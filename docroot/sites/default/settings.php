@@ -68,6 +68,7 @@
  *
  * One example of the simplest connection array is shown below. To use the
  * sample settings, copy and uncomment the code below between the @code and
+ *
  * @endcode lines and paste it after the $databases declaration. You will need
  * to replace the database username and password and possibly the host and port
  * with the appropriate credentials for your database system.
@@ -88,7 +89,7 @@
  * );
  * @endcode
  */
-$databases = array();
+$databases = [];
 
 /**
  * Customizing database settings.
@@ -122,6 +123,7 @@ $databases = array();
  * traditionally referred to as master/slave in database server documentation).
  *
  * The general format for the $databases array is as follows:
+ *
  * @code
  * $databases['default']['default'] = $info_array;
  * $databases['default']['replica'][] = $info_array;
@@ -245,13 +247,14 @@ $databases = array();
  * array key CONFIG_ACTIVE_DIRECTORY.
  *
  * Example:
+ *
  * @code
  *   $config_directories = array(
  *     CONFIG_SYNC_DIRECTORY => '/directory/outside/webroot',
  *   );
  * @endcode
  */
-$config_directories = array();
+$config_directories = [];
 
 /**
  * Settings:
@@ -293,6 +296,7 @@ $config_directories = array();
  * stored with backups of your database.
  *
  * Example:
+ *
  * @code
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
@@ -721,6 +725,7 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * like to allow.
  *
  * For example:
+ *
  * @code
  * $settings['trusted_host_patterns'] = array(
  *   '^www\.example\.com$',
@@ -786,3 +791,86 @@ $settings['entity_update_batch_size'] = 50;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
+
+
+// SimpleSAMLphp configuration
+// Provide universal absolute path to the installation.
+if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {
+  $settings['simplesamlphp_dir'] = '/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp';
+}
+else {
+  // Local SAML path.
+  if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
+    $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
+  }
+}
+
+if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] == 'prod') {
+  $config['system.file']['path']['temporary'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/tmp";
+}
+else {
+  $config['system.file']['path']['temporary'] = sys_get_temp_dir();
+}
+
+$config['simplesamlphp_auth.settings'] = [
+  'langcode' => 'en',
+  'default_langcode' => 'en',
+  'activate' => TRUE,
+  'mail_attr' => 'eduPersonPrincipalName',
+  'unique_id' => 'uid',
+  'user_name' => 'displayName',
+  'auth_source' => 'default-sp',
+  'login_link_display_name' => 'Stanford Login',
+  'header_no_cache' => 1,
+  'logout_goto_url' => NULL,
+  'user_register_original' => 'visitors',
+  'register_users' => TRUE,
+  'autoenablesaml' => TRUE,
+  'debug' => TRUE,
+  'secure' => FALSE,
+  'httponly' => FALSE,
+  'role' => [
+    'population' => 'administrator:suAffiliation,=,hsdo:web|administrator:suAffiliation,=,itservices:webservices',
+    'eval_every_time' => FALSE,
+  ],
+  'allow' => [
+    'set_drupal_pwd' => TRUE,
+    'default_login' => TRUE,
+    'default_login_roles' => [],
+    'default_login_users' => '1',
+  ],
+  'sync' => [
+    'mail' => TRUE,
+    'user_name' => TRUE,
+  ],
+];
+
+$config['environment_indicator.indicator']['bg_color'] = '#086601';
+$config['environment_indicator.indicator']['fg_color'] = '#fff';
+$config['environment_indicator.indicator']['name'] = 'Local';
+
+if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+    case 'dev':
+      $config['environment_indicator.indicator']['bg_color'] = '#6B0500';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = 'Development';
+      break;
+    case 'test':
+      $config['environment_indicator.indicator']['bg_color'] = '#4127C2';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = 'Staging';
+      break;
+    case 'prod':
+      $config['environment_indicator.indicator']['bg_color'] = '#000';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = 'Production';
+      break;
+    default:
+      $config['environment_indicator.indicator']['bg_color'] = '#086601';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = $_ENV['AH_SITE_ENVIRONMENT'];
+      break;
+  }
+}
+

@@ -1,15 +1,16 @@
 project:
   machine_name: suhumsci
-  prefix: BLT
-  human_name: 'BLTed 8'
+  prefix: suhumsci
+  human_name: 'Stanford Humanities and Sciences Product'
   profile:
-    name: lightning
+    name: suhumsci
   local:
     protocol: http
     hostname: 'local.${project.machine_name}.com'
 git:
   default_branch: master
-  remotes: {  }
+  remotes:
+    - 'suhumsci@svn-4707.devcloud.hosting.acquia.com:suhumsci.git'
 drush:
   aliases:
     remote: '${project.machine_name}.test'
@@ -32,3 +33,4 @@ modules:
   prod:
     enable: [acquia_connector, shield]
     uninstall: [devel, views_ui]
+simplesamlphp: true

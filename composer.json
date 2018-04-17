@@ -1,60 +1,75 @@
 {
-    "name": "acquia/blt-project",
-    "description": "Project template for Drupal 8 sites built with BLT.",
-    "type": "project",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "require": {
-        "acquia/blt": "^9.0.3"
-    },
-    "require-dev": {},
-    "extra": {
-        "enable-patching": true,
-        "installer-types": [
-            "bower-asset",
-            "npm-asset"
-        ],
-        "installer-paths": {
-            "docroot/core": [
-                "type:drupal-core"
-            ],
-            "docroot/modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "docroot/modules/custom/{$name}": [
-                "type:drupal-custom-module"
-            ],
-            "docroot/profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "docroot/profiles/custom/{$name}": [
-                "type:drupal-custom-profile"
-            ],
-            "docroot/themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "docroot/themes/custom/{$name}": [
-                "type:drupal-custom-theme"
-            ],
-            "docroot/libraries/{$name}": [
-                "type:drupal-library",
-                "type:bower-asset",
-                "type:npm-asset"
-            ],
-            "drush/contrib/{$name}": [
-                "type:drupal-drush"
-            ]
-        },
-        "merge-plugin": {
-            "require": [
-                "blt/composer.required.json",
-                "blt/composer.suggested.json"
-            ],
-            "merge-extra": true,
-            "merge-extra-deep": true,
-            "merge-scripts": true,
-            "replace": false,
-            "ignore-duplicates": true
-        }
+  "name": "acquia/blt-project",
+  "description": "Project template for Drupal 8 sites built with BLT.",
+  "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
     }
+  ],
+  "require": {
+    "acquia/blt": "^9.0.3",
+    "cweagans/composer-patches": "^1.6",
+    "composer/installers": "^1.4",
+    "davidbarratt/custom-installer": "~1.0",
+    "drupal/core": "^8.5.0",
+    "drupal/simplesamlphp_auth": "^3.0"
+  },
+  "require-dev": {},
+  "extra": {
+    "enable-patching": true,
+    "installer-types": [
+      "bower-asset",
+      "npm-asset"
+    ],
+    "installer-paths": {
+      "docroot/core": [
+        "type:drupal-core"
+      ],
+      "docroot/modules/contrib/{$name}": [
+        "type:drupal-module"
+      ],
+      "docroot/modules/custom/{$name}": [
+        "type:drupal-custom-module"
+      ],
+      "docroot/profiles/contrib/{$name}": [
+        "type:drupal-profile"
+      ],
+      "docroot/profiles/custom/{$name}": [
+        "type:drupal-custom-profile"
+      ],
+      "docroot/themes/contrib/{$name}": [
+        "type:drupal-theme"
+      ],
+      "docroot/themes/custom/{$name}": [
+        "type:drupal-custom-theme"
+      ],
+      "docroot/libraries/{$name}": [
+        "type:drupal-library",
+        "type:bower-asset",
+        "type:npm-asset"
+      ],
+      "drush/contrib/{$name}": [
+        "type:drupal-drush"
+      ]
+    },
+    "merge-plugin": {
+      "require": [
+        "blt/composer.required.json"
+      ],
+      "merge-extra": true,
+      "merge-extra-deep": true,
+      "merge-scripts": true,
+      "replace": false,
+      "ignore-duplicates": true
+    }
+  },
+  "scripts": {
+    "post-drupal-scaffold-cmd": [
+      "cd docroot && patch -p1 <../patches/htaccess-saml.patch"
+    ]
+  }
 }

@@ -1,0 +1,338 @@
+diff --git a/modules/ui_patterns_views/templates/pattern-view-field.html.twig b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
+new file mode 100644
+index 0000000..7f1e292
+--- /dev/null
++++ b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
+@@ -0,0 +1,53 @@
++{#
++/**
++ * @file
++ * Default view template to display all the fields in a row.
++ *
++ * Available variables:
++ * - view: The view in use.
++ * - fields: A list of fields, each one contains:
++ *   - content: The output of the field.
++ *   - raw: The raw data for the field, if it exists. This is NOT output safe.
++ *   - class: The safe class ID to use.
++ *   - handler: The Views field handler controlling this field.
++ *   - inline: Whether or not the field should be inline.
++ *   - wrapper_element: An HTML element for a wrapper.
++ *   - wrapper_attributes: List of attributes for wrapper element.
++ *   - separator: An optional separator that may appear before a field.
++ *   - label: The field's label text.
++ *   - label_element: An HTML element for a label wrapper.
++ *   - label_attributes: List of attributes for label wrapper.
++ *   - label_suffix: Colon after the label.
++ *   - element_type: An HTML element for the field content.
++ *   - element_attributes: List of attributes for HTML element for field content.
++ *   - has_label_colon: A boolean indicating whether to display a colon after
++ *     the label.
++ *   - element_type: An HTML element for the field content.
++ *   - element_attributes: List of attributes for HTML element for field content.
++ * - row: The raw result from the query, with all data it fetched.
++ *
++ * @see template_preprocess_views_view_fields()
++ *
++ * @ingroup themeable
++ */
++#}
++
++{{ field.separator }}
++{%- if field.wrapper_element -%}
++  <{{ field.wrapper_element }}{{ field.wrapper_attributes }}>
++{%- endif %}
++{%- if field.label -%}
++  {%- if field.label_element -%}
++    <{{ field.label_element }}{{ field.label_attributes }}>{{ field.label }}{{ field.label_suffix }}</{{ field.label_element }}>
++  {%- else -%}
++    {{ field.label }}{{ field.label_suffix }}
++  {%- endif %}
++{%- endif %}
++{%- if field.element_type -%}
++  <{{ field.element_type }}{{ field.element_attributes }}>{{ field.content }}</{{ field.element_type }}>
++{%- else -%}
++  {{ field.content }}
++{%- endif %}
++{%- if field.wrapper_element -%}
++  </{{ field.wrapper_element }}>
++{%- endif %}
+diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
+index 84323d8..a36a405 100644
+--- a/modules/ui_patterns_views/ui_patterns_views.module
++++ b/modules/ui_patterns_views/ui_patterns_views.module
+@@ -6,6 +6,9 @@
+  */
+ 
+ use Drupal\ui_patterns\Element\PatternContext;
++use Drupal\Component\Utility\Html;
++use Drupal\Component\Utility\Xss;
++use Drupal\Core\Template\Attribute;
+ 
+ /**
+  * Implements hook_theme().
+@@ -15,6 +18,9 @@ function ui_patterns_views_theme() {
+     'pattern_views_row' => [
+       'variables' => ['view' => NULL, 'options' => [], 'row' => NULL],
+     ],
++    'pattern_view_field' => [
++      'variables' => ['view' => NULL, 'field' => NULL, 'row' => NULL],
++    ],
+   ];
+ }
+ 
+@@ -35,22 +41,114 @@ function template_preprocess_pattern_views_row(array &$variables) {
+   $options = $variables['options'];
+   $row = $variables['row'];
+ 
+-  foreach ($options['pattern_mapping'] as $mapping) {
+-    $field_name = $mapping['source'];
+-    $field = $view->field[$field_name];
+-    $field_output = $view->style_plugin->getField($row->index, $field_name);
+-    if ($row_plugin->isFieldVisible($field, $field_output)) {
+-      $destination = $row_plugin->getMappingDestination('views_row', $field_name, $options);
+-      $fields[$destination][] = $field_output;
++  foreach ($view->field as $id => $field) {
++    // render this even if set to exclude so it can be used elsewhere.
++    $field_output = $view->style_plugin->getField($row->index, $id);
++    $empty = $field->isValueEmpty($field_output, $field->options['empty_zero']);
++    if (empty($field->options['exclude']) && (!$empty || (empty($field->options['hide_empty']) && empty($variables['options']['hide_empty'])))) {
++      $object = new stdClass();
++      $object->handler = $view->field[$id];
++      $object->inline = !empty($variables['options']['inline'][$id]);
++      // Set up default value of the flag that indicates whether to display a
++      // colon after the label.
++      $object->has_label_colon = FALSE;
++
++      $object->element_type = $object->handler->elementType(TRUE, !$variables['options']['default_field_elements'], $object->inline);
++      if ($object->element_type) {
++        $attributes = [];
++        if ($object->handler->options['element_default_classes']) {
++          $attributes['class'][] = 'field-content';
++        }
++
++        if ($classes = $object->handler->elementClasses($row->index)) {
++          $attributes['class'][] = $classes;
++        }
++        $object->element_attributes = new Attribute($attributes);
++      }
++
++      $object->content = $field_output;
++      if (isset($view->field[$id]->field_alias) && isset($row->{$view->field[$id]->field_alias})) {
++        $object->raw = $row->{$view->field[$id]->field_alias};
++      }
++      else {
++        // Make sure it exists to reduce NOTICE.
++        $object->raw = NULL;
++      }
++
++      if (!empty($variables['options']['separator']) && $previous_inline && $object->inline && $object->content) {
++        $object->separator = Xss::filterAdmin($variables['options']['separator']);
++      }
++
++      $object->class = Html::cleanCssIdentifier($id);
++
++      $previous_inline = $object->inline;
++      // Set up field wrapper element.
++      $object->wrapper_element = $object->handler->elementWrapperType(TRUE, TRUE);
++      if ($object->wrapper_element === '' && $variables['options']['default_field_elements']) {
++        $object->wrapper_element = $object->inline ? 'span' : 'div';
++      }
++
++      // Set up field wrapper attributes if field wrapper was set.
++      if ($object->wrapper_element) {
++        $attributes = [];
++        if ($object->handler->options['element_default_classes']) {
++          $attributes['class'][] = 'views-field';
++          $attributes['class'][] = 'views-field-' . $object->class;
++        }
++
++        if ($classes = $object->handler->elementWrapperClasses($row->index)) {
++          $attributes['class'][] = $classes;
++        }
++        $object->wrapper_attributes = new Attribute($attributes);
++      }
++
++      // Set up field label
++      $object->label = $view->field[$id]->label();
++
++      // Set up field label wrapper and its attributes.
++      if ($object->label) {
++        // Add a colon in a label suffix.
++        if ($object->handler->options['element_label_colon']) {
++          $object->label_suffix = ': ';
++          $object->has_label_colon = TRUE;
++        }
++
++        // Set up label HTML element.
++        $object->label_element = $object->handler->elementLabelType(TRUE, !$variables['options']['default_field_elements']);
++
++        // Set up label attributes.
++        if ($object->label_element) {
++          $attributes = [];
++          if ($object->handler->options['element_default_classes']) {
++            $attributes['class'][] = 'views-label';
++            $attributes['class'][] = 'views-label-' . $object->class;
++          }
++
++          // Set up field label.
++          $element_label_class = $object->handler->elementLabelClasses($row->index);
++          if ($element_label_class) {
++            $attributes['class'][] = $element_label_class;
++          }
++          $object->label_attributes = new Attribute($attributes);
++        }
++      }
++
++      $destination = $row_plugin->getMappingDestination('views_row', $id, $options);
++      $fields[$destination][] = [
++        '#theme' => 'pattern_view_field',
++        '#view' => $view,
++        '#row' => $row,
++        '#field' => $object,
++      ];
+     }
+   }
+ 
+-  $variables['pattern'] = [];
+-  if ($view->preview) {
+-    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
+-    $variables['pattern'] = ['#type' => 'status_messages'];
+-  }
+-  elseif (!empty($fields)) {
++//  $variables['pattern'] = [];
++//  if ($view->preview) {
++//    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
++//    $variables['pattern'] = ['#type' => 'status_messages'];
++//  }
++//  elseif (!empty($fields)) {
+     $variables['pattern'] = [
+       '#type' => 'pattern',
+       '#id' => $options['pattern'],
+@@ -63,7 +161,7 @@ function template_preprocess_pattern_views_row(array &$variables) {
+     $variables['pattern']['#context']['view_name'] = $view->storage->id();
+     $variables['pattern']['#context']['display'] = $view->current_display;
+     $variables['pattern']['#context']['view'] = $view;
+-  }
++//  }
+ }
+ 
+ /**
+diff --git a/ui_patterns_views-preview.patch b/ui_patterns_views-preview.patch
+new file mode 100644
+index 0000000..22a34de
+--- /dev/null
++++ b/ui_patterns_views-preview.patch
+@@ -0,0 +1,112 @@
++diff --git a/modules/ui_patterns_views/templates/pattern-view-field.html.twig b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
++new file mode 100644
++index 0000000..7f1e292
++--- /dev/null
+++++ b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
++@@ -0,0 +1,53 @@
+++{#
+++/**
+++ * @file
+++ * Default view template to display all the fields in a row.
+++ *
+++ * Available variables:
+++ * - view: The view in use.
+++ * - fields: A list of fields, each one contains:
+++ *   - content: The output of the field.
+++ *   - raw: The raw data for the field, if it exists. This is NOT output safe.
+++ *   - class: The safe class ID to use.
+++ *   - handler: The Views field handler controlling this field.
+++ *   - inline: Whether or not the field should be inline.
+++ *   - wrapper_element: An HTML element for a wrapper.
+++ *   - wrapper_attributes: List of attributes for wrapper element.
+++ *   - separator: An optional separator that may appear before a field.
+++ *   - label: The field's label text.
+++ *   - label_element: An HTML element for a label wrapper.
+++ *   - label_attributes: List of attributes for label wrapper.
+++ *   - label_suffix: Colon after the label.
+++ *   - element_type: An HTML element for the field content.
+++ *   - element_attributes: List of attributes for HTML element for field content.
+++ *   - has_label_colon: A boolean indicating whether to display a colon after
+++ *     the label.
+++ *   - element_type: An HTML element for the field content.
+++ *   - element_attributes: List of attributes for HTML element for field content.
+++ * - row: The raw result from the query, with all data it fetched.
+++ *
+++ * @see template_preprocess_views_view_fields()
+++ *
+++ * @ingroup themeable
+++ */
+++#}
+++
+++{{ field.separator }}
+++{%- if field.wrapper_element -%}
+++  <{{ field.wrapper_element }}{{ field.wrapper_attributes }}>
+++{%- endif %}
+++{%- if field.label -%}
+++  {%- if field.label_element -%}
+++    <{{ field.label_element }}{{ field.label_attributes }}>{{ field.label }}{{ field.label_suffix }}</{{ field.label_element }}>
+++  {%- else -%}
+++    {{ field.label }}{{ field.label_suffix }}
+++  {%- endif %}
+++{%- endif %}
+++{%- if field.element_type -%}
+++  <{{ field.element_type }}{{ field.element_attributes }}>{{ field.content }}</{{ field.element_type }}>
+++{%- else -%}
+++  {{ field.content }}
+++{%- endif %}
+++{%- if field.wrapper_element -%}
+++  </{{ field.wrapper_element }}>
+++{%- endif %}
++diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
++index 84323d8..b52bc7e 100644
++--- a/modules/ui_patterns_views/ui_patterns_views.module
+++++ b/modules/ui_patterns_views/ui_patterns_views.module
++@@ -15,6 +15,9 @@ function ui_patterns_views_theme() {
++     'pattern_views_row' => [
++       'variables' => ['view' => NULL, 'options' => [], 'row' => NULL],
++     ],
+++    'pattern_view_field' => [
+++      'variables' => ['view' => NULL, 'field' => NULL, 'row' => NULL],
+++    ],
++   ];
++ }
++ 
++@@ -41,16 +44,22 @@ function template_preprocess_pattern_views_row(array &$variables) {
++     $field_output = $view->style_plugin->getField($row->index, $field_name);
++     if ($row_plugin->isFieldVisible($field, $field_output)) {
++       $destination = $row_plugin->getMappingDestination('views_row', $field_name, $options);
++-      $fields[$destination][] = $field_output;
+++      $field->content = $field_output;
+++      $fields[$destination][] = [
+++        '#theme' => 'pattern_view_field',
+++        '#view' => $view,
+++        '#row' => $row,
+++        '#field' => $field,
+++      ];
++     }
++   }
++ 
++-  $variables['pattern'] = [];
++-  if ($view->preview) {
++-    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
++-    $variables['pattern'] = ['#type' => 'status_messages'];
++-  }
++-  elseif (!empty($fields)) {
+++//  $variables['pattern'] = [];
+++//  if ($view->preview) {
+++//    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
+++//    $variables['pattern'] = ['#type' => 'status_messages'];
+++//  }
+++//  elseif (!empty($fields)) {
++     $variables['pattern'] = [
++       '#type' => 'pattern',
++       '#id' => $options['pattern'],
++@@ -63,7 +72,7 @@ function template_preprocess_pattern_views_row(array &$variables) {
++     $variables['pattern']['#context']['view_name'] = $view->storage->id();
++     $variables['pattern']['#context']['display'] = $view->current_display;
++     $variables['pattern']['#context']['view'] = $view;
++-  }
+++//  }
++ }
++ 
++ /**

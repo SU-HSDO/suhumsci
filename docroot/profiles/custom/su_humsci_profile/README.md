@@ -1,4 +1,4 @@
-# [Stanford MRC](https://github.com/SU-HSDO/stanford_mrc)
+# [Stanford MRC](https://github.com/SU-HSDO/su_humsci_profile)
 
 Maintainers: Maintainers: [pookmish](https://github.com/pookmish), [boznik](https://github.com/boznik), [josephgknox](https://github.com/josephgknox)
 

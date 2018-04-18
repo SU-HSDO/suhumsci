@@ -1,0 +1,114 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.stanford_event.body
+    - field.field.node.stanford_event.field_s_event_admission
+    - field.field.node.stanford_event.field_s_event_audience
+    - field.field.node.stanford_event.field_s_event_category
+    - field.field.node.stanford_event.field_s_event_contact_email
+    - field.field.node.stanford_event.field_s_event_contact_phone
+    - field.field.node.stanford_event.field_s_event_date
+    - field.field.node.stanford_event.field_s_event_image
+    - field.field.node.stanford_event.field_s_event_link
+    - field.field.node.stanford_event.field_s_event_location
+    - field.field.node.stanford_event.field_s_event_map_link
+    - field.field.node.stanford_event.field_s_event_speaker
+    - field.field.node.stanford_event.field_s_event_sponsor
+    - field.field.node.stanford_event.field_s_event_status
+    - field.field.node.stanford_event.field_s_event_type
+    - field.field.node.stanford_event.field_s_event_video
+    - node.type.stanford_event
+  module:
+    - bricks
+    - hs_events
+    - link
+    - stanford_media
+    - text
+    - user
+_core:
+  default_config_hash: I-lvMrEteIxDa1VXJqfEBaL2MYDvA4P7-t6YTZxmVmc
+id: node.stanford_event.default
+targetEntityType: node
+bundle: stanford_event
+mode: default
+content:
+  body:
+    type: text_default
+    weight: 5
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_s_event_date:
+    type: datetime_hs
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'n/j/Y g:i A'
+      display: start_date
+    third_party_settings: {  }
+  field_s_event_image:
+    type: media_image_formatter
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: ''
+      link: 0
+    third_party_settings: {  }
+  field_s_event_link:
+    type: link
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  field_s_event_location:
+    type: basic_string
+    weight: 4
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_s_event_speaker:
+    type: bricks_nested
+    weight: 6
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+  field_s_event_video:
+    type: entity_reference_entity_view
+    weight: 7
+    region: content
+    label: hidden
+    settings:
+      view_mode: full
+      link: false
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_s_event_admission: true
+  field_s_event_audience: true
+  field_s_event_category: true
+  field_s_event_contact_email: true
+  field_s_event_contact_phone: true
+  field_s_event_map_link: true
+  field_s_event_sponsor: true
+  field_s_event_status: true
+  field_s_event_type: true

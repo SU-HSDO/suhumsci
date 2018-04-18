@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * hs_events.mdoule
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeForm;
+
+/**
+ * Implements hook_entity_delete().
+ */
+function hs_events_entity_delete(EntityInterface $entity) {
+  if ($entity instanceof Node && $entity->bundle() == 'stanford_event') {
+    $speakers = $entity->get('field_s_event_speaker')->getValue();
+    foreach ($speakers as $speaker_value) {
+      $speaker = \Drupal::entityTypeManager()
+        ->getStorage('event_collections')
+        ->load($speaker_value['target_id']);
+      if ($speaker) {
+        $speaker->delete();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function hs_events_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  // Make sure we have the node form.
+  $callback_object = $form_state->getBuildInfo()['callback_object'];
+  if (!$callback_object instanceof NodeForm) {
+    return;
+  }
+
+  // Make sure we are on the stanford_event node form.
+  $entity = $form_state->getBuildInfo()['callback_object']->getEntity();
+  if (!($entity instanceof Node && $entity->bundle() == 'stanford_event')) {
+    return;
+  }
+
+  /** @var \Drupal\Core\Field\WidgetBaseInterface $widget */
+  $widget = $context['widget'];
+  if ($widget->getBaseId() == 'daterange_datelist') {
+
+    // Adds wrappers so we can easily find the parts with jQuery.
+    $element['value']['#prefix'] = '<div class="start-date">';
+    $element['value']['#suffix'] = '</div>';
+    $element['end_value']['#prefix'] = '<div class="end-date">';
+    $element['end_value']['#suffix'] = '</div>';
+
+    $show_end = FALSE;
+
+    // Compare start and end dates to determine default checkbox value.
+    if (!empty($element['value']['#default_value']) && !empty($element['end_value']['#default_value'])) {
+      /** @var \DateInterval $diff */
+      $diff = $element['value']['#default_value']->diff($element['end_value']['#default_value']);
+      $show_end = (bool) (int) $diff->format('%Y%M%D%H%I%S');
+    }
+
+    $element['show_end'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Show End Date'),
+      '#default_value' => $show_end,
+      '#attributes' => ['class' => ['show-end-date']],
+    ];
+
+    $element['#attached']['library'][] = 'hs_events/admin';
+    array_unshift($element['#element_validate'], 'hs_events_node_validate_date');
+  }
+
+}
+
+/**
+ * Implements hook_preprocess_select().
+ */
+function hs_events_preprocess_select(&$variables) {
+  if (preg_match("/field_s_event_date.*?\[year\]/", $variables['element']['#name'])) {
+
+    // Limit the number of years in the Event date field.
+    $this_year = (int) date('Y');
+    foreach ($variables['options'] as $key => $option) {
+      if (!(int) $option['value']) {
+        continue;
+      }
+
+      // Only show a 20 year span.
+      $diff = abs($this_year - $option['value']);
+      if ($diff > 10 && $option['value'] != $variables['element']['#value']) {
+        unset($variables['options'][$key]);
+      }
+    }
+  }
+}
+
+/**
+ * Validation for event dates in nodes form.
+ */
+function hs_events_node_validate_date(array &$element, FormStateInterface $form_state) {
+
+  $date = $form_state->getValue('field_s_event_date');
+
+  // If the start value is populated but end is empty, copy the start date
+  // to the end date to pass validation.
+  if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
+    $date[0]['end_value'] = $date[0]['value'];
+    $element['end_value']['#value']['object'] = $date[0]['end_value'];
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+    $form_state->setValue('field_s_event_date', $date);
+  }
+}

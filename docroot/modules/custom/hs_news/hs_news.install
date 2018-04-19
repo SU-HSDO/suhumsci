@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * hs_news.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_news_install() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('rabbit_hole.behavior_settings.default');
+  $config->set('allow_override', 0);
+  $config->set('redirect_code', '301');
+  $config->save();
+
+  $config = $config_factory->getEditable('rabbit_hole.behavior_settings.default_bundle');
+  $config->set('allow_override', 0);
+  $config->set('redirect_code', '301');
+  $config->save();
+}

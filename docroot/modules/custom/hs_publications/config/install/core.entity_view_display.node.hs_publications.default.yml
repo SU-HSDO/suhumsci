@@ -14,28 +14,137 @@ dependencies:
   module:
     - datetime
     - ds
+    - layout_builder
+    - layout_discovery
     - link
     - stanford_media
     - text
     - user
 third_party_settings:
-  ds:
-    layout:
-      id: basic_node
-      library: null
-      disable_css: false
-      entity_classes: all_classes
-      settings: {  }
-    regions:
-      main:
-        - links
-        - field_hs_publication_year
-        - body
-        - field_hs_publication_author
-        - field_hs_publication_documents
-        - field_hs_publication_image
-        - field_hs_publication_link
-        - field_hs_publication_publisher
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          332eb516-3d18-47aa-b09c-f62a4503f532:
+            uuid: 332eb516-3d18-47aa-b09c-f62a4503f532
+            region: content
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_image'
+              label: 'Publication Image'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: media_responsive_image_formatter
+                settings:
+                  view_mode: default
+                  image_style: hero_image
+                  link: 0
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+      -
+        layout_id: ds_3col_stacked_fluid
+        layout_settings:
+          wrappers:
+            header: div
+            left: div
+            middle: div
+            right: div
+            footer: div
+          outer_wrapper: div
+          attributes: ''
+          link_attribute: ''
+          link_custom: ''
+          classes:
+            layout_class: {  }
+        components:
+          6f2dac49-29c7-4309-9248-1c548da6676a:
+            uuid: 6f2dac49-29c7-4309-9248-1c548da6676a
+            region: middle
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_year'
+              label: 'Publication Year'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: datetime_custom
+                settings:
+                  timezone_override: ''
+                  date_format: 'Y'
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+          4a5ee9da-cee6-4221-8414-caef4cf321b2:
+            uuid: 4a5ee9da-cee6-4221-8414-caef4cf321b2
+            region: middle
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_link'
+              label: 'Publication Link'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: link
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: '0'
+                  target: '0'
+                third_party_settings:
+                  ds:
+                    ds_limit: ''
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 1
+          80397dff-e856-4bec-b47e-12bcb8a09192:
+            uuid: 80397dff-e856-4bec-b47e-12bcb8a09192
+            region: middle
+            configuration:
+              id: 'field_block:node:hs_publications:body'
+              label: Body
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 2
+          fc67014a-816a-48f8-9d50-7151a6b33874:
+            uuid: fc67014a-816a-48f8-9d50-7151a6b33874
+            region: middle
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_documents'
+              label: 'Publication Documents'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: default
+                third_party_settings:
+                  ds:
+                    ds_limit: ''
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 3
+_core:
+  default_config_hash: DbOyjW1Wt9N8fH1ARccdrpLxToPz2pwube1pOgitYqE
 id: node.hs_publications.default
 targetEntityType: node
 bundle: hs_publications
@@ -44,14 +153,14 @@ content:
   body:
     type: text_default
     weight: 2
-    region: main
+    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
   field_hs_publication_author:
     type: entity_reference_entity_view
     weight: 3
-    region: main
+    region: content
     label: hidden
     settings:
       view_mode: default
@@ -60,7 +169,7 @@ content:
   field_hs_publication_documents:
     type: entity_reference_entity_view
     weight: 4
-    region: main
+    region: content
     label: hidden
     settings:
       link: false
@@ -69,7 +178,7 @@ content:
   field_hs_publication_image:
     type: media_responsive_image_formatter
     weight: 5
-    region: main
+    region: content
     label: hidden
     settings:
       view_mode: default
@@ -79,7 +188,7 @@ content:
   field_hs_publication_link:
     type: link
     weight: 6
-    region: main
+    region: content
     label: hidden
     settings:
       trim_length: 80
@@ -91,7 +200,7 @@ content:
   field_hs_publication_publisher:
     type: string
     weight: 7
-    region: main
+    region: content
     label: hidden
     settings:
       link_to_entity: false
@@ -99,7 +208,7 @@ content:
   field_hs_publication_year:
     type: datetime_custom
     weight: 1
-    region: main
+    region: content
     label: hidden
     settings:
       timezone_override: ''
@@ -107,7 +216,7 @@ content:
     third_party_settings: {  }
   links:
     weight: 0
-    region: main
+    region: content
     settings: {  }
     third_party_settings: {  }
 hidden:

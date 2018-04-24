@@ -12,6 +12,11 @@ To set up your local environment and begin developing for this project, refer to
 * Local drush alias: @my-project.local
 * Local site URL: http://local.my-project.com
 
+1. Clone the repository and check out the develop branch.
+2. Run a `composer install --prefer-source` answer yes to any questions during this step.
+3. Run `blt local:setup` and answer the questions to configure your database settings.
+4. If you would like a clean installation run `drush si --sites-subdir=default`.
+
 ## Resources
 
 * JIRA - link me!

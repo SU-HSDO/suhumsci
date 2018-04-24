@@ -1,0 +1,114 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_publications.body
+    - field.field.node.hs_publications.field_hs_publication_author
+    - field.field.node.hs_publications.field_hs_publication_documents
+    - field.field.node.hs_publications.field_hs_publication_image
+    - field.field.node.hs_publications.field_hs_publication_link
+    - field.field.node.hs_publications.field_hs_publication_publisher
+    - field.field.node.hs_publications.field_hs_publication_type
+    - field.field.node.hs_publications.field_hs_publication_year
+    - node.type.hs_publications
+  module:
+    - datetime
+    - ds
+    - link
+    - stanford_media
+    - text
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: basic_node
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings: {  }
+    regions:
+      main:
+        - links
+        - field_hs_publication_year
+        - body
+        - field_hs_publication_author
+        - field_hs_publication_documents
+        - field_hs_publication_image
+        - field_hs_publication_link
+        - field_hs_publication_publisher
+id: node.hs_publications.default
+targetEntityType: node
+bundle: hs_publications
+mode: default
+content:
+  body:
+    type: text_default
+    weight: 2
+    region: main
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_publication_author:
+    type: entity_reference_entity_view
+    weight: 3
+    region: main
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+  field_hs_publication_documents:
+    type: entity_reference_entity_view
+    weight: 4
+    region: main
+    label: hidden
+    settings:
+      link: false
+      view_mode: default
+    third_party_settings: {  }
+  field_hs_publication_image:
+    type: media_responsive_image_formatter
+    weight: 5
+    region: main
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: hero_image
+      link: 0
+    third_party_settings: {  }
+  field_hs_publication_link:
+    type: link
+    weight: 6
+    region: main
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  field_hs_publication_publisher:
+    type: string
+    weight: 7
+    region: main
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_hs_publication_year:
+    type: datetime_custom
+    weight: 1
+    region: main
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'Y'
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: main
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_hs_publication_type: true

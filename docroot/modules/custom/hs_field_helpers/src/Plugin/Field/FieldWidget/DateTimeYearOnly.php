@@ -3,6 +3,7 @@
 namespace Drupal\hs_field_helpers\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,6 +21,19 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
  * )
  */
 class DateTimeYearOnly extends WidgetBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    // Only work on "Date Only" fields.
+    $type = $field_definition->getFieldStorageDefinition()
+      ->getSetting('datetime_type');
+    if ($type != 'date') {
+      return FALSE;
+    }
+    return parent::isApplicable($field_definition);
+  }
 
   /**
    * {@inheritdoc}

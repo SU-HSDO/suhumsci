@@ -1,6 +1,7 @@
 langcode: en
 status: true
 dependencies:
+    - system
   theme:
     - su_humsci_theme
 id: su_humsci_theme_page_title
@@ -14,4 +15,9 @@ settings:
   label: 'Page title'
   provider: core
   label_display: '0'
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '/node/*'
+    negate: true
+    context_mapping: {  }

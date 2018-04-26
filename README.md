@@ -1,6 +1,6 @@
-# My Project
+# Stanford Humanities And Sciences
 
-A brief description of My Project.
+This is an Acquia BLT tool to assist in deploying code for Humanities and Sciences installation profile. 
 
 ## Getting Started
 
@@ -11,6 +11,11 @@ To set up your local environment and begin developing for this project, refer to
 * Local environment: DrupalVM
 * Local drush alias: @my-project.local
 * Local site URL: http://local.my-project.com
+
+1. Clone the repository and check out the develop branch.
+2. Run a `composer install --prefer-source` answer yes to any questions during this step.
+3. Run `blt local:setup` and answer the questions to configure your database settings.
+4. If you would like a clean installation run `drush si su_humsci_profile -y`.
 
 ## Resources
 

@@ -69,7 +69,7 @@ class HumsciCommand extends BltTasks {
         $database_password = $this->askQuestion("Database password for $multisite site?", $status['db-password'], TRUE);
       }
 
-      $settings_contents = preg_replace("/'database' => '.*?',/", "'database' => '$database_name',", $settings_contents);
+      $settings_contents = preg_replace("/db_name = .*?;/", "db_name = '$database_name';", $settings_contents);
       $settings_contents = preg_replace("/'username' => '.*?',/", "'username' => '$database_user_name',", $settings_contents);
       $settings_contents = preg_replace("/'password' => '.*?',/", "'password' => '$database_password',", $settings_contents);
       $settings_contents = preg_replace("/'host' => '.*?',/", "'host' => '$database_host',", $settings_contents);
@@ -91,8 +91,6 @@ class HumsciCommand extends BltTasks {
       }
       $connection->query('CREATE DATABASE IF NOT EXISTS ' . $status['db-name']);
     }
-    $this->syncDbDefault('prod');
-    $this->syncFiles('prod');
   }
 
   /**

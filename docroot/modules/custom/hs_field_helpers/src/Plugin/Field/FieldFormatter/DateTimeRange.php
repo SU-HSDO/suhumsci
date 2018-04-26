@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_events\Plugin\Field\FieldFormatter;
+namespace Drupal\hs_field_helpers\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,9 +29,10 @@ class DateTimeRange extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return [
-        'display' => 'start_date',
-      ] + parent::defaultSettings();
+    $settings = [
+      'display' => 'start_date',
+    ];
+    return $settings + parent::defaultSettings();
   }
 
   /**

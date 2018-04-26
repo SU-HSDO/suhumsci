@@ -1,0 +1,198 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_publications.body
+    - field.field.node.hs_publications.field_hs_publication_author
+    - field.field.node.hs_publications.field_hs_publication_documents
+    - field.field.node.hs_publications.field_hs_publication_image
+    - field.field.node.hs_publications.field_hs_publication_link
+    - field.field.node.hs_publications.field_hs_publication_publisher
+    - field.field.node.hs_publications.field_hs_publication_type
+    - field.field.node.hs_publications.field_hs_publication_year
+    - node.type.hs_publications
+    - system.menu.main
+  module:
+    - hs_field_helpers
+    - layout_builder
+    - layout_discovery
+    - menu_block
+    - su_humsci_theme
+    - user
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          0cd4b199-7637-47e6-853b-ff533cbf2626:
+            uuid: 0cd4b199-7637-47e6-853b-ff533cbf2626
+            region: content
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_image'
+              label: 'Publication Image'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: default
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+      -
+        layout_id: basic_node
+        layout_settings: {  }
+        components:
+          0b87320b-542d-405c-8849-471071b02c8c:
+            uuid: 0b87320b-542d-405c-8849-471071b02c8c
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: '0'
+              follow: 0
+              follow_parent: '0'
+              level: 1
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              label_type: block
+              suggestion: main
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+          0774c023-31b5-4268-a740-34597ea685c3:
+            uuid: 0774c023-31b5-4268-a740-34597ea685c3
+            region: main
+            configuration:
+              id: page_title_block
+              label: 'Page title'
+              provider: core
+              label_display: '0'
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+          1a8f1696-44e7-48a2-883b-c1caf8b3c1ea:
+            uuid: 1a8f1696-44e7-48a2-883b-c1caf8b3c1ea
+            region: main
+            configuration:
+              id: page_title_block
+              label: 'Page title'
+              provider: core
+              label_display: '0'
+              context_mapping: {  }
+            additional: {  }
+            weight: 1
+          78b20a47-2a98-4902-8a45-2a8320c5844f:
+            uuid: 78b20a47-2a98-4902-8a45-2a8320c5844f
+            region: main
+            configuration:
+              id: 'field_block:node:hs_publications:title'
+              label: Title
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_title_heading
+                settings:
+                  tag: h1
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 2
+          facdcedf-2ec8-43ae-8736-9a0e8f7ae77b:
+            uuid: facdcedf-2ec8-43ae-8736-9a0e8f7ae77b
+            region: main
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_year'
+              label: 'Publication Year'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: datetime_custom
+                settings:
+                  timezone_override: ''
+                  date_format: 'Y'
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 3
+          ca06313c-b2ed-41b3-8362-a423f329d499:
+            uuid: ca06313c-b2ed-41b3-8362-a423f329d499
+            region: main
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_publisher'
+              label: Publisher
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 4
+          dca94c86-fb45-45fc-b64a-5696e464183c:
+            uuid: dca94c86-fb45-45fc-b64a-5696e464183c
+            region: main
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_author'
+              label: Author
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: default
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 5
+          ba0cae80-2ec2-4c75-90e5-aa99ef00fb63:
+            uuid: ba0cae80-2ec2-4c75-90e5-aa99ef00fb63
+            region: main
+            configuration:
+              id: 'field_block:node:hs_publications:body'
+              label: Body
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 6
+id: node.hs_publications.default
+targetEntityType: node
+bundle: hs_publications
+mode: default
+content:
+  links:
+    weight: 100
+    region: content
+hidden:
+  body: true
+  field_hs_publication_author: true
+  field_hs_publication_documents: true
+  field_hs_publication_image: true
+  field_hs_publication_link: true
+  field_hs_publication_publisher: true
+  field_hs_publication_type: true
+  field_hs_publication_year: true

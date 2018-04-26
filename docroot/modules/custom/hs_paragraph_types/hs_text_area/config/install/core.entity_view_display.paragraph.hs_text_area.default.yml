@@ -1,0 +1,45 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_text_area.field_hs_text_area
+    - paragraphs.paragraphs_type.hs_text_area
+  module:
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          02e75a03-1119-40bb-b857-a134cd338a82:
+            uuid: 02e75a03-1119-40bb-b857-a134cd338a82
+            region: content
+            configuration:
+              id: 'field_block:paragraph:hs_text_area:field_hs_text_area'
+              label_display: ''
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+id: paragraph.hs_text_area.default
+targetEntityType: paragraph
+bundle: hs_text_area
+mode: default
+content:
+  field_hs_text_area:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden: {  }

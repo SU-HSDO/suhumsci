@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_hero_image
+    - node.type.hs_basic_page
+    - paragraphs.paragraphs_type.hs_hero_image
+  module:
+    - entity_reference_revisions
+id: node.hs_basic_page.field_hs_hero_image
+field_name: field_hs_hero_image
+entity_type: node
+bundle: hs_basic_page
+label: 'Hero Image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      hs_hero_image: hs_hero_image
+    target_bundles_drag_drop:
+      hs_hero_image:
+        enabled: true
+        weight: 3
+      hs_text_area:
+        weight: 4
+        enabled: false
+field_type: entity_reference_revisions

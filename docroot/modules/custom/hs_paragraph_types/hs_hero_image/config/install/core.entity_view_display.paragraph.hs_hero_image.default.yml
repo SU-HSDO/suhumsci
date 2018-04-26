@@ -1,0 +1,48 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_hero_image.field_hs_hero_image
+    - paragraphs.paragraphs_type.hs_hero_image
+  module:
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          fff70d8b-a134-496e-8808-c10082e54419:
+            uuid: fff70d8b-a134-496e-8808-c10082e54419
+            region: content
+            configuration:
+              id: 'field_block:paragraph:hs_hero_image:field_hs_hero_image'
+              label_display: ''
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                  link: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+id: paragraph.hs_hero_image.default
+targetEntityType: paragraph
+bundle: hs_hero_image
+mode: default
+content:
+  field_hs_hero_image:
+    type: entity_reference_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+hidden: {  }

@@ -20,8 +20,8 @@ third_party_settings:
         layout_id: layout_onecol
         layout_settings: {  }
         components:
-          36bcb71a-e2df-4ace-8a8d-c2db64b1e47d:
-            uuid: 36bcb71a-e2df-4ace-8a8d-c2db64b1e47d
+          f6f1822b-4e2f-44d8-9a58-5706a1693ea7:
+            uuid: f6f1822b-4e2f-44d8-9a58-5706a1693ea7
             region: content
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_hero_image'
@@ -79,8 +79,27 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          c79d4c6f-876d-4211-bf94-98cbfdf1ad2e:
-            uuid: c79d4c6f-876d-4211-bf94-98cbfdf1ad2e
+          d343a54c-e1f5-4206-a613-c0c8c2d13c79:
+            uuid: d343a54c-e1f5-4206-a613-c0c8c2d13c79
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: '0'
+              follow: 0
+              follow_parent: '0'
+              level: 2
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              label_type: block
+              suggestion: menu_block__main
+              context_mapping: {  }
+            additional: {  }
+            weight: 1
+          542b0f64-1f1e-4d1f-bc05-cf529d60e8c5:
+            uuid: 542b0f64-1f1e-4d1f-bc05-cf529d60e8c5
             region: main
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_components'
@@ -92,36 +111,21 @@ third_party_settings:
                 type: entity_reference_revisions_entity_view
                 settings:
                   view_mode: default
-                third_party_settings: {  }
+                third_party_settings:
+                  ds:
+                    ds_limit: ''
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
             weight: 1
     allow_custom: false
+    enable_defaults: true
 id: node.hs_basic_page.default
 targetEntityType: node
 bundle: hs_basic_page
 mode: default
-content:
-  field_hs_hero_image:
-    type: entity_reference_revisions_entity_view
-    weight: 102
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  field_hs_page_components:
-    type: entity_reference_revisions_entity_view
-    weight: 101
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    region: content
-  links:
-    weight: 100
-    region: content
-hidden: {  }
+content: { }
+hidden:
+  field_hs_hero_image: true
+  field_hs_page_components: true
+  links: true;

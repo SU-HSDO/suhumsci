@@ -1,0 +1,77 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_slide.field_hs_image
+    - field.field.paragraph.hs_slide.field_hs_slide_body
+    - field.field.paragraph.hs_slide.field_hs_slide_link
+    - field.field.paragraph.hs_slide.field_hs_slide_title
+    - paragraphs.paragraphs_type.hs_slide
+  module:
+    - field_group
+    - link
+    - stanford_media
+    - text
+third_party_settings:
+  field_group:
+    group_overlay:
+      children:
+        - field_hs_slide_title
+        - field_hs_slide_body
+        - field_hs_slide_link
+      parent_name: ''
+      weight: 1
+      format_type: html_element
+      format_settings:
+        id: ''
+        classes: slick-content
+        element: div
+        show_label: false
+        label_element: h3
+        attributes: ''
+        effect: none
+        speed: fast
+      label: Overlay
+id: paragraph.hs_slide.default
+targetEntityType: paragraph
+bundle: hs_slide
+mode: default
+content:
+  field_hs_image:
+    type: media_image_formatter
+    weight: 0
+    region: content
+    label: hidden
+    third_party_settings: {  }
+    settings:
+      view_mode: full
+      image_style: slideshow
+      link: 0
+  field_hs_slide_body:
+    weight: 3
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_hs_slide_link:
+    weight: 4
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_hs_slide_title:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

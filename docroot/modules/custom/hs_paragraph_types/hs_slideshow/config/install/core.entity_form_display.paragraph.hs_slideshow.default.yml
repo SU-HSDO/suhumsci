@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_slideshow.field_hs_slideshow_slides
+    - paragraphs.paragraphs_type.hs_slideshow
+  module:
+    - paragraphs
+id: paragraph.hs_slideshow.default
+targetEntityType: paragraph
+bundle: hs_slideshow
+mode: default
+content:
+  field_hs_slideshow_slides:
+    type: paragraphs
+    weight: 0
+    region: content
+    settings:
+      title: Slide
+      title_plural: Slides
+      edit_mode: closed
+      closed_mode: summary
+      autocollapse: all
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: hs_slide
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

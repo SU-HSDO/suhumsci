@@ -1,0 +1,63 @@
+uuid: ea4bfa9a-1f10-4587-9917-b76dd7aa2931
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.image_browser
+    - field.field.paragraph.hs_slide.field_hs_image
+    - field.field.paragraph.hs_slide.field_hs_slide_body
+    - field.field.paragraph.hs_slide.field_hs_slide_link
+    - field.field.paragraph.hs_slide.field_hs_slide_title
+    - paragraphs.paragraphs_type.hs_slide
+  module:
+    - entity_browser
+    - link
+    - text
+id: paragraph.hs_slide.default
+targetEntityType: paragraph
+bundle: hs_slide
+mode: default
+content:
+  field_hs_image:
+    type: entity_browser_entity_reference
+    weight: 1
+    region: content
+    settings:
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: thumbnail
+      field_widget_replace: false
+    third_party_settings: {  }
+  field_hs_slide_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_slide_link:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_hs_slide_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

@@ -1,0 +1,39 @@
+{% if page.header or page.search %}
+  <header id="header">
+    <div class="decanter-grid">
+      <div class="decanter-width-two-thirds">
+        {{ page.header }}
+      </div>
+      <div class="decanter-width-one-third decanter-end-row">
+        {{ page.search }}
+      </div>
+
+    </div>
+  </header>
+{% endif %}
+
+{% if page.menu %}
+  <div class="menu">
+    <div class="decanter-grid">
+      {{ page.menu }}
+    </div>
+  </div>
+{% endif %}
+
+{{ page.breadcrumb }}
+
+{% if page.highlighted | render %}
+  <div id="highlighted">{{ page.highlighted }}</div>
+{% endif %}
+
+<div id="main-content" class="main-container">
+  {{ page.content }}
+</div>
+
+{% if page.footer | render %}
+  <footer id="footer">
+    <div class="decanter-grid">
+      {{ page.footer }}
+    </div>
+  </footer>
+{% endif %}

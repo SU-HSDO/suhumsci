@@ -94,7 +94,7 @@ module.exports = function(grunt) {
           "node_modules/bourbon-neat/app/assets/stylesheets",
           "node_modules/font-awesome/scss",
           "node_modules/neat-omega/core",
-          "../../../../../themes/stanford/stanford_basic/libraries/decanter/scss",
+          "node_modules/decanter/scss",
           "node_modules",
         ],
         sourceMap: true,
@@ -108,18 +108,13 @@ module.exports = function(grunt) {
           // conditionally using logic built in to the theme template or module.
 
           // BASE
-          'css/base/base.css':  'scss/base/base.scss',
-          'css/ckeditor.css':   'scss/ckeditor.scss',
-          'css/base/front.css':   'scss/base/front.scss',
-
-          // NODE
-          // add node files to be compiled here
-
-          // PARAGRAPH
-          // add paragraph files to be compiled here
+          // 'css/base/base.css':  'scss/base/base.scss',
+          // 'css/ckeditor.css':   'scss/ckeditor.scss',
 
           // PATTERNS
-          // add pattern files to be compiled here
+
+          // COMPONENTS
+          'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
         }
       }
     },

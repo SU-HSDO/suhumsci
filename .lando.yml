@@ -1,8 +1,5 @@
-name: suhumsci
+name: arch
 recipe: drupal8
-# proxy:
-#   solr:
-#     - solr.mrcblt.sws:8983
 config:
   webroot: docroot
   php: '7.1'
@@ -10,20 +7,10 @@ services:
   appserver:
     ssl: true
     extras:
-      - "apt-get update"
-      - "ln -s /app/vendor/bin/blt /usr/bin/blt"
+      - apt-get update
+      - ln -s /app/vendor/bin/blt /usr/bin/blt
   database:
-    type: mysql:5.7
-  # solr:
-  #   type: solr:5.5
-  #   portforward: true
-  #   core: project
-  #   config:
-  #     conf: solrconf
-  # memcache:
-  #   type: memcached:1.5
-  #   mem: 128
-  #   portforward: true
+    type: 'mysql:5.7'
 tooling:
   blt:
     service: appserver

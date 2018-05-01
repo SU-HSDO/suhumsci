@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @file
+ * hs_field_helpers.module
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\menu_block\Plugin\Block\MenuBlock;
+
+/**
+ * Implements hook_preprocess().
+ */
+function hs_field_helpers_preprocess(&$variables, $hook) {
+  if($hook == 'block'){
+//    ddl($variables);
+  }
+//  ddl($hook);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_load().
+ */
+function hs_field_helpers_block_load(array $entities) {
+//  dpm($entities);
+}
+
+/**
+ * Implements hook_entity_load().
+ */
+function hs_field_helpers_entity_load(array $entities, $entity_type_id) {
+//  dpm($entity_type_id);
+}
+
+/**
+ * Implements hook_block_build_alter().
+ */
+function hs_field_helpers_block_build_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+//  dpm($block);
+}
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function hs_field_helpers_block_view_alter(array &$build, BlockPluginInterface $block) {
+  if ($block instanceof MenuBlock) {
+    dpm(__LINE__);
+    /** @var \Drupal\Core\Menu\MenuLinkTree $menu_tree */
+    $menu_tree = \Drupal::service('menu.link_tree');
+    $menu_name = $block->getDerivativeId();
+    /** @var \Drupal\Core\Menu\MenuTreeParameters $parameters */
+    $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
+
+    if (empty(array_filter($parameters->activeTrail))) {
+      $build = [];
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_field_helpers_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\field\Entity\FieldConfig $field_config */
+  $field_config = $form_state->getBuildInfo()['callback_object']->getEntity();
+  // Add an option to exclude views from the form. The module only has the
+  // "allowed views" option. This hides the allowed views and adds the excluded
+  // views.
+  if ($field_config->getType() == 'viewfield') {
+    $form['third_party_settings']['hs_field_helpers']['excluded_views'] = [
+      '#type' => 'checkboxes',
+      '#title' => t('Excluded views'),
+      '#options' => $form['settings']['allowed_views']['#options'],
+      '#default_value' => $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views'),
+    ];
+    $form['settings']['allowed_views']['#type'] = 'hidden';
+    $form['#validate'][] = 'hs_field_helpers_form_field_config_edit_form_validate';
+  }
+}
+
+/**
+ * Validation handler for field config edit form.
+ */
+function hs_field_helpers_form_field_config_edit_form_validate(&$form, FormStateInterface $form_state) {
+  if ($excluded_views = &$form_state->getValue([
+    'third_party_settings',
+    'hs_field_helpers',
+    'excluded_views',
+  ])) {
+    // Remove keys on the values to make the config cleaner.
+    $excluded_views = array_filter(array_values($excluded_views));
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  /** @var \Drupal\viewfield\Plugin\Field\FieldWidget\ViewfieldWidgetSelect $widget */
+  $widget = $context['widget'];
+  if ($widget->getPluginId() == 'viewfield_select') {
+    /** @var \Drupal\field\Entity\FieldConfig $field_config */
+    $field_config = $context['items']->getFieldDefinition();
+
+    // Strip the view options as defined by the exclude views settings.
+    // @see hs_field_helpers_form_field_config_edit_form_alter().
+    if ($excluded_views = $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views')) {
+      $element['target_id']['#options'] = array_diff_key($element['target_id']['#options'], array_flip($excluded_views));
+    }
+  }
+}

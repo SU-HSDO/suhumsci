@@ -16,6 +16,12 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
   // Each layout has its own preprocess hook. So we have to use generic hook.
   if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
 
+    // This attribute exists when on the layout management page. We don't want
+    // to clean up the regions when on that page because it will break the UI.
+    if (!empty($variables['attributes']['data-layout-update-url'])) {
+      return;
+    }
+
     foreach (Element::children($variables['content']) as $region) {
 
       // Some blocks such as a menu block don't have any output, but the layout

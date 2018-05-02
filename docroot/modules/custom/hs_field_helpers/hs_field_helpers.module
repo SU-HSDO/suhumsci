@@ -6,6 +6,34 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Layout\LayoutDefinition;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_preprocess().
+ */
+function hs_field_helpers_preprocess(&$variables, $hook) {
+  // Each layout has its own preprocess hook. So we have to use generic hook.
+  if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
+
+    foreach (Element::children($variables['content']) as $region) {
+
+      // Some blocks such as a menu block don't have any output, but the layout
+      // still outputs an empty container for the block that has no content.
+      // So lets find out if they are empty, and clean them up.
+      foreach (Element::children($variables['content'][$region]) as $item_id) {
+        if (empty($variables['content'][$region][$item_id]['#theme'])) {
+          unset($variables['content'][$region][$item_id]);
+        }
+      }
+
+      // Clean up empty regions after we've cleaned up the blocks in the region.
+      if (empty(Element::children($variables['content'][$region]))) {
+        unset($variables['content'][$region]);
+      }
+    }
+  }
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().

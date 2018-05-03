@@ -53,7 +53,7 @@ class HsEventsJavascriptTest extends JavascriptTestBase {
    */
   public function testNodeAccess() {
     $assert_session = $this->assertSession();
-    $this->drupalGet('node/add/stanford_event');
+    $this->drupalGet('node/add/hs_event');
     $assert_session->statusCodeEquals(403);
 
     $account = $this->drupalCreateUser([
@@ -72,7 +72,7 @@ class HsEventsJavascriptTest extends JavascriptTestBase {
     ]);
     $this->drupalLogin($account);
 
-    $this->drupalGet('node/add/stanford_event');
+    $this->drupalGet('node/add/hs_event');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('Create Event');
   }
@@ -88,7 +88,7 @@ class HsEventsJavascriptTest extends JavascriptTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->drupalGet('node/add/stanford_event');
+    $this->drupalGet('node/add/hs_event');
 
     $page->checkField('Show End Date');
 
@@ -98,37 +98,37 @@ class HsEventsJavascriptTest extends JavascriptTestBase {
           'title[0][value]' => 'Test Event',
           'body[0][summary]' => NULL,
           'body[0][value]' => 'Body Value',
-          'field_s_event_link[0][uri]' => 'http://google.com',
-          'field_s_event_link[0][title]' => 'Google',
+          'field_hs_event_link[0][uri]' => 'http://google.com',
+          'field_hs_event_link[0][title]' => 'Google',
         ],
         'select' => [
-          'field_s_event_date[0][value][month]' => date('n'),
-          'field_s_event_date[0][value][day]' => date('j'),
-          'field_s_event_date[0][value][year]' => date('Y'),
-          'field_s_event_date[0][value][hour]' => date('g'),
-          'field_s_event_date[0][value][minute]' => 15,
-          'field_s_event_date[0][value][ampm]' => date('a'),
-          'field_s_event_date[0][end_value][month]' => date('n'),
-          'field_s_event_date[0][end_value][day]' => date('j'),
-          'field_s_event_date[0][end_value][year]' => date('Y') + 1,
-          'field_s_event_date[0][end_value][hour]' => date('g'),
-          'field_s_event_date[0][end_value][minute]' => 15,
-          'field_s_event_date[0][end_value][ampm]' => date('a'),
+          'field_hs_event_date[0][value][month]' => date('n'),
+          'field_hs_event_date[0][value][day]' => date('j'),
+          'field_hs_event_date[0][value][year]' => date('Y'),
+          'field_hs_event_date[0][value][hour]' => date('g'),
+          'field_hs_event_date[0][value][minute]' => 15,
+          'field_hs_event_date[0][value][ampm]' => date('a'),
+          'field_hs_event_date[0][end_value][month]' => date('n'),
+          'field_hs_event_date[0][end_value][day]' => date('j'),
+          'field_hs_event_date[0][end_value][year]' => date('Y') + 1,
+          'field_hs_event_date[0][end_value][hour]' => date('g'),
+          'field_hs_event_date[0][end_value][minute]' => 15,
+          'field_hs_event_date[0][end_value][ampm]' => date('a'),
         ],
       ],
       'Supplement Info' => [
         'text' => [
-          'field_s_event_location[0][value]' => 'The White House',
-          'field_s_event_map_link[0][uri]' => 'http://maps.google.com',
-          'field_s_event_map_link[0][title]' => 'Google Maps',
-          'field_s_event_sponsor[0][value]' => 'Stanford University',
-          'field_s_event_contact_email[0][value]' => 'test@test.com',
-          'field_s_event_contact_phone[0][value]' => '123-456-7890',
-          'field_s_event_admission[0][value]' => 'Free',
+          'field_hs_event_location[0][value]' => 'The White House',
+          'field_hs_event_map_link[0][uri]' => 'http://maps.google.com',
+          'field_hs_event_map_link[0][title]' => 'Google Maps',
+          'field_hs_event_sponsor[0][value]' => 'Stanford University',
+          'field_hs_event_contact_email[0][value]' => 'test@test.com',
+          'field_hs_event_contact_phone[0][value]' => '123-456-7890',
+          'field_hs_event_admission[0][value]' => 'Free',
         ],
         'autocomplete' => [
-          'field_s_event_category[0][target_id]' => 'Test Category',
-          'field_s_event_audience[0][target_id]' => 'General Public',
+          'field_hs_event_category[0][target_id]' => 'Test Category',
+          'field_hs_event_audience[0][target_id]' => 'General Public',
         ],
       ],
     ];
@@ -180,8 +180,8 @@ class HsEventsJavascriptTest extends JavascriptTestBase {
     $assert_session->waitForElementVisible('css', '.field--name-field-s-event-image input[name="remove"]');
 
     $page->pressButton('Add new Speaker');
-    $assert_session->waitForField('field_s_event_speaker[form][inline_entity_form][title][0][value]');
-    $page->fillField('field_s_event_speaker[form][inline_entity_form][title][0][value]', $this->randomString());
+    $assert_session->waitForField('field_hs_event_speaker[form][inline_entity_form][title][0][value]');
+    $page->fillField('field_hs_event_speaker[form][inline_entity_form][title][0][value]', $this->randomString());
 
     $page->clickLink('Post Event Details');
 

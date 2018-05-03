@@ -78,7 +78,7 @@ class HsEventsTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($account);
 
-    $this->drupalGet('node/add/stanford_event');
+    $this->drupalGet('node/add/hs_event');
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains('Create Event');
 
@@ -89,18 +89,18 @@ class HsEventsTest extends BrowserTestBase {
     $time = round(time() / (15 * 60)) * (15 * 60);
 
     $date_fields = [
-      'field_s_event_date[0][value][month]' => date('n', $time),
-      'field_s_event_date[0][value][day]' => date('j', $time),
-      'field_s_event_date[0][value][year]' => date('Y', $time),
-      'field_s_event_date[0][value][hour]' => date('g', $time),
-      'field_s_event_date[0][value][minute]' => (int) date('i', $time),
-      'field_s_event_date[0][value][ampm]' => date('a', $time),
-      'field_s_event_date[0][end_value][month]' => '',
-      'field_s_event_date[0][end_value][day]' => '',
-      'field_s_event_date[0][end_value][year]' => '',
-      'field_s_event_date[0][end_value][hour]' => '',
-      'field_s_event_date[0][end_value][minute]' => '',
-      'field_s_event_date[0][end_value][ampm]' => '',
+      'field_hs_event_date[0][value][month]' => date('n', $time),
+      'field_hs_event_date[0][value][day]' => date('j', $time),
+      'field_hs_event_date[0][value][year]' => date('Y', $time),
+      'field_hs_event_date[0][value][hour]' => date('g', $time),
+      'field_hs_event_date[0][value][minute]' => (int) date('i', $time),
+      'field_hs_event_date[0][value][ampm]' => date('a', $time),
+      'field_hs_event_date[0][end_value][month]' => '',
+      'field_hs_event_date[0][end_value][day]' => '',
+      'field_hs_event_date[0][end_value][year]' => '',
+      'field_hs_event_date[0][end_value][hour]' => '',
+      'field_hs_event_date[0][end_value][minute]' => '',
+      'field_hs_event_date[0][end_value][ampm]' => '',
     ];
 
     foreach ($date_fields as $field => $value) {
@@ -108,14 +108,14 @@ class HsEventsTest extends BrowserTestBase {
     }
 
     // Tests the year is only a 20 year span
-    $assert_session->optionNotExists('field_s_event_date[0][value][year]', date('Y') - 11);
-    $assert_session->optionNotExists('field_s_event_date[0][value][year]', date('Y') + 11);
-    $assert_session->optionExists('field_s_event_date[0][value][year]', date('Y') - 10);
-    $assert_session->optionExists('field_s_event_date[0][value][year]', date('Y') + 10);
-    $assert_session->optionNotExists('field_s_event_date[0][end_value][year]', date('Y') - 11);
-    $assert_session->optionNotExists('field_s_event_date[0][end_value][year]', date('Y') + 11);
-    $assert_session->optionExists('field_s_event_date[0][end_value][year]', date('Y') - 10);
-    $assert_session->optionExists('field_s_event_date[0][end_value][year]', date('Y') + 10);
+    $assert_session->optionNotExists('field_hs_event_date[0][value][year]', date('Y') - 11);
+    $assert_session->optionNotExists('field_hs_event_date[0][value][year]', date('Y') + 11);
+    $assert_session->optionExists('field_hs_event_date[0][value][year]', date('Y') - 10);
+    $assert_session->optionExists('field_hs_event_date[0][value][year]', date('Y') + 10);
+    $assert_session->optionNotExists('field_hs_event_date[0][end_value][year]', date('Y') - 11);
+    $assert_session->optionNotExists('field_hs_event_date[0][end_value][year]', date('Y') + 11);
+    $assert_session->optionExists('field_hs_event_date[0][end_value][year]', date('Y') - 10);
+    $assert_session->optionExists('field_hs_event_date[0][end_value][year]', date('Y') + 10);
   }
 
 }

@@ -3,27 +3,27 @@ status: true
 dependencies:
   config:
     - entity_browser.browser.image_browser
-    - field.field.node.stanford_news_item.body
-    - field.field.node.stanford_news_item.field_news_image
-    - field.field.node.stanford_news_item.field_s_news_byline
-    - field.field.node.stanford_news_item.field_s_news_categories
-    - field.field.node.stanford_news_item.field_s_news_date
-    - field.field.node.stanford_news_item.field_s_news_link
-    - field.field.node.stanford_news_item.field_s_news_meta_tags
-    - node.type.stanford_news_item
+    - field.field.node.hs_news.body
+    - field.field.node.hs_news.field_hs_news_byline
+    - field.field.node.hs_news.field_hs_news_categories
+    - field.field.node.hs_news.field_hs_news_date
+    - field.field.node.hs_news.field_hs_news_image
+    - field.field.node.hs_news.field_hs_news_link
+    - node.type.hs_news
   module:
+    - datetime
     - entity_browser
     - link
     - path
     - text
-id: node.stanford_news_item.default
+id: node.hs_news.default
 targetEntityType: node
-bundle: stanford_news_item
+bundle: hs_news
 mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 2
+    weight: 3
     region: content
     settings:
       rows: 9
@@ -32,13 +32,36 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_news_image:
+  field_hs_news_byline:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_news_categories:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_news_date:
+    type: datetime_default
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_news_image:
     type: entity_browser_entity_reference
-    weight: 3
+    weight: 4
     region: content
     settings:
       entity_browser: image_browser
@@ -47,30 +70,13 @@ content:
       field_widget_remove: true
       selection_mode: selection_append
       field_widget_display_settings:
-        view_mode: default
+        view_mode: thumbnail
       field_widget_replace: false
       open: false
     third_party_settings: {  }
-  field_s_news_byline:
-    type: string_textfield
-    weight: 1
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_s_news_categories:
-    type: entity_reference_autocomplete
-    weight: 5
-    region: content
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  field_s_news_link:
+  field_hs_news_link:
     type: link_default
-    weight: 4
+    weight: 5
     region: content
     settings:
       placeholder_url: ''
@@ -78,7 +84,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 11
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -86,21 +92,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 9
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 12
+    weight: 13
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 9
+    weight: 10
     region: content
     third_party_settings: {  }
   title:
@@ -113,7 +119,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 6
+    weight: 7
     settings:
       match_operator: CONTAINS
       size: 60
@@ -121,10 +127,8 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 11
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_s_news_date: true
-  field_s_news_meta_tags: true
+hidden: {  }

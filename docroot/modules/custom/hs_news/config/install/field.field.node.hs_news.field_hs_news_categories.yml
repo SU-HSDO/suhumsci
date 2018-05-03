@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_s_news_categories
-    - node.type.stanford_news_item
-    - taxonomy.vocabulary.news_categories
-id: node.stanford_news_item.field_s_news_categories
-field_name: field_s_news_categories
+    - field.storage.node.field_hs_news_categories
+    - node.type.hs_news
+    - taxonomy.vocabulary.hs_news_categories
+id: node.hs_news.field_hs_news_categories
+field_name: field_hs_news_categories
 entity_type: node
-bundle: stanford_news_item
+bundle: hs_news
 label: Categories
 description: ''
 required: false
@@ -19,7 +19,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      news_categories: news_categories
+      hs_news_categories: hs_news_categories
     sort:
       field: name
       direction: asc

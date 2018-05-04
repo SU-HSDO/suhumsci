@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         }
       },
       css: {
-        files: ['scss/**/*.scss', 'patterns/**/**/scss/*.scss', 'examples/**/**/scss/*.scss'],
+        files: ['scss/**/*.scss', 'scss/**/**/*.scss','patterns/**/**/scss/*.scss'],
         tasks: ['sass'],
         options: {
           interrupt: true
@@ -107,8 +107,9 @@ module.exports = function(grunt) {
           // conditionally using logic built in to the theme template or module.
 
           // BASE
-          // 'css/base/base.css':  'scss/base/base.scss',
-          // 'css/ckeditor.css':   'scss/ckeditor.scss',
+          'css/base/archaeology.css':  'scss/base/archaeology.scss',
+          'css/base/base.css':         'scss/base/base.scss',
+          // 'css/ckeditor.css':          'scss/ckeditor.scss',
 
           // PATTERNS
 

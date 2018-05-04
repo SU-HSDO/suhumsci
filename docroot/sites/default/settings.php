@@ -301,7 +301,7 @@ $config_directories = [];
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
  */
-$settings['hash_salt'] = 'MysGGzsMmZRJEARZDi6g38mvP2Z7FNR8maQLXK_TyIVGmUVDuEA1HrX7XWq0IAx3xiTzHJbJlQ';
+$settings['hash_salt'] = '';
 
 /**
  * Deployment identifier.
@@ -879,14 +879,3 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] === 'pro
   $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
 }
 
-$databases['default']['default'] = array (
-  'database' => 'drupal8',
-  'username' => 'drupal8',
-  'password' => 'drupal8',
-  'prefix' => '',
-  'host' => 'database',
-  'port' => '3306',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-  'driver' => 'mysql',
-);
-$settings['install_profile'] = 'su_humsci_profile';

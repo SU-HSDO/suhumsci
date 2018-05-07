@@ -107,14 +107,16 @@ module.exports = function(grunt) {
           // conditionally using logic built in to the theme template or module.
 
           // BASE
-          'css/base/archaeology.css':  'scss/base/archaeology.scss',
-          'css/base/base.css':         'scss/base/base.scss',
-          // 'css/ckeditor.css':          'scss/ckeditor.scss',
+          'css/base/base.css':    'scss/base/base.scss',
+          // 'css/ckeditor.css':  'scss/ckeditor.scss',
 
           // PATTERNS
 
           // COMPONENTS
           'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
+
+          // CUSTOM PROJECTS
+          'css/custom/archaeology/archaeology.css': 'scss/custom/archaeology/archaeology.scss',
         }
       }
     },

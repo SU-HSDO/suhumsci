@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_slideshow_slides
+    - paragraphs.paragraphs_type.hs_slide
+    - paragraphs.paragraphs_type.hs_slideshow
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: y5wbeyIGvalihfYYvFBSr_MxiiisybvuKMkM0tmVhiU
+id: paragraph.hs_slideshow.field_hs_slideshow_slides
+field_name: field_hs_slideshow_slides
+entity_type: paragraph
+bundle: hs_slideshow
+label: Slides
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      hs_slide: hs_slide
+    target_bundles_drag_drop:
+      hs_cta_buttons:
+        weight: 6
+        enabled: false
+      hs_postcard:
+        weight: 7
+        enabled: false
+      hs_slide:
+        enabled: true
+        weight: 8
+      wysiwyg:
+        weight: 9
+        enabled: false
+      hs_slideshow:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

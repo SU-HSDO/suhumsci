@@ -66,13 +66,6 @@ class EventSubscriber implements EventSubscriberInterface {
   public function onLayoutBuilderRender(SectionComponentBuildRenderArrayEvent $event) {
     if ($event->getPlugin() instanceof MenuBlock) {
       $build = $event->getBuild();
-      // If there are no menu items in the menu block, set the build to an
-      // empty array so that the block label doens't get rendered.
-      if (empty($build['content']['#items'])) {
-        $event->setBuild([]);
-        return;
-      }
-
       $menu_name = $event->getPlugin()->getDerivativeId();
       $this->setMenuBlockLabel($build, $menu_name);
       $event->setBuild($build);

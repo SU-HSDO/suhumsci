@@ -1,0 +1,153 @@
+<?php
+
+/**
+ * @file
+ * hs_field_helpers.module
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Layout\LayoutDefinition;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_preprocess().
+ */
+function hs_field_helpers_preprocess(&$variables, $hook) {
+  // Each layout has its own preprocess hook. So we have to use generic hook.
+  if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
+
+    // This attribute exists when on the layout management page. We don't want
+    // to clean up the regions when on that page because it will break the UI.
+    if (!empty($variables['attributes']['data-layout-update-url'])) {
+      return;
+    }
+
+    foreach (Element::children($variables['content']) as $region) {
+
+      // Some blocks such as a menu block don't have any output, but the layout
+      // still outputs an empty container for the block that has no content.
+      // So lets find out if they are empty, and clean them up.
+      foreach (Element::children($variables['content'][$region]) as $item_id) {
+        if (empty($variables['content'][$region][$item_id]['#theme'])) {
+          unset($variables['content'][$region][$item_id]);
+        }
+      }
+
+      // Clean up empty regions after we've cleaned up the blocks in the region.
+      if (empty(Element::children($variables['content'][$region]))) {
+        unset($variables['content'][$region]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_field_helpers_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\field\Entity\FieldConfig $field_config */
+  $field_config = $form_state->getBuildInfo()['callback_object']->getEntity();
+  // Add an option to exclude views from the form. The module only has the
+  // "allowed views" option. This hides the allowed views and adds the excluded
+  // views.
+  if ($field_config->getType() == 'viewfield') {
+    $form['third_party_settings']['hs_field_helpers']['excluded_views'] = [
+      '#type' => 'checkboxes',
+      '#title' => t('Excluded views'),
+      '#options' => $form['settings']['allowed_views']['#options'],
+      '#default_value' => $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views') ?: [],
+    ];
+    $form['#validate'][] = 'hs_field_helpers_form_field_config_edit_form_validate';
+  }
+}
+
+/**
+ * Validation handler for field config edit form.
+ */
+function hs_field_helpers_form_field_config_edit_form_validate(&$form, FormStateInterface $form_state) {
+  if ($excluded_views = &$form_state->getValue([
+    'third_party_settings',
+    'hs_field_helpers',
+    'excluded_views',
+  ])) {
+    // Remove keys on the values to make the config cleaner.
+    $excluded_views = array_filter(array_values($excluded_views));
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  /** @var \Drupal\Core\Field\WidgetBaseInterface $widget */
+  $widget = $context['widget'];
+
+  switch ($widget->getPluginId()) {
+    case 'viewfield_select':
+      /** @var \Drupal\field\Entity\FieldConfig $field_config */
+      $field_config = $context['items']->getFieldDefinition();
+      // Strip the view options as defined by the exclude views settings.
+      // @see hs_field_helpers_form_field_config_edit_form_alter().
+      if ($excluded_views = $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views')) {
+        $element['target_id']['#options'] = array_diff_key($element['target_id']['#options'], array_flip($excluded_views));
+      }
+      break;
+
+    case 'daterange_datelist':
+      // To simulate the same field functionality as we had in D7, we need to
+      // add a checkbox and validation handlers.
+      // Adds wrappers so we can easily find the parts with jQuery.
+      $element['value']['#prefix'] = '<div class="start-date">';
+      $element['value']['#suffix'] = '</div>';
+      $element['end_value']['#prefix'] = '<div class="end-date">';
+      $element['end_value']['#suffix'] = '</div>';
+
+      $show_end = FALSE;
+
+      // Compare start and end dates to determine default checkbox value.
+      if (!empty($element['value']['#default_value']) && !empty($element['end_value']['#default_value'])) {
+        /** @var \DateInterval $diff */
+        $diff = $element['value']['#default_value']->diff($element['end_value']['#default_value']);
+        $show_end = (bool) (int) $diff->format('%Y%M%D%H%I%S');
+      }
+
+      $element['show_end'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Show End Date'),
+        '#default_value' => $show_end,
+        '#attributes' => ['class' => ['show-end-date']],
+      ];
+
+      $element['#attached']['library'][] = 'hs_field_helpers/admin';
+      array_unshift($element['#element_validate'], 'hs_field_helpers_node_validate_date');
+
+      break;
+  }
+}
+
+/**
+ * Validation for event dates in nodes form.
+ */
+function hs_field_helpers_node_validate_date(array &$element, FormStateInterface $form_state) {
+  $date = $form_state->getValue('field_hs_event_date');
+
+  // If the start value is populated but end is empty, copy the start date
+  // to the end date to pass validation.
+  if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
+    $date[0]['end_value'] = $date[0]['value'];
+    $element['end_value']['#value']['object'] = $date[0]['end_value'];
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+    $form_state->setValue('field_hs_event_date', $date);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view_pattern().
+ */
+function hs_field_helpers_preprocess_views_view_pattern(&$variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  $pattern = $view->style_plugin->options['pattern'];
+  $variables['pattern'] = $pattern;
+}

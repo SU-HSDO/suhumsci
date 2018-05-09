@@ -3,9 +3,7 @@
 //
 // Hover Main Menu
 //
-
-@import
-  'decanter-no-markup';
+@import 'decanter-no-markup';
 
 // Styles for no JavaScript
 // Fallback styles, which are also applied to the page when
@@ -13,7 +11,7 @@
 #menu-region {
   .decanter-main-menu--hover-reveal {
     .no-js & {
-      .fa {
+      .fas {
         display: none;
       }
     }
@@ -53,14 +51,15 @@
 
 // Main menu in header region
 #menu-region {
-  .fa {
-    font: normal normal normal 14px/1 FontAwesome;
+  .fa:before, .far:before, .fas:before {
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
   }
 
   .js & {
     .decanter-main-menu--hover-reveal {
       @include media($medium-screen) {
-        .fa {
+        .fa, .far, .fas {
           display: none;
         }
 
@@ -87,7 +86,6 @@
               @include media($medium-screen) {
                 background: none;
               }
-
 
               &.ui-widget {
                 border: none;
@@ -146,7 +144,8 @@
           }
 
           .decanter-nav-submenu {
-            .menu-item a {
+            .menu-item a,
+            .menu-item span {
               border-bottom: none;
               color: $color-white;
 
@@ -156,7 +155,6 @@
               @include media($medium-screen) {
                 @include margin(0 0 10px 0);
               }
-
 
               &:hover {
                 background-color: transparent;
@@ -237,7 +235,7 @@
           @include padding(0.2em null null 0.75em);
         }
 
-        a {
+        a, span {
           color: $color-white;
           border: 0;
 
@@ -273,7 +271,6 @@
     @include media(max-width $medium-screen) {
       display: none;
     }
-
 
     h2#menu-blockmain-menu {
       @include margin(0 null null);

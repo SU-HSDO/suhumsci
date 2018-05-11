@@ -1,0 +1,76 @@
+@charset "UTF-8";
+
+//
+// Search
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+.search-block-form {
+  form {
+    display: inline-block;
+    float: right;
+    position: relative;
+
+    &.expanded {
+      input.button {
+        z-index: 999;
+      }
+
+      input.form-search {
+        background: transparent;
+        width: 145px;
+      }
+    }
+  }
+
+  input {
+    &.button {
+      display: block;
+      position: absolute;
+      background: url("../../img/search.svg") no-repeat;
+      background-size: 45px 45px;
+      top: 5px;
+      right: 5px;
+      border: 0;
+      font-size: 0;
+      width: 45px;
+      height: 45px;
+      z-index: -999;
+    }
+
+    &.form-search {
+      background: url("../../img/search.svg") no-repeat center center;
+      background-size: 45px 45px;
+      -webkit-transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
+      transition: width 0.6s, border-radius 0.6s, background 0.6s, box-shadow 0.6s;
+      width: 0;
+      height: auto;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 0 1.5px $color-bright-red;
+
+      @include padding(null 35px null null);
+
+      .user-is-tabbing &:hover,
+      .user-is-tabbing &:focus {
+        box-shadow: 0 0 0 2px $color-bright-red;
+        border: none;
+      }
+
+      .user-is-tabbing &:focus {
+        background: url("../../img/search.svg") no-repeat 160px center;
+        background-size: 45px 45px;
+        -webkit-transition: width 0.6s, border-radius 0.6s, background 0.6s;
+        transition: width 0.6s, border-radius 0.6s, background 0.6s;
+        cursor: text;
+        width: 145px;
+
+        @include padding(null 50px null 15px);
+      }
+    }
+  }
+}

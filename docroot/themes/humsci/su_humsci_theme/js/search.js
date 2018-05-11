@@ -2,7 +2,7 @@
   'use strict';
   Drupal.behaviors.suHumSciTheme = {
     attach: function(context, settings) {
-      $('#block-searchform input[type=search]').focus(function() {
+      $('.search-block-form input[type=search]').focus(function() {
         $(this).closest('form').addClass('expanded');
       }).blur(function() {
         var $this = $(this);

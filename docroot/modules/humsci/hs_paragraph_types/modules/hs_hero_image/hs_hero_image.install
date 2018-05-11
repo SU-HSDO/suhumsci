@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * hs_hero_image.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_hero_image_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_hero_image_display']);
+  }
+  catch (Exception $e) {
+    \Drupal::messenger()->addError(t('Unable to set initial display settings for Hero Image'));
+  }
+
+  $module_installer->uninstall(['hs_hero_image_display']);
+}

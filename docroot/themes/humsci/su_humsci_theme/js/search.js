@@ -10,7 +10,7 @@
           if (!$this.closest('form').find('input[type=submit]').is(':focus')) {
             $this.closest('form').removeClass('expanded');
           }
-        }, 50);
+        }, 200);
       });
 
       function handleFirstTab(e) {

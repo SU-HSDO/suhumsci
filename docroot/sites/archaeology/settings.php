@@ -1,3 +1,3 @@
 <?php
 
-include '../default/settings.php';
+require '../default/settings.php';

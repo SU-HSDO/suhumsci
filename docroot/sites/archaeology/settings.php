@@ -1,3 +1,3 @@
 <?php
 
-require '../default/settings.php';
+require DRUPAL_ROOT . "/sites/default/settings.php";

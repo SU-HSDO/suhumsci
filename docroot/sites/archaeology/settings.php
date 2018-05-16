@@ -776,7 +776,7 @@ $settings['file_scan_ignore_directories'] = [
 $settings['entity_update_batch_size'] = 50;
 
 if (file_exists($app_root . '/default/settings.php')) {
-  include $app_root . '/default/settings.local.php';
+  include $app_root . '/default/settings.php';
 }
 
 /**

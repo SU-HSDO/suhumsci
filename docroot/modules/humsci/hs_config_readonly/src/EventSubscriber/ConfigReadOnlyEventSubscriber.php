@@ -27,21 +27,29 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   use ConfigReadonlyWhitelistTrait;
 
   /**
+   * Installed configuration service.
+   *
    * @var \Drupal\Core\Config\ExtensionInstallStorage
    */
   protected $extensionConfigStorage;
 
   /**
+   * Optional configuration service.
+   *
    * @var \Drupal\Core\Config\ExtensionInstallStorage
    */
   protected $extensionOptionalConfigStorage;
 
   /**
+   * Ignore the configurations form these modules.
+   *
    * @var array
    */
   protected $excludedModules = ['system'];
 
   /**
+   * Root path of Drupal.
+   *
    * @var string
    */
   protected $drupalRoot;
@@ -54,13 +62,6 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     'system_modules',
     'system_modules_uninstall',
     'user_admin_permissions',
-  ];
-
-  /**
-   * Form ids to skip marking as read only.
-   */
-  protected $formIdExceptions = [
-    'search_form',
   ];
 
   /**

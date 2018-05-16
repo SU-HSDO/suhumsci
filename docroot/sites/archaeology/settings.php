@@ -383,7 +383,7 @@ $settings['update_free_access'] = FALSE;
  * Specify every reverse proxy IP address in your environment.
  * This setting is required if $settings['reverse_proxy'] is TRUE.
  */
-# $settings['reverse_proxy_addresses'] = ['a.b.c.d', ...];
+# $settings['reverse_proxy_addresses'] = array('a.b.c.d', ...);
 
 /**
  * Set this value if your proxy server sends the client IP in a header
@@ -432,6 +432,7 @@ $settings['update_free_access'] = FALSE;
  * getting cached pages from the proxy.
  */
 # $settings['omit_vary_cookie'] = TRUE;
+
 
 /**
  * Cache TTL for client error (4xx) responses.
@@ -576,10 +577,10 @@ if ($settings['hash_salt']) {
  * The "en" part of the variable name, is dynamic and can be any langcode of
  * any added language. (eg locale_custom_strings_de for german).
  */
-# $settings['locale_custom_strings_en'][''] = [
+# $settings['locale_custom_strings_en'][''] = array(
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
-# ];
+# );
 
 /**
  * A custom theme for the offline page:
@@ -633,7 +634,7 @@ if ($settings['hash_salt']) {
  *   override in a services.yml file in the same directory as settings.php
  *   (definitions in this file will override service definition defaults).
  */
-# $settings['bootstrap_config_storage'] = ['Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage'];
+# $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
 
 /**
  * Configuration overrides.
@@ -775,10 +776,6 @@ $settings['file_scan_ignore_directories'] = [
  */
 $settings['entity_update_batch_size'] = 50;
 
-if (file_exists($app_root . '/default/settings.php')) {
-  include $app_root . '/default/settings.php';
-}
-
 /**
  * Load local development override configuration, if available.
  *
@@ -793,4 +790,98 @@ if (file_exists($app_root . '/default/settings.php')) {
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-$settings['install_profile'] = 'su_humsci_profile';
+
+if (file_exists('/var/www/site-php')) {
+  require '/var/www/site-php/swshumsci/swshumsci-settings.inc';
+}
+
+require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
+
+// SimpleSAMLphp configuration
+// Provide universal absolute path to the installation.
+if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {
+  $settings['simplesamlphp_dir'] = '/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp';
+}
+else {
+  // Local SAML path.
+  if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
+    $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
+  }
+}
+
+if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] == 'prod') {
+  $config['system.file']['path']['temporary'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/tmp";
+}
+else {
+  $config['system.file']['path']['temporary'] = sys_get_temp_dir();
+}
+
+$config['simplesamlphp_auth.settings'] = [
+  'langcode' => 'en',
+  'default_langcode' => 'en',
+  'activate' => TRUE,
+  'mail_attr' => 'eduPersonPrincipalName',
+  'unique_id' => 'uid',
+  'user_name' => 'displayName',
+  'auth_source' => 'default-sp',
+  'login_link_display_name' => 'Stanford Login',
+  'header_no_cache' => 1,
+  'logout_goto_url' => NULL,
+  'user_register_original' => 'visitors',
+  'register_users' => TRUE,
+  'autoenablesaml' => TRUE,
+  'debug' => TRUE,
+  'secure' => FALSE,
+  'httponly' => FALSE,
+  'role' => [
+    'population' => 'administrator:suAffiliation,=,hsdo:web|administrator:suAffiliation,=,itservices:webservices',
+    'eval_every_time' => FALSE,
+  ],
+  'allow' => [
+    'set_drupal_pwd' => TRUE,
+    'default_login' => TRUE,
+    'default_login_roles' => [],
+    'default_login_users' => '1',
+  ],
+  'sync' => [
+    'mail' => TRUE,
+    'user_name' => TRUE,
+  ],
+];
+
+$config['environment_indicator.indicator']['bg_color'] = '#086601';
+$config['environment_indicator.indicator']['fg_color'] = '#fff';
+$config['environment_indicator.indicator']['name'] = 'Local';
+
+if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
+    case 'dev':
+      $config['environment_indicator.indicator']['bg_color'] = '#6B0500';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = 'Development';
+      break;
+    case 'test':
+      $config['environment_indicator.indicator']['bg_color'] = '#4127C2';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = 'Staging';
+      break;
+    case 'prod':
+      $config['environment_indicator.indicator']['bg_color'] = '#000';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = 'Production';
+      break;
+    default:
+      $config['environment_indicator.indicator']['bg_color'] = '#086601';
+      $config['environment_indicator.indicator']['fg_color'] = '#fff';
+      $config['environment_indicator.indicator']['name'] = $_ENV['AH_SITE_ENVIRONMENT'];
+      break;
+  }
+}
+
+if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] === 'prod') {
+  if (PHP_SAPI !== 'cli') {
+    // Don't lock config when using drush.
+    $settings['config_readonly'] = TRUE;
+  }
+  $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
+}

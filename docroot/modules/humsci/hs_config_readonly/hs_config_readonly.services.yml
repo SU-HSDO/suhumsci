@@ -1,5 +1,14 @@
 services:
-  hs_config_readonly.config_readonly_subscriber:
+  hs_config_readonly.extension_storage:
+    class: Drupal\Core\Config\ExtensionInstallStorage
+    arguments: ['@config.storage']
+
+  hs_config_readonly.extension_optional_storage:
+    class: Drupal\Core\Config\ExtensionInstallStorage
+    arguments: ['@config.storage', 'config/optional']
+
+  hs_config_readonly.form_subscribe:
     class: Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
-    tags:
-      - { name: event_subscriber }
+    decorates: config_readonly_form_subscriber
+    public: false
+    arguments: ['@app.root', '@module_handler', '@hs_config_readonly.extension_storage', '@hs_config_readonly.extension_optional_storage']

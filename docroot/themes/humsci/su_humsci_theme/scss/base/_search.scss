@@ -26,25 +26,14 @@
     }
   }
 
-  .js-form-type-search:after {
-    content: '';
-    background: url("../../img/search.svg") no-repeat;
-    position: absolute;
-    height: 45px;
-    width: 45px;
-    z-index: 9999;
-    right: 3px;
-    top: 20px;
-    pointer-events: none;
-  }
-
   input {
     &.button {
       display: block;
       position: absolute;
-      background: transparent;
+      background: url("../../img/search.svg") no-repeat;
+      background-size: 45px 45px;
       top: 21px;
-      right: 2px;
+      right: 1px;
       border: 0;
       font-size: 0;
       width: 45px;
@@ -53,7 +42,9 @@
     }
 
     &.form-search {
+      background: url("../../img/search.svg") no-repeat center right;
       background-color: $color-white;
+      background-size: 45px 45px;
       -webkit-transition: width 0.6s, border-radius 0.6s, background 0s, box-shadow 0.6s;
       transition: width 0.6s, border-radius 0.6s, background 0s, box-shadow 0.6s;
       width: 0;
@@ -63,7 +54,7 @@
       cursor: pointer;
       box-shadow: 0 0 0 1.5px $color-bright-red;
 
-      @include padding(null 35px null null);
+      @include padding(null 32px null null);
 
       .user-is-tabbing &:hover,
       .user-is-tabbing &:focus {
@@ -72,8 +63,7 @@
       }
 
       .user-is-tabbing &:focus {
-        -webkit-transition: width 0.6s, border-radius 0.6s, background 0s;
-        transition: width 0.6s, border-radius 0.6s, background 0s;
+        background-size: 45px 45px;
         cursor: text;
         width: 145px;
 

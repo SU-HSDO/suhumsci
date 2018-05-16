@@ -107,7 +107,7 @@ module.exports = function(grunt) {
           // conditionally using logic built in to the theme template or module.
 
           // BASE
-          'css/base/base.css':    'scss/base/base.scss',
+          'css/base/index.css':   'scss/base/index.scss',
           // 'css/ckeditor.css':  'scss/ckeditor.scss',
 
           // PATTERNS

@@ -141,3 +141,13 @@ function hs_field_helpers_node_validate_date(array &$element, FormStateInterface
     $form_state->setValue('field_hs_event_date', $date);
   }
 }
+
+/**
+ * Implements hook_preprocess_views_view_pattern().
+ */
+function hs_field_helpers_preprocess_views_view_pattern(&$variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  $pattern = $view->style_plugin->options['pattern'];
+  $variables['pattern'] = $pattern;
+}

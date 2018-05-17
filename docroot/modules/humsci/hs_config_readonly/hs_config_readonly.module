@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * hs_config_readonly.module
+ */
+
+/**
+ * Implements hook_config_readonly_whitelist_patterns().
+ */
+function hs_config_readonly_config_readonly_whitelist_patterns() {
+  // Lets whitelist everything because in our event subscriber we have the
+  // ability to change hose the forms are locked.
+  return ['*'];
+}

@@ -4,6 +4,7 @@ namespace Drupal\hs_config_readonly\EventSubscriber;
 
 use Drupal\config_readonly\ConfigReadonlyWhitelistTrait;
 use Drupal\config_readonly\ReadOnlyFormEvent;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ExtensionInstallStorage;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -67,13 +68,32 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($drupal_root, ModuleHandlerInterface $module_handler, ExtensionInstallStorage $extension_config_storage, ExtensionInstallStorage $extension_optional_config_storage) {
+  public function __construct($drupal_root, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, ExtensionInstallStorage $extension_config_storage, ExtensionInstallStorage $extension_optional_config_storage) {
     $this->drupalRoot = $drupal_root;
     $this->moduleHandler = $module_handler;
+    $this->excludedModules = $config_factory->get('hs_config_readonly')
+      ->get('excluded_modules') ?: $this->excludedModules;
     $this->extensionConfigStorage = $extension_config_storage;
     $this->extensionOptionalConfigStorage = $extension_optional_config_storage;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents() {
+    $events = [];
+    $events[ReadOnlyFormEvent::NAME][] = ['onFormAlter', 200];
+    return $events;
+  }
+
+  /**
+   * Mark the event form as read only given config conditions.
+   *
+   * @param \Drupal\config_readonly\ReadOnlyFormEvent $event
+   *   The triggered event.
+   *
+   * @throws \ReflectionException
+   */
   public function onFormAlter(ReadOnlyFormEvent $event) {
     // Check if the form is a ConfigFormBase or a ConfigEntityListBuilder.
     $form_object = $event->getFormState()->getFormObject();
@@ -96,32 +116,25 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
       $name = $entity->getConfigDependencyName();
 
       // Block config from a module.
-      $mark_form_read_only = $this->configIsEditable([$name]);
-
-      // Unless its defined as a whiteist pattern.
-      if ($this->matchesWhitelistPattern($name)) {
-        $mark_form_read_only = FALSE;
-      }
+      $mark_form_read_only = $this->configIsLocked($name);
+      // If all config is in the whitelist, do not block the form.
+      $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
     }
 
     // Config forms.
     if ($mark_form_read_only && $form_object instanceof ConfigFormBase) {
-      $editable_config = $this->getEditableConfigNames($form_object);
-      $mark_form_read_only = $this->configIsEditable($editable_config);
+      $names = $this->getEditableConfigNames($form_object);
+      $mark_form_read_only = $this->configIsLocked($names);
+
+      // If all configs are in the whitelist, do not block the form.
+      if ($names == array_filter($names, [$this, 'matchesWhitelistPattern'])) {
+        $mark_form_read_only = FALSE;
+      }
     }
 
     if ($mark_form_read_only) {
       $event->markFormReadOnly();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getSubscribedEvents() {
-    $events = [];
-    $events[ReadOnlyFormEvent::NAME][] = ['onFormAlter', 200];
-    return $events;
   }
 
   /**
@@ -140,6 +153,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     // Use reflection to work around getEditableConfigNames() as protected.
     // @todo Review in 9.x for API change.
     // @see https://www.drupal.org/node/2095289
+    // @see \Drupal\config_readonly\EventSubscriber\ReadOnlyFormSubscriber::getEditableConfigNames()
     $reflection = new \ReflectionMethod(get_class($form), 'getEditableConfigNames');
     $reflection->setAccessible(TRUE);
     return $reflection->invoke($form);
@@ -148,31 +162,16 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   /**
    * Check if the given configuration name can be edited.
    *
-   * @param array $config
+   * @param array|string $config
    *   Array of config names.
    *
    * @return bool
    *   If it can be edited.
    */
-  protected function configIsEditable(array $config) {
-    if ($config == array_filter($config, [$this, 'isEditableConfig'])) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * @param $name
-   *
-   * @return bool
-   */
-  protected function isEditableConfig($name) {
-    foreach ($this->getLockedConfigs() as $config) {
-      if ($config == $name) {
-        return FALSE;
-      }
-    }
-    return TRUE;
+  protected function configIsLocked($config) {
+    $config = is_array($config) ? $config : [$config];
+    $locked_config = $this->getLockedConfigs();
+    return !empty(array_intersect($config, $locked_config));
   }
 
   /**
@@ -184,7 +183,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   protected function getLockedConfigs() {
     $module_configs = [];
     foreach ($this->moduleHandler->getModuleList() as $name => $extension) {
-      if ($extension->getType() == 'profile' || in_array($name, $this->excludedModules)) {
+      if (in_array($name, $this->excludedModules)) {
         continue;
       }
 
@@ -217,6 +216,35 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
       $names = $this->extensionConfigStorage->getComponentNames([$component]);
     }
     return array_keys($names);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function matchesWhitelistPattern($name) {
+    // Check for matches.
+    $patterns = $this->getWhitelistPatterns();
+    if ($patterns) {
+      foreach ($patterns as $pattern) {
+
+        // We defined the pattern `*` in the hook to allow config to be changed
+        // when the ConfigReadonlyStorage is executed. But for locking down
+        // forms, we don't want to whitelist everything. This still gives us
+        // the ability to whitelist specific configs via the hook.
+        //
+        // @see \Drupal\config_readonly\Config\ConfigReadonlyStorage::checkLock()
+        // @see hs_config_readonly_config_readonly_whitelist_patterns().
+        if ($pattern == '*') {
+          continue;
+        }
+
+        $escaped = str_replace('\*', '.*', preg_quote($pattern, '/'));
+        if (preg_match('/^' . $escaped . '$/', $name)) {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }

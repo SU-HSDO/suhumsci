@@ -27,11 +27,7 @@ repo_type="$6"
 #cd $repo_root
 #
 #
-#drush updb -y;
-#drush cr;
-#
-#if [[ $target_env = *"ode"* ]]; then
-#  drush pmu simplesamlphp_auth
-#fi
+#drush --root=/var/www/html/[site].[target_env]/docroot @sites updatedb --yes
+#drush --root=/var/www/html/[site].[target_env]/docroot @sites cr
 
 set +v

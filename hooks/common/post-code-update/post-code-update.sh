@@ -27,19 +27,7 @@ repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-echo "site: $site"
-echo "target_env: $target_env"
-echo "source_branch: $source_branch"
-echo "deployed_tag: $deployed_tag"
-echo "repo_url: $repo_url"
-echo "repo_type: $repo_type"
-
-
-drush updb -y;
-drush cr;
-
-if [[ $target_env = *"ode"* ]]; then
-  drush pmu simplesamlphp_auth
-fi
+drush --root=/var/www/html/[site].[target_env]/docroot @sites updatedb --yes
+drush --root=/var/www/html/[site].[target_env]/docroot @sites cr
 
 set +v

@@ -790,10 +790,6 @@ $settings['entity_update_batch_size'] = 50;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 
-if (file_exists('/var/www/site-php')) {
-  require '/var/www/site-php/swshumsci/swshumsci-settings.inc';
-}
-
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
 
 // SimpleSAMLphp configuration

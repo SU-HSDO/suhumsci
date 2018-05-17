@@ -199,17 +199,17 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
    *
    * @param string $name
    *   Machine name of extension.
-   * @param bool $do_optional
+   * @param bool $only_optional
    *   FALSE (default) to list config/install items, TRUE to list
    *   config/optional items.
    *
    * @return string[]
    *   List of config items provided by this extension.
    */
-  protected function listProvidedItems($name, $do_optional = FALSE) {
+  protected function listProvidedItems($name, $only_optional = FALSE) {
     $pathname = drupal_get_filename('module', $name);
     $component = new Extension($this->drupalRoot, 'module', $pathname);
-    if ($do_optional) {
+    if ($only_optional) {
       $names = $this->extensionOptionalConfigStorage->getComponentNames([$component]);
     }
     else {

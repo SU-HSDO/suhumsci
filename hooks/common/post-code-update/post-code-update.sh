@@ -15,6 +15,6 @@
 
 set -ev
 
-../update-db.sh $1 $2 $3 $4 $5 $6
+././../update-db.sh $1 $2 $3 $4 $5 $6
 
 set +v

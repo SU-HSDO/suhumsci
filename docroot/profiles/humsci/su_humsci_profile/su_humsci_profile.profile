@@ -9,5 +9,5 @@
  * Implements hook_install_tasks_alter().
  */
 function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
-  $tasks['install_configure_form']['function'] = 'Drupal\\su_humsci_profile\\Form\\SiteConfigureForm';
+  $tasks['install_finished']['function'] = 'su_humsci_profile_lock_config';
 }

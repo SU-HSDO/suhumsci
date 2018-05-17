@@ -10,7 +10,6 @@ $config = [
     'core:AdminPassword',
   ],
 
-
   // An authentication source which can authenticate against both SAML 2.0
   // and Shibboleth 1.3 IdPs.
   'default-sp' => [
@@ -18,15 +17,18 @@ $config = [
 
     // The entity ID of this SP.
     // Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
-    'entityID' => NULL,
+    'entityID' => 'https://swshumsci.stanford.edu',
 
     // The entity ID of the IdP this should SP should contact.
     // Can be NULL/unset, in which case the user will be shown a list of available IdPs.
-    'idp' => NULL,
+    'idp' => 'https://idp.stanford.edu/',
 
     // The URL to the discovery service.
     // Can be NULL/unset, in which case a builtin discovery service will be used.
     'discoURL' => NULL,
+
+    'privatekey' => '/home/swshumsci/saml/saml.pem',
+    'certificate' => '/home/swshumsci/saml/saml.crt'
 
     /*
      * WARNING: SHA-1 is disallowed starting January the 1st, 2014.
@@ -67,7 +69,6 @@ $config = [
         'urn:oid:x.x.x.x',
     ),*/
   ],
-
 
   /*
   'example-sql' => array(
@@ -193,7 +194,6 @@ $config = [
       'authpapi:PAPI',
   ),
   */
-
 
   /*
   'facebook' => array(

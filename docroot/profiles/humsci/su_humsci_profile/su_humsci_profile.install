@@ -47,3 +47,12 @@ function su_humsci_profile_install() {
   user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['search content']);
   user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['search content']);
 }
+
+/**
+ * Enables config readonly module after profile finishes.
+ */
+function su_humsci_profile_lock_config(&$install_state){
+  install_finished($install_state);
+  // todo enable custom config readonly module when available.
+//  \Drupal::service('module_installer')->install(['config_readonly']);
+}

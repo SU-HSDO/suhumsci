@@ -21,13 +21,11 @@ class SiteConfigureForm extends CoreSiteConfigureForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $email = 'test@test.com';
-    $password = uniqid();
     // TODO change these to desired settings.
     $form['site_information']['site_name']['#default_value'] = $this->t('SWS HumSci');
     $form['site_information']['site_mail']['#default_value'] = $email;
     $form['admin_account']['account']['mail']['#default_value'] = $email;
     $form['admin_account']['account']['name']['#default_value'] = 'swsadmin';
-    $form['admin_account']['account']['pass']['#default_value'] = $password;
     return $form;
   }
 

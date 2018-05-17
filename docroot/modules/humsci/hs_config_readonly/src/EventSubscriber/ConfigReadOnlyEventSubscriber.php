@@ -205,6 +205,8 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
    *
    * @return string[]
    *   List of config items provided by this extension.
+   *
+   * @see \Drupal\config_update\ConfigLister::listProvidedItems().
    */
   protected function listProvidedItems($name, $only_optional = FALSE) {
     $pathname = drupal_get_filename('module', $name);

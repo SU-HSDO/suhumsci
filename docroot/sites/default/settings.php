@@ -433,7 +433,6 @@ $settings['update_free_access'] = FALSE;
  */
 # $settings['omit_vary_cookie'] = TRUE;
 
-
 /**
  * Cache TTL for client error (4xx) responses.
  *
@@ -790,8 +789,8 @@ $settings['entity_update_batch_size'] = 50;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
 
+require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
 
 // SimpleSAMLphp configuration
 // Provide universal absolute path to the installation.
@@ -874,11 +873,15 @@ if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRO
   }
 }
 
-if (isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] === 'prod') {
+if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   if (PHP_SAPI !== 'cli') {
     // Don't lock config when using drush.
     $settings['config_readonly'] = TRUE;
   }
-  $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
+
+  // Set sync directory for production environments.
+  if ($_ENV['AH_SITE_ENVIRONMENT'] === 'prod') {
+    $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
+  }
 }
 

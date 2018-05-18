@@ -8,3 +8,7 @@
  */
 
 
+// Load file on acquia server.
+if (file_exists('/home/swshumsci/saml/saml20-idp-remote.php')) {
+  include_once '/home/swshumsci/saml/saml20-idp-remote.php';
+}

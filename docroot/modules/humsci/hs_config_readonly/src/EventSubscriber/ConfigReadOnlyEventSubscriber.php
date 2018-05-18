@@ -71,10 +71,12 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   public function __construct($drupal_root, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, ExtensionInstallStorage $extension_config_storage, ExtensionInstallStorage $extension_optional_config_storage) {
     $this->drupalRoot = $drupal_root;
     $this->moduleHandler = $module_handler;
-    $this->excludedModules = $config_factory->get('hs_config_readonly')
-      ->get('excluded_modules') ?: $this->excludedModules;
     $this->extensionConfigStorage = $extension_config_storage;
     $this->extensionOptionalConfigStorage = $extension_optional_config_storage;
+
+    $config = $config_factory->get('hs_config_readonly.settings');
+    $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
+    $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;
   }
 
   /**

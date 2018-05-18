@@ -1,9 +1,113 @@
-@import 'decanter-no-markup';
+@charset "UTF-8";
 
-header.header-wrapper {
-  background: $color-cardinal-red;
+//
+// Base
+// Overrides for the Matertial Design Admin theme.
+//
+
+@import
+  'decanter-no-markup';
+
+// Alerts.
+.messages.messages--warning,
+.messages.messages--warning .card,
+.toast.messages--warning,
+.badge.messages--warning,
+span.messages--warning.marker {
+  background-color: $color-sun !important;
 }
 
+.messages-clone.messages--warning .card-content {
+  border-color: $color-sun !important;
+
+  .message-header .card-title::before {
+    color: $color-sun;
+  }
+}
+
+// Breadcrumbs.
 .breadcrumb-section-wrapper {
+  background: $color-cool-grey;
+
+  .breadcrumb-nav ol li {
+    color: $color-white;
+
+    a,
+    &:before {
+      color: $color-white;
+    }
+  }
+}
+
+// Global.
+body {
+  font-family: $font-sans;
+}
+
+// Header.
+header.header-wrapper {
   background: $color-bright-red;
+}
+
+// Inputs.
+input:not([type]):focus:not([readonly]),
+input[type=text]:not(.browser-default):focus:not([readonly]),
+input[type=password]:not(.browser-default):focus:not([readonly]),
+input[type=email]:not(.browser-default):focus:not([readonly]),
+input[type=url]:not(.browser-default):focus:not([readonly]),
+input[type=time]:not(.browser-default):focus:not([readonly]),
+input[type=date]:not(.browser-default):focus:not([readonly]),
+input[type=datetime]:not(.browser-default):focus:not([readonly]),
+input[type=datetime-local]:not(.browser-default):focus:not([readonly]),
+input[type=tel]:not(.browser-default):focus:not([readonly]),
+input[type=number]:not(.browser-default):focus:not([readonly]),
+input[type=search]:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid $color-bright-red;
+  box-shadow: 0 1px 0 0 $color-bright-red;
+}
+
+[type="checkbox"].filled-in:checked + label:after,
+input[type="checkbox"][type='checkbox']:checked + label:after {
+  border: 2px solid $color-bright-red;
+  background-color: $color-bright-red;
+}
+
+textarea.materialize-textarea:focus {
+  border: 1px solid $color-bright-red;
+}
+
+// Links.
+a {
+  color: $color-bright-red;
+  &:hover,
+  &focus {
+    color: $color-black;
+  }
+  .card-action & {
+    color: $color-bright-red;
+    &:hover,
+    &:focus {
+      color: $color-black;
+    }
+  }
+}
+.btn-paragraph-action {
+  color: $color-bright-red;
+
+  &:hover,
+  &focus {
+    color: $color-black;
+  }
+}
+
+.btn,
+.button-action,
+.btn-floating {
+  background: $color-bright-red;
+
+  &:hover,
+  &:focus {
+    background: $color-cool-grey;
+  }
 }

@@ -1,0 +1,26 @@
+{% if content.left_sidebar and content.right_sidebar %}
+  {% set main_class = 'decanter-width-one-half' %}
+{% elseif content.left_sidebar or content.right_sidebar %}
+  {% set main_class = 'decanter-width-three-fourths' %}
+{% endif %}
+
+{% set attributes = attributes.addClass([settings.section_width, 'clearfix', 'three-column']) %}
+
+<div{{ attributes }}>
+  {% if content.left_sidebar %}
+    <div class="decanter-width-one-fourth region">
+      {{ content.left_sidebar }}
+    </div>
+  {% endif %}
+
+
+  <div class="{{ main_class }} region">
+    {{ content.main }}
+  </div>
+
+  {% if content.right_sidebar %}
+    <div class="decanter-width-one-fourth region">
+      {{ content.right_sidebar }}
+    </div>
+  {% endif %}
+</div>

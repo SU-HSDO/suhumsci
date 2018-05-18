@@ -21,8 +21,8 @@ dependencies:
     - node.type.hs_event
     - system.menu.main
   module:
+    - hs_layouts
     - layout_builder
-    - layout_discovery
     - menu_block
     - user
 third_party_settings:
@@ -31,12 +31,13 @@ third_party_settings:
     allow_custom: false
     sections:
       -
-        layout_id: layout_threecol_25_50_25
-        layout_settings: {  }
+        layout_id: three_column_w_image
+        layout_settings:
+          section_width: decanter-grid
         components:
-          c2d44931-5a53-4b66-8765-331beeb1664f:
-            uuid: c2d44931-5a53-4b66-8765-331beeb1664f
-            region: top
+          17c03c95-9c3b-41b3-a2a7-9c2e6e508847:
+            uuid: 17c03c95-9c3b-41b3-a2a7-9c2e6e508847
+            region: image
             configuration:
               id: 'field_block:node:hs_event:field_hs_event_image'
               label: Image
@@ -44,38 +45,19 @@ third_party_settings:
               label_display: '0'
               formatter:
                 label: hidden
-                type: media_responsive_image_formatter
+                type: media_image_formatter
                 settings:
                   view_mode: default
-                  image_style: full_responsive
+                  image_style: responsive_small
                   link: 0
                 third_party_settings: {  }
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          32daddfc-46ba-4c52-9ed2-38492919f4e0:
-            uuid: 32daddfc-46ba-4c52-9ed2-38492919f4e0
-            region: first
-            configuration:
-              id: 'menu_block:main'
-              label: 'Main navigation'
-              provider: menu_block
-              label_display: visible
-              follow: 1
-              follow_parent: '1'
-              level: 1
-              depth: 0
-              expand: 1
-              parent: 'main:'
-              suggestion: menu_block__main
-              label_type: root
-              context_mapping: {  }
-            additional: {  }
-            weight: 0
-          50ed623f-c9a8-4a7a-8809-6f0d27f4dc83:
-            uuid: 50ed623f-c9a8-4a7a-8809-6f0d27f4dc83
-            region: second
+          e94bc142-2ac9-4b6c-98a3-4827eaa5d618:
+            uuid: e94bc142-2ac9-4b6c-98a3-4827eaa5d618
+            region: top
             configuration:
               id: 'field_block:node:hs_event:title'
               label: Title
@@ -91,32 +73,12 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          6877cac2-b9d4-4d1c-83cb-8b0611806a13:
-            uuid: 6877cac2-b9d4-4d1c-83cb-8b0611806a13
-            region: second
+          13525012-4f81-4341-a688-5c5df5e02543:
+            uuid: 13525012-4f81-4341-a688-5c5df5e02543
+            region: main_above
             configuration:
-              id: 'field_block:node:hs_event:field_hs_event_date'
-              label: Date
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: datetime_hs
-                settings:
-                  timezone_override: ''
-                  date_format: Y-m-d
-                  display: start_date
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 1
-          2c40323f-2dc5-4917-8976-33aa048ca8e4:
-            uuid: 2c40323f-2dc5-4917-8976-33aa048ca8e4
-            region: second
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_sponsor'
-              label: 'Event Sponsor'
+              id: 'field_block:node:hs_event:field_hs_event_location'
+              label: Location
               provider: layout_builder
               label_display: '0'
               formatter:
@@ -127,10 +89,74 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
+            weight: 0
+          ef48ad06-4700-4bf7-8b70-8fdbb0cbd641:
+            uuid: ef48ad06-4700-4bf7-8b70-8fdbb0cbd641
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_event:field_hs_event_date'
+              label: Date
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: datetime_hs
+                settings:
+                  timezone_override: ''
+                  date_format: 'l, F j, Y g:i A'
+                  display: start_date
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 1
+          ac50c867-0985-4b91-ac2b-fc11ad0afb11:
+            uuid: ac50c867-0985-4b91-ac2b-fc11ad0afb11
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_event:field_hs_event_link'
+              label: 'Event Link'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: link
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: '0'
+                  target: '0'
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
             weight: 2
-          ecf20a01-ecec-408a-9ab8-96a7b4c88c37:
-            uuid: ecf20a01-ecec-408a-9ab8-96a7b4c88c37
-            region: second
+          0e5eb606-345f-4bf9-8cc6-72404de9230b:
+            uuid: 0e5eb606-345f-4bf9-8cc6-72404de9230b
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_event:field_hs_event_map_link'
+              label: 'Map Link'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: link
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: '0'
+                  target: '0'
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 3
+          a2b5feea-8674-42a5-8473-91b22a788799:
+            uuid: a2b5feea-8674-42a5-8473-91b22a788799
+            region: main_above
             configuration:
               id: 'field_block:node:hs_event:field_hs_event_admission'
               label: 'Admission Information'
@@ -144,10 +170,27 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 3
-          34afc3ee-7546-48ef-9fd4-933bdf4895f7:
-            uuid: 34afc3ee-7546-48ef-9fd4-933bdf4895f7
-            region: second
+            weight: 4
+          c6de5e85-5beb-4b3e-956e-d465aeba9fad:
+            uuid: c6de5e85-5beb-4b3e-956e-d465aeba9fad
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_event:field_hs_event_sponsor'
+              label: 'Event Sponsor'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: basic_string
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 5
+          d1cf1ccc-0520-4308-8a4b-48d1850bed8e:
+            uuid: d1cf1ccc-0520-4308-8a4b-48d1850bed8e
+            region: main_below
             configuration:
               id: 'field_block:node:hs_event:body'
               label: Body
@@ -161,25 +204,62 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 4
-          e3f9adc9-81a0-46c4-8154-4d628bf29e4a:
-            uuid: e3f9adc9-81a0-46c4-8154-4d628bf29e4a
-            region: second
+            weight: 0
+          2f58b9be-0d23-4f40-b7f4-0187b435f1f8:
+            uuid: 2f58b9be-0d23-4f40-b7f4-0187b435f1f8
+            region: main_below
             configuration:
-              id: 'field_block:node:hs_event:field_hs_event_video'
-              label: 'Event Video'
+              id: 'field_block:node:hs_event:field_hs_event_contact_email'
+              label: 'Contact Email'
               provider: layout_builder
               label_display: '0'
               formatter:
                 label: hidden
-                type: entity_reference_entity_view
-                settings:
-                  view_mode: full
+                type: basic_string
+                settings: {  }
                 third_party_settings: {  }
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 5
+            weight: 1
+          71b446fa-868d-4707-9f5b-99daad836f48:
+            uuid: 71b446fa-868d-4707-9f5b-99daad836f48
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_event:field_hs_event_contact_phone'
+              label: 'Contact Phone Number'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: telephone_link
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 2
+          c178ab91-9072-4274-89da-96af227b4f0d:
+            uuid: c178ab91-9072-4274-89da-96af227b4f0d
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: visible
+              follow: 1
+              follow_parent: '0'
+              level: 1
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              suggestion: menu_block__main
+              label_type: root
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+_core:
+  default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
 id: node.hs_event.default
 targetEntityType: node
 bundle: hs_event

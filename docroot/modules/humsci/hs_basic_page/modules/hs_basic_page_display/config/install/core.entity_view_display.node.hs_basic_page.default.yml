@@ -7,20 +7,21 @@ dependencies:
     - node.type.hs_basic_page
     - system.menu.main
   module:
+    - hs_layouts
     - layout_builder
-    - layout_discovery
     - menu_block
     - user
 third_party_settings:
   layout_builder:
     sections:
       -
-        layout_id: layout_threecol_25_50_25
-        layout_settings: {  }
+        layout_id: three_column
+        layout_settings:
+          section_width: ''
         components:
-          cd10e018-b99d-4955-a518-61e43895340e:
-            uuid: cd10e018-b99d-4955-a518-61e43895340e
-            region: top
+          13b1ba92-73e2-42fc-8cd2-e4743faf8899:
+            uuid: 13b1ba92-73e2-42fc-8cd2-e4743faf8899
+            region: main
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_hero'
               label: 'Hero Image'
@@ -36,9 +37,33 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          e396def4-adf6-4dae-b6fa-83b94ddaa7fc:
-            uuid: e396def4-adf6-4dae-b6fa-83b94ddaa7fc
-            region: second
+      -
+        layout_id: three_column
+        layout_settings:
+          section_width: decanter-grid
+        components:
+          16405d26-e8b4-4c8a-896b-c7a45873dd4d:
+            uuid: 16405d26-e8b4-4c8a-896b-c7a45873dd4d
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: visible
+              follow: 1
+              follow_parent: '0'
+              level: 1
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              suggestion: menu_block__main
+              label_type: root
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+          3b1a10ed-5309-47bf-acff-654a1d64f7f0:
+            uuid: 3b1a10ed-5309-47bf-acff-654a1d64f7f0
+            region: main
             configuration:
               id: 'field_block:node:hs_basic_page:title'
               label: Title
@@ -54,9 +79,9 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          0774f204-3dac-4937-8d42-ad68af33ea2d:
-            uuid: 0774f204-3dac-4937-8d42-ad68af33ea2d
-            region: second
+          24d81da8-5fb2-4032-ab8a-4029d47d06ac:
+            uuid: 24d81da8-5fb2-4032-ab8a-4029d47d06ac
+            region: main
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_components'
               label: Components
@@ -74,27 +99,10 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 1
-          e0a16deb-f95b-423b-b457-af68f2222ef4:
-            uuid: e0a16deb-f95b-423b-b457-af68f2222ef4
-            region: first
-            configuration:
-              id: 'menu_block:main'
-              label: 'Main navigation'
-              provider: menu_block
-              label_display: visible
-              follow: 1
-              follow_parent: '1'
-              level: 1
-              depth: 0
-              expand: 1
-              parent: 'main:'
-              suggestion: menu_block__main
-              label_type: root
-              context_mapping: {  }
-            additional: {  }
-            weight: 0
     allow_custom: false
     enable_defaults: true
+_core:
+  default_config_hash: uC1KAjQU7_UN3WcFmpXZ4VWYZm1HoMqsKmmZneOeolM
 id: node.hs_basic_page.default
 targetEntityType: node
 bundle: hs_basic_page

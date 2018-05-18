@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * hs_layouts.module
+ */
+
+/**
+ * Implements hook_plugin_filter_layout_alter().
+ */
+function hs_layouts_plugin_filter_layout_alter(&$definitions, &$extra, &$consumer) {
+  if ($consumer == 'layout_builder') {
+    /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
+    foreach ($definitions as $id => $definition) {
+      if ($definition->getProvider() !== 'hs_layouts') {
+        unset($definitions[$id]);
+      }
+    }
+  }
+}

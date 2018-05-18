@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * hs_slide.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_slide_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_slide_display']);
+  }
+  catch (Exception $e) {
+    \Drupal::messenger()
+      ->addError(t('Unable to set initial display settings for Slide Paragraph'));
+  }
+
+  $module_installer->uninstall(['hs_slide_display']);
+}

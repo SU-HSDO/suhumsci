@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * hs_slideshow.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_slideshow_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_slideshow_display']);
+  }
+  catch (Exception $e) {
+    \Drupal::messenger()
+      ->addError(t('Unable to set initial display settings for Slideshow Paragraph'));
+  }
+
+  $module_installer->uninstall(['hs_slideshow_display']);
+}

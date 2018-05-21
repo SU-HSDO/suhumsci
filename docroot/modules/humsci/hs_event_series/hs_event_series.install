@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * hs_event_series.install
+ */
+
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\pathauto\Entity\PathautoPattern;
+
+/**
+ * Implements hook_install().
+ */
+function hs_event_series_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_event_series_display']);
+  }
+  catch (Exception $e) {
+    \Drupal::messenger()
+      ->addError(t('Unable to set initial display settings for Event Series'));
+  }
+
+  if ($events_form = EntityFormDisplay::load('node.hs_event.default')) {
+    $field_options = [
+      'weight' => 23,
+      'type' => 'options_select',
+      'region' => 'content',
+    ];
+    $events_form->setComponent('field_hs_event_series', $field_options);
+    $field_group = $events_form->getThirdPartySetting('field_group', 'group_event_details');
+    $field_group['children'][] = 'field_hs_event_series';
+    $events_form->setThirdPartySetting('field_group', 'group_event_details', $field_group);
+    $events_form->save();
+  }
+
+  if($path_auto = \Drupal\pathauto\Entity\PathautoPattern::load('hs_events')){
+    $path_auto->setPattern('events/[node:field_hs_event_series:entity:title]/[node:title]');
+    $path_auto->save();
+  }
+}

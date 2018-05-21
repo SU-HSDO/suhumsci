@@ -885,3 +885,7 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
   }
 }
 
+// Lets whitelist everything because in our event subscriber we have the
+// ability to decide which forms are locked.
+// @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
+$settings['config_readonly_whitelist_patterns'] = ['*'];

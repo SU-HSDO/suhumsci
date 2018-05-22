@@ -6,13 +6,12 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\Entity\Node;
 
 /**
- * Implements hook_entity_delete().
+ * Implements hook_ENTITY_TYPE_delete().
  */
-function hs_events_entity_delete(EntityInterface $entity) {
-  if ($entity instanceof Node && $entity->bundle() == 'hs_event') {
+function hs_events_node_delete(EntityInterface $entity) {
+  if ($entity->bundle() == 'hs_event') {
     $speakers = $entity->get('field_hs_event_speaker')->getValue();
 
     // When running a migration rollback the referenced entities are not deleted

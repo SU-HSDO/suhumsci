@@ -879,13 +879,12 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     $settings['config_readonly'] = TRUE;
   }
 
-  // Set sync directory for production environments.
-  if ($_ENV['AH_SITE_ENVIRONMENT'] === 'prod') {
-    $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
-  }
+  // Set sync directory for Acquia environments.
+  $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
 }
 
 // Lets whitelist everything because in our event subscriber we have the
 // ability to decide which forms are locked.
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
+$settings['install_profile'] = 'su_humsci_profile';

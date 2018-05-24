@@ -10,6 +10,7 @@ dependencies:
     - entity_reference_exposed_filters
     - node
     - user
+    - views_infinite_scroll
 id: hs_event_series
 label: 'Event Series'
 module: views
@@ -44,7 +45,7 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
           expose_sort_order: true
@@ -244,156 +245,6 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: 'Upcoming With Series Filter'
-    position: 1
-    display_options:
-      display_extenders: {  }
-      display_description: ''
-      block_hide_empty: true
-      relationships:
-        field_hs_event_series:
-          id: field_hs_event_series
-          table: node__field_hs_event_series
-          field: field_hs_event_series
-          relationship: none
-          group_type: group
-          admin_label: 'field_hs_event_series: Content'
-          required: false
-          plugin_id: standard
-      defaults:
-        relationships: false
-        filters: false
-        filter_groups: false
-        arguments: false
-        title: false
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_event: hs_event
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-        field_hs_event_date_value:
-          id: field_hs_event_date_value
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '>='
-          value:
-            min: ''
-            max: ''
-            value: now
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: datetime
-        eref_node_titles:
-          id: eref_node_titles
-          table: node_field_data
-          field: eref_node_titles
-          relationship: field_hs_event_series
-          group_type: group
-          admin_label: ''
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: ''
-            label: 'Event Series'
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: series
-            required: false
-            remember: false
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            reduce: 0
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          entity_type: node
-          plugin_id: eref_node_titles
-          sort_order: '1'
-          sort_by: '1'
-          get_unpublished: '1'
-          get_filter_no_results: '0'
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      arguments: {  }
-      title: 'Upcoming Events'
-      exposed_block: true
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - 'user.node_grants:view'
-        - user.permissions
-      tags: {  }
   past_event:
     display_plugin: block
     id: past_event
@@ -525,6 +376,7 @@ display:
         filter_groups: false
         arguments: false
         title: false
+        pager: false
       filters:
         status:
           value: '1'
@@ -640,13 +492,35 @@ display:
           1: AND
       arguments: {  }
       title: 'Past Events'
-      exposed_block: true
+      exposed_block: false
+      pager:
+        type: infinite_scroll
+        options:
+          items_per_page: 5
+          offset: 0
+          id: 0
+          total_pages: null
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Show More'
+            automatically_load_content: false
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
@@ -665,6 +539,179 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  upcoming_event_with_filter:
+    display_plugin: block
+    id: upcoming_event_with_filter
+    display_title: 'Upcoming With Series Filter'
+    position: 1
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      block_hide_empty: true
+      relationships:
+        field_hs_event_series:
+          id: field_hs_event_series
+          table: node__field_hs_event_series
+          field: field_hs_event_series
+          relationship: none
+          group_type: group
+          admin_label: 'field_hs_event_series: Content'
+          required: false
+          plugin_id: standard
+      defaults:
+        relationships: false
+        filters: false
+        filter_groups: false
+        arguments: false
+        title: false
+        pager: false
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            hs_event: hs_event
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+        field_hs_event_date_value:
+          id: field_hs_event_date_value
+          table: node__field_hs_event_date
+          field: field_hs_event_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: now
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: datetime
+        eref_node_titles:
+          id: eref_node_titles
+          table: node_field_data
+          field: eref_node_titles
+          relationship: field_hs_event_series
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'Event Series'
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: series
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          entity_type: node
+          plugin_id: eref_node_titles
+          sort_order: '0'
+          sort_by: '1'
+          get_unpublished: '1'
+          get_filter_no_results: '0'
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      arguments: {  }
+      title: 'Upcoming Events'
+      exposed_block: true
+      pager:
+        type: infinite_scroll
+        options:
+          items_per_page: 5
+          offset: 0
+          id: 0
+          total_pages: null
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          views_infinite_scroll:
+            button_text: 'Show More'
+            automatically_load_content: false
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }

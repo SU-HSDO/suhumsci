@@ -2,7 +2,7 @@
   'use strict';
   Drupal.behaviors.HoverMenu = {
     attach: function(context, settings) {
-      var $header = $('#menu-region');
+      var $header = $('#header');
 
       function setMenu() {
         var $menu = $header.find('ul.decanter-nav-primary');

@@ -1,36 +1,39 @@
-{% if page.header or page.search %}
-  <header id="header">
-    <div class="decanter-grid">
-      <div class="decanter-width-two-thirds">
+<header id="header">
+  <div class="decanter-grid">
+
+    {% if page.header %}
+      <div id="header-region" class="decanter-width-three-fourths">
         {{ page.header }}
       </div>
-      <div class="decanter-width-one-third decanter-end-row">
+    {% endif %}
+
+    {% if page.search %}
+      <div id="search-region" class="decanter-width-one-fourth decanter-end-row">
         {{ page.search }}
       </div>
+    {% endif %}
 
-    </div>
-  </header>
-{% endif %}
+  </div>
 
-{% if page.menu %}
-  <div id="menu-region">
-    <div class="decanter-grid">
+  {% if page.menu %}
+    <div id=" menu-region">
       {{ page.menu }}
     </div>
+  {% endif %}
+</header>
+
+{% if page.help or page.highlighted %}
+  <div id="help-region decanter-grid'">
+    {{ page.help }}
+    {{ page.highlighted }}
   </div>
 {% endif %}
 
-{{ page.breadcrumb }}
-
-{% if page.highlighted | render %}
-  <div id="highlighted">{{ page.highlighted }}</div>
-{% endif %}
-
-<div id="main-content" class="main-container">
+<div id="main-content" class="main-container {{ main_class }}">
   {{ page.content }}
 </div>
 
-{% if page.footer | render %}
+{% if page.footer %}
   <footer id="footer">
     <div class="decanter-grid">
       {{ page.footer }}

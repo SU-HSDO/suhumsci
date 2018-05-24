@@ -1,7 +1,9 @@
+uuid: e8a625c7-6d7c-4260-94d3-40ae21f5586e
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.hs_wide_card
     - field.storage.node.body
     - field.storage.node.field_hs_event_date
     - field.storage.node.field_hs_event_image
@@ -13,10 +15,11 @@ dependencies:
     - node
     - stanford_media
     - text
-    - ui_patterns_views
     - user
     - views_infinite_scroll
     - views_taxonomy_term_name_depth
+_core:
+  default_config_hash: g0uKHFw1z64oliHrLS0wx65Gr3S8zzHiKjwhp-XIkX8
 id: hs_events
 label: Events
 module: views
@@ -81,50 +84,10 @@ display:
       style:
         type: default
       row:
-        type: ui_patterns
+        type: 'entity:node'
         options:
-          default_field_elements: 0
-          inline:
-            title: 0
-            body: 0
-            field_hs_event_image: 0
-            field_hs_event_date: 0
-            field_hs_event_date_1: 0
-            field_hs_event_location: 0
-          separator: ''
-          hide_empty: 0
-          pattern: wide_card
-          pattern_mapping:
-            'views_row:title':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: title
-            'views_row:field_hs_event_location':
-              destination: program
-              weight: 1
-              plugin: views_row
-              source: field_hs_event_location
-            'views_row:field_hs_event_date':
-              destination: time
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_date
-            'views_row:field_hs_event_date_1':
-              destination: link
-              weight: 3
-              plugin: views_row
-              source: field_hs_event_date_1
-            'views_row:field_hs_event_image':
-              destination: image
-              weight: 4
-              plugin: views_row
-              source: field_hs_event_image
-            'views_row:body':
-              destination: description
-              weight: 5
-              plugin: views_row
-              source: body
+          relationship: none
+          view_mode: hs_wide_card
       fields:
         title:
           id: title

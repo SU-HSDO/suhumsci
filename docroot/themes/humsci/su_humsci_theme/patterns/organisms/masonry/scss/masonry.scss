@@ -5,11 +5,21 @@
   @include media(min-width ($medium-screen - 1)) {
     > div {
       width: calc(33% - 20px);
+      float:left;
     }
   }
 
   img {
     width: 100%;
     height: auto;
+  }
+}
+
+html.no-js .masonry {
+  display: flex;
+  flex-wrap: wrap;
+
+  > div {
+    padding: 0 10px;
   }
 }

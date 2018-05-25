@@ -11,7 +11,10 @@
 function su_humsci_theme_preprocess_page(&$variables) {
   // Node pages are configured with layout builder so we dont need to set this
   // class.
-  if (!isset($variables['node'])) {
+  $request = \Drupal::requestStack();
+  $attributes = $request->getCurrentRequest()->attributes->getIterator();
+  $controller = isset($attributes['_controller']) ? $attributes['_controller'] : '';
+  if (!isset($variables['node']) && strpos($controller, 'layout_builder') === FALSE) {
     $variables['main_class'] = 'decanter-grid';
   }
 }

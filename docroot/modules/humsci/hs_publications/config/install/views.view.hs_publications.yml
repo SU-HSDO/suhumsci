@@ -10,6 +10,7 @@ dependencies:
     - taxonomy.vocabulary.hs_publication_type
   module:
     - datetime
+    - eck
     - hs_field_helpers
     - node
     - stanford_media
@@ -99,6 +100,7 @@ display:
             title: 0
             field_hs_publication_author: 0
             field_hs_publication_year: 0
+            nid: 0
           separator: ''
           hide_empty: 1
           pattern: masonry_item
@@ -108,24 +110,29 @@ display:
               weight: 0
               plugin: views_row
               source: field_hs_publication_image
-            'views_row:field_hs_publication_type':
+            'views_row:nid':
               destination: body
               weight: 1
+              plugin: views_row
+              source: nid
+            'views_row:field_hs_publication_type':
+              destination: body
+              weight: 2
               plugin: views_row
               source: field_hs_publication_type
             'views_row:title':
               destination: body
-              weight: 2
+              weight: 3
               plugin: views_row
               source: title
             'views_row:field_hs_publication_author':
               destination: body
-              weight: 3
+              weight: 4
               plugin: views_row
               source: field_hs_publication_author
             'views_row:field_hs_publication_year':
               destination: body
-              weight: 4
+              weight: 5
               plugin: views_row
               source: field_hs_publication_year
       fields:
@@ -494,27 +501,24 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: string
-        field_hs_publication_author_target_id:
-          id: field_hs_publication_author_target_id
-          table: node__field_hs_publication_author
-          field: field_hs_publication_author_target_id
-          relationship: none
+        title_1:
+          id: title_1
+          table: publications_collections_field_data
+          field: title
+          relationship: field_hs_publication_author
           group_type: group
           admin_label: ''
-          operator: '='
-          value:
-            min: ''
-            max: ''
-            value: ''
+          operator: word
+          value: ''
           group: 1
           exposed: true
           expose:
-            operator_id: field_hs_publication_author_target_id_op
+            operator_id: title_1_op
             label: 'Search by Author'
             description: ''
             use_operator: false
-            operator: field_hs_publication_author_target_id_op
-            identifier: author
+            operator: title_1_op
+            identifier: pub_author
             required: false
             remember: false
             multiple: false
@@ -523,8 +527,6 @@ display:
               anonymous: '0'
               administrator: '0'
             placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -537,7 +539,9 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: numeric
+          entity_type: publications_collections
+          entity_field: title
+          plugin_id: string
         field_hs_publication_type_target_id:
           id: field_hs_publication_type_target_id
           table: node__field_hs_publication_type
@@ -615,8 +619,30 @@ display:
       title: Publications
       header: {  }
       footer: {  }
-      empty: {  }
-      relationships: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: '<p>No publications are available at this time. Please check back again soon.</p>'
+            format: basic_html
+          plugin_id: text
+      relationships:
+        field_hs_publication_author:
+          id: field_hs_publication_author
+          table: node__field_hs_publication_author
+          field: field_hs_publication_author
+          relationship: none
+          group_type: group
+          admin_label: 'field_hs_publication_author: Publications Collections'
+          required: false
+          plugin_id: standard
       arguments: {  }
       display_extenders: {  }
       use_ajax: true
@@ -624,6 +650,7 @@ display:
         operator: AND
         groups:
           1: AND
+      group_by: true
     cache_metadata:
       max-age: -1
       contexts:

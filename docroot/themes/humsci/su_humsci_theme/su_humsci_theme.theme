@@ -18,3 +18,13 @@ function su_humsci_theme_preprocess_page(&$variables) {
     $variables['main_class'] = 'decanter-grid';
   }
 }
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function su_humsci_theme_preprocess_views_view(&$vars) {
+  if (!empty($vars['more'])) {
+    // Add class to read more link in views.
+    $vars['more']['#options']['attributes']['class'][] = 'decanter-button';
+  }
+}

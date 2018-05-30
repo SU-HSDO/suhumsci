@@ -68,7 +68,6 @@
  *
  * One example of the simplest connection array is shown below. To use the
  * sample settings, copy and uncomment the code below between the @code and
- *
  * @endcode lines and paste it after the $databases declaration. You will need
  * to replace the database username and password and possibly the host and port
  * with the appropriate credentials for your database system.
@@ -123,7 +122,6 @@ $databases = [];
  * traditionally referred to as master/slave in database server documentation).
  *
  * The general format for the $databases array is as follows:
- *
  * @code
  * $databases['default']['default'] = $info_array;
  * $databases['default']['replica'][] = $info_array;
@@ -247,7 +245,6 @@ $databases = [];
  * array key CONFIG_ACTIVE_DIRECTORY.
  *
  * Example:
- *
  * @code
  *   $config_directories = array(
  *     CONFIG_SYNC_DIRECTORY => '/directory/outside/webroot',
@@ -296,7 +293,6 @@ $config_directories = [];
  * stored with backups of your database.
  *
  * Example:
- *
  * @code
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
@@ -383,7 +379,7 @@ $settings['update_free_access'] = FALSE;
  * Specify every reverse proxy IP address in your environment.
  * This setting is required if $settings['reverse_proxy'] is TRUE.
  */
-# $settings['reverse_proxy_addresses'] = array('a.b.c.d', ...);
+# $settings['reverse_proxy_addresses'] = ['a.b.c.d', ...];
 
 /**
  * Set this value if your proxy server sends the client IP in a header
@@ -432,6 +428,7 @@ $settings['update_free_access'] = FALSE;
  * getting cached pages from the proxy.
  */
 # $settings['omit_vary_cookie'] = TRUE;
+
 
 /**
  * Cache TTL for client error (4xx) responses.
@@ -576,10 +573,10 @@ if ($settings['hash_salt']) {
  * The "en" part of the variable name, is dynamic and can be any langcode of
  * any added language. (eg locale_custom_strings_de for german).
  */
-# $settings['locale_custom_strings_en'][''] = array(
+# $settings['locale_custom_strings_en'][''] = [
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
-# );
+# ];
 
 /**
  * A custom theme for the offline page:
@@ -633,7 +630,7 @@ if ($settings['hash_salt']) {
  *   override in a services.yml file in the same directory as settings.php
  *   (definitions in this file will override service definition defaults).
  */
-# $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
+# $settings['bootstrap_config_storage'] = ['Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage'];
 
 /**
  * Configuration overrides.
@@ -724,7 +721,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * like to allow.
  *
  * For example:
- *
  * @code
  * $settings['trusted_host_patterns'] = array(
  *   '^www\.example\.com$',
@@ -789,105 +785,3 @@ $settings['entity_update_batch_size'] = 50;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-
-require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-
-// SimpleSAMLphp configuration
-// Provide universal absolute path to the installation.
-if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {
-  $settings['simplesamlphp_dir'] = '/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp';
-}
-else {
-  // Local SAML path.
-  if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
-    $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
-  }
-}
-
-if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] == 'prod') {
-  $config['system.file']['path']['temporary'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/tmp";
-}
-else {
-  $config['system.file']['path']['temporary'] = sys_get_temp_dir();
-}
-
-$config['simplesamlphp_auth.settings'] = [
-  'langcode' => 'en',
-  'default_langcode' => 'en',
-  'activate' => TRUE,
-  'mail_attr' => 'eduPersonPrincipalName',
-  'unique_id' => 'uid',
-  'user_name' => 'displayName',
-  'auth_source' => 'default-sp',
-  'login_link_display_name' => 'Stanford Login',
-  'header_no_cache' => 1,
-  'logout_goto_url' => NULL,
-  'user_register_original' => 'visitors',
-  'register_users' => TRUE,
-  'autoenablesaml' => TRUE,
-  'debug' => TRUE,
-  'secure' => FALSE,
-  'httponly' => FALSE,
-  'role' => [
-    'population' => 'administrator:suAffiliation,=,hsdo:web|administrator:suAffiliation,=,itservices:webservices',
-    'eval_every_time' => FALSE,
-  ],
-  'allow' => [
-    'set_drupal_pwd' => TRUE,
-    'default_login' => TRUE,
-    'default_login_roles' => [],
-    'default_login_users' => '1',
-  ],
-  'sync' => [
-    'mail' => TRUE,
-    'user_name' => TRUE,
-  ],
-];
-
-$config['environment_indicator.indicator']['bg_color'] = '#086601';
-$config['environment_indicator.indicator']['fg_color'] = '#fff';
-$config['environment_indicator.indicator']['name'] = 'Local';
-
-if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-    case 'dev':
-      $config['environment_indicator.indicator']['bg_color'] = '#6B0500';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = 'Development';
-      break;
-    case 'test':
-      $config['environment_indicator.indicator']['bg_color'] = '#4127C2';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = 'Staging';
-      break;
-    case 'prod':
-      $config['environment_indicator.indicator']['bg_color'] = '#000';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = 'Production';
-      break;
-    default:
-      $config['environment_indicator.indicator']['bg_color'] = '#086601';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = $_ENV['AH_SITE_ENVIRONMENT'];
-      break;
-  }
-}
-
-if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  if (PHP_SAPI !== 'cli') {
-    // Don't lock config when using drush.
-    $settings['config_readonly'] = TRUE;
-  }
-
-  // Set sync directory for Acquia environments.
-  $config_directories['sync'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config";
-}
-
-// Lets whitelist everything because in our event subscriber we have the
-// ability to decide which forms are locked.
-// @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
-$settings['config_readonly_whitelist_patterns'] = ['*'];
-
-if (file_exists('/var/www/site-php')) {
-  require '/var/www/site-php/swshumsci/archaeology-settings.inc';
-}

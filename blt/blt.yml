@@ -1,26 +1,21 @@
 project:
-  machine_name: suhumsci
   prefix: suhumsci
   human_name: 'Stanford Humanities and Sciences Product'
   profile:
     name: suhumsci
-  local:
-    protocol: http
-    hostname: 'local.${project.machine_name}.com'
+  local: {  }
 git:
   default_branch: develop
   remotes:
     - 'swshumsci@svn-4786.devcloud.hosting.acquia.com:swshumsci.git'
 drush:
   aliases:
-    remote: '${project.machine_name}.test'
-    local: self
     ci: self
   default_alias: '${drush.aliases.local}'
 modules:
   local:
     enable: [dblog, devel, seckit, views_ui]
-    uninstall: [acquia_connector, shield]
+    uninstall: [acquia_connector, simplesamlphp_auth, shield]
   ci:
     enable: {  }
     uninstall: [acquia_connector, shield]

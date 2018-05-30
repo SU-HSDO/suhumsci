@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,6 +25,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EntityTitleHeading extends FormatterBase implements ContainerFactoryPluginInterface {
 
+  /**
+   * Path matcher service.
+   *
+   * @var \Drupal\Core\Path\PathMatcherInterface
+   */
   protected $pathMatcher;
 
   /**
@@ -45,7 +51,7 @@ class EntityTitleHeading extends FormatterBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, $path_matcher) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, PathMatcherInterface $path_matcher) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->pathMatcher = $path_matcher;
   }

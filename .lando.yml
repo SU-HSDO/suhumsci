@@ -1,19 +1,23 @@
 name: suhumsci
 recipe: drupal8
-# proxy:
-#   solr:
-#     - solr.mrcblt.sws:8983
 config:
   webroot: docroot
   php: '7.1'
+proxy:
+  appserver:
+    - swshumsci.suhumsci.loc
+    - archaeology.suhumsci.loc
+#   solr:
+#     - solr.mrcblt.sws:8983
 services:
   appserver:
     ssl: true
     extras:
       - "apt-get update"
       - "ln -s /app/vendor/bin/blt /usr/bin/blt"
-  database:
+  archaeology:
     type: mysql:5.7
+
   # solr:
   #   type: solr:5.5
   #   portforward: true
@@ -24,6 +28,7 @@ services:
   #   type: memcached:1.5
   #   mem: 128
   #   portforward: true
+
 tooling:
   blt:
     service: appserver

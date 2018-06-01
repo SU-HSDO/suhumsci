@@ -6,17 +6,17 @@
 
 {% set attributes = attributes.addClass([settings.section_width, 'clearfix', 'three-column']) %}
 
+
 {% if content.main or content.left_sidebar or content.right_sidebar %}
 
   <div{{ attributes }}>
     {% if content.left_sidebar %}
-      <div class="decanter-width-one-fourth region">
+      <div class="decanter-width-one-fourth layout-region">
         {{ content.left_sidebar }}
       </div>
     {% endif %}
 
-
-    <div class="{{ main_class }} region">
+    <div class="{{ main_class }} layout-region">
       {{ content.main }}
     </div>
 

@@ -111,6 +111,8 @@ module.exports = function(grunt) {
           // 'css/ckeditor.css':  'scss/ckeditor.scss',
 
           // PATTERNS
+          'patterns/molecules/wide-card/scss/wide-card.css': 'patterns/molecules/wide-card/css/wide-card.scss',
+          'patterns/organisms/masonry/css/masonry.css': 'patterns/organisms/masonry/scss/masonry.scss',
 
           // COMPONENTS
           'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',

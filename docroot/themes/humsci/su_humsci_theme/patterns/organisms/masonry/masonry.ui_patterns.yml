@@ -1,0 +1,25 @@
+masonry:
+  label: "Masonry"
+  fields:
+    items:
+      label: "Items"
+      type: list
+
+  libraries:
+    - masonry:
+        remote: https://unpkg.com/masonry-layout@4.2.1/dist/masonry.pkgd.min.js
+        license:
+          name: Masonry
+          url: https://masonry.desandro.com/#mit-license
+        css:
+          component:
+            css/masonry.css: {}
+        js:
+          //unpkg.com/masonry-layout@4.2.1/dist/masonry.pkgd.min.js: {type: external, minified: true }
+          //imagesloaded.desandro.com/imagesloaded.pkgd.min.js: {type: external, minified: true }
+          js/masonry.js: {}
+        dependencies:
+          - core/jquery
+          - core/jquery.once
+
+  use: "@su_humsci_theme/organisms/masonry/masonry.html.twig"

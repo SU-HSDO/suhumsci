@@ -21,6 +21,7 @@ if [ ! -f $acsf_file ]; then
   cd $repo_root
 
   blt artifact:ac-hooks:db-scrub $site $target_env $db_name $source_env
+  blt artifact:update:drupal:all-sites
 
 fi
 

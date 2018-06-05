@@ -3,12 +3,13 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 use Acquia\Blt\Robo\Exceptions\BltException;
 
 /**
  * Defines commands in the "custom" namespace.
  */
-class HumsciCommand extends BltTasks {
+class HumsciCommand extends AcHooksCommand {
 
   /**
    * Synchronize local env from remote (remote --> local).
@@ -234,6 +235,47 @@ class HumsciCommand extends BltTasks {
     }
 
     return $this->getConfigValue("drush.aliases.$environment");
+  }
+
+  /**
+   * Update the database to reflect the state of the Drupal file system.
+   *
+   * @command artifact:update:drupal:all-sites
+   * @aliases auda
+   */
+  public function updateAll() {
+    // Disable alias since we are targeting specific uri.
+    $this->config->set('drush.alias', '');
+
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      try {
+        $this->updateSite($multisite);
+      }
+      catch (\Exception $e) {
+        $this->say("Unable to update <comment>$multisite</comment>");
+      }
+    }
+  }
+
+  /**
+   * Execute updates on a specific site.
+   *
+   * @param string $multisite
+   *
+   * @throws \Acquia\Blt\Robo\Exceptions\BltException
+   */
+  protected function updateSite($multisite) {
+    $this->say("Deploying updates to <comment>$multisite</comment>...");
+    $this->switchSiteContext($multisite);
+
+    $this->invokeCommand('drupal:toggle:modules');
+    $this->taskDrush()
+      ->drush("updb -y")
+      ->run();
+    $this->taskDrush()
+      ->drush("cr")
+      ->run();
+    $this->say("Finished deploying updates to $multisite.");
   }
 
 }

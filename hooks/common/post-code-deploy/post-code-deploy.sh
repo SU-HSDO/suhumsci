@@ -12,7 +12,6 @@
 
 set -ev
 
-
 site="$1"
 target_env="$2"
 source_branch="$3"
@@ -25,11 +24,6 @@ repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-if [[ $target_env == "test" ]]; then
-    target_env="stage"
-fi
-
-drush --root=/var/www/html/[site].[target_env]/docroot -l archaeology-$target_env.stanford.edu updatedb --yes
-drush --root=/var/www/html/[site].[target_env]/docroot -l archaeology-$target_env.stanford.edu cr
+blt artifact:ac-hooks:post-code-deploy $site $target_env $source_branch $deployed_tag $repo_url $repo_type --environment=$target_env -v --yes --no-interaction
 
 set +v

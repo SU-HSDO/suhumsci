@@ -23,7 +23,7 @@
       window.addEventListener('keydown', handleFirstTab);
 
 
-      $('.ptype-hs-hero-image', context).not(':first').each(function () {
+      $('.decanter-grid .ptype-hs-hero-image', context).not(':first-child').each(function () {
         $(this).addClass('overflow-hero');
       });
       $(window).resize(heroImage);

@@ -1,12 +1,12 @@
-(function($, Drupal) {
+(function ($, Drupal) {
   'use strict';
   Drupal.behaviors.suHumSciTheme = {
-    attach: function(context, settings) {
-      $('.search-block-form input[type=search]').focus(function() {
+    attach: function (context, settings) {
+      $('.search-block-form input[type=search]').focus(function () {
         $(this).closest('form').addClass('expanded');
-      }).blur(function() {
+      }).blur(function () {
         var $this = $(this);
-        setTimeout(function() {
+        setTimeout(function () {
           if (!$this.closest('form').find('input[type=submit]').is(':focus')) {
             $this.closest('form').removeClass('expanded');
           }
@@ -21,6 +21,19 @@
       }
 
       window.addEventListener('keydown', handleFirstTab);
+
+
+      $('.ptype-hs-hero-image', context).not(':first').each(function () {
+        $(this).addClass('overflow-hero');
+      });
+      $(window).resize(heroImage);
+
+      $('.overflow-hero').imagesLoaded(heroImage);
+      function heroImage() {
+        $('.overflow-hero', context).each(function () {
+          $(this).css('margin-bottom', $(this).children().height());
+        });
+      }
     }
   };
 })(jQuery, Drupal);

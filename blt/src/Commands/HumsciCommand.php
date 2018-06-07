@@ -12,6 +12,31 @@ use Acquia\Blt\Robo\Exceptions\BltException;
 class HumsciCommand extends AcHooksCommand {
 
   /**
+   * Run cron on all sites.
+   *
+   * @command drupal:cron
+   */
+  public function cron() {
+    // Disable alias since we are targeting specific uri.
+    $this->config->set('drush.alias', '');
+
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      try {
+        $this->say("Running Cron on <comment>$multisite</comment>...");
+        $this->switchSiteContext($multisite);
+
+        $this->taskDrush()
+          ->drush("cron")
+          ->drush('cr')
+          ->run();
+      }
+      catch (\Exception $e) {
+        $this->say("Unable to run cron on <comment>$multisite</comment>");
+      }
+    }
+  }
+
+  /**
    * Synchronize local env from remote (remote --> local).
    *
    * Copies remote db to local db, re-imports config, and executes db updates
@@ -45,6 +70,8 @@ class HumsciCommand extends AcHooksCommand {
     $current_site = $initial_site;
 
     foreach ($multisites as $multisite) {
+      $this->say($multisite);
+      $this->say(str_repeat('-', strlen($multisite)));
       if ($current_site != $multisite) {
         $this->switchSiteContext($multisite);
         $current_site = $multisite;

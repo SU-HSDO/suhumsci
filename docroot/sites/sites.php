@@ -64,6 +64,7 @@ foreach ($humsci_sites as $site) {
   $sites["$site-dev.stanford.edu"] = $site;
   $sites["$site-stage.stanford.edu"] = $site;
   $sites["$site-prod.stanford.edu"] = $site;
+  $sites["$site.stanford.edu"] = $site;
 }
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

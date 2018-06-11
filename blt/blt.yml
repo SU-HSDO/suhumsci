@@ -1,4 +1,5 @@
 project:
+  machine_name: blted8
   prefix: suhumsci
   human_name: 'Stanford Humanities and Sciences Product'
   profile:
@@ -10,24 +11,26 @@ git:
     - 'swshumsci@svn-4786.devcloud.hosting.acquia.com:swshumsci.git'
 drush:
   aliases:
+    remote: '${project.machine_name}.test'
+    local: self
     ci: self
   default_alias: '${drush.aliases.local}'
 modules:
   local:
     enable: [dblog, devel, seckit, views_ui]
-    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly]
+    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly, bugherdapi]
   ci:
     enable: {  }
     uninstall: [acquia_connector, shield]
   dev:
     enable: [acquia_connector, shield]
-    uninstall: [config_readonly]
+    uninstall: [config_readonly, bugherdapi]
   test:
     enable: [acquia_connector, shield]
-    uninstall: [devel, config_readonly]
+    uninstall: [devel, config_readonly, bugherdapi]
   prod:
-    enable: [acquia_connector, shield, hs_config_readonly]
-    uninstall: [devel]
+    enable: [acquia_connector, shield, hs_config_readonly, bugherdapi]
+    uninstall: [devel, views_ui]
 multisites:
   - default
   - archaeology

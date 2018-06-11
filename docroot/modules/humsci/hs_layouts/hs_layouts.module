@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * hs_layouts.module
+ */
+
+/**
+ * Implements hook_plugin_filter_layout_alter().
+ */
+function hs_layouts_plugin_filter_layout_alter(&$definitions, &$extra, &$consumer) {
+  if ($consumer == 'layout_builder') {
+    /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
+    foreach ($definitions as $id => $definition) {
+      if ($definition->getProvider() !== 'hs_layouts') {
+        unset($definitions[$id]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function hs_layouts_page_attachments(array &$attachments) {
+  $request = \Drupal::requestStack();
+  $attributes = $request->getCurrentRequest()->attributes->getIterator();
+  $controller = isset($attributes['_controller']) ? $attributes['_controller'] : '';
+  if (strpos($controller, 'layout_builder') !== FALSE) {
+    $attachments['#attached']['library'][] = 'hs_layouts/admin';
+  }
+}

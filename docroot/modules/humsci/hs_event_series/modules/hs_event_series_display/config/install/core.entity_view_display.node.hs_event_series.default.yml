@@ -1,0 +1,157 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_event_series.body
+    - field.field.node.hs_event_series.field_hs_event_series_image
+    - node.type.hs_event_series
+    - system.menu.main
+    - views.view.hs_event_series
+  module:
+    - hs_layouts
+    - layout_builder
+    - menu_block
+    - text
+    - user
+    - views
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: three_column_w_image
+        layout_settings:
+          section_width: decanter-grid
+        components:
+          ac071a08-6029-47fa-b730-cd243245b7f5:
+            uuid: ac071a08-6029-47fa-b730-cd243245b7f5
+            region: top
+            configuration:
+              id: 'field_block:node:hs_event_series:title'
+              label: Title
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_title_heading
+                settings:
+                  tag: h1
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+          fbe5858f-5475-462e-bef2-091725548e82:
+            uuid: fbe5858f-5475-462e-bef2-091725548e82
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: visible
+              follow: 1
+              follow_parent: '-1'
+              level: 1
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              suggestion: menu_block__main
+              label_type: block
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+          742501f5-37d3-439b-96ef-dfc89065c037:
+            uuid: 742501f5-37d3-439b-96ef-dfc89065c037
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_event_series:body'
+              label: Body
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+          5c34a580-713a-4908-bc21-8992dc2a3a3a:
+            uuid: 5c34a580-713a-4908-bc21-8992dc2a3a3a
+            region: image
+            configuration:
+              id: 'field_block:node:hs_event_series:field_hs_event_series_image'
+              label: 'Series Image'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: media_image_formatter
+                settings:
+                  view_mode: default
+                  image_style: responsive_small
+                  link: 0
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+          49171903-5f9d-4b11-9c38-959f826c5d24:
+            uuid: 49171903-5f9d-4b11-9c38-959f826c5d24
+            region: main_below
+            configuration:
+              id: 'views_block:hs_event_series-upcoming_event'
+              label: ''
+              provider: views
+              label_display: visible
+              views_label: ''
+              items_per_page: none
+              context_mapping:
+                field_hs_event_series_target_id: layout_builder.entity
+            additional: {  }
+            weight: 1
+          502be47a-67af-428b-ba2a-a75de37d79a6:
+            uuid: 502be47a-67af-428b-ba2a-a75de37d79a6
+            region: main_below
+            configuration:
+              id: 'views_block:hs_event_series-past_event'
+              label: ''
+              provider: views
+              label_display: visible
+              views_label: ''
+              items_per_page: none
+              context_mapping:
+                field_hs_event_series_target_id: layout_builder.entity
+            additional: {  }
+            weight: 2
+    enable_defaults: true
+    allow_custom: false
+_core:
+  default_config_hash: AZpRcbQAWkqWZd2AL_reDjabR4wzz6yuE0atdJFij80
+id: node.hs_event_series.default
+targetEntityType: node
+bundle: hs_event_series
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_hs_event_series_image:
+    type: entity_reference_entity_view
+    weight: 102
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

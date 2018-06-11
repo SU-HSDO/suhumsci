@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * hs_events.mdoule
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function hs_events_node_delete(EntityInterface $entity) {
+  if ($entity->bundle() == 'hs_event') {
+    $speakers = $entity->get('field_hs_event_speaker')->getValue();
+
+    // When running a migration rollback the referenced entities are not deleted
+    // so we have to delete them manually. Deleting via the UI does not have
+    // the same issue.
+    foreach ($speakers as $speaker_value) {
+      $speaker = \Drupal::entityTypeManager()
+        ->getStorage('event_collections')
+        ->load($speaker_value['target_id']);
+      if ($speaker) {
+        $speaker->delete();
+      }
+    }
+  }
+}

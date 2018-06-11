@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * hs_text_area.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_text_area_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_text_area_display']);
+  }
+  catch (Exception $e) {
+    \Drupal::messenger()
+      ->addError(t('Unable to set initial display settings for Text Area Paragraph'));
+  }
+
+}

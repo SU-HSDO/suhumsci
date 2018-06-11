@@ -82,7 +82,7 @@ function hs_field_helpers_form_field_config_edit_form_validate(&$form, FormState
 function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
   /** @var \Drupal\Core\Field\WidgetBaseInterface $widget */
   $widget = $context['widget'];
-
+  //dpm($widget->getPluginId());
   switch ($widget->getPluginId()) {
     case 'viewfield_select':
       /** @var \Drupal\field\Entity\FieldConfig $field_config */
@@ -95,6 +95,7 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
       break;
 
     case 'daterange_datelist':
+    case 'daterange_default':
       // To simulate the same field functionality as we had in D7, we need to
       // add a checkbox and validation handlers.
       // Adds wrappers so we can easily find the parts with jQuery.

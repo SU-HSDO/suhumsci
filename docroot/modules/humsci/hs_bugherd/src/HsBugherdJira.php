@@ -39,9 +39,16 @@ class HsBugherdJira {
       ->get('jira_project');
     $issue_service = $this->jiraRestWrapper->getIssueService();
     $search = $issue_service->createSearch();
-    $search->search("project = $jira_project and ");
-
+    $search->search("project = $jira_project");
     dpm($search->getIssues());
+  }
+
+  public function sendToJira($data) {
+
+  }
+
+  public function sendToBugherd($data) {
+
   }
 
 }

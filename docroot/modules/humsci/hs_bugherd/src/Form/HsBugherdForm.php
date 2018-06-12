@@ -29,8 +29,6 @@ class HsBugherdForm extends BugherdConfigurationForm {
       '#title' => $this->t('Jira Project'),
       '#default_value' => $config->get('jira_project'),
     ];
-    $service = \Drupal::service('hs_bugherd.jira');
-    $service->test();
     return $form;
   }
 

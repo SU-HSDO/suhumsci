@@ -121,7 +121,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
+//    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
 
     $config = $this->config('bugherdapi.settings');
 

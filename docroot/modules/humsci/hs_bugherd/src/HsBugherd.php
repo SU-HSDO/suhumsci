@@ -3,7 +3,6 @@
 namespace Drupal\hs_bugherd;
 
 use Bugherd\Client;
-use Drupal\jira_rest\JiraRestWrapperService;
 
 /**
  * Class BugherdApi.
@@ -37,16 +36,11 @@ class HsBugherd {
   protected $client;
 
   /**
-   * @var \Drupal\jira_rest\JiraRestWrapperService
-   */
-  protected $jiraRestWrapper;
-
-  /**
    * BugherdApi constructor.
    */
-  public function __construct(JiraRestWrapperService $jira_rest) {
-    $this->jiraRestWrapper = $jira_rest;
+  public function __construct() {
     $this->apiKey = static::getApiKey();
+    $this->projectKey = self::getProjectId();
     $this->client = new Client($this->apiKey);
   }
 
@@ -58,6 +52,15 @@ class HsBugherd {
    */
   public static function getApiKey() {
     return \Drupal::configFactory()->get('bugherdapi.settings')->get('api_key');
+  }
+
+  /**
+   * @return array|mixed|null
+   */
+  public static function getProjectId() {
+    return \Drupal::configFactory()
+      ->get('bugherdapi.settings')
+      ->get('project_id');
   }
 
   /**
@@ -111,7 +114,7 @@ class HsBugherd {
    *   Returned response.
    */
   public function getProjects() {
-    return $this->getApi(self::BUGHERDAPI_PROJECT)->all();
+    return $this->getApi(self::BUGHERDAPI_PROJECT)->listing(FALSE, FALSE);
   }
 
   /**
@@ -123,8 +126,26 @@ class HsBugherd {
    * @return array
    *   Returned response.
    */
-  public function getTasks($project_id) {
-    return $this->getApi(self::BUGHERDAPI_TASK)->all($project_id);
+  public function getTasks($project_id = NULL) {
+    return $this->getApi(self::BUGHERDAPI_TASK)
+      ->all($project_id ?: $this->projectKey);
+  }
+
+  public function getTask($task_id, $project_id = NULL) {
+    return $this->getApi(self::BUGHERDAPI_TASK)
+      ->show($project_id ?: $this->projectKey, $task_id);
+  }
+
+  /**
+   * @param string $project_id
+   * @param int $task_id
+   * @param array $data
+   *
+   * @return mixed
+   */
+  public function updateTask($project_id, $task_id, $data) {
+    return $this->getApi(self::BUGHERDAPI_TASK)
+      ->update($project_id, $task_id, $data);
   }
 
   /**

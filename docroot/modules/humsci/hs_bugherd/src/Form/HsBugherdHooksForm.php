@@ -117,10 +117,11 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    Cache::invalidateTags(['hs_bugherd_hooks']);
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-    // $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
+    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
 
     $config = $this->config('bugherdapi.settings');
 
@@ -186,7 +187,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   protected function getJiraFilter() {
     $config = $this->config('bugherdapi.settings');
     $jira_project = $config->get('jira_project');
-    return "project = $jira_project and summary ~ bugherd";
+    return "project = $jira_project and summary ~ 'BUGHERD-*'";
   }
 
   /**
@@ -204,7 +205,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $hooks = [];
     $jira_hooks = $this->jiraIssueService->getCommunicationService()
       ->get('/rest/webhooks/1.0/webhook');
-
     foreach ($jira_hooks as $jira_hook) {
       if (!empty($jira_hook->filters->{'issue-related-events-section'}) && $jira_hook->filters->{'issue-related-events-section'} == $this->getJiraFilter()) {
         // The hook's id is the last part of a url in the "self" attribute.

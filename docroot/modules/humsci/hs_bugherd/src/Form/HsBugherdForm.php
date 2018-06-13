@@ -110,12 +110,14 @@ class HsBugherdForm extends ConfigFormBase {
       '#title' => $this->t('Bugherd to Jira Mapping'),
       '#tree' => TRUE,
     ];
+
     foreach ($bugherd_statuses as $bugherd_status => $label) {
       $form['status_map'][$bugherd_status] = [
         '#type' => 'number',
         '#title' => $label . $this->t(' Status'),
         '#description' => $this->t('The JIRA status code for a %label status', ['%label' => $label]),
         '#required' => TRUE,
+        '#default_value' => $config->get('status_map.' . $bugherd_status),
       ];
     }
 

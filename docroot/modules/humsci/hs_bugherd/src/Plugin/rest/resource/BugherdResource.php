@@ -4,7 +4,6 @@ namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
-use Drupal\jira_rest\jiraIssueServiceService;
 use Drupal\jira_rest\JiraRestWrapperService;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -87,7 +86,7 @@ class BugherdResource extends ResourceBase {
     if (isset($data['webhookEvent'])) {
       return new ResourceResponse($this->sendToBugherd($data));
     }
-    return new ResourceResponse($this->sendToJira($data)->getKey());
+    return new ResourceResponse($this->sendToJira($data));
   }
 
   /**
@@ -131,9 +130,11 @@ class BugherdResource extends ResourceBase {
       $task = $data['comment']['task'];
     }
     else {
+      // Task was created in bugherd.
       // When a task is created it doesnt have all the info so we do a call to Get
       // updated task info.
       $task = $this->bugherdApi->getTask($data['task']['id']) ?: $data;
+      return $task;
       $task = $task['task'] ?: $task;
     }
 
@@ -242,23 +243,6 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
-   * Search JIRA for an issue with the same summary.
-   *
-   * @param string $issue_name
-   *   Issue summary in JIRA to search.
-   *
-   * @return \biologis\JIRA_PHP_API\Issue[]
-   *   Array of JIRA issues.
-   */
-  protected function searchJira($issue_name) {
-    $jira_project = $this->getJiraProject();
-    $issue_service = $this->jiraIssueService;
-    $search = $issue_service->createSearch();
-    $search->search("project = $jira_project and summary ~ '$issue_name'");
-    return $search->getIssues();
-  }
-
-  /**
    * @param array $data
    *
    * @return bool|mixed
@@ -289,11 +273,29 @@ class BugherdResource extends ResourceBase {
         break;
 
       case 'jira:issue_updated':
-        $status = ['status' => HsBugherd::BUGHERDAPI_TODO];
-        return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+        if ($data['changelog']['items'][0]['field'] == 'status') {
+          $jira_status = $data['changelog']['items'][0]['to'];
+          $status = ['status' => $this->getTranslatedStatus($jira_status)];
+          return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+        }
     }
 
     return FALSE;
+  }
+
+  /**
+   * Get the beherd status from a jira status id.
+   *
+   * @param int $status
+   *   Jira status ID
+   *
+   * @return string
+   *   Bugherd Status.
+   */
+  protected function getTranslatedStatus($status) {
+    $config = $this->configFactory->get('bugherdapi.settings');
+    $status_map = array_flip($config['status_map']);
+    return $status_map[$status] ?: HsBugherd::BUGHERDAPI_TODO;
   }
 
 }

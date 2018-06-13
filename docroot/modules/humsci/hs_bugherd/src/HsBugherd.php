@@ -23,15 +23,15 @@ class HsBugherd {
 
   const BUGHERDAPI_WEBHOOK = 'webhook';
 
-  const BUGHERDAPI_BACKLOG = 0;
+  const BUGHERDAPI_BACKLOG = 'backlog';
 
-  const BUGHERDAPI_TODO = 1;
+  const BUGHERDAPI_TODO = 'todo';
 
-  const BUGHERDAPI_DOING = 2;
+  const BUGHERDAPI_DOING = 'doing';
 
-  const BUGHERDAPI_DONE = 4;
+  const BUGHERDAPI_DONE = 'done';
 
-  const BUGHERDAPI_CLOSED = 5;
+  const BUGHERDAPI_CLOSED = 'closed';
 
   /**
    * The Bugherd api key.
@@ -169,24 +169,46 @@ class HsBugherd {
    *
    * @return mixed
    */
-  public function updateTask($project_id, $task_id, $data) {
+  public function updateTask($task_id, $data, $project_id = NULL) {
     return $this->getApi(self::BUGHERDAPI_TASK)
-      ->update($project_id, $task_id, $data);
+      ->update($project_id ?: $this->projectKey, $task_id, $data);
   }
 
   /**
    * Get all the commments on a particular task.
    *
-   * @param integer $projectId
+   * @param integer $project_id
    *   Project id found from getProjects().
-   * @param integer $taskId
+   * @param integer $task_id
    *   Task id found from getTasks().
    *
    * @return array
    *   Returned response.
    */
-  public function getComments($projectId, $taskId) {
-    return $this->getApi(self::BUGHERDAPI_COMMENT)->all($projectId, $taskId);
+  public function getComments($project_id, $task_id) {
+    return $this->getApi(self::BUGHERDAPI_COMMENT)->all($project_id, $task_id);
+  }
+
+  /**
+   * Add a comment to a task.
+   *
+   * @param int $task_id
+   *   Task ID.
+   * @param array $comment_data
+   *   Keyed array of comment data.
+   * @param int|null $project_id
+   *   Project ID if different than current.
+   *
+   * @throws \Exception
+   *
+   * @see https://www.bugherd.com/api_v2#api_comment_create
+   */
+  public function addComment($task_id, array $comment_data, $project_id = NULL) {
+    if (!isset($comment_data['text'])) {
+      throw new \Exception('Text is required to add a comment');
+    }
+    $this->getApi(self::BUGHERDAPI_COMMENT)
+      ->create($project_id ?: $this->projectKey, $task_id, $comment_data);
   }
 
   /**

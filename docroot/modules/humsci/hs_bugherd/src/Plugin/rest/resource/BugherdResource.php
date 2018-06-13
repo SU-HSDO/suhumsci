@@ -80,15 +80,14 @@ class BugherdResource extends ResourceBase {
    * Responds to entity POST requests.
    *
    * @return \Drupal\rest\ResourceResponse
+   * @throws \Exception
    */
-  public function post($data) {
-    if (isset($data['task']) || isset($data['comment'])) {
-      $response = $this->sendToJira($data)->getKey();
+  public function post(array $data) {
+    // Data from jira has this key. Bugherd does not.
+    if (isset($data['webhookEvent'])) {
+      return new ResourceResponse($this->sendToBugherd($data));
     }
-    else {
-      $response = $this->sendToBugherd($data);
-    }
-    return new ResourceResponse($response);
+    return new ResourceResponse($this->sendToJira($data)->getKey());
   }
 
   /**
@@ -126,7 +125,7 @@ class BugherdResource extends ResourceBase {
    *
    * @return \biologis\JIRA_PHP_API\Issue
    */
-  protected function sendToJira($data) {
+  protected function sendToJira(array $data) {
     if (isset($data['comment'])) {
       // Comment was added in Bugherd.
       $task = $data['comment']['task'];
@@ -171,7 +170,7 @@ class BugherdResource extends ResourceBase {
    * @return string
    *   Created name.
    */
-  protected function getTaskName($task) {
+  protected function getTaskName(array $task) {
     return "BUGHERD-{$task['local_task_id']}: {$task['description']}";
   }
 
@@ -184,7 +183,7 @@ class BugherdResource extends ResourceBase {
    * @return \biologis\JIRA_PHP_API\Issue
    *   Created JIRA issue.
    */
-  protected function createJiraIssue($task) {
+  protected function createJiraIssue(array $task) {
     /** @var \biologis\JIRA_PHP_API\Issue $issue */
     $issue = $this->jiraIssueService->create();
     $issue->fields->project->setKey($this->getJiraProject());
@@ -209,14 +208,16 @@ class BugherdResource extends ResourceBase {
    *   Bugherd ID.
    * @param string $external_id
    *   JIRA Key.
+   * @param int|null $project_id
+   *   Bugherd Project ID if available.
    *
    * @return mixed
    *   Result of the operation.
    */
-  protected function setBugherdExternalId($task_id, $external_id) {
+  protected function setBugherdExternalId($task_id, $external_id, $project_id = NULL) {
     // Just setting the external id value.
     $data = ['external_id' => $external_id];
-    return $this->bugherdApi->updateTask($this->getBugherdProject(), $task_id, $data);
+    return $this->bugherdApi->updateTask($task_id, $data, $project_id);
   }
 
   /**
@@ -228,7 +229,7 @@ class BugherdResource extends ResourceBase {
    * @return string
    *   Build description.
    */
-  protected function buildDescription($task) {
+  protected function buildDescription(array $task) {
     $description = [];
     $description[] = $task['description'];
     $description[] = "Requestor: {$task['requester']['display_name']}";
@@ -258,13 +259,40 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
-   * TODO
-   *
    * @param array $data
    *
-   * @return mixed
+   * @return bool|mixed
+   * @throws \Exception
    */
-  protected function sendToBugherd($data) {
+  protected function sendToBugherd(array $data) {
+    $issue_key = $data['issue']['key'];
+    $bugherd_task = NULL;
+    // Find the bugherd task for this jira ticket.
+    foreach ($this->bugherdApi->getTasks()['tasks'] as $task) {
+      if ($task['external_id'] == $issue_key) {
+        $bugherd_task = $task;
+        break;
+      }
+    }
+
+    // This JIRA Ticket doesn't match to any bugherd ticket.
+    if (!$bugherd_task) {
+      return FALSE;
+    }
+
+    switch ($data['webhookEvent']) {
+      case 'comment_created':
+        $comment = [
+          'text' => $data['comment']['author']['displayName'] . ': ' . $data['comment']['body'],
+        ];
+        return $this->bugherdApi->addComment($bugherd_task['id'], $comment, $bugherd_task['project_id']);
+        break;
+
+      case 'jira:issue_updated':
+        $status = ['status' => HsBugherd::BUGHERDAPI_TODO];
+        return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+    }
+
     return FALSE;
   }
 

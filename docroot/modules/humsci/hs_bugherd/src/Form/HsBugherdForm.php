@@ -2,8 +2,8 @@
 
 namespace Drupal\hs_bugherd\Form;
 
-use Drupal\bugherdapi\Form\BugherdConfigurationForm;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
@@ -15,7 +15,23 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @package Drupal\hs_bugherd\Form
  */
-class HsBugherdForm extends BugherdConfigurationForm {
+class HsBugherdForm extends ConfigFormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [
+      'bugherdapi.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'hs_bugherd_api';
+  }
 
   /**
    * @var \Drupal\hs_bugherd\HsBugherd
@@ -60,7 +76,7 @@ class HsBugherdForm extends BugherdConfigurationForm {
       '#type' => 'textfield',
       '#title' => $this->t('BugHerd API key'),
       '#default_value' => $config->get('api_key'),
-      '#size' => 60,
+      '#required' => TRUE,
       //      '#ajax' => [
       //        'callback' => '::formAjaxSubmit',
       //        'wrapper' => 'project-id',
@@ -69,7 +85,7 @@ class HsBugherdForm extends BugherdConfigurationForm {
 
     $form['project_id'] = [
       '#type' => 'select',
-      '#title' => $this->t('Project'),
+      '#title' => $this->t('Bugherd Project'),
       '#default_value' => $config->get('project_id'),
       '#options' => $this->bugherdApi->getProjects(),
       '#prefix' => '<div id="project-id">',
@@ -79,12 +95,30 @@ class HsBugherdForm extends BugherdConfigurationForm {
       '#type' => 'textfield',
       '#title' => $this->t('Jira Project'),
       '#default_value' => $config->get('jira_project'),
+      '#required' => TRUE,
     ];
-    $form['actions']['rebuild_hooks'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Rebuild Webhooks'),
-      '#submit' => ['::rebuildHooks'],
+
+    $bugherd_statuses = [
+      HsBugherd::BUGHERDAPI_BACKLOG => $this->t('Backlog'),
+      HsBugherd::BUGHERDAPI_TODO => $this->t('ToDo'),
+      HsBugherd::BUGHERDAPI_DOING => $this->t('Doing'),
+      HsBugherd::BUGHERDAPI_DONE => $this->t('Done'),
+      HsBugherd::BUGHERDAPI_CLOSED => $this->t('Closed'),
     ];
+    $form['status_map'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Bugherd to Jira Mapping'),
+      '#tree' => TRUE,
+    ];
+    foreach ($bugherd_statuses as $bugherd_status => $label) {
+      $form['status_map'][$bugherd_status] = [
+        '#type' => 'number',
+        '#title' => $label . $this->t(' Status'),
+        '#description' => $this->t('The JIRA status code for a %label status', ['%label' => $label]),
+        '#required' => TRUE,
+      ];
+    }
+
     return $form;
   }
 
@@ -97,41 +131,8 @@ class HsBugherdForm extends BugherdConfigurationForm {
       ->set('project_id', $form_state->getValue('project_id'))
       ->set('api_key', $form_state->getValue('api_key'))
       ->set('jira_project', $form_state->getValue('jira_project'))
+      ->set('status_map', $form_state->getValue('status_map'))
       ->save();
-  }
-
-  /**
-   * Form submission handler and hook rebuilder.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function rebuildHooks(array &$form, FormStateInterface $form_state) {
-    $bugherd_project_id = $form_state->getValue('project_id');
-    $this->submitForm($form, $form_state);
-    foreach ($this->bugherdApi->getHooks()['webhooks'] as $webhook) {
-      if ($webhook['project_id'] == $bugherd_project_id) {
-        $this->bugherdApi->deleteWebhook($webhook['id']);
-      }
-    }
-    $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
-
-    $bugherd_events = ['task_create', 'task_update', 'comment', 'task_destroy'];
-    foreach ($bugherd_events as $event) {
-      try {
-        $this->bugherdApi->createWebhook([
-          'project_id' => $bugherd_project_id,
-          'event' => $event,
-          'target_url' => "$url/api/hs-bugherd",
-        ]);
-      }
-      catch (\Exception $e) {
-        $this->logger('hs_bugherd')
-          ->error('Unable to add Bugherd Webook for event %event', ['%event' => $event]);
-      }
-    }
   }
 
 }

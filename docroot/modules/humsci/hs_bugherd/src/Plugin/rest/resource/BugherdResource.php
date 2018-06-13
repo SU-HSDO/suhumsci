@@ -4,6 +4,7 @@ namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
+use Drupal\jira_rest\jiraIssueServiceService;
 use Drupal\jira_rest\JiraRestWrapperService;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -30,9 +31,9 @@ class BugherdResource extends ResourceBase {
   protected $bugherdApi;
 
   /**
-   * @var \Drupal\jira_rest\JiraRestWrapperService
+   * @var \biologis\JIRA_PHP_API\IssueService
    */
-  protected $jiraRestWrapper;
+  protected $jiraIssueService;
 
   /**
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -55,7 +56,7 @@ class BugherdResource extends ResourceBase {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, JiraRestWrapperService $jira_wrapper, HsBugherd $bugherd_api, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->bugherdApi = $bugherd_api;
-    $this->jiraRestWrapper = $jira_wrapper;
+    $this->jiraIssueService = $jira_wrapper->getIssueService();
     $this->configFactory = $config_factory;
   }
 
@@ -81,7 +82,7 @@ class BugherdResource extends ResourceBase {
    * @return \Drupal\rest\ResourceResponse
    */
   public function post($data) {
-    if (isset($data['task'])) {
+    if (isset($data['task']) || isset($data['comment'])) {
       $response = $this->sendToJira($data)->getKey();
     }
     else {
@@ -121,18 +122,30 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
-   * @param array $task
+   * @param array $data
    *
    * @return \biologis\JIRA_PHP_API\Issue
    */
-  protected function sendToJira($task) {
-    // Get updated task info.
-    $task = $this->bugherdApi->getTask($task['task']['id']) ?: $task;
-    $task = $task['task'] ?: $task;
+  protected function sendToJira($data) {
+    if (isset($data['comment'])) {
+      // Comment was added in Bugherd.
+      $task = $data['comment']['task'];
+    }
+    else {
+      // When a task is created it doesnt have all the info so we do a call to Get
+      // updated task info.
+      $task = $this->bugherdApi->getTask($data['task']['id']) ?: $data;
+      $task = $task['task'] ?: $task;
+    }
 
     // The task already has a JIRA issue linked.
     if (empty($issue = $this->loadJiraIssue($task['external_id']))) {
       $issue = $this->createJiraIssue($task);
+    }
+
+    if (isset($data['comment'])) {
+      // Add the comment now.
+      $issue->addComment($this->t('From ') . $data['comment']['user']['display_name'] . PHP_EOL . $data['comment']['text']);
     }
     return $issue;
   }
@@ -146,7 +159,7 @@ class BugherdResource extends ResourceBase {
    * @return \biologis\JIRA_PHP_API\Issue
    */
   protected function loadJiraIssue($issue_id) {
-    return $this->jiraRestWrapper->getIssueService()->load($issue_id);
+    return $this->jiraIssueService->load($issue_id);
   }
 
   /**
@@ -172,9 +185,8 @@ class BugherdResource extends ResourceBase {
    *   Created JIRA issue.
    */
   protected function createJiraIssue($task) {
-    $issue_service = $this->jiraRestWrapper->getIssueService();
     /** @var \biologis\JIRA_PHP_API\Issue $issue */
-    $issue = $issue_service->create();
+    $issue = $this->jiraIssueService->create();
     $issue->fields->project->setKey($this->getJiraProject());
     $issue->fields->setDescription($this->buildDescription($task));
     // Issue type : Bug
@@ -239,7 +251,7 @@ class BugherdResource extends ResourceBase {
    */
   protected function searchJira($issue_name) {
     $jira_project = $this->getJiraProject();
-    $issue_service = $this->jiraRestWrapper->getIssueService();
+    $issue_service = $this->jiraIssueService;
     $search = $issue_service->createSearch();
     $search->search("project = $jira_project and summary ~ '$issue_name'");
     return $search->getIssues();

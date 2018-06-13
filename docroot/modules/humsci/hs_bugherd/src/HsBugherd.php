@@ -23,6 +23,16 @@ class HsBugherd {
 
   const BUGHERDAPI_WEBHOOK = 'webhook';
 
+  const BUGHERDAPI_BACKLOG = 0;
+
+  const BUGHERDAPI_TODO = 1;
+
+  const BUGHERDAPI_DOING = 2;
+
+  const BUGHERDAPI_DONE = 4;
+
+  const BUGHERDAPI_CLOSED = 5;
+
   /**
    * The Bugherd api key.
    *
@@ -36,7 +46,7 @@ class HsBugherd {
   protected $client;
 
   /**
-   * BugherdApi constructor.
+   * HsBugherd constructor.
    */
   public function __construct() {
     $this->apiKey = static::getApiKey();
@@ -55,12 +65,28 @@ class HsBugherd {
   }
 
   /**
+   * @param string $key
+   */
+  public function setApiKey($api_key) {
+    $this->apiKey = $api_key;
+    // Rebuild the client
+    $this->client = new Client($this->apiKey);
+  }
+
+  /**
    * @return array|mixed|null
    */
   public static function getProjectId() {
     return \Drupal::configFactory()
       ->get('bugherdapi.settings')
       ->get('project_id');
+  }
+
+  /**
+   * @param string $project_id
+   */
+  public function setProjectId($project_id) {
+    $this->projectKey = $project_id;
   }
 
   /**

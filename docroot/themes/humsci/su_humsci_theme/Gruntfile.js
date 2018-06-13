@@ -90,7 +90,7 @@ module.exports = function(grunt) {
       options: {
         includePaths: [
           "scss",
-          "node_modules/bourbon/app/assets/stylesheets",
+          "node_modules/bourbon/core",
           "node_modules/bourbon-neat/app/assets/stylesheets",
           "node_modules/neat-omega/core",
           "node_modules/decanter/scss",
@@ -111,8 +111,9 @@ module.exports = function(grunt) {
           // 'css/ckeditor.css':  'scss/ckeditor.scss',
 
           // PATTERNS
-          'patterns/molecules/wide-card/scss/wide-card.css': 'patterns/molecules/wide-card/css/wide-card.scss',
-          'patterns/organisms/masonry/css/masonry.css': 'patterns/organisms/masonry/scss/masonry.scss',
+          // 'patterns/molecules/wide-card/css/wide-card.css':  'patterns/molecules/wide-card/scss/wide-card.scss',
+          'patterns/molecules/event-card/css/event-card.css':   'patterns/molecules/event-card/scss/event-card.scss',
+          'patterns/organisms/masonry/css/masonry.css':         'patterns/organisms/masonry/scss/masonry.scss',
 
           // COMPONENTS
           'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',

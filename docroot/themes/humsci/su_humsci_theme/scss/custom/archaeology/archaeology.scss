@@ -14,23 +14,35 @@
   '../utilities/mixins/index';
 
 // Heading
-  h1 {
-    @include heading-dash(6px, $color-sun, 50px);
-  }
+h1 {
+  @include heading-dash(6px, $color-sun, 50px);
+}
 
-  h2 {
-    @include heading-dash(4px, $color-sun, 40px);
-  }
+h2 {
+  @include heading-dash(4px, $color-sun, 40px);
+}
 
-  h3 {
-    @include heading-dash(3px, $color-sun, 30px);
-  }
+h3 {
+  @include heading-dash(3px, $color-sun, 30px);
+}
 
-  h4 {
-    @include heading-dash(3px, $color-sun, 25px);
-  }
+h4 {
+  @include heading-dash(3px, $color-sun, 25px);
+}
 
-  h5,
-  h6 {
-    @include heading-dash(2px, $color-sun, 20px);
+h5,
+h6 {
+  @include heading-dash(2px, $color-sun, 20px);
+}
+
+// Headers without dash
+h3.event-card__title {
+  &:after {
+    content: none;
   }
+}
+
+// Event category dash
+.accent-dash {
+  @include accent-dash(2px, $color-sun, 20px);
+}

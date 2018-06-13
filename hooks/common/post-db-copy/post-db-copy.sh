@@ -9,6 +9,14 @@ deployed_tag="$4"
 repo_url="$5"
 repo_type="$6"
 
+
+echo "site: $site"
+echo "target_env: $target_env"
+echo "source_branch: $source_branch"
+echo "deployed_tag: $deployed_tag"
+echo "repo_url: $repo_url"
+echo "repo_type: $repo_type"
+
 # Prep for BLT commands.
 repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH

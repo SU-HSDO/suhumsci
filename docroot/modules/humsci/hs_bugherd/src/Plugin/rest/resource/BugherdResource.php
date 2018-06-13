@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
@@ -50,13 +51,19 @@ class BugherdResource extends ResourceBase {
   protected $bugherdProject;
 
   /**
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, JiraRestWrapperService $jira_wrapper, HsBugherd $bugherd_api, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, JiraRestWrapperService $jira_wrapper, HsBugherd $bugherd_api, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->bugherdApi = $bugherd_api;
     $this->jiraIssueService = $jira_wrapper->getIssueService();
     $this->configFactory = $config_factory;
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -71,17 +78,26 @@ class BugherdResource extends ResourceBase {
       $container->get('logger.factory')->get('rest'),
       $container->get('jira_rest_wrapper_service'),
       $container->get('hs_bugherd'),
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('cache.default')
     );
   }
 
   /**
    * Responds to entity POST requests.
    *
+   * @param array $data
+   *   Post data from API.
+   *
    * @return \Drupal\rest\ResourceResponse
    * @throws \Exception
    */
   public function post(array $data) {
+    if ($this->cacheBackend->get('hs_bugherd_api')) {
+      return new ResourceResponse($this->t('Must wait 10 seconds between calls'));
+    }
+    $this->cacheBackend->set('hs_bugherd_api', TRUE, time() + 10);
+
     // Data from jira has this key. Bugherd does not.
     if (isset($data['webhookEvent'])) {
       return new ResourceResponse($this->sendToBugherd($data));
@@ -120,9 +136,13 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
-   * @param array $data
+   * Array of data from bugherd.
    *
-   * @return \biologis\JIRA_PHP_API\Issue
+   * @param array $data
+   *   Bugherd api data.
+   *
+   * @return string
+   *   The Jira issue that was created/updated.
    */
   protected function sendToJira(array $data) {
     if (isset($data['comment'])) {
@@ -134,7 +154,6 @@ class BugherdResource extends ResourceBase {
       // When a task is created it doesnt have all the info so we do a call to Get
       // updated task info.
       $task = $this->bugherdApi->getTask($data['task']['id']) ?: $data;
-      return $task;
       $task = $task['task'] ?: $task;
     }
 
@@ -147,7 +166,7 @@ class BugherdResource extends ResourceBase {
       // Add the comment now.
       $issue->addComment($this->t('From ') . $data['comment']['user']['display_name'] . PHP_EOL . $data['comment']['text']);
     }
-    return $issue;
+    return $issue->getKey();
   }
 
   /**
@@ -233,9 +252,14 @@ class BugherdResource extends ResourceBase {
   protected function buildDescription(array $task) {
     $description = [];
     $description[] = $task['description'];
+    $description[] = '';
     $description[] = "Requestor: {$task['requester']['display_name']}";
     $description[] = "URL: {$task['site']}{$task['url']}";
     $description[] = "Browser: {$task['requester_browser']}";
+    $description[] = "Browser size: {$task['requester_browser_size']}";
+    $description[] = "Browser size: {$task['requester_resolution']}";
+    $description[] = "Item Selector: {$task['selector_info']['path']}";
+
     if ($screenshot = $task['screenshot_url']) {
       $description[] = "Screenshot: {$task['screenshot_url']}";
     }
@@ -294,7 +318,8 @@ class BugherdResource extends ResourceBase {
    */
   protected function getTranslatedStatus($status) {
     $config = $this->configFactory->get('bugherdapi.settings');
-    $status_map = array_flip($config['status_map']);
+    $status_map = $config->get('status_map');
+    $status_map = array_flip($status_map);
     return $status_map[$status] ?: HsBugherd::BUGHERDAPI_TODO;
   }
 

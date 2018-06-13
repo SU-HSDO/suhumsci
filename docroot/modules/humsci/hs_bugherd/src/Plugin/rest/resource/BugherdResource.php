@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
@@ -58,12 +57,11 @@ class BugherdResource extends ResourceBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, JiraRestWrapperService $jira_wrapper, HsBugherd $bugherd_api, ConfigFactoryInterface $config_factory, CacheBackendInterface $cache_backend) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, JiraRestWrapperService $jira_wrapper, HsBugherd $bugherd_api, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->bugherdApi = $bugherd_api;
     $this->jiraIssueService = $jira_wrapper->getIssueService();
     $this->configFactory = $config_factory;
-    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -78,8 +76,7 @@ class BugherdResource extends ResourceBase {
       $container->get('logger.factory')->get('rest'),
       $container->get('jira_rest_wrapper_service'),
       $container->get('hs_bugherd'),
-      $container->get('config.factory'),
-      $container->get('cache.default')
+      $container->get('config.factory')
     );
   }
 
@@ -93,11 +90,6 @@ class BugherdResource extends ResourceBase {
    * @throws \Exception
    */
   public function post(array $data) {
-    if ($this->cacheBackend->get('hs_bugherd_api')) {
-      return new ResourceResponse($this->t('Must wait 10 seconds between calls'));
-    }
-    $this->cacheBackend->set('hs_bugherd_api', TRUE, time() + 10);
-
     // Data from jira has this key. Bugherd does not.
     if (isset($data['webhookEvent'])) {
       return new ResourceResponse($this->sendToBugherd($data));
@@ -146,6 +138,10 @@ class BugherdResource extends ResourceBase {
    */
   protected function sendToJira(array $data) {
     if (isset($data['comment'])) {
+      if (empty($data['comment']['user']['email'])) {
+        return $this->t('Comment rejected from Anonymous');
+      }
+
       // Comment was added in Bugherd.
       $task = $data['comment']['task'];
     }
@@ -273,6 +269,12 @@ class BugherdResource extends ResourceBase {
    * @throws \Exception
    */
   protected function sendToBugherd(array $data) {
+    $jira_user = $this->configFactory->get('jira_rest.settings')
+      ->get('jira_rest.username');
+    if ($data['comment']['author']['name'] == $jira_user) {
+      return $this->t('Comment rejected from @name', ['@name' => $data['comment']['author']['name']]);
+    }
+
     $issue_key = $data['issue']['key'];
     $bugherd_task = NULL;
     // Find the bugherd task for this jira ticket.

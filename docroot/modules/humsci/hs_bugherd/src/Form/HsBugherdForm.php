@@ -77,10 +77,10 @@ class HsBugherdForm extends ConfigFormBase {
       '#title' => $this->t('BugHerd API key'),
       '#default_value' => $config->get('api_key'),
       '#required' => TRUE,
-      //      '#ajax' => [
-      //        'callback' => '::formAjaxSubmit',
-      //        'wrapper' => 'project-id',
-      //      ],
+      //'#ajax' => [
+      //  'callback' => '::formAjaxSubmit',
+      //  'wrapper' => 'project-id',
+      //],
     ];
 
     $form['project_id'] = [

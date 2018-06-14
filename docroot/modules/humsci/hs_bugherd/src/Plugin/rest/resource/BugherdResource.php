@@ -2,8 +2,6 @@
 
 namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
-use biologis\JIRA_PHP_API\CommentService;
-use biologis\JIRA_PHP_API\Issue;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
@@ -95,7 +93,7 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
-   * Responds to entity POST requests.
+   * Responds to POST requests.
    *
    * @param array $data
    *   Post data from API.
@@ -267,7 +265,7 @@ class BugherdResource extends ResourceBase {
    */
   protected function getTaskName(array $task) {
     // Trim down the descrption to only 5 words so we dont clutter up JIRA with
-    // a long paragraph.
+    // a long paragraph as the summary.
     $description_words = explode(' ', trim($task['description']));
     $title = array_slice($description_words, 0, 5);
     $title = implode(' ', $title);

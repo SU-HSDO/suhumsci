@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * hs_bugherd.module
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\encrypt\Entity\EncryptionProfile;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_bugherd_form_jira_rest_config_form_alter(&$form, FormStateInterface $form_state) {
+  if (\Drupal::moduleHandler()->moduleExists('encrypt')) {
+    array_unshift($form['#submit'], 'hs_bugherd_form_jira_rest_config_form_submit');
+  }
+}
+
+/**
+ * Submit handler to encrypt password.
+ */
+function hs_bugherd_form_jira_rest_config_form_submit($form, FormStateInterface $form_state) {
+  if ($password = &$form_state->getValue('password')) {
+    if ($encryption_profile = EncryptionProfile::load('real_aes')) {
+      // Encrypt the password saved to configuration.
+      $password = \Drupal::service('encryption')->encrypt($password, $encryption_profile);
+    }
+  }
+}

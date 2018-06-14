@@ -82,7 +82,7 @@ class HsBugherdForm extends ConfigFormBase {
       //        'wrapper' => 'project-id',
       //      ],
     ];
-    dpm($this->jiraIssueService->load('ARCH-107'));
+//    dpm($this->jiraIssueService->load('ARCH-107'));
 
     $form['project_id'] = [
       '#type' => 'select',

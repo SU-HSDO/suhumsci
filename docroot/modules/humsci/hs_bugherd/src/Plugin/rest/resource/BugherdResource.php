@@ -346,7 +346,7 @@ class BugherdResource extends ResourceBase {
     $description[] = "Browser: {$task['requester_browser']}";
     $description[] = "Browser size: {$task['requester_browser_size']}";
     $description[] = "Browser size: {$task['requester_resolution']}";
-    $description[] = "Item: {$task['selector_info']['html']}";
+    $description[] = "Item: " . strip_tags($task['selector_info']['html'], '<img><a><p><iframe>');
 
     if ($screenshot = $task['screenshot_url']) {
       $description[] = "Screenshot: {$task['screenshot_url']}";

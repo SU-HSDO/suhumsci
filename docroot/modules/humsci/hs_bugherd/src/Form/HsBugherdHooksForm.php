@@ -120,7 +120,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
+//    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
 
     $config = $this->config('bugherdapi.settings');
 
@@ -240,7 +240,10 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $project_id = $config->get('project_id');
 
     $hooks = [];
-    $bugherd_hooks = $this->bugherdApi->getHooks() ?: ['webhooks' => []];
+    $bugherd_hooks = $this->bugherdApi->getHooks();
+    if (!isset($bugherd_hooks['webhooks'])) {
+      return [];
+    }
     foreach ($bugherd_hooks['webhooks'] as $webhook) {
       if ($webhook['project_id'] == $project_id) {
         $hooks[] = $webhook;

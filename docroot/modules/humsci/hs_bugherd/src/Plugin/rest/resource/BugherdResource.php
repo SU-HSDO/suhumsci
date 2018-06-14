@@ -87,14 +87,19 @@ class BugherdResource extends ResourceBase {
    *   Post data from API.
    *
    * @return \Drupal\rest\ResourceResponse
-   * @throws \Exception
    */
   public function post(array $data) {
-    // Data from jira has this key. Bugherd does not.
-    if (isset($data['webhookEvent'])) {
-      return new ResourceResponse($this->sendToBugherd($data));
+    try {
+      // Data from jira has this key. Bugherd does not.
+      if (isset($data['webhookEvent'])) {
+        return new ResourceResponse($this->sendToBugherd($data));
+      }
+      return new ResourceResponse($this->sendToJira($data));
     }
-    return new ResourceResponse($this->sendToJira($data));
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+      return new ResourceResponse($e->getMessage());
+    }
   }
 
   /**
@@ -135,10 +140,12 @@ class BugherdResource extends ResourceBase {
    *
    * @return string
    *   The Jira issue that was created/updated.
+   * @throws \Exception
    */
   protected function sendToJira(array $data) {
     if (isset($data['comment'])) {
       if (empty($data['comment']['user']['email'])) {
+        $this->logger->info('Anonymous comment rejected for ticket @id', ['@id' => $data['comment']['task']['local_task_id']]);
         return $this->t('Comment rejected from Anonymous');
       }
 
@@ -155,12 +162,28 @@ class BugherdResource extends ResourceBase {
 
     // The task already has a JIRA issue linked.
     if (empty($issue = $this->getJiraIssue($task['external_id']))) {
-      $issue = $this->createJiraIssue($task);
+      if ($issue = $this->createJiraIssue($task)) {
+        $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
+          '@jira' => $issue->getKey(),
+          '@bugherd' => $task['local_task_id'],
+        ]);
+      }
+      else {
+        throw new \Exception(t('JIRA issue could not be created for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
+      }
     }
 
     if (isset($data['comment'])) {
       // Add the comment now.
-      $issue->addComment($this->t('From ') . $data['comment']['user']['display_name'] . PHP_EOL . $data['comment']['text']);
+      if ($issue->addComment($this->t('From ') . $data['comment']['user']['display_name'] . PHP_EOL . $data['comment']['text'])) {
+        $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
+          '@jira' => $issue->getKey(),
+          '@bugherd' => $task['local_task_id'],
+        ]);
+      }
+      else {
+        throw new \Exception(t('JIRA issue could not be created for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
+      }
     }
     return $issue->getKey();
   }
@@ -187,7 +210,13 @@ class BugherdResource extends ResourceBase {
    *   Created name.
    */
   protected function getTaskName(array $task) {
-    return "BUGHERD-{$task['local_task_id']}: {$task['description']}";
+    // Trim down the descrption to only 5 words so we dont clutter up JIRA with
+    // a long paragraph.
+    $description_words = explode(' ', trim($task['description']));
+    $title = array_slice($description_words, 0, 5);
+    $title = implode(' ', $title);
+    $title .= count($description_words) > 5 ? '...' : '';
+    return "BUGHERD-{$task['local_task_id']}: $title";
   }
 
   /**
@@ -204,15 +233,13 @@ class BugherdResource extends ResourceBase {
     $issue = $this->jiraIssueService->create();
     $issue->fields->project->setKey($this->getJiraProject());
     $issue->fields->setDescription($this->buildDescription($task));
-    // Issue type : Bug
     $issue->fields->issuetype->setId('1');
     $issue->fields->addGenericJiraObject('priority');
-    //Priority Minor
     $issue->fields->priority->setId('4');
     $issue->fields->setSummary($this->getTaskName($task));
-
-    //create the parent issue
     $issue->save();
+
+    // Now that the JIRA issue is created, link it to the bugherd item.
     $this->setBugherdExternalId($task['id'], $issue->getKey());
     return $issue;
   }
@@ -254,7 +281,7 @@ class BugherdResource extends ResourceBase {
     $description[] = "Browser: {$task['requester_browser']}";
     $description[] = "Browser size: {$task['requester_browser_size']}";
     $description[] = "Browser size: {$task['requester_resolution']}";
-    $description[] = "Item Selector: {$task['selector_info']['path']}";
+    $description[] = "Item: {$task['selector_info']['html']}";
 
     if ($screenshot = $task['screenshot_url']) {
       $description[] = "Screenshot: {$task['screenshot_url']}";
@@ -271,10 +298,12 @@ class BugherdResource extends ResourceBase {
   protected function sendToBugherd(array $data) {
     $issue_key = $data['issue']['key'];
     if (!($bugherd_task = $this->getBugherdTask($issue_key))) {
+      $this->logger->info('Unable to find bugherd ticket for issue: @key', ['@key' => $issue_key]);
       return FALSE;
     }
 
-    if (!$this->isNewBugherdComment($bugherd_task, $data['comment'])) {
+    if (isset($data['comment']) && !$this->isNewBugherdComment($bugherd_task, $data['comment'])) {
+      $this->logger->info('Comment rejected from @name. Comment is not new.', ['@name' => $data['comment']['author']['name']]);
       return $this->t('Comment rejected from @name', ['@name' => $data['comment']['author']['name']]);
     }
 

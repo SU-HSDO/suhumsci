@@ -2,6 +2,8 @@
 
 namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
+use biologis\JIRA_PHP_API\CommentService;
+use biologis\JIRA_PHP_API\Issue;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
@@ -25,31 +27,43 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BugherdResource extends ResourceBase {
 
   /**
+   * Bugherd API service.
+   *
    * @var \Drupal\hs_bugherd\HsBugherd
    */
   protected $bugherdApi;
 
   /**
+   * Jira rest service.
+   *
    * @var \biologis\JIRA_PHP_API\IssueService
    */
   protected $jiraIssueService;
 
   /**
+   * Configuration factory service.
+   *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
+   * The Jira project to sync bugherd to.
+   *
    * @var string
    */
   protected $jiraProject;
 
   /**
-   * @var string
+   * Bugherd Project ID
+   *
+   * @var int
    */
   protected $bugherdProject;
 
   /**
+   * Cache backend service.
+   *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackend;
@@ -143,50 +157,89 @@ class BugherdResource extends ResourceBase {
    * @throws \Exception
    */
   protected function sendToJira(array $data) {
-    if (isset($data['comment'])) {
-      if (empty($data['comment']['user']['email'])) {
-        $this->logger->info('Anonymous comment rejected for ticket @id', ['@id' => $data['comment']['task']['local_task_id']]);
-        return $this->t('Comment rejected from Anonymous');
-      }
 
-      // Comment was added in Bugherd.
+    // Bugherd commented.
+    if (isset($data['comment'])) {
       $task = $data['comment']['task'];
-    }
-    else {
-      // Task was created in bugherd.
-      // When a task is created it doesnt have all the info so we do a call to Get
-      // updated task info.
-      $task = $this->bugherdApi->getTask($data['task']['id']) ?: $data;
-      $task = $task['task'] ?: $task;
+      unset($data['comment']['task']);
+      return $this->bugherdTaskCommented($data['comment'], $task);
     }
 
-    // The task already has a JIRA issue linked.
+    // Bugherd task created or updated.
+    return $this->bugherdTaskUpdated($data['task']);
+  }
+
+  /**
+   * A task was either created or updated, find/create jira issue and update.
+   *
+   * @param array $task
+   *   Bugherd API data.
+   *
+   * @return string
+   *   Jira issue id.
+   *
+   * @throws \Exception
+   */
+  protected function bugherdTaskUpdated(array $task) {
+    $new_issue_created = FALSE;
+    // Create a jira issue if none exists.
     if (empty($issue = $this->getJiraIssue($task['external_id']))) {
-      if ($issue = $this->createJiraIssue($task)) {
-        $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
-          '@jira' => $issue->getKey(),
-          '@bugherd' => $task['local_task_id'],
-        ]);
-      }
-      else {
-        throw new \Exception(t('JIRA issue could not be created for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
-      }
+      $new_issue_created = TRUE;
+      $issue = $this->createJiraIssue($task);
+
+      $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
+        '@jira' => $issue->getKey(),
+        '@bugherd' => $task['local_task_id'],
+      ]);
     }
 
-    if (isset($data['comment'])) {
-      // Add the comment now.
-      if ($issue->addComment($this->t('From ') . $data['comment']['user']['display_name'] . PHP_EOL . $data['comment']['text'])) {
-        $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
-          '@jira' => $issue->getKey(),
-          '@bugherd' => $task['local_task_id'],
-        ]);
-      }
-      else {
-        throw new \Exception(t('JIRA issue could not be created for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
-      }
+    // Issue needs to be updated.
+    if (!$new_issue_created) {
+      $issue->fields->setDescription($this->buildDescription($task));
+      $issue->save();
     }
     return $issue->getKey();
   }
+
+  /**
+   * Add a comment to JIRA from bugherd.
+   *
+   * @param array $comment
+   *   Bugherd Comment data.
+   * @param array $task
+   *   Bugherd Task data.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+   *   Updated issue or message.
+   *
+   * @throws \Exception
+   */
+  protected function bugherdTaskCommented(array $comment, array $task) {
+    // Block comments from anonymous users so we don't have looping APIs.
+    if (empty($comment['user']['email'])) {
+      $this->logger->info('Anonymous comment rejected for ticket @id', ['@id' => $task['local_task_id']]);
+      return $this->t('Comment rejected from Anonymous');
+    }
+
+    if ($issue = $this->getJiraIssue($task['external_id'])) {
+      // Add the comment now.
+      if ($issue->addComment($comment['text'])) {
+        $this->logger->info('New comment sent to JIRA issue from @name. Jira: @jira, Bugherd: @bugherd', [
+          '@name' => $comment['user']['display_name'],
+          '@jira' => $issue->getKey(),
+          '@bugherd' => $task['local_task_id'],
+        ]);
+      }
+      else {
+        throw new \Exception(t('JIRA comment could not be created for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
+      }
+
+      return $issue->getKey();
+    }
+
+    throw new \Exception(t('Unable to find JIRA ticket for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
+  }
+
 
   /**
    * Load a specific JIRA issue.
@@ -197,7 +250,7 @@ class BugherdResource extends ResourceBase {
    * @return \biologis\JIRA_PHP_API\Issue
    */
   protected function getJiraIssue($issue_id) {
-    return $this->jiraIssueService->load($issue_id);
+    return $issue_id ? $this->jiraIssueService->load($issue_id) : FALSE;
   }
 
   /**
@@ -229,6 +282,7 @@ class BugherdResource extends ResourceBase {
    *   Created JIRA issue.
    */
   protected function createJiraIssue(array $task) {
+
     /** @var \biologis\JIRA_PHP_API\Issue $issue */
     $issue = $this->jiraIssueService->create();
     $issue->fields->project->setKey($this->getJiraProject());
@@ -237,6 +291,14 @@ class BugherdResource extends ResourceBase {
     $issue->fields->addGenericJiraObject('priority');
     $issue->fields->priority->setId('4');
     $issue->fields->setSummary($this->getTaskName($task));
+    $issue->fields->addGenericJiraObject('reporter');
+    $issue->fields->reporter->setName('');
+
+    if (strpos($task['requestor']['email'], 'stanford.edu') !== FALSE) {
+      $requester_sunet = substr($task['requestor']['email'], 0, strpos($task['requestor']['email'], '@'));
+      $issue->fields->reporter->setName($requester_sunet);
+    }
+
     $issue->save();
 
     // Now that the JIRA issue is created, link it to the bugherd item.
@@ -327,7 +389,7 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
-   * Get the bugherd task that matches the jira issue id.
+   * Get the bugherd task that matches the jira issue id using the external_id.
    *
    * @param string $jira_issue
    *   Jira issue id.

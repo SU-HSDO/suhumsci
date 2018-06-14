@@ -65,7 +65,7 @@ class HsBugherd {
   }
 
   /**
-   * @param string $key
+   * @param string $api_key
    */
   public function setApiKey($api_key) {
     $this->apiKey = $api_key;
@@ -120,7 +120,7 @@ class HsBugherd {
    * @return array
    *   Returned response.
    */
-  public function getUsers($members = TRUE, $guests = TRUE) {
+  public function getAllUsers($members = TRUE, $guests = TRUE) {
     if ($guests && $members) {
       return $this->getApi(self::BUGHERDAPI_USER)->all();
     }
@@ -131,6 +131,26 @@ class HsBugherd {
       return $this->getApi(self::BUGHERDAPI_USER)->getGuests();
     }
     return [];
+  }
+
+  /**
+   * Get list of all members in the organization.
+   *
+   * @return array
+   *   Returned response.
+   */
+  public function getMembers() {
+    return $this->getAllUsers(TRUE, FALSE);
+  }
+
+  /**
+   * Get list of all guests in the organization.
+   *
+   * @return array
+   *   Returned response.
+   */
+  public function getGuests() {
+    return $this->getAllUsers(FALSE, TRUE);
   }
 
   /**
@@ -156,7 +176,7 @@ class HsBugherd {
    *
    * https://www.bugherd.com/api_v2#api_task_list
    */
-  public function getTasks($project_id = NULL, array $params = array()) {
+  public function getTasks($project_id = NULL, array $params = []) {
     return $this->getApi(self::BUGHERDAPI_TASK)
       ->all($project_id ?: $this->projectKey, $params);
   }

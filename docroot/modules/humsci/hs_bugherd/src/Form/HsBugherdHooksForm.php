@@ -117,18 +117,17 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    Cache::invalidateTags(['hs_bugherd_hooks']);
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-//    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
+    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
 
     $config = $this->config('bugherdapi.settings');
 
     $bugherd_project = $config->get('project_id');
 
     // Delete all bugherd webhooks for this project.
-    foreach ($this->getBugherdHooks() as $webhook) {
+    foreach ($this->getBugherdHooks(TRUE) as $webhook) {
       $this->bugherdApi->deleteWebhook($webhook['id']);
     }
 
@@ -157,7 +156,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       ],
     ];
 
-    $jira_hooks = $this->getJiraHooks();
+    $jira_hooks = $this->getJiraHooks(TRUE);
     // Jira hooks don't exist, so lets make one.
     if (empty($jira_hooks)) {
       $this->jiraIssueService->getCommunicationService()
@@ -169,6 +168,8 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       $this->jiraIssueService->getCommunicationService()
         ->put('/rest/webhooks/1.0/webhook/' . $hook_id, (object) $hook_data);
     }
+
+    Cache::invalidateTags(['hs_bugherd_hooks']);
   }
 
   /**
@@ -193,12 +194,15 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   /**
    * Get the Jira hook for bugherd api (normally only 1).
    *
+   * @param bool $ignore_cache
+   *   Ignore the cacheed hooks.
+   *
    * @return array
    *   Keyed array with the hook id as the array key.
    */
-  protected function getJiraHooks() {
+  protected function getJiraHooks($ignore_cache = FALSE) {
     $cache = $this->cacheBackend->get('hs_bugherd_jira_hooks');
-    if ($cache) {
+    if (!$ignore_cache && $cache) {
       return $cache->data;
     }
 
@@ -220,12 +224,15 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   /**
    * Get all the bugherd hooks for this project.
    *
+   * @param bool $ignore_cache
+   *   Ignore the cacheed hooks.
+   *
    * @return array
    *   Array of webhooks.
    */
-  protected function getBugherdHooks() {
+  protected function getBugherdHooks($ignore_cache = FALSE) {
     $cache = $this->cacheBackend->get('hs_bugherd_bugherd_hooks');
-    if ($cache) {
+    if (!$ignore_cache && $cache) {
       return $cache->data;
     }
 
@@ -233,7 +240,8 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $project_id = $config->get('project_id');
 
     $hooks = [];
-    $bugherd_hooks = $this->bugherdApi->getHooks();
+    $bugherd_hooks = $this->bugherdApi->getHooks() ?: ['webhooks' => []];
+    dpm($bugherd_hooks);
     foreach ($bugherd_hooks['webhooks'] as $webhook) {
       if ($webhook['project_id'] == $project_id) {
         $hooks[] = $webhook;

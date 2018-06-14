@@ -82,6 +82,7 @@ class HsBugherdForm extends ConfigFormBase {
       //        'wrapper' => 'project-id',
       //      ],
     ];
+    dpm($this->jiraIssueService->load('ARCH-107'));
 
     $form['project_id'] = [
       '#type' => 'select',
@@ -98,28 +99,50 @@ class HsBugherdForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    $bugherd_statuses = [
-      HsBugherd::BUGHERDAPI_BACKLOG => $this->t('Backlog'),
-      HsBugherd::BUGHERDAPI_TODO => $this->t('ToDo'),
-      HsBugherd::BUGHERDAPI_DOING => $this->t('Doing'),
-      HsBugherd::BUGHERDAPI_DONE => $this->t('Done'),
-      HsBugherd::BUGHERDAPI_CLOSED => $this->t('Closed'),
-    ];
     $form['status_map'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Bugherd to Jira Mapping'),
       '#tree' => TRUE,
     ];
 
-    foreach ($bugherd_statuses as $bugherd_status => $label) {
-      $form['status_map'][$bugherd_status] = [
-        '#type' => 'number',
-        '#title' => $label . $this->t(' Status'),
-        '#description' => $this->t('The JIRA status code for a %label status', ['%label' => $label]),
-        '#required' => TRUE,
-        '#default_value' => $config->get('status_map.' . $bugherd_status),
-      ];
-    }
+    $form['status_map'][HsBugherd::BUGHERDAPI_BACKLOG] = [
+      '#type' => 'number',
+      '#title' => $this->t('Backlog Status'),
+      '#description' => $this->t('The JIRA status code for a "Backlog" status.'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('status_map.' . HsBugherd::BUGHERDAPI_BACKLOG),
+    ];
+
+    $form['status_map'][HsBugherd::BUGHERDAPI_TODO] = [
+      '#type' => 'number',
+      '#title' => $this->t('ToDo Status'),
+      '#description' => $this->t('The JIRA status code for a "To Do" status.'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('status_map.' . HsBugherd::BUGHERDAPI_TODO),
+    ];
+    $form['status_map'][HsBugherd::BUGHERDAPI_DOING] = [
+      '#type' => 'number',
+      '#title' => $this->t('Doing Status'),
+      '#description' => $this->t('The JIRA status code for a "Doing" status.'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('status_map.' . HsBugherd::BUGHERDAPI_DOING),
+    ];
+
+    $form['status_map'][HsBugherd::BUGHERDAPI_DONE] = [
+      '#type' => 'number',
+      '#title' => $this->t('Done Status'),
+      '#description' => $this->t('The JIRA status code for a "Done" status.'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('status_map.' . HsBugherd::BUGHERDAPI_DONE),
+    ];
+
+    $form['status_map'][HsBugherd::BUGHERDAPI_CLOSED] = [
+      '#type' => 'number',
+      '#title' => $this->t('Closed Status'),
+      '#description' => $this->t('The JIRA status code for a "Closed" status. This is normally after the user has accepted the change.'),
+      '#required' => TRUE,
+      '#default_value' => $config->get('status_map.' . HsBugherd::BUGHERDAPI_CLOSED),
+    ];
 
     return $form;
   }

@@ -241,7 +241,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
 
     $hooks = [];
     $bugherd_hooks = $this->bugherdApi->getHooks() ?: ['webhooks' => []];
-    dpm($bugherd_hooks);
     foreach ($bugherd_hooks['webhooks'] as $webhook) {
       if ($webhook['project_id'] == $project_id) {
         $hooks[] = $webhook;

@@ -283,7 +283,7 @@ class BugherdResource extends ResourceBase {
         $comment = [
           'text' => $data['comment']['author']['displayName'] . ': ' . $data['comment']['body'],
         ];
-        return $this->bugherdApi->addComment($bugherd_task['id'], $comment, $bugherd_task['project_id']);
+        return $this->bugherdApi->addComment($bugherd_task['id'], $comment);
         break;
 
       case 'jira:issue_updated':
@@ -315,15 +315,25 @@ class BugherdResource extends ResourceBase {
   }
 
   /**
+   * Check if the bugherd task has a comment that matches the new comment.
+   *
+   * When a comment is added in bugherd, it sends the data to JIRA. Jira then
+   * fires it's webhook and attempts to send the data back to Bugherd. This
+   * would cause duplicate comments. So we check if any comment in bugherd
+   * has the same text as the new comment from JIRA.
+   *
    * @param array $bugherd_task
-   * @param array $comment
+   *   Bugherd task matching the Jira issue.
+   * @param array $new_comment
+   *   New comment data from JIRA
    *
    * @return bool
+   *   If the comment already exists in Bugherd.
    */
-  protected function isNewBugherdComment(array $bugherd_task, array $comment) {
+  protected function isNewBugherdComment(array $bugherd_task, array $new_comment) {
     $comments = $this->bugherdApi->getComments($bugherd_task['id']);
-    foreach ($comments as $comment) {
-      if (strpos($comment['body'], $comment['text']) !== FALSE) {
+    foreach ($comments['comments'] as $comment) {
+      if (strpos($new_comment['body'], $comment['text']) !== FALSE) {
         return FALSE;
       }
     }

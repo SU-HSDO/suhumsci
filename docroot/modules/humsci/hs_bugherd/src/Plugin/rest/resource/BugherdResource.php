@@ -297,8 +297,8 @@ class BugherdResource extends ResourceBase {
     $issue->fields->addGenericJiraObject('reporter');
     $issue->fields->reporter->setName('');
 
-    if (strpos($task['requestor']['email'], 'stanford.edu') !== FALSE) {
-      $requester_sunet = substr($task['requestor']['email'], 0, strpos($task['requestor']['email'], '@'));
+    if (strpos($task['requester']['email'], 'stanford.edu') !== FALSE) {
+      $requester_sunet = substr($task['requester']['email'], 0, strpos($task['requester']['email'], '@'));
       $issue->fields->reporter->setName($requester_sunet);
     }
 
@@ -341,7 +341,7 @@ class BugherdResource extends ResourceBase {
     $description = [];
     $description[] = $task['description'];
     $description[] = '';
-    $description[] = "Requestor: {$task['requester']['display_name']}";
+    $description[] = "Requester: {$task['requester']['display_name']}";
     $description[] = "URL: {$task['site']}{$task['url']}";
     $description[] = "Browser: {$task['requester_browser']}";
     $description[] = "Browser size: {$task['requester_browser_size']}";

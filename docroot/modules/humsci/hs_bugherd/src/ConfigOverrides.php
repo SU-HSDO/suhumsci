@@ -50,11 +50,15 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $overrides = [];
     if (in_array('jira_rest.settings', $names) && $this->moduleHandler->moduleExists('encrypt')) {
 
-      // Get the original encrypted password without overrides.
-      $encrypted_password = $this->configFactory->getEditable('jira_rest.settings')
-        ->getOriginal('jira_rest.password', FALSE);
+      $original_config = $this->configFactory->getEditable('jira_rest.settings');
 
-      if ($encryption_profile = EncryptionProfile::load('real_aes')) {
+      // Get the original encrypted password without overrides.
+      $encrypted_password = $original_config->getOriginal('jira_rest.password', FALSE);
+
+      // Get the encrypt profile id.
+      $profile_id = $original_config->getOriginal('jira_rest.encryption_id', FALSE);
+
+      if ($encryption_profile = EncryptionProfile::load($profile_id)) {
 
         try {
           // Decrypt the password.

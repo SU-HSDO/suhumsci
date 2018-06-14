@@ -197,6 +197,10 @@ class BugherdResource extends ResourceBase {
     if (!$new_issue_created) {
       $issue->fields->setDescription($this->buildDescription($task));
       $issue->save();
+
+      if ($task['status'] == HsBugherd::BUGHERDAPI_CLOSED) {
+        $issue->addComment($this->t('Issue closed in Bugherd by @name', ['@name' => $task['updater']['display_name']]));
+      }
     }
     return $issue->getKey();
   }
@@ -239,7 +243,6 @@ class BugherdResource extends ResourceBase {
 
     throw new \Exception(t('Unable to find JIRA ticket for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
   }
-
 
   /**
    * Load a specific JIRA issue.

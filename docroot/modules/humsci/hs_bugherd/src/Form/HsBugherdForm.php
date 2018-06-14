@@ -121,8 +121,6 @@ class HsBugherdForm extends ConfigFormBase {
       ];
     }
 
-    //    dpm($this->bugherdApi->getTasks());
-    dpm($this->bugherdApi->getComments('6778513'));
     return $form;
   }
 

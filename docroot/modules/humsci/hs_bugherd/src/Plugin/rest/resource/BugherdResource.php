@@ -154,7 +154,7 @@ class BugherdResource extends ResourceBase {
     }
 
     // The task already has a JIRA issue linked.
-    if (empty($issue = $this->loadJiraIssue($task['external_id']))) {
+    if (empty($issue = $this->getJiraIssue($task['external_id']))) {
       $issue = $this->createJiraIssue($task);
     }
 
@@ -173,7 +173,7 @@ class BugherdResource extends ResourceBase {
    *
    * @return \biologis\JIRA_PHP_API\Issue
    */
-  protected function loadJiraIssue($issue_id) {
+  protected function getJiraIssue($issue_id) {
     return $this->jiraIssueService->load($issue_id);
   }
 
@@ -269,25 +269,13 @@ class BugherdResource extends ResourceBase {
    * @throws \Exception
    */
   protected function sendToBugherd(array $data) {
-    $jira_user = $this->configFactory->get('jira_rest.settings')
-      ->get('jira_rest.username');
-    if ($data['comment']['author']['name'] == $jira_user) {
-      return $this->t('Comment rejected from @name', ['@name' => $data['comment']['author']['name']]);
-    }
-
     $issue_key = $data['issue']['key'];
-    $bugherd_task = NULL;
-    // Find the bugherd task for this jira ticket.
-    foreach ($this->bugherdApi->getTasks()['tasks'] as $task) {
-      if ($task['external_id'] == $issue_key) {
-        $bugherd_task = $task;
-        break;
-      }
+    if (!($bugherd_task = $this->getBugherdTask($issue_key))) {
+      return FALSE;
     }
 
-    // This JIRA Ticket doesn't match to any bugherd ticket.
-    if (!$bugherd_task) {
-      return FALSE;
+    if (!$this->isNewBugherdComment($bugherd_task, $data['comment'])) {
+      return $this->t('Comment rejected from @name', ['@name' => $data['comment']['author']['name']]);
     }
 
     switch ($data['webhookEvent']) {
@@ -307,6 +295,39 @@ class BugherdResource extends ResourceBase {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Get the bugherd task that matches the jira issue id.
+   *
+   * @param string $jira_issue
+   *   Jira issue id.
+   *
+   * @return bool|array
+   *   Task data array or false if none found.
+   */
+  protected function getBugherdTask($jira_issue) {
+    $response = $this->bugherdApi->getTasks(NULL, ['external_id' => $jira_issue]);
+    if (empty($response['tasks'][0])) {
+      return FALSE;
+    }
+    return $response['tasks'][0];
+  }
+
+  /**
+   * @param array $bugherd_task
+   * @param array $comment
+   *
+   * @return bool
+   */
+  protected function isNewBugherdComment(array $bugherd_task, array $comment) {
+    $comments = $this->bugherdApi->getComments($bugherd_task['id']);
+    foreach ($comments as $comment) {
+      if (strpos($comment['body'], $comment['text']) !== FALSE) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
   /**

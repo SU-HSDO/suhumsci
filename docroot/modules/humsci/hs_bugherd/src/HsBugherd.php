@@ -148,26 +148,51 @@ class HsBugherd {
    *
    * @param integer $project_id
    *   Project id found from getProjects().
+   * @param array $params
+   *   Array of possible search parameters.
    *
    * @return array
    *   Returned response.
+   *
+   * https://www.bugherd.com/api_v2#api_task_list
    */
-  public function getTasks($project_id = NULL) {
+  public function getTasks($project_id = NULL, array $params = array()) {
     return $this->getApi(self::BUGHERDAPI_TASK)
-      ->all($project_id ?: $this->projectKey);
+      ->all($project_id ?: $this->projectKey, $params);
   }
 
+  /**
+   * Get a specific task
+   *
+   * @param int $task_id
+   *   Bugherd Task ID.
+   * @param int|null $project_id
+   *   Project ID if the task is in another project.
+   *
+   * @return array
+   *   Task data.
+   *
+   * @see https://www.bugherd.com/api_v2#api_task_show
+   */
   public function getTask($task_id, $project_id = NULL) {
     return $this->getApi(self::BUGHERDAPI_TASK)
       ->show($project_id ?: $this->projectKey, $task_id);
   }
 
   /**
-   * @param string $project_id
+   * Update a specific task with the given data.
+   *
    * @param int $task_id
+   *   Bugherd Task id.
    * @param array $data
+   *   Keyed array of update data.
+   * @param int|null $project_id
+   *   Project ID if the task is in another project.
    *
    * @return mixed
+   *   Update response.
+   *
+   * @see https://www.bugherd.com/api_v2#api_task_update
    */
   public function updateTask($task_id, $data, $project_id = NULL) {
     return $this->getApi(self::BUGHERDAPI_TASK)
@@ -177,16 +202,19 @@ class HsBugherd {
   /**
    * Get all the commments on a particular task.
    *
-   * @param integer $project_id
-   *   Project id found from getProjects().
    * @param integer $task_id
    *   Task id found from getTasks().
+   * @param integer $project_id
+   *   Project id found from getProjects().
    *
    * @return array
    *   Returned response.
+   *
+   * @see https://www.bugherd.com/api_v2#api_comment_list
    */
-  public function getComments($project_id, $task_id) {
-    return $this->getApi(self::BUGHERDAPI_COMMENT)->all($project_id, $task_id);
+  public function getComments($task_id, $project_id = NULL) {
+    return $this->getApi(self::BUGHERDAPI_COMMENT)
+      ->all($project_id ?: $this->projectKey, $task_id);
   }
 
   /**
@@ -216,20 +244,26 @@ class HsBugherd {
    *
    * @return array
    *   Returned response.
+   *
+   * @see https://www.bugherd.com/api_v2#api_webhook_list
    */
   public function getHooks() {
     return $this->getApi(self::BUGHERDAPI_WEBHOOK)->all();
   }
 
   /**
-   *
+   * Creaet a bugherd webhook.
    *
    * @param array $params
+   *   Keyed array of webhook data.
    *
    * @return array
    *   Returned response.
    *
    * @throws \Exception
+   *   Event is required.
+   *
+   * @see https://www.bugherd.com/api_v2#api_webhook_create
    */
   public function createWebhook(array $params) {
     if (empty($params['event'])) {
@@ -247,6 +281,8 @@ class HsBugherd {
    *
    * @return mixed
    *   Returned response.
+   *
+   * @see https://www.bugherd.com/api_v2#api_webhook_delete
    */
   public function deleteWebhook($id) {
     return $this->getApi(self::BUGHERDAPI_WEBHOOK)->remove($id);

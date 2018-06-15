@@ -1,0 +1,43 @@
+{% set attributes = attributes.addClass('card') %}
+
+<div{{ attributes }}>
+
+  {% if image %}
+    <div class="horizontal-card__img">
+      {{ image }}
+    </div>
+  {% endif %}
+
+  <div class="horizontal-card__content">
+    {% if category %}
+      <div class="horizontal-card__category accent-dash">{{ category }}</div>
+    {% endif %}
+
+    {% if date %}
+      <div class="horizontal-card__date">{{ date }}</div>
+    {% endif %}
+
+    <div class=horizontal-card__subcontent>
+      {% if time %}
+        <div class="horizontal-card__time">{{ time }}</div>
+      {% endif %}
+
+      {% if time and location %}
+        <div class="pipe">|</div>
+      {% endif %}
+
+      {% if location %}
+        <div class="horizontal-card__location">{{ location }}</div>
+      {% endif %}
+    </div>
+
+    {% if title %}
+      <h3 class="horizontal-card__title">{{ title }}</h3>
+    {% endif %}
+
+    {% if speaker %}
+      <div class="horizontal-card__speaker">{{ speaker }}</div>
+    {% endif %}
+
+  </div>
+</div>

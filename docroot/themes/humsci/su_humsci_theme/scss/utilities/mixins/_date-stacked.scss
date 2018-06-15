@@ -6,23 +6,24 @@
 //
 
 @mixin date-stacked {
-  position: absolute;
+  background: $color-black;
   bottom: -35px;
+  box-shadow: $box-shadow;
+  color: $color-white;
   left: 35px;
-  margin-right: 0;
-  padding: 20px 25px;
-  background: #333;
-  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+  position: absolute;
+  text-align: center;
+
+  @include margin(null 0 null null);
+  @include padding(20px 25px);
 
   .date-month {
-    font-size: 1.2em;
-    font-weight: 100;
-    line-height: 1.4em;
+    font-size: $lead-font-size;
+    font-weight: $font-x-light;
+    line-height: $heading-line-height;
   }
 
   .date-day {
-    font-weight: 400;
+    font-weight: $font-normal;
   }
 }

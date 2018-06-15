@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_bugherd\Form;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -40,7 +39,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('cache.default'),
       $container->get('hs_bugherd'),
       $container->get('jira_rest_wrapper_service')
     );
@@ -49,7 +47,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(CacheBackendInterface $cache_backend, HsBugherd $bugherd_api, JiraRestWrapperService $jira_wrapper) {
+  public function __construct(HsBugherd $bugherd_api, JiraRestWrapperService $jira_wrapper) {
     $this->cacheBackend = $cache_backend;
     $this->bugherdApi = $bugherd_api;
     $this->jiraIssueService = $jira_wrapper->getIssueService();
@@ -120,7 +118,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-//    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
+    //    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
 
     $config = $this->config('bugherdapi.settings');
 
@@ -168,8 +166,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       $this->jiraIssueService->getCommunicationService()
         ->put('/rest/webhooks/1.0/webhook/' . $hook_id, (object) $hook_data);
     }
-
-    Cache::invalidateTags(['hs_bugherd_hooks']);
   }
 
   /**
@@ -201,11 +197,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    *   Keyed array with the hook id as the array key.
    */
   protected function getJiraHooks($ignore_cache = FALSE) {
-    $cache = $this->cacheBackend->get('hs_bugherd_jira_hooks');
-    if (!$ignore_cache && $cache) {
-      return $cache->data;
-    }
-
     $hooks = [];
     $jira_hooks = $this->jiraIssueService->getCommunicationService()
       ->get('/rest/webhooks/1.0/webhook');
@@ -217,7 +208,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
         $hooks[$id] = $jira_hook;
       }
     }
-    $this->cacheBackend->set('hs_bugherd_jira_hooks', $hooks, Cache::PERMANENT, ['hs_bugherd_hooks']);
     return $hooks;
   }
 
@@ -231,11 +221,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    *   Array of webhooks.
    */
   protected function getBugherdHooks($ignore_cache = FALSE) {
-    $cache = $this->cacheBackend->get('hs_bugherd_bugherd_hooks');
-    if (!$ignore_cache && $cache) {
-      return $cache->data;
-    }
-
     $config = $this->config('bugherdapi.settings');
     $project_id = $config->get('project_id');
 
@@ -249,7 +234,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
         $hooks[] = $webhook;
       }
     }
-    $this->cacheBackend->set('hs_bugherd_bugherd_hooks', $hooks, Cache::PERMANENT, ['hs_bugherd_hooks']);
     return $hooks;
   }
 

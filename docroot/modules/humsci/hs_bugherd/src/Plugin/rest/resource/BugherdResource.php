@@ -60,13 +60,6 @@ class BugherdResource extends ResourceBase {
   protected $bugherdProject;
 
   /**
-   * Cache backend service.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, JiraRestWrapperService $jira_wrapper, HsBugherd $bugherd_api, ConfigFactoryInterface $config_factory) {
@@ -265,8 +258,9 @@ class BugherdResource extends ResourceBase {
    */
   protected function getTaskName(array $task) {
     // Trim down the descrption to only 5 words so we dont clutter up JIRA with
-    // a long paragraph as the summary.
-    $description_words = explode(' ', trim($task['description']));
+    // a long paragraph as the summary. Also Jira doesnt like new lines in the
+    // Summary
+    $description_words = explode(' ', trim(preg_replace("/\r|\n/", "", $task['description'])));
     $title = array_slice($description_words, 0, 5);
     $title = implode(' ', $title);
     $title .= count($description_words) > 5 ? '...' : '';

@@ -370,13 +370,15 @@ class BugherdResource extends ResourceBase {
           'text' => $data['comment']['author']['displayName'] . ': ' . $data['comment']['body'],
         ];
         return $this->bugherdApi->addComment($bugherd_task['id'], $comment);
-        break;
 
       case 'jira:issue_updated':
         if ($data['changelog']['items'][0]['field'] == 'status') {
           $jira_status = $data['changelog']['items'][0]['to'];
-          $status = ['status' => $this->getTranslatedStatus($jira_status)];
-          return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+          if ($new_status = $this->getTranslatedStatus($jira_status)) {
+            $status = ['status' => $new_status];
+            return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+          }
+          $this->logger->info(t('Unable to map Jira status to bugherd. Jira status id: @jira'), ['@jira' => $jira_status]);
         }
     }
 
@@ -439,7 +441,7 @@ class BugherdResource extends ResourceBase {
     $config = $this->configFactory->get('bugherdapi.settings');
     $status_map = $config->get('status_map');
     $status_map = array_flip($status_map);
-    return $status_map[$status] ?: HsBugherd::BUGHERDAPI_TODO;
+    return isset($status_map[$status]) ? $status_map[$status] : NULL;
   }
 
 }

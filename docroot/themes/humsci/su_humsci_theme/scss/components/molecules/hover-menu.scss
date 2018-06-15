@@ -25,7 +25,7 @@
 
       &.menu--main {
         box-shadow: none;
-        float: right;
+        float: none;
         height: 40px;
 
         a:hover,
@@ -67,7 +67,7 @@
 
         &.menu--main {
           box-shadow: none;
-          float: right;
+          float: none;
           height: 40px;
 
           a:hover,
@@ -82,6 +82,8 @@
           border: none;
 
           &.ui-menu {
+            float: right;
+
             &.ui-widget-content {
               background: $color-black;
 
@@ -111,6 +113,18 @@
             .ui-menu-item-wrapper {
               @include margin(0 1.5em 0 0);
               @include padding(6px 0 6px 0);
+            }
+          }
+
+          > li {
+            color: $color-bright-red;
+            &:hover {
+              color: $color-black;
+            }
+            &:last-of-type {
+              .ui-menu-item-wrapper {
+                margin-right: 0;
+              }
             }
           }
 

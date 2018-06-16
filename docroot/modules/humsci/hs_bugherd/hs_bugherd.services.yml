@@ -4,6 +4,6 @@ services:
     arguments: ['@jira_rest_wrapper_service']
   hs_bugherd.overrider:
     class: Drupal\hs_bugherd\ConfigOverrides
-    arguments: ['@module_handler', '@config.factory', '@encryption']
+    arguments: ['@module_handler', '@config.factory', '@encryption', '@logger.factory']
     tags:
       - {name: config.factory.override, priority: 5}

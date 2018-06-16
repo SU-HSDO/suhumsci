@@ -5,8 +5,10 @@ namespace Drupal\hs_bugherd\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\encrypt\EncryptService;
+use Drupal\encrypt\Entity\EncryptionProfile;
 use Drupal\hs_bugherd\HsBugherd;
-use Drupal\jira_rest\JiraRestWrapperService;
+use Drupal\key\Entity\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -16,6 +18,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @package Drupal\hs_bugherd\Form
  */
 class HsBugherdForm extends ConfigFormBase {
+
+  /**
+   * @var \Drupal\hs_bugherd\HsBugherd
+   */
+  protected $bugherdApi;
+
+  /**
+   * @var \Drupal\encrypt\EncryptService
+   */
+  protected $encryption;
+
+  public function getFormId() {
+    return 'hs_bugherd';
+  }
 
   /**
    * {@inheritdoc}
@@ -29,40 +45,23 @@ class HsBugherdForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    return 'hs_bugherd_api';
-  }
-
-  /**
-   * @var \Drupal\hs_bugherd\HsBugherd
-   */
-  protected $bugherdApi;
-
-  /**
-   * @var \biologis\JIRA_PHP_API\IssueService
-   */
-  protected $jiraIssueService;
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
       $container->get('request_stack'),
       $container->get('hs_bugherd'),
-      $container->get('jira_rest_wrapper_service')
+      $container->get('encryption')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, RequestStack $request_stack, HsBugherd $bugherd_api, JiraRestWrapperService $jira_wrapper) {
+  public function __construct(ConfigFactoryInterface $config_factory, RequestStack $request_stack, HsBugherd $bugherd_api, EncryptService $encrypt) {
     parent::__construct($config_factory);
     $this->requestStack = $request_stack;
     $this->bugherdApi = $bugherd_api;
-    $this->jiraIssueService = $jira_wrapper->getIssueService();
+    $this->encryption = $encrypt;
   }
 
   /**
@@ -72,22 +71,35 @@ class HsBugherdForm extends ConfigFormBase {
     $form = parent::buildForm($form, $form_state);
     $config = $this->config('bugherdapi.settings');
 
+    $keys = [];
+    /** @var Key $key */
+    foreach (Key::loadMultiple() as $key) {
+      $keys[$key->id()] = $key->label();
+    }
+
     $form['api_key'] = [
-      '#type' => 'textfield',
+      '#type' => 'select',
       '#title' => $this->t('BugHerd API key'),
       '#default_value' => $config->get('api_key'),
+      '#options' => $keys,
       '#required' => TRUE,
-      //'#ajax' => [
-      //  'callback' => '::formAjaxSubmit',
-      //  'wrapper' => 'project-id',
-      //],
+      '#ajax' => [
+        'callback' => '::updateProjectOptions',
+        'wrapper' => 'project-id',
+        'effect' => 'fade',
+      ],
     ];
+
+    $projects = [];
+    if ($this->bugherdApi->connectionSuccessful()) {
+      $projects = $this->bugherdApi->getProjects();
+    }
 
     $form['project_id'] = [
       '#type' => 'select',
       '#title' => $this->t('Bugherd Project'),
       '#default_value' => $config->get('project_id'),
-      '#options' => $this->bugherdApi->getProjects(),
+      '#options' => $projects,
       '#prefix' => '<div id="project-id">',
       '#suffix' => '</div>',
     ];
@@ -147,15 +159,60 @@ class HsBugherdForm extends ConfigFormBase {
   }
 
   /**
+   * Ajax handler to update project options.
+   *
+   * @param array $form
+   *   Complete form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Current form state.
+   *
+   * @return array
+   *   Modified select form element.
+   */
+  public function updateProjectOptions(array $form, FormStateInterface $form_state) {
+    $project_options = [];
+
+    $key = Key::load($form_state->getValue('api_key'));
+    $this->bugherdApi->setApiKey($key->getKeyValue());
+    if ($this->bugherdApi->connectionSuccessful()) {
+      $project_options = $this->bugherdApi->getProjects();
+    }
+    $form['project_id']['#options'] = $project_options;
+    return $form['project_id'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+    $key = Key::load($form_state->getValue('api_key'));
+    $this->bugherdApi->setApiKey($key->getKeyValue());
+    $test = $this->bugherdApi->getOrganization();
+    if (isset($test['error'])) {
+      $form_state->setError($form['api_key'], $test['error']);
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
+    /** @var Key $key */
+    $key = Key::load($form_state->getValue('api_key'));
+    $config_dependencies = [$key->getConfigDependencyName()];
+    if ($profile_id = $form_state->getValue('encryption_profile')) {
+      $encryption_profile = EncryptionProfile::load($profile_id);
+      $config_dependencies[] = $encryption_profile->getConfigDependencyName();
+    }
+
     $this->config('bugherdapi.settings')
       ->set('project_id', $form_state->getValue('project_id'))
-      ->set('api_key', $form_state->getValue('api_key'))
+      ->set('api_key', $key->id())
       ->set('jira_project', $form_state->getValue('jira_project'))
       ->set('status_map', $form_state->getValue('status_map'))
+      ->set('dependencies.config', $config_dependencies)
       ->save();
   }
 

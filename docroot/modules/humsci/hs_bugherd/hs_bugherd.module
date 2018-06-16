@@ -12,27 +12,30 @@ use Drupal\encrypt\Entity\EncryptionProfile;
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_bugherd_form_jira_rest_config_form_alter(&$form, FormStateInterface $form_state) {
-  if (\Drupal::moduleHandler()->moduleExists('encrypt')) {
-    $profiles = [];
+  $profiles = [];
 
-    /** @var EncryptionProfile $profile */
-    foreach (EncryptionProfile::loadMultiple() as $profile) {
-      $profiles[$profile->id()] = $profile->label();
-    }
-    $encryption_id = \Drupal::configFactory()->get('jira_rest.settings')->get('jira_rest.encryption_id');
-
-    $form['encryption_id'] = [
-      '#type' => 'select',
-      '#title' => t('Encryption Profile'),
-      '#description' => t('Encrypt the password'),
-      '#options' => $profiles,
-      '#empty_option' => t('- No Encryption -'),
-      '#default_value' => $encryption_id,
-    ];
-    $form['#submit'][] = 'hs_bugherd_form_jira_rest_config_form_submit';
+  /** @var EncryptionProfile $profile */
+  foreach (EncryptionProfile::loadMultiple() as $profile) {
+    $profiles[$profile->id()] = $profile->label();
   }
+  $encryption_id = \Drupal::configFactory()
+    ->get('jira_rest.settings')
+    ->get('jira_rest.encryption_id');
+
+  $form['encryption_id'] = [
+    '#type' => 'select',
+    '#title' => t('Encryption Profile'),
+    '#description' => t('Encrypt the password'),
+    '#options' => $profiles,
+    '#empty_option' => t('- No Encryption -'),
+    '#default_value' => $encryption_id,
+  ];
+  $form['#submit'][] = 'hs_bugherd_form_jira_rest_config_form_submit';
 }
 
+/**
+ * Submit handler for jira rest config to encrypt the password.
+ */
 function hs_bugherd_form_jira_rest_config_form_submit($form, FormStateInterface $form_state) {
   if ($password = $form_state->getValue('password')) {
     $encryption_id = $form_state->getValue('encryption_id');
@@ -48,4 +51,11 @@ function hs_bugherd_form_jira_rest_config_form_submit($form, FormStateInterface 
       $config->save();
     }
   }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function hs_bugherd_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+//  dpm($form_id);
 }

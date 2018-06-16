@@ -3,6 +3,7 @@
 namespace Drupal\hs_bugherd;
 
 use Bugherd\Client;
+use Drupal\key\Entity\Key;
 
 /**
  * Class BugherdApi.
@@ -61,7 +62,13 @@ class HsBugherd {
    *   API key.
    */
   public static function getApiKey() {
-    return \Drupal::configFactory()->get('bugherdapi.settings')->get('api_key');
+    $key_id = \Drupal::configFactory()
+      ->get('bugherdapi.settings')
+      ->get('api_key');
+    /** @var Key $key */
+    if ($key = Key::load($key_id)) {
+      return $key->getKeyValue();
+    }
   }
 
   /**
@@ -71,6 +78,16 @@ class HsBugherd {
     $this->apiKey = $api_key;
     // Rebuild the client
     $this->client = new Client($this->apiKey);
+  }
+
+  /**
+   * Test if the api connection works.
+   *
+   * @return bool
+   */
+  public function connectionSuccessful() {
+    $test = $this->getOrganization();
+    return !isset($test['error']);
   }
 
   /**

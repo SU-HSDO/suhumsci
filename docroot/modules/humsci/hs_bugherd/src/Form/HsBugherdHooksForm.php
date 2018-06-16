@@ -48,7 +48,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function __construct(HsBugherd $bugherd_api, JiraRestWrapperService $jira_wrapper) {
-    $this->cacheBackend = $cache_backend;
     $this->bugherdApi = $bugherd_api;
     $this->jiraIssueService = $jira_wrapper->getIssueService();
   }
@@ -199,7 +198,8 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   protected function getJiraHooks($ignore_cache = FALSE) {
     $hooks = [];
     $jira_hooks = $this->jiraIssueService->getCommunicationService()
-      ->get('/rest/webhooks/1.0/webhook');
+      ->get('/rest/webhooks/1.0/webhook') ?: [];
+
     foreach ($jira_hooks as $jira_hook) {
       if (!empty($jira_hook->filters->{'issue-related-events-section'}) && $jira_hook->filters->{'issue-related-events-section'} == $this->getJiraFilter()) {
         // The hook's id is the last part of a url in the "self" attribute.

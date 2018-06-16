@@ -18,7 +18,7 @@ drush:
 modules:
   local:
     enable: [dblog, devel, seckit, views_ui]
-    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly, bugherdapi]
+    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly]
   ci:
     enable: {  }
     uninstall: [acquia_connector, shield]
@@ -27,10 +27,10 @@ modules:
     uninstall: [config_readonly]
   test:
     enable: [acquia_connector, shield]
-    uninstall: [devel, config_readonly]
+    uninstall: [config_readonly]
   prod:
     enable: [acquia_connector, shield, hs_config_readonly, bugherdapi]
-    uninstall: [devel, views_ui]
+    uninstall: [views_ui]
 multisites:
   - default
   - archaeology

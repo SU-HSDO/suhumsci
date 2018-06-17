@@ -2,16 +2,43 @@
 @import 'decanter-no-markup';
 
 .masonry {
-  @include media(min-width ($medium-screen - 1)) {
-    > div {
-      width: calc(33% - 20px);
-      float:left;
-    }
+  width: 100%;
+}
+
+.masonry-sizer {
+  display: block;
+  visibility: hidden;
+  height: 0;
+
+  &--item { width: 100%; }
+  &--gap { width: 0; }
+
+  @include media(700px) {
+    &--item { width: 47%; }
+    &--gap { width: 6%; }
   }
 
-  img {
-    width: 100%;
-    height: auto;
+  @include media(960px) {
+    &--item { width: 30%; }
+    &--gap { width: 5%; }
+  }
+
+  @include media(1200px) {
+    &--item { width: 23%; }
+    &--gap { width: 2.67%; }
+  }
+}
+
+.masonry-item {
+  width: 100%;
+  @include media(700px) {
+    width: 47%;
+  }
+  @include media(960px) {
+    width: 30%;
+  }
+  @include media(1200px) {
+    width: 23%;
   }
 }
 

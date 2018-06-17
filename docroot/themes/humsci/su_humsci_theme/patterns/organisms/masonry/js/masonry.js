@@ -27,7 +27,10 @@
         // Set the masonry when images are loaded.
         $container.imagesLoaded(function () {
           $container.masonry({
-            gutter: 20
+            columnWidth: '.masonry-sizer--item',
+            gutter: '.masonry-sizer--gap',
+            itemSelector: '.masonry-item',
+            percentPosition: true
           });
         });
       });

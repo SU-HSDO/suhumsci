@@ -32,22 +32,16 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $encryption;
 
   /**
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
-   */
-  protected $logger;
-
-  /**
    * ConfigOverrides constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    * @param \Drupal\encrypt\EncryptService $encrypt_service
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service) {
     $this->moduleHandler = $module_handler;
     $this->configFactory = $config_factory;
     $this->encryption = $encrypt_service;
-    $this->logger = $logger_factory->get('hs_bugerd');
   }
 
   /**

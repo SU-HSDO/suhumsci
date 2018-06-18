@@ -7,9 +7,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\encrypt\EncryptService;
 use Drupal\encrypt\Entity\EncryptionProfile;
+use Drupal\encrypt\Exception\EncryptException;
 
 /**
  * Example configuration override.
@@ -65,18 +65,13 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       $profile_id = $original_config->getOriginal('jira_rest.encryption_id', FALSE);
 
       if ($profile_id && $encryption_profile = EncryptionProfile::load($profile_id)) {
-        try {
-          // Decrypt the password.
-          $decrypted_password = $this->encryption->decrypt($encrypted_password, $encryption_profile);
-          $overrides['jira_rest.settings'] = ['jira_rest' => ['password' => $decrypted_password]];
-        }
-        catch (\Exception $e) {
-          $this->logger->error('Unable to decrypt Jira password: @message', ['@message' => $e->getMessage()]);
-        }
+        // Decrypt the password.
+        $decrypted_password = $this->encryption->decrypt($encrypted_password, $encryption_profile);
+        $overrides['jira_rest.settings'] = ['jira_rest' => ['password' => $decrypted_password]];
       }
     }
 
-    // Override the path of the key for real_aes entity.
+    // Override the path of the key for real_aes entity on local environments.
     if (in_array('key.key.real_aes', $names) && !isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $overrides['key.key.real_aes'] = [
         'key_provider_settings' => [

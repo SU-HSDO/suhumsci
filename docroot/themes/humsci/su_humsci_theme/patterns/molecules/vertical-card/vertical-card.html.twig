@@ -1,0 +1,24 @@
+{% set attributes = attributes.addClass('vertical-card') %}
+
+<div{{ attributes }}>
+
+  {% if image %}
+    <div class="vertical-card__img">
+      {{ image }}
+    </div>
+  {% endif %}
+
+  <div class="vertical-card__content">
+    {% if title %}
+      <h2 class="vertical-card__title">{{ title }}</h2>
+    {% endif %}
+    {% if description %}
+      <div class="vertical-card__description">
+        {{ description }}
+      </div>
+    {% endif %}
+    {% if button %}
+      <a class="decanter-button" href="\"#\"">{{ button }}</a>
+  {% endif %}
+</div>
+</div>

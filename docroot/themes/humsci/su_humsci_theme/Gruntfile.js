@@ -114,6 +114,7 @@ module.exports = function(grunt) {
           'patterns/molecules/featured-card/css/featured-card.css':     'patterns/molecules/featured-card/scss/featured-card.scss',
           'patterns/molecules/horizontal-card/css/horizontal-card.css': 'patterns/molecules/horizontal-card/scss/horizontal-card.scss',
           'patterns/organisms/masonry/css/masonry.css':                 'patterns/organisms/masonry/scss/masonry.scss',
+          'patterns/molecules/vertical-card/css/vertical-card.css':     'patterns/molecules/vertical-card/scss/vertical-card.scss',
 
           // COMPONENTS
           'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',

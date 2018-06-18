@@ -22,6 +22,7 @@ repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-blt artifact:ac-hooks:post-code-update $site $target_env $source_branch $deployed_tag $repo_url $repo_type --environment=$target_env -v --yes --no-interaction
+#blt artifact:ac-hooks:post-code-update $site $target_env $source_branch $deployed_tag $repo_url $repo_type --environment=$target_env -v --yes --no-interaction
+blt artifact:update:drupal:all-sites
 
 set +v

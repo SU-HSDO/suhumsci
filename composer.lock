@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0784b79b219f7c7a2d41bed532ed42bc",
+    "content-hash": "4e1f83816dc7f71bc8938ae103c15eb7",
     "packages": [
         {
             "name": "acquia/blt",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/acquia/blt.git",
-                "reference": "0a5944f345cabb559f10a309546369a5fdf1e9e6"
+                "reference": "063c302aa5bde123e36757e54cddd6750f725711"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/acquia/blt/zipball/0a5944f345cabb559f10a309546369a5fdf1e9e6",
-                "reference": "0a5944f345cabb559f10a309546369a5fdf1e9e6",
+                "url": "https://api.github.com/repos/acquia/blt/zipball/063c302aa5bde123e36757e54cddd6750f725711",
+                "reference": "063c302aa5bde123e36757e54cddd6750f725711",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +26,7 @@
                 "composer/semver": "^1.4",
                 "consolidation/config": "^1.0.0",
                 "consolidation/robo": "~1.2.4",
-                "cweagans/composer-patches": "^1.6.4",
+                "cweagans/composer-patches": "^1.6.5",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.4.0",
                 "dflydev/dot-access-data": "^1.1.0",
                 "doctrine/common": "^2.5",
@@ -94,7 +94,7 @@
                 "template",
                 "testing"
             ],
-            "time": "2018-06-08T23:14:22+00:00"
+            "time": "2018-06-15T19:46:53+00:00"
         },
         {
             "name": "acquia/http-hmac-php",
@@ -2660,17 +2660,11 @@
         },
         {
             "name": "drupal/config_update",
-            "version": "1.5.0",
+            "version": "dev-1.x",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/config_update",
-                "reference": "8.x-1.5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/config_update-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "2f7ae5f90b1c0ab8edf84680d2651e81fab6a126"
+                "reference": "5785588167279912d1e1f3a936fbf4a306265bd6"
             },
             "require": {
                 "drupal/core": "*"
@@ -2681,12 +2675,15 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1512587912",
+                    "version": "8.x-1.5+9-dev",
+                    "datestamp": "1524853380",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "https://www.drupal.org/project/config_update/issues/2974637": "https://www.drupal.org/files/issues/2018-06-11/drush9-support-2974637-24.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2707,7 +2704,8 @@
             "homepage": "https://www.drupal.org/project/config_update",
             "support": {
                 "source": "http://cgit.drupalcode.org/config_update"
-            }
+            },
+            "time": "2018-04-27T20:59:12+00:00"
         },
         {
             "name": "drupal/core",
@@ -2715,12 +2713,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/drupal/core.git",
-                "reference": "86d19366c5bf8bb3f0ce21df0fdd34022ed45aee"
+                "reference": "4d5ed77a1bd536c48317226bec807f127d70b4b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupal/core/zipball/86d19366c5bf8bb3f0ce21df0fdd34022ed45aee",
-                "reference": "86d19366c5bf8bb3f0ce21df0fdd34022ed45aee",
+                "url": "https://api.github.com/repos/drupal/core/zipball/4d5ed77a1bd536c48317226bec807f127d70b4b3",
+                "reference": "4d5ed77a1bd536c48317226bec807f127d70b4b3",
                 "shasum": ""
             },
             "require": {
@@ -2946,7 +2944,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-            "time": "2018-06-15T12:51:03+00:00"
+            "time": "2018-06-18T22:47:48+00:00"
         },
         {
             "name": "drupal/crop",
@@ -5178,6 +5176,71 @@
             "homepage": "https://www.drupal.org/project/role_delegation",
             "support": {
                 "source": "http://cgit.drupalcode.org/role_delegation"
+            }
+        },
+        {
+            "name": "drupal/role_theme_switcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/role_theme_switcher",
+                "reference": "8.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/role_theme_switcher-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "bbd29dd9840aa906406561d47b389024e7b66a93"
+            },
+            "require": {
+                "drupal/core": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0",
+                    "datestamp": "1500898742",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "https://www.drupal.org/project/role_theme_switcher/issues/2980351": "https://www.drupal.org/files/issues/2018-06-18/role_theme_switcher-admin_theme-2980351-3.patch"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Julien Dubreuil",
+                    "homepage": "https://www.drupal.org/user/519520",
+                    "email": "dubreuil.julien@gmail.com"
+                },
+                {
+                    "name": "Pravin Ajaaz",
+                    "homepage": "https://www.drupal.org/user/2910049"
+                },
+                {
+                    "name": "tiutiun",
+                    "homepage": "https://www.drupal.org/user/158669"
+                }
+            ],
+            "description": "Assign a specific theme for different roles.",
+            "homepage": "https://github.com/JulienD/role_theme_switcher",
+            "keywords": [
+                "Drupal",
+                "Drupal 8",
+                "Theme"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/role_theme_switcher",
+                "issues": "https://github.com/JulienD/role_theme_switcher/issues"
             }
         },
         {
@@ -10895,16 +10958,16 @@
         },
         {
             "name": "zendframework/zend-feed",
-            "version": "2.10.1",
+            "version": "2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-feed.git",
-                "reference": "2815c29a4c4e52bf4033128592ea310b0f4e9379"
+                "reference": "5253f949f4ad999086ab9b408908b6c6776f24db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-feed/zipball/2815c29a4c4e52bf4033128592ea310b0f4e9379",
-                "reference": "2815c29a4c4e52bf4033128592ea310b0f4e9379",
+                "url": "https://api.github.com/repos/zendframework/zend-feed/zipball/5253f949f4ad999086ab9b408908b6c6776f24db",
+                "reference": "5253f949f4ad999086ab9b408908b6c6776f24db",
                 "shasum": ""
             },
             "require": {
@@ -10952,7 +11015,7 @@
                 "feed",
                 "zf"
             ],
-            "time": "2018-06-05T13:16:04+00:00"
+            "time": "2018-06-18T20:14:01+00:00"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -13201,6 +13264,7 @@
         "drupal/field_group": 5,
         "drupal/auto_entitylabel": 20,
         "drupal/eck": 15,
+        "drupal/config_update": 20,
         "drupal/extlink": 20,
         "drupal/entity_browser": 20,
         "drupal/entity_embed": 10,

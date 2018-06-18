@@ -6,19 +6,19 @@
     {% if image %}
       <div class="featured-card__img">
         {{ image }}
-      {% endif %}
 
-      <div class="date-stacked">
-        {% if month %}
-          <div class="date-month">{{ month }}</div>
-        {% endif %}
+        <div class="date-stacked">
+          {% if month %}
+            <div class="date-month">{{ month }}</div>
+          {% endif %}
 
-        {% if day %}
-          <div class="date-day">{{ day }}</div>
-        {% endif %}
+          {% if day %}
+            <div class="date-day">{{ day }}</div>
+          {% endif %}
 
+        </div>
       </div>
-    </div>
+    {% endif %}
 
     <div class="featured-card__content-container">
       {% if time %}
@@ -30,7 +30,9 @@
       {% endif %}
 
       {% if title %}
-        <div class="featured-card__title"><h2>{{ title }}</h2></div>
+        <div class="featured-card__title">
+          <h2>{{ title }}</h2>
+        </div>
       {% endif %}
     </div>
   </div>

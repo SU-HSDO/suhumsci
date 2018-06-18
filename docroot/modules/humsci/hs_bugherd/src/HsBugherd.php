@@ -66,7 +66,7 @@ class HsBugherd {
       ->get('bugherdapi.settings')
       ->get('api_key');
     /** @var Key $key */
-    if ($key = Key::load($key_id)) {
+    if ($key_id && $key = Key::load($key_id)) {
       return $key->getKeyValue();
     }
   }

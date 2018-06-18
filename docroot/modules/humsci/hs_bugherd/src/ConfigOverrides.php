@@ -77,10 +77,10 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
 
     // Override the path of the key for real_aes entity.
-    if (in_array('key.key.real_aes', $names) && isset($_ENV['AH_SITE_ENVIRONMENT'])) {
+    if (in_array('key.key.real_aes', $names) && !isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $overrides['key.key.real_aes'] = [
         'key_provider_settings' => [
-          'file_location' => "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/REAL_AES",
+          'file_location' => "../keys/REAL_AES",
         ],
       ];
     }

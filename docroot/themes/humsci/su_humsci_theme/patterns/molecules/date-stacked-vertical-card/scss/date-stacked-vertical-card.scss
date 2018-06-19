@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+//
+// Date Stacked Vertical Card
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+.date-stacked-vertical-card {
+  .date-stacked-vertical-card__img {
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
+.date-stacked-vertical-card__content-container {
+  @include card;
+  @include padding(2.75em 1.75em 1em);
+
+  .date-stacked-vertical-card__time {
+    @include margin(null null 5px null);
+  }
+
+  .date-stacked-vertical-card__title {
+    h2 {
+      @include margin(20px null null);
+    }
+  }
+}

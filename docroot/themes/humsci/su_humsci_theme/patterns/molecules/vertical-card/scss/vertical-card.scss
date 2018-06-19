@@ -8,6 +8,10 @@
 @import
   'decanter-no-markup';
 
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
 .vertical-card {
   .vertical-card__img {
     img {
@@ -17,7 +21,9 @@
     }
   }
 
-  .vertical-card__content {
+  .vertical-card__content-container {
+    @include card;
+
     .vertical-card__title {
       @include margin(0 null null);
     }

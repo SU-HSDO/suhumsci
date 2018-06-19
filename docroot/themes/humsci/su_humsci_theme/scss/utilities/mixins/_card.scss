@@ -2,28 +2,24 @@
 
 //
 // Card
-// Adds global styles for horizontal and vertical cards.
+// Adds global styles for cards.
 //
 
-// Horizontal card
-@mixin horizontal-card {
+// Card
+@mixin card {
   background: $color-white;
   box-shadow: $box-shadow;
-  display: block;
-
-  @include media($medium-screen) {
-    display: flex;
-  }
 
   @include margin(null null 2em);
   @include padding(1em);
 }
 
-// Vertical card
-@mixin vertical-card {
-  background: $color-white;
-  box-shadow: $box-shadow;
+// Horizontal card
+// Custom display settings for horizontal cards
+@mixin horizontal-card {
+  display: block;
 
-  @include margin(null null 2em);
-  @include padding(1em);
+  @include media($medium-screen) {
+    display: flex;
+  }
 }

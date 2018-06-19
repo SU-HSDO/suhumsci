@@ -1,0 +1,50 @@
+uuid: 258c81b3-e996-4d57-8cd6-15e129a0c94a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - paragraphs.paragraphs_type.hs_postcard
+  module:
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          09e9f584-4385-4cef-9e5b-d7b20dfb4f42:
+            uuid: 09e9f584-4385-4cef-9e5b-d7b20dfb4f42
+            region: content
+            configuration:
+              id: 'field_block:paragraph:hs_postcard:field_hs_postcard_image'
+              label_display: ''
+              formatter:
+                type: entity_reference_entity_view
+                label: above
+                settings:
+                  view_mode: default
+                  link: false
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_postcard_image
+            weight: 0
+id: paragraph.hs_postcard.default
+targetEntityType: paragraph
+bundle: hs_postcard
+mode: default
+content:
+  field_hs_postcard_image:
+    type: entity_reference_entity_view
+    weight: 0
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+hidden: {  }

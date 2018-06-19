@@ -1,23 +1,57 @@
-uuid: c4309cdc-81ef-452d-a48d-80ce05d1e26d
 langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.image_browser
+    - field.field.paragraph.hs_postcard.field_hs_postcard_body
+    - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_title
     - paragraphs.paragraphs_type.hs_postcard
+  module:
+    - entity_browser
+    - text
 id: paragraph.hs_postcard.default
 targetEntityType: paragraph
 bundle: hs_postcard
 mode: default
 content:
-  field_hs_postcard_image:
-    weight: 0
+  field_hs_postcard_body:
+    weight: 3
     settings:
-      match_operator: CONTAINS
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_hs_postcard_display:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_hs_postcard_image:
+    weight: 1
+    settings:
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: thumbnail
+      field_widget_replace: false
+      open: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_hs_postcard_title:
+    weight: 2
+    settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: string_textfield
     region: content
 hidden:
   created: true

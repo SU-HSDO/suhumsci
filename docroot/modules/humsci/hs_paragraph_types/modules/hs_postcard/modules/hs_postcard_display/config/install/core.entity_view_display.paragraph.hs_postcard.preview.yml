@@ -1,8 +1,9 @@
-uuid: 258c81b3-e996-4d57-8cd6-15e129a0c94a
+uuid: 9b0209df-828e-42c6-af06-e938a4d76e1a
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
     - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
@@ -18,7 +19,7 @@ dependencies:
 third_party_settings:
   ds:
     layout:
-      id: pattern_masonry_item
+      id: pattern_wide_card
       library: null
       disable_css: false
       entity_classes: all_classes
@@ -26,26 +27,27 @@ third_party_settings:
         pattern:
           field_templates: default
     regions:
+      title:
+        - field_hs_postcard_title
+      description:
+        - field_hs_postcard_body
       image:
         - field_hs_postcard_image
-      body:
-        - field_hs_postcard_title
-        - field_hs_postcard_body
-id: paragraph.hs_postcard.default
+id: paragraph.hs_postcard.preview
 targetEntityType: paragraph
 bundle: hs_postcard
-mode: default
+mode: preview
 content:
   field_hs_postcard_body:
-    weight: 2
+    type: text_default
+    weight: 1
+    region: description
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
-    region: body
   field_hs_postcard_image:
     type: media_image_formatter
-    weight: 0
+    weight: 2
     label: hidden
     settings:
       view_mode: default
@@ -54,12 +56,12 @@ content:
     third_party_settings: {  }
     region: image
   field_hs_postcard_title:
-    weight: 1
+    type: entity_title_heading
+    weight: 0
+    region: title
     label: hidden
     settings:
       tag: h2
     third_party_settings: {  }
-    type: entity_title_heading
-    region: body
 hidden:
   field_hs_postcard_display: true

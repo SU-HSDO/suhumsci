@@ -2,13 +2,12 @@
 
 namespace Drupal\hs_field_helpers\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\Random;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\options\Plugin\Field\FieldType\ListItemBase;
 
 /**
  * Plugin implementation of the 'display_mode_field' field type.
@@ -16,20 +15,58 @@ use Drupal\Core\TypedData\DataDefinition;
  * @FieldType(
  *   id = "display_mode_field",
  *   label = @Translation("Display Mode Select"),
- *   description = @Translation("Allow the user to choose which display mode to
- *   display the entity."), default_widget = "display_mode_widget",
- *   default_formatter = "display_mode_formatter"
+ *   description = @Translation("Allow the user to choose which display mode to display the entity."),
+ *   default_widget = "options_select",
+ *   default_formatter = "list_default",
  * )
  */
-class DisplayModeField extends FieldItemBase {
+class DisplayModeField extends ListItemBase {
 
   /**
    * {@inheritdoc}
    */
-  public static function defaultStorageSettings() {
-    return [
-        'display_modes' => [],
-      ] + parent::defaultStorageSettings();
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = [];
+    $default_settings = $allowed_values = $this->getSetting('allowed_values');
+
+    $element['allowed_values'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Display Modes'),
+      '#tree' => TRUE,
+      '#element_validate' => [[$this, 'elementValidate']],
+    ];
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepository $display_repo */
+    $display_repo = \Drupal::service('entity_display.repository');
+    $view_modes = $display_repo->getViewModeOptionsByBundle($this->getEntity()
+      ->getEntityTypeId(), $this->getEntity()->bundle());
+
+    foreach ($view_modes as $view_mode_id => $label) {
+      $element['allowed_values'][$view_mode_id]['enabled'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Allow %label', ['%label' => $label]),
+        '#default_value' => isset($default_settings[$view_mode_id]),
+      ];
+      $element['allowed_values'][$view_mode_id]['label'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Label for %label', ['%label' => $label]),
+        '#default_value' => $default_settings[$view_mode_id] ?? NULL,
+        '#states' => [
+          'visible' => [
+            ':input[name*="' . $view_mode_id . '"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
+    }
+
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function allowedValuesDescription() {
+    return '';
   }
 
   /**
@@ -53,7 +90,7 @@ class DisplayModeField extends FieldItemBase {
       'columns' => [
         'value' => [
           'type' => 'varchar',
-          'length' => (int) $field_definition->getSetting('max_length'),
+          'length' => 255,
           'binary' => FALSE,
         ],
       ],
@@ -63,116 +100,21 @@ class DisplayModeField extends FieldItemBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Validation to clean up field values.
+   *
+   * @param $element
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param $form
    */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $random = new Random();
-    $values['value'] = $random->word(mt_rand(1, $field_definition->getSetting('max_length')));
-    return $values;
-  }
-
-  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $elements = [];
-    $default_settings = $this->getSetting('display_modes');
-    dpm($default_settings);
-
-    $elements['display_modes'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Display Modes'),
-      '#tree' => TRUE,
-    ];
-
-    $view_modes_ids = \Drupal::entityQuery('entity_view_mode')
-      ->condition('targetEntityType', $this->getEntity()->getEntityTypeId())
-      ->execute();
-    $view_modes = \Drupal::entityTypeManager()
-      ->getStorage('entity_view_mode')
-      ->loadMultiple($view_modes_ids);
-
-    foreach ($view_modes as $view_mode) {
-      $elements['display_modes'][$view_mode->id()]['enabled'] = [
-        '#type' => 'checkbox',
-        '#title' => $this->t('Allow %label', ['%label' => $view_mode->label()]),
-        '#default_value' => $default_settings[$view_mode->id()]['enabled'] ?? NULL,
-      ];
-      $elements['display_modes'][$view_mode->id()]['label'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Label for %label', ['%label' => $view_mode->label()]),
-        '#default_value' => $default_settings[$view_mode->id()]['label'] ?? NULL,
-        '#states' => [
-          'visible' => [
-            ':input[name*="' . $view_mode->id() . '"]' => ['checked' => TRUE],
-          ],
-        ],
-      ];
-    }
-
-    return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $elements = [];
-//    $default_settings = $this->getSetting('display_modes');
-//    dpm($default_settings);
-//    $elements['display_modes'] = [
-//      '#type' => 'fieldset',
-//      '#title' => $this->t('Display Modes'),
-//      '#tree' => TRUE,
-//    ];
-//
-//    $view_modes_ids = \Drupal::entityQuery('entity_view_mode')
-//      ->condition('targetEntityType', $this->getEntity()->getEntityTypeId())
-//      ->execute();
-//    $view_modes = \Drupal::entityTypeManager()
-//      ->getStorage('entity_view_mode')
-//      ->loadMultiple($view_modes_ids);
-//
-//    foreach ($view_modes as $view_mode) {
-//      $elements['display_modes'][$view_mode->id()]['enabled'] = [
-//        '#type' => 'checkbox',
-//        '#title' => $this->t('Allow %label', ['%label' => $view_mode->label()]),
-//        '#default_value' => $default_settings[$view_mode->id()]['enabled'] ?? NULL,
-//        '#disabled' => $has_data,
-//      ];
-//      $elements['display_modes'][$view_mode->id()]['label'] = [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('Label for %label', ['%label' => $view_mode->label()]),
-//        '#default_value' => $default_settings[$view_mode->id()]['label'] ?? NULL,
-//        '#disabled' => $has_data,
-//        '#states' => [
-//          'visible' => [
-//            ':input[name*="' . $view_mode->id() . '"]' => ['checked' => TRUE],
-//          ],
-//        ],
-//      ];
-//    }
-//
-//    //    $elements['max_length'] = [
-//    //      '#type' => 'number',
-//    //      '#title' => t('Maximum length'),
-//    //      '#default_value' => $this->getSetting('max_length'),
-//    //      '#required' => TRUE,
-//    //      '#description' => t('The maximum length of the field in characters.'),
-//    //      '#min' => 1,
-//    //      '#disabled' => $has_data,
-//    //    ];
-
-    return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function storageSettingsToConfigData(array $settings) {
-    foreach ($settings['display_modes'] as $id => $mode) {
+  public function elementValidate($element, FormStateInterface $form_state, $form) {
+    $modes = &$form_state->getValue(['settings', 'allowed_values']);
+    foreach ($modes as $mode_id => &$mode) {
       if (!$mode['enabled']) {
-        unset($settings['display_modes'][$id]);
+        unset($modes[$mode_id]);
+        continue;
       }
+      $mode = $mode['label'];
     }
-    return $settings;
   }
 
   /**
@@ -181,6 +123,26 @@ class DisplayModeField extends FieldItemBase {
   public function isEmpty() {
     $value = $this->get('value')->getValue();
     return $value === NULL || $value === '';
+  }
+
+  /**
+   * Get the display mode from the field value.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   Entity in question.
+   *
+   * @return string
+   *   New display mode if found.
+   */
+  public static function getDisplayMode(FieldableEntityInterface $entity) {
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+    foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
+      if ($field_definition->getType() == 'display_mode_field' && $value = $entity->get($field_name)
+          ->getValue()) {
+        return $value[0]['value'];
+      }
+    }
+    return '';
   }
 
 }

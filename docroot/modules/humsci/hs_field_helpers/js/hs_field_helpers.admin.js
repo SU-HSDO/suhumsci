@@ -1,10 +1,10 @@
-(function ($, window, Drupal) {
+(function ($, Drupal) {
   'use strict';
 
   Drupal.behaviors.hsEventsAdmin = {
-    attach: function attach() {
-      $('input.show-end-date[type="checkbox"]').each(function () {
-        var parent = $(this).closest('.field--type-daterange');
+    attach: function attach(context, settings) {
+      $('input.show-end-date[type="checkbox"]', context).each(function () {
+        var parent = $(this).closest('fieldset');
         if ($(this).is(':checked')) {
           $(parent).find('.end-date').show();
         }
@@ -12,15 +12,17 @@
           $(parent).find('.end-date').hide();
         }
       }).change(function () {
-        var parent = $(this).closest('.field--type-daterange');
+        var parent = $(this).closest('fieldset');
         if ($(this).is(':checked')) {
           var $startDate = $(parent).find('.start-date');
           var $endDate = $(parent).find('.end-date');
 
-          $startDate.find('select').each(function () {
+          $startDate.find('select[name^="field_*"], input[name^="field_*"]').each(function () {
+            console.log($(this));
             var name = $(this).attr('name').split('[').pop();
             var value = $(this).val();
-            $endDate.find('select[name*="end_value][' + name + '"]').val(value).trigger("chosen:updated");
+            $endDate.find('select[name*="end_value][' + name + '"], input[name*="end_value][' + name + '"]')
+              .val(value).trigger("chosen:updated");
           });
 
           $endDate.show();
@@ -31,4 +33,4 @@
       })
     }
   };
-})(jQuery, window, Drupal);
+})(jQuery, Drupal);

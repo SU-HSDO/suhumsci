@@ -17,19 +17,21 @@
       <div class="horizontal-card__date">{{ date }}</div>
     {% endif %}
 
-    <div class=horizontal-card__subcontent>
-      {% if time %}
-        <div class="horizontal-card__time">{{ time }}</div>
-      {% endif %}
+    {% if time|render|trim or location|render|trim %}
+      <div class=horizontal-card__subcontent>
+        {% if time|render|trim %}
+          <div class="horizontal-card__time">{{ time }}</div>
+        {% endif %}
 
-      {% if time and location %}
-        <div class="pipe">|</div>
-      {% endif %}
+        {% if time|render|trim and location|render|trim %}
+          <div class="pipe">|</div>
+        {% endif %}
 
-      {% if location %}
-        <div class="horizontal-card__location">{{ location }}</div>
-      {% endif %}
-    </div>
+        {% if location|render|trim %}
+          <div class="horizontal-card__location">{{ location }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
 
     {% if title %}
       <h3 class="horizontal-card__title">{{ title }}</h3>

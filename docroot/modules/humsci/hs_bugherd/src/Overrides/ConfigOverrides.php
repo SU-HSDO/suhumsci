@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_bugherd;
+namespace Drupal\hs_bugherd\Overrides;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -9,7 +9,6 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\encrypt\EncryptService;
 use Drupal\encrypt\Entity\EncryptionProfile;
-use Drupal\encrypt\Exception\EncryptException;
 
 /**
  * Example configuration override.

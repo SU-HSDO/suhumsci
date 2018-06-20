@@ -305,4 +305,13 @@ class HumsciCommand extends AcHooksCommand {
     $this->say("Finished deploying updates to $multisite.");
   }
 
+  /**
+   * Get encryption keys from acquia.
+   *
+   * @command humsci:keys
+   */
+  public function humsciKeys() {
+    $this->taskDrush()->drush("rsync @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")->run();
+  }
+
 }

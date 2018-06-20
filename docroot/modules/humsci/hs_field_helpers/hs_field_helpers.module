@@ -153,9 +153,13 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
       if ($excluded_views = $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views')) {
         $element['target_id']['#options'] = array_diff_key($element['target_id']['#options'], array_flip($excluded_views));
       }
+      // Chosen & Material Admin conflicts with this select list during ajax.
+      // The easiest way to fix is to disable those libraries.
+      $element['display_id']['#attributes']['class'][] = 'browser-default';
       break;
 
     case 'daterange_datelist':
+    case 'daterange_default':
       // To simulate the same field functionality as we had in D7, we need to
       // add a checkbox and validation handlers.
       // Adds wrappers so we can easily find the parts with jQuery.
@@ -185,6 +189,7 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
 
       break;
   }
+  $element['#attached']['library'][] = 'hs_field_helpers/admin';
 }
 
 /**

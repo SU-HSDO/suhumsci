@@ -108,7 +108,7 @@ module.exports = function(grunt) {
 
           // BASE
           'css/base/index.css':   'scss/base/index.scss',
-          // 'css/ckeditor.css':  'scss/ckeditor.scss',
+          'css/ckeditor.css':  'scss/ckeditor.scss',
 
           // PATTERNS
           'patterns/molecules/wide-card/scss/wide-card.css': 'patterns/molecules/wide-card/css/wide-card.scss',

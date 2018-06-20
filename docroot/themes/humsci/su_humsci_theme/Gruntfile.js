@@ -108,7 +108,7 @@ module.exports = function(grunt) {
 
           // BASE
           'css/base/index.css':   'scss/base/index.scss',
-          // 'css/ckeditor.css':  'scss/ckeditor.scss',
+          'css/ckeditor.css':  'scss/ckeditor.scss',
 
           // PATTERNS
           'patterns/molecules/date-stacked-vertical-card/css/date-stacked-vertical-card.css': 'patterns/molecules/date-stacked-vertical-card/scss/date-stacked-vertical-card.scss',

@@ -35,3 +35,7 @@ multisites:
   - default
   - archaeology
 simplesamlphp: true
+command-hooks:
+  post-deploy-build:
+    dir: ${deploy.dir}
+    command: rm -rf keys

@@ -10,6 +10,9 @@ use Drupal\encrypt\Entity\EncryptionProfile;
 
 /**
  * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds submit handler to encrypt the JIRA reset password. This will be removed
+ * when https://www.drupal.org/project/jira_rest/issues/2888655 is resolved.
  */
 function hs_bugherd_form_jira_rest_config_form_alter(&$form, FormStateInterface $form_state) {
   $profiles = [];
@@ -35,6 +38,8 @@ function hs_bugherd_form_jira_rest_config_form_alter(&$form, FormStateInterface 
 
 /**
  * Submit handler for jira rest config to encrypt the password.
+ *
+ * @see hs_bugherd_form_jira_rest_config_form_alter()
  */
 function hs_bugherd_form_jira_rest_config_form_submit($form, FormStateInterface $form_state) {
   if ($password = $form_state->getValue('password')) {

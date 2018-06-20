@@ -6,11 +6,15 @@ dependencies:
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
     - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_link
     - field.field.paragraph.hs_postcard.field_hs_postcard_title
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - entity_browser
+    - link
     - text
+_core:
+  default_config_hash: kLCqrS79aUH4qP0gJi9wderj2RKBU6y21nBxatVGfxg
 id: paragraph.hs_postcard.default
 targetEntityType: paragraph
 bundle: hs_postcard
@@ -44,6 +48,14 @@ content:
       open: false
     third_party_settings: {  }
     type: entity_browser_entity_reference
+    region: content
+  field_hs_postcard_link:
+    weight: 4
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
     region: content
   field_hs_postcard_title:
     weight: 2

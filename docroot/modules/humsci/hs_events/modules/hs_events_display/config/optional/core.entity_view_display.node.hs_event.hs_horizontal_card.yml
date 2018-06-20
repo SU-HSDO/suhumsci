@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.hs_wide_card
+    - core.entity_view_mode.node.hs_horizontal_card
     - field.field.node.hs_event.body
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
@@ -32,7 +32,7 @@ dependencies:
 third_party_settings:
   ds:
     layout:
-      id: pattern_wide_card
+      id: pattern_horizontal_card
       library: null
       disable_css: false
       entity_classes: all_classes
@@ -40,7 +40,7 @@ third_party_settings:
         pattern:
           field_templates: default
     regions:
-      headline:
+      category:
         - field_hs_event_series
       title:
         - node_title
@@ -48,9 +48,9 @@ third_party_settings:
         - body
       image:
         - field_hs_event_image
-      program:
+      location:
         - field_hs_event_location
-      time:
+      date:
         - field_hs_event_date
     fields:
       node_title:
@@ -62,10 +62,10 @@ third_party_settings:
           link: true
           wrapper: span
           class: ''
-id: node.hs_event.hs_wide_card
+id: node.hs_event.hs_horizontal_card
 targetEntityType: node
 bundle: hs_event
-mode: hs_wide_card
+mode: hs_horizontal_card
 content:
   body:
     type: text_trimmed

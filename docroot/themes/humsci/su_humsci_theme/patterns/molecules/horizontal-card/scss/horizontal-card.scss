@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+//
+// Horizontal Card
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+.horizontal-card {
+  @include card;
+  @include horizontal-card;
+
+  .horizontal-card__img {
+    @include margin(null 0 null null);
+
+    img {
+      width: 100%;
+
+      @include margin(0 0 0.75em 0);
+    }
+
+    @include media($medium-screen) {
+      @include margin(null 30px null null);
+
+      img {
+        width: auto;
+
+        @include margin(0);
+      }
+    }
+  }
+
+  .horizontal-card__content {
+    .horizontal-card__category {
+      @include margin(0 0 0.75em 0);
+
+      font-weight: $font-x-light;
+    }
+
+    .horizontal-card__date {
+      @include margin(0 0 0.25em 0);
+    }
+
+    .horizontal-card__subcontent {
+      @include margin(0 0 0.25em 0);
+
+      .horizontal-card__time {
+        display: inline-block;
+      }
+
+      .pipe {
+        display: inline-block;
+        padding: 0 3px;
+      }
+
+      .horizontal-card__location {
+        display: inline-block;
+      }
+    }
+
+    .horizontal-card__title {
+      @include margin(0.5em null null);
+    }
+
+    .horizontal-card__speaker {
+      font-weight: $font-x-light;
+
+      @include margin(0.25em 0 0 0);
+
+      .views-label {
+        display: block;
+        float: left;
+      }
+    }
+
+    .horizontal-card__description {
+      @include margin(0.75em null null);
+    }
+  }
+}

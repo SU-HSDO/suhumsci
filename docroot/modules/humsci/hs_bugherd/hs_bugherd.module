@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * hs_bugherd.module
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\encrypt\Entity\EncryptionProfile;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Adds submit handler to encrypt the JIRA reset password. This will be removed
+ * when https://www.drupal.org/project/jira_rest/issues/2888655 is resolved.
+ */
+function hs_bugherd_form_jira_rest_config_form_alter(&$form, FormStateInterface $form_state) {
+  $profiles = [];
+
+  /** @var EncryptionProfile $profile */
+  foreach (EncryptionProfile::loadMultiple() as $profile) {
+    $profiles[$profile->id()] = $profile->label();
+  }
+  $encryption_id = \Drupal::configFactory()
+    ->get('jira_rest.settings')
+    ->get('jira_rest.encryption_id');
+
+  $form['encryption_id'] = [
+    '#type' => 'select',
+    '#title' => t('Encryption Profile'),
+    '#description' => t('Encrypt the password'),
+    '#options' => $profiles,
+    '#empty_option' => t('- No Encryption -'),
+    '#default_value' => $encryption_id,
+  ];
+  $form['#submit'][] = 'hs_bugherd_form_jira_rest_config_form_submit';
+}
+
+/**
+ * Submit handler for jira rest config to encrypt the password.
+ *
+ * @see hs_bugherd_form_jira_rest_config_form_alter()
+ */
+function hs_bugherd_form_jira_rest_config_form_submit($form, FormStateInterface $form_state) {
+  if ($password = $form_state->getValue('password')) {
+    $encryption_id = $form_state->getValue('encryption_id');
+
+    if ($encryption_profile = EncryptionProfile::load($encryption_id)) {
+      // Encrypt the password saved to configuration.
+      $password = \Drupal::service('encryption')
+        ->encrypt($password, $encryption_profile);
+
+      $config = \Drupal::configFactory()->getEditable('jira_rest.settings');
+      $config->set('jira_rest.encryption_id', $encryption_id);
+      $config->set('jira_rest.password', $password);
+      $config->save();
+    }
+  }
+}

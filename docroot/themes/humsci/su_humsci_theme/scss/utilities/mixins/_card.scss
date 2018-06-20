@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+//
+// Card
+// Adds global styles for cards.
+//
+
+// Card
+@mixin card {
+  background: $color-white;
+  box-shadow: $box-shadow;
+
+  @include margin(null null 2em);
+  @include padding(1em);
+}
+
+// Horizontal card
+// Custom display settings for horizontal cards
+@mixin horizontal-card {
+  display: block;
+
+  @include media($medium-screen) {
+    display: flex;
+  }
+}

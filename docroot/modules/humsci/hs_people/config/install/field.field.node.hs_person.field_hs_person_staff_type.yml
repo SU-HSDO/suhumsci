@@ -1,0 +1,31 @@
+uuid: b4811769-6d2c-4c9c-863a-a25a1ec67d56
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_person_staff_type
+    - node.type.hs_person
+    - taxonomy.vocabulary.hs_person_staff_type
+_core:
+  default_config_hash: pwGmaqNUnYeu_hFOY0br5BphQL-lBn7oxuD1TBY_d_Q
+id: node.hs_person.field_hs_person_staff_type
+field_name: field_hs_person_staff_type
+entity_type: node
+bundle: hs_person
+label: 'Staff Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_person_staff_type: hs_person_staff_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

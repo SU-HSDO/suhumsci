@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * hs_people.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_people_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_people_display']);
+  }
+  catch (Exception $e) {
+    $message = t('Unable to set initial display settings for people');
+    \Drupal::messenger()->addError($message);
+    \Drupal::logger('hs_people')->error($message);
+  }
+}

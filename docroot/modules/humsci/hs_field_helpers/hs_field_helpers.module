@@ -8,7 +8,68 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\hs_field_helpers\Plugin\Field\FieldType\DisplayModeField;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_help().
+ */
+function hs_field_helpers_help($route_name, RouteMatchInterface $route_match) {
+  if (strpos($route_name, 'entity.entity_view_display.') === FALSE) {
+    return;
+  }
+
+  /** @var FieldConfig $field */
+  foreach (FieldConfig::loadMultiple() as $field) {
+    if ($field->getType() != 'display_mode_field') {
+      continue;
+    }
+
+    $entity_type = $field->getTargetEntityTypeId();
+    $entity_bundle = $field->getTargetBundle();
+    $field_view_modes = $field->getFieldStorageDefinition()
+      ->getSetting('allowed_values');
+
+    // Display help text to the user configuring the view mode. This prevents
+    // needing to switch back and forth to remember which display "label" is
+    // being edited.
+    foreach ($field_view_modes as $display_id => $label) {
+      if ($route_match->getParameter('bundle') == $entity_bundle &&
+        $route_match->getParameter('entity_type_id') == $entity_type &&
+        $route_match->getParameter('view_mode_name') == $display_id
+      ) {
+        return t('This display mode is displayed to the user as %label', ['%label' => $label]);
+      }
+    }
+    $field->getEntityTypeId();
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if ($entity instanceof FieldableEntityInterface) {
+    $view_mode = DisplayModeField::getDisplayMode($entity) ?: $view_mode;
+  }
+}
+
+/**
+ * Implements hook_field_widget_info_alter().
+ */
+function hs_field_helpers_field_widget_info_alter(array &$info) {
+  $info['options_select']['field_types'][] = 'display_mode_field';
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function hs_field_helpers_field_formatter_info_alter(array &$info) {
+  $info['list_default']['field_types'][] = 'display_mode_field';
+}
 
 //function hs_field_helpers_context
 

@@ -35,6 +35,12 @@ multisites:
   - default
   - archaeology
 simplesamlphp: true
+
+# This file lists files to exclude from rsync-ing
+deploy:
+  exclude_file: ${repo.root}/blt/deploy/rsync-exclude.txt
+
+# Any additional modifications to the files before commiting.
 command-hooks:
   post-deploy-build:
     dir: ${deploy.dir}

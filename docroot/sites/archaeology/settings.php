@@ -834,8 +834,6 @@ $config['simplesamlphp_auth.settings'] = [
   'allow' => [
     'set_drupal_pwd' => FALSE,
     'default_login' => TRUE,
-    'default_login_roles' => [],
-    'default_login_users' => '1',
   ],
   'sync' => [
     'mail' => TRUE,

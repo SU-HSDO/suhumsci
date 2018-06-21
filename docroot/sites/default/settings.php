@@ -829,7 +829,7 @@ $config['simplesamlphp_auth.settings'] = [
   'secure' => FALSE,
   'httponly' => FALSE,
   'role' => [
-    'population' => 'administrator:suAffiliation,=,hsdo:web|administrator:suAffiliation,=,itservices:webservices',
+    'population' => 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices',
     'eval_every_time' => FALSE,
   ],
   'allow' => [
@@ -878,12 +878,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     // Don't lock config when using drush.
     $settings['config_readonly'] = TRUE;
   }
-
-  $site = basename(dirname(__FILE__));
-
-  // Set sync directory for Acquia environments.
-  $config_directories[CONFIG_SYNC_DIRECTORY] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config/$site";
-  $config_directories['vcs'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config/$site";
 }
 
 // Lets whitelist everything because in our event subscriber we have the

@@ -1,0 +1,85 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_postcard.field_hs_postcard_body
+    - field.field.paragraph.hs_postcard.field_hs_postcard_display
+    - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_link
+    - field.field.paragraph.hs_postcard.field_hs_postcard_title
+    - paragraphs.paragraphs_type.hs_postcard
+  module:
+    - ds
+    - field_formatter_class
+    - layout_builder
+    - layout_discovery
+    - link
+    - stanford_media
+    - text
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_vertical_card
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+    regions:
+      title:
+        - field_hs_postcard_title
+      image:
+        - field_hs_postcard_image
+      description:
+        - field_hs_postcard_body
+      button:
+        - field_hs_postcard_link
+_core:
+  default_config_hash: uIA0BnBxwVYVqm5yzJ2Nt7C9DMLcGG-0Oluk3UKCBtM
+id: paragraph.hs_postcard.default
+targetEntityType: paragraph
+bundle: hs_postcard
+mode: default
+content:
+  field_hs_postcard_body:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: description
+  field_hs_postcard_image:
+    type: media_image_formatter
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: large
+      link: 0
+    third_party_settings: {  }
+    region: image
+  field_hs_postcard_link:
+    weight: 3
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      field_formatter_class:
+        class: decanter-button
+    type: link
+    region: button
+  field_hs_postcard_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: title
+hidden:
+  field_hs_postcard_display: true

@@ -17,6 +17,7 @@ function hs_postcard_install() {
   catch (Exception $e) {
     \Drupal::messenger()
       ->addError(t('Unable to set initial display settings for postcard Paragraph'));
+    \Drupal::logger('hs_postcard')->error('Unable to set initial display settings for postcard Paragraph');
   }
 
 }

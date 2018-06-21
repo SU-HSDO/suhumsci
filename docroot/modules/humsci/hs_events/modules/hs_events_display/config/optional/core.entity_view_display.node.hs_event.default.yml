@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.hs_vertical_card
     - field.field.node.hs_event.body
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
@@ -23,16 +22,13 @@ dependencies:
     - node.type.hs_event
     - system.menu.main
   module:
-    - ds
-    - hs_field_helpers
     - hs_layouts
     - layout_builder
     - menu_block
-    - stanford_media
     - user
 third_party_settings:
   layout_builder:
-    enable_defaults: false
+    enable_defaults: true
     allow_custom: false
     sections:
       -
@@ -263,120 +259,16 @@ third_party_settings:
               context_mapping: {  }
             additional: {  }
             weight: 0
-          72f26939-201a-4cfe-9e7e-f5302683a1d4:
-            uuid: 72f26939-201a-4cfe-9e7e-f5302683a1d4
-            region: location
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_location'
-              label_display: ''
-              formatter:
-                type: basic_string
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_location
-            weight: 0
-          d3590734-3618-4048-9b93-b7e7b11b65bb:
-            uuid: d3590734-3618-4048-9b93-b7e7b11b65bb
-            region: image
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_image'
-              label_display: ''
-              formatter:
-                type: media_image_formatter
-                label: hidden
-                settings:
-                  view_mode: default
-                  image_style: large
-                  link: '1'
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_image
-            weight: 1
-          b687ca5c-508e-497d-a193-48a1e4c744d8:
-            uuid: b687ca5c-508e-497d-a193-48a1e4c744d8
-            region: month
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_date'
-              label_display: ''
-              formatter:
-                type: datetime_hs
-                label: hidden
-                settings:
-                  timezone_override: ''
-                  date_format: M
-                  display: start_date
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_date
-            weight: 0
-  ds:
-    layout:
-      id: pattern_date_stacked_vertical_card
-      library: null
-      disable_css: false
-      entity_classes: all_classes
-      settings:
-        pattern:
-          field_templates: default
-    regions:
-      image:
-        - field_hs_event_image
-      month:
-        - field_hs_event_date
-      location:
-        - field_hs_event_location
-      title:
-        - node_title
-    fields:
-      node_title:
-        plugin_id: node_title
-        weight: 3
-        label: hidden
-        formatter: default
-        settings:
-          link: true
-          wrapper: span
-          class: ''
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
-id: node.hs_event.hs_vertical_card
+id: node.hs_event.default
 targetEntityType: node
 bundle: hs_event
-mode: hs_vertical_card
+mode: default
 content:
-  field_hs_event_date:
-    type: datetime_hs
-    weight: 1
-    region: month
-    label: hidden
-    settings:
-      timezone_override: ''
-      date_format: M
-      display: start_date
-    third_party_settings: {  }
-  field_hs_event_image:
-    type: media_image_formatter
-    weight: 0
-    region: image
-    label: hidden
-    settings:
-      view_mode: default
-      image_style: large
-      link: '1'
-    third_party_settings: {  }
-  field_hs_event_location:
-    type: basic_string
-    weight: 2
-    region: location
-    label: hidden
+  links:
+    weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
@@ -386,7 +278,10 @@ hidden:
   field_hs_event_category: true
   field_hs_event_contact_email: true
   field_hs_event_contact_phone: true
+  field_hs_event_date: true
+  field_hs_event_image: true
   field_hs_event_link: true
+  field_hs_event_location: true
   field_hs_event_map_link: true
   field_hs_event_series: true
   field_hs_event_speaker: true
@@ -394,4 +289,3 @@ hidden:
   field_hs_event_status: true
   field_hs_event_type: true
   field_hs_event_video: true
-  links: true

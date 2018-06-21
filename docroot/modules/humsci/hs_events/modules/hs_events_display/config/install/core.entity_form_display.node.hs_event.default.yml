@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_series
     - field.field.node.hs_event.field_hs_event_speaker
     - field.field.node.hs_event.field_hs_event_sponsor
     - field.field.node.hs_event.field_hs_event_status
@@ -52,6 +53,7 @@ third_party_settings:
         - field_hs_event_image
         - field_hs_event_link
         - field_hs_event_speaker
+        - field_hs_event_series
         - field_hs_event_type
       parent_name: group_event_tabs
       weight: 2
@@ -96,6 +98,8 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Post Event Details'
+_core:
+  default_config_hash: e1Kpgyy7ewspR0Ahrghe--ElWw9lvDkBcUdMMNsWDyg
 id: node.hs_event.default
 targetEntityType: node
 bundle: hs_event
@@ -159,12 +163,9 @@ content:
     region: content
   field_hs_event_date:
     weight: 18
-    settings:
-      date_order: MDY
-      time_type: '12'
-      increment: 15
+    settings: {  }
     third_party_settings: {  }
-    type: daterange_datelist
+    type: daterange_default
     region: content
   field_hs_event_image:
     type: entity_browser_entity_reference
@@ -205,6 +206,12 @@ content:
     third_party_settings: {  }
     type: link_default
     region: content
+  field_hs_event_series:
+    weight: 23
+    type: options_select
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_hs_event_speaker:
     type: inline_entity_form_complex
     weight: 22
@@ -229,7 +236,7 @@ content:
     type: string_textarea
     region: content
   field_hs_event_type:
-    weight: 24
+    weight: 23
     settings: {  }
     third_party_settings: {  }
     type: options_select

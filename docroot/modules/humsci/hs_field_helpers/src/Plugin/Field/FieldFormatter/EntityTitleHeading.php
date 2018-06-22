@@ -73,18 +73,19 @@ class EntityTitleHeading extends FormatterBase implements ContainerFactoryPlugin
 
     $parent = $items->getParent()->getValue();
 
-    $text = $parent->get('title')->getValue()[0]['value'];
-
-    if ($this->getSetting('linked')) {
-      $text = Link::fromTextAndUrl($text, $parent->toUrl())->toString();
+    $output = [];
+    foreach ($items->getValue() as $delta => $item) {
+      $text = $item['value'];
+      if ($this->getSetting('linked')) {
+        $text = Link::fromTextAndUrl($text, $parent->toUrl())->toString();
+      }
+      $output[$delta] = [
+        '#type' => 'html_tag',
+        '#tag' => $this->getSetting('tag'),
+        '#attributes' => $attributes->toArray(),
+        '#value' => $text,
+      ];
     }
-    $output[] = [
-      '#type' => 'html_tag',
-      '#tag' => $this->getSetting('tag'),
-      '#attributes' => $attributes->toArray(),
-      '#value' => $text,
-    ];
-
     return $output;
   }
 

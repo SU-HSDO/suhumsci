@@ -19,6 +19,7 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
         'section_width' => '',
+        'region_widths' => '',
       ];
   }
 
@@ -34,6 +35,17 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
       '#default_value' => $this->configuration['section_width'] ?: NULL,
       '#options' => [
         'decanter-grid' => $this->t('Limited Width'),
+      ],
+    ];
+
+    $form['region_widths'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Region Widths'),
+      '#description' => $this->t('change the widths of the 3 columns.'),
+      '#default_value' => $this->configuration['region_widths'] ?: 'center',
+      '#options' => [
+        'center' => $this->t('Larger Center Column'),
+        'equal' => $this->t('Equal Columns'),
       ],
     ];
     return $form;
@@ -53,5 +65,6 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
     // In case classes is missing entirely, use the defaults.
     $defaults = $this->defaultConfiguration();
     $this->configuration['section_width'] = $form_state->getValue('section_width', $defaults['section_width']);
+    $this->configuration['region_widths'] = $form_state->getValue('region_widths', $defaults['region_widths']);
   }
 }

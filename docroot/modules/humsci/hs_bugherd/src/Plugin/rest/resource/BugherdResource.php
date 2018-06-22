@@ -291,7 +291,19 @@ class BugherdResource extends ResourceBase {
 
     if (strpos($task['requester']['email'], 'stanford.edu') !== FALSE) {
       $requester_sunet = substr($task['requester']['email'], 0, strpos($task['requester']['email'], '@'));
-      $issue->fields->reporter->setName($requester_sunet);
+
+      // Search Jira for the users that match the username.
+      $jira_users = $this->jiraIssueService->getCommunicationService()
+        ->get('user/search?', ['username' => $requester_sunet]);
+
+      // Since the search isn't an exact match search, we want to loop through
+      // and make sure we have the right user's name.
+      foreach ($jira_users as $user) {
+        if ($user->name == $requester_sunet) {
+          $issue->fields->reporter->setName($requester_sunet);
+          break;
+        }
+      }
     }
 
     $issue->save();

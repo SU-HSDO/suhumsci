@@ -820,23 +820,20 @@ $config['simplesamlphp_auth.settings'] = [
   'user_name' => 'displayName',
   'auth_source' => 'default-sp',
   'login_link_display_name' => 'Stanford Login',
-  'header_no_cache' => 1,
-  'logout_goto_url' => NULL,
+  'header_no_cache' => TRUE,
   'user_register_original' => 'visitors',
   'register_users' => TRUE,
   'autoenablesaml' => TRUE,
-  'debug' => TRUE,
+  'debug' => FALSE,
   'secure' => FALSE,
   'httponly' => FALSE,
   'role' => [
-    'population' => 'administrator:suAffiliation,=,hsdo:web|administrator:suAffiliation,=,itservices:webservices',
-    'eval_every_time' => FALSE,
+    'population' => 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices',
+    'eval_every_time' => TRUE,
   ],
   'allow' => [
-    'set_drupal_pwd' => TRUE,
+    'set_drupal_pwd' => FALSE,
     'default_login' => TRUE,
-    'default_login_roles' => [],
-    'default_login_users' => '1',
   ],
   'sync' => [
     'mail' => TRUE,
@@ -878,11 +875,6 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
     // Don't lock config when using drush.
     $settings['config_readonly'] = TRUE;
   }
-  $site = basename(dirname(__FILE__));
-
-  // Set sync directory for Acquia environments.
-  $config_directories[CONFIG_SYNC_DIRECTORY] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config/$site";
-  $config_directories['vcs'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/config/$site";
 }
 
 // Lets whitelist everything because in our event subscriber we have the

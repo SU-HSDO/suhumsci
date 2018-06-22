@@ -13,6 +13,10 @@ use Drupal\hs_field_helpers\Plugin\Field\FieldType\DisplayModeField;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Field\FormatterInterface;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Implements hook_help().
@@ -219,4 +223,117 @@ function hs_field_helpers_preprocess_views_view_pattern(&$variables) {
   $view = $variables['view'];
   $pattern = $view->style_plugin->options['pattern'];
   $variables['pattern'] = $pattern;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary_alter().
+ */
+function hs_field_helpers_field_formatter_settings_summary_alter(&$summary, $context) {
+  $inline = $context['formatter']->getThirdPartySetting('hs_field_helpers', 'inline_contents');
+  if (!empty($inline)) {
+    $summary[] = t('Inline Contents: @inline', ['@inline' => $inline ? t('Yes') : t('No')]);
+  }
+}
+
+/**
+ * Implements hook_field_formatter_third_party_settings_form().
+ *
+ * Adds a 'class' textfield to all formatters.
+ */
+function hs_field_helpers_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, $form, FormStateInterface $form_state) {
+  $element['inline_contents'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Inline Contents'),
+    '#description' => t('Display the field items as comma separated values.'),
+    '#default_value' => $plugin->getThirdPartySetting('hs_field_helpers', 'inline_contents'),
+  ];
+  return $element;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * The field_formatter_class module doesn't work on layout builder fields, so we
+ * have to add our classes on our own.
+ *
+ * @see field_formatter_class_preprocess_field().
+ */
+function hs_field_helpers_preprocess_field(&$variables) {
+  // Get a few convenient handles.
+  $entity = $variables['element']['#object'];
+  $field_name = $variables['element']['#field_name'];
+  $view_mode = $variables['element']['#view_mode'];
+
+  // Drill down to field formatter settings.
+  $render_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+  // Anything else should be handled by field_formatter_class.
+  if (!($render_display instanceof LayoutBuilderEntityViewDisplay)) {
+    return;
+  }
+  $field_display = _hs_field_helpers_get_view_mode_component($render_display, $field_name);
+
+  // Add class for whole field.
+  if (!empty($field_display['third_party_settings']['field_formatter_class'])) {
+    $variables['attributes']['class'][] = $field_display['third_party_settings']['field_formatter_class']['class'];
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ *
+ * Adds a theme suggestion to make all contents be inline. Then our theme can
+ * take that suggestion and run with it.
+ */
+function hs_field_helpers_theme_suggestions_field(array $variables) {
+
+  // Get a few convenient handles.
+  /** @var FieldableEntityInterface $entity */
+  $entity = $variables['element']['#object'];
+  $field_name = $variables['element']['#field_name'];
+  $view_mode = $variables['element']['#view_mode'];
+
+  // Drill down to field formatter settings.
+  /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $render_display */
+  $render_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+  $field_display = _hs_field_helpers_get_view_mode_component($render_display, $field_name);
+
+  $suggestions = [];
+  // Add class for whole field.
+  if (isset($field_display['third_party_settings']['hs_field_helpers']) && $field_display['third_party_settings']['hs_field_helpers']) {
+    $entity_type = $entity->getEntityTypeId();
+    $suggestions = [
+      'field__inline_contents',
+      "field__inline_contents__$field_name",
+      "field__inline_contents__$entity_type",
+    ];
+  }
+  return $suggestions;
+}
+
+/**
+ * A field can be nested in a layout builder section, so lets go get it.
+ *
+ * @param \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $entity_display
+ *   Display entity.
+ * @param string $field_name
+ *   Field name to find.
+ *
+ * @return array|null
+ *   Formatter settings of the field if found.
+ */
+function _hs_field_helpers_get_view_mode_component(LayoutBuilderEntityViewDisplay $entity_display, $field_name) {
+  $entity_type = $entity_display->getTargetEntityTypeId();
+  $entity_bundle = $entity_display->getTargetBundle();
+  $id = "field_block:$entity_type:$entity_bundle:$field_name";
+
+  /** @var \Drupal\layout_builder\Section $section */
+  foreach ($entity_display->getSections() as $section) {
+    /** @var \Drupal\layout_builder\SectionComponent $component */
+    foreach ($section->getComponents() as $component) {
+      $config = $component->get('configuration');
+      if ($config['id'] == $id) {
+        return $config['formatter'];
+      }
+    }
+  }
 }

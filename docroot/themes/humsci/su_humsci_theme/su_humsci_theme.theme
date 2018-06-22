@@ -5,6 +5,8 @@
  * Preprocess functions for Stanford HumSci.
  */
 
+use Drupal\views\Plugin\views\field\EntityField;
+
 /**
  * Implements hook_preprocess_patterns_overview_page().
  */
@@ -46,4 +48,29 @@ function su_humsci_theme_preprocess_block(&$vars) {
   if (in_array($vars['elements']['#plugin_id'], $block_ids)) {
     $vars['attributes']['class'][] = 'decanter-grid';
   }
+}
+
+/**
+ * Implements hook_preprocess_pattern_view_field().
+ */
+function su_humsci_theme_preprocess_pattern_view_field(&$vars) {
+  $field = $vars['field'];
+  if ($field->handler instanceof EntityField) {
+    $items = $field->handler->getItems($vars['row']);
+
+    // Make labels plural if they are generic.
+    if ($field->label) {
+      $replacement = count($items) > 1 ? 's' : '';
+      $field->label = str_replace('(s)', $replacement, $field->label);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_field().
+ */
+function su_humsci_theme_preprocess_field(&$vars) {
+  // Make labels plural if they are generic.
+  $replacement = count($vars['items']) > 1 ? 's' : '';
+  $vars['label'] = str_replace('(s)', $replacement, $vars['label']);
 }

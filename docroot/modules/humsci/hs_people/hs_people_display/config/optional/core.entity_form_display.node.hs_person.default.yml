@@ -1,4 +1,3 @@
-uuid: fb209efc-bc1f-4451-9644-ef0a88213a28
 langcode: en
 status: true
 dependencies:
@@ -19,6 +18,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_middle_name
     - field.field.node.hs_person.field_hs_person_office
     - field.field.node.hs_person.field_hs_person_office_hours
+    - field.field.node.hs_person.field_hs_person_research
     - field.field.node.hs_person.field_hs_person_staff_type
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
@@ -111,6 +111,7 @@ third_party_settings:
       children:
         - field_hs_person_faculty_status
         - field_hs_person_faculty_interest
+        - field_hs_person_research
       parent_name: group_tabs
       weight: 4
       format_type: tab
@@ -152,7 +153,7 @@ third_party_settings:
         required_fields: true
       label: 'Staff Info'
 _core:
-  default_config_hash: qUHXSXnqF74MtGbHPDs7ypdHG20K9KzbAn1QiIMaLyM
+  default_config_hash: Rp14Xb-0uZU6KO262zJAZMgo2S2YeZlYIA8bDO6o1Us
 id: node.hs_person.default
 targetEntityType: node
 bundle: hs_person
@@ -290,6 +291,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_hs_person_research:
+    weight: 28
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: content
   field_hs_person_staff_type:
     weight: 33

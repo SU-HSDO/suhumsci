@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * hs_research.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_research_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_research_display']);
+  }
+  catch (Exception $e) {
+    $message = t('Unable to set initial display settings for research');
+    \Drupal::messenger()->addError($message);
+    \Drupal::logger('hs_research')->error($message);
+  }
+}

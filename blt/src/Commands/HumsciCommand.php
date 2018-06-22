@@ -2,14 +2,24 @@
 
 namespace Acquia\Blt\Custom\Commands;
 
-use Acquia\Blt\Robo\BltTasks;
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 use Acquia\Blt\Robo\Exceptions\BltException;
+use Consolidation\AnnotatedCommand\CommandData;
 
 /**
  * Defines commands in the "custom" namespace.
  */
 class HumsciCommand extends AcHooksCommand {
+
+  /**
+   * Log in when drupal:sync finishes.
+   *
+   * @hook post-command drupal:sync
+   */
+  public function postArtifactBuild($result, CommandData $commandData) {
+    $this->taskDrush()->drush('uli')->run();
+  }
+
 
   /**
    * Run cron on all sites.

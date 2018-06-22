@@ -30,13 +30,9 @@ dependencies:
     - node.type.hs_person
     - system.menu.main
   module:
-    - address
-    - datetime
     - hs_layouts
     - layout_builder
-    - link
     - menu_block
-    - telephone
     - text
     - user
 third_party_settings:
@@ -79,7 +75,7 @@ third_party_settings:
               depth: 0
               expand: 1
               parent: 'main:'
-              suggestion: main_block__main
+              suggestion: menu_block__main
               label_type: root
               context_mapping: {  }
             additional: {  }
@@ -124,7 +120,7 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 1
+            weight: 2
           31123cde-5602-4989-bf2f-d01681c70abc:
             uuid: 31123cde-5602-4989-bf2f-d01681c70abc
             region: main_above
@@ -144,7 +140,7 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 2
+            weight: 3
           cf81b2bb-83c1-4179-aaa0-747938d91a94:
             uuid: cf81b2bb-83c1-4179-aaa0-747938d91a94
             region: main_above
@@ -166,7 +162,7 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 3
+            weight: 0
           8d405c41-3d04-44a4-b60f-eaa8c2fc3167:
             uuid: 8d405c41-3d04-44a4-b60f-eaa8c2fc3167
             region: main_below
@@ -224,177 +220,32 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_hs_person_affiliation:
-    weight: 3
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_hs_person_education:
-    weight: 5
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_person_email:
-    weight: 6
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
-    region: content
-  field_hs_person_faculty_interest:
-    weight: 14
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_hs_person_faculty_status:
-    weight: 13
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_hs_person_image:
-    type: entity_reference_entity_view
-    weight: 21
-    label: above
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    region: content
-  field_hs_person_links:
-    weight: 12
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_hs_person_mail:
-    weight: 10
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: address_default
-    region: content
-  field_hs_person_mail_code:
-    weight: 11
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_person_office:
-    weight: 9
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_person_office_hours:
-    weight: 8
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_person_research:
-    weight: 22
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: main_above
-  field_hs_person_staff_type:
-    weight: 20
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_hs_person_student_cohort:
-    weight: 16
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: html_year
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_hs_person_student_dissert:
-    weight: 18
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_person_student_grad:
-    weight: 19
-    label: hidden
-    settings:
-      timezone_override: ''
-      format_type: html_year
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_hs_person_student_study:
-    weight: 17
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_hs_person_student_type:
-    weight: 15
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_hs_person_telephone:
-    weight: 7
-    label: hidden
-    settings:
-      title: ''
-    third_party_settings: {  }
-    type: telephone_link
-    region: content
-  field_hs_person_title:
-    weight: 4
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
   links:
-    weight: 0
-    region: content
+    weight: 100
     settings: {  }
     third_party_settings: {  }
+    region: main_above
 hidden:
+  field_hs_person_affiliation: true
+  field_hs_person_education: true
+  field_hs_person_email: true
+  field_hs_person_faculty_interest: true
+  field_hs_person_faculty_status: true
   field_hs_person_first_name: true
+  field_hs_person_image: true
   field_hs_person_last_name: true
+  field_hs_person_links: true
+  field_hs_person_mail: true
+  field_hs_person_mail_code: true
   field_hs_person_middle_name: true
+  field_hs_person_office: true
+  field_hs_person_office_hours: true
+  field_hs_person_research: true
+  field_hs_person_staff_type: true
+  field_hs_person_student_cohort: true
+  field_hs_person_student_dissert: true
+  field_hs_person_student_grad: true
+  field_hs_person_student_study: true
+  field_hs_person_student_type: true
+  field_hs_person_telephone: true
+  field_hs_person_title: true

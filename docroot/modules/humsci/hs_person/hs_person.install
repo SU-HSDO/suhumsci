@@ -2,21 +2,21 @@
 
 /**
  * @file
- * hs_people.install
+ * hs_person.install
  */
 
 /**
  * Implements hook_install().
  */
-function hs_people_install() {
+function hs_person_install() {
   /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
   $module_installer = \Drupal::service('module_installer');
   try {
-    $module_installer->install(['hs_people_display']);
+    $module_installer->install(['hs_person_display']);
   }
   catch (Exception $e) {
-    $message = t('Unable to set initial display settings for people');
+    $message = t('Unable to set initial display settings for person');
     \Drupal::messenger()->addError($message);
-    \Drupal::logger('hs_people')->error($message);
+    \Drupal::logger('hs_person')->error($message);
   }
 }

@@ -1,0 +1,28 @@
+id: hs_event_time
+label: 'Event Start Time'
+ui_limit: 'hs_event|*'
+properties:
+  block: 'field_block:node:hs_event:field_hs_event_date'
+  use_block_title: false
+  add_block_wrappers: false
+  config:
+    id: 'field_block:node:hs_event:field_hs_event_date'
+    label: ''
+    provider: layout_builder
+    label_display: ''
+    formatter:
+      label: hidden
+      type: datetime_hs
+      settings:
+        timezone_override: ''
+        date_format: 'g:i A'
+        display: start_date
+      third_party_settings:
+        field_formatter_class:
+          class: ''
+    context_mapping:
+      entity: '@node.node_route_context:node'
+type: block
+type_label: 'Block field'
+entities:
+  node: node

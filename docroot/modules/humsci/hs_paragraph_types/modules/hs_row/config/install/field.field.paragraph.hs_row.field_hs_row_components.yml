@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_row_components
+    - paragraphs.paragraphs_type.hs_row
+  module:
+    - entity_reference_revisions
+id: paragraph.hs_row.field_hs_row_components
+field_name: field_hs_row_components
+entity_type: paragraph
+bundle: hs_row
+label: Components
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 1
+    target_bundles:
+      hs_row: hs_row
+    target_bundles_drag_drop:
+      row:
+        enabled: true
+        weight: 8
+field_type: entity_reference_revisions

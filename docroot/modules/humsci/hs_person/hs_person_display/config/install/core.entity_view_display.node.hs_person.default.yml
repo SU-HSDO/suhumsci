@@ -1,3 +1,4 @@
+uuid: 153757b9-e84a-4aef-9fb2-56fae0308e23
 langcode: en
 status: true
 dependencies:
@@ -29,12 +30,14 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
     - system.menu.main
+    - views.view.hs_publications
   module:
     - hs_layouts
     - layout_builder
     - menu_block
     - text
     - user
+    - views
 third_party_settings:
   layout_builder:
     sections:
@@ -200,14 +203,29 @@ third_party_settings:
                     class: ''
                   ds:
                     ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 1
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
             weight: 5
+          8e4bc54b-d81e-4c42-a469-45b8ecef0729:
+            uuid: 8e4bc54b-d81e-4c42-a469-45b8ecef0729
+            region: main_below
+            configuration:
+              id: 'views_block:hs_publications-author_list'
+              label: 'Featured Publications'
+              provider: views
+              label_display: visible
+              views_label: 'Featured Publications'
+              items_per_page: none
+              context_mapping: {  }
+            additional: {  }
+            weight: 2
     enable_defaults: true
     allow_custom: false
 _core:
-  default_config_hash: wd5bqvDU2CgZNeg83x3eieeTVYkKWCc7l0Sf1BNb5Hs
+  default_config_hash: RLmMBeK2tRMVeqNOZ_sz6tnGCajWw8qpfujM2hOThKU
 id: node.hs_person.default
 targetEntityType: node
 bundle: hs_person

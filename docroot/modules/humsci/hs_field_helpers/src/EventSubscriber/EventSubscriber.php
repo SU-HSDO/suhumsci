@@ -8,6 +8,7 @@ use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\menu_block\Plugin\Block\MenuBlock;
+use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -64,11 +65,28 @@ class EventSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function onLayoutBuilderRender(SectionComponentBuildRenderArrayEvent $event) {
+    $build = $event->getBuild();
+
     if ($event->getPlugin() instanceof MenuBlock) {
-      $build = $event->getBuild();
       $menu_name = $event->getPlugin()->getDerivativeId();
       $this->setMenuBlockLabel($build, $menu_name);
       $event->setBuild($build);
+    }
+
+    // Empty views still display the block title in layouts so we have to clear
+    // that up by checking for rows and no result contents.
+    if ($event->getPlugin() instanceof ViewsBlock && !$event->inPreview()) {
+      // We use the view's render array instead of build because the build might
+      // have an overridden label which we want to exclude from the logic.
+      $render_array = $event->getPlugin()->build();
+
+      // We want to strip all tags like divs, p, span, etc. Keep tags that
+      // can still contain desirable output.
+      $render = trim(strip_tags(render($render_array), '<img><iframe>'));
+      if (empty($render)) {
+        $event->setBuild([]);
+      }
+
     }
   }
 

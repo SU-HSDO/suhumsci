@@ -69,6 +69,14 @@ AddEncoding gzip svgz
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
+  # Redirect HTTP to HTTPS on cloud
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} prod [NC,OR]
+  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} test [NC,OR]
+  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} dev [NC]
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [NE,L,R=301]
+
   # Set "protossl" to "s" if we were accessed via https://.  This is used later
   # if you enable "www." stripping or enforcement, in order to ensure that
   # you don't bounce between http and https.

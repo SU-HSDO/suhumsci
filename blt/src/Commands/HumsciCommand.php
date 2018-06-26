@@ -16,7 +16,7 @@ class HumsciCommand extends AcHooksCommand {
    *
    * @hook post-command drupal:sync
    */
-  public function postArtifactBuild($result, CommandData $commandData) {
+  public function postDrupalSync($result, CommandData $commandData) {
     $this->taskDrush()->drush('uli')->run();
   }
 

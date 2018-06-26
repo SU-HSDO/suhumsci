@@ -21,7 +21,8 @@ function _su_humsci_profile_revert_configs(array $configs) {
       }
 
       // The config now exists, so lets revert to make sure we're in the correct
-      // state.
+      // state. We do this because if its an entity view display, layout builder
+      // modifies the configuration on creation. We don't want that.
       try {
         $config_update->revert($config_type, $name);
       }

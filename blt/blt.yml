@@ -35,14 +35,10 @@ multisites:
   - default
   - archaeology
 simplesamlphp: true
-
-# Files that are used by BLT during deployment.
 deploy:
-  exclude_file: ${repo.root}/blt/deploy/rsync-exclude.txt
-  gitignore_file: ${repo.root}/blt/deploy/.gitignore
-
-# Any additional modifications to the files before commiting.
+  exclude_file: '${repo.root}/blt/deploy/rsync-exclude.txt'
+  gitignore_file: '${repo.root}/blt/deploy/.gitignore'
 command-hooks:
   post-deploy-build:
-    dir: ${deploy.dir}
-    command: "chmod +x blt/cleanup.sh; blt/cleanup.sh"
+    dir: '${deploy.dir}'
+    command: 'chmod +x blt/cleanup.sh; blt/cleanup.sh'

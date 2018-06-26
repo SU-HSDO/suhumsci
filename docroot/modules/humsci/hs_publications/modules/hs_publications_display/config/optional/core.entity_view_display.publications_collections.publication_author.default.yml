@@ -8,13 +8,41 @@ dependencies:
     - field_formatter_class
     - layout_builder
     - layout_discovery
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          ef5c5276-79e0-4f21-b906-15a54a31dcc2:
+            uuid: ef5c5276-79e0-4f21-b906-15a54a31dcc2
+            region: content
+            configuration:
+              id: 'field_block:publications_collections:publication_author:field_hs_publication_author'
+              label_display: ''
+              formatter:
+                label: hidden
+                settings:
+                  link: true
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                type: entity_reference_label
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_publication_author
+            weight: 0
+    enable_defaults: false
+    allow_custom: false
 id: publications_collections.publication_author.default
 targetEntityType: publications_collections
 bundle: publication_author
 mode: default
 content:
   field_hs_publication_author:
-    weight: -4
+    weight: 0
     label: hidden
     settings:
       link: true
@@ -23,12 +51,5 @@ content:
         class: ''
     type: entity_reference_label
     region: content
-  title:
-    label: hidden
-    type: string
-    weight: -5
-    region: content
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-hidden: {  }
+hidden:
+  title: true

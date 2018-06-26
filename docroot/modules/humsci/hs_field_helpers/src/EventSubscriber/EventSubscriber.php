@@ -79,15 +79,38 @@ class EventSubscriber implements EventSubscriberInterface {
       // We use the view's render array instead of build because the build might
       // have an overridden label which we want to exclude from the logic.
       $render_array = $event->getPlugin()->build();
-
-      // We want to strip all tags like divs, p, span, etc. Keep tags that
-      // can still contain desirable output.
-      $render = trim(strip_tags(render($render_array), '<img><iframe>'));
-      if (empty($render)) {
+      if (empty($this->getCleanRender($render_array))) {
         $event->setBuild([]);
       }
-
     }
+
+    // While in preview, if the build renders empty, we never see it to on the
+    // edit page. So we can't configure the block or delete it. So lets at least
+    // put the block ID visible so we can see what's there.
+    if ($event->inPreview() && empty($this->getCleanRender($build))) {
+      $build['content'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $build['#configuration']['id'],
+      ];
+      $event->setBuild($build);
+    }
+  }
+
+  /**
+   * Render and clean up a render array to get only the visible markup tags.
+   *
+   * We want to strip all tags like divs, p, span, etc. Keep tags that can still
+   * contain desirable output.
+   *
+   * @param array $render_array
+   *   A render array.
+   *
+   * @return string
+   *   Rendered and clean markup.
+   */
+  protected function getCleanRender(array $render_array) {
+    return trim(strip_tags(render($render_array), '<img><iframe>'));
   }
 
   /**

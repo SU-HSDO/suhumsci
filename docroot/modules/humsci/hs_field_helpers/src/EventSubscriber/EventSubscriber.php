@@ -8,6 +8,7 @@ use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\menu_block\Plugin\Block\MenuBlock;
+use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -64,12 +65,52 @@ class EventSubscriber implements EventSubscriberInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function onLayoutBuilderRender(SectionComponentBuildRenderArrayEvent $event) {
+    $build = $event->getBuild();
+
     if ($event->getPlugin() instanceof MenuBlock) {
-      $build = $event->getBuild();
       $menu_name = $event->getPlugin()->getDerivativeId();
       $this->setMenuBlockLabel($build, $menu_name);
       $event->setBuild($build);
     }
+
+    // Empty views still display the block title in layouts so we have to clear
+    // that up by checking for rows and no result contents.
+    if ($event->getPlugin() instanceof ViewsBlock && !$event->inPreview()) {
+      // We use the view's render array instead of build because the build might
+      // have an overridden label which we want to exclude from the logic.
+      $render_array = $event->getPlugin()->build();
+      if (empty($this->getCleanRender($render_array))) {
+        $event->setBuild([]);
+      }
+    }
+
+    // While in preview, if the build renders empty, we never see it to on the
+    // edit page. So we can't configure the block or delete it. So lets at least
+    // put the block ID visible so we can see what's there.
+    if ($event->inPreview() && empty($this->getCleanRender($build))) {
+      $build['content'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $build['#configuration']['id'],
+      ];
+      $event->setBuild($build);
+    }
+  }
+
+  /**
+   * Render and clean up a render array to get only the visible markup tags.
+   *
+   * We want to strip all tags like divs, p, span, etc. Keep tags that can still
+   * contain desirable output.
+   *
+   * @param array $render_array
+   *   A render array.
+   *
+   * @return string
+   *   Rendered and clean markup.
+   */
+  protected function getCleanRender(array $render_array) {
+    return trim(strip_tags(render($render_array), '<img><iframe>'));
   }
 
   /**

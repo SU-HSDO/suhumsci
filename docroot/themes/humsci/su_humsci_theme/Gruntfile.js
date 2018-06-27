@@ -119,6 +119,9 @@ module.exports = function(grunt) {
           // COMPONENTS
           'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
 
+          // NODES
+          'css/nodes/hs_person.css':  'scss/nodes/hs_person.scss',
+
           // CUSTOM PROJECTS
           'css/custom/archaeology/archaeology.css': 'scss/custom/archaeology/archaeology.scss',
         }

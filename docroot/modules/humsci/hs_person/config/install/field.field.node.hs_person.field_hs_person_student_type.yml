@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_person_student_type
+    - node.type.hs_person
+    - taxonomy.vocabulary.hs_person_student_type
+_core:
+  default_config_hash: WewDoZyOxHv5SWQcCpVisjkrDP5EGe9Zf3d_ysfTJ0A
+id: node.hs_person.field_hs_person_student_type
+field_name: field_hs_person_student_type
+entity_type: node
+bundle: hs_person
+label: 'Student Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_person_student_type: hs_person_student_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

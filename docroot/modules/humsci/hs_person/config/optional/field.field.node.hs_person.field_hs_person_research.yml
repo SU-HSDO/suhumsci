@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_person_research
+    - node.type.hs_person
+    - node.type.hs_research
+_core:
+  default_config_hash: zW5cIdlzO2nw2EEAbClnM87O1AGDqYRL1Ki27ifSwTs
+id: node.hs_person.field_hs_person_research
+field_name: field_hs_person_research
+entity_type: node
+bundle: hs_person
+label: 'Research Area(s)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      hs_research: hs_research
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

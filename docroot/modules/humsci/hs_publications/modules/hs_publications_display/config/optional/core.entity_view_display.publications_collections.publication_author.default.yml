@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.publications_collections.publication_author
+    - field.field.publications_collections.publication_author.field_hs_publication_author
+  module:
+    - field_formatter_class
+    - layout_builder
+    - layout_discovery
+id: publications_collections.publication_author.default
+targetEntityType: publications_collections
+bundle: publication_author
+mode: default
+content:
+  field_hs_publication_author:
+    weight: 0
+    label: hidden
+    settings:
+      link: true
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    type: entity_reference_label
+    region: content
+hidden:
+  title: true

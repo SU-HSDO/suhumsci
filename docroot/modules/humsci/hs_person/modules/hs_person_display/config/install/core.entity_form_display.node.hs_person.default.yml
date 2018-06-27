@@ -24,7 +24,6 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
     - field.field.node.hs_person.field_hs_person_student_study
-    - field.field.node.hs_person.field_hs_person_student_type
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -125,7 +124,6 @@ third_party_settings:
       label: 'Faculty Info'
     group_student_info:
       children:
-        - field_hs_person_student_type
         - field_hs_person_student_cohort
         - field_hs_person_student_study
         - field_hs_person_student_dissert
@@ -153,8 +151,6 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Staff Info'
-_core:
-  default_config_hash: vsprk0zUL59Y_Ve7LaRgwTejygxGaWTZSDEC0eCFTr0
 id: node.hs_person.default
 targetEntityType: node
 bundle: hs_person
@@ -336,15 +332,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete_tags
-    region: content
-  field_hs_person_student_type:
-    weight: 28
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_hs_person_telephone:
     weight: 13

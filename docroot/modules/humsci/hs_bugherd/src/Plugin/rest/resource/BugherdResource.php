@@ -8,7 +8,6 @@ use Drupal\jira_rest\JiraRestWrapperService;
 use Drupal\key\Entity\Key;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
-use GuzzleHttp\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

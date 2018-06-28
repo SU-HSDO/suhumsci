@@ -9,6 +9,7 @@ use Drupal\encrypt\EncryptService;
 use Drupal\encrypt\Entity\EncryptionProfile;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\key\Entity\Key;
+use GuzzleHttp\Client;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 

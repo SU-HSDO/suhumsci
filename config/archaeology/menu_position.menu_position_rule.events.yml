@@ -1,0 +1,28 @@
+uuid: eababee7-eb79-47b4-9873-ce2179519b3f
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - system
+id: events
+label: Events
+menu_name: main
+parent: 'menu_link_content:a3d6d0dd-54f1-4ce1-8193-12eefd36919d'
+menu_link: 'menu_position_link:events'
+enabled: true
+weight: -1
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      hs_event: hs_event
+      hs_event_series: hs_event_series
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  current_theme:
+    id: current_theme
+    theme: ''
+    negate: 0
+    context_mapping: {  }

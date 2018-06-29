@@ -1,0 +1,31 @@
+uuid: 97b57a81-7374-4ee6-9372-9dbb456aa678
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_publication_type
+    - node.type.hs_publications
+    - taxonomy.vocabulary.hs_publication_type
+_core:
+  default_config_hash: V0PSy6ip9v23wn5_HmLSiLdRalDP7Oh8vVEvYt7KFyY
+id: node.hs_publications.field_hs_publication_type
+field_name: field_hs_publication_type
+entity_type: node
+bundle: hs_publications
+label: 'Publication Type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_publication_type: hs_publication_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

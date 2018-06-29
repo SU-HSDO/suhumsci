@@ -24,7 +24,6 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
     - field.field.node.hs_person.field_hs_person_student_study
-    - field.field.node.hs_person.field_hs_person_student_type
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -47,6 +46,7 @@ third_party_settings:
         - field_hs_person_last_name
         - field_hs_person_image
         - field_hs_person_affiliation
+        - field_hs_person_weight
       parent_name: group_tabs
       weight: 1
       format_type: tab
@@ -97,6 +97,7 @@ third_party_settings:
         - field_hs_person_title
         - field_hs_person_education
         - field_hs_person_links
+        - field_hs_person_research
       parent_name: group_tabs
       weight: 2
       format_type: tab
@@ -111,7 +112,6 @@ third_party_settings:
       children:
         - field_hs_person_faculty_status
         - field_hs_person_faculty_interest
-        - field_hs_person_research
       parent_name: group_tabs
       weight: 4
       format_type: tab
@@ -124,7 +124,6 @@ third_party_settings:
       label: 'Faculty Info'
     group_student_info:
       children:
-        - field_hs_person_student_type
         - field_hs_person_student_cohort
         - field_hs_person_student_study
         - field_hs_person_student_dissert
@@ -152,8 +151,6 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Staff Info'
-_core:
-  default_config_hash: o6u3fImJifPF9osvGyEiPLalQIhFYTLcY7YfI-kZly8
 id: node.hs_person.default
 targetEntityType: node
 bundle: hs_person
@@ -293,7 +290,7 @@ content:
     type: string_textfield
     region: content
   field_hs_person_research:
-    weight: 28
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -335,15 +332,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete_tags
-    region: content
-  field_hs_person_student_type:
-    weight: 28
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_hs_person_telephone:
     weight: 13

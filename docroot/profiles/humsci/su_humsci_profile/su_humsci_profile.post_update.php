@@ -59,30 +59,5 @@ function su_humsci_profile_post_update_8_0_1() {
  * Release 8.0.2 changes.
  */
 function su_humsci_profile_post_update_8_0_2() {
-  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
-  $module_installer = \Drupal::service('module_installer');
-  // Install research first so the display settings for person content can get
-  // installed.
-  $module_installer->install(['hs_research']);
-  $module_installer->install(['hs_person']);
-
-  $configs = [
-    'field_storage_config' => [
-      'publications_collections.field_hs_publication_author',
-    ],
-    'field_config' => [
-      'publications_collections.publication_author.field_hs_publication_author',
-      'node.hs_person.field_hs_person_research',
-    ],
-    'entity_form_display' => [
-      'publications_collections.publication_author.default',
-    ],
-    'entity_view_display' => [
-      'publications_collections.publication_author.default',
-    ],
-    'view' => [
-      'hs_publications',
-    ],
-  ];
-  _su_humsci_profile_revert_configs($configs);
+  // Removed this as it is now handled by config management.
 }

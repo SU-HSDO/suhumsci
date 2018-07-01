@@ -5,6 +5,7 @@ namespace Drupal\hs_bugherd\Plugin\rest\resource;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
+use Drupal\key\Entity\Key;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
@@ -193,7 +194,79 @@ class BugherdResource extends ResourceBase {
         $issue->addComment($this->t('Issue closed in Bugherd by @name', ['@name' => $task['updater']['display_name']]));
       }
     }
+
+    // Attach the screenshot to the Jira Issue if it doesn't have any already.
+    if (!empty($task['screenshot_url']) && empty($issue->fields->attachment)) {
+      $this->addAttachment($issue->getKey(), $task['screenshot_url']);
+      $this->jiraRestService->attachFileToIssueByKey($task['screenshot_url'], $issue->getKey());
+    }
+
     return $issue->getKey();
+  }
+
+  /**
+   * Add an attachment file to a JIRA issue.
+   *
+   * The method Drupal\jira_rest\JiraRestWrapperService::attachFileToIssueByKey
+   * doesn't work correctly. This provides our own method to attach the file.
+   *
+   * @param string $issueKey
+   *   Jira Issue ID.
+   * @param string $file
+   *   Url to file.
+   * @param null $name
+   *   Desired name of the file.
+   *
+   * @return mixed
+   *
+   * @see https://community.atlassian.com/t5/Jira-questions/Upload-URL-Attachment-via-API-on-JIRA-PHP/qaq-p/44828
+   * @see https://developer.atlassian.com/cloud/jira/platform/rest/?_ga=2.240914371.1127742332.1530222923-1785182880.1526662104#api-api-2-issue-issueIdOrKey-attachments-post
+   */
+  protected function addAttachment($issueKey, $file, $name = NULL) {
+    $jira_config = $this->configFactory->get('jira_rest.settings');
+    $url = $jira_config->get('jira_rest.instanceurl');
+    $username = $jira_config->get('jira_rest.username');
+    /** @var \Drupal\key\Entity\Key $key */
+    $key = Key::load($jira_config->get('jira_rest.password'));
+    $password = $key ? $key->getKeyValue() : '';
+
+    // Creating file name.
+    $file_name = $name ? $name : time() . '-' . basename($file);
+    $path = tempnam(sys_get_temp_dir(), 'bugherd');
+
+    // Saving file in a temp path.
+    file_put_contents($path, file_get_contents($file));
+
+    // Initiating CURLFile for preparing the upload
+    $cfile = new \CURLFile($path);
+    $cfile->setPostFilename($file_name);
+
+    // Creating array for Curl Post Fields.
+    $data = ['file' => $cfile];
+    $ch = curl_init();
+    // Setting the headers.
+    $headers = [
+      'X-Atlassian-Token: nocheck',
+      'Content-Type: multipart/form-data',
+    ];
+
+    curl_setopt_array($ch, [
+      CURLOPT_URL => "$url/rest/api/latest/issue/$issueKey/attachments",
+      CURLOPT_USERPWD => "$username:$password",
+      CURLOPT_POST => 1,
+      CURLOPT_SSL_VERIFYHOST => 0,
+      CURLOPT_SSL_VERIFYPEER => 0,
+      CURLOPT_VERBOSE => 1,
+      CURLOPT_POSTFIELDS => $data,
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_HTTPHEADER => $headers,
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+    unlink($path);
+
+    return $response;
   }
 
   /**

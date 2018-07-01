@@ -274,25 +274,25 @@ class HumsciCommand extends AcHooksCommand {
     return $this->getConfigValue("drush.aliases.$environment");
   }
 
-  /**
-   * Update the database to reflect the state of the Drupal file system.
-   *
-   * @command artifact:update:drupal:all-sites
-   * @aliases auda
-   */
-  public function updateAll() {
-    // Disable alias since we are targeting specific uri.
-    $this->config->set('drush.alias', '');
-
-    foreach ($this->getConfigValue('multisites') as $multisite) {
-      try {
-        $this->updateSite($multisite);
-      }
-      catch (\Exception $e) {
-        $this->say("Unable to update <comment>$multisite</comment>");
-      }
-    }
-  }
+//  /**
+//   * Update the database to reflect the state of the Drupal file system.
+//   *
+//   * @command artifact:update:drupal:all-sites
+//   * @aliases auda
+//   */
+//  public function updateAll() {
+//    // Disable alias since we are targeting specific uri.
+//    $this->config->set('drush.alias', '');
+//
+//    foreach ($this->getConfigValue('multisites') as $multisite) {
+//      try {
+//        $this->updateSite($multisite);
+//      }
+//      catch (\Exception $e) {
+//        $this->say("Unable to update <comment>$multisite</comment>");
+//      }
+//    }
+//  }
 
   /**
    * Execute updates on a specific site.

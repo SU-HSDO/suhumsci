@@ -798,3 +798,5 @@ require DRUPAL_ROOT . '/sites/config.setttings.php';
 // ability to decide which forms are locked.
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
+
+$config_directories[CONFIG_SYNC_DIRECTORY] = "../config/default/all";

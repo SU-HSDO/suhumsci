@@ -37,6 +37,8 @@ function _su_humsci_profile_revert_configs(array $configs) {
  * Release 8.0.1 changes.
  */
 function su_humsci_profile_post_update_8_0_1() {
+  \Drupal::service('module_installer')->install(['config_update']);
+
   /** @var \Drupal\config_update\ConfigReverter $config_update */
   $config_update = \Drupal::service('config_update.config_update');
 

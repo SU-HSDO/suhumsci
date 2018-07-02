@@ -59,7 +59,12 @@ class HumsciConfigCommand extends ConfigCommand {
           break;
 
         case 'config-split':
-          $this->importConfigSplit($task, $cm_core_key);
+          try {
+            $this->importConfigSplit($task, $cm_core_key);
+          }
+          catch (\Exception $e) {
+            $this->say($e->getMessage());
+          }
           break;
 
         case 'features':
@@ -75,7 +80,7 @@ class HumsciConfigCommand extends ConfigCommand {
       $task->drush("cache-rebuild");
       $result = $task->run();
       if (!$result->wasSuccessful()) {
-        throw new BltException("Failed to import configuration!");
+        $this->say("Failed to import configuration!");
       }
 
       $this->checkConfigOverrides($cm_core_key);

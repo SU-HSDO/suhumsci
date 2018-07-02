@@ -799,4 +799,4 @@ require DRUPAL_ROOT . '/sites/config.setttings.php';
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
 
-$config_directories[CONFIG_SYNC_DIRECTORY] = "../config/default/all";
+$config_directories[CONFIG_SYNC_DIRECTORY] = "../config/default";

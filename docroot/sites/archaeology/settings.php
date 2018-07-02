@@ -798,4 +798,4 @@ if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/swshumsci/archaeology-settings.inc';
 }
 
-$config_directories[CONFIG_SYNC_DIRECTORY] = "../config/archaeology/all";
+$config_directories[CONFIG_SYNC_DIRECTORY] = "../config/archaeology";

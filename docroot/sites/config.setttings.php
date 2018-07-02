@@ -1,5 +1,6 @@
 <?php
 
+$config_directories[CONFIG_SYNC_DIRECTORY] = '../config/common';
 
 // SimpleSAMLphp configuration
 // Provide universal absolute path to the installation.

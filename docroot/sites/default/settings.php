@@ -789,7 +789,8 @@ $settings['entity_update_batch_size'] = 50;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-
+$blt_override_config_directories = FALSE;
+$config_directories['sync'] = "../config/default";
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
 require DRUPAL_ROOT . '/sites/config.setttings.php';
 

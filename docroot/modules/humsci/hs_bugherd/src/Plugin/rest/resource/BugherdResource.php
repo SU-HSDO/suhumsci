@@ -198,7 +198,6 @@ class BugherdResource extends ResourceBase {
     // Attach the screenshot to the Jira Issue if it doesn't have any already.
     if (!empty($task['screenshot_url']) && empty($issue->fields->attachment)) {
       $this->addAttachment($issue->getKey(), $task['screenshot_url']);
-      $this->jiraRestService->attachFileToIssueByKey($task['screenshot_url'], $issue->getKey());
     }
 
     return $issue->getKey();

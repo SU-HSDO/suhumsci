@@ -64,7 +64,7 @@ function su_humsci_profile_update_8002() {
   $common_configs = [];
   foreach (scandir('../config/common') as $file) {
     if (strpos($file, 'yml') !== FALSE) {
-      $common_configs[] = $file;
+      $common_configs[] = str_replace('.yml', '', $file);
     }
   }
 

@@ -208,6 +208,7 @@ class BugherdResource extends ResourceBase {
    *
    * The method Drupal\jira_rest\JiraRestWrapperService::attachFileToIssueByKey
    * doesn't work correctly. This provides our own method to attach the file.
+   * https://www.drupal.org/project/jira_rest/issues/2982894 is the issue.
    *
    * @param string $issueKey
    *   Jira Issue ID.

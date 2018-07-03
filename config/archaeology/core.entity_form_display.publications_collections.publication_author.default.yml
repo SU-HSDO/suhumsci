@@ -4,11 +4,18 @@ status: true
 dependencies:
   config:
     - eck.eck_type.publications_collections.publication_author
+    - field.field.publications_collections.publication_author.field_hs_publication_author
 id: publications_collections.publication_author.default
 targetEntityType: publications_collections
 bundle: publication_author
 mode: default
 content:
+  field_hs_publication_author:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_hs_publication_author_link:
     weight: 3
     settings: {  }
@@ -17,7 +24,7 @@ content:
     region: content
   title:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60

@@ -18,10 +18,12 @@ class HumsciConfigCommand extends ConfigCommand {
    * @command drupal:config:import
    * @aliases dci setup:config-import
    *
+   * @option partial Don't delete existing configuration.
+   *
    * @validateDrushConfig
    * @executeInVm
    */
-  public function import() {
+  public function import($options = ['partial' => FALSE]) {
     $strategy = $this->getConfigValue('cm.strategy');
     $cm_core_key = $this->getConfigValue('cm.core.key');
     $this->logConfig($this->getConfigValue('cm'), 'cm');
@@ -60,7 +62,7 @@ class HumsciConfigCommand extends ConfigCommand {
 
         case 'config-split':
           try {
-            $this->importConfigSplit($task, $cm_core_key);
+            $this->importConfigSplit($task, $cm_core_key, $options['partial']);
           }
           catch (\Exception $e) {
             $this->say($e->getMessage());
@@ -96,12 +98,13 @@ class HumsciConfigCommand extends ConfigCommand {
    *
    * @param \Acquia\Blt\Robo\Tasks\DrushTask $task
    * @param string $cm_core_key
+   * @param bool $partial
    */
-  protected function importConfigSplit($task, $cm_core_key) {
+  protected function importConfigSplit($task, $cm_core_key, $partial = FALSE) {
     $task->drush("pm-enable")->arg('config_split');
 
     // Local environments we don't want all the custom site created configs.
-    if ($this->getConfigValue('environment') == 'local') {
+    if ($this->getConfigValue('environment') == 'local' && !$partial) {
       $task->drush("config-import")->arg($cm_core_key);
       // Runs a second import to ensure splits are
       // both defined and imported.

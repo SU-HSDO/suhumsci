@@ -20,7 +20,6 @@ class HumsciCommand extends AcHooksCommand {
     $this->taskDrush()->drush('uli')->run();
   }
 
-
   /**
    * Run cron on all sites.
    *
@@ -301,7 +300,24 @@ class HumsciCommand extends AcHooksCommand {
    * @command humsci:keys
    */
   public function humsciKeys() {
-    $this->taskDrush()->drush("rsync @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")->run();
+    $this->taskDrush()
+      ->drush("rsync @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
+      ->run();
+  }
+
+  /**
+   * Get encryption keys from acquia.
+   *
+   * @command humsci:keys:send
+   */
+  public function humsciKeysSend() {
+    $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
+
+    if (strtolower($send)[0] == 'y') {
+      $this->taskDrush()
+        ->drush("rsync @self:../keys/ @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys")
+        ->run();
+    }
   }
 
 }

@@ -60,7 +60,18 @@ function su_humsci_profile_lock_config(&$install_state) {
  * Create config split entities.
  */
 function su_humsci_profile_update_8002() {
-  \Drupal::service('module_installer')->install(['config_split']);
+  \Drupal::service('module_installer')->install([
+    'config_split',
+    'config_ignore',
+  ]);
+  $ignore_config = \Drupal::configFactory()
+    ->getEditable('config_ignore.settings');
+  $ignore_config->set('ignored_config_entities', [
+    'core.entity_form_display.hs_*',
+    'core.entity_view_display.hs_*',
+  ]);
+  $ignore_config->save();
+
   $common_configs = [];
   foreach (scandir('../config/common') as $file) {
     if (strpos($file, 'yml') !== FALSE) {

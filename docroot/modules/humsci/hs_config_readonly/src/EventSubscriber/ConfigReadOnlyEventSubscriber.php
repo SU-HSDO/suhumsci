@@ -2,11 +2,11 @@
 
 namespace Drupal\hs_config_readonly\EventSubscriber;
 
+use Drupal\config_filter\Config\FilteredStorageInterface;
+use Drupal\config_filter\Plugin\ConfigFilterPluginManager;
 use Drupal\config_readonly\ConfigReadonlyWhitelistTrait;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ExtensionInstallStorage;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -28,18 +28,14 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   use ConfigReadonlyWhitelistTrait;
 
   /**
-   * Installed configuration service.
-   *
-   * @var \Drupal\Core\Config\ExtensionInstallStorage
+   * @var \Drupal\config_filter\Config\FilteredStorageInterface
    */
-  protected $extensionConfigStorage;
+  protected $configStorage;
 
   /**
-   * Optional configuration service.
-   *
-   * @var \Drupal\Core\Config\ExtensionInstallStorage
+   * @var \Drupal\config_filter\Plugin\ConfigFilterPluginManager
    */
-  protected $extensionOptionalConfigStorage;
+  protected $configFilterManager;
 
   /**
    * Ignore the configurations form these modules.
@@ -47,13 +43,6 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
    * @var array
    */
   protected $excludedModules = ['system'];
-
-  /**
-   * Root path of Drupal.
-   *
-   * @var string
-   */
-  protected $drupalRoot;
 
   /**
    * Form ids to mark as read only.
@@ -68,12 +57,10 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($drupal_root, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, ExtensionInstallStorage $extension_config_storage, ExtensionInstallStorage $extension_optional_config_storage) {
-    $this->drupalRoot = $drupal_root;
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, FilteredStorageInterface $config_storage, ConfigFilterPluginManager $filter_manager) {
     $this->moduleHandler = $module_handler;
-    $this->extensionConfigStorage = $extension_config_storage;
-    $this->extensionOptionalConfigStorage = $extension_optional_config_storage;
-
+    $this->configStorage = $config_storage;
+    $this->configFilterManager = $filter_manager;
     $config = $config_factory->get('hs_config_readonly.settings');
     $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;
@@ -110,17 +97,17 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     if (!$mark_form_read_only && $form_object instanceof EntityFormInterface) {
       $entity = $form_object->getEntity();
       $mark_form_read_only = $entity instanceof ConfigEntityInterface;
-    }
 
-    // Don't block particular patterns.
-    if ($mark_form_read_only && $form_object instanceof EntityFormInterface) {
-      $entity = $form_object->getEntity();
-      $name = $entity->getConfigDependencyName();
+      // Don't block particular patterns.
+      if ($mark_form_read_only) {
+        $entity = $form_object->getEntity();
+        $name = $entity->getConfigDependencyName();
 
-      // Block config from a module.
-      $mark_form_read_only = $this->configIsLocked($name);
-      // If all config is in the whitelist, do not block the form.
-      $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
+        // Block config from a module.
+        $mark_form_read_only = $this->configIsLocked($name);
+        // If all config is in the whitelist, do not block the form.
+        $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
+      }
     }
 
     // Config forms.
@@ -183,43 +170,20 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
    *   Config names.
    */
   protected function getLockedConfigs() {
-    $module_configs = [];
-    foreach ($this->moduleHandler->getModuleList() as $name => $extension) {
-      if (in_array($name, $this->excludedModules)) {
-        continue;
+    $configs = $this->configStorage->listAll();
+    if (!$this->configFilterManager->hasDefinition('config_ignore')) {
+      return $configs;
+    }
+
+    /** @var \Drupal\config_ignore\Plugin\ConfigFilter\IgnoreFilter $plugin */
+    $plugin = $this->configFilterManager->createInstance('config_ignore');
+    foreach ($plugin->filterListAll('', []) as $ignored_config) {
+      $pos = array_search($ignored_config, $configs);
+      if ($pos !== FALSE) {
+        unset($configs[$pos]);
       }
-
-      $install_list = $this->listProvidedItems($name);
-      $optional_list = $this->listProvidedItems($name, TRUE);
-      $module_configs = array_merge($module_configs, $install_list, $optional_list);
     }
-    return $module_configs;
-  }
-
-  /**
-   * Returns a list of the install storage items for an extension.
-   *
-   * @param string $name
-   *   Machine name of extension.
-   * @param bool $only_optional
-   *   FALSE (default) to list config/install items, TRUE to list
-   *   config/optional items.
-   *
-   * @return string[]
-   *   List of config items provided by this extension.
-   *
-   * @see \Drupal\config_update\ConfigLister::listProvidedItems().
-   */
-  protected function listProvidedItems($name, $only_optional = FALSE) {
-    $pathname = drupal_get_filename('module', $name);
-    $component = new Extension($this->drupalRoot, 'module', $pathname);
-    if ($only_optional) {
-      $names = $this->extensionOptionalConfigStorage->getComponentNames([$component]);
-    }
-    else {
-      $names = $this->extensionConfigStorage->getComponentNames([$component]);
-    }
-    return array_keys($names);
+    return $configs;
   }
 
   /**

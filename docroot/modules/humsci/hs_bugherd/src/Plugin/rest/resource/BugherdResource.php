@@ -519,7 +519,7 @@ class BugherdResource extends ResourceBase {
    * @param int $status
    *   Jira status ID
    *
-   * @return string
+   * @return string|null
    *   Bugherd Status.
    */
   protected function getTranslatedStatus($status) {
@@ -537,8 +537,6 @@ class BugherdResource extends ResourceBase {
         return $bugherd_id;
       }
     }
-    $status_map = array_flip($status_map);
-    return isset($status_map[$status]) ? $status_map[$status] : NULL;
   }
 
 }

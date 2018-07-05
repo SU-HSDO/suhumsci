@@ -17,20 +17,23 @@
   @include horizontal-card;
 
   .horizontal-card__img {
-    @include margin(null 0 null null);
+    @include margin(0);
+
+    width: 100%;
 
     img {
+      @include margin(0 0 0.5em 0);
+      display: block;
+      padding: 0;
       width: 100%;
-
-      @include margin(0 0 0.75em 0);
+      height: auto;
     }
 
     @include media($medium-screen) {
-      @include margin(null 30px null null);
+      @include margin(0 .75em 0 0);
+      width: 10em;
 
       img {
-        width: auto;
-
         @include margin(0);
       }
     }
@@ -65,7 +68,11 @@
     }
 
     .horizontal-card__title {
-      @include margin(0.5em null null);
+      @include margin(0 0 .35em);
+      font-weight: 600;
+      &:after {
+        content: none;
+      }
     }
 
     .horizontal-card__speaker {
@@ -80,7 +87,10 @@
     }
 
     .horizontal-card__description {
-      @include margin(0.75em null null);
+      @include margin(0);
+      > div {
+        @include margin(0 0 .25em);
+      }
     }
   }
 }

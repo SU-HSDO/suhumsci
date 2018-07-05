@@ -27,8 +27,8 @@ $config = [
     // Can be NULL/unset, in which case a builtin discovery service will be used.
     'discoURL' => NULL,
 
-    'privatekey' => '/home/swshumsci/saml/saml.pem',
-    'certificate' => '/home/swshumsci/saml/saml.crt'
+    'privatekey' => '/mnt/gfs/swshumsci.prod/nobackup/apikeys/saml/saml.pem',
+    'certificate' => '/mnt/gfs/swshumsci.prod/nobackup/apikeys/saml/saml.crt'
 
     /*
      * WARNING: SHA-1 is disallowed starting January the 1st, 2014.

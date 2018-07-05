@@ -519,14 +519,24 @@ class BugherdResource extends ResourceBase {
    * @param int $status
    *   Jira status ID
    *
-   * @return string
+   * @return string|null
    *   Bugherd Status.
    */
   protected function getTranslatedStatus($status) {
     $config = $this->configFactory->get('bugherdapi.settings');
     $status_map = $config->get('status_map');
-    $status_map = array_flip($status_map);
-    return isset($status_map[$status]) ? $status_map[$status] : NULL;
+
+    foreach ($status_map as $bugherd_id => $ids) {
+      $ids = explode(',', $ids);
+
+      foreach ($ids as &$id) {
+        $id = trim($id);
+      }
+
+      if (in_array($status, $ids)) {
+        return $bugherd_id;
+      }
+    }
   }
 
 }

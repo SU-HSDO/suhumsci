@@ -64,75 +64,14 @@ function su_humsci_profile_update_8002() {
     'config_split',
     'config_ignore',
   ]);
-  $ignore_config = \Drupal::configFactory()
-    ->getEditable('config_ignore.settings');
-  $ignore_config->set('ignored_config_entities', [
-    'core.entity_form_display.hs_*',
-    'core.entity_view_display.hs_*',
-  ]);
-  $ignore_config->save();
 
-  $common_configs = [];
-  foreach (scandir('../config/common') as $file) {
-    if (strpos($file, 'yml') !== FALSE) {
-      $common_configs[] = str_replace('.yml', '', $file);
+  $config_path = '../config/common';
+  $source = new \Drupal\Core\Config\FileStorage($config_path);
+  /** @var \Drupal\Core\Config\CachedStorage $config_storage */
+  $config_storage = \Drupal::service('config.storage');
+  foreach ($source->listAll() as $name) {
+    if (strpos($name, 'config_split') !== FALSE) {
+      $config_storage->write($name, $source->read($name));
     }
-  }
-
-  $module_list = [
-    'shield' => 0,
-    'acquia_connector' => 0,
-    'simplesamlphp_auth' => 0,
-  ];
-
-  $envs = [
-    'local' => [
-      'uuid' => '41c5d8ad-fd3f-4063-bedb-ed03930425e7',
-      'module' => [
-        'devel' => 0,
-        'devel_generate' => 0,
-        'devel_debug_log' => 0,
-        'seckit' => 0,
-      ],
-    ],
-    'dev' => [
-      'uuid' => 'def1a9c6-c7bb-483a-81ed-dd33df4b1970',
-      'module' => $module_list,
-    ],
-    'stage' => [
-      'uuid' => '2d143306-d314-41c6-8187-de88a9aa1551',
-      'module' => $module_list,
-    ],
-    'prod' => [
-      'uuid' => 'f6a93472-9c36-4caa-b752-6e99e19c071e',
-      'module' => $module_list,
-    ],
-    'common' => [
-      'uuid' => '78aa1b52-6c7d-4927-9c89-36536a7e603d',
-      'status' => TRUE,
-      'folder' => '../config/common',
-      'blacklist' => $common_configs,
-    ],
-  ];
-  foreach ($envs as $env => $values) {
-    $split = [
-      'langcode' => 'en',
-      'status' => FALSE,
-      'dependencies' => [],
-      'id' => $env,
-      'label' => ucfirst($env),
-      'folder' => '../config/envs/' . $env,
-      'module' => [],
-      'theme' => [],
-      'blacklist' => [],
-      'graylist' => [],
-      'graylist_dependents' => TRUE,
-      'graylist_skip_equal' => TRUE,
-      'weight' => 0,
-    ];
-
-    $split = $values + $split;
-    $split = ConfigSplitEntity::create($split);
-    $split->save();
   }
 }

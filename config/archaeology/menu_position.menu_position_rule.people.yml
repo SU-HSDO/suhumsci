@@ -1,0 +1,27 @@
+uuid: 38e6c337-a49e-4b4e-b79d-e19756e076a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - system
+id: people
+label: People
+menu_name: main
+parent: 'menu_link_content:eadd6c9a-6c7a-4e05-9b00-2488680ce39a'
+menu_link: 'menu_position_link:people'
+enabled: true
+weight: -1
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      hs_person: hs_person
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  current_theme:
+    id: current_theme
+    theme: ''
+    negate: 0
+    context_mapping: {  }

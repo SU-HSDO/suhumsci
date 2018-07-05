@@ -525,6 +525,18 @@ class BugherdResource extends ResourceBase {
   protected function getTranslatedStatus($status) {
     $config = $this->configFactory->get('bugherdapi.settings');
     $status_map = $config->get('status_map');
+
+    foreach ($status_map as $bugherd_id => $ids) {
+      $ids = explode(',', $ids);
+
+      foreach ($ids as &$id) {
+        $id = trim($id);
+      }
+
+      if (in_array($status, $ids)) {
+        return $bugherd_id;
+      }
+    }
     $status_map = array_flip($status_map);
     return isset($status_map[$status]) ? $status_map[$status] : NULL;
   }

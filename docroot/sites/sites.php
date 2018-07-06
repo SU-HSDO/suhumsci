@@ -58,6 +58,7 @@
 
 $humsci_sites = [
   'archaeology',
+  'france',
 ];
 
 foreach ($humsci_sites as $site) {

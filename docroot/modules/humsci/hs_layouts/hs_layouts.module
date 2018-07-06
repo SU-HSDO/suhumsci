@@ -18,15 +18,3 @@ function hs_layouts_plugin_filter_layout_alter(&$definitions, &$extra, &$consume
     }
   }
 }
-
-/**
- * Implements hook_page_attachments().
- */
-function hs_layouts_page_attachments(array &$attachments) {
-  $request = \Drupal::requestStack();
-  $attributes = $request->getCurrentRequest()->attributes->getIterator();
-  $controller = isset($attributes['_controller']) ? $attributes['_controller'] : '';
-  if (strpos($controller, 'layout_builder') !== FALSE) {
-    $attachments['#attached']['library'][] = 'hs_layouts/admin';
-  }
-}

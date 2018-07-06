@@ -1,0 +1,87 @@
+<?php
+
+namespace Drupal\hs_field_helpers\Plugin\Field\FieldFormatter;
+
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeCustomFormatter;
+use Drupal\datetime_range\DateTimeRangeTrait;
+
+/**
+ * Plugin implementation of the 'Custom' formatter for 'daterange' fields.
+ *
+ * This formatter renders the data range as plain text, with a fully
+ * configurable date format using the PHP date syntax and separator.
+ *
+ * @FieldFormatter(
+ *   id = "datetime_academic_year",
+ *   label = @Translation("Academic Year"),
+ *   field_types = {
+ *     "datetime"
+ *   }
+ * )
+ */
+class DateTimeAcademicYear extends DateTimeCustomFormatter {
+
+  use DateTimeRangeTrait;
+
+  public static function isApplicable(FieldDefinitionInterface $field_definition) {
+    // Only work on "Date Only" fields.
+    $type = $field_definition->getFieldStorageDefinition()
+      ->getSetting('datetime_type');
+    if ($type != 'date') {
+      return FALSE;
+    }
+    return parent::isApplicable($field_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    $settings = [
+      'display' => 'start_date',
+    ];
+    return $settings + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+
+    $elements = [];
+    $display = $this->getSetting('display');
+    foreach ($items as $delta => $item) {
+      if (!empty($item->{$display})) {
+        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+        $date = $item->{$display};
+        $elements[$delta] = $this->buildDate($date);
+      }
+    }
+
+    return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+    unset($form['separator'], $form['date_format']);
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+    if ($display = $this->getSetting('display')) {
+      $summary[] = $this->t('Display: %display', ['%display' => $display]);
+    }
+    return $summary;
+  }
+
+}

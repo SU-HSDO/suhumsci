@@ -790,13 +790,5 @@ $settings['entity_update_batch_size'] = 50;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $blt_override_config_directories = FALSE;
-$config_directories['sync'] = "../config/default";
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-require DRUPAL_ROOT . '/sites/config.setttings.php';
-
-// Lets whitelist everything because in our event subscriber we have the
-// ability to decide which forms are locked.
-// @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
-$settings['config_readonly_whitelist_patterns'] = ['*'];
-
 $config_directories[CONFIG_SYNC_DIRECTORY] = "../config/default";

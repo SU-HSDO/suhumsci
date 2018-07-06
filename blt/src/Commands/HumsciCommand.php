@@ -313,7 +313,7 @@ class HumsciCommand extends AcHooksCommand {
   public function humsciKeysSend() {
     $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
 
-    if (strtolower($send)[0] == 'y') {
+    if (strtolower($send[0]) == 'y') {
       $this->taskDrush()
         ->drush("rsync @self:../keys/ @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys")
         ->run();

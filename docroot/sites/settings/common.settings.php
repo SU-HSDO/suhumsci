@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * This file gets added by blt.settings.php as an override configuration.
+ */
+
 // SimpleSAMLphp configuration
 // Provide universal absolute path to the installation.
 if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {

@@ -9,6 +9,9 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\DrupalKernel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Implements hook_install().
@@ -65,11 +68,31 @@ function su_humsci_profile_update_8002() {
     'config_ignore',
   ]);
 
-  $config_path = '../config/common';
-  $source = new FileStorage($config_path);
+  // Install all the default configs first which includes environment specific
+  // config splits.
+  $source = new FileStorage('../config/default');
   /** @var \Drupal\Core\Config\CachedStorage $config_storage */
   $config_storage = \Drupal::service('config.storage');
   foreach ($source->listAll() as $name) {
     $config_storage->write($name, $source->read($name));
+  }
+
+  // Install the config splits from the individual site config directory.
+  try {
+    $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
+  }
+  catch (BadRequestHttpException $e) {
+    return;
+  }
+  $site_dir = str_replace('sites/', '', $site_path);
+  if (is_dir("../config/$site_dir")) {
+    $source = new FileStorage("../config/$site_dir");
+    /** @var \Drupal\Core\Config\CachedStorage $config_storage */
+    $config_storage = \Drupal::service('config.storage');
+    foreach ($source->listAll() as $name) {
+      if (strpos($name, 'config_split')) {
+        $config_storage->write($name, $source->read($name));
+      }
+    }
   }
 }

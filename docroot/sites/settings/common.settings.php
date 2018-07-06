@@ -94,3 +94,8 @@ if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
 // ability to decide which forms are locked.
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
+
+// On acquia, load a salt from the server.
+if ($is_ah_env) {
+  $settings['hash_salt'] = file_get_contents('/mnt/gfs/swshumsci.prod/nobackup/apikeys/salt.txt');
+}

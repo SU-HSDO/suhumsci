@@ -794,6 +794,4 @@ if (file_exists('/var/www/site-php')) {
   require '/var/www/site-php/swshumsci/archaeology-settings.inc';
 }
 
-$blt_override_config_directories = FALSE;
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-$config_directories[CONFIG_SYNC_DIRECTORY] = "../config/archaeology";

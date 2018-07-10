@@ -301,7 +301,7 @@ class HumsciCommand extends AcHooksCommand {
    */
   public function humsciKeys() {
     $this->taskDrush()
-      ->drush("rsync @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
+      ->drush("rsync @swshumsci.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
       ->run();
   }
 
@@ -309,13 +309,16 @@ class HumsciCommand extends AcHooksCommand {
    * Get encryption keys from acquia.
    *
    * @command humsci:keys:send
+   *
+   * @param string $env
+   *   Acquia environment to send the keys.
    */
-  public function humsciKeysSend() {
+  public function humsciKeysSend($env = 'prod') {
     $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
-
+    $key_dir = $this->getConfigValue("key-dir.$env");
     if (strtolower($send[0]) == 'y') {
       $this->taskDrush()
-        ->drush("rsync @self:../keys/ @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys")
+        ->drush("rsync @self:../keys/ @swshumsci.$env:$key_dir")
         ->run();
     }
   }

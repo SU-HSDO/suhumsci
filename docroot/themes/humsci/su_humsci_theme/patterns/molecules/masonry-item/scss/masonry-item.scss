@@ -1,59 +1,62 @@
 @charset "UTF-8";
 
-///
-/// MASONRY ITEM COMPONENT
-///
+//
+// Masonry Item
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
 
 .masonry-item {
-
-  &--inner {
-    background-color: #fff;
-    border: 1px solid mix(#000, transparent, 25%);
-    box-shadow: 3px 3px 3px mix(#000, transparent, 25%);
-    margin-bottom: 2em;
-  }
-}
-
-.masonry-item--image {
-  width: 100%;
-  overflow: hidden;
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-}
-
-.masonry-item--inner {
-
   .masonry-item--image {
+    width: 100%;
+    overflow: hidden;
+
     img {
+      width: 100%;
+      height: auto;
       display: block;
     }
   }
 
-  .masonry-item--body {
-    overflow: hidden;
-    padding: .75em;
-
-    p {
-      margin: 0;
+  .masonry-item--inner {
+    .masonry-item--image {
+      img {
+        display: block;
+      }
     }
 
-    .masonry-item--type {
-      font-size: .9em;
-      font-weight: 300;
-      margin-bottom: .5em;
-    }
+    .masonry-item--body {
+      overflow: hidden;
 
-    h3.masonry-item--title {
-      margin: 0 0 .5em;
-    }
+      @include card;
 
-    .masonry-item--author-year {
-      font-weight: 300;
-      .author {
-        font-weight: 400;
+      p {
+        @include margin(0);
+      }
+
+      .masonry-item--type {
+        font-size: $small-font-size;
+        font-weight: $font-light;
+
+        @include margin(null null 0.5em);
+      }
+
+      h3.masonry-item--title {
+        margin: 0 0 .5em;
+      }
+
+      .masonry-item--author-year {
+        font-weight: $font-light;
+
+        .author {
+          font-weight: $font-normal;
+        }
       }
     }
   }

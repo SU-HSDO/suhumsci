@@ -83,11 +83,9 @@ if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRO
   }
 }
 
-if (isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  if (PHP_SAPI !== 'cli') {
-    // Don't lock config when using drush.
-    $settings['config_readonly'] = TRUE;
-  }
+if ($is_ah_env && PHP_SAPI !== 'cli') {
+  // Don't lock config when using drush.
+  $settings['config_readonly'] = TRUE;
 }
 
 // Lets whitelist everything because in our event subscriber we have the
@@ -97,5 +95,5 @@ $settings['config_readonly_whitelist_patterns'] = ['*'];
 
 // On acquia, load a salt from the server.
 if ($is_ah_env) {
-  $settings['hash_salt'] = file_get_contents('/mnt/gfs/swshumsci.prod/nobackup/apikeys/salt.txt');
+  $settings['hash_salt'] = file_get_contents("/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/salt.txt");
 }

@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+//
+// Paragraphs
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// Default spacing
+.paragraph-item {
+  @include margin(null null 1.5em);
+}
+
+.paragraph--type--hs-row .paragraph-item {
+  @include margin(null null 0);
+}
+
+// Hero spacing
+.field-hs-page-hero {
+  @include margin(null null 0.5em);
+}
+
+// Remove margins above headings
+.paragraph-item h1,
+.paragraph-item h2,
+.paragraph-item h3,
+.paragraph-item h4,
+.paragraph-item h5,
+.paragraph-item h6 {
+  &:first-child {
+    @include margin(0 null null);
+  }
+}

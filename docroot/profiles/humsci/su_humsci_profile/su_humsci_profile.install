@@ -78,13 +78,10 @@ function su_humsci_profile_update_8002() {
   }
 
   // Install the config splits from the individual site config directory.
-  try {
-    $site_path = DrupalKernel::findSitePath(Request::createFromGlobals());
-  }
-  catch (BadRequestHttpException $e) {
-    return;
-  }
-  $site_dir = str_replace('sites/', '', $site_path);
+  $file_dir = \Drupal::service('file_system')->realpath(file_default_scheme() . "://");
+  $site_path = str_replace('/files', '', $file_dir);
+  $site_dir = substr($site_path, strrpos($site_path, '/') + 1);
+
   if (is_dir("../config/$site_dir")) {
     $source = new FileStorage("../config/$site_dir");
     /** @var \Drupal\Core\Config\CachedStorage $config_storage */

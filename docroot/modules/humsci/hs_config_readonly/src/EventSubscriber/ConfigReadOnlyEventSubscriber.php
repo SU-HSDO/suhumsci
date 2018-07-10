@@ -174,8 +174,6 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   protected function configIsLocked($config) {
     $config = is_array($config) ? $config : [$config];
     $locked_config = $this->getLockedConfigs();
-    dpm($config);
-    dpm($locked_config);
     return !empty(array_intersect($config, $locked_config));
   }
 

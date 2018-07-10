@@ -20,7 +20,6 @@ class HumsciCommand extends AcHooksCommand {
     $this->taskDrush()->drush('uli')->run();
   }
 
-
   /**
    * Run cron on all sites.
    *
@@ -275,26 +274,6 @@ class HumsciCommand extends AcHooksCommand {
   }
 
   /**
-   * Update the database to reflect the state of the Drupal file system.
-   *
-   * @command artifact:update:drupal:all-sites
-   * @aliases auda
-   */
-  public function updateAll() {
-    // Disable alias since we are targeting specific uri.
-    $this->config->set('drush.alias', '');
-
-    foreach ($this->getConfigValue('multisites') as $multisite) {
-      try {
-        $this->updateSite($multisite);
-      }
-      catch (\Exception $e) {
-        $this->say("Unable to update <comment>$multisite</comment>");
-      }
-    }
-  }
-
-  /**
    * Execute updates on a specific site.
    *
    * @param string $multisite
@@ -321,7 +300,27 @@ class HumsciCommand extends AcHooksCommand {
    * @command humsci:keys
    */
   public function humsciKeys() {
-    $this->taskDrush()->drush("rsync @swshumsci.dev:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")->run();
+    $this->taskDrush()
+      ->drush("rsync @swshumsci.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
+      ->run();
+  }
+
+  /**
+   * Get encryption keys from acquia.
+   *
+   * @command humsci:keys:send
+   *
+   * @param string $env
+   *   Acquia environment to send the keys.
+   */
+  public function humsciKeysSend($env = 'prod') {
+    $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
+    $key_dir = $this->getConfigValue("key-dir.$env");
+    if (strtolower($send[0]) == 'y') {
+      $this->taskDrush()
+        ->drush("rsync @self:../keys/ @swshumsci.$env:$key_dir")
+        ->run();
+    }
   }
 
 }

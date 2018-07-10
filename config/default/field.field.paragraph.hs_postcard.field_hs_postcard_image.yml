@@ -1,0 +1,32 @@
+uuid: a28abfd3-03fe-4f03-b578-2e2b214c883f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_postcard_image
+    - media.type.image
+    - media.type.video
+    - paragraphs.paragraphs_type.hs_postcard
+_core:
+  default_config_hash: 5jfko7YIMAhoiy163zsyV701PC-3H6i0a1OIJcqoF4U
+id: paragraph.hs_postcard.field_hs_postcard_image
+field_name: field_hs_postcard_image
+entity_type: paragraph
+bundle: hs_postcard
+label: Image
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      video: video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: image
+field_type: entity_reference

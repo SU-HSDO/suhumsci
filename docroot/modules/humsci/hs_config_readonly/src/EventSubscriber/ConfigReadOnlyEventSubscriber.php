@@ -49,9 +49,16 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
    */
   protected $readOnlyFormIds = [
     'config_single_import_form',
-    'system_modules',
     'system_modules_uninstall',
-    'user_admin_permissions',
+  ];
+
+  /**
+   * Form IDs that we find that can be bypassed such as views duplication.
+   *
+   * @var array
+   */
+  protected $bypassFormIds = [
+    'view_duplicate_form',
   ];
 
   /**
@@ -64,6 +71,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     $config = $config_factory->get('hs_config_readonly.settings');
     $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;
+    $this->bypassFormIds = $config->get('bypass_form_ids') ?: $this->readOnlyFormIds;
   }
 
   /**
@@ -87,6 +95,12 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     // Check if the form is a ConfigFormBase or a ConfigEntityListBuilder.
     $form_object = $event->getFormState()->getFormObject();
     $mark_form_read_only = $form_object instanceof ConfigFormBase;
+
+    // Some forms are safe to allow to the user because they duplicate configs,
+    // not modify them.
+    if (in_array($form_object->getFormId(), $this->bypassFormIds)) {
+      return;
+    }
 
     if (!$mark_form_read_only) {
       $mark_form_read_only = in_array($form_object->getFormId(), $this->readOnlyFormIds);

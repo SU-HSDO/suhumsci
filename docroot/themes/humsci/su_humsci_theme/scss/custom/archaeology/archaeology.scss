@@ -19,7 +19,7 @@
 
 // Heading
 h1 {
-  @include heading-dash(.2em, $color-sun, 1.125em);
+  @include heading-dash(0.2em, $color-sun, 1.125em);
 }
 
 h2 {
@@ -45,6 +45,11 @@ h2#menu-blockmain-menu {
   &:after {
     content: none;
   }
+}
+
+// Headers with centered dash
+h2.text-align-center:after {
+  @include margin(0 auto);
 }
 
 // Event category dash

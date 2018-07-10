@@ -1,0 +1,31 @@
+uuid: bfd0ce3b-7846-486d-b3b1-41ae133042c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_course_tags
+    - node.type.hs_course
+    - taxonomy.vocabulary.hs_course_tags
+_core:
+  default_config_hash: UMU8CiqNBgyaYZ4hlq9_rAeSyh6eXnP3Jpttn1HbIiY
+id: node.hs_course.field_hs_course_tags
+field_name: field_hs_course_tags
+entity_type: node
+bundle: hs_course
+label: 'Course Tags'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_course_tags: hs_course_tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

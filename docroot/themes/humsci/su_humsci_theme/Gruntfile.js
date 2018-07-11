@@ -113,14 +113,16 @@ module.exports = function(grunt) {
           // PATTERNS
           'patterns/molecules/date-stacked-vertical-card/css/date-stacked-vertical-card.css': 'patterns/molecules/date-stacked-vertical-card/scss/date-stacked-vertical-card.scss',
           'patterns/molecules/horizontal-card/css/horizontal-card.css':                       'patterns/molecules/horizontal-card/scss/horizontal-card.scss',
-          'patterns/organisms/masonry/css/masonry.css':                                       'patterns/organisms/masonry/scss/masonry.scss',
+          'patterns/molecules/masonry-item/css/masonry-item.css':                             'patterns/molecules/masonry-item/scss/masonry-item.scss',
           'patterns/molecules/vertical-card/css/vertical-card.css':                           'patterns/molecules/vertical-card/scss/vertical-card.scss',
+          'patterns/organisms/masonry/css/masonry.css':                                       'patterns/organisms/masonry/scss/masonry.scss',
 
           // COMPONENTS
           'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
 
           // NODES
-          'css/nodes/hs_person.css':  'scss/nodes/hs_person.scss',
+          'css/nodes/hs_basic_page.css':  'scss/nodes/hs_basic_page.scss',
+          'css/nodes/hs_person.css':      'scss/nodes/hs_person.scss',
 
           // CUSTOM PROJECTS
           'css/custom/archaeology/archaeology.css': 'scss/custom/archaeology/archaeology.scss',

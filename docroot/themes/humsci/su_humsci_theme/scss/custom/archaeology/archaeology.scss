@@ -9,7 +9,7 @@
 @import
   'decanter-no-markup';
 
-// Decanter Overrides (RJG).
+// Decanter Overrides
 @import
   '../decanter-overrides/decanter-overrides';
 
@@ -19,7 +19,7 @@
 
 // Heading
 h1 {
-  @include heading-dash(.2em, $color-sun, 1.125em);
+  @include heading-dash(0.2em, $color-sun, 1.125em);
 }
 
 h2 {
@@ -41,10 +41,16 @@ h6 {
 
 // Headers without dash
 .date-stacked-vertical-card__content-container h2,
-h2#menu-blockmain-menu {
+h2#menu-blockmain-menu,
+#footer h2 {
   &:after {
     content: none;
   }
+}
+
+// Headers with centered dash
+h2.text-align-center:after {
+  @include margin(0 auto);
 }
 
 // Event category dash
@@ -61,4 +67,9 @@ h2#menu-blockmain-menu {
   .decanter-button {
     @include margin(0 null null);
   }
+}
+
+// Homepage
+.front .hs-basic-page.field-hs-page-hero {
+  @include margin(null null 0.5em);
 }

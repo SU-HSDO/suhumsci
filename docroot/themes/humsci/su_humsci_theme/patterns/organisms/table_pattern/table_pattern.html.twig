@@ -29,6 +29,18 @@
 {% set empty_cell = {'#markup': ''} %}
 
 <div{{ attributes.setAttribute('role', 'grid').setAttribute('aria-readonly', 'true') }}>
+  {% if caption|render|striptags|trim %}
+    <div class="table-caption">
+      {{ caption }}
+    </div>
+  {% endif %}
+
+  {% if header %}
+    <div class="table-header" role="row">
+      {{ header }}
+    </div>
+  {% endif %}
+
   {% for item in items %}
     {% if not item['#column_1'] and columns.column_1 %}
       {% set item = item|merge({'#column_1': empty_cell}) %}
@@ -45,6 +57,7 @@
     {% if not item['#column_5'] and columns.column_5 %}
       {% set item = item|merge({'#column_5': empty_cell }) %}
     {% endif %}
+
 
     {{ item }}
   {% endfor %}

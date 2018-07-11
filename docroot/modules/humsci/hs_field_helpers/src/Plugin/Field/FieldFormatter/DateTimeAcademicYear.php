@@ -6,7 +6,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeCustomFormatter;
-use Drupal\datetime_range\DateTimeRangeTrait;
 
 /**
  * Plugin implementation of the 'Custom' formatter for 'daterange' fields.
@@ -24,10 +23,18 @@ use Drupal\datetime_range\DateTimeRangeTrait;
  */
 class DateTimeAcademicYear extends DateTimeCustomFormatter {
 
-  use DateTimeRangeTrait;
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return ['date_format' => 'Y'] + parent::defaultSettings();
+  }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    // Only work on "Date Only" fields.
+    // Only work on "Date Only" fields, not date time fields.
     $type = $field_definition->getFieldStorageDefinition()
       ->getSetting('datetime_type');
     if ($type != 'date') {
@@ -39,28 +46,12 @@ class DateTimeAcademicYear extends DateTimeCustomFormatter {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
-    $settings = [
-      'display' => 'start_date',
-    ];
-    return $settings + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-
-    $elements = [];
-    $display = $this->getSetting('display');
-    foreach ($items as $delta => $item) {
-      if (!empty($item->{$display})) {
-        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
-        $date = $item->{$display};
-        $elements[$delta] = $this->buildDate($date);
-      }
+    $elements = parent::viewElements($items, $langcode);
+    // Academic year 2018 is displayed as 2017 - 2018.
+    foreach ($elements as &$element) {
+      $element['#markup'] = $element['#markup'] - 1 . ' - ' . $element['#markup'];
     }
-
     return $elements;
   }
 
@@ -69,7 +60,7 @@ class DateTimeAcademicYear extends DateTimeCustomFormatter {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
-    unset($form['separator'], $form['date_format']);
+    unset($form['date_format']);
     return $form;
   }
 
@@ -77,11 +68,7 @@ class DateTimeAcademicYear extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = parent::settingsSummary();
-    if ($display = $this->getSetting('display')) {
-      $summary[] = $this->t('Display: %display', ['%display' => $display]);
-    }
-    return $summary;
+    return [];
   }
 
 }

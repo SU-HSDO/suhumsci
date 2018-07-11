@@ -74,7 +74,9 @@ function su_humsci_profile_update_8002() {
   /** @var \Drupal\Core\Config\CachedStorage $config_storage */
   $config_storage = \Drupal::service('config.storage');
   foreach ($source->listAll() as $name) {
-    $config_storage->write($name, $source->read($name));
+    if (strpos($name, 'config_split') !== FALSE || strpos($name, 'config_ignore') !== FALSE) {
+      $config_storage->write($name, $source->read($name));
+    }
   }
 
   // Install the config splits from the individual site config directory.

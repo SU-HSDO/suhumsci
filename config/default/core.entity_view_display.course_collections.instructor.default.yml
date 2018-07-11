@@ -1,0 +1,74 @@
+uuid: 65e44979-6f86-4e60-af11-88c7f03aabb4
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.course_collections.instructor
+    - field.field.course_collections.instructor.field_instructor_name
+    - field.field.course_collections.instructor.field_instructor_person
+  module:
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          8dcde5bf-ff0b-483a-93d7-af8064e898cf:
+            uuid: 8dcde5bf-ff0b-483a-93d7-af8064e898cf
+            region: content
+            configuration:
+              id: 'field_block:course_collections:instructor:field_instructor_person'
+              label_display: ''
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_instructor_person
+            weight: 0
+          08b76fae-fde2-416d-a15f-45eeec90e0cc:
+            uuid: 08b76fae-fde2-416d-a15f-45eeec90e0cc
+            region: content
+            configuration:
+              id: 'field_block:course_collections:instructor:field_instructor_name'
+              label_display: ''
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_instructor_name
+            weight: 1
+id: course_collections.instructor.default
+targetEntityType: course_collections
+bundle: instructor
+mode: default
+content:
+  field_instructor_name:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_instructor_person:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }

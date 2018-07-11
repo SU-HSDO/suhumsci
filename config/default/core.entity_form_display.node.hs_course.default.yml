@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entity_browser.browser.file_browser
     - field.field.node.hs_course.body
     - field.field.node.hs_course.field_hs_course_academic_year
     - field.field.node.hs_course.field_hs_course_code
@@ -14,21 +15,24 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_section_dates
     - field.field.node.hs_course.field_hs_course_section_days
     - field.field.node.hs_course.field_hs_course_section_end
+    - field.field.node.hs_course.field_hs_course_section_instruc
     - field.field.node.hs_course.field_hs_course_section_location
     - field.field.node.hs_course.field_hs_course_section_number
     - field.field.node.hs_course.field_hs_course_section_quarter
     - field.field.node.hs_course.field_hs_course_section_start
     - field.field.node.hs_course.field_hs_course_section_syllabus
     - field.field.node.hs_course.field_hs_course_section_units
-    - field.field.node.hs_course.field_hs_course_section_year
     - field.field.node.hs_course.field_hs_course_subject
     - field.field.node.hs_course.field_hs_course_tags
     - field.field.node.hs_course.field_s_course_section_id
     - node.type.hs_course
   module:
     - datetime_range
+    - entity_browser
+    - entity_browser_entity_form
     - field_group
     - hs_field_helpers
+    - inline_entity_form
     - path
     - redirect
     - text
@@ -38,7 +42,7 @@ third_party_settings:
       children:
         - field_s_course_section_id
         - field_hs_course_section_number
-        - field_hs_course_section_year
+        - field_hs_course_section_instruc
         - field_hs_course_section_quarter
         - field_hs_course_section_location
         - field_hs_course_section_dates
@@ -131,7 +135,7 @@ content:
     third_party_settings: {  }
   field_hs_course_section_dates:
     type: daterange_datelist
-    weight: 16
+    weight: 32
     region: content
     settings:
       increment: 15
@@ -140,7 +144,7 @@ content:
     third_party_settings: {  }
   field_hs_course_section_days:
     type: string_textfield
-    weight: 18
+    weight: 34
     region: content
     settings:
       size: 60
@@ -148,15 +152,33 @@ content:
     third_party_settings: {  }
   field_hs_course_section_end:
     type: string_textfield
-    weight: 20
+    weight: 36
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_hs_course_section_instruc:
+    weight: 29
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: Instructor
+      label_plural: Instructors
+      allow_new: true
+      match_operator: CONTAINS
+      collapsible: false
+      collapsed: false
+      allow_existing: false
+      allow_duplicate: false
+    third_party_settings:
+      entity_browser_entity_form:
+        entity_browser_id: _none
+    type: inline_entity_form_complex
+    region: content
   field_hs_course_section_location:
     type: string_textfield
-    weight: 15
+    weight: 31
     region: content
     settings:
       size: 60
@@ -164,48 +186,45 @@ content:
     third_party_settings: {  }
   field_hs_course_section_number:
     type: number
-    weight: 12
+    weight: 28
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_hs_course_section_quarter:
     type: options_buttons
-    weight: 14
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
   field_hs_course_section_start:
     type: string_textfield
-    weight: 19
+    weight: 35
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
   field_hs_course_section_syllabus:
-    type: entity_reference_autocomplete_tags
-    weight: 17
+    type: entity_browser_entity_reference
+    weight: 33
     region: content
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      entity_browser: file_browser
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      open: false
+      field_widget_display_settings: {  }
     third_party_settings: {  }
   field_hs_course_section_units:
     type: number
-    weight: 21
+    weight: 37
     region: content
     settings:
       placeholder: ''
-    third_party_settings: {  }
-  field_hs_course_section_year:
-    type: datetime_academic_year
-    weight: 13
-    region: content
-    settings:
-      min: 'now - 10 years'
-      max: 'now + 10 years'
     third_party_settings: {  }
   field_hs_course_subject:
     type: string_textfield
@@ -226,7 +245,7 @@ content:
     third_party_settings: {  }
   field_s_course_section_id:
     type: number
-    weight: 11
+    weight: 27
     region: content
     settings:
       placeholder: ''

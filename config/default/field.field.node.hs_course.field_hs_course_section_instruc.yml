@@ -1,26 +1,26 @@
-uuid: a67bde57-f87d-403b-848e-8d02ce851b57
+uuid: c63ee6d8-fec3-48fa-970b-9850f4e3fab1
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_hs_course_syllabus
-    - media.type.file
+    - eck.eck_type.course_collections.instructor
+    - field.storage.node.field_hs_course_section_instruc
     - node.type.hs_course
-id: node.hs_course.field_hs_course_syllabus
-field_name: field_hs_course_syllabus
+id: node.hs_course.field_hs_course_section_instruc
+field_name: field_hs_course_section_instruc
 entity_type: node
 bundle: hs_course
-label: Syllabus
+label: Instructors
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:media'
+  handler: 'default:course_collections'
   handler_settings:
     target_bundles:
-      file: file
+      instructor: instructor
     sort:
       field: _none
     auto_create: false

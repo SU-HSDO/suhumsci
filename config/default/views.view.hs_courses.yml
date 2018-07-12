@@ -1,17 +1,12 @@
 uuid: 97c24b5e-9c57-4ad5-bef9-56d730e9d426
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - field.storage.node.field_hs_course_academic_year
     - field.storage.node.field_hs_course_code
-    - field.storage.node.field_hs_course_section_days
-    - field.storage.node.field_hs_course_section_end
-    - field.storage.node.field_hs_course_section_instruc
-    - field.storage.node.field_hs_course_section_location
     - field.storage.node.field_hs_course_section_number
     - field.storage.node.field_hs_course_section_quarter
-    - field.storage.node.field_hs_course_section_start
     - field.storage.node.field_hs_course_subject
     - node.type.hs_course
   module:
@@ -191,10 +186,9 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: number_integer
+          type: string
           settings:
-            thousand_separator: ''
-            prefix_suffix: false
+            link_to_entity: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -277,7 +271,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: Title
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -310,7 +304,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -334,69 +328,6 @@ display:
           field_api_classes: false
           entity_type: node
           entity_field: title
-          plugin_id: field
-        field_hs_course_section_instruc:
-          id: field_hs_course_section_instruc
-          table: node__field_hs_course_section_instruc
-          field: field_hs_course_section_instruc
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_entity_view
-          settings:
-            view_mode: default
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
           plugin_id: field
         field_hs_course_academic_year:
           id: field_hs_course_academic_year
@@ -512,69 +443,6 @@ display:
           click_sort_column: value
           type: list_default
           settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        field_hs_course_section_days:
-          id: field_hs_course_section_days
-          table: node__field_hs_course_section_days
-          field: field_hs_course_section_days
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -712,69 +580,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_hs_course_section_location:
-          id: field_hs_course_section_location
-          table: node__field_hs_course_section_location
-          field: field_hs_course_section_location
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: false
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
       filters:
         status:
           value: '1'
@@ -843,13 +648,8 @@ display:
       tags:
         - 'config:field.storage.node.field_hs_course_academic_year'
         - 'config:field.storage.node.field_hs_course_code'
-        - 'config:field.storage.node.field_hs_course_section_days'
-        - 'config:field.storage.node.field_hs_course_section_end'
-        - 'config:field.storage.node.field_hs_course_section_instruc'
-        - 'config:field.storage.node.field_hs_course_section_location'
         - 'config:field.storage.node.field_hs_course_section_number'
         - 'config:field.storage.node.field_hs_course_section_quarter'
-        - 'config:field.storage.node.field_hs_course_section_start'
         - 'config:field.storage.node.field_hs_course_subject'
         - extensions
   list:
@@ -954,12 +754,7 @@ display:
       tags:
         - 'config:field.storage.node.field_hs_course_academic_year'
         - 'config:field.storage.node.field_hs_course_code'
-        - 'config:field.storage.node.field_hs_course_section_days'
-        - 'config:field.storage.node.field_hs_course_section_end'
-        - 'config:field.storage.node.field_hs_course_section_instruc'
-        - 'config:field.storage.node.field_hs_course_section_location'
         - 'config:field.storage.node.field_hs_course_section_number'
         - 'config:field.storage.node.field_hs_course_section_quarter'
-        - 'config:field.storage.node.field_hs_course_section_start'
         - 'config:field.storage.node.field_hs_course_subject'
         - extensions

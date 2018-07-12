@@ -1,0 +1,28 @@
+uuid: 1de43aac-0c98-4d1f-8235-9ac61449cba4
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.course_collections.instructor
+    - eck.eck_type.course_collections.schedule
+    - field.storage.course_collections.field_schedule_instructors
+id: course_collections.schedule.field_schedule_instructors
+field_name: field_schedule_instructors
+entity_type: course_collections
+bundle: schedule
+label: Instructors
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:course_collections'
+  handler_settings:
+    target_bundles:
+      instructor: instructor
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

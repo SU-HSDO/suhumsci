@@ -1,0 +1,32 @@
+uuid: 7aac0b9f-9203-4b20-a22d-33eb331d70a2
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - system
+id: research_areas
+label: 'Research Areas'
+menu_name: main
+parent: 'menu_link_content:c3e60097-ddc9-43a0-93a5-7aca79d15e34'
+menu_link: 'menu_position_link:research_areas'
+enabled: true
+weight: -2
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      hs_research: hs_research
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  current_theme:
+    id: current_theme
+    theme: ''
+    negate: 0
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: ''
+    negate: false
+    context_mapping: {  }

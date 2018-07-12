@@ -1,0 +1,49 @@
+uuid: dd5b6c65-e89d-477e-9ef4-86dd1d330c7a
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.course_collections.schedule
+    - field.field.course_collections.schedule.field_schedule_dates
+    - field.field.course_collections.schedule.field_schedule_days
+    - field.field.course_collections.schedule.field_schedule_instructors
+    - field.field.course_collections.schedule.field_schedule_location
+  module:
+    - datetime_range
+id: course_collections.schedule.default
+targetEntityType: course_collections
+bundle: schedule
+mode: default
+content:
+  field_schedule_dates:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: daterange_default
+    region: content
+  field_schedule_days:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_schedule_instructors:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_schedule_location:
+    weight: 4
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden: {  }

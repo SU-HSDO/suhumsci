@@ -1,16 +1,16 @@
-uuid: c63ee6d8-fec3-48fa-970b-9850f4e3fab1
+uuid: 914b4bd0-7d10-493c-8474-430de9622a10
 langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.course_collections.instructor
-    - field.storage.node.field_hs_course_section_instruc
+    - eck.eck_type.course_collections.schedule
+    - field.storage.node.field_hs_course_schedules
     - node.type.hs_course
-id: node.hs_course.field_hs_course_section_instruc
-field_name: field_hs_course_section_instruc
+id: node.hs_course.field_hs_course_schedules
+field_name: field_hs_course_schedules
 entity_type: node
 bundle: hs_course
-label: Instructors
+label: Schedules
 description: ''
 required: false
 translatable: false
@@ -20,7 +20,7 @@ settings:
   handler: 'default:course_collections'
   handler_settings:
     target_bundles:
-      instructor: instructor
+      schedule: schedule
     sort:
       field: _none
     auto_create: false

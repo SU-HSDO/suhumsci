@@ -6,43 +6,48 @@
 
 {% set attributes = attributes.addClass([settings.section_width, 'clearfix', 'three-column-w-image']) %}
 
-<div{{ attributes }}>
-  {% if content.left_sidebar %}
-    <div class="decanter-width-one-fourth layout-region">
-      {{ content.left_sidebar }}
-    </div>
-  {% endif %}
-
-
-  <div class="main-content {{ main_class }}">
-    {% if content.top %}
-      <div class="top layout-region">
-        {{ content.top }}
+{% if content %}
+  <div{{ attributes }}>
+    {% if content.left_sidebar %}
+      <div{{ region_attributes.left_sidebar.addClass(['decanter-width-one-fourth', 'layout__region']) }}>
+        {{ content.left_sidebar }}
       </div>
     {% endif %}
 
-    {% if content.image %}
-      <div class="image-wrapper layout-region">
-        {{ content.image }}
-      </div>
-    {% endif %}
 
-    <div class="main {% if content.main_below %}break-below-top{% endif %}">
-      <div class="main-above layout-region">
-        {{ content.main_above }}
-      </div>
-
-      {% if content.main_below %}
-        <div class="main-below layout-region">
-          {{ content.main_below }}
+    <div class="main-content {{ main_class }}">
+      {% if content.top %}
+        <div{{ region_attributes.top.addClass(['top', 'layout__region']) }}>
+          {{ content.top }}
         </div>
       {% endif %}
+
+      {% if content.image %}
+        <div{{ region_attributes.image.addClass(['image-wrapper', 'layout__region']) }}>
+          {{ content.image }}
+        </div>
+      {% endif %}
+
+      <div class="main {% if content.main_below and content.main_above %}break-below-top{% endif %}">
+        {% if content.main_above %}
+          <div{{ region_attributes.main_above.addClass(['main-above', 'layout__region']) }}>
+            {{ content.main_above }}
+          </div>
+        {% endif %}
+
+        {% if content.main_below %}
+          <div{{ region_attributes.main_below.addClass(['main-below', 'layout__region']) }}>
+            {{ content.main_below }}
+          </div>
+        {% endif %}
+      </div>
     </div>
+
+    {% if content.right_sidebar %}
+      <div{{ region_attributes.right_sidebar.addClass(['decanter-width-one-fourth', 'layout__region']) }}>
+        {{ content.right_sidebar }}
+      </div>
+    {% endif %}
   </div>
 
-  {% if content.right_sidebar %}
-    <div class="decanter-width-one-fourth layout-region">
-      {{ content.right_sidebar }}
-    </div>
-  {% endif %}
-</div>
+{% endif %}

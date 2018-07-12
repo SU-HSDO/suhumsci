@@ -11,24 +11,26 @@
   {% set main_class = 'decanter-width-one-third' %}
 {% endif %}
 
-{% if content.main or content.left_sidebar or content.right_sidebar %}
+{% if content %}
 
-  <div{{ attributes }}>
+  <div{{ attributes.addClass('layout') }}>
+
     {% if content.left_sidebar %}
-      <div class="{{ sidebar_class }} layout-region">
+      <div{{ region_attributes.left_sidebar.addClass([sidebar_class, 'layout__region']) }}>
         {{ content.left_sidebar }}
       </div>
     {% endif %}
 
-    <div class="{{ main_class }} layout-region">
+    <div{{ region_attributes.main.addClass([main_class, 'layout__region']) }}>
       {{ content.main }}
     </div>
 
     {% if content.right_sidebar %}
-      <div class="{{ sidebar_class }} layout-region">
+      <div{{ region_attributes.right_sidebar.addClass([sidebar_class, 'layout__region']) }}>
         {{ content.right_sidebar }}
       </div>
     {% endif %}
+
   </div>
 
 {% endif %}

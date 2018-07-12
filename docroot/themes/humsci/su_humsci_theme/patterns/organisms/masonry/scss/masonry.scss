@@ -1,3 +1,9 @@
+@charset "UTF-8";
+
+//
+// Masonry
+//
+
 // Decanter
 @import 'decanter-no-markup';
 
@@ -10,17 +16,32 @@
   visibility: hidden;
   height: 0;
 
-  &--item { width: 100%; }
-  &--gap { width: 0; }
+  &--item {
+    width: 100%;
+  }
+
+  &--gap {
+    width: 0;
+  }
 
   @include media(700px) {
-    &--item { width: 47%; }
-    &--gap { width: 6%; }
+    &--item {
+      width: 47%;
+    }
+
+    &--gap {
+      width: 6%;
+    }
   }
 
   @include media(960px) {
-    &--item { width: 30%; }
-    &--gap { width: 5%; }
+    &--item {
+      width: 30%;
+    }
+
+    &--gap {
+      width: 5%;
+    }
   }
 
   // If we want four items across at xl breakpoint.
@@ -34,9 +55,11 @@
 
 .masonry-item {
   width: 100%;
+
   @include media(700px) {
     width: 47%;
   }
+
   @include media(960px) {
     width: 30%;
   }
@@ -54,6 +77,6 @@ html.no-js .masonry {
   flex-wrap: wrap;
 
   > div {
-    padding: 0 10px;
+    @include padding(0 10px);
   }
 }

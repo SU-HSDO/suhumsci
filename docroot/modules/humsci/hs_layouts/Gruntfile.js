@@ -107,8 +107,7 @@ module.exports = function(grunt) {
           // conditionally using logic built in to the theme template or module.
 
           // BASE
-          'css/three-column-w-image.css':   'scss/three-column-w-image.scss',
-          'css/hs_layouts.admin.css':       'scss/hs_layouts.admin.scss'
+          'css/three-column-w-image.css':   'scss/three-column-w-image.scss'
         }
       }
     },

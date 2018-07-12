@@ -28,10 +28,12 @@
         </div>
       {% endif %}
 
-      <div class="main {% if content.main_below %}break-below-top{% endif %}">
-        <div{{ region_attributes.main_above.addClass(['main-above', 'layout__region']) }}>
-          {{ content.main_above }}
-        </div>
+      <div class="main {% if content.main_below and content.main_above %}break-below-top{% endif %}">
+        {% if content.main_above %}
+          <div{{ region_attributes.main_above.addClass(['main-above', 'layout__region']) }}>
+            {{ content.main_above }}
+          </div>
+        {% endif %}
 
         {% if content.main_below %}
           <div{{ region_attributes.main_below.addClass(['main-below', 'layout__region']) }}>

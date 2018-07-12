@@ -95,11 +95,16 @@ class BugherdResource extends ResourceBase {
    * @return \Drupal\rest\ResourceResponse
    */
   public function post(array $data) {
+    $this->logger->info('posted data: ' . var_export($data, TRUE));
     try {
+
       // Data from jira has this key. Bugherd does not.
       if (isset($data['webhookEvent'])) {
-        return new ResourceResponse($this->sendToBugherd($data));
+        $response = $this->sendToBugherd($data);
+        $this->logger->info('bugherd response: ' . var_export($response, TRUE));
+        return new ResourceResponse($response);
       }
+
       return new ResourceResponse($this->sendToJira($data));
     }
     catch (\Exception $e) {

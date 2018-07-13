@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - eck.eck_type.course_collections.instructor
-    - field.field.course_collections.instructor.field_instructor_name
     - field.field.course_collections.instructor.field_instructor_person
   module:
     - layout_builder
@@ -33,23 +32,6 @@ third_party_settings:
             additional:
               field_name: field_instructor_person
             weight: 0
-          08b76fae-fde2-416d-a15f-45eeec90e0cc:
-            uuid: 08b76fae-fde2-416d-a15f-45eeec90e0cc
-            region: content
-            configuration:
-              id: 'field_block:course_collections:instructor:field_instructor_name'
-              label_display: ''
-              formatter:
-                label: hidden
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_instructor_name
-            weight: 1
     enable_defaults: false
     allow_custom: false
 id: course_collections.instructor.default
@@ -57,14 +39,6 @@ targetEntityType: course_collections
 bundle: instructor
 mode: default
 content:
-  field_instructor_name:
-    weight: 1
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
   field_instructor_person:
     weight: 0
     label: hidden

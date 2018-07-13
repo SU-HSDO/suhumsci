@@ -11,24 +11,28 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_id
     - field.field.node.hs_course.field_hs_course_link
     - field.field.node.hs_course.field_hs_course_requirements
-    - field.field.node.hs_course.field_hs_course_schedules
     - field.field.node.hs_course.field_hs_course_section_comp
+    - field.field.node.hs_course.field_hs_course_section_days
+    - field.field.node.hs_course.field_hs_course_section_end_date
+    - field.field.node.hs_course.field_hs_course_section_end_time
     - field.field.node.hs_course.field_hs_course_section_id
+    - field.field.node.hs_course.field_hs_course_section_location
     - field.field.node.hs_course.field_hs_course_section_number
     - field.field.node.hs_course.field_hs_course_section_quarter
+    - field.field.node.hs_course.field_hs_course_section_st_date
+    - field.field.node.hs_course.field_hs_course_section_st_time
     - field.field.node.hs_course.field_hs_course_section_syllabus
     - field.field.node.hs_course.field_hs_course_section_units
     - field.field.node.hs_course.field_hs_course_subject
     - field.field.node.hs_course.field_hs_course_tags
     - node.type.hs_course
   module:
+    - datetime
     - entity_browser
-    - entity_browser_entity_form
     - field_group
     - hs_field_helpers
-    - inline_entity_form
+    - link
     - path
-    - redirect
     - text
 third_party_settings:
   field_group:
@@ -39,7 +43,8 @@ third_party_settings:
         - field_hs_course_section_quarter
         - field_hs_course_section_syllabus
         - field_hs_course_section_units
-        - field_hs_course_schedules
+        - field_hs_course_section_location
+        - group_section_dates
       parent_name: ''
       weight: 11
       format_type: fieldset
@@ -49,6 +54,22 @@ third_party_settings:
         description: ''
         required_fields: true
       label: 'Section Details'
+    group_section_dates:
+      children:
+        - field_hs_course_section_st_date
+        - field_hs_course_section_st_time
+        - field_hs_course_section_end_date
+        - field_hs_course_section_end_time
+        - field_hs_course_section_days
+      parent_name: group_section_details
+      weight: 34
+      format_type: fieldset
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        required_fields: false
+      label: 'Section Dates'
 id: node.hs_course.default
 targetEntityType: node
 bundle: hs_course
@@ -78,7 +99,7 @@ content:
       max: 'now + 10 years'
     third_party_settings: {  }
   field_hs_course_code:
-    weight: 38
+    weight: 3
     settings:
       size: 60
       placeholder: ''
@@ -87,7 +108,7 @@ content:
     region: content
   field_hs_course_grading:
     type: string_textfield
-    weight: 8
+    weight: 9
     region: content
     settings:
       size: 60
@@ -95,46 +116,30 @@ content:
     third_party_settings: {  }
   field_hs_course_id:
     type: number
-    weight: 3
+    weight: 4
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_hs_course_link:
-    type: redirect_source
-    weight: 6
+    type: link_default
+    weight: 7
     region: content
-    settings: {  }
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_hs_course_requirements:
     type: string_textfield
-    weight: 5
+    weight: 6
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_hs_course_schedules:
-    weight: 32
-    settings:
-      form_mode: default
-      override_labels: true
-      label_singular: Schedule
-      label_plural: Schedules
-      allow_new: true
-      match_operator: CONTAINS
-      collapsible: false
-      collapsed: false
-      allow_existing: false
-      allow_duplicate: false
-    third_party_settings:
-      entity_browser_entity_form:
-        entity_browser_id: _none
-    type: inline_entity_form_complex
-    region: content
   field_hs_course_section_comp:
     type: entity_reference_autocomplete_tags
-    weight: 4
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -142,13 +147,27 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_hs_course_section_days:
-    type: string_textfield
-    weight: 34
-    region: content
+    weight: 44
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_hs_course_section_end_date:
+    weight: 42
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_hs_course_section_end_time:
+    weight: 43
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_hs_course_section_id:
     type: number
     weight: 27
@@ -156,6 +175,14 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
+  field_hs_course_section_location:
+    weight: 33
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_hs_course_section_number:
     type: number
     weight: 28
@@ -169,14 +196,20 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_hs_course_section_start:
-    type: string_textfield
-    weight: 35
+  field_hs_course_section_st_date:
+    weight: 40
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
     region: content
+  field_hs_course_section_st_time:
+    weight: 41
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_hs_course_section_syllabus:
     type: entity_browser_entity_reference
     weight: 30
@@ -209,7 +242,7 @@ content:
     third_party_settings: {  }
   field_hs_course_tags:
     type: entity_reference_autocomplete_tags
-    weight: 7
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS

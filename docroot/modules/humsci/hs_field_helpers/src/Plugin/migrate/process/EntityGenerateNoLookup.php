@@ -42,8 +42,6 @@ class EntityGenerateNoLookup extends EntityGenerate {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrateExecutable, Row $row, $destinationProperty) {
-    var_dump('here');
-    var_dump($value);
     // In case of subfields ('field_reference/target_id'), extract the field
     // name only.
     $parts = explode('/', $destinationProperty);

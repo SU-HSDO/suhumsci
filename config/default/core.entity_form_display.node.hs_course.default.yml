@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_section_end_date
     - field.field.node.hs_course.field_hs_course_section_end_time
     - field.field.node.hs_course.field_hs_course_section_id
+    - field.field.node.hs_course.field_hs_course_section_instruc
     - field.field.node.hs_course.field_hs_course_section_location
     - field.field.node.hs_course.field_hs_course_section_number
     - field.field.node.hs_course.field_hs_course_section_quarter
@@ -29,8 +30,10 @@ dependencies:
   module:
     - datetime
     - entity_browser
+    - entity_browser_entity_form
     - field_group
     - hs_field_helpers
+    - inline_entity_form
     - link
     - path
     - text
@@ -44,6 +47,7 @@ third_party_settings:
         - field_hs_course_section_syllabus
         - field_hs_course_section_units
         - field_hs_course_section_location
+        - field_hs_course_section_instruc
         - group_section_dates
       parent_name: ''
       weight: 11
@@ -175,8 +179,26 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_hs_course_section_location:
+  field_hs_course_section_instruc:
     weight: 33
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: Instructor
+      label_plural: Instructors
+      allow_new: true
+      match_operator: CONTAINS
+      collapsible: false
+      collapsed: false
+      allow_existing: false
+      allow_duplicate: false
+    third_party_settings:
+      entity_browser_entity_form:
+        entity_browser_id: _none
+    type: inline_entity_form_complex
+    region: content
+  field_hs_course_section_location:
+    weight: 32
     settings:
       size: 60
       placeholder: ''

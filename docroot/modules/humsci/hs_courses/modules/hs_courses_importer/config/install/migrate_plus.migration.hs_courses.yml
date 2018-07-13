@@ -79,6 +79,10 @@ source:
       label: 'Section Quarter'
       selector: term
     -
+      name: instructors
+      label: 'Instructors'
+      selector: schedules/schedule[1]/instructors
+    -
       name: section_location
       label: 'Section Location'
       selector: schedules/schedule[1]/location
@@ -110,7 +114,6 @@ source:
     type: hs_course
     basic_html: basic_html
     link: http://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&catalog=&q=
-    space: ' '
 process:
   status: constants/status
   type: constants/type
@@ -158,17 +161,15 @@ process:
       plugin: default_value
       default_value: null
   field_hs_course_section_quarter:
-    -
-      plugin: substr
-      source: quarter
-      start: 10
+    plugin: substr
+    source: quarter
+    start: 10
   field_hs_course_link:
-    -
-      plugin: concat
-      source:
-        - constants/link
-        - subject
-        - code
+    plugin: concat
+    source:
+      - constants/link
+      - subject
+      - code
   field_hs_course_section_days:
     -
       plugin: str_replace
@@ -187,22 +188,35 @@ process:
       search: '/[[:blank:]]+/'
       replace: ' '
     -
-      plugin: trim
+      plugin: callback
+      callable: trim
   field_hs_course_section_st_date:
-    -
-      plugin: format_date
-      from_format: 'M j, Y'
-      to_format: 'Y-m-d'
-      source: start_date
+    plugin: format_date
+    from_format: 'M j, Y'
+    to_format: 'Y-m-d'
+    source: start_date
   field_hs_course_section_end_date:
-    -
-      plugin: format_date
-      from_format: 'M j, Y'
-      to_format: 'Y-m-d'
-      source: end_date
+    plugin: format_date
+    from_format: 'M j, Y'
+    to_format: 'Y-m-d'
+    source: end_date
   field_hs_course_section_end_time: end_time
   field_hs_course_section_st_time: start_time
-
+  field_hs_course_section_instruc:
+    -
+      plugin: sub_process
+      source: instructors
+      key: sunet
+      process:
+        target_id:
+          plugin: entity_generate_no_lookup
+          entity_type: course_collections
+          bundle_key: type
+          bundle: instructor
+          value_key: title
+          source: name
+    -
+      plugin: flatten
 destination:
   plugin: 'entity:node'
 migration_dependencies:

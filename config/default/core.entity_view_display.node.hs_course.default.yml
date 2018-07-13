@@ -1,4 +1,4 @@
-uuid: 90e61208-318f-40a3-a71b-fce6e625c15f
+uuid: 4bdc683e-a21f-405e-b491-2dd25e077d86
 langcode: en
 status: true
 dependencies:
@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_section_end_date
     - field.field.node.hs_course.field_hs_course_section_end_time
     - field.field.node.hs_course.field_hs_course_section_id
+    - field.field.node.hs_course.field_hs_course_section_instruc
     - field.field.node.hs_course.field_hs_course_section_location
     - field.field.node.hs_course.field_hs_course_section_number
     - field.field.node.hs_course.field_hs_course_section_quarter
@@ -26,7 +27,6 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_tags
     - node.type.hs_course
   module:
-    - datetime
     - layout_builder
     - layout_discovery
     - user
@@ -37,214 +37,35 @@ third_party_settings:
         layout_id: layout_onecol
         layout_settings: {  }
         components:
-          2fa92fee-8e2d-4210-8b9c-eeb59af24c6a:
-            uuid: 2fa92fee-8e2d-4210-8b9c-eeb59af24c6a
+          6dfdf7b9-a323-44f7-8aa1-01bb51ed36b8:
+            uuid: 6dfdf7b9-a323-44f7-8aa1-01bb51ed36b8
             region: content
             configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_units'
+              id: 'field_block:node:hs_course:field_hs_course_section_instruc'
               label_display: ''
               formatter:
                 label: above
                 settings:
-                  link_to_entity: false
+                  link: true
                 third_party_settings: {  }
-                type: string
+                type: entity_reference_label
               context_mapping:
                 entity: layout_builder.entity
             additional:
-              field_name: field_hs_course_section_units
+              field_name: field_hs_course_section_instruc
             weight: 0
-          e85af384-5539-4abe-b39b-ec4429d15768:
-            uuid: e85af384-5539-4abe-b39b-ec4429d15768
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_code'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_code
-            weight: 1
-          3c422632-427e-4363-964f-0198d579cdd7:
-            uuid: 3c422632-427e-4363-964f-0198d579cdd7
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_days'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_section_days
-            weight: 2
-          a08addf0-931a-4226-8b53-f1d630e471be:
-            uuid: a08addf0-931a-4226-8b53-f1d630e471be
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_location'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_section_location
-            weight: 4
-          d598ed7e-904a-41a7-91c2-4cef6f3f682e:
-            uuid: d598ed7e-904a-41a7-91c2-4cef6f3f682e
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_st_time'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_section_st_time
-            weight: 6
-          1fa8324b-f24c-4551-8e09-062b4150eb7b:
-            uuid: 1fa8324b-f24c-4551-8e09-062b4150eb7b
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_end_time'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  link_to_entity: false
-                third_party_settings: {  }
-                type: string
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_section_end_time
-            weight: 7
-          3c2964da-aa52-4f6e-b6f1-71b15b16f872:
-            uuid: 3c2964da-aa52-4f6e-b6f1-71b15b16f872
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_end_date'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  format_type: medium
-                  timezone_override: ''
-                third_party_settings: {  }
-                type: datetime_default
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_section_end_date
-            weight: 8
-          e84fbdbc-a57c-4a58-94ff-61fe9d2f86ef:
-            uuid: e84fbdbc-a57c-4a58-94ff-61fe9d2f86ef
-            region: content
-            configuration:
-              id: 'field_block:node:hs_course:field_hs_course_section_st_date'
-              label_display: ''
-              formatter:
-                label: above
-                settings:
-                  format_type: medium
-                  timezone_override: ''
-                third_party_settings: {  }
-                type: datetime_default
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_course_section_st_date
-            weight: 9
 id: node.hs_course.default
 targetEntityType: node
 bundle: hs_course
 mode: default
 content:
-  field_hs_course_code:
-    weight: 102
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_course_section_days:
-    weight: 103
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_course_section_end_date:
-    weight: 109
-    label: above
-    settings:
-      format_type: medium
-      timezone_override: ''
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_hs_course_section_end_time:
-    weight: 108
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_course_section_location:
-    weight: 105
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_course_section_st_date:
-    weight: 110
-    label: above
-    settings:
-      format_type: medium
-      timezone_override: ''
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
-  field_hs_course_section_st_time:
-    weight: 107
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
-  field_hs_course_section_units:
+  field_hs_course_section_instruc:
     weight: 101
     label: above
     settings:
-      link_to_entity: false
+      link: true
     third_party_settings: {  }
-    type: string
+    type: entity_reference_label
     region: content
   links:
     weight: 100
@@ -254,14 +75,22 @@ content:
 hidden:
   body: true
   field_hs_course_academic_year: true
+  field_hs_course_code: true
   field_hs_course_grading: true
   field_hs_course_id: true
   field_hs_course_link: true
   field_hs_course_requirements: true
   field_hs_course_section_comp: true
+  field_hs_course_section_days: true
+  field_hs_course_section_end_date: true
+  field_hs_course_section_end_time: true
   field_hs_course_section_id: true
+  field_hs_course_section_location: true
   field_hs_course_section_number: true
   field_hs_course_section_quarter: true
+  field_hs_course_section_st_date: true
+  field_hs_course_section_st_time: true
   field_hs_course_section_syllabus: true
+  field_hs_course_section_units: true
   field_hs_course_subject: true
   field_hs_course_tags: true

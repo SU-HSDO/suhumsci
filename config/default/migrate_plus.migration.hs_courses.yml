@@ -73,7 +73,7 @@ source:
     -
       name: tags
       label: 'Course Tags'
-      selector: ../../tags/tag/organization
+      selector: ../../tags
     -
       name: quarter
       label: 'Section Quarter'
@@ -151,15 +151,27 @@ process:
       default_value: null
   field_hs_course_tags:
     -
-      plugin: entity_generate
-      entity_type: taxonomy_term
-      bundle_key: vid
-      bundle: hs_course_tags
-      value_key: name
+      plugin: sub_process
       source: tags
+      key: name
+      process:
+        target_id:
+          -
+            plugin: concat
+            source:
+              - organization
+              - name
+            delimiter: '::'
+          -
+            plugin: tanslate_course_tag
+          -
+            plugin: entity_generate
+            entity_type: taxonomy_term
+            bundle_key: vid
+            bundle: hs_course_tags
+            value_key: name
     -
-      plugin: default_value
-      default_value: null
+      plugin: flatten
   field_hs_course_section_quarter:
     plugin: substr
     source: quarter

@@ -73,39 +73,39 @@ source:
     -
       name: tags
       label: 'Course Tags'
-      selector: ../../tags/tag/organization
+      selector: ../../tags
     -
       name: quarter
       label: 'Section Quarter'
       selector: term
     -
       name: instructors
-      label: 'Instructors'
-      selector: schedules/schedule[1]/instructors
+      label: Instructors
+      selector: 'schedules/schedule[1]/instructors'
     -
       name: section_location
       label: 'Section Location'
-      selector: schedules/schedule[1]/location
+      selector: 'schedules/schedule[1]/location'
     -
       name: section_days
       label: 'Section Days'
-      selector: schedules/schedule[1]/days
+      selector: 'schedules/schedule[1]/days'
     -
       name: start_date
       label: 'Start Date'
-      selector: schedules/schedule[1]/startDate
+      selector: 'schedules/schedule[1]/startDate'
     -
       name: end_date
       label: 'End Date'
-      selector: schedules/schedule[1]/endDate
+      selector: 'schedules/schedule[1]/endDate'
     -
       name: start_time
       label: 'Start Time'
-      selector: schedules/schedule[1]/startTime
+      selector: 'schedules/schedule[1]/startTime'
     -
       name: end_time
       label: 'End Time'
-      selector: schedules/schedule[1]/endTime
+      selector: 'schedules/schedule[1]/endTime'
   ids:
     guid:
       type: string
@@ -113,7 +113,7 @@ source:
     status: 1
     type: hs_course
     basic_html: basic_html
-    link: http://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&catalog=&q=
+    link: 'http://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&catalog=&q='
 process:
   status: constants/status
   type: constants/type
@@ -137,7 +137,7 @@ process:
     -
       plugin: format_date
       from_format: 'Y'
-      to_format: 'Y-06-01'
+      to_format: Y-06-01
   field_hs_course_section_comp:
     -
       plugin: entity_generate
@@ -151,15 +151,27 @@ process:
       default_value: null
   field_hs_course_tags:
     -
-      plugin: entity_generate
-      entity_type: taxonomy_term
-      bundle_key: vid
-      bundle: hs_course_tags
-      value_key: name
+      plugin: sub_process
       source: tags
+      key: name
+      process:
+        target_id:
+          -
+            plugin: concat
+            source:
+              - organization
+              - name
+            delimiter: '::'
+          -
+            plugin: tanslate_course_tag
+          -
+            plugin: entity_generate
+            entity_type: taxonomy_term
+            bundle_key: vid
+            bundle: hs_course_tags
+            value_key: name
     -
-      plugin: default_value
-      default_value: null
+      plugin: flatten
   field_hs_course_section_quarter:
     plugin: substr
     source: quarter
@@ -193,12 +205,12 @@ process:
   field_hs_course_section_st_date:
     plugin: format_date
     from_format: 'M j, Y'
-    to_format: 'Y-m-d'
+    to_format: Y-m-d
     source: start_date
   field_hs_course_section_end_date:
     plugin: format_date
     from_format: 'M j, Y'
-    to_format: 'Y-m-d'
+    to_format: Y-m-d
     source: end_date
   field_hs_course_section_end_time: end_time
   field_hs_course_section_st_time: start_time
@@ -209,7 +221,7 @@ process:
       key: sunet
       process:
         target_id:
-          plugin: entity_generate
+          plugin: entity_generate_no_lookup
           entity_type: course_collections
           bundle_key: type
           bundle: instructor

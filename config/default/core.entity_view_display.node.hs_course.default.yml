@@ -1,0 +1,141 @@
+uuid: 68ea02fc-9cff-4e66-b2bd-828a9d58ad27
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_course.body
+    - field.field.node.hs_course.field_hs_course_academic_year
+    - field.field.node.hs_course.field_hs_course_code
+    - field.field.node.hs_course.field_hs_course_grading
+    - field.field.node.hs_course.field_hs_course_id
+    - field.field.node.hs_course.field_hs_course_link
+    - field.field.node.hs_course.field_hs_course_requirements
+    - field.field.node.hs_course.field_hs_course_section_comp
+    - field.field.node.hs_course.field_hs_course_section_days
+    - field.field.node.hs_course.field_hs_course_section_end_date
+    - field.field.node.hs_course.field_hs_course_section_end_time
+    - field.field.node.hs_course.field_hs_course_section_id
+    - field.field.node.hs_course.field_hs_course_section_instruc
+    - field.field.node.hs_course.field_hs_course_section_location
+    - field.field.node.hs_course.field_hs_course_section_number
+    - field.field.node.hs_course.field_hs_course_section_quarter
+    - field.field.node.hs_course.field_hs_course_section_st_date
+    - field.field.node.hs_course.field_hs_course_section_st_time
+    - field.field.node.hs_course.field_hs_course_section_syllabus
+    - field.field.node.hs_course.field_hs_course_section_units
+    - field.field.node.hs_course.field_hs_course_subject
+    - field.field.node.hs_course.field_hs_course_tags
+    - node.type.hs_course
+    - system.menu.main
+  module:
+    - hs_layouts
+    - layout_builder
+    - menu_block
+    - user
+third_party_settings:
+  layout_builder:
+    enable_defaults: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: three_column
+        layout_settings:
+          section_width: decanter-grid
+          region_widths: center
+        components:
+          83cd1eee-8726-4940-9d8e-cf73c4af0b8a:
+            uuid: 83cd1eee-8726-4940-9d8e-cf73c4af0b8a
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: visible
+              follow: 1
+              follow_parent: '-1'
+              level: 1
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              suggestion: menu_block__main
+              label_type: root
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+          12fe5317-34cd-40f0-aa6a-1a7890ff624a:
+            uuid: 12fe5317-34cd-40f0-aa6a-1a7890ff624a
+            region: main
+            configuration:
+              id: 'field_block:node:hs_course:title'
+              label: Title
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: above
+                type: entity_title_heading
+                settings:
+                  tag: h1
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+          b8975e21-5e0b-41d4-8638-097ee92d6007:
+            uuid: b8975e21-5e0b-41d4-8638-097ee92d6007
+            region: main
+            configuration:
+              id: 'field_block:node:hs_course:field_hs_course_requirements'
+              label: Requirements
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: above
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 1
+id: node.hs_course.default
+targetEntityType: node
+bundle: hs_course
+mode: default
+content:
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_hs_course_academic_year: true
+  field_hs_course_code: true
+  field_hs_course_grading: true
+  field_hs_course_id: true
+  field_hs_course_link: true
+  field_hs_course_requirements: true
+  field_hs_course_section_comp: true
+  field_hs_course_section_days: true
+  field_hs_course_section_end_date: true
+  field_hs_course_section_end_time: true
+  field_hs_course_section_id: true
+  field_hs_course_section_instruc: true
+  field_hs_course_section_location: true
+  field_hs_course_section_number: true
+  field_hs_course_section_quarter: true
+  field_hs_course_section_st_date: true
+  field_hs_course_section_st_time: true
+  field_hs_course_section_syllabus: true
+  field_hs_course_section_units: true
+  field_hs_course_subject: true
+  field_hs_course_tags: true

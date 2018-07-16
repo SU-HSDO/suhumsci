@@ -5,7 +5,8 @@
 //
 
 // Decanter
-@import 'decanter-no-markup';
+@import
+  'decanter-no-markup';
 
 // Styles for no JavaScript
 // Fallback styles, which are also applied to the page when
@@ -91,6 +92,7 @@
                 background: none;
               }
 
+
               &.ui-widget {
                 border: none;
               }
@@ -110,17 +112,31 @@
               }
             }
 
+            li.menu-item--active-trail {
+              .ui-menu-item-wrapper {
+                border-bottom: 3px solid $color-black;
+                color: $color-black;
+              }
+
+              .decanter-nav-submenu .ui-menu-item-wrapper {
+                color: $color-white;
+                border-bottom: none;
+              }
+            }
+
             .ui-menu-item-wrapper {
               @include margin(0 1.5em 0 0);
-              @include padding(6px 0 6px 0);
+              @include padding(6px 0);
             }
           }
 
           > li {
             color: $color-bright-red;
+
             &:hover {
               color: $color-black;
             }
+
             &:last-of-type {
               .ui-menu-item-wrapper {
                 margin-right: 0;
@@ -171,6 +187,7 @@
               @include media($medium-screen) {
                 @include margin(0 0 10px 0);
               }
+
 
               &:hover {
                 background-color: transparent;
@@ -287,6 +304,7 @@
     @include media(max-width $medium-screen) {
       display: none;
     }
+
 
     h2#menu-blockmain-menu {
       @include margin(0 null null);

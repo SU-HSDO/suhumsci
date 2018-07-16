@@ -71,7 +71,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     $config = $config_factory->get('hs_config_readonly.settings');
     $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;
-    $this->bypassFormIds = $config->get('bypass_form_ids') ?: $this->readOnlyFormIds;
+    $this->bypassFormIds = $config->get('bypass_form_ids') ?: $this->bypassFormIds;
   }
 
   /**

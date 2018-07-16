@@ -4,11 +4,36 @@ namespace Drupal\hs_courses_importer\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Database\Connection;
 
 /**
  * Class CourseTagForm.
  */
 class CourseTagForm extends EntityForm {
+
+  /**
+   * Database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('database')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(Connection $database) {
+    $this->database = $database;
+  }
 
   /**
    * {@inheritdoc}
@@ -40,7 +65,7 @@ class CourseTagForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('Translated Tag'),
       '#default_value' => $hs_course_tag->tag(),
-      '#required' => true,
+      '#required' => TRUE,
     ];
 
     return $form;
@@ -52,6 +77,7 @@ class CourseTagForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $hs_course_tag = $this->entity;
     $status = $hs_course_tag->save();
+    $this->invalidateHashes();
 
     switch ($status) {
       case SAVED_NEW:
@@ -66,6 +92,17 @@ class CourseTagForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($hs_course_tag->toUrl('collection'));
+  }
+
+  /**
+   * Invalidates migration hashes.
+   */
+  protected function invalidateHashes() {
+    if ($this->database->schema()->tableExists('migrate_map_hs_courses')) {
+      $this->database->update('migrate_map_hs_courses')
+        ->fields(['hash' => ''])
+        ->execute();
+    }
   }
 
 }

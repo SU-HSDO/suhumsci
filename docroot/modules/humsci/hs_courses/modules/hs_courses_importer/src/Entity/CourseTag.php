@@ -62,9 +62,7 @@ class CourseTag extends ConfigEntityBase implements CourseTagInterface {
   protected $tag;
 
   /**
-   * Get the tranlated tag text.
-   *
-   * @return string
+   * {@inheritdoc}
    */
   public function tag() {
     return $this->tag;

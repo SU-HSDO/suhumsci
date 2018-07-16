@@ -118,4 +118,27 @@ class HumsciConfigCommand extends ConfigCommand {
     $task->drush("config-import")->arg($cm_core_key)->option('partial');
   }
 
+  /**
+   * Log in when drupal:sync finishes.
+   *
+   * @hook post-command drupal:config:import
+   */
+  public function postConfigImport() {
+    $result = $this->taskDrush()->drush('config-missing-report')->args([
+      'type',
+      'system.all',
+    ])->option('format', 'json')->run();
+    $configs = json_decode($result->getMessage(), TRUE);
+
+    // Since we ignore all the entity form and entity display configs, drush cim
+    // does not import any new ones. So here we are importing any of those
+    // missing configs if they are new.
+    foreach ($configs as $item) {
+      $name = $item['item'];
+      if (strpos($name, 'core.entity_') !== FALSE) {
+        $this->taskDrush()->drush('config:import-missing')->arg($name)->run();
+      }
+    }
+  }
+
 }

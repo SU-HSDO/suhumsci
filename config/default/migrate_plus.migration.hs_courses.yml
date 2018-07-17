@@ -1,7 +1,10 @@
 uuid: accb1872-4298-4ae3-b66e-774497d16555
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.hs_course
+    - migrate_plus.migration_group.hs_courses
 _core:
   default_config_hash: 2DJ5AzPeTfHylbydpZgbiPH85AJUWuiotQgawcg3SU8
 id: hs_courses
@@ -15,14 +18,14 @@ source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: http
-  urls: 'http://explorecourses.stanford.edu/search?view=xml-20140630&q=ARCHLGY&filter-term-Autumn=on&filter-term-Winter=on&filter-term-Spring=on&filter-term-Summer=on&filter-catalognumber-ARCHLGY=on&filter-departmentcode-ARCHLGY=on&filter-coursestatus-Active=on&filter-catalognumber-ARCHLGY=on'
+  urls: '/api/hs_courses'
   data_parser_plugin: simple_xml
   item_selector: //courses/course/sections/section
   fields:
     -
       name: guid
       label: GUID
-      selector: classId
+      selector: guid
     -
       name: title
       label: 'Course Title'
@@ -132,8 +135,11 @@ process:
   field_hs_course_section_location: section_location
   field_hs_course_academic_year:
     -
-      plugin: substr
+      plugin: skip_on_empty
+      method: process
       source: year
+    -
+      plugin: substr
       start: 5
     -
       plugin: format_date
@@ -177,15 +183,20 @@ process:
     -
       plugin: flatten
   field_hs_course_section_quarter:
-    plugin: substr
-    source: quarter
-    start: 10
+    -
+      plugin: skip_on_empty
+      method: process
+      source: quarter
+    -
+      plugin: substr
+      start: 10
   field_hs_course_link:
-    plugin: concat
-    source:
-      - constants/link
-      - subject
-      - code
+    -
+      plugin: concat
+      source:
+        - constants/link
+        - subject
+        - code
   field_hs_course_section_days:
     -
       plugin: str_replace

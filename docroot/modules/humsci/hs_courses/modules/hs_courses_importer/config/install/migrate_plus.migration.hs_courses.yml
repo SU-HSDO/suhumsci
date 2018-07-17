@@ -1,7 +1,10 @@
 uuid: accb1872-4298-4ae3-b66e-774497d16555
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.hs_course
+    - migrate_plus.migration_group.hs_courses
 _core:
   default_config_hash: 2DJ5AzPeTfHylbydpZgbiPH85AJUWuiotQgawcg3SU8
 id: hs_courses
@@ -15,7 +18,7 @@ source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: http
-  urls: 'http://archaeology.suhumsci.loc/api/hs_courses'
+  urls: '/api/hs_courses'
   data_parser_plugin: simple_xml
   item_selector: //courses/course/sections/section
   fields:

@@ -15,34 +15,34 @@ source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: http
-  urls: 'http://explorecourses.stanford.edu/search?view=xml-20140630&q=ARCHLGY&filter-term-Autumn=on&filter-term-Winter=on&filter-term-Spring=on&filter-term-Summer=on&filter-catalognumber-ARCHLGY=on&filter-departmentcode-ARCHLGY=on&filter-coursestatus-Active=on&filter-catalognumber-ARCHLGY=on'
-  data_parser_plugin: simple_xml
-  item_selector: //courses/course/sections/section
+  urls: 'http://archaeology.suhumsci.loc/api/hs_courses'
+  data_parser_plugin: json
+  item_selector: /
   fields:
     -
       name: guid
       label: GUID
-      selector: classId
+      selector: guid
     -
       name: title
       label: 'Course Title'
-      selector: ../../title
+      selector: title
     -
-      name: body
+      name: description
       label: Description
-      selector: ../../description
+      selector: description
     -
       name: year
       label: 'Course Academic Year'
-      selector: ../../year
+      selector: year
     -
       name: component
       label: 'Section Component'
-      selector: component
+      selector: section/component
     -
       name: course_id
       label: 'Course ID'
-      selector: courseId
+      selector: administrativeInformation/courseId
     -
       name: code
       label: 'Section Code'
@@ -50,19 +50,19 @@ source:
     -
       name: grading
       label: 'Course Grading'
-      selector: ../../grading
+      selector: grading
     -
       name: requirements
       label: 'Course Requirements'
-      selector: ../../gers
+      selector: gers
     -
       name: section_id
       label: 'Section ID'
-      selector: classId
+      selector: section/classId
     -
       name: section_number
       label: 'Section Number'
-      selector: sectionNumber
+      selector: section/sectionNumber
     -
       name: subject
       label: 'Course Subject'
@@ -70,43 +70,43 @@ source:
     -
       name: units
       label: 'Section Units'
-      selector: units
+      selector: section/units
     -
       name: tags
       label: 'Course Tags'
-      selector: ../../tags
+      selector: tags
     -
       name: quarter
       label: 'Section Quarter'
-      selector: term
+      selector: section/term
     -
       name: instructors
       label: Instructors
-      selector: 'schedules/schedule[1]/instructors'
+      selector: 'section/schedule/instructors'
     -
       name: section_location
       label: 'Section Location'
-      selector: 'schedules/schedule[1]/location'
+      selector: 'section/schedule/location'
     -
       name: section_days
       label: 'Section Days'
-      selector: 'schedules/schedule[1]/days'
+      selector: 'section/schedule/days'
     -
       name: start_date
       label: 'Start Date'
-      selector: 'schedules/schedule[1]/startDate'
+      selector: 'section/schedule/startDate'
     -
       name: end_date
       label: 'End Date'
-      selector: 'schedules/schedule[1]/endDate'
+      selector: 'section/schedule/endDate'
     -
       name: start_time
       label: 'Start Time'
-      selector: 'schedules/schedule[1]/startTime'
+      selector: 'section/schedule/startTime'
     -
       name: end_time
       label: 'End Time'
-      selector: 'schedules/schedule[1]/endTime'
+      selector: 'section/schedule/endTime'
   ids:
     guid:
       type: string
@@ -119,7 +119,7 @@ process:
   status: constants/status
   type: constants/type
   title: title
-  body/value: body
+  body/value: description
   body/format: constants/basic_html
   field_hs_course_grading: grading
   field_hs_course_code: code
@@ -152,11 +152,8 @@ process:
       default_value: null
   field_hs_course_tags:
     -
-      plugin: callback
-      callable: simplexml_load_string
-      source: tags
-    -
       plugin: sub_process
+      source: tags
       key: name
       process:
         target_id:
@@ -177,19 +174,35 @@ process:
     -
       plugin: flatten
   field_hs_course_section_quarter:
-    plugin: substr
-    source: quarter
-    start: 10
+    -
+      plugin: skip_on_empty
+      method: process
+      source: quarter
+    -
+      plugin: substr
+      start: 10
   field_hs_course_link:
-    plugin: concat
-    source:
-      - constants/link
-      - subject
-      - code
+    -
+      plugin: skip_on_empty
+      method: process
+      source: subject
+    -
+      plugin: skip_on_empty
+      method: process
+      source: code
+    -
+      plugin: concat
+      source:
+        - constants/link
+        - subject
+        - code
   field_hs_course_section_days:
     -
-      plugin: str_replace
+      plugin: skip_on_empty
+      method: process
       source: section_days
+    -
+      plugin: str_replace
       regex: true
       search: '/[\t]/'
       replace: ' '
@@ -206,22 +219,37 @@ process:
     -
       plugin: callback
       callable: trim
+
   field_hs_course_section_st_date:
-    plugin: format_date
-    from_format: 'M j, Y'
-    to_format: Y-m-d
-    source: start_date
+    -
+      plugin: skip_on_empty
+      method: process
+      source: start_date
+    -
+      plugin: format_date
+      from_format: 'M j, Y'
+      to_format: Y-m-d
+    -
+      plugin: default_value
+      default_value: null
   field_hs_course_section_end_date:
-    plugin: format_date
-    from_format: 'M j, Y'
-    to_format: Y-m-d
-    source: end_date
+    -
+      plugin: skip_on_empty
+      method: process
+      source: end_date
+    -
+      plugin: format_date
+      from_format: 'M j, Y'
+      to_format: Y-m-d
+    -
+      plugin: default_value
+      default_value: null
   field_hs_course_section_end_time: end_time
   field_hs_course_section_st_time: start_time
   field_hs_course_section_instruc:
     -
-      plugin: callback
-      callable: simplexml_load_string
+      plugin: skip_on_empty
+      method: process
       source: instructors
     -
       plugin: sub_process

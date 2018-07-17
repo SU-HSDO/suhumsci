@@ -364,6 +364,9 @@ function _hs_field_helpers_get_view_mode_component(LayoutBuilderEntityViewDispla
 
 /**
  * Implements hook_entity_delete().
+ *
+ * When an entity is manually deleted from the database, we want to remove it
+ * from the migration mapping.
  */
 function hs_field_helpers_entity_delete(EntityInterface $entity) {
   $database = \Drupal::database();

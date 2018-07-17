@@ -20,10 +20,17 @@ class CoursesController extends ControllerBase {
   protected $httpClient;
 
   /**
+   * @var \DOMDocument
+   */
+  protected $courseDom;
+
+  /**
    * Constructs a new CoursesController object.
    */
   public function __construct(ClientInterface $http_client) {
     $this->httpClient = $http_client;
+    $this->courseDom = new \DOMDocument('1.0', 'UTF-8');
+    $this->setCourseDom();
   }
 
   /**
@@ -41,119 +48,97 @@ class CoursesController extends ControllerBase {
    * @return string
    *   Return Hello string.
    */
-  public function getCourses() {
-    $url = 'http://explorecourses.stanford.edu/search?q=ARCHLGY&view=xml-20140630&collapse=&filter-departmentcode-ARCHLGY=on&filter-coursestatus-Active=on&filter-catalognumber-ARCHLGY=on';
+  public function courses() {
     $response = new Response();
-    $response->headers->set('Content-Type', 'application/json');
-
-    $config = $this->config('hs_courses_importer.importer_settings');
-    if ($config_url = $config->get('url')) {
-      $url = $config_url;
-    }
-    $courses = $this->getCoursesFromUrl($url);
-    $courses = $this->processCourses($courses);
-    $this->cleanArrays($courses);
-
-    $response->setContent(json_encode($courses));
-
+    $response->setMaxAge(360);
+    $response->headers->set('Content-Type', 'text/xml');
+    $response->setContent($this->courseDom->saveXML());
     return $response;
   }
 
   /**
-   * Clear empty arrays to prevent strange behaviors with field mappings.
+   * Set the Course Dom Property after getting and cleaning the data.
    *
-   * @param mixed $data
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  protected function cleanArrays(&$data) {
-    if (is_array($data)) {
-      if (!empty(array_filter($data))) {
-        foreach ($data as &$value) {
-          $this->cleanArrays($value);
-        }
-      }
-      $data = array_filter($data);
-    }
-  }
-
-  protected function getCoursesFromUrl($url) {
-    $hashed_url = md5($url);
-    $cache = \Drupal::cache()->get("hs_courses:$hashed_url");
-    if ($cache) {
-      return $cache->data;
+  protected function setCourseDom() {
+    $url = 'http://explorecourses.stanford.edu/search?q=ARCHLGY&view=xml-20140630&collapse=&filter-departmentcode-ARCHLGY=on&filter-coursestatus-Active=on&filter-catalognumber-ARCHLGY=on';
+    $config = $this->config('hs_courses_importer.importer_settings');
+    if ($config_url = $config->get('url')) {
+      $url = $config_url;
     }
 
     $api_response = $this->httpClient->request('GET', $url);
-    if ($api_response->getStatusCode() != 200) {
-      return [];
-    }
+    $body = (string) $api_response->getBody();
 
-    $xml = simplexml_load_string((string) $api_response->getBody());
-    $courses = json_decode(json_encode($xml), TRUE);
+    // The data from explorecourses.stanford.edu contains a ton of unwanted
+    // markup that shouldnt be in an xml source. So lets clean it up first.
+    $body = preg_replace("/[\t\n\r]/", ' ', $body);
+    $body = preg_replace("/[[:blank:]]+/", " ", $body);
+    $body = str_replace('> ', ">", $body);
+    $body = str_replace(' <', "<", $body);
+    $this->courseDom->loadXML($body);
 
-    \Drupal::cache()->set("hs_courses:$hashed_url", $courses);
+    $this->cleanCourses();
+    $this->setSectionGuids();
   }
 
   /**
-   * Modify the courses data array to get the structure we need.
-   *
-   * @param array $courses
-   *   Original data from explorecourses.stanford.edu.
-   *
-   * @return array
-   *   Cleaned up data.
+   * Remove unwanted/unnecessary nodes.
    */
-  protected function processCourses(array $courses) {
-    $return_courses = [];
-
-    foreach ($courses['courses']['course'] as $course) {
-      unset($course['learningObjectives']);
-      if (!empty($course['tags']['tag'][0])) {
-        $course['tags'] = $course['tags']['tag'];
-      }
-
-      $return_course = $course;
-
-      $guid = $course['administrativeInformation']['courseId'];
-      $guid .= '-' . $course['code'];
-      $return_course['guid'] = $guid;
-
-      foreach ($course['sections'] as $sections) {
-        unset($return_course['sections']);
-        $return_course[$guid] = $guid;
-
-        if (!is_array($sections)) {
-          $return_courses[$guid] = $return_course;
-          continue;
-        }
-
-        // Only one section on the course.
-        if (isset($sections['classId'])) {
-          $sections = [$sections];
-        }
-
-        // Multiple sections on the course.
-        foreach ($sections as $section) {
-          unset($section['numEnrolled'], $section['maxEnrolled'], $section['numWaitlist'], $section['enrollStatus'], $section['currentClassSize'], $section['currentWaitlistSize']);
-          $section_guid = $guid . '-' . $section['classId'];
-          if (!empty($section['schedules']['schedule'][0])) {
-            $section['schedules']['schedule'] = $section['schedules']['schedule'][0];
-          }
-          $section['schedule'] = $section['schedules']['schedule'];
-          unset($section['schedules']);
-
-
-          if (!empty($section['schedule']['instructors']['instructor'][0])) {
-            $section['schedule']['instructors'] = $section['schedule']['instructors']['instructor'];
-          }
-
-
-          $return_course['section'] = $section;
-          $return_course['guid'] = $section_guid;
-          $return_courses[$section_guid] = $return_course;
-        }
+  protected function cleanCourses() {
+    $remove_nodes = [
+      'learningObjectives',
+      'currentClassSize',
+      'numEnrolled',
+      'numWaitlist',
+      'enrollStatus',
+    ];
+    $xpath = new \DOMXPath($this->courseDom);
+    foreach ($remove_nodes as $node) {
+      $elements = $xpath->query("//$node");
+      foreach ($elements as $element) {
+        // This is a hint from the manual comments
+        $element->parentNode->removeChild($element);
       }
     }
-    return $return_courses;
+  }
+
+  /**
+   * Set unique guids on each course section within the xml.
+   *
+   * If a course does not contain a section, create an empty section with only
+   * a guid to identify it. This allows us to keep the migrate selector on the
+   * sections/section.
+   */
+  protected function setSectionGuids() {
+    $xpath = new \DOMXPath($this->courseDom);
+    /** @var \SimpleXMLElement $all_sections [] */
+    $all_sections = $xpath->query('//sections');
+
+    /** @var \DOMElement $course_sections */
+    foreach ($all_sections as $course_sections) {
+      // Courses that have no sections, we'll add an empty section just for the
+      // guid.
+      if (!$course_sections->hasChildNodes()) {
+        $child = new \DOMElement('section');
+        $course_sections->appendChild($child);
+      }
+
+      // Build the guid parts.
+      $course_id = $xpath->query('../administrativeInformation/courseId', $course_sections)[0]->textContent;
+      $code = $xpath->query('../code', $course_sections)[0]->textContent;
+
+      /** @var \DOMElement $section */
+      foreach ($xpath->query('section', $course_sections) as $section) {
+        $guid = "$course_id-$code";
+        if ($xpath->query('classId', $section)->length) {
+          $guid .= '-' . $xpath->query('classId', $section)[0]->textContent;
+        }
+        $guid = new \DOMElement('guid', $guid);
+        $section->appendChild($guid);
+      }
+    }
   }
 
 }

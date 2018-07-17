@@ -16,8 +16,8 @@ source:
   plugin: url
   data_fetcher_plugin: http
   urls: 'http://archaeology.suhumsci.loc/api/hs_courses'
-  data_parser_plugin: json
-  item_selector: /
+  data_parser_plugin: simple_xml
+  item_selector: //courses/course/sections/section
   fields:
     -
       name: guid
@@ -26,23 +26,23 @@ source:
     -
       name: title
       label: 'Course Title'
-      selector: title
+      selector: ../../title
     -
-      name: description
+      name: body
       label: Description
-      selector: description
+      selector: ../../description
     -
       name: year
       label: 'Course Academic Year'
-      selector: year
+      selector: ../../year
     -
       name: component
       label: 'Section Component'
-      selector: section/component
+      selector: component
     -
       name: course_id
       label: 'Course ID'
-      selector: administrativeInformation/courseId
+      selector: courseId
     -
       name: code
       label: 'Section Code'
@@ -50,19 +50,19 @@ source:
     -
       name: grading
       label: 'Course Grading'
-      selector: grading
+      selector: ../../grading
     -
       name: requirements
       label: 'Course Requirements'
-      selector: gers
+      selector: ../../gers
     -
       name: section_id
       label: 'Section ID'
-      selector: section/classId
+      selector: classId
     -
       name: section_number
       label: 'Section Number'
-      selector: section/sectionNumber
+      selector: sectionNumber
     -
       name: subject
       label: 'Course Subject'
@@ -70,43 +70,43 @@ source:
     -
       name: units
       label: 'Section Units'
-      selector: section/units
+      selector: units
     -
       name: tags
       label: 'Course Tags'
-      selector: tags
+      selector: ../../tags
     -
       name: quarter
       label: 'Section Quarter'
-      selector: section/term
+      selector: term
     -
       name: instructors
       label: Instructors
-      selector: 'section/schedule/instructors'
+      selector: 'schedules/schedule[1]/instructors'
     -
       name: section_location
       label: 'Section Location'
-      selector: 'section/schedule/location'
+      selector: 'schedules/schedule[1]/location'
     -
       name: section_days
       label: 'Section Days'
-      selector: 'section/schedule/days'
+      selector: 'schedules/schedule[1]/days'
     -
       name: start_date
       label: 'Start Date'
-      selector: 'section/schedule/startDate'
+      selector: 'schedules/schedule[1]/startDate'
     -
       name: end_date
       label: 'End Date'
-      selector: 'section/schedule/endDate'
+      selector: 'schedules/schedule[1]/endDate'
     -
       name: start_time
       label: 'Start Time'
-      selector: 'section/schedule/startTime'
+      selector: 'schedules/schedule[1]/startTime'
     -
       name: end_time
       label: 'End Time'
-      selector: 'section/schedule/endTime'
+      selector: 'schedules/schedule[1]/endTime'
   ids:
     guid:
       type: string
@@ -119,7 +119,7 @@ process:
   status: constants/status
   type: constants/type
   title: title
-  body/value: description
+  body/value: body
   body/format: constants/basic_html
   field_hs_course_grading: grading
   field_hs_course_code: code
@@ -132,8 +132,11 @@ process:
   field_hs_course_section_location: section_location
   field_hs_course_academic_year:
     -
-      plugin: substr
+      plugin: skip_on_empty
+      method: process
       source: year
+    -
+      plugin: substr
       start: 5
     -
       plugin: format_date
@@ -152,8 +155,11 @@ process:
       default_value: null
   field_hs_course_tags:
     -
-      plugin: sub_process
+      plugin: callback
+      callable: simplexml_load_string
       source: tags
+    -
+      plugin: sub_process
       key: name
       process:
         target_id:
@@ -183,14 +189,6 @@ process:
       start: 10
   field_hs_course_link:
     -
-      plugin: skip_on_empty
-      method: process
-      source: subject
-    -
-      plugin: skip_on_empty
-      method: process
-      source: code
-    -
       plugin: concat
       source:
         - constants/link
@@ -198,11 +196,8 @@ process:
         - code
   field_hs_course_section_days:
     -
-      plugin: skip_on_empty
-      method: process
-      source: section_days
-    -
       plugin: str_replace
+      source: section_days
       regex: true
       search: '/[\t]/'
       replace: ' '
@@ -219,37 +214,22 @@ process:
     -
       plugin: callback
       callable: trim
-
   field_hs_course_section_st_date:
-    -
-      plugin: skip_on_empty
-      method: process
-      source: start_date
-    -
-      plugin: format_date
-      from_format: 'M j, Y'
-      to_format: Y-m-d
-    -
-      plugin: default_value
-      default_value: null
+    plugin: format_date
+    from_format: 'M j, Y'
+    to_format: Y-m-d
+    source: start_date
   field_hs_course_section_end_date:
-    -
-      plugin: skip_on_empty
-      method: process
-      source: end_date
-    -
-      plugin: format_date
-      from_format: 'M j, Y'
-      to_format: Y-m-d
-    -
-      plugin: default_value
-      default_value: null
+    plugin: format_date
+    from_format: 'M j, Y'
+    to_format: Y-m-d
+    source: end_date
   field_hs_course_section_end_time: end_time
   field_hs_course_section_st_time: start_time
   field_hs_course_section_instruc:
     -
-      plugin: skip_on_empty
-      method: process
+      plugin: callback
+      callable: simplexml_load_string
       source: instructors
     -
       plugin: sub_process

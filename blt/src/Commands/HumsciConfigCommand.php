@@ -119,7 +119,7 @@ class HumsciConfigCommand extends ConfigCommand {
   }
 
   /**
-   * Log in when drupal:sync finishes.
+   * Import any missing entity form/display configs since they are ignored.
    *
    * @hook post-command drupal:config:import
    */

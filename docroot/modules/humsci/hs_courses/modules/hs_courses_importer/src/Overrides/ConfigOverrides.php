@@ -25,7 +25,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    */
   public function __construct(RequestStack $request_stack) {
-    $this->currentRequestStack = $request_stack->getCurrentRequest();
+    $this->currentRequestStack = $request_stack->getCurrentRequest() ?: $request_stack->getMasterRequest();
   }
 
   /**

@@ -142,6 +142,13 @@
                 margin-right: 0;
               }
             }
+            // Last two submenus should hug the right.
+            &:last-of-type,
+            &:nth-last-of-type(2) {
+              ul.decanter-nav-submenu {
+                right: 0;
+              }
+            }
           }
 
           > li > a {
@@ -317,9 +324,11 @@
 
     a {
       font-size: $base-font-size;
+      line-height: 1.125;
       text-decoration: none;
 
-      @include padding(0 0 5px 10px);
+      @include padding(0 0 0 10px);
+      @include margin(0 0 15px 0);
 
       &:hover,
       &.is-active,
@@ -355,7 +364,7 @@
       }
 
       &.menu-item--expanded > a {
-        border-left: 2px solid $color-black;
+        border-left: 1px solid $color-black;
         color: #2e2d29;
       }
 

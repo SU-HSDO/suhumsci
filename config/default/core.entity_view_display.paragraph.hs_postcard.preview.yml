@@ -12,6 +12,10 @@ dependencies:
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - ds
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - layout_discovery
     - link
     - stanford_media
     - text
@@ -34,6 +38,89 @@ third_party_settings:
         - field_hs_postcard_body
       time:
         - field_hs_postcard_link
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          2c50d4fd-5d2d-4d4d-9753-32f82c4c9147:
+            uuid: 2c50d4fd-5d2d-4d4d-9753-32f82c4c9147
+            region: description
+            configuration:
+              id: 'field_block:paragraph:hs_postcard:field_hs_postcard_body'
+              label_display: ''
+              formatter:
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+                type: text_default
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_postcard_body
+            weight: 0
+          fbda6ab8-1024-4e51-91e5-9da6cd217315:
+            uuid: fbda6ab8-1024-4e51-91e5-9da6cd217315
+            region: image
+            configuration:
+              id: 'field_block:paragraph:hs_postcard:field_hs_postcard_image'
+              label_display: ''
+              formatter:
+                type: media_image_formatter
+                label: hidden
+                settings:
+                  view_mode: default
+                  image_style: hs_medium_square_360x360
+                  link: 0
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_postcard_image
+            weight: 0
+          cae30be8-1f1a-4dfb-af3d-05b4247ff57e:
+            uuid: cae30be8-1f1a-4dfb-af3d-05b4247ff57e
+            region: time
+            configuration:
+              id: 'field_block:paragraph:hs_postcard:field_hs_postcard_link'
+              label_display: ''
+              formatter:
+                label: hidden
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: ''
+                  target: ''
+                third_party_settings: {  }
+                type: link
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_postcard_link
+            weight: 0
+          69e4f7a6-5fec-4d82-8b98-5348035170e3:
+            uuid: 69e4f7a6-5fec-4d82-8b98-5348035170e3
+            region: title
+            configuration:
+              id: 'field_block:paragraph:hs_postcard:field_hs_postcard_title'
+              label_display: ''
+              formatter:
+                label: hidden
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_postcard_title
+            weight: 0
 _core:
   default_config_hash: tYFdW9WYdB_HxOvHWw1Wh1OljOAiLUjjVF-jtAHekls
 id: paragraph.hs_postcard.preview
@@ -54,9 +141,13 @@ content:
     label: hidden
     settings:
       view_mode: default
-      image_style: large
+      image_style: hs_medium_square_360x360
       link: 0
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     region: image
   field_hs_postcard_link:
     weight: 3
@@ -69,7 +160,7 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
-    region: button
+    region: time
   field_hs_postcard_title:
     weight: 0
     label: hidden

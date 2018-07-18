@@ -5,7 +5,8 @@
 //
 
 // Decanter
-@import 'decanter-no-markup';
+@import
+  'decanter-no-markup';
 
 // Styles for no JavaScript
 // Fallback styles, which are also applied to the page when
@@ -91,6 +92,7 @@
                 background: none;
               }
 
+
               &.ui-widget {
                 border: none;
               }
@@ -110,20 +112,41 @@
               }
             }
 
+            li.menu-item--active-trail {
+              .ui-menu-item-wrapper {
+                border-bottom: 3px solid $color-black;
+                color: $color-black;
+              }
+
+              .decanter-nav-submenu .ui-menu-item-wrapper {
+                color: $color-white;
+                border-bottom: none;
+              }
+            }
+
             .ui-menu-item-wrapper {
               @include margin(0 1.5em 0 0);
-              @include padding(6px 0 6px 0);
+              @include padding(6px 0);
             }
           }
 
           > li {
             color: $color-bright-red;
+
             &:hover {
               color: $color-black;
             }
+
             &:last-of-type {
               .ui-menu-item-wrapper {
                 margin-right: 0;
+              }
+            }
+            // Last two submenus should hug the right.
+            &:last-of-type,
+            &:nth-last-of-type(2) {
+              ul.decanter-nav-submenu {
+                right: 0;
               }
             }
           }
@@ -171,6 +194,7 @@
               @include media($medium-screen) {
                 @include margin(0 0 10px 0);
               }
+
 
               &:hover {
                 background-color: transparent;
@@ -288,6 +312,7 @@
       display: none;
     }
 
+
     h2#menu-blockmain-menu {
       @include margin(0 null null);
 
@@ -298,10 +323,12 @@
     }
 
     a {
-      font-weight: $font-bold;
+      font-size: $base-font-size;
+      line-height: 1.125;
       text-decoration: none;
 
-      @include padding(0 0 5px 10px);
+      @include padding(0 0 0 10px);
+      @include margin(0 0 15px 0);
 
       &:hover,
       &.is-active,
@@ -333,20 +360,17 @@
 
         &.is-active {
           color: $color-black;
-          font-weight: $font-bold;
         }
       }
 
       &.menu-item--expanded > a {
-        border-left: 2px solid $color-black;
+        border-left: 1px solid $color-black;
         color: #2e2d29;
-        font-weight: $font-bold;
       }
 
       ul.menu .menu-item a.is-active {
         border-left: none;
         color: $color-black;
-        font-weight: $font-bold;
       }
     }
 

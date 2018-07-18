@@ -29,12 +29,14 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
     - system.menu.main
+    - views.view.hs_publications
   module:
     - hs_layouts
     - layout_builder
     - menu_block
     - text
     - user
+    - views
 third_party_settings:
   layout_builder:
     sections:
@@ -93,11 +95,9 @@ third_party_settings:
                 type: media_image_formatter
                 settings:
                   view_mode: default
-                  image_style: responsive_small
+                  image_style: hs_medium_square_360x360
                   link: 0
-                third_party_settings:
-                  field_formatter_class:
-                    class: ''
+                third_party_settings: {  }
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }

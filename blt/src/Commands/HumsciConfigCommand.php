@@ -12,6 +12,66 @@ use Acquia\Blt\Robo\Exceptions\BltException;
  */
 class HumsciConfigCommand extends ConfigCommand {
 
+  protected $uuids = [];
+
+  /**
+   * Copy a given module configs from default into the module.
+   *
+   * @command drupal:config:module
+   *
+   * @param string $module_name
+   */
+  public function copyConfigToModule($module_name) {
+    $info_file = $this->rglob($this->getConfigValue('docroot') . '/*/humsci/*/' . $module_name . '*.yml');
+    $module_path = str_replace("/$module_name.info.yml", '', reset($info_file));
+    foreach ($this->rglob("$module_path/config/*/*.yml") as $config) {
+      $file_name = substr($config, strrpos($config, '/') + 1);
+      if (file_exists("config/default/$file_name")) {
+        copy("config/default/$file_name", $config);
+      }
+    }
+  }
+
+  /**
+   * @param $pattern
+   * @param int $flags
+   *
+   * @return array|void
+   */
+  protected function rglob($pattern, $flags = 0) {
+    $files = glob($pattern, $flags);
+    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
+      $files = array_merge($files, $this->rglob($dir . '/' . basename($pattern), $flags));
+    }
+    return $files;
+  }
+//
+//  find a way to sync to production sites and revert form and view configs.
+//  /**
+//   * Import any missing entity form/display configs since they are ignored.
+//   *
+//   * @hook pre-command drupal:config:import
+//   */
+//  public function preConfigImport() {
+//    $configs = $this->taskDrush()
+//      ->drush('sqlq')
+//      ->arg('select name from config where name like "core.entity_view_display.node.hs_%" or name like "core.entity_form_display.node.hs_%"')
+//      ->run()
+//      ->getMessage();
+//    $configs = array_filter(explode("\n", $configs));
+//    foreach ($configs as $config) {
+//
+//      $uuid = $this->taskDrush()
+//        ->drush('cget')
+//        ->args([$config, 'uuid'])
+//        ->option('format', 'csv')
+//        ->run()
+//        ->getMessage();
+//      $this->taskDrush()->drush('cdel')->arg($config)->run();
+//      $this->uuids[$config] = trim($uuid);
+//    }
+//  }
+
   /**
    * Imports configuration from the config directory according to cm.strategy.
    *

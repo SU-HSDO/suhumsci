@@ -144,6 +144,11 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       }
     }
 
+    // No jira filter is configured.
+    if (!$this->getJiraFilter()) {
+      return;
+    }
+
     $hook_data = [
       'name' => 'Bugherd for ARCH',
       'url' => $url,

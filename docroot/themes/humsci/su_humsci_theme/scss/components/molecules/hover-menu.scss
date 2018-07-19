@@ -43,8 +43,11 @@
             font-weight: $font-normal;
             text-decoration: none;
 
-            @include margin(0 1.5em 0 0);
+            @include margin(0 1em 0 0);
             @include padding(6px 0);
+            @include media($large-screen) {
+              @include margin(null 1.5em null null);
+            }
           }
         }
       }
@@ -104,10 +107,11 @@
               .ui-widget {
                 background: $color-black;
 
-                @include padding(1em);
+                @include padding(.7em 1em);
 
                 &.decanter-nav-submenu li a {
                   font-size: 1.8rem;
+                  line-height: 1.25;
                 }
               }
             }
@@ -125,13 +129,17 @@
             }
 
             .ui-menu-item-wrapper {
-              @include margin(0 1.5em 0 0);
+              @include margin(0 1em 0 0);
               @include padding(6px 0);
+              @include media($large-screen) {
+                @include margin(null 1.5em null null);
+              }
             }
           }
 
           > li {
             color: $color-bright-red;
+            position: relative;
 
             &:hover {
               color: $color-black;

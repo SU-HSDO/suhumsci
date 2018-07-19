@@ -1,5 +1,14 @@
 # HumSci
 
+8.0.4
+--------------------------------------------------------------------------------  
+_Release Date: 2018-07-19_
+
+- Fixed Front end styling in the theme
+- Added course content type
+- Added course importer
+- Added local path for course importer to target, allowing us to defined custom guids needed by the importer
+
 8.0.3
 --------------------------------------------------------------------------------  
 _Release Date: 2018-07-12_

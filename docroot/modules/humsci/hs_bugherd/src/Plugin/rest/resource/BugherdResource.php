@@ -97,7 +97,6 @@ class BugherdResource extends ResourceBase {
   public function post(array $data) {
     $this->logger->info('posted data: ' . var_export($data, TRUE));
     try {
-
       // Data from jira has this key. Bugherd does not.
       if (isset($data['webhookEvent'])) {
         $response = $this->sendToBugherd($data);
@@ -428,7 +427,9 @@ class BugherdResource extends ResourceBase {
     $description[] = "Browser: {$task['requester_browser']}";
     $description[] = "Browser size: {$task['requester_browser_size']}";
     $description[] = "Browser size: {$task['requester_resolution']}";
-    $description[] = "Item: " . strip_tags($task['selector_info']['html'], '<img><a><p><iframe>');
+    if (!empty($task['selector_info']['html'])) {
+      $description[] = "Item: " . strip_tags($task['selector_info']['html'], '<img><a><p><iframe>');
+    }
 
     if ($screenshot = $task['screenshot_url']) {
       $description[] = "Screenshot: {$task['screenshot_url']}";
@@ -462,13 +463,17 @@ class BugherdResource extends ResourceBase {
         return $this->bugherdApi->addComment($bugherd_task['id'], $comment);
 
       case 'jira:issue_updated':
-        if ($data['changelog']['items'][0]['field'] == 'status') {
-          $jira_status = $data['changelog']['items'][0]['to'];
-          if ($new_status = $this->getTranslatedStatus($jira_status)) {
-            $status = ['status' => $new_status];
-            return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+        $changelog = $data['changelog']['items'];
+
+        foreach ($changelog as $change) {
+          if ($change['field'] == 'status') {
+            $jira_status = $data['changelog']['items'][0]['to'];
+            if ($new_status = $this->getTranslatedStatus($jira_status)) {
+              $status = ['status' => $new_status];
+              return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+            }
+            $this->logger->info(t('Unable to map Jira status to bugherd. Jira status id: @jira'), ['@jira' => $jira_status]);
           }
-          $this->logger->info(t('Unable to map Jira status to bugherd. Jira status id: @jira'), ['@jira' => $jira_status]);
         }
     }
 

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file hs_courses.module
+ */
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function hs_courses_course_collections_view_alter(array &$build, Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+  // On the ECK entity, if the instructor person is set, use that to display.
+  if (!empty($build['field_instructor_person']['#items'])) {
+    unset($build['title']);
+  }
+}

@@ -59,6 +59,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
    */
   protected $bypassFormIds = [
     'view_duplicate_form',
+    'menu_edit_form',
   ];
 
   /**

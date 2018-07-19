@@ -354,10 +354,14 @@ class BugherdResource extends ResourceBase {
    *   Created JIRA issue.
    */
   protected function createJiraIssue(array $task) {
+    $jira_project = $this->getJiraProject();
+    if (!$jira_project) {
+      return $this->t('No Jira project configured');
+    }
 
     /** @var \biologis\JIRA_PHP_API\Issue $issue */
     $issue = $this->jiraIssueService->create();
-    $issue->fields->project->setKey($this->getJiraProject());
+    $issue->fields->project->setKey($jira_project);
     $issue->fields->setDescription($this->buildDescription($task));
     $issue->fields->issuetype->setId('1');
     $issue->fields->addGenericJiraObject('priority');

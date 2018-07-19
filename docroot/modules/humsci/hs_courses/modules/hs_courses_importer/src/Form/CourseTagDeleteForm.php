@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_courses_importer\Form;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -26,6 +27,15 @@ class CourseTagDeleteForm extends EntityConfirmFormBase {
     return new static(
       $container->get('database')
     );
+  }
+
+  /**
+   * CourseTagDeleteForm constructor.
+   *
+   * @param \Drupal\Core\Database\Connection $database
+   */
+  public function __construct(Connection $database) {
+    $this->database = $database;
   }
 
   /**

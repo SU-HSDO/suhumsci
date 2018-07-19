@@ -184,7 +184,7 @@ class HumsciConfigCommand extends ConfigCommand {
    * @hook post-command drupal:config:import
    */
   public function postConfigImport() {
-    $this->yell('Importing missing configs!');
+    $this->yell('Importing new form and display configuration items that don\'t exist in the database because they are ignored in config.ignore');
     $result = $this->taskDrush()->drush('config-missing-report')->args([
       'type',
       'system.all',

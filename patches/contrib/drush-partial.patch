@@ -1,0 +1,15 @@
+diff --git a/src/Drupal/Commands/config/ConfigImportCommands.php b/src/Drupal/Commands/config/ConfigImportCommands.php
+index 2f56cddd..cc169209 100644
+--- a/src/Drupal/Commands/config/ConfigImportCommands.php
++++ b/src/Drupal/Commands/config/ConfigImportCommands.php
+@@ -177,7 +177,9 @@ class ConfigImportCommands extends DrushCommands
+             $replacement_storage = new StorageReplaceDataWrapper($active_storage);
+             foreach ($source_storage->listAll() as $name) {
+                 $data = $source_storage->read($name);
+-                $replacement_storage->replaceData($name, $data);
++                if ($data) {
++                    $replacement_storage->replaceData($name, $data);
++                }
+             }
+             $source_storage = $replacement_storage;
+         }

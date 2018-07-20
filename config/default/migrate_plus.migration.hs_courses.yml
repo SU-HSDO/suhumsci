@@ -1,7 +1,10 @@
 uuid: accb1872-4298-4ae3-b66e-774497d16555
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.hs_course
+    - migrate_plus.migration_group.hs_courses
 _core:
   default_config_hash: 2DJ5AzPeTfHylbydpZgbiPH85AJUWuiotQgawcg3SU8
 id: hs_courses
@@ -46,7 +49,7 @@ source:
     -
       name: code
       label: 'Section Code'
-      selector: code
+      selector: ../../code
     -
       name: grading
       label: 'Course Grading'
@@ -66,7 +69,7 @@ source:
     -
       name: subject
       label: 'Course Subject'
-      selector: subject
+      selector: ../../subject
     -
       name: units
       label: 'Section Units'

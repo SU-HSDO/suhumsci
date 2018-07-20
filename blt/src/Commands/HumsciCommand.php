@@ -55,7 +55,7 @@ class HumsciCommand extends AcHooksCommand {
    * @aliases ds drupal:sync drupal:sync:default sync sync:refresh
    * @executeInVm
    */
-  public function sync($options = ['sync-files' => FALSE]) {
+  public function sync($options = ['sync-files' => FALSE, 'partial' => FALSE]) {
 
     $commands = $this->getConfigValue('sync.commands');
     if ($options['sync-files'] || $this->getConfigValue('sync.files')) {

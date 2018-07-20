@@ -229,8 +229,24 @@ process:
     from_format: 'M j, Y'
     to_format: Y-m-d
     source: end_date
-  field_hs_course_section_end_time: end_time
-  field_hs_course_section_st_time: start_time
+  field_hs_course_section_end_time:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: end_time
+    -
+      plugin: str_replace
+      search: ':00 '
+      replace: ' '
+  field_hs_course_section_st_time:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: start_time
+    -
+      plugin: str_replace
+      search: ':00 '
+      replace: ' '
   field_hs_course_section_instruc:
     -
       plugin: callback

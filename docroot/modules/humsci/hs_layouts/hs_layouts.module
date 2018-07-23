@@ -6,14 +6,27 @@
  */
 
 /**
- * Implements hook_plugin_filter_layout_alter().
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
-function hs_layouts_plugin_filter_layout_alter(&$definitions, &$extra, &$consumer) {
-  if ($consumer == 'layout_builder') {
-    /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
-    foreach ($definitions as $id => $definition) {
-      if ($definition->getProvider() !== 'hs_layouts') {
-        unset($definitions[$id]);
+function hs_layouts_plugin_filter_layout__layout_builder_alter(&$definitions, &$extra, &$consumer) {
+  /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
+  foreach ($definitions as $id => $definition) {
+    if ($definition->getProvider() !== 'hs_layouts') {
+      unset($definitions[$id]);
+    }
+  }
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function hs_layouts_plugin_filter_block__layout_builder_alter(&$definitions, &$extra) {
+  foreach ($definitions as $id => &$definition) {
+    if (strpos($id, 'views_exposed_filter_block') !== FALSE) {
+      $view_block = str_replace('views_exposed_filter_block:', 'views_block:', $id);
+      if (isset($definitions[$view_block])) {
+        $definition['category'] = $definitions[$view_block]['category'];
+        $definition['admin_label'] = t('@view: @display <span class="view-form">Exposed form</span>', $definitions[$view_block]['admin_label']->getArguments());
       }
     }
   }

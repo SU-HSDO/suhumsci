@@ -45,32 +45,15 @@ class HumsciConfigCommand extends ConfigCommand {
     }
     return $files;
   }
-//
-//  find a way to sync to production sites and revert form and view configs.
-//  /**
-//   * Import any missing entity form/display configs since they are ignored.
-//   *
-//   * @hook pre-command drupal:config:import
-//   */
-//  public function preConfigImport() {
-//    $configs = $this->taskDrush()
-//      ->drush('sqlq')
-//      ->arg('select name from config where name like "core.entity_view_display.node.hs_%" or name like "core.entity_form_display.node.hs_%"')
-//      ->run()
-//      ->getMessage();
-//    $configs = array_filter(explode("\n", $configs));
-//    foreach ($configs as $config) {
-//
-//      $uuid = $this->taskDrush()
-//        ->drush('cget')
-//        ->args([$config, 'uuid'])
-//        ->option('format', 'csv')
-//        ->run()
-//        ->getMessage();
-//      $this->taskDrush()->drush('cdel')->arg($config)->run();
-//      $this->uuids[$config] = trim($uuid);
-//    }
-//  }
+
+  /**
+   * Toggle modules first
+   *
+   * @hook pre-command drupal:config:import
+   */
+  public function preConfigImport() {
+    $this->invokeCommand('drupal:toggle:modules');
+  }
 
   /**
    * Imports configuration from the config directory according to cm.strategy.

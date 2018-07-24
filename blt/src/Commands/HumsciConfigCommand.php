@@ -161,7 +161,9 @@ class HumsciConfigCommand extends ConfigCommand {
    * @param bool $partial
    */
   protected function importConfigSplit($task, $cm_core_key, $partial = FALSE) {
-    $partial = $this->input()->getOption('partial') ?: $partial;
+    if ($this->input()->hasOption('partial')) {
+      $partial = $this->input()->getOption('partial');
+    }
     $task->drush("pm-enable")->arg('config_split');
 
     // Local environments we don't want all the custom site created configs.

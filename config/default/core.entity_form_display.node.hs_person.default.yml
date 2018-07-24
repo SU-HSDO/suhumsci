@@ -30,9 +30,9 @@ dependencies:
     - node.type.hs_person
   module:
     - address
-    - datetime
     - entity_browser
     - field_group
+    - hs_field_helpers
     - link
     - path
     - telephone
@@ -47,7 +47,6 @@ third_party_settings:
         - field_hs_person_last_name
         - field_hs_person_image
         - field_hs_person_affiliation
-        - field_hs_person_weight
       parent_name: group_tabs
       weight: 1
       format_type: tab
@@ -309,9 +308,11 @@ content:
     region: content
   field_hs_person_student_cohort:
     weight: 29
-    settings: {  }
+    settings:
+      min: 'now - 10 years'
+      max: 'now + 10 years'
     third_party_settings: {  }
-    type: datetime_default
+    type: datetime_year_only
     region: content
   field_hs_person_student_dissert:
     weight: 31
@@ -323,9 +324,11 @@ content:
     region: content
   field_hs_person_student_grad:
     weight: 32
-    settings: {  }
+    settings:
+      min: 'now - 10 years'
+      max: 'now + 10 years'
     third_party_settings: {  }
-    type: datetime_default
+    type: datetime_year_only
     region: content
   field_hs_person_student_study:
     weight: 30

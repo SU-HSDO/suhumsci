@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - search_api.server.default_server
+    - core.entity_view_mode.node.search_index
   module:
     - search_api
     - node
@@ -28,14 +29,14 @@ field_settings:
         anonymous: anonymous
       view_mode:
         'entity:node':
-          hs_basic_page: default
-          hs_course: default
-          hs_event: default
-          hs_event_series: default
-          hs_news: default
-          hs_person: default
-          hs_publications: default
-          hs_research: default
+          hs_basic_page: search_index
+          hs_course: search_index
+          hs_event: search_index
+          hs_event_series: search_index
+          hs_news: search_index
+          hs_person: search_index
+          hs_publications: search_index
+          hs_research: search_index
   status:
     label: 'Publishing status'
     datasource_id: 'entity:node'
@@ -48,7 +49,7 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: title
     type: text
-    boost: !!float 8
+    boost: !!float 5
   uid:
     label: 'Author ID'
     datasource_id: 'entity:node'
@@ -105,8 +106,7 @@ processor_settings:
       preprocess_query: -46
   ignorecase:
     all_fields: false
-    fields:
-      - title
+    fields: {  }
     weights:
       preprocess_index: -5
       preprocess_query: -48
@@ -127,8 +127,7 @@ processor_settings:
       preprocess_query: -43
   stopwords:
     all_fields: false
-    fields:
-      - title
+    fields: {  }
     stopwords:
       - a
       - an
@@ -170,8 +169,7 @@ processor_settings:
       preprocess_query: -49
   tokenizer:
     all_fields: false
-    fields:
-      - title
+    fields: {  }
     spaces: ''
     overlap_cjk: 1
     minimum_word_size: '3'
@@ -180,8 +178,7 @@ processor_settings:
       preprocess_query: -45
   transliteration:
     all_fields: false
-    fields:
-      - title
+    fields: {  }
     weights:
       preprocess_index: -4
       preprocess_query: -47

@@ -8,7 +8,12 @@
 @import
   'decanter-no-markup';
 
-.search-block-form {
+.search-block-form,
+.views-exposed-filter-block.hs-search-search-page {
+  label {
+    @include hide-visually();
+  }
+
   form {
     display: inline-block;
     float: right;
@@ -19,7 +24,7 @@
         z-index: 999;
       }
 
-      input.form-search {
+      input.form-search, input[type=text] {
         background: $color-white;
         width: 145px;
       }
@@ -41,7 +46,7 @@
       z-index: -999;
     }
 
-    &.form-search {
+    &.form-search, &[type=text] {
       background: url("../../img/search.svg") no-repeat center right;
       background-color: $color-white;
       background-size: 45px 45px;

@@ -1,0 +1,184 @@
+uuid: 27803739-e551-4cd7-9cc9-2192263f5d9f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.hs_event.body
+    - field.field.node.hs_event.field_hs_event_admission
+    - field.field.node.hs_event.field_hs_event_audience
+    - field.field.node.hs_event.field_hs_event_category
+    - field.field.node.hs_event.field_hs_event_contact_email
+    - field.field.node.hs_event.field_hs_event_contact_phone
+    - field.field.node.hs_event.field_hs_event_date
+    - field.field.node.hs_event.field_hs_event_image
+    - field.field.node.hs_event.field_hs_event_link
+    - field.field.node.hs_event.field_hs_event_location
+    - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_series
+    - field.field.node.hs_event.field_hs_event_speaker
+    - field.field.node.hs_event.field_hs_event_sponsor
+    - field.field.node.hs_event.field_hs_event_status
+    - field.field.node.hs_event.field_hs_event_type
+    - field.field.node.hs_event.field_hs_event_video
+    - node.type.hs_event
+  module:
+    - bricks
+    - hs_field_helpers
+    - link
+    - telephone
+    - text
+    - user
+_core:
+  default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
+id: node.hs_event.search_index
+targetEntityType: node
+bundle: hs_event
+mode: search_index
+content:
+  body:
+    type: text_default
+    weight: 0
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_event_admission:
+    type: text_default
+    weight: 9
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_event_audience:
+    type: entity_reference_label
+    weight: 16
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_hs_event_category:
+    type: entity_reference_label
+    weight: 15
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_hs_event_contact_email:
+    type: email_mailto
+    weight: 14
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_event_contact_phone:
+    type: telephone_link
+    weight: 13
+    region: content
+    label: hidden
+    settings:
+      title: ''
+    third_party_settings: {  }
+  field_hs_event_date:
+    type: datetime_hs
+    weight: 12
+    region: content
+    label: hidden
+    settings:
+      display: start_date
+      date_format: 'Y-m-d\TH:i:s'
+      timezone_override: ''
+    third_party_settings: {  }
+  field_hs_event_image:
+    type: entity_reference_entity_view
+    weight: 11
+    region: content
+    label: hidden
+    settings:
+      link: false
+      view_mode: default
+    third_party_settings: {  }
+  field_hs_event_link:
+    type: link
+    weight: 10
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  field_hs_event_location:
+    type: basic_string
+    weight: 8
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_event_map_link:
+    type: link
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+  field_hs_event_series:
+    type: entity_reference_label
+    weight: 7
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_hs_event_speaker:
+    type: bricks_nested
+    weight: 6
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+  field_hs_event_sponsor:
+    type: basic_string
+    weight: 5
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_event_status:
+    type: entity_reference_label
+    weight: 4
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_hs_event_type:
+    type: entity_reference_label
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_hs_event_video:
+    type: entity_reference_entity_view
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      link: false
+      view_mode: default
+    third_party_settings: {  }
+hidden:
+  links: true

@@ -4,11 +4,18 @@ status: true
 dependencies:
   config:
     - field.storage.node.body
+    - field.storage.node.field_hs_event_image
+    - field.storage.node.field_hs_event_series_image
+    - field.storage.node.field_hs_news_image
     - field.storage.node.field_hs_page_components
+    - field.storage.node.field_hs_page_hero
+    - field.storage.node.field_hs_person_image
+    - field.storage.node.field_hs_publication_image
     - search_api.index.default_index
   module:
     - entity_reference_revisions
     - search_api
+    - stanford_media
     - text
     - ui_patterns_views
     - views_infinite_scroll
@@ -80,8 +87,14 @@ display:
             field_hs_page_components: 0
             body: 0
             search_api_excerpt: 0
+            field_hs_page_hero: 0
+            field_hs_event_image: 0
+            field_hs_news_image: 0
+            field_hs_person_image: 0
+            field_hs_publication_image: 0
+            field_hs_event_series_image: 0
           separator: ''
-          hide_empty: 0
+          hide_empty: 1
           pattern: horizontal_card
           pattern_mapping:
             'views_row:title':
@@ -89,9 +102,39 @@ display:
               weight: 0
               plugin: views_row
               source: title
+            'views_row:field_hs_page_hero':
+              destination: image
+              weight: 1
+              plugin: views_row
+              source: field_hs_page_hero
+            'views_row:field_hs_event_image':
+              destination: image
+              weight: 2
+              plugin: views_row
+              source: field_hs_event_image
+            'views_row:field_hs_news_image':
+              destination: image
+              weight: 3
+              plugin: views_row
+              source: field_hs_news_image
+            'views_row:field_hs_person_image':
+              destination: image
+              weight: 4
+              plugin: views_row
+              source: field_hs_person_image
+            'views_row:field_hs_publication_image':
+              destination: image
+              weight: 5
+              plugin: views_row
+              source: field_hs_publication_image
+            'views_row:field_hs_event_series_image':
+              destination: image
+              weight: 6
+              plugin: views_row
+              source: field_hs_event_series_image
             'views_row:search_api_excerpt':
               destination: description
-              weight: 1
+              weight: 7
               plugin: views_row
               source: search_api_excerpt
       fields:
@@ -359,6 +402,492 @@ display:
           multi_type: separator
           multi_separator: ', '
           plugin_id: search_api
+        field_hs_page_hero:
+          id: field_hs_page_hero
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_page_hero
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_revisions_entity_view
+          settings:
+            view_mode: default
+          group_column: ''
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+          entity_type: node
+          plugin_id: search_api_field
+        field_hs_event_image:
+          id: field_hs_event_image
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_event_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_image_formatter
+          settings:
+            view_mode: default
+            image_style: hs_small_square_200x200
+            link: 1
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              file:
+                display_method: label
+                view_mode: default
+              image:
+                display_method: label
+                view_mode: default
+              video:
+                display_method: label
+                view_mode: default
+          entity_type: node
+          plugin_id: search_api_field
+        field_hs_news_image:
+          id: field_hs_news_image
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_news_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_image_formatter
+          settings:
+            view_mode: default
+            image_style: hs_small_square_200x200
+            link: 1
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              file:
+                display_method: label
+                view_mode: default
+              image:
+                display_method: label
+                view_mode: default
+              video:
+                display_method: label
+                view_mode: default
+          entity_type: node
+          plugin_id: search_api_field
+        field_hs_person_image:
+          id: field_hs_person_image
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_person_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_image_formatter
+          settings:
+            view_mode: default
+            image_style: hs_small_square_200x200
+            link: 1
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              file:
+                display_method: label
+                view_mode: default
+              image:
+                display_method: label
+                view_mode: default
+              video:
+                display_method: label
+                view_mode: default
+          entity_type: node
+          plugin_id: search_api_field
+        field_hs_publication_image:
+          id: field_hs_publication_image
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_publication_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_image_formatter
+          settings:
+            view_mode: default
+            image_style: hs_small_square_200x200
+            link: 1
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              file:
+                display_method: label
+                view_mode: default
+              image:
+                display_method: label
+                view_mode: default
+              video:
+                display_method: label
+                view_mode: default
+          entity_type: node
+          plugin_id: search_api_field
+        field_hs_event_series_image:
+          id: field_hs_event_series_image
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_event_series_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_image_formatter
+          settings:
+            view_mode: default
+            image_style: hs_small_square_200x200
+            link: 1
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api_entity
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+            display_methods:
+              file:
+                display_method: label
+                view_mode: default
+              image:
+                display_method: label
+                view_mode: default
+              video:
+                display_method: label
+                view_mode: default
+          entity_type: node
+          plugin_id: search_api_field
       filters:
         search_api_fulltext:
           id: search_api_fulltext
@@ -484,7 +1013,13 @@ display:
         - url.query_args
       tags:
         - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_hs_event_image'
+        - 'config:field.storage.node.field_hs_event_series_image'
+        - 'config:field.storage.node.field_hs_news_image'
         - 'config:field.storage.node.field_hs_page_components'
+        - 'config:field.storage.node.field_hs_page_hero'
+        - 'config:field.storage.node.field_hs_person_image'
+        - 'config:field.storage.node.field_hs_publication_image'
         - extensions
   search_page:
     display_plugin: page
@@ -504,5 +1039,11 @@ display:
         - url.query_args
       tags:
         - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_hs_event_image'
+        - 'config:field.storage.node.field_hs_event_series_image'
+        - 'config:field.storage.node.field_hs_news_image'
         - 'config:field.storage.node.field_hs_page_components'
+        - 'config:field.storage.node.field_hs_page_hero'
+        - 'config:field.storage.node.field_hs_person_image'
+        - 'config:field.storage.node.field_hs_publication_image'
         - extensions

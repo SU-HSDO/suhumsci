@@ -20,19 +20,25 @@ function hs_courses_importer_update_8001() {
   $executable = new MigrateExecutable($course_migration, $log);
   if (\Drupal::database()->schema()->tableExists('migrate_map_hs_courses')) {
     $executable->rollback();
-    \Drupal::database()->schema()->dropTable('migrate_map_hs_courses');
   }
+}
 
+/**
+ * Drop the migrate table for courses.
+ */
+function hs_courses_importer_update_8002(){
   $source = new FileStorage('../config/default');
   /** @var \Drupal\Core\Config\CachedStorage $config_storage */
   $config_storage = \Drupal::service('config.storage');
   $config_storage->write('migrate_plus.migration.hs_courses', $source->read('migrate_plus.migration.hs_courses'));
+  \Drupal::database()->schema()->dropTable('migrate_map_hs_courses');
+  drupal_flush_all_caches();
 }
 
 /**
  * Import courses with new mapping.
  */
-function hs_courses_importer_update_8002(){
+function hs_courses_importer_update_8003(){
   $migrations = hs_field_helpers_migration_list();
   /** @var \Drupal\migrate_plus\Entity\Migration $course_migration */
   $course_migration = $migrations['hs_courses']['hs_courses'];

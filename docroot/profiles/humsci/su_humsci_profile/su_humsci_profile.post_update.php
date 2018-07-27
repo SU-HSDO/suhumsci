@@ -112,12 +112,11 @@ function su_humsci_profile_post_update_8_0_3() {
         $display->unsetThirdPartySetting('layout_builder', $key);
       }
       $display->save();
+      continue;
     }
 
     // Remove the old key.
-    if ($old_key === TRUE && $new_key === TRUE) {
-      $display->unsetThirdPartySetting('layout_builder', 'enable_defaults');
-      $display->save();
-    }
+    $display->unsetThirdPartySetting('layout_builder', 'enable_defaults');
+    $display->save();
   }
 }

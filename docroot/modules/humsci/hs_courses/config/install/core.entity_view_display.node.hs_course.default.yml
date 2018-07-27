@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.hs_course.body
+    - field.field.node.hs_course.field_hs_course_academic_career
     - field.field.node.hs_course.field_hs_course_academic_year
     - field.field.node.hs_course.field_hs_course_code
     - field.field.node.hs_course.field_hs_course_grading
@@ -31,10 +32,11 @@ dependencies:
     - hs_layouts
     - layout_builder
     - menu_block
+    - options
     - user
 third_party_settings:
   layout_builder:
-    is_enabled: true
+    enabled: true
     allow_custom: false
     sections:
       -
@@ -487,11 +489,34 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 18
+          86117c13-3143-41b7-918e-6c985af42602:
+            uuid: 86117c13-3143-41b7-918e-6c985af42602
+            region: main
+            configuration:
+              id: 'field_block:node:hs_course:field_hs_course_academic_career'
+              label_display: ''
+              formatter:
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+                type: list_default
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_course_academic_career
+            weight: 19
 id: node.hs_course.default
 targetEntityType: node
 bundle: hs_course
 mode: default
 content:
+  field_hs_course_academic_career:
+    weight: 101
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: main
   links:
     weight: 100
     region: content

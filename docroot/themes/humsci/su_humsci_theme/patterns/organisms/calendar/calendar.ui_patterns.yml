@@ -1,0 +1,55 @@
+calendar:
+  label: "Calendar"
+  fields:
+    items:
+      label: "Items"
+      type: list
+#      preview:
+#        -
+#          type: pattern
+#          id: table_row
+#          column_1: 'Vivamus sagittis lacus vel augue'
+#          column_2: 'Bacon ipsum dolor amet swine tri-tip'
+#          column_3: 'Pig brisket cupim chicken pork belly'
+#          column_4: 'Porchetta turducken fatback kevin'
+#          column_5: 'Andouille kielbasa kevin capicola'
+#        -
+#          type: pattern
+#          id: table_row
+#          column_1: 'Vivamus sagittis lacus vel augue'
+#          column_3: 'Pig brisket cupim chicken pork belly'
+#          column_4: 'Porchetta turducken fatback kevin'
+#          column_5: 'Andouille kielbasa kevin capicola'
+#        -
+#          type: pattern
+#          id: table_row
+#          column_1: 'Vivamus sagittis lacus vel augue'
+#          column_2: 'Bacon ipsum dolor amet swine tri-tip'
+#          column_3: 'Pig brisket cupim chicken pork belly'
+#          column_5: 'Andouille kielbasa kevin capicola'
+#        -
+#          type: pattern
+#          id: table_row
+#          column_1: 'Vivamus sagittis lacus vel augue'
+#          column_2: 'Bacon ipsum dolor amet swine tri-tip'
+#          column_3: 'Pig brisket cupim chicken pork belly'
+#          column_4: 'Porchetta turducken fatback kevin'
+  libraries:
+    - calendar:
+        remote: https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js
+        license:
+          name: FullCalendar
+          url: https://fullcalendar.io/license
+        css:
+          component:
+            css/calendar.css: {}
+            //cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css: {type: external, minified: true }
+        js:
+          //cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js: {type: external, minified: true }
+          //cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js: {type: external, minified: true }
+          js/calendar.js: {}
+        dependencies:
+          - core/jquery
+          - core/jquery.once
+
+  use: "@su_humsci_theme/organisms/calendar/calendar.html.twig"

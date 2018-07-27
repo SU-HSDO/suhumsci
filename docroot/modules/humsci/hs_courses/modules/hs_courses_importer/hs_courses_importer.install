@@ -31,6 +31,10 @@ function hs_courses_importer_update_8002(){
   /** @var \Drupal\Core\Config\CachedStorage $config_storage */
   $config_storage = \Drupal::service('config.storage');
   $config_storage->write('migrate_plus.migration.hs_courses', $source->read('migrate_plus.migration.hs_courses'));
+
+  // I added the course id & course code to source.ids. Anytime the ids are
+  // added/deleted the table must be deleted so that it can be rebuilt with the
+  // additional columns on the next import.
   \Drupal::database()->schema()->dropTable('migrate_map_hs_courses');
   drupal_flush_all_caches();
 }

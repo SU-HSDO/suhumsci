@@ -99,14 +99,15 @@ function su_humsci_profile_post_update_8_0_3() {
     if (empty($lb_settings)) {
       continue;
     }
+
     // https://www.drupal.org/files/issues/2018-05-03/2936358-opt_in-32.patch
     $old_key = $display->getThirdPartySetting('layout_builder', 'enable_defaults');
     // https://cgit.drupalcode.org/drupal/tree/core/modules/layout_builder/config/schema/layout_builder.schema.yml?id=c6cdc4392324b4ee18f0492bbc6ea53c2f918250
     $new_key = $display->getThirdPartySetting('layout_builder', 'enabled');
 
-    // Check for differences with the old and the new patch and clear layout
-    // builder if it needs to be.
-    if ($old_key === FALSE && $new_key === TRUE) {
+    // The layout builder is not enabled, so remove all the third party settings
+    // from the config.
+    if ($old_key === FALSE || $new_key === FALSE) {
       foreach (array_keys($lb_settings) as $key) {
         $display->unsetThirdPartySetting('layout_builder', $key);
       }

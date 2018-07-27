@@ -150,7 +150,7 @@ class HumsciConfigCommand extends ConfigCommand {
     $task->drush("pm-enable")->arg('config_split');
 
     // Local environments we don't want all the custom site created configs.
-    if ($this->getConfigValue('environment') == 'local' && !$partial) {
+    if (($this->getConfigValue('environment') == 'local' || $this->getConfigValue('environment') == 'dev') && !$partial) {
       $task->drush("config-import")->arg($cm_core_key);
       // Runs a second import to ensure splits are
       // both defined and imported.

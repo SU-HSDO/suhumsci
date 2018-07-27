@@ -1,6 +1,9 @@
+uuid: 06eee702-dff2-47e8-b74c-b7dd4b4ca2f8
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: mw50o3Qp-ku8UixfHYqdP7uUm92kV-SlXb7xHwwvT4I
 id: hs_events_importer
 class: null
 field_plugin_method: null
@@ -12,7 +15,9 @@ source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: file
-  urls: 'http://events.stanford.edu/xml/drupal/v2.php?organization=702'
+  urls:
+    - 'http://events.stanford.edu/xml/drupal/v2.php?organization=702'
+    - 'http://events.stanford.edu/xml/drupal/v2.php?organization=702&unlisted'
   data_parser_plugin: simple_xml
   item_selector: /EventList/Event
   fields:
@@ -58,7 +63,7 @@ source:
       selector: locationText
     -
       name: map_link
-      label: "Map Link"
+      label: 'Map Link'
       selector: mapUrl
     -
       name: event_sponsor
@@ -66,11 +71,11 @@ source:
       selector: sponsor
     -
       name: contact_email
-      label: "Contact Email"
+      label: 'Contact Email'
       selector: contactEmail
     -
       name: contact_phone
-      label: "Contact Phone"
+      label: 'Contact Phone'
       selector: contactPhone
     -
       name: admission
@@ -78,13 +83,12 @@ source:
       selector: admissionDescription
     -
       name: event_status
-      label: "Event Status"
+      label: 'Event Status'
       selector: eventStatus
     -
       name: speaker
-      label: "Speaker"
+      label: Speaker
       selector: People/person
-
   ids:
     guid:
       type: string
@@ -116,24 +120,24 @@ process:
       source: event_start
       from_format: 'Y-m-d H:i:s O'
       to_format: U
-      timezone: 'Etc/GMT'
+      timezone: Etc/GMT
     -
       plugin: format_date
       from_format: U
       to_format: 'Y-m-d\TH:i:s'
-      timezone: 'Etc/GMT'
+      timezone: Etc/GMT
   field_hs_event_date/end_value:
     -
       plugin: format_date
       source: event_end
       from_format: 'Y-m-d H:i:s O'
       to_format: U
-      timezone: 'Etc/GMT'
+      timezone: Etc/GMT
     -
       plugin: format_date
       from_format: U
       to_format: 'Y-m-d\TH:i:s'
-      timezone: 'Etc/GMT'
+      timezone: Etc/GMT
   field_hs_event_category:
     -
       plugin: explode

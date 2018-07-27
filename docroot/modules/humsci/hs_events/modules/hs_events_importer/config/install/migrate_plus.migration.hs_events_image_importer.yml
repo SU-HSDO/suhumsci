@@ -1,6 +1,9 @@
+uuid: b8ea5252-6553-4eae-8a5d-ed1aa7d56aa7
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: lVkxAzcYq2_G24MBxYiVxZnlzW0Cyiij8xEKqSnPMFE
 id: hs_events_image_importer
 class: null
 field_plugin_method: null
@@ -12,7 +15,9 @@ source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: file
-  urls: 'http://events.stanford.edu/xml/drupal/v2.php?organization=702'
+  urls:
+    - 'http://events.stanford.edu/xml/drupal/v2.php?organization=702'
+    - 'http://events.stanford.edu/xml/drupal/v2.php?organization=702&unlisted'
   data_parser_plugin: simple_xml
   item_selector: /EventList/Event
   fields:
@@ -58,4 +63,4 @@ process:
         status: 1
 destination:
   plugin: 'entity:media'
-migration_dependencies: {}
+migration_dependencies: {  }

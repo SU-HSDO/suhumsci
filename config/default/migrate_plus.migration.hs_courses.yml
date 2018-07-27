@@ -45,11 +45,11 @@ source:
     -
       name: course_id
       label: 'Course ID'
-      selector: courseId
+      selector: ../../administrativeInformation/courseId
     -
       name: code
       label: 'Section Code'
-      selector: code
+      selector: ../../code
     -
       name: grading
       label: 'Course Grading'
@@ -69,7 +69,7 @@ source:
     -
       name: subject
       label: 'Course Subject'
-      selector: subject
+      selector: ../../subject
     -
       name: units
       label: 'Section Units'
@@ -82,6 +82,10 @@ source:
       name: quarter
       label: 'Section Quarter'
       selector: term
+    -
+      name: academic_career
+      label: 'Academic Career'
+      selector: ../../administrativeInformation/academicCareer
     -
       name: instructors
       label: Instructors
@@ -133,6 +137,7 @@ process:
   field_hs_course_subject: subject
   field_hs_course_section_units: units
   field_hs_course_section_location: section_location
+  field_hs_course_academic_career: academic_career
   field_hs_course_academic_year:
     -
       plugin: skip_on_empty
@@ -227,8 +232,24 @@ process:
     from_format: 'M j, Y'
     to_format: Y-m-d
     source: end_date
-  field_hs_course_section_end_time: end_time
-  field_hs_course_section_st_time: start_time
+  field_hs_course_section_end_time:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: end_time
+    -
+      plugin: str_replace
+      search: ':00 '
+      replace: ' '
+  field_hs_course_section_st_time:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: start_time
+    -
+      plugin: str_replace
+      search: ':00 '
+      replace: ' '
   field_hs_course_section_instruc:
     -
       plugin: callback

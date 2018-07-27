@@ -1,3 +1,4 @@
+uuid: 98ac1da1-285f-42b2-8a9e-17c748db430a
 langcode: en
 status: true
 dependencies:
@@ -11,8 +12,8 @@ dependencies:
     - node.type.hs_news
     - system.menu.main
   module:
+    - hs_layouts
     - layout_builder
-    - layout_discovery
     - menu_block
     - user
 third_party_settings:
@@ -21,12 +22,14 @@ third_party_settings:
     allow_custom: false
     sections:
       -
-        layout_id: layout_threecol_25_50_25
-        layout_settings: {  }
+        layout_id: three_column_w_image
+        layout_settings:
+          section_width: decanter-grid
+          region_widths: center
         components:
-          dbaa1c65-692e-4f75-b936-2510fe72a3d1:
-            uuid: dbaa1c65-692e-4f75-b936-2510fe72a3d1
-            region: second
+          0c07d3f0-676a-4530-b347-41947c253714:
+            uuid: 0c07d3f0-676a-4530-b347-41947c253714
+            region: top
             configuration:
               id: 'field_block:node:hs_news:title'
               label: Title
@@ -37,52 +40,42 @@ third_party_settings:
                 type: entity_title_heading
                 settings:
                   tag: h1
-                third_party_settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          c7787374-9d91-4016-be80-f21f284550aa:
-            uuid: c7787374-9d91-4016-be80-f21f284550aa
-            region: first
+          0e55d440-653b-4d7a-839a-bf2825744abf:
+            uuid: 0e55d440-653b-4d7a-839a-bf2825744abf
+            region: image
             configuration:
-              id: 'menu_block:main'
-              label: 'Main navigation'
-              provider: menu_block
-              label_display: visible
-              follow: 1
-              follow_parent: '1'
-              level: 1
-              depth: 0
-              expand: 1
-              parent: 'main:'
-              suggestion: menu_block__main
-              label_type: root
-              context_mapping: {  }
-            additional: {  }
-            weight: 0
-          ed90cef3-2239-45ea-bf8a-fa230186586a:
-            uuid: ed90cef3-2239-45ea-bf8a-fa230186586a
-            region: second
-            configuration:
-              id: 'field_block:node:hs_news:field_hs_news_date'
-              label: 'Publish date'
+              id: 'field_block:node:hs_news:field_hs_news_image'
+              label: 'News Image'
               provider: layout_builder
               label_display: '0'
               formatter:
                 label: hidden
-                type: datetime_default
+                type: media_image_formatter
                 settings:
-                  timezone_override: ''
-                  format_type: medium
-                third_party_settings: {  }
+                  view_mode: default
+                  image_style: hs_medium_square_360x360
+                  link: 0
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 1
-          9ea92f78-8063-4ab1-82c2-584469cdff50:
-            uuid: 9ea92f78-8063-4ab1-82c2-584469cdff50
-            region: second
+            weight: 0
+          b9a12242-ca2f-4bf9-841e-d7caddf1eb99:
+            uuid: b9a12242-ca2f-4bf9-841e-d7caddf1eb99
+            region: top
             configuration:
               id: 'field_block:node:hs_news:field_hs_news_byline'
               label: Byline
@@ -93,14 +86,63 @@ third_party_settings:
                 type: string
                 settings:
                   link_to_entity: false
-                third_party_settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 2
-          57e68156-8db0-42d0-b859-45ee0e68be05:
-            uuid: 57e68156-8db0-42d0-b859-45ee0e68be05
-            region: second
+            weight: 1
+          7ec8a376-e2a8-46b7-9f7c-f1096441c99d:
+            uuid: 7ec8a376-e2a8-46b7-9f7c-f1096441c99d
+            region: left_sidebar
+            configuration:
+              id: 'menu_block:main'
+              label: 'Main navigation'
+              provider: menu_block
+              label_display: visible
+              follow: 1
+              follow_parent: '-1'
+              level: 1
+              depth: 0
+              expand: 1
+              parent: 'main:'
+              suggestion: menu_block__main
+              label_type: root
+              context_mapping: {  }
+            additional: {  }
+            weight: 0
+          a00ecb9e-fa75-4c4c-a9d0-1a20501ecb11:
+            uuid: a00ecb9e-fa75-4c4c-a9d0-1a20501ecb11
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_news:field_hs_news_link'
+              label: 'Link to External Article'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: link
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: '0'
+                  target: '0'
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 1
+          b07fee82-5c0b-432e-8d5f-81e85a63394d:
+            uuid: b07fee82-5c0b-432e-8d5f-81e85a63394d
+            region: main_below
             configuration:
               id: 'field_block:node:hs_news:body'
               label: Body
@@ -110,27 +152,34 @@ third_party_settings:
                 label: hidden
                 type: text_default
                 settings: {  }
-                third_party_settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 3
-          6cb32387-2f4e-40e4-8034-bd2c085967a5:
-            uuid: 6cb32387-2f4e-40e4-8034-bd2c085967a5
-            region: top
+            weight: 0
+          727d7f94-d4a0-4bdd-b205-e921c995a1d3:
+            uuid: 727d7f94-d4a0-4bdd-b205-e921c995a1d3
+            region: main_above
             configuration:
-              id: 'field_block:node:hs_news:field_hs_news_image'
-              label: 'News Image'
+              id: 'field_block:node:hs_news:field_hs_news_date'
+              label: 'Publish date'
               provider: layout_builder
               label_display: '0'
               formatter:
                 label: hidden
-                type: media_responsive_image_formatter
+                type: datetime_default
                 settings:
-                  view_mode: default
-                  image_style: full_responsive
-                  link: 0
-                third_party_settings: {  }
+                  timezone_override: ''
+                  format_type: standard_date
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }

@@ -18,13 +18,13 @@ drush:
 modules:
   local:
     enable: [dblog, devel, devel_debug_log, devel_generate, seckit, views_ui]
-    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly]
+    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly, config_ignore]
   ci:
     enable: {  }
     uninstall: [acquia_connector, shield]
   dev:
     enable: [acquia_connector, shield]
-    uninstall: [config_readonly, bugherdapi]
+    uninstall: [config_readonly, bugherdapi, config_ignore]
   test:
     enable: [acquia_connector, shield]
     uninstall: [config_readonly, bugherdapi]
@@ -45,15 +45,6 @@ command-hooks:
 cm:
   strategy: config-split
   allow-overrides: true
-
-sync:
-  commands:
-    - source:build:composer
-    - blt:init:settings
-    - drupal:sync:db
-    - drupal:toggle:modules
-    - drupal:update
-    - source:build:frontend
 
 key-dir:
   dev: /mnt/gfs/swshumsci.dev/nobackup/apikeys

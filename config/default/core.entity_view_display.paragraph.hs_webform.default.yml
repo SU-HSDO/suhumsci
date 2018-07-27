@@ -1,0 +1,61 @@
+uuid: 91090e36-92eb-4107-9084-738a2108869c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_webform.field_hs_webform
+    - paragraphs.paragraphs_type.hs_webform
+  module:
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - layout_discovery
+    - webform
+third_party_settings:
+  layout_builder:
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings: {  }
+        components:
+          b72ab325-5ce7-4e4f-99a2-d2c9b28c938e:
+            uuid: b72ab325-5ce7-4e4f-99a2-d2c9b28c938e
+            region: content
+            configuration:
+              id: 'field_block:paragraph:hs_webform:field_hs_webform'
+              label_display: ''
+              formatter:
+                label: hidden
+                settings:
+                  source_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+                type: webform_entity_reference_entity_view
+              context_mapping:
+                entity: layout_builder.entity
+            additional:
+              field_name: field_hs_webform
+            weight: 0
+    enable_defaults: false
+    allow_custom: false
+id: paragraph.hs_webform.default
+targetEntityType: paragraph
+bundle: hs_webform
+mode: default
+content:
+  field_hs_webform:
+    weight: 0
+    label: hidden
+    settings:
+      source_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    type: webform_entity_reference_entity_view
+    region: content
+hidden: {  }

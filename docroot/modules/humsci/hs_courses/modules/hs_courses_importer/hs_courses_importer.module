@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * hs_coures_importer.module
+ */
+
+use Drupal\search_api\IndexInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_search_api_index_items_alter().
+ *
+ * Our course importer imports multiple nodes for each course. Its possible that
+ * a single course could have dozens of sections and therefore dozens of nodes.
+ * Since the data is identical for each section except for date and times, we
+ * can exclude all sections except 1 from indexing. This will prevent a single
+ * course from consuming the search results if a user is looking for a
+ * non-course content, but it has matching results as a course.
+ */
+function hs_courses_importer_search_api_index_items_alter(IndexInterface $index, array &$items) {
+  /** @var \Drupal\search_api\Item\Item $item */
+  foreach ($items as $item_id => $item) {
+    $entity = $item->getOriginalObject()->getValue();
+    if ($entity instanceof NodeInterface && $entity->bundle() == 'hs_course') {
+      $nid = $entity->id();
+      if (!hs_courses_importer_index_item($nid)) {
+        unset($items[$item_id]);
+      }
+    }
+  }
+}
+
+/**
+ * Determine if the given node id is the first section of a given course.
+ *
+ * @param int $nid
+ *   A node id to check against.
+ *
+ * @return bool
+ *   If this item should be indexed.
+ */
+function hs_courses_importer_index_item($nid) {
+  $source_ids = \Drupal::database()->select('migrate_map_hs_courses', 'm')
+    ->fields('m', ['sourceid1', 'sourceid2'])
+    ->condition('destid1', $nid)
+    ->execute()
+    ->fetchAssoc();
+
+  // Course was not imported so we will ignore it entirely to prevent any
+  // unknown effects.
+  if (!$source_ids) {
+    return TRUE;
+  }
+
+  // Get all migrate mapped courses that match the course id & the course code.
+  // sorted by the destination id (nid) this will give us the very first node
+  // that was imported from the source.
+  $first_course_id = \Drupal::database()
+    ->select('migrate_map_hs_courses', 'm')
+    ->fields('m', ['destid1'])
+    ->condition('sourceid1', $source_ids['sourceid1'])
+    ->condition('sourceid2', $source_ids['sourceid2'])
+    ->orderBy('destid1', 'asc')
+    ->range(0, 1)
+    ->execute()
+    ->fetchField();
+
+  return $first_course_id == $nid;
+}

@@ -4,9 +4,6 @@
  * @file hs_courses.module
  */
 
-use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\search_api\Query\QueryInterface;
-
 /**
  * Implements hook_ENTITY_TYPE_view_alter().
  */
@@ -14,26 +11,5 @@ function hs_courses_course_collections_view_alter(array &$build, Drupal\Core\Ent
   // On the ECK entity, if the instructor person is set, use that to display.
   if (!empty($build['field_instructor_person']['#items'])) {
     unset($build['title']);
-  }
-}
-
-/**
- * Implements hook_search_api_db_query_alter().
- */
-function hs_courses_search_api_db_query_alter(SelectInterface &$db_query, QueryInterface $query) {
-  $courses = \Drupal::database()
-    ->select('node_field_data', 'n')
-    ->condition('type', 'hs_course')
-    ->fields('n', ['nid', 'title'])
-    ->orderBy('nid', 'asc')
-    ->execute();
-
-  $course_titles = [];
-  // Courses that have multiple sections, we want to exclude the
-  foreach ($courses->fetchAllKeyed() as $nid => $title) {
-    if (in_array($title, $course_titles)) {
-      $db_query->condition('t.item_id', "%node/$nid:%", 'not like');
-    }
-    $course_titles[] = $title;
   }
 }

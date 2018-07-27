@@ -101,8 +101,8 @@ function su_humsci_profile_post_update_8_0_3() {
     }
     // https://www.drupal.org/files/issues/2018-05-03/2936358-opt_in-32.patch
     $old_key = $display->getThirdPartySetting('layout_builder', 'enable_defaults');
-    // https://www.drupal.org/files/issues/2018-07-18/2936358-opt_in-79-PASS.patch
-    $new_key = $display->getThirdPartySetting('layout_builder', 'is_enabled');
+    // https://cgit.drupalcode.org/drupal/tree/core/modules/layout_builder/config/schema/layout_builder.schema.yml?id=c6cdc4392324b4ee18f0492bbc6ea53c2f918250
+    $new_key = $display->getThirdPartySetting('layout_builder', 'enabled');
 
     // Check for differences with the old and the new patch and clear layout
     // builder if it needs to be.

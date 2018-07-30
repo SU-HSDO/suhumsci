@@ -1,3 +1,4 @@
+uuid: dcad4d59-2188-495a-9c05-6d1bfe16e283
 langcode: en
 status: true
 dependencies:
@@ -69,120 +70,6 @@ third_party_settings:
           link: true
           wrapper: span
           class: ''
-  layout_builder:
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings: {  }
-        components:
-          a933ec8b-ad46-4a5d-8af2-4015a3acf7aa:
-            uuid: a933ec8b-ad46-4a5d-8af2-4015a3acf7aa
-            region: description
-            configuration:
-              id: 'field_block:node:hs_event:body'
-              label_display: ''
-              formatter:
-                type: text_trimmed
-                label: hidden
-                settings:
-                  trim_length: 300
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: body
-            weight: 0
-          da037b7b-5b3a-498c-b710-5900e28ec81a:
-            uuid: da037b7b-5b3a-498c-b710-5900e28ec81a
-            region: date
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_date'
-              label_display: ''
-              formatter:
-                type: datetime_hs
-                label: hidden
-                settings:
-                  timezone_override: ''
-                  date_format: 'l, F j, Y'
-                  display: start_date
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_date
-            weight: 0
-          0d0cf242-7619-44a4-afa6-99b4f5d44d8b:
-            uuid: 0d0cf242-7619-44a4-afa6-99b4f5d44d8b
-            region: image
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_image'
-              label_display: ''
-              formatter:
-                type: media_image_formatter
-                label: hidden
-                settings:
-                  view_mode: default
-                  image_style: medium
-                  link: '1'
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_image
-            weight: 0
-          74608893-6618-40e2-9544-99e4ae07596c:
-            uuid: 74608893-6618-40e2-9544-99e4ae07596c
-            region: location
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_location'
-              label_display: ''
-              formatter:
-                type: basic_string
-                label: hidden
-                settings: {  }
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_location
-            weight: 0
-          1fa104f8-da85-4cf2-b86e-dc81b69749f5:
-            uuid: 1fa104f8-da85-4cf2-b86e-dc81b69749f5
-            region: category
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_series'
-              label_display: ''
-              formatter:
-                type: entity_reference_label
-                label: hidden
-                settings:
-                  link: false
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_series
-            weight: 0
-          14d608e4-f2e0-464b-8966-1b1835d6b973:
-            uuid: 14d608e4-f2e0-464b-8966-1b1835d6b973
-            region: speaker
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_speaker'
-              label_display: ''
-              formatter:
-                type: bricks_nested
-                label: hidden
-                settings:
-                  view_mode: default
-                  link: false
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional:
-              field_name: field_hs_event_speaker
-            weight: 0
-    enable_defaults: false
-    allow_custom: false
 id: node.hs_event.hs_horizontal_card
 targetEntityType: node
 bundle: hs_event
@@ -205,7 +92,7 @@ content:
     label: hidden
     settings:
       view_mode: default
-      image_style: medium
+      image_style: hs_small_square_200x200
       link: '1'
     third_party_settings: {  }
   field_hs_event_location:

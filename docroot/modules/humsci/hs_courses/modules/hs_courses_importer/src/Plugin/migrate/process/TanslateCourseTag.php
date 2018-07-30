@@ -13,8 +13,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a 'TanslateCourseTag' migrate process plugin.
  *
  * @MigrateProcessPlugin(
- *  id = "tanslate_course_tag"
+ *  id = "translate_course_tag"
  * )
+ *
+ * Example usage:
+ *
+ * @code
+ * process:
+ *   field_tags:
+ *     plugin: translate_course_tag
+ *     source: tags
+ *     ignore_empty: true
+ * @endcode
  */
 class TanslateCourseTag extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
@@ -52,6 +62,12 @@ class TanslateCourseTag extends ProcessPluginBase implements ContainerFactoryPlu
       if ($value == $tag_entity->label()) {
         return $tag_entity->tag();
       }
+    }
+
+    // A translation entity was not found, and we want to ignore the value if
+    // no translation was found.
+    if (isset($this->configuration['ignore_empty']) && $this->configuration['ignore_empty']) {
+      return NULL;
     }
     return $value;
   }

@@ -182,7 +182,11 @@ process:
               - name
             delimiter: '::'
           -
-            plugin: tanslate_course_tag
+            plugin: translate_course_tag
+            ignore_empty: true
+          -
+            plugin: skip_on_empty
+            method: process
           -
             plugin: entity_generate
             entity_type: taxonomy_term

@@ -8,6 +8,7 @@
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\Core\Config\FileStorage;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Rollback courses, revert the migration config.
@@ -21,12 +22,23 @@ function hs_courses_importer_update_8001() {
   if (\Drupal::database()->schema()->tableExists('migrate_map_hs_courses')) {
     $executable->rollback();
   }
+
+  // Delete all machine readable
+  $terms = \Drupal::entityTypeManager()
+    ->getStorage('taxonomy_term')
+    ->loadTree('hs_course_tags', 0, NULL, TRUE);
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  foreach ($terms as $term) {
+    if (strpos($term->label(), '::') !== FALSE) {
+      $term->delete();
+    }
+  }
 }
 
 /**
  * Drop the migrate table for courses.
  */
-function hs_courses_importer_update_8002(){
+function hs_courses_importer_update_8002() {
   $source = new FileStorage('../config/default');
   /** @var \Drupal\Core\Config\CachedStorage $config_storage */
   $config_storage = \Drupal::service('config.storage');
@@ -42,7 +54,7 @@ function hs_courses_importer_update_8002(){
 /**
  * Import courses with new mapping.
  */
-function hs_courses_importer_update_8003(){
+function hs_courses_importer_update_8003() {
   $migrations = hs_field_helpers_migration_list();
   /** @var \Drupal\migrate_plus\Entity\Migration $course_migration */
   $course_migration = $migrations['hs_courses']['hs_courses'];

@@ -5,6 +5,8 @@
  * su_humsci_profile.post_update.php
  */
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+
 function _su_humsci_profile_revert_configs(array $configs) {
   /** @var \Drupal\config_update\ConfigReverter $config_update */
   $config_update = \Drupal::service('config_update.config_update');
@@ -85,4 +87,36 @@ function su_humsci_profile_post_update_8_0_2() {
     ],
   ];
   _su_humsci_profile_revert_configs($configs);
+}
+
+/**
+ * Fixes layout builder patch differences.
+ */
+function su_humsci_profile_post_update_8_0_3() {
+  /** @var \Drupal\Core\Entity\Entity\EntityViewDisplay $display */
+  foreach (EntityViewDisplay::loadMultiple() as $display) {
+    $lb_settings = $display->getThirdPartySettings('layout_builder');
+    if (empty($lb_settings)) {
+      continue;
+    }
+
+    // https://www.drupal.org/files/issues/2018-05-03/2936358-opt_in-32.patch
+    $old_key = $display->getThirdPartySetting('layout_builder', 'enable_defaults');
+    // https://cgit.drupalcode.org/drupal/tree/core/modules/layout_builder/config/schema/layout_builder.schema.yml?id=c6cdc4392324b4ee18f0492bbc6ea53c2f918250
+    $new_key = $display->getThirdPartySetting('layout_builder', 'enabled');
+
+    // The layout builder is not enabled, so remove all the third party settings
+    // from the config.
+    if ($old_key === FALSE || $new_key === FALSE) {
+      foreach (array_keys($lb_settings) as $key) {
+        $display->unsetThirdPartySetting('layout_builder', $key);
+      }
+      $display->save();
+      continue;
+    }
+
+    // Remove the old key.
+    $display->unsetThirdPartySetting('layout_builder', 'enable_defaults');
+    $display->save();
+  }
 }

@@ -95,6 +95,7 @@
                 background: none;
               }
 
+
               &.ui-widget {
                 border: none;
               }
@@ -106,7 +107,7 @@
               .ui-widget {
                 background: $color-white;
 
-                @include padding(.7em 1em);
+                @include padding(0.7em 1em);
 
                 &.decanter-nav-submenu li a {
                   font-size: 1.8rem;
@@ -154,6 +155,7 @@
                 margin-right: 0;
               }
             }
+
             // Last two submenus should hug the right.
             &:last-of-type,
             &:nth-last-of-type(2) {
@@ -187,7 +189,6 @@
             background-color: transparent;
             border: none;
             border-bottom: 3px solid $color-black;
-            color: $color-cloud;
 
             @include media($medium-screen) {
               color: $color-black;
@@ -212,10 +213,6 @@
                 border: none;
                 color: $color-black;
               }
-
-              &.is-active {
-                color: $color-cloud;
-              }
             }
 
             .ui-state-active,
@@ -224,7 +221,6 @@
             .ui-button:active,
             .ui-button.ui-state-active:hover {
               background-color: transparent;
-              color: $color-cloud;
             }
           }
         }
@@ -244,6 +240,7 @@
         }
       }
 
+
       // Mobile styles for the main menu in header region.
       @include media(max-width ($medium-screen - 1)) {
         ul {
@@ -257,8 +254,10 @@
             border: 1px solid $color-fog;
             display: block;
             width: 95%;
+
             &.decanter-nav-submenu {
               background: $color-fog;
+
               a {
                 &.is-active {
                   border-bottom: none;
@@ -306,6 +305,7 @@
             color: $color-black;
             text-decoration: none;
           }
+
           &.is-active {
             border-left: 3px solid $color-bright-red;
             color: $color-bright-red;
@@ -319,6 +319,7 @@
           color: $color-black;
           float: right;
           width: auto;
+
           @include margin(null 1rem null null);
         }
       }
@@ -336,6 +337,7 @@
     @include media(max-width $medium-screen) {
       display: none;
     }
+
 
     h2#menu-blockmain-menu {
       @include margin(0 null null);
@@ -392,9 +394,11 @@
         color: #2e2d29;
       }
 
-      ul.menu .menu-item a.is-active {
-        border-left: none;
-        color: $color-black;
+      ul {
+        &.menu .menu-item a.is-active {
+          border-left: none;
+          color: $color-black;
+        }
       }
     }
 

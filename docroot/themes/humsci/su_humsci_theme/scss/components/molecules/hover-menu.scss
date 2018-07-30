@@ -104,7 +104,7 @@
               }
 
               .ui-widget {
-                background: $color-black;
+                background: $color-white;
 
                 @include padding(.7em 1em);
 
@@ -118,12 +118,17 @@
             li.menu-item--active-trail {
               .ui-menu-item-wrapper {
                 border-bottom: 3px solid $color-black;
-                color: $color-black;
+                color: $color-bright-red;
               }
 
               .decanter-nav-submenu .ui-menu-item-wrapper {
-                color: $color-white;
+                color: $color-bright-red;
                 border-bottom: none;
+
+                &:hover,
+                &:focus {
+                  color: $color-black;
+                }
               }
             }
 
@@ -193,7 +198,7 @@
             .menu-item a,
             .menu-item span {
               border-bottom: none;
-              color: $color-white;
+              color: $color-bright-red;
 
               @include margin(0 1.5em 10px 0);
               @include padding(0);
@@ -205,8 +210,7 @@
               &:hover {
                 background-color: transparent;
                 border: none;
-                color: $color-cloud;
-                text-decoration: underline;
+                color: $color-black;
               }
 
               &.is-active {
@@ -221,7 +225,6 @@
             .ui-button.ui-state-active:hover {
               background-color: transparent;
               color: $color-cloud;
-              text-decoration: underline;
             }
           }
         }
@@ -245,14 +248,23 @@
       @include media(max-width ($medium-screen - 1)) {
         ul {
           display: none;
-          background: $color-black;
+          background: $color-white;
           position: absolute;
           z-index: 1;
           width: calc(100% - 10px);
 
           &.expanded {
+            border: 1px solid $color-fog;
             display: block;
             width: 95%;
+            &.decanter-nav-submenu {
+              background: $color-fog;
+              a {
+                &.is-active {
+                  border-bottom: none;
+                }
+              }
+            }
           }
 
           ul {
@@ -270,37 +282,44 @@
 
           button {
             @include padding(4px);
-            @include margin(null null null 1.5em);
           }
         }
 
         li {
+          border-bottom: 1px solid $color-fog;
           display: block;
           position: relative;
 
-          @include padding(0.2em null null 0.75em);
+          @include margin(null 0 null null);
+          @include padding(0.2em null 0.2em 0.75em);
         }
 
         a, span {
-          color: $color-white;
           border: 0;
+          color: $color-bright-red;
+          font-weight: $font-normal;
 
-          @include padding(0);
+          @include padding(null null null 1rem);
 
           &:hover,
           &:focus {
+            color: $color-black;
             text-decoration: none;
           }
-
           &.is-active {
-            border-bottom: 2px solid $color-white;
+            border-left: 3px solid $color-bright-red;
+            color: $color-bright-red;
             font-weight: $font-bold;
+            text-decoration: none;
           }
         }
 
-        button {
-          color: $color-white;
+        button.fa-plus,
+        button.fa-minus {
+          color: $color-black;
+          float: right;
           width: auto;
+          @include margin(null 1rem null null);
         }
       }
     }

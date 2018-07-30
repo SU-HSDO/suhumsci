@@ -23,6 +23,7 @@
 
     img {
       @include margin(0 0 0.5em 0);
+
       display: block;
       padding: 0;
       width: 100%;
@@ -30,7 +31,8 @@
     }
 
     @include media($medium-screen) {
-      @include margin(0 .75em 0 0);
+      @include margin(0 0.75em 0 0);
+
       width: 10em;
 
       img {
@@ -55,22 +57,21 @@
       @include margin(0 0 0.25em 0);
 
       .horizontal-card__time {
-        display: inline-block;
+        float: left;
       }
 
       .pipe {
-        display: inline-block;
-        padding: 0 3px;
-      }
+        float: left;
 
-      .horizontal-card__location {
-        display: inline-block;
+        @include padding(0 3px);
       }
     }
 
     .horizontal-card__title {
-      @include margin(0 0 .35em);
+      @include margin(0 0 0.35em);
+
       font-weight: 600;
+
       &:after {
         content: none;
       }
@@ -89,8 +90,9 @@
 
     .horizontal-card__description {
       @include margin(0);
+
       > div {
-        @include margin(0 0 .25em);
+        @include margin(0 0 0.25em);
       }
     }
   }

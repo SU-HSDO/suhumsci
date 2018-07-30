@@ -2,27 +2,54 @@
 
 .field-hs-row-components {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 
   &.counted-items-2 {
     > div {
-      width: calc(50% - 20px);
+      width: 100%;
+      margin: 0 auto 1em;
+
+      @include media(768px) {
+        width: calc(50% - 20px);
+        margin-bottom: 0;
+      }
     }
   }
 
   &.counted-items-3 {
     > div {
-      width: calc(33% - 20px);
+      width: 100%;
+      margin: 0 auto 1em;
 
-      @include media($medium-screen) {
-        width: calc(33% - 20px);
+      @include media(768px) {
+        width: calc(50% - 20px);
+        margin-bottom: 0;
+      }
+
+      @include media(960px) {
+        width: calc(33.334% - 20px);
       }
     }
   }
 
   &.counted-items-4 {
     > div {
-      width: calc(25% - 20px);
+      width: 100%;
+      margin: 0 auto 1em;
+
+      @include media(768px) {
+        width: calc(50% - 20px);
+        margin-bottom: 0;
+      }
+
+      @include media(960px) {
+        width: calc(33.334% - 20px);
+      }
+
+      @include media(1200px) {
+        width: calc(25% - 20px);
+      }
     }
   }
 }

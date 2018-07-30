@@ -1,0 +1,43 @@
+uuid: 7dc6f38e-de76-4481-9b4d-fe5b306d5345
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.hs_basic_page.field_hs_page_components
+    - field.field.node.hs_basic_page.field_hs_page_hero
+    - field.field.node.hs_basic_page.layout_builder__layout
+    - node.type.hs_basic_page
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - layout_discovery
+    - user
+_core:
+  default_config_hash: uC1KAjQU7_UN3WcFmpXZ4VWYZm1HoMqsKmmZneOeolM
+id: node.hs_basic_page.search_index
+targetEntityType: node
+bundle: hs_basic_page
+mode: search_index
+content:
+  field_hs_page_components:
+    type: entity_reference_revisions_entity_view
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+  field_hs_page_hero:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+hidden:
+  layout_builder__layout: true
+  links: true

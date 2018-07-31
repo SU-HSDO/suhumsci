@@ -8,40 +8,28 @@
 @import
   'decanter-no-markup';
 
-<<<<<<< HEAD
-.search-block-form {
-  form {
-    float: right;
-    position: relative;
-
-    @include margin(null null -7rem);
-
-    @include media($medium-screen) {
-      @include margin((-7rem) null 0);
-    }
-
-    &.expanded {
-      input.button {
-        z-index: 999;
-      }
-=======
 #search-region {
   .search-block-form,
   .views-exposed-filter-block.hs-search-search-page {
     label {
-      @include hide-visually();
+      @include hide-visually;
     }
 
     form {
-      display: inline-block;
       float: right;
       position: relative;
+
+      @include margin(null null -7rem);
+
+      @include media($medium-screen) {
+        @include margin((-7rem) null 0);
+      }
+
 
       &.expanded {
         input.button {
           z-index: 999;
         }
->>>>>>> 65a3199783e0b8274ba54b682b1ba438fe8090c5
 
         input.form-search, input[type=text] {
           background: $color-white;

@@ -366,7 +366,7 @@
       }
 
       &.is-active {
-        border-left: 2px solid $color-black;
+        border-left: 1px solid $color-black;
       }
     }
 
@@ -399,7 +399,6 @@
 
       ul {
         &.menu .menu-item a.is-active {
-          border-left: none;
           color: $color-black;
         }
       }
@@ -408,7 +407,12 @@
     ul.menu ul.menu .menu-item a {
       font-weight: $font-normal;
 
+      @include margin(null null null 1rem);
       @include padding(null null null 20px);
+    }
+
+    ul.menu ul.menu ul.menu .menu-item a {
+      @include margin(null null null 2rem);
     }
   }
 }

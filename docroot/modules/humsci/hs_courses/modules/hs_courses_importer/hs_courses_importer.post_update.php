@@ -2,7 +2,7 @@
 
 /**
  * @file
- * hs_courses_importer.install
+ * hs_courses_importer.post_update.php
  */
 
 use Drupal\migrate\MigrateMessage;
@@ -12,7 +12,7 @@ use Drupal\Core\Config\FileStorage;
 /**
  * Rollback courses, revert the migration config.
  */
-function hs_courses_importer_update_8001() {
+function hs_courses_importer_post_update_801() {
   $migrations = hs_field_helpers_migration_list();
   /** @var \Drupal\migrate_plus\Entity\Migration $course_migration */
   $course_migration = $migrations['hs_courses']['hs_courses'];
@@ -37,7 +37,7 @@ function hs_courses_importer_update_8001() {
 /**
  * Drop the migrate table for courses.
  */
-function hs_courses_importer_update_8002() {
+function hs_courses_importer_post_update_802() {
   $source = new FileStorage('../config/default');
   /** @var \Drupal\Core\Config\CachedStorage $config_storage */
   $config_storage = \Drupal::service('config.storage');
@@ -53,7 +53,7 @@ function hs_courses_importer_update_8002() {
 /**
  * Import courses with new mapping.
  */
-function hs_courses_importer_update_8003() {
+function hs_courses_importer_post_update_803() {
   $migrations = hs_field_helpers_migration_list();
   /** @var \Drupal\migrate_plus\Entity\Migration $course_migration */
   $course_migration = $migrations['hs_courses']['hs_courses'];

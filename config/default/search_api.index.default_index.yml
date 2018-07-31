@@ -1,0 +1,191 @@
+uuid: 7bf9ca79-227b-4edb-91a4-725e33cf8640
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.server.default_server
+    - core.entity_view_mode.node.search_index
+  module:
+    - search_api
+    - node
+id: default_index
+name: 'Default content index'
+description: 'Default content index created by the Database Search Defaults module'
+read_only: false
+field_settings:
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+  rendered:
+    label: 'Rendered HTML output'
+    property_path: rendered_item
+    type: text
+    configuration:
+      roles:
+        anonymous: anonymous
+      view_mode:
+        'entity:node':
+          hs_basic_page: search_index
+          hs_course: search_index
+          hs_event: search_index
+          hs_event_series: search_index
+          hs_news: search_index
+          hs_person: search_index
+          hs_publications: search_index
+          hs_research: search_index
+  status:
+    label: 'Publishing status'
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    indexed_locked: true
+    type_locked: true
+  title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: text
+    boost: !!float 5
+  uid:
+    label: 'Author ID'
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+datasource_settings:
+  'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url:
+    weights:
+      preprocess_index: -30
+  aggregated_field:
+    weights:
+      add_properties: 20
+  content_access:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -44
+  entity_status:
+    weights:
+      preprocess_index: -10
+  highlight:
+    highlight: always
+    highlight_partial: false
+    excerpt: true
+    excerpt_length: 256
+    exclude_fields:
+      - title
+    prefix: '<strong>'
+    suffix: '</strong>'
+    weights:
+      postprocess_query: 0
+  html_filter:
+    all_fields: false
+    fields: {  }
+    title: true
+    alt: true
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      string: 2
+    weights:
+      preprocess_index: -3
+      preprocess_query: -46
+  ignorecase:
+    all_fields: false
+    fields: {  }
+    weights:
+      preprocess_index: -5
+      preprocess_query: -48
+  rendered_item:
+    weights:
+      add_properties: 0
+      pre_index_save: -10
+  stemmer:
+    all_fields: true
+    fields:
+      - rendered
+      - title
+    exceptions:
+      mexican: mexic
+      texan: texa
+    weights:
+      preprocess_index: 0
+      preprocess_query: -43
+  stopwords:
+    all_fields: false
+    fields: {  }
+    stopwords:
+      - a
+      - an
+      - and
+      - are
+      - as
+      - at
+      - be
+      - but
+      - by
+      - for
+      - if
+      - in
+      - into
+      - is
+      - it
+      - 'no'
+      - not
+      - of
+      - 'on'
+      - or
+      - s
+      - such
+      - t
+      - that
+      - the
+      - their
+      - then
+      - there
+      - these
+      - they
+      - this
+      - to
+      - was
+      - will
+      - with
+    weights:
+      preprocess_index: -5
+      preprocess_query: -49
+  tokenizer:
+    all_fields: false
+    fields: {  }
+    spaces: ''
+    overlap_cjk: 1
+    minimum_word_size: '3'
+    weights:
+      preprocess_index: -2
+      preprocess_query: -45
+  transliteration:
+    all_fields: false
+    fields: {  }
+    weights:
+      preprocess_index: -4
+      preprocess_query: -47
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: default_server

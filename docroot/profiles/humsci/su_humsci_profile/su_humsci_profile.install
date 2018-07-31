@@ -9,9 +9,6 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Core\Config\FileStorage;
-use Drupal\Core\DrupalKernel;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Implements hook_install().
@@ -80,7 +77,8 @@ function su_humsci_profile_update_8002() {
   }
 
   // Install the config splits from the individual site config directory.
-  $file_dir = \Drupal::service('file_system')->realpath(file_default_scheme() . "://");
+  $file_dir = \Drupal::service('file_system')
+    ->realpath(file_default_scheme() . "://");
   $site_path = str_replace('/files', '', $file_dir);
   $site_dir = substr($site_path, strrpos($site_path, '/') + 1);
 
@@ -94,4 +92,13 @@ function su_humsci_profile_update_8002() {
       }
     }
   }
+}
+
+/**
+ * Uninstalls search module.
+ */
+function su_humsci_profile_update_8003() {
+  /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  $module_installer->uninstall(['search']);
 }

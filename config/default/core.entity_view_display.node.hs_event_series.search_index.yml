@@ -1,0 +1,37 @@
+uuid: b40d9a22-0cd1-4fc8-b963-e89332ac59d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.hs_event_series.body
+    - field.field.node.hs_event_series.field_hs_event_series_image
+    - node.type.hs_event_series
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: Cq5jtQP3T99l8oJ3Df7Yh-QGR0ES3MqIE9RUM-MgtQ8
+id: node.hs_event_series.search_index
+targetEntityType: node
+bundle: hs_event_series
+mode: search_index
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_hs_event_series_image:
+    type: entity_reference_entity_view
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+hidden:
+  links: true

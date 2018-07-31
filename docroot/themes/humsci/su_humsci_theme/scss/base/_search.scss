@@ -10,9 +10,14 @@
 
 .search-block-form {
   form {
-    display: inline-block;
     float: right;
     position: relative;
+
+    @include margin(null null -7rem);
+
+    @include media($medium-screen) {
+      @include margin((-7rem) null 0);
+    }
 
     &.expanded {
       input.button {

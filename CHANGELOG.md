@@ -1,5 +1,14 @@
 # HumSci
 
+8.0.5
+--------------------------------------------------------------------------------  
+_Release Date: 2018-08-01_
+
+- Use search_api for site search, allowing us to exclude some course nodes from being indexed and take up all the search 
+  result space
+- Updated news content type
+- Several front end style improvements.
+
 8.0.4
 --------------------------------------------------------------------------------  
 _Release Date: 2018-07-19_

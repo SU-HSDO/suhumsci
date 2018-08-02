@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains letsencrypt_challenge.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function letsencrypt_challenge_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the letsencrypt_challenge module.
+    case 'help.page.letsencrypt_challenge':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allows for a configuration of the challenge required to (re)generate the certificate from a remote location in manual mode.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

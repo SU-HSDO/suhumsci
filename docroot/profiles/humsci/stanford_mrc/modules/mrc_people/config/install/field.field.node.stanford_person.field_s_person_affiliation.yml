@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_s_person_affiliation
+    - node.type.stanford_person
+    - taxonomy.vocabulary.person_affiliation
+id: node.stanford_person.field_s_person_affiliation
+field_name: field_s_person_affiliation
+entity_type: node
+bundle: stanford_person
+label: Affiliation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      person_affiliation: person_affiliation
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

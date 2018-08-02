@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - system
+id: events
+label: Events
+menu_name: main
+parent: 'menu_link_content:12f8753d-7bbf-4b56-9812-2f72617703ad'
+menu_link: 'menu_position_link:events'
+enabled: true
+weight: -5
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      stanford_event: stanford_event
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+  current_theme:
+    id: current_theme
+    theme: ''
+    negate: 0
+    context_mapping: {  }

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - taxonomy
+id: mrc_event_series_terms
+label: 'MRC Event Series Terms'
+type: 'canonical_entities:taxonomy_term'
+pattern: 'events/event-series/[term:name]'
+selection_criteria:
+  02c1d900-921d-4572-a9dc-57f4b57c9f59:
+    id: 'entity_bundle:taxonomy_term'
+    bundles:
+      mrc_event_series: mrc_event_series
+    negate: false
+    context_mapping:
+      taxonomy_term: taxonomy_term
+    uuid: 02c1d900-921d-4572-a9dc-57f4b57c9f59
+selection_logic: and
+weight: -5
+relationships: {  }

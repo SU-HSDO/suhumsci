@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_mrc_event_series
+    - node.type.stanford_visitor
+    - taxonomy.vocabulary.mrc_event_series
+id: node.stanford_visitor.field_mrc_event_series
+field_name: field_mrc_event_series
+entity_type: node
+bundle: stanford_visitor
+label: 'MRC Event Series'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      mrc_event_series: mrc_event_series
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

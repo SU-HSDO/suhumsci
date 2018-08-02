@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * mrc_visitor.install
+ */
+
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Rebuilds the node display.
+ */
+function mrc_visitor_update_8001() {
+  // Removed the config update since it happens in mrc_helper_install().
+}
+
+/**
+ * Remove field_s_visitor_program_type, program type vocabulary and terms
+ * associated.
+ */
+function mrc_visitor_update_8002() {
+  // Delete the field first so drupal doesn't complain.
+  $entityManager = \Drupal::service('entity.manager');
+  $fields = $entityManager->getFieldDefinitions('node', 'stanford_visitor');
+
+  if ($field = $fields['field_s_visitor_program_type']) {
+    $field->delete();
+  }
+
+  // Delete terms.
+  $vid = 'visitor_program_type';
+  $tids = Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', $vid)
+    ->execute();
+  entity_delete_multiple('taxonomy_term', $tids);
+
+  // Delete vocabulary.
+  $vocab = Vocabulary::load($vid);
+  if ($vocab) {
+    $vocab->delete();
+  }
+}
+
+/**
+ * Update node type name and some fields.
+ */
+function mrc_visitor_update_8003() {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\Config $config_entity */
+  $config_entity = $config_factory->getEditable('node.type.stanford_visitor');
+  $config_entity->set('name', 'MRC Visitor');
+  $config_entity->set('description', 'A person visiting Stanford for the MRC Visitor Program');
+  $config_entity->save();
+
+  $config_entity = $config_factory->getEditable('field.field.node.stanford_visitor.field_s_visitor_year_visited');
+  $config_entity->set('description', '');
+  $config_entity->save();
+
+  $config_entity = $config_factory->getEditable('field.field.node.stanford_visitor.field_s_visitor_external_link');
+  $config_entity->set('description', 'Enter an external URL such as http://example.com');
+  $config_entity->save();
+
+  $config_entity = $config_factory->getEditable('core.entity_form_display.node.stanford_visitor.default');
+  $config_entity->set('content.field_mrc_event_series.type', 'options_select');
+  $config_entity->set('content.field_mrc_event_series.settings', []);
+  $config_entity->save();
+
+  module_load_install('stanford_mrc');
+  $path = drupal_get_path('module', 'mrc_visitor') . '/config/install';
+  stanford_mrc_update_configs(TRUE, ['views.view.mrc_visitor'], $path);
+}
+
+/**
+ * Feedback changes.
+ */
+function mrc_visitor_update_8004() {
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\Config $config_entity */
+  $config_entity = $config_factory->getEditable('field.field.node.stanford_visitor.field_s_visitor_donor');
+  $config_entity->set('description', 'Enter the donor/sponsor information for this visitor.');
+  $config_entity->save();
+
+  $config_entity = $config_factory->getEditable('field.field.node.stanford_visitor.field_s_visitor_external_link');
+  $config_entity->set('description', 'Insert the text for the link');
+  $config_entity->set('settings.link_type', 16);
+  $config_entity->save();
+
+}

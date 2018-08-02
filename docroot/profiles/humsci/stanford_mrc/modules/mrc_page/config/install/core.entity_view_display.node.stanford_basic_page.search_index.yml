@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.stanford_basic_page.field_s_mrc_page_bricks
+    - field.field.node.stanford_basic_page.field_s_mrc_page_sidebar_block
+    - node.type.stanford_basic_page
+  module:
+    - block_field
+    - bricks
+    - ds
+    - user
+third_party_settings:
+  ds:
+    regions:
+      page_title:
+        - node_title
+      sidebar:
+        - field_s_mrc_page_sidebar_block
+      content:
+        - field_s_mrc_page_bricks
+    layout:
+      id: pattern_node_basic
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+        settings:
+          wrapper: h1
+          class: page-title
+          link: false
+_core:
+  default_config_hash: eCJfWs1L2OJlePnDzTtAIAuf7b9QberTFVdcVaNRMIQ
+id: node.stanford_basic_page.search_index
+targetEntityType: node
+bundle: stanford_basic_page
+mode: search_index
+content:
+  field_s_mrc_page_bricks:
+    weight: 3
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: bricks_nested
+    region: content
+  field_s_mrc_page_sidebar_block:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: block_field
+    region: sidebar
+hidden:
+  links: true

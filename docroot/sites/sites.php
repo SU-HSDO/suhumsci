@@ -58,6 +58,8 @@
 
 $humsci_sites = [
   'archaeology',
+  'francestanford',
+  'mrc',
 ];
 
 foreach ($humsci_sites as $site) {

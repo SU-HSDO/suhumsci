@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: mrc_news
+label: 'MRC News'
+type: 'canonical_entities:node'
+pattern: 'news/[node:title]'
+selection_criteria:
+  c9410459-e8b0-4492-9919-9b2c3c9330aa:
+    id: node_type
+    bundles:
+      stanford_news_item: stanford_news_item
+    negate: false
+    context_mapping:
+      node: node
+    uuid: c9410459-e8b0-4492-9919-9b2c3c9330aa
+selection_logic: and
+weight: -5
+relationships: {  }

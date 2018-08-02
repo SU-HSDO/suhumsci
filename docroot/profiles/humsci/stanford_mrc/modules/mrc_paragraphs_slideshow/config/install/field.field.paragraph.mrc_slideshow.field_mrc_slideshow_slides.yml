@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_mrc_slideshow_slides
+    - paragraphs.paragraphs_type.mrc_slide
+    - paragraphs.paragraphs_type.mrc_slideshow
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: y5wbeyIGvalihfYYvFBSr_MxiiisybvuKMkM0tmVhiU
+id: paragraph.mrc_slideshow.field_mrc_slideshow_slides
+field_name: field_mrc_slideshow_slides
+entity_type: paragraph
+bundle: mrc_slideshow
+label: Slides
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      mrc_slide: mrc_slide
+    target_bundles_drag_drop:
+      mrc_cta_buttons:
+        weight: 6
+        enabled: false
+      mrc_postcard:
+        weight: 7
+        enabled: false
+      mrc_slide:
+        enabled: true
+        weight: 8
+      wysiwyg:
+        weight: 9
+        enabled: false
+      mrc_slideshow:
+        weight: 10
+        enabled: false
+field_type: entity_reference_revisions

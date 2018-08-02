@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * mrc_yearonly.mdoule
+ */
+
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_theme().
+ */
+function mrc_yearonly_theme($existing, $type, $theme, $path) {
+  return [
+    'yearonly_academic' => [
+      'variables' => ['start_year' => NULL, 'end_year' => NULL],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function mrc_yearonly_views_data_alter(array &$data) {
+  $fields = FieldStorageConfig::loadMultiple();
+  /** @var FieldStorageConfig $field */
+  foreach ($fields as $field) {
+    if ($field->getType() == 'yearonly') {
+      // Add our sorting and filter plugins.
+      $key = $field->getTargetEntityTypeId() . '__' . $field->getName();
+      $data[$key][$field->getName() . '_value']['filter']['id'] = 'yearonly';
+      $data[$key][$field->getName() . '_value']['sort']['id'] = 'yearonly';
+    }
+  }
+}

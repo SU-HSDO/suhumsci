@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * mrc_display_modes.module
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Entity\EntityViewMode;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function mrc_display_modes_form_entity_view_mode_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\Core\Entity\Entity\EntityViewMode $view_mode */
+  $view_mode = $form_state->getFormObject()->getEntity();
+  $bundles = \Drupal::entityManager()
+    ->getBundleInfo($view_mode->getTargetType());
+
+  foreach ($bundles as &$bundle) {
+    $bundle = $bundle['label'];
+  }
+
+  $form['bundles'] = [
+    '#type' => 'checkboxes',
+    '#title' => t('Enable this view mode for the following types'),
+    '#options' => $bundles,
+    '#default_value' => $view_mode->getThirdPartySetting('mrc_display_modes', 'bundles') ?: [],
+  ];
+
+  $form['#entity_builders'][] = 'mrc_display_modes_form_entity_view_mode_add_form_builder';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function mrc_display_modes_form_entity_view_mode_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  mrc_display_modes_form_entity_view_mode_edit_form_alter($form, $form_state, $form_id);
+}
+
+function mrc_display_modes_form_entity_view_mode_add_form_builder($entity_type, EntityViewMode $view_mode, &$form, FormStateInterface $form_state) {
+  $bundles = array_filter($form_state->getValue('bundles'));
+  if (empty($bundles)) {
+    $view_mode->unsetThirdPartySetting('mrc_display_modes', 'bundles');
+    return;
+  }
+
+  $view_mode->setThirdPartySetting('mrc_display_modes', 'bundles', array_values($bundles));
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function mrc_display_modes_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Custom display modes aren't available.
+  if (empty($form['modes']['display_modes_custom']['#options'])) {
+    return;
+  }
+
+  /** @var \Drupal\Core\Entity\Entity\EntityViewDisplay $display */
+  $display = $form_state->getFormObject()->getEntity();
+  $entity_type = $display->getTargetEntityTypeId();
+
+  $view_mode_storage = \Drupal::entityTypeManager()
+    ->getStorage('entity_view_mode');
+
+  foreach (array_keys($form['modes']['display_modes_custom']['#options']) as $option) {
+    $view_mode = $view_mode_storage->load("$entity_type.$option");
+    $bundles = $view_mode->getThirdPartySetting('mrc_display_modes', 'bundles') ?: [];
+
+    // If the view mode is not configured for this bundle, remove it as an
+    // option.
+    if (!empty($bundles) && !in_array($display->getTargetBundle(), $bundles)) {
+      unset($form['modes']['display_modes_custom']['#options'][$option]);
+    }
+  }
+}

@@ -1,0 +1,76 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.stanford_basic_page.field_s_mrc_page_bricks
+    - field.field.node.stanford_basic_page.field_s_mrc_page_sidebar_block
+    - node.type.stanford_basic_page
+  module:
+    - bricks
+    - ds
+    - mrc_ds_blocks
+    - user
+third_party_settings:
+  mrc_ds_blocks:
+    'menu_block:main':
+      config:
+        provider: menu_block
+        admin_label: ''
+        label: 'Main navigation'
+        label_display: visible
+        level: '1'
+        depth: '0'
+        expand: 1
+        parent: 'main:'
+        label_type: root
+        follow: 1
+        follow_parent: '0'
+        suggestion: main
+      parent_name: ''
+      weight: 13
+      region: hidden
+    local_tasks_block:
+      config:
+        provider: core
+        admin_label: ''
+        label: Tabs
+        label_display: 0
+        primary: 1
+        secondary: 1
+      parent_name: ''
+      weight: 12
+      region: hidden
+  ds:
+    regions:
+      content:
+        - field_s_mrc_page_bricks
+    layout:
+      id: pattern_node_basic
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+_core:
+  default_config_hash: eCJfWs1L2OJlePnDzTtAIAuf7b9QberTFVdcVaNRMIQ
+id: node.stanford_basic_page.search_result
+targetEntityType: node
+bundle: stanford_basic_page
+mode: search_result
+content:
+  field_s_mrc_page_bricks:
+    type: bricks_nested
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings:
+      ds:
+        ds_limit: ''
+hidden:
+  field_s_mrc_page_sidebar_block: true
+  links: true

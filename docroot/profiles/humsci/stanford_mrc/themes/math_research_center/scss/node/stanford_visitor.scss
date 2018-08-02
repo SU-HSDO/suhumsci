@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+///
+/// VISITOR NODE STYLES
+///
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// Stanford Math Research Center
+@import
+  '../utilities/mixins/mixins';
+
+.stanford-visitor {
+  &.field-s-visitor-position-title {
+    font-weight: 600;
+  }
+
+  &.field-s-visitor-curr-inst {
+    @include margin(0.5em null null);
+  }
+
+  &.field-s-visitor-year-visited {
+    @include margin(0.5em null null);
+
+    > div:first-child {
+      float: left;
+      font-weight: 600;
+
+      &:after {
+        content: ":\00a0";
+      }
+    }
+
+    div:nth-child(2) > div {
+      display: inline-block;
+
+      &:after {
+        content: ", ";
+      }
+
+      &:last-child:after {
+        content: none;
+      }
+    }
+  }
+
+  &.field-s-visitor-research-area {
+    @include margin(0.5em null null);
+
+    > div:first-child {
+      float: left;
+      font-weight: 600;
+
+      &:after {
+        content: ":\00a0";
+      }
+    }
+  }
+
+  &.field-s-visitor-donor {
+    font-style: italic;
+    font-weight: 600;
+
+    > div:first-child {
+      float: left;
+      padding-right: 0.15em;
+    }
+  }
+
+  &.field-s-visitor-external-link {
+    @include margin(0.5em null null);
+
+    > div:first-child {
+      float: left;
+      padding-right: 0.15em;
+    }
+  }
+}

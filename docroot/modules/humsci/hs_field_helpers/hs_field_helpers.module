@@ -17,12 +17,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Component\Utility\Unicode;
+use Drupal\ui_patterns\UiPatterns;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
+use Drupal\ui_patterns\Element\PatternContext;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -99,12 +100,17 @@ function hs_field_helpers_field_formatter_info_alter(array &$info) {
   $info['list_default']['field_types'][] = 'display_mode_field';
 }
 
-//function hs_field_helpers_context
-
 /**
  * Implements hook_preprocess().
  */
 function hs_field_helpers_preprocess(&$variables, $hook) {
+  // UI Patterns cleanup to remove regions that don't have anything to render.
+  if (isset($variables['context']) && $variables['context'] instanceof PatternContext) {
+    $pattern_id = str_replace('pattern_', '', $hook);
+    _hs_field_helpers_cleanup_pattern_regions($variables, $pattern_id);
+  }
+
+  // Layout Builder cleanup.
   // Each layout has its own preprocess hook. So we have to use generic hook.
   if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
 
@@ -129,6 +135,36 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
       if (empty(Element::children($variables['content'][$region]))) {
         unset($variables['content'][$region]);
       }
+    }
+  }
+}
+
+/**
+ * Remove empty regions to prevent unwanted markup in patterns.
+ *
+ * @param array $pattern
+ *   Pattern render array.
+ * @param $pattern_id
+ *   Pattern ID being used.
+ */
+function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
+  $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
+  foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
+    if (empty($pattern[$region])) {
+      continue;
+    }
+    // Some blocks such as a menu block don't have any output, but the layout
+    // still outputs an empty container for the block that has no content.
+    // So lets find out if they are empty, and clean them up.
+    foreach (Element::children($pattern[$region]) as $item_id) {
+      if (!isset($pattern[$region][$item_id]['#field_type'])) {
+        unset($pattern[$region][$item_id]);
+      }
+    }
+
+    // Clean up empty regions after we've cleaned up the blocks in the region.
+    if (empty(Element::children($pattern[$region]))) {
+      unset($pattern[$region]);
     }
   }
 }

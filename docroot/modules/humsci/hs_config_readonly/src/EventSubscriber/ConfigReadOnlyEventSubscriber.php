@@ -7,7 +7,10 @@ use Drupal\config_filter\Plugin\ConfigFilterPluginManager;
 use Drupal\config_readonly\ConfigReadonlyWhitelistTrait;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\ctools\Wizard\EntityFormWizardBase;
+use Drupal\ctools\Wizard\EntityFormWizardInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Entity\EntityFormInterface;
@@ -38,6 +41,11 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   protected $configFilterManager;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Ignore the configurations form these modules.
    *
    * @var array
@@ -50,6 +58,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   protected $readOnlyFormIds = [
     'config_single_import_form',
     'system_modules_uninstall',
+    //    'entity_browser_general_info_config_form',
   ];
 
   /**
@@ -65,7 +74,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, FilteredStorageInterface $config_storage, ConfigFilterPluginManager $filter_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, FilteredStorageInterface $config_storage, ConfigFilterPluginManager $filter_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->moduleHandler = $module_handler;
     $this->configStorage = $config_storage;
     $this->configFilterManager = $filter_manager;
@@ -73,6 +82,7 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
     $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;
     $this->bypassFormIds = $config->get('bypass_form_ids') ?: $this->bypassFormIds;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -122,6 +132,20 @@ class ConfigReadOnlyEventSubscriber implements EventSubscriberInterface {
         $mark_form_read_only = $this->configIsLocked($name);
         // If all config is in the whitelist, do not block the form.
         $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
+      }
+    }
+
+    if (!$mark_form_read_only && $form_object instanceof EntityFormWizardBase) {
+      try {
+        $name = $this->entityTypeManager->getStorage($form_object->getEntityType())
+          ->load($form_object->getMachineName())->getConfigDependencyName();
+        // Block config from a module.
+        $mark_form_read_only = $this->configIsLocked($name);
+        // If all config is in the whitelist, do not block the form.
+        $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
+      }
+      catch (\Exception $e) {
+        // Entity doesn't exist so theres nothing to do.
       }
     }
 

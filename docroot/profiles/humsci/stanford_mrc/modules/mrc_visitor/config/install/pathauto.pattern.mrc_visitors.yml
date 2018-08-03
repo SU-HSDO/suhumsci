@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: mrc_visitors
+label: 'MRC Visitors'
+type: 'canonical_entities:node'
+pattern: 'visitors/[node:title]'
+selection_criteria:
+  ee811a54-417e-4a73-acd3-06e664073930:
+    id: node_type
+    bundles:
+      stanford_visitor: stanford_visitor
+    negate: false
+    context_mapping:
+      node: node
+    uuid: ee811a54-417e-4a73-acd3-06e664073930
+selection_logic: and
+weight: -5
+relationships: {  }

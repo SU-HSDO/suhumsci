@@ -1,0 +1,30 @@
+
+{% set attributes = attributes.addClass('mrc-news-recent-card') %}
+
+<div{{ attributes }}>
+  <div class="mrc-news-recent__item">
+    {% if image %}
+      <div class="mrc-news-recent__img">
+        {{ image }}
+      </div>
+    {% endif %}
+    <div class="mrc-news-recent__content">
+      {% if title %}
+        <h2 class="mrc-news-recent__title">{{ title }}</h2>
+      {% endif %}
+      <div class="mrc-news-recent__date-source">
+        {% if date %}
+          <div class="mrc-news-recent__date">{{ date }}</div>
+        {% endif %}
+
+        {% if date and source %}
+          &nbsp;|&nbsp;
+        {% endif %}
+
+        {% if source %}
+          <div class="mrc-news-recent__source">{{ source }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

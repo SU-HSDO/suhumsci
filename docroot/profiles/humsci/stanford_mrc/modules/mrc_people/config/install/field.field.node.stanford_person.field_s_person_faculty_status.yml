@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_s_person_faculty_status
+    - node.type.stanford_person
+    - taxonomy.vocabulary.person_faculty_status
+id: node.stanford_person.field_s_person_faculty_status
+field_name: field_s_person_faculty_status
+entity_type: node
+bundle: stanford_person
+label: 'Faculty Status'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      person_faculty_status: person_faculty_status
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

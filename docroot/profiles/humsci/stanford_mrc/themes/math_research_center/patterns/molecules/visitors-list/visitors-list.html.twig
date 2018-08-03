@@ -1,0 +1,26 @@
+
+{% set attributes = attributes.addClass('mrc-visitors-list') %}
+
+<div{{ attributes }}>
+  <div class="mrc-visitors-list__col1">
+    {% if name %}
+      <h2 class="mrc-visitors-list__name">{{ name }}</h2>
+    {% endif %}
+    {% if title %}
+      <div class="mrc-visitors-list__title">{{ title }}</div>
+    {% endif %}
+  </div>
+  <div class="mrc-visitors-list__col2">
+    {% if university %}
+      <div class="mrc-visitors-list__university">{{ university }}</div>
+    {% endif %}
+    {% if academic_year %}
+      <div class="mrc-visitors-list__academic-year">{{ academic_year }}</div>
+    {% endif %}
+  </div>
+  <div class="mrc-visitors-list__col3">
+    {% if research_areas %}
+      <div class="mrc-visitors-list__research-area">{{ research_areas }}</div>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_s_person_faculty_interests
+    - node.type.stanford_person
+    - taxonomy.vocabulary.person_faculty_interests
+id: node.stanford_person.field_s_person_faculty_interests
+field_name: field_s_person_faculty_interests
+entity_type: node
+bundle: stanford_person
+label: 'Fields of Interest'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      person_faculty_interests: person_faculty_interests
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

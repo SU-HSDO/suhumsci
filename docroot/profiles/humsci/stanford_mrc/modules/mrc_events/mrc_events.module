@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ * mrc_events.mdoule
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_entity_delete().
+ */
+function mrc_events_entity_delete(EntityInterface $entity) {
+  if ($entity instanceof Node && $entity->bundle() == 'stanford_event') {
+    $speakers = $entity->get('field_s_event_speaker')->getValue();
+    foreach ($speakers as $speaker_value) {
+      $speaker = \Drupal::entityTypeManager()
+        ->getStorage('event_collections')
+        ->load($speaker_value['target_id']);
+      if ($speaker) {
+        $speaker->delete();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function mrc_events_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  if ($element['#entity_type'] == 'node' && $element['#bundle'] == 'stanford_event') {
+    /** @var \Drupal\Core\Field\WidgetBaseInterface $widget */
+    $widget = $context['widget'];
+    if ($widget->getBaseId() == 'daterange_datelist') {
+
+      // Adds wrappers so we can easily find the parts with jQuery.
+      $element['value']['#prefix'] = '<div class="start-date">';
+      $element['value']['#suffix'] = '</div>';
+      $element['end_value']['#prefix'] = '<div class="end-date">';
+      $element['end_value']['#suffix'] = '</div>';
+
+      $show_end = FALSE;
+
+      // Compare start and end dates to determine default checkbox value.
+      if (!empty($element['value']['#default_value']) && !empty($element['end_value']['#default_value'])) {
+        /** @var \DateInterval $diff */
+        $diff = $element['value']['#default_value']->diff($element['end_value']['#default_value']);
+        $show_end = (bool) (int) $diff->format('%Y%M%D%H%I%S');
+      }
+
+      $element['show_end'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Show End Date'),
+        '#default_value' => $show_end,
+        '#attributes' => ['class' => ['show-end-date']],
+      ];
+
+      $element['#attached']['library'][] = 'mrc_events/admin';
+      array_unshift($element['#element_validate'], 'mrc_events_node_validate_date');
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+function mrc_events_preprocess(&$variables, $hook) {
+  // Limit the number of years in the date field.
+  if ($hook == 'select' && strpos($variables['element']['#name'], 'field_s_event_date') !== FALSE) {
+    if (strpos($variables['element']['#name'], '[year]') !== FALSE) {
+      $this_year = (int) date('Y');
+      foreach ($variables['options'] as $key => $option) {
+        if (!(int) $option['value']) {
+          continue;
+        }
+
+        $diff = abs($this_year - $option['value']);
+        if ($diff > 10) {
+          unset($variables['options'][$key]);
+        }
+      }
+    }
+
+  }
+}
+
+/**
+ * Validation for event dates in nodes form.
+ */
+function mrc_events_node_validate_date(array &$element, FormStateInterface $form_state) {
+
+  $date = $form_state->getValue('field_s_event_date');
+
+  // If the start value is populated but end is empty, copy the start date
+  // to the end date to pass validation.
+  if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
+    $date[0]['end_value'] = $date[0]['value'];
+    $element['end_value']['#value']['object'] = $date[0]['end_value'];
+
+    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+    $form_state->setValue('field_s_event_date', $date);
+  }
+}

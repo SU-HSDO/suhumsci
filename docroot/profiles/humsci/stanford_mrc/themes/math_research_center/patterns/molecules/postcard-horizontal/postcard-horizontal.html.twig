@@ -1,0 +1,30 @@
+
+{% set attributes = attributes.addClass('mrc-postcard--horizontal') %}
+
+<div{{ attributes }}>
+  {% if image %}
+    <div class="mrc-postcard__img">
+      {{ image }}
+    </div>
+  {% endif %}
+
+  <div class="mrc-postcard__content">
+    {% if super_head %}
+      <div class="mrc-postcard__superhead">{{ super_head }}</div>
+    {% endif %}
+    {% if title %}
+      <h2 class="mrc-postcard__title">{{ title }}</h2>
+    {% endif %}
+    {% if description %}
+      <div>
+        {{ description }}
+      </div>
+    {% endif %}
+
+    {% if button %}
+      <div class="mrc-postcard__button">
+        {{ button }}
+      </div>
+    {% endif %}
+  </div>
+</div>

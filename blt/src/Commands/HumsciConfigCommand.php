@@ -47,15 +47,6 @@ class HumsciConfigCommand extends ConfigCommand {
   }
 
   /**
-   * Toggle modules first
-   *
-   * @hook pre-command drupal:config:import
-   */
-  public function preConfigImport() {
-    $this->invokeCommand('drupal:toggle:modules');
-  }
-
-  /**
    * Imports configuration from the config directory according to cm.strategy.
    *
    * @command drupal:config:import
@@ -162,30 +153,6 @@ class HumsciConfigCommand extends ConfigCommand {
     // Runs a second import to ensure splits are
     // both defined and imported.
     $task->drush("config-import")->arg($cm_core_key)->option('partial');
-  }
-
-  /**
-   * Import any missing entity form/display configs since they are ignored.
-   *
-   * @hook post-command drupal:config:import
-   */
-  public function postConfigImport() {
-    $this->yell('Importing new form and display configuration items that don\'t exist in the database because they are ignored in config.ignore');
-    $result = $this->taskDrush()->drush('config-missing-report')->args([
-      'type',
-      'system.all',
-    ])->option('format', 'json')->run();
-    $configs = json_decode($result->getMessage(), TRUE);
-
-    // Since we ignore all the entity form and entity display configs, drush cim
-    // does not import any new ones. So here we are importing any of those
-    // missing configs if they are new.
-    foreach ($configs as $item) {
-      $name = $item['item'];
-      if (strpos($name, 'core.entity_') !== FALSE) {
-        $this->taskDrush()->drush('config:import-missing')->arg($name)->run();
-      }
-    }
   }
 
 }

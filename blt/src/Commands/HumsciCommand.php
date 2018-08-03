@@ -12,15 +12,6 @@ use Consolidation\AnnotatedCommand\CommandData;
 class HumsciCommand extends AcHooksCommand {
 
   /**
-   * Log in when drupal:sync finishes.
-   *
-   * @hook post-command drupal:sync
-   */
-  public function postDrupalSync($result, CommandData $commandData) {
-    $this->taskDrush()->drush('uli')->run();
-  }
-
-  /**
    * Run cron on all sites.
    *
    * @command drupal:cron
@@ -321,6 +312,66 @@ class HumsciCommand extends AcHooksCommand {
         ->drush("rsync @self:../keys/ @swshumsci.$env:$key_dir")
         ->run();
     }
+  }
+
+  /**
+   * Get encryption keys from acquia.
+   *
+   * @command humsci:csr
+   */
+  public function humsciCsr() {
+    //    $this->invokeCommand('humsci:keys');
+    $keys_dir = $this->getConfigValue('repo.root') . '/keys/ssl';
+    $conf = parse_ini_file("$keys_dir/openssl.conf", TRUE);
+
+    $this->yell('Existing Domains');
+    $this->say(implode("\n", $conf['alt_names']));
+    while ($domain = $this->askQuestion('What url should be added to the CSR? Leave empty to end.')) {
+      $key = 'DNS.' . (count($conf['alt_names']) + 1);
+      $conf['alt_names'][$key] = $domain;
+    }
+
+    file_put_contents("$keys_dir/openssl.conf", $this->arrayToIni($conf));
+
+    $csr_file = date('Y-m-d') . '_swshumsci.csr';
+    $command = "openssl req -nodes -newkey rsa:2048 -sha256 -keyout humsci.key \
+                -subj '/C=US/ST=California/L=Palo Alto/O=Stanford University/OU=Application Support Operations/CN=swshumsci.stanford.edu' \
+                -config openssl.conf -out $csr_file";
+    $this->say(shell_exec("cd $keys_dir && $command"));
+  }
+
+  /**
+   * Convert an array to an ini file string.
+   *
+   * @param array $a
+   *   Data to convert.
+   * @param array $parent
+   *   Parent during recursion.
+   *
+   * @return string
+   *   Ini file string.
+   */
+  protected function arrayToIni(array $a, array $parent = array()) {
+    $out = '';
+    foreach ($a as $k => $v) {
+      if (is_array($v)) {
+        //subsection case
+        //merge all the sections into one array...
+        $sec = array_merge((array) $parent, (array) $k);
+        //add section information to the output
+        $out .= PHP_EOL . '[' . join('.', $sec) . ']' . PHP_EOL;
+        //recursively traverse deeper
+        $out .= $this->arrayToIni($v, $sec);
+      }
+      else {
+        //plain key->value case
+        if(strpos($v, '(') !== FALSE || strpos($v, ')') !== fALSE){
+          $v = "\"$v\"";
+        }
+        $out .= "$k = $v" . PHP_EOL;
+      }
+    }
+    return $out;
   }
 
 }

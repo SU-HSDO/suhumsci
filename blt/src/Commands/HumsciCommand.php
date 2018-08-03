@@ -320,7 +320,7 @@ class HumsciCommand extends AcHooksCommand {
    * @command humsci:csr
    */
   public function humsciCsr() {
-    $this->invokeCommand('humsci:keys');
+    //    $this->invokeCommand('humsci:keys');
     $keys_dir = $this->getConfigValue('repo.root') . '/keys/ssl';
     $conf = parse_ini_file("$keys_dir/openssl.conf", TRUE);
 
@@ -333,10 +333,18 @@ class HumsciCommand extends AcHooksCommand {
 
     file_put_contents("$keys_dir/openssl.conf", $this->arrayToIni($conf));
 
-    $csr_file = date('Y-m-d') . '_swshumsci.csr';
-    $command = "openssl req -nodes -newkey rsa:2048 -sha256 -keyout humsci.key \
-                -subj '/C=US/ST=California/L=Palo Alto/O=Stanford University/OU=Application Support Operations/CN=swshumsci.stanford.edu' \
-                -config openssl.conf -out $csr_file";
+    $file_prefix = date('Y-m-d') . '/' . date('H:i:s');
+    if (!file_exists("$keys_dir/$file_prefix")) {
+      mkdir("$keys_dir/$file_prefix", 0777, TRUE);
+    }
+
+    $csr_file = "$file_prefix/swshumsci.csr";
+    $key_file = "$file_prefix/swshumsci.key";
+    file_put_contents("$keys_dir/$file_prefix/alt_names.txt", implode(', ', $conf['alt_names']));
+
+    $command = "openssl req -nodes -newkey rsa:2048 -sha256 -keyout $key_file \
+                    -subj '/C=US/ST=California/L=Palo Alto/O=Stanford University/OU=Application Support Operations/CN=swshumsci.stanford.edu' \
+                    -config openssl.conf -out $csr_file";
     $this->say(shell_exec("cd $keys_dir && $command"));
     // Send the new conf and csr to acquia for safe keeping.
     $this->invokeCommand('humsci:keys:send');

@@ -320,7 +320,7 @@ class HumsciCommand extends AcHooksCommand {
    * @command humsci:csr
    */
   public function humsciCsr() {
-    //    $this->invokeCommand('humsci:keys');
+    $this->invokeCommand('humsci:keys');
     $keys_dir = $this->getConfigValue('repo.root') . '/keys/ssl';
     $conf = parse_ini_file("$keys_dir/openssl.conf", TRUE);
 
@@ -338,6 +338,8 @@ class HumsciCommand extends AcHooksCommand {
                 -subj '/C=US/ST=California/L=Palo Alto/O=Stanford University/OU=Application Support Operations/CN=swshumsci.stanford.edu' \
                 -config openssl.conf -out $csr_file";
     $this->say(shell_exec("cd $keys_dir && $command"));
+    // Send the new conf and csr to acquia for safe keeping.
+    $this->invokeCommand('humsci:keys:send');
   }
 
   /**
@@ -365,7 +367,7 @@ class HumsciCommand extends AcHooksCommand {
       }
       else {
         //plain key->value case
-        if(strpos($v, '(') !== FALSE || strpos($v, ')') !== fALSE){
+        if (strpos($v, '(') !== FALSE || strpos($v, ')') !== FALSE) {
           $v = "\"$v\"";
         }
         $out .= "$k = $v" . PHP_EOL;

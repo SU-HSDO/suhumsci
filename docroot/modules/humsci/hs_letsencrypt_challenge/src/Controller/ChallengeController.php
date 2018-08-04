@@ -51,10 +51,8 @@ class ChallengeController extends ControllerBase {
       $response->setContent($challenge);
     }
     if ($key) {
-      $wellknown_directory = \Drupal::service('file_system')
-        ->realpath('public://.well-known/acme-challenge');
-      if (file_exists("$wellknown_directory/$key")) {
-        $response->setContent(file_get_contents("$wellknown_directory/$key"));
+      if (file_exists("/mnt/gfs/swshumscidev/files/$key")) {
+        $response->setContent(file_get_contents("/mnt/gfs/swshumsci.dev/files/$key"));
       }
     }
 

@@ -3,6 +3,7 @@
 namespace Drupal\letsencrypt_challenge\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,12 +51,15 @@ class ChallengeController extends ControllerBase {
     if ($challenge = $this->state->get('letsencrypt_challenge.challenge', '')) {
       $response->setContent($challenge);
     }
-    if ($key) {
-      if (file_exists("/mnt/gfs/swshumscidev/files/.well-known/acme-challenge/$key")) {
-        $response->setContent(file_get_contents("/mnt/gfs/swshumsci.dev/files/.well-known/acme-challenge/$key"));
+
+    // Automated challenges get uploaded to a directory. Here we are grabbing
+    // that file from the directory and using it as the contents.
+    if ($directory = Settings::get('letsencrypt_challenge_directory', '')) {
+      $directory = rtrim($directory, '/ ');
+      if ($key && file_exists("$directory/.well-known/acme-challenge/$key")) {
+        $response->setContent(file_get_contents("$directory/.well-known/acme-challenge/$key"));
       }
     }
-
     return $response;
   }
 

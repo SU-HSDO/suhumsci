@@ -51,8 +51,8 @@ class ChallengeController extends ControllerBase {
       $response->setContent($challenge);
     }
     if ($key) {
-      if (file_exists("/mnt/gfs/swshumscidev/files/$key")) {
-        $response->setContent(file_get_contents("/mnt/gfs/swshumsci.dev/files/$key"));
+      if (file_exists("/mnt/gfs/swshumscidev/files/.well-known/acme-challenge/$key")) {
+        $response->setContent(file_get_contents("/mnt/gfs/swshumsci.dev/files/.well-known/acme-challenge/$key"));
       }
     }
 

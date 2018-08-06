@@ -58,6 +58,10 @@ class HumsciHook extends BltTasks {
    * @hook post-command recipes:multisite:init
    */
   public function postMultisite() {
-    $this->invokeCommand('humsci:csr');
+    $add_domain = $this->askDefault('Would you like to add domains at this time?', 'y');
+    if (strtolower($add_domain[0]) == 'y') {
+      $this->invokeCommand('humsci:add-domain');
+    }
   }
+
 }

@@ -120,7 +120,7 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 2
+            weight: 4
           31123cde-5602-4989-bf2f-d01681c70abc:
             uuid: 31123cde-5602-4989-bf2f-d01681c70abc
             region: main_above
@@ -137,10 +137,12 @@ third_party_settings:
                 third_party_settings:
                   field_formatter_class:
                     class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 4
+            weight: 5
           cf81b2bb-83c1-4179-aaa0-747938d91a94:
             uuid: cf81b2bb-83c1-4179-aaa0-747938d91a94
             region: main_above
@@ -151,14 +153,16 @@ third_party_settings:
               label_display: '0'
               formatter:
                 label: hidden
-                type: string
+                type: entity_title_heading
                 settings:
-                  link_to_entity: false
+                  tag: h3
                 third_party_settings:
                   field_formatter_class:
                     class: ''
                   ds:
                     ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
@@ -205,7 +209,7 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 5
+            weight: 8
           8e4bc54b-d81e-4c42-a469-45b8ecef0729:
             uuid: 8e4bc54b-d81e-4c42-a469-45b8ecef0729
             region: main_below
@@ -218,7 +222,280 @@ third_party_settings:
               items_per_page: none
               context_mapping: {  }
             additional: {  }
+            weight: 7
+          9517dfef-610f-47a7-8f3b-73a84fdc2e6f:
+            uuid: 9517dfef-610f-47a7-8f3b-73a84fdc2e6f
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_student_study'
+              label: 'Field of Study'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: entity_reference_label
+                settings:
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  ds:
+                    ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 11
+          5ca1fb3e-d8c0-49b4-aa0b-143421ed97a4:
+            uuid: 5ca1fb3e-d8c0-49b4-aa0b-143421ed97a4
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_faculty_interest'
+              label: 'Fields of Interest'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: entity_reference_label
+                settings:
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  ds:
+                    ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 10
+          5133b417-43d2-4b87-b554-2acac0cf09da:
+            uuid: 5133b417-43d2-4b87-b554-2acac0cf09da
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_education'
+              label: 'Degrees / Education'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  ds:
+                    ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
             weight: 2
+          2c82473c-762f-466b-8378-0c6b85b4b555:
+            uuid: 2c82473c-762f-466b-8378-0c6b85b4b555
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_office_hours'
+              label: 'Office Hours'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  ds:
+                    ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 3
+          266d0c36-ed22-4bc0-970d-6a0b6b324188:
+            uuid: 266d0c36-ed22-4bc0-970d-6a0b6b324188
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_telephone'
+              label: Telephone
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 6
+          e1c16ca1-8949-41f4-b1ad-b8c6c421af04:
+            uuid: e1c16ca1-8949-41f4-b1ad-b8c6c421af04
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_student_cohort'
+              label: Cohort
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: datetime_custom
+                settings:
+                  timezone_override: ''
+                  date_format: 'Y'
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 12
+          4459bd69-99ad-43cd-8142-aff24dd62cc8:
+            uuid: 4459bd69-99ad-43cd-8142-aff24dd62cc8
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_student_grad'
+              label: 'Graduation Year'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: datetime_custom
+                settings:
+                  timezone_override: ''
+                  date_format: 'Y'
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 13
+          378a799d-596c-4242-a845-0f11d24290ec:
+            uuid: 378a799d-596c-4242-a845-0f11d24290ec
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_mail'
+              label: 'Mailing Address'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: address_default
+                settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 5
+          0144cad2-b0f4-43e2-8847-78cdba464501:
+            uuid: 0144cad2-b0f4-43e2-8847-78cdba464501
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_mail_code'
+              label: 'Mail Code'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 6
+          f06e0aad-a1b7-4032-8a51-7c03f3934f52:
+            uuid: f06e0aad-a1b7-4032-8a51-7c03f3934f52
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_student_dissert'
+              label: 'Dissertation Title'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: inline
+                type: string
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 4
+          b697bed6-b63e-43bc-8380-4e6a6964ca51:
+            uuid: b697bed6-b63e-43bc-8380-4e6a6964ca51
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_faculty_status'
+              label: 'Faculty Status'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_label
+                settings:
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 2
+          f8fc4845-54bb-4411-8e43-05ba99f7a4fb:
+            uuid: f8fc4845-54bb-4411-8e43-05ba99f7a4fb
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_staff_type'
+              label: 'Staff Type'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_reference_label
+                settings:
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 3
           173f1a9e-ccfd-403e-98b4-f9ad91b434d7:
             uuid: 173f1a9e-ccfd-403e-98b4-f9ad91b434d7
             region: main_above
@@ -238,7 +515,7 @@ third_party_settings:
                   target: '0'
                 third_party_settings:
                   field_formatter_class:
-                    class: ''
+                    class: decanter-more-link
                   ds:
                     ds_limit: ''
                   hs_field_helpers:
@@ -246,7 +523,7 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
-            weight: 3
+            weight: 9
     enabled: true
     allow_custom: false
 _core:

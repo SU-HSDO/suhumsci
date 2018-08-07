@@ -60,14 +60,16 @@ $humsci_sites = [
   'archaeology',
   'francestanford',
   'mrc',
+  'swshumsci-sandbox',
 ];
 
 foreach ($humsci_sites as $site) {
-  $sites["$site.suhumsci.loc"] = $site;
-  $sites["$site-dev.stanford.edu"] = $site;
-  $sites["$site-stage.stanford.edu"] = $site;
-  $sites["$site-prod.stanford.edu"] = $site;
-  $sites["$site.stanford.edu"] = $site;
+  $directory = preg_replace("/[^\da-z]/", "_", $site);;
+  $sites["$site.suhumsci.loc"] = $directory;
+  $sites["$site-dev.stanford.edu"] = $directory;
+  $sites["$site-stage.stanford.edu"] = $directory;
+  $sites["$site-prod.stanford.edu"] = $directory;
+  $sites["$site.stanford.edu"] = $directory;
 }
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

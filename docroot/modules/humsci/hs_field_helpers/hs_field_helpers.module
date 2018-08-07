@@ -150,14 +150,15 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
   $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
-    if (empty($pattern[$region])) {
+    if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
       continue;
     }
     // Some blocks such as a menu block don't have any output, but the layout
     // still outputs an empty container for the block that has no content.
     // So lets find out if they are empty, and clean them up.
     foreach (Element::children($pattern[$region]) as $item_id) {
-      if (!isset($pattern[$region][$item_id]['#field_type'])) {
+      $item = $pattern[$region][$item_id];
+      if (empty($item['#field_type']) && empty($item['#theme']) && empty($item['#type'])) {
         unset($pattern[$region][$item_id]);
       }
     }

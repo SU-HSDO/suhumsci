@@ -539,7 +539,7 @@ class HumsciCommand extends AcHooksCommand {
         $file = "$primary_domain.key";
         break;
       case 'Intermediate Certificates':
-        $file = 'fullchain.cer';
+        $file = 'ca.cer';
         break;
       default:
         $file = "$primary_domain.cer";

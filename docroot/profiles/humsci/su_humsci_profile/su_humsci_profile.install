@@ -102,3 +102,14 @@ function su_humsci_profile_update_8003() {
   $module_installer = \Drupal::service('module_installer');
   $module_installer->uninstall(['search']);
 }
+
+/**
+ * Invalidate sample content.
+ */
+function su_humsci_profile_update_8004() {
+  \Drupal::database()
+    ->update('key_value_expire')
+    ->fields(['expire' => 0])
+    ->condition('collection', 'tempstore.shared.layout_builder.sample_entity')
+    ->execute();
+}

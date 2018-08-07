@@ -44,8 +44,7 @@ class HumsciHook extends BltTasks {
     // Since we ignore all the entity form and entity display configs, drush cim
     // does not import any new ones. So here we are importing any of those
     // missing configs if they are new.
-    foreach ($configs as $item) {
-      $name = $item['item'];
+    foreach ($configs as $name) {
       if (strpos($name, 'core.entity_') !== FALSE) {
         $this->taskDrush()->drush('config:import-missing')->arg($name)->run();
       }
@@ -58,6 +57,10 @@ class HumsciHook extends BltTasks {
    * @hook post-command recipes:multisite:init
    */
   public function postMultisite() {
-    $this->invokeCommand('humsci:csr');
+    $add_domain = $this->askDefault('Would you like to add domains at this time?', 'y');
+    if (strtolower($add_domain[0]) == 'y') {
+      $this->invokeCommand('humsci:add-domain');
+    }
   }
+
 }

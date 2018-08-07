@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_academic_career
     - field.field.node.hs_course.field_hs_course_academic_year
     - field.field.node.hs_course.field_hs_course_code
+    - field.field.node.hs_course.field_hs_course_explore_tags
     - field.field.node.hs_course.field_hs_course_grading
     - field.field.node.hs_course.field_hs_course_id
     - field.field.node.hs_course.field_hs_course_link
@@ -112,6 +113,15 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_hs_course_explore_tags:
+    weight: 27
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_hs_course_grading:
     type: string_textfield
     weight: 5

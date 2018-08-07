@@ -148,26 +148,46 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
  *   Pattern ID being used.
  */
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
-  $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
+  try {
+    $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
+  }
+  catch (Exception $e) {
+    // No pattern found.
+    return;
+  }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
       continue;
     }
-    // Some blocks such as a menu block don't have any output, but the layout
-    // still outputs an empty container for the block that has no content.
-    // So lets find out if they are empty, and clean them up.
-    foreach (Element::children($pattern[$region]) as $item_id) {
-      $item = $pattern[$region][$item_id];
-      if (empty($item['#field_type']) && empty($item['#theme']) && empty($item['#type'])) {
-        unset($pattern[$region][$item_id]);
-      }
-    }
-
-    // Clean up empty regions after we've cleaned up the blocks in the region.
-    if (empty(Element::children($pattern[$region]))) {
+    if (!_hs_field_helpers_render_array_has_content($pattern[$region])) {
       unset($pattern[$region]);
     }
   }
+}
+
+/**
+ * Find out if an element has content without actually rendering it out.
+ *
+ * @param mixed $data
+ *   Element to check without rendering.
+ *
+ * @return bool
+ *   Has something to trigger rendering.
+ */
+function _hs_field_helpers_render_array_has_content($data) {
+  if (!is_array($data)) {
+    return FALSE;
+  }
+
+  if (isset($data['#field_type']) || isset($data['#theme']) || isset($data['#type']) || isset($data['#markup'])) {
+    return TRUE;
+  }
+  foreach (Element::children($data) as $item) {
+    if (_hs_field_helpers_render_array_has_content($data[$item])) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
 
 /**

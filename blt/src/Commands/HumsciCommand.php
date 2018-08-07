@@ -487,11 +487,11 @@ class HumsciCommand extends AcHooksCommand {
     else {
       while ($new_domain = $this->askQuestion('New Domain? Leave empty to create cert')) {
         if (strpos($new_domain, '.stanford.edu') === FALSE) {
-          $this->say('Invalid domain');
+          $this->say('Invalid domain. Must be a stanford domain.');
           continue;
         }
-        if (strpos($new_domain, 'http') === FALSE) {
-          $this->say('Invalid domain');
+        if (strpos($new_domain, 'http') !== FALSE) {
+          $this->say('Invalid domain. Do not include the domain protocol.');
           continue;
         }
         $domains [] = trim($new_domain, ' /\\');

@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * hs_publications.module
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function hs_publications_publications_collections_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if (!empty($build['field_hs_publication_author'])) {
+    unset($build['title']);
+  }
+}

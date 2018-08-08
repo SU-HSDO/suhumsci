@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.hs_course.field_hs_course_academic_career
     - field.field.node.hs_course.field_hs_course_academic_year
     - field.field.node.hs_course.field_hs_course_code
+    - field.field.node.hs_course.field_hs_course_explore_tags
     - field.field.node.hs_course.field_hs_course_grading
     - field.field.node.hs_course.field_hs_course_id
     - field.field.node.hs_course.field_hs_course_link
@@ -505,6 +506,22 @@ third_party_settings:
             additional:
               field_name: field_hs_course_academic_career
             weight: 19
+          6fed084f-8afe-4e81-b523-59a03d581ff0:
+            uuid: 6fed084f-8afe-4e81-b523-59a03d581ff0
+            region: main
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:hs_course:field_hs_course_explore_tags'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 20
 id: node.hs_course.default
 targetEntityType: node
 bundle: hs_course
@@ -516,6 +533,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: list_default
+    region: main
+  field_hs_course_explore_tags:
+    weight: 102
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: main
   links:
     weight: 100

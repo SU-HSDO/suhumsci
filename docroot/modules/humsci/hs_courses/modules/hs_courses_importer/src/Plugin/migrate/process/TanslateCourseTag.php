@@ -68,40 +68,9 @@ class TanslateCourseTag extends ProcessPluginBase implements ContainerFactoryPlu
     // A translation entity was not found, and we want to ignore the value if
     // no translation was found.
     if (isset($this->configuration['ignore_empty']) && $this->configuration['ignore_empty']) {
-      try {
-        $this->createMissingEntity($value);
-      }
-      catch (\Exception $e) {
-        // Nothing to do.
-      }
       return NULL;
     }
     return $value;
-  }
-
-  /**
-   * Create a missing translation tag for quick administer.
-   *
-   * @param string $name
-   *   The label of the tag.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createMissingEntity($name) {
-    $id = preg_replace('/[^a-z0-9_]+/', '_', strtolower($name));
-    $unique_id = $id;
-    $increment = 0;
-    // Make sure we have a unique ID when trying to create the entity.
-    while ($this->tagTranslationStorage->load($unique_id)) {
-      $unique_id = "{$id}_{$increment}";
-      $increment++;
-    }
-
-    $entity = $this->tagTranslationStorage->create([
-      'id' => $id,
-      'label' => $name,
-    ]);
-    $entity->save();
   }
 
 }

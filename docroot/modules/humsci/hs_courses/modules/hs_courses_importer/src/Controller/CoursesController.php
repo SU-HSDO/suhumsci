@@ -62,7 +62,7 @@ class CoursesController extends ControllerBase {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function setCourseDom() {
-    $url = 'http://explorecourses.stanford.edu/search?q=ARCHLGY&view=xml-20140630&collapse=&filter-departmentcode-ARCHLGY=on&filter-coursestatus-Active=on&filter-catalognumber-ARCHLGY=on';
+    $url = 'http://explorecourses.stanford.edu/search?view=xml-20140630&view=catalog-20140630&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q=ARCHLGY%3A';
     $config = $this->config('hs_courses_importer.importer_settings');
     if ($config_url = $config->get('url')) {
       $url = $config_url;

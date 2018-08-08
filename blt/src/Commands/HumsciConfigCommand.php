@@ -142,6 +142,8 @@ class HumsciConfigCommand extends ConfigCommand {
 
     // Local environments we don't want all the custom site created configs.
     if (($this->getConfigValue('environment') == 'local' || $this->getConfigValue('environment') == 'dev') && !$partial) {
+      $this->taskDrush()->drush('sqlq')->arg('truncate webform_submission')->run();
+      $this->taskDrush()->drush('sqlq')->arg('truncate webform_submission_data')->run();
       $task->drush("config-import")->arg($cm_core_key);
       // Runs a second import to ensure splits are
       // both defined and imported.

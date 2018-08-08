@@ -107,15 +107,16 @@ module.exports = function(grunt) {
           // conditionally using logic built in to the theme template or module.
 
           // BASE
-          'css/base/index.css':   'scss/base/index.scss',
-          'css/ckeditor.css':  'scss/ckeditor.scss',
+          'css/base/index.css': 'scss/base/index.scss',
+          'css/ckeditor.css':   'scss/ckeditor.scss',
 
           // PATTERNS
           'patterns/molecules/date-stacked-vertical-card/css/date-stacked-vertical-card.css': 'patterns/molecules/date-stacked-vertical-card/scss/date-stacked-vertical-card.scss',
           'patterns/molecules/horizontal-card/css/horizontal-card.css':                       'patterns/molecules/horizontal-card/scss/horizontal-card.scss',
           'patterns/molecules/masonry-item/css/masonry-item.css':                             'patterns/molecules/masonry-item/scss/masonry-item.scss',
           'patterns/molecules/vertical-card/css/vertical-card.css':                           'patterns/molecules/vertical-card/scss/vertical-card.scss',
-          'patterns/molecules/table_row/css/table_row.css':                           'patterns/molecules/table_row/scss/table_row.scss',
+          'patterns/molecules/vertical-link-card/css/vertical-link-card.css':                 'patterns/molecules/vertical-link-card/scss/vertical-link-card.scss',
+          'patterns/molecules/table_row/css/table_row.css':                                   'patterns/molecules/table_row/scss/table_row.scss',
           'patterns/organisms/table_pattern/css/table_pattern.css':                           'patterns/organisms/table_pattern/scss/table_pattern.scss',
           'patterns/organisms/masonry/css/masonry.css':                                       'patterns/organisms/masonry/scss/masonry.scss',
 

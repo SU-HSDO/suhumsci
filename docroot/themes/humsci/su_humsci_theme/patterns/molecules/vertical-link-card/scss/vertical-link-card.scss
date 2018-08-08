@@ -3,10 +3,14 @@
 //
 // Vertical Card
 //
+
 // Decanter
-@import 'decanter-no-markup';
+@import
+  'decanter-no-markup';
+
 // SU HumSci
-@import '../utilities/mixins/index';
+@import
+  '../utilities/mixins/index';
 
 .vertical-link-card {
   height: 100%;
@@ -14,14 +18,34 @@
   > a {
     display: table;
     height: 100%;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+
+      img {
+        -webkit-transform: scale(1.03);
+        -moz-transform: scale(1.03);
+        -o-transform: scale(1.03);
+        transform: scale(1.03);
+      }
+    }
   }
 
   .vertical-link-card__img {
     display: table-row;
     height: 0;
 
+    .field-hs-postcard-image {
+      overflow: hidden;
+    }
+
     img {
       width: 100%;
+      -webkit-transition: all 1s ease;
+      -moz-transition: all 1s ease;
+      -o-transition: all 1s ease;
+      transition: all 1s ease;
     }
   }
 
@@ -31,15 +55,16 @@
     background: $color-bright-red;
     color: $color-white;
     display: table-row;
-    padding: 0;
 
-    > * {
-      @include padding(0.75em);
-      margin: 0;
-    }
+    @include padding(0);
 
     .vertical-link-card__title {
       @include margin(0 null null);
+      @include padding(0.5em 0.5em null);
+    }
+
+    .vertical-link-card__description {
+      @include padding(null 0.75em 0.75em);
     }
   }
 }

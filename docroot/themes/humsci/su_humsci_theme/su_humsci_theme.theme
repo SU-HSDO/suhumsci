@@ -116,8 +116,16 @@ function su_humsci_theme_preprocess_pattern_vertical_link_card(&$vars) {
  * Implements hook_preprocess().
  */
 function su_humsci_theme_preprocess(&$vars, $hook) {
+  $seenIds = &drupal_static(__FUNCTION__, []);
   // Verify ALL id attributes are unique.
   if (!empty($vars['attributes']['id'])) {
-    $vars['attributes']['id'] = Html::getUniqueId($vars['attributes']['id']);
+
+    $id = $vars['attributes']['id'];
+    if (isset($seenIds[$id])) {
+      $vars['attributes']['id'] = $id . '--' . ++$seenIds[$id];
+    }
+    else {
+      $seenIds[$id] = 1;
+    }
   }
 }

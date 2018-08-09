@@ -111,3 +111,13 @@ function su_humsci_theme_preprocess_pattern_vertical_link_card(&$vars) {
     return;
   }
 }
+
+/**
+ * Implements hook_preprocess().
+ */
+function su_humsci_theme_preprocess(&$vars, $hook) {
+  // Verify ALL id attributes are unique.
+  if (!empty($vars['attributes']['id'])) {
+    $vars['attributes']['id'] = Html::getUniqueId($vars['attributes']['id']);
+  }
+}

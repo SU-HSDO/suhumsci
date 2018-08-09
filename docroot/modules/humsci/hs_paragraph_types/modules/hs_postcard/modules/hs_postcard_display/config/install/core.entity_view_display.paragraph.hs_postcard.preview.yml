@@ -1,3 +1,4 @@
+uuid: bb983562-fc2e-43b7-a825-10b1644b13ab
 langcode: en
 status: true
 dependencies:
@@ -11,8 +12,8 @@ dependencies:
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - ds
-    - layout_builder
-    - layout_discovery
+    - field_formatter_class
+    - hs_field_helpers
     - link
     - stanford_media
     - text
@@ -36,7 +37,7 @@ third_party_settings:
       time:
         - field_hs_postcard_link
 _core:
-  default_config_hash: uIA0BnBxwVYVqm5yzJ2Nt7C9DMLcGG-0Oluk3UKCBtM
+  default_config_hash: tYFdW9WYdB_HxOvHWw1Wh1OljOAiLUjjVF-jtAHekls
 id: paragraph.hs_postcard.preview
 targetEntityType: paragraph
 bundle: hs_postcard
@@ -55,9 +56,13 @@ content:
     label: hidden
     settings:
       view_mode: default
-      image_style: large
+      image_style: hs_medium_square_360x360
       link: 0
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     region: image
   field_hs_postcard_link:
     weight: 3
@@ -70,7 +75,7 @@ content:
       target: ''
     third_party_settings: {  }
     type: link
-    region: button
+    region: time
   field_hs_postcard_title:
     weight: 0
     label: hidden

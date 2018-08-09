@@ -1,5 +1,14 @@
 # HumSci
 
+8.0.6
+--------------------------------------------------------------------------------  
+_Release Date: 2018-08-08_
+
+- Full HTML format
+- Font awesome CKEditor Button
+- People node display defaults
+- provisioned mrc, francestanford, and swshumsci-sandbox
+
 8.0.5
 --------------------------------------------------------------------------------  
 _Release Date: 2018-08-01_

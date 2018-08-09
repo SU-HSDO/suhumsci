@@ -13,6 +13,8 @@
           $menu.removeClass('expanded');
           $menu.find('.fa-minus').addClass('fa-plus').removeClass('fa-minus');
           $menu.find('.expanded').removeClass('expanded');
+          // Remove attribute only on top level to pass AMP test.
+          $menu.children('li').children('a').removeAttr('aria-expanded');
         } else {
           // Check if jquery ui has been applied yet.
           if ($menu.hasClass('ui-menu')) {

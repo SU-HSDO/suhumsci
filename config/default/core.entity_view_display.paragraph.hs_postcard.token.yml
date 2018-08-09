@@ -1,9 +1,9 @@
-uuid: bb983562-fc2e-43b7-a825-10b1644b13ab
+uuid: 8abed51e-d027-428c-9417-03bb0868351c
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.paragraph.preview
+    - core.entity_view_mode.paragraph.token
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
     - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
@@ -20,7 +20,7 @@ dependencies:
 third_party_settings:
   ds:
     layout:
-      id: pattern_horizontal_card
+      id: pattern_vertical_link_card
       library: null
       disable_css: false
       entity_classes: all_classes
@@ -34,14 +34,14 @@ third_party_settings:
         - field_hs_postcard_image
       description:
         - field_hs_postcard_body
-      time:
+      button:
         - field_hs_postcard_link
 _core:
-  default_config_hash: tYFdW9WYdB_HxOvHWw1Wh1OljOAiLUjjVF-jtAHekls
-id: paragraph.hs_postcard.preview
+  default_config_hash: pD2JUVXvQBSgYIl6eg5c8YEnrxvftUnux2cz-3A-P9Y
+id: paragraph.hs_postcard.token
 targetEntityType: paragraph
 bundle: hs_postcard
-mode: preview
+mode: token
 content:
   field_hs_postcard_body:
     weight: 2
@@ -56,7 +56,7 @@ content:
     label: hidden
     settings:
       view_mode: default
-      image_style: hs_medium_square_360x360
+      image_style: hs_medium_rectangle_360x250
       link: 0
     third_party_settings:
       field_formatter_class:
@@ -71,11 +71,13 @@ content:
       trim_length: 80
       url_only: false
       url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      field_formatter_class:
+        class: decanter-button
     type: link
-    region: time
+    region: button
   field_hs_postcard_title:
     weight: 0
     label: hidden

@@ -1,3 +1,4 @@
+uuid: 9280a267-4436-4941-a669-e25a24e52af8
 langcode: en
 status: true
 dependencies:
@@ -11,8 +12,7 @@ dependencies:
   module:
     - ds
     - field_formatter_class
-    - layout_builder
-    - layout_discovery
+    - hs_field_helpers
     - link
     - stanford_media
     - text
@@ -36,7 +36,7 @@ third_party_settings:
       button:
         - field_hs_postcard_link
 _core:
-  default_config_hash: uIA0BnBxwVYVqm5yzJ2Nt7C9DMLcGG-0Oluk3UKCBtM
+  default_config_hash: pD2JUVXvQBSgYIl6eg5c8YEnrxvftUnux2cz-3A-P9Y
 id: paragraph.hs_postcard.default
 targetEntityType: paragraph
 bundle: hs_postcard
@@ -55,9 +55,13 @@ content:
     label: hidden
     settings:
       view_mode: default
-      image_style: large
+      image_style: hs_medium_rectangle_360x250
       link: 0
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     region: image
   field_hs_postcard_link:
     weight: 3

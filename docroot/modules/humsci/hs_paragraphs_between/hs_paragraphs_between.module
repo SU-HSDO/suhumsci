@@ -1,0 +1,177 @@
+<?php
+
+/**
+ * @file
+ * hs_paragraphs_between.module
+ */
+
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_paragraphs_between_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.block':
+      return '<p>' . t('This module provide a button on unlimited ') .
+        t('paragraph fields that allows the user to quickly add a ') .
+        t('paragraph below any existing paragraph. This is very similar ') .
+        t('to the built in functionality paragraphs has for "Add Above" ') .
+        t('but this does not require a modal paragraph selection and ') .
+        t('also works on the material theme which the "Add Above" does not.') . '</p>';
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ */
+function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+  // For simplicity, lets only allow middle paragraphs on unlimited fields.
+  $cardinality = $context['items']->getFieldDefinition()
+    ->getFieldStorageDefinition()
+    ->getCardinality();
+  if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+    return;
+  }
+
+  $elements['#attached']['library'][] = 'paragraphs_between/field_widget';
+
+  if ($context['items']->count() == 5 && $form_state->getTriggeringElement()) {
+    return;
+  }
+
+  foreach ($context['items'] as $delta => $item) {
+    $elements[$delta]['below'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['paragraphs-between-buttons']],
+      '#prefix' => '<div class="paragraphs-between-wrapper">',
+      '#suffix' => '</div>',
+    ];
+    // Copies the bottom add more links to place them on each paragraph.
+    foreach ($elements['add_more']['operations']['#links'] as $link_name => $link) {
+      $link = $link['title'];
+      $link['#submit'] = ['paragraphs_between_add_below_submit'];
+      $link['#attributes']['class'] = ['paragraphs-between-add-more'];
+      $link['#ajax']['callback'] = 'paragraphs_between_add_below_ajax';
+      $link['#delta'] = $delta;
+      $link['#name'] .= "_below_$delta";
+      $link['#id'] .= "-below-$delta";
+      unset($link['#limit_validation_errors']);
+      $elements[$delta]['below'][$link_name] = $link;
+    }
+  }
+}
+
+/**
+ * AJax handler to return the form element.
+ *
+ * @param $form
+ *   Complete form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ *
+ * @return array
+ *   Field element.
+ *
+ * @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::addMoreAjax()
+ */
+function hs_paragraphs_between_add_below_ajax($form, FormStateInterface $form_state) {
+  $submit = ParagraphsWidget::getSubmitElementInfo($form, $form_state, ParagraphsWidget::ACTION_POSITION_HEADER);
+  return $submit['element'];
+}
+
+/**
+ * Add more below submission handler.
+ *
+ * @param $form
+ *   Complete form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ *
+ * @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::addMoreSubmit()
+ */
+function hs_paragraphs_between_add_below_submit($form, FormStateInterface $form_state) {
+  $submit = ParagraphsWidget::getSubmitElementInfo($form, $form_state, ParagraphsWidget::ACTION_POSITION_HEADER);
+
+  $field_path = array_merge($submit['element']['#field_parents'], [$submit['element']['#field_name']]);
+
+  // Get the sorted field values so we can find what position to inject the new
+  // paragraph item.
+  $field_values = $form_state->getValue($field_path);
+  unset($field_values['add_more']);
+  uasort($field_values, function ($a, $b) {
+    return $a['_weight'] > $b['_weight'];
+  });
+  $add_more_delta = array_search($submit['button']['#delta'], array_keys($field_values)) + 1;
+
+  hs_paragraphs_between_prepare_delta_position($submit['widget_state'], $form_state, $field_path, $add_more_delta);
+
+  if (isset($submit['button']['#bundle_machine_name'])) {
+    $submit['widget_state']['selected_bundle'] = $submit['button']['#bundle_machine_name'];
+  }
+  else {
+    $submit['widget_state']['selected_bundle'] = $submit['element']['add_more']['add_more_select']['#value'];
+  }
+
+  $submit['widget_state'] = ParagraphsWidget::autocollapse($submit['widget_state']);
+
+  ParagraphsWidget::setWidgetState($submit['parents'], $submit['field_name'], $form_state, $submit['widget_state']);
+
+  $form_state->setRebuild();
+}
+
+/**
+ * Prepares the widget state to add a new paragraph at a specific position.
+ *
+ * @param array $widget_state
+ *   Widget state as reference, so that it can be updated.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Form state.
+ * @param array $field_path
+ *   Path to paragraph field.
+ * @param int|mixed $new_delta
+ *   Delta position in list of paragraphs, where new paragraph will be added.
+ *
+ * @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::prepareDeltaPosition()
+ */
+function hs_paragraphs_between_prepare_delta_position(array &$widget_state, FormStateInterface $form_state, array $field_path, $new_delta) {
+  // Increase number of items to create place for new paragraph.
+  $widget_state['items_count']++;
+
+  // Default behavior is adding to end of list and in case delta is not
+  // provided or already at end, we can skip all other steps.
+  if (!is_numeric($new_delta) || intval($new_delta) >= $widget_state['real_item_count']) {
+    return;
+  }
+
+  $widget_state['real_item_count']++;
+
+  // Limit delta between 0 and "number of items" in paragraphs widget.
+  $new_delta = max(intval($new_delta), 0);
+
+  // Change user input in order to create new delta position.
+  $user_input = NestedArray::getValue($form_state->getUserInput(), $field_path);
+
+  // Rearrange all original deltas to make one place for the new element.
+  $new_original_deltas = [];
+  foreach ($widget_state['original_deltas'] as $current_delta => $original_delta) {
+    $new_current_delta = $current_delta >= $new_delta ? $current_delta + 1 : $current_delta;
+
+    $new_original_deltas[$new_current_delta] = $original_delta;
+    $user_input[$original_delta]['_weight'] = $new_current_delta;
+  }
+
+  // Add information into delta mapping for the new element.
+  $original_deltas_size = count($widget_state['original_deltas']);
+  $new_original_deltas[$new_delta] = $original_deltas_size;
+  $user_input[$original_deltas_size]['_weight'] = $new_delta;
+
+  $widget_state['original_deltas'] = $new_original_deltas;
+  NestedArray::setValue($form_state->getUserInput(), $field_path, $user_input);
+}

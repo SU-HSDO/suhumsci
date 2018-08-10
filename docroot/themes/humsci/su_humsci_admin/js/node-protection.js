@@ -5,10 +5,10 @@
 
 (function ($, Drupal) {
   'use strict';
+  // Allow Save Submit button.
   var save = false;
-  // Allow Submit/Edit button.
+  // Flag the form has been edited.
   var edit = false;
-  // Dirty form flag.
 
   Drupal.behaviors.nodeEditProtection = {
     attach: function (context, settings) {

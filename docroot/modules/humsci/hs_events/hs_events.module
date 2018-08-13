@@ -6,24 +6,14 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
 /**
- * Implements hook_ENTITY_TYPE_delete().
+ * Implements hook_ENTITY_TYPE_view_alter().
  */
-function hs_events_node_delete(EntityInterface $entity) {
-  if ($entity->bundle() == 'hs_event') {
-    $speakers = $entity->get('field_hs_event_speaker')->getValue();
-
-    // When running a migration rollback the referenced entities are not deleted
-    // so we have to delete them manually. Deleting via the UI does not have
-    // the same issue.
-    foreach ($speakers as $speaker_value) {
-      $speaker = \Drupal::entityTypeManager()
-        ->getStorage('event_collections')
-        ->load($speaker_value['target_id']);
-      if ($speaker) {
-        $speaker->delete();
-      }
-    }
+function hs_events_event_collections_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  // On the ECK entity, if the instructor person is set, use that to display.
+  if (!empty($build['field_speaker_person']['#items'])) {
+    unset($build['title']);
   }
 }

@@ -462,6 +462,39 @@ function hs_field_helpers_cron() {
       array_walk($migration_list, 'hs_field_helpers_execute_migration');
     }
   }
+
+  _he_field_helpers_clean_eck();
+}
+
+function _he_field_helpers_clean_eck(){
+  /** @var \Drupal\entity_usage\EntityUsage $entity_usage */
+  $entity_usage = \Drupal::service('entity_usage.usage');
+  $definitions = \Drupal::entityTypeManager()->getDefinitions();
+  $logger = \Drupal::logger('hs_field_helpers');
+
+  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
+  foreach ($definitions as $entity_type_id => $entity_type) {
+    // Find all the entity types ECK has available.
+    if ($entity_type->getOriginalClass() != \Drupal\eck\Entity\EckEntity::class) {
+      continue;
+    }
+
+    $entities = \Drupal::entityTypeManager()
+      ->getStorage($entity_type_id)
+      ->loadMultiple();
+
+    // Delete all ECK entities that aren't being used. Some ECK's don't get
+    // deleted if they were imported by a migration.
+    foreach ($entities as $entity) {
+      if (empty($entity_usage->listUsage($entity))) {
+        $logger->info(t('Deleted ECK due to no usages. %type: %id'), [
+          '%type' => $entity_type_id,
+          '%id' => $entity->id(),
+        ]);
+        $entity->delete();
+      }
+    }
+  }
 }
 
 /**

@@ -310,7 +310,7 @@ function hs_field_helpers_preprocess_views_view_pattern(&$variables) {
  */
 function hs_field_helpers_field_formatter_settings_summary_alter(&$summary, $context) {
   $inline = $context['formatter']->getThirdPartySetting('hs_field_helpers', 'inline_contents');
-  if (!empty($inline) && $inline) {
+  if (!empty($inline)) {
     $summary[] = t('Inline Contents: @inline', ['@inline' => $inline ? t('Yes') : t('No')]);
   }
 }

@@ -33,12 +33,10 @@
       function menuEdgeCheck() {
         var viewportWidth = document.body.clientWidth;
         jQuery('ul.decanter-nav-primary > li').each(function() {
-          var itemWidth = jQuery(this).outerWidth();
           var itemFromLeft = jQuery(this).offset().left;
           var itemFromRight = viewportWidth - itemFromLeft;
           var subMenuWidth = jQuery('> ul', this).outerWidth();
           if (subMenuWidth > itemFromRight) {
-            console.log( "Too close to the edge!" );
             jQuery(this).addClass( 'edge' );
           }
           else {

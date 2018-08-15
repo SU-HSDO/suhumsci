@@ -55,20 +55,21 @@
 
       // Open/close the menu from hamburger button.
       $header.find('button.fa-bars').once().click(function() {
-        $(this).siblings('ul').toggleClass('expanded').find('.fa-minus').each(function() {
-          $(this).toggleClass('fa-plus').toggleClass('fa-minus');
-          $(this).siblings('ul').toggleClass('expanded');
-        });
+        menuExpander(this);
       });
 
       // Open/close submenus from the plus button.
       $header.find('button.fa-plus').once().click(function() {
-        $(this).siblings('ul').toggleClass('expanded').find('.fa-minus').each(function() {
-          $(this).toggleClass('fa-plus').toggleClass('fa-minus');
-          $(this).siblings('ul').toggleClass('expanded');
-        });
+        menuExpander(this);
         $(this).toggleClass('fa-plus').toggleClass('fa-minus');
       });
+
+      function menuExpander(theMenu) {
+        $(theMenu).siblings('ul').toggleClass('expanded').find('.fa-minus').each(function() {
+          $(theMenu).toggleClass('fa-plus').toggleClass('fa-minus');
+          $(theMenu).siblings('ul').toggleClass('expanded');
+        });
+      }
 
       // debounce so that we don't run our resize functions constantly
       function debounce(func, wait, immediate) {

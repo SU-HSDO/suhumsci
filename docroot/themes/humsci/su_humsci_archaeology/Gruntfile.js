@@ -44,7 +44,7 @@ module.exports = function(grunt) {
     uglify: {
       // This is for minifying all of our scripts.
       options: {
-        sourceMap: true,
+        sourceMap: false,
         mangle: false
       },
       my_target: {

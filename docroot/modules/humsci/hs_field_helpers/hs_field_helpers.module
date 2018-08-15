@@ -24,6 +24,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\ui_patterns\Element\PatternContext;
+use Drupal\eck\Entity\EckEntity;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -466,6 +467,18 @@ function hs_field_helpers_cron() {
   _he_field_helpers_clean_eck();
 }
 
+/**
+ * Deletes any ECK entities that don't have any usage of them anywhere.
+ *
+ * With entity reference fields, entity_usage module tracks the use of ECK
+ * entities. Because of that we can safely delete these entities that have no
+ * usage statitistics of them. Mostly this is from doing a migration rollback.
+ * Deleting a node manually seems to clean the ECK entities.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
 function _he_field_helpers_clean_eck(){
   /** @var \Drupal\entity_usage\EntityUsage $entity_usage */
   $entity_usage = \Drupal::service('entity_usage.usage');
@@ -475,7 +488,7 @@ function _he_field_helpers_clean_eck(){
   /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
   foreach ($definitions as $entity_type_id => $entity_type) {
     // Find all the entity types ECK has available.
-    if ($entity_type->getOriginalClass() != \Drupal\eck\Entity\EckEntity::class) {
+    if ($entity_type->getOriginalClass() != EckEntity::class) {
       continue;
     }
 

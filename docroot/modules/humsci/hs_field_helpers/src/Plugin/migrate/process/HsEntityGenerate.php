@@ -44,7 +44,7 @@ class HsEntityGenerate extends EntityGenerate {
    *
    * @param string $value
    *   Migration source value.
-   * @param $entity_id
+   * @param int $entity_id
    *   Entity ID that was found.
    */
   protected function entityValues($value, $entity_id) {

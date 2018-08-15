@@ -8,6 +8,7 @@
 use Drupal\Core\Config\FileStorage;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Cache\Cache;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_install().
@@ -72,7 +73,7 @@ function hs_events_update_8001() {
 /**
  * Rebuild entity usage statistics for event speakers.
  *
- * @see \Drupal\entity_usage\Form\BatchUpdateForm::updateSourcesBatchWorker().
+ * @see \Drupal\entity_usage\Form\BatchUpdateForm::updateSourcesBatchWorker()
  */
 function hs_events_update_8002() {
   // Flush caches so we clear up any field cacheing from the previous update.
@@ -82,7 +83,7 @@ function hs_events_update_8002() {
   $nids = \Drupal::entityQuery('node')
     ->condition('type', 'hs_event')
     ->execute();
-  $events = \Drupal\node\Entity\Node::loadMultiple($nids);
+  $events = Node::loadMultiple($nids);
 
   foreach ($events as $entity) {
     // Track all revisions and translations of the source entity. Sources

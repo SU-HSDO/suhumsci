@@ -17,14 +17,12 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function hs_paragraphs_between_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block':
-      return '<p>' . t('This module provide a button on unlimited ') .
-        t('paragraph fields that allows the user to quickly add a ') .
-        t('paragraph below any existing paragraph. This is very similar ') .
-        t('to the built in functionality paragraphs has for "Add Above" ') .
-        t('but this does not require a modal paragraph selection and ') .
-        t('also works on the material theme which the "Add Above" does not.') . '</p>';
-
-      break;
+      return '<p>' . t('This module provide a button on unlimited ' .
+          'paragraph fields that allows the user to quickly add a ' .
+          'paragraph below any existing paragraph. This is very similar ' .
+          'to the built in functionality paragraphs has for "Add Above" ' .
+          'but this does not require a modal paragraph selection and ' .
+          'also works on the material theme which the "Add Above" does not.') . '</p>';
   }
 }
 
@@ -46,7 +44,7 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
     return;
   }
 
-  foreach ($context['items'] as $delta => $item) {
+  foreach (array_keys($context['items']) as $delta) {
     $elements[$delta]['below'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['paragraphs-between-buttons']],
@@ -71,7 +69,7 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
 /**
  * AJax handler to return the form element.
  *
- * @param $form
+ * @param array $form
  *   Complete form
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Current form state.
@@ -81,7 +79,7 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
  *
  * @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::addMoreAjax()
  */
-function hs_paragraphs_between_add_below_ajax($form, FormStateInterface $form_state) {
+function hs_paragraphs_between_add_below_ajax(array $form, FormStateInterface $form_state) {
   $submit = ParagraphsWidget::getSubmitElementInfo($form, $form_state, ParagraphsWidget::ACTION_POSITION_HEADER);
   return $submit['element'];
 }
@@ -89,14 +87,14 @@ function hs_paragraphs_between_add_below_ajax($form, FormStateInterface $form_st
 /**
  * Add more below submission handler.
  *
- * @param $form
+ * @param array $form
  *   Complete form
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Current form state.
  *
  * @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::addMoreSubmit()
  */
-function hs_paragraphs_between_add_below_submit($form, FormStateInterface $form_state) {
+function hs_paragraphs_between_add_below_submit(array $form, FormStateInterface $form_state) {
   $submit = ParagraphsWidget::getSubmitElementInfo($form, $form_state, ParagraphsWidget::ACTION_POSITION_HEADER);
 
   $field_path = array_merge($submit['element']['#field_parents'], [$submit['element']['#field_name']]);
@@ -105,8 +103,8 @@ function hs_paragraphs_between_add_below_submit($form, FormStateInterface $form_
   // paragraph item.
   $field_values = $form_state->getValue($field_path);
   unset($field_values['add_more']);
-  uasort($field_values, function ($a, $b) {
-    return $a['_weight'] > $b['_weight'];
+  uasort($field_values, function ($item_1, $item_2) {
+    return $item_1['_weight'] > $item_2['_weight'];
   });
   $add_more_delta = array_search($submit['button']['#delta'], array_keys($field_values)) + 1;
 

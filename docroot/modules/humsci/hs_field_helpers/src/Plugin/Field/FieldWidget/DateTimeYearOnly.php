@@ -53,6 +53,7 @@ class DateTimeYearOnly extends WidgetBase {
     $element += [
       '#type' => 'select',
       '#options' => $this->getOptions(),
+      '#empty_option' => $this->t('- None -'),
     ];
     $element = ['value' => $element];
 

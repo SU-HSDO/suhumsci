@@ -38,6 +38,7 @@
 #}
 {%
   set title_classes = [
+  'field-label',
   label_display == 'visually_hidden' ? 'visually-hidden',
 ]
 %}
@@ -56,9 +57,11 @@
   {% endif %}
 {% else %}
   <div{{ attributes }}>
-    <span{{ title_attributes.addClass(title_classes) }}><strong>{{ label }}: </strong></span>
-    {% for item in items %}
-      <span{{ item.attributes }}>{{ item.content }}{% if not loop.last %}, {% endif %}</span>
-    {% endfor %}
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
+    <div class="items">
+      {% for item in items %}
+        <span{{ item.attributes }}>{{ item.content }}{% if not loop.last %}, {% endif %}</span>
+      {% endfor %}
+    </div>
   </div>
 {% endif %}

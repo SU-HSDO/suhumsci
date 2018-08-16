@@ -4,7 +4,7 @@
     attach: function (context, settings) {
       $('.paragraphs-between-wrapper', context).once('between-buttons').each(function (i, buttonWrapper) {
         buttonWrapper = $(buttonWrapper);
-        // buttonWrapper.hide();
+        buttonWrapper.hide();
         buttonWrapper.children('.paragraphs-between-buttons').hide();
 
         buttonWrapper.append($('<a>', {

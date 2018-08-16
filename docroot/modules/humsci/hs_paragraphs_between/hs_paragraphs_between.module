@@ -40,7 +40,7 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
     return;
   }
 
-  $elements['#attached']['library'][] = 'paragraphs_between/field_widget';
+  $elements['#attached']['library'][] = 'hs_paragraphs_between/field_widget';
 
   if ($context['items']->count() == 5 && $form_state->getTriggeringElement()) {
     return;
@@ -56,9 +56,9 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
     // Copies the bottom add more links to place them on each paragraph.
     foreach ($elements['add_more']['operations']['#links'] as $link_name => $link) {
       $link = $link['title'];
-      $link['#submit'] = ['paragraphs_between_add_below_submit'];
+      $link['#submit'] = ['hs_paragraphs_between_add_below_submit'];
       $link['#attributes']['class'] = ['paragraphs-between-add-more'];
-      $link['#ajax']['callback'] = 'paragraphs_between_add_below_ajax';
+      $link['#ajax']['callback'] = 'hs_paragraphs_between_add_below_ajax';
       $link['#delta'] = $delta;
       $link['#name'] .= "_below_$delta";
       $link['#id'] .= "-below-$delta";

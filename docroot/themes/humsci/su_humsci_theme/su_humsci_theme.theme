@@ -29,6 +29,11 @@ function su_humsci_theme_preprocess_page(&$vars) {
   if (!isset($vars['node']) && strpos($controller, 'layout_builder') === FALSE) {
     $vars['main_class'] = 'decanter-grid';
   }
+
+  if ($site_style = theme_get_setting('humsci_site_styles')) {
+    // No errors occur if the library doesn't exist, so this is safe to do.
+    $vars['#attached']['library'][] = "su_humsci_theme/$site_style";
+  }
 }
 
 /**

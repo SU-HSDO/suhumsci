@@ -22,13 +22,10 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_type
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
-    - system.menu.main
   module:
     - ds
+    - field_formatter_class
     - hs_field_helpers
-    - hs_layouts
-    - layout_builder
-    - menu_block
     - stanford_media
     - user
 third_party_settings:
@@ -92,15 +89,19 @@ content:
       display: start_date
     third_party_settings: {  }
   field_hs_event_image:
-    type: media_image_formatter
+    type: media_responsive_image_formatter
     weight: 0
     region: image
     label: hidden
     settings:
       view_mode: default
-      image_style: hs_medium_rectangle_360x250
+      image_style: landscape_rectangle
       link: '1'
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
   field_hs_event_location:
     type: basic_string
     weight: 4

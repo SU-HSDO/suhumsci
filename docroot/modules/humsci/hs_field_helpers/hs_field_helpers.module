@@ -346,7 +346,7 @@ function hs_field_helpers_preprocess_field(&$variables) {
   $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
   // A user can customize a field label in the layout builder but it doesn't
   // get moved to the field level.
-  $variables['label'] = $field_config['label'];
+  $variables['label'] = $field_config['label'] ?? $variables['label'];
 
   // Add class for whole field.
   if (!empty($field_config['formatter']['third_party_settings']['field_formatter_class'])) {
@@ -397,19 +397,18 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $view_mode, $field_name) {
   $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
 
-  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay)) {
-    return [];
-  }
-
   $entity_type = $entity_display->getTargetEntityTypeId();
   $entity_bundle = $entity_display->getTargetBundle();
   $id = "field_block:$entity_type:$entity_bundle:$field_name";
   $render_build = $entity_display->build($entity);
+  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])){
+    return [];
+  }
 
   foreach ($render_build['_layout_builder'] as $section) {
     foreach (Element::children($section) as $region_id) {
       foreach ($section[$region_id] as $component) {
-        if ($component['#plugin_id'] == $id) {
+        if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
           return $component['#configuration'];
         }
       }

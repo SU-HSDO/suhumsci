@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+//
+// Archaeology Navigation
+// Archaeology website specific styles.
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci Theme
+@import
+  '../../../su_humsci_theme/scss/utilities/mixins/index';
+
+// Menu active states
+.main-container .menu--main {
+  .menu-item--active-trail.menu-item--expanded > a,
+  a.is-active {
+    border-left-color: $color-sun;
+  }
+}
+
+.js #header .decanter-main-menu--hover-reveal {
+  a.is-active {
+    border-left-color: $color-sun;
+  }
+
+  .ui-menu.decanter-nav-primary {
+    &.ui-menu li.menu-item--active-trail .ui-menu-item-wrapper,
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+      border-bottom-color: $color-sun;
+    }
+  }
+}

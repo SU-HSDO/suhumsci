@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         }
       },
       css: {
-        files: ['scss/**/*.scss', 'scss/**/**/*.scss','patterns/**/**/scss/*.scss'],
+        files: ['scss/**/*.scss'],
         tasks: ['sass'],
         options: {
           interrupt: true
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
     uglify: {
       // This is for minifying all of our scripts.
       options: {
-        sourceMap: true,
+        sourceMap: false,
         mangle: false
       },
       my_target: {
@@ -108,24 +108,6 @@ module.exports = function(grunt) {
 
           // BASE
           'css/base/index.css': 'scss/base/index.scss',
-          'css/ckeditor.css':   'scss/ckeditor.scss',
-
-          // PATTERNS
-          'patterns/molecules/date-stacked-vertical-card/css/date-stacked-vertical-card.css': 'patterns/molecules/date-stacked-vertical-card/scss/date-stacked-vertical-card.scss',
-          'patterns/molecules/horizontal-card/css/horizontal-card.css':                       'patterns/molecules/horizontal-card/scss/horizontal-card.scss',
-          'patterns/molecules/masonry-item/css/masonry-item.css':                             'patterns/molecules/masonry-item/scss/masonry-item.scss',
-          'patterns/molecules/vertical-card/css/vertical-card.css':                           'patterns/molecules/vertical-card/scss/vertical-card.scss',
-          'patterns/molecules/vertical-link-card/css/vertical-link-card.css':                 'patterns/molecules/vertical-link-card/scss/vertical-link-card.scss',
-          'patterns/molecules/table-row/css/table-row.css':                                   'patterns/molecules/table-row/scss/table-row.scss',
-          'patterns/organisms/table-pattern/css/table-pattern.css':                           'patterns/organisms/table-pattern/scss/table-pattern.scss',
-          'patterns/organisms/masonry/css/masonry.css':                                       'patterns/organisms/masonry/scss/masonry.scss',
-
-          // COMPONENTS
-          'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
-
-          // NODES
-          'css/nodes/hs_basic_page.css':  'scss/nodes/hs_basic_page.scss',
-          'css/nodes/hs_person.css':      'scss/nodes/hs_person.scss',
         }
       }
     },

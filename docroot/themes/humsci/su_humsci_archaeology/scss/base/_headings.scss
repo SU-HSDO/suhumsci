@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+//
+// Archaeology Headings
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci Theme
+@import
+  '../../../su_humsci_theme/scss/utilities/mixins/index';
+
+// Heading
+h1 {
+  @include heading-dash(0.2em, $color-sun, 1.125em);
+}
+
+h2 {
+  @include heading-dash(4px, $color-sun, 40px);
+  // Headers with centered dash
+  &.text-align-center:after {
+    @include margin(0 auto);
+  }
+
+  // Headers without dash
+  &.vertical-link-card__title,
+  .date-stacked-vertical-card__content-container &,
+  &#menu-blockmain-menu,
+  #footer h2 {
+    &:after {
+      content: none;
+    }
+  }
+}
+
+h3 {
+  @include heading-dash(3px, $color-sun, 30px);
+
+  .field-hs-person-title & {
+    &:after {
+      content: none;
+    }
+  }
+}
+
+h4 {
+  @include heading-dash(3px, $color-sun, 25px);
+}
+
+h5,
+h6 {
+  @include heading-dash(2px, $color-sun, 20px);
+}

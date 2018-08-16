@@ -1,5 +1,16 @@
 # HumSci
 
+8.0.7
+--------------------------------------------------------------------------------  
+_Release Date: 2018-08-16_
+
+- Node edit protection with javascript to prevent un-intentional progress loss.
+- Added better responsive image styles
+- Bugfix on year date widget
+- Added changes for accessibility issues
+- Increased cache time
+- Added site style options in the theme settings.
+
 8.0.6
 --------------------------------------------------------------------------------  
 _Release Date: 2018-08-08_

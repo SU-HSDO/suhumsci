@@ -49,7 +49,7 @@ unit_kernel_tests: &unit_kernel_tests
     - restore_cache: *restore_cache
     - run:
         name: Fix host authenticity
-        command: ssh-keyscan 18.206.223.236 >> ~/.ssh/known_hosts
+        command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests

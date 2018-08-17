@@ -53,8 +53,9 @@ unit_kernel_tests: &unit_kernel_tests
     - run:
         name: Copy local settings
         command: |
-          ls -al .
-          ls -al docroot/sites/default
+          ls -al .circleci/
+          ls -al .circleci/config/
+          ls -al docroot/sites/default/settings
           cp .circleci/config/local.settings.php docroot/sites/default/settings/local.settings.php
     - run:
         name: Run PHPUnit tests

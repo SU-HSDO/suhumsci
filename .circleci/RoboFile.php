@@ -185,7 +185,7 @@ class RoboFile extends \Robo\Tasks {
     $task = $this->drush()
       ->args('sql-sync')
       ->args("@$site.dev")
-      ->args('default')
+      ->args('@default.local')
       ->option('verbose')
       ->option('yes');
     return $task;

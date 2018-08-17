@@ -29,7 +29,7 @@ class RoboFile extends \Robo\Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
-        $collection->addTask($this->installDrupal());
+    $collection->addTask($this->installDrupal());
     $collection->addTask($this->debug());
     $collection->addTask($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
@@ -182,13 +182,21 @@ class RoboFile extends \Robo\Tasks {
   }
 
   protected function syncAcquia($site = 'swshumsci') {
-    $task = $this->drush()
-      ->args('sql-sync')
+    //    $tasks[] = $this->drush()
+    //      ->args('sql-sync')
+    //      ->args("@$site.dev")
+    //      ->args('@default.local')
+    //      ->option('verbose')
+    //      ->option('yes');
+    $tasks[] = $this->drush()
       ->args("@$site.dev")
-      ->args('@default.local')
-      ->option('verbose')
+      ->args('sql-dump > db.sql')
       ->option('yes');
-    return $task;
+    $tasks[] = $this->drush()
+      ->args("@default.local")
+      ->args('sql-cli < db.sql')
+      ->option('yes');
+    return $tasks;
   }
 
   /**

@@ -52,7 +52,10 @@ unit_kernel_tests: &unit_kernel_tests
         command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
     - run:
         name: Copy local settings
-        command: cp .circleci/config/local.settings.php docroot/sites/default/settings/
+        command: |
+          ls .
+          mkdir docroot/sites/default/settings
+          cp .circleci/config/local.settings.php docroot/sites/default/settings/
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests

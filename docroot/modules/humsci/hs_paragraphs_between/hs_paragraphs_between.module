@@ -40,7 +40,8 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
 
   $elements['#attached']['library'][] = 'hs_paragraphs_between/field_widget';
 
-  foreach (array_keys($context['items']) as $delta) {
+  // Can't use array keys here because it's a traversable object.
+  foreach ($context['items'] as $delta => $item) {
     $elements[$delta]['below'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['paragraphs-between-buttons']],

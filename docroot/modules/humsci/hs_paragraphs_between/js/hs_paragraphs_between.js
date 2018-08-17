@@ -4,8 +4,7 @@
     attach: function (context, settings) {
       $('.paragraphs-between-wrapper', context).once('between-buttons').each(function (i, buttonWrapper) {
         buttonWrapper = $(buttonWrapper);
-        buttonWrapper.hide();
-        buttonWrapper.children('.paragraphs-between-buttons').hide();
+        buttonWrapper.hide().children('.paragraphs-between-buttons').hide();
 
         buttonWrapper.append($('<a>', {
           href: '#',
@@ -17,8 +16,7 @@
           })
         }).click(function (e) {
           e.preventDefault();
-          $(this).siblings().show();
-          $(this).hide();
+          $(this).hide().siblings().show();
         }));
 
         buttonWrapper.closest('tr').hover(function () {
@@ -27,8 +25,7 @@
           }
           buttonWrapper.show();
         }, function () {
-          buttonWrapper.hide();
-          buttonWrapper.children('.paragraphs-between-buttons').hide();
+          buttonWrapper.hide().children('.paragraphs-between-buttons').hide();
           buttonWrapper.find('.add-below-expand').show();
         })
       });

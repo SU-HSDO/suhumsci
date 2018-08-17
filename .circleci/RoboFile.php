@@ -31,7 +31,7 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
     $collection->addTask($this->debug());
-    $collection->addTask($this->syncAcquia());
+    $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
   }
@@ -188,14 +188,9 @@ class RoboFile extends \Robo\Tasks {
     //      ->args('@default.local')
     //      ->option('verbose')
     //      ->option('yes');
-    $tasks[] = $this->drush()
-      ->args("@$site.dev")
-      ->args('sql-dump > db.sql')
-      ->option('yes');
-    $tasks[] = $this->drush()
-      ->args("@default.local")
-      ->args('sql-cli < db.sql')
-      ->option('yes');
+
+    $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
+    $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
     return $tasks;
   }
 

@@ -29,10 +29,16 @@ class RoboFile extends \Robo\Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
-//    $collection->addTask($this->installDrupal());
+    //    $collection->addTask($this->installDrupal());
+    $collection->addTask($this->debug());
     $collection->addTask($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
+  }
+
+  protected function debug() {
+    return $this->drush()
+      ->args('sql-connect');
   }
 
   /**

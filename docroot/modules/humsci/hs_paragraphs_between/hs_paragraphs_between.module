@@ -40,10 +40,6 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
 
   $elements['#attached']['library'][] = 'hs_paragraphs_between/field_widget';
 
-  if ($context['items']->count() == 5 && $form_state->getTriggeringElement()) {
-    return;
-  }
-
   foreach (array_keys($context['items']) as $delta) {
     $elements[$delta]['below'] = [
       '#type' => 'container',

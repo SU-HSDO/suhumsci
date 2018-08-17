@@ -53,9 +53,9 @@ unit_kernel_tests: &unit_kernel_tests
     - run:
         name: Copy local settings
         command: |
-          ls .
-          mkdir docroot/sites/default/settings
-          cp .circleci/config/local.settings.php docroot/sites/default/settings/
+          ls -al .
+          ls -al docroot/sites/default
+          cp .circleci/config/local.settings.php docroot/sites/default/settings/local.settings.php
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests

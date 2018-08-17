@@ -48,7 +48,11 @@ class HumsciCommand extends AcHooksCommand {
    * @aliases ds drupal:sync drupal:sync:default sync sync:refresh
    * @executeInVm
    */
-  public function sync($options = ['sync-files' => FALSE, 'partial' => FALSE]) {
+  public function sync($options = [
+    'sync-files' => FALSE,
+    'partial' => FALSE,
+    'no-seven' => FALSE,
+  ]) {
 
     $commands = $this->getConfigValue('sync.commands');
     if ($options['sync-files'] || $this->getConfigValue('sync.files')) {
@@ -56,7 +60,21 @@ class HumsciCommand extends AcHooksCommand {
     }
     $this->invokeCommands($commands);
 
-    return $this->taskDrush()->drush('updb -y')->run();
+    if ($options['no-seven']) {
+      $admin_info = $this->taskDrush()->drush('uinf')->options([
+        'uid' => 1,
+        'fields' => 'name',
+        'format' => 'json',
+      ])->run()->getMessage();
+      $json = json_decode($admin_info, TRUE);
+      $user_name = $json[1]['name'];
+
+      return $this->taskDrush()
+        ->drush('user:role:remove')
+        ->arg('seven_admin_theme_user')
+        ->arg($user_name)
+        ->run();
+    }
   }
 
   /**

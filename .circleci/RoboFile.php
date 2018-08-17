@@ -178,7 +178,8 @@ class RoboFile extends \Robo\Tasks {
     $task = $this->drush()
       ->args('sql-sync')
       ->args("@$site.dev")
-      ->args('@self');
+      ->args('@self')
+      ->option('create-db');
     return $task;
   }
 

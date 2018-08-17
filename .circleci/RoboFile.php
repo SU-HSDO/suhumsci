@@ -38,7 +38,7 @@ class RoboFile extends \Robo\Tasks {
 
   protected function debug() {
     return $this->drush()
-      ->args('@swshumsci.local')
+      ->args('@default.local')
       ->args('sql-connect');
   }
 

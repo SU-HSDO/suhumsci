@@ -19,7 +19,7 @@
       }
     }
 
-    @include media($medium-screen) {
+    @include media($large-screen) {
       ul ul {
         display: none;
       }
@@ -67,7 +67,8 @@
       button {
         width: auto;
       }
-      @include media($medium-screen) {
+
+      @include media($large-screen) {
         .fa, .far, .fas {
           display: none;
         }
@@ -94,7 +95,7 @@
             &.ui-widget-content {
               background: $color-black;
 
-              @include media($medium-screen) {
+              @include media($large-screen) {
                 background: none;
               }
 
@@ -193,7 +194,7 @@
             border: none;
             border-bottom: 3px solid $color-black;
 
-            @include media($medium-screen) {
+            @include media($large-screen) {
               color: $color-black;
             }
           }
@@ -207,9 +208,10 @@
               @include margin(0 1.5em 10px 0);
               @include padding(0);
 
-              @include media($medium-screen) {
+              @include media($large-screen) {
                 @include margin(0 0 10px 0);
               }
+
 
               &:hover {
                 background-color: transparent;
@@ -234,6 +236,10 @@
           li {
             position: relative;
             display: block;
+
+            &:hover {
+              cursor: auto;
+            }
           }
 
           ul {
@@ -245,7 +251,7 @@
 
 
       // Mobile styles for the main menu in header region.
-      @include media(max-width ($medium-screen - 1)) {
+      @include media(max-width ($large-screen - 1)) {
         ul {
           display: none;
           background: $color-white;
@@ -264,6 +270,10 @@
               a {
                 &.is-active {
                   border-bottom: none;
+                }
+
+                &:hover {
+                  background-color: transparent;
                 }
               }
             }
@@ -337,7 +347,7 @@
   .menu--main {
     float: none;
 
-    @include media(max-width $medium-screen) {
+    @include media(max-width $large-screen) {
       display: none;
     }
 

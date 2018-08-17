@@ -4,3 +4,23 @@
  * @file
  * su_humsci_admin.theme
  */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function su_humsci_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $bundle_info */
+  $bundle_info = \Drupal::service('entity_type.bundle.info');
+  $bundles = $bundle_info->getBundleInfo('node');
+
+  // Each node type has 2 different form ID's. One for creation and one for
+  // edits. We want to add the library to all node forms.
+  foreach (array_keys($bundles) as $bundle) {
+    if ($form_id == "node_{$bundle}_form" || $form == "node_{$bundle}_edit_form") {
+      $form['#attached']['library'][] = 'su_humsci_admin/node_protection';
+      break;
+    }
+  }
+}

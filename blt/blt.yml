@@ -48,7 +48,12 @@ command-hooks:
 cm:
   strategy: config-split
   allow-overrides: true
-
+# For some reason, sometimes BLT changes the docroot/sites/sites.php file. We add these dummy commands to
+# change the first two commands during the sync command to prevent unwanted changes.
+sync:
+  commands:
+    - custom:hello
+    - custom:hello
 key-dir:
   dev: /mnt/gfs/swshumsci.dev/nobackup/apikeys
   test: /mnt/gfs/swshumsci.test/nobackup/apikeys

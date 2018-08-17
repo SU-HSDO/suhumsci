@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\mrc_migrate_processors\Plugin\migrate\process;
+namespace Drupal\hs_field_helpers\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\Download;

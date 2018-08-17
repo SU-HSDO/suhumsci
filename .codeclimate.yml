@@ -3,12 +3,9 @@ engines:
   # ES Linting requires an .eslintrc file to tweak checks.
   eslint:
     enabled: false
-  # All css should be compiled so we only need to check scss files.
+  # We can ignore css since we compile all css from scss files.
   csslint:
-    enabled: true
-    checks:
-      overqualified-elements:
-        enabled: false
+    enabled: false
   # We don't lint our coffee. Eew.
   coffeelint:
     enabled: false
@@ -36,13 +33,13 @@ engines:
     enabled: true
     checks:
       Drupal Commenting FunctionComment TypeHintMissing:
-        enabled: false
+        enabled: true
       Drupal Commenting FunctionComment IncorrectTypeHint:
-        enabled: false
+        enabled: true
       DrupalPractice Commenting CommentEmptyLine SpacingAfter:
-        enabled: false
+        enabled: true
       Drupal NamingConventions ValidFunctionName ScopeNotCamelCaps:
-        enabled: false
+        enabled: true
       Drupal NamingConventions ValidClassName StartWithCaptial:
         enabled: false
       Drupal NamingConventions ValidFunctionName NotCamelCaps:
@@ -50,7 +47,7 @@ engines:
       DrupalPractice General ClassName ClassPrefix:
         enabled: false
       Drupal NamingConventions ValidClassName NoUnderscores:
-        enabled: false
+        enabled: true
     config:
       file_extensions: "php,inc,install,module,profile"
       standard: "Drupal,DrupalPractice"

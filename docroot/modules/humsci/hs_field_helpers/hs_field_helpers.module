@@ -343,18 +343,14 @@ function hs_field_helpers_preprocess_field(&$variables) {
   $entity = $variables['element']['#object'];
   $field_name = $variables['element']['#field_name'];
   $view_mode = $variables['element']['#view_mode'];
-
-  // Drill down to field formatter settings.
-  $render_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-  // Anything else should be handled by field_formatter_class.
-  if (!($render_display instanceof LayoutBuilderEntityViewDisplay)) {
-    return;
-  }
-  $field_display = _hs_field_helpers_get_view_mode_component($render_display, $field_name);
+  $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
+  // A user can customize a field label in the layout builder but it doesn't
+  // get moved to the field level.
+  $variables['label'] = $field_config['label'] ?? $variables['label'];
 
   // Add class for whole field.
-  if (!empty($field_display['third_party_settings']['field_formatter_class'])) {
-    $variables['attributes']['class'][] = $field_display['third_party_settings']['field_formatter_class']['class'];
+  if (!empty($field_config['formatter']['third_party_settings']['field_formatter_class'])) {
+    $variables['attributes']['class'][] = $field_config['formatter']['third_party_settings']['field_formatter_class']['class'];
   }
 }
 
@@ -365,21 +361,16 @@ function hs_field_helpers_preprocess_field(&$variables) {
  * take that suggestion and run with it.
  */
 function hs_field_helpers_theme_suggestions_field(array $variables) {
-
   // Get a few convenient handles.
   /** @var FieldableEntityInterface $entity */
   $entity = $variables['element']['#object'];
   $field_name = $variables['element']['#field_name'];
   $view_mode = $variables['element']['#view_mode'];
-
-  // Drill down to field formatter settings.
-  /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $render_display */
-  $render_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
-  $field_display = _hs_field_helpers_get_view_mode_component($render_display, $field_name);
+  $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
 
   $suggestions = [];
-  // Add class for whole field.
-  if (isset($field_display['third_party_settings']['hs_field_helpers']) && $field_display['third_party_settings']['hs_field_helpers']) {
+  //  // Add class for whole field.
+  if (isset($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
       'field__inline_contents',
@@ -393,26 +384,33 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 /**
  * A field can be nested in a layout builder section, so lets go get it.
  *
- * @param \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $entity_display
- *   Display entity.
+ * @param EntityInterface $entity
+ *   The entity in question.
+ * @param string $view_mode
+ *   View mode to build.
  * @param string $field_name
  *   Field name to find.
  *
  * @return array|null
  *   Formatter settings of the field if found.
  */
-function _hs_field_helpers_get_view_mode_component(LayoutBuilderEntityViewDisplay $entity_display, $field_name) {
+function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $view_mode, $field_name) {
+  $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
+
   $entity_type = $entity_display->getTargetEntityTypeId();
   $entity_bundle = $entity_display->getTargetBundle();
   $id = "field_block:$entity_type:$entity_bundle:$field_name";
+  $render_build = $entity_display->build($entity);
+  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
+    return [];
+  }
 
-  /** @var \Drupal\layout_builder\Section $section */
-  foreach ($entity_display->getSections() as $section) {
-    /** @var \Drupal\layout_builder\SectionComponent $component */
-    foreach ($section->getComponents() as $component) {
-      $config = $component->get('configuration');
-      if ($config['id'] == $id) {
-        return $config['formatter'];
+  foreach ($render_build['_layout_builder'] as $section) {
+    foreach (Element::children($section) as $region_id) {
+      foreach ($section[$region_id] as $component) {
+        if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
+          return $component['#configuration'];
+        }
       }
     }
   }

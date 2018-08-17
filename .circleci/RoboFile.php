@@ -186,7 +186,8 @@ class RoboFile extends \Robo\Tasks {
       ->args('sql-sync')
       ->args("@$site.dev")
       ->args('@default.local')
-      ->option('create-db');
+      ->option('create-db')
+      ->option('yes');
     return $task;
   }
 

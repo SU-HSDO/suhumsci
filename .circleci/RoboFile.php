@@ -30,6 +30,7 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
+    $collection->addTask($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
   }
@@ -166,10 +167,18 @@ class RoboFile extends \Robo\Tasks {
   protected function installDrupal() {
     $task = $this->drush()
       ->args('site-install')
-      ->args('config_installer')
+      ->args('minimal')
       ->option('verbose')
       ->option('yes')
       ->option('db-url', static::DB_URL, '=');
+    return $task;
+  }
+
+  protected function syncAcquia($site = 'default'){
+    $task = $this->drush()
+      ->args('sql-sync')
+      ->args("@$site.dev")
+      ->args('@self');
     return $task;
   }
 

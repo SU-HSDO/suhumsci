@@ -174,11 +174,12 @@ class RoboFile extends \Robo\Tasks {
     return $task;
   }
 
-  protected function syncAcquia($site = 'default'){
+  protected function syncAcquia($site = 'swshumsci.dev') {
     $task = $this->drush()
       ->args('sql-sync')
       ->args("@$site.dev")
-      ->args('@self');
+      ->args('@self')
+      ->option('sanitize');
     return $task;
   }
 

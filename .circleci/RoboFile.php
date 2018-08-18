@@ -38,7 +38,7 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
     $collection->addTask($this->debug());
-    $collection->addTaskList($this->syncAcquia());
+//    $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
   }

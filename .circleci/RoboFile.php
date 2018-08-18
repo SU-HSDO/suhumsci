@@ -182,12 +182,6 @@ class RoboFile extends \Robo\Tasks {
   }
 
   protected function syncAcquia($site = 'swshumsci') {
-//        $tasks[] = $this->drush()
-//          ->args('sql-sync')
-//          ->args("@$site.dev")
-//          ->args('@default.local')
-//          ->option('verbose')
-//          ->option('yes');
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
     $tasks[] = $this->taskExecStack()->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
@@ -209,7 +203,7 @@ class RoboFile extends \Robo\Tasks {
       ->mkdir('artifacts/phpunit', 777);
     $tasks[] = $this->taskExecStack()
       ->dir('docroot')
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/custom');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
     return $tasks;
   }
 

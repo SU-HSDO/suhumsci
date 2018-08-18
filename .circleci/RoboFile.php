@@ -102,7 +102,7 @@ class RoboFile extends \Robo\Tasks {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/settings.local.php', 'web/sites/default/settings.local.php', $force);
+      ->copy('.circleci/config/settings.local.php', 'docroot/sites/default/settings.local.php', $force);
     $tasks[] = $this->taskExec('wget -O dump.sql ' . getenv('DB_DUMP_URL'));
     $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
     return $tasks;
@@ -191,7 +191,7 @@ class RoboFile extends \Robo\Tasks {
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > clean_dump.sql");
     $tasks[] = $this->taskExecStack()->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
-    $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
+    $tasks[] = $this->drush()->dir('docroot')->rawArg('sql-cli < dump.sql');
     return $tasks;
   }
 
@@ -205,10 +205,10 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', 'web/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', 'docroot/core/phpunit.xml', $force)
       ->mkdir('artifacts/phpunit', 777);
     $tasks[] = $this->taskExecStack()
-      ->dir('web')
+      ->dir('docroot')
       ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/custom');
     return $tasks;
   }
@@ -223,11 +223,11 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', 'web/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', 'docroot/core/phpunit.xml', $force)
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()
-      ->dir('web')
+      ->dir('docroot')
       ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html modules/custom');
     return $tasks;
   }

@@ -182,16 +182,15 @@ class RoboFile extends \Robo\Tasks {
   }
 
   protected function syncAcquia($site = 'swshumsci') {
-        $tasks[] = $this->drush()
-          ->args('sql-sync')
-          ->args("@$site.dev")
-          ->args('@default.local')
-          ->option('target-dump', './', '=')
-          ->option('verbose')
-          ->option('yes');
-
-//    $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
-//    $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
+//        $tasks[] = $this->drush()
+//          ->args('sql-sync')
+//          ->args("@$site.dev")
+//          ->args('@default.local')
+//          ->option('verbose')
+//          ->option('yes');
+    $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
+    $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
+    $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
     return $tasks;
   }
 

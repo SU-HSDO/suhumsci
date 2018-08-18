@@ -20,6 +20,13 @@ class RoboFile extends \Robo\Tasks {
   const DB_URL = 'mysql://root@127.0.0.1/drupal8';
 
   /**
+   * Directory of drupal installation.
+   *
+   * @var string
+   */
+  const DRUPAL_ROOT = 'docroot';
+
+  /**
    * Command to run unit tests.
    *
    * @return \Robo\Result
@@ -102,7 +109,7 @@ class RoboFile extends \Robo\Tasks {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/settings.local.php', 'docroot/sites/default/settings.local.php', $force);
+      ->copy('.circleci/config/settings.local.php', static::DRUPAL_ROOT . '/sites/default/settings.local.php', $force);
     $tasks[] = $this->taskExec('wget -O dump.sql ' . getenv('DB_DUMP_URL'));
     $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
     return $tasks;
@@ -184,8 +191,10 @@ class RoboFile extends \Robo\Tasks {
   protected function syncAcquia($site = 'swshumsci') {
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
-    $tasks[] = $this->taskExecStack()->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
-    $tasks[] = $this->drush()->rawArg('@default.local sql-cli < clean_dump.sql');
+    $tasks[] = $this->taskExecStack()
+      ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
+    $tasks[] = $this->drush()
+      ->rawArg('@default.local sql-cli < clean_dump.sql');
     return $tasks;
   }
 
@@ -199,10 +208,10 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', 'docroot/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT.'/core/phpunit.xml', $force)
       ->mkdir('artifacts/phpunit', 777);
     $tasks[] = $this->taskExecStack()
-      ->dir('docroot')
+      ->dir(static::DRUPAL_ROOT)
       ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
     return $tasks;
   }
@@ -217,11 +226,11 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', 'docroot/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT.'/core/phpunit.xml', $force)
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()
-      ->dir('docroot')
+      ->dir(static::DRUPAL_ROOT)
       ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html modules/custom');
     return $tasks;
   }
@@ -239,8 +248,8 @@ class RoboFile extends \Robo\Tasks {
     $tasks[] = $this->taskFilesystemStack()
       ->mkdir('artifacts/phpcs');
     $tasks[] = $this->taskExecStack()
-      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml web/modules/custom')
-      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml web/modules/custom');
+      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/custom')
+      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/custom');
     return $tasks;
   }
 
@@ -252,7 +261,7 @@ class RoboFile extends \Robo\Tasks {
    */
   protected function drush() {
     // Drush needs an absolute path to the docroot.
-    $docroot = $this->getDocroot() . '/web';
+    $docroot = $this->getDocroot() . '/' . static::DRUPAL_ROOT;
     return $this->taskExec('vendor/bin/drush')
       ->option('root', $docroot, '=');
   }

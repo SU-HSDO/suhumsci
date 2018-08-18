@@ -189,8 +189,8 @@ class RoboFile extends \Robo\Tasks {
 //          ->option('verbose')
 //          ->option('yes');
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
-    $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
-    $tasks[] = $this->taskExecStack()->exec("grep -v '^Connection to' dump.sql > dump.sql");
+    $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > clean_dump.sql");
+    $tasks[] = $this->taskExecStack()->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
     $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
     return $tasks;
   }

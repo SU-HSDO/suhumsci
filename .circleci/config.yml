@@ -8,6 +8,13 @@ copy_robo: &copy_robo
     name: Copy RoboFile.php
     command: cp .circleci/RoboFile.php .
 
+## Starts apache
+start_apache: &start_apache
+  run:
+    name: Starting Apache
+    command: |
+      apache2ctl start
+
 ## Defines images and working directory.
 defaults: &defaults
   docker:

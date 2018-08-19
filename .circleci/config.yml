@@ -48,6 +48,7 @@ save_cache: &save_cache
 unit_kernel_tests: &unit_kernel_tests
   <<: *defaults
   steps:
+    - *start_apache
     - add_ssh_keys:
         fingerprints:
           - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"

@@ -37,16 +37,9 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
-    $collection->addTask($this->debug());
 //    $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
-  }
-
-  protected function debug() {
-    return $this->drush()
-      ->args('@default.local')
-      ->args('sql-connect');
   }
 
   /**
@@ -208,7 +201,7 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT.'/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT.'/core/phpunit.xml', $force)
       ->mkdir('artifacts/phpunit', 777);
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)

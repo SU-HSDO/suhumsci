@@ -45,8 +45,7 @@ class RoboFile extends \Robo\Tasks {
 
   protected function fixPerms() {
     return $this->taskExecStack()
-      ->dir(static::DRUPAL_ROOT)
-      ->exec('chmod 777 -R sites');
+      ->exec('chmod 777 -R ' . static::DRUPAL_ROOT);
   }
 
   /**

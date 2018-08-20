@@ -26,7 +26,12 @@ class RoboFile extends \Robo\Tasks {
    */
   const DRUPAL_ROOT = 'docroot';
 
-  const ARTIFACTS = 'docroot/sites/simpletest/artifacts';
+  /**
+   * Artifacts directory relative to DRUPAL_ROOT.
+   *
+   * @var string
+   */
+  const ARTIFACTS = '../artifacts';
 
   /**
    * Command to run unit tests.
@@ -214,7 +219,7 @@ class RoboFile extends \Robo\Tasks {
 
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
-      ->exec('sudo -u www-data -E ../vendor/bin/phpunit -c core --debug --verbose --log-junit ' . static::ARTIFACTS . '/phpunit/phpunit.xml modules/contrib/asset_injector');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ' . static::ARTIFACTS . '/phpunit/phpunit.xml modules/contrib/asset_injector');
     return $tasks;
   }
 

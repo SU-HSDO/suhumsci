@@ -14,7 +14,7 @@ start_apache: &start_apache
     name: Starting Apache
     command: |
       apache2ctl start
-      mkdir -m 777 /var/www/html/artifacts
+      usermod -a -G www-data root
 
 ## Defines images and working directory.
 defaults: &defaults

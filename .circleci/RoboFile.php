@@ -37,7 +37,7 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
-    $collection->addTask($this->fixPerms());
+//    $collection->addTask($this->fixPerms());
     //    $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
@@ -211,7 +211,12 @@ class RoboFile extends \Robo\Tasks {
       ->mkdir('artifacts/phpunit', 777);
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
-      ->exec('sudo -u www-data -E ../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
+
+//    $tasks[] = $this->taskExecStack()
+//      ->dir(static::DRUPAL_ROOT)
+//      ->exec('sudo -u www-data -E ../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
+
     return $tasks;
   }
 

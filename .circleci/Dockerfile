@@ -9,3 +9,4 @@ RUN sed -ri -e 's!/var/www/html/web!/var/www/html/docroot!g' /etc/apache2/apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 RUN adduser www-data root
+RUN adduser root www-data

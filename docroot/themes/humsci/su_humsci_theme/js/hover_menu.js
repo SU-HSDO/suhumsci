@@ -31,16 +31,16 @@
 
       // Check main menu items to ensure dropdown submenus don't get orphaned or cut off.
       function menuEdgeCheck() {
-        var viewportWidth = document.body.clientWidth;
-        jQuery('ul.decanter-nav-primary > li').each(function() {
-          var itemFromLeft = jQuery(this).offset().left;
-          var itemFromRight = viewportWidth - itemFromLeft;
-          var subMenuWidth = jQuery('> ul', this).outerWidth();
-          if (subMenuWidth > itemFromRight) {
-            jQuery(this).addClass( 'edge' );
+        var $viewportWidth = $('body').innerWidth();
+        $('ul.decanter-nav-primary > li', context).each(function() {
+          var $itemFromLeft = jQuery(this).offset().left;
+          var $itemFromRight = $viewportWidth - $itemFromLeft;
+          var $subMenuWidth = jQuery('> ul', this).outerWidth();
+          if ($subMenuWidth > $itemFromRight) {
+            $(this).addClass( 'edge' );
           }
           else {
-            jQuery(this).removeClass( 'edge' );
+            $(this).removeClass( 'edge' );
           }
         });
       }
@@ -48,7 +48,7 @@
       setMenu();
       menuEdgeCheck();
 
-      var onResizeActivity = debounce(function() {
+      var onResizeActivity = Drupal.debounce(function() {
         setMenu();
         menuEdgeCheck();
       }, 125);
@@ -70,22 +70,6 @@
           $(theMenu).siblings('ul').toggleClass('expanded');
         });
       }
-
-      // debounce so that we don't run our resize functions constantly
-      function debounce(func, wait, immediate) {
-        var timeout;
-        return function() {
-          var context = this, args = arguments;
-          var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-          };
-          var callNow = immediate && !timeout;
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-          if (callNow) func.apply(context, args);
-        };
-      } // end debounce function
 
       // run on window resize
       window.addEventListener('resize', onResizeActivity);

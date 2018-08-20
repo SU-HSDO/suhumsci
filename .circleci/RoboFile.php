@@ -45,7 +45,7 @@ class RoboFile extends \Robo\Tasks {
 
   protected function fixPerms() {
     return $this->taskExecStack()
-      ->exec('sudo chmod -R 777 /var/www/html');
+      ->exec('sudo chown -R www-data:www-data /var/www/html');
   }
 
   /**

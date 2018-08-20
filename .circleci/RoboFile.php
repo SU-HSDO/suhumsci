@@ -209,7 +209,8 @@ class RoboFile extends \Robo\Tasks {
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('artifacts/phpunit', 777)
-      ->chown('artifacts', 'www-data:www-data', TRUE);
+      ->chown('artifacts', 'www-data', TRUE)
+      ->chgrp('artifacts', 'www-data', TRUE);
     //    $tasks[] = $this->taskExecStack()
     //      ->dir(static::DRUPAL_ROOT)
     //      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');

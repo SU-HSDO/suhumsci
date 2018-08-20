@@ -45,7 +45,7 @@ class RoboFile extends \Robo\Tasks {
 
   protected function fixPerms() {
     return $this->taskExecStack()
-      ->exec('chown -R www-data:www-data ' . static::DRUPAL_ROOT);
+      ->exec('sudo chown -R www-data:www-data ' . static::DRUPAL_ROOT);
   }
 
   /**

@@ -44,15 +44,8 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
-    //    $collection->addTask($this->fixPerms());
-    //    $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
-  }
-
-  protected function fixPerms() {
-    return $this->taskExecStack()
-      ->exec('sudo chown -R www-data:www-data /var/www/html');
   }
 
   /**

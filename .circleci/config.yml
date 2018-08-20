@@ -53,10 +53,6 @@ unit_kernel_tests: &unit_kernel_tests
         fingerprints:
           - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
     - checkout
-    - run:
-        name: Set Permissions
-        command: |
-          chmod 777 -R /var/www/html/docroot/sites
     - *copy_robo
     - restore_cache: *restore_cache
     - run:

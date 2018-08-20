@@ -37,9 +37,16 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTask($this->installDrupal());
-//    $collection->addTaskList($this->syncAcquia());
+    $collection->addTask($this->fixPerms());
+    //    $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
+  }
+
+  protected function fixPerms() {
+    return $this->taskExecStack()
+      ->dir(static::DRUPAL_ROOT)
+      ->exec('chmod 777 -R sites');
   }
 
   /**
@@ -201,7 +208,7 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT.'/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('artifacts/phpunit', 777);
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
@@ -219,7 +226,7 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT.'/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()

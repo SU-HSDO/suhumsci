@@ -371,7 +371,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 
   $suggestions = [];
   //  // Add class for whole field.
-  if (isset($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
+  if (!empty($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
       'field__inline_contents',
@@ -401,6 +401,12 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
   $entity_type = $entity_display->getTargetEntityTypeId();
   $entity_bundle = $entity_display->getTargetBundle();
   $id = "field_block:$entity_type:$entity_bundle:$field_name";
+  $static_id = "$id-{$entity->id()}";
+  $builds = &drupal_static(__FUNCTION__);
+  if (isset($builds[$static_id])) {
+    return $builds[$static_id];
+  }
+
   $render_build = $entity_display->build($entity);
   if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
     return [];
@@ -410,6 +416,7 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
     foreach (Element::children($section) as $region_id) {
       foreach ($section[$region_id] as $component) {
         if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
+          $builds[$static_id] = $component['#configuration'];
           return $component['#configuration'];
         }
       }

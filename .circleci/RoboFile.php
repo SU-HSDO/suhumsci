@@ -26,6 +26,8 @@ class RoboFile extends \Robo\Tasks {
    */
   const DRUPAL_ROOT = 'docroot';
 
+  const ARTIFACTS = 'docroot/sites/simpletest/artifacts';
+
   /**
    * Command to run unit tests.
    *
@@ -208,18 +210,11 @@ class RoboFile extends \Robo\Tasks {
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
-      ->mkdir('artifacts/phpunit', 777)
-      ->chown('artifacts', 'www-data', TRUE)
-      ->chgrp('artifacts', 'www-data', TRUE)
-      ->chmod('artifacts', 777, 0000, TRUE);
-    //    $tasks[] = $this->taskExecStack()
-    //      ->dir(static::DRUPAL_ROOT)
-    //      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
+      ->mkdir(static::ARTIFACTS . '/phpunit', 777);
 
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
-      ->exec('sudo -u www-data -E ../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/contrib/asset_injector');
-    //\Drupal\Component\PhpStorage\FileStorage::createDirectory()
+      ->exec('sudo -u www-data -E ../vendor/bin/phpunit -c core --debug --verbose --log-junit ' . static::ARTIFACTS . '/phpunit/phpunit.xml modules/contrib/asset_injector');
     return $tasks;
   }
 

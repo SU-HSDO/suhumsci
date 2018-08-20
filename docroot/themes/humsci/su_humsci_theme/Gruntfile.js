@@ -121,7 +121,8 @@ module.exports = function(grunt) {
           'patterns/organisms/masonry/css/masonry.css':                                       'patterns/organisms/masonry/scss/masonry.scss',
 
           // COMPONENTS
-          'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
+          'css/components/atoms/atoms.css':         'scss/components/atoms/index.scss',
+          'css/components/molecules/molecules.css': 'scss/components/molecules/index.scss',
 
           // NODES
           'css/nodes/hs_basic_page.css':  'scss/nodes/hs_basic_page.scss',

@@ -197,7 +197,7 @@ class RoboFile extends \Robo\Tasks {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/settings.local.php', static::DRUPAL_ROOT . '/sites/default/settings.local.php', TRUE);
+      ->copy('.circleci/config/circleci.local.settings.php', static::DRUPAL_ROOT . '/sites/default/settings.local.php', TRUE);
 
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");

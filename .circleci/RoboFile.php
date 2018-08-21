@@ -81,7 +81,7 @@ class RoboFile extends Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     foreach ($this->getSites() as $site) {
-//      $this->yell("Testing against: $site");
+      //      $this->yell("Testing against: $site");
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests());
@@ -202,7 +202,7 @@ class RoboFile extends Tasks {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
     // Copy site specific settings files to default settings.
-    if ($site != 'swshumsci') {
+    if ($site != 'default' && $site != 'swshusmci') {
       $tasks[] = $this->taskFilesystemStack()
         ->copy(static::DRUPAL_ROOT . "/sites/$site/settings.php", static::DRUPAL_ROOT . "/sites/default/settings.php", TRUE);
     }

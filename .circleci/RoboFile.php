@@ -97,6 +97,10 @@ class RoboFile extends Tasks {
   protected function runUpdatePath($partial_config = FALSE) {
     $tasks = [];
 
+    // Get encryption keys first.
+    $tasks[] = $this->blt()
+      ->arg('humsci:keys');
+
     $tasks[] = $this->drush()
       ->args('updatedb')
       ->option('yes')
@@ -126,6 +130,8 @@ class RoboFile extends Tasks {
    */
   protected function runBehatTests() {
     $tasks = [];
+    // Don't use blt to run behat here. It's dependencies conflict with
+    // circleci too much.
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/behat.yml', 'tests/behat/behat.yml', TRUE);
     $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml');

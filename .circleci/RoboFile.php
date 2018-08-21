@@ -104,7 +104,7 @@ class RoboFile extends Tasks {
 
     $tasks[] = $this->blt()
       ->arg('drupal:toggle:modules')
-      ->option('env', 'ci', '=');
+      ->option('environment', 'ci', '=');
 
     $config_import = $this->drush()
       ->args('config-import')

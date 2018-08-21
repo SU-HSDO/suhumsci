@@ -201,8 +201,13 @@ class RoboFile extends Tasks {
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
+    // Copy site specific settings files to default settings.
+    if ($site != 'swshumsci') {
+      $tasks[] = $this->taskExec('cp ' . static::DRUPAL_ROOT . "/sites/$site/settings.php", static::DRUPAL_ROOT . "/sites/default/settings.php", TRUE);
+    }
+    // Copy database credentials to be included via BLT.
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings.php', TRUE);
+      ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings/includes.settings.php', TRUE);
 
     // This line is just to test connection and to prevent unwanted line at
     // the beginning of the db dump. Without this, we would get the text

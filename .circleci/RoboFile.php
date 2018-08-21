@@ -175,9 +175,14 @@ class RoboFile extends Tasks {
   /**
    * Syncs the site to Acquia.
    *
-   * @param string $site
+   * We can't use drush sql-sync because it causes rsync issues when it tries
+   * to chown the files.
    *
-   * @return array
+   * @param string $site
+   *   Machine name of the site to syn.
+   *
+   * @return \Robo\Task\Base\Exec[]
+   *   Array of tasks.
    */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
@@ -185,8 +190,14 @@ class RoboFile extends Tasks {
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings.php', TRUE);
 
-    $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
-    $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
+    // This line is just to test connection and to prevent unwanted line at
+    // the beginning of the db dump. Without this, we would get the text
+    // "Warning: Permanently added the RSA host key for IP address" at the top
+    // of the db dump.
+    $tasks[] = $this->drush()->rawArg("@$site.prod sql-connect");
+    $tasks[] = $this->drush()->rawArg("@$site.prod sql-dump > dump.sql");
+
+    // At the end of the drush command, we need to remove the ssh command.
     $tasks[] = $this->taskExecStack()
       ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
     $tasks[] = $this->drush()

@@ -143,10 +143,11 @@ class RoboFile extends \Robo\Tasks {
   protected function runBehatTests() {
     $force = TRUE;
     $tasks = [];
-//    $tasks[] = $this->taskExec('service apache2 start');
-//    $tasks[] = $this->taskFilesystemStack()
-//      ->copy('.circleci/config/behat.yml', 'tests/behat.yml', $force);
-    $tasks[] = $this->taskExec('vendor/acquia/blt/bin/blt tests:behat:run');
+    //    $tasks[] = $this->taskExec('service apache2 start');
+    //    $tasks[] = $this->taskFilesystemStack()
+    //      ->copy('.circleci/config/behat.yml', 'tests/behat.yml', $force);
+    $tasks[] = $this->taskExec('vendor/acquia/blt/bin/blt tests:behat:init:config --yes');
+    $tasks[] = $this->taskExec('vendor/acquia/blt/bin/blt tests:behat:run --yes');
     //    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat.yml');
     return $tasks;
   }

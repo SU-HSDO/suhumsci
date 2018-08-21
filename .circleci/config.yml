@@ -15,6 +15,18 @@ start_apache: &start_apache
     command: |
       apache2ctl start
 
+## Add SSH Key
+add_ssh: &add_ssh
+  add_ssh_keys:
+    fingerprints:
+      - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
+
+## Add Known Hosts
+add_known_hosts: &add_known_hosts
+  run:
+    name: Add SSH Known Hosts
+    command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+
 ## Defines images and working directory.
 defaults: &defaults
   docker:
@@ -49,15 +61,9 @@ unit_kernel_tests: &unit_kernel_tests
   <<: *defaults
   steps:
     - *start_apache
-#    - add_ssh_keys:
-#        fingerprints:
-#          - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
     - checkout
     - *copy_robo
     - restore_cache: *restore_cache
-#    - run:
-#        name: Fix host authenticity
-#        command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests
@@ -68,20 +74,23 @@ unit_kernel_tests: &unit_kernel_tests
     - save_cache: *save_cache
 
 ### Job to run the update path and Behat tests.
-#behat_tests: &behat_tests
-#  <<: *defaults
-#  steps:
-#    - checkout
-#    - *copy_robo
-#    - restore_cache: *restore_cache
-#    - run:
-#        name: Run Behat tests
-#        command: robo job:run-behat-tests
-#    - save_cache: *save_cache
-#    - store_test_results:
-#        path: /var/www/html/artifacts/behat
-#    - store_artifacts:
-#        path: /var/www/html/artifacts
+behat_tests: &behat_tests
+  <<: *defaults
+  steps:
+    - *start_apache
+    - *add_ssh
+    - *add_known_hosts
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Run Behat tests
+        command: robo job:run-behat-tests
+    - save_cache: *save_cache
+    - store_test_results:
+        path: /var/www/html/artifacts/behat
+    - store_artifacts:
+        path: /var/www/html/artifacts
 
 ## Job to check test coverage.
 code_coverage: &code_coverage
@@ -102,8 +111,8 @@ version: 2
 jobs:
   run-unit-kernel-tests:
      <<: *unit_kernel_tests
-#  run-behat-tests:
-#     <<: *behat_tests
+  run-behat-tests:
+     <<: *behat_tests
   run-code-coverage:
      <<: *code_coverage
 
@@ -113,5 +122,5 @@ workflows:
   test_and_lint:
     jobs:
       - run-unit-kernel-tests
-#      - run-behat-tests
+      - run-behat-tests
       - run-code-coverage

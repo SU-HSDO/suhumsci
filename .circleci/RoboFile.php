@@ -86,7 +86,8 @@ class RoboFile extends \Robo\Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
-    $collection->addTaskList($this->importDatabase());
+    $collection->addTask($this->syncAcquia());
+//    $collection->addTaskList($this->importDatabase());
     $collection->addTaskList($this->runUpdatePath());
     $collection->addTaskList($this->runBehatTests());
     return $collection->run();
@@ -187,6 +188,11 @@ class RoboFile extends \Robo\Tasks {
     return $task;
   }
 
+  /**
+   * @param string $site
+   *
+   * @return array
+   */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
@@ -248,8 +254,8 @@ class RoboFile extends \Robo\Tasks {
     $tasks[] = $this->taskFilesystemStack()
       ->mkdir('artifacts/phpcs');
     $tasks[] = $this->taskExecStack()
-      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/custom')
-      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/custom');
+      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/humsci')
+      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/humsci');
     return $tasks;
   }
 

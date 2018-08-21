@@ -79,7 +79,7 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->waitForDatabase());
     $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUpdatePath());
-    $collection->addTask($this->startChrome());
+//    $collection->addTask($this->startChrome());
     $collection->addTaskList($this->runBehatTests());
     return $collection->run();
   }

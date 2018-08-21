@@ -96,11 +96,16 @@ class RoboFile extends Tasks {
    */
   protected function runUpdatePath($partial_config = FALSE) {
     $tasks = [];
+
     $tasks[] = $this->drush()
       ->args('updatedb')
       ->option('yes')
       ->option('verbose');
-    $tasks[] = $this->blt()->arg('drupal:toggle:modules');
+
+    $tasks[] = $this->blt()
+      ->arg('drupal:toggle:modules')
+      ->option('env', 'ci', '=');
+
     $config_import = $this->drush()
       ->args('config-import')
       ->option('yes')
@@ -108,6 +113,7 @@ class RoboFile extends Tasks {
     if ($partial_config) {
       $config_import->option('partial');
     }
+
     $tasks[] = $config_import;
     return $tasks;
   }
@@ -184,7 +190,7 @@ class RoboFile extends Tasks {
     $tasks[] = $this->taskExecStack()
       ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
     $tasks[] = $this->drush()
-      ->rawArg('@default.local sql-cli < clean_dump.sql');
+      ->rawArg('@self sql-cli < clean_dump.sql');
     return $tasks;
   }
 

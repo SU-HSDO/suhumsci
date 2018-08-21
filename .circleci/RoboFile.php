@@ -1,6 +1,9 @@
 <?php
 
+namespace Circleci;
+
 use Robo\Tasks;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Base tasks for setting up a module to test within a full Drupal environment.
@@ -79,9 +82,11 @@ class RoboFile extends Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
-    $collection->addTaskList($this->syncAcquia());
-    $collection->addTaskList($this->runUpdatePath(TRUE));
-    $collection->addTaskList($this->runBehatTests());
+    foreach ($this->getSites() as $site) {
+      $collection->addTaskList($this->syncAcquia($site));
+      $collection->addTaskList($this->runUpdatePath(TRUE));
+      $collection->addTaskList($this->runBehatTests());
+    }
     return $collection->run();
   }
 
@@ -300,6 +305,17 @@ class RoboFile extends Tasks {
   protected function blt() {
     return $this->taskExec('vendor/acquia/blt/bin/blt')
       ->option('verbose');
+  }
+
+  /**
+   * Get all available sites in multisite setup.
+   *
+   * @return array
+   *   Array of machine names for sites.
+   */
+  protected function getSites() {
+    $blt_config = Yaml::parseFile($this->getDocroot() . '/blt/blt.yml');
+    return $blt_config['multisites'] ?: ['default'];
   }
 
 }

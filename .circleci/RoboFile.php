@@ -313,7 +313,7 @@ class RoboFile extends Tasks {
    */
   protected function getSites() {
     $blt_config = Yaml::parseFile($this->getDocroot() . '/blt/blt.yml');
-    return $blt_config['multisites'] ?: ['default'];
+    return $blt_config['multisites'];
   }
 
 }

@@ -86,7 +86,7 @@ class RoboFile extends \Robo\Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
-    $collection->addTask($this->syncAcquia());
+    $collection->addTaskList($this->syncAcquia());
 //    $collection->addTaskList($this->importDatabase());
     $collection->addTaskList($this->runUpdatePath());
     $collection->addTaskList($this->runBehatTests());

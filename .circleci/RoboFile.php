@@ -1,7 +1,5 @@
 <?php
 
-// @codingStandardsIgnoreStart
-
 /**
  * Base tasks for setting up a module to test within a full Drupal environment.
  *
@@ -25,13 +23,6 @@ class RoboFile extends \Robo\Tasks {
    * @var string
    */
   const DRUPAL_ROOT = 'docroot';
-
-  /**
-   * Artifacts directory relative to DRUPAL_ROOT.
-   *
-   * @var string
-   */
-  const ARTIFACTS = '../artifacts';
 
   /**
    * Command to run unit tests.
@@ -88,8 +79,13 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->waitForDatabase());
     $collection->addTaskList($this->syncAcquia());
     $collection->addTaskList($this->runUpdatePath());
+    $collection->addTask($this->startChrome());
     $collection->addTaskList($this->runBehatTests());
     return $collection->run();
+  }
+
+  protected function startChrome(){
+    $command = 'google-chrome';
   }
 
   /**
@@ -117,20 +113,26 @@ class RoboFile extends \Robo\Tasks {
   /**
    * Updates the database.
    *
+   * @param bool $partial_config
+   *   Use partial option when doing config import.
    *
    * @return \Robo\Task\Base\Exec[]
    *   An array of tasks.
    */
-  protected function runUpdatePath() {
+  protected function runUpdatePath($partial_config = FALSE) {
     $tasks = [];
     $tasks[] = $this->drush()
       ->args('updatedb')
       ->option('yes')
       ->option('verbose');
-    $tasks[] = $this->drush()
+    $config_import = $this->drush()
       ->args('config-import')
       ->option('yes')
       ->option('verbose');
+    if ($partial_config) {
+      $config_import->option('partial');
+    }
+    $tasks[] = $config_import;
     return $tasks;
   }
 
@@ -141,14 +143,8 @@ class RoboFile extends \Robo\Tasks {
    *   An array of tasks.
    */
   protected function runBehatTests() {
-    $force = TRUE;
     $tasks = [];
-    //    $tasks[] = $this->taskExec('service apache2 start');
-    //    $tasks[] = $this->taskFilesystemStack()
-    //      ->copy('.circleci/config/behat.yml', 'tests/behat.yml', $force);
-    $tasks[] = $this->taskExec('vendor/acquia/blt/bin/blt tests:behat:init:config --yes');
-    $tasks[] = $this->taskExec('vendor/acquia/blt/bin/blt tests:behat:run --yes');
-    //    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat.yml');
+    $tasks[] = $this->blt()->arg('tests:behat:run')->option('yes');
     return $tasks;
   }
 
@@ -176,13 +172,16 @@ class RoboFile extends \Robo\Tasks {
   /**
    * Install Drupal.
    *
+   * @param string $profile
+   *   Which install profile to use.
+   *
    * @return \Robo\Task\Base\Exec
    *   A task to install Drupal.
    */
-  protected function installDrupal() {
+  protected function installDrupal($profile = 'minimal') {
     $task = $this->drush()
       ->args('site-install')
-      ->args('minimal')
+      ->args($profile)
       ->option('verbose')
       ->option('yes')
       ->option('db-url', static::DB_URL, '=');
@@ -190,6 +189,8 @@ class RoboFile extends \Robo\Tasks {
   }
 
   /**
+   * Syncs the site to Acquia.
+   *
    * @param string $site
    *
    * @return array
@@ -199,9 +200,9 @@ class RoboFile extends \Robo\Tasks {
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings.php', TRUE);
+    // BLT needs the local file for Behat some reason.
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings/local.settings.php', TRUE);
-
 
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
@@ -223,11 +224,11 @@ class RoboFile extends \Robo\Tasks {
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
-      ->mkdir(static::ARTIFACTS . '/phpunit', 777);
+      ->mkdir('../artifacts/phpunit', 777);
 
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ' . static::ARTIFACTS . '/phpunit/phpunit.xml modules/humsci');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/humsci');
     return $tasks;
   }
 
@@ -246,7 +247,7 @@ class RoboFile extends \Robo\Tasks {
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ' . static::ARTIFACTS . '/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci');
     return $tasks;
   }
 
@@ -289,6 +290,16 @@ class RoboFile extends \Robo\Tasks {
   protected function getDocroot() {
     $docroot = (getcwd());
     return $docroot;
+  }
+
+  /**
+   * Return BLT.
+   *
+   * @return \Robo\Task\Base\Exec
+   *   A drush exec command.
+   */
+  protected function blt() {
+    return $this->taskExec('vendor/acquia/blt/bin/blt ');
   }
 
 }

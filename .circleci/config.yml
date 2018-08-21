@@ -14,15 +14,6 @@ start_apache: &start_apache
     name: Starting Apache
     command: |
       apache2ctl start
-## Add SSH Key
-add_ssh: &add_ssh
-  add_ssh_keys:
-    fingerprints:
-      - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
-  run:
-    name: Add SSH Key
-    command: |
-      ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
 
 ## Defines images and working directory.
 defaults: &defaults
@@ -58,10 +49,15 @@ unit_kernel_tests: &unit_kernel_tests
   <<: *defaults
   steps:
     - *start_apache
-    - *add_ssh
+#    - add_ssh_keys:
+#        fingerprints:
+#          - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
     - checkout
     - *copy_robo
     - restore_cache: *restore_cache
+#    - run:
+#        name: Fix host authenticity
+#        command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests

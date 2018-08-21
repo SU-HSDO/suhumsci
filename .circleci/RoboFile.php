@@ -81,6 +81,7 @@ class RoboFile extends Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     foreach ($this->getSites() as $site) {
+      $this->yell("Testing against: $site");
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests());
@@ -195,7 +196,7 @@ class RoboFile extends Tasks {
    */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
-    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
+    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings.php', TRUE);
 

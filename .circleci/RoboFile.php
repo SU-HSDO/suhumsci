@@ -87,7 +87,7 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTaskList($this->syncAcquia());
-//    $collection->addTaskList($this->importDatabase());
+    $collection->addTaskList($this->importDatabase());
     $collection->addTaskList($this->runUpdatePath());
     $collection->addTaskList($this->runBehatTests());
     return $collection->run();
@@ -194,6 +194,11 @@ class RoboFile extends \Robo\Tasks {
    * @return array
    */
   protected function syncAcquia($site = 'swshumsci') {
+    $tasks = [];
+    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
+    $tasks[] = $this->taskFilesystemStack()
+      ->copy('.circleci/config/settings.local.php', static::DRUPAL_ROOT . '/sites/default/settings.local.php', TRUE);
+
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
     $tasks[] = $this->taskExecStack()

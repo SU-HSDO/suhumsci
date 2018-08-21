@@ -10,7 +10,3 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 RUN adduser www-data root
 RUN adduser root www-data
-
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
-RUN rm google-chrome-stable_current_amd64.deb

@@ -1,5 +1,7 @@
 <?php
 
+use Robo\Tasks;
+
 /**
  * Base tasks for setting up a module to test within a full Drupal environment.
  *
@@ -8,7 +10,7 @@
  * @class RoboFile
  * @codeCoverageIgnore
  */
-class RoboFile extends \Robo\Tasks {
+class RoboFile extends Tasks {
 
   /**
    * The database URL.
@@ -78,36 +80,9 @@ class RoboFile extends \Robo\Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     $collection->addTaskList($this->syncAcquia());
-    $collection->addTaskList($this->runUpdatePath());
-//    $collection->addTask($this->startChrome());
+    $collection->addTaskList($this->runUpdatePath(TRUE));
     $collection->addTaskList($this->runBehatTests());
     return $collection->run();
-  }
-
-  protected function startChrome(){
-    $command = 'google-chrome';
-  }
-
-  /**
-   * Imports and updates the database.
-   *
-   * This task assumes that there is an environment variable $DB_DUMP_URL
-   * that contains a URL to a database dump. Ideally, you should set up drush
-   * site aliases and then replace this task by a drush sql-sync one. See the
-   * README at lullabot/drupal8ci for further details.
-   *
-   * @return \Robo\Task\Base\Exec[]
-   *   An array of tasks.
-   */
-  protected function importDatabase() {
-    $force = TRUE;
-    $tasks = [];
-    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
-    $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/settings.local.php', static::DRUPAL_ROOT . '/sites/default/settings.local.php', $force);
-    $tasks[] = $this->taskExec('wget -O dump.sql ' . getenv('DB_DUMP_URL'));
-    $tasks[] = $this->drush()->rawArg('sql-cli < dump.sql');
-    return $tasks;
   }
 
   /**
@@ -144,8 +119,6 @@ class RoboFile extends \Robo\Tasks {
    */
   protected function runBehatTests() {
     $tasks = [];
-//    $tasks[] = $this->blt()->arg('tests:behat:run')->option('yes');
-
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/behat.yml', 'tests/behat/behat.yml', TRUE);
     $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml');
@@ -227,7 +200,7 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('../artifacts/phpunit', 777);
 
     $tasks[] = $this->taskExecStack()
@@ -246,7 +219,7 @@ class RoboFile extends \Robo\Tasks {
     $force = TRUE;
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit-drupal-8.5.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()

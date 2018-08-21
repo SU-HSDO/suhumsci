@@ -100,6 +100,7 @@ class RoboFile extends Tasks {
       ->args('updatedb')
       ->option('yes')
       ->option('verbose');
+    $tasks[] = $this->blt()->arg('drupal:toggle:modules');
     $config_import = $this->drush()
       ->args('config-import')
       ->option('yes')
@@ -177,9 +178,6 @@ class RoboFile extends Tasks {
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database drupal8"');
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings.php', TRUE);
-    // BLT needs the local file for Behat some reason.
-    $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings/local.settings.php', TRUE);
 
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.dev sql-dump > dump.sql");
@@ -276,7 +274,8 @@ class RoboFile extends Tasks {
    *   A drush exec command.
    */
   protected function blt() {
-    return $this->taskExec('vendor/acquia/blt/bin/blt')->option('verbose');
+    return $this->taskExec('vendor/acquia/blt/bin/blt')
+      ->option('verbose');
   }
 
 }

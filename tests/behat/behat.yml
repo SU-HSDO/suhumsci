@@ -1,23 +1,33 @@
 default:
   suites:
     default:
-      paths:
-        - %paths.base%/features
+      contexts:
+        - Drupal\FeatureContext
+        - Drupal\DrupalExtension\Context\DrupalContext
+        - Drupal\DrupalExtension\Context\MinkContext
+        - Drupal\DrupalExtension\Context\MessageContext
   extensions:
     Behat\MinkExtension:
-      default_session: goutte
-      browser_name: chrome
-      javascript_session: default
       goutte: ~
-      files_path: "%paths.base%/media"
+      selenium2: ~
+      base_url: http://localhost
+      sessions:
+        default:
+          goutte: ~
+        javascript:
+          selenium2:
+            browser: chrome
+            wd_host: http://localhost:4444/wd/hub
     Drupal\DrupalExtension:
       blackbox: ~
-      api_driver: "drupal"
-    jarnaiz\JUnitFormatter\JUnitFormatterExtension:
-        filename: report.xml
-        outputDir: %paths.base%/build/tests
-    Bex\Behat\ScreenshotExtension:
-      screenshot_taking_mode: failed_steps
-      image_drivers:
-        local:
-          screenshot_directory: /tmp
+      api_driver: 'drupal'
+      drush:
+        alias: 'local'
+      drupal:
+        drupal_root: '/var/www/suhumsci/docroot'
+      region_map:
+        footer: "#footer"
+      selectors:
+        message_selector: '.messages'
+        error_message_selector: '.messages.messages--error'
+        success_message_selector: '.messages.messages--status'

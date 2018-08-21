@@ -31,15 +31,10 @@ add_known_hosts: &add_known_hosts
 defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
-
-    - image: selenium/standalone-chrome-debug:latest
-      environment:
-        CHROME_BIN: "/usr/bin/google-chrome"
-
+    - image: selenium/standalone-chrome:latest
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
-
   working_directory: /var/www/html
 
 ## Defines the cache restoring mechanism.
@@ -57,23 +52,6 @@ save_cache: &save_cache
   key: v1-dependencies-{{ checksum "composer.lock" }}
 
 #Jobs
-
-## Job to run Unit and Kernel tests.
-unit_kernel_tests: &unit_kernel_tests
-  <<: *defaults
-  steps:
-    - *start_apache
-    - checkout
-    - *copy_robo
-    - restore_cache: *restore_cache
-    - run:
-        name: Run PHPUnit tests
-        command: robo job:run-unit-tests
-    - store_test_results:
-        path: /var/www/html/artifacts/phpunit
-    - store_artifacts:
-        path: /var/www/html/artifacts
-    - save_cache: *save_cache
 
 ### Job to run the update path and Behat tests.
 behat_tests: &behat_tests
@@ -93,6 +71,23 @@ behat_tests: &behat_tests
         path: /var/www/html/artifacts/behat
     - store_artifacts:
         path: /var/www/html/artifacts
+
+## Job to run Unit and Kernel tests.
+unit_kernel_tests: &unit_kernel_tests
+  <<: *defaults
+  steps:
+    - *start_apache
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Run PHPUnit tests
+        command: robo job:run-unit-tests
+    - store_test_results:
+        path: /var/www/html/artifacts/phpunit
+    - store_artifacts:
+        path: /var/www/html/artifacts
+    - save_cache: *save_cache
 
 ## Job to check test coverage.
 code_coverage: &code_coverage

@@ -144,7 +144,11 @@ class RoboFile extends \Robo\Tasks {
    */
   protected function runBehatTests() {
     $tasks = [];
-    $tasks[] = $this->blt()->arg('tests:behat:run')->option('yes');
+//    $tasks[] = $this->blt()->arg('tests:behat:run')->option('yes');
+
+    $tasks[] = $this->taskFilesystemStack()
+      ->copy('.circleci/config/behat.yml', 'tests/behat/behat.yml', TRUE);
+    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml');
     return $tasks;
   }
 
@@ -299,7 +303,7 @@ class RoboFile extends \Robo\Tasks {
    *   A drush exec command.
    */
   protected function blt() {
-    return $this->taskExec('vendor/acquia/blt/bin/blt ');
+    return $this->taskExec('vendor/acquia/blt/bin/blt')->option('verbose');
   }
 
 }

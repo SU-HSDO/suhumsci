@@ -4,6 +4,11 @@ namespace Drupal\Tests\hs_basic_page\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 
+/**
+ * Class HsBasicPageKernelTest.
+ *
+ * @group hs_basic_page
+ */
 class HsBasicPageKernelTest extends KernelTestBase {
 
   /**

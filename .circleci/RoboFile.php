@@ -284,6 +284,7 @@ class RoboFile extends Tasks {
    * Get the absolute path to the docroot.
    *
    * @return string
+   *   The repo directory.
    */
   protected function getDocroot() {
     $docroot = (getcwd());

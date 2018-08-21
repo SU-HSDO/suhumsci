@@ -14,6 +14,15 @@ start_apache: &start_apache
     name: Starting Apache
     command: |
       apache2ctl start
+## Add SSH Key
+add_ssh: &add_ssh
+  add_ssh_keys:
+    fingerprints:
+      - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
+  run:
+    name: Add SSH Key
+    command: |
+      ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
 
 ## Defines images and working directory.
 defaults: &defaults
@@ -49,15 +58,10 @@ unit_kernel_tests: &unit_kernel_tests
   <<: *defaults
   steps:
     - *start_apache
-    - add_ssh_keys:
-        fingerprints:
-          - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
+    - *add_ssh
     - checkout
     - *copy_robo
     - restore_cache: *restore_cache
-    - run:
-        name: Fix host authenticity
-        command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests
@@ -82,36 +86,20 @@ unit_kernel_tests: &unit_kernel_tests
 #        path: /var/www/html/artifacts/behat
 #    - store_artifacts:
 #        path: /var/www/html/artifacts
-#
-### Job to check coding standards.
-#code_sniffer: &code_sniffer
-#  <<: *defaults
-#  steps:
-#    - checkout
-#    - *copy_robo
-#    - restore_cache: *restore_cache
-#    - run:
-#        name: Inspect coding standards
-#        command: robo job:check-coding-standards
-#    - store_test_results:
-#        path: /var/www/html/artifacts/phpcs
-#    - store_artifacts:
-#        path: /var/www/html/artifacts
-#    - save_cache: *save_cache
-#
-### Job to check test coverage.
-#code_coverage: &code_coverage
-#  <<: *defaults
-#  steps:
-#    - checkout
-#    - *copy_robo
-#    - restore_cache: *restore_cache
-#    - run:
-#        name: Generate code coverage report
-#        command: robo job:generate-coverage-report
-#    - store_artifacts:
-#        path: /var/www/html/artifacts
-#    - save_cache: *save_cache
+
+## Job to check test coverage.
+code_coverage: &code_coverage
+  <<: *defaults
+  steps:
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Generate code coverage report
+        command: robo job:generate-coverage-report
+    - store_artifacts:
+        path: /var/www/html/artifacts
+    - save_cache: *save_cache
 
 # Declare all of the jobs we should run.
 version: 2
@@ -120,8 +108,8 @@ jobs:
      <<: *unit_kernel_tests
 #  run-behat-tests:
 #     <<: *behat_tests
-#  run-code-coverage:
-#     <<: *code_coverage
+  run-code-coverage:
+     <<: *code_coverage
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -130,4 +118,4 @@ workflows:
     jobs:
       - run-unit-kernel-tests
 #      - run-behat-tests
-#      - run-code-coverage
+      - run-code-coverage

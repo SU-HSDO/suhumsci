@@ -231,7 +231,7 @@ class RoboFile extends \Robo\Tasks {
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()
       ->dir(static::DRUPAL_ROOT)
-      ->exec('sudo -u www-data -E ../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ' . static::ARTIFACTS . '/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ' . static::ARTIFACTS . '/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci');
     return $tasks;
   }
 

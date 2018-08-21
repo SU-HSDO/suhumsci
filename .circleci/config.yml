@@ -108,10 +108,10 @@ version: 2
 jobs:
 #  run-unit-kernel-tests:
 #     <<: *unit_kernel_tests
-  run-behat-tests:
-     <<: *behat_tests
-#  run-code-coverage:
-#     <<: *code_coverage
+#  run-behat-tests:
+#     <<: *behat_tests
+  run-code-coverage:
+     <<: *code_coverage
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -119,5 +119,5 @@ workflows:
   test_and_lint:
     jobs:
 #      - run-unit-kernel-tests
-      - run-behat-tests
-#      - run-code-coverage
+#      - run-behat-tests
+      - run-code-coverage

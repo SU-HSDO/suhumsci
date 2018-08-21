@@ -1,14 +1,14 @@
-{% set attributes = attributes.addClass('decanter-grid') %}
+{% set attributes = attributes.addClass('grid--container') %}
 
 {% if content.left_sidebar and content.right_sidebar %}
-  {% set main_class = 'decanter-width-one-half' %}
+  {% set main_class = 'grid--6-of-12' %}
 {% elseif content.left_sidebar or content.right_sidebar %}
-  {% set main_class = 'decanter-width-three-fourths' %}
+  {% set main_class = 'grid--9-of-12' %}
 {% endif %}
 
 <div{{ attributes }}>
   {% if content.left_sidebar %}
-    <div class="decanter-width-one-fourth">
+    <div class="grid--3-of-12">
       {{ content.left_sidebar }}
     </div>
   {% endif %}
@@ -19,7 +19,7 @@
   </div>
 
   {% if content.right_sidebar %}
-    <div class="decanter-width-one-fourth">
+    <div class="grid--3-of-12">
       {{ content.right_sidebar }}
     </div>
   {% endif %}

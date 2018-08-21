@@ -1,7 +1,5 @@
 <?php
 
-namespace Circleci;
-
 use Robo\Tasks;
 use Symfony\Component\Yaml\Yaml;
 

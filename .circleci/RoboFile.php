@@ -343,7 +343,15 @@ class RoboFile extends Tasks {
    */
   protected function getSites() {
     $blt_config = $this->getBltConfig();
-    return $blt_config['multisites'];
+    $sites = [];
+    foreach ($blt_config['multisites'] as $site) {
+
+      // Sandbox sites are unpredictable, so lets ignore them.
+      if (strpos($site, 'sandbox') !== FALSE) {
+        continue;
+      }
+    }
+    return $sites;
   }
 
   /**

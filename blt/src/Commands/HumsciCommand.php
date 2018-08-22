@@ -312,7 +312,7 @@ class HumsciCommand extends AcHooksCommand {
    */
   public function humsciKeys() {
     $this->taskDrush()
-      ->drush("rsync --mode=rltgoDkz @default.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
+      ->drush("rsync --mode=rltDkz @default.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
       ->run();
   }
 

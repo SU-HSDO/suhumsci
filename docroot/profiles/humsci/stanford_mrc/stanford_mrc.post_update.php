@@ -138,6 +138,6 @@ function stanford_mrc_post_update_8_0_10_alpha1() {
 function stanford_mrc_post_update_8_0_11() {
   /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
   $module_installer = \Drupal::service('module_installer');
-  $module_installer->install(['hs_field_helpers', 'layout_builder']);
+  $module_installer->install(['hs_field_helpers']);
   $module_installer->uninstall(['mrc_migrate_processors']);
 }

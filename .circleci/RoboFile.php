@@ -28,6 +28,13 @@ class RoboFile extends Tasks {
   const DRUPAL_ROOT = 'docroot';
 
   /**
+   * Config from blt.yml file.
+   *
+   * @var array
+   */
+  protected $bltConfig;
+
+  /**
    * Command to run unit tests.
    *
    * @return \Robo\Result
@@ -81,7 +88,8 @@ class RoboFile extends Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     foreach ($this->getSites() as $site) {
-      //      $this->yell("Testing against: $site");
+      $collection->addTask($this->taskExec('echo "$(tput setaf 0)$(tput setab 2)  ' . str_repeat(' ', strlen($site)) . '  $(tput sgr 0)"'));
+      $collection->addTask($this->taskExec('echo "$(tput setaf 0)$(tput setab 2)  ' . $site . '  $(tput sgr 0)"'));
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests());
@@ -104,22 +112,18 @@ class RoboFile extends Tasks {
     static $keys_loaded = FALSE;
     // Get encryption keys first and only once.
     if (!$keys_loaded) {
-      $tasks[] = $this->blt()
-        ->arg('humsci:keys');
+      $tasks[] = $this->blt()->arg('humsci:keys');
       $keys_loaded = TRUE;
     }
 
-    $tasks[] = $this->drush()
-      ->args('updatedb')
+    $tasks[] = $this->drush()->args('updatedb')
       ->option('yes')
       ->option('verbose');
 
-    $tasks[] = $this->blt()
-      ->arg('drupal:toggle:modules')
+    $tasks[] = $this->blt()->arg('drupal:toggle:modules')
       ->option('environment', 'ci', '=');
 
-    $config_import = $this->drush()
-      ->args('config-import')
+    $config_import = $this->drush()->args('config-import')
       ->option('yes')
       ->option('verbose');
     if ($partial_config) {
@@ -153,8 +157,7 @@ class RoboFile extends Tasks {
    *   A task instance.
    */
   protected function installDependencies() {
-    return $this->taskComposerInstall()
-      ->optimizeAutoloader();
+    return $this->taskComposerInstall()->optimizeAutoloader();
   }
 
   /**
@@ -238,8 +241,7 @@ class RoboFile extends Tasks {
       ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('../artifacts/phpunit', 777);
 
-    $tasks[] = $this->taskExecStack()
-      ->dir(static::DRUPAL_ROOT)
+    $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
       ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/humsci');
     return $tasks;
   }
@@ -257,9 +259,8 @@ class RoboFile extends Tasks {
       ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
-    $tasks[] = $this->taskExecStack()
-      ->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci');
+    $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci/');
     return $tasks;
   }
 
@@ -273,8 +274,7 @@ class RoboFile extends Tasks {
     $tasks = [];
     $tasks[] = $this->taskExecStack()
       ->exec('vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer');
-    $tasks[] = $this->taskFilesystemStack()
-      ->mkdir('artifacts/phpcs');
+    $tasks[] = $this->taskFilesystemStack()->mkdir('artifacts/phpcs');
     $tasks[] = $this->taskExecStack()
       ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/humsci')
       ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/humsci');
@@ -323,8 +323,21 @@ class RoboFile extends Tasks {
    *   Array of machine names for sites.
    */
   protected function getSites() {
-    $blt_config = Yaml::parseFile($this->getDocroot() . '/blt/blt.yml');
+    $blt_config = $this->getBltConfig();
     return $blt_config['multisites'];
+  }
+
+  /**
+   * Get BLT Config settings from blt.yml file.
+   *
+   * @return array
+   *   BLT Settings.
+   */
+  protected function getBltConfig() {
+    if (!isset($this->bltConfig)) {
+      $this->bltConfig = Yaml::parseFile($this->getDocroot() . '/blt/blt.yml');
+    }
+    return $this->bltConfig;
   }
 
 }

@@ -106,18 +106,18 @@ code_coverage: &code_coverage
 # Declare all of the jobs we should run.
 version: 2
 jobs:
-#  run-unit-kernel-tests:
-#     <<: *unit_kernel_tests
+  run-unit-kernel-tests:
+     <<: *unit_kernel_tests
   run-behat-tests:
      <<: *behat_tests
-#  run-code-coverage:
-#     <<: *code_coverage
+  run-code-coverage:
+     <<: *code_coverage
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2
   test_and_lint:
     jobs:
-#      - run-unit-kernel-tests
+      - run-unit-kernel-tests
       - run-behat-tests
-#      - run-code-coverage
+      - run-code-coverage

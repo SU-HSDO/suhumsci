@@ -14,7 +14,6 @@ Feature: Web drivers
   Scenario: Test for Footer Links.
     Given I am on "/"
     Then the response status code should be 200
-    And I should see "Search" in the "search" region
     And I should see the link "Stanford Home" in the "global_footer" region
     And I should see the link "Maps & Directions" in the "global_footer" region
     And I should see the link "Search Stanford" in the "global_footer" region

@@ -10,6 +10,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @class RoboFile
  * @codeCoverageIgnore
+ * @see https://github.com/lullabot/drupal8ci/
  */
 class RoboFile extends Tasks {
 
@@ -26,6 +27,13 @@ class RoboFile extends Tasks {
    * @var string
    */
   const DRUPAL_ROOT = 'docroot';
+
+  /**
+   * Directory to run unit tests, relative to drupal root.
+   *
+   * @var string
+   */
+  const TEST_DIR = 'modules/humsci';
 
   /**
    * Config from blt.yml file.
@@ -88,8 +96,6 @@ class RoboFile extends Tasks {
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
     foreach ($this->getSites() as $site) {
-      $collection->addTask($this->taskExec('echo "$(tput setaf 0)$(tput setab 2)  ' . str_repeat(' ', strlen($site)) . '  $(tput sgr 0)"'));
-      $collection->addTask($this->taskExec('echo "$(tput setaf 0)$(tput setab 2)  ' . $site . '  $(tput sgr 0)"'));
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests());
@@ -109,20 +115,23 @@ class RoboFile extends Tasks {
   protected function runUpdatePath($partial_config = FALSE) {
     $tasks = [];
 
-    static $keys_loaded = FALSE;
     // Get encryption keys first and only once.
+    static $keys_loaded = FALSE;
     if (!$keys_loaded) {
       $tasks[] = $this->blt()->arg('humsci:keys');
       $keys_loaded = TRUE;
     }
 
+    // Update the database.
     $tasks[] = $this->drush()->args('updatedb')
       ->option('yes')
       ->option('verbose');
 
+    // Toggle modules for CI environment. Modules should match production.
     $tasks[] = $this->blt()->arg('drupal:toggle:modules')
       ->option('environment', 'ci', '=');
 
+    // Import the configs.
     $config_import = $this->drush()->args('config-import')
       ->option('yes')
       ->option('verbose');
@@ -204,12 +213,17 @@ class RoboFile extends Tasks {
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
-    // Copy site specific settings files to default settings.
+
+    // To make things easy on setting up these tests, we'll just use the default
+    // directory for all site tests. But that means we need to bring over the
+    // site specific settings.php files too account for anything specific.
     if ($site != 'default' && $site != 'swshusmci') {
       $tasks[] = $this->taskFilesystemStack()
         ->copy(static::DRUPAL_ROOT . "/sites/$site/settings.php", static::DRUPAL_ROOT . "/sites/default/settings.php", TRUE);
     }
-    // Copy database credentials to be included via BLT.
+
+    // Copy circle.ci settings. This setting is included from blt.
+    // @see https://github.com/acquia/blt/blob/9.x/settings/blt.settings.php#L284
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings/includes.settings.php', TRUE);
 
@@ -220,9 +234,11 @@ class RoboFile extends Tasks {
     $tasks[] = $this->drush()->rawArg("@$site.prod sql-connect");
     $tasks[] = $this->drush()->rawArg("@$site.prod sql-dump > dump.sql");
 
-    // At the end of the drush command, we need to remove the ssh command.
+    // At the end of the drush command, we need to remove the ssh connection
+    // closed message.
     $tasks[] = $this->taskExecStack()
       ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
+
     $tasks[] = $this->drush()
       ->rawArg('@self sql-cli < clean_dump.sql');
     return $tasks;
@@ -242,7 +258,7 @@ class RoboFile extends Tasks {
       ->mkdir('../artifacts/phpunit', 777);
 
     $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml modules/humsci');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml ' . static::TEST_DIR);
     return $tasks;
   }
 
@@ -260,7 +276,7 @@ class RoboFile extends Tasks {
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html modules/humsci/');
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html ' . static::TEST_DIR);
     return $tasks;
   }
 
@@ -276,8 +292,8 @@ class RoboFile extends Tasks {
       ->exec('vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer');
     $tasks[] = $this->taskFilesystemStack()->mkdir('artifacts/phpcs');
     $tasks[] = $this->taskExecStack()
-      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/humsci')
-      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/modules/humsci');
+      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/' . static::TEST_DIR)
+      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/' . static::TEST_DIR);
     return $tasks;
   }
 

@@ -1,6 +1,14 @@
 <?php
 
-$databases['default']['default'] = array (
+/**
+ * @file
+ * circlei.settings.php
+ *
+ * This contains the database credentials and any additional settings for
+ * circle.ci
+ */
+
+$databases['default']['default'] = array(
   'database' => 'drupal8',
   'username' => 'root',
   'password' => '',
@@ -10,4 +18,3 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
-

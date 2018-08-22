@@ -33,25 +33,20 @@
       function menuEdgeCheck() {
         var $viewportWidth = $('body').innerWidth();
         $('ul.decanter-nav-primary > li', context).each(function() {
-          var $itemFromLeft = jQuery(this).offset().left;
+          var $itemFromLeft = $(this).offset().left;
           var $itemFromRight = $viewportWidth - $itemFromLeft;
-          var $subMenuWidth = jQuery('> ul', this).outerWidth();
+          var $subMenuWidth = $('> ul', this).outerWidth();
           if ($subMenuWidth > $itemFromRight) {
-            $(this).addClass( 'edge' );
+            $(this).addClass('edge');
           }
           else {
-            $(this).removeClass( 'edge' );
+            $(this).removeClass('edge');
           }
         });
       }
 
       setMenu();
       menuEdgeCheck();
-
-      var onResizeActivity = Drupal.debounce(function() {
-        setMenu();
-        menuEdgeCheck();
-      }, 125);
 
       // Open/close the menu from hamburger button.
       $header.find('button.fa-bars').once().click(function() {
@@ -72,7 +67,12 @@
       }
 
       // run on window resize
-      window.addEventListener('resize', onResizeActivity);
+      window.addEventListener('resize',
+        Drupal.debounce(function() {
+          setMenu();
+          menuEdgeCheck();
+        }, 125)
+      );
 
     }
   };

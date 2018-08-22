@@ -152,7 +152,7 @@ class RoboFile extends Tasks {
    * @return \Robo\Task\Base\Exec[]
    *   An array of tasks.
    */
-  protected function runBehatTests($tags = ['default']) {
+  protected function runBehatTests(array $tags = ['global']) {
     $tasks = [];
     // Don't use blt to run behat here. It's dependencies conflict with
     // circleci too much.

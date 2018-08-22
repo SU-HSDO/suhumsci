@@ -25,8 +25,8 @@
     {% endif %}
 
     {% if site_name %}
-      <div class="block--lockup__site-name">
-        <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
+      <div class="block--lockup__site-name {% if site_name_line_2|render|striptags|trim %}two-line-name{% endif %}">
+        <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</br>{{ site_name_line_2 }}</a>
       </div>
     {% endif %}
   </div>

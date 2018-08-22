@@ -8,7 +8,7 @@
         var $menu = $header.find('ul.decanter-nav-primary');
 
         // Desktop, apply the jquery ui menu and change any mobile classes.
-        if ($(window).width() >= 1201) {
+        if (window.innerWidth >= 1201) {
           $menu.menu();
           $menu.removeClass('expanded');
           $menu.find('.fa-minus').addClass('fa-plus').removeClass('fa-minus');

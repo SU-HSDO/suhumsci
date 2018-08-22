@@ -158,7 +158,7 @@ class RoboFile extends Tasks {
     // circleci too much.
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/behat.yml', 'tests/behat/behat.yml', TRUE);
-    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml --tags=' . implode($tags));
+    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml --tags=' . implode(',', $tags));
     return $tasks;
   }
 

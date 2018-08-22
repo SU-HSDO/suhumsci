@@ -98,7 +98,7 @@ class RoboFile extends Tasks {
     foreach ($this->getSites() as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
-      $collection->addTaskList($this->runBehatTests());
+      $collection->addTaskList($this->runBehatTests(['global', $site]));
     }
     return $collection->run();
   }
@@ -146,16 +146,19 @@ class RoboFile extends Tasks {
   /**
    * Runs Behat tests.
    *
+   * @param string[] $tags
+   *   Array of tags to run tests.
+   *
    * @return \Robo\Task\Base\Exec[]
    *   An array of tasks.
    */
-  protected function runBehatTests() {
+  protected function runBehatTests($tags = ['default']) {
     $tasks = [];
     // Don't use blt to run behat here. It's dependencies conflict with
     // circleci too much.
     $tasks[] = $this->taskFilesystemStack()
       ->copy('.circleci/config/behat.yml', 'tests/behat/behat.yml', TRUE);
-    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml');
+    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml --tags=' . implode($tags));
     return $tasks;
   }
 

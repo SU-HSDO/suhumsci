@@ -1,16 +1,15 @@
-@example
-Feature: Web drivers
-  In order to verify that web drivers are working
-  As a user
-  I should be able to load the homepage
-  With and without Javascript
+@global
+Feature: GDPR Links
+  In order to verify that we are compliant with GDPR
+  As a visitor
+  I should see a variety of links.
 
-#  @javascript
-#  Scenario: Test the Javascript works.
-#    Given I am on "/"
-#    Then I should be on "/"
+  @javascript
+  Scenario: Test the Javascript works.
+    Given I am on "/"
+    Then I should be on "/"
 
-
+  @safe
   Scenario: Test for Footer Links.
     Given I am on "/"
     Then the response status code should be 200

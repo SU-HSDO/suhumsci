@@ -2,10 +2,7 @@
 
 /**
  * @file
- * circlei.settings.php
- *
- * This contains the database credentials and any additional settings for
- * circle.ci
+ * Database credentials and any additional settings for circle.ci.
  */
 
 $databases['default']['default'] = array(

@@ -40,6 +40,7 @@ function hs_theme_helper_form_system_site_information_settings_alter(&$form, For
     ->execute();
   $user_roles = \Drupal::currentUser()->getRoles();
 
+  // Lock the site slogan unless the user has the admin role.
   if (empty(array_intersect($user_roles, $admin_roles))) {
     $form['site_information']['site_slogan']['#attributes']['disabled'] = 'disabled';
   }
@@ -48,10 +49,14 @@ function hs_theme_helper_form_system_site_information_settings_alter(&$form, For
 }
 
 /**
- * @param $form
+ * Form submit handler for basic site settings form.
+ *
+ * @param array $form
+ *   Complete Form.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Submitted form state.
  */
-function hs_theme_helper_form_system_site_information_settings_submit(&$form, FormStateInterface $form_state) {
+function hs_theme_helper_form_system_site_information_settings_submit(array &$form, FormStateInterface $form_state) {
   \Drupal::configFactory()->getEditable('system.site')
     ->set('name_line2', $form_state->getValue('site_name_line_2'))
     ->save();

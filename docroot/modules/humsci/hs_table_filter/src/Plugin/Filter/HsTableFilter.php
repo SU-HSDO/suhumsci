@@ -43,6 +43,7 @@ class HsTableFilter extends FilterBase {
       // Replace tags without any attributes.
       $text = preg_replace("/<$tag>(.*?)\/$tag>/s", "<div>$1/div>", $text);
     }
+    dpm($text);
     return new FilterProcessResult($text);
   }
 

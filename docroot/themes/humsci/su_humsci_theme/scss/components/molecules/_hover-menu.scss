@@ -92,24 +92,24 @@
 
           &.ui-menu {
             float: right;
-          }
 
-          &.ui-menu .ui-menu-item-wrapper {
-            @include margin(0 1em 0 0);
-            @include padding(6px 0);
-            @include media($large-screen) {
-              @include margin(null 1.5em null null);
+            li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper {
+              border-bottom: 0;
+              color: $color-bright-red;
             }
-          }
 
-          &.ui-menu li.menu-item--active-trail .ui-menu-item-wrapper {
-            border-bottom: 3px solid $color-black;
-            color: $color-bright-red;
-          }
+            li.menu-item--active-trail .ui-menu-item-wrapper {
+              border-bottom: 3px solid $color-black;
+              color: $color-bright-red;
+            }
 
-          &.ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper {
-            border-bottom: 0;
-            color: $color-bright-red;
+            .ui-menu-item-wrapper {
+              @include margin(0 1em 0 0);
+              @include padding(6px 0);
+              @include media($large-screen) {
+                @include margin(null 1.5em null null);
+              }
+            }
           }
 
           &.ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper:hover,
@@ -120,6 +120,26 @@
           > li {
             color: $color-bright-red;
             position: relative;
+
+            > a .ui-menu-icon {
+              right: -18px;
+              top: -23px;
+              -webkit-transform: rotate(90deg);
+              transform: rotate(90deg);
+            }
+
+            > a {
+              font-weight: $font-normal;
+
+              @media (min-width: 951px) {
+                font-size: $base-font-size;
+              }
+            }
+
+            // If menu is too close to right edge, make it hug the right (js menuEdgeCheck function).
+            &.edge ul.decanter-nav-submenu {
+              right: 0;
+            }
           }
 
           > li:hover {
@@ -128,26 +148,6 @@
 
           > li:last-of-type .ui-menu-item-wrapper {
             margin-right: 0;
-          }
-
-          // If menu is too close to right edge, make it hug the right (js menuEdgeCheck function).
-          > li.edge ul.decanter-nav-submenu {
-            right: 0;
-          }
-
-          > li > a {
-            font-weight: $font-normal;
-
-            @media (min-width: 951px) {
-              font-size: $base-font-size;
-            }
-          }
-
-          > li > a .ui-menu-icon {
-            right: -18px;
-            top: -23px;
-            -webkit-transform: rotate(90deg);
-            transform: rotate(90deg);
           }
 
           .ui-state-active,
@@ -216,12 +216,13 @@
             background: $color-white;
 
             @include padding(0.7em 1em);
+
+            &.decanter-nav-submenu li a {
+              font-size: 1.8rem;
+              line-height: 1.25;
+            }
           }
 
-          .ui-widget.decanter-nav-submenu li a {
-            font-size: 1.8rem;
-            line-height: 1.25;
-          }
         }
 
         ul ul {
@@ -261,29 +262,28 @@
 
           .expanded.decanter-nav-submenu {
             background: $color-fog;
-          }
 
-          .expanded.decanter-nav-submenu a.is-active {
-            border-bottom: 0;
-          }
+            a:hover {
+              background-color: transparent;
+            }
 
-          .expanded.decanter-nav-submenu a:hover {
-            background-color: transparent;
+            a.is-active {
+              border-bottom: 0;
+            }
           }
 
           ul {
             border: 1px solid $color-white;
             z-index: 2;
-          }
 
-          ul ul {
-            z-index: 3;
-          }
+            ul {
+              z-index: 3;
 
-          ul ul ul {
-            z-index: 4;
+              ul {
+                z-index: 4;
+              }
+            }
           }
-
           button {
             @include padding(4px);
           }
@@ -379,6 +379,17 @@
       li {
         display: block;
       }
+
+      &.menu ul.menu ul.menu .menu-item a {
+        @include margin(null null null 2rem);
+      }
+
+      &.menu ul.menu .menu-item a {
+        font-weight: $font-normal;
+
+        @include margin(null null null 1rem);
+        @include padding(null null null 20px);
+      }
     }
 
     .menu-item--active-trail {
@@ -407,15 +418,5 @@
       }
     }
 
-    ul.menu ul.menu .menu-item a {
-      font-weight: $font-normal;
-
-      @include margin(null null null 1rem);
-      @include padding(null null null 20px);
-    }
-
-    ul.menu ul.menu ul.menu .menu-item a {
-      @include margin(null null null 2rem);
-    }
   }
 }

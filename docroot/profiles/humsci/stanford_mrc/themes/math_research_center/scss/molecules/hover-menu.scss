@@ -16,44 +16,44 @@
 // Fallback styles, which are also applied to the page when
 // loading and in-between navigation page refreshes
 #header {
-.decanter-main-menu--hover-reveal {
-  .no-js & {
-    .fa {
-      display: none;
-    }
-  }
-
-  @include media($medium-screen) {
-    ul ul {
-      display: none;
+  .decanter-main-menu--hover-reveal {
+    .no-js & {
+      .fa {
+        display: none;
+      }
     }
 
-    &.menu--main {
-      box-shadow: none;
-      float: right;
-      height: 40px;
-
-      a:hover,
-      a.is-active,
-      .menu-item--active-trail a {
-        border-bottom: solid 3px $color-black;
+    @include media($medium-screen) {
+      ul ul {
+        display: none;
       }
 
-      li {
-        @include margin(null 0 null null);
+      &.menu--main {
+        box-shadow: none;
+        float: right;
+        height: 40px;
 
-        &.menu-item > a {
-          font-size: $base-font-size;
-          font-weight: $font-normal;
-          text-decoration: none;
+        a:hover,
+        a.is-active,
+        .menu-item--active-trail a {
+          border-bottom: solid 3px $color-black;
+        }
 
-          @include margin(0 1.5em 0 0);
-          @include padding(6px 0);
+        li {
+          @include margin(null 0 null null);
+
+          &.menu-item > a {
+            font-size: $base-font-size;
+            font-weight: $font-normal;
+            text-decoration: none;
+
+            @include margin(0 1.5em 0 0);
+            @include padding(6px 0);
+          }
         }
       }
     }
   }
-}
 }
 
 // Main menu in header region
@@ -85,38 +85,36 @@
         .ui-menu.decanter-nav-primary {
           border: none;
 
-          &.ui-menu {
-            &.ui-widget-content {
+          &.ui-menu.ui-widget-content {
+            background: $color-black;
+
+            @include media($medium-screen) {
+              background: none;
+            }
+
+
+            &.ui-widget {
+              border: none;
+            }
+
+            .ui-icon {
+              background-image: none;
+            }
+
+            .ui-widget {
               background: $color-black;
 
-              @include media($medium-screen) {
-                background: none;
-              }
+              @include padding(1em);
 
-
-              &.ui-widget {
-                border: none;
-              }
-
-              .ui-icon {
-                background-image: none;
-              }
-
-              .ui-widget {
-                background: $color-black;
-
-                @include padding(1em);
-
-                &.decanter-nav-submenu li a {
-                  font-size: 1.8rem;
-                }
+              &.decanter-nav-submenu li a {
+                font-size: 1.8rem;
               }
             }
+          }
 
-            .ui-menu-item-wrapper {
-              @include margin(0 1.5em 0 0);
-              @include padding(6px 0 6px 0);
-            }
+          &.ui-menu .ui-menu-item-wrapper {
+            @include margin(0 1.5em 0 0);
+            @include padding(6px 0 6px 0);
           }
 
           > li > a {

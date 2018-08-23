@@ -97,7 +97,7 @@
             float: right;
           }
 
-          .ui-menu .ui-menu-item-wrapper {
+          &.ui-menu .ui-menu-item-wrapper {
             @include margin(0 1em 0 0);
             @include padding(6px 0);
             @include media($large-screen) {
@@ -105,19 +105,19 @@
             }
           }
 
-          .ui-menu li.menu-item--active-trail .ui-menu-item-wrapper {
+          &.ui-menu li.menu-item--active-trail .ui-menu-item-wrapper {
             border-bottom: 3px solid $color-black;
             color: $color-bright-red;
           }
 
-          .ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper {
-            color: $color-bright-red;
+          &.ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper {
             border-bottom: 0;
+            color: $color-bright-red;
+          }
 
-            &:hover,
-            &:focus {
-              color: $color-black;
-            }
+          &.ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper:hover,
+          &.ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper:focus {
+            color: $color-black;
           }
 
           > li {
@@ -179,13 +179,13 @@
             @include media($large-screen) {
               @include margin(0 0 10px 0);
             }
+          }
 
-
-            &:hover {
-              background-color: transparent;
-              border: 0;
-              color: $color-black;
-            }
+          .decanter-nav-submenu .menu-item a:hover,
+          .decanter-nav-submenu .menu-item span:hover {
+            background-color: transparent;
+            border: 0;
+            color: $color-black;
           }
         }
 
@@ -220,6 +220,7 @@
 
             @include padding(0.7em 1em);
           }
+
           .ui-widget.decanter-nav-submenu li a {
             font-size: 1.8rem;
             line-height: 1.25;
@@ -263,29 +264,29 @@
 
           .expanded.decanter-nav-submenu {
             background: $color-fog;
+          }
 
-            a {
-              &.is-active {
-                border-bottom: 0;
-              }
+          .expanded.decanter-nav-submenu a {
+            &.is-active {
+              border-bottom: 0;
+            }
 
-              &:hover {
-                background-color: transparent;
-              }
+            &:hover {
+              background-color: transparent;
             }
           }
 
           ul {
             border: 1px solid $color-white;
             z-index: 2;
+          }
 
-            ul {
-              z-index: 3;
+          ul ul {
+            z-index: 3;
+          }
 
-              ul {
-                z-index: 4;
-              }
-            }
+          ul ul ul {
+            z-index: 4;
           }
 
           button {

@@ -95,53 +95,47 @@
 
           &.ui-menu {
             float: right;
+          }
 
-            .ui-menu-item-wrapper {
-              @include margin(0 1em 0 0);
-              @include padding(6px 0);
-              @include media($large-screen) {
-                @include margin(null 1.5em null null);
-              }
+          .ui-menu .ui-menu-item-wrapper {
+            @include margin(0 1em 0 0);
+            @include padding(6px 0);
+            @include media($large-screen) {
+              @include margin(null 1.5em null null);
             }
           }
 
-          .ui-menu li.menu-item--active-trail {
-            .ui-menu-item-wrapper {
-              border-bottom: 3px solid $color-black;
-              color: $color-bright-red;
-            }
+          .ui-menu li.menu-item--active-trail .ui-menu-item-wrapper {
+            border-bottom: 3px solid $color-black;
+            color: $color-bright-red;
+          }
 
-            .decanter-nav-submenu .ui-menu-item-wrapper {
-              color: $color-bright-red;
-              border-bottom: 0;
+          .ui-menu li.menu-item--active-trail .decanter-nav-submenu .ui-menu-item-wrapper {
+            color: $color-bright-red;
+            border-bottom: 0;
 
-              &:hover,
-              &:focus {
-                color: $color-black;
-              }
+            &:hover,
+            &:focus {
+              color: $color-black;
             }
           }
 
           > li {
             color: $color-bright-red;
             position: relative;
-
-            &:hover {
-              color: $color-black;
-            }
           }
 
-          > li:last-of-type {
-            .ui-menu-item-wrapper {
-              margin-right: 0;
-            }
+          > li:hover {
+            color: $color-black;
+          }
+
+          > li:last-of-type .ui-menu-item-wrapper {
+            margin-right: 0;
           }
 
           // If menu is too close to right edge, make it hug the right (js menuEdgeCheck function).
-          > li.edge {
-            ul.decanter-nav-submenu {
-              right: 0;
-            }
+          > li.edge ul.decanter-nav-submenu {
+            right: 0;
           }
 
           > li > a {
@@ -150,13 +144,13 @@
             @media (min-width: 951px) {
               font-size: $base-font-size;
             }
+          }
 
-            .ui-menu-icon {
-              right: -18px;
-              top: -23px;
-              -webkit-transform: rotate(90deg);
-              transform: rotate(90deg);
-            }
+          > li > a .ui-menu-icon {
+            right: -18px;
+            top: -23px;
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
           }
 
           .ui-state-active,
@@ -174,34 +168,34 @@
             }
           }
 
-          .decanter-nav-submenu {
-            .menu-item a,
-            .menu-item span {
-              border-bottom: 0;
-              color: $color-bright-red;
+          .decanter-nav-submenu .menu-item a,
+          .decanter-nav-submenu .menu-item span {
+            border-bottom: 0;
+            color: $color-bright-red;
 
-              @include margin(0 1.5em 10px 0);
-              @include padding(0);
+            @include margin(0 1.5em 10px 0);
+            @include padding(0);
 
-              @include media($large-screen) {
-                @include margin(0 0 10px 0);
-              }
-
-
-              &:hover {
-                background-color: transparent;
-                border: 0;
-                color: $color-black;
-              }
+            @include media($large-screen) {
+              @include margin(0 0 10px 0);
             }
 
-            .ui-state-active,
-            .ui-widget-content .ui-state-active
-            a.ui-button:active,
-            .ui-button:active,
-            .ui-button.ui-state-active:hover {
+
+            &:hover {
               background-color: transparent;
+              border: 0;
+              color: $color-black;
             }
+          }
+        }
+
+        .ui-menu.decanter-nav-primary .decanter-nav-submenu {
+          .ui-state-active,
+          .ui-widget-content .ui-state-active
+          a.ui-button:active,
+          .ui-button:active,
+          .ui-button.ui-state-active:hover {
+            background-color: transparent;
           }
         }
 
@@ -225,11 +219,10 @@
             background: $color-white;
 
             @include padding(0.7em 1em);
-
-            &.decanter-nav-submenu li a {
-              font-size: 1.8rem;
-              line-height: 1.25;
-            }
+          }
+          .ui-widget.decanter-nav-submenu li a {
+            font-size: 1.8rem;
+            line-height: 1.25;
           }
         }
 
@@ -239,10 +232,10 @@
           li {
             position: relative;
             display: block;
+          }
 
-            &:hover {
-              cursor: auto;
-            }
+          li:hover {
+            cursor: auto;
           }
 
           ul {
@@ -266,18 +259,18 @@
             border: 1px solid $color-fog;
             display: block;
             width: 95%;
+          }
 
-            &.decanter-nav-submenu {
-              background: $color-fog;
+          .expanded.decanter-nav-submenu {
+            background: $color-fog;
 
-              a {
-                &.is-active {
-                  border-bottom: 0;
-                }
+            a {
+              &.is-active {
+                border-bottom: 0;
+              }
 
-                &:hover {
-                  background-color: transparent;
-                }
+              &:hover {
+                background-color: transparent;
               }
             }
           }

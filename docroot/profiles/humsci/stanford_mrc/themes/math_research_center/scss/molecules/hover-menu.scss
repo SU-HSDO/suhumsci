@@ -91,24 +91,23 @@
             @include media($medium-screen) {
               background: none;
             }
+          }
 
+          .ui-menu.ui-widget-content.ui-widget {
+            border: none;
+          }
 
-            &.ui-widget {
-              border: none;
-            }
+          .ui-menu.ui-widget-content .ui-icon {
+            background-image: none;
+          }
 
-            .ui-icon {
-              background-image: none;
-            }
+          .ui-menu.ui-widget-content.ui-widget {
+            background: $color-black;
 
-            .ui-widget {
-              background: $color-black;
+            @include padding(1em);
 
-              @include padding(1em);
-
-              &.decanter-nav-submenu li a {
-                font-size: 1.8rem;
-              }
+            &.decanter-nav-submenu li a {
+              font-size: 1.8rem;
             }
           }
 
@@ -123,13 +122,13 @@
             @media (min-width: 951px) {
               font-size: $base-font-size;
             }
+          }
 
-            & .ui-menu-icon {
-              right: -18px;
-              top: -23px;
-              -webkit-transform: rotate(90deg);
-              transform: rotate(90deg);
-            }
+          > li > a .ui-menu-icon {
+            right: -18px;
+            top: -23px;
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
           }
 
           .ui-state-active,
@@ -149,30 +148,6 @@
           }
 
           .decanter-nav-submenu {
-            .menu-item a {
-              border-bottom: none;
-              color: $color-white;
-
-              @include margin(0 1.5em 10px 0);
-              @include padding(0);
-
-              @include media($medium-screen) {
-                @include margin(0 0 10px 0);
-              }
-
-
-              &:hover {
-                background-color: transparent;
-                border: none;
-                color: $color-cloud;
-                text-decoration: underline;
-              }
-
-              &.is-active {
-                color: $color-cloud;
-              }
-            }
-
             .ui-state-active,
             .ui-widget-content .ui-state-active
             a.ui-button:active,
@@ -181,6 +156,30 @@
               background-color: transparent;
               color: $color-cloud;
               text-decoration: underline;
+            }
+          }
+
+          .decanter-nav-submenu .menu-item a {
+            border-bottom: none;
+            color: $color-white;
+
+            @include margin(0 1.5em 10px 0);
+            @include padding(0);
+
+            @include media($medium-screen) {
+              @include margin(0 0 10px 0);
+            }
+
+
+            &:hover {
+              background-color: transparent;
+              border: none;
+              color: $color-cloud;
+              text-decoration: underline;
+            }
+
+            &.is-active {
+              color: $color-cloud;
             }
           }
         }

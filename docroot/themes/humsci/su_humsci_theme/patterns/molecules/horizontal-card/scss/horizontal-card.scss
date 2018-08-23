@@ -69,9 +69,10 @@
     }
 
     .horizontal-card__title {
-      @include margin(0 0 0.35em);
-
+      clear: both;
       font-weight: 600;
+
+      @include margin(0 0 0.35em);
 
       &:after {
         content: none;
@@ -95,17 +96,6 @@
       > div {
         @include margin(0 0 0.25em);
       }
-    }
-  }
-
-  // Ensures desired layout when used on page using the three column with image layout
-  .three-column-w-image & {
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      clear: both;
     }
   }
 }

@@ -26,23 +26,29 @@ class HsTableFilter extends FilterBase {
    */
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
-    $dom = new \DOMDocument();
-    $dom->loadHTML($result);
 
-    $oldNode = $dom->getElementsByTagName('table')->item(0);
-    $this->clonishNode($oldNode, 'div');
-
-    // Same but with a new namespace
-    //clonishNode($oldNode, 'newns:BXR', 'http://newns');
-
-    dpm($dom->saveXML());
-
-    /** @var \DOMElement $table_element */
-    foreach ($dom->getElementsByTagName('table') as $table_element) {
-
-    }
     dpm($result);
+    $dom = new \DOMDocument();
+    $dom->loadHTML($result, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $table_count = $dom->getElementsByTagName('table')->length;
+    for ($i = 0; $i < $table_count; $i++) {
+      // We always get item(0) because each time we replace a table, the next
+      // one becomes item(0).
+      if ($table = $dom->getElementsByTagName('table')->item(0)) {
+        $table->setAttribute('class', 'div-table');
+        $this->changeName($table, 'div');
+      }
+    }
+
+    //    /** @var \DOMElement $table_element */
+    //    foreach ($dom->getElementsByTagName('table') as $table_element) {
+    //      dpm($table_element);
+    //      $this->clonishNode($table_element, 'div');
+    //    }
+
+    dpm($dom->saveHTML());
     return $result;
+    return $dom->saveHTML();
   }
 
   /**
@@ -50,7 +56,7 @@ class HsTableFilter extends FilterBase {
    * @param $newName
    * @param null $newNS
    */
-  function clonishNode(\DOMNode $oldNode, $newName, $newNS = NULL) {
+  protected function changeTags(\DOMNode $oldNode, $newName, $newNS = NULL) {
     if (isset($newNS)) {
       $newNode = $oldNode->ownerDocument->createElementNS($newNS, $newName);
     }
@@ -67,6 +73,19 @@ class HsTableFilter extends FilterBase {
     }
 
     $oldNode->parentNode->replaceChild($newNode, $oldNode);
+  }
+
+  function changeName($node, $name) {
+    $newnode = $node->ownerDocument->createElement($name);
+    foreach ($node->childNodes as $child) {
+      $child = $node->ownerDocument->importNode($child, TRUE);
+      $newnode->appendChild($child, TRUE);
+    }
+    foreach ($node->attributes as $attrName => $attrNode) {
+      $newnode->setAttribute($attrName, $attrNode);
+    }
+    $newnode->ownerDocument->replaceChild($newnode, $node);
+    return $newnode;
   }
 
 }

@@ -21,71 +21,57 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class HsTableFilter extends FilterBase {
 
+  protected $tableTags = [
+    'td',
+    'tr',
+    'th',
+    'thead',
+    'tbody',
+    'caption',
+    'table',
+  ];
+
   /**
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    $result = new FilterProcessResult($text);
+    $text = $this->addDivAttributes($text);
 
-    dpm($result);
+    foreach ($this->tableTags as $tag) {
+      // Replace tags that have other attributes.
+      $text = preg_replace("/<$tag (.*?)\/$tag>/s", "<div $1/div>", $text);
+      // Replace tags without any attributes.
+      $text = preg_replace("/<$tag>(.*?)\/$tag>/s", "<div>$1/div>", $text);
+    }
+    return new FilterProcessResult($text);
+  }
+
+  protected function addDivAttributes($text) {
     $dom = new \DOMDocument();
-    $dom->loadHTML($result, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    $table_count = $dom->getElementsByTagName('table')->length;
-    for ($i = 0; $i < $table_count; $i++) {
-      // We always get item(0) because each time we replace a table, the next
-      // one becomes item(0).
-      if ($table = $dom->getElementsByTagName('table')->item(0)) {
-        $table->setAttribute('class', 'div-table');
-        $this->changeName($table, 'div');
-      }
+    $dom->loadHtml($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    /** @var \DOMElement $table */
+    foreach ($dom->getElementsByTagName('table') as $table) {
+      $table->setAttribute('role', 'grid');
+      $table->setAttribute('aria-readonly', 'true');
+      $classes = $table->getAttribute('class') ?: '';
+      $table->setAttribute('class', trim("$classes 'table-pattern"));
     }
 
-    //    /** @var \DOMElement $table_element */
-    //    foreach ($dom->getElementsByTagName('table') as $table_element) {
-    //      dpm($table_element);
-    //      $this->clonishNode($table_element, 'div');
-    //    }
+    /** @var \DOMElement $table_head */
+    foreach ($dom->getElementsByTagName('thead') as $table_head) {
+      $table_head->setAttribute('role', 'row');
+    }
+    /** @var \DOMElement $row */
+    foreach ($dom->getElementsByTagName('tr') as $row) {
+      $row->setAttribute('class', 'table-row');
+      $row->setAttribute('role', 'row');
+    }
+    /** @var \DOMElement $cell */
+    foreach ($dom->getElementsByTagName('td') as $cell) {
+      $cell->setAttribute('role', 'gridcell');
+    }
 
-    dpm($dom->saveHTML());
-    return $result;
     return $dom->saveHTML();
-  }
-
-  /**
-   * @param \DOMNode $oldNode
-   * @param $newName
-   * @param null $newNS
-   */
-  protected function changeTags(\DOMNode $oldNode, $newName, $newNS = NULL) {
-    if (isset($newNS)) {
-      $newNode = $oldNode->ownerDocument->createElementNS($newNS, $newName);
-    }
-    else {
-      $newNode = $oldNode->ownerDocument->createElement($newName);
-    }
-
-    foreach ($oldNode->attributes as $attr) {
-      $newNode->appendChild($attr->cloneNode());
-    }
-
-    foreach ($oldNode->childNodes as $child) {
-      $newNode->appendChild($child->cloneNode(TRUE));
-    }
-
-    $oldNode->parentNode->replaceChild($newNode, $oldNode);
-  }
-
-  function changeName($node, $name) {
-    $newnode = $node->ownerDocument->createElement($name);
-    foreach ($node->childNodes as $child) {
-      $child = $node->ownerDocument->importNode($child, TRUE);
-      $newnode->appendChild($child, TRUE);
-    }
-    foreach ($node->attributes as $attrName => $attrNode) {
-      $newnode->setAttribute($attrName, $attrNode);
-    }
-    $newnode->ownerDocument->replaceChild($newnode, $node);
-    return $newnode;
   }
 
 }

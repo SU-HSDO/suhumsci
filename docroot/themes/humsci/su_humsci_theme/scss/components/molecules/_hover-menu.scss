@@ -96,56 +96,28 @@
           &.ui-menu {
             float: right;
 
-            &.ui-widget-content {
-              background: $color-black;
-
-              @include media($large-screen) {
-                background: none;
-              }
-
-
-              &.ui-widget {
-                border: none;
-              }
-
-              .ui-icon {
-                background-image: none;
-              }
-
-              .ui-widget {
-                background: $color-white;
-
-                @include padding(0.7em 1em);
-
-                &.decanter-nav-submenu li a {
-                  font-size: 1.8rem;
-                  line-height: 1.25;
-                }
-              }
-            }
-
-            li.menu-item--active-trail {
-              .ui-menu-item-wrapper {
-                border-bottom: 3px solid $color-black;
-                color: $color-bright-red;
-              }
-
-              .decanter-nav-submenu .ui-menu-item-wrapper {
-                color: $color-bright-red;
-                border-bottom: 0;
-
-                &:hover,
-                &:focus {
-                  color: $color-black;
-                }
-              }
-            }
-
             .ui-menu-item-wrapper {
               @include margin(0 1em 0 0);
               @include padding(6px 0);
               @include media($large-screen) {
                 @include margin(null 1.5em null null);
+              }
+            }
+          }
+
+          .ui-menu li.menu-item--active-trail {
+            .ui-menu-item-wrapper {
+              border-bottom: 3px solid $color-black;
+              color: $color-bright-red;
+            }
+
+            .decanter-nav-submenu .ui-menu-item-wrapper {
+              color: $color-bright-red;
+              border-bottom: 0;
+
+              &:hover,
+              &:focus {
+                color: $color-black;
               }
             }
           }
@@ -157,18 +129,18 @@
             &:hover {
               color: $color-black;
             }
+          }
 
-            &:last-of-type {
-              .ui-menu-item-wrapper {
-                margin-right: 0;
-              }
+          > li:last-of-type {
+            .ui-menu-item-wrapper {
+              margin-right: 0;
             }
+          }
 
-            // If menu is too close to right edge, make it hug the right (js menuEdgeCheck function).
-            &.edge {
-              ul.decanter-nav-submenu {
-                right: 0;
-              }
+          // If menu is too close to right edge, make it hug the right (js menuEdgeCheck function).
+          > li.edge {
+            ul.decanter-nav-submenu {
+              right: 0;
             }
           }
 
@@ -205,7 +177,7 @@
           .decanter-nav-submenu {
             .menu-item a,
             .menu-item span {
-              border-bottom: none;
+              border-bottom: 0;
               color: $color-bright-red;
 
               @include margin(0 1.5em 10px 0);
@@ -229,6 +201,34 @@
             .ui-button:active,
             .ui-button.ui-state-active:hover {
               background-color: transparent;
+            }
+          }
+        }
+
+        .ui-menu.decanter-nav-primary.ui-menu.ui-widget-content {
+          background: $color-black;
+
+          @include media($large-screen) {
+            background: none;
+          }
+
+
+          &.ui-widget {
+            border: 0;
+          }
+
+          .ui-icon {
+            background-image: none;
+          }
+
+          .ui-widget {
+            background: $color-white;
+
+            @include padding(0.7em 1em);
+
+            &.decanter-nav-submenu li a {
+              font-size: 1.8rem;
+              line-height: 1.25;
             }
           }
         }

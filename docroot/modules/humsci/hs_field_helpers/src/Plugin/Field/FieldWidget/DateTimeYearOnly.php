@@ -75,7 +75,9 @@ class DateTimeYearOnly extends WidgetBase {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as &$value) {
-      $value['value'] = $value['value'] . '-06-01';
+      if ($value['value']) {
+        $value['value'] = $value['value'] . '-06-01';
+      }
     }
     return parent::massageFormValues($values, $form, $form_state);
   }

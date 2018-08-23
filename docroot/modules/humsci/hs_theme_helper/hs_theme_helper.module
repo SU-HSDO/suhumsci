@@ -70,6 +70,8 @@ function hs_theme_helper_preprocess_block(&$variables) {
     $line_2 = \Drupal::configFactory()
       ->get('system.site')
       ->get('name_line2');
-    $variables['site_name_line_2']['#markup'] = $line_2 ?: '';
+    if ($line_2) {
+      $variables['site_name_line_2']['#markup'] = $line_2;
+    }
   }
 }

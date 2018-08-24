@@ -16,22 +16,40 @@
 }
 
 .table-header {
-  display: table-header-group;
-  font-weight: $font-normal;
-  text-align: center;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+
+  @include media($medium-screen) {
+    display: table-header-group;
+    font-weight: $font-normal;
+    position: static;
+    text-align: center;
+  }
+
 
   > div {
-    background-color: $color-cloud;
-    border: 1px solid $color-driftwood;
-    color: $color-black;
-    display: table-cell;
-    text-align: left;
+    display: block;
+    width: 100%;
 
-    @include padding(1.5rem);
+    @include media($medium-screen) {
+      background-color: $color-cloud;
+      border: 1px solid $color-driftwood;
+      color: $color-black;
+      display: table-cell;
+      text-align: left;
+
+      @include padding(1.5rem);
+    }
   }
 }
 
 .table-pattern {
-  display: table;
+  display: block;
   width: 100%;
+
+  @include media($medium-screen) {
+    display: table;
+    width: 100%;
+  }
 }

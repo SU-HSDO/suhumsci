@@ -1,0 +1,143 @@
+diff --git a/modules/key_encrypt/key_encrypt.info.yml b/modules/key_encrypt/key_encrypt.info.yml
+new file mode 100644
+index 0000000..3b01968
+--- /dev/null
++++ b/modules/key_encrypt/key_encrypt.info.yml
+@@ -0,0 +1,8 @@
++name: Key Encrypt
++type: module
++description: Provides a plugin for Key to encrypt the key value using Encrypt profiles.
++core: 8.x
++package: Security
++dependencies:
++  - key
++  - encrypt
+diff --git a/modules/key_encrypt/src/Plugin/KeyProvider/EncryptedConfigKeyProvider.php b/modules/key_encrypt/src/Plugin/KeyProvider/EncryptedConfigKeyProvider.php
+new file mode 100644
+index 0000000..63f66ea
+--- /dev/null
++++ b/modules/key_encrypt/src/Plugin/KeyProvider/EncryptedConfigKeyProvider.php
+@@ -0,0 +1,123 @@
++<?php
++
++namespace Drupal\key_encrypt\Plugin\KeyProvider;
++
++use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Url;
++use Drupal\encrypt\EncryptService;
++use Drupal\encrypt\Entity\EncryptionProfile;
++use Drupal\key\Exception\KeyValueNotSetException;
++use Drupal\key\KeyInterface;
++use Drupal\key\Plugin\KeyProvider\ConfigKeyProvider;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * Adds a key provider that allows a key to be stored in configuration.
++ *
++ * @KeyProvider(
++ *   id = "encrypted_config",
++ *   label = @Translation("Encrypted Configuration"),
++ *   description = @Translation("The Configuration key provider stores the key in Drupal's configuration system as encrypted."),
++ *   storage_method = "config",
++ *   key_value = {
++ *     "accepted" = TRUE,
++ *     "required" = FALSE
++ *   }
++ * )
++ */
++class EncryptedConfigKeyProvider extends ConfigKeyProvider {
++
++  /**
++   * @var \Drupal\encrypt\EncryptService
++   */
++  protected $encryption;
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $configuration,
++      $plugin_id,
++      $plugin_definition,
++      $container->get('encryption')
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function __construct(array $configuration, $plugin_id, $plugin_definition, EncryptService $encryption) {
++    parent::__construct($configuration, $plugin_id, $plugin_definition);
++    $this->encryption = $encryption;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function defaultConfiguration() {
++    return [
++      'encryption_profile' => NULL,
++    ];
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
++    $encryption_profiles = [];
++    /** @var EncryptionProfile $profile */
++    foreach (EncryptionProfile::loadMultiple() as $profile) {
++      $encryption_profiles[$profile->id()] = $profile->label();
++    }
++    // Add an option to indicate that the value is stored Base64-encoded.
++    $form['encryption_profile'] = [
++      '#type' => 'select',
++      '#title' => $this->t('Encryption Profile'),
++      '#description' => $this->t('Choose an available encryption profile. If the desired profile is not listed, <a href=":link">create a new profile.</a>', [':link' => Url::fromRoute('entity.encryption_profile.add_form')->toString()]),
++      '#default_value' => $this->getConfiguration()['encryption_profile'],
++      '#options' => $encryption_profiles,
++      '#required' => TRUE,
++    ];
++    return $form;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getKeyValue(KeyInterface $key) {
++    $key_value = parent::getKeyValue($key);
++    if ($encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile'])) {
++      $key_value = $this->encryption->decrypt($key_value, $encryption_profile);
++    }
++    return $key_value;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function setKeyValue(KeyInterface $key, $key_value) {
++    $encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile']);
++    $this->configuration['key_value'] = $this->encryption->encrypt($key_value, $encryption_profile);
++
++    if (isset($this->configuration['key_value'])) {
++      return TRUE;
++    }
++    else {
++      throw new KeyValueNotSetException();
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function calculateDependencies() {
++    $dependencies = parent::calculateDependencies();
++    /** @var EncryptionProfile $encryption_profile */
++    if ($encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile'])) {
++      $dependencies['config'][] = $encryption_profile->getConfigDependencyName();
++    }
++    return $dependencies;
++  }
++
++}

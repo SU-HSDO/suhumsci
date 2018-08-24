@@ -45,6 +45,15 @@ class HsTableFilter extends FilterBase {
     return new FilterProcessResult($text);
   }
 
+  /**
+   * Add appropriate attributes such as classes and roles to table tags.
+   *
+   * @param string $text
+   *   Text with tables.
+   *
+   * @return string
+   *   Modified text.
+   */
   protected function addDivAttributes($text) {
     $dom = new \DOMDocument();
     libxml_use_internal_errors(TRUE);
@@ -88,10 +97,64 @@ class HsTableFilter extends FilterBase {
     foreach ($dom->getElementsByTagName('td') as $cell) {
       $cell->setAttribute('class', 'table-cell');
       $cell->setAttribute('role', 'gridcell');
+
+      if ($label = $this->findCellLabel($cell)) {
+        $cell->setAttribute('data-column-label', $label);
+        $cell->setAttribute('aria-label', $label);
+      }
     }
 
     preg_match_all("/<body>(.*?)<\/body>/s", $dom->saveHTML(), $output_array);
     return $dom->saveHTML();
+  }
+
+  /**
+   * Find a label from a th tag relative to the give table cell.
+   *
+   * @param \DOMElement $cell
+   *   A table cell td.
+   *
+   * @return string
+   *   Table heading values.
+   */
+  protected function findCellLabel(\DOMElement $cell) {
+    $xpath = new \DOMXPath($cell->ownerDocument);
+
+    $i = 0;
+    $first_cell_in_row = NULL;
+    $sibling = $cell->previousSibling;
+    while ($sibling) {
+      if (isset($sibling->tagName)) {
+        /** @var \DOMElement $first_cell_in_row */
+        $first_cell_in_row = $sibling;
+        $i++;
+      }
+      $sibling = $sibling->previousSibling;
+    }
+
+    /** @var \DOMElement $table */
+    $table = $cell->parentNode;
+    while ($table->tagName != 'table') {
+      $table = $table->parentNode;
+    }
+
+    /** @var \DOMNodeList $headings */
+    $headings = $xpath->query("thead/tr/th", $table);
+
+    $label = [];
+    // Table with top headers.
+    if ($headings->item($i)) {
+      $label[] = $headings->item($i)->nodeValue;
+    }
+
+    // Table with headers in the first column.
+    if ($first_cell_in_row && $first_cell_in_row->tagName == 'th') {
+      // When a table has both top and side headers, we want to label the cell
+      // with both values.
+      $label[] = $first_cell_in_row->nodeValue;
+    }
+
+    return implode(', ', $label);
   }
 
 }

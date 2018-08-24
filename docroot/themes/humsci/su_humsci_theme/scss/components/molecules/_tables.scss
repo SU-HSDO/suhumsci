@@ -8,6 +8,66 @@
 @import
   'decanter-no-markup';
 
+.table-pattern {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+
+  @include media($medium-screen) {
+    display: table;
+    width: 100%;
+  }
+}
+
+.table-caption {
+  display: table-caption;
+  font-size: larger;
+  font-weight: $font-bold;
+  text-align: center;
+}
+
+
+.table-header {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+
+  @include media($medium-screen) {
+    display: table-header-group;
+    font-weight: $font-normal;
+    position: static;
+    text-align: center;
+  }
+
+  .table-row {
+    display: table-row;
+
+    @include media($medium-screen) {
+      background-color: $color-cloud;
+      border: 1px solid $color-driftwood;
+      color: $color-black;
+      text-align: left;
+
+      @include padding(1.5rem);
+    }
+  }
+}
+
+.table-header-cell{
+  background-color: $color-cloud;
+  border: 1px solid $color-driftwood;
+  color: $color-black;
+}
+
+.table-body {
+  display: block;
+  width: 100%;
+
+  @include media($medium-screen) {
+    display: table-row-group;
+  }
+}
+
 .table-row {
   display: block;
   width: 100%;
@@ -18,11 +78,11 @@
     display: table-row;
   }
 
-
   > div {
     border: 1px solid $color-driftwood;
     border-bottom: 0;
     position: relative;
+    min-height: 55px;
 
     @include padding(15px null 15px 50%);
 
@@ -32,7 +92,6 @@
 
       @include padding(1.5rem);
     }
-
 
     &:before {
       color: $color-black;
@@ -59,56 +118,5 @@
     &:last-child {
       border-bottom: 1px solid $color-driftwood;
     }
-  }
-}
-
-.table-caption {
-  display: table-caption;
-  font-size: larger;
-  font-weight: $font-bold;
-  text-align: center;
-}
-
-.table-header {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-
-  @include media($medium-screen) {
-    display: table-header-group;
-    font-weight: $font-normal;
-    position: static;
-    text-align: center;
-  }
-
-
-  > div {
-    display: block;
-    width: 100%;
-
-    @include media($medium-screen) {
-      background-color: $color-cloud;
-      border: 1px solid $color-driftwood;
-      color: $color-black;
-      display: table-cell;
-      text-align: left;
-
-      @include padding(1.5rem);
-    }
-  }
-}
-
-.table-body {
-  display: table-row-group;
-  width: 100%;
-}
-
-.table-pattern {
-  display: block;
-  width: 100%;
-
-  @include media($medium-screen) {
-    display: table;
-    width: 100%;
   }
 }

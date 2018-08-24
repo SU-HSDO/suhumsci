@@ -1,11 +1,10 @@
 @charset "UTF-8";
 
 //
-// Table Row
+// Tables
 //
 
 // Decanter
-
 @import
   'decanter-no-markup';
 
@@ -56,8 +55,60 @@
       display: block;
       width: 100%;
     }
+
     &:last-child {
-      border-bottom: 1px solid $color-driftwood;;
+      border-bottom: 1px solid $color-driftwood;
     }
+  }
+}
+
+.table-caption {
+  display: table-caption;
+  font-size: larger;
+  font-weight: $font-bold;
+  text-align: center;
+}
+
+.table-header {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+
+  @include media($medium-screen) {
+    display: table-header-group;
+    font-weight: $font-normal;
+    position: static;
+    text-align: center;
+  }
+
+
+  > div {
+    display: block;
+    width: 100%;
+
+    @include media($medium-screen) {
+      background-color: $color-cloud;
+      border: 1px solid $color-driftwood;
+      color: $color-black;
+      display: table-cell;
+      text-align: left;
+
+      @include padding(1.5rem);
+    }
+  }
+}
+
+.table-body {
+  display: table-row-group;
+  width: 100%;
+}
+
+.table-pattern {
+  display: block;
+  width: 100%;
+
+  @include media($medium-screen) {
+    display: table;
+    width: 100%;
   }
 }

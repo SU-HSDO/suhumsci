@@ -1,6 +1,8 @@
 {% set attributes = attributes.addClass('table-row') %}
 
-<div{{ attributes.setAttribute('role', 'row') }} role="row">
+{# Remove data-column-label from each column div once dynamic funtionality is added #}
+
+<div{{ attributes.setAttribute('role', 'row') }}>
   {% if column_1 %}
     <div class="column-1" role="gridcell" data-column-label="Title">
       {{ column_1 }}

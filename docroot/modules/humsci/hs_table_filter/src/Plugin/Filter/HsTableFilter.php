@@ -55,47 +55,21 @@ class HsTableFilter extends FilterBase {
     libxml_use_internal_errors(TRUE);
     $dom->loadHtml($text);
 
-    /** @var \DOMElement $table */
-    foreach ($dom->getElementsByTagName('table') as $table) {
-      $table->setAttribute('role', 'grid');
-      $table->setAttribute('aria-readonly', 'true');
-      $classes = $table->getAttribute('class') ?: '';
-      $table->setAttribute('class', trim("$classes table-pattern"));
-    }
+    foreach ($this->tableTags as $tag) {
+      $tag_properties = $this->getPropertiesForTag($tag);
 
-    foreach ($dom->getElementsByTagName('caption') as $caption) {
-      $caption->setAttribute('class', 'table-caption');
-    }
+      /** @var \DOMElement $node */
+      foreach ($dom->getElementsByTagName($tag) as $node) {
+        foreach ($tag_properties as $property => $value) {
+          if (is_array($value)) {
+            $value = $node->getAttribute($property) . implode(' ', $value);
+          }
+          $node->setAttribute($property, trim($value));
+        }
 
-    foreach ($dom->getElementsByTagName('tbody') as $tbody) {
-      $tbody->setAttribute('class', 'table-body');
-    }
-
-    /** @var \DOMElement $table_head */
-    foreach ($dom->getElementsByTagName('thead') as $table_head) {
-      $table_head->setAttribute('class', 'table-header');
-      $table_head->setAttribute('role', 'row');
-    }
-
-    /** @var \DOMElement $cell */
-    foreach ($dom->getElementsByTagName('th') as $cell) {
-      $cell->setAttribute('class', 'table-header-cell');
-      $cell->setAttribute('role', 'gridcell');
-    }
-
-    /** @var \DOMElement $row */
-    foreach ($dom->getElementsByTagName('tr') as $row) {
-      $row->setAttribute('class', 'table-row');
-      $row->setAttribute('role', 'row');
-    }
-
-    /** @var \DOMElement $cell */
-    foreach ($dom->getElementsByTagName('td') as $cell) {
-      $cell->setAttribute('class', 'table-cell');
-      $cell->setAttribute('role', 'gridcell');
-
-      if ($label = $this->findCellLabel($cell)) {
-        $cell->setAttribute('aria-label', $label);
+        if ($tag == 'td' && $label = $this->findCellLabel($node)) {
+          $node->setAttribute('aria-label', $label);
+        }
       }
     }
 
@@ -152,9 +126,8 @@ class HsTableFilter extends FilterBase {
    * @return int
    *   Position in the row.
    */
-  protected function findCellPositionInRow(\DOMElement $cell){
+  protected function findCellPositionInRow(\DOMElement $cell) {
     $position = 0;
-    $first_cell_in_row = NULL;
     $sibling = $cell->previousSibling;
     while ($sibling) {
       if (isset($sibling->tagName)) {
@@ -174,7 +147,7 @@ class HsTableFilter extends FilterBase {
    * @return \DOMElement|null
    *   The first cell in the row, if any.
    */
-  protected function findCellFirstSibling(\DOMElement $cell){
+  protected function findCellFirstSibling(\DOMElement $cell) {
     $first_cell_in_row = NULL;
     $sibling = $cell->previousSibling;
     while ($sibling) {
@@ -185,6 +158,46 @@ class HsTableFilter extends FilterBase {
       $sibling = $sibling->previousSibling;
     }
     return $first_cell_in_row;
+  }
+
+  protected function getPropertiesForTag($tag) {
+    $attributes = [];
+    switch ($tag) {
+      case 'table':
+        $attributes['class'][] = 'table-pattern';
+        $attributes['aria-readonly'][] = 'true';
+        $attributes['role'] = 'grid';
+        break;
+
+      case 'caption':
+        $attributes['class'][] = 'table-caption';
+        break;
+
+      case 'tbody':
+        $attributes['class'][] = 'table-body';
+        break;
+
+      case 'thead':
+        $attributes['class'][] = 'table-header';
+        $attributes['role'] = 'row';
+        break;
+
+      case 'th':
+        $attributes['class'][] = 'table-header-cell';
+        $attributes['role'] = 'gridcell';
+        break;
+
+      case 'tr':
+        $attributes['class'][] = 'table-row';
+        $attributes['role'] = 'row';
+        break;
+
+      case 'td':
+        $attributes['class'][] = 'table-cell';
+        $attributes['role'] = 'gridcell';
+        break;
+    }
+    return $attributes;
   }
 
 }

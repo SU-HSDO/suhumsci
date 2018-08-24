@@ -36,42 +36,61 @@ class HsTableFilter extends FilterBase {
    */
   public function process($text, $langcode) {
     $text = $this->addDivAttributes($text);
-
     foreach ($this->tableTags as $tag) {
       // Replace tags that have other attributes.
       $text = preg_replace("/<$tag (.*?)\/$tag>/s", "<div $1/div>", $text);
       // Replace tags without any attributes.
       $text = preg_replace("/<$tag>(.*?)\/$tag>/s", "<div>$1/div>", $text);
     }
-    dpm($text);
     return new FilterProcessResult($text);
   }
 
   protected function addDivAttributes($text) {
     $dom = new \DOMDocument();
-    $dom->loadHtml($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_use_internal_errors(TRUE);
+    $dom->loadHtml($text);
+
     /** @var \DOMElement $table */
     foreach ($dom->getElementsByTagName('table') as $table) {
       $table->setAttribute('role', 'grid');
       $table->setAttribute('aria-readonly', 'true');
       $classes = $table->getAttribute('class') ?: '';
-      $table->setAttribute('class', trim("$classes 'table-pattern"));
+      $table->setAttribute('class', trim("$classes table-pattern"));
+    }
+
+    foreach ($dom->getElementsByTagName('caption') as $caption) {
+      $caption->setAttribute('class', 'table-caption');
+    }
+
+    foreach ($dom->getElementsByTagName('tbody') as $tbody) {
+      $tbody->setAttribute('class', 'table-body');
     }
 
     /** @var \DOMElement $table_head */
     foreach ($dom->getElementsByTagName('thead') as $table_head) {
+      $table_head->setAttribute('class', 'table-header');
       $table_head->setAttribute('role', 'row');
     }
+
+    /** @var \DOMElement $cell */
+    foreach ($dom->getElementsByTagName('th') as $cell) {
+      $cell->setAttribute('class', 'table-header-cell');
+      $cell->setAttribute('role', 'gridcell');
+    }
+
     /** @var \DOMElement $row */
     foreach ($dom->getElementsByTagName('tr') as $row) {
       $row->setAttribute('class', 'table-row');
       $row->setAttribute('role', 'row');
     }
+
     /** @var \DOMElement $cell */
     foreach ($dom->getElementsByTagName('td') as $cell) {
+      $cell->setAttribute('class', 'table-cell');
       $cell->setAttribute('role', 'gridcell');
     }
 
+    preg_match_all("/<body>(.*?)<\/body>/s", $dom->saveHTML(), $output_array);
     return $dom->saveHTML();
   }
 

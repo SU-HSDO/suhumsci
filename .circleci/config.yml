@@ -1,0 +1,123 @@
+# CircleCI integration with Drupal 8.
+
+# Reusable steps.
+
+## Copies .circle/Robofile to the repository root.
+copy_robo: &copy_robo
+  run:
+    name: Copy RoboFile.php
+    command: cp .circleci/RoboFile.php .
+
+## Starts apache
+start_apache: &start_apache
+  run:
+    name: Starting Apache
+    command: |
+      apache2ctl start
+
+## Add SSH Key
+add_ssh: &add_ssh
+  add_ssh_keys:
+    fingerprints:
+      - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
+
+## Add Known Hosts
+add_known_hosts: &add_known_hosts
+  run:
+    name: Add SSH Known Hosts
+    command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+
+## Defines images and working directory.
+defaults: &defaults
+  docker:
+    - image: pookmish/drupal8ci:latest
+    - image: selenium/standalone-chrome:latest
+    - image: mariadb:10.3
+      environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: 1
+  working_directory: /var/www/html
+
+## Defines the cache restoring mechanism.
+restore_cache: &restore_cache
+  # We use the composer.lock as a way to determine if we can cache our build.
+  keys:
+  - v1-dependencies-{{ checksum "composer.lock" }}
+  # fallback to using the latest cache if no exact match is found
+  - v1-dependencies-
+
+## Defines the cache saving mechanism.
+save_cache: &save_cache
+  paths:
+    - ./vendor
+  key: v1-dependencies-{{ checksum "composer.lock" }}
+
+#Jobs
+
+### Job to run the update path and Behat tests.
+behat_tests: &behat_tests
+  <<: *defaults
+  steps:
+    - *start_apache
+    - *add_ssh
+    - *add_known_hosts
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Run Behat tests
+        command: robo job:run-behat-tests
+    - save_cache: *save_cache
+    - store_test_results:
+        path: /var/www/html/artifacts/behat
+    - store_artifacts:
+        path: /var/www/html/artifacts
+
+## Job to run Unit and Kernel tests.
+unit_kernel_tests: &unit_kernel_tests
+  <<: *defaults
+  steps:
+    - *start_apache
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Run PHPUnit tests
+        command: robo job:run-unit-tests
+    - store_test_results:
+        path: /var/www/html/artifacts/phpunit
+    - store_artifacts:
+        path: /var/www/html/artifacts
+    - save_cache: *save_cache
+
+## Job to check test coverage.
+code_coverage: &code_coverage
+  <<: *defaults
+  steps:
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Generate code coverage report
+        command: robo job:generate-coverage-report
+    - store_artifacts:
+        path: /var/www/html/artifacts
+    - save_cache: *save_cache
+
+# Declare all of the jobs we should run.
+version: 2
+jobs:
+  run-unit-kernel-tests:
+     <<: *unit_kernel_tests
+  run-behat-tests:
+     <<: *behat_tests
+  run-code-coverage:
+     <<: *code_coverage
+
+# Declare a workflow that runs all of our jobs in parallel.
+workflows:
+  version: 2
+  test_and_lint:
+    jobs:
+      - run-unit-kernel-tests
+      - run-behat-tests
+      - run-code-coverage

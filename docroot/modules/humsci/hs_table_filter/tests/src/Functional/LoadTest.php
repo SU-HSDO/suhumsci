@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Simple test to ensure that main page loads with module enabled.
  *
- * @group hs_table_formatter
+ * @group hs_table_filter
  */
 class LoadTest extends BrowserTestBase {
 
@@ -17,7 +17,7 @@ class LoadTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['hs_table_formatter'];
+  public static $modules = ['hs_table_filter'];
 
   /**
    * A user with permission to administer site configuration.

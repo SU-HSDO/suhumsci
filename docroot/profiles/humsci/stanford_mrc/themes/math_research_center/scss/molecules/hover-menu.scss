@@ -16,44 +16,44 @@
 // Fallback styles, which are also applied to the page when
 // loading and in-between navigation page refreshes
 #header {
-.decanter-main-menu--hover-reveal {
-  .no-js & {
-    .fa {
-      display: none;
-    }
-  }
-
-  @include media($medium-screen) {
-    ul ul {
-      display: none;
+  .decanter-main-menu--hover-reveal {
+    .no-js & {
+      .fa {
+        display: none;
+      }
     }
 
-    &.menu--main {
-      box-shadow: none;
-      float: right;
-      height: 40px;
-
-      a:hover,
-      a.is-active,
-      .menu-item--active-trail a {
-        border-bottom: solid 3px $color-black;
+    @include media($medium-screen) {
+      ul ul {
+        display: none;
       }
 
-      li {
-        @include margin(null 0 null null);
+      &.menu--main {
+        box-shadow: none;
+        float: right;
+        height: 40px;
 
-        &.menu-item > a {
-          font-size: $base-font-size;
-          font-weight: $font-normal;
-          text-decoration: none;
+        a:hover,
+        a.is-active,
+        .menu-item--active-trail a {
+          border-bottom: solid 3px $color-black;
+        }
 
-          @include margin(0 1.5em 0 0);
-          @include padding(6px 0);
+        li {
+          @include margin(null 0 null null);
+
+          &.menu-item > a {
+            font-size: $base-font-size;
+            font-weight: $font-normal;
+            text-decoration: none;
+
+            @include margin(0 1.5em 0 0);
+            @include padding(6px 0);
+          }
         }
       }
     }
   }
-}
 }
 
 // Main menu in header region
@@ -85,38 +85,35 @@
         .ui-menu.decanter-nav-primary {
           border: none;
 
-          &.ui-menu {
-            &.ui-widget-content {
-              background: $color-black;
+          &.ui-menu.ui-widget-content {
+            background: $color-black;
 
-              @include media($medium-screen) {
-                background: none;
-              }
-
-
-              &.ui-widget {
-                border: none;
-              }
-
-              .ui-icon {
-                background-image: none;
-              }
-
-              .ui-widget {
-                background: $color-black;
-
-                @include padding(1em);
-
-                &.decanter-nav-submenu li a {
-                  font-size: 1.8rem;
-                }
-              }
+            @include media($medium-screen) {
+              background: none;
             }
+          }
 
-            .ui-menu-item-wrapper {
-              @include margin(0 1.5em 0 0);
-              @include padding(6px 0 6px 0);
-            }
+          .ui-menu.ui-widget-content.ui-widget {
+            border: none;
+          }
+
+          .ui-menu.ui-widget-content .ui-icon {
+            background-image: none;
+          }
+
+          .ui-menu.ui-widget-content.ui-widget {
+            background: $color-black;
+
+            @include padding(1em);
+          }
+
+          .ui-menu.ui-widget-content.ui-widget.decanter-nav-submenu li a {
+            font-size: 1.8rem;
+          }
+
+          &.ui-menu .ui-menu-item-wrapper {
+            @include margin(0 1.5em 0 0);
+            @include padding(6px 0 6px 0);
           }
 
           > li > a {
@@ -125,13 +122,13 @@
             @media (min-width: 951px) {
               font-size: $base-font-size;
             }
+          }
 
-            & .ui-menu-icon {
-              right: -18px;
-              top: -23px;
-              -webkit-transform: rotate(90deg);
-              transform: rotate(90deg);
-            }
+          > li > a .ui-menu-icon {
+            right: -18px;
+            top: -23px;
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
           }
 
           .ui-state-active,
@@ -151,30 +148,6 @@
           }
 
           .decanter-nav-submenu {
-            .menu-item a {
-              border-bottom: none;
-              color: $color-white;
-
-              @include margin(0 1.5em 10px 0);
-              @include padding(0);
-
-              @include media($medium-screen) {
-                @include margin(0 0 10px 0);
-              }
-
-
-              &:hover {
-                background-color: transparent;
-                border: none;
-                color: $color-cloud;
-                text-decoration: underline;
-              }
-
-              &.is-active {
-                color: $color-cloud;
-              }
-            }
-
             .ui-state-active,
             .ui-widget-content .ui-state-active
             a.ui-button:active,
@@ -183,6 +156,30 @@
               background-color: transparent;
               color: $color-cloud;
               text-decoration: underline;
+            }
+          }
+
+          .decanter-nav-submenu .menu-item a {
+            border-bottom: none;
+            color: $color-white;
+
+            @include margin(0 1.5em 10px 0);
+            @include padding(0);
+
+            @include media($medium-screen) {
+              @include margin(0 0 10px 0);
+            }
+
+
+            &:hover {
+              background-color: transparent;
+              border: none;
+              color: $color-cloud;
+              text-decoration: underline;
+            }
+
+            &.is-active {
+              color: $color-cloud;
             }
           }
         }

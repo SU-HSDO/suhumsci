@@ -8,7 +8,7 @@
         var $menu = $header.find('ul.decanter-nav-primary');
 
         // Desktop, apply the jquery ui menu and change any mobile classes.
-        if ($(window).width() >= 1201) {
+        if (window.innerWidth >= 1201) {
           $menu.menu();
           $menu.removeClass('expanded');
           $menu.find('.fa-minus').addClass('fa-plus').removeClass('fa-minus');
@@ -29,25 +29,51 @@
         }
       }
 
+      // Check main menu items to ensure dropdown submenus don't get orphaned or cut off.
+      function menuEdgeCheck() {
+        var $viewportWidth = $('body').innerWidth();
+        $('ul.decanter-nav-primary > li', context).each(function() {
+          var $itemFromLeft = $(this).offset().left;
+          var $itemFromRight = $viewportWidth - $itemFromLeft;
+          var $subMenuWidth = $('> ul', this).outerWidth();
+          if ($subMenuWidth > $itemFromRight) {
+            $(this).addClass('edge');
+          }
+          else {
+            $(this).removeClass('edge');
+          }
+        });
+      }
+
       setMenu();
-      $(window).resize(setMenu);
+      menuEdgeCheck();
 
       // Open/close the menu from hamburger button.
       $header.find('button.fa-bars').once().click(function() {
-        $(this).siblings('ul').toggleClass('expanded').find('.fa-minus').each(function() {
-          $(this).toggleClass('fa-plus').toggleClass('fa-minus');
-          $(this).siblings('ul').toggleClass('expanded');
-        });
+        menuExpander(this);
       });
 
       // Open/close submenus from the plus button.
       $header.find('button.fa-plus').once().click(function() {
-        $(this).siblings('ul').toggleClass('expanded').find('.fa-minus').each(function() {
-          $(this).toggleClass('fa-plus').toggleClass('fa-minus');
-          $(this).siblings('ul').toggleClass('expanded');
-        });
+        menuExpander(this);
         $(this).toggleClass('fa-plus').toggleClass('fa-minus');
       });
+
+      function menuExpander(theMenu) {
+        $(theMenu).siblings('ul').toggleClass('expanded').find('.fa-minus').each(function() {
+          $(theMenu).toggleClass('fa-plus').toggleClass('fa-minus');
+          $(theMenu).siblings('ul').toggleClass('expanded');
+        });
+      }
+
+      // run on window resize
+      window.addEventListener('resize',
+        Drupal.debounce(function() {
+          setMenu();
+          menuEdgeCheck();
+        }, 125)
+      );
+
     }
   };
 })(jQuery, Drupal);

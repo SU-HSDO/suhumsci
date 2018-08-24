@@ -185,14 +185,24 @@ process:
     -
       plugin: default_value
       default_value: null
+  speaker_person:
+    plugin: entity_lookup
+    source: speaker
+    value_key: title
+    bundle_key: type
+    bundle: hs_person
+    entity_type: node
+    ignore_case: true
   field_hs_event_speaker:
     -
       source: speaker
-      plugin: entity_generate_no_lookup
+      plugin: hs_entity_generate
       entity_type: event_collections
       bundle_key: type
       bundle: speaker
       value_key: title
+      values:
+        field_speaker_person: '@speaker_person'
     -
       plugin: default_value
       default_value: null

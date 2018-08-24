@@ -24,6 +24,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\ui_patterns\Element\PatternContext;
+use Drupal\eck\Entity\EckEntity;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -370,7 +371,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 
   $suggestions = [];
   //  // Add class for whole field.
-  if (isset($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
+  if (!empty($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
       'field__inline_contents',
@@ -400,6 +401,12 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
   $entity_type = $entity_display->getTargetEntityTypeId();
   $entity_bundle = $entity_display->getTargetBundle();
   $id = "field_block:$entity_type:$entity_bundle:$field_name";
+  $static_id = "$id-{$entity->id()}";
+  $builds = &drupal_static(__FUNCTION__);
+  if (isset($builds[$static_id])) {
+    return $builds[$static_id];
+  }
+
   $render_build = $entity_display->build($entity);
   if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
     return [];
@@ -409,6 +416,7 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
     foreach (Element::children($section) as $region_id) {
       foreach ($section[$region_id] as $component) {
         if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
+          $builds[$static_id] = $component['#configuration'];
           return $component['#configuration'];
         }
       }
@@ -458,6 +466,51 @@ function hs_field_helpers_cron() {
     // Take it one group at a time, importing the migrations within each group.
     foreach ($migrations as $group_id => $migration_list) {
       array_walk($migration_list, 'hs_field_helpers_execute_migration');
+    }
+  }
+
+  _he_field_helpers_clean_eck();
+}
+
+/**
+ * Deletes any ECK entities that don't have any usage of them anywhere.
+ *
+ * With entity reference fields, entity_usage module tracks the use of ECK
+ * entities. Because of that we can safely delete these entities that have no
+ * usage statitistics of them. Mostly this is from doing a migration rollback.
+ * Deleting a node manually seems to clean the ECK entities.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _he_field_helpers_clean_eck() {
+  /** @var \Drupal\entity_usage\EntityUsage $entity_usage */
+  $entity_usage = \Drupal::service('entity_usage.usage');
+  $definitions = \Drupal::entityTypeManager()->getDefinitions();
+  $logger = \Drupal::logger('hs_field_helpers');
+
+  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
+  foreach ($definitions as $entity_type_id => $entity_type) {
+    // Find all the entity types ECK has available.
+    if ($entity_type->getOriginalClass() != EckEntity::class) {
+      continue;
+    }
+
+    $entities = \Drupal::entityTypeManager()
+      ->getStorage($entity_type_id)
+      ->loadMultiple();
+
+    // Delete all ECK entities that aren't being used. Some ECK's don't get
+    // deleted if they were imported by a migration.
+    foreach ($entities as $entity) {
+      if (empty($entity_usage->listUsage($entity))) {
+        $logger->info(t('Deleted ECK due to no usages. %type: %id'), [
+          '%type' => $entity_type_id,
+          '%id' => $entity->id(),
+        ]);
+        $entity->delete();
+      }
     }
   }
 }

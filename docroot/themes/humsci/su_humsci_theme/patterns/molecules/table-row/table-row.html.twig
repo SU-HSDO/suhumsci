@@ -1,32 +1,34 @@
 {% set attributes = attributes.addClass('table-row') %}
 
-<div{{ attributes.setAttribute('role', 'row') }} role="row">
+{# Remove data-column-label from each column div once dynamic funtionality is added #}
+
+<div{{ attributes.setAttribute('role', 'row') }}>
   {% if column_1 %}
-    <div class="column-1" role="gridcell">
+    <div class="column-1" role="gridcell" data-column-label="Title">
       {{ column_1 }}
     </div>
   {% endif %}
 
   {% if column_2 %}
-    <div class="column-2" role="gridcell">
+    <div class="column-2" role="gridcell" data-column-label="Instructor">
       {{ column_2 }}
     </div>
   {% endif %}
 
   {% if column_3 %}
-    <div class="column-3" role="gridcell">
+    <div class="column-3" role="gridcell" data-column-label="Quarter">
       {{ column_3 }}
     </div>
   {% endif %}
 
   {% if column_4 %}
-    <div class="column-4" role="gridcell">
+    <div class="column-4" role="gridcell" data-column-label="Day, Time, Location">
       {{ column_4 }}
     </div>
   {% endif %}
 
   {% if column_5 %}
-    <div class="column-5" role="gridcell">
+    <div class="column-5" role="gridcell" data-column-label="Column 5">
       {{ column_5 }}
     </div>
   {% endif %}

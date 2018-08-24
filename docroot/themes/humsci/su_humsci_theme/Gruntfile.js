@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         }
       },
       css: {
-        files: ['scss/**/*.scss', 'scss/**/**/*.scss','patterns/**/**/scss/*.scss'],
+        files: ['scss/**/*.scss', 'scss/**/**/*.scss', 'patterns/**/**/scss/*.scss'],
         tasks: ['sass'],
         options: {
           interrupt: true
@@ -62,7 +62,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'img/source/',
-          src: ['{,*/}*.{png,jpg,gif}' ],
+          src: ['{,*/}*.{png,jpg,gif}'],
           dest: 'img/optimized/'
         }]
       }
@@ -79,7 +79,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'images/source/',
-          src: ['{,*/}*.svg' ],
+          src: ['{,*/}*.svg'],
           dest: 'images/optimized/'
         }]
       }
@@ -102,34 +102,27 @@ module.exports = function(grunt) {
         precision: 10
       },
       dist: {
-        files: {
-          // Files are compiled individually so they may be included
-          // conditionally using logic built in to the theme template or module.
-
-          // BASE
-          'css/base/index.css': 'scss/base/index.scss',
-          'css/ckeditor.css':   'scss/ckeditor.scss',
-
-          // PATTERNS
-          'patterns/molecules/date-stacked-vertical-card/css/date-stacked-vertical-card.css': 'patterns/molecules/date-stacked-vertical-card/scss/date-stacked-vertical-card.scss',
-          'patterns/molecules/horizontal-card/css/horizontal-card.css':                       'patterns/molecules/horizontal-card/scss/horizontal-card.scss',
-          'patterns/molecules/masonry-item/css/masonry-item.css':                             'patterns/molecules/masonry-item/scss/masonry-item.scss',
-          'patterns/molecules/vertical-card/css/vertical-card.css':                           'patterns/molecules/vertical-card/scss/vertical-card.scss',
-          'patterns/molecules/vertical-link-card/css/vertical-link-card.css':                 'patterns/molecules/vertical-link-card/scss/vertical-link-card.scss',
-          'patterns/molecules/table-row/css/table-row.css':                                   'patterns/molecules/table-row/scss/table-row.scss',
-          'patterns/organisms/table-pattern/css/table-pattern.css':                           'patterns/organisms/table-pattern/scss/table-pattern.scss',
-          'patterns/organisms/masonry/css/masonry.css':                                       'patterns/organisms/masonry/scss/masonry.scss',
-
-          // COMPONENTS
-          'css/components/molecules/hover-menu.css':  'scss/components/molecules/hover-menu.scss',
-
-          // NODES
-          'css/nodes/hs_basic_page.css':  'scss/nodes/hs_basic_page.scss',
-          'css/nodes/hs_person.css':      'scss/nodes/hs_person.scss',
-
-          // CUSTOM PROJECTS
-          'css/custom/archaeology/archaeology.css': 'scss/custom/archaeology/archaeology.scss',
-        }
+        files: [{
+            expand: true,
+            cwd: 'scss',
+            src: ['**/[a-z]*.scss'],
+            dest: 'css',
+            ext: '.css',
+            rename: function(dest, src) {
+              return dest + '/' + src.replace('scss', 'css');
+            }
+          },
+          {
+            expand: true,
+            cwd: 'patterns',
+            src: ['**/[a-z]*.scss'],
+            dest: 'patterns',
+            ext: '.css',
+            rename: function(dest, src) {
+              return dest + '/' + src.replace('scss', 'css');
+            }
+          }
+        ]
       }
     },
     drush: {
@@ -140,7 +133,7 @@ module.exports = function(grunt) {
     browserSync: {
       dev: {
         bsFiles: {
-          src : [
+          src: [
             'css/**/*.css',
             'templates/**/*.twig',
             'images/optimized/**/*.{png,jpg,gif,svg}',

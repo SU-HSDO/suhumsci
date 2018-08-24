@@ -99,7 +99,6 @@ class HsTableFilter extends FilterBase {
       $cell->setAttribute('role', 'gridcell');
 
       if ($label = $this->findCellLabel($cell)) {
-        $cell->setAttribute('data-column-label', $label);
         $cell->setAttribute('aria-label', $label);
       }
     }

@@ -58,33 +58,14 @@ class HsTableFilter extends FilterBase {
     foreach ($this->tableTags as $tag) {
       /** @var \DOMElement $node */
       foreach ($dom->getElementsByTagName($tag) as $node) {
-        $this->setNodeAttributes($node);
+        $method = 'setAttributesFor' . ucfirst($node->tagName);
+        call_user_func([$this, $method], $node);
       }
     }
 
     // Get only the context inside the body tag.
     preg_match_all("/<body>(.*?)<\/body>/s", $dom->saveHTML(), $output_array);
     return $output_array[1][0];
-  }
-
-  /**
-   * Set table tag attributes.
-   *
-   * @param \DOMElement $node
-   *   Table tag to set attributes.
-   */
-  protected function setNodeAttributes(\DOMElement $node) {
-    $tag_properties = $this->getAttributesForTag($node->tagName);
-    foreach ($tag_properties as $property => $value) {
-      if (is_array($value)) {
-        $value = $node->getAttribute($property) . implode(' ', $value);
-      }
-      $node->setAttribute($property, trim($value));
-    }
-
-    if ($node->tagName == 'td' && $label = $this->findCellLabel($node)) {
-      $node->setAttribute('aria-label', $label);
-    }
   }
 
   /**
@@ -170,52 +151,97 @@ class HsTableFilter extends FilterBase {
   }
 
   /**
-   * Get attributes for a table tag.
+   * Sets any attributes for table elements.
    *
-   * @param string $tag
-   *   Html tag from tables.
-   *
-   * @return array
-   *   Tag attributes.
+   * @param \DOMElement $node
+   *   Table element
    */
-  protected function getAttributesForTag($tag) {
-    $attributes = [];
-    switch ($tag) {
-      case 'table':
-        $attributes['class'][] = 'table-pattern';
-        $attributes['aria-readonly'][] = 'true';
-        $attributes['role'] = 'grid';
-        break;
+  protected function setAttributesForTable(\DOMElement $node) {
+    static::addClassToNode($node, 'table-pattern');
+    $node->setAttribute('role', 'grid');
+    $node->setAttribute('aria-readonly', 'true');
+  }
 
-      case 'caption':
-        $attributes['class'][] = 'table-caption';
-        break;
+  /**
+   * Sets any attributes for caption elements.
+   *
+   * @param \DOMElement $node
+   *   Caption element
+   */
+  protected function setAttributesForCaption(\DOMElement $node) {
+    static::addClassToNode($node, 'table-caption');
+  }
 
-      case 'tbody':
-        $attributes['class'][] = 'table-body';
-        break;
+  /**
+   * Sets any attributes for tbody elements.
+   *
+   * @param \DOMElement $node
+   *   Tbody element
+   */
+  protected function setAttributesForTbody(\DOMElement $node) {
+    static::addClassToNode($node, 'table-body');
+  }
 
-      case 'thead':
-        $attributes['class'][] = 'table-header';
-        $attributes['role'] = 'row';
-        break;
+  /**
+   * Sets any attributes for thead elements.
+   *
+   * @param \DOMElement $node
+   *   Thead element
+   */
+  protected function setAttributesForThead(\DOMElement $node) {
+    static::addClassToNode($node, 'table-header');
+    $node->setAttribute('role', 'row');
+  }
 
-      case 'th':
-        $attributes['class'][] = 'table-header-cell';
-        $attributes['role'] = 'gridcell';
-        break;
+  /**
+   * Sets any attributes for th elements.
+   *
+   * @param \DOMElement $node
+   *   Th element
+   */
+  protected function setAttributesForTh(\DOMElement $node) {
+    static::addClassToNode($node, 'table-header-cell');
+    $node->setAttribute('role', 'gridcell');
+  }
 
-      case 'tr':
-        $attributes['class'][] = 'table-row';
-        $attributes['role'] = 'row';
-        break;
+  /**
+   * Sets any attributes for tr elements.
+   *
+   * @param \DOMElement $node
+   *   Tr element
+   */
+  protected function setAttributesForTr(\DOMElement $node) {
+    static::addClassToNode($node, 'table-row');
+    $node->setAttribute('role', 'row');
+  }
 
-      case 'td':
-        $attributes['class'][] = 'table-cell';
-        $attributes['role'] = 'gridcell';
-        break;
+  /**
+   * Sets any attributes for td elements.
+   *
+   * @param \DOMElement $node
+   *   Td element
+   */
+  protected function setAttributesForTd(\DOMElement $node) {
+    static::addClassToNode($node, 'table-cell');
+    $node->setAttribute('role', 'gridcell');
+
+    if ($label = $this->findCellLabel($node)) {
+      $node->setAttribute('aria-label', $label);
     }
-    return $attributes;
+  }
+
+  /**
+   * Add classes to an element and retain original classes.
+   *
+   * @param \DOMElement $node
+   *   Element.
+   * @param string|string[] $classes
+   *   classes to add.
+   */
+  protected static function addClassToNode(\DOMElement $node, $classes) {
+    $new_classes = is_array($classes) ? implode(' ', $classes) : $classes;
+    $existing_classes = $node->getAttribute('class');
+    $node->setAttribute('class', trim("$existing_classes $new_classes"));
   }
 
 }

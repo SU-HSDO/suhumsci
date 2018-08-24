@@ -2,12 +2,8 @@
 
 namespace Drupal\hs_table_filter\Plugin\Filter;
 
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\linkit\SubstitutionManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a Linkit filter.
@@ -103,8 +99,9 @@ class HsTableFilter extends FilterBase {
       }
     }
 
+    // Get only the context inside the body tag.
     preg_match_all("/<body>(.*?)<\/body>/s", $dom->saveHTML(), $output_array);
-    return $dom->saveHTML();
+    return $output_array[1][0];
   }
 
   /**
@@ -119,18 +116,7 @@ class HsTableFilter extends FilterBase {
   protected function findCellLabel(\DOMElement $cell) {
     $xpath = new \DOMXPath($cell->ownerDocument);
 
-    $i = 0;
-    $first_cell_in_row = NULL;
-    $sibling = $cell->previousSibling;
-    while ($sibling) {
-      if (isset($sibling->tagName)) {
-        /** @var \DOMElement $first_cell_in_row */
-        $first_cell_in_row = $sibling;
-        $i++;
-      }
-      $sibling = $sibling->previousSibling;
-    }
-
+    $position = $this->findCellPositionInRow($cell);
     /** @var \DOMElement $table */
     $table = $cell->parentNode;
     while ($table->tagName != 'table') {
@@ -142,18 +128,63 @@ class HsTableFilter extends FilterBase {
 
     $label = [];
     // Table with top headers.
-    if ($headings->item($i)) {
-      $label[] = $headings->item($i)->nodeValue;
+    if ($headings->item($position)) {
+      $label[] = $headings->item($position)->nodeValue;
     }
 
+    $first_row_cell = $this->findCellFirstSibling($cell);
     // Table with headers in the first column.
-    if ($first_cell_in_row && $first_cell_in_row->tagName == 'th') {
+    if ($first_row_cell && $first_row_cell->tagName == 'th') {
       // When a table has both top and side headers, we want to label the cell
       // with both values.
-      $label[] = $first_cell_in_row->nodeValue;
+      $label[] = $first_row_cell->nodeValue;
     }
 
     return implode(', ', $label);
+  }
+
+  /**
+   * Find what position the cell is in the row.
+   *
+   * @param \DOMElement $cell
+   *   The table `td` cell.
+   *
+   * @return int
+   *   Position in the row.
+   */
+  protected function findCellPositionInRow(\DOMElement $cell){
+    $position = 0;
+    $first_cell_in_row = NULL;
+    $sibling = $cell->previousSibling;
+    while ($sibling) {
+      if (isset($sibling->tagName)) {
+        $position++;
+      }
+      $sibling = $sibling->previousSibling;
+    }
+    return $position;
+  }
+
+  /**
+   * Find the first table cell in the same row.
+   *
+   * @param \DOMElement $cell
+   *   A table `td` element.
+   *
+   * @return \DOMElement|null
+   *   The first cell in the row, if any.
+   */
+  protected function findCellFirstSibling(\DOMElement $cell){
+    $first_cell_in_row = NULL;
+    $sibling = $cell->previousSibling;
+    while ($sibling) {
+      if (isset($sibling->tagName)) {
+        /** @var \DOMElement $first_cell_in_row */
+        $first_cell_in_row = $sibling;
+      }
+      $sibling = $sibling->previousSibling;
+    }
+    return $first_cell_in_row;
   }
 
 }

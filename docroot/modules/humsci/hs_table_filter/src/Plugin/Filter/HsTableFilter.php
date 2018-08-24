@@ -56,26 +56,35 @@ class HsTableFilter extends FilterBase {
     $dom->loadHtml($text);
 
     foreach ($this->tableTags as $tag) {
-      $tag_properties = $this->getPropertiesForTag($tag);
-
       /** @var \DOMElement $node */
       foreach ($dom->getElementsByTagName($tag) as $node) {
-        foreach ($tag_properties as $property => $value) {
-          if (is_array($value)) {
-            $value = $node->getAttribute($property) . implode(' ', $value);
-          }
-          $node->setAttribute($property, trim($value));
-        }
-
-        if ($tag == 'td' && $label = $this->findCellLabel($node)) {
-          $node->setAttribute('aria-label', $label);
-        }
+        $this->setNodeAttributes($node);
       }
     }
 
     // Get only the context inside the body tag.
     preg_match_all("/<body>(.*?)<\/body>/s", $dom->saveHTML(), $output_array);
     return $output_array[1][0];
+  }
+
+  /**
+   * Set table tag attributes.
+   *
+   * @param \DOMElement $node
+   *   Table tag to set attributes.
+   */
+  protected function setNodeAttributes(\DOMElement $node) {
+    $tag_properties = $this->getAttributesForTag($node->tagName);
+    foreach ($tag_properties as $property => $value) {
+      if (is_array($value)) {
+        $value = $node->getAttribute($property) . implode(' ', $value);
+      }
+      $node->setAttribute($property, trim($value));
+    }
+
+    if ($node->tagName == 'td' && $label = $this->findCellLabel($node)) {
+      $node->setAttribute('aria-label', $label);
+    }
   }
 
   /**
@@ -160,7 +169,16 @@ class HsTableFilter extends FilterBase {
     return $first_cell_in_row;
   }
 
-  protected function getPropertiesForTag($tag) {
+  /**
+   * Get attributes for a table tag.
+   *
+   * @param string $tag
+   *   Html tag from tables.
+   *
+   * @return array
+   *   Tag attributes.
+   */
+  protected function getAttributesForTag($tag) {
     $attributes = [];
     switch ($tag) {
       case 'table':

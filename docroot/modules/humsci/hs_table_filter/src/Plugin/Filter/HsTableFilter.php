@@ -154,7 +154,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for table elements.
    *
    * @param \DOMElement $node
-   *   Table element
+   *   Table element.
    */
   protected function setAttributesForTable(\DOMElement $node) {
     static::addClassToNode($node, 'table-pattern');
@@ -166,7 +166,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for caption elements.
    *
    * @param \DOMElement $node
-   *   Caption element
+   *   Caption element.
    */
   protected function setAttributesForCaption(\DOMElement $node) {
     static::addClassToNode($node, 'table-caption');
@@ -176,7 +176,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for tbody elements.
    *
    * @param \DOMElement $node
-   *   Tbody element
+   *   Tbody element.
    */
   protected function setAttributesForTbody(\DOMElement $node) {
     static::addClassToNode($node, 'table-body');
@@ -186,7 +186,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for thead elements.
    *
    * @param \DOMElement $node
-   *   Thead element
+   *   Thead element.
    */
   protected function setAttributesForThead(\DOMElement $node) {
     static::addClassToNode($node, 'table-header');
@@ -197,7 +197,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for th elements.
    *
    * @param \DOMElement $node
-   *   Th element
+   *   Th element.
    */
   protected function setAttributesForTh(\DOMElement $node) {
     static::addClassToNode($node, 'table-header-cell');
@@ -208,7 +208,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for tr elements.
    *
    * @param \DOMElement $node
-   *   Tr element
+   *   Tr element.
    */
   protected function setAttributesForTr(\DOMElement $node) {
     static::addClassToNode($node, 'table-row');
@@ -219,7 +219,7 @@ class HsTableFilter extends FilterBase {
    * Sets any attributes for td elements.
    *
    * @param \DOMElement $node
-   *   Td element
+   *   Td element.
    */
   protected function setAttributesForTd(\DOMElement $node) {
     static::addClassToNode($node, 'table-cell');
@@ -236,7 +236,7 @@ class HsTableFilter extends FilterBase {
    * @param \DOMElement $node
    *   Element.
    * @param string|string[] $classes
-   *   classes to add.
+   *   Classes to add.
    */
   protected static function addClassToNode(\DOMElement $node, $classes) {
     $new_classes = is_array($classes) ? implode(' ', $classes) : $classes;

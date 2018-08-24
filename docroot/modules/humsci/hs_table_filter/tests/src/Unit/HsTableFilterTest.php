@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\hs_table_filter\Unit;
 
-use Drupal\hs_table_filter\Plugin\Filter\HsTableFilter;
 use Drupal\Tests\UnitTestCase;
 
 /**

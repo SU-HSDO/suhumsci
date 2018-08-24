@@ -22,11 +22,13 @@
 
   > div {
     border: 1px solid $color-driftwood;
+    border-bottom: 0;
     position: relative;
 
     @include padding(15px null 15px 50%);
 
     @include media($medium-screen) {
+      border-bottom: 1px solid $color-driftwood;
       display: table-cell;
 
       @include padding(1.5rem);
@@ -53,6 +55,9 @@
     [class*="column-"] {
       display: block;
       width: 100%;
+    }
+    &:last-child {
+      border-bottom: 1px solid $color-driftwood;;
     }
   }
 }

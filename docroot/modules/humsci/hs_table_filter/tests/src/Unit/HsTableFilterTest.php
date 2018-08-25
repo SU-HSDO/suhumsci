@@ -86,6 +86,9 @@ class HsTableFilterTest extends UnitTestCase {
     }
   }
 
+  /**
+   * Set the dom document and xpaths with converted text.
+   */
   protected function setTestDom() {
     $converted_text = (string) $this->filter->process($this->testHtml, 'en');
     $this->dom->loadHTML($converted_text);

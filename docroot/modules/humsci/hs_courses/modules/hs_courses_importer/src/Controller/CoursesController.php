@@ -62,25 +62,32 @@ class CoursesController extends ControllerBase {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function setCourseDom() {
-    $url = 'http://explorecourses.stanford.edu/search?view=xml-20140630&view=catalog-20140630&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q=ARCHLGY%3A';
+    $urls = ['http://explorecourses.stanford.edu/search?view=xml-20140630&view=catalog-20140630&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q=ARCHLGY%3A'];
     $config = $this->config('hs_courses_importer.importer_settings');
-    if ($config_url = $config->get('url')) {
-      $url = $config_url;
+    if ($config_url = $config->get('urls')) {
+      $urls = $config_url;
     }
 
-    $api_response = $this->httpClient->request('GET', $url);
-    $body = (string) $api_response->getBody();
+    foreach ($urls as $url) {
+      $api_response = $this->httpClient->request('GET', $url);
+      $body = (string) $api_response->getBody();
 
-    // The data from explorecourses.stanford.edu contains a ton of unwanted
-    // markup that shouldnt be in an xml source. So lets clean it up first.
-    $body = preg_replace("/[\t\n\r]/", ' ', $body);
-    $body = preg_replace("/[[:blank:]]+/", " ", $body);
-    $body = str_replace('> ', ">", $body);
-    $body = str_replace(' <', "<", $body);
-    $this->courseDom->loadXML($body);
+      // The data from explorecourses.stanford.edu contains a ton of unwanted
+      // markup that shouldnt be in an xml source. So lets clean it up first.
+      $body = preg_replace("/[\t\n\r]/", ' ', $body);
+      $body = preg_replace("/[[:blank:]]+/", " ", $body);
+      $body = str_replace('> ', ">", $body);
+      $body = str_replace(' <', "<", $body);
 
-    $this->cleanCourses();
-    $this->setSectionGuids();
+      $this->courseDom->loadXML($body);
+
+      $this->cleanCourses();
+      $this->setSectionGuids();
+    }
+  }
+
+  protected function mergeFeeds() {
+
   }
 
   /**

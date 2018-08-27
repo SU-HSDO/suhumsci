@@ -83,8 +83,12 @@ class CourseImporter extends ConfigFormBase {
 
     foreach (explode("\n", $urls) as $url) {
       $this->validateIsUrl($url, $form, $form_state);
-      $this->validateIsExploreCourses($url, $form, $form_state);
-      $this->validateIsXmlUrl($url, $form, $form_state);
+      if (!$form_state->getErrors()) {
+        $this->validateIsExploreCourses($url, $form, $form_state);
+      }
+      if (!$form_state->getErrors()) {
+        $this->validateIsXmlUrl($url, $form, $form_state);
+      }
     }
   }
 
@@ -92,7 +96,7 @@ class CourseImporter extends ConfigFormBase {
    * Check if the string is a full URL.
    *
    * @param string $url
-   *   Url string to check
+   *   Url string to check.
    * @param array $form
    *   Original form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -100,9 +104,8 @@ class CourseImporter extends ConfigFormBase {
    */
   protected function validateIsUrl($url, array &$form, FormStateInterface $form_state) {
     $parsed_url = parse_url($url);
-    // Validate the given line is actually a full URL.
     if (!isset($parsed_url['scheme']) || !isset($parsed_url['host']) || !isset($parsed_url['path']) || !isset($parsed_url['query'])) {
-      $form_state->setError($form['url'], $this->t('Invalid URL Format url: %$url', ['%url' => $url]));
+      $form_state->setError($form['urls'], $this->t('Invalid URL Format url: %url', ['%url' => $url]));
     }
   }
 
@@ -110,7 +113,7 @@ class CourseImporter extends ConfigFormBase {
    * Check if the url points to explorecourses.stanford.edu.
    *
    * @param string $url
-   *   Url string to check
+   *   Url string to check.
    * @param array $form
    *   Original form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -118,9 +121,8 @@ class CourseImporter extends ConfigFormBase {
    */
   protected function validateIsExploreCourses($url, array &$form, FormStateInterface $form_state) {
     $parsed_url = parse_url($url);
-    // Make sure the url is pointing to what we expect.
     if ($parsed_url['host'] != 'explorecourses.stanford.edu') {
-      $form_state->setError($form['url'], $this->t('URL %url Must be for explorecourses.stanford.edu', ['%url' => $url]));
+      $form_state->setError($form['urls'], $this->t('URL %url Must be for explorecourses.stanford.edu', ['%url' => $url]));
     }
   }
 
@@ -128,7 +130,7 @@ class CourseImporter extends ConfigFormBase {
    * Check that the url points to an XML feed.
    *
    * @param string $url
-   *   Url string to check
+   *   Url string to check.
    * @param array $form
    *   Original form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -140,15 +142,13 @@ class CourseImporter extends ConfigFormBase {
       $response = $this->guzzle->request('GET', $url);
     }
     catch (GuzzleException $e) {
-      $form_state->setError($form['url'], $this->t('Unable to gather data from %url.', ['%url' => $url]));
+      $form_state->setError($form['urls'], $this->t('Unable to gather data from %url.', ['%url' => $url]));
     }
 
     $content_type = $response->getHeader('Content-Type');
-    // Finally check to make sure the url points to the XML feed from
-    // explorecourses.stanford.edu.
     foreach ($content_type as $type) {
       if (strpos($type, 'xml') === FALSE) {
-        $form_state->setError($form['url'], $this->t('URL Must be an XML feed. %$url', ['%url' => $url]));
+        $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));
       }
     }
   }

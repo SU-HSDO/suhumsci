@@ -15,6 +15,8 @@ use Drupal\Core\Config\StorageInterface;
 class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
 
   /**
+   * Config factory service.
+   *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
@@ -23,6 +25,7 @@ class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
    * CourseImporterOverrides constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory service.
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;

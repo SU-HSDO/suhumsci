@@ -5,6 +5,7 @@ namespace Drupal\hs_courses_importer\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use GuzzleHttp\ClientInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -20,6 +21,13 @@ class CoursesController extends ControllerBase {
   protected $httpClient;
 
   /**
+   * Request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * @var \DOMDocument
    */
   protected $courseDom;
@@ -27,8 +35,9 @@ class CoursesController extends ControllerBase {
   /**
    * Constructs a new CoursesController object.
    */
-  public function __construct(ClientInterface $http_client) {
+  public function __construct(ClientInterface $http_client, RequestStack $request_stack) {
     $this->httpClient = $http_client;
+    $this->requestStack = $request_stack;
     $this->courseDom = new \DOMDocument('1.0', 'UTF-8');
     $this->setCourseDom();
   }
@@ -38,7 +47,8 @@ class CoursesController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('http_client')
+      $container->get('http_client'),
+      $container->get('request_stack')
     );
   }
 
@@ -62,58 +72,24 @@ class CoursesController extends ControllerBase {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function setCourseDom() {
-    $urls = ['http://explorecourses.stanford.edu/search?view=xml-20140630&view=catalog-20140630&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q=ARCHLGY%3A'];
-    $config = $this->config('hs_courses_importer.importer_settings');
-    if ($config_urls = $config->get('urls')) {
-      $urls = $config_urls;
-    }
-
-    foreach ($urls as $url) {
-      $api_response = $this->httpClient->request('GET', $url);
-      $body = (string) $api_response->getBody();
-
-      // The data from explorecourses.stanford.edu contains a ton of unwanted
-      // markup that shouldnt be in an xml source. So lets clean it up first.
-      $body = preg_replace("/[\t\n\r]/", ' ', $body);
-      $body = preg_replace("/[[:blank:]]+/", " ", $body);
-      $body = str_replace('> ', ">", $body);
-      $body = str_replace(' <', "<", $body);
-
-      $this->mergeFeeds($body);
-
-      //      dpm($this->courseDom->saveXML());
-      $this->cleanCourses();
-      $this->setSectionGuids();
-    }
-  }
-
-  /**
-   * Merge multiple course feeds into a single XML document.
-   *
-   * @param string $xml_data
-   *   The xml data from explorecourses.
-   */
-  protected function mergeFeeds($xml_data) {
-    $xpath = new \DOMXPath($this->courseDom);
-    $courses = $xpath->query('//courses');
-    if (!$courses->length) {
-      $this->courseDom->loadXML($xml_data);
+    $url = $this->requestStack->getCurrentRequest()->get('feed');
+    if (!$url) {
       return;
     }
-    $courses = $courses->item(0);
 
-    $merge_dom = new \DOMDocument();
-    $merge_dom->loadXML($xml_data);
-    $merge_xpath = new \DOMXPath($merge_dom);
+    $api_response = $this->httpClient->request('GET', $url);
+    $body = (string) $api_response->getBody();
 
-    // We can simply append additional child nodes since the migrate guid will
-    // sort out which ones to update. Also if a course is repeated, it should
-    // contain the same data from multiple feed sources.
-    foreach ($merge_xpath->query('//courses/course') as $course) {
-      if ($importedNode = $this->courseDom->importNode($course, TRUE)) {
-        $courses->appendChild($importedNode);
-      }
-    }
+    // The data from explorecourses.stanford.edu contains a ton of unwanted
+    // markup that shouldnt be in an xml source. So lets clean it up first.
+    $body = preg_replace("/[\t\n\r]/", ' ', $body);
+    $body = preg_replace("/[[:blank:]]+/", " ", $body);
+    $body = str_replace('> ', ">", $body);
+    $body = str_replace(' <', "<", $body);
+
+    $this->courseDom->loadXML($body);
+    $this->cleanCourses();
+    $this->setSectionGuids();
   }
 
   /**

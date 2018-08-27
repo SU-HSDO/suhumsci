@@ -50,7 +50,7 @@ class CoursesController extends ControllerBase {
    */
   public function courses() {
     $response = new Response();
-    $response->setMaxAge(360);
+    $response->setMaxAge(0);
     $response->headers->set('Content-Type', 'text/xml');
     $response->setContent($this->courseDom->saveXML());
     return $response;
@@ -64,8 +64,8 @@ class CoursesController extends ControllerBase {
   protected function setCourseDom() {
     $urls = ['http://explorecourses.stanford.edu/search?view=xml-20140630&view=catalog-20140630&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q=ARCHLGY%3A'];
     $config = $this->config('hs_courses_importer.importer_settings');
-    if ($config_url = $config->get('urls')) {
-      $urls = $config_url;
+    if ($config_urls = $config->get('urls')) {
+      $urls = $config_urls;
     }
 
     foreach ($urls as $url) {
@@ -79,15 +79,41 @@ class CoursesController extends ControllerBase {
       $body = str_replace('> ', ">", $body);
       $body = str_replace(' <', "<", $body);
 
-      $this->courseDom->loadXML($body);
+      $this->mergeFeeds($body);
 
+      //      dpm($this->courseDom->saveXML());
       $this->cleanCourses();
       $this->setSectionGuids();
     }
   }
 
-  protected function mergeFeeds() {
+  /**
+   * Merge multiple course feeds into a single XML document.
+   *
+   * @param string $xml_data
+   *   The xml data from explorecourses.
+   */
+  protected function mergeFeeds($xml_data) {
+    $xpath = new \DOMXPath($this->courseDom);
+    $courses = $xpath->query('//courses');
+    if (!$courses->length) {
+      $this->courseDom->loadXML($xml_data);
+      return;
+    }
+    $courses = $courses->item(0);
 
+    $merge_dom = new \DOMDocument();
+    $merge_dom->loadXML($xml_data);
+    $merge_xpath = new \DOMXPath($merge_dom);
+
+    // We can simply append additional child nodes since the migrate guid will
+    // sort out which ones to update. Also if a course is repeated, it should
+    // contain the same data from multiple feed sources.
+    foreach ($merge_xpath->query('//courses/course') as $course) {
+      if ($importedNode = $this->courseDom->importNode($course, TRUE)) {
+        $courses->appendChild($importedNode);
+      }
+    }
   }
 
   /**
@@ -133,7 +159,14 @@ class CoursesController extends ControllerBase {
       }
 
       // Build the guid parts.
-      $course_id = $xpath->query('../administrativeInformation/courseId', $course_sections)[0]->textContent;
+      $course_id_element = $xpath->query('../administrativeInformation/courseId', $course_sections);
+      $course_id = 000;
+
+      // Some XML feeds from explore courses don't have the courseId element.
+      // So we need to check for its existance.
+      if ($course_id_element->length) {
+        $course_id = $course_id_element->item(0)->textContent;
+      }
       $code = $xpath->query('../code', $course_sections)[0]->textContent;
 
       /** @var \DOMElement $section */

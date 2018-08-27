@@ -64,7 +64,7 @@ class CourseImporter extends ConfigFormBase {
       '#title' => $this->t('Course Feed URL'),
       '#description' => $this->t('One url per line'),
       '#required' => TRUE,
-      '#default_value' => $config->get('urls') ? implode("\n", $config->get('url')) : '',
+      '#default_value' => $config->get('urls') ? implode("\n", $config->get('urls')) : '',
     ];
 
     return parent::buildForm($form, $form_state);
@@ -75,7 +75,7 @@ class CourseImporter extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-    $urls = $form_state->getValue('urls');
+    $urls = trim($form_state->getValue('urls'));
 
     foreach (explode("\n", $urls) as $url) {
       $parsed_url = parse_url($url);

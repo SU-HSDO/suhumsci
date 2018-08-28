@@ -52,6 +52,7 @@ class RoboFile extends Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
+    $collection->addTask($this->startApache());
     $collection->addTask($this->installDrupal());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
@@ -67,6 +68,7 @@ class RoboFile extends Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
+    $collection->addTask($this->startApache());
     $collection->addTask($this->installDrupal());
     $collection->addTaskList($this->runUnitTestsWithCoverage());
     return $collection->run();
@@ -81,6 +83,7 @@ class RoboFile extends Tasks {
   public function jobCheckCodingStandards() {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
+    $collection->addTask($this->startApache());
     $collection->addTaskList($this->runCodeSniffer());
     return $collection->run();
   }
@@ -95,12 +98,22 @@ class RoboFile extends Tasks {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->waitForDatabase());
+    $collection->addTask($this->startApache());
     foreach ($this->getSites() as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests(['global', $site]));
     }
     return $collection->run();
+  }
+
+  /**
+   * Start apache service.
+   *
+   * @return \Robo\Task\Base\Exec
+   */
+  protected function startApache(){
+    return $this->taskExec('service apache2 start');
   }
 
   /**

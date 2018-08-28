@@ -90,7 +90,7 @@ class RoboFile extends Tasks {
   /**
    * Perform some tasks to prepare the drupal environment.
    *
-   * @return \Robo\Task\Base\Exec[]
+   * @return \Robo\Contract\TaskInterface[]
    *   List of tasks to set up site.
    */
   protected function setupSite() {

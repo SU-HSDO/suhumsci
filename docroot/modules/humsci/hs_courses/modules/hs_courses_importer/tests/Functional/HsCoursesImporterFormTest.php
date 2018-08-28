@@ -39,6 +39,13 @@ class HsCoursesImporterFormTest extends BrowserTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
+   * Test url.
+   *
+   * @var string
+   */
+  protected $testUrl = "http://explorecourses.stanford.edu/search?view=xml-20140630&academicYear=&page=0&q=AFRICAAM&filter-departmentcode-AFRICAAM=on&filter-coursestatus-Active=on&filter-term-Autumn=on";
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -52,15 +59,28 @@ class HsCoursesImporterFormTest extends BrowserTestBase {
   }
 
   /**
+   * Test the form is there.
+   *
+   * @covers ::create
+   * @covers ::getEditableConfigNames
+   * @covers ::buildForm
+   * @covers ::getFormId
+   */
+  public function testForm() {
+    $this->drupalGet('/admin/structure/migrate/course-importer');
+    $this->assertSession()->fieldExists('urls');
+    $this->assertSession()->buttonExists('Save configuration');
+  }
+
+  /**
    * Test form validation and submission.
    *
-   * @covers ::validateForm()
-   * @covers ::validateIsUrl()
-   * @covers ::validateIsExploreCourses()
-   * @covers ::validateIsXmlUrl()
-   * @covers ::submitForm()
+   * @covers ::validateForm
+   * @covers ::validateIsUrl
+   * @covers ::validateIsExploreCourses
+   * @covers ::validateIsXmlUrl
    */
-  public function testFormSubmission() {
+  public function testInvalidSubmission() {
     $urls = 'garbage';
     $this->drupalPostForm('/admin/structure/migrate/course-importer', ['urls' => $urls], 'Save configuration');
     $this->assertSession()->pageTextContains('Invalid URL Format');
@@ -74,8 +94,15 @@ class HsCoursesImporterFormTest extends BrowserTestBase {
     $this->drupalPostForm('/admin/structure/migrate/course-importer', ['urls' => $urls], 'Save configuration');
     $this->assertSession()->pageTextContains('URL Must be an XML feed');
 
-    $urls = "http://explorecourses.stanford.edu/search?view=xml-20140630&academicYear=&page=0&q=AFRICAAM&filter-departmentcode-AFRICAAM=on&filter-coursestatus-Active=on&filter-term-Autumn=on";
-    $this->drupalPostForm('/admin/structure/migrate/course-importer', ['urls' => $urls], 'Save configuration');
+  }
+
+  /**
+   * Test form validation and submission.
+   *
+   * @covers ::submitForm
+   */
+  public function testFormSubmission() {
+    $this->drupalPostForm('/admin/structure/migrate/course-importer', ['urls' => $this->testUrl], 'Save configuration');
     $this->assertSession()
       ->pageTextContains('The configuration options have been saved');
 
@@ -90,9 +117,9 @@ class HsCoursesImporterFormTest extends BrowserTestBase {
     $migration_url = urldecode($migration_urls[0]);
 
     $this->assertNotFalse(strpos($migration_url, 'feed='));
-    $this->assertEquals($urls, substr($migration_url, strpos($migration_url, 'feed=') + 5));
+    $this->assertEquals($this->testUrl, substr($migration_url, strpos($migration_url, 'feed=') + 5));
 
-    $this->drupalGet('/api/hs_courses', ['query' => ['feed' => $urls]]);
+    $this->drupalGet('/api/hs_courses', ['query' => ['feed' => $this->testUrl]]);
     $this->assertSession()->responseContains('<course>');
   }
 

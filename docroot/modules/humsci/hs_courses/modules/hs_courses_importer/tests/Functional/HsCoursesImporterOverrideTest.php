@@ -5,7 +5,7 @@ namespace Drupal\Tests\hs_courses_importer\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Class HsCoursesImporterOverrideTest
+ * Class HsCoursesImporterOverrideTest.
  *
  * @coversDefaultClass \Drupal\hs_courses_importer\Overrides\CourseImporterOverrides
  * @package Drupal\Tests\hs_courses_importer\Functional
@@ -69,11 +69,11 @@ class HsCoursesImporterOverrideTest extends BrowserTestBase {
   /**
    * Tests the migration config is overridden with correct data.
    *
-   * @covers ::loadOverrides()
-   * @covers ::getMigrationUrls()
-   * @covers ::createConfigObject()
-   * @covers ::getCacheSuffix()
-   * @covers ::createConfigObject()
+   * @covers ::loadOverrides
+   * @covers ::getMigrationUrls
+   * @covers ::createConfigObject
+   * @covers ::getCacheSuffix
+   * @covers ::createConfigObject
    */
   public function testConfigOverride() {
     $url = urlencode($this->testUrl);

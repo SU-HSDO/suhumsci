@@ -50,9 +50,7 @@ class RoboFile extends Tasks {
    */
   public function jobRunUnitTests() {
     $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->waitForDatabase());
-    $collection->addTask($this->startApache());
+    $collection->addTaskList($this->setupSite());
     $collection->addTask($this->installDrupal());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
@@ -66,25 +64,9 @@ class RoboFile extends Tasks {
    */
   public function jobGenerateCoverageReport() {
     $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->waitForDatabase());
-    $collection->addTask($this->startApache());
+    $collection->addTaskList($this->setupSite());
     $collection->addTask($this->installDrupal());
     $collection->addTaskList($this->runUnitTestsWithCoverage());
-    return $collection->run();
-  }
-
-  /**
-   * Command to check for Drupal's Coding Standards.
-   *
-   * @return \Robo\Result
-   *   The result of the collection of tasks.
-   */
-  public function jobCheckCodingStandards() {
-    $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->startApache());
-    $collection->addTaskList($this->runCodeSniffer());
     return $collection->run();
   }
 
@@ -96,9 +78,7 @@ class RoboFile extends Tasks {
    */
   public function jobRunBehatTests() {
     $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->waitForDatabase());
-    $collection->addTask($this->startApache());
+    $collection->addTaskList($this->setupSite());
     foreach ($this->getSites() as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
@@ -108,12 +88,16 @@ class RoboFile extends Tasks {
   }
 
   /**
-   * Start apache service.
+   * Perform some tasks to prepare the drupal environment.
    *
-   * @return \Robo\Task\Base\Exec
+   * @return \Robo\Task\Base\Exec[]
+   *   List of tasks to set up site.
    */
-  protected function startApache(){
-    return $this->taskExec('service apache2 start');
+  protected function setupSite() {
+    $tasks[] = $this->installDependencies();
+    $tasks[] = $this->waitForDatabase();
+    $tasks[] = $this->taskExec('service apache2 start');
+    return $tasks;
   }
 
   /**

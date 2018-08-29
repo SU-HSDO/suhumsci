@@ -1,0 +1,33 @@
+uuid: 367db537-543a-4808-bbe7-106321ae144d
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_class
+    - masquerade
+    - user
+    - webform
+  theme:
+    - su_humsci_admin
+third_party_settings:
+  block_class:
+    classes: ''
+id: masquerade_2
+theme: su_humsci_admin
+region: content
+weight: -4
+provider: null
+plugin: masquerade
+settings:
+  id: masquerade
+  label: Masquerade
+  provider: masquerade
+  label_display: '0'
+visibility:
+  user_role:
+    id: user_role
+    roles:
+      administrator: administrator
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

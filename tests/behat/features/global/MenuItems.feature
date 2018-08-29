@@ -8,4 +8,4 @@ Feature: Main Menu Links
   Scenario: Test for Footer Links.
     Given I am on "/"
     Then the response status code should be 200
-    And every link in the "menu" region should work
+    And every link in the "header" region should work

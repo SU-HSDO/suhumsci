@@ -56,6 +56,10 @@ class FeatureContext extends RawDrupalContext {
       try {
         $this->getSession()->getStatusCode();
         $this->assertSession()->statusCodeEquals('200');
+
+        // Check that something exists on the page and that its not a 200 white
+        // screen or error page.
+        $this->getSession()->getPage()->hasLink('Stanford Home');
         print "200 Success \n";
       }
       catch (UnsupportedDriverActionException $e) {

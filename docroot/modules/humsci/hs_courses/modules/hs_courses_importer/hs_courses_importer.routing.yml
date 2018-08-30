@@ -6,3 +6,14 @@ hs_courses_importer.courses_controller_getCourses:
     _title: 'H&S Courses'
   requirements:
     _permission: 'access content'
+
+hs_courses_importer.course_importer:
+  path: '/admin/structure/migrate/course-importer'
+  defaults:
+    _form: '\Drupal\hs_courses_importer\Form\CourseImporter'
+    _title: 'Course Importer Settings'
+  requirements:
+    _permission: 'administer course importer settings'
+  options:
+    _admin_route: TRUE
+

@@ -84,6 +84,9 @@ unit_kernel_tests: &unit_kernel_tests
 code_coverage: &code_coverage
   <<: *defaults
   steps:
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
     - run:
         name: Generate code coverage report
         command: robo job:generate-coverage-report

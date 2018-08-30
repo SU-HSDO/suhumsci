@@ -139,7 +139,7 @@ class CoursesController extends ControllerBase {
       $course_id = '000';
 
       // Some XML feeds from explore courses don't have the courseId element.
-      // So we need to check for its existance.
+      // So we need to check for its existence.
       if ($course_id_element->length) {
         $course_id = $course_id_element->item(0)->textContent;
       }

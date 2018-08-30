@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_courses_importer\Form;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -82,30 +83,19 @@ class CourseImporter extends ConfigFormBase {
     $urls = trim($form_state->getValue('urls'));
 
     foreach (explode("\n", $urls) as $url) {
-      $this->validateIsUrl($url, $form, $form_state);
-      if (!$form_state->getErrors()) {
-        $this->validateIsExploreCourses($url, $form, $form_state);
+      $url = trim($url);
+      if (!UrlHelper::isValid($url, TRUE)) {
+        $form_state->setError($form['urls'], $this->t('Invalid URL Format url: %url', ['%url' => $url]));
+        return;
       }
+
+      $this->validateIsExploreCourses($url, $form, $form_state);
+
+      // If there are errors from explore courses validation, don't check if its
+      // an XML source.
       if (!$form_state->getErrors()) {
         $this->validateIsXmlUrl($url, $form, $form_state);
       }
-    }
-  }
-
-  /**
-   * Check if the string is a full URL.
-   *
-   * @param string $url
-   *   Url string to check.
-   * @param array $form
-   *   Original form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Current form state.
-   */
-  protected function validateIsUrl($url, array &$form, FormStateInterface $form_state) {
-    $parsed_url = parse_url($url);
-    if (!isset($parsed_url['scheme']) || !isset($parsed_url['host']) || !isset($parsed_url['path']) || !isset($parsed_url['query'])) {
-      $form_state->setError($form['urls'], $this->t('Invalid URL Format url: %url', ['%url' => $url]));
     }
   }
 
@@ -143,6 +133,7 @@ class CourseImporter extends ConfigFormBase {
     }
     catch (GuzzleException $e) {
       $form_state->setError($form['urls'], $this->t('Unable to gather data from %url.', ['%url' => $url]));
+      return;
     }
 
     $content_type = $response->getHeader('Content-Type');
@@ -160,8 +151,12 @@ class CourseImporter extends ConfigFormBase {
     parent::submitForm($form, $form_state);
     global $base_url;
 
+    $urls = explode("\n", $form_state->getValue('urls');
+    foreach ($urls as &$url) {
+      $url = trim($url);
+    }
     $this->config('hs_courses_importer.importer_settings')
-      ->set('urls', explode("\n", $form_state->getValue('urls')))
+      ->set('urls', $urls)
       ->set('base_url', $base_url)
       ->save();
 

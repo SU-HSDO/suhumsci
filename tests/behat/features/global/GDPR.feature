@@ -4,10 +4,10 @@ Feature: GDPR Links
   As a visitor
   I should see a variety of links.
 
-  @javascript
-  Scenario: Test the Javascript works.
-    Given I am on "/"
-    Then I should be on "/"
+#  @javascript
+#  Scenario: Test the Javascript works.
+#    Given I am on "/"
+#    Then I should be on "/"
 
   @safe
   Scenario: Test for Footer Links.

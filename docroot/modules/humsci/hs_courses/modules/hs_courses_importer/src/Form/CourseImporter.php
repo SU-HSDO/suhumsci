@@ -153,7 +153,7 @@ class CourseImporter extends ConfigFormBase {
 
     $urls = explode("\n", $form_state->getValue('urls'));
     foreach ($urls as &$url) {
-      $url = trim($url);
+      $url = trim($url, " \t\n\r\0\x0B,");
     }
     $this->config('hs_courses_importer.importer_settings')
       ->set('urls', $urls)

@@ -136,7 +136,7 @@ class CoursesController extends ControllerBase {
 
       // Build the guid parts.
       $course_id_element = $xpath->query('../administrativeInformation/courseId', $course_sections);
-      $course_id = 000;
+      $course_id = '000';
 
       // Some XML feeds from explore courses don't have the courseId element.
       // So we need to check for its existance.

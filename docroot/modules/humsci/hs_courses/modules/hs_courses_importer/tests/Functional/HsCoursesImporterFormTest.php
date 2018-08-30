@@ -76,7 +76,6 @@ class HsCoursesImporterFormTest extends BrowserTestBase {
    * Test form validation and submission.
    *
    * @covers ::validateForm
-   * @covers ::validateIsUrl
    * @covers ::validateIsExploreCourses
    * @covers ::validateIsXmlUrl
    */

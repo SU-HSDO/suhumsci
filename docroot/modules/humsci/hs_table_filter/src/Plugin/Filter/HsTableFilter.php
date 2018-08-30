@@ -53,7 +53,7 @@ class HsTableFilter extends FilterBase {
   protected function addDivAttributes($text) {
     $dom = new \DOMDocument();
     libxml_use_internal_errors(TRUE);
-    $dom->loadHtml($text);
+    $dom->loadHtml(mb_convert_encoding($text, 'HTML-ENTITIES', 'UTF-8'));
 
     foreach ($this->tableTags as $tag) {
       /** @var \DOMElement $node */

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_table_formatter.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_table_formatter_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_table_formatter module.
+    case 'help.page.hs_table_formatter':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Text formatter plugin to convert a table to div tags.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

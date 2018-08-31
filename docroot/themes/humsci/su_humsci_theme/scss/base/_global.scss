@@ -31,12 +31,9 @@
 // Embedded media in WYSIWYG.
 .embedded-entity {
   @include margin(0 0 1em);
-  width: 100%;
+  width: fit-content;
   float: none;
-  img {
-    width: 100%;
-    height: auto;
-  }
+
   &.align-left {
     @media (min-width: 768px) {
       @include margin(null 1em 1em null);
@@ -44,10 +41,12 @@
       max-width: 50%;
       float: left;
     }
+
     @media (min-width: 960px) {
       max-width: 75%;
     }
   }
+
   &.align-right {
     @media (min-width: 768px) {
       @include margin(null null 1em 1em);
@@ -55,6 +54,7 @@
       max-width: 50%;
       float: right;
     }
+
     @media (min-width: 960px) {
       max-width: 75%;
     }

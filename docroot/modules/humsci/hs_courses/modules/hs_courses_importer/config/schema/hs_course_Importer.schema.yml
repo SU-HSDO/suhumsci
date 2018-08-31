@@ -13,10 +13,14 @@ hs_courses_importer.hs_course_tag.*:
     tag:
       type: string
       label: 'Explore Courses Tag'
+
 hs_courses_importer.importer_settings:
   type: config_entity
   label: 'Course Importer settings.'
   mapping:
-    url:
+    base_url:
       type: string
+      label: 'Local url helpful for use in CRON'
+    urls:
+      type: sequence
       label: 'Importer URL'

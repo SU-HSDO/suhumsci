@@ -8,57 +8,14 @@
 @import
   'decanter-no-markup';
 
-.table-row {
+.table-pattern {
   display: block;
   width: 100%;
-
-  @include margin(null null 40px);
+  margin-bottom: 20px;
 
   @include media($medium-screen) {
-    display: table-row;
-  }
-
-
-  > div {
-    border: 1px solid $color-driftwood;
-    border-bottom: 0;
-    position: relative;
-
-    @include padding(15px null 15px 50%);
-
-    @include media($medium-screen) {
-      border-bottom: 1px solid $color-driftwood;
-      display: table-cell;
-
-      @include padding(1.5rem);
-    }
-
-
-    &:before {
-      color: $color-black;
-      content: attr(data-column-label);
-      font-weight: $font-bold;
-      left: 6px;
-      position: absolute;
-      top: 6px;
-      white-space: nowrap;
-      width: 45%;
-
-      @include padding(10px 10px null null);
-
-      @include media($medium-screen) {
-        content: none;
-      }
-    }
-
-    [class*="column-"] {
-      display: block;
-      width: 100%;
-    }
-
-    &:last-child {
-      border-bottom: 1px solid $color-driftwood;
-    }
+    display: table;
+    width: 100%;
   }
 }
 
@@ -81,16 +38,13 @@
     text-align: center;
   }
 
-
-  > div {
-    display: block;
-    width: 100%;
+  .table-row {
+    display: table-row;
 
     @include media($medium-screen) {
       background-color: $color-cloud;
       border: 1px solid $color-driftwood;
       color: $color-black;
-      display: table-cell;
       text-align: left;
 
       @include padding(1.5rem);
@@ -98,17 +52,70 @@
   }
 }
 
-.table-body {
-  display: table-row-group;
-  width: 100%;
+.table-header-cell {
+  background-color: $color-cloud;
+  border: 1px solid $color-driftwood;
+  color: $color-black;
 }
 
-.table-pattern {
+.table-body {
   display: block;
   width: 100%;
 
   @include media($medium-screen) {
-    display: table;
-    width: 100%;
+    display: table-row-group;
+  }
+}
+
+.table-row {
+  display: block;
+  width: 100%;
+
+  @include margin(null null 40px);
+
+  @include media($medium-screen) {
+    display: table-row;
+  }
+
+  > div {
+    border: 1px solid $color-driftwood;
+    border-bottom: 0;
+    position: relative;
+    min-height: 55px;
+
+    @include padding(15px null 15px 50%);
+
+    @include media($medium-screen) {
+      border-bottom: 1px solid $color-driftwood;
+      display: table-cell;
+
+      @include padding(1.5rem);
+    }
+
+    &:before {
+      color: $color-black;
+      content: attr(aria-label);
+      font-weight: $font-bold;
+      left: 6px;
+      position: absolute;
+      top: 6px;
+      white-space: nowrap;
+      width: 45%;
+
+      @include padding(10px 10px null null);
+
+      @include media($medium-screen) {
+        content: none;
+      }
+    }
+
+    [class*="column-"] {
+      display: block;
+      width: 100%;
+    }
+
+    &:last-child {
+      border-bottom: 1px solid $color-driftwood;
+    }
   }
 }

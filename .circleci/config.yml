@@ -8,13 +8,6 @@ copy_robo: &copy_robo
     name: Copy RoboFile.php
     command: cp .circleci/RoboFile.php .
 
-## Starts apache
-start_apache: &start_apache
-  run:
-    name: Starting Apache
-    command: |
-      apache2ctl start
-
 ## Add SSH Key
 add_ssh: &add_ssh
   add_ssh_keys:
@@ -57,7 +50,6 @@ save_cache: &save_cache
 behat_tests: &behat_tests
   <<: *defaults
   steps:
-    - *start_apache
     - *add_ssh
     - *add_known_hosts
     - checkout
@@ -76,7 +68,6 @@ behat_tests: &behat_tests
 unit_kernel_tests: &unit_kernel_tests
   <<: *defaults
   steps:
-    - *start_apache
     - checkout
     - *copy_robo
     - restore_cache: *restore_cache
@@ -110,8 +101,8 @@ jobs:
      <<: *unit_kernel_tests
   run-behat-tests:
      <<: *behat_tests
-  run-code-coverage:
-     <<: *code_coverage
+#  run-code-coverage:
+#     <<: *code_coverage
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -120,4 +111,4 @@ workflows:
     jobs:
       - run-unit-kernel-tests
       - run-behat-tests
-      - run-code-coverage
+#      - run-code-coverage

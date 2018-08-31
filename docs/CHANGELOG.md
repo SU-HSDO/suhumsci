@@ -1,5 +1,21 @@
 # HumSci
 
+8.0.8
+--------------------------------------------------------------------------------  
+_Release Date: 2018-08-30_
+
+- Integrated with CircleCI for automated testing.
+- Set up initial behat test to test all links in the main menu.
+- Began PHPUnit Tests to increase code coverage.
+- Added Table text filter to convert tables into structured divs.
+- Added the ability to add paragraphs between others without the need to drag and drop from the bottom.
+- Improved main menu when screen is the same size as the page.
+- Fixed the ability to use menu link weight module for other users.
+- Added a form for the user to change the URL of course importers.
+- Responsive div table styles.
+- Allow up to 5 lines of text in the site lockup. 
+- Link the event speaker to a person node if one exists.
+
 8.0.7
 --------------------------------------------------------------------------------  
 _Release Date: 2018-08-16_

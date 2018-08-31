@@ -50,8 +50,7 @@ class RoboFile extends Tasks {
    */
   public function jobRunUnitTests() {
     $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->waitForDatabase());
+    $collection->addTaskList($this->setupSite());
     $collection->addTask($this->installDrupal());
     $collection->addTaskList($this->runUnitTests());
     return $collection->run();
@@ -65,23 +64,9 @@ class RoboFile extends Tasks {
    */
   public function jobGenerateCoverageReport() {
     $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->waitForDatabase());
+    $collection->addTaskList($this->setupSite());
     $collection->addTask($this->installDrupal());
     $collection->addTaskList($this->runUnitTestsWithCoverage());
-    return $collection->run();
-  }
-
-  /**
-   * Command to check for Drupal's Coding Standards.
-   *
-   * @return \Robo\Result
-   *   The result of the collection of tasks.
-   */
-  public function jobCheckCodingStandards() {
-    $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTaskList($this->runCodeSniffer());
     return $collection->run();
   }
 
@@ -93,14 +78,26 @@ class RoboFile extends Tasks {
    */
   public function jobRunBehatTests() {
     $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-    $collection->addTask($this->waitForDatabase());
+    $collection->addTaskList($this->setupSite());
     foreach ($this->getSites() as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests(['global', $site]));
     }
     return $collection->run();
+  }
+
+  /**
+   * Perform some tasks to prepare the drupal environment.
+   *
+   * @return \Robo\Contract\TaskInterface[]
+   *   List of tasks to set up site.
+   */
+  protected function setupSite() {
+    $tasks[] = $this->installDependencies();
+    $tasks[] = $this->waitForDatabase();
+    $tasks[] = $this->taskExec('service apache2 start');
+    return $tasks;
   }
 
   /**
@@ -261,7 +258,7 @@ class RoboFile extends Tasks {
       ->mkdir('../artifacts/phpunit', 777);
 
     $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --log-junit ../artifacts/phpunit/phpunit.xml ' . static::TEST_DIR);
+      ->exec('../vendor/bin/phpunit -c core --log-junit ../artifacts/phpunit/phpunit.xml ' . static::TEST_DIR);
     return $tasks;
   }
 

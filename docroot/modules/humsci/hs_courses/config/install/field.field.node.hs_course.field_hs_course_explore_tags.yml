@@ -1,0 +1,29 @@
+uuid: ae9bcf4e-734d-4415-9ee6-3ee0b02c5dde
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_course_explore_tags
+    - node.type.hs_course
+    - taxonomy.vocabulary.hs_course_tags
+id: node.hs_course.field_hs_course_explore_tags
+field_name: field_hs_course_explore_tags
+entity_type: node
+bundle: hs_course
+label: 'Explore Course Tags'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_course_tags: hs_course_tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

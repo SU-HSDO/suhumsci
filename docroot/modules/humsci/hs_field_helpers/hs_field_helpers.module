@@ -31,7 +31,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Implements hook_views_data_alter().
  */
 function hs_field_helpers_views_data_alter(array &$data) {
-  /** @var FieldStorageConfig $field_storage */
+  /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
   foreach (FieldStorageConfig::loadMultiple() as $field_storage) {
     if ($field_storage->getType() != 'datetime') {
       continue;

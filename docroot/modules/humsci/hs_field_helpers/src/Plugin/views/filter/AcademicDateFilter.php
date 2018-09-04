@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\views\filter\Date;
 
 /**
- * Class AcademicDateFilter
+ * Class AcademicDateFilter.
  *
  * @ingroup views_filter_handlers
  *
@@ -127,8 +127,7 @@ class AcademicDateFilter extends Date {
    * {@inheritdoc}
    */
   protected function opBetween($field) {
-    if ($this->inException()) {
-      $this->value['value'] = $this->value['exception_value'];
+    if ($this->value['exception'] && $this->inException()) {
       $this->value['min'] = $this->value['exception_min'];
       $this->value['max'] = $this->value['exception_max'];
     }
@@ -139,53 +138,48 @@ class AcademicDateFilter extends Date {
    * {@inheritdoc}
    */
   protected function opSimple($field) {
-    if ($this->inException()) {
+    if ($this->value['exception'] && $this->inException()) {
       $this->value['value'] = $this->value['exception_value'];
-      $this->value['min'] = $this->value['exception_min'];
-      $this->value['max'] = $this->value['exception_max'];
     }
     parent::opSimple($field);
   }
 
   /**
+   * Check if current date is in the exception window.
+   *
    * @return bool
-   * @throws \Exception
+   *   True if currently in window.
    */
   protected function inException() {
-    if ($this->value['exception']) {
-      $this_year = date('Y');
-      $end_year = $this_year;
+    $this_year = date('Y');
+    $end_year = $this_year;
 
-      // Add one year if the start and end dates span over January 1st.
-      if ($this->value['exception_start_month'] > $this->value['exception_end_month']) {
-        $end_year++;
-      }
-      elseif ($this->value['exception_start_month'] == $this->value['exception_end_month'] && $this->value['exception_start_day'] > $this->value['exception_end_day']) {
-        $end_year++;
-      }
-
-      try {
-        $start_exception = "$this_year-{$this->value['exception_start_month']}-{$this->value['exception_start_day']}";
-        $end_exception = "$end_year-{$this->value['exception_end_month']}-{$this->value['exception_end_day']}";
-
-        $timezone = $this->getTimezone();
-        $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
-        $end = new DateTimePlus($end_exception, new \DateTimeZone($timezone));
-
-        // Add 1 day to the end date since the timestamp will be midnight of that
-        // day. This will include the end date in the exception.
-        $end->add(new \DateInterval('P2D'));
-      }
-      catch (\Exception $e) {
-        return FALSE;
-      }
-
-      $now = time();
-      if ($now >= $start->getTimestamp() && $now <= $end->getTimestamp()) {
-        return TRUE;
-      }
+    // Add one year if the start and end dates span over January 1st.
+    if ($this->value['exception_start_month'] > $this->value['exception_end_month']) {
+      $end_year++;
     }
-    return FALSE;
+    elseif ($this->value['exception_start_month'] == $this->value['exception_end_month'] && $this->value['exception_start_day'] > $this->value['exception_end_day']) {
+      $end_year++;
+    }
+
+    try {
+      $start_exception = "$this_year-{$this->value['exception_start_month']}-{$this->value['exception_start_day']}";
+      $end_exception = "$end_year-{$this->value['exception_end_month']}-{$this->value['exception_end_day']}";
+
+      $timezone = $this->getTimezone();
+      $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
+      $end = new DateTimePlus($end_exception, new \DateTimeZone($timezone));
+
+      // Add 1 day to the end date since the timestamp will be midnight of
+      // that day. This will include the end date in the exception.
+      $end->add(new \DateInterval('P2D'));
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+
+    $now = time();
+    return $now >= $start->getTimestamp() && $now <= $end->getTimestamp();
   }
 
 }

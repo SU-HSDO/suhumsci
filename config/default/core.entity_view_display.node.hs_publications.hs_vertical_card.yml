@@ -36,7 +36,9 @@ third_party_settings:
       description:
         - field_hs_publication_type
         - node_title
+      author:
         - field_hs_publication_author
+      year:
         - field_hs_publication_year
     fields:
       node_title:
@@ -54,14 +56,19 @@ bundle: hs_publications
 mode: hs_vertical_card
 content:
   field_hs_publication_author:
-    type: entity_reference_entity_view
+    type: entity_reference_label
     weight: 3
-    region: description
+    region: author
     label: hidden
     settings:
       link: false
-      view_mode: default
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: vertical-card__author-year--author
+      ds:
+        ds_limit: ''
+      hs_field_helpers:
+        inline_contents: 0
   field_hs_publication_image:
     type: media_responsive_image_formatter
     weight: 0
@@ -89,12 +96,16 @@ content:
   field_hs_publication_year:
     type: datetime_custom
     weight: 4
-    region: description
+    region: year
     label: hidden
     settings:
       timezone_override: ''
       date_format: 'Y'
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: vertical-card__author-year--year
+      hs_field_helpers:
+        inline_contents: 0
 hidden:
   body: true
   field_hs_publication_documents: true

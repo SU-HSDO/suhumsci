@@ -98,29 +98,15 @@ class AcademicDateFilter extends Date {
       ],
     ];
 
-    $form['value']['exception_value'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Exception Value'),
-      '#size' => 30,
-      '#states' => $form['value']['value']['#states'],
-      '#default_value' => $this->value['exception_value'] ?? '',
-    ];
-
-    $form['value']['exception_min'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Min'),
-      '#size' => 30,
-      '#states' => $form['value']['min']['#states'],
-      '#default_value' => $this->value['exception_min'] ?? '',
-    ];
-
-    $form['value']['exception_max'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Max'),
-      '#size' => 30,
-      '#states' => $form['value']['max']['#states'],
-      '#default_value' => $this->value['exception_max'] ?? '',
-    ];
+    foreach (['value', 'min', 'max'] as $key) {
+      $form['value']['exception_' . $key] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Exception @key', ['@key' => ucfirst($key)]),
+        '#size' => 30,
+        '#states' => $form['value'][$key]['#states'],
+        '#default_value' => $this->value['exception_' . $key] ?? '',
+      ];
+    }
   }
 
   /**

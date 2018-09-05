@@ -9,6 +9,11 @@ use Drupal\datetime\Plugin\views\filter\Date;
 /**
  * Class AcademicDateFilter.
  *
+ * Overrides the parent Date class to add in extra options for an exception
+ * window. The extra options is presented to the user as "Settings" next to the
+ * view filter. This will allow for a single window during the year in which the
+ * filter criteria can be changed.
+ *
  * @ingroup views_filter_handlers
  *
  * @ViewsFilter("academic_datetime")
@@ -19,7 +24,9 @@ class AcademicDateFilter extends Date {
    * {@inheritdoc}
    */
   public function hasExtraOptions() {
-    return !$this->isExposed();
+    // Check if value or min is set to prevent the extra options form from
+    // displaying before the main filter settings.
+    return !$this->isExposed() && (!empty($this->value['value']) || !empty($this->value['min']));
   }
 
   /**
@@ -42,12 +49,18 @@ class AcademicDateFilter extends Date {
     $days = range(0, 31);
     unset($days[0]);
 
+    $states = [
+      'visible' => [
+        ':input[name="options[exception][exception]"]' => ['checked' => TRUE],
+      ],
+    ];
     $form['exception']['start_month'] = [
       '#type' => 'select',
       '#title' => $this->t('Start Exception Month'),
       '#default_value' => $this->options['exception']['start_month'] ?? NULL,
       '#options' => $months['months'],
       '#prefix' => '<div class="exception-start-wrapper">',
+      '#states' => $states,
     ];
 
     $form['exception']['start_day'] = [
@@ -56,6 +69,7 @@ class AcademicDateFilter extends Date {
       '#default_value' => $this->options['exception']['start_day'] ?? NULL,
       '#options' => $days,
       '#suffix' => '</div>',
+      '#states' => $states,
     ];
 
     $form['exception']['end_month'] = [
@@ -64,6 +78,7 @@ class AcademicDateFilter extends Date {
       '#options' => $months['months'],
       '#default_value' => $this->options['exception']['end_month'] ?? NULL,
       '#prefix' => '<div class="exception-end-wrapper">',
+      '#states' => $states,
     ];
 
     $form['exception']['end_day'] = [
@@ -72,6 +87,7 @@ class AcademicDateFilter extends Date {
       '#options' => $days,
       '#default_value' => $this->options['exception']['end_day'] ?? NULL,
       '#suffix' => '</div>',
+      '#states' => $states,
     ];
 
     $between_operators = ['between', 'not between'];
@@ -81,6 +97,7 @@ class AcademicDateFilter extends Date {
         '#title' => $this->t('Exception Value'),
         '#size' => 30,
         '#default_value' => $this->options['exception']['value'] ?? '',
+        '#states' => $states,
       ];
     }
     else {
@@ -89,12 +106,14 @@ class AcademicDateFilter extends Date {
         '#title' => $this->t('Exception Min'),
         '#size' => 30,
         '#default_value' => $this->options['exception']['min'] ?? '',
+        '#states' => $states,
       ];
       $form['exception']['max'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Exception Max'),
         '#size' => 30,
         '#default_value' => $this->options['exception']['max'] ?? '',
+        '#states' => $states,
       ];
     }
     $form['#attached']['library'][] = 'hs_field_helpers/date_exception';
@@ -145,13 +164,16 @@ class AcademicDateFilter extends Date {
     $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
     $end = new DateTimePlus($end_exception, new \DateTimeZone($timezone));
 
+    // if the dates have any issues like invalid characters, just ignore the
+    // exception.
     if ($start->hasErrors() || $end->hasErrors()) {
       return FALSE;
     }
 
-    // Add 1 day to the end date since the timestamp will be midnight of
-    // that day. This will include the end date in the exception.
-    $end->add(new \DateInterval('P1D'));
+    // Add 1 second less than a day to the end date since the timestamp will be
+    // 11:59PM of that day. This will help include the end date in the exception
+    // window.
+    $end->add(new \DateInterval('PT23H59M59S'));
     $now = time();
     return $now >= $start->getTimestamp() && $now <= $end->getTimestamp();
   }
@@ -163,10 +185,12 @@ class AcademicDateFilter extends Date {
    *   True if its over a new year.
    */
   protected function isMultipleYears() {
+    // Simple check if start month is later in the calendar.
     if ($this->options['exception']['start_month'] > $this->options['exception']['end_month']) {
       return TRUE;
     }
 
+    // Months are the same, so lets check agains the days.
     if (
       $this->options['exception']['start_month'] == $this->options['exception']['end_month'] &&
       $this->options['exception']['start_day'] > $this->options['exception']['end_day']

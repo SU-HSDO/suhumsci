@@ -60,6 +60,15 @@ class AcademicDateFilterTest extends KernelTestBase {
       'hs_field_helpers_test_config',
     ]);
 
+    $this->setupNodes();
+  }
+
+  /**
+   * Install node type and with field and create a node.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function setupNodes() {
     NodeType::create([
       'type' => 'page',
       'name' => 'page',
@@ -95,61 +104,61 @@ class AcademicDateFilterTest extends KernelTestBase {
    * @covers ::inException
    * @covers ::adminSummary
    */
-    public function testAcademicFilter() {
-      /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
-      $filter_manager = $this->container->get('plugin.manager.views.filter');
-      $filters = $filter_manager->getDefinitions();
-      $this->assertArrayHasKey('academic_datetime', $filters);
-      $configuration = [
-        'entity_type' => 'node',
-        'field' => $this->field->getName() . '_value',
-        'table' => 'node__' . $this->field->getName(),
-        'id' => 'academic_datetime',
-        'field_name' => $this->field->getName(),
-      ];
-      /** @var AcademicDateFilter $filter */
-      $filter = $filter_manager->createInstance('academic_datetime', $configuration);
-      $this->assertEquals(AcademicDateFilter::class, get_class($filter));
+  public function testAcademicFilter() {
+    /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
+    $filter_manager = $this->container->get('plugin.manager.views.filter');
+    $filters = $filter_manager->getDefinitions();
+    $this->assertArrayHasKey('academic_datetime', $filters);
+    $configuration = [
+      'entity_type' => 'node',
+      'field' => $this->field->getName() . '_value',
+      'table' => 'node__' . $this->field->getName(),
+      'id' => 'academic_datetime',
+      'field_name' => $this->field->getName(),
+    ];
+    /** @var AcademicDateFilter $filter */
+    $filter = $filter_manager->createInstance('academic_datetime', $configuration);
+    $this->assertEquals(AcademicDateFilter::class, get_class($filter));
 
-      $this->setFilterValues($filter);
-      $this->assertEquals('= now Exception: = now +30days', $filter->adminSummary());
-      $this->assertTrue($filter->hasExtraOptions());
+    $this->setFilterValues($filter);
+    $this->assertEquals('= now Exception: = now +30days', $filter->adminSummary());
+    $this->assertTrue($filter->hasExtraOptions());
 
-      $form_state = new FormState();
-      $form = [];
-      $filter->buildExtraOptionsForm($form, $form_state);
-      $this->assertArrayHasKey('exception', $form);
+    $form_state = new FormState();
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayHasKey('exception', $form);
 
-      $filter->operator = '=';
-      $form = [];
-      $filter->buildExtraOptionsForm($form, $form_state);
-      $this->assertArrayHasKey('value', $form['exception']);
-      $this->assertArrayNotHasKey('min', $form['exception']);
+    $filter->operator = '=';
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayHasKey('value', $form['exception']);
+    $this->assertArrayNotHasKey('min', $form['exception']);
 
-      $filter->operator = 'between';
-      $form = [];
-      $filter->buildExtraOptionsForm($form, $form_state);
-      $this->assertArrayHasKey('min', $form['exception']);
-      $this->assertArrayNotHasKey('value', $form['exception']);
+    $filter->operator = 'between';
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayHasKey('min', $form['exception']);
+    $this->assertArrayNotHasKey('value', $form['exception']);
 
-      $form_state->set('exposed', TRUE);
-      $form = [];
-      $filter->buildExtraOptionsForm($form, $form_state);
-      $this->assertArrayNotHasKey('exception', $form);
+    $form_state->set('exposed', TRUE);
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayNotHasKey('exception', $form);
 
-      $filter = new TestAcademicDateFilter();
-      $this->setFilterValues($filter);
-      $this->assertTrue($filter->inException());
+    $filter = new TestAcademicDateFilter();
+    $this->setFilterValues($filter);
+    $this->assertTrue($filter->inException());
 
-      // One full year of exception excluding the current day.
-      $filter->options['exception']['start_month'] = date('n');
-      $filter->options['exception']['start_day'] = date('j') + 1;
-      $filter->options['exception']['end_day'] = date('j') - 1;
-      $this->assertFalse($filter->inException());
+    // One full year of exception excluding the current day.
+    $filter->options['exception']['start_month'] = date('n');
+    $filter->options['exception']['start_day'] = date('j') + 1;
+    $filter->options['exception']['end_day'] = date('j') - 1;
+    $this->assertFalse($filter->inException());
 
-      $filter->options['exception']['end_month'] = 'garbage';
-      $this->assertFalse($filter->inException());
-    }
+    $filter->options['exception']['end_month'] = 'garbage';
+    $this->assertFalse($filter->inException());
+  }
 
   /**
    * @covers ::opSimple

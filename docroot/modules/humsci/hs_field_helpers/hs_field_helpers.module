@@ -36,10 +36,11 @@ function hs_field_helpers_views_data_alter(array &$data) {
     if ($field_storage->getType() != 'datetime') {
       continue;
     }
-
     $entity_type = $field_storage->getTargetEntityTypeId();
     $field_name = $field_storage->getName();
 
+    // Change the filter id to our custom filter. This will give us an optional
+    // exception window for academic calendars.
     $value_data = &$data["{$entity_type}__{$field_name}"]["{$field_name}_value"];
     $value_data['filter']['id'] = 'academic_datetime';
   }

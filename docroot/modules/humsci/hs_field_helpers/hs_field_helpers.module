@@ -156,38 +156,19 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
     return;
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
-    if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
-      continue;
-    }
-    if (!_hs_field_helpers_render_array_has_content($pattern[$region])) {
+    $rendered = render($pattern[$region]);
+    // Set the rendering to the region so it doesn't render twice. This gives a
+    // small performance improvement compared to rendering twice.
+    $pattern[$region] = $rendered;
+
+    // Remove all wrapper divs so we can check if the region actually has any
+    // visible output.
+    $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
+    $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
+    if (empty(trim($rendered))) {
       unset($pattern[$region]);
     }
   }
-}
-
-/**
- * Find out if an element has content without actually rendering it out.
- *
- * @param mixed $data
- *   Element to check without rendering.
- *
- * @return bool
- *   Has something to trigger rendering.
- */
-function _hs_field_helpers_render_array_has_content($data) {
-  if (!is_array($data)) {
-    return FALSE;
-  }
-
-  if (isset($data['#field_type']) || isset($data['#theme']) || isset($data['#type']) || isset($data['#markup'])) {
-    return TRUE;
-  }
-  foreach (Element::children($data) as $item) {
-    if (_hs_field_helpers_render_array_has_content($data[$item])) {
-      return TRUE;
-    }
-  }
-  return FALSE;
 }
 
 /**

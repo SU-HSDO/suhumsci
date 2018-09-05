@@ -105,8 +105,8 @@ class AcademicDateFilter extends Date {
    */
   protected function opBetween($field) {
     if (!empty($this->options['exception']) && $this->options['exception']['exception'] && $this->inException()) {
-      $this->value['min'] = $this->options['exception']['exception_min'];
-      $this->value['max'] = $this->options['exception']['exception_max'];
+      $this->value['min'] = $this->options['exception']['min'] ?? $this->value['min'];
+      $this->value['max'] = $this->options['exception']['max'] ?? $this->value['max'];
     }
     parent::opBetween($field);
   }
@@ -116,7 +116,7 @@ class AcademicDateFilter extends Date {
    */
   protected function opSimple($field) {
     if (!empty($this->options['exception']) && $this->options['exception']['exception'] && $this->inException()) {
-      $this->value['value'] = $this->options['exception']['exception_value'];
+      $this->value['value'] = $this->options['exception']['value'];
     }
     parent::opSimple($field);
   }
@@ -167,9 +167,9 @@ class AcademicDateFilter extends Date {
     $summary[] = parent::adminSummary();
     if (isset($this->options['exception']['exception']) && $this->options['exception']['exception']) {
       // Change the filter values so we can easily reuse the parent method.
-      $this->value['min'] = $this->options['exception']['min'];
-      $this->value['max'] = $this->options['exception']['max'];
-      $this->value['value'] = $this->options['exception']['value'];
+      $this->value['min'] = $this->options['exception']['min'] ?? $this->value['min'];
+      $this->value['max'] = $this->options['exception']['max'] ?? $this->value['max'];
+      $this->value['value'] = $this->options['exception']['value'] ?? $this->value['value'];
 
       $summary[] = t('Exception:')->render();
       $summary[] = parent::adminSummary();

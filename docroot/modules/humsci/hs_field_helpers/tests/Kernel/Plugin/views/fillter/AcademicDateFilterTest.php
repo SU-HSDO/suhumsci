@@ -20,11 +20,15 @@ use Drupal\views\Views;
 class AcademicDateFilterTest extends KernelTestBase {
 
   /**
+   * Field Storage entity.
+   *
    * @var \Drupal\field\Entity\FieldStorageConfig
    */
   protected $fieldStorage;
 
   /**
+   * Field Config entity.
+   *
    * @var \Drupal\field\Entity\FieldConfig
    */
   protected $field;
@@ -116,7 +120,7 @@ class AcademicDateFilterTest extends KernelTestBase {
       'id' => 'academic_datetime',
       'field_name' => $this->field->getName(),
     ];
-    /** @var AcademicDateFilter $filter */
+    /** @var \Drupal\hs_field_helpers\Plugin\views\filter\AcademicDateFilter $filter */
     $filter = $filter_manager->createInstance('academic_datetime', $configuration);
     $this->assertEquals(AcademicDateFilter::class, get_class($filter));
 
@@ -161,6 +165,8 @@ class AcademicDateFilterTest extends KernelTestBase {
   }
 
   /**
+   * Test the filter gives correct results.
+   *
    * @covers ::opSimple
    * @covers ::opBetween
    * @covers ::inException
@@ -171,7 +177,7 @@ class AcademicDateFilterTest extends KernelTestBase {
     $this->assertNotEmpty($view->result);
 
     $view = Views::getView('test_filters');
-    $display_filters =  &$view->storage->getDisplay('default')['display_options']['filters'];
+    $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'];
     $display_filters[$this->field->getName()] = [
       'id' => $this->field->getName() . '_value',
       'table' => 'node__' . $this->field->getName(),
@@ -219,7 +225,7 @@ class AcademicDateFilterTest extends KernelTestBase {
   }
 
   /**
-   * @param $filter
+   * @param AcademicDateFilter $filter
    */
   protected function setFilterValues(AcademicDateFilter $filter) {
     $filter->value['value'] = 'now';
@@ -246,20 +252,6 @@ class TestAcademicDateFilter extends AcademicDateFilter {
    * {@inheritdoc}
    */
   public function __construct() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function opBetween($field) {
-    parent::opBetween($field);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function opSimple($field) {
-    parent::opSimple($field);
   }
 
   /**

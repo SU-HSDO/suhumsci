@@ -164,7 +164,7 @@ class AcademicDateFilter extends Date {
     $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
     $end = new DateTimePlus($end_exception, new \DateTimeZone($timezone));
 
-    // if the dates have any issues like invalid characters, just ignore the
+    // If the dates have any issues like invalid characters, just ignore the
     // exception.
     if ($start->hasErrors() || $end->hasErrors()) {
       return FALSE;

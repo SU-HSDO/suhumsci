@@ -18,104 +18,95 @@ class AcademicDateFilter extends Date {
   /**
    * {@inheritdoc}
    */
-  protected function defineOptions() {
-    $options = parent::defineOptions();
-    $options['value']['contains']['exception']['default'] = 0;
-    $options['value']['contains']['exception_start_month']['default'] = NULL;
-    $options['value']['contains']['exception_start_day']['default'] = NULL;
-    $options['value']['contains']['exception_end_month']['default'] = NULL;
-    $options['value']['contains']['exception_end_day']['default'] = NULL;
-    $options['value']['contains']['exception_value']['default'] = '';
-    $options['value']['contains']['exception_min']['default'] = '';
-    $options['value']['contains']['exception_max']['default'] = '';
-    return $options;
+  public function hasExtraOptions() {
+    return !$this->isExposed();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function valueForm(&$form, FormStateInterface $form_state) {
-    parent::valueForm($form, $form_state);
+  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
+    parent::buildExtraOptionsForm($form, $form_state);
+
     if ($form_state->get('exposed')) {
       return;
     }
 
-    $form['value']['exception'] = [
+    $form['exception']['exception'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Add Exception Time Frame'),
-      '#default_value' => $this->value['exception'] ?? 0,
+      '#default_value' => $this->options['exception']['exception'] ?? 0,
     ];
 
     $months = cal_info(0);
     $days = range(0, 31);
     unset($days[0]);
 
-    $form['value']['exception_start_month'] = [
+    $form['exception']['start_month'] = [
       '#type' => 'select',
       '#title' => $this->t('Start Exception Month'),
-      '#default_value' => $this->value['exception_start_month'] ?? NULL,
+      '#default_value' => $this->options['exception']['start_month'] ?? NULL,
       '#options' => $months['months'],
-      '#states' => [
-        'visible' => [
-          ':input[name="options[value][exception]"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#prefix' => '<div class="exception-start-wrapper">',
     ];
 
-    $form['value']['exception_start_day'] = [
+    $form['exception']['start_day'] = [
       '#type' => 'select',
       '#title' => $this->t('Start Exception Day'),
-      '#default_value' => $this->value['exception_start_day'] ?? NULL,
+      '#default_value' => $this->options['exception']['start_day'] ?? NULL,
       '#options' => $days,
-      '#states' => [
-        'visible' => [
-          ':input[name="options[value][exception]"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#suffix' => '</div>',
     ];
 
-    $form['value']['exception_end_month'] = [
+    $form['exception']['end_month'] = [
       '#type' => 'select',
       '#title' => $this->t('End Exception Month'),
       '#options' => $months['months'],
-      '#default_value' => $this->value['exception_end_month'] ?? NULL,
-      '#states' => [
-        'visible' => [
-          ':input[name="options[value][exception]"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#default_value' => $this->options['exception']['end_month'] ?? NULL,
+      '#prefix' => '<div class="exception-end-wrapper">',
     ];
 
-    $form['value']['exception_end_day'] = [
+    $form['exception']['end_day'] = [
       '#type' => 'select',
       '#title' => $this->t('End Exception Day'),
       '#options' => $days,
-      '#default_value' => $this->value['exception_end_day'] ?? NULL,
-      '#states' => [
-        'visible' => [
-          ':input[name="options[value][exception]"]' => ['checked' => TRUE],
-        ],
-      ],
+      '#default_value' => $this->options['exception']['end_day'] ?? NULL,
+      '#suffix' => '</div>',
     ];
 
-    foreach (['value', 'min', 'max'] as $key) {
-      $form['value']['exception_' . $key] = [
+    $between_operators = ['between', 'not between'];
+    if (!in_array($this->operator, $between_operators)) {
+      $form['exception']['value'] = [
         '#type' => 'textfield',
-        '#title' => $this->t('Exception @key', ['@key' => ucfirst($key)]),
+        '#title' => $this->t('Exception Value'),
         '#size' => 30,
-        '#states' => $form['value'][$key]['#states'],
-        '#default_value' => $this->value['exception_' . $key] ?? '',
+        '#default_value' => $this->options['exception']['value'] ?? '',
       ];
     }
+    else {
+      $form['exception']['min'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Exception Min'),
+        '#size' => 30,
+        '#default_value' => $this->options['exception']['min'] ?? '',
+      ];
+      $form['exception']['max'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Exception Max'),
+        '#size' => 30,
+        '#default_value' => $this->options['exception']['max'] ?? '',
+      ];
+    }
+    $form['#attached']['library'][] = 'hs_field_helpers/date_exception';
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opBetween($field) {
-    if ($this->value['exception'] && $this->inException()) {
-      $this->value['min'] = $this->value['exception_min'];
-      $this->value['max'] = $this->value['exception_max'];
+    if (!empty($this->options['exception']) && $this->options['exception']['exception'] && $this->inException()) {
+      $this->value['min'] = $this->options['exception']['exception_min'];
+      $this->value['max'] = $this->options['exception']['exception_max'];
     }
     parent::opBetween($field);
   }
@@ -124,8 +115,8 @@ class AcademicDateFilter extends Date {
    * {@inheritdoc}
    */
   protected function opSimple($field) {
-    if ($this->value['exception'] && $this->inException()) {
-      $this->value['value'] = $this->value['exception_value'];
+    if (!empty($this->options['exception']) && $this->options['exception']['exception'] && $this->inException()) {
+      $this->value['value'] = $this->options['exception']['exception_value'];
     }
     parent::opSimple($field);
   }
@@ -141,16 +132,17 @@ class AcademicDateFilter extends Date {
     $end_year = $this_year;
 
     // Add one year if the start and end dates span over January 1st.
-    if ($this->value['exception_start_month'] > $this->value['exception_end_month']) {
-      $end_year++;
-    }
-    elseif ($this->value['exception_start_month'] == $this->value['exception_end_month'] && $this->value['exception_start_day'] > $this->value['exception_end_day']) {
+    if ($this->options['exception']['start_month'] > $this->options['exception']['end_month'] ||
+      (
+        $this->options['exception']['start_month'] == $this->options['exception']['end_month'] &&
+        $this->options['exception']['start_day'] > $this->options['exception']['end_day']
+      )) {
       $end_year++;
     }
 
     try {
-      $start_exception = "$this_year-{$this->value['exception_start_month']}-{$this->value['exception_start_day']}";
-      $end_exception = "$end_year-{$this->value['exception_end_month']}-{$this->value['exception_end_day']}";
+      $start_exception = "$this_year-{$this->options['exception']['start_month']}-{$this->options['exception']['start_day']}";
+      $end_exception = "$end_year-{$this->options['exception']['end_month']}-{$this->options['exception']['end_day']}";
 
       $timezone = $this->getTimezone();
       $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
@@ -166,6 +158,23 @@ class AcademicDateFilter extends Date {
 
     $now = time();
     return $now >= $start->getTimestamp() && $now <= $end->getTimestamp();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function adminSummary() {
+    $summary[] = parent::adminSummary();
+    if (isset($this->options['exception']['exception']) && $this->options['exception']['exception']) {
+      // Change the filter values so we can easily reuse the parent method.
+      $this->value['min'] = $this->options['exception']['min'];
+      $this->value['max'] = $this->options['exception']['max'];
+      $this->value['value'] = $this->options['exception']['value'];
+
+      $summary[] = t('Exception:')->render();
+      $summary[] = parent::adminSummary();
+    }
+    return implode(' ', $summary);
   }
 
 }

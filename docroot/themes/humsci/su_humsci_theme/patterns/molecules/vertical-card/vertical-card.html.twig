@@ -17,17 +17,17 @@
         {{ description }}
       </div>
     {% endif %}
-    {% if author|render|trim or year|render|trim %}
+    {% if author or year %}
       <div class=vertical-card__author-year>
-        {% if author|render|trim %}
+        {% if author %}
           <div class="vertical-card__author-year--author">{{ author }}</div>
         {% endif %}
 
-        {% if author|render|trim and year|render|trim %}
+        {% if author and year %}
           <div class="comma">,</div>
         {% endif %}
 
-        {% if year|render|trim %}
+        {% if year %}
           <div class="vertical-card__author-year--year">{{ year }}</div>
         {% endif %}
       </div>

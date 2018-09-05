@@ -126,6 +126,8 @@ class AcademicDateFilter extends Date {
    *
    * @return bool
    *   True if currently in window.
+   *
+   * @throws \Exception
    */
   protected function inException() {
     $this_year = date('Y');
@@ -140,22 +142,20 @@ class AcademicDateFilter extends Date {
       $end_year++;
     }
 
-    try {
-      $start_exception = "$this_year-{$this->options['exception']['start_month']}-{$this->options['exception']['start_day']}";
-      $end_exception = "$end_year-{$this->options['exception']['end_month']}-{$this->options['exception']['end_day']}";
+    $start_exception = "$this_year-{$this->options['exception']['start_month']}-{$this->options['exception']['start_day']}";
+    $end_exception = "$end_year-{$this->options['exception']['end_month']}-{$this->options['exception']['end_day']}";
 
-      $timezone = $this->getTimezone();
-      $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
-      $end = new DateTimePlus($end_exception, new \DateTimeZone($timezone));
+    $timezone = $this->getTimezone();
+    $start = new DateTimePlus($start_exception, new \DateTimeZone($timezone));
+    $end = new DateTimePlus($end_exception, new \DateTimeZone($timezone));
 
-      // Add 1 day to the end date since the timestamp will be midnight of
-      // that day. This will include the end date in the exception.
-      $end->add(new \DateInterval('P2D'));
-    }
-    catch (\Exception $e) {
+    if ($start->hasErrors() || $end->hasErrors()) {
       return FALSE;
     }
 
+    // Add 1 day to the end date since the timestamp will be midnight of
+    // that day. This will include the end date in the exception.
+    $end->add(new \DateInterval('P1D'));
     $now = time();
     return $now >= $start->getTimestamp() && $now <= $end->getTimestamp();
   }

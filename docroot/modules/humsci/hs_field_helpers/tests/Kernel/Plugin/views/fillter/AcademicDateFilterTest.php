@@ -105,7 +105,6 @@ class AcademicDateFilterTest extends KernelTestBase {
    *
    * @covers ::hasExtraOptions
    * @covers ::buildExtraOptionsForm
-   * @covers ::inException
    * @covers ::adminSummary
    */
   public function testAcademicFilter() {
@@ -124,7 +123,18 @@ class AcademicDateFilterTest extends KernelTestBase {
     $filter = $filter_manager->createInstance('academic_datetime', $configuration);
     $this->assertEquals(AcademicDateFilter::class, get_class($filter));
 
-    $this->setFilterValues($filter);
+    $filter->value['value'] = 'now';
+    $filter->options['exception'] = [
+      'exception' => 1,
+      'start_month' => date('n') - 1 ?: 12,
+      'start_day' => date('j'),
+      'end_month' => date('n'),
+      'end_day' => date('j'),
+      'value' => 'now +30days',
+      'min' => 'now -15days',
+      'max' => 'now +45days',
+    ];
+
     $this->assertEquals('= now Exception: = now +30days', $filter->adminSummary());
     $this->assertTrue($filter->hasExtraOptions());
 
@@ -149,19 +159,6 @@ class AcademicDateFilterTest extends KernelTestBase {
     $form = [];
     $filter->buildExtraOptionsForm($form, $form_state);
     $this->assertArrayNotHasKey('exception', $form);
-
-    $filter = new TestAcademicDateFilter();
-    $this->setFilterValues($filter);
-    $this->assertTrue($filter->inException());
-
-    // One full year of exception excluding the current day.
-    $filter->options['exception']['start_month'] = date('n');
-    $filter->options['exception']['start_day'] = date('j') + 1;
-    $filter->options['exception']['end_day'] = date('j') - 1;
-    $this->assertFalse($filter->inException());
-
-    $filter->options['exception']['end_month'] = 'garbage';
-    $this->assertFalse($filter->inException());
   }
 
   /**
@@ -172,12 +169,59 @@ class AcademicDateFilterTest extends KernelTestBase {
    * @covers ::inException
    */
   public function testOperations() {
-    $view = Views::getView('test_filters');
+    $field_name = $this->field->getName();
+
+    // Test without any filters.
+    $view = $this->getView();
+    $view->storage->getDisplay('default')['display_options']['filters'] = [];
     $view->execute();
     $this->assertNotEmpty($view->result);
 
+    // Test with the filter but not the exception filter.
+    $view = $this->getView();
+    $view->storage->getDisplay('default')['display_options']['filters'][$field_name]['exception']['exception'] = 0;
+    $view->execute();
+    $this->assertEmpty($view->result);
+
+    // Test with the filter and the exception.
+    $view = $this->getView();
+    $view->execute();
+    $this->assertNotEmpty($view->result);
+
+    // Test between operation.
+    $view = $this->getView();
+    $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'][$field_name];
+    $display_filters['operator'] = 'between';
+    $view->execute();
+    $this->assertNotEmpty($view->result);
+
+    // Test over the new year.
+    $view = $this->getView();
+    $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'][$field_name];
+    $display_filters['exception']['start_month'] = 12;
+    $display_filters['exception']['end_month'] = 11;
+    $view->execute();
+    $this->assertEmpty($view->result);
+
+    // Test try catch for invalid exception dates.
+    $view = $this->getView();
+    $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'][$field_name];
+    $display_filters['exception']['end_month'] = 'garbage';
+    $view->execute();
+    $this->assertEmpty($view->result);
+  }
+
+  /**
+   * Get the test filter view with the field filter set.
+   *
+   * @return \Drupal\views\ViewExecutable
+   *   The filtered test view.
+   */
+  protected function getView() {
+    // Load the view each time to remove any results.
     $view = Views::getView('test_filters');
     $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'];
+
     $display_filters[$this->field->getName()] = [
       'id' => $this->field->getName() . '_value',
       'table' => 'node__' . $this->field->getName(),
@@ -186,11 +230,16 @@ class AcademicDateFilterTest extends KernelTestBase {
       'group_type' => 'group',
       'exposed' => FALSE,
       'operator' => '>=',
-      'value' => ['value' => 'now +5days', 'type' => 'date'],
+      'value' => [
+        'min' => 'now -5days',
+        'max' => 'now +5days',
+        'value' => 'now +5days',
+        'type' => 'date',
+      ],
       'plugin_id' => 'academic_datetime',
       'is_grouped' => FALSE,
       'exception' => [
-        'exception' => 0,
+        'exception' => 1,
         'start_month' => (date('n') - 1 ?: 12),
         'start_day' => date('j'),
         'end_month' => date('n'),
@@ -200,65 +249,8 @@ class AcademicDateFilterTest extends KernelTestBase {
         'max' => 'now +45days',
       ],
     ];
-    $view->save();
-    $view->execute();
-    $this->assertEmpty($view->result);
 
-    $view = Views::getView('test_filters');
-    $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'];
-    $display_filters[$this->field->getName()]['exception']['exception'] = 1;
-
-    $view->save();
-    $view->execute();
-    $this->assertNotEmpty($view->result);
-
-    // Reload the view to clear data from previous execution.
-    $view = Views::getView('test_filters');
-    $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'];
-    $display_filters[$this->field->getName()]['operator'] = 'between';
-    $display_filters[$this->field->getName()]['value']['min'] = 'now -5days';
-    $display_filters[$this->field->getName()]['value']['max'] = 'now +1year';
-
-    $view->save();
-    $view->execute();
-    $this->assertNotEmpty($view->result);
-  }
-
-  /**
-   * @param AcademicDateFilter $filter
-   */
-  protected function setFilterValues(AcademicDateFilter $filter) {
-    $filter->value['value'] = 'now';
-    $filter->options['exception'] = [
-      'exception' => 1,
-      'start_month' => date('n') - 1 ?: 12,
-      'start_day' => date('j'),
-      'end_month' => date('n'),
-      'end_day' => date('j'),
-      'value' => 'now +30days',
-      'min' => 'now -15days',
-      'max' => 'now +45days',
-    ];
-  }
-
-}
-
-/**
- * Overrides for Class TestAcademicDateFilter.
- */
-class TestAcademicDateFilter extends AcademicDateFilter {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function inException() {
-    return parent::inException();
+    return $view;
   }
 
 }

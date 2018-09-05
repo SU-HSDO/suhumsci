@@ -134,11 +134,7 @@ class AcademicDateFilter extends Date {
     $end_year = $this_year;
 
     // Add one year if the start and end dates span over January 1st.
-    if ($this->options['exception']['start_month'] > $this->options['exception']['end_month'] ||
-      (
-        $this->options['exception']['start_month'] == $this->options['exception']['end_month'] &&
-        $this->options['exception']['start_day'] > $this->options['exception']['end_day']
-      )) {
+    if ($this->isMultipleYears()) {
       $end_year++;
     }
 
@@ -158,6 +154,27 @@ class AcademicDateFilter extends Date {
     $end->add(new \DateInterval('P1D'));
     $now = time();
     return $now >= $start->getTimestamp() && $now <= $end->getTimestamp();
+  }
+
+  /**
+   * Check if the start and end dates span over the new year.
+   *
+   * @return bool
+   *   True if its over a new year.
+   */
+  protected function isMultipleYears() {
+    if ($this->options['exception']['start_month'] > $this->options['exception']['end_month']) {
+      return TRUE;
+    }
+
+    if (
+      $this->options['exception']['start_month'] == $this->options['exception']['end_month'] &&
+      $this->options['exception']['start_day'] > $this->options['exception']['end_day']
+    ) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**

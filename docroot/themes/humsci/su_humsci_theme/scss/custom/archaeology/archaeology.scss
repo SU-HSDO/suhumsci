@@ -40,11 +40,15 @@ h6 {
 }
 
 // Headers without dash
+.horizontal-card__title,
+.horizontal-card__title h2,
 h2.vertical-link-card__title,
 .date-stacked-vertical-card__content-container h2,
 h2#menu-blockmain-menu,
 #footer h2,
-.field-hs-person-title h3 {
+.field-hs-person-title h3,
+.view.duplicate-of-news h2.vertical-card__title,
+.view.hs-publications h2 {
   &:after {
     content: none;
   }
@@ -60,6 +64,11 @@ h2.text-align-center:after {
   @include accent-dash(2px, $color-sun, 20px);
 }
 
+// Featured publications dash
+.views-field-field-hs-publication-type .masonry-item--type {
+  @include accent-dash(2px, $color-sun, 20px);
+}
+
 // Button (more-link) styles in views
 .views-element-container {
   .more-link {
@@ -69,6 +78,11 @@ h2.text-align-center:after {
   .decanter-button {
     @include margin(0 null null);
   }
+}
+
+// Reasearch area buttons
+.views-field-field-hs-person-research .decanter-button--secondary {
+  @include margin(null null 0);
 }
 
 // Menu active states
@@ -96,7 +110,6 @@ h2.text-align-center:after {
     }
   }
 }
-
 
 // Homepage
 .front .hs-basic-page.field-hs-page-hero {

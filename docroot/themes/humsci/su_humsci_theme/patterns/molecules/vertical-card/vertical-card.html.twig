@@ -17,6 +17,21 @@
         {{ description }}
       </div>
     {% endif %}
+    {% if author or year %}
+      <div class=vertical-card__author-year>
+        {% if author %}
+          <div class="vertical-card__author-year--author">{{ author }}</div>
+        {% endif %}
+
+        {% if author and year %}
+          <div class="comma">,</div>
+        {% endif %}
+
+        {% if year %}
+          <div class="vertical-card__author-year--year">{{ year }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
     {% if button %}
       <div class="vertical-card__button">{{ button }}</div>
     {% endif %}

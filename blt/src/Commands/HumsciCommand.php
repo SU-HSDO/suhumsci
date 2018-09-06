@@ -4,14 +4,11 @@ namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 use Acquia\Blt\Robo\Exceptions\BltException;
-use Consolidation\AnnotatedCommand\CommandData;
 
 /**
- * Defines commands in the "custom" namespace.
+ * Defines commands in the "humsci" namespace.
  */
 class HumsciCommand extends AcHooksCommand {
-
-  protected $apiEndpoint = 'https://cloudapi.acquia.com/v1';
 
   /**
    * Run cron on all sites.
@@ -100,8 +97,8 @@ class HumsciCommand extends AcHooksCommand {
 
       // Generate settings.php.
       $multisite_dir = $this->getConfigValue('docroot') . "/sites/$multisite";
-      $project_local_settings_file = "$multisite_dir/settings/local.settings.php";
-      $settings_contents = file_get_contents($project_local_settings_file);
+      $local_settings = "$multisite_dir/settings/local.settings.php";
+      $settings_contents = file_get_contents($local_settings);
 
       $database_name = $this->getDatabaseName($multisite, $status['db-name']);
 
@@ -123,7 +120,7 @@ class HumsciCommand extends AcHooksCommand {
       $settings_contents = preg_replace("/'host' => '.*?',/", "'host' => '$database_host',", $settings_contents);
       $settings_contents = preg_replace("/'port' => '.*?',/", "'port' => '$database_port',", $settings_contents);
 
-      file_put_contents($project_local_settings_file, $settings_contents);
+      file_put_contents($local_settings, $settings_contents);
 
       $status = $this->getInspector()->getStatus();
       $connection = @mysqli_connect(
@@ -303,274 +300,6 @@ class HumsciCommand extends AcHooksCommand {
       ->drush("cr")
       ->run();
     $this->say("Finished deploying updates to $multisite.");
-  }
-
-  /**
-   * Get encryption keys from acquia.
-   *
-   * @command humsci:keys
-   */
-  public function humsciKeys() {
-    $this->taskDrush()
-      ->drush("rsync --mode=rltDkz @default.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
-      ->run();
-  }
-
-  /**
-   * Get encryption keys from acquia.
-   *
-   * @command humsci:keys:send
-   *
-   * @param string $env
-   *   Acquia environment to send the keys.
-   */
-  public function humsciKeysSend($env = 'prod') {
-    $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
-    $key_dir = $this->getConfigValue("key-dir.$env");
-    if (strtolower($send[0]) == 'y') {
-      $this->taskDrush()
-        ->drush("rsync @self:../keys/ @default.$env:$key_dir")
-        ->run();
-    }
-  }
-
-  /**
-   * Get encryption keys from acquia.
-   *
-   * @command humsci:csr
-   */
-  public function humsciCsr() {
-    //    $this->invokeCommand('humsci:keys');
-    $keys_dir = $this->getConfigValue('repo.root') . '/keys/ssl';
-    $conf = parse_ini_file("$keys_dir/openssl.conf", TRUE);
-
-    $this->yell('Existing Domains');
-    $this->say(implode("\n", $conf['alt_names']));
-    while ($domain = $this->askQuestion('What url should be added to the CSR? Leave empty to end.')) {
-      $key = 'DNS.' . (count($conf['alt_names']) + 1);
-      $conf['alt_names'][$key] = $domain;
-    }
-
-    file_put_contents("$keys_dir/openssl.conf", $this->arrayToIni($conf));
-
-    $file_prefix = date('Y-m-d') . '/' . date('H:i:s');
-    if (!file_exists("$keys_dir/$file_prefix")) {
-      mkdir("$keys_dir/$file_prefix", 0777, TRUE);
-    }
-
-    $csr_file = "$file_prefix/swshumsci.csr";
-    $key_file = "$file_prefix/swshumsci.key";
-    file_put_contents("$keys_dir/$file_prefix/alt_names.txt", implode(', ', $conf['alt_names']));
-
-    $command = "openssl req -nodes -newkey rsa:2048 -sha256 -keyout $key_file \
-                    -subj '/C=US/ST=California/L=Palo Alto/O=Stanford University/OU=Application Support Operations/CN=swshumsci.stanford.edu' \
-                    -config openssl.conf -out $csr_file";
-    $this->say(shell_exec("cd $keys_dir && $command"));
-    // Send the new conf and csr to acquia for safe keeping.
-    $this->invokeCommand('humsci:keys:send');
-  }
-
-  /**
-   * Convert an array to an ini file string.
-   *
-   * @param array $a
-   *   Data to convert.
-   * @param array $parent
-   *   Parent during recursion.
-   *
-   * @return string
-   *   Ini file string.
-   */
-  protected function arrayToIni(array $a, array $parent = array()) {
-    $out = '';
-    foreach ($a as $k => $v) {
-      if (is_array($v)) {
-        //subsection case
-        //merge all the sections into one array...
-        $sec = array_merge((array) $parent, (array) $k);
-        //add section information to the output
-        $out .= PHP_EOL . '[' . join('.', $sec) . ']' . PHP_EOL;
-        //recursively traverse deeper
-        $out .= $this->arrayToIni($v, $sec);
-      }
-      else {
-        //plain key->value case
-        if (strpos($v, '(') !== FALSE || strpos($v, ')') !== FALSE) {
-          $v = "\"$v\"";
-        }
-        $out .= "$k = $v" . PHP_EOL;
-      }
-    }
-    return $out;
-  }
-
-  /**
-   * @command humsci:add-domain
-   *
-   * @throws \Robo\Exception\TaskException
-   */
-  public function humsciAddDomain() {
-
-    $username = $this->askQuestion('Acquia Username. Usually an email', '', TRUE);
-    $password = $this->askHidden('Acquia Password');
-
-    $new_domains = [];
-    while ($domain = $this->askQuestion('Domain to add. Leave empty when done')) {
-      while (empty($environment = $this->askChoice('Which environment', [
-        'dev',
-        'test',
-        'prod',
-      ], ''))) {
-        continue;
-      }
-      $url = "{$this->apiEndpoint}/sites/devcloud:swshumsci/envs/$environment/domains/$domain.json";
-
-      $this->say($url);
-
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-      curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-      curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      $output = curl_exec($ch);
-      $info = curl_getinfo($ch);
-      curl_close($ch);
-      $this->say($output);
-
-      $new_domains[$environment][] = $domain;
-    }
-
-    foreach ($new_domains as $environment => $domains) {
-      $this->humsciLetsEncryptAdd($environment, ['domains' => $domains]);
-    }
-  }
-
-  /**
-   * @command humsci:letsencrypt:list
-   *
-   * @param string $environment
-   *   Which environment to add to cert.
-   *
-   * @return array
-   *   Existing domains on the cert.
-   *
-   * @throws \Robo\Exception\TaskException
-   */
-  public function humsciLetsEncryptList($environment = 'dev') {
-    if (!in_array($environment, ['dev', 'test', 'prod'])) {
-      $this->say('invalid environment');
-      return;
-    }
-
-    $shell_command = "cd ~ && .acme.sh/acme.sh --list --listraw";
-    $php_command = "return shell_exec('$shell_command');";
-    $results = $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
-      ->drush('eval')
-      ->arg($php_command)
-      ->run();
-
-    $results = $results->getMessage();
-
-    $domain_environment = str_replace('test', 'stage', $environment);
-    $matches = preg_grep("/^.*-$domain_environment.*/", explode("\n", $results));
-    $cert = reset($matches);
-    preg_match_all("/[a-z].*?\.edu/", $cert, $domains);
-    $domains = $domains[0];
-
-    return $domains;
-  }
-
-  /**
-   * @command humsci:letsencrypt:add-domain
-   *
-   * @param string $environment
-   *   Which environment to add to cert.
-   *
-   * @throws \Robo\Exception\TaskException
-   */
-  public function humsciLetsEncryptAdd($environment = 'dev', $options = ['domains' => []]) {
-    if (!in_array($environment, ['dev', 'test', 'prod'])) {
-      $this->say('invalid environment');
-      return;
-    }
-
-    $domains = $this->humsciLetsEncryptList($environment);
-
-    $this->say('Existing domains on the cert:' . PHP_EOL . implode(PHP_EOL, $domains));
-    if ($options['domains']) {
-      $domains = array_merge($domains, $options['domains']);
-    }
-    else {
-      while ($new_domain = $this->askQuestion('New Domain? Leave empty to create cert')) {
-        if (strpos($new_domain, '.stanford.edu') === FALSE) {
-          $this->say('Invalid domain. Must be a stanford domain.');
-          continue;
-        }
-        if (strpos($new_domain, 'http') !== FALSE) {
-          $this->say('Invalid domain. Do not include the domain protocol.');
-          continue;
-        }
-        $domains [] = trim($new_domain, ' /\\');
-      }
-    }
-
-    $primary_domain = array_shift($domains);
-    asort($domains);
-    $domains = "-d $primary_domain -d " . implode(' -d ', $domains);
-
-    $directory = "/mnt/gfs/swshumsci.$environment/files/";
-    $shell_command = "cd ~ && .acme.sh/acme.sh --issue $domains -w $directory";
-    $php_command = "return shell_exec('$shell_command');";
-    $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
-      ->drush('eval')
-      ->arg($php_command)
-      ->run();
-  }
-
-  /**
-   * @command humsci:letsencrypt:get-cert
-   *
-   * @param string $environment
-   *   Which environment to add to cert.
-   *
-   * @throws \Robo\Exception\TaskException
-   */
-  public function humsciLetsEncryptGet($environment = 'dev') {
-    if (!in_array($environment, ['dev', 'test', 'prod'])) {
-      $this->say('invalid environment');
-      return;
-    }
-
-    $domains = $this->humsciLetsEncryptList($environment);
-    $primary_domain = array_shift($domains);
-
-    $file = $this->askChoice('Which file would you like to get?', [
-      'Certificate',
-      'Private Key',
-      'Intermediate Certificates',
-    ], 'Certificate');
-    switch ($file) {
-      case 'Private Key':
-        $file = "$primary_domain.key";
-        break;
-      case 'Intermediate Certificates':
-        $file = 'ca.cer';
-        break;
-      default:
-        $file = "$primary_domain.cer";
-        break;
-    }
-
-    $shell_command = "cd ~ && cat .acme.sh/$primary_domain/$file";
-    $php_command = "return shell_exec('$shell_command');";
-    $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
-      ->drush('eval')
-      ->arg($php_command)
-      ->run();
   }
 
 }

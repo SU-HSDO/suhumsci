@@ -56,7 +56,7 @@ class MrcDsBlocksLocalAction extends DeriverBase implements ContainerDeriverInte
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions($base_plugin_definition) {
+  public function getDerivativeDefinitions($base_plugin_def) {
     $this->derivatives = array();
 
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
@@ -83,7 +83,7 @@ class MrcDsBlocksLocalAction extends DeriverBase implements ContainerDeriverInte
     }
 
     foreach ($this->derivatives as &$entry) {
-      $entry += $base_plugin_definition;
+      $entry += $base_plugin_def;
     }
 
     return $this->derivatives;

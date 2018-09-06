@@ -6,11 +6,8 @@
  */
 
 /**
- * Make slick slideshow loop.
+ * Outdated.
  */
 function mrc_paragraphs_slideshow_post_update_8_0_6() {
-  $config_factory = \Drupal::configFactory();
-  $config = $config_factory->getEditable('slick.optionset.mrc_slideshow');
-  $config->set('options.settings.infinite', TRUE);
-  $config->save(TRUE);
+
 }

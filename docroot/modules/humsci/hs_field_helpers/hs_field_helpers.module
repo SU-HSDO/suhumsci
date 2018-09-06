@@ -610,7 +610,6 @@ function hs_field_helpers_form_views_exposed_form_alter(&$form, FormStateInterfa
   // Ajax blocks using the module views_block_filter_block do not display the
   // "Reset" button after the form has been submitted. So we are going to change
   // the access and apply some javascript to help keep the ajaxy feel.
-//  $form['#attributes']['class'][] = 'ajax-form';
   $form['actions']['reset']['#access'] = TRUE;
   $form['#attached']['library'][] = 'hs_field_helpers/views_reset';
 }

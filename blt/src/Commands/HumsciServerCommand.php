@@ -137,22 +137,9 @@ class HumsciServerCommand extends AcHooksCommand {
     $domains = $this->humsciLetsEncryptList($environment);
 
     $this->say('Existing domains on the cert:' . PHP_EOL . implode(PHP_EOL, $domains));
-    if ($options['domains']) {
-      $domains = array_merge($domains, $options['domains']);
-    }
-    else {
-      while ($new_domain = $this->askQuestion('New Domain? Leave empty to create cert')) {
-        if (strpos($new_domain, '.stanford.edu') === FALSE) {
-          $this->say('Invalid domain. Must be a stanford domain.');
-          continue;
-        }
-        if (strpos($new_domain, 'http') !== FALSE) {
-          $this->say('Invalid domain. Do not include the domain protocol.');
-          continue;
-        }
-        $domains [] = trim($new_domain, ' /\\');
-      }
-    }
+
+    $domains = array_merge($domains, $options['domains']);
+    $domains = array_merge($domains, $this->getDomains());
 
     $primary_domain = array_shift($domains);
     asort($domains);
@@ -166,6 +153,28 @@ class HumsciServerCommand extends AcHooksCommand {
       ->drush('eval')
       ->arg($php_command)
       ->run();
+  }
+
+  /**
+   * Get new domains to add to Cert.
+   *
+   * @return array
+   *   New domains.
+   */
+  protected function getDomains() {
+    $domains = [];
+    while ($new_domain = $this->askQuestion('New Domain? Leave empty to create cert')) {
+      if (strpos($new_domain, '.stanford.edu') === FALSE) {
+        $this->say('Invalid domain. Must be a stanford domain.');
+        continue;
+      }
+      if (strpos($new_domain, 'http') !== FALSE) {
+        $this->say('Invalid domain. Do not include the domain protocol.');
+        continue;
+      }
+      $domains[] = trim($new_domain, ' /\\');
+    }
+    return $domains;
   }
 
   /**

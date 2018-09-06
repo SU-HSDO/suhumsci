@@ -145,9 +145,17 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     }
 
     // No jira filter is configured.
-    if (!$this->getJiraFilter()) {
-      return;
+    if ($this->getJiraFilter()) {
+      $this->addJiraHook();
     }
+  }
+
+  /**
+   * Add the Jira hook via the Jira API.
+   */
+  protected function addJiraHook() {
+    $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
+    $url .= '/api/hs-bugherd';
 
     $hook_data = [
       'name' => 'Bugherd for ARCH',

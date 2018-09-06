@@ -177,9 +177,7 @@ class PatternsStyle extends StylePluginBase {
     foreach ($this->getFields() as $field_name => $label) {
       $weight = (int) $this->getDefaultValue($configuration, $field_name, 'weight');
       $fields[$field_name] = [
-        'info' => [
-          '#plain_text' => $label,
-        ],
+        'info' => ['#plain_text' => $label],
         'destination' => [
           '#type' => 'select',
           '#title' => $this->t('Destination for @field', ['@field' => $label]),
@@ -194,13 +192,9 @@ class PatternsStyle extends StylePluginBase {
           '#delta' => 20,
           '#title' => $this->t('Weight for @field field', ['@field' => $label]),
           '#title_display' => 'invisible',
-          '#attributes' => [
-            'class' => ['field-weight'],
-          ],
+          '#attributes' => ['class' => ['field-weight'],],
         ],
-        '#attributes' => [
-          'class' => ['draggable'],
-        ],
+        '#attributes' => ['class' => ['draggable']],
         '#weight' => $weight,
       ];
     }
@@ -262,29 +256,18 @@ class PatternsStyle extends StylePluginBase {
 
     $pattern_regions = [];
 
-    // Get header fields.
-    if ($this->view->header) {
-      foreach ($this->view->header as $field => $header) {
-        if (!isset($this->options['pattern_mapping']["header:$field"])) {
-          continue;
+    foreach (['header', 'footer'] as $section) {
+      // Get header fields.
+      if ($this->view->{$section}) {
+        foreach ($this->view->{$section} as $field => $part) {
+          if (!isset($this->options['pattern_mapping']["$section:$field"])) {
+            continue;
+          }
+
+          $section_region = $this->options['pattern_mapping']["$section:$field"]['destination'];
+          $pattern_regions[$section_region]["$section:$field"] = $part->render();
+          unset($this->view->{$section}[$field]);
         }
-
-        $header_region = $this->options['pattern_mapping']["header:$field"]['destination'];
-        $pattern_regions[$header_region]["header:$field"] = $header->render();
-        unset($this->view->header[$field]);
-      }
-    }
-
-    // Get footer fields.
-    if ($this->view->footer) {
-      foreach ($this->view->footer as $field => $footer) {
-        if (!isset($this->options['pattern_mapping']["footer:$field"])) {
-          continue;
-        }
-
-        $footer_region = $this->options['pattern_mapping']["footer:$field"]['destination'];
-        $pattern_regions[$footer_region]["footer:$field"] = $footer->render();
-        unset($this->view->footer[$field]);
       }
     }
 

@@ -89,28 +89,11 @@ class HumsciConfigCommand extends ConfigCommand {
         $task->drush("config:set system.site uuid $exported_site_uuid");
       }
 
-      switch ($strategy) {
-        case 'core-only':
-          $this->importCoreOnly($task, $cm_core_key);
-          break;
-
-        case 'config-split':
-          try {
-            $this->importConfigSplit($task, $cm_core_key, $options['partial']);
-          }
-          catch (\Exception $e) {
-            $this->say($e->getMessage());
-          }
-          break;
-
-        case 'features':
-          $this->importFeatures($task, $cm_core_key);
-
-          if ($this->getConfigValue('cm.features.no-overrides')) {
-            // @codingStandardsIgnoreLine
-            $this->checkFeaturesOverrides();
-          }
-          break;
+      try {
+        $this->importConfigSplit($task, $cm_core_key, $options['partial']);
+      }
+      catch (\Exception $e) {
+        $this->say($e->getMessage());
       }
 
       $task->drush("cache-rebuild");
@@ -142,8 +125,14 @@ class HumsciConfigCommand extends ConfigCommand {
 
     // Local environments we don't want all the custom site created configs.
     if (($this->getConfigValue('environment') == 'local' || $this->getConfigValue('environment') == 'dev') && !$partial) {
-      $this->taskDrush()->drush('sqlq')->arg('truncate webform_submission')->run();
-      $this->taskDrush()->drush('sqlq')->arg('truncate webform_submission_data')->run();
+      $this->taskDrush()
+        ->drush('sqlq')
+        ->arg('truncate webform_submission')
+        ->run();
+      $this->taskDrush()
+        ->drush('sqlq')
+        ->arg('truncate webform_submission_data')
+        ->run();
       $task->drush("config-import")->arg($cm_core_key);
       // Runs a second import to ensure splits are
       // both defined and imported.

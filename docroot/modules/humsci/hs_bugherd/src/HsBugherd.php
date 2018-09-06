@@ -313,7 +313,7 @@ class HsBugherd {
   /**
    * Delete a specific webook.
    *
-   * @param $id
+   * @param integer $hook_id
    *   Webhook id found from getHooks().
    *
    * @return mixed
@@ -321,8 +321,8 @@ class HsBugherd {
    *
    * @see https://www.bugherd.com/api_v2#api_webhook_delete
    */
-  public function deleteWebhook($id) {
-    return $this->getApi(self::BUGHERDAPI_WEBHOOK)->remove($id);
+  public function deleteWebhook($hook_id) {
+    return $this->getApi(self::BUGHERDAPI_WEBHOOK)->remove($hook_id);
   }
 
 }

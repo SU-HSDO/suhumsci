@@ -8,7 +8,6 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\encrypt\EncryptService;
-use Drupal\encrypt\Entity\EncryptionProfile;
 
 /**
  * Example configuration override.

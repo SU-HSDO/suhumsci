@@ -605,3 +605,18 @@ function hs_field_helpers_execute_migration(MigrationInterface $migration, $migr
   $executable->import();
   $executed_migrations[$migration_id] = $migration_id;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_field_helpers_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
+  if (empty($form['actions']['reset'])) {
+    return;
+  }
+
+  // Ajax blocks using the module views_block_filter_block do not display the
+  // "Reset" button after the form has been submitted. So we are going to change
+  // the access and apply some javascript to help keep the ajaxy feel.
+  $form['actions']['reset']['#access'] = TRUE;
+  $form['#attached']['library'][] = 'hs_field_helpers/views_reset';
+}

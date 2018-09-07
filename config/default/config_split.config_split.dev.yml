@@ -8,12 +8,22 @@ folder: ../config/envs/dev
 module:
   shield: 0
   acquia_connector: 0
+  acquia_purge: 0
   simplesamlphp_auth: 0
   config_import_de: 0
+  purge: 0
+  purge_drush: 0
+  purge_processor_cron: 0
+  purge_processor_lateruntime: 0
+  purge_queuer_coretags: 0
+  purge_ui: 0
 theme: {  }
 blacklist:
   - acquia_connector.settings
   - simplesamlphp_auth.settings
+  - purge.logger_channels
+  - purge.plugins
+  - purge_queuer_coretags.settings
 graylist:
   - field_ui.settings
 graylist_dependents: true

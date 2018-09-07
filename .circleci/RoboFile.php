@@ -213,7 +213,6 @@ class RoboFile extends Tasks {
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
-    $tasks[] = $this->drush()->arg('sql-drop')->option('yes');
 
     // To make things easy on setting up these tests, we'll just use the default
     // directory for all site tests. But that means we need to bring over the
@@ -240,6 +239,7 @@ class RoboFile extends Tasks {
     $tasks[] = $this->taskExecStack()
       ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
 
+    $tasks[] = $this->drush()->arg('sql-drop')->option('yes');
     $tasks[] = $this->drush()
       ->rawArg('@self sql-cli < clean_dump.sql');
     return $tasks;

@@ -65,15 +65,15 @@ class HumsciServerCommand extends AcHooksCommand {
 
       $this->say($url);
 
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-      curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-      curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      curl_setopt($ch, CURLOPT_POST, 1);
-      $output = curl_exec($ch);
-      $info = curl_getinfo($ch);
-      curl_close($ch);
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, $url);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+      curl_setopt($curl, CURLOPT_USERPWD, "$username:$password");
+      curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_setopt($curl, CURLOPT_POST, 1);
+      $output = curl_exec($curl);
+      $info = curl_getinfo($curl);
+      curl_close($curl);
       $this->say($output);
 
       $new_domains[$environment][] = $domain;

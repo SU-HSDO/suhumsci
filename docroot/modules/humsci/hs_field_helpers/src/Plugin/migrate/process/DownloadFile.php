@@ -29,11 +29,9 @@ use Drupal\migrate\Row;
  *   source:
  *     - source_url
  *     - destination_directory
- * @endcode
  *
  * This will download source_url to destination_uri.
  *
- * @code
  * process:
  *   plugin: download
  *   source:

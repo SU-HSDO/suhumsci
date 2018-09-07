@@ -25,8 +25,6 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
    *
    * @param \Drupal\config_readonly\ReadOnlyFormEvent $event
    *   The triggered event.
-   *
-   * @throws \ReflectionException
    */
   public function onFormAlter(ReadOnlyFormEvent $event) {
     // Check if the form is a ConfigFormBase or a ConfigEntityListBuilder.
@@ -46,49 +44,95 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
     // Check if the form is an EntityFormInterface and entity is a config
     // entity.
     if (!$mark_form_read_only && $form_object instanceof EntityFormInterface) {
-      $entity = $form_object->getEntity();
-      $mark_form_read_only = $entity instanceof ConfigEntityInterface;
-
-      // Don't block particular patterns.
-      if ($mark_form_read_only) {
-        $entity = $form_object->getEntity();
-        $name = $entity->getConfigDependencyName();
-
-        // Block config from a module.
-        $mark_form_read_only = $this->configIsLocked($name);
-        // If all config is in the whitelist, do not block the form.
-        $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
-      }
+      $mark_form_read_only = $this->lockEntityFormInterface($form_object);
     }
 
     if (!$mark_form_read_only && $form_object instanceof EntityFormWizardBase) {
-      try {
-        $name = $this->entityTypeManager->getStorage($form_object->getEntityType())
-          ->load($form_object->getMachineName())->getConfigDependencyName();
-        // Block config from a module.
-        $mark_form_read_only = $this->configIsLocked($name);
-        // If all config is in the whitelist, do not block the form.
-        $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
-      }
-      catch (\Exception $e) {
-        // Entity doesn't exist so theres nothing to do.
-      }
+      $mark_form_read_only = $this->lockEntityFormWizard($form_object);
     }
 
     // Config forms.
     if ($mark_form_read_only && $form_object instanceof ConfigFormBase) {
-      $names = $this->getEditableConfigNames($form_object);
-      $mark_form_read_only = $this->configIsLocked($names);
-
-      // If all configs are in the whitelist, do not block the form.
-      if ($names == array_filter($names, [$this, 'matchesWhitelistPattern'])) {
-        $mark_form_read_only = FALSE;
-      }
+      $this->lockConfigFormBase($form_object);
     }
 
     if ($mark_form_read_only) {
       $event->markFormReadOnly();
     }
+  }
+
+  /**
+   * Should an entity form be locked.
+   *
+   * @param \Drupal\Core\Entity\EntityFormInterface $form_object
+   *   Form state object.
+   *
+   * @return bool
+   *   If the form should be marked readonly.
+   */
+  protected function lockEntityFormInterface(EntityFormInterface $form_object) {
+    $entity = $form_object->getEntity();
+    $mark_form_read_only = $entity instanceof ConfigEntityInterface;
+
+    // Don't block particular patterns.
+    if ($mark_form_read_only) {
+      $entity = $form_object->getEntity();
+      $name = $entity->getConfigDependencyName();
+
+      // Block config from a module.
+      $mark_form_read_only = $this->configIsLocked($name);
+      // If all config is in the whitelist, do not block the form.
+      $mark_form_read_only = $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
+    }
+    return $mark_form_read_only;
+  }
+
+  /**
+   * Check the entity form wizard if it should be locked.
+   *
+   * @param \Drupal\ctools\Wizard\EntityFormWizardBase $form_object
+   *   Form state object.
+   *
+   * @return bool
+   *   If the form should be marked readonly.
+   */
+  protected function lockEntityFormWizard(EntityFormWizardBase $form_object) {
+    try {
+      $name = $this->entityTypeManager->getStorage($form_object->getEntityType())
+        ->load($form_object->getMachineName())->getConfigDependencyName();
+      // Block config from a module.
+      $mark_form_read_only = $this->configIsLocked($name);
+      // If all config is in the whitelist, do not block the form.
+      return $this->matchesWhitelistPattern($name) ? FALSE : $mark_form_read_only;
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Should a simple config form be locked.
+   *
+   * @param \Drupal\Core\Form\ConfigFormBase $form_object
+   *   Form state object.
+   *
+   * @return bool
+   *   if the form should be marked readonly.
+   */
+  protected function lockConfigFormBase(ConfigFormBase $form_object) {
+    try {
+      $names = $this->getEditableConfigNames($form_object);
+    }
+    catch (\ReflectionException $e) {
+      return FALSE;
+    }
+
+    $mark_form_read_only = $this->configIsLocked($names);
+    // If all configs are in the whitelist, do not block the form.
+    if ($names == array_filter($names, [$this, 'matchesWhitelistPattern'])) {
+      $mark_form_read_only = FALSE;
+    }
+    return $mark_form_read_only;
   }
 
   /**
@@ -133,6 +177,8 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
    *
    * @return array
    *   Config names.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   protected function getLockedConfigs() {
     $configs = $this->configStorage->listAll();

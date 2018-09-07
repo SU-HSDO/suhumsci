@@ -104,11 +104,14 @@ class DisplayModeField extends ListItemBase {
   /**
    * Validation to clean up field values.
    *
-   * @param $element
+   * @param array $element
+   *   Form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param $form
+   *   Current form state.
+   * @param array $form
+   *   Complete form.
    */
-  public function elementValidate($element, FormStateInterface $form_state, $form) {
+  public function elementValidate(array $element, FormStateInterface $form_state, array $form) {
     $modes = &$form_state->getValue(['settings', 'allowed_values']);
     foreach ($modes as $mode_id => &$mode) {
       if (!$mode['enabled']) {

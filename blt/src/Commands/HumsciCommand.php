@@ -3,7 +3,6 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
-use Acquia\Blt\Robo\Exceptions\BltException;
 
 /**
  * Defines commands in the "humsci" namespace.
@@ -75,11 +74,17 @@ class HumsciCommand extends AcHooksCommand {
   }
 
   /**
-   * @param $question
+   * Ask a question to the user.
+   *
+   * @param string $question
+   *   The question to ask.
    * @param string $default
+   *   Default value.
    * @param bool $required
+   *   If a response is required.
    *
    * @return string
+   *   Response to the question.
    */
   protected function askQuestion($question, $default = '', $required = FALSE) {
     if ($default) {
@@ -95,9 +100,13 @@ class HumsciCommand extends AcHooksCommand {
   }
 
   /**
+   * Get the database name of the multisite.
+   *
    * @param string $multisite
+   *   Site name.
    *
    * @return string
+   *   Database name.
    */
   protected function getDatabaseName($multisite = 'default', $default = 'drupal') {
     $database_name = '';

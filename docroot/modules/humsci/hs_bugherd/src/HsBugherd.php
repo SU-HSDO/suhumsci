@@ -42,6 +42,8 @@ class HsBugherd {
   protected $apiKey;
 
   /**
+   * Bugherd services.
+   *
    * @var \Bugherd\Client
    */
   protected $client;
@@ -84,14 +86,18 @@ class HsBugherd {
    * Test if the api connection works.
    *
    * @return bool
+   *   IF the connection was successful.
    */
-  public function connectionSuccessful() {
+  public function isConnectionSuccessful() {
     $test = $this->getOrganization();
     return !isset($test['error']);
   }
 
   /**
-   * @return array|mixed|null
+   * Get the bugherd project ID from the config settings.
+   *
+   * @return string
+   *   Project id.
    */
   public static function getProjectId() {
     return \Drupal::configFactory()
@@ -100,7 +106,10 @@ class HsBugherd {
   }
 
   /**
+   * Set the project ID for the API.
+   *
    * @param string $project_id
+   *   Bugherd project id.
    */
   public function setProjectId($project_id) {
     $this->projectKey = $project_id;
@@ -183,7 +192,7 @@ class HsBugherd {
   /**
    * Get all task for a project.
    *
-   * @param integer $project_id
+   * @param int $project_id
    *   Project id found from getProjects().
    * @param array $params
    *   Array of possible search parameters.
@@ -239,9 +248,9 @@ class HsBugherd {
   /**
    * Get all the commments on a particular task.
    *
-   * @param integer $task_id
+   * @param int $task_id
    *   Task id found from getTasks().
-   * @param integer $project_id
+   * @param int $project_id
    *   Project id found from getProjects().
    *
    * @return array
@@ -313,7 +322,7 @@ class HsBugherd {
   /**
    * Delete a specific webook.
    *
-   * @param integer $hook_id
+   * @param int $hook_id
    *   Webhook id found from getHooks().
    *
    * @return mixed

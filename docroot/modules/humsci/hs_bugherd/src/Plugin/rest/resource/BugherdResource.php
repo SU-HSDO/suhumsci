@@ -7,7 +7,7 @@ use Drupal\key\Entity\Key;
 use Drupal\rest\ResourceResponse;
 
 /**
- * Class BugherdResource
+ * Class BugherdResource.
  *
  * @RestResource(
  *   id = "hs_bugherd_resource",
@@ -307,7 +307,7 @@ class BugherdResource extends BugherdResourceBase {
       $description[] = "Item: " . strip_tags($task['selector_info']['html'], '<img><a><p><iframe>');
     }
 
-    if ($screenshot = $task['screenshot_url']) {
+    if ($task['screenshot_url']) {
       $description[] = "Screenshot: {$task['screenshot_url']}";
     }
     return implode(PHP_EOL, $description);

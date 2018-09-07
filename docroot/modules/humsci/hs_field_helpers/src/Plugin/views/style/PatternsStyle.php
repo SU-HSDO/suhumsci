@@ -161,11 +161,7 @@ class PatternsStyle extends StylePluginBase {
 
     $elements = [
       '#type' => 'table',
-      '#header' => [
-        $this->t('Source'),
-        $this->t('Destination'),
-        $this->t('Weight'),
-      ],
+      '#header' => $this->getHeaders(),
     ];
     $elements['#tabledrag'][] = [
       'action' => 'order',
@@ -201,6 +197,20 @@ class PatternsStyle extends StylePluginBase {
 
     uasort($fields, [SortArray::class, 'sortByWeightProperty']);
     return array_merge($elements, $fields);
+  }
+
+  /**
+   * Get the table headers.
+   *
+   * @return array
+   *   Array of translated table headers.
+   */
+  protected function getHeaders(){
+    return [
+      $this->t('Source'),
+      $this->t('Destination'),
+      $this->t('Weight'),
+    ];
   }
 
   /**

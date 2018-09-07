@@ -45,7 +45,7 @@ abstract class BugherdResourceBase extends ResourceBase {
   protected $jiraProject;
 
   /**
-   * Bugherd Project ID
+   * Bugherd Project ID.
    *
    * @var int
    */
@@ -131,7 +131,7 @@ abstract class BugherdResourceBase extends ResourceBase {
   protected function getTaskName(array $task) {
     // Trim down the descrption to only 5 words so we dont clutter up JIRA with
     // a long paragraph as the summary. Also Jira doesnt like new lines in the
-    // Summary
+    // summary.
     $description_words = explode(' ', trim(preg_replace("/\r|\n/", "", $task['description'])));
     $title = array_slice($description_words, 0, 5);
     $title = implode(' ', $title);

@@ -72,7 +72,7 @@ class HumsciServerCommand extends AcHooksCommand {
       curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
       curl_setopt($curl, CURLOPT_POST, 1);
       $output = curl_exec($curl);
-      $info = curl_getinfo($curl);
+      curl_getinfo($curl);
       curl_close($curl);
       $this->say($output);
 

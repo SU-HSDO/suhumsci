@@ -22,6 +22,8 @@ class ChallengeController extends ControllerBase {
   protected $state;
 
   /**
+   * File system service.
+   *
    * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;

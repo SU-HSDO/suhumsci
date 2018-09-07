@@ -78,7 +78,7 @@ class HsBugherd {
    */
   public function setApiKey($api_key) {
     $this->apiKey = $api_key;
-    // Rebuild the client
+    // Rebuild the clien object with the new api key.
     $this->client = new Client($this->apiKey);
   }
 
@@ -141,7 +141,7 @@ class HsBugherd {
    * @param bool $members
    *   Get the Members.
    * @param bool $guests
-   *   Get the Guests
+   *   Get the Guests.
    *
    * @return array
    *   Returned response.
@@ -200,7 +200,7 @@ class HsBugherd {
    * @return array
    *   Returned response.
    *
-   * https://www.bugherd.com/api_v2#api_task_list
+   * @see https://www.bugherd.com/api_v2#api_task_list
    */
   public function getTasks($project_id = NULL, array $params = []) {
     return $this->getApi(self::BUGHERDAPI_TASK)

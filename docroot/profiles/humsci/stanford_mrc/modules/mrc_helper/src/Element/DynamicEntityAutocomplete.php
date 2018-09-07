@@ -61,7 +61,7 @@ class DynamicEntityAutocomplete extends Textfield {
     }
     $element['#autocomplete_route_name'] = 'mrc_helper';
     $element['#autocomplete_route_parameters'] = [
-      'selection_settings_key' => $selection_key,
+      'selection_key' => $selection_key,
     ];
     return $element;
   }

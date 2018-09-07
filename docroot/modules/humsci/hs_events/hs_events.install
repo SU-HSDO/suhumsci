@@ -110,3 +110,46 @@ function hs_events_update_8002() {
   // entities that are not being used anywhere.
   _he_field_helpers_clean_eck();
 }
+
+/**
+ * Fix speaker field configuration.
+ */
+function hs_events_update_8003() {
+  $tables = [
+    'node__field_hs_event_speaker',
+    'node_revision__field_hs_event_speaker',
+  ];
+  $fields = [
+    'field_hs_event_speaker_depth',
+    'field_hs_event_speaker_options',
+  ];
+  $field_data = [];
+  // Remove the unwanted columns from the database.
+  foreach ($tables as $table) {
+    foreach ($fields as $field) {
+      if (\Drupal::database()->schema()->fieldExists($table, $field)) {
+        \Drupal::database()->schema()->dropField($table, $field);
+      }
+    }
+    $query = \Drupal::database()->select($table, 't')->fields('t')->execute();
+
+    // Gather all the field data to be inserted after we rebuild the field
+    // storage.
+    while ($row = $query->fetchAssoc()) {
+      $field_data[$table][] = $row;
+    }
+    \Drupal::database()->truncate($table)->execute();
+  }
+
+  // Resave the field so it resets the schema in the field data tables.
+  $field = FieldStorageConfig::load('node.field_hs_event_speaker');
+  $field->save();
+
+  // Insert all the old data back into the database.
+  foreach ($field_data as $table => $rows) {
+    foreach ($rows as $row) {
+      \Drupal::database()->insert($table)->fields($row)->execute();
+    }
+  }
+
+}

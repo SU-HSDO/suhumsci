@@ -117,8 +117,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-    //    $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
-
+    // $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
     $config = $this->config('bugherdapi.settings');
 
     $bugherd_project = $config->get('project_id');
@@ -145,9 +144,17 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     }
 
     // No jira filter is configured.
-    if (!$this->getJiraFilter()) {
-      return;
+    if ($this->getJiraFilter()) {
+      $this->addJiraHook();
     }
+  }
+
+  /**
+   * Add the Jira hook via the Jira API.
+   */
+  protected function addJiraHook() {
+    $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
+    $url .= '/api/hs-bugherd';
 
     $hook_data = [
       'name' => 'Bugherd for ARCH',

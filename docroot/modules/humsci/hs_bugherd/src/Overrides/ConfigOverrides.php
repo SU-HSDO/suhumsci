@@ -8,7 +8,6 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\encrypt\EncryptService;
-use Drupal\encrypt\Entity\EncryptionProfile;
 
 /**
  * Example configuration override.
@@ -16,16 +15,22 @@ use Drupal\encrypt\Entity\EncryptionProfile;
 class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
   /**
+   * Module Handler Service.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
+   * Config Factory Service.
+   *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
+   * Encryption Service.
+   *
    * @var \Drupal\encrypt\EncryptService
    */
   protected $encryption;
@@ -34,8 +39,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * ConfigOverrides constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   Module Handler Service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config Factory Service.
    * @param \Drupal\encrypt\EncryptService $encrypt_service
+   *   Encryption Service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service) {
     $this->moduleHandler = $module_handler;

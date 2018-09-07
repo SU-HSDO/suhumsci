@@ -54,14 +54,14 @@ class DynamicEntityAutocomplete extends Textfield {
     // can pull it back out. See EntityAutocomplete for details on this
     // approach.
     $autocomplete_data = serialize($element['#target_types']);
-    $selection_settings_key = Crypt::hmacBase64($autocomplete_data, Settings::getHashSalt());
+    $selection_key = Crypt::hmacBase64($autocomplete_data, Settings::getHashSalt());
     $key_value_storage = static::getEntityAutocompleteKeyValueStore();
-    if (!$key_value_storage->has($selection_settings_key)) {
-      $key_value_storage->set($selection_settings_key, $element['#target_types']);
+    if (!$key_value_storage->has($selection_key)) {
+      $key_value_storage->set($selection_key, $element['#target_types']);
     }
     $element['#autocomplete_route_name'] = 'mrc_helper';
     $element['#autocomplete_route_parameters'] = [
-      'selection_settings_key' => $selection_settings_key,
+      'selection_key' => $selection_key,
     ];
     return $element;
   }
@@ -78,7 +78,7 @@ class DynamicEntityAutocomplete extends Textfield {
     }
 
     $element_value = [];
-    $entity_ids_from_input = static::getEntityIdsByEntityTypeFromInput($element['#value']);
+    $entity_ids = static::getEntityIdsByEntityTypeFromInput($element['#value']);
 
     foreach ($element['#target_types'] as $entity_type_id => $settings) {
       $options = [
@@ -88,9 +88,9 @@ class DynamicEntityAutocomplete extends Textfield {
       ];
       // Validate all entities selected for the specific entity type.
       $handler = static::getSelectionManager()->getInstance($options);
-      if (isset($entity_ids_from_input[$entity_type_id])) {
-        $valid_ids = $handler->validateReferenceableEntities($entity_ids_from_input[$entity_type_id]);
-        if ($invalid_ids = array_diff($entity_ids_from_input[$entity_type_id], $valid_ids)) {
+      if (isset($entity_ids[$entity_type_id])) {
+        $valid_ids = $handler->validateReferenceableEntities($entity_ids[$entity_type_id]);
+        if ($invalid_ids = array_diff($entity_ids[$entity_type_id], $valid_ids)) {
           foreach ($invalid_ids as $invalid_id) {
             $form_state->setError($element, t('The referenced entity (%type: %id) does not exist.', ['%type' => $entity_type_id, '%id' => $invalid_id]));
           }

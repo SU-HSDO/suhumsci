@@ -3,11 +3,16 @@
 //
 // Global
 //
-// Decanter
-@import 'decanter-no-markup';
-// SU HumSci
-@import '../utilities/mixins/index';
 
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+// Date stacked style
 .date-stacked {
   @include date-stacked;
 }
@@ -31,12 +36,14 @@
 // Embedded media in WYSIWYG.
 .embedded-entity {
   @include margin(0 0 1em);
+
   width: fit-content;
   float: none;
 
   &.align-left {
     @media (min-width: 768px) {
       @include margin(null 1em 1em null);
+
       width: auto;
       max-width: 50%;
       float: left;
@@ -50,6 +57,7 @@
   &.align-right {
     @media (min-width: 768px) {
       @include margin(null null 1em 1em);
+
       width: auto;
       max-width: 50%;
       float: right;
@@ -61,7 +69,19 @@
   }
 }
 
-// Emphasized text style.
+// Exposed filter spacing
+.views-exposed-form {
+  .form-item,
+  .form-actions {
+    @include margin(0.5rem null 0 null);
+  }
+
+  label {
+    @include margin(1rem null 0.5rem);
+  }
+}
+
+// Emphasized text style
 .emphasized-text {
   font-weight: $font-bold;
   font-style: italic;

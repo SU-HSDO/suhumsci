@@ -177,6 +177,16 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
+      $rendered = render($pattern[$region]);
+
+      // Remove all wrapper divs so we can check if the region actually has any
+      // visible output.
+      $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
+      $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
+      if (empty(trim($rendered))) {
+        unset($pattern[$region]);
+      }
+
       continue;
     }
     if (!_hs_field_helpers_render_array_has_content($pattern[$region])) {
@@ -303,16 +313,23 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
  * Validation for event dates in nodes form.
  */
 function hs_field_helpers_node_validate_date(array &$element, FormStateInterface $form_state) {
-  $date = $form_state->getValue('field_hs_event_date');
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+  $entity = $form_state->getBuildInfo()['callback_object']->getEntity();
 
-  // If the start value is populated but end is empty, copy the start date
-  // to the end date to pass validation.
-  if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
-    $date[0]['end_value'] = $date[0]['value'];
-    $element['end_value']['#value']['object'] = $date[0]['end_value'];
+  foreach ($entity->getFieldDefinitions() as $field_definition) {
+    if ($field_definition->getType() == 'daterange') {
+      $date = $form_state->getValue($field_definition->getName());
 
-    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
-    $form_state->setValue('field_hs_event_date', $date);
+      // If the start value is populated but end is empty, copy the start date
+      // to the end date to pass validation.
+      if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
+        $date[0]['end_value'] = $date[0]['value'];
+        $element['end_value']['#value']['object'] = $date[0]['end_value'];
+
+        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+        $form_state->setValue($field_definition->getName(), $date);
+      }
+    }
   }
 }
 
@@ -575,9 +592,9 @@ function hs_field_helpers_migration_list() {
  * Executes a single migration, taken from drush command in migrate_tools.
  *
  * @param \Drupal\migrate\Plugin\MigrationInterface $migration
- *  The migration to execute.
+ *   The migration to execute.
  * @param string $migration_id
- *  The migration ID (not used, just an artifact of array_walk()).
+ *   The migration ID (not used, just an artifact of array_walk()).
  *
  * @throws \Drupal\migrate\MigrateException
  *
@@ -607,4 +624,19 @@ function hs_field_helpers_execute_migration(MigrationInterface $migration, $migr
   $executable = new MigrateExecutable($migration, $log, $options);
   $executable->import();
   $executed_migrations[$migration_id] = $migration_id;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_field_helpers_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
+  if (empty($form['actions']['reset'])) {
+    return;
+  }
+
+  // Ajax blocks using the module views_block_filter_block do not display the
+  // "Reset" button after the form has been submitted. So we are going to change
+  // the access and apply some javascript to help keep the ajaxy feel.
+  $form['actions']['reset']['#access'] = TRUE;
+  $form['#attached']['library'][] = 'hs_field_helpers/views_reset';
 }

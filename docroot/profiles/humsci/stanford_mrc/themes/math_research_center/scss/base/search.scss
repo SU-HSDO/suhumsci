@@ -16,7 +16,6 @@
   '../utilities/mixins/mixins';
 
 #block-searchform {
-
   form {
     display: inline-block;
     float: right;
@@ -26,6 +25,7 @@
       input.button {
         z-index: 999;
       }
+
       input.form-search {
         background: transparent;
         width: 145px;
@@ -33,19 +33,31 @@
     }
   }
 
+  .form-item {
+    @include margin(-3em null -1em);
+
+    @media (max-width: 750px) {
+      @include margin(0);
+    }
+  }
+
   input {
     &.button {
       display: block;
       position: absolute;
-      background: url('../../img/search.svg') no-repeat;
+      background: url("../../img/search.svg") no-repeat;
       background-size: 45px 45px;
-      top: 5px;
-      right: 5px;
+      top: -55px;
+      right: 2px;
       border: 0;
       font-size: 0;
       width: 45px;
       height: 45px;
       z-index: -999;
+
+      @media (max-width: 750px) {
+        top: 5px;
+      }
     }
 
     &.form-search {

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\pathauto\Entity\PathautoPattern;
 
 /**
  * Implements hook_install().
@@ -34,7 +35,7 @@ function hs_event_series_install() {
     $events_form->save();
   }
 
-  if ($path_auto = \Drupal\pathauto\Entity\PathautoPattern::load('hs_events')) {
+  if ($path_auto = PathautoPattern::load('hs_events')) {
     $path_auto->setPattern('events/[node:field_hs_event_series:entity:title]/[node:title]');
     $path_auto->save();
   }

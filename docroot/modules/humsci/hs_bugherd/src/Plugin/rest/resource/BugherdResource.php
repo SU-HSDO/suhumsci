@@ -122,7 +122,7 @@ class BugherdResource extends BugherdResourceBase {
    *   Jira Issue ID.
    * @param string $file
    *   Url to file.
-   * @param null $name
+   * @param string|null $name
    *   Desired name of the file.
    *
    * @return mixed
@@ -314,9 +314,14 @@ class BugherdResource extends BugherdResourceBase {
   }
 
   /**
+   * Use Jira data to call bugherd api with new/updated data.
+   *
    * @param array $data
+   *   Jira hook data.
    *
    * @return bool|mixed
+   *   Response or false if failed.
+   *
    * @throws \Exception
    */
   protected function sendToBugherd(array $data) {

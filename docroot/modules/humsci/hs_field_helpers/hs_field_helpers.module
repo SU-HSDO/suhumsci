@@ -164,7 +164,7 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
  *
  * @param array $pattern
  *   Pattern render array.
- * @param $pattern_id
+ * @param string $pattern_id
  *   Pattern ID being used.
  */
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
@@ -400,14 +400,14 @@ function hs_field_helpers_preprocess_field(&$variables) {
  */
 function hs_field_helpers_theme_suggestions_field(array $variables) {
   // Get a few convenient handles.
-  /** @var FieldableEntityInterface $entity */
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
   $entity = $variables['element']['#object'];
   $field_name = $variables['element']['#field_name'];
   $view_mode = $variables['element']['#view_mode'];
   $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
 
   $suggestions = [];
-  //  // Add class for whole field.
+  // Add class for whole field.
   if (!empty($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
@@ -422,7 +422,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 /**
  * A field can be nested in a layout builder section, so lets go get it.
  *
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity in question.
  * @param string $view_mode
  *   View mode to build.
@@ -501,7 +501,7 @@ function hs_field_helpers_cron() {
   if (\Drupal::moduleHandler()->moduleExists('migrate')) {
     $migrations = hs_field_helpers_migration_list();
     // Take it one group at a time, importing the migrations within each group.
-    foreach ($migrations as $group_id => $migration_list) {
+    foreach ($migrations as $migration_list) {
       array_walk($migration_list, 'hs_field_helpers_execute_migration');
     }
   }
@@ -555,7 +555,7 @@ function _he_field_helpers_clean_eck() {
 /**
  * Retrieve a list of active migrations, partially taken from migrate_tools.
  *
- * @return MigrationInterface[][]
+ * @return \Drupal\migrate\Plugin\MigrationInterface[][]
  *   An array keyed by migration group, each value containing an array of
  *   migrations or an empty array if no migrations match the input criteria.
  *

@@ -138,7 +138,7 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
   /**
    * Get the editable configuration names.
    *
-   * @param ConfigFormBase $form
+   * @param \Drupal\Core\Form\ConfigFormBase $form
    *   The configuration form.
    *
    * @return array

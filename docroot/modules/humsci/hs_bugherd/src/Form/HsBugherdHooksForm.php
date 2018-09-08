@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_bugherd\Form;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -25,11 +24,15 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   protected $cacheBackend;
 
   /**
+   * Bugherd API service.
+   *
    * @var \Drupal\hs_bugherd\HsBugherd
    */
   protected $bugherdApi;
 
   /**
+   * Jira wrapper service.
+   *
    * @var \biologis\JIRA_PHP_API\IssueService
    */
   protected $jiraIssueService;

@@ -113,7 +113,8 @@ abstract class BugherdResourceBase extends ResourceBase {
    * @param string $issue_id
    *   Issue ID, ie: DEV-123.
    *
-   * @return \biologis\JIRA_PHP_API\Issue
+   * @return \biologis\JIRA_PHP_API\Issue|bool
+   *   The found Jira issue or false if none exists.
    */
   protected function getJiraIssue($issue_id) {
     return $issue_id ? $this->jiraIssueService->load($issue_id) : FALSE;
@@ -160,7 +161,7 @@ abstract class BugherdResourceBase extends ResourceBase {
    * Get the beherd status from a jira status id.
    *
    * @param int $status
-   *   Jira status ID
+   *   Jira status ID.
    *
    * @return string|null
    *   Bugherd Status.

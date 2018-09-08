@@ -20,6 +20,7 @@ class HumsciConfigCommand extends ConfigCommand {
    * @command drupal:config:module
    *
    * @param string $module_name
+   *   Module machine name.
    */
   public function copyConfigToModule($module_name) {
     $info_file = $this->rglob($this->getConfigValue('docroot') . '/*/humsci/*/' . $module_name . '*.yml');
@@ -33,10 +34,15 @@ class HumsciConfigCommand extends ConfigCommand {
   }
 
   /**
-   * @param $pattern
+   * Recusive glob.
+   *
+   * @param string $pattern
+   *   Glob pattern.
    * @param int $flags
+   *   Globl flags.
    *
    * @return array|void
+   *   Response from glob.
    */
   protected function rglob($pattern, $flags = 0) {
     $files = glob($pattern, $flags);

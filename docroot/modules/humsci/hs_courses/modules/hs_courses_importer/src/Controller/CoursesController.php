@@ -55,10 +55,10 @@ class CoursesController extends ControllerBase {
   }
 
   /**
-   * Getcourses.
+   * Get courses xml data.
    *
-   * @return string
-   *   Return Hello string.
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   Xml response.
    */
   public function courses() {
     $response = new Response();

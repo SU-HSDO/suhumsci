@@ -95,7 +95,7 @@ abstract class BugherdResourceBase extends ResourceBase {
   /**
    * Returns the bugherd project ID.
    *
-   * @return string
+   * @return int
    *   ID.
    */
   protected function getBugherdProject() {

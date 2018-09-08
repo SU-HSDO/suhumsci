@@ -171,7 +171,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       return;
     }
 
-    foreach ($jira_hooks as $hook_id => $webhook) {
+    foreach (array_keys($jira_hooks) as $hook_id) {
       $this->jiraIssueService->getCommunicationService()
         ->put('/rest/webhooks/1.0/webhook/' . $hook_id, (object) $hook_data);
     }

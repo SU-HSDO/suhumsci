@@ -34,6 +34,7 @@ class ChallengeController extends ControllerBase {
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   File system service.
    */
   public function __construct(StateInterface $state, FileSystemInterface $file_system) {
     $this->state = $state;

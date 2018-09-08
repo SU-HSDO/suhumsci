@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class HsBugherdForm
+ * Class HsBugherdForm.
  *
  * @package Drupal\hs_bugherd\Form
  */

@@ -27,7 +27,7 @@ class DisplayModeField extends ListItemBase {
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = [];
-    $default_settings = $allowed_values = $this->getSetting('allowed_values');
+    $default_settings = $this->getSetting('allowed_values');
 
     $element['allowed_values'] = [
       '#type' => 'fieldset',

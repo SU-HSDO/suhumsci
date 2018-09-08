@@ -155,7 +155,7 @@ class PatternsStyle extends StylePluginBase {
    * @return array
    *   Drag table form for the given pattern.
    */
-  public function getMappingForm($pattern_id, $configuration) {
+  public function getMappingForm($pattern_id, array $configuration) {
     /** @var \Drupal\ui_patterns\Definition\PatternDefinition $pattern */
     $pattern = $this->patternsManager->getDefinition($pattern_id);
 
@@ -188,7 +188,7 @@ class PatternsStyle extends StylePluginBase {
           '#delta' => 20,
           '#title' => $this->t('Weight for @field field', ['@field' => $label]),
           '#title_display' => 'invisible',
-          '#attributes' => ['class' => ['field-weight'],],
+          '#attributes' => ['class' => ['field-weight']],
         ],
         '#attributes' => ['class' => ['draggable']],
         '#weight' => $weight,
@@ -251,7 +251,7 @@ class PatternsStyle extends StylePluginBase {
    * @return null|mixed
    *   The existing value or null.
    */
-  public function getDefaultValue($configuration, $field_name, $value) {
+  public function getDefaultValue(array $configuration, $field_name, $value) {
     if (!empty($configuration['pattern_mapping'][$field_name][$value])) {
       return $configuration['pattern_mapping'][$field_name][$value];
     }

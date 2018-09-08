@@ -27,6 +27,7 @@ class BugherdResource extends BugherdResourceBase {
    *   Post data from API.
    *
    * @return \Drupal\rest\ResourceResponse
+   *   Returned responses.
    */
   public function post(array $data) {
     $this->logger->info('posted data: ' . var_export($data, TRUE));
@@ -54,6 +55,7 @@ class BugherdResource extends BugherdResourceBase {
    *
    * @return string
    *   The Jira issue that was created/updated.
+   *
    * @throws \Exception
    */
   protected function sendToJira(array $data) {
@@ -126,6 +128,7 @@ class BugherdResource extends BugherdResourceBase {
    *   Desired name of the file.
    *
    * @return mixed
+   *   Response from Jira API.
    *
    * @see https://community.atlassian.com/t5/Jira-questions/Upload-URL-Attachment-via-API-on-JIRA-PHP/qaq-p/44828
    * @see https://developer.atlassian.com/cloud/jira/platform/rest/?_ga=2.240914371.1127742332.1530222923-1785182880.1526662104#api-api-2-issue-issueIdOrKey-attachments-post
@@ -145,7 +148,7 @@ class BugherdResource extends BugherdResourceBase {
     // Saving file in a temp path.
     file_put_contents($path, file_get_contents($file));
 
-    // Initiating CURLFile for preparing the upload
+    // Initiating CURLFile for preparing the upload.
     $cfile = new \CURLFile($path);
     $cfile->setPostFilename($file_name);
 
@@ -372,7 +375,7 @@ class BugherdResource extends BugherdResourceBase {
    * @param array $bugherd_task
    *   Bugherd task matching the Jira issue.
    * @param array $new_comment
-   *   New comment data from JIRA
+   *   New comment data from JIRA.
    *
    * @return bool
    *   If the comment already exists in Bugherd.

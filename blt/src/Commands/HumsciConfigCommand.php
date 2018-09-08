@@ -3,7 +3,6 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
-use Acquia\Blt\Robo\Exceptions\BltException;
 
 /**
  * Class HumsciCommands.
@@ -17,10 +16,10 @@ class HumsciConfigCommand extends ConfigCommand {
   /**
    * Copy a given module configs from default into the module.
    *
-   * @command drupal:config:module
-   *
    * @param string $module_name
    *   Module machine name.
+   *
+   * @command drupal:config:module
    */
   public function copyConfigToModule($module_name) {
     $info_file = $this->rglob($this->getConfigValue('docroot') . '/*/humsci/*/' . $module_name . '*.yml');
@@ -120,8 +119,11 @@ class HumsciConfigCommand extends ConfigCommand {
    * Import configuration using config_split module.
    *
    * @param \Acquia\Blt\Robo\Tasks\DrushTask $task
+   *   Drush task.
    * @param string $cm_core_key
+   *   Which config import to use.
    * @param bool $partial
+   *   If --partial should be used.
    */
   protected function importConfigSplit($task, $cm_core_key, $partial = FALSE) {
     if ($this->input()->hasOption('partial')) {

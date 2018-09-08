@@ -17,10 +17,12 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return parent::defaultConfiguration() + [
-        'section_width' => '',
-        'region_widths' => '',
-      ];
+    $config = parent::defaultConfiguration();
+    $config += [
+      'section_width' => '',
+      'region_widths' => '',
+    ];
+    return $config;
   }
 
   /**
@@ -67,4 +69,5 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
     $this->configuration['section_width'] = $form_state->getValue('section_width', $defaults['section_width']);
     $this->configuration['region_widths'] = $form_state->getValue('region_widths', $defaults['region_widths']);
   }
+
 }

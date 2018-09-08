@@ -28,7 +28,6 @@ function su_humsci_profile_local_tasks_alter(&$local_tasks) {
 function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (isset($form['simplesamlphp_auth_login_link'])) {
     // Moves the original form elements into a collapsed group.
-
     $form['simplesamlphp_auth_login_link']['#weight'] = -99;
     $form['manual'] = [
       '#type' => 'details',
@@ -43,4 +42,3 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     unset($form['name'], $form['pass'], $form['actions']);
   }
 }
-

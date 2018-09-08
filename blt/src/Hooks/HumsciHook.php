@@ -20,7 +20,7 @@ class HumsciHook extends BltTasks {
   }
 
   /**
-   * Toggle modules first
+   * Toggle modules first.
    *
    * @hook pre-command drupal:config:import
    */

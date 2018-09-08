@@ -104,6 +104,8 @@ class HumsciCommand extends AcHooksCommand {
    *
    * @param string $multisite
    *   Site name.
+   * @param string $default
+   *   Default database name.
    *
    * @return string
    *   Database name.
@@ -221,6 +223,7 @@ class HumsciCommand extends AcHooksCommand {
    * Execute updates on a specific site.
    *
    * @param string $multisite
+   *   Which site to update.
    *
    * @throws \Acquia\Blt\Robo\Exceptions\BltException
    */

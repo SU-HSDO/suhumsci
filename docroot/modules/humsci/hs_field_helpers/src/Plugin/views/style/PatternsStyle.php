@@ -130,7 +130,7 @@ class PatternsStyle extends StylePluginBase {
    * @param array $configuration
    *   Current configuration settings.
    */
-  public function buildPatternSourceForm(&$form, array $configuration) {
+  public function buildPatternSourceForm(array &$form, array $configuration) {
     foreach (array_keys($this->patternsManager->getDefinitions()) as $pattern_id) {
       $form['pattern_mapping'][$pattern_id] = [
         '#type' => 'container',
@@ -205,7 +205,7 @@ class PatternsStyle extends StylePluginBase {
    * @return array
    *   Array of translated table headers.
    */
-  protected function getHeaders(){
+  protected function getHeaders() {
     return [
       $this->t('Source'),
       $this->t('Destination'),

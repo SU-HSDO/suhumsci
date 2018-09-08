@@ -50,6 +50,8 @@ abstract class ConfigReadonlyEventSubscriberBase implements EventSubscriberInter
 
   /**
    * Form ids to mark as read only.
+   *
+   * @var array
    */
   protected $readOnlyFormIds = [
     'config_single_import_form',

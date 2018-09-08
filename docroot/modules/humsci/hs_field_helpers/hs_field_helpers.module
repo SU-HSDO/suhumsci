@@ -52,7 +52,7 @@ function hs_field_helpers_help($route_name, RouteMatchInterface $route_match) {
     return;
   }
 
-  /** @var FieldConfig $field */
+  /** @var \Drupal\field\Entity\FieldConfig $field */
   foreach (FieldConfig::loadMultiple() as $field) {
     if ($field->getType() != 'display_mode_field') {
       continue;

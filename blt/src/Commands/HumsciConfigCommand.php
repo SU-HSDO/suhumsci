@@ -3,6 +3,7 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
+use Acquia\Blt\Robo\Tasks\DrushTask;
 
 /**
  * Class HumsciCommands.
@@ -125,7 +126,7 @@ class HumsciConfigCommand extends ConfigCommand {
    * @param bool $partial
    *   If --partial should be used.
    */
-  protected function importConfigSplit($task, $cm_core_key, $partial = FALSE) {
+  protected function importConfigSplit(DrushTask $task, $cm_core_key, $partial = FALSE) {
     if ($this->input()->hasOption('partial')) {
       $partial = $this->input()->getOption('partial');
     }

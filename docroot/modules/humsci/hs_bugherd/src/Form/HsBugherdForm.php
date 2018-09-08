@@ -206,7 +206,7 @@ class HsBugherdForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    /** @var Key $key */
+    /** @var \Drupal\key\Entity\Key $key */
     $key = Key::load($form_state->getValue('api_key'));
     $config_dependencies = [$key->getConfigDependencyName()];
     if ($profile_id = $form_state->getValue('encryption_profile')) {

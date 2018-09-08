@@ -109,7 +109,7 @@ class CoursesController extends ControllerBase {
     foreach ($remove_nodes as $node) {
       $elements = $xpath->query("//$node");
       foreach ($elements as $element) {
-        // This is a hint from the manual comments
+        // This is a hint from the manual comments.
         $element->parentNode->removeChild($element);
       }
     }
@@ -124,10 +124,10 @@ class CoursesController extends ControllerBase {
    */
   protected function setSectionGuids() {
     $xpath = new \DOMXPath($this->courseDom);
-    /** @var \SimpleXMLElement $all_sections[] */
+    /* @var \SimpleXMLElement $all_sections[] */
     $all_sections = $xpath->query('//sections');
 
-    /** @var \DOMElement $course_sections */
+    /* @var \DOMElement $course_sections */
     foreach ($all_sections as $course_sections) {
       // Courses that have no sections, we'll add an empty section just for the
       // guid.
@@ -147,7 +147,7 @@ class CoursesController extends ControllerBase {
       }
       $code = $xpath->query('../code', $course_sections)[0]->textContent;
 
-      /** @var \DOMElement $section */
+      /* @var \DOMElement $section */
       foreach ($xpath->query('section', $course_sections) as $section) {
         $guid = "$course_id-$code";
         if ($xpath->query('classId', $section)->length) {

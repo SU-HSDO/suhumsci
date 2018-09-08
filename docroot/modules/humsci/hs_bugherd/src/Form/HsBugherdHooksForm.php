@@ -19,11 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HsBugherdHooksForm extends ConfirmFormBase {
 
   /**
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Bugherd API service.
    *
    * @var \Drupal\hs_bugherd\HsBugherd

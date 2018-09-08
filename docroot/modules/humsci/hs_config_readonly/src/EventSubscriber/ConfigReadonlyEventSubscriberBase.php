@@ -21,16 +21,22 @@ abstract class ConfigReadonlyEventSubscriberBase implements EventSubscriberInter
   use ConfigReadonlyWhitelistTrait;
 
   /**
+   * Config filter storage service.
+   *
    * @var \Drupal\config_filter\Config\FilteredStorageInterface
    */
   protected $configStorage;
 
   /**
+   * Config filter plugin manager service.
+   *
    * @var \Drupal\config_filter\Plugin\ConfigFilterPluginManager
    */
   protected $configFilterManager;
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;

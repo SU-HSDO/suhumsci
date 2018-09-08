@@ -142,8 +142,10 @@ class DisplayModeField extends ListItemBase {
   public static function getDisplayMode(FieldableEntityInterface $entity) {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
     foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-      if ($field_definition->getType() == 'display_mode_field' && $value = $entity->get($field_name)
-          ->getValue()) {
+      if (
+        $field_definition->getType() == 'display_mode_field' &&
+        $value = $entity->get($field_name)->getValue()
+      ) {
         return $value[0]['value'];
       }
     }

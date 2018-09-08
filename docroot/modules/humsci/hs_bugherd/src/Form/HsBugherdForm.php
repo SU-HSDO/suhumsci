@@ -20,15 +20,22 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class HsBugherdForm extends ConfigFormBase {
 
   /**
+   * Bugherd API service.
+   *
    * @var \Drupal\hs_bugherd\HsBugherd
    */
   protected $bugherdApi;
 
   /**
+   * Encryption service.
+   *
    * @var \Drupal\encrypt\EncryptService
    */
   protected $encryption;
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return 'hs_bugherd';
   }

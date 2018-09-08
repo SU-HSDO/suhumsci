@@ -67,14 +67,17 @@ class HsBugherd {
     $key_id = \Drupal::configFactory()
       ->get('bugherdapi.settings')
       ->get('api_key');
-    /** @var Key $key */
+    /** @var \Drupal\key\Entity\Key $key */
     if ($key_id && $key = Key::load($key_id)) {
       return $key->getKeyValue();
     }
   }
 
   /**
+   * Set the Bugherd API key.
+   *
    * @param string $api_key
+   *   New key.
    */
   public function setApiKey($api_key) {
     $this->apiKey = $api_key;
@@ -208,7 +211,7 @@ class HsBugherd {
   }
 
   /**
-   * Get a specific task
+   * Get a specific task.
    *
    * @param int $task_id
    *   Bugherd Task ID.
@@ -240,7 +243,7 @@ class HsBugherd {
    *
    * @see https://www.bugherd.com/api_v2#api_task_update
    */
-  public function updateTask($task_id, $data, $project_id = NULL) {
+  public function updateTask($task_id, array $data, $project_id = NULL) {
     return $this->getApi(self::BUGHERDAPI_TASK)
       ->update($project_id ?: $this->projectKey, $task_id, $data);
   }

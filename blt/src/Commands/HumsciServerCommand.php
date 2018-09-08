@@ -98,7 +98,7 @@ class HumsciServerCommand extends AcHooksCommand {
   public function humsciLetsEncryptList($environment = 'dev') {
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
-      return;
+      return [];
     }
 
     $shell_command = "cd ~ && .acme.sh/acme.sh --list --listraw";
@@ -121,10 +121,12 @@ class HumsciServerCommand extends AcHooksCommand {
   }
 
   /**
-   * @command humsci:letsencrypt:add-domain
+   * Add domain to LetsEncrypt certificate.
    *
    * @param string $environment
    *   Which environment to add to cert.
+   *
+   * @command humsci:letsencrypt:add-domain
    *
    * @throws \Robo\Exception\TaskException
    */
@@ -178,10 +180,12 @@ class HumsciServerCommand extends AcHooksCommand {
   }
 
   /**
-   * @command humsci:letsencrypt:get-cert
+   * Get LetsEncrypt certificate file contents.
    *
    * @param string $environment
    *   Which environment to add to cert.
+   *
+   * @command humsci:letsencrypt:get-cert
    *
    * @throws \Robo\Exception\TaskException
    */
@@ -203,9 +207,11 @@ class HumsciServerCommand extends AcHooksCommand {
       case 'Private Key':
         $file = "$primary_domain.key";
         break;
+
       case 'Intermediate Certificates':
         $file = 'ca.cer';
         break;
+
       default:
         $file = "$primary_domain.cer";
         break;

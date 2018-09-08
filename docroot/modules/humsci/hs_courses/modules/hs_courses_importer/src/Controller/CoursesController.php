@@ -28,6 +28,8 @@ class CoursesController extends ControllerBase {
   protected $requestStack;
 
   /**
+   * Courses Dom Document.
+   *
    * @var \DOMDocument
    */
   protected $courseDom;
@@ -122,7 +124,7 @@ class CoursesController extends ControllerBase {
    */
   protected function setSectionGuids() {
     $xpath = new \DOMXPath($this->courseDom);
-    /** @var \SimpleXMLElement $all_sections [] */
+    /** @var \SimpleXMLElement $all_sections[] */
     $all_sections = $xpath->query('//sections');
 
     /** @var \DOMElement $course_sections */

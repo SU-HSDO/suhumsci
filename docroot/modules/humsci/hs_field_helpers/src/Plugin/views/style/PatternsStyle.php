@@ -130,7 +130,7 @@ class PatternsStyle extends StylePluginBase {
    * @param array $configuration
    *   Current configuration settings.
    */
-  public function buildPatternSourceForm(&$form, $configuration) {
+  public function buildPatternSourceForm(&$form, array $configuration) {
     foreach (array_keys($this->patternsManager->getDefinitions()) as $pattern_id) {
       $form['pattern_mapping'][$pattern_id] = [
         '#type' => 'container',

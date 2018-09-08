@@ -7,7 +7,7 @@ use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class RouteSubscriber
+ * Class RouteSubscriber.
  *
  * @package Drupal\su_humsci_profile\Routing
  */

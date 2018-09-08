@@ -37,7 +37,7 @@ class HumsciConfigCommand extends ConfigCommand {
    * Recusive glob.
    *
    * @param string $pattern
-   *   Glob pattern
+   *   Glob pattern.
    * @param int $flags
    *   Globl flags.
    *

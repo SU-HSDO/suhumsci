@@ -24,6 +24,11 @@ h1 {
 
 h2 {
   @include heading-dash(4px, $color-sun, 40px);
+
+  // Headers with centered dash
+  &.text-align-center:after {
+    @include margin(0 auto);
+  }
 }
 
 h3 {
@@ -52,11 +57,6 @@ h2#menu-blockmain-menu,
   &:after {
     content: none;
   }
-}
-
-// Headers with centered dash
-h2.text-align-center:after {
-  @include margin(0 auto);
 }
 
 // Event category dash

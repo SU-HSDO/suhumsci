@@ -84,7 +84,7 @@ class DateTimeYearOnly extends WidgetBase {
   /**
    * Get widget options for select list.
    *
-   * @return string
+   * @return array
    *   Range of years.
    */
   protected function getOptions() {

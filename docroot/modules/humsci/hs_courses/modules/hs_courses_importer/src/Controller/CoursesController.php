@@ -76,7 +76,7 @@ class CoursesController extends ControllerBase {
   protected function setCourseDom() {
     $url = $this->requestStack->getCurrentRequest()->get('feed');
     if (!$url) {
-      return;
+      return [];
     }
 
     $api_response = $this->httpClient->request('GET', $url);
@@ -124,7 +124,7 @@ class CoursesController extends ControllerBase {
    */
   protected function setSectionGuids() {
     $xpath = new \DOMXPath($this->courseDom);
-    /* @var \SimpleXMLElement $all_sections[] */
+    /* @var \SimpleXMLElement $all_sections [] */
     $all_sections = $xpath->query('//sections');
 
     /* @var \DOMElement $course_sections */
@@ -145,13 +145,14 @@ class CoursesController extends ControllerBase {
       if ($course_id_element->length) {
         $course_id = $course_id_element->item(0)->textContent;
       }
-      $code = $xpath->query('../code', $course_sections)[0]->textContent;
+      $code = $xpath->query('../code', $course_sections)->item(0)->textContent;
 
       /* @var \DOMElement $section */
       foreach ($xpath->query('section', $course_sections) as $section) {
         $guid = "$course_id-$code";
         if ($xpath->query('classId', $section)->length) {
-          $guid .= '-' . $xpath->query('classId', $section)[0]->textContent;
+          $guid .= '-' . $xpath->query('classId', $section)
+              ->item(0)->textContent;
         }
         $guid = new \DOMElement('guid', $guid);
         $section->appendChild($guid);

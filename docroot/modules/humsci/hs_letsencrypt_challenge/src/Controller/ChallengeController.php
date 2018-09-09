@@ -57,7 +57,7 @@ class ChallengeController extends ControllerBase {
    * @param string $key
    *   Name of the challenge file.
    *
-   * @return string
+   * @return \Symfony\Component\HttpFoundation\Response
    *   Return challenge string.
    */
   public function content($key = NULL) {

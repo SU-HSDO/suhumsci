@@ -151,8 +151,8 @@ class CoursesController extends ControllerBase {
       foreach ($xpath->query('section', $course_sections) as $section) {
         $guid = "$course_id-$code";
         if ($xpath->query('classId', $section)->length) {
-          $guid .= '-' . $xpath->query('classId', $section)
-              ->item(0)->textContent;
+          $class_id = $xpath->query('classId', $section)->item(0)->textContent;
+          $guid .= "-$class_id";
         }
         $guid = new \DOMElement('guid', $guid);
         $section->appendChild($guid);

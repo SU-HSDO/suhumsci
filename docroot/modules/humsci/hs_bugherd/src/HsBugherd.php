@@ -195,8 +195,8 @@ class HsBugherd {
   /**
    * Get all task for a project.
    *
-   * @param int $project_id
-   *   Project id found from getProjects().
+   * @param int|null $project_id
+   *   Project id found from getProjects() or null to use existing id.
    * @param array $params
    *   Array of possible search parameters.
    *

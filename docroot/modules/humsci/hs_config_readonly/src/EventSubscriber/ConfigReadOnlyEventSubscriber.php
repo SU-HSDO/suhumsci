@@ -48,7 +48,7 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
   }
 
   /**
-   * Check the form object
+   * Check the form object.
    *
    * @param bool $mark_readonly
    *   If the form is already marked readonly.

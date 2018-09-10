@@ -160,7 +160,6 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
    */
   protected function getEditableConfigNames(ConfigFormBase $form) {
     // Use reflection to work around getEditableConfigNames() as protected.
-    // @todo Review in 9.x for API change.
     // @see https://www.drupal.org/node/2095289
     // @see \Drupal\config_readonly\EventSubscriber\ReadOnlyFormSubscriber::getEditableConfigNames()
     $reflection = new \ReflectionMethod(get_class($form), 'getEditableConfigNames');

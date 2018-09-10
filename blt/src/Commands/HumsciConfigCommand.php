@@ -3,7 +3,6 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
-use Acquia\Blt\Robo\Tasks\DrushTask;
 
 /**
  * Class HumsciCommands.

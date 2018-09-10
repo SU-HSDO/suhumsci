@@ -130,7 +130,7 @@ class PatternsStyle extends StylePluginBase {
    * @param array $configuration
    *   Current configuration settings.
    */
-  public function buildPatternSourceForm(&$form, array $configuration) {
+  public function buildPatternSourceForm(array &$form, array $configuration) {
     foreach (array_keys($this->patternsManager->getDefinitions()) as $pattern_id) {
       $form['pattern_mapping'][$pattern_id] = [
         '#type' => 'container',
@@ -205,7 +205,7 @@ class PatternsStyle extends StylePluginBase {
    * @return array
    *   Array of translated table headers.
    */
-  protected function getHeaders(){
+  protected function getHeaders() {
     return [
       $this->t('Source'),
       $this->t('Destination'),
@@ -265,21 +265,8 @@ class PatternsStyle extends StylePluginBase {
     $render = parent::render();
 
     $pattern_regions = [];
-
-    foreach (['header', 'footer'] as $section) {
-      // Get header fields.
-      if ($this->view->{$section}) {
-        foreach ($this->view->{$section} as $field => $part) {
-          if (!isset($this->options['pattern_mapping']["$section:$field"])) {
-            continue;
-          }
-
-          $section_region = $this->options['pattern_mapping']["$section:$field"]['destination'];
-          $pattern_regions[$section_region]["$section:$field"] = $part->render();
-          unset($this->view->{$section}[$field]);
-        }
-      }
-    }
+    $this->buildHeaderFooterRegions('header', $pattern_regions);
+    $this->buildHeaderFooterRegions('footer', $pattern_regions);
 
     // Add rows to the pattern.
     $rows_region = $this->options['pattern_mapping']['rows']['destination'];
@@ -296,6 +283,29 @@ class PatternsStyle extends StylePluginBase {
 
     $render[0]['#rows'] = array_filter($pattern_regions);
     return $render;
+  }
+
+  /**
+   * Build the header and footer regions of the pattern.
+   *
+   * @param string $section
+   *   Header or footer section.
+   * @param array $pattern_regions
+   *   Built pattern output.
+   */
+  protected function buildHeaderFooterRegions($section, array &$pattern_regions) {
+    // Get section fields.
+    if ($this->view->{$section}) {
+      foreach ($this->view->{$section} as $field => $part) {
+        if (!isset($this->options['pattern_mapping']["$section:$field"])) {
+          continue;
+        }
+
+        $section_region = $this->options['pattern_mapping']["$section:$field"]['destination'];
+        $pattern_regions[$section_region]["$section:$field"] = $part->render();
+        unset($this->view->{$section}[$field]);
+      }
+    }
   }
 
 }

@@ -5,6 +5,7 @@ namespace Drupal\hs_field_helpers\Plugin\migrate\process;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Do some math formula on a numerical value.
@@ -50,10 +51,8 @@ class Arithmetic extends ProcessPluginBase {
         $item = preg_replace('[^0-9\+-\*\/\(\) ]', '', $item);
       }
     }
-
-    $formula = implode($this->configuration['operation'], array_filter($fields));
-    $compute = create_function("", "return (" . trim($formula) . ");");
-    return 0 + $compute();
+    $expression = new ExpressionLanguage();
+    return $expression->evaluate(implode($this->configuration['operation'], $fields));
   }
 
 }

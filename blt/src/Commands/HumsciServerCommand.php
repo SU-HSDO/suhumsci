@@ -27,10 +27,10 @@ class HumsciServerCommand extends AcHooksCommand {
   /**
    * Get encryption keys from acquia.
    *
-   * @command humsci:keys:send
-   *
    * @param string $env
    *   Acquia environment to send the keys.
+   *
+   * @command humsci:keys:send
    */
   public function humsciKeysSend($env = 'prod') {
     $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
@@ -43,6 +43,8 @@ class HumsciServerCommand extends AcHooksCommand {
   }
 
   /**
+   * Add a domain to Acquia environment.
+   *
    * @command humsci:add-domain
    *
    * @throws \Robo\Exception\TaskException
@@ -85,7 +87,7 @@ class HumsciServerCommand extends AcHooksCommand {
   }
 
   /**
-   * @command humsci:letsencrypt:list
+   * List the LetsEncrypt certificates for the environment.
    *
    * @param string $environment
    *   Which environment to add to cert.
@@ -94,6 +96,8 @@ class HumsciServerCommand extends AcHooksCommand {
    *   Existing domains on the cert.
    *
    * @throws \Robo\Exception\TaskException
+   *
+   * @command humsci:letsencrypt:list
    */
   public function humsciLetsEncryptList($environment = 'dev') {
     if (!in_array($environment, ['dev', 'test', 'prod'])) {

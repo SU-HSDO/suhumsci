@@ -118,7 +118,7 @@ class HumsciConfigCommand extends ConfigCommand {
   /**
    * Import configuration using config_split module.
    *
-   * @param \Acquia\Blt\Robo\Tasks\DrushTask $task
+   * @param mixed $task
    *   Drush task.
    * @param string $cm_core_key
    *   Which config import to use.

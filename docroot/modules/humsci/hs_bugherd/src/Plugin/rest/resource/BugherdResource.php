@@ -328,6 +328,7 @@ class BugherdResource extends BugherdResourceBase {
    * @throws \Exception
    */
   protected function sendToBugherd(array $data) {
+
     $issue_key = $data['issue']['key'];
     if (!($bugherd_task = $this->getBugherdTask($issue_key))) {
       $this->logger->info('Unable to find bugherd ticket for issue: @key', ['@key' => $issue_key]);
@@ -339,29 +340,47 @@ class BugherdResource extends BugherdResourceBase {
       return $this->t('Comment rejected from @name', ['@name' => $data['comment']['author']['name']]);
     }
 
+    $return = FALSE;
     switch ($data['webhookEvent']) {
       case 'comment_created':
         $comment = [
           'text' => $data['comment']['author']['displayName'] . ': ' . $data['comment']['body'],
         ];
-        return $this->bugherdApi->addComment($bugherd_task['id'], $comment);
+        $return = $this->bugherdApi->addComment($bugherd_task['id'], $comment);
+        break;
 
       case 'jira:issue_updated':
-        $changelog = $data['changelog']['items'];
-
-        foreach ($changelog as $change) {
-          if ($change['field'] == 'status') {
-            $jira_status = $data['changelog']['items'][0]['to'];
-            if ($new_status = $this->getTranslatedStatus($jira_status)) {
-              $status = ['status' => $new_status];
-              return $this->bugherdApi->updateTask($bugherd_task['id'], $status);
-            }
-            $this->logger->info(t('Unable to map Jira status to bugherd. Jira status id: @jira'), ['@jira' => $jira_status]);
-          }
+        if ($new_status = $this->getNewBugherdStatus($data)) {
+          $status = ['status' => $new_status];
+          $return = $this->bugherdApi->updateTask($bugherd_task['id'], $status);
         }
+        break;
     }
 
-    return FALSE;
+    return $return;
+  }
+
+  /**
+   * Get the new bugherd status from the Jira webhook data.
+   *
+   * @param array $jira_data
+   *   Jira webhook data.
+   *
+   * @return null|string
+   *   The appropriate bugherd status.
+   */
+  protected function getNewBugherdStatus(array $jira_data) {
+    $changelog = $jira_data['changelog']['items'];
+
+    foreach ($changelog as $change) {
+      if ($change['field'] == 'status') {
+        $jira_status = $change['to'];
+        if ($new_status = $this->getTranslatedStatus($jira_status)) {
+          return $new_status;
+        }
+        $this->logger->info(t('Unable to map Jira status to bugherd. Jira status id: @jira'), ['@jira' => $jira_status]);
+      }
+    }
   }
 
   /**

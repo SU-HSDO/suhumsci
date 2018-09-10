@@ -29,6 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TanslateCourseTag extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * Entity Storage Service for hs_course_tag entity type.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $tagTranslation;

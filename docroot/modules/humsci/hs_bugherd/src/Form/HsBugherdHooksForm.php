@@ -19,11 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HsBugherdHooksForm extends ConfirmFormBase {
 
   /**
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Bugherd API service.
    *
    * @var \Drupal\hs_bugherd\HsBugherd
@@ -120,7 +115,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
     // Testing endpoint.
-    // $url = 'https://webhook.site/d413cf81-acb5-4277-84a8-804eb752f45c';
+    // $url = 'https://webhook.site/93c53d6c-b941-4103-a564-98d5e53b2a79';
     $config = $this->config('bugherdapi.settings');
 
     $bugherd_project = $config->get('project_id');
@@ -176,7 +171,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       return;
     }
 
-    foreach ($jira_hooks as $hook_id => $webhook) {
+    foreach (array_keys($jira_hooks) as $hook_id) {
       $this->jiraIssueService->getCommunicationService()
         ->put('/rest/webhooks/1.0/webhook/' . $hook_id, (object) $hook_data);
     }

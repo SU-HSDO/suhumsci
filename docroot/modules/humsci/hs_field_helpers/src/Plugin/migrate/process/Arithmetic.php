@@ -51,24 +51,25 @@ class Arithmetic extends ProcessPluginBase {
       }
     }
 
+    $result = '';
     switch ($this->configuration['operation']) {
       case '+';
-        return $this->addFields($fields);
+        $result = $this->addFields($fields);
         break;
 
       case '-';
-        return $this->subtractFields($fields);
+        $result = $this->subtractFields($fields);
         break;
 
       case '*';
-        return $this->multiplyFields($fields);
+        $result = $this->multiplyFields($fields);
         break;
 
       case '/';
-        return $this->divideFields($fields);
+        $result = $this->divideFields($fields);
         break;
     }
-    return '';
+    return $result;
   }
 
   /**
@@ -150,4 +151,5 @@ class Arithmetic extends ProcessPluginBase {
     }
     return $result;
   }
+
 }

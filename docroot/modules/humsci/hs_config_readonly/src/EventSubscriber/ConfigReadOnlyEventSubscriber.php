@@ -40,24 +40,35 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
     if (!$mark_form_read_only) {
       $mark_form_read_only = in_array($form_object->getFormId(), $this->readOnlyFormIds);
     }
-
-    // Check if the form is an EntityFormInterface and entity is a config
-    // entity.
-    if (!$mark_form_read_only && $form_object instanceof EntityFormInterface) {
-      $mark_form_read_only = $this->lockEntityFormInterface($form_object);
-    }
-
-    if (!$mark_form_read_only && $form_object instanceof EntityFormWizardBase) {
-      $mark_form_read_only = $this->lockEntityFormWizard($form_object);
-    }
-
-    // Config forms.
-    if ($mark_form_read_only && $form_object instanceof ConfigFormBase) {
-      $this->lockConfigFormBase($form_object);
-    }
+    $this->checkFormObjects($mark_form_read_only, $form_object);
 
     if ($mark_form_read_only) {
       $event->markFormReadOnly();
+    }
+  }
+
+  /**
+   * Check the form object
+   *
+   * @param bool $mark_readonly
+   *   If the form is already marked readonly.
+   * @param object $form_object
+   *   Form state object.
+   */
+  protected function checkFormObjects(&$mark_readonly, $form_object) {
+    // Check if the form is an EntityFormInterface and entity is a config
+    // entity.
+    if (!$mark_readonly && $form_object instanceof EntityFormInterface) {
+      $mark_readonly = $this->lockEntityFormInterface($form_object);
+    }
+
+    if (!$mark_readonly && $form_object instanceof EntityFormWizardBase) {
+      $mark_readonly = $this->lockEntityFormWizard($form_object);
+    }
+
+    // Config forms.
+    if ($mark_readonly && $form_object instanceof ConfigFormBase) {
+      $mark_readonly = $this->lockConfigFormBase($form_object);
     }
   }
 

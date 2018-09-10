@@ -51,9 +51,103 @@ class Arithmetic extends ProcessPluginBase {
       }
     }
 
-    $formula = implode($this->configuration['operation'], array_filter($fields));
-    $compute = create_function("", "return (" . trim($formula) . ");");
-    return 0 + $compute();
+    switch ($this->configuration['operation']) {
+      case '+';
+        return $this->addFields($fields);
+        break;
+
+      case '-';
+        return $this->subtractFields($fields);
+        break;
+
+      case '*';
+        return $this->multiplyFields($fields);
+        break;
+
+      case '/';
+        return $this->divideFields($fields);
+        break;
+    }
+    return '';
   }
 
+  /**
+   * Add all the fields.
+   *
+   * @param array $fields
+   *   Numeric values.
+   *
+   * @return int
+   *   Numeric result.
+   */
+  protected function addFields(array $fields) {
+    $result = 0;
+    foreach (array_filter($fields) as $field) {
+      $result += $field;
+    }
+    return $result;
+  }
+
+  /**
+   * Subtract the following fields from the first one.
+   *
+   * @param array $fields
+   *   Numeric values.
+   *
+   * @return int
+   *   Numeric result.
+   */
+  protected function subtractFields(array $fields) {
+    $result = NULL;
+    foreach (array_filter($fields) as $field) {
+      if ($result === NULL) {
+        $result = $field;
+        continue;
+      }
+      $result += $field;
+    }
+    return $result;
+  }
+
+  /**
+   * Multiply all the fields together.
+   *
+   * @param array $fields
+   *   Numeric values.
+   *
+   * @return int
+   *   Numeric result.
+   */
+  protected function multiplyFields(array $fields) {
+    $result = NULL;
+    foreach (array_filter($fields) as $field) {
+      if ($result === NULL) {
+        $result = $field;
+        continue;
+      }
+      $result *= $field;
+    }
+    return $result;
+  }
+
+  /**
+   * Divide the first field by the following fields.
+   *
+   * @param array $fields
+   *   Numeric values.
+   *
+   * @return int
+   *   Numeric result.
+   */
+  protected function divideFields(array $fields) {
+    $result = NULL;
+    foreach (array_filter($fields) as $field) {
+      if ($result === NULL) {
+        $result = $field;
+        continue;
+      }
+      $result /= $field;
+    }
+    return $result;
+  }
 }

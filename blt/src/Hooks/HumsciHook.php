@@ -16,6 +16,11 @@ class HumsciHook extends BltTasks {
    * @hook post-command drupal:sync
    */
   public function postDrupalSync($result, CommandData $commandData) {
+    $this->taskDrush()
+      ->drush('pmu')
+      ->arg('simplesamlphp_auth')
+      ->option('yes')
+      ->run();
     $this->taskDrush()->drush('uli')->run();
   }
 

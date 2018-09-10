@@ -350,7 +350,7 @@ class BugherdResource extends BugherdResourceBase {
         break;
 
       case 'jira:issue_updated':
-        if ($new_status = $this->getNewBugherdStatus()) {
+        if ($new_status = $this->getNewBugherdStatus($data)) {
           $status = ['status' => $new_status];
           $return = $this->bugherdApi->updateTask($bugherd_task['id'], $status);
         }

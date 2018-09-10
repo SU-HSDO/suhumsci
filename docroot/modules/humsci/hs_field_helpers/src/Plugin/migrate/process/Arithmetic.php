@@ -5,6 +5,7 @@ namespace Drupal\hs_field_helpers\Plugin\migrate\process;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Do some math formula on a numerical value.
@@ -50,106 +51,8 @@ class Arithmetic extends ProcessPluginBase {
         $item = preg_replace('[^0-9\+-\*\/\(\) ]', '', $item);
       }
     }
-
-    $result = '';
-    switch ($this->configuration['operation']) {
-      case '+';
-        $result = $this->addFields($fields);
-        break;
-
-      case '-';
-        $result = $this->subtractFields($fields);
-        break;
-
-      case '*';
-        $result = $this->multiplyFields($fields);
-        break;
-
-      case '/';
-        $result = $this->divideFields($fields);
-        break;
-    }
-    return $result;
-  }
-
-  /**
-   * Add all the fields.
-   *
-   * @param array $fields
-   *   Numeric values.
-   *
-   * @return int
-   *   Numeric result.
-   */
-  protected function addFields(array $fields) {
-    $result = 0;
-    foreach (array_filter($fields) as $field) {
-      $result += $field;
-    }
-    return $result;
-  }
-
-  /**
-   * Subtract the following fields from the first one.
-   *
-   * @param array $fields
-   *   Numeric values.
-   *
-   * @return int
-   *   Numeric result.
-   */
-  protected function subtractFields(array $fields) {
-    $result = NULL;
-    foreach (array_filter($fields) as $field) {
-      if ($result === NULL) {
-        $result = $field;
-        continue;
-      }
-      $result += $field;
-    }
-    return $result;
-  }
-
-  /**
-   * Multiply all the fields together.
-   *
-   * @param array $fields
-   *   Numeric values.
-   *
-   * @return int
-   *   Numeric result.
-   */
-  protected function multiplyFields(array $fields) {
-    $result = NULL;
-    foreach (array_filter($fields) as $field) {
-      if ($result === NULL) {
-        $result = $field;
-        continue;
-      }
-      $result *= $field;
-    }
-    return $result;
-  }
-
-  /**
-   * Divide the first field by the following fields.
-   *
-   * @param array $fields
-   *   Numeric values.
-   *
-   * @return int
-   *   Numeric result.
-   */
-  protected function divideFields(array $fields) {
-    $result = NULL;
-    foreach (array_filter($fields) as $field) {
-      if ($result === NULL) {
-        $result = $field;
-        continue;
-      }
-      $result /= $field;
-    }
-    return $result;
+    $expression = new ExpressionLanguage();
+    return $expression->evaluate(implode($this->configuration['operation'], $fields));
   }
 
 }

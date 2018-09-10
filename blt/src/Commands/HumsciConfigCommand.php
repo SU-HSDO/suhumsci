@@ -119,14 +119,14 @@ class HumsciConfigCommand extends ConfigCommand {
   /**
    * Import configuration using config_split module.
    *
-   * @param \Acquia\Blt\Robo\Tasks\DrushTask $task
+   * @param mixed $task
    *   Drush task.
    * @param string $cm_core_key
    *   Which config import to use.
    * @param bool $partial
    *   If --partial should be used.
    */
-  protected function importConfigSplit(DrushTask $task, $cm_core_key, $partial = FALSE) {
+  protected function importConfigSplit($task, $cm_core_key, $partial = FALSE) {
     if ($this->input()->hasOption('partial')) {
       $partial = $this->input()->getOption('partial');
     }

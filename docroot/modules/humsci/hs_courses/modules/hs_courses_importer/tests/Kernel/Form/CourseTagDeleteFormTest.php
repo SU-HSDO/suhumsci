@@ -3,6 +3,7 @@
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
 use Drupal\Core\Form\FormState;
+use Drupal\hs_courses_importer\Entity\CourseTag;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
@@ -59,6 +60,8 @@ class CourseTagDeleteFormTest extends EntityKernelTestBase {
     $form = [];
     $form = $form_object->form($form, $form_state);
     $form_object->submitForm($form, $form_state);
+
+    $this->assertEmpty(CourseTag::load($this->courseTag->id()));
   }
 
 }

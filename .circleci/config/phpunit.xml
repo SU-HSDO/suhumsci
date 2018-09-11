@@ -60,12 +60,12 @@
   </listeners>
   <!-- Filter for coverage reports. -->
   <filter>
-    <whitelist addUncoveredFilesFromWhitelist="false">
+    <whitelist addUncoveredFilesFromWhitelist="true">
       <directory>../modules/humsci</directory>
       <!-- By definition test classes have no tests. -->
       <exclude>
-        <directory>../*/node_modules</directory>
-        <directory>../*/tests</directory>
+        <directory>../modules/humsci/*/tests</directory>
+        <directory>../modules/humsci/*/modules/*/tests</directory>
       </exclude>
     </whitelist>
   </filter>

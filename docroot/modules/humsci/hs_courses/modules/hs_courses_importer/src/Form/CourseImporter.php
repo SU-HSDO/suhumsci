@@ -131,10 +131,12 @@ class CourseImporter extends ConfigFormBase {
       /** @var \GuzzleHttp\Psr7\Response $response */
       $response = $this->guzzle->request('GET', $url);
     }
+      // @codeCoverageIgnoreStart
     catch (GuzzleException $e) {
       $form_state->setError($form['urls'], $this->t('Unable to gather data from %url.', ['%url' => $url]));
       return;
     }
+    // @codeCoverageIgnoreEnd
 
     $content_type = $response->getHeader('Content-Type');
     foreach ($content_type as $type) {

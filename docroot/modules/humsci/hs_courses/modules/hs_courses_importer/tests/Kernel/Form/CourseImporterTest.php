@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Class HsCoursesImporterFormTest.
  *
- * @coversDefaultClass \Drupal\hs_courses_importer\Form\CourseImporter
+ * @covers \Drupal\hs_courses_importer\Form\CourseImporter
  * @group hs_courses_importer
  * @group coverage
  */
@@ -64,16 +64,6 @@ class CourseImporterTest extends KernelTestBase implements ServiceModifierInterf
 
   /**
    * Test the form class and its methods.
-   *
-   * @covers ::__construct
-   * @covers ::create
-   * @covers ::getFormId
-   * @covers ::getEditableConfigNames
-   * @covers ::buildForm
-   * @covers ::validateForm
-   * @covers ::validateIsExploreCourses
-   * @covers ::validateIsXmlUrl
-   * @covers ::submitForm
    */
   public function testForm() {
     $form = $this->formBuilder->getForm($this->formClass);

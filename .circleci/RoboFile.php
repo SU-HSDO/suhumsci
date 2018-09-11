@@ -277,7 +277,7 @@ class RoboFile extends Tasks {
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html ' . static::TEST_DIR);
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html --group coverage' . static::TEST_DIR);
     return $tasks;
   }
 

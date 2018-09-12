@@ -5,7 +5,7 @@ namespace Drupal\Test\hs_courses_importer\Kernel;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
- * Class CourseTagListBuilderTest
+ * Class CourseTagListBuilderTest.
  *
  * @covers \Drupal\hs_courses_importer\CourseTagListBuilder
  * @group hs_courses_importer
@@ -13,6 +13,8 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 class CourseTagListBuilderTest extends EntityKernelTestBase {
 
   /**
+   * Tag List builder object.
+   *
    * @var \Drupal\hs_courses_importer\CourseTagListBuilder
    */
   protected $listBuilder;

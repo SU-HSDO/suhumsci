@@ -24,6 +24,9 @@ class CourseImporterOverridesTest extends KernelTestBase {
     'hs_courses_importer',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->config('hs_courses_importer.importer_settings')

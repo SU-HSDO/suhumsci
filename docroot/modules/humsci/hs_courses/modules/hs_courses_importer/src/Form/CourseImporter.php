@@ -125,19 +125,12 @@ class CourseImporter extends ConfigFormBase {
    *   Original form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Current form state.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function validateIsXmlUrl($url, array &$form, FormStateInterface $form_state) {
-    try {
-      /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $this->guzzle->request('GET', $url);
-    }
-      // @codeCoverageIgnoreStart
-    catch (GuzzleException $e) {
-      $form_state->setError($form['urls'], $this->t('Unable to gather data from %url.', ['%url' => $url]));
-      return;
-    }
-    // @codeCoverageIgnoreEnd
-
+    /** @var \GuzzleHttp\Psr7\Response $response */
+    $response = $this->guzzle->request('GET', $url);
     $content_type = $response->getHeader('Content-Type');
     foreach ($content_type as $type) {
       if (strpos($type, 'xml') === FALSE) {

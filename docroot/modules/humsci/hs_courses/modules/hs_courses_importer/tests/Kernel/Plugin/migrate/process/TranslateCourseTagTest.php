@@ -16,16 +16,22 @@ use Drupal\migrate\Row;
 class TranslateCourseTagTest extends EntityKernelTestBase {
 
   /**
+   * Migrate plugin object.
+   *
    * @var \Drupal\hs_courses_importer\Plugin\migrate\process\TranslateCourseTag
    */
   protected $tagTranslatePlugin;
 
   /**
+   * Migrate process manager service.
+   *
    * @var \Drupal\migrate\Plugin\MigratePluginManager
    */
   protected $processManager;
 
   /**
+   * Course tag entity.
+   *
    * @var \Drupal\hs_courses_importer\Entity\CourseTag
    */
   protected $courseTag;
@@ -113,4 +119,5 @@ class MigrateExecutableTest implements MigrateExecutableInterface {
   public function saveMessage($message, $level = MigrationInterface::MESSAGE_ERROR) {
 
   }
+
 }

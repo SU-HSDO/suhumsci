@@ -19,6 +19,8 @@ use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
 class CourseImporterTest extends HsCoursesImporterTestBase implements ServiceModifierInterface {
 
   /**
+   * Form builder service.
+   *
    * @var \Drupal\Core\Form\FormBuilderInterface
    */
   protected $formBuilder;

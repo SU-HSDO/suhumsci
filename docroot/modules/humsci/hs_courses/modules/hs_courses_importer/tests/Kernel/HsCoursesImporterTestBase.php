@@ -12,6 +12,8 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 abstract class HsCoursesImporterTestBase extends EntityKernelTestBase {
 
   /**
+   * Course tag entity.
+   *
    * @var \Drupal\hs_courses_importer\Entity\CourseTag
    */
   protected $courseTag;

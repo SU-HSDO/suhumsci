@@ -10,7 +10,6 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @coversDefaultClass \Drupal\hs_courses_importer\Overrides\CourseImporterOverrides
  * @group hs_courses_importer
- * @group coverage
  */
 class CourseImporterOverridesTest extends KernelTestBase {
 

@@ -12,7 +12,6 @@ use Drupal\migrate\Row;
  *
  * @covers \Drupal\hs_courses_importer\Plugin\migrate\process\TranslateCourseTag
  * @group hs_courses_importer
- * @group coverage
  */
 class TranslateCourseTagTest extends EntityKernelTestBase {
 
@@ -36,7 +35,11 @@ class TranslateCourseTagTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'hs_courses_importer', 'migrate'];
+  public static $modules = [
+    'system',
+    'hs_courses_importer',
+    'migrate',
+  ];
 
   /**
    * {@inheritdoc}

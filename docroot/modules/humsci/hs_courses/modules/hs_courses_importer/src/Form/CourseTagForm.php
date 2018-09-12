@@ -76,6 +76,8 @@ class CourseTagForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $hs_course_tag = $this->entity;
+//    var_dump($hs_course_tag);
+//    dpm($hs_course_tag);
     $status = $hs_course_tag->save();
     $this->invalidateHashes();
 

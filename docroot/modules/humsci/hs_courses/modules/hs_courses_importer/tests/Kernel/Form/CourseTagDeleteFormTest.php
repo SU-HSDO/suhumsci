@@ -2,46 +2,19 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
+require_once __DIR__ . '/../HsCoursesImporterTestBase.php';
+
 use Drupal\Core\Form\FormState;
 use Drupal\hs_courses_importer\Entity\CourseTag;
-use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
 
 /**
  * Class HsCoursesImporterFormTest.
  *
  * @covers \Drupal\hs_courses_importer\Form\CourseTagDeleteForm
  * @group hs_courses_importer
- * @group coverage
  */
-class CourseTagDeleteFormTest extends EntityKernelTestBase {
-
-  /**
-   * @var \Drupal\hs_courses_importer\Entity\CourseTag
-   */
-  protected $courseTag;
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = [
-    'system',
-    'hs_courses_importer',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-    $name = $this->randomMachineName();
-    $this->courseTag = $this->entityManager->createInstance('hs_course_tag', [
-      'id' => strtolower($name),
-      'label' => $name,
-      'tag' => $this->randomString(),
-    ]);
-  }
+class CourseTagDeleteFormTest extends HsCoursesImporterTestBase {
 
   /**
    * Test the form class and its methods.

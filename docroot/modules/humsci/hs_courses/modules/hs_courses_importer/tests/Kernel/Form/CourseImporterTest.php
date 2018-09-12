@@ -2,19 +2,21 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
+require_once __DIR__ . '/../HsCoursesImporterTestBase.php';
+
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\Form\FormState;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\Core\Render\Element;
+use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
 
 /**
  * Class HsCoursesImporterFormTest.
  *
  * @covers \Drupal\hs_courses_importer\Form\CourseImporter
  * @group hs_courses_importer
- * @group coverage
  */
-class CourseImporterTest extends KernelTestBase implements ServiceModifierInterface {
+class CourseImporterTest extends HsCoursesImporterTestBase implements ServiceModifierInterface {
 
   /**
    * @var \Drupal\Core\Form\FormBuilderInterface
@@ -34,16 +36,6 @@ class CourseImporterTest extends KernelTestBase implements ServiceModifierInterf
    * @var string
    */
   protected $validUrl = 'http://explorecourses.stanford.edu/search?view=xml&q=abcdefg';
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = [
-    'system',
-    'hs_courses_importer',
-  ];
 
   /**
    * {@inheritdoc}
@@ -67,6 +59,7 @@ class CourseImporterTest extends KernelTestBase implements ServiceModifierInterf
    */
   public function testForm() {
     $form = $this->formBuilder->getForm($this->formClass);
+    $this->assertCount(4, Element::children($form));
     $this->assertArrayHasKey('urls', $form);
 
     $form_state = new FormState();

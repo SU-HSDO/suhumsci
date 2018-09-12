@@ -9,7 +9,6 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
  *
  * @covers \Drupal\hs_courses_importer\CourseTagListBuilder
  * @group hs_courses_importer
- * @group coverage
  */
 class CourseTagListBuilderTest extends EntityKernelTestBase {
 

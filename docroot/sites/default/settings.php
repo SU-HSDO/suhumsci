@@ -791,4 +791,3 @@ $settings['entity_update_batch_size'] = 50;
 # }
 
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-$settings['install_profile'] = 'config_installer';

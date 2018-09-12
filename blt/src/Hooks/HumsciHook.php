@@ -11,7 +11,7 @@ use Consolidation\AnnotatedCommand\CommandData;
 class HumsciHook extends BltTasks {
 
   /**
-   * Log in when drupal:sync finishes.
+   * Disables saml & log in when drupal:sync finishes.
    *
    * @hook post-command drupal:sync
    */

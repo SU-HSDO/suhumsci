@@ -9,7 +9,6 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class CourseImporter.

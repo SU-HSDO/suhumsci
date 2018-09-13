@@ -121,6 +121,9 @@ class HsBugherd {
   /**
    * Get the desired API.
    *
+   * @param string $api
+   *   Bugherd api to get: organization, user, project, task, comment, webhook.
+   *
    * @return \Bugherd\Api\AbstractApi
    *   The api.
    */

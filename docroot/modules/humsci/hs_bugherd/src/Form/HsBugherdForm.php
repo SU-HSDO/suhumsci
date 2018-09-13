@@ -209,10 +209,6 @@ class HsBugherdForm extends ConfigFormBase {
     /** @var \Drupal\key\Entity\Key $key */
     $key = Key::load($form_state->getValue('api_key'));
     $config_dependencies = [$key->getConfigDependencyName()];
-    if ($profile_id = $form_state->getValue('encryption_profile')) {
-      $encryption_profile = EncryptionProfile::load($profile_id);
-      $config_dependencies[] = $encryption_profile->getConfigDependencyName();
-    }
 
     $this->config('bugherdapi.settings')
       ->set('project_id', $form_state->getValue('project_id'))

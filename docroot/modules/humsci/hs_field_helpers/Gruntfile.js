@@ -96,7 +96,7 @@ module.exports = function(grunt) {
           "node_modules/decanter/scss",
           "node_modules",
         ],
-        sourceMap: true,
+        sourceMap: false,
         // This controls the compiled css and can be changed to nested, compact or compressed.
         outputStyle: 'compressed',
         precision: 10
@@ -109,18 +109,7 @@ module.exports = function(grunt) {
             dest: 'css',
             ext: '.css',
             extDot: 'last',
-            rename: function(dest, src) {
-              return dest + '/' + src.replace('scss', 'css');
-            }
-          },
-          {
-            expand: true,
-            cwd: 'patterns',
-            src: ['**/[a-z]*.scss'],
-            dest: 'patterns',
-            ext: '.css',
-            extDot: 'last',
-            rename: function(dest, src) {
+            rename: function(dest, src, a) {
               return dest + '/' + src.replace('scss', 'css');
             }
           }

@@ -1,6 +1,7 @@
 FROM juampynr/drupal8ci:latest
 
 RUN docker-php-ext-install bz2
+RUN docker-php-ext-install calendar
 
 # Change docroot since we use Composer Drupal project.
 RUN sed -ri -e 's!/var/www/html/web!/var/www/html/docroot!g' /etc/apache2/sites-available/*.conf

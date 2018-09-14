@@ -1,5 +1,15 @@
 # HumSci
 
+8.0.9
+--------------------------------------------------------------------------------  
+_Release Date: 2018-09-14_
+
+- Style changes for MRC code
+- Allow MRC year picker back 30 years.
+- Expose views reset buttons and use ajax to reset
+- Patched Masquerade module.
+- Large amount of Code Climate cleanup
+
 8.0.8
 --------------------------------------------------------------------------------  
 _Release Date: 2018-08-30_

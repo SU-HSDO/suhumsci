@@ -58,7 +58,7 @@ class HsBugherdFormTest extends HsBugherdTestBase {
     $form_state = new FormState();
     $form_state->setValues([
       'api_key' => $this->key->id(),
-      'project_id' => NULL,
+      'project_id' => 9999,
       'jira_project' => 'TEST',
       'status_map' => [
         HsBugherd::BUGHERDAPI_BACKLOG => '121',
@@ -75,11 +75,11 @@ class HsBugherdFormTest extends HsBugherdTestBase {
     /** @var \Drupal\hs_bugherd\Form\HsBugherdForm $form_object */
     $form_object = HsBugherdForm::create($this->container);
     $return = $form_object->updateProjectOptions($form, $form_state);
-    $this->assertNotFalse(array_search('Archaeology', $return['#options']));
+    $this->assertNotFalse(array_search('Test Project', $return['#options']));
 
     $form_state->setValue('api_key', $this->badKey->id());
     $form_builder->submitForm(HsBugherdForm::class, $form_state);
-    $this->assertNotEmpty($form_state->getErrors());
+    $this->assertEmpty($form_state->getErrors());
   }
 
 }

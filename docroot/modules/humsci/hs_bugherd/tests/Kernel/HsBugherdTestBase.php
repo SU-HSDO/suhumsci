@@ -113,13 +113,13 @@ abstract class HsBugherdTestBase extends KernelTestBase {
       ->willThrow(new \Exception('This failed!'));
     $bugherd_api->isConnectionSuccessful()->willReturn(TRUE);
     $bugherd_api->getProjects()->willReturn([
-      rand(1000, 9999) => $this->randomString(),
+      9999 =>'Test Project',
     ]);
     $bugherd_api->setApiKey(Argument::type('string'))->willReturn();
     $bugherd_api->getOrganization()->willReturn([
       'organization' => [
         'id' => 999,
-        'name' => $this->randomString(),
+        'name' => 'TEST',
       ],
     ]);
     return $bugherd_api->reveal();

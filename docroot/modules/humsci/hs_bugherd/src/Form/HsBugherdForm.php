@@ -6,7 +6,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\encrypt\EncryptService;
-use Drupal\encrypt\Entity\EncryptionProfile;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\key\Entity\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;

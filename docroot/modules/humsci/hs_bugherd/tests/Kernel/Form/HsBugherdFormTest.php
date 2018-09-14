@@ -43,7 +43,7 @@ class HsBugherdFormTest extends HsBugherdTestBase {
   }
 
   /**
-   *
+   * Test the bugherd form has the correct functionality.
    */
   public function testBugherdForm() {
     /** @var \Drupal\Core\Form\FormBuilderInterface $form_builder */

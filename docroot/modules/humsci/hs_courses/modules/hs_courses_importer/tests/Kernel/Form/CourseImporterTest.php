@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
-require_once __DIR__ . '/../HsCoursesImporterTestBase.php';
-
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\Form\FormState;

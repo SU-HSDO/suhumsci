@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
-require_once __DIR__ . '/../HsCoursesImporterTestBase.php';
-
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\hs_courses_importer\Entity\CourseTag;

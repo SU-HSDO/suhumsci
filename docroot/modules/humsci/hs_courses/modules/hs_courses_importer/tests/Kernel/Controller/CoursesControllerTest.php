@@ -2,8 +2,6 @@
 
 namespace Drupal\Test\hs_courses_importer\Kernel\Controller;
 
-require_once __DIR__ . '/../HsCoursesImporterTestBase.php';
-
 use Drupal\hs_courses_importer\Controller\CoursesController;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
 use GuzzleHttp\ClientInterface;

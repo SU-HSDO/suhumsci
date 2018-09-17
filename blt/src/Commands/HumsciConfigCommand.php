@@ -3,7 +3,6 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
-use Acquia\Blt\Robo\Exceptions\BltException;
 
 /**
  * Class HumsciCommands.
@@ -17,9 +16,10 @@ class HumsciConfigCommand extends ConfigCommand {
   /**
    * Copy a given module configs from default into the module.
    *
-   * @command drupal:config:module
-   *
    * @param string $module_name
+   *   Module machine name.
+   *
+   * @command drupal:config:module
    */
   public function copyConfigToModule($module_name) {
     $info_file = $this->rglob($this->getConfigValue('docroot') . '/*/humsci/*/' . $module_name . '*.yml');
@@ -33,10 +33,15 @@ class HumsciConfigCommand extends ConfigCommand {
   }
 
   /**
-   * @param $pattern
+   * Recusive glob.
+   *
+   * @param string $pattern
+   *   Glob pattern.
    * @param int $flags
+   *   Globl flags.
    *
    * @return array|void
+   *   Response from glob.
    */
   protected function rglob($pattern, $flags = 0) {
     $files = glob($pattern, $flags);
@@ -89,28 +94,11 @@ class HumsciConfigCommand extends ConfigCommand {
         $task->drush("config:set system.site uuid $exported_site_uuid");
       }
 
-      switch ($strategy) {
-        case 'core-only':
-          $this->importCoreOnly($task, $cm_core_key);
-          break;
-
-        case 'config-split':
-          try {
-            $this->importConfigSplit($task, $cm_core_key, $options['partial']);
-          }
-          catch (\Exception $e) {
-            $this->say($e->getMessage());
-          }
-          break;
-
-        case 'features':
-          $this->importFeatures($task, $cm_core_key);
-
-          if ($this->getConfigValue('cm.features.no-overrides')) {
-            // @codingStandardsIgnoreLine
-            $this->checkFeaturesOverrides();
-          }
-          break;
+      try {
+        $this->importConfigSplit($task, $cm_core_key, $options['partial']);
+      }
+      catch (\Exception $e) {
+        $this->say($e->getMessage());
       }
 
       $task->drush("cache-rebuild");
@@ -130,9 +118,12 @@ class HumsciConfigCommand extends ConfigCommand {
   /**
    * Import configuration using config_split module.
    *
-   * @param \Acquia\Blt\Robo\Tasks\DrushTask $task
+   * @param mixed $task
+   *   Drush task.
    * @param string $cm_core_key
+   *   Which config import to use.
    * @param bool $partial
+   *   If --partial should be used.
    */
   protected function importConfigSplit($task, $cm_core_key, $partial = FALSE) {
     if ($this->input()->hasOption('partial')) {
@@ -142,8 +133,6 @@ class HumsciConfigCommand extends ConfigCommand {
 
     // Local environments we don't want all the custom site created configs.
     if (($this->getConfigValue('environment') == 'local' || $this->getConfigValue('environment') == 'dev') && !$partial) {
-      $this->taskDrush()->drush('sqlq')->arg('truncate webform_submission')->run();
-      $this->taskDrush()->drush('sqlq')->arg('truncate webform_submission_data')->run();
       $task->drush("config-import")->arg($cm_core_key);
       // Runs a second import to ensure splits are
       // both defined and imported.

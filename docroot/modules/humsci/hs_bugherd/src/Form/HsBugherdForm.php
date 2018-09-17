@@ -13,22 +13,29 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class HsBugherdForm
+ * Class HsBugherdForm.
  *
  * @package Drupal\hs_bugherd\Form
  */
 class HsBugherdForm extends ConfigFormBase {
 
   /**
+   * Bugherd API service.
+   *
    * @var \Drupal\hs_bugherd\HsBugherd
    */
   protected $bugherdApi;
 
   /**
+   * Encryption service.
+   *
    * @var \Drupal\encrypt\EncryptService
    */
   protected $encryption;
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId() {
     return 'hs_bugherd';
   }
@@ -72,7 +79,7 @@ class HsBugherdForm extends ConfigFormBase {
     $config = $this->config('bugherdapi.settings');
 
     $keys = [];
-    /** @var Key $key */
+    /** @var \Drupal\key\Entity\Key $key */
     foreach (Key::loadMultiple() as $key) {
       $keys[$key->id()] = $key->label();
     }
@@ -91,7 +98,7 @@ class HsBugherdForm extends ConfigFormBase {
     ];
 
     $projects = [];
-    if ($this->bugherdApi->connectionSuccessful()) {
+    if ($this->bugherdApi->isConnectionSuccessful()) {
       $projects = $this->bugherdApi->getProjects();
     }
 
@@ -174,7 +181,7 @@ class HsBugherdForm extends ConfigFormBase {
 
     $key = Key::load($form_state->getValue('api_key'));
     $this->bugherdApi->setApiKey($key->getKeyValue());
-    if ($this->bugherdApi->connectionSuccessful()) {
+    if ($this->bugherdApi->isConnectionSuccessful()) {
       $project_options = $this->bugherdApi->getProjects();
     }
     $form['project_id']['#options'] = $project_options;
@@ -199,7 +206,7 @@ class HsBugherdForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    /** @var Key $key */
+    /** @var \Drupal\key\Entity\Key $key */
     $key = Key::load($form_state->getValue('api_key'));
     $config_dependencies = [$key->getConfigDependencyName()];
     if ($profile_id = $form_state->getValue('encryption_profile')) {

@@ -42,6 +42,8 @@ class HsBugherd {
   protected $apiKey;
 
   /**
+   * Bugherd services.
+   *
    * @var \Bugherd\Client
    */
   protected $client;
@@ -65,18 +67,21 @@ class HsBugherd {
     $key_id = \Drupal::configFactory()
       ->get('bugherdapi.settings')
       ->get('api_key');
-    /** @var Key $key */
+    /** @var \Drupal\key\Entity\Key $key */
     if ($key_id && $key = Key::load($key_id)) {
       return $key->getKeyValue();
     }
   }
 
   /**
+   * Set the Bugherd API key.
+   *
    * @param string $api_key
+   *   New key.
    */
   public function setApiKey($api_key) {
     $this->apiKey = $api_key;
-    // Rebuild the client
+    // Rebuild the clien object with the new api key.
     $this->client = new Client($this->apiKey);
   }
 
@@ -84,14 +89,18 @@ class HsBugherd {
    * Test if the api connection works.
    *
    * @return bool
+   *   IF the connection was successful.
    */
-  public function connectionSuccessful() {
+  public function isConnectionSuccessful() {
     $test = $this->getOrganization();
     return !isset($test['error']);
   }
 
   /**
-   * @return array|mixed|null
+   * Get the bugherd project ID from the config settings.
+   *
+   * @return string
+   *   Project id.
    */
   public static function getProjectId() {
     return \Drupal::configFactory()
@@ -100,7 +109,10 @@ class HsBugherd {
   }
 
   /**
+   * Set the project ID for the API.
+   *
    * @param string $project_id
+   *   Bugherd project id.
    */
   public function setProjectId($project_id) {
     $this->projectKey = $project_id;
@@ -132,7 +144,7 @@ class HsBugherd {
    * @param bool $members
    *   Get the Members.
    * @param bool $guests
-   *   Get the Guests
+   *   Get the Guests.
    *
    * @return array
    *   Returned response.
@@ -183,15 +195,15 @@ class HsBugherd {
   /**
    * Get all task for a project.
    *
-   * @param integer $project_id
-   *   Project id found from getProjects().
+   * @param int|null $project_id
+   *   Project id found from getProjects() or null to use existing id.
    * @param array $params
    *   Array of possible search parameters.
    *
    * @return array
    *   Returned response.
    *
-   * https://www.bugherd.com/api_v2#api_task_list
+   * @see https://www.bugherd.com/api_v2#api_task_list
    */
   public function getTasks($project_id = NULL, array $params = []) {
     return $this->getApi(self::BUGHERDAPI_TASK)
@@ -199,7 +211,7 @@ class HsBugherd {
   }
 
   /**
-   * Get a specific task
+   * Get a specific task.
    *
    * @param int $task_id
    *   Bugherd Task ID.
@@ -231,7 +243,7 @@ class HsBugherd {
    *
    * @see https://www.bugherd.com/api_v2#api_task_update
    */
-  public function updateTask($task_id, $data, $project_id = NULL) {
+  public function updateTask($task_id, array $data, $project_id = NULL) {
     return $this->getApi(self::BUGHERDAPI_TASK)
       ->update($project_id ?: $this->projectKey, $task_id, $data);
   }
@@ -239,9 +251,9 @@ class HsBugherd {
   /**
    * Get all the commments on a particular task.
    *
-   * @param integer $task_id
+   * @param int $task_id
    *   Task id found from getTasks().
-   * @param integer $project_id
+   * @param int $project_id
    *   Project id found from getProjects().
    *
    * @return array
@@ -313,7 +325,7 @@ class HsBugherd {
   /**
    * Delete a specific webook.
    *
-   * @param $id
+   * @param int $hook_id
    *   Webhook id found from getHooks().
    *
    * @return mixed
@@ -321,8 +333,8 @@ class HsBugherd {
    *
    * @see https://www.bugherd.com/api_v2#api_webhook_delete
    */
-  public function deleteWebhook($id) {
-    return $this->getApi(self::BUGHERDAPI_WEBHOOK)->remove($id);
+  public function deleteWebhook($hook_id) {
+    return $this->getApi(self::BUGHERDAPI_WEBHOOK)->remove($hook_id);
   }
 
 }

@@ -22,7 +22,7 @@ function hs_courses_importer_post_update_8001() {
     $executable->rollback();
   }
 
-  // Delete all machine readable
+  // Delete all machine readable.
   $terms = \Drupal::entityTypeManager()
     ->getStorage('taxonomy_term')
     ->loadTree('hs_course_tags', 0, NULL, TRUE);

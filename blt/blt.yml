@@ -9,6 +9,10 @@ git:
   default_branch: develop
   remotes:
     - 'swshumsci@svn-4786.devcloud.hosting.acquia.com:swshumsci.git'
+deploy:
+  tag_source: true
+  exclude_file: '${repo.root}/blt/deploy/rsync-exclude.txt'
+  gitignore_file: '${repo.root}/blt/deploy/.gitignore'
 drush:
   aliases:
     remote: '${project.machine_name}.test'
@@ -18,10 +22,10 @@ drush:
 modules:
   local:
     enable: [dblog, devel, devel_debug_log, devel_generate, seckit, views_ui, config_import_de]
-    uninstall: [acquia_connector, simplesamlphp_auth, shield, config_readonly, config_ignore]
+    uninstall: [acquia_connector, purge, simplesamlphp_auth, shield, config_readonly, config_ignore]
   ci:
     enable: [hs_config_readonly, hs_bugherd]
-    uninstall: [acquia_connector, shield, simplesamlphp_auth]
+    uninstall: [purge, acquia_connector, shield, simplesamlphp_auth]
   dev:
     enable: [acquia_connector, shield, config_import_de]
     uninstall: [config_readonly, bugherdapi, config_ignore]
@@ -30,7 +34,7 @@ modules:
     uninstall: [config_readonly, bugherdapi]
   prod:
     enable: [acquia_connector, hs_config_readonly, hs_bugherd]
-    uninstall: [shield, views_ui]
+    uninstall: [shield]
 multisites:
   - default
   - archaeology
@@ -38,9 +42,6 @@ multisites:
   - francestanford
   - swshumsci_sandbox
 simplesamlphp: true
-deploy:
-  exclude_file: '${repo.root}/blt/deploy/rsync-exclude.txt'
-  gitignore_file: '${repo.root}/blt/deploy/.gitignore'
 command-hooks:
   post-deploy-build:
     dir: '${deploy.dir}'

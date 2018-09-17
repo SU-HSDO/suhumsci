@@ -25,6 +25,26 @@ use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\eck\Entity\EckEntity;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function hs_field_helpers_views_data_alter(array &$data) {
+  /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
+  foreach (FieldStorageConfig::loadMultiple() as $field_storage) {
+    if ($field_storage->getType() != 'datetime') {
+      continue;
+    }
+    $entity_type = $field_storage->getTargetEntityTypeId();
+    $field_name = $field_storage->getName();
+
+    // Change the filter id to our custom filter. This will give us an optional
+    // exception window for academic calendars.
+    $value_data = &$data["{$entity_type}__{$field_name}"]["{$field_name}_value"];
+    $value_data['filter']['id'] = 'academic_datetime';
+  }
+}
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -52,7 +72,7 @@ function hs_field_helpers_help($route_name, RouteMatchInterface $route_match) {
     return;
   }
 
-  /** @var FieldConfig $field */
+  /** @var \Drupal\field\Entity\FieldConfig $field */
   foreach (FieldConfig::loadMultiple() as $field) {
     if ($field->getType() != 'display_mode_field') {
       continue;
@@ -114,27 +134,36 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
   // Layout Builder cleanup.
   // Each layout has its own preprocess hook. So we have to use generic hook.
   if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
+    hs_fields_helpers_cleanup_layout_builder($variables);
+  }
+}
 
-    // This attribute exists when on the layout management page. We don't want
-    // to clean up the regions when on that page because it will break the UI.
-    if (!empty($variables['attributes']['data-layout-update-url'])) {
-      return;
+/**
+ * Helper function to clean up empty layout builder regions.
+ *
+ * @param array $variables
+ *   Preprocess variables.
+ */
+function hs_fields_helpers_cleanup_layout_builder(array &$variables) {
+  // This attribute exists when on the layout management page. We don't want
+  // to clean up the regions when on that page because it will break the UI.
+  if (!empty($variables['attributes']['data-layout-update-url'])) {
+    return;
+  }
+  foreach (Element::children($variables['content']) as $region) {
+
+    // Some blocks such as a menu block don't have any output, but the layout
+    // still outputs an empty container for the block that has no content.
+    // So lets find out if they are empty, and clean them up.
+    foreach (Element::children($variables['content'][$region]) as $item_id) {
+      if (empty($variables['content'][$region][$item_id]['#theme'])) {
+        unset($variables['content'][$region][$item_id]);
+      }
     }
-    foreach (Element::children($variables['content']) as $region) {
 
-      // Some blocks such as a menu block don't have any output, but the layout
-      // still outputs an empty container for the block that has no content.
-      // So lets find out if they are empty, and clean them up.
-      foreach (Element::children($variables['content'][$region]) as $item_id) {
-        if (empty($variables['content'][$region][$item_id]['#theme'])) {
-          unset($variables['content'][$region][$item_id]);
-        }
-      }
-
-      // Clean up empty regions after we've cleaned up the blocks in the region.
-      if (empty(Element::children($variables['content'][$region]))) {
-        unset($variables['content'][$region]);
-      }
+    // Clean up empty regions after we've cleaned up the blocks in the region.
+    if (empty(Element::children($variables['content'][$region]))) {
+      unset($variables['content'][$region]);
     }
   }
 }
@@ -144,7 +173,7 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
  *
  * @param array $pattern
  *   Pattern render array.
- * @param $pattern_id
+ * @param string $pattern_id
  *   Pattern ID being used.
  */
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
@@ -157,6 +186,16 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
+      $rendered = render($pattern[$region]);
+
+      // Remove all wrapper divs so we can check if the region actually has any
+      // visible output.
+      $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
+      $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
+      if (empty(trim($rendered))) {
+        unset($pattern[$region]);
+      }
+
       continue;
     }
     if (!_hs_field_helpers_render_array_has_content($pattern[$region])) {
@@ -283,16 +322,23 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
  * Validation for event dates in nodes form.
  */
 function hs_field_helpers_node_validate_date(array &$element, FormStateInterface $form_state) {
-  $date = $form_state->getValue('field_hs_event_date');
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+  $entity = $form_state->getBuildInfo()['callback_object']->getEntity();
 
-  // If the start value is populated but end is empty, copy the start date
-  // to the end date to pass validation.
-  if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
-    $date[0]['end_value'] = $date[0]['value'];
-    $element['end_value']['#value']['object'] = $date[0]['end_value'];
+  foreach ($entity->getFieldDefinitions() as $field_definition) {
+    if ($field_definition->getType() == 'daterange') {
+      $date = $form_state->getValue($field_definition->getName());
 
-    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
-    $form_state->setValue('field_hs_event_date', $date);
+      // If the start value is populated but end is empty, copy the start date
+      // to the end date to pass validation.
+      if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
+        $date[0]['end_value'] = $date[0]['value'];
+        $element['end_value']['#value']['object'] = $date[0]['end_value'];
+
+        /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+        $form_state->setValue($field_definition->getName(), $date);
+      }
+    }
   }
 }
 
@@ -337,7 +383,7 @@ function hs_field_helpers_field_formatter_third_party_settings_form(FormatterInt
  * The field_formatter_class module doesn't work on layout builder fields, so we
  * have to add our classes on our own.
  *
- * @see field_formatter_class_preprocess_field().
+ * @see field_formatter_class_preprocess_field()
  */
 function hs_field_helpers_preprocess_field(&$variables) {
   // Get a few convenient handles.
@@ -363,14 +409,14 @@ function hs_field_helpers_preprocess_field(&$variables) {
  */
 function hs_field_helpers_theme_suggestions_field(array $variables) {
   // Get a few convenient handles.
-  /** @var FieldableEntityInterface $entity */
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
   $entity = $variables['element']['#object'];
   $field_name = $variables['element']['#field_name'];
   $view_mode = $variables['element']['#view_mode'];
   $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
 
   $suggestions = [];
-  //  // Add class for whole field.
+  // Add class for whole field.
   if (!empty($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
@@ -385,7 +431,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 /**
  * A field can be nested in a layout builder section, so lets go get it.
  *
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity in question.
  * @param string $view_mode
  *   View mode to build.
@@ -464,7 +510,7 @@ function hs_field_helpers_cron() {
   if (\Drupal::moduleHandler()->moduleExists('migrate')) {
     $migrations = hs_field_helpers_migration_list();
     // Take it one group at a time, importing the migrations within each group.
-    foreach ($migrations as $group_id => $migration_list) {
+    foreach ($migrations as $migration_list) {
       array_walk($migration_list, 'hs_field_helpers_execute_migration');
     }
   }
@@ -518,7 +564,7 @@ function _he_field_helpers_clean_eck() {
 /**
  * Retrieve a list of active migrations, partially taken from migrate_tools.
  *
- * @return MigrationInterface[][]
+ * @return \Drupal\migrate\Plugin\MigrationInterface[][]
  *   An array keyed by migration group, each value containing an array of
  *   migrations or an empty array if no migrations match the input criteria.
  *
@@ -555,9 +601,9 @@ function hs_field_helpers_migration_list() {
  * Executes a single migration, taken from drush command in migrate_tools.
  *
  * @param \Drupal\migrate\Plugin\MigrationInterface $migration
- *  The migration to execute.
+ *   The migration to execute.
  * @param string $migration_id
- *  The migration ID (not used, just an artifact of array_walk()).
+ *   The migration ID (not used, just an artifact of array_walk()).
  *
  * @throws \Drupal\migrate\MigrateException
  *
@@ -587,4 +633,19 @@ function hs_field_helpers_execute_migration(MigrationInterface $migration, $migr
   $executable = new MigrateExecutable($migration, $log, $options);
   $executable->import();
   $executed_migrations[$migration_id] = $migration_id;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_field_helpers_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
+  if (empty($form['actions']['reset'])) {
+    return;
+  }
+
+  // Ajax blocks using the module views_block_filter_block do not display the
+  // "Reset" button after the form has been submitted. So we are going to change
+  // the access and apply some javascript to help keep the ajaxy feel.
+  $form['actions']['reset']['#access'] = TRUE;
+  $form['#attached']['library'][] = 'hs_field_helpers/views_reset';
 }

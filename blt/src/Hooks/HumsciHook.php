@@ -11,16 +11,21 @@ use Consolidation\AnnotatedCommand\CommandData;
 class HumsciHook extends BltTasks {
 
   /**
-   * Log in when drupal:sync finishes.
+   * Disables saml & log in when drupal:sync finishes.
    *
    * @hook post-command drupal:sync
    */
   public function postDrupalSync($result, CommandData $commandData) {
+    $this->taskDrush()
+      ->drush('pmu')
+      ->arg('simplesamlphp_auth')
+      ->option('yes')
+      ->run();
     $this->taskDrush()->drush('uli')->run();
   }
 
   /**
-   * Toggle modules first
+   * Toggle modules first.
    *
    * @hook pre-command drupal:config:import
    */

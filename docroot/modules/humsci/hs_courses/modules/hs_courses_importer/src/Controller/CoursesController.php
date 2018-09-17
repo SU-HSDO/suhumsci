@@ -28,6 +28,8 @@ class CoursesController extends ControllerBase {
   protected $requestStack;
 
   /**
+   * Courses Dom Document.
+   *
    * @var \DOMDocument
    */
   protected $courseDom;
@@ -53,10 +55,10 @@ class CoursesController extends ControllerBase {
   }
 
   /**
-   * Getcourses.
+   * Get courses xml data.
    *
-   * @return string
-   *   Return Hello string.
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   Xml response.
    */
   public function courses() {
     $response = new Response();
@@ -74,7 +76,7 @@ class CoursesController extends ControllerBase {
   protected function setCourseDom() {
     $url = $this->requestStack->getCurrentRequest()->get('feed');
     if (!$url) {
-      return;
+      return [];
     }
 
     $api_response = $this->httpClient->request('GET', $url);
@@ -107,7 +109,7 @@ class CoursesController extends ControllerBase {
     foreach ($remove_nodes as $node) {
       $elements = $xpath->query("//$node");
       foreach ($elements as $element) {
-        // This is a hint from the manual comments
+        // This is a hint from the manual comments.
         $element->parentNode->removeChild($element);
       }
     }
@@ -122,10 +124,10 @@ class CoursesController extends ControllerBase {
    */
   protected function setSectionGuids() {
     $xpath = new \DOMXPath($this->courseDom);
-    /** @var \SimpleXMLElement $all_sections [] */
+    /* @var \SimpleXMLElement $all_sections [] */
     $all_sections = $xpath->query('//sections');
 
-    /** @var \DOMElement $course_sections */
+    /* @var \DOMElement $course_sections */
     foreach ($all_sections as $course_sections) {
       // Courses that have no sections, we'll add an empty section just for the
       // guid.
@@ -143,13 +145,14 @@ class CoursesController extends ControllerBase {
       if ($course_id_element->length) {
         $course_id = $course_id_element->item(0)->textContent;
       }
-      $code = $xpath->query('../code', $course_sections)[0]->textContent;
+      $code = $xpath->query('../code', $course_sections)->item(0)->textContent;
 
-      /** @var \DOMElement $section */
+      /* @var \DOMElement $section */
       foreach ($xpath->query('section', $course_sections) as $section) {
         $guid = "$course_id-$code";
         if ($xpath->query('classId', $section)->length) {
-          $guid .= '-' . $xpath->query('classId', $section)[0]->textContent;
+          $class_id = $xpath->query('classId', $section)->item(0)->textContent;
+          $guid .= "-$class_id";
         }
         $guid = new \DOMElement('guid', $guid);
         $section->appendChild($guid);

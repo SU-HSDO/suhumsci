@@ -22,6 +22,8 @@ class ChallengeController extends ControllerBase {
   protected $state;
 
   /**
+   * File system service.
+   *
    * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
@@ -31,6 +33,8 @@ class ChallengeController extends ControllerBase {
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   *   File system service.
    */
   public function __construct(StateInterface $state, FileSystemInterface $file_system) {
     $this->state = $state;
@@ -53,7 +57,7 @@ class ChallengeController extends ControllerBase {
    * @param string $key
    *   Name of the challenge file.
    *
-   * @return string
+   * @return \Symfony\Component\HttpFoundation\Response
    *   Return challenge string.
    */
   public function content($key = NULL) {

@@ -56,14 +56,14 @@ class DynamicEntityAutocompleteController extends ControllerBase {
   /**
    * Handle the dymamic autocomplete route.
    */
-  public function handleAutocomplete(Request $request, $selection_settings_key) {
+  public function handleAutocomplete(Request $request, $selection_key) {
     if (!$input = $request->query->get('q')) {
       throw new \Exception('No input given to autocomplete route.');
     }
 
     $typed_string = Tags::explode($input);
     $typed_string = Unicode::strtolower(array_pop($typed_string));
-    $selection_settings = $this->keyValue->get($selection_settings_key, FALSE);
+    $selection_settings = $this->keyValue->get($selection_key, FALSE);
 
     $combined_matches = [];
 

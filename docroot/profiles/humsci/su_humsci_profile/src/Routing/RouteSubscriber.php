@@ -7,13 +7,15 @@ use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class RouteSubscriber
+ * Class RouteSubscriber.
  *
  * @package Drupal\su_humsci_profile\Routing
  */
 class RouteSubscriber extends RouteSubscriberBase {
 
   /**
+   * Module Handler service.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
@@ -22,6 +24,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    * RouteSubscriber constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   Module handler service.
    */
   public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;

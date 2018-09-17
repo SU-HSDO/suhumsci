@@ -33,6 +33,7 @@ class CourseTagDeleteForm extends EntityConfirmFormBase {
    * CourseTagDeleteForm constructor.
    *
    * @param \Drupal\Core\Database\Connection $database
+   *   Database connection service.
    */
   public function __construct(Connection $database) {
     $this->database = $database;

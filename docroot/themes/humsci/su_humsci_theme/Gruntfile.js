@@ -108,6 +108,7 @@ module.exports = function(grunt) {
             src: ['**/[a-z]*.scss'],
             dest: 'css',
             ext: '.css',
+            extDot: 'last',
             rename: function(dest, src) {
               return dest + '/' + src.replace('scss', 'css');
             }
@@ -118,6 +119,7 @@ module.exports = function(grunt) {
             src: ['**/[a-z]*.scss'],
             dest: 'patterns',
             ext: '.css',
+            extDot: 'last',
             rename: function(dest, src) {
               return dest + '/' + src.replace('scss', 'css');
             }

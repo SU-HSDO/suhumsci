@@ -10,9 +10,10 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface CourseTagInterface extends ConfigEntityInterface {
 
   /**
-   * Get the tranlated tag text.
+   * Get the translated tag text.
    *
    * @return string
+   *   Translated tag.
    */
   public function tag();
 

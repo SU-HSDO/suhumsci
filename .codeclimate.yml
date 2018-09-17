@@ -1,4 +1,15 @@
-engines:
+version: "2"
+checks:
+  argument-count:
+    enabled: false
+  method-complexity:
+    config:
+      threshold: 10
+  method-lines:
+    config:
+      threshold: 40
+
+plugins:
   # https://docs.codeclimate.com/docs/eslint
   # ES Linting requires an .eslintrc file to tweak checks.
   eslint:
@@ -64,6 +75,8 @@ engines:
         enabled: false
       UnusedFormalParameter:
         enabled: false
+      Naming/ShortVariable:
+        enabled: false
     config:
       # https://phpmd.org/rules/index.html
       # The following sets include everything except the controversial set.
@@ -103,24 +116,17 @@ engines:
       - todo
       - dpm
       - dsm
-ratings:
-  paths:
-  - "**.inc"
-  - "**.module"
-  - "**.profile"
-  - "**.php"
-  - "**.install"
-  - "**.scss"
-  - "**.sass"
-  - "**.js"
 # exclude these files/paths
-exclude_paths:
-- "test/**/*"
-- "**/vendor/**/*"
-- "**.min.*"
-- "tests/"
-- "spec/"
-- "**/vendor/"
-- "docroot/simplesaml"
-- "**/Gruntfile.js"
-- "docroot/sites/"
+exclude_patterns:
+  - "docroot/profiles/humsci/stanford_mrc"
+  - "test/**/*"
+  - "**/vendor/**/*"
+  - "**.min.*"
+  - "**/tests/**/*"
+  - "tests/"
+  - "spec/"
+  - "**/vendor/"
+  - "docroot/simplesaml"
+  - "**/Gruntfile.js"
+  - "docroot/sites/"
+  - "simplesamlphp/"

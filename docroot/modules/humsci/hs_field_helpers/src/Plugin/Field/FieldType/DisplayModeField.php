@@ -27,7 +27,7 @@ class DisplayModeField extends ListItemBase {
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = [];
-    $default_settings = $allowed_values = $this->getSetting('allowed_values');
+    $default_settings = $this->getSetting('allowed_values');
 
     $element['allowed_values'] = [
       '#type' => 'fieldset',
@@ -104,11 +104,14 @@ class DisplayModeField extends ListItemBase {
   /**
    * Validation to clean up field values.
    *
-   * @param $element
+   * @param array $element
+   *   Form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param $form
+   *   Current form state.
+   * @param array $form
+   *   Complete form.
    */
-  public function elementValidate($element, FormStateInterface $form_state, $form) {
+  public function elementValidate(array $element, FormStateInterface $form_state, array $form) {
     $modes = &$form_state->getValue(['settings', 'allowed_values']);
     foreach ($modes as $mode_id => &$mode) {
       if (!$mode['enabled']) {
@@ -139,8 +142,10 @@ class DisplayModeField extends ListItemBase {
   public static function getDisplayMode(FieldableEntityInterface $entity) {
     /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
     foreach ($entity->getFieldDefinitions() as $field_name => $field_definition) {
-      if ($field_definition->getType() == 'display_mode_field' && $value = $entity->get($field_name)
-          ->getValue()) {
+      if (
+        $field_definition->getType() == 'display_mode_field' &&
+        $value = $entity->get($field_name)->getValue()
+      ) {
         return $value[0]['value'];
       }
     }

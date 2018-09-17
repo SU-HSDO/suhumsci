@@ -239,6 +239,7 @@ class RoboFile extends Tasks {
     $tasks[] = $this->taskExecStack()
       ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
 
+    $tasks[] = $this->drush()->arg('sql-drop')->option('yes');
     $tasks[] = $this->drush()
       ->rawArg('@self sql-cli < clean_dump.sql');
     return $tasks;

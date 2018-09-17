@@ -130,7 +130,7 @@ class PatternsStyle extends StylePluginBase {
    * @param array $configuration
    *   Current configuration settings.
    */
-  public function buildPatternSourceForm(&$form, $configuration) {
+  public function buildPatternSourceForm(array &$form, array $configuration) {
     foreach (array_keys($this->patternsManager->getDefinitions()) as $pattern_id) {
       $form['pattern_mapping'][$pattern_id] = [
         '#type' => 'container',
@@ -155,17 +155,13 @@ class PatternsStyle extends StylePluginBase {
    * @return array
    *   Drag table form for the given pattern.
    */
-  public function getMappingForm($pattern_id, $configuration) {
+  public function getMappingForm($pattern_id, array $configuration) {
     /** @var \Drupal\ui_patterns\Definition\PatternDefinition $pattern */
     $pattern = $this->patternsManager->getDefinition($pattern_id);
 
     $elements = [
       '#type' => 'table',
-      '#header' => [
-        $this->t('Source'),
-        $this->t('Destination'),
-        $this->t('Weight'),
-      ],
+      '#header' => $this->getHeaders(),
     ];
     $elements['#tabledrag'][] = [
       'action' => 'order',
@@ -177,9 +173,7 @@ class PatternsStyle extends StylePluginBase {
     foreach ($this->getFields() as $field_name => $label) {
       $weight = (int) $this->getDefaultValue($configuration, $field_name, 'weight');
       $fields[$field_name] = [
-        'info' => [
-          '#plain_text' => $label,
-        ],
+        'info' => ['#plain_text' => $label],
         'destination' => [
           '#type' => 'select',
           '#title' => $this->t('Destination for @field', ['@field' => $label]),
@@ -194,19 +188,29 @@ class PatternsStyle extends StylePluginBase {
           '#delta' => 20,
           '#title' => $this->t('Weight for @field field', ['@field' => $label]),
           '#title_display' => 'invisible',
-          '#attributes' => [
-            'class' => ['field-weight'],
-          ],
+          '#attributes' => ['class' => ['field-weight']],
         ],
-        '#attributes' => [
-          'class' => ['draggable'],
-        ],
+        '#attributes' => ['class' => ['draggable']],
         '#weight' => $weight,
       ];
     }
 
     uasort($fields, [SortArray::class, 'sortByWeightProperty']);
     return array_merge($elements, $fields);
+  }
+
+  /**
+   * Get the table headers.
+   *
+   * @return array
+   *   Array of translated table headers.
+   */
+  protected function getHeaders() {
+    return [
+      $this->t('Source'),
+      $this->t('Destination'),
+      $this->t('Weight'),
+    ];
   }
 
   /**
@@ -247,7 +251,7 @@ class PatternsStyle extends StylePluginBase {
    * @return null|mixed
    *   The existing value or null.
    */
-  public function getDefaultValue($configuration, $field_name, $value) {
+  public function getDefaultValue(array $configuration, $field_name, $value) {
     if (!empty($configuration['pattern_mapping'][$field_name][$value])) {
       return $configuration['pattern_mapping'][$field_name][$value];
     }
@@ -261,32 +265,8 @@ class PatternsStyle extends StylePluginBase {
     $render = parent::render();
 
     $pattern_regions = [];
-
-    // Get header fields.
-    if ($this->view->header) {
-      foreach ($this->view->header as $field => $header) {
-        if (!isset($this->options['pattern_mapping']["header:$field"])) {
-          continue;
-        }
-
-        $header_region = $this->options['pattern_mapping']["header:$field"]['destination'];
-        $pattern_regions[$header_region]["header:$field"] = $header->render();
-        unset($this->view->header[$field]);
-      }
-    }
-
-    // Get footer fields.
-    if ($this->view->footer) {
-      foreach ($this->view->footer as $field => $footer) {
-        if (!isset($this->options['pattern_mapping']["footer:$field"])) {
-          continue;
-        }
-
-        $footer_region = $this->options['pattern_mapping']["footer:$field"]['destination'];
-        $pattern_regions[$footer_region]["footer:$field"] = $footer->render();
-        unset($this->view->footer[$field]);
-      }
-    }
+    $this->buildHeaderFooterRegions('header', $pattern_regions);
+    $this->buildHeaderFooterRegions('footer', $pattern_regions);
 
     // Add rows to the pattern.
     $rows_region = $this->options['pattern_mapping']['rows']['destination'];
@@ -303,6 +283,29 @@ class PatternsStyle extends StylePluginBase {
 
     $render[0]['#rows'] = array_filter($pattern_regions);
     return $render;
+  }
+
+  /**
+   * Build the header and footer regions of the pattern.
+   *
+   * @param string $section
+   *   Header or footer section.
+   * @param array $pattern_regions
+   *   Built pattern output.
+   */
+  protected function buildHeaderFooterRegions($section, array &$pattern_regions) {
+    // Get section fields.
+    if ($this->view->{$section}) {
+      foreach ($this->view->{$section} as $field => $part) {
+        if (!isset($this->options['pattern_mapping']["$section:$field"])) {
+          continue;
+        }
+
+        $section_region = $this->options['pattern_mapping']["$section:$field"]['destination'];
+        $pattern_regions[$section_region]["$section:$field"] = $part->render();
+        unset($this->view->{$section}[$field]);
+      }
+    }
   }
 
 }

@@ -7,7 +7,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\hs_bugherd\HsBugherd;
-use Drupal\key\Entity\Key;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -81,6 +80,9 @@ class HsBugherdTest extends UnitTestCase {
    */
   protected $values;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

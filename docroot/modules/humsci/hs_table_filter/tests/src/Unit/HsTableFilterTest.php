@@ -9,7 +9,6 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\hs_table_filter\Plugin\Filter\HsTableFilter
  *
  * @group hs_table_filter
- * @group coverage
  */
 class HsTableFilterTest extends UnitTestCase {
 

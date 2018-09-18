@@ -261,8 +261,6 @@ class HumsciCommand extends AcHooksCommand {
     foreach ($this->rglob("$humsci_modules/*Test.php") as $path) {
       $relative_path = str_replace("$root/", '', $path);
 
-      var_dump($relative_path);
-
       $module_path = substr($relative_path, 0, strpos($relative_path, '/tests/'));
       $module = substr($module_path, strrpos($module_path, '/') + 1);
 

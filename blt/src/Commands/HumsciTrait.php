@@ -2,15 +2,19 @@
 
 namespace Acquia\Blt\Custom\Commands;
 
+use Zend\Stdlib\Glob;
+
 /**
  * Trait HumsciTrait.
+ *
+ * Commmonly used methods used in our custom BLT commands.
  *
  * @package Acquia\Blt\Custom\Commands
  */
 trait HumsciTrait {
 
   /**
-   * Recusive glob.
+   * Recursive glob.
    *
    * @param string $pattern
    *   Glob pattern.
@@ -21,8 +25,8 @@ trait HumsciTrait {
    *   Response from glob.
    */
   protected function rglob($pattern, $flags = 0) {
-    $files = glob($pattern, $flags);
-    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
+    $files = Glob::glob($pattern, $flags);
+    foreach (Glob::glob(dirname($pattern) . '/*', Glob::GLOB_ONLYDIR | Glob::GLOB_NOSORT) as $dir) {
       $files = array_merge($files, $this->rglob($dir . '/' . basename($pattern), $flags));
     }
     return $files;

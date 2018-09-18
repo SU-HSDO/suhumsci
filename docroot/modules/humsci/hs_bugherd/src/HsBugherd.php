@@ -209,7 +209,7 @@ class HsBugherd {
    * @see https://www.bugherd.com/api_v2#api_task_list
    */
   public function getTasks($project_id = NULL, array $params = []) {
-    return $this->getApi(self::BUGHERDAPI_TASK)
+    return (array) $this->getApi(self::BUGHERDAPI_TASK)
       ->all($project_id ?: $this->projectKey, $params);
   }
 

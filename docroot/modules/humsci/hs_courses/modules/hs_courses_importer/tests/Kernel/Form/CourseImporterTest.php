@@ -7,6 +7,9 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\Element;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
+use Prophecy\Argument;
 
 /**
  * Class HsCoursesImporterFormTest.
@@ -42,7 +45,19 @@ class CourseImporterTest extends HsCoursesImporterTestBase implements ServiceMod
    */
   protected function setUp() {
     parent::setUp();
-    $this->formBuilder = \Drupal::formBuilder();
+    $this->formBuilder = $this->container->get('form_builder');
+    $client = $this->prophesize(Client::class);
+
+    $client->request(Argument::is('GET'), Argument::is('garbage url'))
+      ->willReturn(new Response());
+    $client->request(Argument::is('GET'), Argument::is('http://google.com'))
+      ->willReturn(new Response());
+    $client->request(Argument::is('GET'), Argument::is('http://explorecourses.stanford.edu/search'))
+      ->willReturn(new Response(200, ['Content-Type' => 'text/html']));
+    $client->request(Argument::is('GET'), Argument::is($this->validUrl))
+      ->willReturn(new Response(200, ['Content-Type' => 'text/xml']));
+
+    $this->container->set('http_client', $client->reveal());
   }
 
   /**

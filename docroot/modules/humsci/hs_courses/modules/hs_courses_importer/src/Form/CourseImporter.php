@@ -131,6 +131,9 @@ class CourseImporter extends ConfigFormBase {
     /** @var \GuzzleHttp\Psr7\Response $response */
     $response = $this->guzzle->request('GET', $url);
     $content_type = $response->getHeader('Content-Type');
+    if (empty($content_type)) {
+      $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));
+    }
     foreach ($content_type as $type) {
       if (strpos($type, 'xml') === FALSE) {
         $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));

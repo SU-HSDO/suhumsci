@@ -121,7 +121,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $bugherd_project = $config->get('project_id');
 
     // Delete all bugherd webhooks for this project.
-    foreach ($this->getBugherdHooks(TRUE) as $webhook) {
+    foreach ($this->getBugherdHooks() as $webhook) {
       $this->bugherdApi->deleteWebhook($webhook['id']);
     }
 
@@ -163,11 +163,11 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       ],
     ];
 
-    $jira_hooks = $this->getJiraHooks(TRUE);
+    $jira_hooks = $this->getJiraHooks();
     // Jira hooks don't exist, so lets make one.
     if (empty($jira_hooks)) {
       $this->jiraIssueService->getCommunicationService()
-        ->put('/rest/webhooks/1.0/webhook', (object) $hook_data);
+        ->post('/rest/webhooks/1.0/webhook', (object) $hook_data);
       return;
     }
 

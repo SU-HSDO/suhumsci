@@ -5,6 +5,7 @@
  * su_humsci_profile.profile
  */
 
+use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 
@@ -20,6 +21,17 @@ function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
  */
 function su_humsci_profile_local_tasks_alter(&$local_tasks) {
   unset($local_tasks['user.pass']);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $entity) {
+  // For new menu link items created on a node form (normally), set the expanded
+  // attribute so all menu items are expanded by default.
+  if ($entity->isNew()) {
+    $entity->set('expanded', TRUE);
+  }
 }
 
 /**

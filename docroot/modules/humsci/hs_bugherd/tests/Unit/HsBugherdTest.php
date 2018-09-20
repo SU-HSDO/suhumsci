@@ -132,7 +132,6 @@ class HsBugherdTest extends UnitTestCase {
     // Task and project methods.
     $this->assertArrayHasKey('error', $bugherd->getOrganization());
     $this->assertArrayHasKey('error', $bugherd->getTasks());
-    $this->assertArrayHasKey('error', (array) $bugherd->getTask($random_string));
     $this->assertArrayHasKey('error', $bugherd->updateTask($random_string, []));
     $this->assertArrayHasKey('error', $bugherd->getComments($random_string));
 

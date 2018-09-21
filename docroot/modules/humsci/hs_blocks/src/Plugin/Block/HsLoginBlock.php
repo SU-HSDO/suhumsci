@@ -65,7 +65,7 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
     // Only show the block to logged out users.
     if ($account->id()) {
       $access = AccessResult::forbidden();
-      //      return $return_as_object ? $access : !$access->isAllowed();
+      return $return_as_object ? $access : !$access->isAllowed();
     }
     return parent::access($account, $return_as_object);
   }
@@ -127,13 +127,14 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
 
     $build = [
       '#theme' => 'hs_blocks_login',
-      '#preface' => 'my preface',
+      '#preface' => $this->configuration['preface'],
       '#link' => [
         '#type' => 'link',
         '#title' => $this->configuration['link_text'],
         '#url' => Url::fromRoute($route, [], ['query' => ['destination' => trim($destination, '/ ')]]),
       ],
       '#postface' => $this->configuration['postface'],
+      '#context' => ['entity:user', 'entity:node'],
     ];
     return $build;
   }

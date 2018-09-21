@@ -181,7 +181,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('hs_bugherd.api');
+    return new Url('entity.bugherd_connection.collection');
   }
 
   /**
@@ -191,9 +191,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    *   Jira filter.
    */
   protected function getJiraFilter() {
-    $config = $this->config('bugherdapi.settings');
-    $jira_project = $config->get('jira_project');
-    return "project = $jira_project and summary ~ 'BUGHERD-*'";
+    return "summary ~ 'BUGHERD-*'";
   }
 
   /**
@@ -231,18 +229,14 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    *   Array of webhooks.
    */
   protected function getBugherdHooks($ignore_cache = FALSE) {
-    $config = $this->config('bugherdapi.settings');
-    $project_id = $config->get('project_id');
-
     $hooks = [];
     $bugherd_hooks = $this->bugherdApi->getHooks();
+
     if (!isset($bugherd_hooks['webhooks'])) {
       return [];
     }
     foreach ($bugherd_hooks['webhooks'] as $webhook) {
-      if ($webhook['project_id'] == $project_id) {
         $hooks[] = $webhook;
-      }
     }
     return $hooks;
   }

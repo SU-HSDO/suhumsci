@@ -76,8 +76,10 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
   public function defaultConfiguration() {
     $config = [
       'link_text' => $this->t('Login'),
-      'preface' => '',
-      'postface' => '',
+      'preface' => [
+        'value' => '',
+        'format' => 'minimal_html',
+      ],
     ];
     return $config + parent::defaultConfiguration();
   }
@@ -87,9 +89,11 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $form['preface'] = [
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Preface Text'),
-      '#default_value' => $this->configuration['preface'],
+      '#format' => $this->configuration['preface']['format'],
+      '#default_value' => $this->configuration['preface']['value'],
+      '#allowed_formats' => ['minimal_html'],
     ];
     $form['link_text'] = [
       '#type' => 'textfield',
@@ -97,12 +101,7 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
       '#default_value' => $this->configuration['link_text'],
       '#required' => TRUE,
     ];
-
-    $form['postface'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Postface Text'),
-      '#default_value' => $this->configuration['postface'],
-    ];
+    $form['#attached']['library'][] = 'hs_blocks/login.admin';
     return $form;
   }
 
@@ -121,19 +120,21 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
   public function build() {
     $destination = $this->requestStack->getCurrentRequest()->getPathInfo();
     $route = 'user.login';
+    // If simple saml is enabled, we want to use that route instead of the core
+    // login form.
     if ($this->moduleHandler->moduleExists('simplesamlphp_auth')) {
       $route = 'simplesamlphp_auth.saml_login';
     }
 
     $build = [
       '#theme' => 'hs_blocks_login',
-      '#preface' => $this->configuration['preface'],
+      '#preface' => check_markup($this->configuration['preface']['value'], $this->configuration['preface']['format']),
       '#link' => [
         '#type' => 'link',
         '#title' => $this->configuration['link_text'],
         '#url' => Url::fromRoute($route, [], ['query' => ['destination' => trim($destination, '/ ')]]),
+        '#attributes' => ['class' => ['decanter-button']],
       ],
-      '#postface' => $this->configuration['postface'],
       '#context' => ['entity:user', 'entity:node'],
     ];
     return $build;

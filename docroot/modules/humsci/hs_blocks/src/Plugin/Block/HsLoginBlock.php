@@ -65,7 +65,7 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
     // Only show the block to logged out users.
     if ($account->id()) {
       $access = AccessResult::forbidden();
-      return $return_as_object ? $access : !$access->isAllowed();
+      return $return_as_object ? $access : FALSE;
     }
     return parent::access($account, $return_as_object);
   }
@@ -111,7 +111,6 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['preface'] = $form_state->getValue('preface');
     $this->configuration['link_text'] = $form_state->getValue('link_text');
-    $this->configuration['postface'] = $form_state->getValue('postface');
   }
 
   /**
@@ -128,7 +127,6 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
 
     $build = [
       '#theme' => 'hs_blocks_login',
-      '#preface' => check_markup($this->configuration['preface']['value'], $this->configuration['preface']['format']),
       '#link' => [
         '#type' => 'link',
         '#title' => $this->configuration['link_text'],
@@ -137,6 +135,13 @@ class HsLoginBlock extends BlockBase implements ContainerFactoryPluginInterface 
       ],
       '#context' => ['entity:user', 'entity:node'],
     ];
+    if ($this->configuration['preface']['value']) {
+      $build['#preface'] = [
+        '#type' => 'processed_text',
+        '#text' => $this->configuration['preface']['value'],
+        '#format' => $this->configuration['preface']['format'],
+      ];
+    }
     return $build;
   }
 

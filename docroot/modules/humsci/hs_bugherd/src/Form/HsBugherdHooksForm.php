@@ -2,6 +2,8 @@
 
 namespace Drupal\hs_bugherd\Form;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -33,21 +35,30 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   protected $jiraIssueService;
 
   /**
+   * Default cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('hs_bugherd'),
-      $container->get('jira_rest_wrapper_service')
+      $container->get('jira_rest_wrapper_service'),
+      $container->get('cache.default')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(HsBugherd $bugherd_api, JiraRestWrapperService $jira_wrapper) {
+  public function __construct(HsBugherd $bugherd_api, JiraRestWrapperService $jira_wrapper, CacheBackendInterface $cache_backend) {
     $this->bugherdApi = $bugherd_api;
     $this->jiraIssueService = $jira_wrapper->getIssueService();
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -69,12 +80,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $config = $this->config('bugherdapi.settings');
-    if (!$config->get('project_id') || !$config->get('jira_project')) {
-      return [
-        '#markup' => $this->t('Bugherd or Jira has not been configured.'),
-      ];
-    }
 
     // Display a summary of all the hooks we have for jira and bugherd.
     $form['hooks'] = [
@@ -102,7 +107,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     foreach ($this->getJiraHooks() as $jira_hook) {
       $project_hooks[] = implode('; ', $jira_hook->events) . ': ' . $jira_hook->url;
     }
-
     $form['hooks']['jira']['hooks']['#markup'] = implode('<br>', $project_hooks);
 
     return $form;
@@ -114,11 +118,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
     $url .= '/api/hs-bugherd';
-    // Testing endpoint.
-    // $url = 'https://webhook.site/93c53d6c-b941-4103-a564-98d5e53b2a79';
-    $config = $this->config('bugherdapi.settings');
-
-    $bugherd_project = $config->get('project_id');
 
     // Delete all bugherd webhooks for this project.
     foreach ($this->getBugherdHooks(TRUE) as $webhook) {
@@ -130,21 +129,24 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     foreach ($bugherd_events as $event) {
       try {
         $this->bugherdApi->createWebhook([
-          'project_id' => $bugherd_project,
           'event' => $event,
           'target_url' => $url,
         ]);
       }
       catch (\Exception $e) {
+        $this->messenger()
+          ->addError($this->t('Unable to add Bugherd Webook for event %event. More info in database logs', ['%event' => $event]));
+
         $this->logger('hs_bugherd')
-          ->error('Unable to add Bugherd Webook for event %event', ['%event' => $event]);
+          ->error('Unable to add Bugherd Webook for event %event, @error', [
+            '%event' => $event,
+            '@error' => $e->getMessage(),
+          ]);
       }
     }
 
-    // No jira filter is configured.
-    if ($this->getJiraFilter()) {
-      $this->addJiraHook();
-    }
+    $this->addJiraHook();
+    Cache::invalidateTags(['hs_bugherd:hooks']);
   }
 
   /**
@@ -155,7 +157,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $url .= '/api/hs-bugherd';
 
     $hook_data = [
-      'name' => 'Bugherd for ARCH',
+      'name' => 'Bugherd Webhook',
       'url' => $url,
       'events' => ['jira:issue_updated', 'comment_created'],
       'filters' => [
@@ -163,12 +165,11 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       ],
     ];
 
-    $jira_hooks = $this->getJiraHooks(TRUE);
+    $jira_hooks = $this->getJiraHooks();
     // Jira hooks don't exist, so lets make one.
     if (empty($jira_hooks)) {
       $this->jiraIssueService->getCommunicationService()
         ->put('/rest/webhooks/1.0/webhook', (object) $hook_data);
-      return;
     }
 
     foreach (array_keys($jira_hooks) as $hook_id) {
@@ -203,7 +204,11 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * @return array
    *   Keyed array with the hook id as the array key.
    */
-  protected function getJiraHooks($ignore_cache = FALSE) {
+  protected function getJiraHooks() {
+    if ($cache = $this->cacheBackend->get('hs_bugherd:jira_hooks')) {
+      return $cache->data;
+    }
+
     $hooks = [];
     $jira_hooks = $this->jiraIssueService->getCommunicationService()
       ->get('/rest/webhooks/1.0/webhook') ?: [];
@@ -216,6 +221,8 @@ class HsBugherdHooksForm extends ConfirmFormBase {
         $hooks[$id] = $jira_hook;
       }
     }
+
+    $this->cacheBackend->set('hs_bugherd:jira_hooks', $hooks, Cache::PERMANENT, ['hs_bugherd:hooks']);
     return $hooks;
   }
 
@@ -228,16 +235,14 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * @return array
    *   Array of webhooks.
    */
-  protected function getBugherdHooks($ignore_cache = FALSE) {
-    $hooks = [];
-    $bugherd_hooks = $this->bugherdApi->getHooks();
+  protected function getBugherdHooks() {
+    if ($cache = $this->cacheBackend->get('hs_bugherd:bugherd_hooks')) {
+      return $cache->data;
+    }
 
-    if (!isset($bugherd_hooks['webhooks'])) {
-      return [];
-    }
-    foreach ($bugherd_hooks['webhooks'] as $webhook) {
-        $hooks[] = $webhook;
-    }
+    $bugherd_hooks = $this->bugherdApi->getHooks();
+    $hooks = $bugherd_hooks['webhooks'] ?? [];
+    $this->cacheBackend->set('hs_bugherd:bugherd_hooks', $hooks, Cache::PERMANENT, ['hs_bugherd:hooks']);
     return $hooks;
   }
 

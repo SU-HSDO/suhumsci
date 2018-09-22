@@ -3,12 +3,11 @@
 namespace Drupal\hs_bugherd\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\hs_bugherd\BugherdJiraInterface;
 
 /**
  * Provides an interface for defining Bugherd Connection entities.
  */
-interface BugherdConnectionInterface extends ConfigEntityInterface, BugherdJiraInterface {
+interface BugherdConnectionInterface extends ConfigEntityInterface {
 
   /**
    * Get the Jira project ID.
@@ -50,5 +49,23 @@ interface BugherdConnectionInterface extends ConfigEntityInterface, BugherdJiraI
    *   Bugherd status.
    */
   public function getBugherdStatus($jira_status);
+
+  /**
+   * Update Bugherd ticket that corresponds to the given Jira ticket.
+   *
+   * @param array $jira_data
+   *   Data from jira webhook.
+   *
+   * @return mixed
+   */
+  public function updateBugherdTicket(array $jira_data);
+
+  /**
+   * Update Jira ticket that corresponds to the Bugherd ticket.
+   *
+   * @param array $bugherd_data
+   *   Data from bugherd webhook.
+   */
+  public function updateJiraTicket(array $bugherd_data);
 
 }

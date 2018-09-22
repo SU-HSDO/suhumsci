@@ -276,6 +276,9 @@ class HsBugherd {
    * @param int|null $project_id
    *   Project ID if different than current.
    *
+   * @return mixed
+   *   Api Response.
+   *
    * @throws \Exception
    *
    * @see https://www.bugherd.com/api_v2#api_comment_create
@@ -284,7 +287,7 @@ class HsBugherd {
     if (!isset($comment_data['text'])) {
       throw new \Exception('Text is required to add a comment');
     }
-    $this->getApi(self::BUGHERDAPI_COMMENT)
+    return $this->getApi(self::BUGHERDAPI_COMMENT)
       ->create($project_id ?: $this->projectKey, $task_id, $comment_data);
   }
 

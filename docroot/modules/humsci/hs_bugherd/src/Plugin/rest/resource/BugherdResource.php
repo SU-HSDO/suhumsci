@@ -46,7 +46,9 @@ class BugherdResource extends ResourceBase {
 
     /** @var \Drupal\hs_bugherd\Entity\BugherdConnectionInterface $connection */
     foreach ($bugherd_connections as $connection) {
-      if ($connection->getBugherdProject() == $data['task']['project_id']) {
+      $project_id = isset($data['task']) ? $data['task']['project_id'] : $data['comment']['task']['project_id'];
+
+      if ($connection->getBugherdProject() == $project_id) {
         return new ResourceResponse($connection->updateJiraTicket($data));
       }
     }

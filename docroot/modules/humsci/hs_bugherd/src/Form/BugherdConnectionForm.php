@@ -5,7 +5,6 @@ namespace Drupal\hs_bugherd\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\hs_bugherd\HsBugherd;
-use Drupal\key\Entity\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,10 +33,6 @@ class BugherdConnectionForm extends EntityForm {
    */
   public function __construct(HsBugherd $bugherd_api) {
     $this->bugherdApi = $bugherd_api;
-    if ($api_key = Key::load($this->config('hs_bugherd.connection_settings')
-      ->get('api_key'))) {
-      $this->bugherdApi->setApiKey($api_key->getKeyValue());
-    }
   }
 
   /**
@@ -66,13 +61,11 @@ class BugherdConnectionForm extends EntityForm {
       '#disabled' => !$bugherd->isNew(),
     ];
 
-    $projects = $this->bugherdApi->getProjects();
-
     $form['bugherdProject'] = [
       '#type' => 'select',
       '#title' => $this->t('Bugherd Project'),
       '#default_value' => $bugherd->getBugherdProject(),
-      '#options' => $projects,
+      '#options' => $this->bugherdApi->getProjects(),
     ];
 
     $form['jiraProject'] = [

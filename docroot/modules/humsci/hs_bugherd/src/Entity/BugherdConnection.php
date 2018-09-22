@@ -81,8 +81,11 @@ class BugherdConnection extends BugherdConnectionBase {
 
       case 'jira:issue_updated':
         if ($new_status = $this->getNewBugherdStatus($jira_data)) {
-          $status = ['status' => $new_status];
-          $return = $this->bugherdApi->updateTask($bugherd_task['id'], $status);
+          $updates = [
+            'status' => $new_status,
+            'external_id' => $jira_data['issue']['key'],
+          ];
+          $return = $this->bugherdApi->updateTask($bugherd_task['id'], $updates);
         }
         break;
     }
@@ -105,9 +108,7 @@ class BugherdConnection extends BugherdConnectionBase {
     foreach ($changelog as $change) {
       if ($change['field'] == 'status') {
         $jira_status = $change['to'];
-        if ($new_status = $this->getBugherdStatus($jira_status)) {
-          return $new_status;
-        }
+        return $this->getBugherdStatus($jira_status);
       }
     }
   }
@@ -153,13 +154,13 @@ class BugherdConnection extends BugherdConnectionBase {
     $new_issue_created = FALSE;
     // Create a jira issue if none exists.
     if (empty($issue = $this->getJiraIssue($task['external_id']))) {
-      $new_issue_created = TRUE;
-      $issue = $this->createJiraIssue($task);
+      if ($issue = $this->createJiraIssue($task)) {
 
-      $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
-        '@jira' => $issue->getKey(),
-        '@bugherd' => $task['local_task_id'],
-      ]);
+        $this->logger->info('New JIRA issue from bugherd. Jira: @jira, Bugherd: @bugherd', [
+          '@jira' => $issue->getKey(),
+          '@bugherd' => $task['local_task_id'],
+        ]);
+      }
     }
 
     // Issue needs to be updated.
@@ -277,13 +278,13 @@ class BugherdConnection extends BugherdConnectionBase {
         ]);
       }
       else {
-        throw new \Exception(t('JIRA comment could not be created for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
+        throw new \Exception(t('JIRA comment could not be created for task #@bugherd', ['@bugherd' => $task['local_task_id']]));
       }
 
       return $issue->getKey();
     }
 
-    throw new \Exception(t('Unable to find JIRA ticket for task # @bugherd', ['@bugherd' => $task['local_task_id']]));
+    throw new \Exception(t('Unable to find JIRA ticket for task #@bugherd', ['@bugherd' => $task['local_task_id']]));
   }
 
   /**
@@ -323,31 +324,12 @@ class BugherdConnection extends BugherdConnectionBase {
         }
       }
     }
-
-    $issue->save();
-
-    // Now that the JIRA issue is created, link it to the bugherd item.
-    $this->setBugherdExternalId($task['id'], $issue->getKey());
-    return $issue;
-  }
-
-  /**
-   * Sync up the bugherd task with the JIRA issue key.
-   *
-   * @param int $task_id
-   *   Bugherd ID.
-   * @param string $external_id
-   *   JIRA Key.
-   * @param int|null $project_id
-   *   Bugherd Project ID if available.
-   *
-   * @return mixed
-   *   Result of the operation.
-   */
-  protected function setBugherdExternalId($task_id, $external_id, $project_id = NULL) {
-    // Just setting the external id value.
-    $data = ['external_id' => $external_id];
-    return $this->bugherdApi->updateTask($task_id, $data, $project_id);
+    if ($issue->save()) {
+      // Now that the JIRA issue is created, link it to the bugherd item.
+      $data = ['external_id' => $issue->getKey()];
+      $this->bugherdApi->updateTask($task['id'], $data, $this->getBugherdProject());
+      return $issue;
+    }
   }
 
   /**

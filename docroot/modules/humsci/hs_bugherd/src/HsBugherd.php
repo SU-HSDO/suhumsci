@@ -65,7 +65,7 @@ class HsBugherd {
    */
   public static function getApiKey() {
     $key_id = \Drupal::configFactory()
-      ->get('bugherdapi.settings')
+      ->get('hs_bugherd.connection_settings')
       ->get('api_key');
     /** @var \Drupal\key\Entity\Key $key */
     if ($key_id && $key = Key::load($key_id)) {

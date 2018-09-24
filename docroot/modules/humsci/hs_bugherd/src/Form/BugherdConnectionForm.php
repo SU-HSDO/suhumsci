@@ -8,7 +8,9 @@ use Drupal\hs_bugherd\HsBugherd;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class BugherdEntityForm.
+ * Class BugherdConnectionForm.
+ *
+ * @package Drupal\hs_bugherd\Form
  */
 class BugherdConnectionForm extends EntityForm {
 
@@ -41,7 +43,7 @@ class BugherdConnectionForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /** @var \Drupal\hs_bugherd\Entity\BugherdEntity $bugherd */
+    /** @var \Drupal\hs_bugherd\Entity\BugherdConnection $bugherd */
     $bugherd = $this->entity;
 
     $form['label'] = [
@@ -56,7 +58,7 @@ class BugherdConnectionForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $bugherd->id(),
       '#machine_name' => [
-        'exists' => '\Drupal\hs_bugherd\Entity\BugherdEntity::load',
+        'exists' => '\Drupal\hs_bugherd\Entity\BugherdConnection::load',
       ],
       '#disabled' => !$bugherd->isNew(),
     ];

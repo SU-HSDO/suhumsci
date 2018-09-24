@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_bugherd\Form;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -98,8 +99,16 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     ];
 
     $project_hooks = [];
+    $bugherd_projects = $this->bugherdApi->getProjects();
+
     foreach ($this->getBugherdHooks() as $webhook) {
-      $project_hooks[] = $webhook['event'] . ': ' . $webhook['target_url'];
+      $hook = [
+        $webhook['event'],
+        $webhook['project_id'] ? $bugherd_projects[$webhook['project_id']] : '',
+        $webhook['target_url'],
+      ];
+
+      $project_hooks[] = implode(', ', array_filter($hook));
     }
     $form['hooks']['bugherd']['hooks']['#markup'] = implode('<br>', $project_hooks);
 
@@ -107,8 +116,8 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     foreach ($this->getJiraHooks() as $jira_hook) {
       $project_hooks[] = implode('; ', $jira_hook->events) . ': ' . $jira_hook->url;
     }
+dpm($this->bugherdApi->getTasks('151047'));
     $form['hooks']['jira']['hooks']['#markup'] = implode('<br>', $project_hooks);
-
     return $form;
   }
 
@@ -116,11 +125,8 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
-    $url .= '/api/hs-bugherd';
-
     // Delete all bugherd webhooks for this project.
-    foreach ($this->getBugherdHooks(TRUE) as $webhook) {
+    foreach ($this->getBugherdHooks() as $webhook) {
       $this->bugherdApi->deleteWebhook($webhook['id']);
     }
 
@@ -130,7 +136,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       try {
         $this->bugherdApi->createWebhook([
           'event' => $event,
-          'target_url' => $url,
+          'target_url' => $this->getHookUrl() . '/bugherd',
         ]);
       }
       catch (\Exception $e) {
@@ -153,12 +159,9 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * Add the Jira hook via the Jira API.
    */
   protected function addJiraHook() {
-    $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
-    $url .= '/api/hs-bugherd';
-
     $hook_data = [
       'name' => 'Bugherd Webhook',
-      'url' => $url,
+      'url' => $this->getHookUrl() . '/jira',
       'events' => ['jira:issue_updated', 'comment_created'],
       'filters' => [
         'issue-related-events-section' => $this->getJiraFilter(),
@@ -169,13 +172,23 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     // Jira hooks don't exist, so lets make one.
     if (empty($jira_hooks)) {
       $this->jiraIssueService->getCommunicationService()
-        ->put('/rest/webhooks/1.0/webhook', (object) $hook_data);
+        ->post('/rest/webhooks/1.0/webhook', (object) $hook_data);
     }
 
     foreach (array_keys($jira_hooks) as $hook_id) {
       $this->jiraIssueService->getCommunicationService()
         ->put('/rest/webhooks/1.0/webhook/' . $hook_id, (object) $hook_data);
     }
+  }
+
+  /**
+   * Get the url to be used for the webhooks.
+   *
+   * @return string
+   */
+  protected function getHookUrl() {
+    $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
+    return $url . '/api/hs-bugherd';
   }
 
   /**
@@ -221,16 +234,12 @@ class HsBugherdHooksForm extends ConfirmFormBase {
         $hooks[$id] = $jira_hook;
       }
     }
-
     $this->cacheBackend->set('hs_bugherd:jira_hooks', $hooks, Cache::PERMANENT, ['hs_bugherd:hooks']);
     return $hooks;
   }
 
   /**
    * Get all the bugherd hooks for this project.
-   *
-   * @param bool $ignore_cache
-   *   Ignore the cacheed hooks.
    *
    * @return array
    *   Array of webhooks.
@@ -242,6 +251,10 @@ class HsBugherdHooksForm extends ConfirmFormBase {
 
     $bugherd_hooks = $this->bugherdApi->getHooks();
     $hooks = $bugherd_hooks['webhooks'] ?? [];
+    uasort($hooks, function ($a, $b) {
+      return SortArray::sortByKeyString($a, $b, 'target_url');
+    });
+
     $this->cacheBackend->set('hs_bugherd:bugherd_hooks', $hooks, Cache::PERMANENT, ['hs_bugherd:hooks']);
     return $hooks;
   }

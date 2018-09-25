@@ -65,7 +65,7 @@ behat_tests: &behat_tests
         path: /var/www/html/artifacts
 
 ## Job to run Unit and Kernel tests.
-unit_kernel_tests: &unit_kernel_tests
+functional_unit_tests: &functional_unit_tests
   <<: *defaults
   steps:
     - checkout
@@ -97,18 +97,18 @@ code_coverage: &code_coverage
 # Declare all of the jobs we should run.
 version: 2
 jobs:
-  run-unit-kernel-tests:
-     <<: *unit_kernel_tests
+  run-functional-unit-tests:
+     <<: *functional_unit_tests
   run-behat-tests:
      <<: *behat_tests
-#  run-code-coverage:
-#     <<: *code_coverage
+  run-code-coverage:
+     <<: *code_coverage
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2
   test_and_lint:
     jobs:
-      - run-unit-kernel-tests
+      - run-functional-unit-tests
       - run-behat-tests
-#      - run-code-coverage
+      - run-code-coverage

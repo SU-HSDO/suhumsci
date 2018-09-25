@@ -6,10 +6,13 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_install_tasks_alter().
@@ -57,5 +60,18 @@ function su_humsci_profile_block_access(Block $block, $operation, AccountInterfa
   if ($block->getPluginId() == 'page_title_block' && $current_request->query->get('_exception_statuscode') == 404) {
     return AccessResult::forbiddenIf($current_request->attributes->get('node'))
       ->addCacheableDependency($block);
+  }
+}
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function su_humsci_profile_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  $role_delegation = \Drupal::moduleHandler()->moduleExists('role_delegation');
+  if ($entity instanceof User && $role_delegation) {
+    $operations['roles'] = [
+      'title' => t('Manage Roles'),
+      'weight' => 11,
+      'url' => Url::fromRoute('role_delegation.edit_form', ['user' => $entity->id()]),
+    ];
   }
 }

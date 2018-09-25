@@ -68,7 +68,6 @@ class HsBugherdHooksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
     $config = $this->config('bugherdapi.settings');
     if (!$config->get('project_id') || !$config->get('jira_project')) {
       return [
@@ -76,6 +75,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       ];
     }
 
+    $form = parent::buildForm($form, $form_state);
     // Display a summary of all the hooks we have for jira and bugherd.
     $form['hooks'] = [
       '#type' => 'fieldset',
@@ -121,7 +121,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     $bugherd_project = $config->get('project_id');
 
     // Delete all bugherd webhooks for this project.
-    foreach ($this->getBugherdHooks(TRUE) as $webhook) {
+    foreach ($this->getBugherdHooks() as $webhook) {
       $this->bugherdApi->deleteWebhook($webhook['id']);
     }
 
@@ -163,11 +163,11 @@ class HsBugherdHooksForm extends ConfirmFormBase {
       ],
     ];
 
-    $jira_hooks = $this->getJiraHooks(TRUE);
+    $jira_hooks = $this->getJiraHooks();
     // Jira hooks don't exist, so lets make one.
     if (empty($jira_hooks)) {
       $this->jiraIssueService->getCommunicationService()
-        ->put('/rest/webhooks/1.0/webhook', (object) $hook_data);
+        ->post('/rest/webhooks/1.0/webhook', (object) $hook_data);
       return;
     }
 
@@ -199,13 +199,10 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   /**
    * Get the Jira hook for bugherd api (normally only 1).
    *
-   * @param bool $ignore_cache
-   *   Ignore the cacheed hooks.
-   *
    * @return array
    *   Keyed array with the hook id as the array key.
    */
-  protected function getJiraHooks($ignore_cache = FALSE) {
+  protected function getJiraHooks() {
     $hooks = [];
     $jira_hooks = $this->jiraIssueService->getCommunicationService()
       ->get('/rest/webhooks/1.0/webhook') ?: [];
@@ -224,13 +221,10 @@ class HsBugherdHooksForm extends ConfirmFormBase {
   /**
    * Get all the bugherd hooks for this project.
    *
-   * @param bool $ignore_cache
-   *   Ignore the cacheed hooks.
-   *
    * @return array
    *   Array of webhooks.
    */
-  protected function getBugherdHooks($ignore_cache = FALSE) {
+  protected function getBugherdHooks() {
     $config = $this->config('bugherdapi.settings');
     $project_id = $config->get('project_id');
 

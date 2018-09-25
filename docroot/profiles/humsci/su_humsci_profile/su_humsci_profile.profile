@@ -7,7 +7,10 @@
 
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_install_tasks_alter().
@@ -52,5 +55,19 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     $form['manual']['actions']['reset'] = Link::createFromRoute(t('Reset Password'), 'user.pass')
       ->toRenderable();
     unset($form['name'], $form['pass'], $form['actions']);
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function su_humsci_profile_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  $role_delegation = \Drupal::moduleHandler()->moduleExists('role_delegation');
+  if ($entity instanceof User && $role_delegation) {
+    $operations['roles'] = [
+      'title' => t('Manage Roles'),
+      'weight' => 11,
+      'url' => Url::fromRoute('role_delegation.edit_form', ['user' => $entity->id()]),
+    ];
   }
 }

@@ -34,14 +34,6 @@ interface BugherdConnectionInterface extends ConfigEntityInterface {
   public function getStatusMap();
 
   /**
-   * Get all the urls configured for the entity.
-   *
-   * @return array
-   *   List of urls.
-   */
-  public function getUrls();
-
-  /**
    * Get the appropriate bugherd status mapped to the given jira status.
    *
    * @param int $jira_status

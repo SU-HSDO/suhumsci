@@ -37,6 +37,7 @@ class BugherdConnectionForm extends EntityForm {
   public function __construct(HsBugherd $bugherd_api) {
     $this->bugherdApi = $bugherd_api;
   }
+
   /**
    * {@inheritdoc}
    */

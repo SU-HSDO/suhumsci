@@ -198,7 +198,7 @@ class HsBugherd {
    *   Returned response.
    */
   public function getProjects() {
-    return  $this->getApi(self::BUGHERDAPI_PROJECT)->listing(FALSE, FALSE);
+    return $this->getApi(self::BUGHERDAPI_PROJECT)->listing(FALSE, FALSE);
   }
 
   /**
@@ -208,6 +208,7 @@ class HsBugherd {
    *   Bugherd Project ID.
    *
    * @return array
+   *   Data of the project.
    */
   public function getProject($project_id) {
     if ($cache = $this->cacheDefault->get("hs_bugherd:project-$project_id")) {
@@ -215,7 +216,7 @@ class HsBugherd {
     }
     $project = $this->getApi(self::BUGHERDAPI_PROJECT)->show($project_id);
     $this->cacheDefault->set("hs_bugherd:project-$project_id", $project['project']);
-    return $project['project'];
+    return $project['project'] ?? [];
   }
 
   /**

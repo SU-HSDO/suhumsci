@@ -73,7 +73,7 @@ class BugherdConnection extends ConfigEntityBase implements BugherdConnectionInt
    *
    * @var array
    */
-  protected $statusMap;
+  protected $statusMap = [];
 
   /**
    * {@inheritdoc}
@@ -94,13 +94,6 @@ class BugherdConnection extends ConfigEntityBase implements BugherdConnectionInt
    */
   public function getJiraProject() {
     return $this->jiraProject;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUrls() {
-    return $this->urls;
   }
 
   /**

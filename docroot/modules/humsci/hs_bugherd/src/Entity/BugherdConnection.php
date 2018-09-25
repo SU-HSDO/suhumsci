@@ -38,8 +38,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   }
  * )
  */
-class BugherdConnection extends ConfigEntityBase implements BugherdConnectionInterface  {
-
+class BugherdConnection extends ConfigEntityBase implements BugherdConnectionInterface {
 
   /**
    * The Bugherd Connection ID.
@@ -56,39 +55,25 @@ class BugherdConnection extends ConfigEntityBase implements BugherdConnectionInt
   protected $label;
 
   /**
+   * Project ID in Bugherd.
+   *
    * @var int
    */
   protected $bugherdProject;
 
   /**
+   * Project Key in Jira.
+   *
    * @var string
    */
   protected $jiraProject;
 
   /**
-   * @var array
-   */
-  protected $urls = [];
-
-  /**
+   * Associative array of Bugherd status to Jira status.
+   *
    * @var array
    */
   protected $statusMap;
-
-  /**
-   * @var \Drupal\jira_rest\JiraRestWrapperService
-   */
-  protected $jiraApi;
-
-  /**
-   * @var \Drupal\hs_bugherd\HsBugherd
-   */
-  protected $bugherdApi;
-
-  /**
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
 
   /**
    * {@inheritdoc}

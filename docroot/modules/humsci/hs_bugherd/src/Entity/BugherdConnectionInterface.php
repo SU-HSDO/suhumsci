@@ -10,9 +10,10 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface BugherdConnectionInterface extends ConfigEntityInterface {
 
   /**
-   * Get the Jira project ID.
+   * Get the Jira project key.
    *
    * @return string
+   *   Jira project key.
    */
   public function getJiraProject();
 
@@ -20,6 +21,7 @@ interface BugherdConnectionInterface extends ConfigEntityInterface {
    * Get the bugherd project ID.
    *
    * @return int
+   *   Bugherd Project ID.
    */
   public function getBugherdProject();
 
@@ -27,7 +29,7 @@ interface BugherdConnectionInterface extends ConfigEntityInterface {
    * Get the status map from bugherd to jira status.
    *
    * @return array
-   *   Keyed array: bugherd status => jira statuses.
+   *   Associative array: bugherd status => jira statuses.
    */
   public function getStatusMap();
 

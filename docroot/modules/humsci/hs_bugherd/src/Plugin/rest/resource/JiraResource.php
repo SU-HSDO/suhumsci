@@ -22,24 +22,21 @@ use Drupal\rest\ResourceResponse;
  */
 class JiraResource extends HsBugherdResourceBase {
 
-  public function get() {
-    $data = json_decode(file_get_contents(drupal_get_path('module', 'hs_bugherd') . '/src/Plugin/rest/resource/examples/fromJira/project_move.json'), TRUE);
-    return $this->post($data);
-  }
-
   /**
    * API post call to respond to Jira webhook call.
    *
    * @param array $jira_data
    *   Jira webhook data.
    *
-   * @return \Drupal\rest\ResourceResponse|void
+   * @return \Drupal\rest\ResourceResponse
+   *   API Response.
+   *
    * @throws \Exception
    */
   public function post(array $jira_data) {
     $this->setBugherdConnection($this->getOriginalJiraProject($jira_data));
     if (!$this->bugherdConnection) {
-      return;
+      return new ResourceResponse($this->t('No connection data'));
     }
 
     $bugherd_task = $this->getBugherdTask($this->getOriginalJiraKey($jira_data));
@@ -55,12 +52,9 @@ class JiraResource extends HsBugherdResourceBase {
     }
 
     $response = new ResourceResponse($jira_data);
+    // Don't cache the responses.
     $response->setMaxAge(0);
-    $build = [
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
+    $build = ['#cache' => ['max-age' => 0]];
     $response->addCacheableDependency($build);
     return $response;
   }
@@ -135,9 +129,11 @@ class JiraResource extends HsBugherdResourceBase {
    *   Bugherd task ID.
    *
    * @return mixed
+   *   API Response.
+   *
    * @throws \Exception
    */
-  protected function addBugherdComment($comment, $bugherd_task_id) {
+  protected function addBugherdComment(array $comment, $bugherd_task_id) {
     $comment = [
       'text' => $comment['author']['displayName'] . ': ' . $comment['body'],
     ];

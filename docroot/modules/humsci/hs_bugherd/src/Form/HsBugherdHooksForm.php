@@ -116,7 +116,7 @@ class HsBugherdHooksForm extends ConfirmFormBase {
     foreach ($this->getJiraHooks() as $jira_hook) {
       $project_hooks[] = implode('; ', $jira_hook->events) . ': ' . $jira_hook->url;
     }
-dpm($this->bugherdApi->getTasks('151047'));
+
     $form['hooks']['jira']['hooks']['#markup'] = implode('<br>', $project_hooks);
     return $form;
   }
@@ -185,6 +185,7 @@ dpm($this->bugherdApi->getTasks('151047'));
    * Get the url to be used for the webhooks.
    *
    * @return string
+   *   Local url to API.
    */
   protected function getHookUrl() {
     $url = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
@@ -210,9 +211,6 @@ dpm($this->bugherdApi->getTasks('151047'));
 
   /**
    * Get the Jira hook for bugherd api (normally only 1).
-   *
-   * @param bool $ignore_cache
-   *   Ignore the cacheed hooks.
    *
    * @return array
    *   Keyed array with the hook id as the array key.

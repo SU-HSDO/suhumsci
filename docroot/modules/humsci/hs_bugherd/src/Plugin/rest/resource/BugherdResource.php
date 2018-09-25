@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_bugherd\Plugin\rest\resource;
 
+use biologis\JIRA_PHP_API\Issue;
 use Drupal\hs_bugherd\Entity\BugherdConnection;
 use Drupal\key\Entity\Key;
 use Drupal\rest\ResourceResponse;
@@ -22,11 +23,6 @@ use Drupal\rest\ResourceResponse;
  */
 class BugherdResource extends HsBugherdResourceBase {
 
-  public function get() {
-    $data = json_decode(file_get_contents(drupal_get_path('module', 'hs_bugherd') . '/src/Plugin/rest/resource/examples/fromBugherd/task_update.json'), TRUE);
-    return $this->post($data);
-  }
-
   /**
    * Responds to POST requests.
    *
@@ -34,13 +30,15 @@ class BugherdResource extends HsBugherdResourceBase {
    *   Post data from API.
    *
    * @return \Drupal\rest\ResourceResponse
+   *   API response.
    *
    * @see https://www.bugherd.com/api_v2
    */
   public function post(array $bugherd_data) {
     $task = $bugherd_data['task'] ?: $bugherd_data['comment']['task'];
-    if (!$this->setBugherdConnection($task['project_id'])) {
-      return;
+    $this->setBugherdConnection($task['project_id']);
+    if (!$this->bugherdConnection) {
+      return new ResourceResponse($this->t('No connection data'));
     }
 
     // New bugherd task.
@@ -62,7 +60,8 @@ class BugherdResource extends HsBugherdResourceBase {
         $issue->fields->setSummary($this->getTaskName($task));
         $issue->save();
 
-        // Attach the screenshot to the Jira Issue if it doesn't have any already.
+        // Attach the screenshot to the Jira Issue if it doesn't have any
+        // already.
         if (!empty($task['screenshot_url']) && empty($issue->fields->attachment)) {
           $this->addAttachment($issue->getKey(), $task['screenshot_url']);
         }
@@ -72,34 +71,34 @@ class BugherdResource extends HsBugherdResourceBase {
     }
 
     $response->setMaxAge(0);
-    $build = [
-      '#cache' => [
-        'max-age' => 0,
-      ],
-    ];
+    $build = ['#cache' => ['max-age' => 0]];
     $response->addCacheableDependency($build);
     return $response;
   }
 
   /**
-   * @param int $bugherd_project
+   * Set the appropriate Bugherd connection entity.
    *
-   * @return bool
+   * @param int $bugherd_project
+   *   Bugherd Project ID.
    */
   protected function setBugherdConnection($bugherd_project) {
     /** @var \Drupal\hs_bugherd\Entity\BugherdConnectionInterface $connection */
     foreach (BugherdConnection::loadMultiple() as $connection) {
       if ($connection->getBugherdProject() == $bugherd_project) {
         $this->bugherdConnection = $connection;
-        return TRUE;
       }
     }
   }
 
   /**
+   * Create a new Jira issue from Bugherd webhook data.
+   *
    * @param array $bugherd_task
+   *   Bugherd webhook data.
    *
    * @return \biologis\JIRA_PHP_API\Issue
+   *   Created Jira issue.
    */
   protected function createJiraIssue(array $bugherd_task) {
     /** @var \biologis\JIRA_PHP_API\Issue $issue */
@@ -143,7 +142,7 @@ class BugherdResource extends HsBugherdResourceBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|bool
    *   Result of adding comment.
    */
-  protected function addJiraComment(array $bugherd_task, $jira_issue, array $comment) {
+  protected function addJiraComment(array $bugherd_task, Issue $jira_issue, array $comment) {
     // Block comments from anonymous users so we don't have looping APIs.
     if (empty($comment['user']['email'])) {
       $this->logger->info('Anonymous comment rejected for ticket @id', ['@id' => $bugherd_task['local_task_id']]);
@@ -164,11 +163,11 @@ class BugherdResource extends HsBugherdResourceBase {
   /**
    * Create a usable description for JIRA from bugherd data.
    *
-   * @param array $task
-   *   Bugherd Data.
+   * @param array $bugherd_task
+   *   Bugherd task data.
    *
    * @return string
-   *   Build description.
+   *   Built description.
    */
   protected function getDescription(array $bugherd_task) {
     $description = [];
@@ -191,11 +190,11 @@ class BugherdResource extends HsBugherdResourceBase {
   /**
    * Get the configured task name to be created in JIRA.
    *
-   * @param array $task
-   *   Array of task values from bugherd.
+   * @param array $bugherd_task
+   *   Bugherd task data.
    *
    * @return string
-   *   Created name.
+   *   Constructed name.
    */
   protected function getTaskName(array $bugherd_task) {
     // Trim down the descrption to only 7 words so we dont clutter up JIRA with
@@ -267,6 +266,5 @@ class BugherdResource extends HsBugherdResourceBase {
     unlink($path);
     return $response;
   }
-
 
 }

@@ -62,6 +62,7 @@ function su_humsci_profile_block_access(Block $block, $operation, AccountInterfa
       ->addCacheableDependency($block);
   }
 }
+
 /**
  * Implements hook_entity_operation_alter().
  */

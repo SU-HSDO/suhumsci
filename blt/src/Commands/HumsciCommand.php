@@ -9,6 +9,8 @@ use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
  */
 class HumsciCommand extends AcHooksCommand {
 
+  use HumsciTrait;
+
   /**
    * Run cron on all sites.
    *
@@ -239,6 +241,36 @@ class HumsciCommand extends AcHooksCommand {
       ->drush("cr")
       ->run();
     $this->say("Finished deploying updates to $multisite.");
+  }
+
+  /**
+   * Update autoloader in composer.json.
+   *
+   * To allow us the ability to create TestBase.php files that can be inherited
+   * by test classes, we have to specify each namespace with the appropriate
+   * directory for the test files. Since composer doesn't do this dynamically,
+   * we have to manually build the autoloader data with all available tests.
+   *
+   * @command update-autoloader
+   */
+  public function updateAutoloader() {
+    $root = $this->getConfigValue('repo.root');
+    $humsci_modules = $this->getConfigValue('docroot') . '/modules/humsci';
+
+    $classes = [];
+    foreach ($this->rglob("$humsci_modules/*Test.php") as $path) {
+      $relative_path = str_replace("$root/", '', $path);
+
+      $module_path = substr($relative_path, 0, strpos($relative_path, '/tests/'));
+      $module = substr($module_path, strrpos($module_path, '/') + 1);
+
+      $classes["Drupal\\Tests\\$module\\"] = "$module_path/tests";
+    }
+
+    $composer = json_decode(file_get_contents("$root/composer.json"), TRUE);
+    $composer['autoload-dev']['psr-4'] = $classes;
+    file_put_contents("$root/composer.json", str_replace('  ', ' ', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) . PHP_EOL);
+    shell_exec("cd $root && composer dump-autoload");
   }
 
 }

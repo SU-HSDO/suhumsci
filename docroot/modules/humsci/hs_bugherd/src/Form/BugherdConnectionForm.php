@@ -4,6 +4,7 @@ namespace Drupal\hs_bugherd\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\hs_bugherd\Entity\BugherdConnection;
 use Drupal\hs_bugherd\HsBugherd;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,6 +37,17 @@ class BugherdConnectionForm extends EntityForm {
   public function __construct(HsBugherd $bugherd_api) {
     $this->bugherdApi = $bugherd_api;
   }
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    // If no bugherd projects are available, tell the user and don't allow them
+    // to enter any additional information.
+    if (empty($this->getAvailableBugherdProjects())) {
+      return ['#markup' => '<h2>' . $this->t('No available bugherd projects') . '</h2>'];
+    }
+    return parent::buildForm($form, $form_state);
+  }
 
   /**
    * {@inheritdoc}
@@ -67,7 +79,11 @@ class BugherdConnectionForm extends EntityForm {
       '#type' => 'select',
       '#title' => $this->t('Bugherd Project'),
       '#default_value' => $bugherd->getBugherdProject(),
-      '#options' => $this->bugherdApi->getProjects(),
+      '#options' => $this->getAvailableBugherdProjects(),
+      '#ajax' => [
+        'callback' => '::updateProjectUrls',
+        'wrapper' => 'project-urls',
+      ],
     ];
 
     $form['jiraProject'] = [
@@ -78,11 +94,20 @@ class BugherdConnectionForm extends EntityForm {
       '#required' => TRUE,
     ];
 
-    $form['urls'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Website urls'),
-      '#required' => TRUE,
-      '#default_value' => implode("\n", $bugherd->getUrls()),
+    $url = '';
+    if ($project_id = $bugherd->getBugherdProject()) {
+      $project = $this->bugherdApi->getProject($project_id);
+      $url = $project['devurl'];
+    }
+    $form['url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Website Url'),
+      '#description' => $this->t('More urls may be configured for this project.'),
+      '#default_value' => $url,
+      '#size' => strlen($url),
+      '#attributes' => ['disabled' => TRUE],
+      '#prefix' => '<div id="project-urls">',
+      '#suffix' => '</div>',
     ];
 
     $form['statusMap'] = [
@@ -132,6 +157,43 @@ class BugherdConnectionForm extends EntityForm {
     ];
 
     return $form;
+  }
+
+  /**
+   * Get the Bugherd projects which haven't been mapped to a Jira project yet.
+   *
+   * @return array
+   *   Associative array of Bugherd projects.
+   */
+  protected function getAvailableBugherdProjects() {
+    $projects = $this->bugherdApi->getProjects();
+    /** @var \Drupal\hs_bugherd\Entity\BugherdConnectionInterface $connection */
+    foreach (BugherdConnection::loadMultiple() as $connection) {
+      if ($connection->id() == $this->entity->id()) {
+        continue;
+      }
+      unset($projects[$connection->getBugherdProject()]);
+    }
+    return $projects;
+  }
+
+  /**
+   * Ajax callback to display the url of the chosen Bugherd project.
+   *
+   * @param array $form
+   *   Complete form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Current form state.
+   *
+   * @return array
+   *   Url with new default value.
+   */
+  public function updateProjectUrls(array $form, FormStateInterface $form_state) {
+    $project_id = $form_state->getValue('bugherdProject');
+    $project = $this->bugherdApi->getProject($project_id);
+    $form['url']['#default_value'] = $project['project']['devurl'];
+    $form['url']['#size'] = strlen($project['project']['devurl']);
+    return $form['url'];
   }
 
   /**

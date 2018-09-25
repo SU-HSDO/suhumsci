@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class BugherdResourceBase
+ * Class BugherdResourceBase.
  *
  * @package Drupal\hs_bugherd\Plugin\rest\resource
  */

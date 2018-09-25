@@ -3,6 +3,7 @@
 namespace Drupal\hs_bugherd;
 
 use Bugherd\Client;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\key\Entity\Key;
 
 /**
@@ -49,9 +50,17 @@ class HsBugherd {
   protected $client;
 
   /**
+   * Cache default service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheDefault;
+
+  /**
    * HsBugherd constructor.
    */
-  public function __construct() {
+  public function __construct(CacheBackendInterface $cache_default) {
+    $this->cacheDefault = $cache_default;
     $this->apiKey = static::getApiKey();
     $this->projectKey = self::getProjectId();
     $this->client = new Client($this->apiKey);
@@ -189,7 +198,24 @@ class HsBugherd {
    *   Returned response.
    */
   public function getProjects() {
-    return $this->getApi(self::BUGHERDAPI_PROJECT)->listing(FALSE, FALSE);
+    return  $this->getApi(self::BUGHERDAPI_PROJECT)->listing(FALSE, FALSE);
+  }
+
+  /**
+   * Get a single project information.
+   *
+   * @param int $project_id
+   *   Bugherd Project ID.
+   *
+   * @return array
+   */
+  public function getProject($project_id) {
+    if ($cache = $this->cacheDefault->get("hs_bugherd:project-$project_id")) {
+      return $cache->data;
+    }
+    $project = $this->getApi(self::BUGHERDAPI_PROJECT)->show($project_id);
+    $this->cacheDefault->set("hs_bugherd:project-$project_id", $project['project']);
+    return $project['project'];
   }
 
   /**

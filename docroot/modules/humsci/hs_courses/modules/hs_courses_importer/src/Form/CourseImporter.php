@@ -9,7 +9,6 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class CourseImporter.
@@ -125,18 +124,16 @@ class CourseImporter extends ConfigFormBase {
    *   Original form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   Current form state.
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function validateIsXmlUrl($url, array &$form, FormStateInterface $form_state) {
-    try {
-      /** @var \GuzzleHttp\Psr7\Response $response */
-      $response = $this->guzzle->request('GET', $url);
-    }
-    catch (GuzzleException $e) {
-      $form_state->setError($form['urls'], $this->t('Unable to gather data from %url.', ['%url' => $url]));
-      return;
-    }
-
+    /** @var \GuzzleHttp\Psr7\Response $response */
+    $response = $this->guzzle->request('GET', $url);
     $content_type = $response->getHeader('Content-Type');
+    if (empty($content_type)) {
+      $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));
+    }
     foreach ($content_type as $type) {
       if (strpos($type, 'xml') === FALSE) {
         $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));

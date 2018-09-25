@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     ignore_empty: true
  * @endcode
  */
-class TanslateCourseTag extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+class TranslateCourseTag extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * Entity Storage Service for hs_course_tag entity type.

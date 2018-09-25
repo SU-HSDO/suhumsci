@@ -11,6 +11,8 @@ use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
  */
 class HumsciConfigCommand extends ConfigCommand {
 
+  use HumsciTrait;
+
   protected $uuids = [];
 
   /**
@@ -30,25 +32,6 @@ class HumsciConfigCommand extends ConfigCommand {
         copy("config/default/$file_name", $config);
       }
     }
-  }
-
-  /**
-   * Recusive glob.
-   *
-   * @param string $pattern
-   *   Glob pattern.
-   * @param int $flags
-   *   Globl flags.
-   *
-   * @return array|void
-   *   Response from glob.
-   */
-  protected function rglob($pattern, $flags = 0) {
-    $files = glob($pattern, $flags);
-    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
-      $files = array_merge($files, $this->rglob($dir . '/' . basename($pattern), $flags));
-    }
-    return $files;
   }
 
   /**

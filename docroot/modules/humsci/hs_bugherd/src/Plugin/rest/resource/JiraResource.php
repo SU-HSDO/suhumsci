@@ -166,7 +166,7 @@ class JiraResource extends HsBugherdResourceBase {
    *
    * @param array $new_comment
    *   Jira comment data.
-   * @param $bugherd_task_id
+   * @param int $bugherd_task_id
    *   Bugherd task id.
    *
    * @return bool

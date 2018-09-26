@@ -2,6 +2,14 @@
 
 namespace Drupal\Tests\hs_bugherd\Form;
 
-class BugherdConnectionDeleteFormTest {
+use Drupal\Tests\UnitTestCase;
+
+/**
+ * Class BugherdConnectionDeleteFormTest.
+ *
+ * @covers \Drupal\hs_bugherd\Form\BugherdConnectionDeleteForm
+ * @group hs_bugherd
+ */
+abstract class BugherdConnectionDeleteFormTest extends UnitTestCase {
 
 }

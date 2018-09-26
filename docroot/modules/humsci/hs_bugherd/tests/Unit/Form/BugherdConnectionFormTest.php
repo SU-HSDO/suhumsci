@@ -14,12 +14,12 @@ use Drupal\hs_bugherd\HsBugherd;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Class BugherdConnectionFormTest
+ * Class BugherdConnectionFormTest.
  *
  * @covers \Drupal\hs_bugherd\Form\BugherdConnectionForm
  * @group hs_bugherd
  */
-class BugherdConnectionFormTest extends UnitTestCase {
+abstract class BugherdConnectionFormTest extends UnitTestCase {
 
   /**
    * Test Entity form.

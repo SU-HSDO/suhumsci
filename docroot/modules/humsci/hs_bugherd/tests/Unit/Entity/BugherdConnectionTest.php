@@ -11,7 +11,7 @@ use Drupal\Tests\UnitTestCase;
  * @covers \Drupal\hs_bugherd\Entity\BugherdConnection
  * @group hs_bugherd
  */
-class BugherdConnectionTest extends UnitTestCase {
+abstract class BugherdConnectionTest extends UnitTestCase {
 
   /**
    * Test Connection entity methods.

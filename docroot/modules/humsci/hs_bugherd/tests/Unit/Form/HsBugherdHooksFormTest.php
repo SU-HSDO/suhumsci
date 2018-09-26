@@ -2,6 +2,14 @@
 
 namespace Drupal\Tests\hs_bugherd\Form;
 
-class HsBugherdHooksFormTest {
+use Drupal\Tests\UnitTestCase;
+
+/**
+ * Class HsBugherdHooksFormTest.
+ *
+ * @covers \Drupal\hs_bugherd\Form\HsBugherdHooksForm
+ * @group hs_bugherd
+ */
+abstract class HsBugherdHooksFormTest extends UnitTestCase {
 
 }

@@ -78,30 +78,48 @@ class JiraResource extends HsBugherdResourceBase {
       }
 
       if ($change['field'] == 'Key') {
-        $changes['external_id'] = $this->getCurrentJiraKey($jira_data);
-        $current_project = $this->getCurrentJiraProject($jira_data);
-        $connection_mapped = FALSE;
-        /** @var \Drupal\hs_bugherd\Entity\BugherdConnectionInterface $connection */
-        foreach (BugherdConnection::loadMultiple() as $connection) {
-          if ($connection->getJiraProject() == $current_project) {
-            $connection_mapped = TRUE;
-          }
-        }
-
-        if (!$connection_mapped) {
-          $changes['status'] = HsBugherd::BUGHERDAPI_CLOSED;
-          $comment = [
-            'author' => ['displayName' => $jira_data['user']['displayName']],
-            'body' => $this->t('Connection Mapping lost. Refer to Jira ticket @key', ['@key' => $changes['external_id']]),
-          ];;
-          $this->addBugherdComment($comment, $bugherd_task['id']);
-        }
+        $changes += $this->getKeyChanges($jira_data, $bugherd_task);
       }
     }
 
     if ($changes) {
       $this->bugherdApi->updateTask($bugherd_task['id'], $changes, $bugherd_task['project_id']);
     }
+  }
+
+  /**
+   * Get changes when the Jira key changes.
+   *
+   * @param array $jira_data
+   *   Jira webhook data.
+   * @param array $bugherd_task
+   *   Bugherd task data.
+   *
+   * @return array
+   *   Array of changes to set on the Bugherd task.
+   *
+   * @throws \Exception
+   */
+  protected function getKeyChanges(array $jira_data, array $bugherd_task) {
+    $changes['external_id'] = $this->getCurrentJiraKey($jira_data);
+    $current_project = $this->getCurrentJiraProject($jira_data);
+    $connection_mapped = FALSE;
+    /** @var \Drupal\hs_bugherd\Entity\BugherdConnectionInterface $connection */
+    foreach (BugherdConnection::loadMultiple() as $connection) {
+      if ($connection->getJiraProject() == $current_project) {
+        $connection_mapped = TRUE;
+      }
+    }
+
+    if (!$connection_mapped) {
+      $changes['status'] = HsBugherd::BUGHERDAPI_CLOSED;
+      $comment = [
+        'author' => ['displayName' => $jira_data['user']['displayName']],
+        'body' => $this->t('Connection Mapping lost. Refer to Jira ticket @key', ['@key' => $changes['external_id']]),
+      ];;
+      $this->addBugherdComment($comment, $bugherd_task['id']);
+    }
+    return $changes;
   }
 
   /**
@@ -137,7 +155,31 @@ class JiraResource extends HsBugherdResourceBase {
     $comment = [
       'text' => $comment['author']['displayName'] . ': ' . $comment['body'],
     ];
-    return $this->bugherdApi->addComment($bugherd_task_id, $comment, $this->bugherdConnection->getBugherdProject());
+    if ($this->isNewComment($comment, $bugherd_task_id)) {
+      return $this->bugherdApi->addComment($bugherd_task_id, $comment, $this->bugherdConnection->getBugherdProject());
+    }
+    return $this->t('Repeated comment: @body', ['@body' => $comment['body']]);
+  }
+
+  /**
+   * Check if the comment is new to bugherd, prevent circular commenting.
+   *
+   * @param array $new_comment
+   *   Jira comment data.
+   * @param $bugherd_task_id
+   *   Bugherd task id.
+   *
+   * @return bool
+   *   If the comment is new.
+   */
+  protected function isNewComment(array $new_comment, $bugherd_task_id) {
+    $comments = $this->bugherdApi->getComments($bugherd_task_id);
+    foreach ($comments['comments'] as $comment) {
+      if (strpos($new_comment['body'], $comment['text']) !== FALSE) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
   /**

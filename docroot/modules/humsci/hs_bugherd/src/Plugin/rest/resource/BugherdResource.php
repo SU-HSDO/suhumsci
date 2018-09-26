@@ -145,7 +145,6 @@ class BugherdResource extends HsBugherdResourceBase {
   protected function addJiraComment(array $bugherd_task, Issue $jira_issue, array $comment) {
     // Block comments from anonymous users so we don't have looping APIs.
     if (empty($comment['user']['email'])) {
-      $this->logger->info('Anonymous comment rejected for ticket @id', ['@id' => $bugherd_task['local_task_id']]);
       return $this->t('Comment rejected from Anonymous');
     }
 

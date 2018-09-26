@@ -303,7 +303,7 @@ class HsBugherd {
    * @param int|null $project_id
    *   Project ID if different than current.
    *
-   * @return mixed
+   * @return array
    *   Api Response.
    *
    * @throws \Exception

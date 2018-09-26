@@ -70,9 +70,7 @@ class BugherdConnectionForm extends EntityForm {
     $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $bugherd->id(),
-      '#machine_name' => [
-        'exists' => '\Drupal\hs_bugherd\Entity\BugherdConnection::load',
-      ],
+      '#machine_name' => ['exists' => '\Drupal\hs_bugherd\Entity\BugherdConnection::load'],
       '#disabled' => !$bugherd->isNew(),
     ];
 
@@ -100,6 +98,7 @@ class BugherdConnectionForm extends EntityForm {
       $project = $this->bugherdApi->getProject($project_id);
       $url = $project['devurl'];
     }
+
     $form['url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Website Url'),
@@ -132,7 +131,6 @@ class BugherdConnectionForm extends EntityForm {
       '#required' => TRUE,
       '#default_value' => $statusMap[HsBugherd::BUGHERDAPI_TODO] ?? '',
     ];
-
     $form['statusMap'][HsBugherd::BUGHERDAPI_DOING] = [
       '#type' => 'textfield',
       '#title' => $this->t('Doing Status'),
@@ -140,7 +138,6 @@ class BugherdConnectionForm extends EntityForm {
       '#required' => TRUE,
       '#default_value' => $statusMap[HsBugherd::BUGHERDAPI_DOING] ?? '',
     ];
-
     $form['statusMap'][HsBugherd::BUGHERDAPI_DONE] = [
       '#type' => 'textfield',
       '#title' => $this->t('Done Status'),
@@ -148,7 +145,6 @@ class BugherdConnectionForm extends EntityForm {
       '#required' => TRUE,
       '#default_value' => $statusMap[HsBugherd::BUGHERDAPI_DONE] ?? '',
     ];
-
     $form['statusMap'][HsBugherd::BUGHERDAPI_CLOSED] = [
       '#type' => 'textfield',
       '#title' => $this->t('Closed Status'),
@@ -156,7 +152,6 @@ class BugherdConnectionForm extends EntityForm {
       '#required' => TRUE,
       '#default_value' => $statusMap[HsBugherd::BUGHERDAPI_CLOSED] ?? '',
     ];
-
     return $form;
   }
 

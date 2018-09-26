@@ -82,8 +82,10 @@ class BugherdConnectionSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
+    $key = Key::load($form_state->getValue('api_key'));
     $this->config('hs_bugherd.connection_settings')
-      ->set('api_key', $form_state->getValue('api_key'))
+      ->set('api_key', $key->id())
+      ->set('dependencies.config', [$key->getConfigDependencyName()])
       ->save();
   }
 

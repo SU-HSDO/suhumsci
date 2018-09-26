@@ -1,5 +1,21 @@
 # HumSci
 
+8.0.10
+--------------------------------------------------------------------------------  
+_Release Date: 2018-09-26_
+
+- Removed masquerade block and added a menu item under people.
+- Added custom permission for user list page
+- Added operation to edit user roles quicker for site managers
+- Improved test coverage
+- Use the block description instead of the admin label on the block display
+- Added visual indicator for links to unpublished nodes
+- Ignore status of baseline views.
+- Fixed double page titles on 404 pages
+- Custom login block with prefix contextual text input
+- Created config split to allow nobots to be disabled on live sites.
+- Set new menu items to be expanded by default.
+
 8.0.9
 --------------------------------------------------------------------------------  
 _Release Date: 2018-09-14_

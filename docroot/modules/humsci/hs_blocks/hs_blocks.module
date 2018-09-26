@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_blocks.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_blocks_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_blocks module.
+    case 'help.page.hs_blocks':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Humsci Blocks') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function hs_blocks_theme($existing, $type, $theme, $path) {
+  return [
+    'hs_blocks_login' => [
+      'template' => 'block--hs-login',
+      'variables' => ['preface' => NULL, 'link' => NULL, 'postface' => NULL],
+    ],
+  ];
+}

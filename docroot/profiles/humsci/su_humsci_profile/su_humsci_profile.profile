@@ -5,9 +5,13 @@
  * su_humsci_profile.profile
  */
 
+use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
+use Drupal\block\Entity\Block;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 
@@ -23,6 +27,17 @@ function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
  */
 function su_humsci_profile_local_tasks_alter(&$local_tasks) {
   unset($local_tasks['user.pass']);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $entity) {
+  // For new menu link items created on a node form (normally), set the expanded
+  // attribute so all menu items are expanded by default.
+  if ($entity->isNew()) {
+    $entity->set('expanded', TRUE);
+  }
 }
 
 /**
@@ -43,6 +58,20 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     $form['manual']['actions']['reset'] = Link::createFromRoute(t('Reset Password'), 'user.pass')
       ->toRenderable();
     unset($form['name'], $form['pass'], $form['actions']);
+  }
+}
+
+/**
+ * Implements hook_block_access().
+ */
+function su_humsci_profile_block_access(Block $block, $operation, AccountInterface $account) {
+  $current_request = \Drupal::requestStack()->getCurrentRequest();
+  // Disable the page title block on 404 page IF the page is a node. Nodes
+  // should have the page title displayed in the node display configuration so
+  // we can rely on that.
+  if ($block->getPluginId() == 'page_title_block' && $current_request->query->get('_exception_statuscode') == 404) {
+    return AccessResult::forbiddenIf($current_request->attributes->get('node'))
+      ->addCacheableDependency($block);
   }
 }
 

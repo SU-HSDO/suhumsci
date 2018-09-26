@@ -6,7 +6,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\encrypt\EncryptService;
-use Drupal\encrypt\Entity\EncryptionProfile;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\key\Entity\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -209,10 +208,6 @@ class HsBugherdForm extends ConfigFormBase {
     /** @var \Drupal\key\Entity\Key $key */
     $key = Key::load($form_state->getValue('api_key'));
     $config_dependencies = [$key->getConfigDependencyName()];
-    if ($profile_id = $form_state->getValue('encryption_profile')) {
-      $encryption_profile = EncryptionProfile::load($profile_id);
-      $config_dependencies[] = $encryption_profile->getConfigDependencyName();
-    }
 
     $this->config('bugherdapi.settings')
       ->set('project_id', $form_state->getValue('project_id'))

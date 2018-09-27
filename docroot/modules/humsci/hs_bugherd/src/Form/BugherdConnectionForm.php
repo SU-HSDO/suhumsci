@@ -193,14 +193,6 @@ class BugherdConnectionForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
-    $form_state->setValue('urls', explode("\n", $form_state->getValue('urls')));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $bugherd = $this->entity;
     $status = $bugherd->save();

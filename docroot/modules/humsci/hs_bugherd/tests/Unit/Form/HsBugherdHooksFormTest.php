@@ -2,7 +2,8 @@
 
 namespace Drupal\Tests\hs_bugherd\Form;
 
-use Drupal\Tests\Core\Form\FormTestBase;
+use Drupal\hs_bugherd\Form\HsBugherdHooksForm;
+use Drupal\Tests\hs_bugherd\Unit\HsBugherdUnitTestBase;
 
 /**
  * Class HsBugherdHooksFormTest.
@@ -10,13 +11,16 @@ use Drupal\Tests\Core\Form\FormTestBase;
  * @covers \Drupal\hs_bugherd\Form\HsBugherdHooksForm
  * @group hs_bugherd
  */
-class HsBugherdHooksFormTest extends FormTestBase {
+class HsBugherdHooksFormTest extends HsBugherdUnitTestBase {
 
   /**
-   * Test works.
+   * Test hooks form.
    */
-  public function testWorks() {
-    $this->assertEquals(1, 1);
+  public function testBugherdHooksForm() {
+    $form_object = HsBugherdHooksForm::create($this->container);
+    $this->assertEquals('hs_bugherd_hooks', $form_object->getFormId());
+    $this->assertEquals('Rebuild All Webhooks?', $form_object->getQuestion()
+      ->getUntranslatedString());
   }
 
 }

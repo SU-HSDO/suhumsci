@@ -4,15 +4,119 @@ namespace Drupal\Tests\hs_bugherd\Unit;
 
 use biologis\JIRA_PHP_API\GuzzleCommunicationService;
 use biologis\JIRA_PHP_API\IssueService;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeRepository;
+use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\Render\Renderer;
+use Drupal\Core\Routing\UrlGenerator;
+use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\hs_bugherd\Entity\BugherdConnection;
 use Drupal\hs_bugherd\HsBugherd;
 use Drupal\jira_rest\JiraRestWrapperService;
-use Drupal\Tests\Core\Form\FormTestBase;
+use Drupal\key\Entity\Key;
+use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+
+if (!defined('SAVED_NEW')) {
+  define('SAVED_NEW', 1);
+}
+if (!defined('SAVED_UPDATED')) {
+  define('SAVED_UPDATED', 2);
+}
 
 /**
  * Class HsBugherdUnitTestBase.
  */
-abstract class HsBugherdUnitTestBase extends FormTestBase {
+abstract class HsBugherdUnitTestBase extends UnitTestCase {
+
+  /**
+   * @var \Drupal\key\Entity\Key
+   */
+  protected $key;
+
+  /**
+   * @var \Drupal\Core\DependencyInjection\ContainerBuilder
+   */
+  protected $container;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeRepository;
+
+  /**
+   * @var EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorage
+   */
+  protected $configEntityStorage;
+
+  /**
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->key = new Key([
+      'id' => $this->randomMachineName(),
+      'label' => $this->getRandomGenerator()->string(),
+    ], 'key');
+
+    $this->container = new ContainerBuilder();
+
+    $this->configFactory = $this->createMock(ConfigFactory::class);
+    $this->configFactory->method('get')
+      ->with('hs_bugherd.connection_settings')
+      ->willReturn('stuff');
+    $this->container->set('config.factory', $this->configFactory);
+
+    $this->container->set('string_translation', $this->createMock(TranslationManager::class));
+
+    $this->configEntityStorage = $this->createMock(ConfigEntityStorage::class);
+    $this->configEntityStorage->method('loadMultiple')
+      ->will($this->returnCallback([$this, 'configEntityStorageCallback']));
+
+    $this->entityTypeRepository = $this->createMock(EntityTypeRepository::class);
+    $this->entityTypeRepository->method('getEntityTypeFromClass')
+      ->will($this->returnCallback([$this, 'entityTypeRepositoryCallback']));
+    $this->container->set('entity_type.repository', $this->entityTypeRepository);
+
+    $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
+    $this->entityTypeManager->method('getStorage')
+      ->withAnyParameters()
+      ->willReturn($this->configEntityStorage);
+    $this->entityTypeManager->method('getDefinition')
+      ->withAnyParameters()
+      ->willReturn($this->createMock(ConfigEntityType::class));
+    $this->container->set('entity_type.manager', $this->entityTypeManager);
+
+    $this->container->set('hs_bugherd', $this->getBugherdService());
+    $module_handler = $this->createMock(ModuleHandler::class);
+    $module_handler->method('getImplementations')
+      ->withAnyParameters()
+      ->willReturn([]);
+    $this->container->set('module_handler', $module_handler);
+
+    $this->container->set('renderer', $this->createMock(Renderer::class));
+    $this->container->set('messenger', $this->createMock(Messenger::class));
+    $this->container->set('url_generator', $this->createMock(UrlGenerator::class));
+    $this->container->set('jira_rest_wrapper_service', $this->getJiraService());
+    $this->container->set('cache.default', $this->createMock(CacheBackendInterface::class));
+    \Drupal::setContainer($this->container);
+  }
 
   /**
    * @param bool $with_hooks
@@ -50,6 +154,11 @@ abstract class HsBugherdUnitTestBase extends FormTestBase {
         'name' => 'TEST',
       ],
     ]);
+    $bugherd_api->getProject(Argument::type('integer'))
+      ->willReturn([
+        'project' => ['devurl' => 'http://example.com'],
+        'devurl' => 'http://example.com',
+      ]);
     return $bugherd_api->reveal();
   }
 
@@ -61,6 +170,29 @@ abstract class HsBugherdUnitTestBase extends FormTestBase {
     $jira_wrapper->getIssueService()
       ->willReturn(new JiraIssueServiceTest($with_hooks));
     return $jira_wrapper->reveal();
+  }
+
+  /**
+   * @param $class
+   *
+   * @return string
+   */
+  public function entityTypeRepositoryCallback($class) {
+    if ($class == BugherdConnection::class) {
+      return 'bugherd_connection';
+    }
+    if ($class == Key::class) {
+      return 'key';
+    }
+  }
+
+  /**
+   * @param array $ids
+   *
+   * @return array
+   */
+  public function configEntityStorageCallback($ids = []) {
+    return [];
   }
 
 }

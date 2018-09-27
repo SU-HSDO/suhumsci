@@ -15,31 +15,6 @@ use Drupal\encrypt\EncryptServiceInterface;
 class BugherdConnectionSettingsForm extends ConfigFormBase {
 
   /**
-   * Drupal\encrypt\EncryptServiceInterface definition.
-   *
-   * @var \Drupal\encrypt\EncryptServiceInterface
-   */
-  protected $encryption;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(ConfigFactoryInterface $config_factory, EncryptServiceInterface $encryption) {
-    parent::__construct($config_factory);
-    $this->encryption = $encryption;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('encryption')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {

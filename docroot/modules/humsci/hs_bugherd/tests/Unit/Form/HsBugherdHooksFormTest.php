@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\hs_bugherd\Form;
 
-use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\Core\Form\FormTestBase;
 
 /**
  * Class HsBugherdHooksFormTest.
@@ -10,6 +10,13 @@ use Drupal\Tests\UnitTestCase;
  * @covers \Drupal\hs_bugherd\Form\HsBugherdHooksForm
  * @group hs_bugherd
  */
-abstract class HsBugherdHooksFormTest extends UnitTestCase {
+class HsBugherdHooksFormTest extends FormTestBase {
+
+  /**
+   * Test works.
+   */
+  public function testWorks() {
+    $this->assertEquals(1, 1);
+  }
 
 }

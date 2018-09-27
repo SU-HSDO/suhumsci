@@ -10,13 +10,13 @@ use Drupal\Tests\hs_bugherd\Unit\HsBugherdUnitTestBase;
  * @covers \Drupal\hs_bugherd\Form\BugherdConnectionSettingsForm
  * @group hs_bugherd
  */
-abstract class BugherdConnectionSettingsFormTest extends HsBugherdUnitTestBase {
+class BugherdConnectionSettingsFormTest extends HsBugherdUnitTestBase {
 
   /**
-   * Test settings connection form.
+   * Test works.
    */
-  public function testSettingsForm() {
-
+  public function testWorks() {
+    $this->assertEquals(1, 1);
   }
 
 }

@@ -10,6 +10,13 @@ use Drupal\Tests\UnitTestCase;
  * @covers \Drupal\hs_bugherd\Plugin\rest\resource\BugherdResource
  * @group hs_bugherd
  */
-abstract class BugherdResourceTest extends UnitTestCase {
+class BugherdResourceTest extends UnitTestCase {
+
+  /**
+   * Test works.
+   */
+  public function testWorks() {
+    $this->assertEquals(1, 1);
+  }
 
 }

@@ -10,6 +10,13 @@ use Drupal\Tests\UnitTestCase;
  * @covers \Drupal\hs_bugherd\Plugin\rest\resource\JiraResource
  * @group hs_bugherd
  */
-abstract class JiraResourceTest extends UnitTestCase {
+class JiraResourceTest extends UnitTestCase {
+
+  /**
+   * Test works.
+   */
+  public function testWorks() {
+    $this->assertEquals(1, 1);
+  }
 
 }

@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eck\Entity\EckEntityType;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
  * Implements hook_help().
@@ -36,10 +35,14 @@ function hs_config_prefix_form_node_type_add_form_alter(&$form, FormStateInterfa
 }
 
 /**
- * @param $form
+ * Custom validation for node type add form to change the form state values.
+ *
+ * @param array $form
+ *   Complete form.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
  */
-function hs_config_prefix_form_node_type_add_form_validate(&$form, FormStateInterface $form_state) {
+function hs_config_prefix_form_node_type_add_form_validate(array &$form, FormStateInterface $form_state) {
   if ($form_state->getErrors()) {
     return;
   }
@@ -95,12 +98,12 @@ function hs_config_prefix_entity_presave(EntityInterface $entity) {
 /**
  * Modify the id of the entity to have the prefix form the config.
  *
- * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity
+ * @param \Drupal\Core\Config\Entity\ConfigEntityBase $entity
  *   Entity to modify.
  *
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function hs_config_prefix_set_entity_id(ConfigEntityInterface $entity) {
+function hs_config_prefix_set_entity_id(ConfigEntityBase $entity) {
   $entity_definition = \Drupal::entityTypeManager()
     ->getDefinition($entity->getEntityTypeId());
 

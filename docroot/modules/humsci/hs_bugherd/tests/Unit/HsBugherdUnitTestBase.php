@@ -103,7 +103,7 @@ abstract class HsBugherdUnitTestBase extends UnitTestCase {
       ->willReturn($this->createMock(ConfigEntityType::class));
     $this->container->set('entity_type.manager', $this->entityTypeManager);
 
-    $this->container->set('hs_bugherd', $this->getBugherdService());
+    $this->container->set('hs_bugherd', $this->getBugherdService(TRUE));
     $module_handler = $this->createMock(ModuleHandler::class);
     $module_handler->method('getImplementations')
       ->withAnyParameters()
@@ -113,7 +113,7 @@ abstract class HsBugherdUnitTestBase extends UnitTestCase {
     $this->container->set('renderer', $this->createMock(Renderer::class));
     $this->container->set('messenger', $this->createMock(Messenger::class));
     $this->container->set('url_generator', $this->createMock(UrlGenerator::class));
-    $this->container->set('jira_rest_wrapper_service', $this->getJiraService());
+    $this->container->set('jira_rest_wrapper_service', $this->getJiraService(TRUE));
     $this->container->set('cache.default', $this->createMock(CacheBackendInterface::class));
     \Drupal::setContainer($this->container);
   }
@@ -132,7 +132,13 @@ abstract class HsBugherdUnitTestBase extends UnitTestCase {
             'id' => 99999,
             'target_url' => 'http://example.com',
             'event' => 'comment',
-            'project_id' => self::PROJECT_ID,
+            'project_id' => 999,
+          ],
+          [
+            'id' => 12345,
+            'target_url' => 'http://example.com',
+            'event' => 'issue_create',
+            'project_id' => 123,
           ],
         ],
       ]);
@@ -145,12 +151,13 @@ abstract class HsBugherdUnitTestBase extends UnitTestCase {
       ->willThrow(new \Exception('This failed!'));
     $bugherd_api->isConnectionSuccessful()->willReturn(TRUE);
     $bugherd_api->getProjects()->willReturn([
-      9999 => 'Test Project',
+      999 => 'Test Project',
+      123 => 'Second project',
     ]);
     $bugherd_api->setApiKey(Argument::type('string'))->willReturn();
     $bugherd_api->getOrganization()->willReturn([
       'organization' => [
-        'id' => 999,
+        'id' => 99,
         'name' => 'TEST',
       ],
     ]);
@@ -269,7 +276,7 @@ class JiraCommunicationServiceTest extends GuzzleCommunicationService {
       'self' => 'https://stanfordits.atlassian.net/rest/webhooks/1.0/webhook/999999',
       'events' => ['jira:issue_updated', 'comment_created'],
       'filters' => (object) [
-        'issue-related-events-section' => "project = TEST and summary ~ 'BUGHERD-*'",
+        'issue-related-events-section' => "summary ~ 'BUGHERD-*'",
       ],
     ];
     if ($path == '/rest/webhooks/1.0/webhook') {

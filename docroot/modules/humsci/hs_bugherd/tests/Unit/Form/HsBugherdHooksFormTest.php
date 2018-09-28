@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class HsBugherdHooksFormTest extends HsBugherdUnitTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->container = \Drupal::getContainer();

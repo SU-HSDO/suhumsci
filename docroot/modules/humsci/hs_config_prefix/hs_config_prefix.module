@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_config_prefix.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
+
+/**
+ * Implements hook_help().
+ */
+function hs_config_prefix_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_config_prefix module.
+    case 'help.page.hs_config_prefix':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Prefix any configuration entities with a specified string') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function hs_config_prefix_entity_presave(EntityInterface $entity) {
+  if ($entity->isNew() && $entity instanceof ConfigEntityBase) {
+    $config_types = ['view', 'node_type'];
+    //    dpm($entity->getEntityTypeId());
+    if (in_array($entity->getEntityTypeId(), $config_types)) {
+
+      $entity_definition = \Drupal::entityTypeManager()
+        ->getDefinition($entity->getEntityTypeId());
+
+      // Different entity types have different keys for the id attribute.
+      $id_key = $entity_definition->getKey('id');
+      $prefix = \Drupal::config('hs_config_prefix.settings')->get('prefix');
+
+      // Check if manually entered prefix exists.
+      if (strpos($entity->id(), $prefix) !== 0) {
+        $id = $prefix . $entity->id();
+        $entity->set($id_key, $id);
+        $entity->setOriginalId($id);
+      }
+    }
+  }
+}

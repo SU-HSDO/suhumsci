@@ -4,6 +4,7 @@ namespace Drupal\hs_bugherd\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\hs_bugherd\Entity\BugherdConnection;
 use Drupal\hs_bugherd\HsBugherd;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,6 +43,13 @@ class BugherdConnectionForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // If connection to Bugherd fails, tell the user.
+    if (!$this->bugherdApi->isConnectionSuccessful()) {
+      $link = Link::createFromRoute('API settings', 'hs_bugherd.bugherd_connection_settings_form')
+        ->toString();
+      return ['#markup' => '<h2>' . $this->t('No connection to Bugherd. Please configure the @link.', ['@link' => $link]) . '</h2>'];
+    }
+
     // If no bugherd projects are available, tell the user and don't allow them
     // to enter any additional information.
     if (empty($this->getAvailableBugherdProjects())) {

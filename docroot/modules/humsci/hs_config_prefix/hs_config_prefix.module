@@ -28,10 +28,26 @@ function hs_config_prefix_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_alter().
  */
-function hs_config_prefix_form_node_type_add_form_alter(&$form, FormStateInterface $form_state) {
-  $form['#validate'][] = 'hs_config_prefix_form_node_type_add_form_validate';
+function hs_config_prefix_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_ids = [
+    'node_type_add_form' => 'type',
+    'ds_field_form' => 'id',
+    'webform_add_form' => 'id',
+  ];
+  if (!isset($form_ids[$form_id])) {
+    return;
+  }
+
+  // Special assistance is needed for a few forms so we'll modify the form state
+  // values during validation. For example:
+  // * Adding a node type redirects to the manage fields route based on the form
+  // state value.
+  // * DS fields don't fire the config entity hook.
+  // * Adding webform redirects to build page based on the form state values.
+  $form_state->set('hs_config_prefix_key', $form_ids[$form_id]);
+  array_unshift($form['#validate'], 'hs_config_prefix_custom_form_validate');
 }
 
 /**
@@ -42,19 +58,13 @@ function hs_config_prefix_form_node_type_add_form_alter(&$form, FormStateInterfa
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   Current form state.
  */
-function hs_config_prefix_form_node_type_add_form_validate(array &$form, FormStateInterface $form_state) {
-  if ($form_state->getErrors()) {
-    return;
-  }
-  // Special help is needed when adding a node type because after submission, it
-  // redirects to the node manage fields page based on the form values instead
-  // of the type's id value.
-  $id = $form_state->getValue('type');
+function hs_config_prefix_custom_form_validate(&$form, FormStateInterface $form_state) {
+  $id = $form_state->getValue($form_state->get('hs_config_prefix_key'));
   $prefix = \Drupal::config('hs_config_prefix.settings')->get('prefix');
 
   // Check if manually entered prefix exists.
   if ($prefix && strpos($id, $prefix) !== 0) {
-    $form_state->setValue('type', "{$prefix}{$id}");
+    $form_state->setValue($form_state->get('hs_config_prefix_key'), "{$prefix}{$id}");
   }
 }
 
@@ -63,6 +73,8 @@ function hs_config_prefix_form_node_type_add_form_validate(array &$form, FormSta
  */
 function hs_config_prefix_entity_presave(EntityInterface $entity) {
   if ($entity->isNew() && $entity instanceof ConfigEntityBase) {
+    // Form and view displays are namespace by the view modes and form modes.
+    // Field storage is managed by the field_ui.settings config.
     $exclude_config_types = [
       'entity_form_display',
       'entity_view_display',
@@ -111,6 +123,9 @@ function hs_config_prefix_set_entity_id(ConfigEntityBase $entity) {
   $id_key = $entity_definition->getKey('id');
   $prefix = \Drupal::config('hs_config_prefix.settings')->get('prefix');
 
+  // Some entity ID's have a prefix. Like view modes, when created through the
+  // UI the entity id is `node.machine_name` so we split up any entities so that
+  // we dont modify the prefix.
   $entity_id = explode('.', $entity->id());
   $item_id = array_pop($entity_id);
 

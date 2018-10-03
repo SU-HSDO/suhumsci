@@ -14,12 +14,23 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
+use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_install_tasks_alter().
  */
 function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
   $tasks['install_finished']['function'] = 'su_humsci_profile_lock_config';
+}
+
+/**
+ * Implements hook_link_alter().
+ */
+function su_humsci_profile_link_alter(&$variables) {
+  if (!$variables['url']->isExternal() && ($variables['url']->getRouteName() == 'entity.user.collection' || $variables['url']->getRouteName() == 'user.admin_index')) {
+    $variables['text'] = 'Users';
+  }
 }
 
 /**

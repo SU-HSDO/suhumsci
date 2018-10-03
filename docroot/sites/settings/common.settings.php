@@ -98,3 +98,9 @@ if ($is_ah_env) {
   $settings['hash_salt'] = file_get_contents("/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/salt.txt");
   $settings['letsencrypt_challenge_directory'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/files/";
 }
+
+// set the config_ignore settings so that config imports will function.
+if ($is_local_env) {
+  $config_ignore = \Drupal\Core\Serialization\Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/default/config_ignore.settings.yml'));
+  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
+}

@@ -24,6 +24,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
+    - field.field.node.hs_person.field_hs_person_student_type
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -490,6 +491,22 @@ third_party_settings:
                 type: link
             additional: {  }
             weight: 15
+          8acc1b43-548d-4000-a2ce-d90a46666871:
+            uuid: 8acc1b43-548d-4000-a2ce-d90a46666871
+            region: main_above
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:hs_person:field_hs_person_student_type'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 16
     enabled: true
     allow_custom: false
 _core:
@@ -525,6 +542,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     type: string
+    region: main_above
+  field_hs_person_student_type:
+    weight: 103
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: main_above
   links:
     weight: 100

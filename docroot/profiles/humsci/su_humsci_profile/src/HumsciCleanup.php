@@ -33,15 +33,13 @@ class HumsciCleanup {
    * HumsciCleanup constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity Type manager service.
+   * @param EntityTypeBundleInfoInterface $bundle_info
+   *   Bundle Info Service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info) {
     $this->entityTypeManager = $entity_type_manager;
     $this->bundleInfo = $bundle_info;
-  }
-
-  public function test() {
-    $cleanup = \Drupal::service('su_humsci_profile.cleanup');
-    $cleanup->deleteField('node', 'field_hs_person_faculty_interest');
   }
 
   /**

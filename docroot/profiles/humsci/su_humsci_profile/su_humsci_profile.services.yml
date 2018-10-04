@@ -4,3 +4,6 @@ services:
     arguments: ['@module_handler']
     tags:
       - { name: event_subscriber }
+  su_humsci_profile.cleanup:
+    class: Drupal\su_humsci_profile\HumsciCleanup
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']

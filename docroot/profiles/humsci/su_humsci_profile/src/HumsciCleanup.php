@@ -34,7 +34,7 @@ class HumsciCleanup {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity Type manager service.
-   * @param EntityTypeBundleInfoInterface $bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
    *   Bundle Info Service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info) {
@@ -79,6 +79,8 @@ class HumsciCleanup {
   /**
    * Delete a field from any view it might be on.
    *
+   * @param string $entity_type
+   *   Entity type the field is on.
    * @param string $field_name
    *   Field machine name.
    *
@@ -92,19 +94,8 @@ class HumsciCleanup {
       $changed = FALSE;
       $displays = $view->get('display');
       foreach ($displays as &$display) {
-        unset($display['display_options']['row']['pattern_mapping']["views_row:$field_name"]);
-
-        $keys = ['fields', 'filters', 'sorts', 'arguments', 'relationships'];
-
-        foreach ($keys as $key) {
-          if (!empty($display['display_options'][$key])) {
-            foreach ($display['display_options'][$key] as $item_key => $item) {
-              if ($item['table'] == "{$entity_type}__$field_name") {
-                $changed = TRUE;
-                unset($display['display_options'][$key][$item_key]);
-              }
-            }
-          }
+        if ($this->cleanupViewDisplay($display, $entity_type, $field_name)) {
+          $changed = TRUE;
         }
       }
 
@@ -113,6 +104,38 @@ class HumsciCleanup {
         $view->save();
       }
     }
+  }
+
+  /**
+   * Delete any occurrences of the field in the view display settings.
+   *
+   * @param array $display
+   *   View display settings.
+   * @param string $entity_type
+   *   Entity type id.
+   * @param string $field_name
+   *   Field machine name.
+   *
+   * @return bool
+   *   If the display was changed at all.
+   */
+  protected function cleanupViewDisplay(array &$display, $entity_type, $field_name) {
+    $changed = FALSE;
+    unset($display['display_options']['row']['pattern_mapping']["views_row:$field_name"]);
+
+    $keys = ['fields', 'filters', 'sorts', 'arguments', 'relationships'];
+
+    foreach ($keys as $key) {
+      if (!empty($display['display_options'][$key])) {
+        foreach ($display['display_options'][$key] as $item_key => $item) {
+          if ($item['table'] == "{$entity_type}__$field_name") {
+            $changed = TRUE;
+            unset($display['display_options'][$key][$item_key]);
+          }
+        }
+      }
+    }
+    return $changed;
   }
 
 }

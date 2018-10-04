@@ -57,6 +57,48 @@ function su_humsci_profile_lock_config(&$install_state) {
 }
 
 /**
+ * Completely delete a field from the database.
+ *
+ * @param string $entity_type
+ *   Entity type id.
+ * @param string $field_name
+ *   Machine name of field.
+ */
+function su_humsci_profile_delete_field($entity_type, $field_name) {
+  $field_storage = \Drupal\field\Entity\FieldStorageConfig::load("$entity_type.$field_name");
+  if (!$field_storage) {
+    return;
+  }
+  su_humsci_profile_delte_field_from_views($field_name);
+  $field_configs = [];
+  /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $bundle_info */
+  $bundle_info = \Drupal::service('entity_type.bundle.info');
+  foreach (array_keys($bundle_info->getBundleInfo($entity_type)) as $bundle) {
+    $field_configs[] = "$entity_type.$bundle.$field_name";
+  }
+  $field_configs = \Drupal\field\Entity\FieldConfig::loadMultiple($field_configs);
+
+  /** @var \Drupal\field\Entity\FieldConfig $field_config */
+  foreach ($field_configs as $field_config) {
+//    $field_config->delete();
+  }
+//  $field_storage->delete();
+}
+
+function su_humsci_profile_delte_field_from_views($field_name) {
+  /** @var \Drupal\views\Entity\View $view */
+  foreach (\Drupal\views\Entity\View::loadMultiple() as $view) {
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      unset($display['display_options']['row']['pattern_mapping']["views_row:$field_name"]);
+      unset($display['display_options']['fields'][$field_name]);
+    }
+    $view->set('display', $displays);
+    $view->save();
+  }
+}
+
+/**
  * Create config split entities.
  */
 function su_humsci_profile_update_8002() {
@@ -148,7 +190,7 @@ function su_humsci_profile_update_8007() {
 /**
  * Add view status to config ignore.
  */
-function su_humsci_profile_update_8008(){
+function su_humsci_profile_update_8008() {
   $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
   if ($ignored_entities = $config->get('ignored_config_entities')) {
     $ignored_entities[] = 'views.view.hs_*:status';

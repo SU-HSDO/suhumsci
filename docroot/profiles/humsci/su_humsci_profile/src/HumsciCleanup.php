@@ -73,8 +73,8 @@ class HumsciCleanup {
 
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     foreach ($field_configs as $field_config) {
-//      field_purge_field($field_config);
-//      $field_config->delete();
+      field_purge_field($field_config);
+      $field_config->delete();
     }
   }
 
@@ -90,7 +90,7 @@ class HumsciCleanup {
    */
   public function deleteFieldFromViews($entity_type, $field_name) {
     /** @var \Drupal\views\Entity\View $view */
-    foreach (View::loadMultiple(['a_test']) as $view) {
+    foreach (View::loadMultiple() as $view) {
       $changed = FALSE;
       $displays = $view->get('display');
       foreach ($displays as &$display) {

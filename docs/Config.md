@@ -24,6 +24,14 @@ to make any changes. Doing so ensures we get accurate import and syncing to code
 do a config import. But a config import should still be executed if any changes are applied or the change should be 
 completed in the UI as well, so that on the next config export the file will still contain the changes.
 
+### Blocks
+With custom themes available to the user, custom blocks on those themes becomes and issue on local environments. When
+a user enables a new subtheme, the blocks are copied and applied to the new theme as new config files. Syncing to that
+site we want to retain those blocks so we have ignored them from the config management. But then on export, the block
+config files are then created. So to prevent them from being committed, we've ignored them from git as well. That allows
+us to make config changes on local environments quickly and safely without adding unwanted configs. We can still add
+new block configs, but we have to deliberately tell git to add that particular file.
+
 ## Config Read Only
 On the production environment we have implemented [config_readonly](https://www.drupal.org/project/config_readonly) module
 but we have done some customizations on the way that is locks the configurations. Originally the module locks every 

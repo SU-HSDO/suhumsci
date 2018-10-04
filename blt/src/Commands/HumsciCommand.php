@@ -286,6 +286,12 @@ class HumsciCommand extends AcHooksCommand {
 
     $base_subtheme = $this->getConfigValue('docroot') . '/themes/humsci/su_humsci_subtheme';
     $new_subtheme = $this->getConfigValue('docroot') . '/themes/humsci/' . $new_machine_name;
+
+    if (file_exists($new_subtheme)) {
+      $this->yell('Subtheme already exists');
+      return;
+    }
+
     $this->taskCopyDir([$base_subtheme => $new_subtheme])->run();
 
     foreach ($this->rglob("$new_subtheme/*") as $file) {

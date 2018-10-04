@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * hs_bugherd.install
+ */
+
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Delete old resource config and create the 2 new ones.
+ */
+function hs_bugherd_update_8001() {
+  \Drupal::configFactory()
+    ->getEditable('rest.resource.hs_bugherd_resource')
+    ->delete();
+
+  $source = new FileStorage(drupal_get_path('module', 'hs_bugherd') . '/config/install');
+  /** @var \Drupal\Core\Config\CachedStorage $config_storage */
+  $config_storage = \Drupal::service('config.storage');
+  $config_names = [
+    'rest.resource.hs_bugherd_resource_bugherd',
+    'rest.resource.hs_bugherd_resource_jira',
+  ];
+  foreach ($config_names as $name) {
+    $config_storage->write($name, $source->read($name));
+  }
+}

@@ -41,7 +41,7 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setRequirement('_permission', 'administer blocks+view restricted block content');
     }
 
-    foreach ($collection as $key => &$route) {
+    foreach ($collection as &$route) {
       if (strpos($route->getPath(), '/admin/people') === 0) {
         $route->setPath(str_replace('/admin/people', '/admin/users', $route->getPath()));
       }

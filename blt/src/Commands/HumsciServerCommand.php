@@ -11,6 +11,8 @@ use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
  */
 class HumsciServerCommand extends AcHooksCommand {
 
+  use HumsciTrait;
+
   protected $apiEndpoint = 'https://cloudapi.acquia.com/v1';
 
   /**
@@ -146,6 +148,8 @@ class HumsciServerCommand extends AcHooksCommand {
 
     $domains = array_merge($domains, $options['domains']);
     $domains = array_merge($domains, $this->getDomains());
+    $domains = array_unique($domains);
+    $this->removeDomains($domains);
 
     $primary_domain = array_shift($domains);
     asort($domains);
@@ -179,6 +183,28 @@ class HumsciServerCommand extends AcHooksCommand {
         continue;
       }
       $domains[] = trim($new_domain, ' /\\');
+    }
+    return $domains;
+  }
+
+  /**
+   * Ask the user if there are any domains on the current cert to be removed.
+   *
+   * @param array $existing_domains
+   *   Array of current domains.
+   *
+   * @return array
+   *   Array of remaining domains.
+   */
+  protected function removeDomains(array &$existing_domains) {
+    $domains = [];
+    $choices = array_merge(['Done'], $existing_domains);
+    while ($remove_domain = $this->askChoice('Would you like to remove a domain?', $choices)) {
+      if ($remove_domain == 'Done') {
+        break;
+      }
+      unset($existing_domains[array_search($remove_domain, $existing_domains)]);
+      $choices = array_merge(['Done'], $existing_domains);
     }
     return $domains;
   }

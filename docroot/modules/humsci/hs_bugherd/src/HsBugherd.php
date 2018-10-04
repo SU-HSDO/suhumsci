@@ -3,6 +3,7 @@
 namespace Drupal\hs_bugherd;
 
 use Bugherd\Client;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\key\Entity\Key;
 
 /**
@@ -49,9 +50,17 @@ class HsBugherd {
   protected $client;
 
   /**
+   * Cache default service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheDefault;
+
+  /**
    * HsBugherd constructor.
    */
-  public function __construct() {
+  public function __construct(CacheBackendInterface $cache_default) {
+    $this->cacheDefault = $cache_default;
     $this->apiKey = static::getApiKey();
     $this->projectKey = self::getProjectId();
     $this->client = new Client($this->apiKey);
@@ -65,7 +74,7 @@ class HsBugherd {
    */
   public static function getApiKey() {
     $key_id = \Drupal::configFactory()
-      ->get('bugherdapi.settings')
+      ->get('hs_bugherd.connection_settings')
       ->get('api_key');
     /** @var \Drupal\key\Entity\Key $key */
     if ($key_id && $key = Key::load($key_id)) {
@@ -120,9 +129,6 @@ class HsBugherd {
 
   /**
    * Get the desired API.
-   *
-   * @param string $api
-   *   Bugherd api to get: organization, user, project, task, comment, webhook.
    *
    * @return \Bugherd\Api\AbstractApi
    *   The api.
@@ -196,6 +202,24 @@ class HsBugherd {
   }
 
   /**
+   * Get a single project information.
+   *
+   * @param int $project_id
+   *   Bugherd Project ID.
+   *
+   * @return array
+   *   Data of the project.
+   */
+  public function getProject($project_id) {
+    if ($cache = $this->cacheDefault->get("hs_bugherd:project-$project_id")) {
+      return $cache->data;
+    }
+    $project = $this->getApi(self::BUGHERDAPI_PROJECT)->show($project_id);
+    $this->cacheDefault->set("hs_bugherd:project-$project_id", $project['project']);
+    return $project['project'] ?? [];
+  }
+
+  /**
    * Get all task for a project.
    *
    * @param int|null $project_id
@@ -209,7 +233,7 @@ class HsBugherd {
    * @see https://www.bugherd.com/api_v2#api_task_list
    */
   public function getTasks($project_id = NULL, array $params = []) {
-    return (array) $this->getApi(self::BUGHERDAPI_TASK)
+    return $this->getApi(self::BUGHERDAPI_TASK)
       ->all($project_id ?: $this->projectKey, $params);
   }
 
@@ -279,6 +303,9 @@ class HsBugherd {
    * @param int|null $project_id
    *   Project ID if different than current.
    *
+   * @return array
+   *   Api Response.
+   *
    * @throws \Exception
    *
    * @see https://www.bugherd.com/api_v2#api_comment_create
@@ -287,7 +314,7 @@ class HsBugherd {
     if (!isset($comment_data['text'])) {
       throw new \Exception('Text is required to add a comment');
     }
-    $this->getApi(self::BUGHERDAPI_COMMENT)
+    return $this->getApi(self::BUGHERDAPI_COMMENT)
       ->create($project_id ?: $this->projectKey, $task_id, $comment_data);
   }
 

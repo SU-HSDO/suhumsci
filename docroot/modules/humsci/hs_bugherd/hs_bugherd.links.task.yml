@@ -1,22 +1,15 @@
-hs_bugherd.config:
-  route_name: bugherdapi.bugherd_configuration_form
-  title: 'Bugherd Configuration'
-  base_route: bugherdapi.bugherd_configuration_form
+entity.bugherd_connection.collection:
+  route_name: entity.bugherd_connection.collection
+  title: 'Bugherd Connections'
+  base_route: entity.bugherd_connection.collection
 
-hs_bugherd.api:
-  route_name: hs_bugherd.api
-  title: 'Bugherd REST'
-  base_route: bugherdapi.bugherd_configuration_form
-  weight: 100
-
-hs_bugherd.jira:
-  route_name: jira_rest.config
-  title: 'Jira REST'
-  base_route: bugherdapi.bugherd_configuration_form
-  weight: 200
+hs_bugherd.connection_settings:
+  route_name: hs_bugherd.bugherd_connection_settings_form
+  title: 'Bugherd Connection Settings'
+  base_route: entity.bugherd_connection.collection
 
 hs_bugherd.webhooks:
   route_name: hs_bugherd.webhooks
   title: 'Webhooks'
-  base_route: bugherdapi.bugherd_configuration_form
+  base_route: entity.bugherd_connection.collection
   weight: 300

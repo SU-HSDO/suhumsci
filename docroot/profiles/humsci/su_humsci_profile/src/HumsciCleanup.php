@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\views\Entity\View;
 
 /**
  * Class HumsciCleanup.
@@ -61,7 +62,7 @@ class HumsciCleanup {
     if (!$field_storage) {
       return;
     }
-    $this->deleteFieldFromViews($field_name);
+    $this->deleteFieldFromViews($entity_type, $field_name);
     $field_configs = [];
 
     foreach (array_keys($this->bundleInfo->getBundleInfo($entity_type)) as $bundle) {
@@ -72,8 +73,8 @@ class HumsciCleanup {
 
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     foreach ($field_configs as $field_config) {
-      field_purge_field($field_config);
-      $field_config->delete();
+//      field_purge_field($field_config);
+//      $field_config->delete();
     }
   }
 
@@ -87,28 +88,32 @@ class HumsciCleanup {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function deleteFieldFromViews($field_name) {
+  public function deleteFieldFromViews($entity_type, $field_name) {
     /** @var \Drupal\views\Entity\View $view */
-    foreach ($this->entityTypeManager->getStorage('view')
-               ->loadMultiple() as $view) {
+    foreach (View::loadMultiple(['a_test']) as $view) {
+      $changed = FALSE;
       $displays = $view->get('display');
       foreach ($displays as &$display) {
         unset($display['display_options']['row']['pattern_mapping']["views_row:$field_name"]);
-        unset($display['display_options']['fields'][$field_name]);
-        unset($display['display_options']['relationships'][$field_name]);
 
-        foreach (['filters', 'sorts', 'arguments'] as $key) {
-          if (!empty($displays['display_options'][$key])) {
-            foreach ($displays['display_options'][$key] as $item_key => $item) {
-              if ($item['field'] == $field_name) {
-                unset($displays['display_options'][$key][$item_key]);
+        $keys = ['fields', 'filters', 'sorts', 'arguments', 'relationships'];
+
+        foreach ($keys as $key) {
+          if (!empty($display['display_options'][$key])) {
+            foreach ($display['display_options'][$key] as $item_key => $item) {
+              if ($item['table'] == "{$entity_type}__$field_name") {
+                $changed = TRUE;
+                unset($display['display_options'][$key][$item_key]);
               }
             }
           }
         }
       }
-      $view->set('display', $displays);
-      $view->save();
+
+      if ($changed) {
+        $view->set('display', $displays);
+        $view->save();
+      }
     }
   }
 

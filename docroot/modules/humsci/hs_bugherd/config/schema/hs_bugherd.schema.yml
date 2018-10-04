@@ -1,0 +1,45 @@
+hs_bugherd.connection_settings:
+  type: config_entity
+  label: 'Bugherd Connection Settings'
+  mapping:
+    api_key:
+      type: string
+      label: 'Key'
+
+hs_bugherd.bugherd.*:
+  type: config_entity
+  label: 'Bugherd Connection config'
+  mapping:
+    uuid:
+      type: string
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    bugherdProject:
+      type: integer
+      label: 'Project ID'
+    jiraProject:
+      type: string
+      label: 'Jira Project'
+    statusMap:
+      type: mapping
+      label: 'Jira Status Map'
+      mapping:
+        backlog:
+          type: string
+          label: 'Backlog'
+        todo:
+          type: string
+          label: 'ToDo'
+        doing:
+          type: string
+          label: 'Doing'
+        done:
+          type: string
+          label: 'Done'
+        closed:
+          type: string
+          label: 'Closed'

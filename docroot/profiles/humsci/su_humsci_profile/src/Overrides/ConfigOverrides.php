@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_bugherd\Overrides;
+namespace Drupal\su_humsci_profile\Overrides;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;

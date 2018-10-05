@@ -50,8 +50,6 @@ class HumsciCleanup {
    * @param string $field_name
    *   Machine name of field.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function deleteField($entity_type, $field_name) {
@@ -83,8 +81,6 @@ class HumsciCleanup {
    * @param string $field_name
    *   Field machine name.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function deleteFieldFromViews($entity_type, $field_name) {

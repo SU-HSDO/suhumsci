@@ -27,7 +27,5 @@ function hs_person_install() {
 function hs_person_update_8001() {
   /** @var \Drupal\su_humsci_profile\HumsciCleanup $cleanup */
   $cleanup = \Drupal::service('su_humsci_profile.cleanup');
-  $cleanup->deleteField('node', 'field_hs_person_faculty_interest');
   $cleanup->deleteField('node', 'field_hs_person_mail_code');
-  $cleanup->deleteField('node', 'field_hs_person_student_study');
 }

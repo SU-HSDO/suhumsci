@@ -9,6 +9,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Core\Config\FileStorage;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install().
@@ -140,7 +141,7 @@ function su_humsci_profile_update_8006() {
  * Give site managers permission to view user list.
  */
 function su_humsci_profile_update_8007() {
-  $site_manager = \Drupal\user\Entity\Role::load('site_manager');
+  $site_manager = Role::load('site_manager');
   $site_manager->grantPermission('view user list');
   $site_manager->save();
 }

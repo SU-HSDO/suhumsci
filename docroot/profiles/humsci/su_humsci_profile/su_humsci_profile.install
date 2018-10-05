@@ -148,11 +148,22 @@ function su_humsci_profile_update_8007() {
 /**
  * Add view status to config ignore.
  */
-function su_humsci_profile_update_8008(){
+function su_humsci_profile_update_8008() {
   $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
   if ($ignored_entities = $config->get('ignored_config_entities')) {
     $ignored_entities[] = 'views.view.hs_*:status';
     $config->set('ignored_config_entities', $ignored_entities);
     $config->save();
   }
+}
+
+/**
+ * Reset config ignore settings.
+ */
+function su_humsci_profile_update_8009() {
+  $source = new FileStorage('../config/default');
+  /** @var \Drupal\Core\Config\CachedStorage $config_storage */
+  $config_storage = \Drupal::service('config.storage');
+  $name = 'config_ignore.settings';
+  $config_storage->write($name, $source->read($name));
 }

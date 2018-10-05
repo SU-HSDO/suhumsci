@@ -278,6 +278,9 @@ class HumsciCommand extends AcHooksCommand {
     $info = Yaml::decode(file_get_contents("$new_subtheme/$new_machine_name.info.yml"));
     $info['name'] = $new_theme_name;
     $info['libraries'] = ["$new_machine_name/base"];
+    $info['component-libraries'] = [
+      $new_machine_name => $info['component-libraries']['su_humsci_subtheme'],
+    ];
     file_put_contents("$new_subtheme/$new_machine_name.info.yml", Yaml::encode($info));
   }
 

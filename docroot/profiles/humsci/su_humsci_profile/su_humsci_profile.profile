@@ -26,7 +26,7 @@ function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
  * Implements hook_link_alter().
  */
 function su_humsci_profile_link_alter(&$variables) {
-  if (!$variables['url']->isExternal() && ($variables['url']->getRouteName() == 'entity.user.collection' || $variables['url']->getRouteName() == 'user.admin_index')) {
+  if ($variables['url']->isRouted() && ($variables['url']->getRouteName() == 'entity.user.collection' || $variables['url']->getRouteName() == 'user.admin_index')) {
     $variables['text'] = 'Users';
   }
 }

@@ -4,3 +4,8 @@ services:
     arguments: ['@module_handler']
     tags:
       - { name: event_subscriber }
+  su_humsci_profile.overrider:
+    class: Drupal\su_humsci_profile\Overrides\ConfigOverrides
+    arguments: ['@module_handler', '@config.factory', '@encryption']
+    tags:
+      - {name: config.factory.override, priority: 5}

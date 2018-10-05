@@ -25,6 +25,7 @@ function su_humsci_theme_form_system_theme_settings_alter(array &$form, FormStat
     '#default_value' => theme_get_setting('humsci_site_styles'),
     '#options' => [
       'archaeology' => t('Archaeology'),
+      'francestanford' => t('France Stanford'),
     ],
   ];
 

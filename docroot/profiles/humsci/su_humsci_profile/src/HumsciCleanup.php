@@ -71,7 +71,6 @@ class HumsciCleanup {
 
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     foreach ($field_configs as $field_config) {
-      field_purge_field($field_config);
       $field_config->delete();
     }
   }

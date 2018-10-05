@@ -5,7 +5,6 @@ dependencies:
   config:
     - core.entity_view_mode.node.hs_vertical_card
     - field.field.node.hs_news.body
-    - field.field.node.hs_news.field_hs_news_byline
     - field.field.node.hs_news.field_hs_news_categories
     - field.field.node.hs_news.field_hs_news_date
     - field.field.node.hs_news.field_hs_news_image
@@ -15,8 +14,8 @@ dependencies:
     - ds
     - field_formatter_class
     - hs_field_helpers
+    - smart_trim
     - stanford_media
-    - text
     - user
 third_party_settings:
   ds:
@@ -53,25 +52,36 @@ bundle: hs_news
 mode: hs_vertical_card
 content:
   body:
-    type: text_trimmed
+    type: smart_trim
     weight: 2
     region: description
     label: hidden
     settings:
       trim_length: 100
+      trim_type: chars
+      trim_suffix: ''
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      summary_handler: trim
+      trim_options:
+        text: true
+        trim_zero: false
+      wrap_output: false
+      more_link: false
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
   field_hs_news_image:
-    type: media_image_formatter
+    type: media_responsive_image_formatter
     weight: 1
     region: image
     label: hidden
     settings:
       view_mode: default
-      image_style: hs_medium_square_360x360
+      image_style: square
       link: '1'
     third_party_settings:
       field_formatter_class:
@@ -84,7 +94,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_hs_news_byline: true
   field_hs_news_categories: true
   field_hs_news_date: true
   field_hs_news_link: true

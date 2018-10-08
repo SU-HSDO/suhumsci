@@ -55,9 +55,17 @@
     @include accent-dash(0.25em, $color-black, 2.125em);
 
     &:before {
-      @include margin(null 0 null null);;
+      @include margin(null 0 null null);
 
       vertical-align: inherit;
+    }
+
+    p {
+      width: 100%;
+
+      @include media($medium-screen) {
+        width: 75%;
+      }
     }
   }
 }

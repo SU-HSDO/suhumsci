@@ -5,7 +5,8 @@
 //
 
 @import
-  'decanter-no-markup';
+  'decanter-no-markup',
+  '../../../../themes/humsci/su_humsci_theme/scss/utilities/mixins/index';
 
 .three-column-w-image {
   .image-wrapper {
@@ -48,12 +49,15 @@
 
   .break-below-top .main-above {
     display: block;
+  }
 
-    &:after {
-      border-bottom: 0.25em solid #eaab00;
-      content: '';
-      display: inline-block;
-      width: 2.125em;
+  .main-below {
+    @include accent-dash(0.25em, $color-black, 2.125em);
+
+    &:before {
+      @include margin(null 0 null null);;
+
+      vertical-align: inherit;
     }
   }
 }

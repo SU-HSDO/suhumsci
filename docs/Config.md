@@ -10,6 +10,13 @@ configured the config_ignore to ignore any configs for our content types that ar
 ignore specific settings which change for every site. Such as the home page, 404 page, google analytics and permissions.
 All of these have been added to be ignored by configuration management.
 
+Also with the addition of [this patch](https://www.drupal.org/project/config_ignore/issues/2857247) we have enabled the
+ability to ignore particular config changes if the change is being ignored. For example, we are ignoring 
+`system.theme:default` key. This allows for a site to change which theme it has set as default, giving us the ability to
+create subthemes for site specific templates/css. If the site has a different value in the `system.theme:default` value
+then config_ignore will ignore that value, and only export the `system.theme` file _if_ there are other changes to the
+configuration file.
+
 ### Local Ignore
 For local development, we don't really need or want to keep all the custom configurations form the site which we are 
 currently working on. Although there are a couple of configurations that we want to ignore like the site settings, and 
@@ -40,3 +47,10 @@ create custom views, fields, content types, etc. So we have build the hs_config_
 the service that config_readonly provides. It will lock any config form _if_ the config lives in the repository _and_
 the config is not being ignored by config_ignore. This allows the user to clone a view, but not make changes to a view
 if it lives in our product.
+
+## Site specific config
+We have a custom module [HS Config Prefix](../docroot/modules/humsci/hs_config_prefix) which will prefix all config
+entities created through the UI. When developing new content types, or various entities for the product, we want the
+prefix to be `hs_`. This will namespace our entities for global use. For site building on the production environment,
+we have a config split which sets the prefix to be `custm_`. This will allow us to differentiate which entities are in
+the product and which ones are on a particular site.

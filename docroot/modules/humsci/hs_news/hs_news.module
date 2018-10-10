@@ -4,23 +4,3 @@
  * @file
  * hs_news.module
  */
-
-use Drupal\Core\Entity\EntityInterface;
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function hs_news_node_presave(EntityInterface $entity) {
-  if ($entity->bundle() == 'hs_news') {
-    if ($entity->hasField('field_hs_news_link') && $entity->hasField('rh_action')) {
-      /** @var \Drupal\Core\Field\FieldItemList $field */
-      $field = $entity->get('field_hs_news_link');
-      if (!$field->count()) {
-        $entity->set('rh_action', 'display_page');
-      }
-      else {
-        $entity->set('rh_action', 'bundle_default');
-      }
-    }
-  }
-}

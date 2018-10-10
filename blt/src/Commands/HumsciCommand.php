@@ -3,6 +3,7 @@
 namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Defines commands in the "humsci" namespace.
@@ -245,6 +246,42 @@ class HumsciCommand extends AcHooksCommand {
     $composer['autoload-dev']['psr-4'] = $classes;
     file_put_contents("$root/composer.json", str_replace('  ', ' ', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) . PHP_EOL);
     shell_exec("cd $root && composer dump-autoload");
+  }
+
+  /**
+   * Create a new subtheme from the base subtheme.
+   *
+   * @command create-subtheme
+   */
+  public function createSubtheme() {
+    $new_theme_name = $this->askQuestion('New Theme Name?', '', TRUE);
+    $new_machine_name = $this->askQuestion('New Theme Name?', preg_replace("/[^a-z]/", '_', strtolower($new_theme_name)), TRUE);
+    $new_machine_name = preg_replace("/[^a-z]/", '_', strtolower($new_machine_name));
+
+    $base_subtheme = $this->getConfigValue('docroot') . '/themes/humsci/su_humsci_subtheme';
+    $new_subtheme = $this->getConfigValue('docroot') . '/themes/humsci/' . $new_machine_name;
+
+    if (file_exists($new_subtheme)) {
+      $this->yell('Subtheme already exists');
+      return;
+    }
+
+    $this->taskCopyDir([$base_subtheme => $new_subtheme])->run();
+
+    foreach ($this->rglob("$new_subtheme/*") as $file) {
+      if (strpos($file, 'su_humsci_subtheme') !== FALSE) {
+        $new_file = str_replace('su_humsci_subtheme', $new_machine_name, $file);
+        $this->taskFilesystemStack()->rename($file, $new_file)->run();
+      }
+    }
+
+    $info = Yaml::decode(file_get_contents("$new_subtheme/$new_machine_name.info.yml"));
+    $info['name'] = $new_theme_name;
+    $info['libraries'] = ["$new_machine_name/base"];
+    $info['component-libraries'] = [
+      $new_machine_name => $info['component-libraries']['su_humsci_subtheme'],
+    ];
+    file_put_contents("$new_subtheme/$new_machine_name.info.yml", Yaml::encode($info));
   }
 
 }

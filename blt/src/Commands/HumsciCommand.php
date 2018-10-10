@@ -251,11 +251,11 @@ class HumsciCommand extends AcHooksCommand {
   /**
    * Create a new subtheme from the base subtheme.
    *
-   * @command create-subtheme
+   * @command humsci:create-subtheme
    */
   public function createSubtheme() {
     $new_theme_name = $this->askQuestion('New Theme Name?', '', TRUE);
-    $new_machine_name = $this->askQuestion('New Theme Name?', preg_replace("/[^a-z]/", '_', strtolower($new_theme_name)), TRUE);
+    $new_machine_name = $this->askQuestion('New Machine Name?', preg_replace("/[^a-z]/", '_', strtolower($new_theme_name)), TRUE);
     $new_machine_name = preg_replace("/[^a-z]/", '_', strtolower($new_machine_name));
 
     $base_subtheme = $this->getConfigValue('docroot') . '/themes/humsci/su_humsci_subtheme';
@@ -281,6 +281,7 @@ class HumsciCommand extends AcHooksCommand {
     $info['component-libraries'] = [
       $new_machine_name => $info['component-libraries']['su_humsci_subtheme'],
     ];
+    unset($info['hidden']);
     file_put_contents("$new_subtheme/$new_machine_name.info.yml", Yaml::encode($info));
   }
 

@@ -17,6 +17,11 @@ use Drupal\filter\Plugin\FilterBase;
  */
 class HsTableFilter extends FilterBase {
 
+  /**
+   * Table tags that should be replaced.
+   *
+   * @var array
+   */
   protected $tableTags = [
     'td',
     'tr',
@@ -31,12 +36,14 @@ class HsTableFilter extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    $text = $this->addDivAttributes($text);
-    foreach ($this->tableTags as $tag) {
-      // Replace tags that have other attributes.
-      $text = preg_replace("/<$tag (.*?)\/$tag>/s", "<div $1/div>", $text);
-      // Replace tags without any attributes.
-      $text = preg_replace("/<$tag>(.*?)\/$tag>/s", "<div>$1/div>", $text);
+    if ($text) {
+      $text = $this->addDivAttributes($text);
+      foreach ($this->tableTags as $tag) {
+        // Replace tags that have other attributes.
+        $text = preg_replace("/<$tag (.*?)\/$tag>/s", "<div $1/div>", $text);
+        // Replace tags without any attributes.
+        $text = preg_replace("/<$tag>(.*?)\/$tag>/s", "<div>$1/div>", $text);
+      }
     }
     return new FilterProcessResult($text);
   }

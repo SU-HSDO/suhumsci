@@ -88,7 +88,7 @@ class RoboFile extends Tasks {
    * @return \Robo\Result
    *   The result tof the collection of tasks.
    */
-  public function jobRunBehatTestsFirstSecond() {
+  public function jobRunBehatTestsSecond() {
     $all_sites = $this->getSites();
     $sites = array_slice($all_sites, count($all_sites) / 2);
     return $this->runBehatTest($sites);

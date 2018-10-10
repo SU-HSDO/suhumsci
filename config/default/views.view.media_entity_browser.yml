@@ -4,12 +4,14 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.media.thumbnail
+    - field.storage.media.field_media_image
     - media.type.file
     - media.type.image
     - media.type.video
   module:
     - entity_browser
     - entity_usage
+    - image
     - media
     - stanford_media
     - user
@@ -33,7 +35,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access media_browser entity browser pages'
+          perm: 'administer entity browsers'
       cache:
         type: none
         options: {  }
@@ -407,6 +409,7 @@ display:
         operator: AND
         groups:
           1: AND
+      use_ajax: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -417,10 +420,15 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.file.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.thumbnail'
+        - extensions
         - 'config:core.entity_view_display.media.video.default'
+        - extensions
         - 'config:core.entity_view_display.media.video.full'
+        - extensions
   file_browser:
     display_plugin: entity_browser
     id: file_browser
@@ -432,6 +440,7 @@ display:
         arguments: true
         filters: false
         filter_groups: false
+        access: false
       display_description: ''
       filters:
         name:
@@ -533,6 +542,10 @@ display:
         operator: AND
         groups:
           1: AND
+      access:
+        type: perm
+        options:
+          perm: 'access file_browser entity browser pages'
     cache_metadata:
       max-age: -1
       contexts:
@@ -543,10 +556,15 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.file.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.thumbnail'
+        - extensions
         - 'config:core.entity_view_display.media.video.default'
+        - extensions
         - 'config:core.entity_view_display.media.video.full'
+        - extensions
   image_browser:
     display_plugin: entity_browser
     id: image_browser
@@ -558,6 +576,7 @@ display:
         arguments: true
         filters: false
         filter_groups: false
+        access: false
       display_description: ''
       filters:
         name:
@@ -659,6 +678,10 @@ display:
         operator: AND
         groups:
           1: AND
+      access:
+        type: perm
+        options:
+          perm: 'access image_browser entity browser pages'
     cache_metadata:
       max-age: -1
       contexts:
@@ -669,19 +692,30 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.file.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.thumbnail'
+        - extensions
         - 'config:core.entity_view_display.media.video.default'
+        - extensions
         - 'config:core.entity_view_display.media.video.full'
+        - extensions
   media_browser:
     display_plugin: entity_browser
     id: media_browser
-    display_title: 'Entity browser'
+    display_title: 'Media browser'
     position: 1
     display_options:
       display_extenders: {  }
       defaults:
         arguments: true
+        access: false
+      access:
+        type: perm
+        options:
+          perm: 'access media_browser entity browser pages'
+      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -692,10 +726,15 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.file.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.thumbnail'
+        - extensions
         - 'config:core.entity_view_display.media.video.default'
+        - extensions
         - 'config:core.entity_view_display.media.video.full'
+        - extensions
   use_detail:
     display_plugin: page
     id: use_detail
@@ -823,6 +862,7 @@ display:
         title: false
         style: false
         row: false
+        access: false
       arguments:
         mid:
           id: mid
@@ -933,6 +973,10 @@ display:
           separator: ''
           hide_empty: false
           default_field_elements: true
+      access:
+        type: perm
+        options:
+          perm: 'access media overview'
     cache_metadata:
       max-age: -1
       contexts:
@@ -970,6 +1014,7 @@ display:
         filter_groups: false
         style: false
         row: false
+        access: false
       fields:
         media_bulk_form:
           id: media_bulk_form
@@ -1270,6 +1315,71 @@ display:
           field_api_classes: false
           entity_type: media
           entity_field: bundle
+          plugin_id: field
+        field_media_image:
+          id: field_media_image
+          table: media__field_media_image
+          field: field_media_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Alternative Text'
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{ field_media_image__alt }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: alt
+          type: image
+          settings:
+            image_style: ''
+            image_link: ''
+          group_column: target_id
+          group_columns:
+            alt: alt
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
           plugin_id: field
         uid:
           id: uid
@@ -1632,6 +1742,7 @@ display:
             changed: changed
             count: count
             operations: operations
+            field_media_image: field_media_image
           info:
             media_bulk_form:
               align: ''
@@ -1692,6 +1803,13 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_media_image:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: true
+              responsive: ''
           default: changed
           empty_table: false
       row:
@@ -1701,8 +1819,12 @@ display:
           separator: ''
           hide_empty: false
           default_field_elements: true
+      access:
+        type: perm
+        options:
+          perm: 'access media overview'
     cache_metadata:
-      max-age: -1
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -1715,6 +1837,8 @@ display:
         - 'config:core.entity_view_display.media.image.thumbnail'
         - 'config:core.entity_view_display.media.video.default'
         - 'config:core.entity_view_display.media.video.full'
+        - 'config:field.storage.media.field_media_image'
+        - extensions
   video_browser:
     display_plugin: entity_browser
     id: video_browser
@@ -1726,6 +1850,7 @@ display:
         arguments: true
         filters: false
         filter_groups: false
+        access: false
       display_description: ''
       filters:
         name:
@@ -1827,6 +1952,10 @@ display:
         operator: AND
         groups:
           1: AND
+      access:
+        type: perm
+        options:
+          perm: 'access video_browser entity browser pages'
     cache_metadata:
       max-age: -1
       contexts:
@@ -1837,7 +1966,12 @@ display:
         - user.permissions
       tags:
         - 'config:core.entity_view_display.media.file.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.default'
+        - extensions
         - 'config:core.entity_view_display.media.image.thumbnail'
+        - extensions
         - 'config:core.entity_view_display.media.video.default'
+        - extensions
         - 'config:core.entity_view_display.media.video.full'
+        - extensions

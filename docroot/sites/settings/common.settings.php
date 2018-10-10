@@ -5,6 +5,8 @@
  * This file gets added by blt.settings.php as an override configuration.
  */
 
+use Drupal\Core\Serialization\Yaml;
+
 // SimpleSAMLphp configuration
 // Provide universal absolute path to the installation.
 if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {
@@ -97,4 +99,10 @@ $settings['config_readonly_whitelist_patterns'] = ['*'];
 if ($is_ah_env) {
   $settings['hash_salt'] = file_get_contents("/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/salt.txt");
   $settings['letsencrypt_challenge_directory'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/files/";
+}
+
+// Set the config_ignore settings so that config imports will function on local.
+if ($is_local_env) {
+  $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
+  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
 }

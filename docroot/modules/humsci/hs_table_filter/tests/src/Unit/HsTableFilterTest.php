@@ -199,4 +199,11 @@ class HsTableFilterTest extends UnitTestCase {
     }
   }
 
+  /**
+   * @covers ::process
+   */
+  public function testEmptyText() {
+    $this->assertEquals('', $this->filter->process('', '')->getProcessedText());
+  }
+
 }

@@ -61,6 +61,8 @@ $humsci_sites = [
   'francestanford',
   'mrc',
   'swshumsci-sandbox',
+  'symsys',
+  'mathematics',
 ];
 
 foreach ($humsci_sites as $site) {

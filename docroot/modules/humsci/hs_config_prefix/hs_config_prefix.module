@@ -72,6 +72,9 @@ function hs_config_prefix_custom_form_validate(array &$form, FormStateInterface 
  * Implements hook_entity_presave().
  */
 function hs_config_prefix_entity_presave(EntityInterface $entity) {
+  if (drupal_installation_attempted()) {
+    return;
+  }
   if ($entity->isNew() && $entity instanceof ConfigEntityBase) {
     // Form and view displays are namespace by the view modes and form modes.
     // Field storage is managed by the field_ui.settings config.

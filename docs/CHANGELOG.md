@@ -1,5 +1,18 @@
 # HumSci
 
+8.0.11
+--------------------------------------------------------------------------------  
+_Release Date: 2018-10-11_
+
+- New sites: symsys and mathemtics
+- Force config entity prefixing
+- allow for custom subthemes
+- New subthemes for archaeology and francestanford
+- Removed and added a couple fields for productizing
+- Several style adjustments.
+- Changed core "People" to "Users"
+- Redesigned bugherd module to allow all webhooks to point to the same domain but differnt urls
+
 8.0.10
 --------------------------------------------------------------------------------  
 _Release Date: 2018-09-26_

@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+//
+// Archaeology
+// Archaeology website specific styles.
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// Decanter Overrides
+@import
+  '../../su_humsci_theme/scss/decanter-overrides/decanter-overrides';
+
+// SU HumSci
+@import
+  '../../su_humsci_theme/scss/utilities/mixins/index';
+
+// Heading
+h1 {
+  @include heading-dash(0.2em, $color-sun, 1.125em);
+}
+
+h2 {
+  @include heading-dash(4px, $color-sun, 40px);
+
+  // Headers with centered dash
+  &.text-align-center:after {
+    @include margin(0 auto);
+  }
+}
+
+h3 {
+  @include heading-dash(3px, $color-sun, 30px);
+}
+
+h4 {
+  @include heading-dash(3px, $color-sun, 25px);
+}
+
+h5,
+h6 {
+  @include heading-dash(2px, $color-sun, 20px);
+}
+
+// Headers without dash
+.horizontal-card__title,
+.horizontal-card__title h2,
+h2.vertical-link-card__title,
+.date-stacked-vertical-card__content-container h2,
+h2#menu-blockmain-menu,
+#footer h2,
+.field-hs-person-title h3,
+.view.duplicate-of-news h2.vertical-card__title,
+.view.hs-publications h2 {
+  &:after {
+    content: none;
+  }
+}
+
+// Page layout dash color
+.three-column-w-image .main-below {
+  @include accent-dash(0.25em, $color-sun, 2.125em);
+}
+
+// Event category dash
+.accent-dash {
+  @include accent-dash(2px, $color-sun, 20px);
+}
+
+// Featured publications dash
+.views-field-field-hs-publication-type .masonry-item--type {
+  @include accent-dash(2px, $color-sun, 20px);
+}
+
+// Button (more-link) styles in views
+.views-element-container {
+  .more-link {
+    text-align: center;
+  }
+
+  .decanter-button {
+    @include margin(0 null null);
+  }
+}
+
+// Reasearch area buttons
+.views-field-field-hs-person-research .decanter-button--secondary {
+  @include margin(null null 0);
+}
+
+// Menu active states
+.main-container .menu--main {
+  .menu-item--active-trail.menu-item--expanded > a,
+  a.is-active {
+    border-left-color: $color-sun;
+  }
+}
+
+.js #header .decanter-main-menu--hover-reveal {
+  a.is-active {
+    border-left-color: $color-sun;
+  }
+
+  .ui-menu.decanter-nav-primary {
+    &.ui-menu li.menu-item--active-trail .ui-menu-item-wrapper,
+    .ui-state-active,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-active,
+    a.ui-button:active,
+    .ui-button:active,
+    .ui-button.ui-state-active:hover {
+      border-bottom-color: $color-sun;
+    }
+  }
+}
+
+// Homepage
+.front .hs-basic-page.field-hs-page-hero {
+  @include margin(null null 0.5em);
+}
+
+// Custom classes
+.centered-font-lead {
+  font-size: 3rem;
+  max-width: 85rem;
+
+  @include margin(null auto);
+}

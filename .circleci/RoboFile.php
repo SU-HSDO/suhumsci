@@ -76,10 +76,37 @@ class RoboFile extends Tasks {
    * @return \Robo\Result
    *   The result tof the collection of tasks.
    */
-  public function jobRunBehatTests() {
+  public function jobRunBehatTestsFirst() {
+    $all_sites = $this->getSites();
+    $sites = array_slice($all_sites, 0, count($all_sites) / 2);
+    return $this->runBehatTest($sites);
+  }
+
+  /**
+   * Command to run behat tests.
+   *
+   * @return \Robo\Result
+   *   The result tof the collection of tasks.
+   */
+  public function jobRunBehatTestsSecond() {
+    $all_sites = $this->getSites();
+    $sites = array_slice($all_sites, count($all_sites) / 2);
+    return $this->runBehatTest($sites);
+  }
+
+  /**
+   * Run behat tests on the given sites.
+   *
+   * @param array $sites
+   *   Array of site machine names.
+   *
+   * @return \Robo\Result
+   *   Tasks collection.
+   */
+  protected function runBehatTest(array $sites) {
     $collection = $this->collectionBuilder();
     $collection->addTaskList($this->setupSite());
-    foreach ($this->getSites() as $site) {
+    foreach ($sites as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
       $collection->addTaskList($this->runBehatTests(['global', $site]));

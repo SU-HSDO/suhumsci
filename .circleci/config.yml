@@ -47,7 +47,7 @@ save_cache: &save_cache
 #Jobs
 
 ### Job to run the update path and Behat tests.
-behat_tests: &behat_tests
+behat_tests_first: &behat_tests_first
   <<: *defaults
   steps:
     - *add_ssh
@@ -57,7 +57,25 @@ behat_tests: &behat_tests
     - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
-        command: robo job:run-behat-tests
+        command: robo job:run-behat-tests-first
+    - save_cache: *save_cache
+    - store_test_results:
+        path: /var/www/html/artifacts/behat
+    - store_artifacts:
+        path: /var/www/html/artifacts
+
+### Job to run the update path and Behat tests.
+behat_tests_second: &behat_tests_second
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - *add_known_hosts
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Run Behat tests
+        command: robo job:run-behat-tests-second
     - save_cache: *save_cache
     - store_test_results:
         path: /var/www/html/artifacts/behat
@@ -97,10 +115,12 @@ code_coverage: &code_coverage
 # Declare all of the jobs we should run.
 version: 2
 jobs:
+  run-behat-tests-first:
+     <<: *behat_tests_first
+  run-behat-tests-second:
+    <<: *behat_tests_second
   run-functional-unit-tests:
      <<: *functional_unit_tests
-  run-behat-tests:
-     <<: *behat_tests
   run-code-coverage:
      <<: *code_coverage
 
@@ -109,6 +129,7 @@ workflows:
   version: 2
   test_and_lint:
     jobs:
+      - run-behat-tests-first
+      - run-behat-tests-second
       - run-functional-unit-tests
-      - run-behat-tests
       - run-code-coverage

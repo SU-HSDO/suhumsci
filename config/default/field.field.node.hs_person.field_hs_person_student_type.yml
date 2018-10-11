@@ -1,18 +1,16 @@
-uuid: 0c549612-6675-4704-a15b-7b61ea5a131c
+uuid: 88590f40-be5a-44ed-b220-7a02abacdc70
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_hs_person_faculty_interest
+    - field.storage.node.field_hs_person_student_type
     - node.type.hs_person
-    - taxonomy.vocabulary.hs_person_faculty_interests
-_core:
-  default_config_hash: _RhGg1Qe-Ov-ktuMHaCDPOW-i9N5BFH7YwNn32hltyk
-id: node.hs_person.field_hs_person_faculty_interest
-field_name: field_hs_person_faculty_interest
+    - taxonomy.vocabulary.hs_person_student_type
+id: node.hs_person.field_hs_person_student_type
+field_name: field_hs_person_student_type
 entity_type: node
 bundle: hs_person
-label: 'Fields of Interest'
+label: 'Student Type'
 description: ''
 required: false
 translatable: false
@@ -22,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      hs_person_faculty_interests: hs_person_faculty_interests
+      hs_person_student_type: hs_person_student_type
     sort:
       field: name
       direction: asc

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * hs_news.install
+ */
+
+/**
+ * Delete unwanted fields.
+ */
+function hs_news_update_8001() {
+  /** @var \Drupal\su_humsci_profile\HumsciCleanup $cleanup */
+  $cleanup = \Drupal::service('su_humsci_profile.cleanup');
+  $cleanup->deleteField('node', 'field_hs_news_byline');
+}

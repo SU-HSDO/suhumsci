@@ -8,14 +8,12 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_affiliation
     - field.field.node.hs_person.field_hs_person_education
     - field.field.node.hs_person.field_hs_person_email
-    - field.field.node.hs_person.field_hs_person_faculty_interest
     - field.field.node.hs_person.field_hs_person_faculty_status
     - field.field.node.hs_person.field_hs_person_first_name
     - field.field.node.hs_person.field_hs_person_image
     - field.field.node.hs_person.field_hs_person_last_name
     - field.field.node.hs_person.field_hs_person_links
     - field.field.node.hs_person.field_hs_person_mail
-    - field.field.node.hs_person.field_hs_person_mail_code
     - field.field.node.hs_person.field_hs_person_middle_name
     - field.field.node.hs_person.field_hs_person_office
     - field.field.node.hs_person.field_hs_person_office_hours
@@ -24,13 +22,13 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
-    - field.field.node.hs_person.field_hs_person_student_study
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
   module:
     - address
     - datetime
+    - field_formatter_class
     - hs_field_helpers
     - link
     - telephone
@@ -72,14 +70,6 @@ content:
     region: content
     label: hidden
     settings: {  }
-    third_party_settings: {  }
-  field_hs_person_faculty_interest:
-    type: entity_reference_label
-    weight: 19
-    region: content
-    label: hidden
-    settings:
-      link: true
     third_party_settings: {  }
   field_hs_person_faculty_status:
     type: entity_reference_label
@@ -132,14 +122,6 @@ content:
     region: content
     label: hidden
     settings: {  }
-    third_party_settings: {  }
-  field_hs_person_mail_code:
-    type: string
-    weight: 12
-    region: content
-    label: hidden
-    settings:
-      link_to_entity: false
     third_party_settings: {  }
   field_hs_person_middle_name:
     type: string
@@ -211,14 +193,6 @@ content:
       date_format: 'Y'
       timezone_override: ''
     third_party_settings: {  }
-  field_hs_person_student_study:
-    type: entity_reference_label
-    weight: 4
-    region: content
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
   field_hs_person_telephone:
     type: telephone_link
     weight: 3
@@ -236,4 +210,7 @@ content:
       link_to_entity: false
     third_party_settings: {  }
 hidden:
+  field_hs_person_external_profile: true
+  field_hs_person_interests: true
+  field_hs_person_student_type: true
   links: true

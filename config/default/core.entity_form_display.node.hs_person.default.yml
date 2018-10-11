@@ -8,14 +8,14 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_affiliation
     - field.field.node.hs_person.field_hs_person_education
     - field.field.node.hs_person.field_hs_person_email
-    - field.field.node.hs_person.field_hs_person_faculty_interest
+    - field.field.node.hs_person.field_hs_person_external_profile
     - field.field.node.hs_person.field_hs_person_faculty_status
     - field.field.node.hs_person.field_hs_person_first_name
     - field.field.node.hs_person.field_hs_person_image
+    - field.field.node.hs_person.field_hs_person_interests
     - field.field.node.hs_person.field_hs_person_last_name
     - field.field.node.hs_person.field_hs_person_links
     - field.field.node.hs_person.field_hs_person_mail
-    - field.field.node.hs_person.field_hs_person_mail_code
     - field.field.node.hs_person.field_hs_person_middle_name
     - field.field.node.hs_person.field_hs_person_office
     - field.field.node.hs_person.field_hs_person_office_hours
@@ -24,7 +24,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
-    - field.field.node.hs_person.field_hs_person_student_study
+    - field.field.node.hs_person.field_hs_person_student_type
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -63,7 +63,6 @@ third_party_settings:
         - field_hs_person_telephone
         - field_hs_person_office
         - field_hs_person_office_hours
-        - field_hs_person_mail_code
         - field_hs_person_mail
       parent_name: group_tabs
       weight: 3
@@ -98,6 +97,8 @@ third_party_settings:
         - field_hs_person_education
         - field_hs_person_links
         - field_hs_person_research
+        - field_hs_person_interests
+        - field_hs_person_external_profile
       parent_name: group_tabs
       weight: 2
       format_type: tab
@@ -111,7 +112,6 @@ third_party_settings:
     group_faculty_info:
       children:
         - field_hs_person_faculty_status
-        - field_hs_person_faculty_interest
       parent_name: group_tabs
       weight: 4
       format_type: tab
@@ -124,8 +124,8 @@ third_party_settings:
       label: 'Faculty Info'
     group_student_info:
       children:
+        - field_hs_person_student_type
         - field_hs_person_student_cohort
-        - field_hs_person_student_study
         - field_hs_person_student_dissert
         - field_hs_person_student_grad
       parent_name: group_tabs
@@ -195,14 +195,13 @@ content:
     third_party_settings: {  }
     type: email_default
     region: content
-  field_hs_person_faculty_interest:
-    weight: 27
+  field_hs_person_external_profile:
+    weight: 14
     settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: link_default
     region: content
   field_hs_person_faculty_status:
     weight: 26
@@ -236,6 +235,14 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
+  field_hs_person_interests:
+    weight: 13
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_hs_person_last_name:
     weight: 4
     settings:
@@ -258,14 +265,6 @@ content:
       default_country: ''
     third_party_settings: {  }
     type: address_default
-    region: content
-  field_hs_person_mail_code:
-    weight: 17
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
     region: content
   field_hs_person_middle_name:
     weight: 3
@@ -307,7 +306,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_hs_person_student_cohort:
-    weight: 29
+    weight: 54
     settings:
       min: 'now - 10 years'
       max: 'now + 10 years'
@@ -315,7 +314,7 @@ content:
     type: datetime_year_only
     region: content
   field_hs_person_student_dissert:
-    weight: 31
+    weight: 55
     settings:
       size: 60
       placeholder: ''
@@ -323,21 +322,18 @@ content:
     type: string_textfield
     region: content
   field_hs_person_student_grad:
-    weight: 32
+    weight: 56
     settings:
       min: 'now - 10 years'
       max: 'now + 10 years'
     third_party_settings: {  }
     type: datetime_year_only
     region: content
-  field_hs_person_student_study:
-    weight: 30
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
+  field_hs_person_student_type:
+    weight: 53
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete_tags
+    type: options_select
     region: content
   field_hs_person_telephone:
     weight: 13

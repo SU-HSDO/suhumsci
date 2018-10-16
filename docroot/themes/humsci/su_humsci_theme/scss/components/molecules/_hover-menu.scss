@@ -3,8 +3,10 @@
 //
 // Hover Main Menu
 //
+
 // Decanter
-@import 'decanter-no-markup';
+@import
+  'decanter-no-markup';
 
 // Styles for no JavaScript
 // Fallback styles, which are also applied to the page when
@@ -193,6 +195,7 @@
           background: none;
         }
 
+
         &.ui-widget {
           border: 0;
         }
@@ -212,7 +215,6 @@
             line-height: 1.25;
           }
         }
-
       }
 
       ul ul {
@@ -233,6 +235,7 @@
         }
       }
     }
+
 
     // Mobile styles for the main menu in header region.
     @include media(max-width ($large-screen - 1)) {
@@ -322,12 +325,21 @@
 // No JavaScript is applied to the menu when
 // it does not appear in the Header region.
 .main-container {
+  .menu-block > ul {
+    font-size: $base-font-size;
+
+    ul {
+      font-size: .9em;
+    }
+  }
+
   .menu--main {
     float: none;
 
     @include media(max-width $large-screen) {
       display: none;
     }
+
 
     h2#menu-blockmain-menu {
       @include margin(0 null null);
@@ -339,8 +351,7 @@
     }
 
     a {
-      font-size: $base-font-size;
-      line-height: 1.125;
+      font-size: unset;
       text-decoration: none;
 
       @include padding(0 0 0 10px);
@@ -362,11 +373,6 @@
 
       li {
         display: block;
-      }
-
-      ul a,
-      ul ul a {
-        font-size: 1.8rem;
       }
 
       &.menu ul.menu ul.menu .menu-item a {
@@ -406,7 +412,6 @@
         }
       }
     }
-
   }
 }
 

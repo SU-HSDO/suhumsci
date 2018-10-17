@@ -1,6 +1,6 @@
 diff --git a/modules/ui_patterns_views/templates/pattern-view-field.html.twig b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
 new file mode 100644
-index 0000000..7f1e292
+index 0000000..64295e5
 --- /dev/null
 +++ b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
 @@ -0,0 +1,53 @@
@@ -57,8 +57,9 @@ index 0000000..7f1e292
 +{%- if field.wrapper_element -%}
 +  </{{ field.wrapper_element }}>
 +{%- endif %}
+\ No newline at end of file
 diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
-index 84323d8..a36a405 100644
+index 388b287..6f835d4 100644
 --- a/modules/ui_patterns_views/ui_patterns_views.module
 +++ b/modules/ui_patterns_views/ui_patterns_views.module
 @@ -6,6 +6,9 @@
@@ -81,7 +82,7 @@ index 84323d8..a36a405 100644
    ];
  }
  
-@@ -35,22 +41,114 @@ function template_preprocess_pattern_views_row(array &$variables) {
+@@ -35,37 +41,122 @@ function template_preprocess_pattern_views_row(array &$variables) {
    $options = $variables['options'];
    $row = $variables['row'];
  
@@ -195,144 +196,40 @@ index 84323d8..a36a405 100644
    }
  
 -  $variables['pattern'] = [];
--  if ($view->preview) {
+-  if ($view->preview && !isset($view->element['#embed'])) {
 -    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
 -    $variables['pattern'] = ['#type' => 'status_messages'];
 -  }
 -  elseif (!empty($fields)) {
-+//  $variables['pattern'] = [];
-+//  if ($view->preview) {
-+//    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
-+//    $variables['pattern'] = ['#type' => 'status_messages'];
-+//  }
-+//  elseif (!empty($fields)) {
-     $variables['pattern'] = [
-       '#type' => 'pattern',
-       '#id' => $options['pattern'],
-@@ -63,7 +161,7 @@ function template_preprocess_pattern_views_row(array &$variables) {
-     $variables['pattern']['#context']['view_name'] = $view->storage->id();
-     $variables['pattern']['#context']['display'] = $view->current_display;
-     $variables['pattern']['#context']['view'] = $view;
+-    $variables['pattern'] = [
+-      '#type' => 'pattern',
+-      '#id' => $options['pattern'],
+-      '#fields' => $fields,
+-      '#multiple_sources' => TRUE,
+-      '#variant' => isset($options['pattern_variant']) ? $options['pattern_variant'] : '',
+-    ];
+-
+-    // Allow default context values to not override those exposed elsewhere.
+-    $variables['pattern']['#context']['type'] = 'views_row';
+-    $variables['pattern']['#context']['view_name'] = $view->storage->id();
+-    $variables['pattern']['#context']['display'] = $view->current_display;
+-    $variables['pattern']['#context']['view'] = $view;
+-    $variables['pattern']['#context']['row'] = $row;
 -  }
-+//  }
++  $variables['pattern'] = [
++    '#type' => 'pattern',
++    '#id' => $options['pattern'],
++    '#fields' => $fields,
++    '#multiple_sources' => TRUE,
++    '#variant' => isset($options['pattern_variant']) ? $options['pattern_variant'] : '',
++  ];
++
++  // Allow default context values to not override those exposed elsewhere.
++  $variables['pattern']['#context']['type'] = 'views_row';
++  $variables['pattern']['#context']['view_name'] = $view->storage->id();
++  $variables['pattern']['#context']['display'] = $view->current_display;
++  $variables['pattern']['#context']['view'] = $view;
++  $variables['pattern']['#context']['row'] = $row;
  }
  
  /**
-diff --git a/ui_patterns_views-preview.patch b/ui_patterns_views-preview.patch
-new file mode 100644
-index 0000000..22a34de
---- /dev/null
-+++ b/ui_patterns_views-preview.patch
-@@ -0,0 +1,112 @@
-+diff --git a/modules/ui_patterns_views/templates/pattern-view-field.html.twig b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
-+new file mode 100644
-+index 0000000..7f1e292
-+--- /dev/null
-++++ b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
-+@@ -0,0 +1,53 @@
-++{#
-++/**
-++ * @file
-++ * Default view template to display all the fields in a row.
-++ *
-++ * Available variables:
-++ * - view: The view in use.
-++ * - fields: A list of fields, each one contains:
-++ *   - content: The output of the field.
-++ *   - raw: The raw data for the field, if it exists. This is NOT output safe.
-++ *   - class: The safe class ID to use.
-++ *   - handler: The Views field handler controlling this field.
-++ *   - inline: Whether or not the field should be inline.
-++ *   - wrapper_element: An HTML element for a wrapper.
-++ *   - wrapper_attributes: List of attributes for wrapper element.
-++ *   - separator: An optional separator that may appear before a field.
-++ *   - label: The field's label text.
-++ *   - label_element: An HTML element for a label wrapper.
-++ *   - label_attributes: List of attributes for label wrapper.
-++ *   - label_suffix: Colon after the label.
-++ *   - element_type: An HTML element for the field content.
-++ *   - element_attributes: List of attributes for HTML element for field content.
-++ *   - has_label_colon: A boolean indicating whether to display a colon after
-++ *     the label.
-++ *   - element_type: An HTML element for the field content.
-++ *   - element_attributes: List of attributes for HTML element for field content.
-++ * - row: The raw result from the query, with all data it fetched.
-++ *
-++ * @see template_preprocess_views_view_fields()
-++ *
-++ * @ingroup themeable
-++ */
-++#}
-++
-++{{ field.separator }}
-++{%- if field.wrapper_element -%}
-++  <{{ field.wrapper_element }}{{ field.wrapper_attributes }}>
-++{%- endif %}
-++{%- if field.label -%}
-++  {%- if field.label_element -%}
-++    <{{ field.label_element }}{{ field.label_attributes }}>{{ field.label }}{{ field.label_suffix }}</{{ field.label_element }}>
-++  {%- else -%}
-++    {{ field.label }}{{ field.label_suffix }}
-++  {%- endif %}
-++{%- endif %}
-++{%- if field.element_type -%}
-++  <{{ field.element_type }}{{ field.element_attributes }}>{{ field.content }}</{{ field.element_type }}>
-++{%- else -%}
-++  {{ field.content }}
-++{%- endif %}
-++{%- if field.wrapper_element -%}
-++  </{{ field.wrapper_element }}>
-++{%- endif %}
-+diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
-+index 84323d8..b52bc7e 100644
-+--- a/modules/ui_patterns_views/ui_patterns_views.module
-++++ b/modules/ui_patterns_views/ui_patterns_views.module
-+@@ -15,6 +15,9 @@ function ui_patterns_views_theme() {
-+     'pattern_views_row' => [
-+       'variables' => ['view' => NULL, 'options' => [], 'row' => NULL],
-+     ],
-++    'pattern_view_field' => [
-++      'variables' => ['view' => NULL, 'field' => NULL, 'row' => NULL],
-++    ],
-+   ];
-+ }
-+ 
-+@@ -41,16 +44,22 @@ function template_preprocess_pattern_views_row(array &$variables) {
-+     $field_output = $view->style_plugin->getField($row->index, $field_name);
-+     if ($row_plugin->isFieldVisible($field, $field_output)) {
-+       $destination = $row_plugin->getMappingDestination('views_row', $field_name, $options);
-+-      $fields[$destination][] = $field_output;
-++      $field->content = $field_output;
-++      $fields[$destination][] = [
-++        '#theme' => 'pattern_view_field',
-++        '#view' => $view,
-++        '#row' => $row,
-++        '#field' => $field,
-++      ];
-+     }
-+   }
-+ 
-+-  $variables['pattern'] = [];
-+-  if ($view->preview) {
-+-    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
-+-    $variables['pattern'] = ['#type' => 'status_messages'];
-+-  }
-+-  elseif (!empty($fields)) {
-++//  $variables['pattern'] = [];
-++//  if ($view->preview) {
-++//    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
-++//    $variables['pattern'] = ['#type' => 'status_messages'];
-++//  }
-++//  elseif (!empty($fields)) {
-+     $variables['pattern'] = [
-+       '#type' => 'pattern',
-+       '#id' => $options['pattern'],
-+@@ -63,7 +72,7 @@ function template_preprocess_pattern_views_row(array &$variables) {
-+     $variables['pattern']['#context']['view_name'] = $view->storage->id();
-+     $variables['pattern']['#context']['display'] = $view->current_display;
-+     $variables['pattern']['#context']['view'] = $view;
-+-  }
-++//  }
-+ }
-+ 
-+ /**

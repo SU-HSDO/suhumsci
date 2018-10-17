@@ -1,0 +1,96 @@
+uuid: 18fe55a6-a1f6-47c9-b079-992ef831c99b
+langcode: en
+status: true
+dependencies: {  }
+id: hs_capx
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: earth_capx
+label: 'H&S CAPx Importer'
+source:
+  track_changes: true
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: json
+  headers:
+    Accept: 'application/json; charset=utf-8'
+    Content-Type: application/json
+  constants:
+    status: 1
+    basic_html: basic_html
+    file_destination: 'public://'
+    file_extension: '.jpg'
+    image_alt_value: 'profile photo'
+    password_length: 55
+  urls:
+    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:eess-faculty-regular&ps=1000'
+    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:ere-faculty-regular&ps=1000'
+    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:geophysics-faculty-regular&ps=1000'
+    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:ges-faculty-regular&ps=1000'
+  item_selector: values
+  fields:
+    -
+      name: sunetid
+      label: sunetid
+      selector: uid
+    -
+      name: display_name
+      label: 'Display Name'
+      selector: displayName
+    -
+      name: last_name
+      label: 'Last Name'
+      selector: names/preferred/lastName
+    -
+      name: first_name
+      label: 'First Name'
+      selector: names/preferred/firstName
+    -
+      name: short_title
+      label: 'CAP Short Title'
+      selector: shortTitle/title
+    -
+      name: biosketch
+      label: 'Biography'
+      selector: bio/text
+    -
+      name: email
+      label: 'Email'
+      selector: primaryContact/email
+    -
+      name: alias
+      label: 'Alias'
+      selector: alias
+    -
+      name: profile_photo
+      label: 'Profile Photo'
+      selector: profilePhotos/bigger/url
+    -
+      name: appointments
+      label: 'Administrative Appointments'
+      selector: longTitle/label/text
+    -
+      name: links
+      label: 'Internet Links'
+      selector: internetLinks
+    -
+      name: phone
+      label: 'Phone Numbers'
+      selector: primaryContact/phoneNumbers
+    -
+      name: office
+      label: 'Office Locations'
+      selector: contacts
+    -
+      name: etag
+      label: 'CAP API Etag'
+      selector: meta/etag
+  ids:
+    sunetid:
+      type: string
+process:
+destination:
+  plugin: 'entity:node'
+migration_dependencies: null

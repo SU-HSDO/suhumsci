@@ -72,7 +72,7 @@ function hs_config_prefix_custom_form_validate(array &$form, FormStateInterface 
  * Implements hook_entity_presave().
  */
 function hs_config_prefix_entity_presave(EntityInterface $entity) {
-  if (drupal_installation_attempted()) {
+  if (drupal_installation_attempted() || empty($GLOBALS['_REQUEST'])) {
     return;
   }
   if ($entity->isNew() && $entity instanceof ConfigEntityBase) {

@@ -212,7 +212,6 @@
             line-height: 1.25;
           }
         }
-
       }
 
       ul ul {
@@ -321,87 +320,33 @@
 // Subnavigation - no JavaScript
 // No JavaScript is applied to the menu when
 // it does not appear in the Header region.
-.main-container {
-  .menu--main {
-    float: none;
+nav.menu-block {
+  font-size: $base-font-size;
 
-    @include media(max-width $large-screen) {
-      display: none;
+  ul ul {
+    font-size: .9em;
+  }
+
+  .menu-item--expanded {
+    list-style-image: none;
+    list-style-type: none;
+  }
+
+  li.menu-item--active-trail > a {
+    color: $color-black;
+    border-left: 1px solid $color-black;
+  }
+
+  a {
+    text-decoration: none;
+    display: block;
+    font-weight: 400;
+    @include padding(0 0 0 10px);
+    @include margin(0 0 15px 0);
+
+    &.is-active {
+      border-left: 1px solid $color-black;
     }
-
-    h2#menu-blockmain-menu {
-      @include margin(0 null null);
-
-      a {
-        font-size: $h2-font-size;
-        font-weight: $font-bold;
-      }
-    }
-
-    a {
-      font-size: $base-font-size;
-      line-height: 1.125;
-      text-decoration: none;
-
-      @include padding(0 0 0 10px);
-      @include margin(0 0 15px 0);
-
-      &:hover,
-      &.is-active,
-      &.ui-state-active {
-        border-bottom: 0;
-      }
-
-      &.is-active {
-        border-left: 1px solid $color-black;
-      }
-    }
-
-    ul {
-      @include margin(null null 0);
-
-      li {
-        display: block;
-      }
-
-      &.menu ul.menu ul.menu .menu-item a {
-        @include margin(null null null 2rem);
-      }
-
-      &.menu ul.menu .menu-item a {
-        font-weight: $font-normal;
-
-        @include margin(null null null 1rem);
-        @include padding(null null null 20px);
-      }
-    }
-
-    .menu-item--active-trail {
-      a {
-        border-bottom: 0;
-        color: $color-bright-red;
-
-        &:hover {
-          color: $color-black;
-        }
-
-        &.is-active {
-          color: $color-black;
-        }
-      }
-
-      &.menu-item--expanded > a {
-        border-left: 1px solid $color-black;
-        color: #2e2d29;
-      }
-
-      ul {
-        &.menu .menu-item a.is-active {
-          color: $color-black;
-        }
-      }
-    }
-
   }
 }
 

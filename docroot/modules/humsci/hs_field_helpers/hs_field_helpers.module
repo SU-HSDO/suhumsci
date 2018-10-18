@@ -26,6 +26,8 @@ use Drupal\migrate\MigrateMessage;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\eck\Entity\EckEntity;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Implements hook_views_data_alter().
@@ -648,4 +650,53 @@ function hs_field_helpers_form_views_exposed_form_alter(&$form, FormStateInterfa
   // the access and apply some javascript to help keep the ajaxy feel.
   $form['actions']['reset']['#access'] = TRUE;
   $form['#attached']['library'][] = 'hs_field_helpers/views_reset';
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function hs_field_helpers_node_presave(EntityInterface $entity) {
+  $rabbit_hole = \Drupal::config('rabbit_hole.behavior_settings.node_type_' . $entity->bundle());
+
+  if ($rabbit_hole->get('redirect') && $rabbit_hole->get('allow_override')) {
+    /** @var \Drupal\Core\Utility\Token $token_service */
+    $token_service = \Drupal::service('token');
+    $target = $token_service->replace($rabbit_hole->get('redirect'), ['node' => $entity]);
+
+    $entity->set('rh_action', 'display_page');
+
+    // Check if the token that was provided is actually a url. If it is, then we
+    // can set the rabbit hole action to redirect to that url.
+    if (is_string($target) && UrlHelper::isValid($target, TRUE)) {
+      $entity->set('rh_action', 'bundle_default');
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function hs_field_helpers_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $rabbit_hole = \Drupal::config('rabbit_hole.behavior_settings.node_type_' . $entity->bundle());
+
+  // If we are not on the current node page or rabbit hole isn't redirecting.
+  if ($rabbit_hole->get('action') != 'page_redirect' || !node_is_page($entity)) {
+    return;
+  }
+
+  // Check if there are individual node settings or if the given node is set to
+  // redirect.
+  if (
+    !$rabbit_hole->get('allow_override') ||
+    $entity->get('rh_action')->getString() == 'bundle_default'
+  ) {
+    $token_service = \Drupal::service('token');
+    $target = $token_service->replace($rabbit_hole->get('redirect'), ['node' => $entity]);
+
+    // Display a message to the user that this page would redirect to another
+    // location for other users.
+    \Drupal::messenger()
+      ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
+  }
+
 }

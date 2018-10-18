@@ -8,14 +8,14 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_affiliation
     - field.field.node.hs_person.field_hs_person_education
     - field.field.node.hs_person.field_hs_person_email
-    - field.field.node.hs_person.field_hs_person_faculty_interest
+    - field.field.node.hs_person.field_hs_person_external_profile
     - field.field.node.hs_person.field_hs_person_faculty_status
     - field.field.node.hs_person.field_hs_person_first_name
     - field.field.node.hs_person.field_hs_person_image
+    - field.field.node.hs_person.field_hs_person_interests
     - field.field.node.hs_person.field_hs_person_last_name
     - field.field.node.hs_person.field_hs_person_links
     - field.field.node.hs_person.field_hs_person_mail
-    - field.field.node.hs_person.field_hs_person_mail_code
     - field.field.node.hs_person.field_hs_person_middle_name
     - field.field.node.hs_person.field_hs_person_office
     - field.field.node.hs_person.field_hs_person_office_hours
@@ -24,7 +24,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
-    - field.field.node.hs_person.field_hs_person_student_study
+    - field.field.node.hs_person.field_hs_person_student_type
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -33,6 +33,7 @@ dependencies:
   module:
     - hs_layouts
     - layout_builder
+    - link
     - menu_block
     - text
     - user
@@ -223,54 +224,6 @@ third_party_settings:
               context_mapping: {  }
             additional: {  }
             weight: 7
-          9517dfef-610f-47a7-8f3b-73a84fdc2e6f:
-            uuid: 9517dfef-610f-47a7-8f3b-73a84fdc2e6f
-            region: main_above
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_student_study'
-              label: 'Field of Study'
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: inline
-                type: entity_reference_label
-                settings:
-                  link: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: ''
-                  ds:
-                    ds_limit: ''
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 11
-          5ca1fb3e-d8c0-49b4-aa0b-143421ed97a4:
-            uuid: 5ca1fb3e-d8c0-49b4-aa0b-143421ed97a4
-            region: main_above
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_faculty_interest'
-              label: 'Fields of Interest'
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: inline
-                type: entity_reference_label
-                settings:
-                  link: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: ''
-                  ds:
-                    ds_limit: ''
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 10
           5133b417-43d2-4b87-b554-2acac0cf09da:
             uuid: 5133b417-43d2-4b87-b554-2acac0cf09da
             region: main_below
@@ -408,28 +361,6 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 5
-          0144cad2-b0f4-43e2-8847-78cdba464501:
-            uuid: 0144cad2-b0f4-43e2-8847-78cdba464501
-            region: main_below
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_mail_code'
-              label: 'Mail Code'
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: inline
-                type: string
-                settings:
-                  link_to_entity: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: ''
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 6
           f06e0aad-a1b7-4032-8a51-7c03f3934f52:
             uuid: f06e0aad-a1b7-4032-8a51-7c03f3934f52
             region: main_below
@@ -524,6 +455,58 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 9
+          af9370bf-ba57-4859-ab07-51e3d43e15be:
+            uuid: af9370bf-ba57-4859-ab07-51e3d43e15be
+            region: main_above
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:hs_person:field_hs_person_interests'
+              formatter:
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+                type: string
+            additional: {  }
+            weight: 14
+          0cbd0b12-a074-4b67-ab11-26f31add80d3:
+            uuid: 0cbd0b12-a074-4b67-ab11-26f31add80d3
+            region: main_above
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:hs_person:field_hs_person_external_profile'
+              formatter:
+                label: above
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: ''
+                  target: ''
+                third_party_settings: {  }
+                type: link
+            additional: {  }
+            weight: 15
+          8acc1b43-548d-4000-a2ce-d90a46666871:
+            uuid: 8acc1b43-548d-4000-a2ce-d90a46666871
+            region: main_above
+            configuration:
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              id: 'field_block:node:hs_person:field_hs_person_student_type'
+              formatter:
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+                type: entity_reference_label
+            additional: {  }
+            weight: 16
     enabled: true
     allow_custom: false
 _core:
@@ -540,6 +523,34 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_hs_person_external_profile:
+    weight: 102
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: main_above
+  field_hs_person_interests:
+    weight: 101
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: main_above
+  field_hs_person_student_type:
+    weight: 103
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: main_above
   links:
     weight: 100
     settings: {  }
@@ -549,14 +560,12 @@ hidden:
   field_hs_person_affiliation: true
   field_hs_person_education: true
   field_hs_person_email: true
-  field_hs_person_faculty_interest: true
   field_hs_person_faculty_status: true
   field_hs_person_first_name: true
   field_hs_person_image: true
   field_hs_person_last_name: true
   field_hs_person_links: true
   field_hs_person_mail: true
-  field_hs_person_mail_code: true
   field_hs_person_middle_name: true
   field_hs_person_office: true
   field_hs_person_office_hours: true
@@ -565,6 +574,5 @@ hidden:
   field_hs_person_student_cohort: true
   field_hs_person_student_dissert: true
   field_hs_person_student_grad: true
-  field_hs_person_student_study: true
   field_hs_person_telephone: true
   field_hs_person_title: true

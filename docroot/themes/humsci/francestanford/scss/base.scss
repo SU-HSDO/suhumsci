@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+//
+// France-Stanford Center For Interdisciplinary Studies
+// France-Stanford website specific styles.
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// Decanter Overrides
+@import
+  '../../su_humsci_theme/scss/decanter-overrides/decanter-overrides';
+
+// SU HumSci
+@import
+  '../../su_humsci_theme/scss/utilities/mixins/index';
+
+// Page layout dash color
+.three-column-w-image .main-below {
+  @include accent-dash(0.25em, $color-bright-blue, 2.125em);
+}
+
+// Custom project content type
+.node-custom-hs-project-custm-person .horizontal-card {
+  background: none;
+  box-shadow: none;
+
+  @include margin(null null 1em null);
+  @include padding(0);
+}
+
+// Adjust Current Project page, which is using the Vertical Card pattern, to
+// match the Projects Archive page, which uses the Masonry Item pattern
+.custom-hs-projects-masonry .vertical-card {
+  h3,
+  h3 a {
+    font-size: 2.1rem;
+
+    @include margin(0 0 0.5em);
+  }
+
+  p {
+    font-size: 1.8rem;
+    line-height: 1.3;
+
+    @include margin(0 null 0.5em);
+  }
+
+  a {
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+}

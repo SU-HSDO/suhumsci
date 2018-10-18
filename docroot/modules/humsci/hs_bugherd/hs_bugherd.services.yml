@@ -1,9 +1,4 @@
 services:
   hs_bugherd:
     class: Drupal\hs_bugherd\HsBugherd
-    arguments: ['@jira_rest_wrapper_service']
-  hs_bugherd.overrider:
-    class: Drupal\hs_bugherd\Overrides\ConfigOverrides
-    arguments: ['@module_handler', '@config.factory', '@encryption']
-    tags:
-      - {name: config.factory.override, priority: 5}
+    arguments: ['@cache.default']

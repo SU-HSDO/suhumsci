@@ -23,7 +23,13 @@
     @include card;
 
     .vertical-card__title {
+      font-size: 3rem;
+
       @include margin(0 null null);
+    }
+
+    > *:last-child > *:last-child {
+      @include margin(null null 0 null);
     }
   }
 
@@ -43,5 +49,9 @@
     .comma {
       @include margin(null null null -3px);
     }
+  }
+
+  > * {
+    word-break: break-word;
   }
 }

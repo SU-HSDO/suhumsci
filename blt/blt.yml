@@ -22,16 +22,16 @@ drush:
 modules:
   local:
     enable: [dblog, devel, devel_debug_log, devel_generate, seckit, views_ui, config_import_de]
-    uninstall: [acquia_connector, purge, simplesamlphp_auth, shield, config_readonly, config_ignore]
+    uninstall: [acquia_connector, purge, simplesamlphp_auth, shield, config_readonly, hs_bugherd]
   ci:
     enable: [hs_config_readonly, hs_bugherd]
     uninstall: [purge, acquia_connector, shield, simplesamlphp_auth]
   dev:
     enable: [acquia_connector, shield, config_import_de]
-    uninstall: [config_readonly, bugherdapi, config_ignore]
+    uninstall: [config_readonly, hs_bugherd]
   test:
     enable: [acquia_connector, shield]
-    uninstall: [config_readonly, bugherdapi]
+    uninstall: [config_readonly, hs_bugherd]
   prod:
     enable: [acquia_connector, hs_config_readonly, hs_bugherd]
     uninstall: [shield]
@@ -41,6 +41,8 @@ multisites:
   - mrc
   - francestanford
   - swshumsci_sandbox
+  - symsys
+  - mathematics
 simplesamlphp: true
 command-hooks:
   post-deploy-build:

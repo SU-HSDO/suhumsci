@@ -1,0 +1,140 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_config_prefix.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eck\Entity\EckEntityType;
+
+/**
+ * Implements hook_help().
+ */
+function hs_config_prefix_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_config_prefix module.
+    case 'help.page.hs_config_prefix':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Prefix any configuration entities with a specified string') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function hs_config_prefix_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_ids = [
+    'node_type_add_form' => 'type',
+    'ds_field_form' => 'id',
+    'webform_add_form' => 'id',
+  ];
+  if (!isset($form_ids[$form_id])) {
+    return;
+  }
+
+  // Special assistance is needed for a few forms so we'll modify the form state
+  // values during validation. For example:
+  // * Adding a node type redirects to the manage fields route based on the form
+  // state value.
+  // * DS fields don't fire the config entity hook.
+  // * Adding webform redirects to build page based on the form state values.
+  $form_state->set('hs_config_prefix_key', $form_ids[$form_id]);
+  array_unshift($form['#validate'], 'hs_config_prefix_custom_form_validate');
+}
+
+/**
+ * Custom validation for node type add form to change the form state values.
+ *
+ * @param array $form
+ *   Complete form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ */
+function hs_config_prefix_custom_form_validate(array &$form, FormStateInterface $form_state) {
+  $id = $form_state->getValue($form_state->get('hs_config_prefix_key'));
+  $prefix = \Drupal::config('hs_config_prefix.settings')->get('prefix');
+
+  // Check if manually entered prefix exists.
+  if ($prefix && strpos($id, $prefix) !== 0) {
+    $form_state->setValue($form_state->get('hs_config_prefix_key'), "{$prefix}{$id}");
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function hs_config_prefix_entity_presave(EntityInterface $entity) {
+  if (drupal_installation_attempted() || empty($GLOBALS['_REQUEST'])) {
+    return;
+  }
+  if ($entity->isNew() && $entity instanceof ConfigEntityBase) {
+    // Form and view displays are namespace by the view modes and form modes.
+    // Field storage is managed by the field_ui.settings config.
+    $exclude_config_types = [
+      'entity_form_display',
+      'entity_view_display',
+      'field_storage_config',
+    ];
+
+    if (\Drupal::moduleHandler()->moduleExists('eck')) {
+      $eck_types = array_keys(EckEntityType::loadMultiple());
+
+      // ECK appends _type to the machine name of each entity type it has, so we
+      // have to do the same.
+      foreach ($eck_types as &$type) {
+        $type = "{$type}_type";
+      }
+      $exclude_config_types = array_merge($exclude_config_types, $eck_types);
+    }
+
+    if (!in_array($entity->getEntityTypeId(), $exclude_config_types)) {
+      try {
+        hs_config_prefix_set_entity_id($entity);
+      }
+      catch (Exception $e) {
+        \Drupal::logger('hs_config_prefix')
+          ->error('Unable to modify entity id on %type: %id', [
+            '%type' => $entity->getEntityTypeId(),
+            '%id' => $entity->id(),
+          ]);
+      }
+    }
+  }
+}
+
+/**
+ * Modify the id of the entity to have the prefix form the config.
+ *
+ * @param \Drupal\Core\Config\Entity\ConfigEntityBase $entity
+ *   Entity to modify.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function hs_config_prefix_set_entity_id(ConfigEntityBase $entity) {
+  $entity_definition = \Drupal::entityTypeManager()
+    ->getDefinition($entity->getEntityTypeId());
+
+  // Different entity types have different keys for the id attribute.
+  $id_key = $entity_definition->getKey('id');
+  $prefix = \Drupal::config('hs_config_prefix.settings')->get('prefix');
+
+  // Some entity ID's have a prefix. Like view modes, when created through the
+  // UI the entity id is `node.machine_name` so we split up any entities so that
+  // we dont modify the prefix.
+  $entity_id = explode('.', $entity->id());
+  $item_id = array_pop($entity_id);
+
+  // Check if manually entered prefix exists.
+  if (strpos($item_id, $prefix) !== 0) {
+    $entity_id[] = $prefix . $item_id;
+    $entity->set($id_key, implode('.', $entity_id));
+  }
+}

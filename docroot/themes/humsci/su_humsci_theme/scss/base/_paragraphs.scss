@@ -10,7 +10,7 @@
 
 // Default spacing
 .paragraph-item {
-  @include margin(null null 1.5em);
+  @include margin(null null 2.5em);
 }
 
 .paragraph--type--hs-row .paragraph-item {
@@ -22,7 +22,7 @@
   width: 100%;
 }
 
-// Remove margins above headings
+// Remove margins above first heading inside of a paragraph
 .paragraph-item h1,
 .paragraph-item h2,
 .paragraph-item h3,
@@ -30,6 +30,16 @@
 .paragraph-item h5,
 .paragraph-item h6 {
   &:first-child {
+    @include margin(0 null null);
+  }
+}
+
+// Offset the spacing between masthead/header and primary content when a hero
+// paragraph is used first
+.paragraph:first-child.paragraph--type--hs-hero-image {
+  @include margin(-2em null null);
+
+  .role--authenticated & {
     @include margin(0 null null);
   }
 }

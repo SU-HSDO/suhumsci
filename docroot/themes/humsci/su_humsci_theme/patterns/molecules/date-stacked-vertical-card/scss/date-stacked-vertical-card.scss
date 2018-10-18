@@ -20,6 +20,10 @@
       width: 100%;
     }
   }
+
+  > * {
+    word-break: break-word;
+  }
 }
 
 .date-stacked-vertical-card__content-container {
@@ -32,7 +36,13 @@
 
   .date-stacked-vertical-card__title {
     h2 {
+      font-size: 3rem;
+
       @include margin(20px null null);
     }
+  }
+
+  > *:last-child > *:last-child {
+    @include margin(null null 0 null);
   }
 }

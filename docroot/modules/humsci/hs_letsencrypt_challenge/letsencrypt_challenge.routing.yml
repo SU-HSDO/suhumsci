@@ -5,7 +5,7 @@ letsencrypt_challenge.challenge_controller_content:
     _controller: '\Drupal\letsencrypt_challenge\Controller\ChallengeController::content'
   methods:  [GET]
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 letsencrypt_challenge.challenge_controller_content_key:
   path: '/.well-known/acme-challenge/{key}'
@@ -13,7 +13,7 @@ letsencrypt_challenge.challenge_controller_content_key:
     _controller: '\Drupal\letsencrypt_challenge\Controller\ChallengeController::content'
   methods:  [GET]
   requirements:
-    _permission: 'access content'
+    _access: 'TRUE'
 
 letsencrypt_challenge.challenge_form:
   path: '/admin/config/letsencrypt_challenge/challenge'

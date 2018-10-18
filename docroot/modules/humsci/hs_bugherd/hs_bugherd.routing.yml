@@ -1,15 +1,6 @@
-hs_bugherd.api:
-  path: '/admin/config/system/bugherd/api'
-  defaults:
-    _form: '\Drupal\hs_bugherd\Form\HsBugherdForm'
-    _title: 'Bugherd Jira API'
-  requirements:
-    _permission: 'administer bugherd'
-  options:
-    _admin_route: TRUE
 
 hs_bugherd.webhooks:
-  path: '/admin/config/system/bugherd/hooks'
+  path: '/admin/config/services/bugherd/hooks'
   defaults:
     _form: '\Drupal\hs_bugherd\Form\HsBugherdHooksForm'
     _title: 'Bugherd Jira Webhooks'
@@ -17,3 +8,12 @@ hs_bugherd.webhooks:
     _permission: 'administer bugherd'
   options:
     _admin_route: TRUE
+
+hs_bugherd.bugherd_connection_settings_form:
+  path: '/admin/config/services/bugherd/settings'
+  defaults:
+    _form: '\Drupal\hs_bugherd\Form\BugherdConnectionSettingsForm'
+    _title: 'BugherdConnectionSettingsForm'
+  requirements:
+    _access: 'TRUE'
+  

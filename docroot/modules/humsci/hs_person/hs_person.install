@@ -20,3 +20,12 @@ function hs_person_install() {
     \Drupal::logger('hs_person')->error($message);
   }
 }
+
+/**
+ * Delete unwanted fields.
+ */
+function hs_person_update_8001() {
+  /** @var \Drupal\su_humsci_profile\HumsciCleanup $cleanup */
+  $cleanup = \Drupal::service('su_humsci_profile.cleanup');
+  $cleanup->deleteField('node', 'field_hs_person_mail_code');
+}

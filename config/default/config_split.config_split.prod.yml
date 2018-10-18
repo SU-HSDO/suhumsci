@@ -10,9 +10,9 @@ module:
   acquia_connector: 0
   acquia_purge: 0
   simplesamlphp_auth: 0
+  hs_bugherd: 0
   hs_config_readonly: 0
   config_readonly: 0
-  config_ignore: 0
   purge: 0
   purge_drush: 0
   purge_processor_cron: 0
@@ -21,9 +21,11 @@ module:
   purge_ui: 0
 theme: {  }
 blacklist:
+  - rest.resource.hs_bugherd_resource
+  - rest.resource.hs_bugherd_resource_bugherd
+  - rest.resource.hs_bugherd_resource_jira
   - acquia_connector.settings
   - simplesamlphp_auth.settings
-  - config_ignore.settings
   - google_analytics.settings
   - purge.logger_channels
   - purge.plugins
@@ -31,6 +33,7 @@ blacklist:
 graylist:
   - field_ui.settings
   - system.performance
+  - hs_config_prefix.settings
 graylist_dependents: true
 graylist_skip_equal: true
 weight: 0

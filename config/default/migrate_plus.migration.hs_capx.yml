@@ -10,25 +10,11 @@ migration_tags: null
 migration_group: hs_capx
 label: 'H&S CAPx Importer'
 source:
-  authentication:
-    plugin: oauth2
-    base_uri: 'https://authz.stanford.edu'
-    token_url: /oauth/token
-    grant_type: client_credentials
-    client_id: client_id
-    client_secret: client_secret
-  track_changes: true
-  plugin: url
-  data_fetcher_plugin: http
-  data_parser_plugin: json
-  headers:
-    Accept: 'application/json; charset=utf-8'
-    Content-Type: application/json
   constants:
     status: 1
     type: hs_person
-  urls:
-    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:eess-faculty-regular&ps=1000'
+    basic_html: basic_html
+  urls: {  }
   item_selector: values
   fields:
     -
@@ -51,6 +37,10 @@ source:
       name: short_title
       label: 'CAP Short Title'
       selector: shortTitle/title
+    -
+      name: long_title
+      label: 'CAP Long Title'
+      selector: longTitle/title
     -
       name: biosketch
       label: 'Biography'
@@ -94,6 +84,23 @@ process:
   title: display_name
   status: constants/status
   type: constants/type
+  field_hs_person_first_name: first_name
+  field_hs_person_last_name: last_name
+  field_hs_person_title: long_title
+  body/value: biosketch
+  body/format: constants/basic_html
+  field_hs_person_email: email
+  field_hs_person_telephone: phone
+  field_hs_person_image/target_id:
+     -
+       plugin: migration_lookup
+       migration: hs_capx_images
+       source: sunetid
+     -
+       plugin: default_value
+       default_value: null
 destination:
   plugin: 'entity:node'
-migration_dependencies: null
+migration_dependencies:
+  required:
+    - migrate_plus.migration.hs_capx_images

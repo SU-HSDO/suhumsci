@@ -18,6 +18,8 @@ class Capx {
 
   const AUTH_URL = 'https://authz.stanford.edu/oauth/token';
 
+  const CAP_URL = 'https://cap.stanford.edu/cap-api/api/profiles/v1';
+
   /**
    * @var string
    */
@@ -143,11 +145,45 @@ class Capx {
     ]);
 
     $result = json_decode($result->getBody()->getContents(), TRUE);
-    $this->cache->set('capx:access_token', $result, time() + $result['expires_in'],[
+    $this->cache->set('capx:access_token', $result, time() + $result['expires_in'], [
       'capx',
       'capx:token',
     ]);
     return $result['access_token'];
+  }
+
+  /**
+   * Get the url for CAPx for the given organizations.
+   *
+   * @param string $organizations
+   *   Comma separated organization codes.
+   * @param bool $children
+   *   Include all children of the organizations.
+   *
+   * @return string
+   *   CAPx URL.
+   */
+  public static function getOrganizationUrl($organizations, $children = FALSE) {
+    $organizations = preg_replace('/[^A-Z,]/', '', strtoupper($organizations));
+    $url = self::CAP_URL . "?orgCodes=$organizations&ps=1000";
+    if ($children) {
+      $url .= '&includeChildren=true';
+    }
+    return $url;
+  }
+
+  /**
+   * Get the url for CAPx for given workgroups.
+   *
+   * @param string $workgroups
+   *   Commas separated list of workgroups.
+   *
+   * @return string
+   *   CAPx URL.
+   */
+  public static function getWorkgroupUrl($workgroups) {
+    $workgroups = preg_replace('/[^A-Z,:]/', '', strtoupper($workgroups));
+    return self::CAP_URL . "?privGroups=$workgroups&ps=1000";
   }
 
 }

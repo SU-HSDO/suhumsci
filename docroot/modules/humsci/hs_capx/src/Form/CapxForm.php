@@ -2,11 +2,11 @@
 
 namespace Drupal\hs_capx\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\key\Entity\Key;
 
 /**
  * Class CapxForm.
@@ -71,6 +71,8 @@ class CapxForm extends ConfigFormBase {
       ->set('child_organizations', $form_state->getValue('child_organizations'))
       ->set('workgroups', $form_state->getValue('workgroups'))
       ->save();
+
+    Cache::invalidateTags(['migration_plugins']);
   }
 
 }

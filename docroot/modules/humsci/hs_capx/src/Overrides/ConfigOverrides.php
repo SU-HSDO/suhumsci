@@ -6,7 +6,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
-
 use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 
@@ -44,21 +43,25 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if (in_array('migrate_plus.migration.hs_capx', $names) || in_array('migrate_plus.migration.hs_capx_images', $names)) {
 
       $config = $this->configFactory->get('hs_capx.settings');
-      $password = '';
+      $password = 'b';
       if ($key = Key::load($config->get('password') ?: '')) {
         $password = $key->getKeyValue();
       }
 
+      // Set the migration urls and client credentials from the user entered
+      // data.
       $overrides['migrate_plus.migration.hs_capx'] = [
         'source' => [
           'authentication' => [
             'client_id' => $config->get('username'),
             'client_secret' => $password,
+            'plugin' => $password ? 'oauth2' : '',
           ],
           'urls' => $this->getCapxUrls(),
         ],
-        'status' => !empty($this->getCapxUrls()),
       ];
+
+      // Image importer will have the same overrides.
       $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
     }
     return $overrides;
@@ -79,7 +82,10 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if ($workgroups = $config->get('workgroups')) {
       $urls[] = Capx::getWorkgroupUrl($workgroups);
     }
-   return $urls;
+
+    // If no workgroups or organizations are configured, use a dummy url with no
+    // data to prevent unwanted error messages.
+    return $urls ?: ['http://ip.jsontest.com'];
   }
 
   /**

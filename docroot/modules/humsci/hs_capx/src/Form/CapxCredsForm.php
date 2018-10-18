@@ -6,12 +6,13 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CapxCredsForm.
+ * Form class to set the CAPx user credentials.
  *
  * @package Drupal\hs_capx\Form
  */
@@ -73,9 +74,12 @@ class CapxCredsForm extends ConfigFormBase {
     foreach ($keys as &$key) {
       $key = $key->label();
     }
+
+    $key_description = t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
     $form['password'] = [
       '#type' => 'select',
       '#title' => $this->t('Password'),
+      '#description' => $key_description,
       '#required' => TRUE,
       '#options' => $keys,
       '#default_value' => $config->get('password'),
@@ -88,6 +92,8 @@ class CapxCredsForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+
+    // Check the given username and password will authenticate with CAPx.
     $this->capx->setUsername($form_state->getValue('username'));
     $password_key = Key::load($form_state->getValue('password'));
     $this->capx->setPassword($password_key->getKeyValue());
@@ -114,6 +120,7 @@ class CapxCredsForm extends ConfigFormBase {
     $password_key = Key::load($form_state->getValue('password'));
     $this->capx->setPassword($password_key->getKeyValue());
 
+    // We have valid username and passwords, lets get the organization data.
     $this->capx->syncOrganizations();
   }
 }

@@ -9,7 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * Class CapxForm.
+ * Form to allow the user to choose which CAPx data to import.
  */
 class CapxForm extends ConfigFormBase {
 

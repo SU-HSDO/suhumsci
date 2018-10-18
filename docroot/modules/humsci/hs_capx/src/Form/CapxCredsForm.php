@@ -75,7 +75,10 @@ class CapxCredsForm extends ConfigFormBase {
       $key = $key->label();
     }
 
-    $key_description = $this->t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
+    $key_description = $this->t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', [
+      ':link' => Url::fromRoute('entity.key.add_form')
+        ->toString(),
+    ]);
     $form['password'] = [
       '#type' => 'select',
       '#title' => $this->t('Password'),
@@ -123,4 +126,5 @@ class CapxCredsForm extends ConfigFormBase {
     // We have valid username and passwords, lets get the organization data.
     $this->capx->syncOrganizations();
   }
+
 }

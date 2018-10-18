@@ -45,7 +45,7 @@ class Capx {
    * Capx constructor.
    *
    * @param \GuzzleHttp\ClientInterface $guzzle
-   *   Guzzle Client service
+   *   Guzzle Client service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache service.
    * @param \Drupal\Core\Database\Connection $database

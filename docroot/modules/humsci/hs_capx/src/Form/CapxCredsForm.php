@@ -75,7 +75,7 @@ class CapxCredsForm extends ConfigFormBase {
       $key = $key->label();
     }
 
-    $key_description = t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
+    $key_description = $this->t('Choose an available key. If the desired key is not listed, <a href=":link">create a new key</a>.', [':link' => Url::fromRoute('entity.key.add_form')->toString()]);
     $form['password'] = [
       '#type' => 'select',
       '#title' => $this->t('Password'),

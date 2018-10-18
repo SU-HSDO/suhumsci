@@ -45,8 +45,11 @@ class Capx {
    * Capx constructor.
    *
    * @param \GuzzleHttp\ClientInterface $guzzle
+   *   Guzzle Client service
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   Cache service.
    * @param \Drupal\Core\Database\Connection $database
+   *   Database connection service.
    */
   public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database) {
     $this->client = $guzzle;
@@ -152,7 +155,7 @@ class Capx {
    *
    * @throws \Exception
    */
-  protected function insertOrgData(array $org_data, $parent = []) {
+  protected function insertOrgData(array $org_data, array $parent = []) {
     if (!empty($org_data['children'])) {
       foreach ($org_data['children'] as $child) {
         $this->insertOrgData($child, $org_data);

@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 class CapxOrgAutocomplete extends ControllerBase {
 
   /**
+   * Database connection service.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
@@ -58,7 +60,7 @@ class CapxOrgAutocomplete extends ControllerBase {
       ->fetchAllAssoc('alias');
 
     $results = [];
-    foreach ($query_results as $alias => $item) {
+    foreach ($query_results as $item) {
       $org_codes = unserialize($item->orgcodes);
       $results[] = ['value' => end($org_codes), 'label' => $item->name];
     }

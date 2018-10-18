@@ -7,9 +7,16 @@ class: null
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags: null
-migration_group: earth_capx
+migration_group: hs_capx
 label: 'H&S CAPx Importer'
 source:
+  authentication:
+    plugin: oauth2
+    base_uri: 'https://authz.stanford.edu'
+    token_url: /oauth/token
+    grant_type: client_credentials
+    client_id: client_id
+    client_secret: client_secret
   track_changes: true
   plugin: url
   data_fetcher_plugin: http
@@ -19,16 +26,9 @@ source:
     Content-Type: application/json
   constants:
     status: 1
-    basic_html: basic_html
-    file_destination: 'public://'
-    file_extension: '.jpg'
-    image_alt_value: 'profile photo'
-    password_length: 55
+    type: hs_person
   urls:
     - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:eess-faculty-regular&ps=1000'
-    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:ere-faculty-regular&ps=1000'
-    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:geophysics-faculty-regular&ps=1000'
-    - 'https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=earthsci:ges-faculty-regular&ps=1000'
   item_selector: values
   fields:
     -
@@ -91,6 +91,9 @@ source:
     sunetid:
       type: string
 process:
+  title: display_name
+  status: constants/status
+  type: constants/type
 destination:
   plugin: 'entity:node'
 migration_dependencies: null

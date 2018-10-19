@@ -43,7 +43,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if (in_array('migrate_plus.migration.hs_capx', $names) || in_array('migrate_plus.migration.hs_capx_images', $names)) {
 
       $config = $this->configFactory->get('hs_capx.settings');
-      $password = 'b';
+      $password = '';
       if ($key = Key::load($config->get('password') ?: '')) {
         $password = $key->getKeyValue();
       }

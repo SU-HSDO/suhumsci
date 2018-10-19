@@ -1,0 +1,25 @@
+uuid: b7f8b3cc-8882-4a75-be63-853be8c5390a
+langcode: en
+status: true
+dependencies: {  }
+id: hs_capx
+label: Profiles
+description: 'H&S CAPx Importer.'
+source_type: null
+module: null
+shared_configuration:
+  source:
+    authentication:
+      plugin: oauth2
+      base_uri: 'https://authz.stanford.edu'
+      token_url: /oauth/token
+      grant_type: client_credentials
+      client_id: client_id
+      client_secret: client_secret
+    track_changes: true
+    plugin: url
+    data_fetcher_plugin: http
+    data_parser_plugin: json
+    headers:
+      Accept: 'application/json; charset=utf-8'
+      Content-Type: application/json

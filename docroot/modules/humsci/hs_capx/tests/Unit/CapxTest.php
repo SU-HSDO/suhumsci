@@ -3,7 +3,7 @@
 namespace Drupal\Tests\hs_capx\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\hs_capx\Capx;
 use Drupal\Tests\UnitTestCase;
 use GuzzleHttp\Client;
@@ -20,14 +20,19 @@ use Psr\Http\Message\RequestInterface;
 class CapxTest extends UnitTestCase {
 
   /**
-   * @var \GuzzleHttp\Client
+   * @var \PHPUnit_Framework_MockObject_MockObject
    */
   protected $guzzle;
 
   /**
-   * @var \Drupal\hs_capx\Capx
+   * @var \Drupal\Tests\hs_capx\Unit\TestCapx
    */
   protected $capx;
+
+  /**
+   * @var \PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $cache;
 
   /**
    * {@inheritdoc}
@@ -36,10 +41,10 @@ class CapxTest extends UnitTestCase {
     parent::setUp();
 
     $this->guzzle = $this->createMock(Client::class);
-    $cache = $this->createMock(CacheBackendInterface::class);
+    $this->cache = $this->createMock(CacheBackendInterface::class);
     $database = $this->createMock(Connection::class);
 
-    $this->capx = new Capx($this->guzzle, $cache, $database);
+    $this->capx = new TestCapx($this->guzzle, $this->cache, $database);
   }
 
   public function testStaticMethods() {
@@ -74,6 +79,100 @@ class CapxTest extends UnitTestCase {
     $this->capx->setUsername($this->getRandomGenerator()->string());
     $this->capx->setPassword($this->getRandomGenerator()->string());
     $this->assertTrue($this->capx->testConnection());
+  }
+
+  /**
+   * Test the orgdata is returned.
+   */
+  public function testOrgData() {
+    $this->guzzle->method('request')
+      ->withAnyParameters()
+      ->will($this->returnCallback([$this, 'guzzleRequestCallback']));
+    $data = $this->capx->getOrgData();
+
+    $this->assertArrayHasKey('name', $data);
+    $this->assertArrayHasKey('alias', $data);
+    $this->assertArrayHasKey('orgCodes', $data);
+    $this->assertArrayHasKey('children', $data);
+  }
+
+  public function testCachedOrgData() {
+    $this->cache->method('GET')
+      ->withAnyParameters()
+      ->will($this->returnCallback([$this, 'cacheGetCallback']));
+    $this->testOrgData();
+
+    $this->assertNotEmpty($this->capx->getAccessToken());
+  }
+
+  /**
+   * Callback function for guzzle mock service.
+   *
+   * @param string $method
+   *   Request method.
+   * @param string $url
+   *   Request url.
+   *
+   * @return \GuzzleHttp\Psr7\Response
+   *   Guzzle's mock response.
+   */
+  public function guzzleRequestCallback($method, $url) {
+    $body = [];
+    switch ($url) {
+      case 'https://authz.stanford.edu/oauth/token':
+        $body = [
+          'access_token' => $this->getRandomGenerator()->string(),
+          'expires_in' => rand(1000, 9999),
+        ];
+        break;
+      case 'https://api.stanford.edu/cap/v1/orgs/AA00':
+        $body = json_decode(file_get_contents(__DIR__ . '/orgs.json'), TRUE);
+        break;
+    }
+
+    return new Response(200, [], json_encode($body));
+  }
+
+  /**
+   * Cache get callback to return desired test data.
+   *
+   * @param string $cid
+   *   Cache ID.
+   *
+   * @return array|mixed|string
+   *   Cached data.
+   */
+  public function cacheGetCallback($cid) {
+    switch ($cid) {
+      case 'capx:org_data':
+        $data = json_decode(file_get_contents(__DIR__ . '/orgs.json'), TRUE);
+        break;
+      case 'capx:access_token':
+        $data = ['access_token' => $this->getRandomGenerator()->string()];
+        break;
+    }
+    return (object) ['data' => $data];
+  }
+
+}
+
+/**
+ * Class TestCapx to expose methods as public.
+ */
+class TestCapx extends Capx {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOrgData() {
+    return parent::getOrgData();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAccessToken() {
+    return parent::getAccessToken();
   }
 
 }

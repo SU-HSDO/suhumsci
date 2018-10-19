@@ -43,15 +43,15 @@ source:
       selector: longTitle/title
     -
       name: biosketch
-      label: 'Biography'
+      label: Biography
       selector: bio/text
     -
       name: email
-      label: 'Email'
+      label: Email
       selector: primaryContact/email
     -
       name: alias
-      label: 'Alias'
+      label: Alias
       selector: alias
     -
       name: profile_photo
@@ -92,13 +92,13 @@ process:
   field_hs_person_email: email
   field_hs_person_telephone: phone
   field_hs_person_image/target_id:
-     -
-       plugin: migration_lookup
-       migration: hs_capx_images
-       source: sunetid
-     -
-       plugin: default_value
-       default_value: null
+    -
+      plugin: migration_lookup
+      migration: hs_capx_images
+      source: sunetid
+    -
+      plugin: default_value
+      default_value: null
 destination:
   plugin: 'entity:node'
 migration_dependencies:

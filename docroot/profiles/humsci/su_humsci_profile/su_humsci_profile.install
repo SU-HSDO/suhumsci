@@ -17,8 +17,25 @@ use Drupal\user\Entity\Role;
 function su_humsci_profile_install() {
   // Assign user 1 the "administrator" role.
   $user = User::load(1);
+  $user->name = 'sws-developers';
   $user->roles[] = 'administrator';
   $user->save();
+
+  User::create([
+    'name' => 'Howard',
+    'password' => user_password(),
+    'email' => 'sws-developers+howard@lists.stanford.edu',
+    'roles' => ['site_manager'],
+    'status' => 1,
+  ])->save();
+
+  User::create([
+    'name' => 'Lindsey',
+    'password' => user_password(),
+    'email' => 'sws-developers+lindsey@lists.stanford.edu',
+    'roles' => ['contributor'],
+    'status' => 1,
+  ])->save();
 
   // We install some menu links, so we have to rebuild the router, to ensure the
   // menu links are valid.

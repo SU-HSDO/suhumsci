@@ -4,6 +4,7 @@ namespace Drupal\hs_capx;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -42,6 +43,34 @@ class Capx {
   protected $password;
 
   /**
+   * Guzzle client service.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $client;
+
+  /**
+   * Cache service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
+
+  /**
+   * Database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * Database logging service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
    * Capx constructor.
    *
    * @param \GuzzleHttp\ClientInterface $guzzle
@@ -50,11 +79,13 @@ class Capx {
    *   Cache service.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactory
    */
-  public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database) {
+  public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database, LoggerChannelFactory $logger_factory) {
     $this->client = $guzzle;
     $this->cache = $cache;
     $this->database = $database;
+    $this->logger = $logger_factory->get('capx');
   }
 
   /**
@@ -128,6 +159,7 @@ class Capx {
     }
     catch (GuzzleException $e) {
       // Most errors originate from the API itself.
+      $this->logger->error($e->getMessage());
       return FALSE;
     }
 

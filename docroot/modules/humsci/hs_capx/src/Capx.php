@@ -79,7 +79,8 @@ class Capx {
    *   Cache service.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactory
+   * @param \Drupal\Core\Logger\LoggerChannelFactory $logger_factory
+   *   Database logging service.
    */
   public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database, LoggerChannelFactory $logger_factory) {
     $this->client = $guzzle;
@@ -225,7 +226,7 @@ class Capx {
     // AA00 is the root level of all Stanford.
     $result = $this->client->request('GET', self::API_URL . '/cap/v1/orgs/AA00', ['query' => ['access_token' => $token]]);
     $result = json_decode($result->getBody()->getContents(), TRUE);
-    $this->cache->set('capx:org_data', $result, time() + 60 * 80 * 24 * 7, [
+    $this->cache->set('capx:org_data', $result, time() + 60 * 60 * 24 * 7, [
       'capx',
       'capx:ord-data',
     ]);

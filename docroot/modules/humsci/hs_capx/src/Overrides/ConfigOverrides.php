@@ -40,30 +40,33 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   public function loadOverrides($names) {
     $overrides = [];
-    if (in_array('migrate_plus.migration.hs_capx', $names) || in_array('migrate_plus.migration.hs_capx_images', $names)) {
 
-      $config = $this->configFactory->get('hs_capx.settings');
-      $password = '';
-      if ($key = Key::load($config->get('password') ?: '')) {
-        $password = $key->getKeyValue();
-      }
-
-      // Set the migration urls and client credentials from the user entered
-      // data.
-      $overrides['migrate_plus.migration.hs_capx'] = [
-        'source' => [
-          'authentication' => [
-            'client_id' => $config->get('username'),
-            'client_secret' => $password,
-            'plugin' => $password ? 'oauth2' : '',
-          ],
-          'urls' => $this->getCapxUrls(),
-        ],
-      ];
-
-      // Image importer will have the same overrides.
-      $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
+    if (!(in_array('migrate_plus.migration.hs_capx', $names) || in_array('migrate_plus.migration.hs_capx_images', $names))) {
+      return [];
     }
+
+    $config = $this->configFactory->get('hs_capx.settings');
+    $password = '';
+    if ($key = Key::load($config->get('password') ?: '')) {
+      $password = $key->getKeyValue();
+    }
+
+    // Set the migration urls and client credentials from the user entered
+    // data.
+    $overrides['migrate_plus.migration.hs_capx'] = [
+      'source' => [
+        'authentication' => [
+          'client_id' => $config->get('username'),
+          'client_secret' => $password,
+          'plugin' => $password ? 'oauth2' : '',
+        ],
+        'urls' => $this->getCapxUrls(),
+      ],
+    ];
+
+    // Image importer will have the same overrides.
+    $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
+
     return $overrides;
   }
 

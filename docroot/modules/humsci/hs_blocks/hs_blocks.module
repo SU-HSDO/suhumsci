@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -52,7 +53,7 @@ function hs_blocks_preprocess_block__block_content(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function hs_blocks_form_layout_builder_update_block_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function hs_blocks_form_layout_builder_update_block_alter(&$form, FormStateInterface $form_state, $form_id) {
   unset($form['settings']['label_display']);
   $form['settings']['formatter']['label']['#options']['above_h2'] = t('Above H2');
 }

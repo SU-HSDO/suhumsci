@@ -48,3 +48,21 @@ function hs_blocks_preprocess_block__block_content(&$variables) {
     $variables['label'] = '';
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_blocks_form_layout_builder_update_block_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  unset($form['settings']['label_display']);
+  $form['settings']['formatter']['label']['#options']['above_h2'] = t('Above H2');
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_blocks_preprocess_block__layout_builder(&$variables) {
+  if ($variables['configuration']['formatter']['label'] == 'above_h2') {
+    $variables['content']['#label_display'] = 'hidden';
+    $variables['label'] = $variables['configuration']['label'];
+  }
+}

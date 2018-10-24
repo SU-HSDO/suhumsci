@@ -4,6 +4,7 @@ namespace Drupal\Tests\hs_capx\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\hs_capx\Capx;
 use Drupal\Tests\UnitTestCase;
 use GuzzleHttp\Client;
@@ -43,10 +44,14 @@ class CapxTest extends UnitTestCase {
     $this->guzzle = $this->createMock(Client::class);
     $this->cache = $this->createMock(CacheBackendInterface::class);
     $database = $this->createMock(Connection::class);
+    $logger = $this->createMock(LoggerChannelFactory::class);
 
-    $this->capx = new TestCapx($this->guzzle, $this->cache, $database);
+    $this->capx = new TestCapx($this->guzzle, $this->cache, $database, $logger);
   }
 
+  /**
+   * Test the static methods.
+   */
   public function testStaticMethods() {
     $url = Capx::getWorkgroupUrl('test:group');
     $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=TEST:GROUP&ps=1000', $url);

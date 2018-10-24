@@ -34,3 +34,17 @@ function hs_blocks_theme($existing, $type, $theme, $path) {
     ],
   ];
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_blocks_preprocess_block__block_content(&$variables) {
+  /** @var \Drupal\block_content\Entity\BlockContent $block_entity */
+  $block_entity = $variables['content']['#block_content'];
+  if (
+    $block_entity->hasField('field_hs_block_hide_title') &&
+    $block_entity->get('field_hs_block_hide_title')->getString()
+  ) {
+    $variables['label'] = '';
+  }
+}

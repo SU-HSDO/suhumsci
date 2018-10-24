@@ -2,6 +2,8 @@
 
 namespace Drupal\hs_capx\Controller;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,7 +48,7 @@ class CapxOrgAutocomplete extends ControllerBase {
    *   Found results response.
    */
   public function autocomplete(Request $request) {
-    $string = mb_strtolower($request->query->get('q'));
+    $string = Xss::filter(Html::escape(mb_strtolower($request->query->get('q'))));
     /** @var \Drupal\Core\Database\Statement $aresults */
     $query_results = $this->database->select('hs_capx_organizations', 'c')
       ->fields('c', [

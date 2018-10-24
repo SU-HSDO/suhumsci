@@ -1,0 +1,24 @@
+
+hs_capx.capx_creds_form:
+  path: '/admin/structure/migrate/capx/creds'
+  defaults:
+    _form: '\Drupal\hs_capx\Form\CapxCredsForm'
+    _title: 'CAPx Credentials'
+  requirements:
+    _permission: 'administer capx settings'
+
+hs_capx.capx_importer_form:
+  path: '/admin/structure/migrate/capx'
+  defaults:
+    _form: '\Drupal\hs_capx\Form\CapxForm'
+    _title: 'CAPx Settings'
+  requirements:
+    _permission: 'administer capx settings'
+  
+hs_capx.org_autocomplete:
+  path: '/capx/org-autocomplete'
+  defaults:
+    _controller: '\Drupal\hs_capx\Controller\CapxOrgAutocomplete::autocomplete'
+    _format: json
+  requirements:
+    _permission: 'administer capx settings'

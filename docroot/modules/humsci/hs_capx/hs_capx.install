@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * hs_capx.install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function hs_capx_schema() {
+  $schema['hs_capx_organizations'] = [
+    'description' => 'Stores data about CAPx Organizations',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique organization ID.',
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the Organization.',
+      ],
+      'alias' => [
+        'type' => 'varchar',
+        'length' => 500,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Alias of the Organization.',
+      ],
+      'orgcodes' => [
+        'type' => 'blob',
+        'size' => 'normal',
+        'not null' => TRUE,
+        'description' => 'List of the organziation codes.',
+      ],
+      'parent' => [
+        'type' => 'varchar',
+        'length' => 500,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The parent organization alias.',
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'alias' => ['alias'],
+    ],
+  ];
+
+  return $schema;
+}

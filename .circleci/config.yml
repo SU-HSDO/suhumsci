@@ -54,7 +54,7 @@ behat_tests_first: &behat_tests_first
     - *add_known_hosts
     - checkout
     - *copy_robo
-    - restore_cache: *restore_cache
+#    - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
         command: robo job:run-behat-tests-first
@@ -72,7 +72,7 @@ behat_tests_second: &behat_tests_second
     - *add_known_hosts
     - checkout
     - *copy_robo
-    - restore_cache: *restore_cache
+#    - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
         command: robo job:run-behat-tests-second
@@ -88,7 +88,7 @@ functional_unit_tests: &functional_unit_tests
   steps:
     - checkout
     - *copy_robo
-    - restore_cache: *restore_cache
+#    - restore_cache: *restore_cache
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests
@@ -104,7 +104,7 @@ code_coverage: &code_coverage
   steps:
     - checkout
     - *copy_robo
-    - restore_cache: *restore_cache
+#    - restore_cache: *restore_cache
     - run:
         name: Generate code coverage report
         command: robo job:generate-coverage-report

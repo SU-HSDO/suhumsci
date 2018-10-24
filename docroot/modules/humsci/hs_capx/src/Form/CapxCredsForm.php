@@ -71,6 +71,9 @@ class CapxCredsForm extends ConfigFormBase {
     ];
 
     $keys = Key::loadMultiple();
+
+    // Loop through the various keys and using reference, change the key object
+    // into the key's label for use in the select form element.
     foreach ($keys as &$key) {
       $key = $key->label();
     }

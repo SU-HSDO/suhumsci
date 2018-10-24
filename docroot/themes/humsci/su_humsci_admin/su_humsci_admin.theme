@@ -24,3 +24,12 @@ function su_humsci_admin_form_alter(&$form, FormStateInterface $form_state, $for
     }
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_admin_form_node_type_add_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['display']['display_submitted']['#default_value'] = FALSE;
+  $form['menu']['menu_options']['#default_value'] = NULL;
+  unset($form['workflow']['options']['#default_value']['promote']);
+}

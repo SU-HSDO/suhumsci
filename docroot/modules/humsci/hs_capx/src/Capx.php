@@ -4,7 +4,7 @@ namespace Drupal\hs_capx;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -82,7 +82,7 @@ class Capx {
    * @param \Drupal\Core\Logger\LoggerChannelFactory $logger_factory
    *   Database logging service.
    */
-  public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database, LoggerChannelFactory $logger_factory) {
+  public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database, LoggerChannelFactoryInterface $logger_factory) {
     $this->client = $guzzle;
     $this->cache = $cache;
     $this->database = $database;

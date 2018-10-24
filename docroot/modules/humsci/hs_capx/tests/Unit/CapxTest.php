@@ -12,7 +12,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class CapxTest.

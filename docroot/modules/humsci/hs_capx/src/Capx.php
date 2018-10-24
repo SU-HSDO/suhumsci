@@ -79,7 +79,7 @@ class Capx {
    *   Cache service.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactory $logger_factory
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   Database logging service.
    */
   public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database, LoggerChannelFactoryInterface $logger_factory) {

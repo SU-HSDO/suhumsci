@@ -1,0 +1,9 @@
+services:
+  capx:
+    class: Drupal\hs_capx\Capx
+    arguments: ['@http_client', '@cache.default', '@database', '@logger.factory']
+  hs_capx.overrider:
+    class: Drupal\hs_capx\Overrides\ConfigOverrides
+    arguments: ['@config.factory']
+    tags:
+      - {name: config.factory.override, priority: 5}

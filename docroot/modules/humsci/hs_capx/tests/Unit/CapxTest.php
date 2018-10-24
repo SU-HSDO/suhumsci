@@ -7,10 +7,12 @@ use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\hs_capx\Capx;
 use Drupal\Tests\UnitTestCase;
+use Drush\Log\Logger;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class CapxTest.
@@ -44,8 +46,9 @@ class CapxTest extends UnitTestCase {
     $this->guzzle = $this->createMock(Client::class);
     $this->cache = $this->createMock(CacheBackendInterface::class);
     $database = $this->createMock(Connection::class);
-    $logger = $this->createMock(LoggerChannelFactory::class);
 
+    $logger = new LoggerChannelFactory();
+    $logger->addLogger($this->createMock(Logger::class));
     $this->capx = new TestCapx($this->guzzle, $this->cache, $database, $logger);
   }
 

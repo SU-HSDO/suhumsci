@@ -30,7 +30,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 14
+    weight: 2
     settings:
       rows: 9
       summary_rows: 3
@@ -39,12 +39,12 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_hs_publication_author:
-    weight: 13
+    weight: 11
     settings:
       form_mode: default
       override_labels: true
@@ -53,6 +53,9 @@ content:
       allow_new: true
       match_operator: CONTAINS
       allow_existing: false
+      collapsible: false
+      collapsed: false
+      allow_duplicate: false
     third_party_settings:
       entity_browser_entity_form:
         entity_browser_id: _none
@@ -89,7 +92,7 @@ content:
     type: entity_browser_entity_reference
     region: content
   field_hs_publication_link:
-    weight: 10
+    weight: 12
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -97,7 +100,7 @@ content:
     type: link_default
     region: content
   field_hs_publication_publisher:
-    weight: 12
+    weight: 14
     settings:
       size: 60
       placeholder: ''
@@ -105,13 +108,13 @@ content:
     type: string_textfield
     region: content
   field_hs_publication_type:
-    weight: 9
+    weight: 13
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_hs_publication_year:
-    weight: 11
+    weight: 10
     settings:
       min: 'now - 10 years'
       max: 'now + 10 years'
@@ -120,7 +123,7 @@ content:
     region: content
   path:
     type: path
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -128,21 +131,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 5
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 8
+    weight: 9
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 5
+    weight: 6
     region: content
     third_party_settings: {  }
   title:
@@ -155,7 +158,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 3
     settings:
       match_operator: CONTAINS
       size: 60
@@ -163,7 +166,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 7
+    weight: 8
     region: content
     settings: {  }
     third_party_settings: {  }

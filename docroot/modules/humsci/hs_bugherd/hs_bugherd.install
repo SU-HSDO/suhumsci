@@ -31,5 +31,7 @@ function hs_bugherd_update_8001() {
  * Delete old rest resource.
  */
 function hs_bugherd_update_8002() {
-  \Drupal::config('rest.resource.hs_bugherd_resource_bugherd')->delete();
+  \Drupal::configFactory()
+    ->get('rest.resource.hs_bugherd_resource_bugherd')
+    ->delete();
 }

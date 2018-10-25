@@ -26,3 +26,12 @@ function hs_bugherd_update_8001() {
     $config_storage->write($name, $source->read($name));
   }
 }
+
+/**
+ * Delete old rest resource.
+ */
+function hs_bugherd_update_8002() {
+  \Drupal::configFactory()
+    ->getEditable('rest.resource.hs_bugherd_resource_bugherd')
+    ->delete();
+}

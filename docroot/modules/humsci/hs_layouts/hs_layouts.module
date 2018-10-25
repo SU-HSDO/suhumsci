@@ -31,3 +31,13 @@ function hs_layouts_plugin_filter_block__layout_builder_alter(&$definitions, &$e
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_layouts_preprocess_container(&$variables) {
+  if (!empty($variables['element']['layout-section'])) {
+    // Add styles to the layout builder admin configuration.
+    $variables['#attached']['library'][] = 'hs_layouts/layout_builder_admin';
+  }
+}

@@ -102,13 +102,17 @@ module.exports = function(grunt) {
         precision: 10
       },
       dist: {
-        files: {
-          // Files are compiled individually so they may be included
-          // conditionally using logic built in to the theme template or module.
-
-          // BASE
-          'css/three-column-w-image.css':   'scss/three-column-w-image.scss'
-        }
+        files: [{
+          expand: true,
+          cwd: 'scss',
+          src: ['**/[a-z]*.scss'],
+          dest: 'css',
+          ext: '.css',
+          extDot: 'last',
+          rename: function(dest, src) {
+            return dest + '/' + src.replace('scss', 'css');
+          }
+        }]
       }
     },
     drush: {

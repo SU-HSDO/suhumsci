@@ -1,0 +1,25 @@
+hs_layouts.choose_block:
+  path: '/hs_layouts/choose/block/{section_storage_type}/{section_storage}/{delta}/{group}'
+  defaults:
+    _controller: '\Drupal\hs_layouts\Controller\HsChooseBlockController::build'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+hs_layouts.add_block:
+  path: '/hs_layouts/add/block/{section_storage_type}/{section_storage}/{delta}/{group}/{plugin_id}'
+  defaults:
+    _form: '\Drupal\hs_layouts\Form\HsAddBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE

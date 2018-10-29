@@ -64,6 +64,7 @@
     "beleneglorion/php-bugherd-api": "dev-master#f0fce97042bd05bc5560fbf37051cd74f802cea1",
     "composer/installers": "^1.4",
     "consolidation/robo": "~1.2.4",
+    "consolidation/site-alias": "1.1.5",
     "cweagans/composer-patches": "^1.6",
     "davidbarratt/custom-installer": "~1.0",
     "dinbror/blazy": "^1.8",
@@ -74,7 +75,7 @@
     "drupal/admin_toolbar": "~1.20",
     "drupal/allowed_formats": "~1.1",
     "drupal/auto_entitylabel": "2.x-dev",
-    "drupal/block_class": "dev-1.x#0a3996529627643fd3a326b0f567f4b1f5056960",
+    "drupal/block_class": "dev-1.x#d77c4eb779840110535a0f9ab698a0733c06d368",
     "drupal/block_content_permissions": "^1.6",
     "drupal/block_field": "^1.0@alpha",
     "drupal/bricks": "dev-1.x",
@@ -91,7 +92,7 @@
     "drupal/default_content": "^1.0@alpha",
     "drupal/draggableviews": "dev-1.x",
     "drupal/dropzonejs": "~2.0@alpha",
-    "drupal/ds": "dev-3.x#401e05508844187dc31ad6dc9433cb15237d4c49",
+    "drupal/ds": "dev-3.x#fe1da24ab36369ea2227b6e2c026fe8fb9ca1ef0",
     "drupal/eck": "~1.0@alpha",
     "drupal/editor_advanced_link": "^1.4",
     "drupal/embed": "~1.0",
@@ -148,7 +149,7 @@
     "drupal/webform": "~5.0-beta18",
     "drupal/xmlsitemap": "dev-1.x",
     "drupal/yearonly": "^1.3",
-    "drush/drush": "dev-master#3630f991b0d392a80f096e353b535d30526e37aa",
+    "drush/drush": "~9.4",
     "enyo/dropzone": "^5.1",
     "harvesthq/chosen": "^1.8",
     "kenwheeler/slick": "^1.8",
@@ -159,7 +160,7 @@
     "su-sws/stanford_media": "dev-8.x-1.x"
   },
   "require-dev": {
-    "drupal/asset_injector": "2.x-dev",
+    "drupal/asset_injector": "~2.3",
     "drupal/config_inspector": "^1.0@beta",
     "drupal/console": "^1.8",
     "drupal/devel": "^1.2",
@@ -228,6 +229,9 @@
       ]
     },
     "patches": {
+      "drush/drush": {
+          "patches": "patches/contrib/drush-partial.patch"
+      },
       "drupal/core": {
         "https://www.drupal.org/project/drupal/issues/564106": "https://www.drupal.org/files/issues/2018-06-27/views-more-link-token-replacement_564106_171.patch",
         "Simplify Field Samples": "patches/contrib/core-simplify-samples.patch"

@@ -16,8 +16,6 @@ use Drupal\layout_builder\SectionStorageInterface;
  */
 class HsAddBlockForm extends AddBlockForm {
 
-  protected $groupBlock;
-
   /**
    * {@inheritdoc}
    */
@@ -62,7 +60,8 @@ class HsAddBlockForm extends AddBlockForm {
     foreach ($section->getComponents() as $component) {
       $component_config = $component->get('configuration');
       if ($component_config['id'] == 'group_block' && $component_config['machine_name'] == $group_block_name) {
-        $component_config['children'][$this->uuid] = $configuration;
+        $configuration['context_mapping'] = $this->block->getContextMapping();
+        $component_config['#children'][$this->uuid] = $configuration;
         $component->setConfiguration($component_config);
       }
     }

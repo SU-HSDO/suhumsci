@@ -19,9 +19,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Defines an inline block plugin type.
  *
  * @Block(
- *  id = "group_block",
- *  admin_label = @Translation("Group block"),
- *  category = @Translation("Inline blocks")
+ *   id = "group_block",
+ *   admin_label = @Translation("Group block"),
+ *   category = @Translation("Inline blocks")
  * )
  *
  * @internal
@@ -69,7 +69,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['machine_name' => NULL, 'children' => []];
+    return ['machine_name' => NULL, '#children' => []];
   }
 
   /**
@@ -90,12 +90,20 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     $build = [];
     $build['children'] = $this->getChildren();
     $build['link'] = $this->buildAddLink();
+    $build['#cache'] = [
+      'keys' => array_keys($build['children']),
+    ];
     return $build;
   }
 
   protected function buildAddLink() {
     /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
     $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
+    // Section storage is only available on the layout builder edit screen.
+    // So if there is no section storage, we don't want to have the add link.
+    if (!$section_storage) {
+      return [];
+    }
 
     $storage_type = $section_storage->getStorageType();
     $storage_id = $section_storage->getStorageId();
@@ -121,6 +129,15 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     ];
   }
 
+  /**
+   * Find which delta of the current layout builder this block is in.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   Layout Builder Section Storage.
+   *
+   * @return int
+   *   Section delta.
+   */
   protected function getSectionDelta(SectionStorageInterface $section_storage) {
     $delta = 0;
 
@@ -128,7 +145,11 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     foreach ($section_storage->getSections() as $section) {
       foreach ($section->getComponents() as $component) {
         $component_config = $component->get('configuration');
-        if ($component_config['id'] == 'group_block' && $component_config['machine_name'] == $this->configuration['machine_name']) {
+        if (
+          $component_config['id'] == 'group_block' &&
+          isset($component_config['machine_name']) &&
+          $component_config['machine_name'] == $this->configuration['machine_name']
+        ) {
           return $delta;
         }
       }
@@ -138,15 +159,14 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   }
 
   /**
+   * Get the children render array blocks.
+   *
    * @return array
+   *   Render arrays.
    */
   protected function getChildren() {
-    static $children = [];
-    if ($children) {
-      return $children;
-    }
-
-    foreach ($this->configuration['children'] as $uuid => $child) {
+    $children = [];
+    foreach ($this->configuration['#children'] as $uuid => $child) {
       $component = new SectionComponent($uuid, '', $child);
       $children[$uuid] = $component->toRenderArray();
     }
@@ -182,8 +202,20 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     }
   }
 
-  public function groupExists() {
-    return FALSE;
+  /**
+   * Check if a group with the given name already exists in the current storage.
+   *
+   * @param string $group_name
+   *   Group machine name.
+   *
+   * @return bool
+   *   If a group with the same name already exists.
+   */
+  public function groupExists($group_name) {
+    /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
+    $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
+    $this->configuration['machine_name'] = $group_name;
+    return !is_null($this->getSectionDelta($section_storage));
   }
 
 }

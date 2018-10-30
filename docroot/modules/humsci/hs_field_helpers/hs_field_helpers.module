@@ -181,8 +181,7 @@ function hs_fields_helpers_cleanup_layout_builder(array &$variables) {
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
   try {
     $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
-  }
-  catch (Exception $e) {
+  } catch (Exception $e) {
     // No pattern found.
     return;
   }
@@ -433,7 +432,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 /**
  * A field can be nested in a layout builder section, so lets go get it.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param FieldableEntityInterface $entity
  *   The entity in question.
  * @param string $view_mode
  *   View mode to build.
@@ -443,7 +442,8 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
  * @return array|null
  *   Formatter settings of the field if found.
  */
-function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $view_mode, $field_name) {
+function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $entity, $view_mode, $field_name) {
+  /** @var EntityViewDisplayInterface $entity_display */
   $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
 
   $entity_type = $entity_display->getTargetEntityTypeId();
@@ -451,25 +451,27 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
   $id = "field_block:$entity_type:$entity_bundle:$field_name";
   $static_id = "$id-{$entity->id()}";
   $builds = &drupal_static(__FUNCTION__);
+
   if (isset($builds[$static_id])) {
     return $builds[$static_id];
   }
-//
-//  $render_build = $entity_display->build($entity);
-//  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
-//    return [];
-//  }
+  dpm($entity_display);
 
-//  foreach ($render_build['_layout_builder'] as $section) {
-//    foreach (Element::children($section) as $region_id) {
-//      foreach ($section[$region_id] as $component) {
-//        if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
-//          $builds[$static_id] = $component['#configuration'];
-//          return $component['#configuration'];
-//        }
-//      }
-//    }
-//  }
+  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay && $entity_display->isLayoutBuilderEnabled())) {
+    return [];
+  }
+
+  /** @var \Drupal\layout_builder\Section $section */
+  foreach ($entity_display->getSections() as $section) {
+    /** @var \Drupal\layout_builder\SectionComponent $component */
+    foreach ($section->getComponents() as $component) {
+      $component_config = $component->get('configuration');
+      if ($component_config['id'] == $id) {
+        $builds[$static_id] = $component_config;
+        return $component_config;
+      }
+    }
+  }
 }
 
 /**
@@ -582,8 +584,7 @@ function hs_field_helpers_migration_list() {
     if ($migration->getSourcePlugin() instanceof RequirementsInterface) {
       try {
         $migration->getSourcePlugin()->checkRequirements();
-      }
-      catch (RequirementsException $e) {
+      } catch (RequirementsException $e) {
         unset($matched_migrations[$id]);
       }
     }

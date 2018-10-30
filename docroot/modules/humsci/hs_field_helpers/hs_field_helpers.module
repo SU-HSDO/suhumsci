@@ -454,22 +454,22 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
   if (isset($builds[$static_id])) {
     return $builds[$static_id];
   }
+//
+//  $render_build = $entity_display->build($entity);
+//  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
+//    return [];
+//  }
 
-  $render_build = $entity_display->build($entity);
-  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
-    return [];
-  }
-
-  foreach ($render_build['_layout_builder'] as $section) {
-    foreach (Element::children($section) as $region_id) {
-      foreach ($section[$region_id] as $component) {
-        if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
-          $builds[$static_id] = $component['#configuration'];
-          return $component['#configuration'];
-        }
-      }
-    }
-  }
+//  foreach ($render_build['_layout_builder'] as $section) {
+//    foreach (Element::children($section) as $region_id) {
+//      foreach ($section[$region_id] as $component) {
+//        if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
+//          $builds[$static_id] = $component['#configuration'];
+//          return $component['#configuration'];
+//        }
+//      }
+//    }
+//  }
 }
 
 /**

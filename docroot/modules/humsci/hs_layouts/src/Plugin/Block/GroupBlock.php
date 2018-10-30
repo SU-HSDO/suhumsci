@@ -8,7 +8,9 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -21,7 +23,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @Block(
  *   id = "group_block",
  *   admin_label = @Translation("Group block"),
- *   category = @Translation("Inline blocks")
+ *   category = @Translation("Inline blocks"),
+ *   context = {
+ *     "entity" = @ContextDefinition("entity:node", label =
+ *   @Translation("Content"))
+ *   }
  * )
  *
  * @internal
@@ -93,6 +99,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     $build['#cache'] = [
       'keys' => array_keys($build['children']),
     ];
+    $build['#cache']['max-age'] = 0;
     return $build;
   }
 
@@ -165,10 +172,24 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Render arrays.
    */
   protected function getChildren() {
+    /** @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repo */
+    $context_repo = \Drupal::service('context.repository');
+    $contexts = $context_repo->getAvailableContexts();
+    try {
+      $contexts['layout_builder.entity'] = $this->getContext('entity');
+    } catch (\Exception $e) {
+      // No context currently.
+    }
+
     $children = [];
     foreach ($this->configuration['#children'] as $uuid => $child) {
       $component = new SectionComponent($uuid, '', $child);
-      $children[$uuid] = $component->toRenderArray();
+      try {
+        $child = $component->toRenderArray($contexts);
+        $children[$uuid] = $child;
+      } catch (\Exception $e) {
+        // Context failed for the particular child.
+      }
     }
     return $children;
   }

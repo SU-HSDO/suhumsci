@@ -256,4 +256,35 @@ class HumsciServerCommand extends AcHooksCommand {
       ->run();
   }
 
+  /**
+   * Changes necessary configuration and adds the domain to the LE Cert.
+   *
+   * @command humsci:launch-site
+   *
+   * @param string $site
+   *   The machine name of the site.
+   */
+  public function launchSite($site) {
+    $new_domain = preg_replace('/[^a-z]/', '-', $site);
+    $new_domain = $this->askQuestion('New domain?', "https://$new_domain.stanford.edu", TRUE);
+    $this->switchSiteContext($site);
+    $this->taskDrush()
+      ->alias($this->getConfigValue('drush.aliases.prod'))
+      ->drush('cset')
+      ->arg('config_split.config_split.not_live')
+      ->arg('status')
+      ->arg('false')
+      ->drush('cset')
+      ->arg('domain_301_redirect.settings')
+      ->arg('domain')
+      ->arg($new_domain)
+      ->drush('cset')
+      ->arg('domain_301_redirect.settings')
+      ->arg('enabled')
+      ->arg(1)
+      ->drush('pmu')
+      ->arg('nobots')
+      ->run();
+  }
+
 }

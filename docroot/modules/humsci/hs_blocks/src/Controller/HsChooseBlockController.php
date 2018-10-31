@@ -2,14 +2,9 @@
 
 namespace Drupal\hs_blocks\Controller;
 
-use Drupal\Core\Ajax\AjaxHelperTrait;
-use Drupal\Core\Block\BlockManagerInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
-use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\ChooseBlockController;
 use Drupal\layout_builder\SectionStorageInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a controller to choose a new block.
@@ -24,7 +19,6 @@ class HsChooseBlockController extends ChooseBlockController {
   public function build(SectionStorageInterface $section_storage, $delta, $group) {
     $build['#type'] = 'container';
     $build['#attributes']['class'][] = 'block-categories';
-
 
     $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getAvailableContexts($section_storage), [
       'section_storage' => $section_storage,

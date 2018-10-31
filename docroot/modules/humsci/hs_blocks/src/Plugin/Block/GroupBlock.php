@@ -8,6 +8,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -41,6 +42,13 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   protected $requestStack;
 
   /**
+   * Context repository service.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -49,10 +57,15 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   Request stack service.
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repo
+   *   Context repository service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->requestStack = $request_stack;
+    $this->contextRepository = $context_repo;
   }
 
   /**
@@ -63,7 +76,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('context.repository')
     );
   }
 
@@ -175,12 +189,11 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Render arrays.
    */
   protected function getChildren() {
-    /** @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repo */
-    $context_repo = \Drupal::service('context.repository');
-    $contexts = $context_repo->getAvailableContexts();
+    $contexts = $this->contextRepository->getAvailableContexts();
     try {
       $contexts['layout_builder.entity'] = $this->getContext('entity');
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // No context currently.
     }
 
@@ -191,7 +204,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         // Pass the contexts from the block into the children.
         $child = $component->toRenderArray($contexts);
         $children[$uuid] = $child;
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         // Context failed for the particular child.
       }
     }

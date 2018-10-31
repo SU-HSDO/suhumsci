@@ -47,13 +47,14 @@ class GroupBlockDeriver extends DeriverBase implements ContainerDeriverInterface
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions($base_plugin_definition) {
+  public function getDerivativeDefinitions($base_definition) {
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
-      if (!$entity_type->get('field_ui_base_route') || $entity_type->id() == 'user') {
+      if (!$entity_type->get('field_ui_base_route')) {
         continue;
       }
-      $derivative = $base_plugin_definition;
+      $derivative = $base_definition;
 
+      $derivative['admin_label'] = $this->t('Group Block: @type', ['@type' => $entity_type->getLabel()]);
       $context_definition = EntityContextDefinition::fromEntityTypeId($entity_type->id())
         ->setLabel($entity_type->getLabel());
       $derivative['context'] = [

@@ -53,7 +53,7 @@ class HsAddBlockForm extends AddBlockForm {
 
     $configuration = $this->block->getConfiguration();
 
-    /** @var SectionComponent $group_block */
+    /** @var \Drupal\layout_builder\SectionComponent $group_block */
     $group_block_name = $form_state->get('layout_builder__component')
       ->getRegion();
 

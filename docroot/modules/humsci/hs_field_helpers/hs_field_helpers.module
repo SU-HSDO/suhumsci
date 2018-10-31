@@ -181,7 +181,8 @@ function hs_fields_helpers_cleanup_layout_builder(array &$variables) {
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
   try {
     $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     // No pattern found.
     return;
   }
@@ -432,7 +433,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 /**
  * A field can be nested in a layout builder section, so lets go get it.
  *
- * @param FieldableEntityInterface $entity
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
  *   The entity in question.
  * @param string $view_mode
  *   View mode to build.
@@ -443,7 +444,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
  *   Formatter settings of the field if found.
  */
 function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $entity, $view_mode, $field_name) {
-  /** @var EntityViewDisplayInterface $entity_display */
+  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $entity_display */
   $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
 
   $entity_type = $entity_display->getTargetEntityTypeId();
@@ -588,7 +589,8 @@ function hs_field_helpers_migration_list() {
     if ($migration->getSourcePlugin() instanceof RequirementsInterface) {
       try {
         $migration->getSourcePlugin()->checkRequirements();
-      } catch (RequirementsException $e) {
+      }
+      catch (RequirementsException $e) {
         unset($matched_migrations[$id]);
       }
     }
@@ -703,5 +705,4 @@ function hs_field_helpers_node_view(array &$build, EntityInterface $entity, Enti
     \Drupal::messenger()
       ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
   }
-
 }

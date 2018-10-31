@@ -392,9 +392,6 @@ function hs_field_helpers_preprocess_field(&$variables) {
   $field_name = $variables['element']['#field_name'];
   $view_mode = $variables['element']['#view_mode'];
   $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
-  // A user can customize a field label in the layout builder but it doesn't
-  // get moved to the field level.
-  $variables['label'] = $field_config['label'] ?? $variables['label'];
 
   // Add class for whole field.
   if (!empty($field_config['formatter']['third_party_settings']['field_formatter_class'])) {

@@ -55,6 +55,7 @@ class GroupBlockDeriver extends DeriverBase implements ContainerDeriverInterface
       $derivative = $base_definition;
 
       $derivative['admin_label'] = $this->t('Group Block: @type', ['@type' => $entity_type->getLabel()]);
+      $derivative['category'] = $entity_type->getLabel();
       $context_definition = EntityContextDefinition::fromEntityTypeId($entity_type->id())
         ->setLabel($entity_type->getLabel());
       $derivative['context'] = [

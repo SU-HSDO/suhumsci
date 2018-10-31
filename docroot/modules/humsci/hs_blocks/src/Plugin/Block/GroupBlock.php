@@ -189,6 +189,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Render arrays.
    */
   protected function getChildren() {
+    /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
+    $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
+    $section_storage->getStorageType();
     $contexts = $this->contextRepository->getAvailableContexts();
     try {
       $contexts['layout_builder.entity'] = $this->getContext('entity');
@@ -203,6 +206,18 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       try {
         // Pass the contexts from the block into the children.
         $child = $component->toRenderArray($contexts);
+
+        $child['#contextual_links'] = [
+          'hs_blocks_block' => [
+            'route_parameters' => [
+              'section_storage_type' => $section_storage->getStorageType(),
+              'section_storage' => $section_storage->getStorageId(),
+              'delta' => $this->getSectionDelta($section_storage),
+              'group' => $this->configuration['machine_name'],
+              'uuid' => $uuid,
+            ],
+          ],
+        ];
         $children[$uuid] = $child;
       }
       catch (\Exception $e) {

@@ -83,9 +83,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   protected function blockAccess(AccountInterface $account) {
     $children = $this->getChildren();
-    if (empty(render($children))) {
-      return AccessResult::forbidden();
-    }
+//    if (empty(render($children))) {
+//      return AccessResult::forbidden();
+//    }
     return parent::blockAccess($account);
   }
 

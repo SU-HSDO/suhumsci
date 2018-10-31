@@ -418,7 +418,10 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 
   $suggestions = [];
   // Add class for whole field.
-  if (!empty($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
+  if (
+    !empty($field_config['formatter']['third_party_settings']['hs_field_helpers'])
+    && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']
+  ) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
       'field__inline_contents',
@@ -452,15 +455,19 @@ function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $ent
   $static_id = "$id-{$entity->id()}";
   $builds = &drupal_static(__FUNCTION__);
 
+  // We've already found the field component, return that.
   if (isset($builds[$static_id])) {
     return $builds[$static_id];
   }
-  dpm($entity_display);
 
-  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay && $entity_display->isLayoutBuilderEnabled())) {
-    return [];
+  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !$entity_display->isLayoutBuilderEnabled()) {
+    // If the entity is not using layout builder, we can simply get the
+    // component. We use the key formatter to make it identical to the way
+    // layout builder has the configurations array.
+    return ['formatter' => $entity_display->getComponent($field_name)];
   }
 
+  // Dive into the layout builder sections to find the component we need.
   /** @var \Drupal\layout_builder\Section $section */
   foreach ($entity_display->getSections() as $section) {
     /** @var \Drupal\layout_builder\SectionComponent $component */

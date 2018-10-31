@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_layouts\Controller;
+namespace Drupal\hs_blocks\Controller;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
@@ -41,7 +41,7 @@ class HsChooseBlockController extends ChooseBlockController {
       foreach ($blocks as $block_id => $block) {
         $link = [
           'title' => $block['admin_label'],
-          'url' => Url::fromRoute('hs_layouts.add_block',
+          'url' => Url::fromRoute('hs_blocks.add_block',
             [
               'section_storage_type' => $section_storage->getStorageType(),
               'section_storage' => $section_storage->getStorageId(),

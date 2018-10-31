@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_layouts\Plugin\Block;
+namespace Drupal\hs_blocks\Plugin\Block;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
@@ -8,9 +8,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -24,10 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *   id = "group_block",
  *   admin_label = @Translation("Group block"),
  *   category = @Translation("Inline blocks"),
- *   context = {
- *     "entity" = @ContextDefinition("entity:node", label =
- *   @Translation("Content"))
- *   }
+ *   deriver = "\Drupal\hs_blocks\Plugin\Derivative\GroupBlockDeriver"
  * )
  *
  * @internal
@@ -83,9 +79,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   protected function blockAccess(AccountInterface $account) {
     $children = $this->getChildren();
-//    if (empty(render($children))) {
-//      return AccessResult::forbidden();
-//    }
+    if (empty(render($children))) {
+      return AccessResult::forbidden();
+    }
     return parent::blockAccess($account);
   }
 
@@ -103,6 +99,12 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     return $build;
   }
 
+  /**
+   * Build a link for the administrative page.
+   *
+   * @return array
+   *   Administrative add block link.
+   */
   protected function buildAddLink() {
     /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
     $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
@@ -118,7 +120,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     return [
       '#type' => 'link',
       '#title' => $this->t('Add Block to Group'),
-      '#url' => Url::fromRoute('hs_layouts.choose_block',
+      '#url' => Url::fromRoute('hs_blocks.choose_block',
         [
           'section_storage_type' => $storage_type,
           'section_storage' => $storage_id,
@@ -152,8 +154,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     foreach ($section_storage->getSections() as $section) {
       foreach ($section->getComponents() as $component) {
         $component_config = $component->get('configuration');
+        list($component_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
         if (
-          $component_config['id'] == 'group_block' &&
+          $component_id == 'group_block' &&
           isset($component_config['machine_name']) &&
           $component_config['machine_name'] == $this->configuration['machine_name']
         ) {
@@ -185,6 +188,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     foreach ($this->configuration['#children'] as $uuid => $child) {
       $component = new SectionComponent($uuid, '', $child);
       try {
+        // Pass the contexts from the block into the children.
         $child = $component->toRenderArray($contexts);
         $children[$uuid] = $child;
       } catch (\Exception $e) {

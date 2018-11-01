@@ -42,7 +42,17 @@ class HsUpdateBlockForm extends HsConfigureBlockFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the component for the given group within the section.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   Entity section storage object.
+   * @param int $delta
+   *   Section delta in the storage.
+   * @param $group_name
+   *   Group machine name.
+   *
+   * @return \Drupal\layout_builder\SectionComponent
+   *   Section component object for the group.
    */
   protected function getGroupComponent(SectionStorageInterface $section_storage, $delta, $group_name) {
     $section = $section_storage->getSection($delta);

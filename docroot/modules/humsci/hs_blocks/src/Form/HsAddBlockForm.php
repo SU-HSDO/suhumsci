@@ -34,7 +34,6 @@ class HsAddBlockForm extends HsConfigureBlockFormBase {
     // Only generate a new component once per form submission.
     if (!$component = $form_state->get('layout_builder__component')) {
       $component = new SectionComponent($this->uuidGenerator->generate(), $group, ['id' => $plugin_id]);
-      $section_storage->getSection($delta)->appendComponent($component);
       $form_state->set('layout_builder__component', $component);
     }
     return $this->doBuildForm($form, $form_state, $section_storage, $delta, $component);

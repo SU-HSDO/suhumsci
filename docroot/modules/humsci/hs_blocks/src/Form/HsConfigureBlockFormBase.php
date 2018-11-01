@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
-use Drupal\hs_blocks\Plugin\Block\GroupBlock;
 use Drupal\layout_builder\Form\ConfigureBlockFormBase;
 
 /**
@@ -50,7 +49,6 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
       }
     }
 
-    $section->removeComponent($this->uuid);
     $this->layoutTempstoreRepository->set($this->sectionStorage);
     $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl());
   }

@@ -4,7 +4,6 @@ namespace Drupal\hs_blocks\Plugin\Block;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -12,6 +11,7 @@ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\hs_blocks\GroupSection;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -92,10 +92,6 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    $children = $this->getChildren();
-    if (empty(render($children))) {
-      return AccessResult::forbidden();
-    }
     return parent::blockAccess($account);
   }
 
@@ -104,41 +100,70 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   public function build() {
     $build = [];
-    $build['children'] = $this->getChildren();
-    $build['link'] = $this->buildAddLink();
+    $build['components'] = $this->getComponents($this->getSectionStorage());
     $build['#cache'] = [
-      'keys' => array_keys($build['children']),
+      'keys' => array_keys($build['components']),
     ];
-    $build['#cache']['max-age'] = 0;
     return $build;
   }
 
   /**
-   * Build a link for the administrative page.
+   * Get the components for the group block.
+   *
+   * @param bool $in_preview
+   *   In preview and add administrative tools.
    *
    * @return array
-   *   Administrative add block link.
+   *   Render array of components.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  protected function buildAddLink() {
-    /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
-    $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
-    // Section storage is only available on the layout builder edit screen.
-    // So if there is no section storage, we don't want to have the add link.
-    if (!$section_storage) {
-      return [];
+  protected function getComponents($in_preview = FALSE) {
+    $components = [];
+    $contexts = $this->contextRepository->getAvailableContexts();
+    $contexts['layout_builder.entity'] = $this->getContext('entity');
+
+    foreach ($this->configuration['#children'] as $uuid => $child) {
+      $component = new SectionComponent($uuid, 'content', $child);
+      $components[$uuid] = $component->toRenderArray($contexts);
+    }
+    if ($in_preview) {
+      $this->buildAdministrativeSection($components);
+    }
+    return $components;
+  }
+
+  /**
+   * Adds contextual links and the add more button to components.
+   *
+   * @param array $components
+   *   Render array of components.
+   */
+  protected function buildAdministrativeSection(array &$components) {
+    $section_storage = $this->getSectionStorage();
+    $section_delta = $this->getSectionDelta($section_storage);
+    foreach (array_keys($components) as $uuid) {
+      $components[$uuid]['#contextual_links'] = [
+        'hs_blocks_block' => [
+          'route_parameters' => [
+            'section_storage_type' => $section_storage->getStorageType(),
+            'section_storage' => $section_storage->getStorageId(),
+            'delta' => $section_delta,
+            'group' => $this->configuration['machine_name'],
+            'uuid' => $uuid,
+          ],
+        ],
+      ];
     }
 
-    $storage_type = $section_storage->getStorageType();
-    $storage_id = $section_storage->getStorageId();
-
-    return [
+    $components['add_link'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Block to Group'),
       '#url' => Url::fromRoute('hs_blocks.choose_block',
         [
-          'section_storage_type' => $storage_type,
-          'section_storage' => $storage_id,
-          'delta' => $this->getSectionDelta($section_storage),
+          'section_storage_type' => $section_storage->getStorageType(),
+          'section_storage' => $section_storage->getStorageId(),
+          'delta' => $section_delta,
           'group' => $this->configuration['machine_name'],
         ],
         [
@@ -150,6 +175,16 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         ]
       ),
     ];
+  }
+
+  /**
+   * Get the current section storage object if on the administrative pages.
+   *
+   * @return SectionStorageInterface|null
+   *   Storage object.
+   */
+  protected function getSectionStorage() {
+    return $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
   }
 
   /**
@@ -180,53 +215,6 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
 
       $delta++;
     }
-  }
-
-  /**
-   * Get the children render array blocks.
-   *
-   * @return array
-   *   Render arrays.
-   */
-  protected function getChildren() {
-    /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
-    $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
-
-    $contexts = $this->contextRepository->getAvailableContexts();
-    try {
-      $contexts['layout_builder.entity'] = $this->getContext('entity');
-    }
-    catch (\Exception $e) {
-      // No context currently.
-    }
-
-    $children = [];
-    foreach ($this->configuration['#children'] as $uuid => $child) {
-      $component = new SectionComponent($uuid, '', $child);
-      try {
-        // Pass the contexts from the block into the children.
-        $child = $component->toRenderArray($contexts);
-
-        if ($section_storage) {
-          $child['#contextual_links'] = [
-            'hs_blocks_block' => [
-              'route_parameters' => [
-                'section_storage_type' => $section_storage->getStorageType(),
-                'section_storage' => $section_storage->getStorageId(),
-                'delta' => $this->getSectionDelta($section_storage),
-                'group' => $this->configuration['machine_name'],
-                'uuid' => $uuid,
-              ],
-            ],
-          ];
-        }
-        $children[$uuid] = $child;
-      }
-      catch (\Exception $e) {
-        // Context failed for the particular child.
-      }
-    }
-    return $children;
   }
 
   /**

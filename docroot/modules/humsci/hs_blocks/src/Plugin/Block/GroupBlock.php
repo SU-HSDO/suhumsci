@@ -12,7 +12,6 @@ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\hs_blocks\GroupSection;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -94,7 +93,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   protected function blockAccess(AccountInterface $account) {
     $components = $this->getComponents();
-    if(empty(render($components))){
+    if (empty(render($components))) {
       return AccessResult::forbidden();
     }
     return parent::blockAccess($account);
@@ -185,7 +184,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   /**
    * Get the current section storage object if on the administrative pages.
    *
-   * @return SectionStorageInterface|null
+   * @return \Drupal\layout_builder\SectionStorageInterface|null
    *   Storage object.
    */
   protected function getSectionStorage() {

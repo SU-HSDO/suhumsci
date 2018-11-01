@@ -4,6 +4,7 @@ namespace Drupal\hs_blocks\Plugin\Block;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -92,6 +93,10 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
+    $components = $this->getComponents();
+    if(empty(render($components))){
+      return AccessResult::forbidden();
+    }
     return parent::blockAccess($account);
   }
 

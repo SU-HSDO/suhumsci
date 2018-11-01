@@ -48,6 +48,8 @@ class GroupBlockDeriver extends DeriverBase implements ContainerDeriverInterface
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_definition) {
+    // Each entity type will have different context, so we have to provide
+    // a derivative for each of those contexts.
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
       if (!$entity_type->get('field_ui_base_route')) {
         continue;

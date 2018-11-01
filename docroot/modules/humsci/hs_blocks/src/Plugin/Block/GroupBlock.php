@@ -93,6 +93,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   protected function blockAccess(AccountInterface $account) {
     $components = $this->getComponents();
+    // This prevents the block label from displaying if there are no contents.
     if (empty(render($components))) {
       return AccessResult::forbidden();
     }
@@ -104,10 +105,10 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   public function build() {
     $build = [];
-    $build['components'] = $this->getComponents($this->getSectionStorage());
-    $build['#cache'] = [
-      'keys' => array_keys($build['components']),
-    ];
+    $build['components'] = $this->getComponents($this->getSectinStorage());
+    // Set the cache keys so that each block will have its own cache, even if
+    // it has the same machine name on different entity displays.
+    $build['#cache']['keys'] = array_keys($build['components']);
     return $build;
   }
 
@@ -124,13 +125,18 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   protected function getComponents($in_preview = FALSE) {
     $components = [];
+
+    // Pass the contexts from the block into the component.
     $contexts = $this->contextRepository->getAvailableContexts();
     $contexts['layout_builder.entity'] = $this->getContext('entity');
 
+    // Build the render array for each component.
     foreach ($this->configuration['#children'] as $uuid => $child) {
       $component = new SectionComponent($uuid, 'content', $child);
       $components[$uuid] = $component->toRenderArray($contexts);
     }
+
+    // Add administrative links.
     if ($in_preview) {
       $this->buildAdministrativeSection($components);
     }
@@ -208,11 +214,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       foreach ($section->getComponents() as $component) {
         $component_config = $component->get('configuration');
         list($component_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
-        if (
-          $component_id == 'group_block' &&
-          isset($component_config['machine_name']) &&
-          $component_config['machine_name'] == $this->configuration['machine_name']
-        ) {
+
+        // We found the delta, so send it back.
+        if ($component_id == 'group_block' && isset($component_config['machine_name']) && $component_config['machine_name'] == $this->configuration['machine_name']) {
           return $delta;
         }
       }

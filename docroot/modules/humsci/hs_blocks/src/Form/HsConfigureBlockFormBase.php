@@ -31,6 +31,8 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
 
     $configuration = $this->block->getConfiguration();
 
+    // The "Region" is the same as the machine name of the group. It's a
+    // pseudo-region.
     /** @var \Drupal\layout_builder\SectionComponent $group_block */
     $group_block_name = $form_state->get('layout_builder__component')
       ->getRegion();
@@ -42,9 +44,14 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
       $component_config = $component->get('configuration');
       list($component_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
 
+      // We need to find the block we intend to add the child into. We check
+      // for just the first part of the component ID since each derivative
+      // has different ids.
       if ($component_id == 'group_block' && $component_config['machine_name'] == $group_block_name) {
         $configuration['context_mapping'] = $this->block->getContextMapping();
         $component_config['#children'][$this->uuid] = $configuration;
+
+        // Save the new child into the group component.
         $component->setConfiguration($component_config);
       }
     }

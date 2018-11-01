@@ -34,6 +34,8 @@ class HsRemoveBlockForm extends RemoveBlockForm {
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
     $this->group = $group;
     $this->uuid = $uuid;
+    // For some reason the uuid property doesn't carry through to the method
+    // handlSectionStorage, so we just set it in the form state for easy access.
     $form_state->set('hs_blocks_uuid', $uuid);
     return parent::buildForm($form, $form_state, $section_storage, $delta);
   }
@@ -47,11 +49,9 @@ class HsRemoveBlockForm extends RemoveBlockForm {
       foreach ($section->getComponents() as $component) {
         $component_config = $component->get('configuration');
         list($component_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
-        if (
-          $component_id == 'group_block' &&
-          isset($component_config['machine_name']) &&
-          $component_config['machine_name'] == $this->group
-        ) {
+
+        // Find the correct group block and remove the child.
+        if ($component_id == 'group_block' && isset($component_config['machine_name']) && $component_config['machine_name'] == $this->group) {
           unset($component_config['#children'][$form_state->get('hs_blocks_uuid')]);
           $component->setConfiguration($component_config);
         }

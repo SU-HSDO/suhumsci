@@ -9,6 +9,9 @@ use Drupal\layout_builder\SectionStorageInterface;
 /**
  * Defines a controller to choose a new block.
  *
+ * This is basically the same as the ChooseBlockController except we needed to
+ * change the link route to point to our routes.
+ *
  * @internal
  */
 class HsChooseBlockController extends ChooseBlockController {
@@ -33,6 +36,8 @@ class HsChooseBlockController extends ChooseBlockController {
         '#theme' => 'links',
       ];
       foreach ($blocks as $block_id => $block) {
+
+        // This is the only difference from parent class.
         $link = [
           'title' => $block['admin_label'],
           'url' => Url::fromRoute('hs_blocks.add_block',

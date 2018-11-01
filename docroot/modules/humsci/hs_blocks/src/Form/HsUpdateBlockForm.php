@@ -48,7 +48,7 @@ class HsUpdateBlockForm extends HsConfigureBlockFormBase {
    *   Entity section storage object.
    * @param int $delta
    *   Section delta in the storage.
-   * @param $group_name
+   * @param string $group_name
    *   Group machine name.
    *
    * @return \Drupal\layout_builder\SectionComponent

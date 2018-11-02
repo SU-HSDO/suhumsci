@@ -28,7 +28,6 @@ dependencies:
     - node.type.hs_news
     - node.type.hs_person
     - node.type.hs_publications
-    - system.menu.admin
   module:
     - datetime
     - datetime_range
@@ -54,7 +53,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'access content overview'
       cache:
         type: tag
         options: {  }
@@ -495,6 +494,57 @@ display:
           entity_type: node
           entity_field: uid
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
       filters:
         status:
           id: status
@@ -636,14 +686,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            all: all
             hs_basic_page: hs_basic_page
-            hs_course: hs_course
-            hs_event: hs_event
-            hs_event_series: hs_event_series
-            hs_news: hs_news
-            hs_person: hs_person
-            hs_publications: hs_publications
           group: 1
           exposed: false
           expose:
@@ -727,9 +770,9 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/basic-page
+      path: admin/content/manage/basic-page
       menu:
-        type: normal
+        type: 'default tab'
         title: 'Basic Page'
         description: ''
         expanded: true
@@ -1218,6 +1261,62 @@ display:
           entity_type: node
           entity_field: uid
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
+      tab_options:
+        type: normal
+        title: 'Manage Content'
+        description: ''
+        weight: 0
     cache_metadata:
       max-age: 0
       contexts:
@@ -1418,7 +1517,7 @@ display:
           1: AND
       display_description: ''
       menu:
-        type: normal
+        type: tab
         title: Courses
         description: ''
         expanded: false
@@ -1426,7 +1525,7 @@ display:
         weight: 0
         context: '0'
         menu_name: admin
-      path: admin/content/course
+      path: admin/content/manage/course
       title: Courses
       fields:
         node_bulk_form:
@@ -1917,6 +2016,57 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
     cache_metadata:
       max-age: 0
       contexts:
@@ -2121,7 +2271,7 @@ display:
           1: AND
       display_description: ''
       menu:
-        type: normal
+        type: tab
         title: 'Event Series'
         description: ''
         expanded: false
@@ -2129,7 +2279,7 @@ display:
         weight: 0
         context: '0'
         menu_name: admin
-      path: admin/content/event
+      path: admin/content/manage/event
       title: 'Event Series'
       fields:
         node_bulk_form:
@@ -2431,6 +2581,57 @@ display:
           entity_type: node
           entity_field: uid
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
     cache_metadata:
       max-age: 0
       contexts:
@@ -2631,7 +2832,7 @@ display:
           1: AND
       display_description: ''
       menu:
-        type: normal
+        type: tab
         title: Events
         description: ''
         expanded: false
@@ -2639,7 +2840,7 @@ display:
         weight: 0
         context: '0'
         menu_name: admin
-      path: admin/content/event
+      path: admin/content/manage/event
       title: Events
       fields:
         node_bulk_form:
@@ -3194,6 +3395,57 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
     cache_metadata:
       max-age: 0
       contexts:
@@ -3399,7 +3651,7 @@ display:
           1: AND
       display_description: ''
       menu:
-        type: normal
+        type: tab
         title: News
         description: ''
         expanded: false
@@ -3407,7 +3659,7 @@ display:
         weight: 0
         context: '0'
         menu_name: admin
-      path: admin/content/news
+      path: admin/content/manage/news
       title: News
       fields:
         node_bulk_form:
@@ -3836,6 +4088,57 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
     cache_metadata:
       max-age: 0
       contexts:
@@ -4039,7 +4342,7 @@ display:
           1: AND
       display_description: ''
       menu:
-        type: normal
+        type: tab
         title: People
         description: ''
         expanded: false
@@ -4047,7 +4350,7 @@ display:
         weight: 0
         context: '0'
         menu_name: admin
-      path: admin/content/people
+      path: admin/content/manage/people
       title: People
       fields:
         node_bulk_form:
@@ -4747,6 +5050,57 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
     cache_metadata:
       max-age: 0
       contexts:
@@ -4954,7 +5308,7 @@ display:
           1: AND
       display_description: ''
       menu:
-        type: normal
+        type: tab
         title: Publications
         description: ''
         expanded: false
@@ -4962,7 +5316,7 @@ display:
         weight: 0
         context: '0'
         menu_name: admin
-      path: admin/content/publications
+      path: admin/content/manage/publications
       title: Publications
       fields:
         node_bulk_form:
@@ -5455,6 +5809,57 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
     cache_metadata:
       max-age: 0
       contexts:

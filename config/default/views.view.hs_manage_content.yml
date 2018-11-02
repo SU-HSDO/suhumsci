@@ -29,12 +29,20 @@ dependencies:
     - node.type.hs_person
     - node.type.hs_publications
     - system.menu.admin
+    - taxonomy.vocabulary.hs_event_type
+    - taxonomy.vocabulary.hs_news_categories
+    - taxonomy.vocabulary.hs_person_affiliation
+    - taxonomy.vocabulary.hs_person_faculty_status
+    - taxonomy.vocabulary.hs_person_staff_type
+    - taxonomy.vocabulary.hs_person_student_type
+    - taxonomy.vocabulary.hs_publication_type
   module:
     - datetime
     - datetime_range
     - hs_field_helpers
     - node
     - stanford_media
+    - taxonomy
     - user
 id: hs_manage_content
 label: 'Manage Content'
@@ -1509,6 +1517,48 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        field_hs_course_code_value:
+          id: field_hs_course_code_value
+          table: node__field_hs_course_code
+          field: field_hs_course_code_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_course_code_value_op
+            label: Code
+            description: ''
+            use_operator: false
+            operator: field_hs_course_code_value_op
+            identifier: code
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
       defaults:
         filters: false
         filter_groups: false
@@ -2824,6 +2874,96 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        field_hs_event_type_target_id:
+          id: field_hs_event_type_target_id
+          table: node__field_hs_event_type
+          field: field_hs_event_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_event_type_target_id_op
+            label: 'Event Type'
+            description: ''
+            use_operator: false
+            operator: field_hs_event_type_target_id_op
+            identifier: event_type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_event_type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_hs_event_location_value:
+          id: field_hs_event_location_value
+          table: node__field_hs_event_location
+          field: field_hs_event_location_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_event_location_value_op
+            label: Location
+            description: ''
+            use_operator: false
+            operator: field_hs_event_location_value_op
+            identifier: location
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
       defaults:
         filters: false
         filter_groups: false
@@ -3456,6 +3596,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -4167,6 +4308,54 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        field_hs_news_categories_target_id:
+          id: field_hs_news_categories_target_id
+          table: node__field_hs_news_categories
+          field: field_hs_news_categories_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_news_categories_target_id_op
+            label: Category
+            description: ''
+            use_operator: false
+            operator: field_hs_news_categories_target_id_op
+            identifier: category
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_news_categories
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
       defaults:
         filters: false
         filter_groups: false
@@ -4673,6 +4862,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -4858,6 +5048,198 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        field_hs_person_affiliation_target_id:
+          id: field_hs_person_affiliation_target_id
+          table: node__field_hs_person_affiliation
+          field: field_hs_person_affiliation_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_person_affiliation_target_id_op
+            label: Affiliation
+            description: ''
+            use_operator: false
+            operator: field_hs_person_affiliation_target_id_op
+            identifier: affiliation
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_person_affiliation
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_hs_person_faculty_status_target_id:
+          id: field_hs_person_faculty_status_target_id
+          table: node__field_hs_person_faculty_status
+          field: field_hs_person_faculty_status_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_person_faculty_status_target_id_op
+            label: 'Faculty Type'
+            description: ''
+            use_operator: false
+            operator: field_hs_person_faculty_status_target_id_op
+            identifier: faculty_type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_person_faculty_status
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_hs_person_staff_type_target_id:
+          id: field_hs_person_staff_type_target_id
+          table: node__field_hs_person_staff_type
+          field: field_hs_person_staff_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_person_staff_type_target_id_op
+            label: 'Staff Type'
+            description: ''
+            use_operator: false
+            operator: field_hs_person_staff_type_target_id_op
+            identifier: staff_type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_person_staff_type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
+        field_hs_person_student_type_target_id:
+          id: field_hs_person_student_type_target_id
+          table: node__field_hs_person_student_type
+          field: field_hs_person_student_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_person_student_type_target_id_op
+            label: 'Student Type'
+            description: ''
+            use_operator: false
+            operator: field_hs_person_student_type_target_id_op
+            identifier: student_type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_person_student_type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
       defaults:
         filters: false
         filter_groups: false
@@ -5635,6 +6017,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -5824,6 +6207,54 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
+        field_hs_publication_type_target_id:
+          id: field_hs_publication_type_target_id
+          table: node__field_hs_publication_type
+          field: field_hs_publication_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_publication_type_target_id_op
+            label: Type
+            description: ''
+            use_operator: false
+            operator: field_hs_publication_type_target_id_op
+            identifier: type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          type: select
+          limit: true
+          vid: hs_publication_type
+          hierarchy: false
+          error_message: true
+          plugin_id: taxonomy_index_tid
       defaults:
         filters: false
         filter_groups: false
@@ -6394,6 +6825,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

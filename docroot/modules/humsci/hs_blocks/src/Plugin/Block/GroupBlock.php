@@ -69,6 +69,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Request stack service.
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repo
    *   Context repository service.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
+   *   Uuid Service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo, UuidInterface $uuid_generator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -249,9 +251,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   /**
    * Set the current block to a unique UUID within the current section storage.
    */
-  protected function setUniqueUuid(){
+  protected function setUniqueUuid() {
     $this->configuration['machine_name'] = $this->uuidGenerator->generate();
-    while(!is_null($this->getSectionDelta($this->getSectionStorage()))){
+    while (!is_null($this->getSectionDelta($this->getSectionStorage()))) {
       $this->configuration['machine_name'] = $this->uuidGenerator->generate();
     }
   }

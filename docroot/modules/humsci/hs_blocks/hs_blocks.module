@@ -95,7 +95,7 @@ function hs_blocks_preprocess_block__layout_builder(&$variables) {
   // Set the block label empty, and we'll set it if the formatter is set to an
   // H2. This prevents the need for any changes to a template.
   $variables['label'] = '';
-  if ($variables['configuration']['formatter']['label'] == 'above_h2') {
+  if (!empty($variables['configuration']['formatter']['label']) && $variables['configuration']['formatter']['label'] == 'above_h2') {
     $variables['content']['#label_display'] = 'hidden';
     $variables['label'] = $variables['configuration']['label'];
   }

@@ -4,6 +4,7 @@ namespace Drupal\hs_blocks\Plugin\Block;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -49,6 +50,13 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   protected $contextRepository;
 
   /**
+   * Uuid Service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidGenerator;
+
+  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -62,10 +70,11 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repo
    *   Context repository service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo, UuidInterface $uuid_generator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->requestStack = $request_stack;
     $this->contextRepository = $context_repo;
+    $this->uuidGenerator = $uuid_generator;
   }
 
   /**
@@ -77,7 +86,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       $plugin_id,
       $plugin_definition,
       $container->get('request_stack'),
-      $container->get('context.repository')
+      $container->get('context.repository'),
+      $container->get('uuid')
     );
   }
 
@@ -228,46 +238,22 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildConfigurationForm($form, $form_state);
-
-    $form['machine_name'] = [
-      '#type' => 'machine_name',
-      '#title' => $this->t('Machine Name'),
-      '#default_value' => $this->configuration['machine_name'],
-      '#machine_name' => [
-        'exists' => [$this, 'groupExists'],
-      ],
-      '#disabled' => !empty($this->configuration['machine_name']),
-    ];
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
-    if (!$form_state->getErrors()) {
-      $this->configuration['machine_name'] = $form_state->getValue('machine_name');
+    // Set the machine name to a uuid value only if its a new block.
+    if (!$form_state->getErrors() && empty($this->configuration['machine_name'])) {
+      $this->setUniqueUuid();
     }
   }
 
   /**
-   * Check if a group with the given name already exists in the current storage.
-   *
-   * @param string $group_name
-   *   Group machine name.
-   *
-   * @return bool
-   *   If a group with the same name already exists.
+   * Set the current block to a unique UUID within the current section storage.
    */
-  public function groupExists($group_name) {
-    /** @var \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase $section_storage */
-    $section_storage = $this->requestStack->getCurrentRequest()->attributes->get('section_storage');
-    $this->configuration['machine_name'] = $group_name;
-    return !is_null($this->getSectionDelta($section_storage));
+  protected function setUniqueUuid(){
+    $this->configuration['machine_name'] = $this->uuidGenerator->generate();
+    while(!is_null($this->getSectionDelta($this->getSectionStorage()))){
+      $this->configuration['machine_name'] = $this->uuidGenerator->generate();
+    }
   }
 
 }

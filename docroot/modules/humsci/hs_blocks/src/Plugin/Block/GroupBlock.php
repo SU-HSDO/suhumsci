@@ -95,7 +95,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['machine_name' => NULL, '#children' => []];
+    return ['machine_name' => NULL, 'children' => []];
   }
 
   /**
@@ -141,7 +141,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     $contexts['layout_builder.entity'] = $this->getContext('entity');
 
     // Build the render array for each component.
-    foreach ($this->configuration['#children'] as $uuid => $child) {
+    foreach ($this->configuration['children'] as $uuid => $child) {
       $component = new SectionComponent($uuid, 'content', $child);
       $components[$uuid] = $component->toRenderArray($contexts);
     }

@@ -35,7 +35,7 @@ class HsUpdateBlockForm extends HsConfigureBlockFormBase {
     $group_component = $this->getGroupComponent($section_storage, $delta, $group);
     $group_config = $group_component->get('configuration');
 
-    $component = new SectionComponent($uuid, $group, $group_config['#children'][$uuid]);
+    $component = new SectionComponent($uuid, $group, $group_config['children'][$uuid]);
     $form_state->set('layout_builder__component', $component);
 
     return $this->doBuildForm($form, $form_state, $section_storage, $delta, $component);

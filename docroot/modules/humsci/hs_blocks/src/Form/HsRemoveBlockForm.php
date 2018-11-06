@@ -52,7 +52,7 @@ class HsRemoveBlockForm extends RemoveBlockForm {
 
         // Find the correct group block and remove the child.
         if ($component_id == 'group_block' && isset($component_config['machine_name']) && $component_config['machine_name'] == $this->group) {
-          unset($component_config['#children'][$form_state->get('hs_blocks_uuid')]);
+          unset($component_config['children'][$form_state->get('hs_blocks_uuid')]);
           $component->setConfiguration($component_config);
         }
       }

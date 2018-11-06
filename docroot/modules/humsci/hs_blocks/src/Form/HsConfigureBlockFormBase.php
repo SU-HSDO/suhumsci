@@ -67,7 +67,7 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
       // has different ids.
       if ($component_id == 'group_block' && $component_config['machine_name'] == $group_block_name) {
         $configuration['context_mapping'] = $this->block->getContextMapping();
-        $component_config['#children'][$this->uuid] = $configuration;
+        $component_config['children'][$this->uuid] = $configuration;
 
         // Save the new child into the group component.
         $component->setConfiguration($component_config);

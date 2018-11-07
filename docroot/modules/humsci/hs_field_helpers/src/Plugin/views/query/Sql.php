@@ -112,7 +112,7 @@ class Sql extends OriginalSql {
       list($entity_type, $field_name) = explode('__', $table);
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
 
-      if (in_array($field_storage->getType(), $field_types)) {
+      if ($field_storage && in_array($field_storage->getType(), $field_types)) {
         $date_fields[$field_alias] = $order_item['direction'];
       }
     }

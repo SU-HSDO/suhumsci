@@ -7,7 +7,7 @@ use Drupal\views\Plugin\views\query\Sql as OriginalSql;
 use Drupal\views\ViewExecutable;
 
 /**
- * Class Sql that adds extra functionality to views Sql.
+ * Adds extra functionality to views Sql to give greatest and least aggregation.
  *
  * @package Drupal\hs_field_helpers\Plugin\views\query
  */
@@ -106,9 +106,13 @@ class Sql extends OriginalSql {
       $field_alias = $order_item['field'];
       $field_data = $this->fields[$field_alias];
       $table = $field_data['table'];
+
+      // Only operate on ECK Fields. We dont care about base fields like entity
+      // title, published etc.
       if (strpos($table, '__') === FALSE) {
         continue;
       }
+
       list($entity_type, $field_name) = explode('__', $table);
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
 

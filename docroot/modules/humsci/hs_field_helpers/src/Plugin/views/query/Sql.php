@@ -104,6 +104,9 @@ class Sql extends OriginalSql {
 
     foreach ($this->orderby as $order_item) {
       $field_alias = $order_item['field'];
+      if (!isset($this->fields[$field_alias])) {
+        continue;
+      }
       $field_data = $this->fields[$field_alias];
       $table = $field_data['table'];
 

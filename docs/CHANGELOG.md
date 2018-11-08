@@ -1,5 +1,17 @@
 # HumSci
 
+8.0.13
+--------------------------------------------------------------------------------  
+_Release Date: 2018-11-14_
+
+* Alter views queries to consolidate date field sorting allowing multiple content types to be sorted togeather.
+* Provided a new block available in layout builder that allows a user to nest fields within the block.
+* Prevent sensitive permissions from being enabled on roles.
+* New view to easily manage content of each content type on its own page.
+* Added the ability to add classes to videos embeded in wysiwyg fields
+* Added the ability to add image captions/credits to image fields
+* Allow for taxonomy term pages to be customized more accurately
+
 8.0.12
 --------------------------------------------------------------------------------  
 _Release Date: 2018-10-29_

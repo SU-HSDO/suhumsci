@@ -1,0 +1,51 @@
+hs_blocks.choose_block:
+  path: '/hs_blocks/choose/block/{section_storage_type}/{section_storage}/{delta}/{group}'
+  defaults:
+    _controller: '\Drupal\hs_blocks\Controller\HsChooseBlockController::build'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+hs_blocks.add_block:
+  path: '/hs_blocks/add/block/{section_storage_type}/{section_storage}/{delta}/{group}/{plugin_id}'
+  defaults:
+    _form: '\Drupal\hs_blocks\Form\HsAddBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+        
+hs_blocks.update_block:
+  path: '/hs_blocks/update/block/{section_storage_type}/{section_storage}/{delta}/{group}/{uuid}'
+  defaults:
+    _form: '\Drupal\hs_blocks\Form\HsUpdateBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+hs_blocks.remove_block:
+  path: '/hs_blocks/remove/block/{section_storage_type}/{section_storage}/{delta}/{group}/{uuid}'
+  defaults:
+    _form: '\Drupal\hs_blocks\Form\HsRemoveBlockForm'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE

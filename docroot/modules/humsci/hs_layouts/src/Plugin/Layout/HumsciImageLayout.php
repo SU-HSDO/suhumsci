@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_layouts\Plugin;
+namespace Drupal\hs_layouts\Plugin\Layout;
 
 use Drupal\Core\Form\FormStateInterface;
 

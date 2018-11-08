@@ -53,16 +53,49 @@ function hs_blocks_preprocess_block__block_content(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function hs_blocks_form_layout_builder_update_block_alter(&$form, FormStateInterface $form_state, $form_id) {
-  unset($form['settings']['label_display']);
+function hs_blocks_form_layout_builder_update_block_alter(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\layout_builder\SectionStorageInterface $section_storage */
+  list($section_storage, $delta, , $uuid) = $form_state->getBuildInfo()['args'];
+  $section = $section_storage->getSection($delta);
+  $component = $section->getComponent($uuid);
+  $component_id = $component->get('configuration')['id'];
+
+  // We only want to hide the label display checkbox for fields, not regular
+  // blocks.
+  if (strpos($component_id, 'field_block') !== FALSE) {
+    $form['settings']['label_display']['#type'] = 'hidden';
+    $form['settings']['label_display']['#default_value'] = FALSE;
+  }
+
   $form['settings']['formatter']['label']['#options']['above_h2'] = t('Above H2');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_blocks_form_layout_builder_add_block_alter(&$form, FormStateInterface $form_state) {
+  list(, , , $field_id) = $form_state->getBuildInfo()['args'];
+
+  // We only want to hide the label display checkbox for fields, not regular
+  // blocks.
+  if (strpos($field_id, 'field_block') !== FALSE) {
+    $form['settings']['label_display']['#type'] = 'hidden';
+    $form['settings']['label_display']['#default_value'] = FALSE;
+  }
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
 function hs_blocks_preprocess_block__layout_builder(&$variables) {
-  if ($variables['configuration']['formatter']['label'] == 'above_h2') {
+  if (!empty($variables['content']['#title'])) {
+    $variables['content']['#title'] = $variables['configuration']['label'];
+  }
+
+  // Set the block label empty, and we'll set it if the formatter is set to an
+  // H2. This prevents the need for any changes to a template.
+  $variables['label'] = '';
+  if (!empty($variables['configuration']['formatter']['label']) && $variables['configuration']['formatter']['label'] == 'above_h2') {
     $variables['content']['#label_display'] = 'hidden';
     $variables['label'] = $variables['configuration']['label'];
   }

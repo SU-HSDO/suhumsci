@@ -412,9 +412,6 @@ function hs_field_helpers_preprocess_field(&$variables) {
   $field_name = $variables['element']['#field_name'];
   $view_mode = $variables['element']['#view_mode'];
   $field_config = _hs_field_helpers_get_view_mode_component($entity, $view_mode, $field_name);
-  // A user can customize a field label in the layout builder but it doesn't
-  // get moved to the field level.
-  $variables['label'] = $field_config['label'] ?? $variables['label'];
 
   // Add class for whole field.
   if (!empty($field_config['formatter']['third_party_settings']['field_formatter_class'])) {
@@ -438,7 +435,10 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 
   $suggestions = [];
   // Add class for whole field.
-  if (!empty($field_config['formatter']['third_party_settings']['hs_field_helpers']) && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']) {
+  if (
+    !empty($field_config['formatter']['third_party_settings']['hs_field_helpers'])
+    && $field_config['formatter']['third_party_settings']['hs_field_helpers']['inline_contents']
+  ) {
     $entity_type = $entity->getEntityTypeId();
     $suggestions = [
       'field__inline_contents',
@@ -452,7 +452,7 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
 /**
  * A field can be nested in a layout builder section, so lets go get it.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
  *   The entity in question.
  * @param string $view_mode
  *   View mode to build.
@@ -462,7 +462,8 @@ function hs_field_helpers_theme_suggestions_field(array $variables) {
  * @return array|null
  *   Formatter settings of the field if found.
  */
-function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $view_mode, $field_name) {
+function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $entity, $view_mode, $field_name) {
+  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $entity_display */
   $entity_display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
 
   $entity_type = $entity_display->getTargetEntityTypeId();
@@ -470,22 +471,28 @@ function _hs_field_helpers_get_view_mode_component(EntityInterface $entity, $vie
   $id = "field_block:$entity_type:$entity_bundle:$field_name";
   $static_id = "$id-{$entity->id()}";
   $builds = &drupal_static(__FUNCTION__);
+
+  // We've already found the field component, return that.
   if (isset($builds[$static_id])) {
     return $builds[$static_id];
   }
 
-  $render_build = $entity_display->build($entity);
-  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !isset($render_build['_layout_builder'])) {
-    return [];
+  if (!($entity_display instanceof LayoutBuilderEntityViewDisplay) || !$entity_display->isLayoutBuilderEnabled()) {
+    // If the entity is not using layout builder, we can simply get the
+    // component. We use the key formatter to make it identical to the way
+    // layout builder has the configurations array.
+    return ['formatter' => $entity_display->getComponent($field_name)];
   }
 
-  foreach ($render_build['_layout_builder'] as $section) {
-    foreach (Element::children($section) as $region_id) {
-      foreach ($section[$region_id] as $component) {
-        if (isset($component['#plugin_id']) && $component['#plugin_id'] == $id) {
-          $builds[$static_id] = $component['#configuration'];
-          return $component['#configuration'];
-        }
+  // Dive into the layout builder sections to find the component we need.
+  /** @var \Drupal\layout_builder\Section $section */
+  foreach ($entity_display->getSections() as $section) {
+    /** @var \Drupal\layout_builder\SectionComponent $component */
+    foreach ($section->getComponents() as $component) {
+      $component_config = $component->get('configuration');
+      if ($component_config['id'] == $id) {
+        $builds[$static_id] = $component_config;
+        return $component_config;
       }
     }
   }
@@ -717,5 +724,4 @@ function hs_field_helpers_node_view(array &$build, EntityInterface $entity, Enti
     \Drupal::messenger()
       ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
   }
-
 }

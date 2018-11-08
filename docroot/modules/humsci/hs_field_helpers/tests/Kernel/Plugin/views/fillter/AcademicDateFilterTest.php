@@ -186,6 +186,7 @@ class AcademicDateFilterTest extends KernelTestBase {
     // Test with the filter and the exception.
     $view = $this->getView();
     $view->execute();
+//    var_dump($view->storage->getDisplay('default')['display_options']['filters']);
     $this->assertNotEmpty($view->result);
 
     // Test between operation.
@@ -234,16 +235,16 @@ class AcademicDateFilterTest extends KernelTestBase {
         'min' => 'now -5days',
         'max' => 'now +5days',
         'value' => 'now +5days',
-        'type' => 'date',
+        'type' => 'offset',
       ],
       'plugin_id' => 'academic_datetime',
       'is_grouped' => FALSE,
       'exception' => [
-        'exception' => 1,
+        'exception' => TRUE,
         'start_month' => (date('n') - 1 ?: 12),
-        'start_day' => date('j'),
-        'end_month' => date('n'),
-        'end_day' => date('j'),
+        'start_day' => 1,
+        'end_month' => date('n') + 1 > 12 ? 1 : date('n') + 1,
+        'end_day' =>  25,
         'value' => 'now -5days',
         'min' => 'now -15days',
         'max' => 'now +45days',

@@ -28,6 +28,25 @@ use Drupal\eck\Entity\EckEntity;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\hs_field_helpers\Plugin\views\query\Sql as HsViewsSql;
+
+/**
+ * Implements hook_views_plugins_query_alter().
+ */
+function hs_field_helpers_views_plugins_query_alter(&$definitions) {
+  $definitions['views_query']['class'] = HsViewsSql::class;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function hs_field_helpers_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($query instanceof HsViewsSql) {
+    $query->alterQuery($view);
+  }
+}
 
 /**
  * Implements hook_views_data_alter().

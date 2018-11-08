@@ -107,7 +107,7 @@ class Sql extends OriginalSql {
       $field_data = $this->fields[$field_alias];
       $table = $field_data['table'];
 
-      // Only operate on ECK Fields. We dont care about base fields like entity
+      // Only operate on CCK Fields. We dont care about base fields like entity
       // title, published etc.
       if (strpos($table, '__') === FALSE) {
         continue;

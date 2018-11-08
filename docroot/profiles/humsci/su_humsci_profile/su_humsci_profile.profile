@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
+use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_install_tasks_alter().
@@ -95,5 +96,27 @@ function su_humsci_profile_entity_operation_alter(array &$operations, EntityInte
       'weight' => 11,
       'url' => Url::fromRoute('role_delegation.edit_form', ['user' => $entity->id()]),
     ];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_user_admin_permissions_alter(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\user\PermissionHandler $permission_handler */
+  $permission_handler = \Drupal::service('user.permissions');
+  $roles = array_keys(Role::loadMultiple());
+
+  // Disables the UI from adding permissions that are potentially site breaking.
+  // This might need adjustment if it becomes a problem. Permissions can still
+  // be changed via drush or update hooks.
+  foreach ($permission_handler->getPermissions() as $permission_name => $permission) {
+    if (isset($permission['restrict access']) && $permission['restrict access']) {
+      foreach ($roles as $role) {
+        if (isset($form['permissions'][$permission_name][$role])) {
+          $form['permissions'][$permission_name][$role]['#attributes']['disabled'] = TRUE;
+        }
+      }
+    }
   }
 }

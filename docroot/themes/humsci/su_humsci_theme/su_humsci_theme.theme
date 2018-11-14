@@ -181,21 +181,3 @@ function _su_humsci_theme_check_link_access(array &$link_items) {
     }
   }
 }
-
-/**
- * Implements hook_preprocess().
- */
-function su_humsci_theme_preprocess(&$vars, $hook) {
-  $seenIds = &drupal_static(__FUNCTION__, []);
-  // Verify ALL id attributes are unique.
-  if (!empty($vars['attributes']['id'])) {
-
-    $id = $vars['attributes']['id'];
-    if (isset($seenIds[$id])) {
-      $vars['attributes']['id'] = $id . '--' . ++$seenIds[$id];
-    }
-    else {
-      $seenIds[$id] = 1;
-    }
-  }
-}

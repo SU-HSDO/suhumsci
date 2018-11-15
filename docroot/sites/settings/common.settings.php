@@ -106,3 +106,8 @@ if ($is_local_env) {
   $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
   $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
 }
+
+// Disables domain redirect on all environments except production.
+if (!$is_ah_prod_env) {
+  $config['domain_301_redirect.settings']['enabled'] = FALSE;
+}

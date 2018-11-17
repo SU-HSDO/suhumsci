@@ -14,16 +14,12 @@
 
       // Open/close submenus from the plus button.
       $('button.fa-plus', $header).once().click(function (e) {
-        var button = this;
-        // Close all other menu items before opening this one.
-        $('button.fa-minus').each(function (i, minusButton) {
-          if (!minusButton.isEqualNode(button)) {
-            $(minusButton).click();
-          }
-        });
-
-        menuExpander(button);
-        $(button).toggleClass('fa-plus').toggleClass('fa-minus');
+        // Collapase all menu items outside of the one that was clicked.
+        // This prevents overlapping submenus.
+        $(this).parent().siblings().find('.fa-minus').click();
+        $(this).siblings('ul').find('.fa-minus').click();
+        menuExpander(this);
+        $(this).toggleClass('fa-plus').toggleClass('fa-minus');
       });
 
       function menuExpander(theMenu) {

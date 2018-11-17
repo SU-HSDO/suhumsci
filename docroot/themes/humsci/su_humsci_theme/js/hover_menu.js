@@ -8,14 +8,22 @@
       this.menuEdgeCheck(context);
 
       // Open/close the menu from hamburger button.
-      $header.find('button.fa-bars').once().click(function () {
+      $('button.fa-bars', $header).once().click(function () {
         menuExpander(this);
       });
 
       // Open/close submenus from the plus button.
-      $header.find('button.fa-plus').once().click(function () {
-        menuExpander(this);
-        $(this).toggleClass('fa-plus').toggleClass('fa-minus');
+      $('button.fa-plus', $header).once().click(function (e) {
+        var button = this;
+        // Close all other menu items before opening this one.
+        $('button.fa-minus').each(function (i, minusButton) {
+          if (!minusButton.isEqualNode(button)) {
+            $(minusButton).click();
+          }
+        });
+
+        menuExpander(button);
+        $(button).toggleClass('fa-plus').toggleClass('fa-minus');
       });
 
       function menuExpander(theMenu) {

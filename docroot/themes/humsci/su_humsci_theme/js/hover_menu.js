@@ -2,18 +2,18 @@
   'use strict';
   Drupal.behaviors.HoverMenu = {
     attach: function (context, settings) {
-      var $header = $('#header');
+      var $header = $('#header', context);
 
       this.setMenu(context);
       this.menuEdgeCheck(context);
 
       // Open/close the menu from hamburger button.
-      $('button.fa-bars', $header).once().click(function () {
+      $('button.fa-bars', $header).click(function () {
         menuExpander(this);
       });
 
       // Open/close submenus from the plus button.
-      $('button.fa-plus', $header).once().click(function (e) {
+      $('button.fa-plus', $header).click(function (e) {
         // Collapase all menu items outside of the one that was clicked.
         // This prevents overlapping submenus.
         $(this).parent().siblings().find('.fa-minus').click();

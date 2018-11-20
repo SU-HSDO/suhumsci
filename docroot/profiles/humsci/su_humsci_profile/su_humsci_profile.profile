@@ -165,9 +165,14 @@ function su_humsci_profile_simplify_condition_forms(array &$condition_elements, 
   $condition_manager = \Drupal::service('plugin.manager.condition');
 
   // Loop through the condition plugin definitions and trim out bad ones.
-  foreach (array_keys($condition_manager->getGroupedDefinitions()) as $plugin_id) {
+  foreach (array_keys($condition_manager->getDefinitions()) as $plugin_id) {
     if (!in_array($plugin_id, $good_plugins)) {
       unset($condition_elements[$plugin_id]);
     }
+  }
+  // Ctools has an identical plugin that core provides, except ctools has the
+  // "Negate the Condition" checkbox so it's a little more flexible.
+  if (isset($condition_elements['entity_bundle:node'])) {
+    unset($condition_elements['node_type']);
   }
 }

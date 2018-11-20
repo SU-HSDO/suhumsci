@@ -47,6 +47,7 @@ function hs_config_prefix_form_alter(&$form, FormStateInterface $form_state, $fo
   // state value.
   // * DS fields don't fire the config entity hook.
   // * Adding webform redirects to build page based on the form state values.
+  // * Adding menu position rules creates a menu item with the ID of the entity.
   $form_state->set('hs_config_prefix_key', $form_ids[$form_id]);
   array_unshift($form['#validate'], 'hs_config_prefix_custom_form_validate');
 }

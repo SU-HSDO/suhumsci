@@ -15,8 +15,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\Entity\Role;
-use Drupal\su_humsci_profile\Plugin\Condition\CtoolsEntityBundle;
-use Drupal\su_humsci_profile\Plugin\Condition\RulesDataIsEmpty;
 
 /**
  * Implements hook_install_tasks_alter().

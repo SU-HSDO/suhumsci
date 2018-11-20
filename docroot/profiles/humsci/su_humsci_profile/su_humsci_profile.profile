@@ -15,6 +15,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\Entity\Role;
+use Drupal\su_humsci_profile\Plugin\Condition\CtoolsEntityBundle;
+use Drupal\su_humsci_profile\Plugin\Condition\RulesDataIsEmpty;
 
 /**
  * Implements hook_install_tasks_alter().
@@ -117,6 +119,57 @@ function su_humsci_profile_form_user_admin_permissions_alter(array &$form, FormS
           $form['permissions'][$permission_name][$role]['#attributes']['disabled'] = TRUE;
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_block_form_alter(array &$form, FormStateInterface $form_state) {
+  su_humsci_profile_simplify_condition_forms($form['visibility'], $form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_menu_position_rule_form_alter(array &$form, FormStateInterface $form_state) {
+  su_humsci_profile_simplify_condition_forms($form['conditions'], $form, $form_state);
+}
+
+/**
+ * Loop through a conditions for element and remove all the bad items.
+ *
+ * Condition plugins are very powerful and therefore are very delicate when
+ * trying to configure them in the UI. Almost all of them are unnecessary to the
+ * end user. Also many of them, especially from ctools and rules modules, cause
+ * unwanted condition data to be stored on the configuration entities. This
+ * in turn causes unwanted reactions when validating the plugins. So to prevent
+ * that from happening, we're going to strip out all of the conditions except
+ * the few that are necessary.
+ *
+ * @param array $condition_elements
+ *   Form element array.
+ * @param array $complete_form
+ *   Complete form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ */
+function su_humsci_profile_simplify_condition_forms(array &$condition_elements, array $complete_form, FormStateInterface $form_state) {
+  $good_plugins = [
+    'node_type',
+    'request_path',
+    'user_role',
+    'entity_bundle:node',
+    'current_theme',
+  ];
+  /** @var \Drupal\Core\Condition\ConditionManager $condition_manager */
+  $condition_manager = \Drupal::service('plugin.manager.condition');
+
+  // Loop through the condition plugin definitions and trim out bad ones.
+  foreach (array_keys($condition_manager->getGroupedDefinitions()) as $plugin_id) {
+    if (!in_array($plugin_id, $good_plugins)) {
+      unset($condition_elements[$plugin_id]);
     }
   }
 }

@@ -6,7 +6,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\key\Entity\Key;
 
 /**
  * Class ConfigOverrides.
@@ -45,7 +44,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
 
     $config = $this->configFactory->get('hs_events_importer.settings');
-    if($urls = $config->get('urls')) {
+    if ($urls = $config->get('urls')) {
       $overrides['migrate_plus.migration.hs_events_importer'] = [
         'source' => [
           'urls' => $urls,

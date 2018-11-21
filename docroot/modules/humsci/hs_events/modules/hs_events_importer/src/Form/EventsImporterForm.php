@@ -31,12 +31,12 @@ class EventsImporterForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $urls = $this->config('hs_events_importer.settings')->get('urls');
+    $urls = $this->config('hs_events_importer.settings')->get('urls') ?: [];
     $form['urls'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Urls'),
       '#description' => $this->t('Leave empty to disable importer'),
-      '#default_value' => implode("\n", $urls),
+      '#default_value' => implode(PHP_EOL, $urls),
     ];
     return $form;
   }
@@ -47,7 +47,7 @@ class EventsImporterForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    $urls = array_filter(explode("\n", str_replace("\r", '', $form_state->getValue('urls'))));
+    $urls = array_filter(explode(PHP_EOL, str_replace("\r", '', $form_state->getValue('urls'))));
     foreach ($urls as &$url) {
       $url = trim($url);
       $this->validateUrl($url, $form, $form_state);

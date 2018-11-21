@@ -10,7 +10,7 @@ use Drupal\Core\Config\StorageInterface;
 /**
  * Class ConfigOverrides.
  *
- * @package Drupal\hs_capx\Overrides
+ * @package Drupal\hs_events_importer\Overrides
  */
 class ConfigOverrides implements ConfigFactoryOverrideInterface {
 

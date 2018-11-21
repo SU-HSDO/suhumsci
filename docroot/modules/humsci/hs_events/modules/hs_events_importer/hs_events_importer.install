@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * hs_events_importer.install
+ */
+
+/**
+ * Move the events importer urls into new configuration override config.
+ */
+function hs_events_importer_update_8001() {
+  $config_factory = \Drupal::configFactory();
+
+  $urls = $config_factory->get('migrate_plus.migration.hs_events_importer')
+    ->get('source.urls');
+
+  // Ensure the urls is an array.
+  if (is_string($urls)) {
+    $urls = [$urls];
+  }
+
+  $config_factory->getEditable('hs_events_importer.settings')
+    ->set('urls', $urls)
+    ->save();
+}

@@ -154,6 +154,11 @@ function su_humsci_profile_form_menu_position_rule_form_alter(array &$form, Form
  *   Current form state.
  */
 function su_humsci_profile_simplify_condition_forms(array &$condition_elements, array $complete_form, FormStateInterface $form_state) {
+  // Allow User 1 to view and modify any conditions.
+  if (\Drupal::currentUser()->id() == 1) {
+    return;
+  }
+
   $good_plugins = [
     'node_type',
     'request_path',

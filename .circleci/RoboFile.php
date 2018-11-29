@@ -269,7 +269,6 @@ class RoboFile extends Tasks {
     $tasks[] = $this->drush()->arg('sql-drop')->option('yes');
     $tasks[] = $this->drush()
       ->rawArg('@self sql-cli < clean_dump.sql');
-    $tasks[] = $this->drush()->arg('cron');
     return $tasks;
   }
 

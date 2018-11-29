@@ -9,7 +9,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Class RevisionCleanup
+ * Service to delete old revisions on entity types.
  *
  * @package Drupal\hs_revision_cleanup
  */
@@ -55,7 +55,7 @@ class RevisionCleanup {
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   Logger factory service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   Config factory service
+   *   Config factory service.
    */
   public function __construct(Connection $database, EntityTypeManagerInterface $entity_type_manager, LoggerChannelFactoryInterface $logger_factory, ConfigFactoryInterface $config_factory) {
     $this->database = $database;

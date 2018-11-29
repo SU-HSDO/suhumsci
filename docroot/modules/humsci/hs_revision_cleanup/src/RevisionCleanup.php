@@ -70,7 +70,8 @@ class RevisionCleanup {
   public function deleteRevisions() {
     foreach ($this->config->get('cleanup') as $cleanup_entity) {
       try {
-        $this->deleteEntityRevisions($cleanup_entity['entity_type'], $cleanup_entity['keep']);
+        // Subtract 1 from keep config to account for the current revision.
+        $this->deleteEntityRevisions($cleanup_entity['entity_type'], $cleanup_entity['keep'] - 1);
       }
       catch (\Exception $e) {
         $this->logger->error('Unable to delete entity revisions for @entity_type: @e', [

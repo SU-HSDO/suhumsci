@@ -61,7 +61,7 @@ class RevisionCleanup {
     $this->database = $database;
     $this->entityTypeManager = $entity_type_manager;
     $this->logger = $logger_factory->get('hs_revision_cleanup');
-    $this->config = $config_factory->get('hs_revision_cleanup.setting');
+    $this->config = $config_factory->get('hs_revision_cleanup.settings');
   }
 
   /**
@@ -89,25 +89,38 @@ class RevisionCleanup {
    * @param int $keep
    *   How many revisions to keep.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function deleteEntityRevisions($entity_type, $keep) {
     $revision_ids = $this->getPossibleRevisionsIds($entity_type);
+
+    // Loop trough all entity ids and delete it's applicable keys.
     foreach ($revision_ids as $entity_id => &$revisions) {
+      // Trim off the first $keep items to leave a set of revisions on each
+      // entity.
       $revisions = array_slice($revisions, 0, -$keep, TRUE);
 
-      if ($revisions) {
-        $this->logger->info($this->t('Deleting @count revisions from @entity_type @id', [
-          '@count' => count($revisions),
-          '@entity_type' => $entity_type,
-          '@id' => $entity_id,
-        ]));
+      // This entity has less than $keep number of revisions..
+      if (!$revisions) {
+        continue;
       }
+      $this->logger->info('Deleting @count revisions from @entity_type @id', [
+        '@count' => count($revisions),
+        '@entity_type' => $entity_type,
+        '@id' => $entity_id,
+      ]);
 
       foreach (array_keys($revisions) as $revision_id) {
-        $this->entityTypeManager->getStorage($entity_type)
-          ->deleteRevision($revision_id);
+        try {
+          $this->entityTypeManager->getStorage($entity_type)
+            ->deleteRevision($revision_id);
+        }
+        catch (\Exception $e) {
+          $this->logger->error('Unable to delete revision @rid. Error: @message', [
+            '@rid' => $revision_id,
+            '@message' => $e->getMessage(),
+          ]);
+        }
       }
     }
   }
@@ -128,22 +141,33 @@ class RevisionCleanup {
 
     $base_table = $entity_definition->getBaseTable();
     $revision_table = $entity_definition->getRevisionTable();
+
+    // Safety catch if the entity type does not have a revisions.
+    if (!$entity_definition->isRevisionable()) {
+      return [];
+    }
+
     $id_key = $entity_definition->getKey('id');
     $revision_key = $entity_definition->getKey('revision');
 
+    // Query on the revision table for the entity type.
     $query = $this->database->select($revision_table, 'r')->fields('r');
 
+    // Join the base table so that we can exclude the current revision.
     $query->join($base_table, 'b', "b.$id_key = r.$id_key");
     $query->orderBy($entity_definition->getKey('id'), 'ASC');
-    $query->orderBy('revision_timestamp', 'ASC');
+    $query->orderBy($revision_key, 'DESC');
+
+    // Exclude the current revision of the entity.
     $query->where("r.$revision_key != b.$revision_key");
 
     $result = $query->execute();
-    $data = [];
+    $revision_ids = [];
     while ($item = $result->fetchAssoc()) {
-      $data[$item[$id_key]][$item[$revision_key]] = $item['revision_timestamp'];
+      $revision_ids[$item[$id_key]][$item[$revision_key]] = $item;
     }
-    return $data;
+
+    return $revision_ids;
   }
 
 }

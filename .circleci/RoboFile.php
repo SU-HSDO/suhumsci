@@ -164,6 +164,7 @@ class RoboFile extends Tasks {
     }
 
     $tasks[] = $config_import;
+    $tasks[] = $this->drush()->arg('cron');
     return $tasks;
   }
 

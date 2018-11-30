@@ -80,15 +80,19 @@ class HsMigrateImportForm extends FormBase {
 
     $this->migrations = $this->migrationPluginManager->createInstances([]);
 
-    // Some migrations will be run when its dependent migration is ran.
+    // No need to show migrations that are dependencies. They will get executed
+    // when their dependent migration is executed.
     foreach ($this->migrations as $migration) {
       foreach ($migration->getMigrationDependencies()['required'] as $dependency) {
+        // Set the dependency migrations to idle so that the primary migration
+        // will still execute.
         $this->migrations[$dependency]->interruptMigration(MigrationInterface::RESULT_STOPPED);
         $this->migrations[$dependency]->setStatus(MigrationInterface::STATUS_IDLE);
         unset($this->migrations[$dependency]);
       }
     }
 
+    // Remove migrations that the user doesn't have access to.
     foreach (array_keys($this->migrations) as $migration_id) {
       if (!$this->account->hasPermission("import $migration_id migration")) {
         unset($this->migrations[$migration_id]);
@@ -149,26 +153,26 @@ class HsMigrateImportForm extends FormBase {
   protected function buildRow(MigrationInterface $migration) {
     $row['label']['#markup'] = $migration->label();
     $row['status']['#markup'] = $migration->getStatusLabel();
-
-    try {
-      $map = $migration->getIdMap();
-      $row['imported']['#markup'] = $map->importedCount();
-    }
-    catch (\Exception $e) {
-      $row['imported']['#markup'] = '0';
-    }
+    $row['imported']['#markup'] = $migration->getIdMap()->importedCount();
 
     if ($last_imported = $this->lastMigrations->get($migration->id(), FALSE)) {
       $row['last_imported']['#markup'] = $this->dateFormatter->format($last_imported / 1000, 'custom', 'M j Y g:i a');
     }
     else {
-      $row['last_imported']['#markup'] = '';
+      $row['last_imported']['#markup'] = $this->t('Unknown');
     }
 
-    $row['operations']['data'] = [
+    $row['operations']['data']['new'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Import'),
+      '#value' => $this->t('Import New Items'),
       '#name' => $migration->id(),
+      '#operation' => 'new',
+    ];
+    $row['operations']['data']['update'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Update Existing Items'),
+      '#name' => $migration->id(),
+      '#operation' => 'update',
     ];
 
     return $row;
@@ -185,7 +189,11 @@ class HsMigrateImportForm extends FormBase {
     $migration->setStatus(MigrationInterface::STATUS_IDLE);
 
     $migrateMessage = new MigrateMessage();
-    $options = ['limit' => 0, 'update' => 1, 'force' => 0];
+    $options = [
+      'limit' => 0,
+      'update' => $form_state->getTriggeringElement()['#operation'] == 'update',
+      'force' => 0,
+    ];
 
     $executable = new HsMigrateBatchExecutable($migration, $migrateMessage, $options);
     $executable->batchImport();

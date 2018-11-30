@@ -49,7 +49,8 @@ class HsMigrateBatchExecutable extends MigrateBatchExecutable {
   protected function batchOperations(array $migrations, $operation, array $options = []) {
     $operations = parent::batchOperations($migrations, $operation, $options);
     foreach ($operations as &$operation) {
-      $operation[0] = self::class . '::batchProcessImport';
+      // Change the operation to use this class instead of the parent.
+      $operation[0] = [self::class, 'batchProcessImport'];
     }
     return $operations;
   }
@@ -77,6 +78,10 @@ class HsMigrateBatchExecutable extends MigrateBatchExecutable {
 
     if (empty($context['sandbox']['total'])) {
       $context['sandbox']['total'] = $executable->getSource()->count();
+
+      // THIS is the only change from the parent class. Allow 15 items to be
+      // imported on each batch execution. The parent split the total items
+      // into 100 executions which doesn't really do anything helpful.
       $context['sandbox']['batch_limit'] = 15;
       $context['results'][$migration->id()] = [
         '@numitems' => 0,
@@ -84,7 +89,7 @@ class HsMigrateBatchExecutable extends MigrateBatchExecutable {
         '@updated' => 0,
         '@failures' => 0,
         '@ignored' => 0,
-        '@name' => $migration->id(),
+        '@name' => $migration->label(),
       ];
     }
 
@@ -104,13 +109,11 @@ class HsMigrateBatchExecutable extends MigrateBatchExecutable {
       '@updated' => $context['results'][$migration->id()]['@updated'] + $executable->getUpdatedCount(),
       '@failures' => $context['results'][$migration->id()]['@failures'] + $executable->getFailedCount(),
       '@ignored' => $context['results'][$migration->id()]['@ignored'] + $executable->getIgnoredCount(),
-      '@name' => $migration->id(),
+      '@name' => $migration->label(),
     ];
 
     // Do some housekeeping.
-    if (
-      $result != MigrationInterface::RESULT_INCOMPLETE
-    ) {
+    if ($result != MigrationInterface::RESULT_INCOMPLETE) {
       $context['finished'] = 1;
     }
     else {

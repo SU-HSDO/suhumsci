@@ -48,7 +48,7 @@ class HsMigrateImportForm extends FormBase {
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
-  protected $migrationPluginManager;
+  protected $migrationManager;
 
   /**
    * Current user account.
@@ -72,13 +72,13 @@ class HsMigrateImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(MigrationPluginManagerInterface $migrations_plugin_manager, DateFormatterInterface $date_formatter, KeyValueFactoryInterface $key_value, AccountProxyInterface $account) {
+  public function __construct(MigrationPluginManagerInterface $migrations_manager, DateFormatterInterface $date_formatter, KeyValueFactoryInterface $key_value, AccountProxyInterface $account) {
     $this->dateFormatter = $date_formatter;
     $this->lastMigrations = $key_value->get('migrate_last_imported');
-    $this->migrationPluginManager = $migrations_plugin_manager;
+    $this->migrationManager = $migrations_manager;
     $this->account = $account;
 
-    $this->migrations = $this->migrationPluginManager->createInstances([]);
+    $this->migrations = $this->migrationManager->createInstances([]);
 
     // No need to show migrations that are dependencies. They will get executed
     // when their dependent migration is executed.

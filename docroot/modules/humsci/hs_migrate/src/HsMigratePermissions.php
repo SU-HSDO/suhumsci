@@ -3,7 +3,6 @@
 namespace Drupal\hs_migrate;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +21,7 @@ class HsMigratePermissions implements ContainerInjectionInterface {
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
-  protected $migrationPluginManager;
+  protected $migrationManager;
 
   /**
    * Array of migrations objects.
@@ -41,17 +40,17 @@ class HsMigratePermissions implements ContainerInjectionInterface {
   /**
    * HsMigratePermissions constructor.
    *
-   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrations_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrations_manager
    *   Migration plugin manager service.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function __construct(MigrationPluginManagerInterface $migrations_plugin_manager) {
-    $this->migrationPluginManager = $migrations_plugin_manager;
-    $this->migrations = $this->migrationPluginManager->createInstances([]);
+  public function __construct(MigrationPluginManagerInterface $migrations_manager) {
+    $this->migrationManager = $migrations_manager;
+    $this->migrations = $this->migrationManager->createInstances([]);
 
     // Some migrations will be run when its dependent migration is ran.
-    foreach ($this->migrations as $id => $migration) {
+    foreach ($this->migrations as $migration) {
       foreach ($migration->getMigrationDependencies()['required'] as $dependency) {
         unset($this->migrations[$dependency]);
       }

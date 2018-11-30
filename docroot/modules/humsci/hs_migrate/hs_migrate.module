@@ -81,12 +81,18 @@ function hs_migrate_cron() {
  *   The migration to execute.
  * @param string $migration_id
  *   The migration ID (not used, just an artifact of array_walk()).
+ * @param array $options
+ *   Array of options to pass into the migration import.
  *
  * @throws \Drupal\migrate\MigrateException
  *
  * @see \Drupal\migrate_tools\Commands\MigrateToolsCommands::executeMigration()
  */
 function hs_migrate_execute_migration(MigrationInterface $migration, $migration_id, $options = []) {
+  // Reset migration status so that it can be executed again.
+  $migration->interruptMigration(MigrationInterface::RESULT_STOPPED);
+  $migration->setStatus(MigrationInterface::STATUS_IDLE);
+
   // Keep track of all migrations run during this command so the same
   // migration is not run multiple times.
   static $executed_migrations = [];

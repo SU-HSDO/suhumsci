@@ -73,6 +73,7 @@ class AcademicDateFilterTest extends KernelTestBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function setupNodes() {
+    date_default_timezone_set('America/Los_Angeles');
     NodeType::create([
       'type' => 'page',
       'name' => 'page',
@@ -186,7 +187,6 @@ class AcademicDateFilterTest extends KernelTestBase {
     // Test with the filter and the exception.
     $view = $this->getView();
     $view->execute();
-//    var_dump($view->storage->getDisplay('default')['display_options']['filters']);
     $this->assertNotEmpty($view->result);
 
     // Test between operation.

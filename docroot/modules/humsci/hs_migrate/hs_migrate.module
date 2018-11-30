@@ -88,7 +88,7 @@ function hs_migrate_cron() {
  *
  * @see \Drupal\migrate_tools\Commands\MigrateToolsCommands::executeMigration()
  */
-function hs_migrate_execute_migration(MigrationInterface $migration, $migration_id, $options = []) {
+function hs_migrate_execute_migration(MigrationInterface $migration, $migration_id, array $options = []) {
   // Reset migration status so that it can be executed again.
   $migration->interruptMigration(MigrationInterface::RESULT_STOPPED);
   $migration->setStatus(MigrationInterface::STATUS_IDLE);

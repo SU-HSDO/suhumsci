@@ -6,17 +6,4 @@ hs_migrate.list:
   options:
     _admin_route: TRUE
   requirements:
-    _custom_access: '\Drupal\hs_migrate\Controller\HsMigrateList::access'
-
-hs_migrate.import:
-  path: '/import/{migration}'
-  defaults:
-    _controller: '\Drupal\hs_migrate\Controller\HsMigrateList::import'
-    _title: 'Importing'
-  options:
-    parameters:
-      migration:
-        type: entity:migration
-    _admin_route: TRUE
-  requirements:
-    _custom_access: '\Drupal\hs_migrate\Controller\HsMigrateList::access'
+    _custom_access: '\Drupal\hs_migrate\Form\HsMigrateImportForm::access'

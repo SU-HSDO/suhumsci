@@ -2,65 +2,96 @@
 
 namespace Drupal\hs_migrate\Form;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\hs_migrate\HsMigrateBatchExecutable;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_plus\Entity\Migration;
-use Drupal\migrate_tools\MigrateBatchExecutable;
 
+/**
+ * Class HsMigrateImportForm.
+ *
+ * @package Drupal\hs_migrate\Form
+ */
 class HsMigrateImportForm extends FormBase {
 
   /**
-   * @var \Drupal\migrate\Plugin\Migration[]
+   * Array of migration plugin objects.
+   *
+   * @var \Drupal\migrate\Plugin\MigrationInterface[]
    */
   protected $migrations;
 
   /**
-   * @var mixed
+   * Date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
+   * Key Value collection of last migrations.
+   *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $lastMigrations;
 
   /**
+   * Migration plugin manager service.
+   *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
   protected $migrationPluginManager;
 
   /**
+   * Current user account.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $account;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return parent::create($container);
+    return new static(
+      $container->get('plugin.manager.migration'),
+      $container->get('date.formatter'),
+      $container->get('keyvalue'),
+      $container->get('current_user')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct() {
+  public function __construct(MigrationPluginManagerInterface $migrations_plugin_manager, DateFormatterInterface $date_formatter, KeyValueFactoryInterface $key_value, AccountProxyInterface $account) {
+    $this->dateFormatter = $date_formatter;
+    $this->lastMigrations = $key_value->get('migrate_last_imported');
+    $this->migrationPluginManager = $migrations_plugin_manager;
+    $this->account = $account;
 
-    $this->dateFormatter = \Drupal::service('date.formatter');
-    $this->lastMigrations = \Drupal::keyValue('migrate_last_imported');
-
-    $this->migrationPluginManager = \Drupal::service('plugin.manager.migration');
-    $matched_migrations = $this->migrationPluginManager->createInstances([]);
-    $this->migrations = $matched_migrations;
+    $this->migrations = $this->migrationPluginManager->createInstances([]);
 
     // Some migrations will be run when its dependent migration is ran.
-    foreach ($this->migrations as $id => $migration) {
+    foreach ($this->migrations as $migration) {
       foreach ($migration->getMigrationDependencies()['required'] as $dependency) {
+        $this->migrations[$dependency]->interruptMigration(MigrationInterface::RESULT_STOPPED);
+        $this->migrations[$dependency]->setStatus(MigrationInterface::STATUS_IDLE);
         unset($this->migrations[$dependency]);
+      }
+    }
+
+    foreach (array_keys($this->migrations) as $migration_id) {
+      if (!$this->account->hasPermission("import $migration_id migration")) {
+        unset($this->migrations[$migration_id]);
       }
     }
 
@@ -106,6 +137,15 @@ class HsMigrateImportForm extends FormBase {
     ];
   }
 
+  /**
+   * Build the form row for the given migration object.
+   *
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   Migration plugin object.
+   *
+   * @return array
+   *   Form render array.
+   */
   protected function buildRow(MigrationInterface $migration) {
     $row['label']['#markup'] = $migration->label();
     $row['status']['#markup'] = $migration->getStatusLabel();
@@ -141,11 +181,32 @@ class HsMigrateImportForm extends FormBase {
     $migration_id = $form_state->getTriggeringElement()['#name'];
     $migration = $this->migrations[$migration_id];
 
+    $migration->interruptMigration(MigrationInterface::RESULT_STOPPED);
+    $migration->setStatus(MigrationInterface::STATUS_IDLE);
+
     $migrateMessage = new MigrateMessage();
     $options = ['limit' => 0, 'update' => 1, 'force' => 0];
 
-    $executable = new MigrateBatchExecutable($migration, $migrateMessage, $options);
+    $executable = new HsMigrateBatchExecutable($migration, $migrateMessage, $options);
     $executable->batchImport();
+  }
+
+  /**
+   * Check if the current user has permission to any migration objects.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Current user.
+   *
+   * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
+   *   Access result.
+   */
+  public function access(AccountInterface $account) {
+    foreach (array_keys($this->migrations) as $migration_id) {
+      if ($account->hasPermission("import $migration_id migration")) {
+        return AccessResult::allowed();
+      }
+    }
+    return AccessResult::forbidden();
   }
 
 }

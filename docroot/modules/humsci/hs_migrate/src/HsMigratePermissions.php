@@ -4,45 +4,74 @@ namespace Drupal\hs_migrate;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class HsMigratePermissions.
+ *
+ * @package Drupal\hs_migrate
+ */
 class HsMigratePermissions implements ContainerInjectionInterface {
 
+  use StringTranslationTrait;
+
   /**
-   * Entity type manager service.
+   * Migration plugin manager service.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
-  protected $entityTypeManager;
+  protected $migrationPluginManager;
+
+  /**
+   * Array of migrations objects.
+   *
+   * @var \Drupal\migrate\Plugin\MigrationInterface[]
+   */
+  protected $migrations;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity_type.manager'));
+    return new static($container->get('plugin.manager.migration'));
   }
 
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  /**
+   * HsMigratePermissions constructor.
+   *
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrations_plugin_manager
+   *   Migration plugin manager service.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function __construct(MigrationPluginManagerInterface $migrations_plugin_manager) {
+    $this->migrationPluginManager = $migrations_plugin_manager;
+    $this->migrations = $this->migrationPluginManager->createInstances([]);
+
+    // Some migrations will be run when its dependent migration is ran.
+    foreach ($this->migrations as $id => $migration) {
+      foreach ($migration->getMigrationDependencies()['required'] as $dependency) {
+        unset($this->migrations[$dependency]);
+      }
+    }
   }
 
+  /**
+   * Build a list of permissions for the available migrations.
+   *
+   * @return array
+   *   Keyed array of permission data.
+   */
   public function permissions() {
     $permissions = [];
 
-//    foreach ($this->entityTypeManager->getStorage('taxonomy_vocabulary')
-//               ->loadMultiple() as $vocabulary) {
-//      $permissions += [
-//        'define view for vocabulary ' . $vocabulary->id() => [
-//          'title' => $this->t('Define the view override for the vocabulary %vocabulary', ['%vocabulary' => $vocabulary->label()]),
-//        ],
-//      ];
-//
-//      $permissions += [
-//        'define view for terms in ' . $vocabulary->id() => [
-//          'title' => $this->t('Define the view override for terms in %vocabulary', ['%vocabulary' => $vocabulary->label()]),
-//        ],
-//      ];
-//    }
+    foreach ($this->migrations as $migration_id => $migration) {
+      $permissions["import $migration_id migration"] = [
+        'title' => $this->t('Execute Migration %label', ['%label' => $migration->label()]),
+      ];
+    }
 
     return $permissions;
   }

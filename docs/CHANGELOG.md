@@ -1,5 +1,17 @@
 # HumSci
 
+8.0.14
+--------------------------------------------------------------------------------  
+_Release Date: 2018-11-29_
+
+* HSD8-486 always show alt text column in admin media listing
+* HSD8-480 Collapse main menu items in mobile when a new item is opened in the same level.
+* HSD8-489 Fix encoding of ampersand in linked card titles.
+* HSD8-503 Set default taxonomy path auto pattern
+* HSD8-500 Created a UI to change the url for the event importer
+* HSD8-479 Limit the conditions a users sees when configuring a block or menu position rule
+* Media updated to check for existing items when a new item is being uploaded.
+
 8.0.13
 --------------------------------------------------------------------------------  
 _Release Date: 2018-11-14_

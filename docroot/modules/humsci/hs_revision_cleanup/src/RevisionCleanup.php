@@ -70,7 +70,9 @@ class RevisionCleanup {
   public function deleteRevisions() {
     foreach ($this->config->get('cleanup') as $cleanup_entity) {
       try {
-        // Subtract 1 from keep config to account for the current revision.
+        // Subtract 1 from keep config to account for the current revision
+        // because we filter out the current revision on the possible revisions
+        // query.
         $this->deleteEntityRevisions($cleanup_entity['entity_type'], $cleanup_entity['keep'] - 1);
       }
       catch (\Exception $e) {

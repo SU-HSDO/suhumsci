@@ -73,6 +73,7 @@ class AcademicDateFilterTest extends KernelTestBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function setupNodes() {
+    date_default_timezone_set('America/Los_Angeles');
     NodeType::create([
       'type' => 'page',
       'name' => 'page',

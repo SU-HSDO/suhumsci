@@ -1,0 +1,160 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_migrate.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\Plugin\RequirementsInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_tools\MigrateExecutable;
+use Drupal\migrate\MigrateMessage;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_migrate_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_migrate module.
+    case 'help.page.hs_migrate':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Adds more functionality to migrate and migrate plus modules') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * When an entity is manually deleted from the database, we want to remove it
+ * from the migration mapping.
+ */
+function hs_migrate_entity_delete(EntityInterface $entity) {
+  $database = \Drupal::database();
+  /** @var \Drupal\migrate\Plugin\MigrationPluginManager $manager */
+  $manager = \Drupal::service('plugin.manager.migration');
+  $migrations = $manager->createInstances([]);
+
+  /** @var \Drupal\migrate_plus\Entity\Migration $migration */
+  foreach ($migrations as $migration) {
+    $destination = $migration->get('destination');
+
+    if (isset($destination['plugin']) && strpos($destination['plugin'], 'entity:') !== FALSE) {
+      list(, $type) = explode(':', $destination['plugin']);
+
+      if ($type == $entity->getEntityTypeId()) {
+        $table = 'migrate_map_' . $migration->id();
+
+        if ($database->schema()->tableExists($table)) {
+          $database->delete($table)
+            ->condition('destid1', $entity->id())
+            ->execute();
+        }
+        return;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function hs_migrate_cron() {
+  $migrations = hs_migrate_migration_list();
+  // Take it one group at a time, importing the migrations within each group.
+  foreach ($migrations as $migration_list) {
+    array_walk($migration_list, 'hs_migrate_execute_migration');
+  }
+
+}
+
+/**
+ * Executes a single migration, taken from drush command in migrate_tools.
+ *
+ * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+ *   The migration to execute.
+ * @param string $migration_id
+ *   The migration ID (not used, just an artifact of array_walk()).
+ * @param array $options
+ *   Array of options to pass into the migration import.
+ *
+ * @throws \Drupal\migrate\MigrateException
+ *
+ * @see \Drupal\migrate_tools\Commands\MigrateToolsCommands::executeMigration()
+ */
+function hs_migrate_execute_migration(MigrationInterface $migration, $migration_id, array $options = []) {
+  // Reset migration status so that it can be executed again.
+  $migration->interruptMigration(MigrationInterface::RESULT_STOPPED);
+  $migration->setStatus(MigrationInterface::STATUS_IDLE);
+
+  // Keep track of all migrations run during this command so the same
+  // migration is not run multiple times.
+  static $executed_migrations = [];
+
+  // Execute all the required migrations first before running this one.
+  $required_migrations = $migration->get('requirements');
+  $required_migrations = array_filter($required_migrations, function ($value) use ($executed_migrations) {
+    return !isset($executed_migrations[$value]);
+  });
+
+  if (!empty($required_migrations)) {
+    $manager = \Drupal::service('plugin.manager.migration');
+    $required_migrations = $manager->createInstances($required_migrations);
+    $dependency_options = array_merge($options, ['is_dependency' => TRUE]);
+    array_walk($required_migrations, 'hs_migrate_execute_migration', $dependency_options);
+    $executed_migrations += $required_migrations;
+  }
+
+  // Finally run this migration.
+  $log = new MigrateMessage();
+  $executable = new MigrateExecutable($migration, $log, $options);
+  $executable->import();
+  $executed_migrations[$migration_id] = $migration_id;
+}
+
+/**
+ * Retrieve a list of active migrations, partially taken from migrate_tools.
+ *
+ * @return \Drupal\migrate\Plugin\MigrationInterface[][]
+ *   An array keyed by migration group, each value containing an array of
+ *   migrations or an empty array if no migrations match the input criteria.
+ *
+ * @see \Drupal\migrate_tools\Commands\MigrateToolsCommands::migrationsList()
+ */
+function hs_migrate_migration_list() {
+  $manager = \Drupal::service('plugin.manager.migration');
+  $matched_migrations = $manager->createInstances([]);
+
+  // Do not return any migrations which fail to meet requirements.
+  /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
+  foreach ($matched_migrations as $id => $migration) {
+    if ($migration->getSourcePlugin() instanceof RequirementsInterface) {
+      try {
+        $migration->getSourcePlugin()->checkRequirements();
+      }
+      catch (RequirementsException $e) {
+        \Drupal::logger('hs_migrate')
+          ->error('Unable to execute migration @name: @message', [
+            '@name' => $migration->label(),
+            '@message' => $e->getMessage(),
+          ]);
+        unset($matched_migrations[$id]);
+      }
+    }
+  }
+
+  // Sort the matched migrations by group.
+  if (!empty($matched_migrations)) {
+    foreach ($matched_migrations as $id => $migration) {
+      $configured_group_id = empty($migration->get('migration_group')) ? 'default' : $migration->get('migration_group');
+      $migrations[$configured_group_id][$id] = $migration;
+    }
+  }
+  return isset($migrations) ? $migrations : [];
+}

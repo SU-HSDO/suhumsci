@@ -73,6 +73,7 @@ class AcademicDateFilterTest extends KernelTestBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function setupNodes() {
+    date_default_timezone_set('America/Los_Angeles');
     NodeType::create([
       'type' => 'page',
       'name' => 'page',
@@ -186,7 +187,6 @@ class AcademicDateFilterTest extends KernelTestBase {
     // Test with the filter and the exception.
     $view = $this->getView();
     $view->execute();
-//    var_dump($view->storage->getDisplay('default')['display_options']['filters']);
     $this->assertNotEmpty($view->result);
 
     // Test between operation.
@@ -200,7 +200,9 @@ class AcademicDateFilterTest extends KernelTestBase {
     $view = $this->getView();
     $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'][$field_name];
     $display_filters['exception']['start_month'] = 12;
-    $display_filters['exception']['end_month'] = 11;
+    $display_filters['exception']['start_day'] = 31;
+    $display_filters['exception']['end_month'] = date('n');
+    $display_filters['exception']['end_day'] = date('j', time() - 60 * 60 * 24) - 1;
     $view->execute();
     $this->assertEmpty($view->result);
 
@@ -244,7 +246,7 @@ class AcademicDateFilterTest extends KernelTestBase {
         'start_month' => (date('n') - 1 ?: 12),
         'start_day' => 1,
         'end_month' => date('n') + 1 > 12 ? 1 : date('n') + 1,
-        'end_day' =>  25,
+        'end_day' => 25,
         'value' => 'now -5days',
         'min' => 'now -15days',
         'max' => 'now +45days',

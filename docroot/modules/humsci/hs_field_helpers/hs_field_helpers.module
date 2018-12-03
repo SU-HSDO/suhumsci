@@ -420,7 +420,7 @@ function hs_field_helpers_preprocess_field(&$variables) {
 
     /** @var \Drupal\Core\Entity\EntityInterface $object */
     $object = $variables['element']['#object'];
-    $class = \Drupal::service('token')->replace($class, [$object->getEntityTypeId() => $object], ['clear' => true]);
+    $class = \Drupal::service('token')->replace($class, [$object->getEntityTypeId() => $object], ['clear' => TRUE]);
     $variables['attributes']['class'][] = Html::cleanCssIdentifier($class);
   }
 }

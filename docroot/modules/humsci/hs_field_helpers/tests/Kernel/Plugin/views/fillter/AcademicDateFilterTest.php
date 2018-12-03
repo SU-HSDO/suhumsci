@@ -108,59 +108,59 @@ class AcademicDateFilterTest extends KernelTestBase {
    * @covers ::buildExtraOptionsForm
    * @covers ::adminSummary
    */
-  //  public function testAcademicFilter() {
-  //    /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
-  //    $filter_manager = $this->container->get('plugin.manager.views.filter');
-  //    $filters = $filter_manager->getDefinitions();
-  //    $this->assertArrayHasKey('academic_datetime', $filters);
-  //    $configuration = [
-  //      'entity_type' => 'node',
-  //      'field' => $this->field->getName() . '_value',
-  //      'table' => 'node__' . $this->field->getName(),
-  //      'id' => 'academic_datetime',
-  //      'field_name' => $this->field->getName(),
-  //    ];
-  //    /** @var \Drupal\hs_field_helpers\Plugin\views\filter\AcademicDateFilter $filter */
-  //    $filter = $filter_manager->createInstance('academic_datetime', $configuration);
-  //    $this->assertEquals(AcademicDateFilter::class, get_class($filter));
-  //
-  //    $filter->value['value'] = 'now';
-  //    $filter->options['exception'] = [
-  //      'exception' => 1,
-  //      'start_month' => date('n') - 1 ?: 12,
-  //      'start_day' => date('j'),
-  //      'end_month' => date('n'),
-  //      'end_day' => date('j'),
-  //      'value' => 'now +30days',
-  //      'min' => 'now -15days',
-  //      'max' => 'now +45days',
-  //    ];
-  //
-  //    $this->assertEquals('= now Exception: = now +30days', $filter->adminSummary());
-  //    $this->assertTrue($filter->hasExtraOptions());
-  //
-  //    $form_state = new FormState();
-  //    $form = [];
-  //    $filter->buildExtraOptionsForm($form, $form_state);
-  //    $this->assertArrayHasKey('exception', $form);
-  //
-  //    $filter->operator = '=';
-  //    $form = [];
-  //    $filter->buildExtraOptionsForm($form, $form_state);
-  //    $this->assertArrayHasKey('value', $form['exception']);
-  //    $this->assertArrayNotHasKey('min', $form['exception']);
-  //
-  //    $filter->operator = 'between';
-  //    $form = [];
-  //    $filter->buildExtraOptionsForm($form, $form_state);
-  //    $this->assertArrayHasKey('min', $form['exception']);
-  //    $this->assertArrayNotHasKey('value', $form['exception']);
-  //
-  //    $form_state->set('exposed', TRUE);
-  //    $form = [];
-  //    $filter->buildExtraOptionsForm($form, $form_state);
-  //    $this->assertArrayNotHasKey('exception', $form);
-  //  }
+  public function testAcademicFilter() {
+    /** @var \Drupal\views\Plugin\ViewsHandlerManager $filter_manager */
+    $filter_manager = $this->container->get('plugin.manager.views.filter');
+    $filters = $filter_manager->getDefinitions();
+    $this->assertArrayHasKey('academic_datetime', $filters);
+    $configuration = [
+      'entity_type' => 'node',
+      'field' => $this->field->getName() . '_value',
+      'table' => 'node__' . $this->field->getName(),
+      'id' => 'academic_datetime',
+      'field_name' => $this->field->getName(),
+    ];
+    /** @var \Drupal\hs_field_helpers\Plugin\views\filter\AcademicDateFilter $filter */
+    $filter = $filter_manager->createInstance('academic_datetime', $configuration);
+    $this->assertEquals(AcademicDateFilter::class, get_class($filter));
+
+    $filter->value['value'] = 'now';
+    $filter->options['exception'] = [
+      'exception' => 1,
+      'start_month' => date('n') - 1 ?: 12,
+      'start_day' => date('j'),
+      'end_month' => date('n'),
+      'end_day' => date('j'),
+      'value' => 'now +30days',
+      'min' => 'now -15days',
+      'max' => 'now +45days',
+    ];
+
+    $this->assertEquals('= now Exception: = now +30days', $filter->adminSummary());
+    $this->assertTrue($filter->hasExtraOptions());
+
+    $form_state = new FormState();
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayHasKey('exception', $form);
+
+    $filter->operator = '=';
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayHasKey('value', $form['exception']);
+    $this->assertArrayNotHasKey('min', $form['exception']);
+
+    $filter->operator = 'between';
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayHasKey('min', $form['exception']);
+    $this->assertArrayNotHasKey('value', $form['exception']);
+
+    $form_state->set('exposed', TRUE);
+    $form = [];
+    $filter->buildExtraOptionsForm($form, $form_state);
+    $this->assertArrayNotHasKey('exception', $form);
+  }
 
   /**
    * Test the filter gives correct results.

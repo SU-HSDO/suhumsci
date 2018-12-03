@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_field_helpers\Plugin\migrate\process;
+namespace Drupal\hs_migrate\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;

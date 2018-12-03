@@ -78,16 +78,13 @@ class HsMigrateImportForm extends FormBase {
     $this->migrationManager = $migrations_manager;
     $this->account = $account;
 
-    $this->migrations = $this->migrationManager->createInstances([]);
+    $migrations = $this->migrationManager->createInstances([]);
+    $this->migrations = $migrations;
 
     // No need to show migrations that are dependencies. They will get executed
     // when their dependent migration is executed.
-    foreach ($this->migrations as $migration) {
+    foreach ($migrations as $migration) {
       foreach ($migration->getMigrationDependencies()['required'] as $dependency) {
-        // Set the dependency migrations to idle so that the primary migration
-        // will still execute.
-        $this->migrations[$dependency]->interruptMigration(MigrationInterface::RESULT_STOPPED);
-        $this->migrations[$dependency]->setStatus(MigrationInterface::STATUS_IDLE);
         unset($this->migrations[$dependency]);
       }
     }

@@ -47,12 +47,32 @@ class HsMigrateBatchExecutable extends MigrateBatchExecutable {
    * {@inheritdoc}
    */
   protected function batchOperations(array $migrations, $operation, array $options = []) {
+    array_walk($migrations, [$this, 'prepareMigrations']);
     $operations = parent::batchOperations($migrations, $operation, $options);
     foreach ($operations as &$operation) {
       // Change the operation to use this class instead of the parent.
       $operation[0] = [self::class, 'batchProcessImport'];
     }
     return $operations;
+  }
+
+  /**
+   * Reset status of the migration and its dependency migration.
+   *
+   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
+   *   Migration object to reset.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  protected function prepareMigrations(MigrationInterface $migration) {
+    $migration->interruptMigration(MigrationInterface::RESULT_STOPPED);
+    $migration->setStatus(MigrationInterface::STATUS_IDLE);
+
+    foreach ($migration->getMigrationDependencies()['required'] as $dependency_id) {
+      /** @var \Drupal\migrate\Plugin\MigrationInterface $dependent_migration */
+      $dependent_migration = $this->migrationPluginManager->createInstance($dependency_id);
+      $this->prepareMigrations($dependent_migration);
+    }
   }
 
   /**

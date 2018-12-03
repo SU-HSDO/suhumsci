@@ -132,13 +132,18 @@ function hs_migrate_migration_list() {
   $matched_migrations = $manager->createInstances([]);
 
   // Do not return any migrations which fail to meet requirements.
-  /** @var \Drupal\migrate\Plugin\Migration $migration */
+  /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
   foreach ($matched_migrations as $id => $migration) {
     if ($migration->getSourcePlugin() instanceof RequirementsInterface) {
       try {
         $migration->getSourcePlugin()->checkRequirements();
       }
       catch (RequirementsException $e) {
+        \Drupal::logger('hs_migrate')
+          ->error('Unable to execute migration @name: @message', [
+            '@name' => $migration->label(),
+            '@message' => $e->getMessage(),
+          ]);
         unset($matched_migrations[$id]);
       }
     }

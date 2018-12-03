@@ -82,7 +82,8 @@ class HsMigrateBatchExecutable extends MigrateBatchExecutable {
       // THIS is the only change from the parent class. Allow 15 items to be
       // imported on each batch execution. The parent split the total items
       // into 100 executions which doesn't really do anything helpful.
-      $context['sandbox']['batch_limit'] = 15;
+      $context['sandbox']['batch_limit'] = \Drupal::config('hs_migrate.settings')
+        ->get('batch_limit') ?: 15;
       $context['results'][$migration->id()] = [
         '@numitems' => 0,
         '@created' => 0,

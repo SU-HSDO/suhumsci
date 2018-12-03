@@ -186,6 +186,15 @@
   }
 }
 
-@mixin paragraph-colors($color) {
+@mixin text-area-colors($color) {
   @extend %#{$color};
+
+  position: relative;
+  width: 100vw;
+  left: calc(-50vw + 50%);
+
+  > * {
+    max-width: $max-width;
+    margin: 0 auto;
+  }
 }

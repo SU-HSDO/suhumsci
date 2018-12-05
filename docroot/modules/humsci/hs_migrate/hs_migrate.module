@@ -33,7 +33,7 @@ function hs_migrate_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_migrate_process_info_alter().
  */
-function hs_migrate_migrate_process_info_alter(array &$definitions){
+function hs_migrate_migrate_process_info_alter(array &$definitions) {
   // Change the class we use for the subprocess functionality to cast xml
   // objects as arrays.
   $definitions['sub_process']['class'] = SubProcess::class;

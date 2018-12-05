@@ -8,11 +8,6 @@ use Drupal\migrate\Plugin\migrate\process\SubProcess as OriginalSubProcess;
 
 /**
  * Override Drupal Core SubProcess plugin to allow SimpleXml processor.
- *
- * @MigrateProcessPlugin(
- *   id = "sub_process",
- *   handle_multiples = TRUE
- * )
  */
 class SubProcess extends OriginalSubProcess {
 

@@ -12,6 +12,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\hs_migrate\Plugin\migrate\process\SubProcess;
 
 /**
  * Implements hook_help().
@@ -27,6 +28,15 @@ function hs_migrate_help($route_name, RouteMatchInterface $route_match) {
 
     default:
   }
+}
+
+/**
+ * Implements hook_migrate_process_info_alter().
+ */
+function hs_migrate_migrate_process_info_alter(array &$definitions){
+  // Change the class we use for the subprocess functionality to cast xml
+  // objects as arrays.
+  $definitions['sub_process']['class'] = SubProcess::class;
 }
 
 /**
@@ -71,7 +81,6 @@ function hs_migrate_cron() {
   foreach ($migrations as $migration_list) {
     array_walk($migration_list, 'hs_migrate_execute_migration');
   }
-
 }
 
 /**

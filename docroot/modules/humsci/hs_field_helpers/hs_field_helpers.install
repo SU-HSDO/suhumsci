@@ -11,3 +11,10 @@
 function hs_field_helpers_install() {
   module_set_weight('hs_field_helpers', 10);
 }
+
+/**
+ * Install hs_migrate module that now contains the migrate plugins and cron.
+ */
+function hs_field_helpers_update_8001() {
+  \Drupal::service('module_installer')->install(['hs_migrate']);
+}

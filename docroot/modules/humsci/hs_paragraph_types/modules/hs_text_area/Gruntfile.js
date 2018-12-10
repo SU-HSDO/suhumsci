@@ -38,7 +38,7 @@ module.exports = function(grunt) {
       },
       twig: {
         files: ['templates/**/*.html.twig'],
-        tasks: ['uglify', 'svgmin', 'imagemin', 'sass', 'drush:ccall']
+        tasks: ['uglify', 'svgmin', 'imagemin', 'sass']
       }
     },
     uglify: {
@@ -115,11 +115,6 @@ module.exports = function(grunt) {
         }]
       }
     },
-    drush: {
-      ccall: {
-        args: ['cache-rebuild', 'all']
-      }
-    },
     browserSync: {
       dev: {
         bsFiles: {
@@ -161,7 +156,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-available-tasks');
-  grunt.loadNpmTasks('grunt-drush');
 
   // My tasks.
   grunt.registerTask('devmode', "Watch and BrowserSync all in one.", ['browserSync', 'watch']);

@@ -5,7 +5,8 @@
  * Include any necessary changes to the authsources config here.
  */
 
-$root = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+// This file should be copied into vendor/simplesamlphp/simplesamlphp/config.
+$root = dirname(__FILE__, 5);
 
 $config['default-sp']['entityID'] = 'https://mrc.stanford.edu';
 $config['default-sp']['privatekey'] = "$root/keys/saml/saml.pem";

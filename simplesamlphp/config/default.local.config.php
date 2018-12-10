@@ -5,19 +5,22 @@
  * Include any changes to the generic config here.
  */
 
-$root = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+// This file should be copied into vendor/simplesamlphp/simplesamlphp/config.
+$root = dirname(__FILE__, 5);
 
-$config['authproc.sp'] = array(
-  10 => array(
-    'class' => 'core:AttributeMap', 'removeurnprefix', 'oid2name',
-  ),
+$config['authproc.sp'] = [
+  10 => [
+    'class' => 'core:AttributeMap',
+    'removeurnprefix',
+    'oid2name',
+  ],
   90 => 'core:LanguageAdaptor',
-);
+];
 
 $config['enable.saml20-idp'] = TRUE;
 $config['metadata.sources'][] = [
   'type' => 'flatfile',
-  'directory' => dirname(dirname(dirname(__FILE__))) . '/keys/saml',
+  'directory' => "$root/keys/saml",
 ];
 
 $config['store.type'] = 'sql';

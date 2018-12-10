@@ -5,7 +5,7 @@
  * Include any changes to the generic config here.
  */
 
-$root = dirname(dirname(dirname(__FILE__)));
+$root = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
 
 $config['authproc.sp'] = array(
   10 => array(

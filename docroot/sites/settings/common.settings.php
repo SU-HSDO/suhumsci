@@ -30,7 +30,7 @@ $config['simplesamlphp_auth.settings'] = [
   'langcode' => 'en',
   'default_langcode' => 'en',
   'activate' => TRUE,
-  'mail_attr' => 'eduPersonPrincipalName',
+  'mail_attr' => 'mail',
   'unique_id' => 'uid',
   'user_name' => 'displayName',
   'auth_source' => 'default-sp',
@@ -43,8 +43,8 @@ $config['simplesamlphp_auth.settings'] = [
   'secure' => FALSE,
   'httponly' => FALSE,
   'role' => [
-    'population' => 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices',
-    'eval_every_time' => TRUE,
+    //    'population' => 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices',
+    'eval_every_time' => 2,
   ],
   'allow' => [
     'set_drupal_pwd' => FALSE,

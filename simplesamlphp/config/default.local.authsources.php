@@ -5,7 +5,7 @@
  * Include any necessary changes to the authsources config here.
  */
 
-$root = dirname(dirname(dirname(__FILE__)));
+$root = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
 
 $config['default-sp']['entityID'] = 'https://mrc.stanford.edu';
 $config['default-sp']['privatekey'] = "$root/keys/saml/saml.pem";

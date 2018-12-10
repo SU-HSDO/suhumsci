@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\Role;
 use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -159,6 +160,12 @@ class CourseImporter extends ConfigFormBase {
 
     // Clear migration discovery cache after saving.
     Cache::invalidateTags(['migration_plugins']);
+
+    // Add permission to execute importer.
+    if ($role = Role::load('site_manager')) {
+      $role->grantPermission('import hs_courses migration');
+      $role->save();
+    }
   }
 
 }

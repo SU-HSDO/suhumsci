@@ -7,6 +7,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
 
 /**
  * Form to allow the user to choose which CAPx data to import.
@@ -73,6 +74,12 @@ class CapxForm extends ConfigFormBase {
       ->save();
 
     Cache::invalidateTags(['migration_plugins']);
+
+    // Add permission to execute importer.
+    if ($role = Role::load('site_manager')) {
+      $role->grantPermission('import hs_capx migration');
+      $role->save();
+    }
   }
 
 }

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Class EventsImporterForm.
@@ -92,6 +93,12 @@ class EventsImporterForm extends ConfigFormBase {
       ->save();
     parent::submitForm($form, $form_state);
     Cache::invalidateTags(['migration_plugins']);
+
+    // Add permission to execute importer.
+    if ($role = Role::load('site_manager')) {
+      $role->grantPermission('import hs_events_importer migration');
+      $role->save();
+    }
   }
 
 }

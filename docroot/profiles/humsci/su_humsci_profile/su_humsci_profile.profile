@@ -14,6 +14,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_install_tasks_alter().
@@ -161,4 +162,26 @@ function su_humsci_profile_simplify_condition_forms(array &$condition_elements, 
   if (isset($condition_elements['entity_bundle:node'])) {
     unset($condition_elements['node_type']);
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function hs_field_helpers_eck_entity_type_insert(EntityInterface $entity) {
+  $eck_type = $entity->id();
+  // When a new ECK entity type is create, set initial permissions so that
+  // site builders aren't required to search for the necessary permissions.
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ["view any $eck_type entities"]);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ["view any $eck_type entities"]);
+
+  user_role_grant_permissions('contributor', [
+    "create $eck_type entities",
+    "delete own $eck_type entities",
+    "edit own $eck_type entities",
+  ]);
+  user_role_grant_permissions('site_manager', [
+    "create $eck_type entities",
+    "delete any $eck_type entities",
+    "edit any $eck_type entities",
+  ]);
 }

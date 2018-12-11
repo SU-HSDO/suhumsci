@@ -4,77 +4,93 @@
  * Lists available colors and color schemes for the su_humsci_theme theme.
  */
 //_color_rewrite_stylesheet()
+
 $info = [
   // Available colors and color labels used in theme.
   'fields' => [
     'base' => t('Base'),
-    'header' => t('Header background'),
-    'branding' => t('Branding background'),
-    'main' => t('Main background'),
-    'footer' => t('Footer background'),
     'link' => t('Link'),
     'text' => t('Text'),
+
+    'button' => t('Button Background'),
+    'button_color' => t('Button Color'),
+
+    'branding' => t('Branding background'),
+    'branding_color' => t('Branding color'),
+
+    'header' => t('Header background'),
+    'header_text' => t('Header text'),
+    'header_link' => t('Header link'),
+
+    'main' => t('Main background'),
+    'main_text' => t('Main text'),
+    'main_link' => t('Main links'),
+
+    'footer' => t('Footer background'),
+    'footer_text' => t('Footer text'),
+    'footer_link' => t('Footer links'),
+
+    'global_footer' => t('Global Footer background'),
+    'global_footer_link' => t('Global Footer color'),
   ],
   // Pre-defined color schemes.
   'schemes' => [
     'default' => [
-      'title' => t('Blue Lagoon (default)'),
+      'title' => t('Day (default)'),
       'colors' => [
-        'base' => '#ffffff',
-        'branding' => '#055a8e',
-        'header' => '#1d84c3',
-        'main' => '#ffffff',
-        'footer' => '#f6f6f2',
-        'link' => '#0071b3',
-        'text' => '#000000',
-      ],
-    ],
-    'firehouse' => [
-      'title' => t('Firehouse'),
-      'colors' => [
-        'base' => '#ffffff',
-        'branding' => '#cd2d2d',
-        'header' => '#d64e4e',
-        'main' => '#ffffff',
-        'footer' => '#f1f4f0',
-        'link' => '#d6121f',
-        'text' => '#000000',
-      ],
-    ],
-    'ice' => [
-      'title' => t('Ice'),
-      'colors' => [
-        'base' => '#ffffff',
-        'branding' => '#d0d0d0',
-        'header' => '#c2c4c5',
-        'main' => '#ffffff',
+        'base' => '#000000',
+        'link' => '#b1040e',
+        'text' => '#2e2d29',
+
+        'button' => '#b1040e',
+        'button_color' => '#ffffff',
+
+        'branding' => '#b1040e',
+        'branding_color' => '#ffffff',
+
+        'header' => '#ffffff',
+        'header_text' => '#2e2d29',
+        'header_link' => '#b1040e',
+
+        'main' => '#fffeff',
+        'main_text' => '#2e2d29',
+        'main_link' => '#b1040e',
+
         'footer' => '#ffffff',
-        'link' => '#019dbf',
-        'text' => '#000000',
+        'footer_text' => '#2e2d29',
+        'footer_link' => '#b1040e',
+
+        'global_footer' => '#8c1515',
+        'global_footer_link' => '#ffffff',
       ],
     ],
-    'plum' => [
-      'title' => t('Plum'),
+    'night' => [
+      'title' => t('Night'),
       'colors' => [
-        'base' => '#ffffff',
-        'branding' => '#4c1c58',
-        'header' => '#593662',
-        'main' => '#fffdf7',
-        'footer' => '#edede7',
-        'link' => '#9d408d',
-        'text' => '#000000',
-      ],
-    ],
-    'slate' => [
-      'title' => t('Slate'),
-      'colors' => [
-        'base' => '#ffffff',
-        'branding' => '#4a4a4a',
-        'header' => '#4e4e4e',
-        'main' => '#ffffff',
+        'base' => '#000000',
+        'link' => '#b1040e',
+        'text' => '#2e2d29',
+
+        'button' => '#b1040e',
+        'button_color' => '#ffffff',
+
+        'branding' => '#b1040e',
+        'branding_color' => '#ffffff',
+
+        'header' => '#ffffff',
+        'header_text' => '#2e2d29',
+        'header_link' => '#b1040e',
+
+        'main' => '#fffeff',
+        'main_text' => '#2e2d29',
+        'main_link' => '#b1040e',
+
         'footer' => '#ffffff',
-        'link' => '#0073b6',
-        'text' => '#000000',
+        'footer_text' => '#2e2d29',
+        'footer_link' => '#b1040e',
+
+        'global_footer' => '#8c1515',
+        'global_footer_link' => '#ffffff',
       ],
     ],
   ],
@@ -94,7 +110,7 @@ $info = [
       // Direction of gradient ('vertical' or 'horizontal').
       'direction' => 'vertical',
       // Keys of colors to use for the gradient.
-      'colors' => ['branding', 'header'],
+      //      'colors' => ['branding', 'header'],
     ],
   ],
   // Preview files.
@@ -104,9 +120,10 @@ $info = [
   '#attached' => [
     'drupalSettings' => [
       'color' => [
-        // Put the logo path into JavaScript for the live preview.
+        // Put the logos path into JavaScript for the live preview.
         'logo' => theme_get_setting('logo.url', 'su_humsci_theme'),
-        'footerLogo' => '/' . drupal_get_path('theme', 'stanford_basic') . '/assets/svg/su_sig_stack_linked.svg',
+        'globalFooterLogo' => '/' . drupal_get_path('theme', 'stanford_basic') . '/assets/svg/su_sig_stack_linked.svg',
+        'userId' => \Drupal::currentUser()->isAuthenticated(),
       ],
     ],
   ],

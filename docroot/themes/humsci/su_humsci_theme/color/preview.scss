@@ -2,13 +2,21 @@
 
 @import 'decanter-no-markup';
 
+.color-placeholder {
+  display: none;
+}
+
+.color-palette {
+  display: none;
+}
+
 .color-preview {
   font-family: "Source Sans Pro", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
   h2 {
     @include h2;
 
-    font-size: 2.3rem;
+    font-size: 1.3rem;
   }
 
   .color-preview-font-lead {
@@ -105,6 +113,15 @@
   }
 
   .color-preview-footer {
+    display: flex;
+    flex-wrap: nowrap;
+
+    .column {
+      width: 25%;
+    }
+  }
+
+  .color-preview-global-footer {
     background-color: #8c1515;
     color: #ffffff;
     width: 100%;
@@ -136,5 +153,10 @@
       width: 80px;
       margin: 10px 0 0 10px;
     }
+  }
+
+  .color-preview-decanter-button {
+    @include button-primary;
+    font-size: 1rem;
   }
 }

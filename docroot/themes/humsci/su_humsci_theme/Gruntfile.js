@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         }
       },
       css: {
-        files: ['scss/**/*.scss', 'scss/**/**/*.scss', 'patterns/**/**/scss/*.scss'],
+        files: ['scss/**/*.scss', 'scss/**/**/*.scss', 'patterns/**/**/scss/*.scss', 'color/*.scss'],
         tasks: ['sass'],
         options: {
           interrupt: true
@@ -102,7 +102,9 @@ module.exports = function(grunt) {
         precision: 10
       },
       dist: {
-        files: [{
+        files: [
+          {"color/preview.css": "color/preview.scss"},
+          {
             expand: true,
             cwd: 'scss',
             src: ['**/[a-z]*.scss'],

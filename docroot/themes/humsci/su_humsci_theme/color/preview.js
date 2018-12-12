@@ -38,7 +38,6 @@
       $colorPreview.find('.color-preview-global-footer').css('background-color', $colorPalette.find('input[name="palette[global_footer]"]').val());
       $colorPreview.find('.color-preview-global-footer, .color-preview-global-footer a').css('color', $colorPalette.find('input[name="palette[global_footer_link]"]').val());
 
-
       $colorPreview.find('.color-preview-decanter-button').css('background-color', $colorPalette.find('input[name="palette[button]"]').val());
       $colorPreview.find('.color-preview-decanter-button').css('color', $colorPalette.find('input[name="palette[button_color]"]').val());
 

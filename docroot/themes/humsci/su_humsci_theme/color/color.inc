@@ -42,26 +42,26 @@ $info = [
         'link' => '#b1040e',
         'text' => '#2e2d29',
 
-        'button' => '#b1040e',
-        'button_color' => '#ffffff',
+        'button' => '#b1040d',
+        'button_color' => '#fffefe',
 
-        'branding' => '#b1040e',
-        'branding_color' => '#ffffff',
+        'branding' => '#b1040f',
+        'branding_color' => '#fefefe',
 
-        'header' => '#ffffff',
-        'header_text' => '#2e2d29',
-        'header_link' => '#b1040e',
+        'header' => '#fffffe',
+        'header_text' => '#2e2d2a',
+        'header_link' => '#b1050e',
 
         'main' => '#fffeff',
-        'main_text' => '#2e2d29',
-        'main_link' => '#b1040e',
+        'main_text' => '#2e2e29',
+        'main_link' => '#b2040e',
 
-        'footer' => '#ffffff',
-        'footer_text' => '#2e2d29',
-        'footer_link' => '#b1040e',
+        'footer' => '#feffff',
+        'footer_text' => '#2f2d29',
+        'footer_link' => '#b0040e',
 
         'global_footer' => '#8c1515',
-        'global_footer_link' => '#ffffff',
+        'global_footer_link' => '#fefeff',
       ],
     ],
     'night' => [

@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * hs_text_area.module
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function hs_text_area_display_paragraph_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($entity->bundle() == 'hs_text_area') {
+    $build['#attached']['library'][] = 'hs_text_area/hs_text_area';
+  }
+}

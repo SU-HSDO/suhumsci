@@ -9,7 +9,6 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\user\Entity\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -104,7 +103,7 @@ class CapxForm extends ConfigFormBase {
     Cache::invalidateTags(['migration_plugins']);
 
     // Add permission to execute importer.
-    $role = $this->entityTypeManager->getStorage('role')->load('site_manager');
+    $role = $this->entityTypeManager->getStorage('user_role')->load('site_manager');
     if ($role) {
       $role->grantPermission('import hs_capx migration');
       $role->save();

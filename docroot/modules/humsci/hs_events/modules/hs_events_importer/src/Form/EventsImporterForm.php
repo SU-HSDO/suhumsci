@@ -7,7 +7,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\Entity\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -123,7 +122,7 @@ class EventsImporterForm extends ConfigFormBase {
     Cache::invalidateTags(['migration_plugins']);
 
     // Add permission to execute importer.
-    $role = $this->entityTypeManager->getStorage('role')->load('site_manager');
+    $role = $this->entityTypeManager->getStorage('user_role')->load('site_manager');
     if ($role) {
       $role->grantPermission('import hs_events_importer migration');
       $role->save();

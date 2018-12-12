@@ -26,6 +26,9 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\hs_field_helpers\Plugin\views\query\Sql as HsViewsSql;
+use Drupal\Component\Utility\Html;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
 
 /**
  * Implements hook_views_plugins_query_alter().
@@ -410,7 +413,13 @@ function hs_field_helpers_preprocess_field(&$variables) {
 
   // Add class for whole field.
   if (!empty($field_config['formatter']['third_party_settings']['field_formatter_class'])) {
-    $variables['attributes']['class'][] = $field_config['formatter']['third_party_settings']['field_formatter_class']['class'];
+    $class = $field_config['formatter']['third_party_settings']['field_formatter_class']['class'];
+
+    /** @var \Drupal\Core\Entity\EntityInterface $object */
+    $object = $variables['element']['#object'];
+    $class = \Drupal::service('token')
+      ->replace($class, [$object->getEntityTypeId() => $object], ['clear' => TRUE]);
+    $variables['attributes']['class'][] = Html::cleanCssIdentifier($class);
   }
 }
 
@@ -603,5 +612,20 @@ function hs_field_helpers_node_view(array &$build, EntityInterface $entity, Enti
     // location for other users.
     \Drupal::messenger()
       ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function hs_field_helpers_field_storage_config_presave(FieldStorageConfigInterface $entity) {
+  $permission_type = $entity->getThirdPartySetting('field_permissions', 'permission_type');
+
+  // If the field is configured to be public, we don't need to create an
+  // unnecessary dependency on the field_permission module.
+  if ($permission_type == FieldPermissionTypeInterface::ACCESS_PUBLIC) {
+    $entity->unsetThirdPartySetting('field_permissions', 'permission_type');
+    // Reset dependencies.
+    $entity->calculateDependencies();
   }
 }

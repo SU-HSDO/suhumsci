@@ -3,16 +3,44 @@
 namespace Drupal\hs_capx\Form;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form to allow the user to choose which CAPx data to import.
  */
 class CapxForm extends ConfigFormBase {
+
+  /**
+   * Entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('entity_type.manager')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory);
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -76,7 +104,8 @@ class CapxForm extends ConfigFormBase {
     Cache::invalidateTags(['migration_plugins']);
 
     // Add permission to execute importer.
-    if ($role = Role::load('site_manager')) {
+    $role = $this->entityTypeManager->getStorage('role')->load('site_manager');
+    if ($role) {
       $role->grantPermission('import hs_capx migration');
       $role->save();
     }

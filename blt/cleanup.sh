@@ -5,4 +5,3 @@
 
 # make all hook files executable.
 chmod -R +x hooks/
-rm vendor/simplesamlphp/simplesamlphp/config/local*

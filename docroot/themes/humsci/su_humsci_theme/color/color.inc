@@ -13,25 +13,25 @@ $info = [
     'text' => t('Text'),
 
     'button' => t('Button Background'),
-    'button_color' => t('Button Color'),
+    'buttoncolor' => t('Button Color'),
 
     'branding' => t('Branding background'),
-    'branding_color' => t('Branding color'),
+    'brandingcolor' => t('Branding color'),
 
     'header' => t('Header background'),
-    'header_text' => t('Header text'),
-    'header_link' => t('Header link'),
+    'headertext' => t('Header text'),
+    'headerlink' => t('Header link'),
 
     'main' => t('Main background'),
-    'main_text' => t('Main text'),
-    'main_link' => t('Main links'),
+    'maintext' => t('Main text'),
+    'mainlink' => t('Main links'),
 
     'footer' => t('Footer background'),
-    'footer_text' => t('Footer text'),
-    'footer_link' => t('Footer links'),
+    'footertext' => t('Footer text'),
+    'footerlink' => t('Footer links'),
 
-    'global_footer' => t('Global Footer background'),
-    'global_footer_link' => t('Global Footer color'),
+    'globalfooter' => t('Global Footer background'),
+    'globalfooterlink' => t('Global Footer color'),
   ],
   // Pre-defined color schemes.
   'schemes' => [
@@ -43,54 +43,54 @@ $info = [
         'text' => '#2e2d29',
 
         'button' => '#b1040d',
-        'button_color' => '#fffefe',
+        'buttoncolor' => '#fffefe',
 
         'branding' => '#b1040f',
-        'branding_color' => '#fefefe',
+        'brandingcolor' => '#fefefe',
 
         'header' => '#fffffe',
-        'header_text' => '#2e2d2a',
-        'header_link' => '#b1050e',
+        'headertext' => '#2e2d2a',
+        'headerlink' => '#b1050e',
 
         'main' => '#fffeff',
-        'main_text' => '#2e2e29',
-        'main_link' => '#b2040e',
+        'maintext' => '#2e2e29',
+        'mainlink' => '#b2040e',
 
         'footer' => '#feffff',
-        'footer_text' => '#2f2d29',
-        'footer_link' => '#b0040e',
+        'footertext' => '#2f2d29',
+        'footerlink' => '#b0040e',
 
-        'global_footer' => '#8c1515',
-        'global_footer_link' => '#fefeff',
+        'globalfooter' => '#8c1515',
+        'globalfooterlink' => '#fefeff',
       ],
     ],
     'night' => [
       'title' => t('Night'),
       'colors' => [
         'base' => '#000000',
-        'link' => '#b1040e',
-        'text' => '#2e2d29',
+        'link' => '#0db104',
+        'text' => '#ffffff',
 
-        'button' => '#b1040e',
-        'button_color' => '#ffffff',
+        'button' => '#0db104',
+        'buttoncolor' => '#000000',
 
-        'branding' => '#b1040e',
-        'branding_color' => '#ffffff',
+        'branding' => '#0db104',
+        'brandingcolor' => '#000000',
 
-        'header' => '#ffffff',
-        'header_text' => '#2e2d29',
-        'header_link' => '#b1040e',
+        'header' => '#000000',
+        'headertext' => '#ffffff',
+        'headerlink' => '#0db104',
 
-        'main' => '#fffeff',
-        'main_text' => '#2e2d29',
-        'main_link' => '#b1040e',
+        'main' => '#000000',
+        'maintext' => '#ffffff',
+        'mainlink' => '#0db104',
 
-        'footer' => '#ffffff',
-        'footer_text' => '#2e2d29',
-        'footer_link' => '#b1040e',
+        'footer' => '#000000',
+        'footertext' => '#ffffff',
+        'footerlink' => '#0db104',
 
-        'global_footer' => '#8c1515',
-        'global_footer_link' => '#ffffff',
+        'globalfooter' => '#158c15',
+        'globalfooterlink' => '#000000',
       ],
     ],
   ],
@@ -123,7 +123,7 @@ $info = [
         // Put the logos path into JavaScript for the live preview.
         'logo' => theme_get_setting('logo.url', 'su_humsci_theme'),
         'globalFooterLogo' => '/' . drupal_get_path('theme', 'stanford_basic') . '/assets/svg/su_sig_stack_linked.svg',
-        'userId' => \Drupal::currentUser()->isAuthenticated(),
+        'userId' => \Drupal::currentUser()->id(),
       ],
     ],
   ],

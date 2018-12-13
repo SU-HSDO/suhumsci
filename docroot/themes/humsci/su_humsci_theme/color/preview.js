@@ -21,25 +21,25 @@
 
 
       $colorPreview.find('.color-preview-brand-bar').css('background-color', $colorPalette.find('input[name="palette[branding]"]').val());
-      $colorPreview.find('.color-preview-brand-bar').css('color', $colorPalette.find('input[name="palette[branding_color]"]').val());
+      $colorPreview.find('.color-preview-brand-bar').css('color', $colorPalette.find('input[name="palette[brandingcolor]"]').val());
 
       $colorPreview.find('.color-preview-header').css('background-color', $colorPalette.find('input[name="palette[header]"]').val());
-      $colorPreview.find('.color-preview-header').css('color', $colorPalette.find('input[name="palette[header_text]"]').val());
-      $colorPreview.find('.color-preview-header a').css('color', $colorPalette.find('input[name="palette[header_link]"]').val());
+      $colorPreview.find('.color-preview-header').css('color', $colorPalette.find('input[name="palette[headertext]"]').val());
+      $colorPreview.find('.color-preview-header a').css('color', $colorPalette.find('input[name="palette[headerlink]"]').val());
 
       $colorPreview.find('.color-preview-main').css('background-color', $colorPalette.find('input[name="palette[main]"]').val());
-      $colorPreview.find('.color-preview-main').css('color', $colorPalette.find('input[name="palette[main_text]"]').val());
-      $colorPreview.find('.color-preview-main a').css('color', $colorPalette.find('input[name="palette[main_link]"]').val());
+      $colorPreview.find('.color-preview-main').css('color', $colorPalette.find('input[name="palette[maintext]"]').val());
+      $colorPreview.find('.color-preview-main a').css('color', $colorPalette.find('input[name="palette[mainlink]"]').val());
 
       $colorPreview.find('.color-preview-footer').css('background-color', $colorPalette.find('input[name="palette[footer]"]').val());
-      $colorPreview.find('.color-preview-footer').css('color', $colorPalette.find('input[name="palette[footer_text]"]').val());
-      $colorPreview.find('.color-preview-footer a').css('color', $colorPalette.find('input[name="palette[footer_link]"]').val());
+      $colorPreview.find('.color-preview-footer').css('color', $colorPalette.find('input[name="palette[footertext]"]').val());
+      $colorPreview.find('.color-preview-footer a').css('color', $colorPalette.find('input[name="palette[footerlink]"]').val());
 
-      $colorPreview.find('.color-preview-global-footer').css('background-color', $colorPalette.find('input[name="palette[global_footer]"]').val());
-      $colorPreview.find('.color-preview-global-footer, .color-preview-global-footer a').css('color', $colorPalette.find('input[name="palette[global_footer_link]"]').val());
+      $colorPreview.find('.color-preview-global-footer').css('background-color', $colorPalette.find('input[name="palette[globalfooter]"]').val());
+      $colorPreview.find('.color-preview-global-footer, .color-preview-global-footer a').css('color', $colorPalette.find('input[name="palette[globalfooterlink]"]').val());
 
       $colorPreview.find('.color-preview-decanter-button').css('background-color', $colorPalette.find('input[name="palette[button]"]').val());
-      $colorPreview.find('.color-preview-decanter-button').css('color', $colorPalette.find('input[name="palette[button_color]"]').val());
+      $colorPreview.find('.color-preview-decanter-button').css('color', $colorPalette.find('input[name="palette[buttoncolor]"]').val());
 
       // var gradientStart = $colorPalette.find('input[name="palette[top]"]').val();
       // var gradientEnd = $colorPalette.find('input[name="palette[bottom]"]').val();

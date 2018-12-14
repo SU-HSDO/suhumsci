@@ -18,6 +18,16 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
+ * Implements hook_entity_type_build().
+ */
+function su_humsci_profile_entity_type_build(array &$entity_types) {
+  if (isset($entity_types['shortcut_set'])) {
+    $entity_types['shortcut_set']
+      ->setFormClass('customize', 'Drupal\su_humsci_profile\Form\HumsciSetCustomize');
+  }
+}
+
+/**
  * Implements hook_install_tasks_alter().
  */
 function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {

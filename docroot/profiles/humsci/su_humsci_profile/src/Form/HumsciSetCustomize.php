@@ -2,9 +2,7 @@
 
 namespace Drupal\su_humsci_profile\Form;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\shortcut\Form\SetCustomize;
 
 /**
@@ -19,7 +17,6 @@ class HumsciSetCustomize extends SetCustomize {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    dpm($this->entity->getShortcuts());
 
     $form['shortcuts']['links']['#tabledrag'] = [
       [
@@ -28,7 +25,7 @@ class HumsciSetCustomize extends SetCustomize {
         'group' => 'shortcut-parent',
         'subgroup' => 'shortcut-parent',
         'source' => 'shortcut-id',
-        "hidden" => false
+        "hidden" => FALSE,
       ],
       [
         'action' => 'depth',
@@ -43,31 +40,66 @@ class HumsciSetCustomize extends SetCustomize {
       ],
     ];
 
-    foreach (Element::children($form['shortcuts']['links']) as $link_id) {
-      $first_column = &$form['shortcuts']['links'][$link_id]['name'];
+    foreach ($this->entity->getShortcuts() as $shortcut) {
+      $link_settings = $shortcut->get('link')->getValue();
+      $link_options = $link_settings[0]['options'];
+
+      $indentation = [];
+      if (isset($link_options['depth']) && $link_options['depth'] > 0) {
+        $indentation = [
+          '#theme' => 'indentation',
+          '#size' => $link_options['depth'],
+        ];
+      }
+
+
+      $first_column = &$form['shortcuts']['links'][$shortcut->id()]['name'];
+      $first_column['#prefix'] = !empty($indentation) ? \Drupal::service('renderer')->render($indentation) : '';
       $first_column['shortcut_id'] = [
         '#type' => 'hidden',
-        '#value' => $link_id,
+        '#value' => $shortcut->id(),
         '#attributes' => ['class' => ['shortcut-id']],
       ];
       $first_column['parent'] = [
         '#type' => 'hidden',
-        '#default_value' => 0,
+        '#default_value' => $link_options['parent'] ?? 0,
         '#attributes' => ['class' => ['shortcut-parent']],
       ];
       $first_column['depth'] = [
         '#type' => 'hidden',
-        '#default_value' => 0,
+        '#default_value' => $link_options['depth'] ?? 0,
         '#attributes' => ['class' => ['shortcut-depth']],
       ];
     }
     return $form;
   }
 
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
-    dpm($form_state->getValue(['shortcuts', 'links']));
-    parent::copyFormValuesToEntity($entity, $form, $form_state);
-    dpm($entity);
+  public function save(array $form, FormStateInterface $form_state) {
+    parent::save($form, $form_state);
+
+    foreach ($this->entity->getShortcuts() as $shortcut) {
+      $link = $shortcut->get('link')->getValue();
+      $depth = $form_state->getValue([
+        'shortcuts',
+        'links',
+        $shortcut->id(),
+        'name',
+        'depth',
+      ]);
+      $parent = $form_state->getValue([
+        'shortcuts',
+        'links',
+        $shortcut->id(),
+        'name',
+        'parent',
+      ]);
+      $link[0]['options']['depth'] = $depth;
+      $link[0]['options']['parent'] = $parent;
+
+      dpm($link);
+      $shortcut->set('link', $link);
+      $shortcut->save();
+    }
   }
 
 }

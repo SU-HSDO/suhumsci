@@ -17,41 +17,6 @@ use Drupal\user\Entity\User;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
-function su_humsci_profile_preprocess_links__toolbar_shortcuts(&$variables) {
-
-  //  dpm($variables);
-  //  $a = $variables['links'][7];
-  //  unset($variables['links'][7]);
-  //  $variables['links'][1]['children'] = $a;
-}
-
-function su_humsci_profile_toolbar() {
-  $items = [];
-
-  $links = shortcut_renderable_links();
-  $items['humsci'] = [
-    '#cache' => ['contexts' => ['user']],
-    '#type' => 'toolbar_item',
-    'tray' => [
-      '#heading' => t('Something here'),
-      'humsci' => $links
-    ],
-  ];
-//  template_preprocess_toolbar()
-dpm($items);
-  return $items;
-}
-
-/**
- * Implements hook_entity_type_build().
- */
-function su_humsci_profile_entity_type_build(array &$entity_types) {
-  if (isset($entity_types['shortcut_set'])) {
-    $entity_types['shortcut_set']
-      ->setFormClass('customize', 'Drupal\su_humsci_profile\Form\HumsciSetCustomize');
-  }
-}
-
 /**
  * Implements hook_install_tasks_alter().
  */

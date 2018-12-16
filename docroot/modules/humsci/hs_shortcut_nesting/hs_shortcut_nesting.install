@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * hs_shortcut_nesting.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_shortcut_nesting_install() {
+  $field_definition = [
+    'description' => 'The parent of the link',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ];
+  $schema = \Drupal::database()->schema();
+  $schema->addField('shortcut_field_data', 'parent', $field_definition);
+  $field_definition['description'] = 'Depth of the link in the menu';
+  $schema->addField('shortcut_field_data', 'depth', $field_definition);
+
+  \Drupal::database()->update('shortcut_field_data')
+    ->fields(['parent' => 0, 'depth' => 0])
+    ->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function hs_shortcut_nesting_uninstall() {
+  $schema = \Drupal::database()->schema();
+  $schema->dropField('shortcut_field_data', 'parent');
+  $schema->dropField('shortcut_field_data', 'depth');
+}

@@ -55,6 +55,12 @@ class HumsciSetCustomize extends SetCustomize {
     return $form;
   }
 
+  /**
+   * Get the table drag settings array.
+   *
+   * @return array
+   *   Table drag settings.
+   */
   protected function getTableDragSettings() {
     return [
       [
@@ -107,19 +113,16 @@ class HumsciSetCustomize extends SetCustomize {
     foreach ($values as $link_id => $item) {
       $weight = $this->getRootWeight($values, $link_id);
 
-      while (isset($sortable_array["$weight"])) {
-        $weight += .01;
+      while (in_array($weight, $sortable_array)) {
+        $weight += .001;
       }
 
-      $sortable_array["$weight"] = $item;
+      $sortable_array[$link_id] = $weight;
     }
-    ksort($sortable_array);
-    $sortable_array = array_values($sortable_array);
+    asort($sortable_array, SORT_NUMERIC);
 
-    $values = [];
-    foreach ($sortable_array as $new_weight => $item) {
-      $item['weight'] = $new_weight;
-      $values[$item['name']['shortcut_id']] = $item;
+    foreach (array_keys($sortable_array) as $new_weight => $link_id) {
+      $values[$link_id]['weight'] = $new_weight;
     }
     return $values;
   }

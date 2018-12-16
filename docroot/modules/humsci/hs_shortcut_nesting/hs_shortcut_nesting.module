@@ -5,13 +5,15 @@
  * hs_shortcut_nesting.module
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\hs_shortcut_nesting\Form\HumsciSetCustomize;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Implements hook_entity_base_field_info().
  */
-function hs_shortcut_nesting_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type) {
+function hs_shortcut_nesting_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() == 'shortcut') {
     $fields['parent'] = BaseFieldDefinition::create('integer')
@@ -31,7 +33,7 @@ function hs_shortcut_nesting_entity_base_field_info(\Drupal\Core\Entity\EntityTy
 function hs_shortcut_nesting_toolbar() {
   $items = shortcut_toolbar();
 
-  $items['shortcuts']['tray']['shortcuts'] = [
+  $items['shortcuts']['tray']= [
     '#theme' => 'menu',
     '#menu_name' => 'shortcuts',
     '#items' => [],
@@ -39,47 +41,55 @@ function hs_shortcut_nesting_toolbar() {
 
   /** @var \Drupal\shortcut\ShortcutSetInterface $shortcut_set */
   $shortcut_set = shortcut_current_displayed_set();
+  $shortcuts = $shortcut_set->getShortcuts();
+  $max_depth = 0;
 
-  $shortcuts_added = 0;
-  while ($shortcuts_added != count($shortcut_set->getShortcuts())) {
-
-//    foreach ($shortcut_set->getShortcuts() as $shortcut) {
-//      if ($shortcut->get('depth')->getString() == 0) {
-//        $items[$shortcut->id()] = [
-//          'title' => $shortcut->getTitle(),
-//          'url' => $shortcut->getUrl(),
-//        ];
-//        $shortcuts_added++;
-//        continue;
-//      }
-//      $items = [
-//        'title' => $shortcut->getTitle(),
-//        'url' => $shortcut->getUrl(),
-//      ];
-//      \Drupal\Component\Utility\NestedArray::setValue($items, $item_parents, $item);
-//    }
+  foreach ($shortcuts as $shortcut) {
+    $shortcut_depth = $shortcut->get('depth')->getString();
+    $max_depth = $shortcut_depth > $max_depth ? $shortcut_depth : $max_depth;
   }
-  dpm($shortcut_set->getShortcuts());
 
-  //  $max_depth = 0;
-  //  foreach ($shortcut_links['#links'] as $link_id => $link) {
-  //    unset($link['type']);
-  //    $items['shortcuts']['tray']['shortcuts']['#items'][$link_id] = $link;
-  //    $max_depth = $link['url']->getOption('depth') > $max_depth ? $link['url']->getOption('depth') : $max_depth;
-  //  }
-  //
-  //  for ($i = 0; $i < $max_depth; $i++) {
-  //    foreach ($items['shortcuts']['tray']['shortcuts']['#items'] as $link_id => $link) {
-  //      if ($parent_id = $link['url']->getOption('parent')) {
-  //        $items['shortcuts']['tray']['shortcuts']['#items'][$parent_id]['below'][$link_id] = $link;
-  //        unset($items['shortcuts']['tray']['shortcuts']['#items'][$link_id]);
-  //      }
-  //    }
-  //  }
-
+  $menu_items = [];
+  $depth = 0;
+  while ($depth <= $max_depth) {
+    foreach ($shortcuts as $shortcut) {
+      if ($shortcut->get('depth')->getString() == $depth) {
+        $path = hs_shortcut_get_item_parents($shortcuts, $shortcut->id());
+        $menu_item = [
+          'title' => $shortcut->getTitle(),
+          'url' => $shortcut->getUrl(),
+        ];
+        NestedArray::setValue($menu_items, $path, $menu_item);
+      }
+    }
+    $depth++;
+  }
+  $items['shortcuts']['tray']['#items'] = $menu_items;
   $items['shortcuts']['#attached']['library'][] = 'hs_shortcut_nesting/toolbar';
 
   return $items;
+}
+
+/**
+ * Get the path of the given link id to build a nested menu.
+ *
+ * @param \Drupal\shortcut\ShortcutInterface[] $shortcuts
+ *   Array of shortcuts.
+ * @param integer $link_id
+ *   Shortcut link id.
+ *
+ * @return array
+ *   Render array parent path.
+ */
+function hs_shortcut_get_item_parents($shortcuts, $link_id) {
+  $shortcut = $shortcuts[$link_id];
+  if ($parent_id = $shortcut->get('parent')->getString()) {
+    $path = hs_shortcut_get_item_parents($shortcuts, $parent_id);
+    $path[] = 'below';
+    $path[] = $link_id;
+    return $path;
+  }
+  return [$link_id];
 }
 
 /**

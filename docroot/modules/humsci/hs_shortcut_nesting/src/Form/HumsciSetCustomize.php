@@ -139,7 +139,7 @@ class HumsciSetCustomize extends SetCustomize {
    * @param int $link_id
    *   Shortcut Id.
    *
-   * @return integer
+   * @return int
    *   Root parent weight.
    */
   protected function getRootWeight(array $values, $link_id) {

@@ -35,7 +35,7 @@ function hs_shortcut_nesting_entity_base_field_info(EntityTypeInterface $entity_
 function hs_shortcut_nesting_toolbar() {
   $items = shortcut_toolbar();
 
-  $items['shortcuts']['tray']= [
+  $items['shortcuts']['tray'] = [
     '#theme' => 'menu',
     '#menu_name' => 'shortcuts',
     '#items' => [],
@@ -77,13 +77,13 @@ function hs_shortcut_nesting_toolbar() {
  *
  * @param \Drupal\shortcut\ShortcutInterface[] $shortcuts
  *   Array of shortcuts.
- * @param integer $link_id
+ * @param int $link_id
  *   Shortcut link id.
  *
  * @return array
  *   Render array parent path.
  */
-function hs_shortcut_get_item_parents($shortcuts, $link_id) {
+function hs_shortcut_get_item_parents(array $shortcuts, $link_id) {
   $shortcut = $shortcuts[$link_id];
   if ($parent_id = $shortcut->get('parent')->getString()) {
     $path = hs_shortcut_get_item_parents($shortcuts, $parent_id);

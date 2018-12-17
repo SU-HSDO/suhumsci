@@ -104,13 +104,17 @@ class HumsciSetCustomize extends SetCustomize {
   }
 
   /**
+   * Sort the submitted link values and give them appropriate weights.
+   *
    * @param array $values
+   *   Form state values.
    *
    * @return array
+   *   Modified values with new weights.
    */
   protected function sortLinkWeights(array $values) {
     $sortable_array = [];
-    foreach ($values as $link_id => $item) {
+    foreach (array_keys($values) as $link_id) {
       $weight = $this->getRootWeight($values, $link_id);
 
       while (in_array($weight, $sortable_array)) {

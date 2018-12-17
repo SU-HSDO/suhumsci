@@ -136,7 +136,7 @@ class HumsciSetCustomize extends SetCustomize {
    *
    * @param array $values
    *   Form submitted values.
-   * @param integer $link_id
+   * @param int $link_id
    *   Shortcut Id.
    *
    * @return integer

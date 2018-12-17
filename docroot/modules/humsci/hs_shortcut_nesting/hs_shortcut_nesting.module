@@ -17,6 +17,7 @@ use Drupal\Core\Template\Attribute;
 function hs_shortcut_nesting_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() == 'shortcut') {
+    // Add a parent and a depth column to the shortcut table.
     $fields['parent'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Parent'))
       ->setDescription(t('Parent menu item.'))
@@ -46,8 +47,9 @@ function hs_shortcut_nesting_toolbar() {
   /** @var \Drupal\shortcut\ShortcutSetInterface $shortcut_set */
   $shortcut_set = shortcut_current_displayed_set();
   $shortcuts = $shortcut_set->getShortcuts();
-  $max_depth = 0;
 
+  // Find the max depth of the menu.
+  $max_depth = 0;
   foreach ($shortcuts as $shortcut) {
     $shortcut_depth = $shortcut->get('depth')->getString();
     $max_depth = $shortcut_depth > $max_depth ? $shortcut_depth : $max_depth;
@@ -55,20 +57,32 @@ function hs_shortcut_nesting_toolbar() {
 
   $menu_items = [];
   $depth = 0;
+
+  // Copy the shortcuts so that we dont loop through every shortcut everytime.
+  $remaining_shortcuts = $shortcuts;
+
+  // Loop through the menu depths, constructing each level from the top down.
   while ($depth <= $max_depth) {
-    foreach ($shortcuts as $shortcut) {
+    foreach ($remaining_shortcuts as $shortcut) {
       if ($shortcut->get('depth')->getString() == $depth) {
+
+        // Get the path where this shortcut should be rendered.
         $path = hs_shortcut_get_item_parents($shortcuts, $shortcut->id());
         $menu_item = [
           'title' => $shortcut->getTitle(),
           'url' => $shortcut->getUrl(),
         ];
+
+        // Set the new item within the menu.
         NestedArray::setValue($menu_items, $path, $menu_item);
+        unset($remaining_shortcuts[$shortcut->id()]);
       }
     }
     $depth++;
   }
 
+  // If the toolbar contains a link to configure the shortcuts, add it to the
+  // end of the first level.
   if ($configure_link) {
     $attributes = new Attribute($configure_link['#options']['attributes']);
     $menu_items['configure'] = [
@@ -97,12 +111,16 @@ function hs_shortcut_nesting_toolbar() {
  */
 function hs_shortcut_get_item_parents(array $shortcuts, $link_id) {
   $shortcut = $shortcuts[$link_id];
+
+  // The given shortcut has a parent, lets get it's path.
   if ($parent_id = $shortcut->get('parent')->getString()) {
     $path = hs_shortcut_get_item_parents($shortcuts, $parent_id);
     $path[] = 'below';
     $path[] = $link_id;
     return $path;
   }
+
+  // No parent for this item. It must be at the root of the menu.
   return [$link_id];
 }
 
@@ -111,6 +129,7 @@ function hs_shortcut_get_item_parents(array $shortcuts, $link_id) {
  */
 function hs_shortcut_nesting_entity_type_build(array &$entity_types) {
   if (isset($entity_types['shortcut_set'])) {
+    // Change the entity form to add nesting tabledragging.
     $entity_types['shortcut_set']->setFormClass('customize', HumsciSetCustomize::class);
   }
 }

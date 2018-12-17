@@ -18,11 +18,13 @@ function hs_shortcut_nesting_entity_base_field_info(EntityTypeInterface $entity_
   if ($entity_type->id() == 'shortcut') {
     $fields['parent'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Parent'))
-      ->setDescription(t('Parent menu item.'));
+      ->setDescription(t('Parent menu item.'))
+      ->setDefaultValue(0);
 
     $fields['depth'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Depth'))
-      ->setDescription(t('Depth within the menu.'));
+      ->setDescription(t('Depth within the menu.'))
+      ->setDefaultValue(0);
   }
   return $fields;
 }

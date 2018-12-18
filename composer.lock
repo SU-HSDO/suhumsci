@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/acquia/blt.git",
-                "reference": "c2e07ee2e0f2cc21903db97ac7c212bd872f76d6"
+                "reference": "e90ace3160a4c0450ba8c2a0e35e1a46f7849329"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/acquia/blt/zipball/c2e07ee2e0f2cc21903db97ac7c212bd872f76d6",
-                "reference": "c2e07ee2e0f2cc21903db97ac7c212bd872f76d6",
+                "url": "https://api.github.com/repos/acquia/blt/zipball/e90ace3160a4c0450ba8c2a0e35e1a46f7849329",
+                "reference": "e90ace3160a4c0450ba8c2a0e35e1a46f7849329",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
                 "doctrine/common": "^2.5",
                 "doctrine/inflector": "~1.1.0",
                 "drupal/coder": "^8.2.11",
-                "drush/drush": "^9.3.0",
+                "drush/drush": "^9.4.0",
                 "grasmash/drupal-security-warning": "^1.0.0",
                 "grasmash/yaml-cli": "^1.0.0",
                 "grasmash/yaml-expander": "^1.2.0",
@@ -94,7 +94,7 @@
                 "template",
                 "testing"
             ],
-            "time": "2018-11-01T12:43:11+00:00"
+            "time": "2018-12-17T15:48:37+00:00"
         },
         {
             "name": "acquia/http-hmac-php",
@@ -594,16 +594,16 @@
         },
         {
             "name": "consolidation/annotated-command",
-            "version": "2.10.0",
+            "version": "2.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consolidation/annotated-command.git",
-                "reference": "8e7d1a05230dc1159c751809e98b74f2b7f71873"
+                "reference": "288593672a8ca9ead2c73a8bfbfa4737862bfd6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/consolidation/annotated-command/zipball/8e7d1a05230dc1159c751809e98b74f2b7f71873",
-                "reference": "8e7d1a05230dc1159c751809e98b74f2b7f71873",
+                "url": "https://api.github.com/repos/consolidation/annotated-command/zipball/288593672a8ca9ead2c73a8bfbfa4737862bfd6a",
+                "reference": "288593672a8ca9ead2c73a8bfbfa4737862bfd6a",
                 "shasum": ""
             },
             "require": {
@@ -615,13 +615,57 @@
                 "symfony/finder": "^2.5|^3|^4"
             },
             "require-dev": {
-                "g1a/composer-test-scenarios": "^2",
+                "g1a/composer-test-scenarios": "^3",
+                "php-coveralls/php-coveralls": "^1",
                 "phpunit/phpunit": "^6",
-                "satooshi/php-coveralls": "^2",
                 "squizlabs/php_codesniffer": "^2.7"
             },
             "type": "library",
             "extra": {
+                "scenarios": {
+                    "symfony4": {
+                        "require": {
+                            "symfony/console": "^4.0"
+                        },
+                        "config": {
+                            "platform": {
+                                "php": "7.1.3"
+                            }
+                        }
+                    },
+                    "symfony2": {
+                        "require": {
+                            "symfony/console": "^2.8"
+                        },
+                        "require-dev": {
+                            "phpunit/phpunit": "^4.8.36"
+                        },
+                        "remove": [
+                            "php-coveralls/php-coveralls"
+                        ],
+                        "config": {
+                            "platform": {
+                                "php": "5.4.8"
+                            }
+                        },
+                        "scenario-options": {
+                            "create-lockfile": "false"
+                        }
+                    },
+                    "phpunit4": {
+                        "require-dev": {
+                            "phpunit/phpunit": "^4.8.36"
+                        },
+                        "remove": [
+                            "php-coveralls/php-coveralls"
+                        ],
+                        "config": {
+                            "platform": {
+                                "php": "5.4.8"
+                            }
+                        }
+                    }
+                },
                 "branch-alias": {
                     "dev-master": "2.x-dev"
                 }
@@ -642,7 +686,7 @@
                 }
             ],
             "description": "Initialize Symfony Console commands from annotated command class methods.",
-            "time": "2018-11-15T01:46:18+00:00"
+            "time": "2018-12-14T01:52:35+00:00"
         },
         {
             "name": "consolidation/config",
@@ -8065,17 +8109,17 @@
         },
         {
             "name": "drupal/webform",
-            "version": "5.0.0-rc29",
+            "version": "5.0.0-rc30",
             "source": {
                 "type": "git",
                 "url": "https://git.drupal.org/project/webform",
-                "reference": "8.x-5.0-rc29"
+                "reference": "8.x-5.0-rc30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/webform-8.x-5.0-rc29.zip",
-                "reference": "8.x-5.0-rc29",
-                "shasum": "f96e42f54b1cd69f0d67c4a88f32c5a8a570e50d"
+                "url": "https://ftp.drupal.org/files/projects/webform-8.x-5.0-rc30.zip",
+                "reference": "8.x-5.0-rc30",
+                "shasum": "0bbc516a1b525fb5c955495c592ab783cff64924"
             },
             "require": {
                 "drupal/core": "*"
@@ -8098,8 +8142,8 @@
                     "dev-5.x": "5.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-5.0-rc29",
-                    "datestamp": "1544223180",
+                    "version": "8.x-5.0-rc30",
+                    "datestamp": "1544990880",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "RC releases are not covered by Drupal security advisories."
@@ -11632,18 +11676,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_ssp.git",
-                "reference": "67be61699ac7b62c5d3708ae08fdebd2c9461cc7"
+                "reference": "ad9ce912186b0eb92e38fe1fe1be2b64bd76dca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_ssp/zipball/67be61699ac7b62c5d3708ae08fdebd2c9461cc7",
-                "reference": "67be61699ac7b62c5d3708ae08fdebd2c9461cc7",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_ssp/zipball/ad9ce912186b0eb92e38fe1fe1be2b64bd76dca7",
+                "reference": "ad9ce912186b0eb92e38fe1fe1be2b64bd76dca7",
                 "shasum": ""
             },
             "require": {
                 "composer/installers": "^1.2",
                 "drupal/simplesamlphp_auth": "~3.0",
-                "php": ">=5.6.0"
+                "php": ">=7.0.0"
             },
             "type": "drupal-custom-module",
             "extra": {
@@ -11658,7 +11702,7 @@
                 "GPL-2.0+"
             ],
             "description": "A Drupal Authentication Module.",
-            "time": "2018-12-10T19:10:14+00:00"
+            "time": "2018-12-18T00:24:12+00:00"
         },
         {
             "name": "symfony-cmf/routing",
@@ -13357,16 +13401,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.35.4",
+            "version": "v1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a"
+                "reference": "730c9c4471b5152d23061feb02b03382264c8a15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
-                "reference": "7e081e98378a1e78c29cc9eba4aefa5d78a05d2a",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/730c9c4471b5152d23061feb02b03382264c8a15",
+                "reference": "730c9c4471b5152d23061feb02b03382264c8a15",
                 "shasum": ""
             },
             "require": {
@@ -13376,12 +13420,12 @@
             "require-dev": {
                 "psr/container": "^1.0",
                 "symfony/debug": "^2.7",
-                "symfony/phpunit-bridge": "^3.3"
+                "symfony/phpunit-bridge": "^3.4.19|^4.1.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.35-dev"
+                    "dev-master": "1.36-dev"
                 }
             },
             "autoload": {
@@ -13419,7 +13463,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-07-13T07:12:17+00:00"
+            "time": "2018-12-16T10:34:11+00:00"
         },
         {
             "name": "typhonius/acquia-php-sdk-v2",

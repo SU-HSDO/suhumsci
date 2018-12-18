@@ -35,10 +35,10 @@
       }
 
       window.addEventListener('keydown', handleFirstTab);
-
       $('figure', context).each(function(i, figure){
-        console.log(figure);
-        $(figure).find('figcaption, picture').css('max-width', $(figure).find('img').width());
+        $(figure).imagesLoaded(function(){
+          $(figure).find('figcaption, picture').css('max-width', $(figure).find('img').width());
+        });
       })
     }
   };

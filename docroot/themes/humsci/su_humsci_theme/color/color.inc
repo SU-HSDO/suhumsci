@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @file
  * Lists available colors and color schemes for the su_humsci_theme theme.
  */
-//_color_rewrite_stylesheet()
 
 $info = [
   // Available colors and color labels used in theme.
@@ -71,26 +71,26 @@ $info = [
         'link' => '#0db104',
         'text' => '#ffffff',
 
-        'button' => '#0db104',
-        'buttoncolor' => '#000000',
+        'button' => '#00ece9',
+        'buttoncolor' => '#b1040e',
 
-        'branding' => '#0db104',
-        'brandingcolor' => '#000000',
+        'branding' => '#ffffff',
+        'brandingcolor' => '#b1040e',
 
         'header' => '#000000',
         'headertext' => '#ffffff',
-        'headerlink' => '#0db104',
+        'headerlink' => '#ffffff',
 
-        'main' => '#000000',
+        'main' => '#3b0536',
         'maintext' => '#ffffff',
-        'mainlink' => '#0db104',
+        'mainlink' => '#00ece9',
 
-        'footer' => '#000000',
+        'footer' => '#1e1e1e',
         'footertext' => '#ffffff',
-        'footerlink' => '#0db104',
+        'footerlink' => '#00ece9',
 
-        'globalfooter' => '#158c15',
-        'globalfooterlink' => '#000000',
+        'globalfooter' => '#8c1515',
+        'globalfooterlink' => '#fefeff',
       ],
     ],
   ],
@@ -110,7 +110,7 @@ $info = [
       // Direction of gradient ('vertical' or 'horizontal').
       'direction' => 'vertical',
       // Keys of colors to use for the gradient.
-      //      'colors' => ['branding', 'header'],
+      'colors' => ['branding', 'header'],
     ],
   ],
   // Preview files.

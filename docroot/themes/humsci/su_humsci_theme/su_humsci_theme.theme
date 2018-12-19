@@ -7,13 +7,15 @@
 
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Component\Utility\Html;
+use Drupal\node\Entity\Node;
+use Drupal\Component\Utility\SortArray;
 
 /**
  * Implements hook_preprocess_patterns_overview_page().
  */
 function su_humsci_theme_preprocess_patterns_overview_page(&$variables) {
   uasort($variables['patterns'], function ($pattern_a, $pattern_b) {
-    return strcmp($pattern_a['label'], $pattern_b['label']);
+    return SortArray::sortByKeyString($pattern_a, $pattern_b, 'label');
   });
 }
 
@@ -166,12 +168,12 @@ function _su_humsci_theme_check_link_access(array &$link_items) {
     /** @var \Drupal\Core\Url $url */
     $url = $link_item['url'];
 
-    if (!$url->isExternal() && $url->getRouteName() == 'entity.node.canonical') {
+    if ($url->isRouted() && $url->getRouteName() == 'entity.node.canonical') {
       $parameters = $url->getRouteParameters();
       $nid = $parameters['node'];
       /** @var \Drupal\node\NodeInterface $node */
-      $node = \Drupal\node\Entity\Node::load($nid);
-      if (!$node->isPublished()) {
+      $node = Node::load($nid);
+      if ($node && !$node->isPublished()) {
         $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
       }
     }

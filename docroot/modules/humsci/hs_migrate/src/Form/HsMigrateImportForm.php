@@ -159,17 +159,10 @@ class HsMigrateImportForm extends FormBase {
       $row['last_imported']['#markup'] = $this->t('Unknown');
     }
 
-    $row['operations']['data']['new'] = [
+    $row['operations']['data'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Import New Items'),
+      '#value' => $this->t('Import'),
       '#name' => $migration->id(),
-      '#operation' => 'new',
-    ];
-    $row['operations']['data']['update'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Update Existing Items'),
-      '#name' => $migration->id(),
-      '#operation' => 'update',
     ];
 
     return $row;
@@ -188,7 +181,7 @@ class HsMigrateImportForm extends FormBase {
     $migrateMessage = new MigrateMessage();
     $options = [
       'limit' => 0,
-      'update' => $form_state->getTriggeringElement()['#operation'] == 'update',
+      'update' => 0,
       'force' => 0,
     ];
 

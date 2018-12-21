@@ -56,6 +56,24 @@ class HumsciServerCommand extends AcHooksCommand {
     $username = $this->askQuestion('Acquia Username. Usually an email', '', TRUE);
     $password = $this->askHidden('Acquia Password');
 
+    $url = "{$this->apiEndpoint}/sites/devcloud:swshumsci/envs/prod/domains.json";
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_USERPWD, "$username:$password");
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    $output = curl_exec($curl);
+    curl_getinfo($curl);
+    curl_close($curl);
+
+    $output = json_decode($output, TRUE);
+    if (isset($output['message'])) {
+      $this->say('Something went wrong');
+      $this->say($output['message']);
+      return;
+    }
+
     $new_domains = [];
     while ($domain = $this->askQuestion('Domain to add. Leave empty when done')) {
       while (empty($environment = $this->askChoice('Which environment', [
@@ -113,6 +131,7 @@ class HumsciServerCommand extends AcHooksCommand {
       ->alias($this->getConfigValue('drush.aliases.remote'))
       ->drush('eval')
       ->arg($php_command)
+      ->printOutput(FALSE)
       ->run();
 
     $results = $results->getMessage();
@@ -146,7 +165,11 @@ class HumsciServerCommand extends AcHooksCommand {
 
     $this->say('Existing domains on the cert:' . PHP_EOL . implode(PHP_EOL, $domains));
 
-    $domains = array_merge($domains, $options['domains']);
+    if (!empty($options['domains'])) {
+      $this->say('Adding domains: '. implode(', ', $options['domains']));
+      $domains = array_merge($domains, $options['domains']);
+    }
+
     $domains = array_merge($domains, $this->getDomains());
     $domains = array_unique($domains);
     $this->removeDomains($domains);
@@ -162,6 +185,7 @@ class HumsciServerCommand extends AcHooksCommand {
       ->alias($this->getConfigValue('drush.aliases.remote'))
       ->drush('eval')
       ->arg($php_command)
+      ->printOutput(FALSE)
       ->run();
   }
 
@@ -253,6 +277,7 @@ class HumsciServerCommand extends AcHooksCommand {
       ->alias($this->getConfigValue('drush.aliases.remote'))
       ->drush('eval')
       ->arg($php_command)
+      ->printOutput(FALSE)
       ->run();
   }
 
@@ -284,6 +309,7 @@ class HumsciServerCommand extends AcHooksCommand {
       ->arg(1)
       ->drush('pmu')
       ->arg('nobots')
+      ->drush('cr')
       ->run();
   }
 

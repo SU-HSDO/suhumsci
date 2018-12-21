@@ -12,7 +12,7 @@
 1. Execute `compser install --prefer-source` to build all of the needed dependencies.
 1. Commit any changes to the composer files.
 1. Execute the blt command `blt deploy`
-1. When asked to create a tag, enter `Y
+1. When asked to create a tag, enter `Y`
 1. Enter a tag prefaced with the current date in the format `YYYY-MM-DD_[tagname]`
     * For example a release tag would be `2019-01-01_8.1.2`
 1. In the Acquia UI choose the tag you created for the code on the staging environment

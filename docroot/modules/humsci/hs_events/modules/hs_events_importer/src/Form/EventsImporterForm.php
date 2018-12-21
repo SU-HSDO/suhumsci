@@ -4,13 +4,40 @@ namespace Drupal\hs_events_importer\Form;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class EventsImporterForm.
  */
 class EventsImporterForm extends ConfigFormBase {
+
+  /**
+   * Entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('entity_type.manager')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($config_factory);
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -92,6 +119,14 @@ class EventsImporterForm extends ConfigFormBase {
       ->save();
     parent::submitForm($form, $form_state);
     Cache::invalidateTags(['migration_plugins']);
+
+    // Add permission to execute importer.
+    $role = $this->entityTypeManager->getStorage('user_role')
+      ->load('site_manager');
+    if ($role) {
+      $role->grantPermission('import hs_events_importer migration');
+      $role->save();
+    }
   }
 
 }

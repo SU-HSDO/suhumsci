@@ -41,7 +41,7 @@ class HumsciSSPLocalAction extends DeriverBase implements ContainerDeriverInterf
   /**
    * {@inheritdoc}
    */
-  public function getDerivativeDefinitions($base_plugin_definition) {
+  public function getDerivativeDefinitions($base_definition) {
     $this->derivatives = [];
     if ($this->moduleHandler->moduleExists('stanford_ssp')) {
       $this->derivatives['su_humsci_profile.add_user'] = [

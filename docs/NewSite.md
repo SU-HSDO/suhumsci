@@ -15,6 +15,7 @@
    * "remote drush alias" should be [machine_name].prod 
    * During that command, it will ask to add domains. This is optional but highly suggested. This will prompt to add 
      domain for each environment and it will initiate the new SSL certificate.
+1. Get the newly built SSL certs for each environment `humsci:letsencrypt:get-cert [environment]` and add them to [Acquia Dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl)
 1. From the database that was set up in Acquia, grab the PHP snippet and add it to the bottom of the new settings.php
    but above the blt.settings.php require statement.
 1. Add the machine name to the [blt settings](../blt/blt.yml) for the `multisites` array.

@@ -13,11 +13,21 @@ To set up your local environment and begin developing for this project, refer to
 * Local site URL: http://local.my-project.com
 
 1. Clone the repository and check out the develop branch.
-2. Run a `composer install --prefer-source` answer yes to any questions during this step.
-3. Run `blt local:setup` and answer the questions to configure your database settings.
-4. If you would like a clean installation run `drush si su_humsci_profile -y`.
-5. A full sync from a site should be accomplished with `blt drupal:sync --sync-files --site=[sitename]`
-6. If you plan to use drupal console, and `drupal` produces an error, try the steps found on [this comment](https://github.com/hechoendrupal/drupal-console/issues/3302#issuecomment-306590885)
+1. Run a `composer install --prefer-source` answer yes to any questions during this step.
+1. Run `blt local:setup` and answer the questions to configure your database settings.
+1. Run `blt humsci:keys` to obtain necessary encryption keys.
+1. If you would like a clean installation run `drush si config_installer -y`.
+1. A full sync from a site should be accomplished with `blt drupal:sync --sync-files --site=[sitename]`
+1. If you plan to use drupal console, and `drupal` produces an error, try the steps found on [this comment](https://github.com/hechoendrupal/drupal-console/issues/3302#issuecomment-306590885)
+
+## Other documentation
+* [Change Log](docs/CHANGELOG.md)
+* [Code Deployment Process](docs/CodeDeploy.md)
+* [Configuration Management Information](docs/Config.md)
+* [Launch Processes](docs/Launch.md)
+* [SSL Certificate Information](docs/LetsEncrypt.md)
+* [SAML Information](docs/SimpleSAML.md)
+* [New Site](docs/NewSite.md)
 
 ## Resources
 

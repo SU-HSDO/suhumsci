@@ -5,6 +5,7 @@ namespace Drupal\hs_courses_importer\Form;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\ClientInterface;
@@ -25,11 +26,19 @@ class CourseImporter extends ConfigFormBase {
   protected $guzzle;
 
   /**
+   * Entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $guzzle) {
+  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $guzzle, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($config_factory);
     $this->guzzle = $guzzle;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -38,7 +47,8 @@ class CourseImporter extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('http_client')
+      $container->get('http_client'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -159,6 +169,13 @@ class CourseImporter extends ConfigFormBase {
 
     // Clear migration discovery cache after saving.
     Cache::invalidateTags(['migration_plugins']);
+
+    // Add permission to execute importer.
+    $role = $this->entityTypeManager->getStorage('user_role')->load('site_manager');
+    if ($role) {
+      $role->grantPermission('import hs_courses migration');
+      $role->save();
+    }
   }
 
 }

@@ -69,6 +69,7 @@ class HsMigratePermissions implements ContainerInjectionInterface {
     foreach ($this->migrations as $migration_id => $migration) {
       $permissions["import $migration_id migration"] = [
         'title' => $this->t('Execute Migration %label', ['%label' => $migration->label()]),
+        'description' => $this->t('Run importer on /import page'),
       ];
     }
 

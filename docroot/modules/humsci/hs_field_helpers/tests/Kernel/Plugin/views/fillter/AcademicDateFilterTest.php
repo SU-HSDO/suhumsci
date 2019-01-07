@@ -201,7 +201,7 @@ class AcademicDateFilterTest extends KernelTestBase {
     $display_filters = &$view->storage->getDisplay('default')['display_options']['filters'][$field_name];
     $display_filters['exception']['start_month'] = 12;
     $display_filters['exception']['start_day'] = 31;
-    $display_filters['exception']['end_month'] = date('n');
+    $display_filters['exception']['end_month'] = date('j', time() - 60 * 60 * 24) - 1;
     $display_filters['exception']['end_day'] = date('j', time() - 60 * 60 * 24) - 1;
     $view->execute();
     $this->assertEmpty($view->result);
@@ -243,10 +243,10 @@ class AcademicDateFilterTest extends KernelTestBase {
       'is_grouped' => FALSE,
       'exception' => [
         'exception' => TRUE,
-        'start_month' => (date('n') - 1 ?: 12),
-        'start_day' => 1,
-        'end_month' => date('n') + 1 > 12 ? 1 : date('n') + 1,
-        'end_day' => 25,
+        'start_month' => date('n', time() - 60 * 60 * 24),
+        'start_day' => date('j', time() - 60 * 60 * 24),
+        'end_month' => date('n', time() + 60 * 60 * 24),
+        'end_day' => date('j', time() + 60 * 60 * 24),
         'value' => 'now -5days',
         'min' => 'now -15days',
         'max' => 'now +45days',

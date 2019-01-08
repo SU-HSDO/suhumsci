@@ -76,8 +76,7 @@ class CourseImporter extends ConfigFormBase {
     $form['urls'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Course Feed URL'),
-      '#description' => $this->t('One url per line'),
-      '#required' => TRUE,
+      '#description' => $this->t('One url per line. Leave empty to disable the importer.'),
       '#default_value' => $config->get('urls') ? implode("\n", $config->get('urls')) : '',
     ];
 

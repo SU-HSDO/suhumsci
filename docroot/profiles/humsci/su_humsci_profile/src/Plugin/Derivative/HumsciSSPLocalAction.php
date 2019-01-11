@@ -44,6 +44,10 @@ class HumsciSSPLocalAction extends DeriverBase implements ContainerDeriverInterf
   public function getDerivativeDefinitions($base_definition) {
     $this->derivatives = [];
     if ($this->moduleHandler->moduleExists('stanford_ssp')) {
+
+      // Normally this would be in a yml file, but since its dependent on a
+      // module that we dont always want enabled, we'll add the local action
+      // link here.
       $this->derivatives['su_humsci_profile.add_user'] = [
         'route_name' => 'stanford_ssp.create_user',
         'title' => $this->t('Add SUNetID User'),

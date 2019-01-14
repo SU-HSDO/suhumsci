@@ -9,14 +9,35 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface CapxImporterInterface extends ConfigEntityInterface {
 
-  public function getWorkgroups();
+  /**
+   * @param bool $as_string
+   *
+   * @return array|string
+   */
+  public function getWorkgroups($as_string = FALSE);
 
-  public function getOrganizations();
+  /**
+   * @param bool $as_string
+   *
+   * @return array|string
+   */
+  public function getOrganizations($as_string = FALSE);
 
+  /**
+   * @return bool
+   */
   public function includeChildrenOrgs();
 
-  public function getCapxUrl();
+  /**
+   * @return array
+   */
+  public function getCapxUrls();
 
+  /**
+   * @param $field_name
+   *
+   * @return array
+   */
   public function getFieldTags($field_name);
 
 }

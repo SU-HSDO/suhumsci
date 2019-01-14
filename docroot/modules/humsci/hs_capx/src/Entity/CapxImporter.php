@@ -3,6 +3,7 @@
 namespace Drupal\hs_capx\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\hs_capx\Capx;
 
 /**
  * Defines the Capx importer entity.
@@ -65,15 +66,15 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOrganizations() {
-    return $this->organizations;
+  public function getOrganizations($as_string = FALSE) {
+    return $as_string ? implode(',', $this->organizations) : $this->organizations;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getWorkgroups() {
-    return $this->workgroups;
+  public function getWorkgroups($as_string = FALSE) {
+    return $as_string ? implode(',', $this->workgroups) : $this->workgroups;
   }
 
   /**
@@ -86,13 +87,24 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCapxUrl() {
-    return '';
+  public function getCapxUrls() {
+    $urls = [];
+    if ($organizations = $this->getOrganizations(TRUE)) {
+      $urls[] = Capx::getOrganizationUrl($organizations, $this->includeChildrenOrgs());
+    }
+    if ($workgroups = $this->getWorkgroups(TRUE)) {
+      $urls[] = Capx::getWorkgroupUrl($workgroups);
+    }
+    return $urls;
   }
+
   /**
    * {@inheritdoc}
    */
-  public function getFieldTags($field_name) {
+  public function getFieldTags($field_name = NULL) {
+    if (!$field_name) {
+      return $this->tagging;
+    }
     if (isset($this->tagging[$field_name])) {
       return $this->tagging[$field_name];
     }

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 
@@ -24,12 +25,15 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $configFactory;
 
   /**
-   * ConfigOverrides constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   Config factory service.
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  protected $entityTypeManager;
+
+  /**
+   * ConfigOverrides constructor.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
   }
 
@@ -63,6 +67,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         'urls' => $this->getCapxUrls(),
       ],
     ];
+    $overrides['migrate_plus.migration.hs_capx'] += $this->getFieldOverrides();
 
     // Image importer will have the same overrides.
     $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
@@ -75,20 +80,40 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *
    * @return array
    *   List of CAPx Urls.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getCapxUrls() {
     $urls = [];
-    $config = $this->configFactory->get('hs_capx.settings');
-    if ($organizations = $config->get('organizations')) {
-      $urls[] = Capx::getOrganizationUrl($organizations, $config->get('child_organizations'));
+    $importers = $this->entityTypeManager->getStorage('capx_importer')
+      ->loadMultiple();
+    /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
+    foreach ($importers as $importer) {
+      $urls = array_merge($urls, $importer->getCapxUrls());
     }
-    if ($workgroups = $config->get('workgroups')) {
-      $urls[] = Capx::getWorkgroupUrl($workgroups);
-    }
+    $urls = array_filter(array_unique($urls));
 
     // If no workgroups or organizations are configured, use a dummy url with no
     // data to prevent unwanted error messages.
     return $urls ?: ['http://ip.jsontest.com'];
+  }
+
+  protected function getFieldOverrides() {
+    $overrides = [];
+    $importers = $this->entityTypeManager->getStorage('capx_importer')
+      ->loadMultiple();
+    /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
+    foreach ($importers as $importer) {
+      foreach ($importer->getFieldTags() as $field_name => $tags) {
+        $overrides['process']["$field_name/target_id"] = [
+          [
+            'plugin' => 'capx_tagging',
+          ],
+        ];
+      }
+    }
+    return $overrides;
   }
 
   /**

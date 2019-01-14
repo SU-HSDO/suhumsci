@@ -48,7 +48,6 @@ class CapxImporterForm extends EntityForm {
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     $importer = $this->entity;
-    dpm($importer);
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -101,6 +100,7 @@ class CapxImporterForm extends EntityForm {
       '#type' => 'details',
       '#title' => $this->t('Tagging'),
       '#tree' => TRUE,
+      '#open' => !empty($this->entity->getFieldTags()),
     ];
     $fields = $this->entityFieldManager->getFieldDefinitions('node', 'hs_person');
     /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_storage */
@@ -136,11 +136,16 @@ class CapxImporterForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
-    $form_state->setValue('tagging', array_filter($form_state->getValue('tagging')));
-    parent::copyFormValuesToEntity($entity, $form, $form_state);
-    $entity->set('organizations', explode(',', $form_state->getValue('organizations')));
-    $entity->set('workgroups', explode(',', $form_state->getValue('workgroups')));
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+    $form_state->setValue('organizations', explode(',', $form_state->getValue('organizations')));
+    $form_state->setValue('workgroups', explode(',', $form_state->getValue('workgroups')));
+
+    $tagging = array_filter($form_state->getValue('tagging'));
+    foreach ($tagging as &$values) {
+      $values = array_values($values);
+    }
+    $form_state->setValue('tagging', $tagging);
   }
 
   /**

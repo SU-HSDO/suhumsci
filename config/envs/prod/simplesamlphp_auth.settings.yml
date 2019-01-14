@@ -1,33 +1,29 @@
 langcode: en
 default_langcode: en
-activate: false
+activate: true
 mail_attr: mail
-unique_id: eduPersonPrincipalName
-user_name: eduPersonPrincipalName
+unique_id: uid
+user_name: displayName
 auth_source: default-sp
-login_link_display_name: 'Federated login'
-header_no_cache: false
+login_link_display_name: 'SUNetID Login'
+header_no_cache: true
 role:
-  population: null
-  eval_every_time: false
+  population: 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices'
+  eval_every_time: 2
 register_users: true
 allow:
-  set_drupal_pwd: true
+  set_drupal_pwd: false
   default_login: true
-  default_login_roles:
-    authenticated: '0'
-    administrator: '0'
-    contributor: '0'
-    site_manager: '0'
-  default_login_users: '1,56,61'
-logout_goto_url: ''
-user_register_original: visitors
+  default_login_roles: {  }
+  default_login_users: '1'
+logout_goto_url: null
+user_register_original: admin_only
 sync:
   mail: true
   user_name: true
-autoenablesaml: false
+autoenablesaml: true
 debug: false
-secure: false
+secure: true
 httponly: false
 _core:
   default_config_hash: BuLah1nwoT5oUjn6XIuKnXkjcvdt5tDIGQ6gAflOY0s

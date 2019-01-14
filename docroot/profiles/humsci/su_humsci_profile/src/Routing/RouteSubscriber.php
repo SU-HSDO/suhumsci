@@ -48,6 +48,10 @@ class RouteSubscriber extends RouteSubscriberBase {
     }
 
     $collection->get('entity.user.collection')->setDefault('_title', 'Users');
+
+    if ($route = $collection->get('stanford_ssp.create_user')) {
+      $route->setRequirement('_permission', 'add saml user');
+    }
   }
 
 }

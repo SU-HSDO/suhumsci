@@ -60,7 +60,7 @@ $config = array(
      * - 'temdir': Saving temporary files. SimpleSAMLphp will attempt to create
      *   this directory if it doesn't exist.
      * When specified as a relative path, this is relative to the SimpleSAMLphp
-     * root directory. 
+     * root directory.
      */
     'certdir' => 'cert/',
     'loggingdir' => 'log/',
@@ -1040,3 +1040,7 @@ $config = array(
     'store.redis.prefix' => 'SimpleSAMLphp',
 );
 include 'acquia_config.php';
+
+if (!getenv('AH_SITE_ENVIRONMENT') && file_exists(__DIR__ .'/local.config.php')) {
+  include 'local.config.php';
+}

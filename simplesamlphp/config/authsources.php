@@ -405,3 +405,7 @@ $config = [
   */
 
 ];
+
+if (!getenv('AH_SITE_ENVIRONMENT') && file_exists(__DIR__ . '/local.authsources.php')) {
+  include 'local.authsources.php';
+}

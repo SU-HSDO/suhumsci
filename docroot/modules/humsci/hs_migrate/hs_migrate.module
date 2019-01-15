@@ -41,14 +41,14 @@ function hs_migrate_migrate_process_info_alter(array &$definitions) {
 /**
  * Implements hook_migrate_source_info_alter().
  */
-function hs_migrate_migrate_source_info_alter(array &$definitions){
+function hs_migrate_migrate_source_info_alter(array &$definitions) {
   $definitions['url']['class'] = '\Drupal\hs_migrate\Plugin\migrate\source\HsUrl';
 }
 
 /**
- * Implements hook_data_parser_info_alter
+ * Implements hook_data_parser_info_alter().
  */
-function hs_migrate_data_parser_info_alter(array &$definitions){
+function hs_migrate_data_parser_info_alter(array &$definitions) {
   $definitions['json']['class'] = '\Drupal\hs_migrate\Plugin\migrate_plus\data_parser\HsJson';
   $definitions['simple_xml']['class'] = '\Drupal\hs_migrate\Plugin\migrate_plus\data_parser\HsSimpleXml';
 }

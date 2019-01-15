@@ -10,6 +10,7 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * CapX Specific process plugin to populate taxonomy term fields during import.
  *
  * @MigrateProcessPlugin(
  *   id = "capx_tagging",

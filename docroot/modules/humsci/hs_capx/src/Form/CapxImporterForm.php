@@ -5,7 +5,6 @@ namespace Drupal\hs_capx\Form;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -18,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CapxImporterForm extends EntityForm {
 
   /**
+   * Entity field manager service.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
@@ -95,6 +96,17 @@ class CapxImporterForm extends EntityForm {
     return $form;
   }
 
+  /**
+   * Build the portion of the importer form for field tagging input.
+   *
+   * @param array $form
+   *   Complete form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Current Form State.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
   protected function buildTaggingForm(array &$form, FormStateInterface $form_state) {
     $form['tagging'] = [
       '#type' => 'details',
@@ -142,7 +154,7 @@ class CapxImporterForm extends EntityForm {
 
     $tagging = array_filter($form_state->getValue('tagging'));
     foreach ($tagging as &$values) {
-      if(is_string($values)){
+      if (is_string($values)) {
         $values = [$values];
       }
       $values = array_values($values);

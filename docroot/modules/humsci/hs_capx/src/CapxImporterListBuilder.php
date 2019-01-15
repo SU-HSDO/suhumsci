@@ -4,6 +4,7 @@ namespace Drupal\hs_capx;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\hs_capx\Entity\CapxImporter;
 
 /**
  * Provides a listing of Capx importer entities.
@@ -15,7 +16,8 @@ class CapxImporterListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Capx importer');
-    $header['id'] = $this->t('Machine name');
+    $header['organization'] = $this->t('Organizations');
+    $header['workgroups'] = $this->t('Workgroups');
     return $header + parent::buildHeader();
   }
 
@@ -24,8 +26,8 @@ class CapxImporterListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
-    $row['id'] = $entity->id();
-    // You probably want a few more properties here...
+    $row['organization'] = $entity->getOrganizations(TRUE);
+    $row['workgroups'] = $entity->getWorkgroups(TRUE);
     return $row + parent::buildRow($entity);
   }
 

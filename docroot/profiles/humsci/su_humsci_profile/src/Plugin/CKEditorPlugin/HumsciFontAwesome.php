@@ -2,31 +2,64 @@
 
 namespace Drupal\su_humsci_profile\Plugin\CKEditorPlugin;
 
-use Drupal\fontawesome\Plugin\CKEditorPlugin\DrupalFontAwesome;
+use Drupal\ckeditor\CKEditorPluginContextualInterface;
+use Drupal\Core\Plugin\PluginBase;
+use Drupal\editor\Entity\Editor;
 
 /**
- * Extend and override the font awesome plugin to change the paths to the js.
+ * Defines the "drupalfontawesome" plugin.
  *
- * This allows us to change the CKEditor images. It is the only way to do so.
- *
- * @package Drupal\su_humsci_profile\Plugin\CKEditorPlugin
+ * @CKEditorPlugin(
+ *   id = "humscifontawesome",
+ *   label = @Translation("Drupal Font Awesome"),
+ *   module = "fontawesome"
+ * )
  */
-class HumsciFontAwesome extends DrupalFontAwesome {
+class HumsciFontAwesome extends PluginBase implements CKEditorPluginContextualInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function getFile() {
-    return drupal_get_path('profile', 'su_humsci_profile') . '/js/plugins/drupalfontawesome/plugin.js';
+  public function getDependencies(Editor $editor) {
+    return ['drupalfontawesome'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getButtons() {
-    $buttons = parent::getButtons();
-    $buttons['DrupalFontAwesome']['image'] = drupal_get_path('profile', 'su_humsci_profile') . '/js/plugins/drupalfontawesome/icons/drupalfontawesome.png';
-    return $buttons;
+  public function isInternal() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFile() {
+    return drupal_get_path('profile', 'su_humsci_profile') . '/js/plugin/humscifontawesome.js';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibraries(Editor $editor) {
+    return ['core/jquery'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfig(Editor $editor) {
+    global $base_path;
+    return [
+      'humsciFontAwesome' => $base_path . drupal_get_path('profile', 'su_humsci_profile') . '/img/icons/humscifontawesome.png',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEnabled(Editor $editor) {
+    return TRUE;
   }
 
 }

@@ -17,15 +17,6 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
- * Implements hook_ckeditor_plugin_info_alter().
- */
-function su_humsci_profile_ckeditor_plugin_info_alter(array &$definitions) {
-  if (isset($definitions['drupalfontawesome'])) {
-    $definitions['drupalfontawesome']['class'] = 'Drupal\su_humsci_profile\Plugin\CKEditorPlugin\HumsciFontAwesome';
-  }
-}
-
-/**
  * Implements hook_install_tasks_alter().
  */
 function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {

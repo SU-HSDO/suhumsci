@@ -72,7 +72,7 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
   /**
    * Include the child organizations.
    *
-   * @var boole
+   * @var bool
    */
   protected $childOrganizations;
 

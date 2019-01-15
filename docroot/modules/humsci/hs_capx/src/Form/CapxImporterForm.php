@@ -70,7 +70,7 @@ class CapxImporterForm extends EntityForm {
     $form['organizations'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Organizations'),
-      '#default_value' => implode(',', $importer->getOrganizations()),
+      '#default_value' => $importer->getOrganizations(TRUE),
       '#autocomplete_route_name' => 'hs_capx.org_autocomplete',
     ];
 
@@ -88,11 +88,10 @@ class CapxImporterForm extends EntityForm {
       '#title' => $this->t('Workgroup'),
       '#description' => $this->t('Enter the name(s) of the workgroup(s) you wish to import. Enter multiple organizations by separating them with a comma ",".<br>
         You can learn more about workgroups at Stanford, and get propernames for import, at the @workgroup.', ['@workgroup' => $workgroup_link->toString()]),
-      '#default_value' => implode(',', $importer->getWorkgroups()),
+      '#default_value' => $importer->getWorkgroups(TRUE),
     ];
 
     $this->buildTaggingForm($form, $form_state);
-
     return $form;
   }
 

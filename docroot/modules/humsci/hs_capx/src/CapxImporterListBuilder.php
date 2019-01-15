@@ -4,7 +4,6 @@ namespace Drupal\hs_capx;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\hs_capx\Entity\CapxImporter;
 
 /**
  * Provides a listing of Capx importer entities.

@@ -67,11 +67,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         'urls' => $this->getCapxUrls(),
       ],
     ];
-    $overrides['migrate_plus.migration.hs_capx'] += $this->getFieldOverrides();
 
     // Image importer will have the same overrides.
     $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
-
+    // Add tagging for profiles.
+    $overrides['migrate_plus.migration.hs_capx'] += $this->getFieldOverrides();
     return $overrides;
   }
 

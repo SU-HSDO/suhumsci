@@ -86,6 +86,9 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   protected function getCapxUrls() {
     $urls = [];
+    if (!$this->entityTypeManager->hasDefinition('capx_importer')) {
+      return $urls;
+    }
     $importers = $this->entityTypeManager->getStorage('capx_importer')
       ->loadMultiple();
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
@@ -101,6 +104,10 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
   protected function getFieldOverrides() {
     $overrides = [];
+    if (!$this->entityTypeManager->hasDefinition('capx_importer')) {
+      return $overrides;
+    }
+
     $importers = $this->entityTypeManager->getStorage('capx_importer')
       ->loadMultiple();
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */

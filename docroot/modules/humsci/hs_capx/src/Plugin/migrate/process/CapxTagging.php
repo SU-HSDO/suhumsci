@@ -12,7 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  *
  * @MigrateProcessPlugin(
- *   id = "capx_tagging"
+ *   id = "capx_tagging",
+ *   handle_multiples = TRUE
  * )
  */
 class CapxTagging extends ProcessPluginBase implements ContainerFactoryPluginInterface {
@@ -57,10 +58,17 @@ class CapxTagging extends ProcessPluginBase implements ContainerFactoryPluginInt
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($importers as $importer) {
       if (in_array($url, $importer->getCapxUrls())) {
-        return $this->entityTypeManager->getStorage('taxonomy_term')->loadMultiple($importer->getFieldTags($field_name));
+        return $importer->getFieldTags($field_name);
       }
     }
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function multiple() {
+    return TRUE;
   }
 
 }

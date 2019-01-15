@@ -106,7 +106,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($importers as $importer) {
       foreach ($importer->getFieldTags() as $field_name => $tags) {
-        $overrides['process']["$field_name/target_id"] = [
+        $overrides['process'][$field_name] = [
           [
             'plugin' => 'capx_tagging',
           ],

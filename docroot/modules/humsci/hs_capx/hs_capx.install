@@ -5,6 +5,8 @@
  * hs_capx.install
  */
 
+use Drupal\hs_capx\Entity\CapxImporter;
+
 /**
  * Implements hook_schema().
  */
@@ -57,6 +59,21 @@ function hs_capx_schema() {
 /**
  * Create config entities from old configuration.
  */
-function hs_capx_update_8001(){
+function hs_capx_update_8001() {
+  drupal_flush_all_caches();
 
+  $capx_settings = \Drupal::configFactory()->getEditable('hs_capx.settings');
+  $orgs = $capx_settings->get('organizations');
+  $workgroups = $capx_settings->get('workgroups');
+  if ($orgs || $workgroups) {
+    $importer = CapxImporter::create([
+      'id' => 'custm_capx_importer',
+      'label' => 'CapX Importer',
+      'workgroups' => explode(',', $workgroups),
+      'childOrganizations' => $capx_settings->get('child_organizations'),
+      'organizations' => explode(',', $orgs),
+    ]);
+    $importer->save();
+  }
+  $capx_settings->save();
 }

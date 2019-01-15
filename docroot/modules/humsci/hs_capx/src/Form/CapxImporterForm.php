@@ -121,15 +121,14 @@ class CapxImporterForm extends EntityForm {
           $terms[$term->tid] = $term->name;
         }
       }
-
       $form['tagging'][$field->getName()] = [
         '#type' => 'select',
         '#title' => $field->getLabel(),
         '#options' => $terms,
-        '#multiple' => TRUE,
+        '#multiple' => $field_storage->getCardinality() == -1,
         '#default_value' => $this->entity->getFieldTags($field->getName()),
+        '#empty_option' => $this->t('- None -'),
       ];
-
     }
   }
 
@@ -143,6 +142,9 @@ class CapxImporterForm extends EntityForm {
 
     $tagging = array_filter($form_state->getValue('tagging'));
     foreach ($tagging as &$values) {
+      if(is_string($values)){
+        $values = [$values];
+      }
       $values = array_values($values);
     }
     $form_state->setValue('tagging', $tagging);

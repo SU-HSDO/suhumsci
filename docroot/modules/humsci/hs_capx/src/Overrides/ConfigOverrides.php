@@ -7,7 +7,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 
 /**
@@ -25,22 +24,37 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $configFactory;
 
   /**
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * Array of available Capx Importers.
+   *
+   * @var \Drupal\hs_capx\Entity\CapxImporter[]
    */
-  protected $entityTypeManager;
+  protected $importers = [];
 
   /**
    * ConfigOverrides constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity type manager service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory service.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
-    $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
+
+    if ($entity_type_manager->hasDefinition('capx_importer')) {
+      $this->importers = $entity_type_manager->getStorage('capx_importer')
+        ->loadMultiple();
+    }
   }
 
   /**
    * {@inheritdoc}
    *
-   * Override the path to the key for the encryption profile.
+   * Override the CapX importer urls, add oauth credentials, and add field
+   * tagging overrides to the importer.
    */
   public function loadOverrides($names) {
     $overrides = [];
@@ -70,6 +84,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
     // Image importer will have the same overrides.
     $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
+
     // Add tagging for profiles.
     $overrides['migrate_plus.migration.hs_capx'] += $this->getFieldOverrides();
     return $overrides;
@@ -80,19 +95,12 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *
    * @return array
    *   List of CAPx Urls.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getCapxUrls() {
     $urls = [];
-    if (!$this->entityTypeManager->hasDefinition('capx_importer')) {
-      return $urls;
-    }
-    $importers = $this->entityTypeManager->getStorage('capx_importer')
-      ->loadMultiple();
+
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-    foreach ($importers as $importer) {
+    foreach ($this->importers as $importer) {
       $urls = array_merge($urls, $importer->getCapxUrls());
     }
     $urls = array_filter(array_unique($urls));
@@ -102,16 +110,17 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     return $urls ?: ['http://ip.jsontest.com'];
   }
 
+  /**
+   * Get any field tagging overrides for all importers.
+   *
+   * @return array
+   *   Keyed array of importer overrides.
+   */
   protected function getFieldOverrides() {
     $overrides = [];
-    if (!$this->entityTypeManager->hasDefinition('capx_importer')) {
-      return $overrides;
-    }
 
-    $importers = $this->entityTypeManager->getStorage('capx_importer')
-      ->loadMultiple();
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-    foreach ($importers as $importer) {
+    foreach ($this->importers as $importer) {
       foreach ($importer->getFieldTags() as $field_name => $tags) {
         $overrides['process'][$field_name] = [
           [

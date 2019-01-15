@@ -55,12 +55,32 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
    */
   protected $label;
 
+  /**
+   * Array of organization strings.
+   *
+   * @var array
+   */
   protected $organizations = [];
 
+  /**
+   * Array of workgroup strings.
+   *
+   * @var array
+   */
   protected $workgroups = [];
 
+  /**
+   * Include the child organizations.
+   *
+   * @var boolean
+   */
   protected $childOrganizations;
 
+  /**
+   * Keyed array of field tagging data.
+   *
+   * @var array
+   */
   protected $tagging = [];
 
   /**

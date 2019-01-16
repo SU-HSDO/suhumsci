@@ -1,5 +1,21 @@
 # HumSci
 
+8.0.15
+--------------------------------------------------------------------------------  
+_Release Date: 2019-01-09_
+
+* HSD8-268 Migrate improter ui for site managers to execute.
+* HSD8-477 Set initial ECK permissions on ECK type creation to allow public viewing
+* HSD8-497 Delete old node revisions on cron run
+* HSD8-513 added color background option to text area paragraph
+* HSD8-532 Allow unlimited event videos
+* HSD8-501 fix image captions for mobile
+* HSD8-359 Configure shild module for dev and test
+* HSD8-529 audio embeding with stanford_media
+* HSD8-385 customize shortcuts with shortcut menu module
+* HSD8-463 Decode local urls before saving
+* Allow removal of course importer url
+
 8.0.14
 --------------------------------------------------------------------------------  
 _Release Date: 2018-11-29_

@@ -88,10 +88,13 @@ class CourseImporter extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
-    $urls = trim($form_state->getValue('urls'));
+    $urls = explode("\n", trim($form_state->getValue('urls')));
 
-    foreach (explode("\n", $urls) as $url) {
+    foreach ($urls as &$url) {
       $url = trim($url);
+      if (strpos($url, 'view=xml') === FALSE) {
+        $url .= '&view=xml-20140630';
+      }
       if (!UrlHelper::isValid($url, TRUE)) {
         $form_state->setError($form['urls'], $this->t('Invalid URL Format url: %url', ['%url' => $url]));
         return;
@@ -105,6 +108,7 @@ class CourseImporter extends ConfigFormBase {
         $this->validateIsXmlUrl($url, $form, $form_state);
       }
     }
+    $form_state->setValue('urls', implode("\n", $urls));
   }
 
   /**
@@ -140,14 +144,12 @@ class CourseImporter extends ConfigFormBase {
     /** @var \GuzzleHttp\Psr7\Response $response */
     $response = $this->guzzle->request('GET', $url);
     $content_type = $response->getHeader('Content-Type');
-    if (empty($content_type)) {
-      $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));
-    }
     foreach ($content_type as $type) {
-      if (strpos($type, 'xml') === FALSE) {
-        $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));
+      if (strpos($type, 'xml') !== FALSE) {
+        return;
       }
     }
+    $form_state->setError($form['urls'], $this->t('URL Must be an XML feed. %url', ['%url' => $url]));
   }
 
   /**
@@ -170,7 +172,8 @@ class CourseImporter extends ConfigFormBase {
     Cache::invalidateTags(['migration_plugins']);
 
     // Add permission to execute importer.
-    $role = $this->entityTypeManager->getStorage('user_role')->load('site_manager');
+    $role = $this->entityTypeManager->getStorage('user_role')
+      ->load('site_manager');
     if ($role) {
       $role->grantPermission('import hs_courses migration');
       $role->save();

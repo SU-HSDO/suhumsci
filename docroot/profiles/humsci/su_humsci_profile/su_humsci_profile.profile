@@ -17,6 +17,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_menu_link_content_menu_link_content_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['link']['widget'][0]['uri']['#description']['#items'][] = t('Enter "@text" for a menu item that is not clickable.', ['@text' => 'route:<nolink>']);
+}
+
+/**
  * Implements hook_install_tasks_alter().
  */
 function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {

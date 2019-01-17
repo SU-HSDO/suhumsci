@@ -52,7 +52,7 @@ class CourseImporterTest extends HsCoursesImporterTestBase implements ServiceMod
       ->willReturn(new Response());
     $client->request(Argument::is('GET'), Argument::is('http://google.com'))
       ->willReturn(new Response());
-    $client->request(Argument::is('GET'), Argument::is('http://explorecourses.stanford.edu/search'))
+    $client->request(Argument::is('GET'), Argument::is('http://explorecourses.stanford.edu/search&view=xml-20140630'))
       ->willReturn(new Response(200, ['Content-Type' => 'text/html']));
     $client->request(Argument::is('GET'), Argument::is($this->validUrl))
       ->willReturn(new Response(200, ['Content-Type' => 'text/xml']));

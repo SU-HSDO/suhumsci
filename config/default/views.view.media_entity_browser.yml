@@ -419,15 +419,19 @@ display:
         - url.query_args
         - user.permissions
       tags:
+        - 'config:core.entity_view_display.media.audio.default'
+        - extensions
+        - 'config:core.entity_view_display.media.audio.full'
+        - extensions
         - 'config:core.entity_view_display.media.file.default'
-        - extensions
-        - 'config:core.entity_view_display.media.image.default'
-        - extensions
-        - 'config:core.entity_view_display.media.image.thumbnail'
         - extensions
         - 'config:core.entity_view_display.media.video.default'
         - extensions
         - 'config:core.entity_view_display.media.video.full'
+        - extensions
+        - 'config:core.entity_view_display.media.image.default'
+        - extensions
+        - 'config:core.entity_view_display.media.image.thumbnail'
         - extensions
   file_browser:
     display_plugin: entity_browser
@@ -555,6 +559,10 @@ display:
         - url.query_args
         - user.permissions
       tags:
+        - 'config:core.entity_view_display.media.audio.default'
+        - extensions
+        - 'config:core.entity_view_display.media.audio.full'
+        - extensions
         - 'config:core.entity_view_display.media.file.default'
         - extensions
         - 'config:core.entity_view_display.media.image.default'
@@ -691,6 +699,10 @@ display:
         - url.query_args
         - user.permissions
       tags:
+        - 'config:core.entity_view_display.media.audio.default'
+        - extensions
+        - 'config:core.entity_view_display.media.audio.full'
+        - extensions
         - 'config:core.entity_view_display.media.file.default'
         - extensions
         - 'config:core.entity_view_display.media.image.default'
@@ -725,6 +737,10 @@ display:
         - url.query_args
         - user.permissions
       tags:
+        - 'config:core.entity_view_display.media.audio.default'
+        - extensions
+        - 'config:core.entity_view_display.media.audio.full'
+        - extensions
         - 'config:core.entity_view_display.media.file.default'
         - extensions
         - 'config:core.entity_view_display.media.image.default'
@@ -799,7 +815,7 @@ display:
           table: entity_usage
           field: count
           relationship: media_to_usage_entity
-          group_type: group
+          group_type: count
           admin_label: ''
           label: Uses
           exclude: false
@@ -863,6 +879,7 @@ display:
         style: false
         row: false
         access: false
+        group_by: false
       arguments:
         mid:
           id: mid
@@ -977,6 +994,7 @@ display:
         type: perm
         options:
           perm: 'access media overview'
+      group_by: true
     cache_metadata:
       max-age: -1
       contexts:
@@ -1513,12 +1531,12 @@ display:
           entity_type: media
           entity_field: changed
           plugin_id: field
-        count:
-          id: count
+        source_id:
+          id: source_id
           table: entity_usage
-          field: count
+          field: source_id
           relationship: media_to_usage_entity
-          group_type: sum
+          group_type: count_distinct
           admin_label: ''
           label: 'Used In'
           exclude: false
@@ -1568,7 +1586,7 @@ display:
           format_plural: false
           format_plural_string: !!binary MQNAY291bnQ=
           prefix: ''
-          suffix: ' Places'
+          suffix: ''
           plugin_id: numeric
         operations:
           id: operations
@@ -1832,6 +1850,8 @@ display:
         - url.query_args
         - user.permissions
       tags:
+        - 'config:core.entity_view_display.media.audio.default'
+        - 'config:core.entity_view_display.media.audio.full'
         - 'config:core.entity_view_display.media.file.default'
         - 'config:core.entity_view_display.media.image.default'
         - 'config:core.entity_view_display.media.image.thumbnail'
@@ -1965,6 +1985,10 @@ display:
         - url.query_args
         - user.permissions
       tags:
+        - 'config:core.entity_view_display.media.audio.default'
+        - extensions
+        - 'config:core.entity_view_display.media.audio.full'
+        - extensions
         - 'config:core.entity_view_display.media.file.default'
         - extensions
         - 'config:core.entity_view_display.media.image.default'

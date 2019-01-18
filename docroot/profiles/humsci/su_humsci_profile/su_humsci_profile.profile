@@ -8,7 +8,6 @@
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Link;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
@@ -16,6 +15,13 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_menu_link_content_menu_link_content_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['link']['widget'][0]['uri']['#description']['#items'][] = t('Enter "@text" for a menu item that is not clickable.', ['@text' => 'route:<nolink>']);
+}
 
 /**
  * Implements hook_install_tasks_alter().
@@ -48,27 +54,6 @@ function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $e
   // attribute so all menu items are expanded by default.
   if ($entity->isNew()) {
     $entity->set('expanded', TRUE);
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (isset($form['simplesamlphp_auth_login_link'])) {
-    // Moves the original form elements into a collapsed group.
-    $form['simplesamlphp_auth_login_link']['#weight'] = -99;
-    $form['manual'] = [
-      '#type' => 'details',
-      '#title' => t('Manual Login'),
-      '#open' => FALSE,
-    ];
-    $form['manual']['name'] = $form['name'];
-    $form['manual']['pass'] = $form['pass'];
-    $form['manual']['actions'] = $form['actions'];
-    $form['manual']['actions']['reset'] = Link::createFromRoute(t('Reset Password'), 'user.pass')
-      ->toRenderable();
-    unset($form['name'], $form['pass'], $form['actions']);
   }
 }
 
@@ -107,6 +92,9 @@ function su_humsci_profile_form_user_admin_permissions_alter(array &$form, FormS
   /** @var \Drupal\user\PermissionHandler $permission_handler */
   $permission_handler = \Drupal::service('user.permissions');
   $roles = array_keys(Role::loadMultiple());
+  if (\Drupal::currentUser()->id() == 1) {
+    return;
+  }
 
   // Disables the UI from adding permissions that are potentially site breaking.
   // This might need adjustment if it becomes a problem. Permissions can still

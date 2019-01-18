@@ -9,6 +9,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Implements hook_install().
@@ -209,18 +210,16 @@ function stanford_mrc_update_8008() {
 /**
  * Fix menu block configurations.
  */
-function stanford_mrd_update_8009() {
+function stanford_mrc_update_8009() {
   /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-  foreach (\Drupal\Core\Entity\Entity\EntityViewDisplay::loadMultiple() as $display) {
-    if ($display->getTargetEntityTypeId() == 'node') {
-      if ($settings = $display->getThirdPartySetting('mrc_ds_blocks', 'menu_block:main')) {
-        $settings['config']['follow'] = 0;
-        $settings['config']['follow_parent'] = 'active';
-        $settings['config']['level'] = 2;
-        $settings['config']['expand'] = TRUE;
-        $display->setThirdPartySetting('mrc_ds_blocks', 'menu_block:main', $settings);
-        $display->save();
-      }
+  foreach (EntityViewDisplay::loadMultiple() as $display) {
+    if ($settings = $display->getThirdPartySetting('mrc_ds_blocks', 'menu_block:main')) {
+      $settings['config']['follow'] = 0;
+      $settings['config']['follow_parent'] = 'active';
+      $settings['config']['level'] = 2;
+      $settings['config']['expand'] = TRUE;
+      $display->setThirdPartySetting('mrc_ds_blocks', 'menu_block:main', $settings);
+      $display->save();
     }
   }
 }

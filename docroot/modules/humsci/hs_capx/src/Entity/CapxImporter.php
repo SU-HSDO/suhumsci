@@ -24,7 +24,7 @@ use Drupal\hs_capx\Capx;
  *     },
  *   },
  *   config_prefix = "capx_importer",
- *   admin_permission = "administer site configuration",
+ *   admin_permission = "administer capx settings",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

@@ -110,6 +110,7 @@ class CapxImporterForm extends EntityForm {
     $form['tagging'] = [
       '#type' => 'details',
       '#title' => $this->t('Tagging'),
+      '#description' => $this->t('Optionally, tag the content imported from CAP with the following terms on the given fields.'),
       '#tree' => TRUE,
       '#open' => !empty($this->entity->getFieldTags()),
     ];

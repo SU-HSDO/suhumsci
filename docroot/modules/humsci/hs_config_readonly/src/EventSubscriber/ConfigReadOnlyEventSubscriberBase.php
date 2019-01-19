@@ -16,7 +16,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  *
  * @package Drupal\hs_config_readonly\EventSubscriber
  */
-abstract class ConfigReadonlyEventSubscriberBase implements EventSubscriberInterface {
+abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInterface {
 
   use ConfigReadonlyWhitelistTrait;
 
@@ -42,6 +42,13 @@ abstract class ConfigReadonlyEventSubscriberBase implements EventSubscriberInter
   protected $entityTypeManager;
 
   /**
+   * Config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Ignore the configurations form these modules.
    *
    * @var array
@@ -56,6 +63,7 @@ abstract class ConfigReadonlyEventSubscriberBase implements EventSubscriberInter
   protected $readOnlyFormIds = [
     'config_single_import_form',
     'system_modules_uninstall',
+    'system_modules',
   ];
 
   /**
@@ -80,6 +88,7 @@ abstract class ConfigReadonlyEventSubscriberBase implements EventSubscriberInter
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;
     $this->bypassFormIds = $config->get('bypass_form_ids') ?: $this->bypassFormIds;
     $this->entityTypeManager = $entity_type_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**

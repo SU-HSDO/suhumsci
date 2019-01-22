@@ -1,0 +1,46 @@
+uuid: ac2d54ae-8255-4638-9e9d-1deafec38b33
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.media_entity_browser
+  module:
+    - stanford_media
+    - views
+name: hs_audio_browser
+label: 'Audio Browser'
+display: modal
+display_configuration:
+  width: ''
+  height: '650'
+  link_text: Continue
+  auto_open: false
+selection_display: multi_step_display
+selection_display_configuration:
+  entity_type: media
+  display: rendered_entity
+  display_settings:
+    view_mode: full
+  select_text: Continue
+  selection_hidden: false
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  c2c908ce-180e-4b8c-bc17-1f73052811ea:
+    settings:
+      submit_text: Add
+      form_mode: media_browser
+    uuid: c2c908ce-180e-4b8c-bc17-1f73052811ea
+    weight: -9
+    label: 'Add Audio'
+    id: embed_code
+  58a6a341-2bf3-473b-acff-d40a550f489b:
+    settings:
+      view: media_entity_browser
+      view_display: audio_browser
+      submit_text: Continue
+      auto_select: false
+    uuid: 58a6a341-2bf3-473b-acff-d40a550f489b
+    weight: -10
+    label: 'Media Library'
+    id: view

@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.hs_event.body
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
+    - field.field.node.hs_event.field_hs_event_audio
     - field.field.node.hs_event.field_hs_event_category
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
@@ -260,6 +261,30 @@ third_party_settings:
               context_mapping: {  }
             additional: {  }
             weight: 0
+          391de6ce-025b-4a71-bab8-48bd45acd06e:
+            uuid: 391de6ce-025b-4a71-bab8-48bd45acd06e
+            region: main_below
+            configuration:
+              id: 'field_block:node:hs_event:field_hs_event_audio'
+              label: Audio
+              provider: layout_builder
+              label_display: ''
+              formatter:
+                label: hidden
+                type: entity_reference_entity_view
+                settings:
+                  view_mode: full
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  ds:
+                    ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 3
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
 id: node.hs_event.default
@@ -267,6 +292,15 @@ targetEntityType: node
 bundle: hs_event
 mode: default
 content:
+  field_hs_event_audio:
+    type: entity_reference_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: main_above
   links:
     weight: 100
     region: content

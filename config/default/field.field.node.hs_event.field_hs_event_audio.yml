@@ -1,0 +1,28 @@
+uuid: 7fdd4c01-4ed5-4b26-a8be-2c8ca027e791
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_event_audio
+    - media.type.audio
+    - node.type.hs_event
+id: node.hs_event.field_hs_event_audio
+field_name: field_hs_event_audio
+entity_type: node
+bundle: hs_event
+label: 'Event Audio'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      audio: audio
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -75,5 +75,13 @@ function hs_capx_update_8001() {
     ]);
     $importer->save();
   }
+  $capx_settings->clear('organizations');
+  $capx_settings->clear('workgroups');
+  $capx_settings->clear('child_organizations');
   $capx_settings->save();
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $entity_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_definition = $entity_type_manager->getDefinition('capx_importer');
+  $entity_update_manager->installEntityType($entity_definition);
 }

@@ -283,3 +283,22 @@ function _su_humsci_profile_update_fix_menuposition_sections(array $sections) {
   }
   return $changed;
 }
+
+/**
+ * Uninstall material admin theme and theme switcher module.
+ */
+function su_humsci_profile_update_8012() {
+  \Drupal::configFactory()
+    ->getEditable('system.theme')
+    ->set('admin', 'seven')
+    ->save();
+
+  \Drupal::service('module_installer')->uninstall(['role_theme_switcher']);
+  \Drupal::service('theme_installer')->uninstall([
+    'material_admin',
+    'su_humsci_admin',
+  ]);
+  if ($role = Role::load('seven_admin_theme_user')) {
+    $role->delete();
+  }
+}

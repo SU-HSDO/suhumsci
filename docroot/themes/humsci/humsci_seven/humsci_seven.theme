@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * humsci_seven.theme
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function humsci_seven_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $bundle_info */
+  $bundle_info = \Drupal::service('entity_type.bundle.info');
+  $bundles = $bundle_info->getBundleInfo('node');
+
+  // Each node type has 2 different form ID's. One for creation and one for
+  // edits. We want to add the library to all node forms.
+  foreach (array_keys($bundles) as $bundle) {
+    if ($form_id == "node_{$bundle}_form" || $form_id == "node_{$bundle}_edit_form") {
+      $form['#attached']['library'][] = 'humsci_seven/node_form';
+      break;
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function humsci_seven_form_node_type_add_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['display']['display_submitted']['#default_value'] = FALSE;
+  $form['menu']['menu_options']['#default_value'] = NULL;
+  unset($form['workflow']['options']['#default_value']['promote']);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_seven_preprocess_page(&$variables) {
+  if (\Drupal::routeMatch()->getRouteName() == 'user.login') {
+    $variables['#attached']['library'][] = 'humsci_seven/login_portal';
+  }
+}

@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.hs_event.body
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
+    - field.field.node.hs_event.field_hs_event_audio
     - field.field.node.hs_event.field_hs_event_category
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
@@ -89,6 +90,7 @@ third_party_settings:
     group_post_event_details:
       children:
         - field_hs_event_video
+        - field_hs_event_audio
       parent_name: group_event_tabs
       weight: 6
       format_type: tab
@@ -153,6 +155,21 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_hs_event_audio:
+    weight: 25
+    settings:
+      entity_browser: hs_audio_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
+      field_widget_display_settings:
+        view_mode: default
+      field_widget_replace: false
+      open: false
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
   field_hs_event_category:
     type: entity_reference_autocomplete
     weight: 28

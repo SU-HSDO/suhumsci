@@ -7,12 +7,40 @@ hs_capx.settings:
     password:
       type: string
       label: Password
+
+hs_capx.capx_importer.*:
+  type: config_entity
+  label: 'Capx importer config'
+  mapping:
+    uuid:
+      type: string
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
     organizations:
-      type: string
-      label: "Organization Codes"
-    child_organizations:
+      type: sequence
+      label: 'Organizations'
+      sequence:
+        type: string
+        label: 'Organization'
+    childOrganizations:
       type: boolean
-      label: "Include Child Organizations"
+      label: 'Include Child Organizations'
     workgroups:
-      type: string
-      label: Workgroups
+      type: sequence
+      label: 'Workgroups'
+      sequence:
+        type: string
+        label: 'workgroup'
+    tagging:
+      type: sequence
+      label: 'Content Tagging'
+      sequence:
+        type: sequence
+        lable: 'Term Ids'
+        sequence:
+          type: integer
+          label: 'Term Id'

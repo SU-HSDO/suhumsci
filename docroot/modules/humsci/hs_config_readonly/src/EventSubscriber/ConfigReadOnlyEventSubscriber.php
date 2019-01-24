@@ -18,7 +18,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *
  * @package Drupal\hs_config_readonly\EventSubscriber
  */
-class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
+class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
 
   /**
    * Mark the event form as read only given config conditions.
@@ -175,6 +175,8 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
    *
    * @return bool
    *   If it can be edited.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   protected function configIsLocked($config) {
     $config = is_array($config) ? $config : [$config];
@@ -198,13 +200,39 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadonlyEventSubscriberBase {
 
     /** @var \Drupal\config_ignore\Plugin\ConfigFilter\IgnoreFilter $plugin */
     $plugin = $this->configFilterManager->createInstance('config_ignore');
-    foreach ($plugin->filterListAll('', []) as $ignored_config) {
+
+    $ignored_config = $plugin->filterListAll('', []);
+    $ignored_config = array_filter($ignored_config, [$this, 'isIgnoredConfig']);
+
+    foreach ($ignored_config as $ignored_config) {
       $pos = array_search($ignored_config, $configs);
       if ($pos !== FALSE) {
         unset($configs[$pos]);
       }
     }
     return $configs;
+  }
+
+  /**
+   * Find out if a provided config entity name should be ignored.
+   *
+   * @param string $config_name
+   *   Config name to
+   *
+   * @return bool
+   *   If the given config should be ignored.
+   */
+  protected function isIgnoredConfig($config_name) {
+    $ignored_config_settings = $this->configFactory->get('config_ignore.settings')
+      ->get('ignored_config_entities');
+    foreach ($ignored_config_settings as $config_ignore_setting) {
+      // Split the ignore settings so that we can ignore individual keys.
+      $ignore = explode(':', $config_ignore_setting);
+      if (count($ignore) > 1 && fnmatch($ignore[0], $config_name)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
   }
 
   /**

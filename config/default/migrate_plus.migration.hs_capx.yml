@@ -14,6 +14,8 @@ source:
     status: 1
     type: hs_person
     basic_html: basic_html
+    link_domain: 'https://profiles.stanford.edu'
+    link_text: 'Stanford Profile'
   urls: {  }
   item_selector: values
   fields:
@@ -74,6 +76,10 @@ source:
       label: 'Office Locations'
       selector: contacts
     -
+      name: profile_id
+      label: 'Profile ID'
+      selector: profileId
+    -
       name: etag
       label: 'CAP API Etag'
       selector: meta/etag
@@ -91,6 +97,18 @@ process:
   body/format: constants/basic_html
   field_hs_person_email: email
   field_hs_person_telephone: phone
+  field_hs_person_external_profile/uri:
+    -
+      plugin: skip_on_empty
+      source: profile_id
+      method: process
+    -
+      plugin: concat
+      delimiter: /
+      source:
+        - constants/link_domain
+        - profile_id
+  field_hs_person_external_profile/title: constants/link_text
   field_hs_person_image/target_id:
     -
       plugin: migration_lookup

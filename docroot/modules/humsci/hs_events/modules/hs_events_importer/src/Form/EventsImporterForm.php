@@ -101,13 +101,15 @@ class EventsImporterForm extends ConfigFormBase {
     }
 
     $parsed_url = parse_url($url);
-    if ($parsed_url['host'] != 'events.stanford.edu') {
-      $form_state->setError($form['urls'], $this->t('@url is not an events.stanford.edu url.', ['@url' => $url]));
+    if (strpos($parsed_url['host'], 'events.stanford.edu') === FALSE) {
+      $form_state->setError($form['urls'], $this->t('@url is not a stanford.edu url.', ['@url' => $url]));
     }
 
-    if (!isset($parsed_url['path']) || strpos($parsed_url['path'], 'xml') === FALSE) {
+    $url_headers = get_headers($url, 1);
+    if (!isset($url_headers['Content-Type']) || strpos($url_headers['Content-Type'], 'text/xml') === FALSE) {
       $form_state->setError($form['urls'], $this->t('@url is not an xml url.', ['@url' => $url]));
     }
+
   }
 
   /**

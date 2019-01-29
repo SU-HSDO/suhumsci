@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_field_helpers\Plugin\views\filter;
+namespace Drupal\hs_views_helper\Plugin\views\filter;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Form\FormStateInterface;
@@ -116,7 +116,7 @@ class AcademicDateFilter extends Date {
         '#states' => $states,
       ];
     }
-    $form['#attached']['library'][] = 'hs_field_helpers/date_exception';
+    $form['#attached']['library'][] = 'hs_field_helper/date_exception';
   }
 
   /**

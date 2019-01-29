@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_field_helpers\Plugin\views\query;
+namespace Drupal\hs_views_helper\Plugin\views\query;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Plugin\views\query\Sql as OriginalSql;
@@ -9,7 +9,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Adds extra functionality to views Sql to give greatest and least aggregation.
  *
- * @package Drupal\hs_field_helpers\Plugin\views\query
+ * @package Drupal\hs_views_helper\Plugin\views\query
  */
 class Sql extends OriginalSql {
 

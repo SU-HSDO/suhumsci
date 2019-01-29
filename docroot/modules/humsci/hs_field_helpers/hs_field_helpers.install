@@ -18,3 +18,10 @@ function hs_field_helpers_install() {
 function hs_field_helpers_update_8001() {
   \Drupal::service('module_installer')->install(['hs_migrate']);
 }
+
+/**
+ * Install hs_migrate module that now contains the migrate plugins and cron.
+ */
+function hs_field_helpers_update_8002() {
+  \Drupal::service('module_installer')->install(['hs_views_helper']);
+}

@@ -19,6 +19,12 @@ class HumsciMarkupNormalizer extends MarkupNormalizer {
    */
   protected $logger;
 
+  /**
+   * HumsciMarkupNormalizer constructor.
+   *
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   Logger factory service.
+   */
   public function __construct(LoggerChannelFactoryInterface $logger_factory) {
     $this->logger = $logger_factory->get('hs_views_helper');
   }

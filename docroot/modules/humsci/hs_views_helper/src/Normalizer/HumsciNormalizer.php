@@ -11,7 +11,7 @@ class HumsciNormalizer extends MarkupNormalizer {
   public function normalize($object, $format = NULL, array $context = []) {
     $normalized = parent::normalize($object, $format, $context);
     if (strpos($normalized, '<ul') !== FALSE) {
-      $normalized = json_encode(['first' => 'first line', '2' => 'second line']);
+//      $normalized = json_encode(['first' => 'first line', '2' => 'second line']);
     }
     return $normalized;
   }

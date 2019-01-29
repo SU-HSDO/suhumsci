@@ -33,12 +33,24 @@ class HumsciSerializer extends Serializer {
     $form['root_tag'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Root Tag'),
+      '#description' => $this->t('Customize the root name in an XML document. Leave empty for default name.'),
       '#default_value' => $this->options['root_tag'],
+      '#states' => [
+        'visible' => [
+          ':input[name="style_options[formats][xml]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
     $form['item_tag'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Item Tag'),
+      '#description' => $this->t('Customize the item name in an XML document. Leave empty for default name.'),
       '#default_value' => $this->options['item_tag'],
+      '#states' => [
+        'visible' => [
+          ':input[name="style_options[formats][xml]"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
   }
 
@@ -49,13 +61,14 @@ class HumsciSerializer extends Serializer {
    * and context to set tag names.
    */
   public function render() {
-
+    $preview = FALSE;
     // Get the content type configured in the display or fallback to the
     // default.
     if ((empty($this->view->live_preview))) {
       $content_type = $this->displayHandler->getContentType();
     }
     else {
+      $preview = TRUE;
       $content_type = !empty($this->options['formats']) ? reset($this->options['formats']) : 'json';
     }
 
@@ -81,6 +94,11 @@ class HumsciSerializer extends Serializer {
     $context = ['views_style_plugin' => $this];
     if ($root_tag = $this->options['root_tag']) {
       $context['xml_root_node_name'] = $this->options['root_tag'];
+    }
+
+    // For easier changes in views UI, lets format the xml output.
+    if ($preview) {
+      $context['xml_format_output'] = 'formatOutput';
     }
 
     $data = $this->options['item_tag'] ? [$this->options['item_tag'] => $rows] : $rows;

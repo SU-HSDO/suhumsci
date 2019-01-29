@@ -116,7 +116,7 @@ class AcademicDateFilter extends Date {
         '#states' => $states,
       ];
     }
-    $form['#attached']['library'][] = 'hs_field_helper/date_exception';
+    $form['#attached']['library'][] = 'hs_field_helpers/date_exception';
   }
 
   /**

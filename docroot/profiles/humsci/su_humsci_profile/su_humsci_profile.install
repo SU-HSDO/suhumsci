@@ -291,8 +291,7 @@ function _su_humsci_profile_update_fix_menuposition_sections(array $sections) {
 function su_humsci_profile_update_8012() {
   $config_factory = \Drupal::configFactory();
 
-  // Delete the old block configurations for the admin theme so that when the
-  // new theme is enabled, the UUIDs will still work and be the same.
+  // Get all the humsci admin theme block names.
   $query = \Drupal::database()
     ->select('config', 'c')
     ->fields('c', ['name'])

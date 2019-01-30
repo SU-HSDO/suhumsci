@@ -1,5 +1,21 @@
 # HumSci
 
+8.0.16
+--------------------------------------------------------------------------------  
+_Release Date: 2019-01-24_
+
+* HSD8-351 Allow courses importer urls to be catalog url
+* HSD8-249 added help text for no link menu items
+* HSD8-309 Ignore revisions for used in count on media list
+* HSD8-530 CAPx workgroup tagging for taxonomy fields
+* HSD8-561 CAPx external link mapping to content
+* HSD8-569 Audio media field in events post event area
+* HSD8-560 Fixed error reports about entity type not installed
+* Fixed max file size limits
+* HSD8-551 anchor and email links and better link widget for wysiwyg
+* HSD8-540 Added granular permission and link to add sunetid user
+* Added stanford_ssp module
+
 8.0.15
 --------------------------------------------------------------------------------  
 _Release Date: 2019-01-09_

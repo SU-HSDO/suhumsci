@@ -9,10 +9,10 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Class TestCloneNode
+ * Class TestCloneNode.
  *
  * @coversDefaultClass \Drupal\hs_actions\Plugin\Action\CloneNode
- * @group hs_courses_importer
+ * @group hs_actions
  */
 class CloneNodeTest extends KernelTestBase {
 

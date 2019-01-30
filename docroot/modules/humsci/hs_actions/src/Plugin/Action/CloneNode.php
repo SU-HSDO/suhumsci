@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\su_humsci_profile\Plugin\Action;
+namespace Drupal\hs_actions\Plugin\Action;
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
 
 /**
  * Clones a node.
@@ -16,7 +16,7 @@ use Drupal\Core\Session\AccountInterface;
  *   type = "node"
  * )
  */
-class CloneNode extends ConfigurableActionBase {
+class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInterface {
 
   /**
    * {@inheritdoc}
@@ -31,11 +31,13 @@ class CloneNode extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $values = range(1, 10);
     $form['clone_count'] = [
       '#type' => 'select',
       '#title' => $this->t('Clone how many times'),
-      '#options' => range(1, 10),
+      '#options' => array_combine($values, $values),
     ];
+
     return $form;
   }
 
@@ -61,7 +63,10 @@ class CloneNode extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    /** @var \Drupal\node\NodeInterface $entity */
+    for ($i = 0; $i < $this->configuration['clone_count']; $i++) {
+      $duplicate = $entity->createDuplicate();
+      $duplicate->save();
+    }
   }
 
 }

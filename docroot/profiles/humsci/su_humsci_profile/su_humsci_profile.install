@@ -14,6 +14,7 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
+use Drupal\block\Entity\Block;
 
 /**
  * Implements hook_install().
@@ -315,4 +316,14 @@ function su_humsci_profile_update_8012() {
   if ($role = Role::load('seven_admin_theme_user')) {
     $role->delete();
   }
+
+  $block = Block::load('su_humsci_admin_breadcrumbs');
+  $visibility = [
+    'id' => 'request_path',
+    'pages' => '/user/login',
+    'negate' => TRUE,
+    'context_mapping' => [],
+  ];
+  $block->setVisibilityConfig('request_path', $visibility);
+  $block->save();
 }

@@ -107,8 +107,6 @@ function hs_migrate_cron() {
  * @param array $options
  *   Array of options to pass into the migration import.
  *
- * @throws \Drupal\migrate\MigrateException
- *
  * @see \Drupal\migrate_tools\Commands\MigrateToolsCommands::executeMigration()
  */
 function hs_migrate_execute_migration(MigrationInterface $migration, $migration_id, array $options = []) {
@@ -135,10 +133,19 @@ function hs_migrate_execute_migration(MigrationInterface $migration, $migration_
   }
 
   // Finally run this migration.
-  $log = new MigrateMessage();
-  $executable = new MigrateExecutable($migration, $log, $options);
-  $executable->import();
-  $executed_migrations[$migration_id] = $migration_id;
+  try {
+    $log = new MigrateMessage();
+    $executable = new MigrateExecutable($migration, $log, $options);
+    $executable->import();
+    $executed_migrations[$migration_id] = $migration_id;
+  }
+  catch (Exception $e) {
+    \Drupal::logger('hs_migrate')
+      ->critical('Unable to execute importer @id: @message', [
+        '@id' => $migration_id,
+        '@message' => $e->getMessage(),
+      ]);
+  }
 }
 
 /**

@@ -65,7 +65,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
    */
   public function defaultConfiguration() {
     return [
-      'clone_count' => 0,
+      'clone_count' => 1,
     ];
   }
 
@@ -96,7 +96,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\node\NodeInterface $object */
     $result = $object->access('update', $account, TRUE)
-      ->andIf($object->getOwner()->access('edit', $account, TRUE));
+      ->andIf($object->access('create', $account, TRUE));
 
     return $return_as_object ? $result : $result->isAllowed();
   }
@@ -105,6 +105,10 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
+    if (!isset($this->configuration['clone_count'])) {
+      $this->configuration['clone_count'] = 1;
+    }
+
     for ($i = 0; $i < $this->configuration['clone_count']; $i++) {
       $duplicate_node = $this->duplicateEntity($entity);
       $duplicate_node->save();

@@ -144,9 +144,9 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
    * Get fields that need to have their referenced entities cloned.
    *
    * @param string $entity_type_id
-   *   The entity type ID. Only entity types that implement.
+   *   The entity type ID.
    * @param string $bundle
-   *   The bundle.
+   *   The entity bundle.
    *
    * @return \Drupal\field\Entity\FieldConfig[]
    *   Array of fields that need cloned values.
@@ -165,7 +165,10 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
 
     $clone_target_types[] = 'paragraph';
 
-    // Filter out fields that we dont care about.
+    // Filter out fields that we dont care about. We only need entity reference
+    // fields that are not base fields. Also we only want entity reference
+    // fields that target specific entity types as defined above that require
+    // cloning..
     $reference_fields = array_filter($fields, function ($field) use ($clone_target_types) {
       $target_entity_id = $field->getFieldStorageDefinition()
         ->getSetting('target_type');

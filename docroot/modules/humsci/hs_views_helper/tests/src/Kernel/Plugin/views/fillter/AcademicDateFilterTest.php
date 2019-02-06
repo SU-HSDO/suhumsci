@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\hs_field_helpers\Kernel\Plugin\views\filter;
+namespace Drupal\Tests\hs_views_helper\Kernel\Plugin\views\filter;
 
 use Drupal\Core\Form\FormState;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\hs_field_helpers\Plugin\views\filter\AcademicDateFilter;
+use Drupal\hs_views_helper\Plugin\views\filter\AcademicDateFilter;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -14,8 +14,8 @@ use Drupal\views\Views;
 /**
  * Class AcademicDateFilterTest.
  *
- * @coversDefaultClass \Drupal\hs_field_helpers\Plugin\views\filter\AcademicDateFilter
- * @group hs_field_helpers
+ * @coversDefaultClass \Drupal\hs_views_helper\Plugin\views\filter\AcademicDateFilter
+ * @group hs_views_helper
  */
 class AcademicDateFilterTest extends KernelTestBase {
 
@@ -37,7 +37,7 @@ class AcademicDateFilterTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'hs_field_helpers',
+    'hs_views_helper',
     'views',
     'views_ui',
     'system',
@@ -45,7 +45,7 @@ class AcademicDateFilterTest extends KernelTestBase {
     'datetime',
     'node',
     'user',
-    'hs_field_helpers_test_config',
+    'hs_views_helper_test_config',
     'filter',
     'text',
   ];
@@ -61,7 +61,7 @@ class AcademicDateFilterTest extends KernelTestBase {
       'system',
       'field',
       'node',
-      'hs_field_helpers_test_config',
+      'hs_views_helper_test_config',
     ]);
 
     $this->setupNodes();
@@ -120,7 +120,7 @@ class AcademicDateFilterTest extends KernelTestBase {
       'id' => 'academic_datetime',
       'field_name' => $this->field->getName(),
     ];
-    /** @var \Drupal\hs_field_helpers\Plugin\views\filter\AcademicDateFilter $filter */
+    /** @var \Drupal\hs_views_helper\Plugin\views\filter\AcademicDateFilter $filter */
     $filter = $filter_manager->createInstance('academic_datetime', $configuration);
     $this->assertEquals(AcademicDateFilter::class, get_class($filter));
 

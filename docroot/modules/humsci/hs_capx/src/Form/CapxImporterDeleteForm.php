@@ -2,14 +2,38 @@
 
 namespace Drupal\hs_capx\Form;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds the form to delete Capx importer entities.
  */
 class CapxImporterDeleteForm extends EntityConfirmFormBase {
+
+  /**
+   * Migration cache bin service.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $migrationCache;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('cache.discovery_migration'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(CacheBackendInterface $migration_cache) {
+    $this->migrationCache = $migration_cache;
+  }
 
   /**
    * {@inheritdoc}
@@ -36,6 +60,9 @@ class CapxImporterDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->migrationCache->invalidate('migration_plugins');
+    Cache::invalidateTags(['migration_plugins', 'hs_capx_config']);
+
     $this->entity->delete();
 
     drupal_set_message(
@@ -44,7 +71,7 @@ class CapxImporterDeleteForm extends EntityConfirmFormBase {
           '@type' => $this->entity->bundle(),
           '@label' => $this->entity->label(),
         ]
-        )
+      )
     );
 
     $form_state->setRedirectUrl($this->getCancelUrl());

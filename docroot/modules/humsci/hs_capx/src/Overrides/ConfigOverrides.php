@@ -143,7 +143,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function getCacheableMetadata($name) {
-    return new CacheableMetadata();
+    $cacheable_data = new CacheableMetadata();
+    if ($name == 'migrate_plus.migration.hs_capx' || $name == 'migrate_plus.migration.hs_capx_images') {
+      $cacheable_data->setCacheTags(['hs_capx_config']);
+    }
+    return $cacheable_data;
   }
 
   /**

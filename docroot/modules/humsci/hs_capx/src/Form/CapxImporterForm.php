@@ -3,7 +3,6 @@
 namespace Drupal\hs_capx\Form;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
@@ -26,13 +25,6 @@ class CapxImporterForm extends EntityForm {
   protected $entityFieldManager;
 
   /**
-   * Migration cache bin service.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $migrationCache;
-
-  /**
    * Database connection service.
    *
    * @var \Drupal\Core\Database\Connection
@@ -53,7 +45,6 @@ class CapxImporterForm extends EntityForm {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
-      $container->get('cache.discovery_migration'),
       $container->get('database')
     );
   }
@@ -61,10 +52,9 @@ class CapxImporterForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $migration_cache, Connection $database) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, Connection $database) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
-    $this->migrationCache = $migration_cache;
     $this->database = $database;
   }
 
@@ -194,9 +184,6 @@ class CapxImporterForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $this->migrationCache->invalidate('migration_plugins');
-    Cache::invalidateTags(['migration_plugins', 'hs_capx_config']);
-
     // Add permission to execute importer.
     $role = $this->entityTypeManager->getStorage('user_role')
       ->load('site_manager');
@@ -222,9 +209,7 @@ class CapxImporterForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($importer->toUrl('collection'));
-  }
 
-  public static function invalidateTags(){
     Cache::invalidateTags(['migration_plugins', 'hs_capx_config']);
   }
 

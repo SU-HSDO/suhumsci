@@ -46,8 +46,7 @@ module.exports = function (grunt) {
       },
       dist: {
         src: [
-          'core/css/*.css',
-          'kss/builder/decanter/kss-assets/css/*.css'
+          'docroot/**/humsci/*.css'
         ]
       }
     },
@@ -89,6 +88,8 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-postcss');
 
   grunt.registerTask('default', ['availabletasks']);
+  grunt.registerTask('compile', ['sass:dist', 'postcss:dist']);
 };

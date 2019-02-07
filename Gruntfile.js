@@ -92,4 +92,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['availabletasks']);
   grunt.registerTask('compile', ['sass:dist', 'postcss:dist']);
+
+  grunt.registerTask('default', ['availabletasks']);
 };

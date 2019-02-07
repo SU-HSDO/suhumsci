@@ -14,8 +14,8 @@ module.exports = function (grunt) {
     ];
 
     var libraries = [];
-    patterns.map(function(pattern){
-      glob.sync(pattern).map(function(file){
+    patterns.map(function (pattern) {
+      glob.sync(pattern).map(function (file) {
         libraries.push(file);
       });
     });
@@ -32,6 +32,23 @@ module.exports = function (grunt) {
         options: {
           interrupt: true
         }
+      }
+    },
+    postcss: {
+      options: {
+        map: true, // inline sourcemaps
+        processors: [
+          require('autoprefixer')({
+            grid: true,
+            browsers: ['last 2 versions', 'ie 11']
+          }) // add vendor prefixes
+        ]
+      },
+      dist: {
+        src: [
+          'core/css/*.css',
+          'kss/builder/decanter/kss-assets/css/*.css'
+        ]
       }
     },
     sass: {
@@ -74,11 +91,4 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('default', ['availabletasks']);
-  grunt.registerTask('mike', ['stuff',], function () {
-
-//     glob("config/default/*yml", {}, function (er, files) {
-// console.log(files);
-//     })
-    console.log(glob.sync('**/decanter/scss').push('stuff'));
-  })
 };

@@ -14,6 +14,7 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
+use Drupal\block\Entity\Block;
 
 /**
  * Implements hook_install().
@@ -282,4 +283,46 @@ function _su_humsci_profile_update_fix_menuposition_sections(array $sections) {
     }
   }
   return $changed;
+}
+
+/**
+ * Uninstall material admin theme and theme switcher module.
+ */
+function su_humsci_profile_update_8012() {
+  $config_factory = \Drupal::configFactory();
+
+  // Get all the humsci admin theme block names.
+  $query = \Drupal::database()
+    ->select('config', 'c')
+    ->fields('c', ['name'])
+    ->condition('name', 'block.block.su_humsci_admin%', 'LIKE')
+    ->execute();
+
+  // The status region no longer exists, so move any blocks into the help
+  // region.
+  while ($config_name = $query->fetchField()) {
+    $config = $config_factory->getEditable($config_name);
+    if ($config->get('region') == 'status') {
+      $config->set('region', 'help')->save();
+    }
+  }
+
+  // Disable theme switcher module since we no longer need it.
+  \Drupal::service('module_installer')->uninstall(['role_theme_switcher']);
+  \Drupal::service('theme_installer')->uninstall(['material_admin']);
+
+  // Remove the role that is no longer necessary.
+  if ($role = Role::load('seven_admin_theme_user')) {
+    $role->delete();
+  }
+
+  $block = Block::load('su_humsci_admin_breadcrumbs');
+  $visibility = [
+    'id' => 'request_path',
+    'pages' => '/user/login',
+    'negate' => TRUE,
+    'context_mapping' => [],
+  ];
+  $block->setVisibilityConfig('request_path', $visibility);
+  $block->save();
 }

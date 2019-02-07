@@ -49,12 +49,6 @@
       // Decanter button links.
       $colorPreview.find('.color-preview-decanter-button').css('background-color', $colorPalette.find('input[name="palette[button]"]').val());
       $colorPreview.find('.color-preview-decanter-button').css('color', $colorPalette.find('input[name="palette[buttoncolor]"]').val());
-
-      // CSS3 Gradients. This was taken from the bartik theme. We currently
-      // have no need for it, but leaving these lines commented for future use.
-      // var gradientStart = $colorPalette.find('input[name="palette[top]"]').val();
-      // var gradientEnd = $colorPalette.find('input[name="palette[bottom]"]').val();
-      // $colorPreview.find('.color-preview-header').attr('style', 'background-color: ' + gradientStart + '; background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(' + gradientStart + '), to(' + gradientEnd + ')); background-image: -moz-linear-gradient(-90deg, ' + gradientStart + ', ' + gradientEnd + ');');
     }
   };
 })(jQuery, Drupal, drupalSettings);

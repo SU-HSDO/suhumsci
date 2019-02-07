@@ -124,8 +124,8 @@ class HumsciCommand extends AcHooksCommand {
 
     $task = $this->taskDrush()
       ->alias('')
-      ->drush('cache-clear drush')
       ->drush('sql-drop')
+      ->drush('cache-clear drush')
       ->drush('sql-sync')
       ->arg("@$remote_alias")
       ->arg($local_alias)
@@ -139,7 +139,6 @@ class HumsciCommand extends AcHooksCommand {
       $task->drush('sql-sanitize');
     }
 
-    $task->drush('cr');
     $task->drush('sqlq "TRUNCATE cache_entity"');
 
     $result = $task->run();
@@ -209,9 +208,6 @@ class HumsciCommand extends AcHooksCommand {
     $this->switchSiteContext($multisite);
 
     $this->invokeCommand('drupal:toggle:modules');
-    $this->taskDrush()
-      ->drush("updb -y")
-      ->run();
     $this->taskDrush()
       ->drush("cr")
       ->run();

@@ -13,12 +13,39 @@ function hs_field_helpers_install() {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function hs_field_helpers_uninstall() {
+  $database_schema = \Drupal::database()->schema();
+  $viewfields = \Drupal::service('entity_field.manager')
+    ->getFieldMapByFieldType('viewfield');
+
+  $columns = ['show_title', 'override_title', 'overridden_title'];
+
+  foreach ($viewfields as $entity_type => $fields) {
+    foreach (array_keys($fields) as $field_name) {
+      foreach ($columns as $column_name) {
+        if ($database_schema->tableExists("{$entity_type}__{$field_name}")) {
+          $database_schema->dropField("{$entity_type}__{$field_name}", "{$field_name}_{$column_name}");
+        }
+        if ($database_schema->tableExists("{$entity_type}_revision__{$field_name}")) {
+          $database_schema->dropField("{$entity_type}_revision__{$field_name}", "{$field_name}_{$column_name}");
+        }
+      }
+    }
+  }
+}
+
+/**
  * Install hs_migrate module that now contains the migrate plugins and cron.
  */
 function hs_field_helpers_update_8001() {
   \Drupal::service('module_installer')->install(['hs_migrate']);
 }
 
+/**
+ * Add columns to view field tables for title customization.
+ */
 function hs_field_helpers_update_8002() {
   $database_schema = \Drupal::database()->schema();
   $viewfields = \Drupal::service('entity_field.manager')

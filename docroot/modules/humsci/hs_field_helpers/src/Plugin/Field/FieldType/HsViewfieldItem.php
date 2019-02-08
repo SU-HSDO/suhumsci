@@ -8,20 +8,27 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\viewfield\Plugin\Field\FieldType\ViewfieldItem;
 
 /**
- * Class HsViewfieldItem
+ * Override the view field type to add columns for view title customizing.
  *
  * @package Drupal\hs_field_helpers\Plugin\Field\FieldType
  */
 class HsViewfieldItem extends ViewfieldItem {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function defaultFieldSettings() {
     $settings = parent::defaultFieldSettings();
     $settings['allow_title_customizing'] = 0;
     return $settings;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::fieldSettingsForm($form, $form_state);
+    // Allow the admin to expose the option to the users or hide it.
     $form['allow_title_customizing'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow customized view title'),

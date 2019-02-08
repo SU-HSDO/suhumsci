@@ -4,9 +4,10 @@ namespace Drupal\hs_field_helpers\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\viewfield\Plugin\Field\FieldFormatter\ViewfieldFormatterDefault;
+use Drupal\views\ViewExecutable;
 
 /**
- * Class HsViewfieldFormatterDefault
+ * Override the default formatter plugin for view fields and add titles.
  *
  * @package Drupal\hs_field_helpers\Plugin\Field\FieldFormatter
  */
@@ -28,8 +29,10 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
       }
     }
 
+    // Add and customize the view title.
     foreach ($values as $delta => $value) {
-      if (!$value['show_title']) {
+      // Either the view is empty or the user doesn't want to display the title.
+      if (!$value['show_title'] || !$this->viewHasResults($elements[$delta]['#content']['#view'])) {
         continue;
       }
 
@@ -38,8 +41,22 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
         $elements[$delta]['#title'] = $value['overridden_title'];
       }
     }
-
     return $elements;
+  }
+
+  /**
+   * Check if there is something to display from the view.
+   *
+   * @param \Drupal\views\ViewExecutable $view
+   *   Executed view object.
+   *
+   * @return bool
+   *   If the view has results or an empty result display.
+   */
+  protected function viewHasResults(ViewExecutable $view) {
+    if ($view->result || $view->empty) {
+      return TRUE;
+    }
   }
 
 }

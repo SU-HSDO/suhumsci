@@ -56,6 +56,27 @@ function hs_field_helpers_field_info_alter(&$info) {
 }
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function hs_field_helpers_field_widget_info_alter(array &$info) {
+  $info['options_select']['field_types'][] = 'display_mode_field';
+
+  if (isset($info['viewfield_select'])) {
+    $info['viewfield_select']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect';
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function hs_field_helpers_field_formatter_info_alter(array &$info) {
+  $info['list_default']['field_types'][] = 'display_mode_field';
+  if (isset($info['viewfield_default'])) {
+    $info['viewfield_default']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault';
+  }
+}
+
+/**
  * Implements hook_views_data_alter().
  */
 function hs_field_helpers_views_data_alter(array &$data) {
@@ -132,27 +153,6 @@ function hs_field_helpers_help($route_name, RouteMatchInterface $route_match) {
 function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
   if ($entity instanceof FieldableEntityInterface) {
     $view_mode = DisplayModeField::getDisplayMode($entity) ?: $view_mode;
-  }
-}
-
-/**
- * Implements hook_field_widget_info_alter().
- */
-function hs_field_helpers_field_widget_info_alter(array &$info) {
-  $info['options_select']['field_types'][] = 'display_mode_field';
-
-  if (isset($info['viewfield_select'])) {
-    $info['viewfield_select']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect';
-  }
-}
-
-/**
- * Implements hook_field_formatter_info_alter().
- */
-function hs_field_helpers_field_formatter_info_alter(array &$info) {
-  $info['list_default']['field_types'][] = 'display_mode_field';
-  if (isset($info['viewfield_default'])) {
-    $info['viewfield_default']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault';
   }
 }
 

@@ -92,8 +92,8 @@
   "require": {
     "acquia/blt": "9.x-dev",
     "beleneglorion/php-bugherd-api": "dev-master#f0fce97042bd05bc5560fbf37051cd74f802cea1",
-    "ckeditor-plugin/link": "4.10.1",
     "ckeditor-plugin/fakeobjects": "4.10.1",
+    "ckeditor-plugin/link": "4.10.1",
     "composer/installers": "^1.4",
     "consolidation/robo": "~1.2.4",
     "consolidation/site-alias": "1.1.5",
@@ -178,6 +178,7 @@
     "drupal/smart_trim": "^1.1",
     "drupal/taxonomy_menu_ui": "^1.0@beta",
     "drupal/ui_patterns": "~1.0@RC",
+    "drupal/ultimate_cron": "^2.0@alpha",
     "drupal/video_embed_field": "~2.0-alpha1",
     "drupal/viewfield": "^3.0@alpha",
     "drupal/views_block_filter_block": "^1.0@beta",
@@ -268,7 +269,7 @@
     },
     "patches": {
       "drush/drush": {
-          "patches": "patches/contrib/drush-partial.patch"
+        "patches": "patches/contrib/drush-partial.patch"
       },
       "drupal/core": {
         "https://www.drupal.org/project/drupal/issues/564106": "https://www.drupal.org/files/issues/2018-06-27/views-more-link-token-replacement_564106_171.patch",
@@ -342,6 +343,14 @@
       "merge-scripts": true,
       "replace": false,
       "ignore-duplicates": true
+    },
+    "violinist": {
+      "allow_updates_beyond_constraint": 0,
+      "blacklist": [],
+      "one_pull_request_per_package": 0,
+      "timeframe_disallowed": "0",
+      "timezone": "+0000",
+      "update_with_dependencies": 1
     }
   },
   "autoload-dev": {

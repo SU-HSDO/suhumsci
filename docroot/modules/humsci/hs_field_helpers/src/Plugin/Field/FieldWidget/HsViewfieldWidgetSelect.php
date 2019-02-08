@@ -50,20 +50,20 @@ class HsViewfieldWidgetSelect extends ViewfieldWidgetSelect {
     if ($items->getFieldDefinition()->getSetting('allow_title_customizing')) {
       $element['show_title'] = [
         '#type' => 'checkbox',
-        '#title' => t('Show view title'),
+        '#title' => $this->t('Show view title'),
         '#weight' => -10,
         '#default_value' => $item_values['show_title'],
       ];
       $element['override_title'] = [
         '#type' => 'checkbox',
-        '#title' => t('Override view title'),
+        '#title' => $this->t('Override view title'),
         '#weight' => -9,
         '#default_value' => $item_values['override_title'],
         '#states' => ['visible' => $primary_visible_test],
       ];
       $element['overridden_title'] = [
         '#type' => 'textfield',
-        '#title' => t('Custom title'),
+        '#title' => $this->t('Custom title'),
         '#weight' => -8,
         '#default_value' => $item_values['overridden_title'],
         '#states' => ['visible' => $secondary_visible_test],

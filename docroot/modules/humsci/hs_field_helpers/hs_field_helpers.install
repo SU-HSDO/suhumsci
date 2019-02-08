@@ -18,3 +18,44 @@ function hs_field_helpers_install() {
 function hs_field_helpers_update_8001() {
   \Drupal::service('module_installer')->install(['hs_migrate']);
 }
+
+function hs_field_helpers_update_8002() {
+  $database_schema = \Drupal::database()->schema();
+  $viewfields = \Drupal::service('entity_field.manager')
+    ->getFieldMapByFieldType('viewfield');
+
+  $schema['show_title'] = [
+    'description' => 'Show the title of the view.',
+    'type' => 'int',
+    'size' => 'small',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ];
+  $schema['override_title'] = [
+    'description' => 'Override the title of the view.',
+    'type' => 'int',
+    'size' => 'small',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ];
+  $schema['overridden_title'] = [
+    'description' => 'Customize view title.',
+    'type' => 'varchar',
+    'length' => 255,
+  ];
+
+  foreach ($viewfields as $entity_type => $fields) {
+    foreach (array_keys($fields) as $field_name) {
+      foreach ($schema as $new_column => $column_spec) {
+        if ($database_schema->tableExists("{$entity_type}__{$field_name}")) {
+          $database_schema->addField("{$entity_type}__{$field_name}", "{$field_name}_{$new_column}", $column_spec);
+        }
+        if ($database_schema->tableExists("{$entity_type}_revision__{$field_name}")) {
+          $database_schema->addField("{$entity_type}_revision__{$field_name}", "{$field_name}_{$new_column}", $column_spec);
+        }
+      }
+    }
+  }
+}

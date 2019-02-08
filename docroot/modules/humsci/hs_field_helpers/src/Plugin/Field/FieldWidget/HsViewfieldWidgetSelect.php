@@ -44,8 +44,8 @@ class HsViewfieldWidgetSelect extends ViewfieldWidgetSelect {
     }
     $primary_field_name = $form_state_keys[0] . '[' . implode('][', array_slice($form_state_keys, 1)) . '][show_title]';
     $secondary_field_name = $form_state_keys[0] . '[' . implode('][', array_slice($form_state_keys, 1)) . '][override_title]';
-    $primary_field_visible_test = [':input[name="' . $primary_field_name . '"]' => ['checked' => TRUE]];
-    $secondary_field_visible_test = [':input[name="' . $secondary_field_name . '"]' => ['checked' => TRUE]];
+    $primary_visible_test = [':input[name="' . $primary_field_name . '"]' => ['checked' => TRUE]];
+    $secondary_visible_test = [':input[name="' . $secondary_field_name . '"]' => ['checked' => TRUE]];
 
     if ($items->getFieldDefinition()->getSetting('allow_title_customizing')) {
       $element['show_title'] = [
@@ -59,14 +59,14 @@ class HsViewfieldWidgetSelect extends ViewfieldWidgetSelect {
         '#title' => t('Override view title'),
         '#weight' => -9,
         '#default_value' => $item_values['override_title'],
-        '#states' => ['visible' => $primary_field_visible_test],
+        '#states' => ['visible' => $primary_visible_test],
       ];
       $element['overridden_title'] = [
         '#type' => 'textfield',
         '#title' => t('Custom title'),
         '#weight' => -8,
         '#default_value' => $item_values['overridden_title'],
-        '#states' => ['visible' => $secondary_field_visible_test],
+        '#states' => ['visible' => $secondary_visible_test],
       ];
     }
     return $element;

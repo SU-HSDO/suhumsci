@@ -19,18 +19,8 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = parent::viewElements($items, $langcode);
 
-    if ($this->getFieldSetting('force_default')) {
-      $values = $this->fieldDefinition->getDefaultValue($items->getEntity());
-    }
-    else {
-      $values = [];
-      foreach ($items as $delta => $item) {
-        $values[$delta] = $item->getValue();
-      }
-    }
-
     // Add and customize the view title.
-    foreach ($values as $delta => $value) {
+    foreach ($this->getFieldValues($items) as $delta => $value) {
       // Either the view is empty or the user doesn't want to display the title.
       if (!$value['show_title'] || !$this->viewHasResults($elements[$delta]['#content']['#view'])) {
         continue;
@@ -42,6 +32,28 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
       }
     }
     return $elements;
+  }
+
+  /**
+   * Get the values from the entity or from the items.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   Field list items.
+   *
+   * @return array
+   *   Keyed array of field values.
+   */
+  protected function getFieldValues(FieldItemListInterface $items) {
+    if ($this->getFieldSetting('force_default')) {
+      $values = $this->fieldDefinition->getDefaultValue($items->getEntity());
+    }
+    else {
+      $values = [];
+      foreach ($items as $delta => $item) {
+        $values[$delta] = $item->getValue();
+      }
+    }
+    return $values;
   }
 
   /**

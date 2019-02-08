@@ -158,3 +158,33 @@ figure {
 figcaption {
   @include caption;
 }
+
+a[class*="heading-link-"] {
+  text-decoration: none;
+}
+
+a[data-extlink] {
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    display: inline;
+  }
+
+  .extlink {
+    font-size: 60%;
+    padding: 0 5px;
+
+    .fa-arrow-right {
+      transform: rotate(-45deg);
+    }
+
+    // Duplicated text "Link is External" occurs in screen readers.
+    // Hide this one from screen readers to prevent repeated text.
+    .visually-hidden {
+      display: none;
+    }
+  }
+}

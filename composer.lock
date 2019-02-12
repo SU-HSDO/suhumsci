@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3985a18ec0b56b78187fa234b2eb56d6",
+    "content-hash": "ee54d4d5d6211e93e50e8ce28d1b2354",
     "packages": [
         {
             "name": "acquia/blt",
@@ -3983,6 +3983,10 @@
                     "recurse": false,
                     "replace": false,
                     "merge-extra": false
+                },
+                "patches_applied": {
+                    "https://www.drupal.org/project/drupal/issues/564106": "https://www.drupal.org/files/issues/2018-06-27/views-more-link-token-replacement_564106_171.patch",
+                    "Simplify Field Samples": "patches/contrib/core-simplify-samples.patch"
                 }
             },
             "autoload": {
@@ -6779,6 +6783,53 @@
             "homepage": "https://www.drupal.org/project/pathauto",
             "support": {
                 "source": "http://cgit.drupalcode.org/pathauto"
+            }
+        },
+        {
+            "name": "drupal/pdb",
+            "version": "1.0.0-alpha6",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/pdb",
+                "reference": "8.x-1.0-alpha6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/pdb-8.x-1.0-alpha6.zip",
+                "reference": "8.x-1.0-alpha6",
+                "shasum": "19721bdd7f61b48150c6ba451174bc1af9683e5a"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-alpha6",
+                    "datestamp": "1479388440",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "mrjmd",
+                    "homepage": "https://www.drupal.org/user/1800446"
+                }
+            ],
+            "description": "Progressively Decoupled Blocks (PDB). Build stuff with javascript frameworks as blocks.",
+            "homepage": "https://www.drupal.org/project/pdb",
+            "support": {
+                "source": "http://cgit.drupalcode.org/pdb"
             }
         },
         {
@@ -17432,6 +17483,7 @@
         "drupal/menu_link_weight": 10,
         "drupal/menu_position": 20,
         "drupal/path_redirect_import": 10,
+        "drupal/pdb": 15,
         "drupal/rabbit_hole": 10,
         "drupal/role_delegation": 15,
         "drupal/rules": 15,
@@ -17450,7 +17502,8 @@
         "su-sws/stanford_ssp": 20,
         "drupal/config_inspector": 10,
         "drupal/devel_debug_log": 10,
-        "drupal/seckit": 15
+        "drupal/seckit": 15,
+        "sensiolabs-de/deprecation-detector": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

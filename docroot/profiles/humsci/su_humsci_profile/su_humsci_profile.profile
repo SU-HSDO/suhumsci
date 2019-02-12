@@ -174,7 +174,7 @@ function su_humsci_profile_simplify_condition_forms(array &$condition_elements, 
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function hs_field_helpers_eck_entity_type_insert(EntityInterface $entity) {
+function su_humsci_profile_eck_entity_type_insert(EntityInterface $entity) {
   $eck_type = $entity->id();
   // When a new ECK entity type is create, set initial permissions so that
   // site builders aren't required to search for the necessary permissions.
@@ -191,4 +191,40 @@ function hs_field_helpers_eck_entity_type_insert(EntityInterface $entity) {
     "delete any $eck_type entities",
     "edit any $eck_type entities",
   ]);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_menu(&$variables) {
+  if ($variables['menu_name'] != 'shortcut_menu') {
+    return;
+  }
+
+  $current_user = \Drupal::currentUser();
+  _su_humci_profile_clean_shortcut_links($variables['items'], $current_user);
+}
+
+/**
+ * Recursively remove links the current user has no access to.
+ *
+ * @param array $links
+ *   Menu links.
+ * @param \Drupal\Core\Session\AccountInterface $current_user
+ *   Current user object.
+ */
+function _su_humci_profile_clean_shortcut_links(array &$links, AccountInterface $current_user) {
+  foreach ($links as $link_id => $link_item) {
+
+    // This user doesn't have permission for this url. Remove the link.
+    if (!$link_item['url']->access($current_user)) {
+      unset($links[$link_id]);
+      continue;
+    }
+
+    // User has access to the parent menu link, but check all the children.
+    if (!empty($links[$link_id]['below'])) {
+      _su_humci_profile_clean_shortcut_links($links[$link_id]['below'], $current_user);
+    }
+  }
 }

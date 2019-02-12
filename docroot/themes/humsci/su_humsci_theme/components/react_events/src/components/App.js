@@ -30,9 +30,9 @@ export class App extends Component {
   sortEvents = (events, sortField = "isoEventDate") => {
     events.sort(function (a, b) {
       try {
-        let aDate = new Date.parse(a[sortField]);
-        let bDate = new Date.parse(b[sortField]);
-        return aDate - bDate;
+        let aDate = new Date(a[sortField]);
+        let bDate = new Date(b[sortField]);
+        return aDate.getTime() - bDate.getTime();
       }
       catch (e) {
         // Do nothing.

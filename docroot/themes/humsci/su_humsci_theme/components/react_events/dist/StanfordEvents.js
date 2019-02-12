@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bc9912ddf836de13ee06"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1f00a9fce87b8ddccd9b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -34421,14 +34421,6 @@ function _wrapComponent(id) {
 
 
 
-var getEventSlice = function getEventSlice() {
-  var currentPage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-  var numPerPage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 7;
-  var events = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-
-  return events.slice(currentPage * numPerPage, currentPage * numPerPage + numPerPage);
-};
-
 var EventList = _wrapComponent('EventList')(function (_Component) {
   _inherits(EventList, _Component);
 
@@ -34438,9 +34430,26 @@ var EventList = _wrapComponent('EventList')(function (_Component) {
     var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
     var eventWeeks = _this.getEventWeekArray(props.events);
-    console.log(eventWeeks);
+
+    var len = 0;
+    var current_week = 0;
+    var sunday = _this.getSunday(new Date());
+    for (var i = 0; i < eventWeeks.length; i++) {
+      if (eventWeeks[i] !== undefined) {
+        len++;
+
+        var date = new Date(eventWeeks[i][0]['isoEventDate']) / 1000;
+        console.log(Math.floor((date - sunday) / (7 * 24 * 60 * 60)));
+        if (Math.floor((date - sunday) / (7 * 24 * 60 * 60)) == 0) {
+          current_week = i;
+        }
+      }
+    }
+    console.log(current_week);
+
     _this.state = {
-      current: 34,
+      current: current_week,
+      totalWeeks: len,
       events: props.events,
       eventSlices: eventWeeks
     };
@@ -34479,6 +34488,9 @@ var EventList = _wrapComponent('EventList')(function (_Component) {
   };
 
   EventList.prototype.handlePageChanged = function handlePageChanged(newPage) {
+    if (this.state.eventSlices[newPage] == undefined) {
+      return;
+    }
     this.setState({
       current: newPage
     });

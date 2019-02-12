@@ -2,19 +2,30 @@ import {Component, PropTypes} from 'react'
 import Pager from 'react-pager'
 import {EventCard} from "./EventCard";
 
-const getEventSlice = (currentPage = 0, numPerPage = 7, events = []) => {
-  return events.slice(currentPage * numPerPage, currentPage * numPerPage + numPerPage)
-};
-
 export class EventList extends Component {
 
   constructor(props) {
     super(props);
 
     let eventWeeks = this.getEventWeekArray(props.events);
-    console.log(eventWeeks);
+
+    let len = 0;
+    let current_week = 0;
+    let sunday = this.getSunday(new Date());
+    for (var i = 0; i < eventWeeks.length; i++) {
+      if (eventWeeks[i] !== undefined) {
+        len++;
+
+        let date = new Date(eventWeeks[i][0]['isoEventDate']) / 1000;
+        if (Math.floor((date - sunday) / (7 * 24 * 60 * 60)) == 0) {
+          current_week = i;
+        }
+      }
+    }
+
     this.state = {
-      current: 34,
+      current: current_week,
+      totalWeeks: len,
       events: props.events,
       eventSlices: eventWeeks
     };
@@ -51,6 +62,9 @@ export class EventList extends Component {
 
 
   handlePageChanged(newPage) {
+    if (this.state.eventSlices[newPage] == undefined) {
+      return;
+    }
     this.setState({
       current: newPage
     });

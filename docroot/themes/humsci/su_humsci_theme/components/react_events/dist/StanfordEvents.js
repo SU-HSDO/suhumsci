@@ -61,7 +61,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "720d2116643de9951c5d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "bc9912ddf836de13ee06"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -34482,12 +34482,9 @@ var EventList = _wrapComponent('EventList')(function (_Component) {
     this.setState({
       current: newPage
     });
-    console.log(newPage);
   };
 
   EventList.prototype.render = function render() {
-    console.log(this.state.current);
-    console.log(this.state.eventSlices);
     return React.createElement(
       'div',
       { className: 'event-list' },

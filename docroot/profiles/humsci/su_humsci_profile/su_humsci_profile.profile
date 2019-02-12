@@ -228,3 +228,14 @@ function _su_humci_profile_clean_shortcut_links(array &$links, AccountInterface 
     }
   }
 }
+
+/**
+ * Implements hook_page_attachments().
+ */
+function su_humsci_profile_page_attachments(array &$attachments){
+  // Conditionally attach an asset to the page.
+  if (!\Drupal::currentUser()
+    ->hasPermission('view toolbar manage')) {
+    $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';
+  }
+}

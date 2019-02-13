@@ -34,6 +34,15 @@ class HumsciHook extends BltTasks {
   }
 
   /**
+   * Update database first.
+   *
+   * @hook pre-command drupal:toggle:modules
+   */
+  public function preToggleModules() {
+    $this->taskDrush()->drush('updb')->run();
+  }
+
+  /**
    * Import any missing entity form/display configs since they are ignored.
    *
    * @hook post-command drupal:config:import

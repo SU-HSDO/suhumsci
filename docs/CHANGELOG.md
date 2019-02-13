@@ -1,5 +1,14 @@
 # HumSci
 
+8.0.17
+--------------------------------------------------------------------------------  
+_Release Date: 2019-02-06_
+
+* HSD8-531 refactor admin theme to remove material admin theme
+* HS-110 Added course code integer field and mapping
+* HSD8-545 events exporter for MRC to create an XML feed to be consumed on mathematics site
+* HSD8-546 node clone action allowing users to clone a node 1 to 10 times. 
+
 8.0.16
 --------------------------------------------------------------------------------  
 _Release Date: 2019-01-24_

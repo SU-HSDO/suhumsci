@@ -289,6 +289,8 @@ function _su_humsci_profile_update_fix_menuposition_sections(array $sections) {
  * Uninstall material admin theme and theme switcher module.
  */
 function su_humsci_profile_update_8012() {
+  drupal_flush_all_caches();
+
   $config_factory = \Drupal::configFactory();
 
   // Get all the humsci admin theme block names.

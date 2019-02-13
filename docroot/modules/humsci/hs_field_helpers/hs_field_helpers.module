@@ -20,50 +20,11 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\ui_patterns\UiPatterns;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\eck\Entity\EckEntity;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\query\QueryPluginBase;
-use Drupal\hs_field_helpers\Plugin\views\query\Sql as HsViewsSql;
 use Drupal\Component\Utility\Html;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
-
-/**
- * Implements hook_views_plugins_query_alter().
- */
-function hs_field_helpers_views_plugins_query_alter(&$definitions) {
-  $definitions['views_query']['class'] = HsViewsSql::class;
-}
-
-/**
- * Implements hook_views_query_alter().
- */
-function hs_field_helpers_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
-  if ($query instanceof HsViewsSql) {
-    $query->alterQuery($view);
-  }
-}
-
-/**
- * Implements hook_views_data_alter().
- */
-function hs_field_helpers_views_data_alter(array &$data) {
-  /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
-  foreach (FieldStorageConfig::loadMultiple() as $field_storage) {
-    if ($field_storage->getType() != 'datetime') {
-      continue;
-    }
-    $entity_type = $field_storage->getTargetEntityTypeId();
-    $field_name = $field_storage->getName();
-
-    // Change the filter id to our custom filter. This will give us an optional
-    // exception window for academic calendars.
-    $value_data = &$data["{$entity_type}__{$field_name}"]["{$field_name}_value"];
-    $value_data['filter']['id'] = 'academic_datetime';
-  }
-}
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -124,20 +85,6 @@ function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $e
   if ($entity instanceof FieldableEntityInterface) {
     $view_mode = DisplayModeField::getDisplayMode($entity) ?: $view_mode;
   }
-}
-
-/**
- * Implements hook_field_widget_info_alter().
- */
-function hs_field_helpers_field_widget_info_alter(array &$info) {
-  $info['options_select']['field_types'][] = 'display_mode_field';
-}
-
-/**
- * Implements hook_field_formatter_info_alter().
- */
-function hs_field_helpers_field_formatter_info_alter(array &$info) {
-  $info['list_default']['field_types'][] = 'display_mode_field';
 }
 
 /**
@@ -290,19 +237,6 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
   $widget = $context['widget'];
 
   switch ($widget->getPluginId()) {
-    case 'viewfield_select':
-      /** @var \Drupal\field\Entity\FieldConfig $field_config */
-      $field_config = $context['items']->getFieldDefinition();
-      // Strip the view options as defined by the exclude views settings.
-      // @see hs_field_helpers_form_field_config_edit_form_alter().
-      if ($excluded_views = $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views')) {
-        $element['target_id']['#options'] = array_diff_key($element['target_id']['#options'], array_flip($excluded_views));
-      }
-      // Chosen & Material Admin conflicts with this select list during ajax.
-      // The easiest way to fix is to disable those libraries.
-      $element['display_id']['#attributes']['class'][] = 'browser-default';
-      break;
-
     case 'daterange_datelist':
     case 'daterange_default':
       // To simulate the same field functionality as we had in D7, we need to
@@ -379,16 +313,6 @@ function hs_field_helpers_node_validate_date(array &$element, FormStateInterface
       }
     }
   }
-}
-
-/**
- * Implements hook_preprocess_views_view_pattern().
- */
-function hs_field_helpers_preprocess_views_view_pattern(&$variables) {
-  /** @var \Drupal\views\ViewExecutable $view */
-  $view = $variables['view'];
-  $pattern = $view->style_plugin->options['pattern'];
-  $variables['pattern'] = $pattern;
 }
 
 /**
@@ -570,21 +494,6 @@ function _he_field_helpers_clean_eck() {
       }
     }
   }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function hs_field_helpers_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
-  if (empty($form['actions']['reset'])) {
-    return;
-  }
-
-  // Ajax blocks using the module views_block_filter_block do not display the
-  // "Reset" button after the form has been submitted. So we are going to change
-  // the access and apply some javascript to help keep the ajaxy feel.
-  $form['actions']['reset']['#access'] = TRUE;
-  $form['#attached']['library'][] = 'hs_field_helpers/views_reset';
 }
 
 /**

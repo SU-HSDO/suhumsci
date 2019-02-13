@@ -12,6 +12,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_tools\MigrateExecutable;
 use Drupal\migrate\MigrateMessage;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\ultimate_cron\CronJobInterface;
 
 /**
  * Implements hook_help().
@@ -87,14 +88,36 @@ function hs_migrate_entity_delete(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_cron().
+ * Ultimate cron callback function to execute a migration group.
+ *
+ * The entity id should be in the form `hs_migrate_{migrate_group_id}` to
+ * execute that group.
+ *
+ * @param \Drupal\ultimate_cron\CronJobInterface $cron_entity
+ *   Ultimate cron entity.
  */
-function hs_migrate_cron() {
+function hs_migrate_ultimate_cron_task(CronJobInterface $cron_entity) {
+  $logger = \Drupal::logger('hs_migrate');
   $migrations = hs_migrate_migration_list();
-  // Take it one group at a time, importing the migrations within each group.
-  foreach ($migrations as $migration_list) {
-    array_walk($migration_list, 'hs_migrate_execute_migration');
+
+  $migration_group = str_replace('hs_migrate_', '', $cron_entity->id());
+  // Execute the migration entities in the provided migration group.
+  if ($migration_group && !empty($migrations[$migration_group])) {
+    try {
+      array_walk($migrations[$migration_group], 'hs_migrate_execute_migration');
+    }
+    catch (Exception $e) {
+
+      // Log any errors that we encounter.
+      $logger->error('Unable to run migration importer: @group @message', [
+        '@group' => $migration_group,
+        '@message' => $e->getMessage(),
+      ]);
+    }
+
+    return;
   }
+  $logger->info('No migration group @group_id exists. No migration executed.', ['@group' => $migration_group]);
 }
 
 /**

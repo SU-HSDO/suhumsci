@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_actions.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_actions_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_actions module.
+    case 'help.page.hs_actions':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides action plugins to work with VBO module.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

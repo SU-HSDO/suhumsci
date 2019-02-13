@@ -89,6 +89,18 @@ source:
       name: speaker
       label: Speaker
       selector: People/person
+    -
+      name: drupal_type
+      label: 'Drupal Type'
+      selector: drupalType
+    -
+      name: drupal_video
+      label: 'Drupal Video'
+      selector: drupalVideo
+    -
+      name: drupal_video_name
+      label: 'Drupal Video Name'
+      selector: drupalVideoName
   ids:
     guid:
       type: string
@@ -208,6 +220,40 @@ process:
     -
       plugin: default_value
       default_value: null
+  field_hs_event_type:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: drupal_type
+    -
+      plugin: explode
+      source: drupal_type
+      delimiter: ','
+    -
+      plugin: callback
+      callable: htmlspecialchars_decode
+    -
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: hs_event_type
+      value_key: name
+    -
+      plugin: default_value
+      default_value: null
+  field_hs_event_video:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: drupal_video
+    -
+      plugin: entity_generate
+      entity_type: media
+      bundle_key: bundle
+      bundle: video
+      value_key: field_media_video_embed_field
+      values:
+        name: drupal_video_name
 destination:
   plugin: 'entity:node'
 migration_dependencies:

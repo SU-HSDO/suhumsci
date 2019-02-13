@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\hs_field_helpers\Plugin\views\style;
+namespace Drupal\hs_views_helper\Plugin\views\style;
 
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;

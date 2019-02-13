@@ -27,6 +27,37 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
 
 /**
+ * Implements hook_field_widget_info_alter().
+ */
+function hs_field_helpers_field_widget_info_alter(array &$info) {
+  $info['options_select']['field_types'][] = 'display_mode_field';
+
+  if (isset($info['viewfield_select'])) {
+    $info['viewfield_select']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect';
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function hs_field_helpers_field_formatter_info_alter(array &$info) {
+  $info['list_default']['field_types'][] = 'display_mode_field';
+
+  if (isset($info['viewfield_default'])) {
+    $info['viewfield_default']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault';
+  }
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function hs_field_helpers_field_info_alter(&$info) {
+  if (isset($info['viewfield'])) {
+    $info['viewfield']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldType\HsViewfieldItem';
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_field_helpers_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -534,6 +565,7 @@ function hs_field_helpers_node_view(array &$build, EntityInterface $entity, Enti
     !$rabbit_hole->get('allow_override') ||
     $entity->get('rh_action')->getString() == 'bundle_default'
   ) {
+    /** @var \Drupal\token\Token $token_service */
     $token_service = \Drupal::service('token');
     $target = $token_service->replace($rabbit_hole->get('redirect'), ['node' => $entity]);
 

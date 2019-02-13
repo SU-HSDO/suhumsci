@@ -88,20 +88,6 @@ function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $e
 }
 
 /**
- * Implements hook_field_widget_info_alter().
- */
-function hs_field_helpers_field_widget_info_alter(array &$info) {
-  $info['options_select']['field_types'][] = 'display_mode_field';
-}
-
-/**
- * Implements hook_field_formatter_info_alter().
- */
-function hs_field_helpers_field_formatter_info_alter(array &$info) {
-  $info['list_default']['field_types'][] = 'display_mode_field';
-}
-
-/**
  * Implements hook_preprocess().
  */
 function hs_field_helpers_preprocess(&$variables, $hook) {
@@ -251,19 +237,6 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
   $widget = $context['widget'];
 
   switch ($widget->getPluginId()) {
-    case 'viewfield_select':
-      /** @var \Drupal\field\Entity\FieldConfig $field_config */
-      $field_config = $context['items']->getFieldDefinition();
-      // Strip the view options as defined by the exclude views settings.
-      // @see hs_field_helpers_form_field_config_edit_form_alter().
-      if ($excluded_views = $field_config->getThirdPartySetting('hs_field_helpers', 'excluded_views')) {
-        $element['target_id']['#options'] = array_diff_key($element['target_id']['#options'], array_flip($excluded_views));
-      }
-      // Chosen & Material Admin conflicts with this select list during ajax.
-      // The easiest way to fix is to disable those libraries.
-      $element['display_id']['#attributes']['class'][] = 'browser-default';
-      break;
-
     case 'daterange_datelist':
     case 'daterange_default':
       // To simulate the same field functionality as we had in D7, we need to

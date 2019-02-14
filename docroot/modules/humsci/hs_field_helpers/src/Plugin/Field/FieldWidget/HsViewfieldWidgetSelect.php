@@ -21,13 +21,7 @@ class HsViewfieldWidgetSelect extends ViewfieldWidgetSelect {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
-    $item = $items->get($delta);
-    $item_values = $item->getValue();
-    $item_values += [
-      'show_title' => 0,
-      'override_title' => 0,
-      'overridden_title' => '',
-    ];
+    $item_values = $this->getItemValues($items, $delta);
 
     // Strip the view options as defined by the exclude views settings.
     // @see hs_field_helpers_form_field_config_edit_form_alter().
@@ -70,6 +64,30 @@ class HsViewfieldWidgetSelect extends ViewfieldWidgetSelect {
       ];
     }
     return $element;
+  }
+
+  /**
+   * Get the item array for the field values combined with default values.
+   *
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   Field item list.
+   * @param int $delta
+   *   Delta of the list.
+   *
+   * @return array
+   *   Delta's value.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  protected function getItemValues(FieldItemListInterface $items, $delta) {
+    $item = $items->get($delta);
+    $item_values = $item->getValue();
+    $item_values += [
+      'show_title' => 0,
+      'override_title' => 0,
+      'overridden_title' => '',
+    ];
+    return $item_values;
   }
 
 }

@@ -236,7 +236,7 @@ function su_humsci_profile_page_attachments(array &$attachments) {
   $current_user = \Drupal::currentUser();
   // Hide the manage button in the toolbar if the user doesnt have permission.
   // Also don't add the library if user doesn't doesnt have access to the
-  // toolbar
+  // toolbar.
   if ($current_user->hasPermission('access toolbar') && !$current_user->hasPermission('view toolbar manage')) {
     $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';
   }

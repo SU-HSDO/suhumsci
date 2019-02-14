@@ -232,10 +232,11 @@ function _su_humci_profile_clean_shortcut_links(array &$links, AccountInterface 
 /**
  * Implements hook_page_attachments().
  */
-function su_humsci_profile_page_attachments(array &$attachments){
+function su_humsci_profile_page_attachments(array &$attachments) {
   $current_user = \Drupal::currentUser();
   // Hide the manage button in the toolbar if the user doesnt have permission.
-  // Also don't add the library if
+  // Also don't add the library if user doesn't doesnt have access to the
+  // toolbar
   if ($current_user->hasPermission('access toolbar') && !$current_user->hasPermission('view toolbar manage')) {
     $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';
   }

@@ -3,7 +3,7 @@
 namespace Drupal\hs_layouts\TwigExtension;
 
 /**
- * Class TwigFilters
+ * Additional twig filters for custom functionality.
  *
  * @package Drupal\su_humsci_theme\TwigExtension
  */
@@ -29,19 +29,19 @@ class TwigFilters extends \Twig_Extension {
    */
   public static function removeHtmlComments($variable) {
     if (!is_string($variable)) {
-      $string = render($variable);
+      $variable = render($variable);
     }
-    return $output = preg_replace([
+    return preg_replace([
       '/<!--(.|\s)*?-->\s*/',
       '/\t+/',
       '/\n+/',
       '/[\r\n]/',
       '/[\n\r]/',
-    ], '', $string);
+    ], '', $variable);
   }
 
   /**
-   * Check if the provided
+   * Check if the provided variable has any visible markup.
    *
    * @param array|string $variable
    *   Render array or rendered string.

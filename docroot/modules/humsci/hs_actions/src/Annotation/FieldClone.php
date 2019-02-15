@@ -5,7 +5,7 @@ namespace Drupal\hs_actions\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Class FieldClone
+ * Class FieldClone to define the field clone plugins.
  *
  * @package Drupal\hs_actions\Annoation
  *

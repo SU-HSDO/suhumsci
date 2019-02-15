@@ -7,7 +7,7 @@ use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class FieldCloneBase
+ * Base field for all field clone plugins.
  *
  * @package Drupal\hs_actions\Plugin\Action\FieldClone
  */
@@ -31,21 +31,21 @@ abstract class FieldCloneBase extends PluginBase implements FieldCloneInterface 
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    // TODO: Implement buildConfigurationForm() method.
+
   }
 
   /**
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement validateConfigurationForm() method.
+
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // TODO: Implement submitConfigurationForm() method.
+
   }
 
 }

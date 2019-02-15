@@ -6,7 +6,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class Date.
+ * Class Date to increment date fields.
  *
  * @FieldClone(
  *   id = "date",
@@ -58,18 +58,27 @@ class Date extends FieldCloneBase {
   /**
    * {@inheritdoc}
    */
-  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $entity, $field_name, $config = []) {
-    if (!$entity->hasField($field_name)) {
+  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $new_entity, $field_name, $config = []) {
+    if (!$new_entity->hasField($field_name) || empty($config['increment'])) {
       return;
     }
+
+    // To allow us to increase the date value for each subsequent clone, keep
+    // track of how many times we've seen this original entity.
     if (!isset($this->entityIds[$original_entity->id()])) {
       $this->entityIds[$original_entity->id()] = 0;
     }
     $this->entityIds[$original_entity->id()]++;
+
+    // Use the multiple to multiply how much to increment from the original
+    // entity.
     $config['multiple'] = $this->entityIds[$original_entity->id()];
 
-    $values = $entity->get($field_name);
+    $values = $original_entity->get($field_name);
     $new_values = [];
+
+    // Loop through all field values and increment them, then set the new values
+    // back to the cloned entity.
     for ($delta = 0; $delta < $values->count(); $delta++) {
       $item_value = $values->get($delta)->getValue();
 
@@ -77,15 +86,32 @@ class Date extends FieldCloneBase {
         $new_values[$delta][$column_name] = $this->incrementDateValue($column_value, $config);
       }
     }
-    $entity->set($field_name, $new_values);
+    $new_entity->set($field_name, $new_values);
   }
 
+  /**
+   * @param string $value
+   *   Original date value.
+   * @param array $increment_config
+   *   Keyed array of increment settings.
+   *
+   * @return string
+   * @throws \Exception
+   */
   protected function incrementDateValue($value, $increment_config = []) {
     $increment = $increment_config['multiple'] * $increment_config['increment'];
 
     $new_value = new \DateTime($value);
+
+    // Add the interval that is in the form of "2 days" or "6 hours".
     $interval = \DateInterval::createFromDateString($increment . ' ' . $increment_config['unit']);
     $new_value->add($interval);
+
+    // Date fields that don't collect the time use a different date format. We
+    // check if the date length is the same length as an example format.
+    if (strlen($value) == strlen('2019-02-21')) {
+      return $new_value->format('Y-m-d');
+    }
     return $new_value->format('Y-m-d\TH:i:s');
   }
 

@@ -1,0 +1,37 @@
+{% set attributes = attributes.addClass('generic-three-column', variant) %}
+
+{% set leftAttributes = create_attribute({class:'left-region'}) %}
+{% set middleAttributes = create_attribute({class:'middle-region'}) %}
+{% set rightAttributes = create_attribute({class:'right-region'}) %}
+
+{% if 'static' in variant %}
+  {% set static = true %}
+{% endif %}
+
+{% if '25_50_25' in variant %}
+  {% set middleAttributes = middleAttributes.addClass('larger') %}
+{% elseif '50_25_25' in variant %}
+  {% set leftAttributes = leftAttributes.addClass('larger') %}
+{% elseif '25_25_50' in variant %}
+  {% set rightAttributes = rightAttributes.addClass('larger') %}
+{% endif %}
+
+<div{{ attributes }}>
+  {%- if left or static -%}
+    <div{{ leftAttributes }}>
+      {{ left }}
+    </div>
+  {%- endif -%}
+
+  {%- if middle or static -%}
+    <div{{ middleAttributes }}>
+      {{ middle }}
+    </div>
+  {%- endif -%}
+
+  {%- if right|render|trim or static -%}
+    <div{{ rightAttributes }}>
+      {{ right }}
+    </div>
+  {%- endif -%}
+</div>

@@ -2,17 +2,15 @@
 
 namespace Drupal\Tests\hs_actions\Kernel\Plugin\Action\FieldClone;
 
-use Drupal\Core\Form\FormState;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\hs_actions\Plugin\Action\CloneNode;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Class DateTest
+ * Test the date field clone plugin functions correctly.
  *
  * @group hs_actions
  * @coversDefaultClass \Drupal\hs_actions\Plugin\Action\FieldClone\Date

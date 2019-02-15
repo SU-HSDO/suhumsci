@@ -9,7 +9,7 @@ use Drupal\hs_actions\Annotation\FieldClone;
 use Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneInterface;
 
 /**
- * Class CloneFieldsManager
+ * Class CloneFieldsManager for field clone plugins.
  */
 class FieldCloneManager extends DefaultPluginManager implements FieldCloneManagerInterface {
 

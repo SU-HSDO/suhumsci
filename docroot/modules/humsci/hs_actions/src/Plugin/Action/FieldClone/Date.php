@@ -58,7 +58,7 @@ class Date extends FieldCloneBase {
   /**
    * {@inheritdoc}
    */
-  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $new_entity, $field_name, $config = []) {
+  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $new_entity, $field_name, array $config = []) {
     if (!$new_entity->hasField($field_name) || empty($config['increment'])) {
       return;
     }
@@ -90,15 +90,19 @@ class Date extends FieldCloneBase {
   }
 
   /**
+   * Increase the given date value by the configured amount.
+   *
    * @param string $value
    *   Original date value.
    * @param array $increment_config
    *   Keyed array of increment settings.
    *
    * @return string
+   *   The new increased value.
+   *
    * @throws \Exception
    */
-  protected function incrementDateValue($value, $increment_config = []) {
+  protected function incrementDateValue($value, array $increment_config = []) {
     $increment = $increment_config['multiple'] * $increment_config['increment'];
 
     $new_value = new \DateTime($value);

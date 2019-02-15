@@ -52,7 +52,6 @@ class TwigFilters extends \Twig_Extension {
   public static function hasMarkup($variable) {
     $string = static::removeHtmlComments($variable);
     $string = strip_tags($string, '<img> <a> <iframe> <object> <picture> <figure>');
-    dpm(trim($string));
     return !empty(trim($string));
   }
 

@@ -47,6 +47,13 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   protected $fieldCloneManager;
 
   /**
+   * Array of field clone plugins.
+   *
+   * @var \Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneInterface[]
+   */
+  protected $fieldClonePlugins;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -165,7 +172,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
     }
     for ($i = 0; $i < $this->configuration['clone_count']; $i++) {
       $duplicate_node = $this->duplicateEntity($entity);
-      //      $duplicate_node->save();
+      $duplicate_node->save();
     }
   }
 
@@ -191,15 +198,24 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       }
     }
 
+    $field_plugins = $this->getFieldClonePlugins();
+
     foreach ($this->configuration['field_clone'] as $plugin_id => $fields) {
-      /** @var \Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneInterface $plugin */
-      $plugin = $this->fieldCloneManager->createInstance($plugin_id);
       foreach ($fields as $field_name => $field_changes) {
-        $plugin->alterFieldValue($duplicate_entity, $field_name, $field_changes);
+        $field_plugins[$plugin_id]->alterFieldValue($entity, $duplicate_entity, $field_name, $field_changes);
       }
     }
 
     return $duplicate_entity;
+  }
+
+  protected function getFieldClonePlugins() {
+    if (empty($this->fieldClonePlugins)) {
+      foreach ($this->fieldCloneManager->getDefinitions() as $plugin_definition) {
+        $this->fieldClonePlugins[$plugin_definition['id']] = $this->fieldCloneManager->createInstance($plugin_definition['id']);
+      }
+    }
+    return $this->fieldClonePlugins;
   }
 
   /**

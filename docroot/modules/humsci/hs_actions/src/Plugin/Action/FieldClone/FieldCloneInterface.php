@@ -20,6 +20,6 @@ interface FieldCloneInterface extends PluginFormInterface, ContainerFactoryPlugi
    *
    * @return mixed
    */
-  public function alterFieldValue(FieldableEntityInterface $entity, $field_name, $config = []);
+  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $entity, $field_name, $config = []);
 
 }

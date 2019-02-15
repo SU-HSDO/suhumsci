@@ -21,6 +21,8 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class Date extends FieldCloneBase {
 
+  protected $entityIds = [];
+
   /**
    * {@inheritdoc}
    */
@@ -56,28 +58,35 @@ class Date extends FieldCloneBase {
   /**
    * {@inheritdoc}
    */
-  public function alterFieldValue(FieldableEntityInterface $entity, $field_name, $config = []) {
+  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $entity, $field_name, $config = []) {
     if (!$entity->hasField($field_name)) {
       return;
     }
+    if (!isset($this->entityIds[$original_entity->id()])) {
+      $this->entityIds[$original_entity->id()] = 0;
+    }
+    $this->entityIds[$original_entity->id()]++;
+    $config['multiple'] = $this->entityIds[$original_entity->id()];
 
     $values = $entity->get($field_name);
+    $new_values = [];
     for ($delta = 0; $delta < $values->count(); $delta++) {
       $item_value = $values->get($delta)->getValue();
-      foreach ($item_value as &$column) {
-        $column = $this->incrementDateValue($column, $config);
+
+      foreach ($item_value as $column_name => $column_value) {
+        $new_values[$delta][$column_name] = $this->incrementDateValue($column_value, $config);
       }
-      $values->set($delta, $item_value);
     }
-    $entity->set($field_name, $values);
+    $entity->set($field_name, $new_values);
   }
 
   protected function incrementDateValue($value, $increment_config = []) {
-     $new_value = new \DateTime($value);
-     $interval = \DateInterval::createFromDateString($increment_config['increment'] . ' ' . $increment_config['unit']);
-     $new_value->add($interval);
+    $increment = $increment_config['multiple'] * $increment_config['increment'];
 
-     $new_value->format($new_value->form);
+    $new_value = new \DateTime($value);
+    $interval = \DateInterval::createFromDateString($increment . ' ' . $increment_config['unit']);
+    $new_value->add($interval);
+    return $new_value->format('Y-m-d\TH:i:s');
   }
 
 }

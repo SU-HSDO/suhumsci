@@ -1,4 +1,4 @@
-{% set attributes = attributes.addClass('generic-three-column', variant) %}
+{% set attributes = attributes.addClass('generic-three-column', variant|clean_class) %}
 
 {% set leftAttributes = create_attribute({class:'left-region'}) %}
 {% set middleAttributes = create_attribute({class:'middle-region'}) %}
@@ -16,22 +16,26 @@
   {% set rightAttributes = rightAttributes.addClass('larger') %}
 {% endif %}
 
-<div{{ attributes }}>
-  {%- if left or static -%}
-    <div{{ leftAttributes }}>
-      {{ left }}
-    </div>
-  {%- endif -%}
+{% spaceless %}
+  <div{{ attributes }}>
 
-  {%- if middle or static -%}
-    <div{{ middleAttributes }}>
-      {{ middle }}
-    </div>
-  {%- endif -%}
+    {%- if left|has_markup or static -%}
+      <div{{ leftAttributes }}>
+        {{ left }}
+      </div>
+    {%- endif -%}
 
-  {%- if right|render|trim or static -%}
-    <div{{ rightAttributes }}>
-      {{ right }}
-    </div>
-  {%- endif -%}
-</div>
+    {%- if middle|has_markup or static -%}
+      <div{{ middleAttributes }}>
+        {{ middle }}
+      </div>
+    {%- endif -%}
+
+    {%- if right|has_markup or static -%}
+      <div{{ rightAttributes }}>
+        {{ right }}
+      </div>
+    {%- endif -%}
+
+  </div>
+{% endspaceless %}

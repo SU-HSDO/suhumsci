@@ -166,7 +166,7 @@ class HumsciServerCommand extends AcHooksCommand {
     $this->say('Existing domains on the cert:' . PHP_EOL . implode(PHP_EOL, $domains));
 
     if (!empty($options['domains'])) {
-      $this->say('Adding domains: '. implode(', ', $options['domains']));
+      $this->say('Adding domains: ' . implode(', ', $options['domains']));
       $domains = array_merge($domains, $options['domains']);
     }
 
@@ -283,10 +283,12 @@ class HumsciServerCommand extends AcHooksCommand {
   /**
    * Changes necessary configuration and adds the domain to the LE Cert.
    *
-   * @command humsci:launch-site
-   *
    * @param string $site
    *   The machine name of the site.
+   *
+   * @command humsci:launch-site
+   *
+   * @throws \Robo\Exception\TaskException
    */
   public function launchSite($site) {
     $new_domain = preg_replace('/[^a-z]/', '-', $site);

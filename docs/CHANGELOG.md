@@ -1,5 +1,24 @@
 # HumSci
 
+8.0.18
+--------------------------------------------------------------------------------  
+_Release Date: 2019-02-20_
+
+* HSD8-578 Added margin to horizontal cards used in ECK fields
+* HSD8-536 Accordion Pattern & Paragraph
+* HSD8-355 Changed config ignore to ignore only parts of google analytics
+* HSD8-579 Use ultimate cron to compartmentalize each migration importer 
+* HSD8-572 Style the login portal page to be closer to material theme
+* HSD8-312 HSD8-504 External LInk icon placement and styles
+* HS-113 CAPx importer fixes
+* HSD8-576 View Field title (with optional override)
+* HSD8-515 Use color module to change colors on the site
+* HSD8-297 Fixed WYSIWYG toolbar when the content is really long
+* HSD8-555 Filter shortcuts the user doesn't have permission to access
+* Enable honeypot on all webforms
+* Research Areas can now be placed in a menu
+* Updated dependencies
+
 8.0.17
 --------------------------------------------------------------------------------  
 _Release Date: 2019-02-06_

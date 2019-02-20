@@ -81,7 +81,7 @@ function hs_capx_update_8001() {
   $capx_settings->save();
 
   $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_updater = \Drupal::entityDefinitionUpdateManager();
   $entity_definition = $entity_type_manager->getDefinition('capx_importer');
-  $entity_update_manager->installEntityType($entity_definition);
+  $entity_updater->installEntityType($entity_definition);
 }

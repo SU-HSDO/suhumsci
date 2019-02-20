@@ -15,9 +15,8 @@
     @include padding(.1em null null);
   }
 
-  &.no-dash {
-    &::after {
-      display: none;
-    }
+  &.no-dash::after,
+  a[data-extlink] &:after {
+    content: unset;
   }
 }

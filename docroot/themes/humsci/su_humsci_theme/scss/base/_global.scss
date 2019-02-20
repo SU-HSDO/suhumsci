@@ -104,7 +104,7 @@
 // External Link icons.
 a span.ext {
   #footer__global-footer & {
-    display:none;
+    display: none;
   }
 }
 
@@ -157,4 +157,44 @@ figure {
 
 figcaption {
   @include caption;
+}
+
+a[class*="heading-link-"] {
+  text-decoration: none;
+}
+
+a[data-extlink] {
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    display: inline;
+  }
+
+  .extlink {
+    font-size: 60%;
+    padding: 0 5px;
+
+    .fa-arrow-right {
+      transform: rotate(-45deg);
+    }
+
+    // Duplicated text "Link is External" occurs in screen readers.
+    // Hide this one from screen readers to prevent repeated text.
+    .visually-hidden {
+      display: none;
+    }
+  }
+}
+
+// Decanter unsets focus style provided by the browser. We NEED this.
+body *:focus {
+  outline: rgb(77, 144, 254) auto 5px;
+}
+
+.brand-bar *:focus,
+.decanter-button *:focus {
+  outline: #fff auto 5px;
 }

@@ -101,7 +101,7 @@ function hs_paragraphs_between_add_below_submit(array $form, FormStateInterface 
   $field_values = $form_state->getValue($field_path);
   unset($field_values['add_more']);
   uasort($field_values, function ($item_1, $item_2) {
-    return $item_1['_weight'] > $item_2['_weight'];
+    return (int) $item_1['_weight'] > $item_2['_weight'];
   });
   $add_more_delta = array_search($submit['button']['#delta'], array_keys($field_values)) + 1;
 

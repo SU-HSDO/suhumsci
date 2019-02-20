@@ -3,6 +3,7 @@
 namespace Drupal\hs_capx\Form;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -24,21 +25,37 @@ class CapxImporterForm extends EntityForm {
   protected $entityFieldManager;
 
   /**
+   * Database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The original entity before saving.
+   *
+   * @var \Drupal\hs_capx\Entity\CapxImporterInterface
+   */
+  protected $originalEntity;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('database')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, Connection $database) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
+    $this->database = $database;
   }
 
   /**
@@ -49,6 +66,7 @@ class CapxImporterForm extends EntityForm {
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     $importer = $this->entity;
+    $this->originalEntity = clone $importer;
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -166,7 +184,6 @@ class CapxImporterForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    Cache::invalidateTags(['migration_plugins']);
     // Add permission to execute importer.
     $role = $this->entityTypeManager->getStorage('user_role')
       ->load('site_manager');
@@ -186,11 +203,46 @@ class CapxImporterForm extends EntityForm {
         break;
 
       default:
+        $this->invalidateMigrationHashes();
         drupal_set_message($this->t('Saved the %label Capx importer.', [
           '%label' => $importer->label(),
         ]));
     }
     $form_state->setRedirectUrl($importer->toUrl('collection'));
+
+    Cache::invalidateTags(['migration_plugins', 'hs_capx_config']);
+  }
+
+  /**
+   * Invalidate migration mapper hashes to be updated on next import.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function invalidateMigrationHashes() {
+    // If the importer hasn't been executed, the table will not be created.
+    if (!$this->database->schema()->tableExists('migrate_map_hs_capx')) {
+      return;
+    }
+
+    $entity_query = $this->entityTypeManager->getStorage('node')
+      ->getQuery('OR');
+
+    // Find all node ids that are tagged with the fields. This allows us to only
+    // invalidate the hashes that are applicable.
+    foreach ($this->originalEntity->getFieldTags() as $field_name => $term_ids) {
+      foreach ($term_ids as $term_id) {
+        $entity_query->condition($field_name, $term_id);
+      }
+    }
+
+    $entity_ids = array_keys($entity_query->execute());
+    if ($entity_ids) {
+      $this->database->update('migrate_map_hs_capx')
+        ->condition('destid1', $entity_query->execute(), 'IN')
+        ->fields(['hash' => ''])
+        ->execute();
+    }
   }
 
 }

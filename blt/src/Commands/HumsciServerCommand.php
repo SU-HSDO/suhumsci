@@ -277,7 +277,6 @@ class HumsciServerCommand extends AcHooksCommand {
       ->alias($this->getConfigValue('drush.aliases.remote'))
       ->drush('eval')
       ->arg($php_command)
-      ->printOutput(FALSE)
       ->run();
   }
 

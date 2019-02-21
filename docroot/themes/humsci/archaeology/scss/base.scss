@@ -33,9 +33,26 @@ a.heading-link-h2 {
   }
 }
 
+.vertical-link-card > a[class*="heading-link-"] {
+  display: table;
+
+  &:after {
+    content: none;
+  }
+}
+
 h3,
 a.heading-link-h3 {
   @include heading-dash(3px, $color-sun, 30px);
+}
+
+.horizontal-card__title {
+  h2,
+  h3 {
+    &:after {
+      content: none;
+    }
+  }
 }
 
 h4,

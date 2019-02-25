@@ -571,8 +571,10 @@ function hs_field_helpers_node_view(array &$build, EntityInterface $entity, Enti
 
     // Display a message to the user that this page would redirect to another
     // location for other users.
-    \Drupal::messenger()
-      ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
+    if ($target != $rabbit_hole->get('redirect')) {
+      \Drupal::messenger()
+        ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
+    }
   }
 }
 

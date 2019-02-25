@@ -41,7 +41,7 @@ function hs_bugherd_update_8002() {
  */
 function hs_bugherd_update_8003() {
   $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_updater = \Drupal::entityDefinitionUpdateManager();
   $entity_definition = $entity_type_manager->getDefinition('bugherd_connection');
-  $entity_update_manager->installEntityType($entity_definition);
+  $entity_updater->installEntityType($entity_definition);
 }

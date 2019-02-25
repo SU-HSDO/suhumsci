@@ -129,6 +129,8 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
    *
    * @return bool
    *   if the form should be marked readonly.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   protected function lockConfigFormBase(ConfigFormBase $form_object) {
     try {
@@ -217,17 +219,17 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
    * Find out if a provided config entity name should be ignored.
    *
    * @param string $config_name
-   *   Config name to
+   *   Config name to check if ignored.
    *
    * @return bool
    *   If the given config should be ignored.
    */
   protected function isIgnoredConfig($config_name) {
-    $ignored_config_settings = $this->configFactory->get('config_ignore.settings')
+    $ignored_configs = $this->configFactory->get('config_ignore.settings')
       ->get('ignored_config_entities');
-    foreach ($ignored_config_settings as $config_ignore_setting) {
+    foreach ($ignored_configs as $ignored_config) {
       // Split the ignore settings so that we can ignore individual keys.
-      $ignore = explode(':', $config_ignore_setting);
+      $ignore = explode(':', $ignored_config);
       if (count($ignore) > 1 && fnmatch($ignore[0], $config_name)) {
         return FALSE;
       }

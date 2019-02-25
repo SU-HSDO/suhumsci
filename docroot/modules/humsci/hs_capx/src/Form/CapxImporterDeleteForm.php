@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_capx\Form;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -37,17 +38,17 @@ class CapxImporterDeleteForm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-
     drupal_set_message(
       $this->t('content @type: deleted @label.',
         [
           '@type' => $this->entity->bundle(),
           '@label' => $this->entity->label(),
         ]
-        )
+      )
     );
 
     $form_state->setRedirectUrl($this->getCancelUrl());
+    Cache::invalidateTags(['migration_plugins', 'hs_capx_config']);
   }
 
 }

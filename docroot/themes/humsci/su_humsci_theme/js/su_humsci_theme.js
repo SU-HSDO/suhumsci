@@ -2,6 +2,11 @@
   'use strict';
   Drupal.behaviors.suHumSciTheme = {
     attach: function (context, settings) {
+      var headings = ['h2', 'h3', 'h4', 'h5', 'h6'];
+      headings.map(function (heading) {
+        $('a:has(' + heading + ')', context).addClass('heading-link-' + heading);
+      });
+
       $('#search-region .search-block-form input[type=search], #search-region .views-exposed-filter-block.hs-search-search-page input[type=text]', context).focus(function () {
         $(this).closest('form').addClass('expanded');
       }).blur(function () {
@@ -15,8 +20,8 @@
 
       // Adds aria label to chosen input fields.
       // https://www.drupal.org/project/chosen/issues/2384865#comment-12568848
-      $('body').on('chosen:ready', function(evt, params) {
-        $('.js-form-item.js-form-type-select', context).once('chosenAccessibilityFix').each(function(index, element) {
+      $('body').on('chosen:ready', function (evt, params) {
+        $('.js-form-item.js-form-type-select', context).once('chosenAccessibilityFix').each(function (index, element) {
           $(element).find('.chosen-container-multi input.chosen-search-input').attr('aria-label', $.trim($(element).find('label').text()));
         });
       });
@@ -35,8 +40,8 @@
       }
 
       window.addEventListener('keydown', handleFirstTab);
-      $('figure', context).each(function(i, figure){
-        $(figure).imagesLoaded(function(){
+      $('figure', context).each(function (i, figure) {
+        $(figure).imagesLoaded(function () {
           $(figure).find('figcaption, picture').css('max-width', $(figure).find('img').width());
         });
       })

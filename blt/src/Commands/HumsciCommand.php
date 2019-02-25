@@ -13,6 +13,76 @@ class HumsciCommand extends AcHooksCommand {
   use HumsciTrait;
 
   /**
+   * Disables a list of modules for all sites in an environment.
+   *
+   * @param string $modules
+   *   Comma delimited list of modules to disable.
+   * @param string $environment
+   *   Environment to disable modules.
+   * @param string $excluded_sites
+   *   Comma delimited list of sites to skip.
+   *
+   * @command drupal:module:uninstall
+   */
+  public function disableModules($modules, $environment, $excluded_sites = '') {
+    if (is_string($modules)) {
+      $modules = explode(',', $modules);
+      array_walk($modules, 'trim');
+    }
+    if (is_string($excluded_sites)) {
+      $excluded_sites = explode(',', $excluded_sites);
+      array_walk($excluded_sites, 'trim');
+    }
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      if (in_array($multisite, $excluded_sites)) {
+        continue;
+      }
+      $this->taskDrush()
+        ->alias("$multisite.$environment")
+        ->drush('pmu')
+        ->args(implode(',', $modules))
+        ->drush('cr')
+        ->run();
+    }
+  }
+
+  /**
+   * Enables a list of modules for all sites in an environment.
+   *
+   * @param string $modules
+   *   Comma delimited list of modules to enable.
+   * @param string $environment
+   *   Environment to disable modules.
+   * @param string $excluded_sites
+   *   Comma delimited list of sites to skip.
+   *
+   * @command drupal:module:enable
+   */
+  public function enableModules($modules, $environment, $excluded_sites = '') {
+    if (is_string($modules)) {
+      $modules = explode(',', $modules);
+      array_walk($modules, 'trim');
+    }
+    if (is_string($excluded_sites)) {
+      $excluded_sites = explode(',', $excluded_sites);
+      array_walk($excluded_sites, 'trim');
+    }
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      if (in_array($multisite, $excluded_sites)) {
+        continue;
+      }
+      $this->taskDrush()
+        ->alias("$multisite.$environment")
+        ->drush('en')
+        ->args(implode(',', $modules))
+        ->drush('cr')
+        ->drush('cim')
+        ->option('partial')
+        ->run();
+    }
+  }
+
+  /**
    * Run cron on all sites.
    *
    * @command drupal:cron

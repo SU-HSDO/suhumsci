@@ -102,7 +102,7 @@ if ($is_ah_env) {
 }
 
 // Set the config_ignore settings so that config imports will function on local.
-if ($is_local_env) {
+if ($is_local_env || (isset($split) && $split == 'local')) {
   $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
   $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
 }

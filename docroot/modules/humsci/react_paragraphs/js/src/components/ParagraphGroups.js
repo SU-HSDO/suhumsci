@@ -34,11 +34,13 @@ export class ParagraphGroups extends Component {
       .then(jsonData => {
         console.log(jsonData);
         jsonData[this.props.fieldName].map((item, delta) => {
-          item.settings = {
-            row: delta,
-            index: 0,
-            width: 12
-          };
+          // item.settings = {
+          //   row: delta,
+          //   index: 0,
+          //   width: 12
+          // };
+          item.settings = JSON.parse(item.settings);
+          console.log(item);
           item.id = 'item-' + item.target_uuid;
 
           var items = {...this.state.items};

@@ -130,7 +130,7 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
     }
     if (!empty($item_data['target_id'])) {
       $entity = Paragraph::load($item_data['target_id']);
-      
+
       foreach ($item_data['entity'] as $field_name => $field_value) {
         if (array_filter($field_value) && strpos($field_name, 'field_') !== FALSE) {
           $entity->set($field_name, $field_value);

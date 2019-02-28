@@ -3,7 +3,9 @@
 
   Drupal.behaviors.hsFieldHelpersViewsReset = {
     attach: function attach(context, settings) {
-
+      if (typeof (Drupal.views) === 'undefined') {
+        return;
+      }
       $.each(Drupal.views.instances, function (key, ajaxView) {
         ajaxView['$exposed_form'].find('input[data-drupal-selector=edit-reset]').once('views-reset').click(function (e) {
           e.preventDefault();

@@ -3,7 +3,7 @@
 namespace Drupal\react_paragraphs\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\TypedData\DataReferenceTargetDefinition;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem;
 
 /**
@@ -15,7 +15,8 @@ use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevi
  *   description = @Translation("My Field Type"),
  *   category = @Translation("Reference revisions"),
  *   default_widget = "react_paragraphs",
- *   default_formatter = "react_paragraphs"
+ *   default_formatter = "react_paragraphs",
+ *   list_class = "\Drupal\entity_reference_revisions\EntityReferenceRevisionsFieldItemList"
  * )
  */
 class ReactParagraphsFieldType extends EntityReferenceRevisionsItem {
@@ -31,7 +32,7 @@ class ReactParagraphsFieldType extends EntityReferenceRevisionsItem {
 
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
-    $properties['settings'] = DataReferenceTargetDefinition::create('integer')
+    $properties['settings'] = DataDefinition::create('string')
       ->setLabel(t('Settings'));
     return $properties;
   }

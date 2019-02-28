@@ -3,15 +3,14 @@
 namespace Drupal\react_paragraphs\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\Plugin\EntityReferenceSelection\ParagraphSelection;
-use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,6 +33,13 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
    */
   protected $selectionManager;
+
+  /**
+   * Keyed array of item ids.
+   *
+   * @var array
+   */
+  protected $paragraphIds;
 
   /**
    * {@inheritdoc}
@@ -62,6 +68,7 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element_id = Html::getUniqueId(str_replace('.', '-', $this->fieldDefinition->id()));
+
     $elements['value'] = $element + [
         '#type' => 'hidden',
         '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
@@ -72,7 +79,8 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
             'reactParagraphs' => [
               [
                 'fieldId' => $element_id,
-                'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()->id(),
+                'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()
+                  ->id(),
                 'available_items' => $this->getAllowedTypes($this->fieldDefinition),
                 'existing_items' => $items->getValue(),
                 'fieldName' => $this->fieldDefinition->getName(),
@@ -84,10 +92,58 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
     return $elements;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    dpm(json_decode(urldecode($values['value']), true));
-    return [];
-//    return parent::massageFormValues($values, $form, $form_state);
+    $react_data = json_decode(urldecode($values['value']), TRUE);
+    $return_data = [];
+
+    foreach ($react_data['rowOrder'] as $row_index => $row_id) {
+
+      foreach ($react_data['rows'][$row_id]['items'] as $item_index => $item_id) {
+        $entity = $this->getEntity($item_id, $react_data['items'][$item_id]);
+        $react_data['items'][$item_id]['settings']['index'] = $item_index;
+        $react_data['items'][$item_id]['settings']['row'] = $row_index;
+
+        $return_data[] = [
+          'entity' => $entity,
+          'target_id' => $entity->id(),
+          'target_revision_id' => $entity->getRevisionId(),
+          'settings' => serialize($react_data['items'][$item_id]['settings']),
+        ];
+      }
+    }
+    return $return_data;
+  }
+
+  /**
+   * @param $item_id
+   * @param array $item_data
+   *
+   * @return \Drupal\Core\Entity\RevisionableContentEntityBase
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function getEntity($item_id, array $item_data) {
+    if (isset($this->paragraphIds[$item_id])) {
+      return $this->paragraphIds[$item_id];
+    }
+    if (!empty($item_data['target_id'])) {
+      $entity = Paragraph::load($item_data['target_id']);
+      
+      foreach ($item_data['entity'] as $field_name => $field_value) {
+        if (array_filter($field_value) && strpos($field_name, 'field_') !== FALSE) {
+          $entity->set($field_name, $field_value);
+        }
+      }
+    }
+    else {
+      $entity = Paragraph::create($item_data['entity']);
+      $entity->save();
+    }
+
+    $this->paragraphIds[$item_id] = $entity;
+    return $this->paragraphIds[$item_id];
   }
 
   /**

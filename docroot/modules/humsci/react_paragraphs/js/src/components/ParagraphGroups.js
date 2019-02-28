@@ -25,13 +25,14 @@ export class ParagraphGroups extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     if (this.props.entityId == null) {
       return;
     }
-
     fetch('http://docroot.suhumsci.loc/node/' + this.props.entityId + '?_format=json')
       .then(response => response.json())
       .then(jsonData => {
+        console.log(jsonData);
         jsonData[this.props.fieldName].map((item, delta) => {
           item.settings = {
             row: delta,
@@ -187,14 +188,15 @@ export class ParagraphGroups extends Component {
 
   onAddRowClick(event) {
     event.preventDefault();
-    const newRowId = 'row-' + this.state.rowCount + 1;
-    this.state.rows[newRowId] = {id: newRowId, items: []};
-    let newRowCount = this.state.rowCount;
-    newRowCount++;
-    this.setState({
-      rowOrder: this.state.rowOrder.concat([newRowId]),
-      rowCount: newRowCount
-    })
+
+    const newState = {...this.state};
+    newState.rowCount += 1;
+    const newRowId = 'row-' + parseInt(newState.rowCount);
+
+    newState.rows[newRowId] = {id: newRowId, items: []};
+    newState.rowOrder.push(newRowId);
+    this.setState(newState);
+    return newState;
   }
 
   onRemoveRow(row, event) {
@@ -210,23 +212,35 @@ export class ParagraphGroups extends Component {
 
   onTakeToolItem(newItem, event) {
     event.preventDefault();
+    if (!this.state.rowOrder.length) {
+      this.onAddRowClick(event);
+    }
+
     let newState = {...this.state};
+
     let newUuid = UUID.v4();
     while (typeof (newState.items['item-' + newUuid]) !== 'undefined') {
       newUuid = UUID.v4();
     }
+
     const lastRowId = newState.rowOrder.slice(-1);
+    const itemWidth = 12 / newState.rows[lastRowId].items.length;
+
     newState.items['item-' + newUuid] = {
       entity: {
         type: [{target_id: newItem.id}]
       },
       id: 'item-' + newUuid,
-      settings: {row: 0, index: 0, width: 3},
+      settings: {
+        row: 0,
+        index: 0,
+        width: isFinite(itemWidth) ? isFinite : 12,
+      },
       target_id: null,
       target_uuid: newUuid,
     };
-    newState.rows[lastRowId].items.push('item-' + newUuid);
 
+    newState.rows[lastRowId].items.push('item-' + newUuid);
     this.setState(newState);
   }
 
@@ -245,6 +259,7 @@ export class ParagraphGroups extends Component {
       }
     });
     this.setState(newState);
+
   }
 
   onItemEdit(item) {

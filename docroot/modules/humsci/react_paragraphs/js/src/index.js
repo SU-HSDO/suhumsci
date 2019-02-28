@@ -27,7 +27,7 @@ if (typeof (window.drupalSettings) === 'undefined') {
 }
 
 window.drupalSettings.reactParagraphs.map(item => {
-  // item.entityId = 437;
+  // item.entityId = null;
   // item.fieldName = 'field_hs_page_components';
   var paragraphsForm = document.getElementById(item.fieldId);
   if (paragraphsForm) {

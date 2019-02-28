@@ -27,6 +27,7 @@ export class Item extends Component {
     }));
   }
 
+
   render() {
     const style = this.state.showForm ? {} : {display: 'none'};
 
@@ -75,7 +76,8 @@ export class Item extends Component {
                    onClick={this.props.onItemRemove.bind(undefined, this.props.item)}>X<span
                   className="visually-hidden"></span></a>
                 <div className="item-form" style={style}>
-                  <EntityForm item={this.props.item}/>
+                  <EntityForm item={this.props.item}
+                              onItemEdit={this.props.onItemEdit}/>
                 </div>
               </div>
 
@@ -89,20 +91,56 @@ export class Item extends Component {
 
 
 export class EntityForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showForm: false,
+    };
+    this.onFieldEdit = this.onFieldEdit.bind(this);
+  }
+
+  onFieldEdit(item, fieldName, event) {
+    let fieldPath = fieldName.split('[');
+    fieldPath = fieldPath.map(path => path.replace(']', ''));
+    item.entity = this.setFieldValue(item.entity, fieldPath, event.target.value);
+    this.props.onItemEdit(item);
+  }
+
+  setFieldValue(entity, path, value) {
+    const [index] = path.splice(0, 1);
+    if (path.length) {
+      if (typeof (entity[index]) === 'undefined') {
+        entity[index] = {};
+      }
+      entity[index] = this.setFieldValue(entity[index], path, value);
+    }
+    else {
+      entity[index] = value;
+    }
+    return entity;
+  }
+
+
   render() {
     switch (this.props.item.entity.type[0].target_id) {
       case 'hs_postcard':
-        return (<PostcardForm entity={this.props.item.entity}/>);
+        return (<PostcardForm item={this.props.item}
+                              onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_text_area':
-        return (<TextAreaForm entity={this.props.item.entity}/>);
+        return (<TextAreaForm entity={this.props.item.entity}
+                              onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_accordion':
-        return (<AccordionForm entity={this.props.item.entity}/>);
+        return (<AccordionForm entity={this.props.item.entity}
+                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_hero_image':
-        return (<HeroImageForm entity={this.props.item.entity}/>);
+        return (<HeroImageForm entity={this.props.item.entity}
+                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_view':
-        return (<ViewForm entity={this.props.item.entity}/>);
+        return (<ViewForm entity={this.props.item.entity}
+                          onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_webform':
-        return (<WebformForm entity={this.props.item.entity}/>);
+        return (<WebformForm entity={this.props.item.entity}
+                             onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       default:
         return (<div/>)
     }

@@ -62,12 +62,9 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element_id = Html::getUniqueId(str_replace('.', '-', $this->fieldDefinition->id()));
-    $element['value'] = $element + [
+    $elements['value'] = $element + [
         '#type' => 'hidden',
         '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-        '#size' => $this->getSetting('size'),
-        '#placeholder' => $this->getSetting('placeholder'),
-        '#maxlength' => $this->getFieldSetting('max_length'),
         '#suffix' => "<div id='$element_id'></div>",
         '#attached' => [
           'library' => ['react_paragraphs/field_widget'],
@@ -84,12 +81,13 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
           ],
         ],
       ];
-
-    return $element;
+    return $elements;
   }
 
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    return parent::massageFormValues($values, $form, $form_state);
+    dpm(json_decode(urldecode($values['value']), true));
+    return [];
+//    return parent::massageFormValues($values, $form, $form_state);
   }
 
   /**

@@ -52,6 +52,7 @@ export class Row extends Component {
                           containerWidth={this.state.containerWidth}
                           onItemResize={this.props.onItemResize}
                           onItemRemove={this.props.onItemRemove}
+                          onItemEdit={this.props.onItemEdit}
                         />
                       )
                     })}

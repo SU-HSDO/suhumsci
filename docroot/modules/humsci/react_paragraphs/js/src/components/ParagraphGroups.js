@@ -3,7 +3,6 @@ import {DragDropContext, Droppable} from 'react-beautiful-dnd';
 import {default as UUID} from "node-uuid";
 import {ToolBox} from "./Molecules/ToolBox";
 import {Row} from "./Row";
-import "../../scss/react_paragraphs.field_widget.scss"
 
 export class ParagraphGroups extends Component {
 
@@ -22,6 +21,7 @@ export class ParagraphGroups extends Component {
     this.onTakeToolItem = this.onTakeToolItem.bind(this);
     this.onItemRemove = this.onItemRemove.bind(this);
     this.onItemResize = this.onItemResize.bind(this);
+    this.onItemEdit = this.onItemEdit.bind(this);
   }
 
   componentDidMount() {
@@ -73,6 +73,23 @@ export class ParagraphGroups extends Component {
             })
         });
       });
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const formItemsField = document.getElementsByName(this.props.fieldName + '[value]');
+    // const formItemsField =
+    // document.getElementsByName('field_react_paragraphs[value]');
+    if (formItemsField.length) {
+      const returnValue = {
+        items: this.state.items,
+        rows: this.state.rows,
+        rowOrder: this.state.rowOrder,
+      };
+      formItemsField[0].value = encodeURI(JSON.stringify(returnValue));
+      return;
+    }
+
+    alert("Something isn't working correctly");
   }
 
   onItemResize(item, containerWidth, event, direction, element, changes) {
@@ -230,6 +247,12 @@ export class ParagraphGroups extends Component {
     this.setState(newState);
   }
 
+  onItemEdit(item) {
+    const newState = {...this.state};
+    newState[item.id] = item;
+    this.setState(newState);
+  }
+
   render() {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -252,6 +275,7 @@ export class ParagraphGroups extends Component {
                     onItemResize={this.onItemResize}
                     onItemRemove={this.onItemRemove}
                     onRemoveRow={this.onRemoveRow}
+                    onItemEdit={this.onItemEdit}
                   />
                 )
               })}
@@ -264,5 +288,6 @@ export class ParagraphGroups extends Component {
       </DragDropContext>
     );
   }
+
 }
 

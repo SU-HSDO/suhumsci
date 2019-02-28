@@ -3,17 +3,13 @@
 //
 // Global
 //
-
 // Decanter
-@import
-  'decanter-no-markup';
-
+@import 'decanter-no-markup';
 // SU HumSci
-@import
-  '../utilities/mixins/index';
+@import '../utilities/mixins/index';
 
 #main-content {
-  @include padding( null null 10rem);
+  @include padding(null null 10rem);
 }
 
 // Date stacked style
@@ -96,12 +92,30 @@
 }
 
 // Further nesting of Decanter's button styles
-.decanter-button a {
-  color: $color-white;
-  text-decoration: none;
 
-  &:hover {
-    text-decoration: none;
+body {
+  .decanter-button:not(a) {
+    padding: 0;
+
+    a {
+      color: $color-white;
+      text-decoration: none;
+      padding: 1rem 2rem 1.5rem;
+      display: block;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .decanter-button--secondary:not(a) {
+    padding: 0;
+
+    a {
+      padding: 1rem 2rem 1.5rem;
+      display: block;
+    }
   }
 }
 

@@ -310,6 +310,10 @@ class HumsciServerCommand extends AcHooksCommand {
       ->arg(1)
       ->drush('pmu')
       ->arg('nobots')
+      ->drush('state:set')
+      ->arg('xmlsitemap_base_url')
+      ->arg($new_domain)
+      ->drush('xmlsitemap:rebuild')
       ->drush('cr')
       ->run();
   }

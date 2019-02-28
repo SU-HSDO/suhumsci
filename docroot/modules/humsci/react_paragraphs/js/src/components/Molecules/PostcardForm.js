@@ -64,10 +64,12 @@ export const PostcardForm = ({item, onFieldEdit}) => {
         onChange={onFieldEdit}
       />
 
-      <div className="form-item">
-        <label>Card Body</label>
-        <TextAreaField data={bodyValue}/>
-      </div>
+      <TextAreaField
+        label="Card Body"
+        value={bodyValue}
+        name="field_hs_postcard_body[0][value]"
+        onChange={onFieldEdit}
+      />
 
       <fieldset className="container">
         <legend>Read More Link</legend>

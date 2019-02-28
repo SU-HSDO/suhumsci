@@ -3,7 +3,7 @@ import {MediaField} from "../Atoms/MediaField";
 import {TextAreaField} from "../Atoms/TextAreaField";
 import {InputField} from "../Atoms/InputField";
 
-export const AccordionForm = ({entity}) => {
+export const AccordionForm = ({entity, onFieldEdit}) => {
   let summaryValue = '';
   if (typeof (entity.field_hs_accordion_summary) !== 'undefined' && entity.field_hs_accordion_summary.length) {
     summaryValue = entity.field_hs_accordion_summary[0].value
@@ -24,8 +24,9 @@ export const AccordionForm = ({entity}) => {
 
       <InputField
         label="Summary"
-        name="field_hs_accordion_summary"
+        name="field_hs_accordion_summary[0][value]"
         value={summaryValue}
+        onChange={onFieldEdit}
       />
 
       <div className="form-item">
@@ -33,10 +34,13 @@ export const AccordionForm = ({entity}) => {
         <MediaField data={imageValue}/>
       </div>
 
-      <div className="form-item">
-        <label>Description</label>
-        <TextAreaField data={descriptionValue}/>
-      </div>
+
+        <TextAreaField
+          label="Description"
+          value={descriptionValue}
+          name="field_hs_accordion_summary[0][value]"
+          onChange={onFieldEdit}
+        />
     </div>
   )
 };

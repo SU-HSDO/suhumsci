@@ -3,7 +3,7 @@ import React from "react";
 
 export const WebformForm = ({entity}) => {
   const displayOptions = [
-    {value: '_none"', label: '- None -'},
+    {value: '_none', label: '- None -'},
     {value: 'contact"', label: 'Contact Us'},
     {value: 'funding_request"', label: 'Funding Request'},
   ];

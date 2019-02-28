@@ -110,10 +110,11 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
           'entity' => $entity,
           'target_id' => $entity->id(),
           'target_revision_id' => $entity->getRevisionId(),
-          'settings' => serialize($react_data['items'][$item_id]['settings']),
+          'settings' => json_encode($react_data['items'][$item_id]['settings']),
         ];
       }
     }
+
     return $return_data;
   }
 

@@ -100,10 +100,12 @@ export class EntityForm extends Component {
   }
 
   onFieldEdit(item, fieldName, event) {
-    let fieldPath = fieldName.split('[');
-    fieldPath = fieldPath.map(path => path.replace(']', ''));
-    item.entity = this.setFieldValue(item.entity, fieldPath, event.target.value);
-    this.props.onItemEdit(item);
+    if (fieldName) {
+      let fieldPath = fieldName.split('[');
+      fieldPath = fieldPath.map(path => path.replace(']', ''));
+      item.entity = this.setFieldValue(item.entity, fieldPath, event.target.value);
+      this.props.onItemEdit(item);
+    }
   }
 
   setFieldValue(entity, path, value) {

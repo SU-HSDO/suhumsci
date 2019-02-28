@@ -35,10 +35,11 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
       10 => 'decanter-width-five-sixths',
       11 => 'decanter-width-eleven-twelfths',
     ];
-
+    $row_data = [];
     for ($delta = 0; $delta < $items->count(); $delta++) {
-      $item = $items->get($delta);
-      $item_settings = unserialize($item->getValue()['settings']);
+      $item_settings = $items->get($delta)->getValue()['settings'];
+      $item_settings = json_decode($item_settings, TRUE);
+
       $row_data[$item_settings['row']]['#type'] = 'container';
       $row_data[$item_settings['row']]['#attributes'] = ['class' => ['clearfix']];
       $row_data[$item_settings['row']][] = [

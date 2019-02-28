@@ -25,22 +25,23 @@ export class ParagraphGroups extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     if (this.props.entityId == null) {
       return;
     }
     fetch('http://docroot.suhumsci.loc/node/' + this.props.entityId + '?_format=json')
       .then(response => response.json())
       .then(jsonData => {
-        console.log(jsonData);
         jsonData[this.props.fieldName].map((item, delta) => {
-          // item.settings = {
-          //   row: delta,
-          //   index: 0,
-          //   width: 12
-          // };
-          item.settings = JSON.parse(item.settings);
-          console.log(item);
+          if (typeof (item.settings) === 'undefined') {
+            item.settings = {
+              row: delta,
+              index: 0,
+              width: 12,
+            }
+          }
+          else {
+            item.settings = JSON.parse(item.settings);
+          }
           item.id = 'item-' + item.target_uuid;
 
           var items = {...this.state.items};

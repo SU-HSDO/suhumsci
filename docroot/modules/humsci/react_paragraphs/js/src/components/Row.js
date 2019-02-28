@@ -47,7 +47,7 @@ export class Row extends Component {
                         <Item
                           key={item.id}
                           item={item}
-                          index={itemIndex}
+                          index={item.settings.index}
                           numItemsInRow={Object.keys(this.props.items).length}
                           containerWidth={this.state.containerWidth}
                           onItemResize={this.props.onItemResize}

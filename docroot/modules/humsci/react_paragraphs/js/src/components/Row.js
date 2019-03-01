@@ -26,7 +26,7 @@ export class Row extends Component {
         {provided => (
           <div {...provided.draggableProps} ref={provided.innerRef}>
 
-            <div className="row" ref={this.containerRef}>
+            <div className="row">
 
               <div {...provided.dragHandleProps}
                    className="row-draggable-handle">
@@ -35,20 +35,21 @@ export class Row extends Component {
                 </span>
               </div>
 
-              <Droppable droppableId={"row-" + this.props.index} type="item"
+              <Droppable  droppableId={this.props.row.id} type="item"
                          direction="horizontal">
                 {(provided, snapshot) => (
 
                   <div {...provided.droppableProps} ref={provided.innerRef}
                        data-isdraggingover={snapshot.isDraggingOver.toString()}
                        className="row-items">
-                    {this.props.items.map((item, itemIndex) => {
+                    <div className="item-list-wrapper" ref={this.containerRef}>
+                    {this.props.items.map((item) => {
                       return (
                         <Item
                           key={item.id}
                           item={item}
                           index={item.settings.index}
-                          numItemsInRow={Object.keys(this.props.items).length}
+                          row={this.props.row}
                           containerWidth={this.state.containerWidth}
                           onItemResize={this.props.onItemResize}
                           onItemRemove={this.props.onItemRemove}
@@ -56,7 +57,7 @@ export class Row extends Component {
                         />
                       )
                     })}
-
+                    </div>
                   </div>
                 )}
               </Droppable>

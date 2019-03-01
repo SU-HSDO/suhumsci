@@ -36,7 +36,7 @@ export class ParagraphGroups extends Component {
             item.settings = {
               row: delta,
               index: 0,
-              width: 12,
+              width: 3,
             }
           }
           else {
@@ -66,13 +66,12 @@ export class ParagraphGroups extends Component {
               var rowOrder = this.state.rowOrder;
 
               rowOrder[items[item.id].settings.row] = 'row-' + items[item.id].settings.row;
-              let newRowCount = this.state.rowCount;
-              newRowCount++;
+
               this.setState(prevState => ({
                 ...prevState,
                 rows: rows,
                 rowOrder: rowOrder,
-                rowCount: newRowCount
+                rowCount: Object.keys(rows).length
               }))
             })
         });
@@ -129,6 +128,7 @@ export class ParagraphGroups extends Component {
     const start = this.state.rows[source.droppableId];
     const end = this.state.rows[destination.droppableId];
 
+    // Items in the same row were reorderd.
     if (start === end) {
       const newItemIds = Array.from(start.items);
       newItemIds.splice(source.index, 1);
@@ -169,11 +169,17 @@ export class ParagraphGroups extends Component {
 
     // When a new item is added, shrink any items down to allow the new item in.
     const newItems = {...this.state.items};
-    endItems.map(itemId => {
+    endItems.map((itemId, itemIndex) => {
+      newItems[itemId].settings.index = itemIndex;
+
       const equalWidth = 12 / endItems.length;
       if (newItems[itemId].settings.width > equalWidth) {
         newItems[itemId].settings.width = equalWidth;
       }
+    });
+
+    startItems.map((itemId, itemIndex) => {
+      newItems[itemId].settings.index = itemIndex;
     });
 
     const newState = {
@@ -193,13 +199,12 @@ export class ParagraphGroups extends Component {
     event.preventDefault();
 
     const newState = {...this.state};
-    newState.rowCount += 1;
     const newRowId = 'row-' + parseInt(newState.rowCount);
 
     newState.rows[newRowId] = {id: newRowId, items: []};
     newState.rowOrder.push(newRowId);
+    newState.rowCount++;
     this.setState(newState);
-    return newState;
   }
 
   onRemoveRow(row, event) {

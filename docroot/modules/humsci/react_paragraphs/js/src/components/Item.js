@@ -31,20 +31,24 @@ export class Item extends Component {
   render() {
     const style = this.state.showForm ? {} : {display: 'none'};
 
+// console.log(this.props);
+//     console.log(this.props.containerWidth);
+//     console.log(this.props.item.settings.width);
     return (
       <Draggable draggableId={this.props.item.id} index={this.props.index}>
         {provided => (
           <Resizable
             className="resizeable-item"
             defaultSize={{
-              width: 100 / this.props.numItemsInRow + "%",
+              width: "100%",
               height: 'auto'
             }}
             size={{
               height: 'auto',
-              width: 100 / (12 / this.props.item.settings.width) + "%",
+              width: this.props.containerWidth * this.props.item.settings.width / 12,
             }}
             minWidth={this.props.containerWidth / 6}
+            bounds='parent'
             grid={[this.props.containerWidth / 12, 1]}
             enable={{
               top: false,

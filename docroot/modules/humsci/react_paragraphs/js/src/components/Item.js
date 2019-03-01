@@ -31,11 +31,15 @@ export class Item extends Component {
   render() {
     const style = this.state.showForm ? {} : {display: 'none'};
     const gridIncrement = this.props.containerWidth / 12;
+    const initialWidth = gridIncrement * this.props.item.settings.width;
 
+    let totalWidth = 0;
+    this.props.rowItems.map(item => {
+      totalWidth += item.settings.width;
+    });
 
-// console.log(this.props);
-//     console.log(this.props.containerWidth);
-//     console.log(this.props.item.settings.width);
+    const maxWidth = gridIncrement * (12 - totalWidth) + initialWidth;
+
     return (
       <Draggable draggableId={this.props.item.id} index={this.props.index}>
         {provided => (
@@ -47,10 +51,10 @@ export class Item extends Component {
             }}
             size={{
               height: 'auto',
-              width: this.props.containerWidth * this.props.item.settings.width / 12,
+              width: initialWidth,
             }}
-            minWidth={this.props.containerWidth / 6}
-            bounds='parent'
+            maxWidth={maxWidth}
+            minWidth={gridIncrement * 2}
             grid={[gridIncrement, 1]}
             enable={{
               top: false,
@@ -62,7 +66,7 @@ export class Item extends Component {
               bottomLeft: false,
               topLeft: false
             }}
-            onResizeStop={this.props.onItemResize.bind(undefined, this.props.item, this.props.containerWidth)}
+            onResizeStop={this.props.onItemResize.bind(undefined, this.props.item, initialWidth, gridIncrement)}
           >
             <div
               className="item"

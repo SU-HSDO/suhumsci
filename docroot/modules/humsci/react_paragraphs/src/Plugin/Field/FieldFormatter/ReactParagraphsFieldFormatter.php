@@ -30,8 +30,8 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
       5 => 'decanter-width-five-twelfths',
       6 => 'decanter-width-one-half',
       7 => 'decanter-width-seven-twelfths',
-      8 => 'decanter-width-three-fourths',
-      9 => 'decanter-width-two-thirds',
+      8=> 'decanter-width-two-thirds',
+      9 => 'decanter-width-three-fourths',
       10 => 'decanter-width-five-sixths',
       11 => 'decanter-width-eleven-twelfths',
     ];

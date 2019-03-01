@@ -29,42 +29,51 @@ export class Row extends Component {
             <div className="row">
 
               <div {...provided.dragHandleProps}
-                   className="row-draggable-handle">
+                   className="row-draggable-handle"
+                   style={{width: '20px'}}
+              >
                 <span className="draggable-icon">
                 ::
                 </span>
               </div>
 
-              <Droppable  droppableId={this.props.row.id} type="item"
+              <Droppable droppableId={this.props.row.id} type="item"
                          direction="horizontal">
                 {(provided, snapshot) => (
 
-                  <div {...provided.droppableProps} ref={provided.innerRef}
+                  <div {...provided.droppableProps}
+                       ref={provided.innerRef}
                        data-isdraggingover={snapshot.isDraggingOver.toString()}
-                       className="row-items">
+                       className="row-items"
+                       style={{width: 'calc(100% - 30px)'}}
+                  >
 
                     <div className="item-list-wrapper" ref={this.containerRef}>
                       {this.props.items.map((item, itemIndex) => {
-                      return (
-                        <Item
-                          key={item.id}
-                          item={item}
-                          index={itemIndex}
-                          rowItems={this.props.items}
-                          containerWidth={this.state.containerWidth}
-                          onItemResize={this.props.onItemResize}
-                          onItemRemove={this.props.onItemRemove}
-                          onItemEdit={this.props.onItemEdit}
-                        />
-                      )
-                    })}
+                        return (
+                          <Item
+                            key={item.id}
+                            item={item}
+                            index={itemIndex}
+                            rowItems={this.props.items}
+                            containerWidth={this.state.containerWidth}
+                            onItemResize={this.props.onItemResize}
+                            onItemRemove={this.props.onItemRemove}
+                            onItemEdit={this.props.onItemEdit}
+                          />
+                        )
+                      })}
 
                     </div>
                   </div>
                 )}
               </Droppable>
-              <a href="#"
-                 onClick={this.props.onRemoveRow.bind(undefined, this.props.row)}>X<span className="visually-hidden">Delete row</span></a>
+
+              <div className="remove-row-button" style={{width: '10px'}}>
+                <a href="#"
+                   onClick={this.props.onRemoveRow.bind(undefined, this.props.row)}>X<span
+                  className="visually-hidden">Delete row</span></a>
+              </div>
             </div>
           </div>
         )}

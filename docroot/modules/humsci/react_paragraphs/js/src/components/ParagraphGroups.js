@@ -96,11 +96,9 @@ export class ParagraphGroups extends Component {
     }
   }
 
-  onItemResize(item, containerWidth, event, direction, element, changes) {
-    const incrementWidth = containerWidth / 12;
-    item.settings.width = Math.round((item.settings.width * incrementWidth + changes.width) / containerWidth * 12);
-
-
+  onItemResize(item, initialWidth, incrementWidth, event, direction, element, changes) {
+    const newWidth = initialWidth + changes.width;
+    item.settings.width = Math.round(newWidth / incrementWidth);
 
     this.setState(prevState => ({
       ...prevState,

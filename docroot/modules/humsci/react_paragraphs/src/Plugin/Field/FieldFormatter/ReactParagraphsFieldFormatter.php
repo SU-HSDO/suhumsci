@@ -40,25 +40,23 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
       $item_settings = $items->get($delta)->getValue()['settings'];
       $item_settings = json_decode($item_settings, TRUE);
 
+      $item_classes = isset($width_classes[$item_settings['width']]) ? [$width_classes[$item_settings['width']]] : [];
+
       $row_data[$item_settings['row']]['#type'] = 'container';
-      $row_data[$item_settings['row']]['#attributes'] = ['class' => ['clearfix']];
+      $row_data[$item_settings['row']]['#attributes'] = [
+        'class' => [
+          'item-row',
+          'clearfix',
+        ],
+      ];
       $row_data[$item_settings['row']][] = [
         '#type' => 'container',
-        '#attributes' => ['class' => [$width_classes[$item_settings['width']]]],
+        '#attributes' => ['class' => $item_classes],
         'item' => $elements[$delta],
       ];
     }
+
     return $row_data;
-  }
-
-  protected function getItemClass($width = 12) {
-
-  }
-
-  public function view(FieldItemListInterface $items, $langcode = NULL) {
-    $view = parent::view($items, $langcode);
-    //    dpm($view);
-    return $view;
   }
 
 }

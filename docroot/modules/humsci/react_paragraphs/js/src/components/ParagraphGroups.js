@@ -36,7 +36,7 @@ export class ParagraphGroups extends Component {
             item.settings = {
               row: delta,
               index: 0,
-              width: 3,
+              width: 12,
             }
           }
           else {
@@ -127,6 +127,7 @@ export class ParagraphGroups extends Component {
     }
     const start = this.state.rows[source.droppableId];
     const end = this.state.rows[destination.droppableId];
+    const newItems = {...this.state.items};
 
     // Items in the same row were reorderd.
     if (start === end) {
@@ -139,6 +140,10 @@ export class ParagraphGroups extends Component {
         items: newItemIds,
       };
 
+      newItemIds.map((itemId, itemIndex) => {
+        newItems[itemId].settings.index = itemIndex;
+      });
+
       const newState = {
         ...this.state,
         rows: {
@@ -150,6 +155,7 @@ export class ParagraphGroups extends Component {
       this.setState(newState);
       return;
     }
+
 
     const startItems = Array.from(start.items);
     startItems.splice(source.index, 1);
@@ -168,7 +174,6 @@ export class ParagraphGroups extends Component {
     };
 
     // When a new item is added, shrink any items down to allow the new item in.
-    const newItems = {...this.state.items};
     endItems.map((itemId, itemIndex) => {
       newItems[itemId].settings.index = itemIndex;
 

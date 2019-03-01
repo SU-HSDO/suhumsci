@@ -38,7 +38,7 @@ export const AccordionForm = ({entity, onFieldEdit}) => {
         <TextAreaField
           label="Description"
           value={descriptionValue}
-          name="field_hs_accordion_summary[0][value]"
+          name="field_hs_accordion_description[0][value]"
           onChange={onFieldEdit}
         />
     </div>

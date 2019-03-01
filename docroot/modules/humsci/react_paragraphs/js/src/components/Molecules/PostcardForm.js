@@ -52,13 +52,13 @@ export const PostcardForm = ({item, onFieldEdit}) => {
                 options={displayOptions}/>
       </div>
 
-      <div className="form-item">
-        <label>Image</label>
-        <MediaField
-          label="Image"
-          value={imageValue}
-          allowedTypes={['image']}/>
-      </div>
+      <MediaField
+        label="Image"
+        value={imageValue}
+        allowedTypes={['image']}
+        name="field_hs_postcard_image[0][target_id]"
+        onChange={onFieldEdit}
+      />
 
       <InputField
         label="Card Title"

@@ -1,27 +1,101 @@
 import React, {Component} from "react";
+import ReactModal from 'react-modal';
 import {default as UUID} from "node-uuid";
 
 
 export class MediaField extends Component {
   constructor(props) {
     super(props);
-    this.state = {inputId: 'field-' + UUID.v4()};
-    this.onSelectClick = this.onSelectClick.bind(this);
+    this.state = {
+      modalOpen: false,
+      inputId: 'field-' + UUID.v4(),
+      iframeUuid: UUID.v4(),
+      selectedItems: typeof (this.props.value) === 'array' ? this.props.value : [this.props.value]
+    };
+    this.onOpenIframe = this.onOpenIframe.bind(this);
+    this.onMediaSelection = this.onMediaSelection.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
   }
 
-  onSelectClick(event) {
+  onMediaSelection(event, itemUuid, selectedEntities) {
+    const entityIds = selectedEntities.map(item => item[0]);
+    this.setState(prevState => ({
+      ...prevState,
+      modalOpen: false,
+      selectedItems: entityIds
+    }));
+    event.target.value = entityIds;
+    this.props.onChange(this.props.name, event)
+  };
+
+  onOpenIframe(event) {
     event.preventDefault();
+
+    if (typeof (jQuery) === 'function') {
+      jQuery(':input[data-uuid="' + this.state.iframeUuid + '"]')
+        .bind('entities-selected', this.onMediaSelection)
+        .addClass('entity-browser-processed');
+    }
+
+    this.setState(prevState => ({
+      ...prevState,
+      modalOpen: !prevState.modalOpen
+    }))
+  }
+
+  onInputChange() {
+
   }
 
   render() {
     return (
       <div className="form-item">
-        <label htmlFor={this.state.inputId}>{this.props.label}</label>
-        Selected Media: {this.props.value}<br/>
+        <label>{this.props.label}</label>
+        <br/>
 
-        <button className="button" onClick={this.onSelectClick}>Select
-          Image</button>
+        <input
+          id={'id-' + this.state.iframeUuid}
+          ref={elem => this.nv = elem}
+          type="submit"
+          value="Select Image"
+          className="button"
+          name={this.props.name + '[open]'}
+          onClick={this.onOpenIframe}
+        />
+
+        {this.state.selectedItems.length &&
+        <div className="selected-items">
+          Selected Media:
+          {this.state.selectedItems.map(mediaId => {
+            return (<MediaItem key={mediaId} mediaId={mediaId}/>)
+          })}
+
+        </div>
+        }
+
+        <ReactModal isOpen={this.state.modalOpen} style={{'z-index': 99}}>
+          <button className="close-modal" onClick={this.onOpenIframe}>Close
+          </button>
+          <iframe
+            src={"/entity-browser/modal/image_browser?uuid=" + this.state.iframeUuid}
+            width="100%" height="100%"/>
+        </ReactModal>
+
+        <input
+          type="hidden"
+          name={this.props.name}
+          onChange={this.onInputChange(undefined, this.props.name)}
+          data-uuid={this.state.iframeUuid}
+        />
       </div>
     )
   }
 };
+
+export const MediaItem = ({mediaId, onRemoveItem}) => {
+  return (
+    <div className="media-item">
+      {mediaId}
+    </div>
+  )
+}

@@ -135,7 +135,7 @@ function hs_config_prefix_set_entity_id(ConfigEntityBase $entity) {
   $item_id = array_pop($entity_id);
 
   // Check if manually entered prefix exists.
-  if (strpos($item_id, $prefix) !== 0) {
+  if ($prefix && strpos($item_id, $prefix) !== 0) {
     $entity_id[] = $prefix . $item_id;
     $entity->set($id_key, implode('.', $entity_id));
   }

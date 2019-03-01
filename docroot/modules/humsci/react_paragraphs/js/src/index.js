@@ -1,4 +1,5 @@
 import React from 'react'
+import Modal from 'react-modal';
 import {render} from 'react-dom'
 import {ParagraphGroups} from './components/ParagraphGroups'
 import "../../scss/react_paragraphs.field_widget.scss"
@@ -26,9 +27,10 @@ if (typeof (window.drupalSettings) === 'undefined') {
   };
 }
 
+
 window.drupalSettings.reactParagraphs.map(item => {
-  // item.entityId = null;
-  // item.fieldName = 'field_hs_page_components';
+  Modal.setAppElement('#' + item.fieldId);
+
   var paragraphsForm = document.getElementById(item.fieldId);
   if (paragraphsForm) {
     render(<ParagraphGroups {...item}/>, paragraphsForm);

@@ -28,7 +28,7 @@ export class ParagraphGroups extends Component {
     if (this.props.entityId == null) {
       return;
     }
-    fetch('http://docroot.suhumsci.loc/node/' + this.props.entityId + '?_format=json')
+    fetch('/node/' + this.props.entityId + '?_format=json')
       .then(response => response.json())
       .then(jsonData => {
         jsonData[this.props.fieldName].map((item, delta) => {
@@ -49,7 +49,7 @@ export class ParagraphGroups extends Component {
           items[item.id] = item;
           this.setState({items});
 
-          fetch('http://docroot.suhumsci.loc/entity/paragraph/' + item.target_id)
+          fetch('/entity/paragraph/' + item.target_id)
             .then(response => response.json())
             .then(jsonData => {
 
@@ -175,13 +175,6 @@ export class ParagraphGroups extends Component {
         newItems[itemId].settings.width = equalWidth;
       }
     });
-
-
-    console.log(result);
-    console.log(this.state);
-    console.log(startItems);
-    console.log(endItems);
-    console.log(newItems);
 
     const newState = {
       ...this.state,

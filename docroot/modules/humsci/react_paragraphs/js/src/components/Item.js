@@ -139,19 +139,19 @@ export class EntityForm extends Component {
         return (<PostcardForm item={this.props.item}
                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_text_area':
-        return (<TextAreaForm entity={this.props.item.entity}
+        return (<TextAreaForm item={this.props.item}
                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_accordion':
-        return (<AccordionForm entity={this.props.item.entity}
+        return (<AccordionForm item={this.props.item}
                                onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_hero_image':
-        return (<HeroImageForm entity={this.props.item.entity}
+        return (<HeroImageForm item={this.props.item}
                                onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_view':
-        return (<ViewForm entity={this.props.item.entity}
+        return (<ViewForm item={this.props.item}
                           onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_webform':
-        return (<WebformForm entity={this.props.item.entity}
+        return (<WebformForm item={this.props.item}
                              onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       default:
         return (<div/>)

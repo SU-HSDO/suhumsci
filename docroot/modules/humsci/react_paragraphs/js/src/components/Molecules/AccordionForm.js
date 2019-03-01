@@ -3,20 +3,20 @@ import {MediaField} from "../Atoms/MediaField";
 import {TextAreaField} from "../Atoms/TextAreaField";
 import {InputField} from "../Atoms/InputField";
 
-export const AccordionForm = ({entity, onFieldEdit}) => {
+export const AccordionForm = ({item, onFieldEdit}) => {
   let summaryValue = '';
-  if (typeof (entity.field_hs_accordion_summary) !== 'undefined' && entity.field_hs_accordion_summary.length) {
-    summaryValue = entity.field_hs_accordion_summary[0].value
+  if (typeof (item.entity.field_hs_accordion_summary) !== 'undefined' && item.entity.field_hs_accordion_summary.length) {
+    summaryValue = item.entity.field_hs_accordion_summary[0].value
   }
 
   let imageValue = '';
-  if (typeof (entity.field_hs_accordion_image) !== 'undefined' && entity.field_hs_accordion_image.length) {
-    imageValue = entity.field_hs_accordion_image[0].target_id
+  if (typeof (item.entity.field_hs_accordion_image) !== 'undefined' && item.entity.field_hs_accordion_image.length) {
+    imageValue = item.entity.field_hs_accordion_image[0].target_id
   }
 
   let descriptionValue = '';
-  if (typeof (entity.field_hs_accordion_description) !== 'undefined' && entity.field_hs_accordion_description.length) {
-    descriptionValue = entity.field_hs_accordion_description[0].value
+  if (typeof (item.entity.field_hs_accordion_description) !== 'undefined' && item.entity.field_hs_accordion_description.length) {
+    descriptionValue = item.entity.field_hs_accordion_description[0].value
   }
 
   return (
@@ -29,18 +29,20 @@ export const AccordionForm = ({entity, onFieldEdit}) => {
         onChange={onFieldEdit}
       />
 
-      <div className="form-item">
-        <label>Image</label>
-        <MediaField data={imageValue}/>
-      </div>
+      <MediaField
+        label="Image"
+        value={imageValue}
+        allowedTypes={['image']}
+        name="field_hs_accordion_image[0][target_id]"
+        onChange={onFieldEdit}
+      />
 
-
-        <TextAreaField
-          label="Description"
-          value={descriptionValue}
-          name="field_hs_accordion_description[0][value]"
-          onChange={onFieldEdit}
-        />
+      <TextAreaField
+        label="Description"
+        value={descriptionValue}
+        name="field_hs_accordion_description[0][value]"
+        onChange={onFieldEdit}
+      />
     </div>
   )
 };

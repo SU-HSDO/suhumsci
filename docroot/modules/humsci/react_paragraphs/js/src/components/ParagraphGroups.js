@@ -42,9 +42,10 @@ export class ParagraphGroups extends Component {
           else {
             item.settings = JSON.parse(item.settings);
           }
+
           item.id = 'item-' + item.target_uuid;
 
-          var items = {...this.state.items};
+          const items = {...this.state.items};
           items[item.id] = item;
           this.setState({items});
 
@@ -56,16 +57,18 @@ export class ParagraphGroups extends Component {
               var items = {...this.state.items};
               items[item.id].entity = jsonData;
 
-              if (typeof (rows['row-' + items[item.id].settings.row]) === 'undefined') {
-                rows['row-' + items[item.id].settings.row] = {
-                  id: 'row-' + items[item.id].settings.row,
+              const rowNumber = items[item.id].settings.row;
+
+              if (typeof (rows['row-' + rowNumber]) === 'undefined') {
+                rows['row-' + rowNumber] = {
+                  id: 'row-' + rowNumber,
                   items: []
                 };
               }
-              rows['row-' + items[item.id].settings.row].items.push(item.id);
+              rows['row-' + rowNumber].items[item.settings.index] = item.id;
               var rowOrder = this.state.rowOrder;
 
-              rowOrder[items[item.id].settings.row] = 'row-' + items[item.id].settings.row;
+              rowOrder[rowNumber] = 'row-' + rowNumber;
 
               this.setState(prevState => ({
                 ...prevState,
@@ -91,13 +94,14 @@ export class ParagraphGroups extends Component {
       formItemsField[0].value = encodeURI(JSON.stringify(returnValue));
       return;
     }
-
-    alert("Something isn't working correctly");
   }
 
   onItemResize(item, containerWidth, event, direction, element, changes) {
     const incrementWidth = containerWidth / 12;
     item.settings.width = Math.round((item.settings.width * incrementWidth + changes.width) / containerWidth * 12);
+
+
+
     this.setState(prevState => ({
       ...prevState,
       items: {
@@ -140,10 +144,6 @@ export class ParagraphGroups extends Component {
         items: newItemIds,
       };
 
-      newItemIds.map((itemId, itemIndex) => {
-        newItems[itemId].settings.index = itemIndex;
-      });
-
       const newState = {
         ...this.state,
         rows: {
@@ -155,7 +155,6 @@ export class ParagraphGroups extends Component {
       this.setState(newState);
       return;
     }
-
 
     const startItems = Array.from(start.items);
     startItems.splice(source.index, 1);
@@ -175,17 +174,18 @@ export class ParagraphGroups extends Component {
 
     // When a new item is added, shrink any items down to allow the new item in.
     endItems.map((itemId, itemIndex) => {
-      newItems[itemId].settings.index = itemIndex;
-
       const equalWidth = 12 / endItems.length;
       if (newItems[itemId].settings.width > equalWidth) {
         newItems[itemId].settings.width = equalWidth;
       }
     });
 
-    startItems.map((itemId, itemIndex) => {
-      newItems[itemId].settings.index = itemIndex;
-    });
+
+    console.log(result);
+    console.log(this.state);
+    console.log(startItems);
+    console.log(endItems);
+    console.log(newItems);
 
     const newState = {
       ...this.state,

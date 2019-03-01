@@ -42,14 +42,15 @@ export class Row extends Component {
                   <div {...provided.droppableProps} ref={provided.innerRef}
                        data-isdraggingover={snapshot.isDraggingOver.toString()}
                        className="row-items">
+
                     <div className="item-list-wrapper" ref={this.containerRef}>
-                    {this.props.items.map((item) => {
+                      {this.props.items.map((item, itemIndex) => {
                       return (
                         <Item
                           key={item.id}
                           item={item}
-                          index={item.settings.index}
-                          row={this.props.row}
+                          index={itemIndex}
+                          rowItems={this.props.items}
                           containerWidth={this.state.containerWidth}
                           onItemResize={this.props.onItemResize}
                           onItemRemove={this.props.onItemRemove}
@@ -57,6 +58,7 @@ export class Row extends Component {
                         />
                       )
                     })}
+
                     </div>
                   </div>
                 )}

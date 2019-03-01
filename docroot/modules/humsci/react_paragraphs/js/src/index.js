@@ -11,8 +11,8 @@ if (typeof (window.drupalSettings) === 'undefined') {
     reactParagraphs: [
       {
         fieldId: 'node-test-type-field-react-paragraphs',
-        entityId: 437,
-        fieldName: 'field_hs_page_components',
+        entityId: 442,
+        fieldName: 'field_react_paragraphs',
         available_items: {
           hs_accordion: {label: 'Accordion'},
           hs_hero_image: {label: 'Hero Image'},

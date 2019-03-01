@@ -30,6 +30,8 @@ export class Item extends Component {
 
   render() {
     const style = this.state.showForm ? {} : {display: 'none'};
+    const gridIncrement = this.props.containerWidth / 12;
+
 
 // console.log(this.props);
 //     console.log(this.props.containerWidth);
@@ -49,7 +51,7 @@ export class Item extends Component {
             }}
             minWidth={this.props.containerWidth / 6}
             bounds='parent'
-            grid={[this.props.containerWidth / 12, 1]}
+            grid={[gridIncrement, 1]}
             enable={{
               top: false,
               right: true,

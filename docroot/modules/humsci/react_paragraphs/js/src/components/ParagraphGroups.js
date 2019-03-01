@@ -83,8 +83,6 @@ export class ParagraphGroups extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const formItemsField = document.getElementsByName(this.props.fieldName + '[value]');
-    // const formItemsField =
-    // document.getElementsByName('field_react_paragraphs[value]');
     if (formItemsField.length) {
       const returnValue = {
         items: this.state.items,

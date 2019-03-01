@@ -18,7 +18,7 @@ export const PostcardForm = ({item, onFieldEdit}) => {
 
   let imageValue = '';
   if (typeof (item.entity.field_hs_postcard_image) !== 'undefined' && item.entity.field_hs_postcard_image.length) {
-    imageValue = item.entity.field_hs_postcard_image[0].value
+    imageValue = item.entity.field_hs_postcard_image[0].target_id
   }
 
   let linkUriValue = '';
@@ -35,6 +35,7 @@ export const PostcardForm = ({item, onFieldEdit}) => {
   if (typeof (item.entity.field_hs_postcard_title) !== 'undefined' && item.entity.field_hs_postcard_title.length) {
     titleValue = item.entity.field_hs_postcard_title[0].value
   }
+
 
   const displayOptions = [
     {value: 'vertical', label: 'Vertical Card'},
@@ -54,7 +55,9 @@ export const PostcardForm = ({item, onFieldEdit}) => {
       <div className="form-item">
         <label>Image</label>
         <MediaField
-          data={imageValue}/>
+          label="Image"
+          value={imageValue}
+          allowedTypes={['image']}/>
       </div>
 
       <InputField

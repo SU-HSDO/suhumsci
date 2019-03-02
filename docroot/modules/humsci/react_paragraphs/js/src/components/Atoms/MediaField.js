@@ -33,7 +33,7 @@ export class MediaField extends Component {
 
     if (typeof (jQuery) === 'function') {
       jQuery(':input[data-uuid="' + this.state.iframeUuid + '"]')
-        .bind('entities-selected', this.onMediaSelection)
+        .on('entities-selected', this.onMediaSelection)
         .addClass('entity-browser-processed');
     }
 
@@ -77,7 +77,7 @@ export class MediaField extends Component {
           <button className="close-modal" onClick={this.onOpenIframe}>Close
           </button>
           <iframe
-            src={"/entity-browser/modal/image_browser?uuid=" + this.state.iframeUuid}
+            src={reactParagraphsApiUrl + "/entity-browser/modal/image_browser?uuid=" + this.state.iframeUuid}
             width="100%" height="100%"/>
         </ReactModal>
 

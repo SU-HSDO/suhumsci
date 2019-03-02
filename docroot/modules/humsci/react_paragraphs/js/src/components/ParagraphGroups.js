@@ -28,7 +28,7 @@ export class ParagraphGroups extends Component {
     if (this.props.entityId == null) {
       return;
     }
-    fetch('/node/' + this.props.entityId + '?_format=json')
+    fetch(reactParagraphsApiUrl + '/node/' + this.props.entityId + '?_format=json')
       .then(response => response.json())
       .then(jsonData => {
         jsonData[this.props.fieldName].map((item, delta) => {
@@ -49,7 +49,7 @@ export class ParagraphGroups extends Component {
           items[item.id] = item;
           this.setState({items});
 
-          fetch('/entity/paragraph/' + item.target_id)
+          fetch(reactParagraphsApiUrl + '/entity/paragraph/' + item.target_id)
             .then(response => response.json())
             .then(jsonData => {
 

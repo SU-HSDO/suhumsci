@@ -5,6 +5,7 @@ import {ParagraphGroups} from './components/ParagraphGroups'
 import "../../scss/react_paragraphs.field_widget.scss"
 
 window.React = React;
+window.reactParagraphsApiUrl = window.location.origin;
 
 // For yarn dev, use test data.
 if (typeof (window.drupalSettings) === 'undefined') {
@@ -25,6 +26,7 @@ if (typeof (window.drupalSettings) === 'undefined') {
       }
     ]
   };
+  window.reactParagraphsApiUrl = 'http://docroot.suhumsci.loc';
 }
 
 

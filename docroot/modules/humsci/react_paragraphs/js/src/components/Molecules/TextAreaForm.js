@@ -2,11 +2,11 @@ import {SketchPicker} from "react-color";
 import React from "react";
 import {TextAreaField} from "../Atoms/TextAreaField";
 
-export const TextAreaForm = ({entity, onFieldEdit}) => {
+export const TextAreaForm = ({item, onFieldEdit}) => {
 
   let bodyValue = '';
-  if (typeof (entity.field_hs_text_area) !== 'undefined' && entity.field_hs_text_area.length) {
-    bodyValue = entity.field_hs_text_area[0].value
+  if (typeof (item.entity.field_hs_text_area) !== 'undefined' && item.entity.field_hs_text_area.length) {
+    bodyValue = item.entity.field_hs_text_area[0].value
   }
 
   return (
@@ -14,6 +14,7 @@ export const TextAreaForm = ({entity, onFieldEdit}) => {
       <TextAreaField
         label="Text Area"
         name="field_hs_text_area[0][value]"
+        formatName="field_hs_text_area[0][format]"
         value={bodyValue}
         onChange={onFieldEdit}
       />

@@ -110,6 +110,9 @@ export class EntityForm extends Component {
   }
 
   onFieldEdit(item, fieldName, event) {
+    console.log(item);
+    console.log(fieldName);
+    console.log(event.target.value);
     if (fieldName) {
       let fieldPath = fieldName.split('[');
       fieldPath = fieldPath.map(path => path.replace(']', ''));

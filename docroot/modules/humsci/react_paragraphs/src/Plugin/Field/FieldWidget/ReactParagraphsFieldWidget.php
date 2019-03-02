@@ -68,26 +68,24 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element_id = Html::getUniqueId(str_replace('.', '-', $this->fieldDefinition->id()));
+    /** @var \Drupal\editor\Plugin\EditorManager $editor_manager */
+    $editor_manager = \Drupal::service('plugin.manager.editor');
+    $attachments = $editor_manager->getAttachments(array_keys(filter_formats()));
+    $attachments['library'][] = 'react_paragraphs/field_widget';
+    $attachments['drupalSettings']['reactParagraphs'][] = [
+      'fieldId' => $element_id,
+      'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()
+        ->id(),
+      'available_items' => $this->getAllowedTypes($this->fieldDefinition),
+      'existing_items' => $items->getValue(),
+      'fieldName' => $this->fieldDefinition->getName(),
+    ];
 
     $elements['value'] = $element + [
         '#type' => 'hidden',
         '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
         '#suffix' => "<div id='$element_id'></div>",
-        '#attached' => [
-          'library' => ['react_paragraphs/field_widget'],
-          'drupalSettings' => [
-            'reactParagraphs' => [
-              [
-                'fieldId' => $element_id,
-                'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()
-                  ->id(),
-                'available_items' => $this->getAllowedTypes($this->fieldDefinition),
-                'existing_items' => $items->getValue(),
-                'fieldName' => $this->fieldDefinition->getName(),
-              ],
-            ],
-          ],
-        ],
+        '#attached' => $attachments,
       ];
     return $elements;
   }

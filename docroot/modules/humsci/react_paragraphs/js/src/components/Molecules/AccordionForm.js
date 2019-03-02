@@ -39,8 +39,9 @@ export const AccordionForm = ({item, onFieldEdit}) => {
 
       <TextAreaField
         label="Description"
-        value={descriptionValue}
         name="field_hs_accordion_description[0][value]"
+        formatName="field_hs_postcard_body[0][format]"
+        value={descriptionValue}
         onChange={onFieldEdit}
       />
     </div>

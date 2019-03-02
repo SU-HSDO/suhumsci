@@ -1,7 +1,7 @@
 import {Select} from "semantic-ui-react";
 import React from "react";
 
-export const WebformForm = ({entity}) => {
+export const WebformForm = ({item}) => {
   const displayOptions = [
     {value: '_none', label: '- None -'},
     {value: 'contact"', label: 'Contact Us'},

@@ -69,8 +69,9 @@ export const PostcardForm = ({item, onFieldEdit}) => {
 
       <TextAreaField
         label="Card Body"
-        value={bodyValue}
         name="field_hs_postcard_body[0][value]"
+        formatName="field_hs_postcard_body[0][format]"
+        value={bodyValue}
         onChange={onFieldEdit}
       />
 

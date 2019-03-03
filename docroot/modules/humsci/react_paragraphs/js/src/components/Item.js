@@ -109,12 +109,11 @@ export class EntityForm extends Component {
     this.onFieldEdit = this.onFieldEdit.bind(this);
   }
 
-  onFieldEdit(item, fieldName, event) {
-    console.log(item);console.log(fieldName);console.log(event);
+  onFieldEdit(item, fieldName, newValue) {
     if (fieldName) {
       let fieldPath = fieldName.split('[');
       fieldPath = fieldPath.map(path => path.replace(']', ''));
-      item.entity = this.setFieldValue(item.entity, fieldPath, event.target.value);
+      item.entity = this.setFieldValue(item.entity, fieldPath, newValue);
       this.props.onItemEdit(item);
     }
   }

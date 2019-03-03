@@ -16,6 +16,7 @@ export class TextAreaField extends Component {
     };
 
     this.onEditorChange = this.onEditorChange.bind(this);
+    this.onFormatChange = this.onFormatChange.bind(this);
   }
 
   componentDidMount() {
@@ -28,9 +29,11 @@ export class TextAreaField extends Component {
   }
 
   onEditorChange(element, newValue) {
-    var eventObject = {target: {value: newValue}};
-    this.props.onChange(this.props.name, eventObject);
-    this.props.onChange(this.props.name, eventObject);
+    this.props.onChange(this.props.name, newValue);
+  }
+
+  onFormatChange(event){
+    this.props.onChange(this.props.formatName, event.target.value);
   }
 
   render() {
@@ -50,7 +53,7 @@ export class TextAreaField extends Component {
           id={this.state.formatId}
           data-editor-for={this.state.inputId}
           name={this.props.formatName}
-          onChange={this.props.onChange.bind(undefined, this.props.formatName)}
+          onChange={this.onFormatChange}
         >
           {this.state.inputFormats.map(format => {
             return (<option key={format.value}

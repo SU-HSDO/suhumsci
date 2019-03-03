@@ -14,7 +14,6 @@ export class MediaField extends Component {
     };
     this.onOpenIframe = this.onOpenIframe.bind(this);
     this.onMediaSelection = this.onMediaSelection.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
   }
 
   onMediaSelection(event, itemUuid, selectedEntities) {
@@ -24,8 +23,7 @@ export class MediaField extends Component {
       modalOpen: false,
       selectedItems: entityIds
     }));
-    event.target.value = entityIds;
-    this.props.onChange(this.props.name, event)
+    this.props.onChange(this.props.name, entityIds.toString())
   };
 
   onOpenIframe(event) {
@@ -43,9 +41,6 @@ export class MediaField extends Component {
     }))
   }
 
-  onInputChange() {
-
-  }
 
   render() {
     return (
@@ -84,13 +79,12 @@ export class MediaField extends Component {
         <input
           type="hidden"
           name={this.props.name}
-          onChange={this.onInputChange(undefined, this.props.name)}
           data-uuid={this.state.iframeUuid}
         />
       </div>
     )
   }
-};
+}
 
 export const MediaItem = ({mediaId, onRemoveItem}) => {
   return (
@@ -98,4 +92,4 @@ export const MediaItem = ({mediaId, onRemoveItem}) => {
       {mediaId}
     </div>
   )
-}
+};

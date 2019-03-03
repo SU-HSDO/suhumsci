@@ -13,17 +13,24 @@ export class TextAreaField extends Component {
         {value: 'full_html', label: 'Full HTML'},
         {value: 'minimal_html', label: 'Minimal HTML'}
       ]
-    }
+    };
+
+    this.onEditorChange = this.onEditorChange.bind(this);
   }
 
   componentDidMount() {
     if (typeof Drupal !== 'undefined') {
       Drupal.behaviors.editor.attach(document, window.drupalSettings);
+      Object.keys(Drupal.editors).map(editorId => {
+        Drupal.editors[editorId].onChange(this.nv, this.onEditorChange.bind(undefined, this.nv));
+      })
     }
-    jQuery('#' + this.state.inputId).on('formUpdated', {parentObject: this}, function (event) {
-      // TODO some magic to get the value from ckeditor.
-      event.data.parentObject.props.onChange(event.data.parentObject.props.name, event);
-    })
+  }
+
+  onEditorChange(element, newValue) {
+    var eventObject = {target: {value: newValue}};
+    this.props.onChange(this.props.name, eventObject);
+    this.props.onChange(this.props.name, eventObject);
   }
 
   render() {
@@ -31,6 +38,7 @@ export class TextAreaField extends Component {
       <div className="form-item">
         <label htmlFor={this.state.inputId}>{this.props.label}</label>
         <textarea
+          ref={elem => this.nv = elem}
           id={this.state.inputId}
           name={this.props.name}
           defaultValue={this.props.value}

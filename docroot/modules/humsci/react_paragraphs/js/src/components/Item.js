@@ -39,11 +39,13 @@ export class Item extends Component {
 
   getItemSummary() {
     let summary = [];
+
     Object.keys(this.props.item.entity).map(fieldName => {
-      if (fieldName.indexOf('field_') === 0) {
+      if (fieldName.indexOf('field_') === 0 && this.props.item.entity[fieldName].length) {
         summary.push(this.props.item.entity[fieldName][0].value);
       }
     });
+
     if (summary.length === 0) {
       return this.props.item.entity.type[0].target_id;
     }

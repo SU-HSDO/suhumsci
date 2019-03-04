@@ -7,31 +7,30 @@ import {InputField} from "../Atoms/InputField";
 export const PostcardForm = ({item, onFieldEdit}) => {
 
   let displayValue = '';
+  let bodyValue = '';
+  let imageValue = '';
+  let linkTitleValue = '';
+  let titleValue = '';
+  let linkUriValue = '';
+
   if (typeof (item.entity.field_hs_postcard_display) !== 'undefined' && item.entity.field_hs_postcard_display.length) {
     displayValue = item.entity.field_hs_postcard_display[0].value
   }
-
-  let bodyValue = '';
   if (typeof (item.entity.field_hs_postcard_body) !== 'undefined' && item.entity.field_hs_postcard_body.length) {
     bodyValue = item.entity.field_hs_postcard_body[0].value
   }
 
-  let imageValue = '';
   if (typeof (item.entity.field_hs_postcard_image) !== 'undefined' && item.entity.field_hs_postcard_image.length) {
     imageValue = item.entity.field_hs_postcard_image[0].target_id
   }
-
-  let linkUriValue = '';
   if (typeof (item.entity.field_hs_postcard_link) !== 'undefined' && item.entity.field_hs_postcard_link.length) {
+
     linkUriValue = item.entity.field_hs_postcard_link[0].uri
   }
-
-  let linkTitleValue = '';
   if (typeof (item.entity.field_hs_postcard_link) !== 'undefined' && item.entity.field_hs_postcard_link.length) {
     linkTitleValue = item.entity.field_hs_postcard_link[0].title
-  }
 
-  let titleValue = '';
+  }
   if (typeof (item.entity.field_hs_postcard_title) !== 'undefined' && item.entity.field_hs_postcard_title.length) {
     titleValue = item.entity.field_hs_postcard_title[0].value
   }

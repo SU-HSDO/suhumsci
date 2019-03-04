@@ -105,7 +105,7 @@ export class Item extends Component {
                        onMouseLeave={this.onViewActionsClick.bind(undefined, 'leave')}>
                     <button
                       onClick={this.onEditFormButtonClick}
-                      className="edit-button">{this.state.showForm ? 'Collapse' : 'Edit'}</button>
+                      className="button">{this.state.showForm ? 'Collapse' : 'Edit'}</button>
 
                     <button className="actions-toggle"
                             onClick={this.onViewActionsClick.bind(undefined, 'toggle')}>

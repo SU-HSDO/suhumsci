@@ -5,16 +5,15 @@ import {InputField} from "../Atoms/InputField";
 
 export const AccordionForm = ({item, onFieldEdit}) => {
   let summaryValue = '';
+  let descriptionValue = '';
+  let imageValue = '';
+
   if (typeof (item.entity.field_hs_accordion_summary) !== 'undefined' && item.entity.field_hs_accordion_summary.length) {
     summaryValue = item.entity.field_hs_accordion_summary[0].value
   }
-
-  let imageValue = '';
   if (typeof (item.entity.field_hs_accordion_image) !== 'undefined' && item.entity.field_hs_accordion_image.length) {
     imageValue = item.entity.field_hs_accordion_image[0].target_id
   }
-
-  let descriptionValue = '';
   if (typeof (item.entity.field_hs_accordion_description) !== 'undefined' && item.entity.field_hs_accordion_description.length) {
     descriptionValue = item.entity.field_hs_accordion_description[0].value
   }

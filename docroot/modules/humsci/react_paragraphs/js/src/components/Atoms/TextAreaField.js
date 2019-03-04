@@ -8,6 +8,7 @@ export class TextAreaField extends Component {
     this.state = {
       inputId: 'field-' + UUID.v4(),
       formatId: 'field-' + UUID.v4(),
+      formatValue: this.props.formatValue ? this.props.formatValue : 'basic_html',
       inputFormats: [
         {value: 'basic_html', label: 'Basic HTML'},
         {value: 'full_html', label: 'Full HTML'},
@@ -31,14 +32,17 @@ export class TextAreaField extends Component {
 
   onEditorChange(element, newValue) {
     this.props.onChange(this.props.name, newValue);
+    this.props.onChange(this.props.formatName, this.state.formatValue);
   }
 
   onTextAreaChange(event) {
     this.props.onChange(this.props.name, event.target.value);
+    this.props.onChange(this.props.formatName, this.state.formatValue);
   }
 
   onFormatChange(event) {
     this.props.onChange(this.props.formatName, event.target.value);
+    this.setState({formatValue: event.target.value});
   }
 
   render() {

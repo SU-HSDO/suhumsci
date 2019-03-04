@@ -32,7 +32,7 @@ export class TextAreaField extends Component {
     this.props.onChange(this.props.name, newValue);
   }
 
-  onFormatChange(event){
+  onFormatChange(event) {
     this.props.onChange(this.props.formatName, event.target.value);
   }
 
@@ -40,26 +40,31 @@ export class TextAreaField extends Component {
     return (
       <div className="form-item">
         <label htmlFor={this.state.inputId}>{this.props.label}</label>
-        <textarea
-          ref={elem => this.nv = elem}
-          id={this.state.inputId}
-          name={this.props.name}
-          defaultValue={this.props.value}
-          onChange={this.props.onChange.bind(undefined, this.props.name)}
-        />
-
-        <label htmlFor={this.state.formatId}>Text Format</label>
-        <select
-          id={this.state.formatId}
-          data-editor-for={this.state.inputId}
-          name={this.props.formatName}
-          onChange={this.onFormatChange}
-        >
-          {this.state.inputFormats.map(format => {
-            return (<option key={format.value}
-                            value={format.value}>{format.label}</option>)
-          })}
-        </select>
+        <div className="form-textarea-wrapper">
+          <textarea
+            ref={elem => this.nv = elem}
+            id={this.state.inputId}
+            name={this.props.name}
+            defaultValue={this.props.value}
+            onChange={this.props.onChange.bind(undefined, this.props.name)}
+          />
+        </div>
+        <div className="filter-wrapper">
+          <div className="form-item">
+            <label htmlFor={this.state.formatId}>Text Format</label>
+            <select
+              id={this.state.formatId}
+              data-editor-for={this.state.inputId}
+              name={this.props.formatName}
+              onChange={this.onFormatChange}
+            >
+              {this.state.inputFormats.map(format => {
+                return (<option key={format.value}
+                                value={format.value}>{format.label}</option>)
+              })}
+            </select>
+          </div>
+        </div>
       </div>
     )
   }

@@ -72,12 +72,19 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
     $editor_manager = \Drupal::service('plugin.manager.editor');
     $attachments = $editor_manager->getAttachments(array_keys(filter_formats()));
     $attachments['library'][] = 'react_paragraphs/field_widget';
+    $attachments['library'][] = 'filter/drupal.filter.admin';
+
+    $item_value = $items->getValue();
+    foreach ($item_value as &$item) {
+      $item['settings'] = json_decode($item['settings'], TRUE);
+    }
+
     $attachments['drupalSettings']['reactParagraphs'][] = [
       'fieldId' => $element_id,
       'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()
         ->id(),
       'available_items' => $this->getAllowedTypes($this->fieldDefinition),
-      'existing_items' => $items->getValue(),
+      'existing_items' => $item_value,
       'fieldName' => $this->fieldDefinition->getName(),
     ];
 

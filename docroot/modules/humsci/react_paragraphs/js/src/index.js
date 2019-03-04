@@ -23,6 +23,16 @@ if (typeof (window.drupalSettings) === 'undefined') {
           hs_view: {label: 'View'},
           hs_webform: {label: 'Webform'}
         },
+        existing_items: [
+          {
+            target_id: 280,
+            settings: {row: 0, index: 0, width: 12}
+          },
+          {
+            target_id: 281,
+            settings: {row: 1, index: 0, width: 12}
+          }
+        ]
       }
     ]
   };

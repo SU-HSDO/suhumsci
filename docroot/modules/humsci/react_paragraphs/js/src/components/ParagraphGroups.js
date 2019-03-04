@@ -8,8 +8,16 @@ export class ParagraphGroups extends Component {
 
   constructor(props) {
     super(props);
+
+    const existingItems = {};
+
+    this.props.existing_items.map(item => {
+      item.id = 'item-' + item.target_id;
+      existingItems[item.id] = item;
+    });
+
     this.state = {
-      items: {},
+      items: existingItems,
       rows: {},
       rowOrder: [],
       rowCount: 0
@@ -28,57 +36,44 @@ export class ParagraphGroups extends Component {
     if (this.props.entityId == null) {
       return;
     }
-    fetch(reactParagraphsApiUrl + '/node/' + this.props.entityId + '?_format=json')
+    Object.keys(this.state.items).map(itemId => {
+      this.loadParagraphEntity(itemId);
+    });
+  }
+
+  loadParagraphEntity(itemId) {
+    const item = this.state.items[itemId];
+
+    fetch(reactParagraphsApiUrl + '/entity/paragraph/' + item.target_id)
       .then(response => response.json())
       .then(jsonData => {
-        jsonData[this.props.fieldName].map((item, delta) => {
-          if (typeof (item.settings) === 'undefined') {
-            item.settings = {
-              row: delta,
-              index: 0,
-              width: 12,
-            }
-          }
-          else {
-            item.settings = JSON.parse(item.settings);
-          }
 
-          item.id = 'item-' + item.target_uuid;
+        var rows = {...this.state.rows};
+        var items = {...this.state.items};
 
-          const items = {...this.state.items};
-          items[item.id] = item;
-          this.setState({items});
+        items[item.id].entity = jsonData;
 
-          fetch(reactParagraphsApiUrl + '/entity/paragraph/' + item.target_id)
-            .then(response => response.json())
-            .then(jsonData => {
+        const rowNumber = item.settings.row;
 
-              var rows = {...this.state.rows};
-              var items = {...this.state.items};
-              items[item.id].entity = jsonData;
+        if (typeof (rows['row-' + rowNumber]) === 'undefined') {
+          rows['row-' + rowNumber] = {
+            id: 'row-' + rowNumber,
+            items: []
+          };
+        }
+        rows['row-' + rowNumber].items[item.settings.index] = item.id;
 
-              const rowNumber = items[item.id].settings.row;
+        var rowOrder = this.state.rowOrder;
+        rowOrder[rowNumber] = 'row-' + rowNumber;
 
-              if (typeof (rows['row-' + rowNumber]) === 'undefined') {
-                rows['row-' + rowNumber] = {
-                  id: 'row-' + rowNumber,
-                  items: []
-                };
-              }
-              rows['row-' + rowNumber].items[item.settings.index] = item.id;
-              var rowOrder = this.state.rowOrder;
-
-              rowOrder[rowNumber] = 'row-' + rowNumber;
-
-              this.setState(prevState => ({
-                ...prevState,
-                rows: rows,
-                rowOrder: rowOrder,
-                rowCount: Object.keys(rows).length
-              }))
-            })
-        });
-      });
+        this.setState(prevState => ({
+          ...prevState,
+          items: items,
+          rows: rows,
+          rowOrder: rowOrder,
+          rowCount: Object.keys(rows).length
+        }))
+      })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -221,12 +216,15 @@ export class ParagraphGroups extends Component {
     let newState = {...this.state};
 
     let newUuid = UUID.v4();
+    // Ensure we always have a unique item ID.
     while (typeof (newState.items['item-' + newUuid]) !== 'undefined') {
       newUuid = UUID.v4();
     }
 
     const lastRowId = newState.rowOrder.slice(-1);
-    const itemWidth = 12 / newState.rows[lastRowId].items.length;
+    const itemWidth = 12 / (newState.rows[lastRowId].items.length + 1);
+
+    newState.rows[lastRowId].items.map(itemId => newState.items[itemId].settings.width = isFinite(itemWidth) ? itemWidth : 12);
 
     newState.items['item-' + newUuid] = {
       entity: {
@@ -236,10 +234,9 @@ export class ParagraphGroups extends Component {
       settings: {
         row: 0,
         index: 0,
-        width: isFinite(itemWidth) ? isFinite : 12,
+        width: isFinite(itemWidth) ? itemWidth : 12,
       },
       target_id: null,
-      target_uuid: newUuid,
     };
 
     newState.rows[lastRowId].items.push('item-' + newUuid);

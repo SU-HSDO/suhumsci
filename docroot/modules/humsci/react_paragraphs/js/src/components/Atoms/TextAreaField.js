@@ -16,6 +16,7 @@ export class TextAreaField extends Component {
     };
 
     this.onEditorChange = this.onEditorChange.bind(this);
+    this.onTextAreaChange = this.onTextAreaChange.bind(this);
     this.onFormatChange = this.onFormatChange.bind(this);
   }
 
@@ -32,6 +33,10 @@ export class TextAreaField extends Component {
     this.props.onChange(this.props.name, newValue);
   }
 
+  onTextAreaChange(event) {
+    this.props.onChange(this.props.name, event.target.value);
+  }
+
   onFormatChange(event) {
     this.props.onChange(this.props.formatName, event.target.value);
   }
@@ -46,7 +51,7 @@ export class TextAreaField extends Component {
             id={this.state.inputId}
             name={this.props.name}
             defaultValue={this.props.value}
-            onChange={this.props.onChange.bind(undefined, this.props.name)}
+            onChange={this.onTextAreaChange}
           />
         </div>
         <div className="filter-wrapper">

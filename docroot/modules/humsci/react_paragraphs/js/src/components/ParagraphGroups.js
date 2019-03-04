@@ -263,7 +263,7 @@ export class ParagraphGroups extends Component {
 
   onItemEdit(item) {
     const newState = {...this.state};
-    newState[item.id] = item;
+    newState.items[item.id] = item;
     this.setState(newState);
   }
 

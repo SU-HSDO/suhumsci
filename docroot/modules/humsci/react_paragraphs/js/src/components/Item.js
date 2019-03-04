@@ -27,6 +27,18 @@ export class Item extends Component {
     }));
   }
 
+  getItemSummary() {
+    let summary = [];
+    Object.keys(this.props.item.entity).map(fieldName => {
+      if (fieldName.indexOf('field_') === 0) {
+        summary.push(this.props.item.entity[fieldName][0].value);
+      }
+    });
+    if (summary.length === 0) {
+      return this.props.item.entity.type[0].target_id;
+    }
+    return summary.filter(line => line !== undefined && line.length > 1).join(', ').replace(/(<([^>]+)>)/ig, "").substr(0, 100);
+  }
 
   render() {
     const style = this.state.showForm ? {} : {display: 'none'};
@@ -78,13 +90,19 @@ export class Item extends Component {
               </div>
 
               <div className="item-contents">
-                {this.props.item.target_id}
-                <button
-                  onClick={this.onEditFormButtonClick}
-                  className="button">{this.state.showForm ? 'Continue' : 'Edit'}</button>
-                <a href="#"
-                   onClick={this.props.onItemRemove.bind(undefined, this.props.item)}>X<span
-                  className="visually-hidden"></span></a>
+                <div className="item-header">
+                  <div className="item-summary">
+                    {this.getItemSummary()}
+                  </div>
+                  <div className="item-actions">
+                    <button
+                      onClick={this.onEditFormButtonClick}
+                      className="button">{this.state.showForm ? 'Continue' : 'Edit'}</button>
+                    <a href="#"
+                       onClick={this.props.onItemRemove.bind(undefined, this.props.item)}>X<span
+                      className="visually-hidden"></span></a>
+                  </div>
+                </div>
                 <div className="item-form" style={style}>
                   <EntityForm item={this.props.item}
                               onItemEdit={this.props.onItemEdit}/>

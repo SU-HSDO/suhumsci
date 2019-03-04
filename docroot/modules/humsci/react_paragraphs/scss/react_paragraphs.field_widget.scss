@@ -1,103 +1,94 @@
-#test-groups {
-  margin: 0 10px;
-}
+.react-paragraphs-widget {
+  input {
+    max-width: 100%;
+  }
 
-.row-items {
+  .row {
+    margin-bottom: 15px;
+    background-color: #fff;
+    display: flex;
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+  }
 
-  border: solid 1px #ddd;
-  background: #f0f0f0;
-  width: 100%;
-  min-height: 65px;
-
-  .item-list-wrapper {
+  .item-list {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: left;
+    padding: 5px 0;
+    min-height: 50px;
   }
 
   .item {
+    display: flex;
+    width: 100%;
     border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    font-size: 18px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+    padding: 5px;
     background: #fff;
   }
 
-  .resizeable-item {
-    padding: 0 10px 0 0;
-
-    &:last-child {
-      padding: 0;
-    }
+  .item-contents {
+    width: 100%;
   }
 
   .item-header {
+    width: 100%;
     display: flex;
   }
-}
 
-.row {
-  margin-bottom: 15px;
-  background-color: #fff;
-  display: flex;
+  .item-actions {
+    margin-left: auto;
+    position: relative;
 
-  .row-draggable-handle {
-    display: table;
-    height: 100px;
-    text-align: center;
-    width: 20px;
-    font-size: 18px;
-    font-weight: 600;
+    .actions-toggle {
+      display: block;
+      height: 36px;
+      width: 36px;
+      background: url(../icons/icon-actions.svg) no-repeat center;
+      background-size: 26px 26px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      -webkit-transition: all 0.1s;
+      transition: all 0.1s;
+      cursor: pointer;
+    }
 
-    span {
-      display: table-cell;
-      vertical-align: middle;
+    .actions-list {
+      display: block;
+      position: absolute;
+      list-style: none;
+      margin: 0;
+      padding: 5px 10px;
+      right: 10px;
+      z-index: 100;
+      background: #f9f8f6;
+      border: 1px solid #a6a6a6;
+      border-radius: 5px 0 5px 5px;
+      -webkit-box-shadow: 0 2px 6px 0 #aaa;
+      box-shadow: 0 2px 6px 0 #aaa;
+    }
+
+    .edit-button {
+      float: left;
     }
   }
-}
 
-.drag-handle {
-  margin-right: 10px;
-  cursor: grab;
-  float: left;
-}
-
-.item-header {
-  .remove-button {
-    float: right;
+  .toolbox {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2)
   }
-}
 
-input {
-  max-width: 100%;
-}
+  .draggable-handle {
+    text-align: center;
+    width: 20px;
 
-.sortable-list {
-  margin: 0;
-  padding: 0;
-  border: 1px solid #ccc;
-}
+    span {
+      margin-top: 10px;
+      display: block;
+    }
+  }
 
-.sortable-item {
-  border: 1px solid #ccc;
-  box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
-  margin: 10px 0;
-  padding: 10px;
-}
 
-.react-grid-item,
-.toolbox {
-  border: 1px solid #ccc;
-  box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2)
 }
-
-.toolbox {
-  min-height: 50px;
-}
-
-.wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-

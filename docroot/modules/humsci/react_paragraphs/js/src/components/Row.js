@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import {Item} from "./Item";
+import {Handle} from "./Atoms/Handle";
 
 export class Row extends Component {
 
@@ -27,28 +28,25 @@ export class Row extends Component {
           <div {...provided.draggableProps} ref={provided.innerRef}>
 
             <div className="row">
+              <Handle
+                {...provided.dragHandleProps}
+                style={{width: '20px'}}
+              />
 
-              <div {...provided.dragHandleProps}
-                   className="row-draggable-handle"
-                   style={{width: '20px'}}
+              <Droppable
+                droppableId={this.props.row.id} type="item"
+                direction="horizontal"
               >
-                <span className="draggable-icon">
-                ::
-                </span>
-              </div>
-
-              <Droppable droppableId={this.props.row.id} type="item"
-                         direction="horizontal">
                 {(provided, snapshot) => (
 
                   <div {...provided.droppableProps}
                        ref={provided.innerRef}
-                       data-isdraggingover={snapshot.isDraggingOver.toString()}
-                       className="row-items"
+                       className="row-items-wrapper"
                        style={{width: 'calc(100% - 30px)'}}
                   >
 
-                    <div className="item-list-wrapper" ref={this.containerRef}>
+                    <div className="item-list" ref={this.containerRef}
+                         style={{background: snapshot.isDraggingOver ? 'lightblue' : 'white'}}>
                       {this.props.items.map((item, itemIndex) => {
                         return (
                           <Item

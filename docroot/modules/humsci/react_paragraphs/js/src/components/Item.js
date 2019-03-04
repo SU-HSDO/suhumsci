@@ -7,6 +7,7 @@ import {AccordionForm} from "./Molecules/AccordionForm";
 import {HeroImageForm} from "./Molecules/HeroImageForm";
 import {ViewForm} from "./Molecules/ViewForm";
 import {WebformForm} from "./Molecules/WebformForm";
+import {Handle} from "./Atoms/Handle";
 
 export class Item extends Component {
 
@@ -14,17 +15,26 @@ export class Item extends Component {
     super(props);
     this.state = {
       showForm: false,
+      showActions: false
     };
     this.onEditFormButtonClick = this.onEditFormButtonClick.bind(this);
+    this.onViewActionsClick = this.onViewActionsClick.bind(this);
   }
 
   onEditFormButtonClick(event) {
     event.preventDefault();
-    event.stopPropagation();
     this.setState(prevState => ({
       ...prevState,
       showForm: !prevState.showForm
     }));
+  }
+
+  onViewActionsClick(action, event) {
+    event.preventDefault();
+    this.setState(prevState => ({
+      ...prevState,
+      showActions: action === 'leave' ? false : !prevState.showActions
+    }))
   }
 
   getItemSummary() {
@@ -41,7 +51,6 @@ export class Item extends Component {
   }
 
   render() {
-    const style = this.state.showForm ? {} : {display: 'none'};
     const gridIncrement = this.props.containerWidth / 12;
     const initialWidth = gridIncrement * this.props.item.settings.width;
 
@@ -85,25 +94,36 @@ export class Item extends Component {
               ref={provided.innerRef}
               {...provided.draggableProps}
             >
-              <div
-                className="drag-handle" {...provided.dragHandleProps}>::
-              </div>
+              <Handle {...provided.dragHandleProps}/>
 
               <div className="item-contents">
                 <div className="item-header">
                   <div className="item-summary">
                     {this.getItemSummary()}
                   </div>
-                  <div className="item-actions">
+                  <div className="item-actions"
+                       onMouseLeave={this.onViewActionsClick.bind(undefined, 'leave')}>
                     <button
                       onClick={this.onEditFormButtonClick}
-                      className="button">{this.state.showForm ? 'Continue' : 'Edit'}</button>
-                    <a href="#"
-                       onClick={this.props.onItemRemove.bind(undefined, this.props.item)}>X<span
-                      className="visually-hidden"></span></a>
+                      className="edit-button">{this.state.showForm ? 'Collapse' : 'Edit'}</button>
+
+                    <button className="actions-toggle"
+                            onClick={this.onViewActionsClick.bind(undefined, 'toggle')}>
+                      <span className="visually-hidden">Toggle Actions</span>
+                    </button>
+
+                    <ul className="actions-list"
+                        style={{display: this.state.showActions ? 'block' : 'none'}}>
+                      <li>
+                        <a className="delete-action" href="#"
+                           onClick={this.props.onItemRemove.bind(undefined, this.props.item)}>Delete</a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-                <div className="item-form" style={style}>
+
+                <div className="item-form"
+                     style={{display: this.state.showForm ? 'block' : 'none'}}>
                   <EntityForm item={this.props.item}
                               onItemEdit={this.props.onItemEdit}/>
                 </div>

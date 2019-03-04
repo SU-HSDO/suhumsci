@@ -269,37 +269,40 @@ export class ParagraphGroups extends Component {
 
   render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="rows" type="row">
-          {provided => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
+      <div className="react-paragraphs-widget">
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable droppableId="rows" type="row">
+            {provided => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
 
-              {this.state.rowOrder.map((rowId, rowIndex) => {
-                const row = this.state.rows[rowId];
-                const rowItems = row.items.map(itemId => this.state.items[itemId]);
-                return (
-                  <Row
-                    key={row.id}
-                    items={rowItems}
-                    row={row}
-                    index={rowIndex}
-                    onItemResize={this.onItemResize}
-                    onItemRemove={this.onItemRemove}
-                    onRemoveRow={this.onRemoveRow}
-                    onItemEdit={this.onItemEdit}
-                  />
-                )
-              })}
-            </div>
-          )}
-        </Droppable>
-        <button onClick={this.onAddRowClick} className="button">Add Row</button>
-        <ToolBox items={this.props.available_items}
-                 onTakeItem={this.onTakeToolItem}/>
-      </DragDropContext>
+                {this.state.rowOrder.map((rowId, rowIndex) => {
+                  const row = this.state.rows[rowId];
+                  const rowItems = row.items.map(itemId => this.state.items[itemId]);
+                  return (
+                    <Row
+                      key={row.id}
+                      items={rowItems}
+                      row={row}
+                      index={rowIndex}
+                      onItemResize={this.onItemResize}
+                      onItemRemove={this.onItemRemove}
+                      onRemoveRow={this.onRemoveRow}
+                      onItemEdit={this.onItemEdit}
+                    />
+                  )
+                })}
+              </div>
+            )}
+          </Droppable>
+          <button onClick={this.onAddRowClick} className="button">Add Row
+          </button>
+          <ToolBox items={this.props.available_items}
+                   onTakeItem={this.onTakeToolItem}/>
+        </DragDropContext>
+      </div>
     );
   }
 

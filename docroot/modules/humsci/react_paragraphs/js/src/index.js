@@ -2,7 +2,7 @@ import React from 'react'
 import Modal from 'react-modal';
 import {render} from 'react-dom'
 import {ParagraphGroups} from './components/ParagraphGroups'
-import "./scss/react_paragraphs.field_widget.scss"
+import "./react_paragraphs.field_widget.scss"
 
 window.React = React;
 window.reactParagraphsApiUrl = window.location.origin;

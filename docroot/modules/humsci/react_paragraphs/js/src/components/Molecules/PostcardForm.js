@@ -1,96 +1,122 @@
-import {Select} from "semantic-ui-react";
-import React from "react";
+import React, {Component} from "react";
+import {default as UUID} from "node-uuid";
 import {TextAreaField} from "../Atoms/TextAreaField";
 import {MediaField} from "../Atoms/MediaField";
 import {InputField} from "../Atoms/InputField";
 
-export const PostcardForm = ({item, onFieldEdit}) => {
+export class PostcardForm extends Component {
 
-  let displayValue = '';
-  let bodyValue = '';
-  let imageValue = '';
-  let linkTitleValue = '';
-  let titleValue = '';
-  let linkUriValue = '';
+  constructor(props) {
+    super(props);
 
-  if (typeof (item.entity.field_hs_postcard_display) !== 'undefined' && item.entity.field_hs_postcard_display.length) {
-    displayValue = item.entity.field_hs_postcard_display[0].value
+    this.state = {
+      fieldValues: {
+        displayValue: '',
+        titleValue: '',
+        bodyValue: '',
+        imageValue: '',
+        linkUriValue: '',
+        linkTitleValue: ''
+      }
+    };
+
+    if (typeof (this.props.item.entity.field_hs_postcard_display) !== 'undefined' && this.props.item.entity.field_hs_postcard_display.length) {
+      this.state.fieldValues.displayValue = this.props.item.entity.field_hs_postcard_display[0].value
+    }
+
+    if (typeof (this.props.item.entity.field_hs_postcard_body) !== 'undefined' && this.props.item.entity.field_hs_postcard_body.length) {
+      this.state.fieldValues.bodyValue = this.props.item.entity.field_hs_postcard_body[0].value
+    }
+
+    if (typeof (this.props.item.entity.field_hs_postcard_image) !== 'undefined' && this.props.item.entity.field_hs_postcard_image.length) {
+      this.state.fieldValues.imageValue = this.props.item.entity.field_hs_postcard_image[0].target_id
+    }
+
+    if (typeof (this.props.item.entity.field_hs_postcard_link) !== 'undefined' && this.props.item.entity.field_hs_postcard_link.length) {
+      this.state.fieldValues.linkUriValue = this.props.item.entity.field_hs_postcard_link[0].uri
+    }
+
+    if (typeof (this.props.item.entity.field_hs_postcard_link) !== 'undefined' && this.props.item.entity.field_hs_postcard_link.length) {
+      this.state.fieldValues.linkTitleValue = this.props.item.entity.field_hs_postcard_link[0].title
+    }
+
+    if (typeof (this.props.item.entity.field_hs_postcard_title) !== 'undefined' && this.props.item.entity.field_hs_postcard_title.length) {
+      this.state.fieldValues.titleValue = this.props.item.entity.field_hs_postcard_title[0].value
+    }
+
+    this.displayId = 'field-' + UUID.v4();
+
+    this.displayOptions = [
+      {value: 'vertical', label: 'Vertical Card'},
+      {value: 'preview', label: 'Horizontal Card'},
+      {value: 'token', label: 'Vertical Linked Card'},
+    ];
+
+    this.onDisplayChange = this.onDisplayChange.bind(this);
   }
-  if (typeof (item.entity.field_hs_postcard_body) !== 'undefined' && item.entity.field_hs_postcard_body.length) {
-    bodyValue = item.entity.field_hs_postcard_body[0].value
+
+  onDisplayChange(event) {
+    this.props.onFieldEdit('field_hs_postcard_display[0][value]', event.target.value);
   }
 
-  if (typeof (item.entity.field_hs_postcard_image) !== 'undefined' && item.entity.field_hs_postcard_image.length) {
-    imageValue = item.entity.field_hs_postcard_image[0].target_id
-  }
-  if (typeof (item.entity.field_hs_postcard_link) !== 'undefined' && item.entity.field_hs_postcard_link.length) {
+  render() {
+    return (
 
-    linkUriValue = item.entity.field_hs_postcard_link[0].uri
-  }
-  if (typeof (item.entity.field_hs_postcard_link) !== 'undefined' && item.entity.field_hs_postcard_link.length) {
-    linkTitleValue = item.entity.field_hs_postcard_link[0].title
+      <div className="horizontal">
+        <div className="form-item">
+          <label htmlFor={this.displayId}>Display</label>
+          <select id={this.displayId}
+                  value={this.state.fieldValues.displayValue}
+                  onChange={this.onDisplayChange}>
 
-  }
-  if (typeof (item.entity.field_hs_postcard_title) !== 'undefined' && item.entity.field_hs_postcard_title.length) {
-    titleValue = item.entity.field_hs_postcard_title[0].value
-  }
-
-
-  const displayOptions = [
-    {value: 'vertical', label: 'Vertical Card'},
-    {value: 'preview', label: 'Horizontal Card'},
-    {value: 'token', label: 'Vertical Linked Card'},
-  ];
-
-
-  return (
-    <div className="horizontal">
-      <div className="form-item">
-        <label>Display</label>
-        <Select value={displayValue}
-                options={displayOptions}/>
-      </div>
-
-      <MediaField
-        label="Image"
-        value={imageValue}
-        allowedTypes={['image']}
-        name="field_hs_postcard_image[0][target_id]"
-        onChange={onFieldEdit}
-      />
-
-      <InputField
-        label="Card Title"
-        name="field_hs_postcard_title[0][value]"
-        value={titleValue}
-        onChange={onFieldEdit}
-      />
-
-      <TextAreaField
-        label="Card Body"
-        name="field_hs_postcard_body[0][value]"
-        formatName="field_hs_postcard_body[0][format]"
-        value={bodyValue}
-        onChange={onFieldEdit}
-      />
-
-      <fieldset className="container">
-        <legend>Read More Link</legend>
-        <div className="fieldset-wrapper">
-          <InputField
-            label="URL"
-            name="field_hs_postcard_link[0][uri]"
-            value={linkUriValue}
-            onChange={onFieldEdit}
-          />
-          <InputField
-            label="Link text"
-            name="field_hs_postcard_link[0][title]"
-            value={linkTitleValue}
-            onChange={onFieldEdit}
-          />
+            {this.displayOptions.map(option =>
+              <option key={option.value}
+                      value={option.value}>{option.label}</option>
+            )}
+          </select>
         </div>
-      </fieldset>
-    </div>
-  )
-};
+
+        <MediaField
+          label="Image"
+          value={this.state.fieldValues.imageValue}
+          allowedTypes={['image']}
+          name="field_hs_postcard_image[0][target_id]"
+          onChange={this.props.onFieldEdit}
+        />
+
+        <InputField
+          label="Card Title"
+          name="field_hs_postcard_title[0][value]"
+          value={this.state.fieldValues.titleValue}
+          onChange={this.props.onFieldEdit}
+        />
+
+        <TextAreaField
+          label="Card Body"
+          name="field_hs_postcard_body[0][value]"
+          formatName="field_hs_postcard_body[0][format]"
+          value={this.state.fieldValues.bodyValue}
+          onChange={this.props.onFieldEdit}
+        />
+
+        <fieldset className="container">
+          <legend>Read More Link</legend>
+          <div className="fieldset-wrapper">
+            <InputField
+              label="URL"
+              name="field_hs_postcard_link[0][uri]"
+              value={this.state.fieldValues.linkUriValue}
+              onChange={this.props.onFieldEdit}
+            />
+            <InputField
+              label="Link text"
+              name="field_hs_postcard_link[0][title]"
+              value={this.state.fieldValues.linkTitleValue}
+              onChange={this.props.onFieldEdit}
+            />
+          </div>
+        </fieldset>
+      </div>
+    )
+  }
+}

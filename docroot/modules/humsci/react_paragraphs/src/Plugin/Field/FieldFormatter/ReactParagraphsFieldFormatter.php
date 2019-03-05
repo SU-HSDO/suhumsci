@@ -47,6 +47,9 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
         $elements[$delta],
       ];
     }
+
+    // If a row doesnt have enough items to fill it, add a spacer at the end to
+    // keep that empty area in the row.
     foreach ($row_item_widths as $row_index => $widths) {
       if ($widths < 12) {
         $spacer_width = 12 - $widths;

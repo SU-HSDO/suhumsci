@@ -124,7 +124,7 @@ export class ViewForm extends Component {
           <select
             id={this.state.fieldIds.target_id}
             onChange={this.onChange.bind(undefined, 'target_id')}
-            value={this.state.fieldValues.target_id}
+            defaultValue={this.state.fieldValues.target_id}
           >
             <option value="">- Select a View -</option>
             {Object.keys(this.state.viewOptions).map(viewId => {
@@ -142,7 +142,7 @@ export class ViewForm extends Component {
           <select
             id={this.state.fieldIds.display_id}
             onChange={this.onChange.bind(undefined, 'display_id')}
-            value={this.state.fieldValues.display_id}
+            defaultValue={this.state.fieldValues.display_id}
           >
             <option value="_none">- Select a display -</option>
             {this.getDisplayOptions().map(displayId => {

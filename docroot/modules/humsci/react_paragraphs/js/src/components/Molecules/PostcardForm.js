@@ -66,7 +66,7 @@ export class PostcardForm extends Component {
         <div className="form-item">
           <label htmlFor={this.displayId}>Display</label>
           <select id={this.displayId}
-                  value={this.state.fieldValues.displayValue}
+                  defaultValue={this.state.fieldValues.displayValue}
                   onChange={this.onDisplayChange}>
 
             {this.displayOptions.map(option =>

@@ -209,11 +209,15 @@ export class ParagraphGroups extends Component {
 
   onTakeToolItem(newItem, event) {
     event.preventDefault();
-    if (!this.state.rowOrder.length) {
-      this.onAddRowClick(event);
-    }
 
-    let newState = {...this.state};
+    const newState = {...this.state};
+    if (!this.state.rowOrder.length) {
+      const newRowId = 'row-' + parseInt(newState.rowCount);
+
+      newState.rows[newRowId] = {id: newRowId, items: []};
+      newState.rowOrder.push(newRowId);
+      newState.rowCount++;
+    }
 
     let newUuid = UUID.v4();
     // Ensure we always have a unique item ID.

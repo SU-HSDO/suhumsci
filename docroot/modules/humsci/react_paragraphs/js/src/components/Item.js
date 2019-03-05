@@ -13,6 +13,16 @@ export class Item extends Component {
 
   constructor(props) {
     super(props);
+
+    this.paragraphTypes = {
+      hs_accordion: 'Accordion',
+      hs_hero_image: 'Hero Image',
+      hs_postcard: 'Postcard',
+      hs_text_area: 'Text Area',
+      hs_view: 'View',
+      hs_webform: 'Webform',
+    };
+
     this.state = {
       showForm: false,
       showActions: false
@@ -45,11 +55,11 @@ export class Item extends Component {
         summary.push(this.props.item.entity[fieldName][0].value);
       }
     });
-
+    summary = summary.filter(line => line !== undefined && line.length > 1);
     if (summary.length === 0) {
-      return this.props.item.entity.type[0].target_id;
+      return this.paragraphTypes[this.props.item.entity.type[0].target_id];
     }
-    return summary.filter(line => line !== undefined && line.length > 1).join(', ').replace(/(<([^>]+)>)/ig, "").substr(0, 100);
+    return summary.join(', ').replace(/(<([^>]+)>)/ig, "").substr(0, 100);
   }
 
   render() {

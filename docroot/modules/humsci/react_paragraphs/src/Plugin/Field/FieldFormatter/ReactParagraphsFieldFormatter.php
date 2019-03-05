@@ -19,44 +19,50 @@ use Drupal\entity_reference_revisions\Plugin\Field\FieldFormatter\EntityReferenc
  */
 class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormatter {
 
+  public function view(FieldItemListInterface $items, $langcode = NULL) {
+    $elements = parent::view($items, $langcode);
+    foreach ($elements['#items'] as $item) {
+      $item->_attributes = ['class' => ['react-paragraphs-wrapper']];
+    }
+    $elements['#attached']['library'][] = 'react_paragraphs/field_formatter';
+    return $elements;
+  }
+
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = parent::viewElements($items, $langcode);
 
-    $width_classes = [
-      1 => 'decanter-width-one-twelfth',
-      2 => 'decanter-width-one-sixth',
-      3 => 'decanter-width-one-fourth',
-      4 => 'decanter-width-one-third',
-      5 => 'decanter-width-five-twelfths',
-      6 => 'decanter-width-one-half',
-      7 => 'decanter-width-seven-twelfths',
-      8=> 'decanter-width-two-thirds',
-      9 => 'decanter-width-three-fourths',
-      10 => 'decanter-width-five-sixths',
-      11 => 'decanter-width-eleven-twelfths',
-    ];
-    $row_data = [];
+    $row_elements = [];
+    $row_item_widths = [];
     for ($delta = 0; $delta < $items->count(); $delta++) {
       $item_settings = $items->get($delta)->getValue()['settings'];
       $item_settings = json_decode($item_settings, TRUE);
 
-      $item_classes = isset($width_classes[$item_settings['width']]) ? [$width_classes[$item_settings['width']]] : [];
+      $row_item_widths[$item_settings['row']] = isset($row_item_widths[$item_settings['row']]) ? $row_item_widths[$item_settings['row']] + $item_settings['width'] : $item_settings['width'];
 
-      $row_data[$item_settings['row']]['#type'] = 'container';
-      $row_data[$item_settings['row']]['#attributes'] = [
-        'class' => [
-          'item-row',
-          'clearfix',
-        ],
-      ];
-      $row_data[$item_settings['row']][] = [
+      $item_classes = "react-width-{$item_settings['width']}-of-12";
+
+      $row_elements[$item_settings['row']][] = [
         '#type' => 'container',
         '#attributes' => ['class' => $item_classes],
-        'item' => $elements[$delta],
+        $elements[$delta],
       ];
     }
+    foreach ($row_item_widths as $row_index => $widths) {
+      if ($widths < 12) {
+        $spacer_width = 12 - $widths;
+        $row_elements[$row_index][] = [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => [
+              'react-spacer',
+              "react-width-$spacer_width-of-12",
+            ],
+          ],
+        ];
+      }
+    }
 
-    return $row_data;
+    return $row_elements;
   }
 
 }

@@ -8,12 +8,12 @@ export class ViewForm extends Component {
 
     this.state = {
       fieldValues: {
-        target_id: null,
-        display_id: null,
-        arguments: null,
-        show_title: null,
-        override_title: null,
-        overridden_title: null,
+        target_id: '',
+        display_id: '',
+        arguments: '',
+        show_title: false,
+        override_title: false,
+        overridden_title: '',
       },
       fieldIds: {
         target_id: 'field-' + UUID.v4(),

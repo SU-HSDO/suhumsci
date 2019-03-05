@@ -27,7 +27,7 @@ function react_paragraphs_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_form_alter().
  */
-function react_paragraphs_form_alter(&$form,FormStateInterface $form_state, $form_id) {
+function react_paragraphs_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if ($form_state->get('entity_browser_current_widget')) {
     $cardinality = \Drupal::requestStack()
       ->getCurrentRequest()->query->get('reactCard');

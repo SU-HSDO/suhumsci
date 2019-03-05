@@ -94,11 +94,13 @@ export class MediaItem extends Component {
   }
 
   componentWillMount() {
-    fetch(window.reactParagraphsApiUrl + '/media/' + this.props.mediaId + '?_format=json')
-      .then(response => response.json())
-      .then(jsonData => {
-        this.setState({entity: jsonData});
-      })
+    if (this.props.mediaId) {
+      fetch(window.reactParagraphsApiUrl + '/media/' + this.props.mediaId + '?_format=json')
+        .then(response => response.json())
+        .then(jsonData => {
+          this.setState({entity: jsonData});
+        })
+    }
   }
 
   render() {
@@ -124,7 +126,7 @@ export const MediaImage = ({entity}) => {
   return (
     <div className="media-item">
       <img src={entity.field_media_image[0].url}
-           style={{'max-width': '200px', 'max-height': '200px'}}/>
+           style={{maxWidth: '200px', maxHeight: '200px'}}/>
     </div>
   )
 };
@@ -140,7 +142,7 @@ export const MediaFile = ({entity}) => {
 export const MediaVideo = ({entity}) => {
   return (
     <div className="media-item">
-      <iframe src={entity.field_media_video_embed_field[0].value} />
+      <iframe src={entity.field_media_video_embed_field[0].value}/>
     </div>
   )
 };

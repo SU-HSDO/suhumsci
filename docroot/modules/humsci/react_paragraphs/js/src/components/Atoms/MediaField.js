@@ -72,7 +72,7 @@ export class MediaField extends Component {
           <button className="close-modal" onClick={this.onOpenIframe}>Close
           </button>
           <iframe
-            src={reactParagraphsApiUrl + "/entity-browser/modal/image_browser?uuid=" + this.state.iframeUuid}
+            src={reactParagraphsApiUrl + "/entity-browser/modal/image_browser?reactCard=1&uuid=" + this.state.iframeUuid}
             width="100%" height="100%"/>
         </ReactModal>
 
@@ -86,10 +86,61 @@ export class MediaField extends Component {
   }
 }
 
-export const MediaItem = ({mediaId, onRemoveItem}) => {
+export class MediaItem extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {entity: {}};
+  }
+
+  componentWillMount() {
+    fetch(window.reactParagraphsApiUrl + '/media/' + this.props.mediaId + '?_format=json')
+      .then(response => response.json())
+      .then(jsonData => {
+        this.setState({entity: jsonData});
+      })
+  }
+
+  render() {
+    if (this.state.entity.bundle) {
+      switch (this.state.entity.bundle[0].target_id) {
+        case 'image':
+          return <MediaImage entity={this.state.entity}/>;
+        case 'file':
+          return <MediaFile entity={this.state.entity}/>;
+        case 'video':
+          return <MediaVideo entity={this.state.entity}/>;
+      }
+    }
+    return (
+      <div className="media-item">
+        {this.props.mediaId}
+      </div>
+    )
+  }
+}
+
+export const MediaImage = ({entity}) => {
   return (
     <div className="media-item">
-      {mediaId}
+      <img src={entity.field_media_image[0].url}
+           style={{'max-width': '200px', 'max-height': '200px'}}/>
+    </div>
+  )
+};
+
+export const MediaFile = ({entity}) => {
+  return (
+    <div className="media-item">
+      BUILD THIS
+    </div>
+  )
+};
+
+export const MediaVideo = ({entity}) => {
+  return (
+    <div className="media-item">
+      <iframe src={entity.field_media_video_embed_field[0].value} />
     </div>
   )
 };

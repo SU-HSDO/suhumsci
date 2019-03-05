@@ -58,6 +58,7 @@
 
 $humsci_sites = [
   'archaeology',
+  'duboislab',
   'francestanford',
   'mrc',
   'swshumsci-sandbox',

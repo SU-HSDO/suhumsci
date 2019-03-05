@@ -37,7 +37,7 @@ export class TextAreaForm extends Component {
 
   onColorChange(color) {
     this.setState({colorValue: color.hex});
-    this.props.onFieldEdit('field_hs_text_area_bg_color[0][color]', color.hex)
+    this.props.onFieldEdit('field_hs_text_area_bg_color[0][color]', color.hex.replace('#', ''))
   }
 
 

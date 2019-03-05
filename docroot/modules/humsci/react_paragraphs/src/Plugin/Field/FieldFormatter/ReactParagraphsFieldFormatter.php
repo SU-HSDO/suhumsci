@@ -35,6 +35,7 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
     $row_item_widths = [];
     for ($delta = 0; $delta < $items->count(); $delta++) {
       $item_settings = $items->get($delta)->getValue()['settings'];
+      dpm($items->get($delta)->getValue()['settings']);
       $item_settings = json_decode($item_settings, TRUE);
 
       $row_item_widths[$item_settings['row']] = isset($row_item_widths[$item_settings['row']]) ? $row_item_widths[$item_settings['row']] + $item_settings['width'] : $item_settings['width'];

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -23,8 +24,10 @@ function react_paragraphs_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
-function react_paragraphs_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  //  dpm($form_id);
+/**
+ * Implements hook_form_alter().
+ */
+function react_paragraphs_form_alter(&$form,FormStateInterface $form_state, $form_id) {
   if ($form_state->get('entity_browser_current_widget')) {
     $cardinality = \Drupal::requestStack()
       ->getCurrentRequest()->query->get('reactCard');

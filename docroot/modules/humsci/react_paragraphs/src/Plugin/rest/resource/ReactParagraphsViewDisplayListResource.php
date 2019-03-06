@@ -9,17 +9,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Provides a resource to get list of available views and its displays.
+ * Provides a resource to get list of available entities.
  *
  * @RestResource(
- *   id = "react_paragraphs_views_list",
- *   label = @Translation("Views"),
+ *   id = "react_paragraphs_views_display_list",
+ *   label = @Translation("Views Display List"),
  *   uri_paths = {
- *     "canonical" = "/entity/views"
+ *     "canonical" = "/entity-list/view-displays"
  *   }
  * )
  */
-class ReactParagraphsViewsListResource extends ResourceBase {
+class ReactParagraphsViewDisplayListResource extends ResourceBase {
 
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -51,20 +51,17 @@ class ReactParagraphsViewsListResource extends ResourceBase {
   /**
    * {@inheritdoc}
    */
-  public function get() {
-    $views = [];
-    $view_storage = $this->entityTypeManager->getStorage('view');
-    /** @var \Drupal\views\Entity\View $view */
-    foreach ($view_storage->loadMultiple() as $view) {
-      $views[$view->id()] = ['label' => $view->label(), 'displays' => []];
-      foreach ($view->get('display') as $display) {
-        if ($display['id'] == 'default') {
-          continue;
-        }
-        $views[$view->id()]['displays'][$display['id']] = $display['display_title'];
-      }
+  public function get($view_id) {
+    $list = [];
+    $storage = $this->entityTypeManager->getStorage('view');
+    foreach($storage->loadMultiple() as $view){
+      $displays = $view->get('display');
+      $list[$view->id()] = [
+        'label' => $view->label(),
+        'displays' => $displays,
+      ];
     }
-    return new JsonResponse($views);
+    return new JsonResponse($list);
   }
 
   /**

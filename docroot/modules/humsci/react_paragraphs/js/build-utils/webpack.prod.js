@@ -9,7 +9,7 @@ const config = {
     app: [`${commonPaths.appEntry}/index.js`]
   },
   output: {
-    filename: 'static/[name].js'
+    filename: 'react_paragraphs.[name].js'
   },
   devtool: 'source-map',
   module: {

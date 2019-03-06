@@ -1,5 +1,14 @@
 # HumSci
 
+8.0.19
+--------------------------------------------------------------------------------  
+_Release Date: 2019-03-06_
+
+* HSD8-596 Added plugin for clone action to change field values
+* HSD8-600 Generic 3 column pattern with variants
+* HSDO-1240 duboislab site provision
+* HSD8-318 Preview videos in media library
+
 8.0.18
 --------------------------------------------------------------------------------  
 _Release Date: 2019-02-20_

@@ -74,11 +74,11 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
     $attachments['library'][] = 'react_paragraphs/field_widget';
     $attachments['library'][] = 'filter/drupal.filter.admin';
 
-    $item_value = $items->getValue();
+    $item_value = array_filter($items->getValue());
     foreach ($item_value as &$item) {
       $item['settings'] = json_decode($item['settings'], TRUE);
     }
-
+//dpm($item_value);
     $attachments['drupalSettings']['reactParagraphs'][] = [
       'fieldId' => $element_id,
       'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()
@@ -103,6 +103,9 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $react_data = json_decode(urldecode($values['value']), TRUE);
     $return_data = [];
+    if (!isset($react_data['rowOrder'])) {
+      return [];
+    }
 
     foreach ($react_data['rowOrder'] as $row_index => $row_id) {
 

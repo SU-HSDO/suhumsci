@@ -13,7 +13,7 @@ if (typeof (window.drupalSettings) === 'undefined') {
     reactParagraphs: [
       {
         fieldId: 'node-test-type-field-react-paragraphs',
-        entityId: 442,
+        entityId: 446,
         fieldName: 'field_react_paragraphs',
         available_items: {
           hs_accordion: {label: 'Accordion'},
@@ -25,12 +25,16 @@ if (typeof (window.drupalSettings) === 'undefined') {
         },
         existing_items: [
           {
-            target_id: 280,
+            target_id: 257,
             settings: {row: 0, index: 0, width: 12}
           },
           {
-            target_id: 281,
+            target_id: 258,
             settings: {row: 1, index: 0, width: 12}
+          },
+          {
+            target_id: 259,
+            settings: {row: 2, index: 0, width: 12}
           }
         ]
       }

@@ -70,11 +70,14 @@ class CloneNodeTest extends KernelTestBase {
     $this->assertEquals(CloneNode::class, get_class($action));
 
     // Simple methods.
-    $this->assertCount(1, $action->defaultConfiguration());
+    $this->assertCount(2, $action->defaultConfiguration());
     $this->assertArrayHasKey('clone_count', $action->defaultConfiguration());
+    $this->assertArrayHasKey('field_clone', $action->defaultConfiguration());
 
     $form = [];
     $form_state = new FormState();
+    $context = ['list' => [$this->node->id()]];
+    $action->setContext($context);
     $this->assertCount(1, $action->buildConfigurationForm($form, $form_state));
     $this->assertArrayHasKey('clone_count', $action->buildConfigurationForm($form, $form_state));
 

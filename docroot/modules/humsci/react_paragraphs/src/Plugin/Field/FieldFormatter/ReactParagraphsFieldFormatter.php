@@ -21,6 +21,10 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
 
   public function view(FieldItemListInterface $items, $langcode = NULL) {
     $elements = parent::view($items, $langcode);
+    if (!isset($elements['#items'])) {
+      return $elements;
+    }
+
     foreach ($elements['#items'] as $item) {
       $item->_attributes = ['class' => ['react-paragraphs-wrapper']];
     }
@@ -35,7 +39,6 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
     $row_item_widths = [];
     for ($delta = 0; $delta < $items->count(); $delta++) {
       $item_settings = $items->get($delta)->getValue()['settings'];
-      dpm($items->get($delta)->getValue()['settings']);
       $item_settings = json_decode($item_settings, TRUE);
 
       $row_item_widths[$item_settings['row']] = isset($row_item_widths[$item_settings['row']]) ? $row_item_widths[$item_settings['row']] + $item_settings['width'] : $item_settings['width'];

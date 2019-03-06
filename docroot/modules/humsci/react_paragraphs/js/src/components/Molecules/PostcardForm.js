@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import Select from 'react-select';
 import {default as UUID} from "node-uuid";
 import {TextAreaField} from "../Atoms/TextAreaField";
 import {MediaField} from "../Atoms/MediaField";
@@ -17,11 +18,24 @@ export class PostcardForm extends Component {
         imageValue: '',
         linkUriValue: '',
         linkTitleValue: ''
-      }
+      },
+      selectedDisplay: null,
     };
 
+    this.displayOptions = [
+      {value: 'default', label: 'Vertical Card'},
+      {value: 'preview', label: 'Horizontal Card'},
+      {value: 'token', label: 'Vertical Linked Card'},
+    ];
+
     if (typeof (this.props.item.entity.field_hs_postcard_display) !== 'undefined' && this.props.item.entity.field_hs_postcard_display.length) {
-      this.state.fieldValues.displayValue = this.props.item.entity.field_hs_postcard_display[0].value
+      this.state.fieldValues.displayValue = this.props.item.entity.field_hs_postcard_display[0].value;
+
+      this.displayOptions.map(item => {
+        if (item.value == this.state.fieldValues.displayValue) {
+          this.state.selectedDisplay = item;
+        }
+      });
     }
 
     if (typeof (this.props.item.entity.field_hs_postcard_body) !== 'undefined' && this.props.item.entity.field_hs_postcard_body.length) {
@@ -46,35 +60,28 @@ export class PostcardForm extends Component {
 
     this.displayId = 'field-' + UUID.v4();
 
-    this.displayOptions = [
-      {value: 'vertical', label: 'Vertical Card'},
-      {value: 'preview', label: 'Horizontal Card'},
-      {value: 'token', label: 'Vertical Linked Card'},
-    ];
 
     this.onDisplayChange = this.onDisplayChange.bind(this);
   }
 
-  onDisplayChange(event) {
-    this.props.onFieldEdit('field_hs_postcard_display[0][value]', event.target.value);
+  onDisplayChange(selectedItem) {
+    this.props.onFieldEdit('field_hs_postcard_display[0][value]', selectedItem.value);
+    this.setState(prevState => ({
+      ...prevState,
+      selectedDisplay: selectedItem,
+    }))
   }
 
   render() {
+
     return (
-
       <div className="horizontal">
-        <div className="form-item">
-          <label htmlFor={this.displayId}>Display</label>
-          <select id={this.displayId}
-                  defaultValue={this.state.fieldValues.displayValue}
-                  onChange={this.onDisplayChange}>
 
-            {this.displayOptions.map(option =>
-              <option key={option.value}
-                      value={option.value}>{option.label}</option>
-            )}
-          </select>
-        </div>
+        <Select
+          options={this.displayOptions}
+          onChange={this.onDisplayChange}
+          value={this.state.selectedDisplay}
+        />
 
         <MediaField
           label="Image"

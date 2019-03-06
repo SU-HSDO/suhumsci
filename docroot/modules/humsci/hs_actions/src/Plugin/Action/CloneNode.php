@@ -5,11 +5,14 @@ namespace Drupal\hs_actions\Plugin\Action;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\hs_actions\Plugin\FieldCloneManagerInterface;
 use Drupal\views_bulk_operations\Action\ViewsBulkOperationsActionBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,6 +42,20 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   protected $entityTypeManager;
 
   /**
+   * Field clone plugin manager service.
+   *
+   * @var \Drupal\hs_actions\Plugin\FieldCloneManagerInterface
+   */
+  protected $fieldCloneManager;
+
+  /**
+   * Array of field clone plugins.
+   *
+   * @var \Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneInterface[]
+   */
+  protected $fieldClonePlugins;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -47,17 +64,19 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       $plugin_id,
       $plugin_definition,
       $container->get('entity_field.manager'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('plugin.manager.hs_actions_field_clone')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, FieldCloneManagerInterface $field_clone_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
+    $this->fieldCloneManager = $field_clone_manager;
   }
 
   /**
@@ -66,6 +85,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   public function defaultConfiguration() {
     return [
       'clone_count' => 1,
+      'field_clone' => [],
     ];
   }
 
@@ -80,14 +100,87 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       '#options' => array_combine($values, $values),
     ];
 
+    foreach ($this->context['list'] as $item) {
+      $node_ids[] = $item[0];
+    }
+
+    // Load all nodes that are being cloned.
+    $nodes = $this->entityTypeManager->getStorage('node')
+      ->loadMultiple($node_ids);
+
+    $form['field_clone'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Adjust Cloned Field Values'),
+      '#tree' => TRUE,
+    ];
+
+    // Add field clone fields to the form.
+    foreach ($nodes as $node) {
+      $this->buildFieldCloneForm($form, $form_state, $node);
+    }
+
+    // If no plugins add to the form, remove the fieldset.
+    if (empty(Element::children($form['field_clone']))) {
+      unset($form['field_clone']);
+    }
+
     return $form;
+  }
+
+  /**
+   * Build the field clone form for the provided entity.
+   *
+   * @param array $form
+   *   Complete Form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Current form state.
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $node
+   *   Entity to be cloned.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  protected function buildFieldCloneForm(array &$form, FormStateInterface $form_state, FieldableEntityInterface $node) {
+    $field_clone_plugins = $this->getFieldClonePlugins();
+
+    $fields = $this->entityFieldManager->getFieldDefinitions('node', $node->bundle());
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field */
+    foreach ($fields as $field) {
+      foreach ($field_clone_plugins as $plugin) {
+
+        $plugin_definition = $plugin->getPluginDefinition();
+        if (in_array($field->getType(), $plugin_definition['fieldTypes'])) {
+
+          $form['field_clone'][$plugin_definition['id']][$field->getName()] = [
+            '#type' => 'details',
+            '#title' => $field->getLabel(),
+            '#description' => $plugin_definition['description'] ?? '',
+            '#open' => TRUE,
+          ];
+
+          $form['field_clone'][$plugin_definition['id']][$field->getName()] += $plugin->buildConfigurationForm($form, $form_state);
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    foreach ($this->getFieldClonePlugins() as $plugin) {
+      $plugin->validateConfigurationForm($form, $form_state);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    foreach ($this->getFieldClonePlugins() as $plugin) {
+      $plugin->submitConfigurationForm($form, $form_state);
+    }
     $this->configuration['clone_count'] = $form_state->getValue('clone_count');
+    $this->configuration['field_clone'] = $form_state->getValue('field_clone', []);
   }
 
   /**
@@ -108,7 +201,6 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
     if (!isset($this->configuration['clone_count'])) {
       $this->configuration['clone_count'] = 1;
     }
-
     for ($i = 0; $i < $this->configuration['clone_count']; $i++) {
       $duplicate_node = $this->duplicateEntity($entity);
       $duplicate_node->save();
@@ -125,6 +217,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
    *   Cloned entity.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function duplicateEntity(ContentEntityInterface $entity) {
@@ -137,7 +230,32 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       }
     }
 
+    $field_plugins = $this->getFieldClonePlugins();
+
+    foreach ($this->configuration['field_clone'] as $plugin_id => $fields) {
+      foreach ($fields as $field_name => $field_changes) {
+        $field_plugins[$plugin_id]->alterFieldValue($entity, $duplicate_entity, $field_name, $field_changes);
+      }
+    }
+
     return $duplicate_entity;
+  }
+
+  /**
+   * Get all the field clone plugins available.
+   *
+   * @return \Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneInterface[]
+   *   Keyed array of plugins.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  protected function getFieldClonePlugins() {
+    if (empty($this->fieldClonePlugins)) {
+      foreach ($this->fieldCloneManager->getDefinitions() as $plugin_definition) {
+        $this->fieldClonePlugins[$plugin_definition['id']] = $this->fieldCloneManager->createInstance($plugin_definition['id']);
+      }
+    }
+    return $this->fieldClonePlugins;
   }
 
   /**

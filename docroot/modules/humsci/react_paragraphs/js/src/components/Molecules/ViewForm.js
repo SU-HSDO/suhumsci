@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import Select from 'react-select';
 import {default as UUID} from "node-uuid";
 
 export class ViewForm extends Component {
@@ -23,19 +24,20 @@ export class ViewForm extends Component {
         override_title: 'field-' + UUID.v4(),
         overridden_title: 'field-' + UUID.v4()
       },
-      viewOptions: {}
+      views: [],
+      displays: {}
     };
 
     if (typeof (this.props.item.entity.field_hs_view) !== 'undefined' && this.props.item.entity.field_hs_view.length) {
       this.state.fieldValues = {...this.props.item.entity.field_hs_view[0]};
     }
 
-
     this.onChange = this.onChange.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
   componentWillMount() {
-    fetch(window.reactParagraphsApiUrl + '/entity/views')
+    fetch(window.reactParagraphsApiUrl + '/entity-list/view-displays')
       .then(response => response.json())
       .then(jsonData => {
         delete jsonData.archive;
@@ -57,8 +59,40 @@ export class ViewForm extends Component {
         delete jsonData.who_s_online;
         delete jsonData.watchdog;
 
-        this.setState({viewOptions: jsonData});
+        const viewOptions = [];
+        const displayOptions = {};
+
+        Object.keys(jsonData).map(viewId => {
+          viewOptions.push({value: viewId, label: jsonData[viewId].label});
+          displayOptions[viewId] = [];
+
+          Object.keys(jsonData[viewId].displays).map(displayId => {
+            const display = jsonData[viewId].displays[displayId];
+            if (display.display_plugin !== 'block') {
+              return;
+
+            }
+
+            displayOptions[viewId].push({
+              value: displayId,
+              label: display.display_title
+            });
+          })
+        });
+
+        this.setState(prevState => ({
+          ...prevState,
+          views: viewOptions,
+          displays: displayOptions,
+        }));
       });
+  }
+
+  onSelect(fieldName, selectedItem) {
+    const newState = {...this.state};
+    newState.fieldValues[fieldName] = selectedItem.value;
+    this.props.onFieldEdit('field_hs_view[0][' + fieldName + ']', selectedItem.value);
+    this.setState(newState)
   }
 
   onChange(field, event) {
@@ -71,15 +105,15 @@ export class ViewForm extends Component {
     })
   }
 
-  getDisplayOptions() {
-    const options = [];
-    if (this.state.fieldValues.target_id && this.state.viewOptions[this.state.fieldValues.target_id]) {
-      return Object.keys(this.state.viewOptions[this.state.fieldValues.target_id].displays);
-    }
-    return options;
-  }
-
   render() {
+    const targetValue = this.state.views.find(item => item.value === this.state.fieldValues.target_id);
+    let displayValue = null;
+    if (targetValue) {
+      displayValue = this.state.displays[targetValue.value].find(item => item.value === this.state.fieldValues.display_id);
+    }
+
+    console.log(displayValue);
+
     return (
       <div>
         <div className="form-item">
@@ -102,13 +136,15 @@ export class ViewForm extends Component {
             onChange={this.onChange.bind(undefined, 'override_title')}
             defaultChecked={this.state.fieldValues.override_title}
           />
-          <label htmlFor={this.state.fieldIds.override_title} className="option">Override Title</label>
+          <label htmlFor={this.state.fieldIds.override_title}
+                 className="option">Override Title</label>
         </div>
 
 
         <div className="form-item"
              style={{display: this.state.fieldValues.show_title && this.state.fieldValues.override_title ? 'block' : 'none'}}>
-          <label htmlFor={this.state.fieldIds.overridden_title}>Overridden Title</label>
+          <label htmlFor={this.state.fieldIds.overridden_title}>Overridden
+            Title</label>
           <input
             id={this.state.fieldIds.overridden_title}
             type="textfield"
@@ -117,59 +153,19 @@ export class ViewForm extends Component {
           />
         </div>
 
+        <Select
+          options={this.state.views}
+          onChange={this.onSelect.bind(undefined, 'target_id')}
+          value={targetValue}
+        />
 
-        <div className="form-item">
-          <label htmlFor={this.state.fieldIds.target_id}>View</label>
+        <Select
+          isDisabled={!this.state.fieldValues.target_id.length}
+          options={this.state.displays[this.state.fieldValues.target_id]}
+          onChange={this.onSelect.bind(undefined, 'display_id')}
+          value={displayValue}
+        />
 
-          <select
-            id={this.state.fieldIds.target_id}
-            onChange={this.onChange.bind(undefined, 'target_id')}
-            defaultValue={this.state.fieldValues.target_id}
-          >
-            <option value="">- Select a View -</option>
-            {Object.keys(this.state.viewOptions).map(viewId => {
-              return (<option key={viewId}
-                              value={viewId}>{this.state.viewOptions[viewId].label}</option>)
-            })}
-          </select>
-        </div>
-
-
-        <div className="form-item"
-             style={{display: this.state.fieldValues.target_id ? 'block' : 'none'}}>
-
-          <label htmlFor={this.state.fieldIds.display_id}>Display</label>
-          <select
-            id={this.state.fieldIds.display_id}
-            onChange={this.onChange.bind(undefined, 'display_id')}
-            defaultValue={this.state.fieldValues.display_id}
-          >
-            <option value="_none">- Select a display -</option>
-            {this.getDisplayOptions().map(displayId => {
-              return (
-                <option key={displayId} value={displayId}>
-                  {this.state.viewOptions[this.state.fieldValues.target_id].displays[displayId]}
-                </option>
-              )
-            })}
-          </select>
-        </div>
-
-
-        <div className="form-item"
-             style={{display: this.state.fieldValues.target_id ? 'block' : 'none'}}>
-          <label htmlFor={this.state.fieldIds.arguments}>Arguments</label>
-          <input
-            id={this.state.fieldIds.arguments}
-            type="textfield"
-            onChange={this.onChange.bind(undefined, 'arguments')}
-            defaultValue={this.state.fieldValues.arguments}
-          />
-          <div className="description">
-            A comma separated list of arguments to pass to the selected view
-            display.
-          </div>
-        </div>
       </div>
     )
   }

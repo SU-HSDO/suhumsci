@@ -47,6 +47,9 @@ export class ParagraphGroups extends Component {
     fetch(reactParagraphsApiUrl + '/entity/paragraph/' + item.target_id)
       .then(response => response.json())
       .then(jsonData => {
+        if (typeof (jsonData.message) !== 'undefined') {
+          return;
+        }
 
         var rows = {...this.state.rows};
         var items = {...this.state.items};

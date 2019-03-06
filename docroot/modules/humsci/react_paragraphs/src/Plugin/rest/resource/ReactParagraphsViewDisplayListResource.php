@@ -51,17 +51,54 @@ class ReactParagraphsViewDisplayListResource extends ResourceBase {
   /**
    * {@inheritdoc}
    */
-  public function get($view_id) {
-    $list = [];
+  public function get() {
+
+    $ignored_views = [
+      'archive',
+      'block_content',
+      'content',
+      'content_recent',
+      'files',
+      'frontpage',
+      'glossary',
+      'media',
+      'hs_search',
+      'hs_manage_content',
+      'media_entity_browser',
+      'redirect',
+      'redirect_404',
+      'taxonomy_term',
+      'user_admin_people',
+      'who_s_new',
+      'who_s_online',
+      'watchdog',
+    ];
+    $data = [];
     $storage = $this->entityTypeManager->getStorage('view');
-    foreach($storage->loadMultiple() as $view){
+
+    foreach ($storage->loadMultiple() as $view) {
+      if (in_array($view->id(), $ignored_views)) {
+        continue;
+      }
+
       $displays = $view->get('display');
-      $list[$view->id()] = [
+      $data['views'][] = [
+        'value' => $view->id(),
         'label' => $view->label(),
-        'displays' => $displays,
       ];
+
+      foreach ($displays as $display_id => $display) {
+        if ($display['display_plugin'] != 'block') {
+          continue;
+        }
+
+        $data['display'][$view->id()][] = [
+          'value' => $display_id,
+          'label' => $display['display_title'],
+        ];
+      }
     }
-    return new JsonResponse($list);
+    return new JsonResponse($data);
   }
 
   /**

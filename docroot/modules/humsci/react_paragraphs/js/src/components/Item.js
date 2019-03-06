@@ -8,6 +8,7 @@ import {HeroImageForm} from "./Molecules/HeroImageForm";
 import {ViewForm} from "./Molecules/ViewForm";
 import {WebformForm} from "./Molecules/WebformForm";
 import {Handle} from "./Atoms/Handle";
+import {ResizeHandle} from "./Atoms/ResizeHandle";
 
 export class Item extends Component {
 
@@ -100,16 +101,17 @@ export class Item extends Component {
               topLeft: false
             }}
             onResizeStop={this.props.onItemResize.bind(undefined, this.props.item, initialWidth, gridIncrement)}
+            handleComponent={{right: ResizeHandle}}
           >
             <div
               className="item"
               ref={provided.innerRef}
               {...provided.draggableProps}
             >
-              <Handle {...provided.dragHandleProps}/>
 
               <div className="item-contents">
                 <div className="item-header">
+                  <Handle {...provided.dragHandleProps}/>
                   <div className="item-summary">
                     {this.getItemSummary()}
                   </div>

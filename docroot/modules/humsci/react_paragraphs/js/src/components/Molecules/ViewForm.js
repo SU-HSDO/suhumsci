@@ -40,50 +40,10 @@ export class ViewForm extends Component {
     fetch(window.reactParagraphsApiUrl + '/entity-list/view-displays')
       .then(response => response.json())
       .then(jsonData => {
-        delete jsonData.archive;
-        delete jsonData.block_content;
-        delete jsonData.content;
-        delete jsonData.content_recent;
-        delete jsonData.files;
-        delete jsonData.frontpage;
-        delete jsonData.glossary;
-        delete jsonData.media;
-        delete jsonData.hs_search;
-        delete jsonData.hs_manage_content;
-        delete jsonData.media_entity_browser;
-        delete jsonData.redirect;
-        delete jsonData.redirect_404;
-        delete jsonData.taxonomy_term;
-        delete jsonData.user_admin_people;
-        delete jsonData.who_s_new;
-        delete jsonData.who_s_online;
-        delete jsonData.watchdog;
-
-        const viewOptions = [];
-        const displayOptions = {};
-
-        Object.keys(jsonData).map(viewId => {
-          viewOptions.push({value: viewId, label: jsonData[viewId].label});
-          displayOptions[viewId] = [];
-
-          Object.keys(jsonData[viewId].displays).map(displayId => {
-            const display = jsonData[viewId].displays[displayId];
-            if (display.display_plugin !== 'block') {
-              return;
-
-            }
-
-            displayOptions[viewId].push({
-              value: displayId,
-              label: display.display_title
-            });
-          })
-        });
-
         this.setState(prevState => ({
           ...prevState,
-          views: viewOptions,
-          displays: displayOptions,
+          views: jsonData.views,
+          displays: jsonData.display,
         }));
       });
   }
@@ -111,8 +71,6 @@ export class ViewForm extends Component {
     if (targetValue) {
       displayValue = this.state.displays[targetValue.value].find(item => item.value === this.state.fieldValues.display_id);
     }
-
-    console.log(displayValue);
 
     return (
       <div>

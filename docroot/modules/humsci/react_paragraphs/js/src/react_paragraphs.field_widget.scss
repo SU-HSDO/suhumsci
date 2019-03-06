@@ -9,6 +9,10 @@
     display: flex;
     border: 1px solid #ccc;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+
+    > .draggable-handle {
+      border-right: 1px solid #ccc;
+    }
   }
 
   .item-list {
@@ -16,21 +20,24 @@
     display: flex;
     align-items: center;
     justify-content: left;
-    padding: 5px 0;
     min-height: 50px;
+    padding: 10px 0;
+  }
+
+  .resizeable-item {
+    padding: 5px;
   }
 
   .item {
     display: flex;
     width: 100%;
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-    padding: 5px;
     background: #fff;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
   }
 
   .item-contents {
-    width: 100%;
+    width: calc(100% - 20px);
     padding: 10px;
   }
 
@@ -85,7 +92,7 @@
   .draggable-handle {
     text-align: center;
     width: 20px;
-    border-right: 1px solid #ccc;
+    flex: 20px 0 0;
 
     span {
       margin-top: 10px;
@@ -96,6 +103,13 @@
       font-size: 0;
       background: url(icons/move.svg) no-repeat center;
     }
+  }
+
+  .resize-handle {
+    background: url(icons/resize.png) no-repeat center;
+    height: 100%;
+    display: block;
+    background-size: 11px;
   }
 
 }

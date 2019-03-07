@@ -10,9 +10,12 @@
     "dev:bundleanalyzer": "yarn dev -- --env.addons=bundleanalyzer",
     "prebuild": "rimraf dist",
     "build": "cross-env NODE_ENV=production webpack -p --env.env=prod",
-    "build:bundleanalyzer": "yarn build -- --env.addons=bundleanalyzer"
+    "build:bundleanalyzer": "yarn build -- --env.addons=bundleanalyzer",
+    "test": "react-scripts test --testMatch '<rootDir>/js/src/tests/**/*.js'"
   },
   "dependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.10.0",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-delay-render": "^0.1.2",
@@ -50,14 +53,13 @@
     "react-hot-loader": "^4.6.3",
     "react-modal": "^3.8.1",
     "react-router": "^4.3.1",
+    "react-scripts": "^2.1.6",
     "react-select": "^2.4.1",
     "rimraf": "^2.6.2",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "webpack": "^4.28.2",
     "webpack-bundle-analyzer": "^2.13.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.1.5"
   },
   "repository": {

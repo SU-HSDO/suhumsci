@@ -1,9 +1,9 @@
 import React from 'react';
-import {configure} from 'enzyme';
-import {shallow, render} from 'enzyme';
+import {configure, shallow, render} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {ParagraphGroups} from "../components/ParagraphGroups";
 
+global.fetch = require('jest-fetch-mock');
 configure({adapter: new Adapter()});
 
 const data = {
@@ -42,6 +42,7 @@ const data = {
     hs_webform: {label: 'Webform'}
   },
 };
+
 
 it("renders correctly", () => {
   const wrapper = render(

@@ -17,6 +17,8 @@ export class ParagraphGroups extends Component {
     });
 
     this.state = {
+      loadedItems: 0,
+      isLoading: true,
       items: existingItems,
       rows: {},
       rowOrder: [],
@@ -32,7 +34,7 @@ export class ParagraphGroups extends Component {
     this.onItemEdit = this.onItemEdit.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.entityId == null) {
       return;
     }
@@ -48,7 +50,7 @@ export class ParagraphGroups extends Component {
       .then(response => response.json())
       .then(jsonData => {
         if (typeof (jsonData.message) !== 'undefined') {
-          return;
+          throw jsonData.message;
         }
 
         var rows = {...this.state.rows};
@@ -71,12 +73,17 @@ export class ParagraphGroups extends Component {
 
         this.setState(prevState => ({
           ...prevState,
+          isLoading: prevState + 1 === items.length,
+          loadedItems: prevState.loadedItems + 1,
           items: items,
           rows: rows,
           rowOrder: rowOrder,
           rowCount: Object.keys(rows).length
         }))
       })
+      .catch(error => {
+        console.log('An error has occured: ' + error)
+      });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -275,6 +282,13 @@ export class ParagraphGroups extends Component {
   }
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <div className="react-loader"><span
+          className="visually-hidden">Loading</span></div>
+      )
+    }
+
     return (
       <div className="react-paragraphs-widget">
         <DragDropContext onDragEnd={this.onDragEnd}>

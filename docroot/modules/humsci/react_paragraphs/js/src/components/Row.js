@@ -36,6 +36,7 @@ export class Row extends Component {
               <Droppable
                 droppableId={this.props.row.id} type="item"
                 direction="horizontal"
+                isDropDisabled={this.props.items.length === 4}
               >
                 {(provided, snapshot) => (
 
@@ -62,6 +63,7 @@ export class Row extends Component {
                         )
                       })}
 
+                      {provided.placeholder}
                     </div>
                   </div>
                 )}

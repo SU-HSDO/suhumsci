@@ -221,6 +221,8 @@ export class ParagraphGroups extends Component {
     event.preventDefault();
 
     const newState = {...this.state};
+
+    // No row exists. Add a row to hold the new item.
     if (!this.state.rowOrder.length) {
       const newRowId = 'row-' + parseInt(newState.rowCount);
 
@@ -235,7 +237,18 @@ export class ParagraphGroups extends Component {
       newUuid = UUID.v4();
     }
 
-    const lastRowId = newState.rowOrder.slice(-1);
+    let lastRowId = newState.rowOrder.slice(-1);
+
+    // Too many item in the last row. Add a new row.
+    if (newState.rows[lastRowId].items.length === 4) {
+      const newRowId = 'row-' + parseInt(newState.rowCount);
+
+      newState.rows[newRowId] = {id: newRowId, items: []};
+      newState.rowOrder.push(newRowId);
+      newState.rowCount++;
+      lastRowId = newState.rowOrder.slice(-1);
+    }
+
     const itemWidth = 12 / (newState.rows[lastRowId].items.length + 1);
 
     newState.rows[lastRowId].items.map(itemId => newState.items[itemId].settings.width = isFinite(itemWidth) ? itemWidth : 12);
@@ -315,6 +328,8 @@ export class ParagraphGroups extends Component {
                     />
                   )
                 })}
+
+                {provided.placeholder}
               </div>
             )}
           </Droppable>

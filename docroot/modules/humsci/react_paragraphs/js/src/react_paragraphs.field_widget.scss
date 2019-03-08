@@ -37,51 +37,46 @@
   }
 
   .item-contents {
-    width: calc(100% - 20px);
-    padding: 10px;
+    width: 100%;
   }
 
   .item-header {
     width: 100%;
     display: flex;
+    border-bottom: 1px solid #ccc;
+
+    > * {
+      margin: 10px;
+    }
+  }
+
+  .item-summary {
+    width: 100%;
+    font-size: 1.4em;
+    line-height: 1.4em;
+    height: 1.4em;
+    overflow: hidden;
+    position: relative;
+
+    &:after {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 3em;
+      background: -webkit-gradient(linear, left top, right top, from(rgba(255, 255, 255, 0)), to(#fff));
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, #fff 100%);
+      content: "\00a0";
+    }
+  }
+
+  .item-form {
+    margin: 10px;
   }
 
   .item-actions {
     margin-left: auto;
-    position: relative;
     display: flex;
-
-    .actions-toggle {
-      display: block;
-      height: 36px;
-      width: 36px;
-      background: url(icons/icon-actions.svg) no-repeat center;
-      background-size: 26px 26px;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      -webkit-transition: all 0.1s;
-      transition: all 0.1s;
-      cursor: pointer;
-    }
-
-    .actions-list {
-      display: block;
-      position: absolute;
-      list-style: none;
-      margin: 0;
-      padding: 5px 10px;
-      right: 10px;
-      z-index: 100;
-      background: #f9f8f6;
-      border: 1px solid #a6a6a6;
-      border-radius: 5px 0 5px 5px;
-      -webkit-box-shadow: 0 2px 6px 0 #aaa;
-      box-shadow: 0 2px 6px 0 #aaa;
-    }
-
-    .edit-button {
-      float: left;
-    }
   }
 
   .toolbox {
@@ -93,16 +88,16 @@
     text-align: center;
     width: 20px;
     flex: 20px 0 0;
-
-    span {
-      margin-top: 10px;
-      display: block;
-    }
+    background-color: #edede8;
 
     .handle-icon {
+      margin-top: 0;
+      display: block;
+      height: 100%;
       font-size: 0;
       background: url(icons/move.svg) no-repeat center;
     }
+
   }
 
   .resize-handle {
@@ -112,6 +107,11 @@
     background-size: 11px;
   }
 
+  .row-actions {
+    width: 40px;
+    background-color: #edede8;
+    border-left: 1px solid #ccc;
+  }
 }
 
 .react-loader {

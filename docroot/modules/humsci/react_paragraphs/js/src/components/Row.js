@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Draggable, Droppable} from "react-beautiful-dnd";
 import {Item} from "./Item";
 import {Handle} from "./Atoms/Handle";
+import {ToggleButton} from "./Atoms/ToggleButton";
 
 export class Row extends Component {
 
@@ -43,7 +44,7 @@ export class Row extends Component {
                   <div {...provided.droppableProps}
                        ref={provided.innerRef}
                        className="row-items-wrapper"
-                       style={{width: 'calc(100% - 30px)'}}
+                       style={{width: 'calc(100% - 60px)'}}
                   >
 
                     <div className="item-list" ref={this.containerRef}
@@ -69,11 +70,13 @@ export class Row extends Component {
                 )}
               </Droppable>
 
-              <div className="remove-row-button" style={{width: '10px'}}>
-                <a href="#"
-                   onClick={this.props.onRemoveRow.bind(undefined, this.props.row)}>X<span
-                  className="visually-hidden">Delete row</span></a>
-              </div>
+              <ToggleButton
+                className="row-actions"
+                actions={[{
+                  onClick: this.props.onRemoveRow.bind(undefined, this.props.row),
+                  value: 'Delete Row'
+                }]}
+              />
             </div>
           </div>
         )}

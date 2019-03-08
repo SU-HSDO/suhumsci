@@ -9,6 +9,7 @@ import {ViewForm} from "./Molecules/ViewForm";
 import {WebformForm} from "./Molecules/WebformForm";
 import {Handle} from "./Atoms/Handle";
 import {ResizeHandle} from "./Atoms/ResizeHandle";
+import {ToggleButton} from "./Atoms/ToggleButton";
 
 export class Item extends Component {
 
@@ -110,8 +111,7 @@ export class Item extends Component {
             >
 
               <div className="item-contents">
-                <div className="item-header">
-                  <Handle {...provided.dragHandleProps}/>
+                <div className="item-header" {...provided.dragHandleProps}>
                   <div className="item-summary">
                     {this.getItemSummary()}
                   </div>
@@ -121,18 +121,19 @@ export class Item extends Component {
                       onClick={this.onEditFormButtonClick}
                       className="button">{this.state.showForm ? 'Collapse' : 'Edit'}</button>
 
-                    <button className="actions-toggle"
-                            onClick={this.onViewActionsClick.bind(undefined, 'toggle')}>
-                      <span className="visually-hidden">Toggle Actions</span>
-                    </button>
-
-                    <ul className="actions-list"
-                        style={{display: this.state.showActions ? 'block' : 'none'}}>
-                      <li>
-                        <a className="delete-action" href="#"
-                           onClick={this.props.onItemRemove.bind(undefined, this.props.item)}>Delete</a>
-                      </li>
-                    </ul>
+                    <ToggleButton
+                      actions={[{
+                        value: 'Delete',
+                        onClick: this.props.onItemRemove.bind(undefined, this.props.item)
+                      },
+                        {
+                          value: 'Duplicate',
+                          onClick: function (e) {
+                            e.preventDefault();
+                            alert('Not working yet')
+                          }
+                        }
+                      ]}/>
                   </div>
                 </div>
 

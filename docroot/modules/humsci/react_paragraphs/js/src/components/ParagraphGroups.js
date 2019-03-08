@@ -18,7 +18,7 @@ export class ParagraphGroups extends Component {
 
     this.state = {
       loadedItems: 0,
-      isLoading: existingItems.length ? true : false,
+      isLoading: !!existingItems.length,
       items: existingItems,
       rows: {},
       rowOrder: [],

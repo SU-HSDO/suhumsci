@@ -52,7 +52,7 @@ class CapxTagging extends ProcessPluginBase implements ContainerFactoryPluginInt
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $destination = explode(Row::PROPERTY_SEPARATOR, $destination_property);
     $field_name = reset($destination);
-    $url = $row->getSourceProperty('active_url');
+    $url = $row->getSourceProperty('current_feed_url');
 
     $importers = $this->entityTypeManager->getStorage('capx_importer')
       ->loadMultiple();

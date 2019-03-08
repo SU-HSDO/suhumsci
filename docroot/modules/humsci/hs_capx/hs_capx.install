@@ -85,3 +85,31 @@ function hs_capx_update_8001() {
   $entity_definition = $entity_type_manager->getDefinition('capx_importer');
   $entity_updater->installEntityType($entity_definition);
 }
+
+/**
+ * Add a new column to the migrate map table.
+ */
+function hs_capx_update_8002() {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('migrate_map_hs_capx')) {
+    return;
+  }
+  $field_spec = [
+    'type' => 'int',
+    'not null' => FALSE,
+  ];
+  $schema->addField('migrate_map_hs_capx', 'destid2', $field_spec);
+
+  $node_query = \Drupal::database()
+    ->select('node', 'n')
+    ->fields('n', ['nid', 'vid'])
+    ->execute()
+    ->fetchAllKeyed();
+  foreach ($node_query as $nid => $vid) {
+    \Drupal::database()
+      ->update('migrate_map_hs_capx')
+      ->fields(['destid2' => $vid])
+      ->condition('destid1', $nid)
+      ->execute();
+  }
+}

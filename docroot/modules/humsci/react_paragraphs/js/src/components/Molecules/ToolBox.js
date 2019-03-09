@@ -1,26 +1,31 @@
-import React, {Component} from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-export class ToolBox extends Component {
+const ToolBoxWrapper = styled.div`
+  border: 1px solid #ccc;
+  box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2)
+`;
 
-  render() {
-    return (
-      <div className="toolbox">
-        <span className="toolbox__title">Toolbox</span>
-        <div className="toolbox__items">
-          {Object.keys(this.props.items).map(item_id => (
-            <ToolBoxItem
-              key={item_id}
-              id={item_id}
-              item={this.props.items[item_id]}
-              onTakeItem={this.props.onTakeItem}
-            />
-          ))}
-        </div>
+export const ToolBox = ({items, onTakeItem}) => {
+  return (
+    <ToolBoxWrapper>
+      <span className="toolbox__title">Toolbox</span>
+      <div className="toolbox__items">
+
+        {Object.keys(items).map(item_id => (
+          <ToolBoxItem
+            key={item_id}
+            id={item_id}
+            item={items[item_id]}
+            onTakeItem={onTakeItem}
+          />
+        ))}
+
       </div>
-    );
-  }
-}
+    </ToolBoxWrapper>
+  );
+};
 
 export const ToolBoxItem = ({id, item, onTakeItem}) => {
   item.id = id;

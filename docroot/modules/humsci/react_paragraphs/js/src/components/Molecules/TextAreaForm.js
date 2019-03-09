@@ -1,6 +1,12 @@
 import React, {Component} from "react";
+import styled from 'styled-components';
 import {CirclePicker} from "react-color";
 import {TextAreaField} from "../Atoms/TextAreaField";
+
+
+const Wrapper = styled.div`
+  ${({outlineColor}) => outlineColor !== '#ffffff' && `outline: 4px solid ${outlineColor};`}
+`;
 
 export class TextAreaForm extends Component {
 
@@ -8,6 +14,7 @@ export class TextAreaForm extends Component {
     super(props);
     this.state = {
       colors: [
+        '#ffffff',
         '#8C1515',
         '#000000',
         '#4D4F53',
@@ -20,7 +27,7 @@ export class TextAreaForm extends Component {
         '#E98300',
         '#53284F'
       ],
-      colorValue: '',
+      colorValue: '#ffffff',
       bodyValue: ''
     };
 
@@ -37,14 +44,18 @@ export class TextAreaForm extends Component {
 
   onColorChange(color) {
     this.setState({colorValue: color.hex});
+    if (color.hex == '#ffffff') {
+      this.props.onFieldEdit('field_hs_text_area_bg_color[0][color]', '');
+      return;
+    }
     this.props.onFieldEdit('field_hs_text_area_bg_color[0][color]', color.hex.replace('#', ''))
   }
 
 
   render() {
     return (
-      <div className="text-area"
-           style={{outline: '4px solid ' + this.state.colorValue}}>
+      <Wrapper className="text-area"
+           outlineColor={this.state.colorValue}>
         <TextAreaField
           label="Text Area"
           name="field_hs_text_area[0][value]"
@@ -61,7 +72,7 @@ export class TextAreaForm extends Component {
             onChange={this.onColorChange}
           />
         </div>
-      </div>
+      </Wrapper>
     )
   }
 }

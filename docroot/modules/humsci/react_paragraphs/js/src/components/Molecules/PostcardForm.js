@@ -4,6 +4,7 @@ import {default as UUID} from "node-uuid";
 import {TextAreaField} from "../Atoms/TextAreaField";
 import {MediaField} from "../Atoms/MediaField";
 import {InputField} from "../Atoms/InputField";
+import {LinkField} from "../Atoms/LinkField";
 
 export class PostcardForm extends Component {
 
@@ -60,7 +61,6 @@ export class PostcardForm extends Component {
 
     this.displayId = 'field-' + UUID.v4();
 
-
     this.onDisplayChange = this.onDisplayChange.bind(this);
   }
 
@@ -106,23 +106,14 @@ export class PostcardForm extends Component {
           onChange={this.props.onFieldEdit}
         />
 
-        <fieldset className="container">
-          <legend>Read More Link</legend>
-          <div className="fieldset-wrapper">
-            <InputField
-              label="URL"
-              name="field_hs_postcard_link[0][uri]"
-              value={this.state.fieldValues.linkUriValue}
-              onChange={this.props.onFieldEdit}
-            />
-            <InputField
-              label="Link text"
-              name="field_hs_postcard_link[0][title]"
-              value={this.state.fieldValues.linkTitleValue}
-              onChange={this.props.onFieldEdit}
-            />
-          </div>
-        </fieldset>
+        <LinkField
+          legend="Read More Link"
+          titleName="field_hs_postcard_link[0][title]"
+          titleValue={this.state.fieldValues.linkTitleValue}
+          uriName="field_hs_postcard_link[0][uri]"
+          uriValue={this.state.fieldValues.linkUriValue}
+          onChange={this.props.onFieldEdit}
+        />
       </div>
     )
   }

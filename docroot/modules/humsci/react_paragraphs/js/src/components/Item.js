@@ -7,7 +7,6 @@ import {AccordionForm} from "./Molecules/AccordionForm";
 import {HeroImageForm} from "./Molecules/HeroImageForm";
 import {ViewForm} from "./Molecules/ViewForm";
 import {WebformForm} from "./Molecules/WebformForm";
-import {Handle} from "./Atoms/Handle";
 import {ResizeHandle} from "./Atoms/ResizeHandle";
 import {ToggleButton} from "./Atoms/ToggleButton";
 
@@ -30,9 +29,11 @@ export class Item extends Component {
       showActions: false
     };
     this.onEditFormButtonClick = this.onEditFormButtonClick.bind(this);
-    this.onViewActionsClick = this.onViewActionsClick.bind(this);
   }
 
+  /**
+   * Expand or collapse the form when the user wants.
+   */
   onEditFormButtonClick(event) {
     event.preventDefault();
     this.setState(prevState => ({
@@ -41,14 +42,11 @@ export class Item extends Component {
     }));
   }
 
-  onViewActionsClick(action, event) {
-    event.preventDefault();
-    this.setState(prevState => ({
-      ...prevState,
-      showActions: action === 'leave' ? false : !prevState.showActions
-    }))
-  }
-
+  /**
+   * Get a string summary of the entity field values.
+   *
+   * todo: add file/media summary better.
+   */
   getItemSummary() {
     let summary = [];
 
@@ -64,7 +62,11 @@ export class Item extends Component {
     return summary.join(', ').replace(/(<([^>]+)>)/ig, "").substr(0, 100);
   }
 
+  /**
+   * Render our component.
+   */
   render() {
+    // Do some math for our 12 column grid given the container width.
     const gridIncrement = this.props.containerWidth / 12;
     const initialWidth = gridIncrement * this.props.item.settings.width;
 
@@ -73,6 +75,7 @@ export class Item extends Component {
       totalWidth += item.settings.width;
     });
 
+    // If there is space available in the row, allow the item to be resized.
     const maxWidth = gridIncrement * (12 - totalWidth) + initialWidth;
 
     return (
@@ -115,8 +118,7 @@ export class Item extends Component {
                   <div className="item-summary">
                     {this.getItemSummary()}
                   </div>
-                  <div className="item-actions"
-                       onMouseLeave={this.onViewActionsClick.bind(undefined, 'leave')}>
+                  <div className="item-actions">
                     <button
                       onClick={this.onEditFormButtonClick}
                       className="button">{this.state.showForm ? 'Collapse' : 'Edit'}</button>

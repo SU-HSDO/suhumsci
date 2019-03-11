@@ -6,17 +6,21 @@ import {ToggleButton} from "./Atoms/ToggleButton";
 
 export class Row extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {containerWidth: 0};
-    this.containerRef = React.createRef();
-  }
+  state = {containerWidth: 0};
+  containerRef = React.createRef();
 
+  /**
+   * When the component mounts, add an event listener so we can measure the
+   * container.
+   */
   componentDidMount() {
     this.setState({containerWidth: this.containerRef.current.offsetWidth});
     window.addEventListener("resize", this.onWindowResize.bind(this));
   }
 
+  /**
+   * If the window is resized, measure and save the new row container width.
+   */
   onWindowResize() {
     this.setState({containerWidth: this.containerRef.current.offsetWidth});
   }

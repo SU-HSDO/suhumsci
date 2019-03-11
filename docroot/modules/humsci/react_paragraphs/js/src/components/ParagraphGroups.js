@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
 import {DragDropContext, Droppable} from 'react-beautiful-dnd';
+import {confirmAlert} from 'react-confirm-alert';
 import {default as UUID} from "node-uuid";
 import {ToolBox} from "./Molecules/ToolBox";
 import {Row} from "./Row";
+import '../react_paragraphs.confirm.scss';
 
 export class ParagraphGroups extends Component {
 
+  /**
+   * Instantiate the component object.
+   *
+   * @param props
+   */
   constructor(props) {
     super(props);
 
@@ -34,6 +41,9 @@ export class ParagraphGroups extends Component {
     this.onItemEdit = this.onItemEdit.bind(this);
   }
 
+  /**
+   * Load all the paragraph entities before mounting the component.
+   */
   componentWillMount() {
     if (this.props.entityId == null) {
       return;
@@ -43,16 +53,26 @@ export class ParagraphGroups extends Component {
     });
   }
 
+  /**
+   * Load a single paragraph entity from the rest API.
+   *
+   * @param itemId
+   */
   loadParagraphEntity(itemId) {
     const item = this.state.items[itemId];
 
+    // This API is provided by Drupal's rest module in core.
     fetch(reactParagraphsApiUrl + '/entity/paragraph/' + item.target_id)
       .then(response => response.json())
       .then(jsonData => {
+
+        // If the API fails to get the paragraph, we get a message. Throw that
+        // message as an error.
         if (typeof (jsonData.message) !== 'undefined') {
           throw jsonData.message;
         }
 
+        // Build the new item data object and add it to the existing items.
         var rows = {...this.state.rows};
         var items = {...this.state.items};
 
@@ -71,6 +91,7 @@ export class ParagraphGroups extends Component {
         var rowOrder = this.state.rowOrder;
         rowOrder[rowNumber] = 'row-' + rowNumber;
 
+        // Set the new state with the new paragraph entity.
         this.setState(prevState => ({
           ...prevState,
           isLoading: prevState + 1 === items.length,
@@ -86,6 +107,10 @@ export class ParagraphGroups extends Component {
       });
   }
 
+  /**
+   * When the component updates at any point, inject the data into a hidden
+   * field for consumption by the field widget during node save.
+   */
   componentDidUpdate(prevProps, prevState, snapshot) {
     const formItemsField = document.getElementsByName(this.props.fieldName + '[value]');
     if (formItemsField.length) {
@@ -99,6 +124,9 @@ export class ParagraphGroups extends Component {
     }
   }
 
+  /**
+   * When an item is resized, save it as part of the state.
+   */
   onItemResize(item, initialWidth, incrementWidth, event, direction, element, changes) {
     const newWidth = initialWidth + changes.width;
     item.settings.width = Math.round(newWidth / incrementWidth);
@@ -112,6 +140,10 @@ export class ParagraphGroups extends Component {
     }))
   }
 
+  /**
+   * After a user has dropped an tem into its desired location, reorder some
+   * data and set the state with the new order.
+   */
   onDragEnd(result) {
     const {destination, source, draggableId, type} = result;
     if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
@@ -157,6 +189,7 @@ export class ParagraphGroups extends Component {
       return;
     }
 
+    // An item was moved from one row to the next.
     const startItems = Array.from(start.items);
     startItems.splice(source.index, 1);
 
@@ -194,6 +227,9 @@ export class ParagraphGroups extends Component {
     this.setState(newState);
   }
 
+  /**
+   * When the user clicks the button to add a new row, add it to the state.
+   */
   onAddRowClick(event) {
     event.preventDefault();
 
@@ -206,17 +242,45 @@ export class ParagraphGroups extends Component {
     this.setState(newState);
   }
 
+  /**
+   * When a user clicks to remove a row, alert them to confirm, then delete
+   * the row.
+   */
   onRemoveRow(row, event) {
-    event.preventDefault;
-    let newState = {...this.state};
-    row.items.map(itemId => {
-      delete newState.items[itemId];
+    event.preventDefault();
+
+    confirmAlert({
+      customUI: ({onClose}) => {
+        return (
+          <div className='alert-dialog'>
+            <p>Are you sure you want to delete this row?</p>
+            <button className="button" onClick={onClose}>Cancel</button>
+            <button className="button button--primary" onClick={(e) => {
+              e.preventDefault();
+
+              let newState = {...this.state};
+              row.items.map(itemId => {
+                delete newState.items[itemId];
+              });
+              newState.rowOrder.splice(newState.rowOrder.indexOf(row.id), 1);
+              delete newState.rows[row.id];
+              this.setState(newState);
+
+              onClose()
+            }}
+            >
+              Delete
+            </button>
+          </div>
+        )
+      }
     });
-    newState.rowOrder.splice(newState.rowOrder.indexOf(row.id), 1);
-    delete newState.rows[row.id];
-    this.setState(newState);
   }
 
+  /**
+   * When a user clicks to add a new item into the mix, add it to the last row,
+   * or create a new row and add it to that. Then save to the state.
+   */
   onTakeToolItem(newItem, event) {
     event.preventDefault();
 
@@ -232,7 +296,8 @@ export class ParagraphGroups extends Component {
     }
 
     let newUuid = UUID.v4();
-    // Ensure we always have a unique item ID.
+    // Ensure we always have a unique item ID. This uuid is only for the form.
+    // It is not the same UUID that Drupal will use.
     while (typeof (newState.items['item-' + newUuid]) !== 'undefined') {
       newUuid = UUID.v4();
     }
@@ -249,8 +314,8 @@ export class ParagraphGroups extends Component {
       lastRowId = newState.rowOrder.slice(-1);
     }
 
+    // Resize all the items in the row. This is the easiest way to handle it.
     const itemWidth = 12 / (newState.rows[lastRowId].items.length + 1);
-
     newState.rows[lastRowId].items.map(itemId => newState.items[itemId].settings.width = isFinite(itemWidth) ? itemWidth : 12);
 
     newState.items['item-' + newUuid] = {
@@ -270,6 +335,10 @@ export class ParagraphGroups extends Component {
     this.setState(newState);
   }
 
+  /**
+   * When a user clicks to delete a single item out of the row, remove it, and
+   * save the state.
+   */
   onItemRemove(item, event) {
     event.preventDefault();
 
@@ -288,14 +357,21 @@ export class ParagraphGroups extends Component {
 
   }
 
+  /**
+   * An item has been edited in some way, save it in the state.
+   */
   onItemEdit(item) {
     const newState = {...this.state};
     newState.items[item.id] = item;
     this.setState(newState);
   }
 
+  /**
+   * Render our component.
+   */
   render() {
     if (this.state.isLoading) {
+      // All paragraphs haven't been loaded.
       return (
         <div className="react-loader"><span
           className="visually-hidden">Loading</span></div>

@@ -79,14 +79,13 @@ export class ToggleButton extends Component {
           displayItems={this.state.showActions}
         >
           {this.props.actions.map((item, index) => {
-
             return (
-              <Input
-                type="submit"
+              <button
+                className="button"
                 key={index}
                 onClick={item.onClick}
                 value={item.value}
-              >{item.value}</Input>
+              >{item.value}</button>
             )
           })}
         </InputWrapper>

@@ -43,7 +43,7 @@ if (typeof (window.drupalSettings) === 'undefined') {
   window.reactParagraphsApiUrl = 'http://docroot.suhumsci.loc';
 }
 
-
+// The field widget gives us all the data we need to get started.
 window.drupalSettings.reactParagraphs.map(item => {
   Modal.setAppElement('#' + item.fieldId);
 

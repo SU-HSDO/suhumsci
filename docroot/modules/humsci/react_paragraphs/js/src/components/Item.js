@@ -1,14 +1,9 @@
 import React, {Component} from 'react';
 import {Draggable} from "react-beautiful-dnd";
 import Resizable from "re-resizable";
-import {PostcardForm} from "./Molecules/PostcardForm";
-import {TextAreaForm} from "./Molecules/TextAreaForm";
-import {AccordionForm} from "./Molecules/AccordionForm";
-import {HeroImageForm} from "./Molecules/HeroImageForm";
-import {ViewForm} from "./Molecules/ViewForm";
-import {WebformForm} from "./Molecules/WebformForm";
 import {ResizeHandle} from "./Atoms/ResizeHandle";
 import {ToggleButton} from "./Atoms/ToggleButton";
+import {EntityForm} from "./Molecules/EntityForm";
 
 export class Item extends Component {
 
@@ -151,65 +146,5 @@ export class Item extends Component {
         )}
       </Draggable>
     )
-  }
-}
-
-
-export class EntityForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showForm: false,
-    };
-    this.onFieldEdit = this.onFieldEdit.bind(this);
-  }
-
-  onFieldEdit(item, fieldName, newValue) {
-    if (fieldName) {
-      let fieldPath = fieldName.split('[');
-      fieldPath = fieldPath.map(path => path.replace(']', ''));
-      item.entity = this.setFieldValue(item.entity, fieldPath, newValue);
-      this.props.onItemEdit(item);
-    }
-  }
-
-  setFieldValue(entity, path, value) {
-    const [index] = path.splice(0, 1);
-    if (path.length) {
-      if (typeof (entity[index]) === 'undefined') {
-        entity[index] = {};
-      }
-      entity[index] = this.setFieldValue(entity[index], path, value);
-    }
-    else {
-      entity[index] = value;
-    }
-    return entity;
-  }
-
-
-  render() {
-    switch (this.props.item.entity.type[0].target_id) {
-      case 'hs_postcard':
-        return (<PostcardForm item={this.props.item}
-                              onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
-      case 'hs_text_area':
-        return (<TextAreaForm item={this.props.item}
-                              onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
-      case 'hs_accordion':
-        return (<AccordionForm item={this.props.item}
-                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
-      case 'hs_hero_image':
-        return (<HeroImageForm item={this.props.item}
-                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
-      case 'hs_view':
-        return (<ViewForm item={this.props.item}
-                          onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
-      case 'hs_webform':
-        return (<WebformForm item={this.props.item}
-                             onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
-      default:
-        return (<div/>)
-    }
   }
 }

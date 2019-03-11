@@ -1,7 +1,7 @@
 import React from "react";
-import {MediaField} from "../Atoms/MediaField";
-import {TextAreaField} from "../Atoms/TextAreaField";
-import {InputField} from "../Atoms/InputField";
+import {MediaField} from "../Atoms/Fields/MediaField";
+import {TextAreaField} from "../Atoms/Fields/TextAreaField";
+import {InputField} from "../Atoms/Fields/InputField";
 
 export const AccordionForm = ({item, onFieldEdit}) => {
   let summaryValue = '';

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import styled from 'styled-components';
 import {CirclePicker} from "react-color";
-import {TextAreaField} from "../Atoms/TextAreaField";
+import {TextAreaField} from "../Atoms/Fields/TextAreaField";
 
 
 const Wrapper = styled.div`

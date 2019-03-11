@@ -1,5 +1,5 @@
 import React from "react";
-import {MediaField} from "../Atoms/MediaField";
+import {MediaField} from "../Atoms/Fields/MediaField";
 
 export const HeroImageForm = ({item, onFieldEdit}) => {
   let heroImageValue = '';

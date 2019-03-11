@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import Select from 'react-select';
 import {default as UUID} from "node-uuid";
-import {TextAreaField} from "../Atoms/TextAreaField";
-import {MediaField} from "../Atoms/MediaField";
-import {InputField} from "../Atoms/InputField";
-import {LinkField} from "../Atoms/LinkField";
+import {TextAreaField} from "../Atoms/Fields/TextAreaField";
+import {MediaField} from "../Atoms/Fields/MediaField";
+import {InputField} from "../Atoms/Fields/InputField";
+import {LinkField} from "../Atoms/Fields/LinkField";
 
 export class PostcardForm extends Component {
 

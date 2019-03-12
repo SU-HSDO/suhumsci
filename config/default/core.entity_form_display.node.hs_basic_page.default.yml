@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.hs_basic_page.field_components
     - field.field.node.hs_basic_page.field_hs_page_components
     - field.field.node.hs_basic_page.field_hs_page_hero
     - field.field.node.hs_basic_page.layout_builder__layout
@@ -10,6 +11,7 @@ dependencies:
   module:
     - paragraphs
     - path
+    - react_paragraphs
 _core:
   default_config_hash: F_j_b6OUzvMt5ycMr7eJPVLjwfl4Cvo-sos3ibg4YZI
 id: node.hs_basic_page.default
@@ -23,19 +25,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_hs_page_components:
-    type: paragraphs
+  field_components:
     weight: 2
-    settings:
-      title: Component
-      title_plural: Components
-      edit_mode: closed
-      closed_mode: summary
-      autocollapse: all
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
+    settings: {  }
     third_party_settings: {  }
+    type: react_paragraphs
     region: content
   field_hs_page_hero:
     type: paragraphs
@@ -49,6 +43,10 @@ content:
       add_mode: button
       form_display_mode: default
       default_paragraph_type: _none
+      closed_mode_threshold: 0
+      features:
+        duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
     third_party_settings: {  }
     region: content
   path:
@@ -101,4 +99,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_hs_page_components: true
   layout_builder__layout: true

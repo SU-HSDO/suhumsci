@@ -1,0 +1,49 @@
+uuid: 18ae80a2-c1bd-4394-8714-2a6ab2b7a344
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_components
+    - node.type.hs_basic_page
+    - paragraphs.paragraphs_type.hs_row
+  module:
+    - react_paragraphs
+id: node.hs_basic_page.field_components
+field_name: field_components
+entity_type: node
+bundle: hs_basic_page
+label: Components
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: '1'
+    target_bundles:
+      hs_row: hs_row
+    target_bundles_drag_drop:
+      hs_accordion:
+        weight: '8'
+        enabled: 0
+      hs_hero_image:
+        weight: '9'
+        enabled: 0
+      hs_postcard:
+        weight: '10'
+        enabled: 0
+      hs_row:
+        enabled: '1'
+        weight: '11'
+      hs_text_area:
+        weight: '12'
+        enabled: 0
+      hs_view:
+        weight: '13'
+        enabled: 0
+      hs_webform:
+        weight: '14'
+        enabled: 0
+field_type: react_paragraphs

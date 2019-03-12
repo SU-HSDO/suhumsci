@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.hs_basic_page.field_components
     - field.field.node.hs_basic_page.field_hs_page_components
     - field.field.node.hs_basic_page.field_hs_page_hero
     - field.field.node.hs_basic_page.layout_builder__layout
@@ -12,6 +13,7 @@ dependencies:
     - hs_layouts
     - layout_builder
     - menu_block
+    - react_paragraphs
     - user
 third_party_settings:
   layout_builder:
@@ -100,6 +102,30 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
+            weight: 2
+          cb85a71a-248a-4a02-bad6-fcfd353b109e:
+            uuid: cb85a71a-248a-4a02-bad6-fcfd353b109e
+            region: main
+            configuration:
+              id: 'field_block:node:hs_basic_page:field_components'
+              label: Components
+              provider: layout_builder
+              label_display: ''
+              formatter:
+                label: hidden
+                type: react_paragraphs
+                settings:
+                  view_mode: default
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  ds:
+                    ds_limit: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
             weight: 1
     allow_custom: true
     enabled: true
@@ -109,7 +135,16 @@ id: node.hs_basic_page.default
 targetEntityType: node
 bundle: hs_basic_page
 mode: default
-content: {  }
+content:
+  field_components:
+    weight: 1
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: react_paragraphs
+    region: main
 hidden:
   field_hs_page_components: true
   field_hs_page_hero: true

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import ReactModal from 'react-modal';
+import Modal from 'react-modal';
 import {default as UUID} from "node-uuid";
 
 
@@ -68,13 +68,24 @@ export class MediaField extends Component {
         </div>
         }
 
-        <ReactModal isOpen={this.state.modalOpen} style={{'z-index': 99}}>
+        <Modal
+          isOpen={this.state.modalOpen}
+          style={{
+            overlay: {
+              background: 'rgba(0, 0, 0, 0.7)'
+            },
+            content: {
+              top: 100,
+              'z-index': 99
+            }
+          }}
+        >
           <button className="close-modal" onClick={this.onOpenIframe}>Close
           </button>
           <iframe
             src={reactParagraphsApiUrl + "/entity-browser/modal/image_browser?reactCard=1&uuid=" + this.state.iframeUuid}
             width="100%" height="100%"/>
-        </ReactModal>
+        </Modal>
 
         <input
           type="hidden"

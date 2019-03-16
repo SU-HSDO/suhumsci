@@ -4,12 +4,15 @@ namespace Drupal\react_paragraphs\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\paragraphs\Plugin\EntityReferenceSelection\ParagraphSelection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -35,6 +38,20 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
   protected $selectionManager;
 
   /**
+   * Entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * File System service.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
+
+  /**
    * Keyed array of item ids.
    *
    * @var array
@@ -51,16 +68,20 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('plugin.manager.entity_reference_selection')
+      $container->get('plugin.manager.entity_reference_selection'),
+      $container->get('entity_type.manager'),
+      $container->get('file_system')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, SelectionPluginManagerInterface $selection_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, SelectionPluginManagerInterface $selection_manager, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->selectionManager = $selection_manager;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->fileSystem = $file_system;
   }
 
   /**
@@ -78,7 +99,7 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
     foreach ($item_value as &$item) {
       $item['settings'] = json_decode($item['settings'], TRUE);
     }
-//dpm($item_value);
+
     $attachments['drupalSettings']['reactParagraphs'][] = [
       'fieldId' => $element_id,
       'entityId' => $form_state->getBuildInfo()['callback_object']->getEntity()
@@ -166,12 +187,32 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    *   A list of arrays keyed by the paragraph type machine name with the following properties.
    *     - label: The label of the paragraph type.
    *     - weight: The weight of the paragraph type.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getAllowedTypes(FieldDefinitionInterface $field_definition = NULL) {
     $return_bundles = [];
     $handler = $this->selectionManager->getSelectionHandler($field_definition ?: $this->fieldDefinition);
     if ($handler instanceof ParagraphSelection) {
       $return_bundles = $handler->getSortedAllowedTypes();
+    }
+    $bundle_entities = $this->entityTypeManager->getStorage('paragraphs_type')
+      ->loadMultiple(array_keys($return_bundles));
+
+    /** @var \Drupal\paragraphs\ParagraphsTypeInterface $paragraph_type */
+    foreach ($bundle_entities as $id => $paragraph_type) {
+      $return_bundles[$id]['icon'] = NULL;
+      if ($icon_uuid = $paragraph_type->get('icon_uuid')) {
+        $file = $this->entityTypeManager->getStorage('file')
+          ->loadByProperties(['uuid' => $icon_uuid]);
+
+        if (!empty($file)) {
+          /** @var \Drupal\file\Entity\File $file */
+          $file = is_array($file) ? reset($file) : $file;
+          $return_bundles[$id]['icon'] = file_create_url($file->getFileUri());
+        }
+      }
     }
     return $return_bundles;
   }

@@ -52,13 +52,14 @@ export class Row extends Component {
                   >
 
                     <div className="item-list" ref={this.containerRef}
-                         style={{background: snapshot.isDraggingOver ? 'lightblue' : 'white'}}>
+                         style={{background: snapshot.isDraggingOver ? 'lightblue' : '#f9f9f9'}}>
                       {this.props.items.map((item, itemIndex) => {
                         return (
                           <Item
                             key={item.id}
                             item={item}
                             index={itemIndex}
+                            availableParagraphs={this.props.availableParagraphs}
                             rowItems={this.props.items}
                             containerWidth={this.state.containerWidth}
                             onItemResize={this.props.onItemResize}

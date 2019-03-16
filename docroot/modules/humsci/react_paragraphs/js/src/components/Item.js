@@ -1,28 +1,27 @@
 import React, {Component} from 'react';
 import {Draggable} from "react-beautiful-dnd";
 import Resizable from "re-resizable";
+import styled from 'styled-components';
 import {ResizeHandle} from "./Atoms/ResizeHandle";
 import {ToggleButton} from "./Atoms/ToggleButton";
 import {EntityForm} from "./Molecules/EntityForm";
+
+const ItemIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin: 0 auto;
+`;
 
 export class Item extends Component {
 
   constructor(props) {
     super(props);
-
-    this.paragraphTypes = {
-      hs_accordion: 'Accordion',
-      hs_hero_image: 'Hero Image',
-      hs_postcard: 'Postcard',
-      hs_text_area: 'Text Area',
-      hs_view: 'View',
-      hs_webform: 'Webform',
-    };
-
     this.state = {
       showForm: false,
       showActions: false
     };
+    this.paragraphType = this.props.item.entity.type[0].target_id;
     this.onEditFormButtonClick = this.onEditFormButtonClick.bind(this);
   }
 
@@ -51,10 +50,11 @@ export class Item extends Component {
       }
     });
     summary = summary.filter(line => line !== undefined && line.length > 1);
-    if (summary.length === 0) {
-      return this.paragraphTypes[this.props.item.entity.type[0].target_id];
-    }
     return summary.join(', ').replace(/(<([^>]+)>)/ig, "").substr(0, 100);
+  }
+
+  getTypeLabel() {
+    return this.props.availableParagraphs[this.paragraphType].label;
   }
 
   /**
@@ -72,6 +72,7 @@ export class Item extends Component {
 
     // If there is space available in the row, allow the item to be resized.
     const maxWidth = gridIncrement * (12 - totalWidth) + initialWidth;
+    const icon = this.props.availableParagraphs[this.paragraphType].icon;
 
     return (
       <Draggable draggableId={this.props.item.id} index={this.props.index}>
@@ -110,9 +111,16 @@ export class Item extends Component {
 
               <div className="item-contents">
                 <div className="item-header" {...provided.dragHandleProps}>
+
+                  <div className="icon-label">
+                    {icon != null && <ItemIcon src={icon}/>}
+                    {this.getTypeLabel()}
+                  </div>
+
                   <div className="item-summary">
                     {this.getItemSummary()}
                   </div>
+
                   <div className="item-actions">
                     <button
                       onClick={this.onEditFormButtonClick}

@@ -16,12 +16,15 @@ if (typeof (window.drupalSettings) === 'undefined') {
         entityId: 446,
         fieldName: 'field_react_paragraphs',
         available_items: {
-          hs_accordion: {label: 'Accordion'},
-          hs_hero_image: {label: 'Hero Image'},
-          hs_postcard: {label: 'Postcard'},
-          hs_text_area: {label: 'Text Area'},
-          hs_view: {label: 'View'},
-          hs_webform: {label: 'Webform'}
+          hs_accordion: {
+            label: 'Accordion',
+            icon: "https://cdn0.iconfinder.com/data/icons/penthemes-layour-builder/512/accordion-512.png"
+          },
+          hs_hero_image: {label: 'Hero Image', icon: null},
+          hs_postcard: {label: 'Postcard', icon: null},
+          hs_text_area: {label: 'Text Area', icon: null},
+          hs_view: {label: 'View', icon: null},
+          hs_webform: {label: 'Webform', icon: null}
         },
         existing_items: [
           {

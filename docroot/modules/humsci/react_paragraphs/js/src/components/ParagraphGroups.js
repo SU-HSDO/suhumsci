@@ -35,7 +35,6 @@ export class ParagraphGroups extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onAddRowClick = this.onAddRowClick.bind(this);
     this.onRemoveRow = this.onRemoveRow.bind(this);
-    this.onTakeToolItem = this.onTakeToolItem.bind(this);
     this.onItemRemove = this.onItemRemove.bind(this);
     this.onItemResize = this.onItemResize.bind(this);
     this.onItemEdit = this.onItemEdit.bind(this);
@@ -141,10 +140,54 @@ export class ParagraphGroups extends Component {
   }
 
   /**
+   * A toolbox item was dragged into a row. Add that item as a new entity.
+   */
+  addToolboxItem(result) {
+    const newType = result.draggableId.replace('new-item-', '');
+
+    const newState = {...this.state};
+
+    let newUuid = UUID.v4();
+    // Ensure we always have a unique item ID. This uuid is only for the form.
+    // It is not the same UUID that Drupal will use.
+    while (typeof (newState.items['item-' + newUuid]) !== 'undefined') {
+      newUuid = UUID.v4();
+    }
+
+    const destinationRow = result.destination.droppableId;
+
+    // Resize all the items in the row. This is the easiest way to handle it.
+    const itemWidth = 12 / (newState.rows[destinationRow].items.length + 1);
+    newState.rows[destinationRow].items.map(itemId => newState.items[itemId].settings.width = isFinite(itemWidth) ? itemWidth : 12);
+
+    newState.items['item-' + newUuid] = {
+      entity: {
+        type: [{target_id: newType}]
+      },
+      id: 'item-' + newUuid,
+      settings: {
+        row: 0,
+        index: 0,
+        width: isFinite(itemWidth) ? itemWidth : 12,
+      },
+      target_id: null,
+    };
+
+    newState.rows[destinationRow].items.splice(result.destination.index, 0, 'item-' + newUuid);
+    this.setState(newState);
+  }
+
+  /**
    * After a user has dropped an tem into its desired location, reorder some
    * data and set the state with the new order.
    */
   onDragEnd(result) {
+    // New item was dragged into the mix. Add it to the data.
+    if (result.source.droppableId === 'toolbox') {
+      this.addToolboxItem(result);
+      return;
+    }
+
     const {destination, source, draggableId, type} = result;
     if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
       return;
@@ -278,64 +321,6 @@ export class ParagraphGroups extends Component {
   }
 
   /**
-   * When a user clicks to add a new item into the mix, add it to the last row,
-   * or create a new row and add it to that. Then save to the state.
-   */
-  onTakeToolItem(newItem, event) {
-    event.preventDefault();
-
-    const newState = {...this.state};
-
-    // No row exists. Add a row to hold the new item.
-    if (!this.state.rowOrder.length) {
-      const newRowId = 'row-' + parseInt(newState.rowCount);
-
-      newState.rows[newRowId] = {id: newRowId, items: []};
-      newState.rowOrder.push(newRowId);
-      newState.rowCount++;
-    }
-
-    let newUuid = UUID.v4();
-    // Ensure we always have a unique item ID. This uuid is only for the form.
-    // It is not the same UUID that Drupal will use.
-    while (typeof (newState.items['item-' + newUuid]) !== 'undefined') {
-      newUuid = UUID.v4();
-    }
-
-    let lastRowId = newState.rowOrder.slice(-1);
-
-    // Too many item in the last row. Add a new row.
-    if (newState.rows[lastRowId].items.length === 4) {
-      const newRowId = 'row-' + parseInt(newState.rowCount);
-
-      newState.rows[newRowId] = {id: newRowId, items: []};
-      newState.rowOrder.push(newRowId);
-      newState.rowCount++;
-      lastRowId = newState.rowOrder.slice(-1);
-    }
-
-    // Resize all the items in the row. This is the easiest way to handle it.
-    const itemWidth = 12 / (newState.rows[lastRowId].items.length + 1);
-    newState.rows[lastRowId].items.map(itemId => newState.items[itemId].settings.width = isFinite(itemWidth) ? itemWidth : 12);
-
-    newState.items['item-' + newUuid] = {
-      entity: {
-        type: [{target_id: newItem.id}]
-      },
-      id: 'item-' + newUuid,
-      settings: {
-        row: 0,
-        index: 0,
-        width: isFinite(itemWidth) ? itemWidth : 12,
-      },
-      target_id: null,
-    };
-
-    newState.rows[lastRowId].items.push('item-' + newUuid);
-    this.setState(newState);
-  }
-
-  /**
    * When a user clicks to delete a single item out of the row, remove it, and
    * save the state.
    */
@@ -397,6 +382,7 @@ export class ParagraphGroups extends Component {
                       items={rowItems}
                       row={row}
                       index={rowIndex}
+                      availableParagraphs={this.props.available_items}
                       onItemResize={this.onItemResize}
                       onItemRemove={this.onItemRemove}
                       onRemoveRow={this.onRemoveRow}

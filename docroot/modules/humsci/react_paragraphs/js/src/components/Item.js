@@ -17,8 +17,10 @@ export class Item extends Component {
 
   constructor(props) {
     super(props);
+    // Newly created items only have a type key. To make it faster for the user,
+    // show the form for newly created items.
     this.state = {
-      showForm: false,
+      showForm: Object.keys(this.props.item.entity).length <= 1,
       showActions: false
     };
     this.paragraphType = this.props.item.entity.type[0].target_id;
@@ -112,8 +114,10 @@ export class Item extends Component {
               <div className="item-contents">
                 <div className="item-header" {...provided.dragHandleProps}>
 
-                  <div className="icon-label">
-                    {icon != null && <ItemIcon src={icon}/>}
+                  <div className="icon-label" style={{textAlign: 'center'}}>
+                    <ItemIcon
+                      src={icon ? icon : 'https://png.pngtree.com/svg/20150803/320b35b99d.png'}
+                    />
                     {this.getTypeLabel()}
                   </div>
 

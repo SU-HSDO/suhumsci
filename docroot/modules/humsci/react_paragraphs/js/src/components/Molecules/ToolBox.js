@@ -50,7 +50,9 @@ const ToolboxItem = styled.div`
   box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
   padding: 10px;
   margin-right: 10px;
-  background: #f9f9f9;
+  background: #f9f9f9;    
+  flex-basis: 100px;
+  text-align: center;
 `;
 
 const ItemIcon = styled.img`

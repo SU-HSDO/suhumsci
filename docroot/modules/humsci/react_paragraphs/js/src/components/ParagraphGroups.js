@@ -395,7 +395,7 @@ export class ParagraphGroups extends Component {
               </div>
             )}
           </Droppable>
-          <button onClick={this.onAddRowClick} className="button">Add Row
+          <button onClick={this.onAddRowClick} className="button">Add Another Row
           </button>
           <ToolBox items={this.props.available_items}
                    onTakeItem={this.onTakeToolItem}/>

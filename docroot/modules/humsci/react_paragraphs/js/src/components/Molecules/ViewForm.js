@@ -124,12 +124,14 @@ export class ViewForm extends Component {
         </div>
 
         <Select
+          placeholder="View"
           options={this.state.views}
           onChange={this.onSelect.bind(undefined, 'target_id')}
           value={targetValue}
         />
 
         <Select
+          placeholder="Display"
           isDisabled={!this.state.fieldValues.target_id.length}
           options={this.state.displays[this.state.fieldValues.target_id]}
           onChange={this.onSelect.bind(undefined, 'display_id')}

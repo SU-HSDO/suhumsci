@@ -53,22 +53,22 @@ export class EntityForm extends Component {
   render() {
     switch (this.props.item.entity.type[0].target_id) {
       case 'hs_postcard':
-        return (<PostcardForm item={this.props.item}
+        return (<PostcardForm errors={this.props.errors} item={this.props.item}
                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_text_area':
-        return (<TextAreaForm item={this.props.item}
+        return (<TextAreaForm errors={this.props.errors} item={this.props.item}
                               onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_accordion':
-        return (<AccordionForm item={this.props.item}
+        return (<AccordionForm errors={this.props.errors} item={this.props.item}
                                onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_hero_image':
-        return (<HeroImageForm item={this.props.item}
+        return (<HeroImageForm errors={this.props.errors} item={this.props.item}
                                onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_view':
-        return (<ViewForm item={this.props.item}
+        return (<ViewForm errors={this.props.errors} item={this.props.item}
                           onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       case 'hs_webform':
-        return (<WebformForm item={this.props.item}
+        return (<WebformForm errors={this.props.errors} item={this.props.item}
                              onFieldEdit={this.onFieldEdit.bind(undefined, this.props.item)}/>);
       default:
         return (<div/>)

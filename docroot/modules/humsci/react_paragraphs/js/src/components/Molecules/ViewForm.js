@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Select from 'react-select';
 import {default as UUID} from "node-uuid";
+import {ErrorMessages} from "../Atoms/ErrorMessages";
 
 export class ViewForm extends Component {
 
@@ -34,6 +35,13 @@ export class ViewForm extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
+  }
+
+  static validateFields(entity) {
+    if (entity.field_hs_view && (typeof entity.field_hs_view[0].display_id === 'undefined' || !entity.field_hs_view[0].display_id)) {
+      return {field: 'field_hs_view', message: 'Display ID is required'};
+    }
+    return null
   }
 
   componentWillMount() {
@@ -72,8 +80,12 @@ export class ViewForm extends Component {
       displayValue = this.state.displays[targetValue.value].find(item => item.value === this.state.fieldValues.display_id);
     }
 
+    const hasErrors = this.props.errors && this.props.errors.length;
     return (
+
       <div>
+        {hasErrors && <ErrorMessages errors={this.props.errors}/>}
+
         <div className="form-item">
           <input
             id={this.state.fieldIds.show_title}

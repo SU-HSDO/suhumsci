@@ -59,6 +59,7 @@ export class Row extends Component {
                             key={item.id}
                             item={item}
                             index={itemIndex}
+                            errors={this.props.errors[item.id]}
                             availableParagraphs={this.props.availableParagraphs}
                             rowItems={this.props.items}
                             containerWidth={this.state.containerWidth}

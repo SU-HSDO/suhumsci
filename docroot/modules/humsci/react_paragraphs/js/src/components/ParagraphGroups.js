@@ -5,6 +5,8 @@ import {default as UUID} from "node-uuid";
 import {ToolBox} from "./Molecules/ToolBox";
 import {Row} from "./Row";
 import '../react_paragraphs.confirm.scss';
+import {ViewForm} from "./Molecules/ViewForm";
+import {ErrorMessages} from "./Atoms/ErrorMessages";
 
 export class ParagraphGroups extends Component {
 
@@ -29,7 +31,8 @@ export class ParagraphGroups extends Component {
       items: existingItems,
       rows: {},
       rowOrder: [],
-      rowCount: 0
+      rowCount: 0,
+      errors: {}
     };
 
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -38,6 +41,34 @@ export class ParagraphGroups extends Component {
     this.onItemRemove = this.onItemRemove.bind(this);
     this.onItemResize = this.onItemResize.bind(this);
     this.onItemEdit = this.onItemEdit.bind(this);
+
+    window.ParagraphsGroups = this;
+  }
+
+  validateFields() {
+    const errors = {};
+    Object.keys(this.state.items).map(itemId => {
+      const entity = this.state.items[itemId].entity;
+      let itemErrors = [];
+
+      switch (entity.type[0].target_id) {
+        case 'hs_view':
+          itemErrors.push(ViewForm.validateFields(entity));
+          break;
+      }
+
+      itemErrors = itemErrors.filter(error => error != null);
+
+      if (itemErrors.length) {
+        errors[itemId] = itemErrors;
+      }
+    });
+    this.setState(prevState => ({
+      ...prevState,
+      errors: errors,
+    }));
+
+    return errors;
   }
 
   /**
@@ -182,6 +213,10 @@ export class ParagraphGroups extends Component {
    * data and set the state with the new order.
    */
   onDragEnd(result) {
+    if (result.destination === null) {
+      return;
+    }
+
     // New item was dragged into the mix. Add it to the data.
     if (result.source.droppableId === 'toolbox') {
       this.addToolboxItem(result);
@@ -363,8 +398,16 @@ export class ParagraphGroups extends Component {
       )
     }
 
+    const hasErrors = !!Object.keys(this.state.errors).length;
+
     return (
       <div className="react-paragraphs-widget">
+
+        {hasErrors &&
+        <ErrorMessages errors={[{message: 'Errors exist'}]}/>
+        }
+
+
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId="rows" type="row">
             {provided => (
@@ -382,6 +425,7 @@ export class ParagraphGroups extends Component {
                       items={rowItems}
                       row={row}
                       index={rowIndex}
+                      errors={this.state.errors}
                       availableParagraphs={this.props.available_items}
                       onItemResize={this.onItemResize}
                       onItemRemove={this.onItemRemove}
@@ -395,7 +439,8 @@ export class ParagraphGroups extends Component {
               </div>
             )}
           </Droppable>
-          <button onClick={this.onAddRowClick} className="button">Add Another Row
+          <button onClick={this.onAddRowClick} className="button">Add Another
+            Row
           </button>
           <ToolBox items={this.props.available_items}
                    onTakeItem={this.onTakeToolItem}/>

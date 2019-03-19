@@ -112,7 +112,8 @@ export class Item extends Component {
             >
 
               <div className="item-contents">
-                <div className="item-header" {...provided.dragHandleProps}>
+                <div className="item-header" {...provided.dragHandleProps}
+                     style={{background: this.props.errors && this.props.errors.length ? '#fcf4f2' : 'transparent'}}>
 
                   <div className="icon-label" style={{textAlign: 'center'}}>
                     <ItemIcon
@@ -148,8 +149,11 @@ export class Item extends Component {
 
                 <div className="item-form"
                      style={{display: this.state.showForm ? 'block' : 'none'}}>
-                  <EntityForm item={this.props.item}
-                              onItemEdit={this.props.onItemEdit}/>
+                  <EntityForm
+                    errors={this.props.errors}
+                    item={this.props.item}
+                    onItemEdit={this.props.onItemEdit}
+                  />
                 </div>
               </div>
 

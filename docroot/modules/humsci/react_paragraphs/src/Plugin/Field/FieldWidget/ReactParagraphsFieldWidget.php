@@ -12,7 +12,6 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\paragraphs\Entity\Paragraph;
-use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\paragraphs\Plugin\EntityReferenceSelection\ParagraphSelection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

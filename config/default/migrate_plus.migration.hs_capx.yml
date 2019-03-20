@@ -88,6 +88,14 @@ source:
       type: string
 process:
   title: display_name
+  revision_timestamp:
+    -
+      plugin: callback
+      callable: time
+  revision_translation_affected:
+    -
+      plugin: default_value
+      default_value: 1
   status: constants/status
   type: constants/type
   field_hs_person_first_name: first_name
@@ -118,7 +126,9 @@ process:
       plugin: default_value
       default_value: null
 destination:
-  plugin: 'entity:node'
+  plugin: 'entity_reference_revisions:node'
+  new_revisions: true
+  force_revision: true
 migration_dependencies:
   required:
     - hs_capx_images

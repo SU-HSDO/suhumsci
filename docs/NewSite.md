@@ -9,6 +9,7 @@
 1. Ensure the Vhost points to Acquia by pinging the url. `ping newvhost.stanford.edu`
 
 ## Site Directory and settings.
+1. Disable shield on all sites on the dev and test environments. this will help when the LE certs are generated. `blt drupal:module:uninstall shield [environment:dev,test]`
 1. Create a new database in [Acquia dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265866-23a85077-2967-41a4-be22-a84c24e0f81a/databases). Adding a database to one environment adds one to all environments.
 1. execute blt command `blt recipes:multisite:init` and answer questions as desired. 
    * Machine name of the site should match the final vhost to be desired.

@@ -58,13 +58,15 @@
 
 $humsci_sites = [
   'archaeology',
+  'dsresearch',
   'duboislab',
   'francestanford',
   'mrc',
-  'swshumsci-sandbox',
-  'symsys',
   'mathematics',
   'philit',
+  'shenlab',
+  'symsys',
+  'swshumsci-sandbox',
 ];
 
 foreach ($humsci_sites as $site) {

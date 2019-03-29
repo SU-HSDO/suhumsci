@@ -68,7 +68,6 @@
  *
  * One example of the simplest connection array is shown below. To use the
  * sample settings, copy and uncomment the code below between the @code and
- *
  * @endcode lines and paste it after the $databases declaration. You will need
  * to replace the database username and password and possibly the host and port
  * with the appropriate credentials for your database system.
@@ -123,7 +122,6 @@ $databases = [];
  * traditionally referred to as master/slave in database server documentation).
  *
  * The general format for the $databases array is as follows:
- *
  * @code
  * $databases['default']['default'] = $info_array;
  * $databases['default']['replica'][] = $info_array;
@@ -247,7 +245,6 @@ $databases = [];
  * array key CONFIG_ACTIVE_DIRECTORY.
  *
  * Example:
- *
  * @code
  *   $config_directories = array(
  *     CONFIG_SYNC_DIRECTORY => '/directory/outside/webroot',
@@ -267,23 +264,6 @@ $config_directories = [];
  */
 
 /**
- * The active installation profile.
- *
- * Changing this after installation is not recommended as it changes which
- * directories are scanned during extension discovery. If this is set prior to
- * installation this value will be rewritten according to the profile selected
- * by the user.
- *
- * @see install_select_profile()
- *
- * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. The
- *   install profile is written to the core.extension configuration. If a
- *   service requires the install profile use the 'install_profile' container
- *   parameter. Functional code can use \Drupal::installProfile().
- */
-# $settings['install_profile'] = '';
-
-/**
  * Salt for one-time login links, cancel links, form tokens, etc.
  *
  * This variable will be set to a random value by the installer. All one-time
@@ -296,7 +276,6 @@ $config_directories = [];
  * stored with backups of your database.
  *
  * Example:
- *
  * @code
  *   $settings['hash_salt'] = file_get_contents('/home/example/salt.txt');
  * @endcode
@@ -383,7 +362,7 @@ $settings['update_free_access'] = FALSE;
  * Specify every reverse proxy IP address in your environment.
  * This setting is required if $settings['reverse_proxy'] is TRUE.
  */
-# $settings['reverse_proxy_addresses'] = array('a.b.c.d', ...);
+# $settings['reverse_proxy_addresses'] = ['a.b.c.d', ...];
 
 /**
  * Set this value if your proxy server sends the client IP in a header
@@ -432,6 +411,7 @@ $settings['update_free_access'] = FALSE;
  * getting cached pages from the proxy.
  */
 # $settings['omit_vary_cookie'] = TRUE;
+
 
 /**
  * Cache TTL for client error (4xx) responses.
@@ -576,10 +556,10 @@ if ($settings['hash_salt']) {
  * The "en" part of the variable name, is dynamic and can be any langcode of
  * any added language. (eg locale_custom_strings_de for german).
  */
-# $settings['locale_custom_strings_en'][''] = array(
+# $settings['locale_custom_strings_en'][''] = [
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
-# );
+# ];
 
 /**
  * A custom theme for the offline page:
@@ -633,7 +613,7 @@ if ($settings['hash_salt']) {
  *   override in a services.yml file in the same directory as settings.php
  *   (definitions in this file will override service definition defaults).
  */
-# $settings['bootstrap_config_storage'] = array('Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage');
+# $settings['bootstrap_config_storage'] = ['Drupal\Core\Config\BootstrapConfigStorageFactory', 'getFileStorage'];
 
 /**
  * Configuration overrides.
@@ -724,7 +704,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * like to allow.
  *
  * For example:
- *
  * @code
  * $settings['trusted_host_patterns'] = array(
  *   '^www\.example\.com$',
@@ -789,6 +768,3 @@ $settings['entity_update_batch_size'] = 50;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-
-require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-$settings['install_profile'] = 'su_humsci_profile';

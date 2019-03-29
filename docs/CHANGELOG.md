@@ -1,5 +1,12 @@
 # HumSci
 
+8.0.20
+--------------------------------------------------------------------------------  
+_Release Date: 2019-03-20_
+
+* Fixed CAPx workgroup tagging: made the current url configuration more granular.
+* Updated dependencies for security vulnerabilities.
+
 8.0.19
 --------------------------------------------------------------------------------  
 _Release Date: 2019-03-06_

@@ -167,6 +167,17 @@ process:
   body/value: biography
   body/format: constants/basic_html
   field_hs_person_email: email
+  field_hs_person_faculty_status:
+    -
+      plugin: entity_generate
+      source: affiliation
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: hs_person_faculty_status
+      value_key: name
+    -
+      plugin: default_value
+      default_value: null
   field_hs_person_interests:
     -
       plugin: callback

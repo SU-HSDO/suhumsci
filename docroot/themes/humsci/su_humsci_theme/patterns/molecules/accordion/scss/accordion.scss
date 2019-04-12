@@ -1,9 +1,17 @@
 @charset "UTF-8";
 
 details {
+  background: #eee;
+
   &[open] {
+    background: #fff;
+
     summary {
       border-bottom: 1px solid #ccc;
+
+      &:after {
+        content: "\f068"
+      }
     }
 
     .revealed-details {
@@ -13,10 +21,26 @@ details {
 
   summary {
     display: inline-block;
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
+    position: relative;
+    padding: 15px;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:after {
+      content: "\f067";
+      font-family: Font Awesome\ 5 Free;
+      font-weight: 900;
+      position: absolute;
+      right: 20px;
+      top: calc(50% - 9px);
+    }
 
     > * {
       display: inline-block;
+      width: calc(100% - 30px);
     }
   }
 

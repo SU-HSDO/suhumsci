@@ -120,18 +120,26 @@ function hs_capx_update_8002() {
 function hs_capx_update_8003() {
   $capx_settings = \Drupal::config('hs_capx.settings');
   $config_factory = \Drupal::configFactory();
-  $ignored_config = $config_factory->get('config_ignore.settings')
-    ->get('ignored_config_entities');
-  $ignored_config[] = 'migrate_plus.migration.*:status';
-  $config_factory->getEditable('config_ignore.settings')
-    ->set('ignored_config_entities', $ignored_config);
+
+  // Delete the image importer since it is now part of the normal importer.
+  $config_factory->getEditable('migrate_plus.migration.hs_capx_images')
+    ->delete();
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('migrate_map_hs_capx_images')) {
+    \Drupal::database()->schema()->dropTable('migrate_map_hs_capx_images');
+  }
+  if ($schema->tableExists('migrate_message_hs_capx_images')) {
+    \Drupal::database()->schema()->dropTable('migrate_message_hs_capx_images');
+  }
+
+  $ignored_config = $config_factory->getEditable('config_ignore.settings');
+  $ignored_entities = $ignored_config->get('ignored_config_entities');
+  $ignored_entities[] = 'migrate_plus.migration.*:status';
+  $ignored_config->set('ignored_config_entities', $ignored_entities)->save();
 
   if (empty($capx_settings->get('username')) && empty($capx_settings->get('password'))) {
-    // Enable capx migrations.
+    // Disable capx migrations if they aren't being used.
     $config_factory->getEditable('migrate_plus.migration.hs_capx')
-      ->set('status', FALSE)
-      ->save();
-    $config_factory->getEditable('migrate_plus.migration.hs_capx_images')
       ->set('status', FALSE)
       ->save();
   }

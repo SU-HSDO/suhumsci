@@ -113,3 +113,26 @@ function hs_capx_update_8002() {
       ->execute();
   }
 }
+
+/**
+ * Disable CAPx migration if no username or password is set (not in use).
+ */
+function hs_capx_update_8003() {
+  $capx_settings = \Drupal::config('hs_capx.settings');
+  $config_factory = \Drupal::configFactory();
+  $ignored_config = $config_factory->get('config_ignore.settings')
+    ->get('ignored_config_entities');
+  $ignored_config[] = 'migrate_plus.migration.*:status';
+  $config_factory->getEditable('config_ignore.settings')
+    ->set('ignored_config_entities', $ignored_config);
+
+  if (empty($capx_settings->get('username')) && empty($capx_settings->get('password'))) {
+    // Enable capx migrations.
+    $config_factory->getEditable('migrate_plus.migration.hs_capx')
+      ->set('status', FALSE)
+      ->save();
+    $config_factory->getEditable('migrate_plus.migration.hs_capx_images')
+      ->set('status', FALSE)
+      ->save();
+  }
+}

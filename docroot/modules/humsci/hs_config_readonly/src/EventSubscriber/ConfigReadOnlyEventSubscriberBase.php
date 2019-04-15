@@ -74,6 +74,7 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
   protected $bypassFormIds = [
     'view_duplicate_form',
     'menu_edit_form',
+    'shortcut_set_customize_form',
   ];
 
   /**

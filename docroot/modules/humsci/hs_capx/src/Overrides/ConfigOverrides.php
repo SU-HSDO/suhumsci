@@ -109,10 +109,10 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           ->getOriginal('migration_group', FALSE);
 
         if ($migration_group == 'hs_capx') {
-          $migration_destination = $this->configFactory->getEditable($name)
+          $migrate_destination = $this->configFactory->getEditable($name)
             ->getOriginal('destination.plugin', FALSE);
 
-          $configs_to_override[$name] = $migration_destination == 'entity_reference_revisions:node';
+          $configs_to_override[$name] = strpos($migrate_destination, 'node') !== FALSE;
         }
       }
     }

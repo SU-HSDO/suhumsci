@@ -7,8 +7,15 @@ proxy:
   appserver:
     - swshumsci.suhumsci.loc
     - archaeology.suhumsci.loc
-#   solr:
-#     - solr.mrcblt.sws:8983
+    - dsresaerch.suhumsci.loc
+    - duboislab.suhumsci.loc
+    - francestanford.suhumsci.loc
+    - mathematics.suhumsci.loc
+    - mrc.suhumsci.loc
+    - philit.suhumsci.loc
+    - shenlab.suhumsci.loc
+    - swshumsci_sandbox.suhumsci.loc
+    - symsys.suhumsci.loc
 services:
   appserver:
     ssl: true
@@ -21,18 +28,60 @@ services:
       user: drupal8
       password: drupal8
       database: archaeology
-
-  # solr:
-  #   type: solr:5.5
-  #   portforward: true
-  #   core: project
-  #   config:
-  #     conf: solrconf
-  # memcache:
-  #   type: memcached:1.5
-  #   mem: 128
-  #   portforward: true
-
+  # dsresaerch:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: dsresaerch
+  # duboislab:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: duboislab
+  # francestanford:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: francestanford
+  # mathematics:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: mathematics
+  # mrc:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: mrc
+  # philit:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: philit
+  # shenlab:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: shenlab
+  # swshumsci_sandbox:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: swshumsci_sandbox
+  # symsys:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal8
+  #     password: drupal8
+  #     database: symsys
 tooling:
   blt:
     service: appserver

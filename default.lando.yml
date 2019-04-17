@@ -3,7 +3,6 @@ recipe: drupal8
 config:
   webroot: docroot
   php: '7.2'
-  drush: composer
 proxy:
   appserver:
     - swshumsci.suhumsci.loc
@@ -37,6 +36,6 @@ services:
 tooling:
   blt:
     service: appserver
-    cmd: /usr/bin/blt
+    cmd: /app/vendor/bin/blt
   git:
     service: appserver

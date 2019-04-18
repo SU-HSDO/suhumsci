@@ -3,7 +3,6 @@
 namespace Drupal\react_paragraphs\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Render\Element;
 use Drupal\entity_reference_revisions\Plugin\Field\FieldFormatter\EntityReferenceRevisionsEntityFormatter;
 
 /**
@@ -19,6 +18,9 @@ use Drupal\entity_reference_revisions\Plugin\Field\FieldFormatter\EntityReferenc
  */
 class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormatter {
 
+  /**
+   * {@inheritdoc}
+   */
   public function view(FieldItemListInterface $items, $langcode = NULL) {
     $elements = parent::view($items, $langcode);
     if (!isset($elements['#items'])) {
@@ -32,6 +34,9 @@ class ReactParagraphsFieldFormatter extends EntityReferenceRevisionsEntityFormat
     return $elements;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = parent::viewElements($items, $langcode);
 

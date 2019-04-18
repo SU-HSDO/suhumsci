@@ -25,11 +25,15 @@ class ReactParagraphsFieldType extends EntityReferenceRevisionsItem {
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
-    return [
-        'target_type' => 'paragraph',
-      ] + parent::defaultStorageSettings();
+    $settings = [
+      'target_type' => 'paragraph',
+    ];
+    return $settings + parent::defaultStorageSettings();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
     $properties['settings'] = DataDefinition::create('string')

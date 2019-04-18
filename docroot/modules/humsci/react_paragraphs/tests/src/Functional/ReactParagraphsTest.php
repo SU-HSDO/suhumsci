@@ -20,7 +20,7 @@ class ReactParagraphsTest extends WebDriverTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected static $modules = [
     'react_paragraphs',
@@ -50,12 +50,14 @@ class ReactParagraphsTest extends WebDriverTestBase {
   ];
 
   /**
+   * Created node entity.
+   *
    * @var \Drupal\node\NodeInterface
    */
   protected $node;
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
@@ -118,6 +120,8 @@ class ReactParagraphsTest extends WebDriverTestBase {
    *   Index of the row starting at 0.
    * @param int $index
    *   Index of the item in the row starting at 0.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function addParagraph(array &$field_values, $paragraph_type, $width = 12, $row = 0, $index = 0) {
     switch ($paragraph_type) {

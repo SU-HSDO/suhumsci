@@ -11,6 +11,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\editor\Plugin\EditorManager;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\Plugin\EntityReferenceSelection\ParagraphSelection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -51,6 +52,13 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
   protected $fileSystem;
 
   /**
+   * Editor Plugin Manager service.
+   *
+   * @var \Drupal\editor\Plugin\EditorManager
+   */
+  protected $editorManager;
+
+  /**
    * Keyed array of item ids.
    *
    * @var array
@@ -69,18 +77,20 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
       $configuration['third_party_settings'],
       $container->get('plugin.manager.entity_reference_selection'),
       $container->get('entity_type.manager'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('plugin.manager.editor')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, SelectionPluginManagerInterface $selection_manager, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, SelectionPluginManagerInterface $selection_manager, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, EditorManager $editor_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
     $this->selectionManager = $selection_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->fileSystem = $file_system;
+    $this->editorManager = $editor_manager;
   }
 
   /**
@@ -88,9 +98,8 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $element_id = Html::getUniqueId(str_replace('.', '-', $this->fieldDefinition->id()));
-    /** @var \Drupal\editor\Plugin\EditorManager $editor_manager */
-    $editor_manager = \Drupal::service('plugin.manager.editor');
-    $attachments = $editor_manager->getAttachments(array_keys(filter_formats()));
+
+    $attachments = $this->editorManager->getAttachments(array_keys(filter_formats()));
     $attachments['library'][] = 'react_paragraphs/field_widget';
     $attachments['library'][] = 'filter/drupal.filter.admin';
 
@@ -108,12 +117,13 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
       'fieldName' => $this->fieldDefinition->getName(),
     ];
 
-    $elements['value'] = $element + [
-        '#type' => 'hidden',
-        '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-        '#suffix' => "<div id='$element_id'></div>",
-        '#attached' => $attachments,
-      ];
+    $elements['value'] = $element;
+    $elements['value'] += [
+      '#type' => 'hidden',
+      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+      '#suffix' => "<div id='$element_id'></div>",
+      '#attached' => $attachments,
+    ];
     return $elements;
   }
 
@@ -147,10 +157,16 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
   }
 
   /**
-   * @param $item_id
-   * @param array $item_data
+   * Get the existing paragraph entity if it exists, or create a new one.
    *
-   * @return \Drupal\Core\Entity\RevisionableContentEntityBase
+   * @param string $item_id
+   *   Unique id from the react widget.
+   * @param array $item_data
+   *   Entity field data.
+   *
+   * @return \Drupal\paragraphs\ParagraphInterface
+   *   Paragraph entity.
+   *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function getEntity($item_id, array $item_data) {
@@ -179,11 +195,11 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
    * Returns the sorted allowed types for a entity reference field.
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *  (optional) The field definition forwhich the allowed types should be
-   *  returned, defaults to the current field.
+   *   (optional) The field definition forwhich the allowed types should be
+   *   returned, defaults to the current field.
    *
    * @return array
-   *   A list of arrays keyed by the paragraph type machine name with the following properties.
+   *   A list of arrays keyed by the paragraph type machine name w/ properties.
    *     - label: The label of the paragraph type.
    *     - weight: The weight of the paragraph type.
    *

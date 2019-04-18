@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ReactParagraphsEntityListResource extends ResourceBase {
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;

@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_text_area.field_hs_text_area
+    - field.field.paragraph.hs_text_area.field_hs_text_area_bg_color
+    - paragraphs.paragraphs_type.hs_text_area
+  module:
+    - field_formatter_class
+    - hs_field_helpers
+    - text
+_core:
+  default_config_hash: E9kJh0q17n4NJEB5a0NakB9sJGl-8801iPFH7POehx0
+id: paragraph.hs_text_area.default
+targetEntityType: paragraph
+bundle: hs_text_area
+mode: default
+content:
+  field_hs_text_area:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: 'color-[paragraph:field_hs_text_area_bg_color]'
+    type: text_default
+    region: content
+hidden:
+  field_hs_text_area_bg_color: true

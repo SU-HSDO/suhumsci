@@ -5,7 +5,7 @@ import {TextAreaField} from "../Atoms/Fields/TextAreaField";
 
 
 const Wrapper = styled.div`
-  ${({outlineColor}) => outlineColor !== '#ffffff' && `outline: 4px solid ${outlineColor};`}
+  ${({outlineColor}) => outlineColor !== '#fff' && `outline: 4px solid ${outlineColor};`}
 `;
 
 export class TextAreaForm extends Component {
@@ -14,21 +14,22 @@ export class TextAreaForm extends Component {
     super(props);
     this.state = {
       colors: [
-        '#ffffff',
-        '#8C1515',
-        '#000000',
-        '#4D4F53',
-        '#D5D0C0',
-        '#928B81',
-        '#009B76',
-        '#0F6C91',
+        '#fff',
+        '#8c1515',
+        '#000',
+        '#4d4f53',
+        '#d5d0c0',
+        '#928b81',
+        '#009b76',
+        '#0f6c91',
         '#006374',
-        '#EAAB00',
-        '#E98300',
-        '#53284F'
+        '#eaab00',
+        '#e98300',
+        '#53284f'
       ],
-      colorValue: '#ffffff',
-      bodyValue: ''
+      colorValue: '#fff',
+      bodyValue: '',
+      colorAccess: false
     };
 
     if (typeof (this.props.item.entity.field_hs_text_area) !== 'undefined' && this.props.item.entity.field_hs_text_area.length) {
@@ -42,9 +43,18 @@ export class TextAreaForm extends Component {
     this.onColorChange = this.onColorChange.bind(this);
   }
 
+  componentWillMount() {
+    fetch(window.reactParagraphsApiUrl + '/api/field-access/paragraph.hs_text_area.field_hs_text_area_bg_color')
+      .then(response => {
+        if (response.status === 200) {
+          this.setState({colorAccess: true})
+        }
+      })
+  }
+
   onColorChange(color) {
     this.setState({colorValue: color.hex});
-    if (color.hex == '#ffffff') {
+    if (color.hex == '#fff') {
       this.props.onFieldEdit('field_hs_text_area_bg_color[0][color]', '');
       return;
     }
@@ -55,7 +65,7 @@ export class TextAreaForm extends Component {
   render() {
     return (
       <Wrapper className="text-area"
-           outlineColor={this.state.colorValue}>
+               outlineColor={this.state.colorValue}>
         <TextAreaField
           label="Text Area"
           name="field_hs_text_area[0][value]"
@@ -64,6 +74,7 @@ export class TextAreaForm extends Component {
           onChange={this.props.onFieldEdit}
         />
 
+        {this.state.colorAccess &&
         <div className="form-item">
           <label>Background Color</label>
           <CirclePicker
@@ -72,6 +83,7 @@ export class TextAreaForm extends Component {
             onChange={this.onColorChange}
           />
         </div>
+        }
       </Wrapper>
     )
   }

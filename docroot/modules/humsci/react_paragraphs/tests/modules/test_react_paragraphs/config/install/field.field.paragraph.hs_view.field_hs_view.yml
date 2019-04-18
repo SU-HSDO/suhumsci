@@ -1,0 +1,50 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_view
+    - paragraphs.paragraphs_type.hs_view
+  module:
+    - hs_field_helpers
+    - viewfield
+third_party_settings:
+  hs_field_helpers:
+    excluded_views:
+      - content
+      - block_content
+      - files
+      - frontpage
+      - hs_manage_content
+      - content_recent
+      - redirect
+      - redirect_404
+      - hs_search
+      - media_entity_browser
+      - taxonomy_term
+      - user_admin_people
+      - watchdog
+      - who_s_new
+      - who_s_online
+id: paragraph.hs_view.field_hs_view
+field_name: field_hs_view
+entity_type: paragraph
+bundle: hs_view
+label: View
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  force_default: 0
+  allowed_views: {  }
+  allowed_display_types:
+    block: block
+    entity_browser: 0
+    feed: 0
+    default: 0
+    page: 0
+  allow_title_customizing: 1
+  handler: 'default:view'
+  handler_settings: {  }
+field_type: viewfield

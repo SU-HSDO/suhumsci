@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_accordion.field_hs_accordion_description
+    - field.field.paragraph.hs_accordion.field_hs_accordion_image
+    - field.field.paragraph.hs_accordion.field_hs_accordion_summary
+    - paragraphs.paragraphs_type.hs_accordion
+  module:
+    - ds
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - stanford_media
+    - text
+third_party_settings:
+  layout_builder:
+    sections: {  }
+  ds:
+    layout:
+      id: pattern_accordion
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: closed
+    regions:
+      title:
+        - field_hs_accordion_summary
+      description:
+        - field_hs_accordion_image
+        - field_hs_accordion_description
+id: paragraph.hs_accordion.default
+targetEntityType: paragraph
+bundle: hs_accordion
+mode: default
+content:
+  field_hs_accordion_description:
+    type: text_default
+    weight: 2
+    region: description
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_accordion_image:
+    type: media_image_formatter
+    weight: 1
+    region: description
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: ''
+      link: 0
+    third_party_settings: {  }
+  field_hs_accordion_summary:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: title
+hidden: {  }

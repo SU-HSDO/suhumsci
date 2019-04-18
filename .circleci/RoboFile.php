@@ -287,7 +287,7 @@ class RoboFile extends Tasks {
       ->mkdir('../artifacts/phpunit', 777);
 
     $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
-      ->exec('../vendor/bin/phpunit -c core --log-junit ../artifacts/phpunit/phpunit.xml --testsuite functional ' . static::TEST_DIR);
+      ->exec('../vendor/bin/phpunit -c core --verbose --log-junit ../artifacts/phpunit/phpunit.xml --testsuite functional ' . static::TEST_DIR);
     return $tasks;
   }
 

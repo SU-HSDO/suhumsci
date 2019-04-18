@@ -6,7 +6,7 @@ import {Draggable, Droppable} from "react-beautiful-dnd";
 const ToolBoxWrapper = styled.div`
 `;
 
-const ToolBoxItems = styled.div`
+const ToolBoxItems = styled.div.attrs({className:'toolbox-items'})`
   display: flex;
 `;
 
@@ -21,14 +21,14 @@ export const ToolBox = ({items, onTakeItem}) => {
         direction="horizontal"
         isDropDisabled={true}
       >
-        {(provided, snapshot) => (
+        {provided => (
 
           <ToolBoxItems
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
             {Object.keys(items).map((item_id, index) => (
-              <ToolBoxItem
+              <ToolBoxItemWrapper
                 key={item_id}
                 id={item_id}
                 item={items[item_id]}
@@ -44,7 +44,7 @@ export const ToolBox = ({items, onTakeItem}) => {
   );
 };
 
-const ToolboxItem = styled.div`
+const ToolBoxItem = styled.div`
   display:block;
   border: 1px solid #ccc;
   box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
@@ -62,29 +62,31 @@ const ItemIcon = styled.img`
   margin: 0 auto;
 `;
 
-export const ToolBoxItem = ({id, item, index, onTakeItem}) => {
+export const ToolBoxItemWrapper = ({id, item, index, onTakeItem}) => {
 
   return (
 
     <Draggable draggableId={'new-item-' + id} index={index}>
       {provided => (
-        <ToolboxItem
+        <ToolBoxItem
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          className={id.replace(/_/g, '-')}
         >
           <ItemIcon
             src={item.icon ? item.icon : 'https://png.pngtree.com/svg/20150803/320b35b99d.png'}
           />
           {item.label}
-        </ToolboxItem>
+        </ToolBoxItem>
       )}
     </Draggable>
   )
 };
 
 ToolBoxItem.propTypes = {
-  key: PropTypes.string,
+  id: PropTypes.string,
   item: PropTypes.object,
+  index: PropTypes.number,
   onTakeItem: PropTypes.func
 };

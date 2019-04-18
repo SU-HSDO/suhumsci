@@ -9,7 +9,7 @@ const config = {
     app: [`${commonPaths.appEntry}/index.js`]
   },
   output: {
-    filename: 'react_paragraphs.[name].js'
+    filename: 'react_paragraphs.[name].min.js'
   },
   devtool: 'source-map',
   module: {

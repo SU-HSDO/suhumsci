@@ -78,6 +78,17 @@ foreach ($humsci_sites as $site) {
   $sites["$site.stanford.edu"] = $directory;
 }
 
+$simpletest_dir = __DIR__ . '/simpletest';
+if (file_exists($simpletest_dir)) {
+  $simpletest_files = glob("$simpletest_dir/*");
+  asort($simpletest_files);
+  foreach ($simpletest_files as &$directory) {
+    $directory = str_replace($simpletest_dir, 'simpletest', $directory);
+  }
+
+  $sites["simpletest.suhumsci.loc"] = reset($simpletest_files);
+}
+
 if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';
 }

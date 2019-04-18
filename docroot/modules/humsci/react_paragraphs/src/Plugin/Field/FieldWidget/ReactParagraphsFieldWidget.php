@@ -194,7 +194,7 @@ class ReactParagraphsFieldWidget extends WidgetBase implements ContainerFactoryP
   /**
    * Returns the sorted allowed types for a entity reference field.
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface|null $field_definition
    *   (optional) The field definition forwhich the allowed types should be
    *   returned, defaults to the current field.
    *

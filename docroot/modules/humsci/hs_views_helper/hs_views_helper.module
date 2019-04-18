@@ -45,7 +45,11 @@ function hs_views_helper_help($route_name, RouteMatchInterface $route_match) {
  * @see hs_views_helper_node_presave()
  */
 function hs_views_helper_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
-  if (isset($view->filter['type']) && $view->filter['type']->value) {
+  if (
+    isset($view->filter['type']) &&
+    $view->filter['type']->getEntityType() == 'node' &&
+    $view->filter['type']->value
+  ) {
     $node_list_position = array_search('node_list', $output['#cache']['tags']);
     unset($output['#cache']['tags'][$node_list_position]);
     foreach ($view->filter['type']->value as $node_type) {

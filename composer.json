@@ -115,6 +115,7 @@
     "drupal/admin_toolbar": "~1.20",
     "drupal/allowed_formats": "~1.1",
     "drupal/anchor_link": "~2.0-alpha2",
+    "drupal/asset_injector": "^2.4",
     "drupal/audio_embed_field": "dev-1.x",
     "drupal/auto_entitylabel": "2.x-dev",
     "drupal/block_class": "dev-1.x#d77c4eb779840110535a0f9ab698a0733c06d368",
@@ -133,7 +134,6 @@
     "drupal/config_readonly": "dev-1.x",
     "drupal/config_update": "dev-1.x#5785588167279912d1e1f3a936fbf4a306265bd6",
     "drupal/core": "~8.6.7",
-    "drupal/csv_importer": "^1.4",
     "drupal/default_content": "^1.0@alpha",
     "drupal/diff": "^1.0@RC",
     "drupal/domain_301_redirect": "1.x-dev",
@@ -212,7 +212,6 @@
     "su-sws/stanford_ssp": "dev-8.x-1.x"
   },
   "require-dev": {
-    "drupal/asset_injector": "~2.3",
     "drupal/config_inspector": "^1.0@beta",
     "drupal/console": "^1.8",
     "drupal/devel": "^1.2",
@@ -352,9 +351,6 @@
       },
       "drupal/fakeobjects": {
         "https://www.drupal.org/project/fakeobjects/issues/3002953": "https://www.drupal.org/files/issues/2019-02-12/fakeobjects-missing_plugin-3002953.patch"
-      },
-      "drupal/csv_importer": {
-        "https://www.drupal.org/project/csv_importer/issues/3000137": "https://www.drupal.org/files/issues/2019-03-29/csv_importer-multiple_values-3000137-9.patch"
       }
     },
     "merge-plugin": {
@@ -393,6 +389,12 @@
     "copy-saml": [
       "cp simplesamlphp/config/* vendor/simplesamlphp/simplesamlphp/config/",
       "cp simplesamlphp/config/* vendor/simplesamlphp/simplesamlphp/config/"
+    ],
+    "release-it-dry": [
+      "release-it --dry-run --no-npm.publish"
+    ],
+    "release-it": [
+      "release-it --no-npm.publish"
     ]
   },
   "config": {

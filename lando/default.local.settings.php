@@ -16,8 +16,8 @@ $databases = array(
     'default' =>
     array(
       'database' => 'archaeology',
-      'username' => 'drupal8',
-      'password' => 'drupal8',
+      'username' => 'drupal',
+      'password' => 'drupal',
       'host' => 'archaeology',
       'port' => '3306',
       'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',

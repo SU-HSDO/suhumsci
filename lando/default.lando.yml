@@ -1,0 +1,87 @@
+name: suhumsci
+recipe: drupal8
+config:
+  webroot: docroot
+  php: '7.2'
+proxy:
+  appserver:
+    - swshumsci.suhumsci.loc
+    - archaeology.suhumsci.loc
+    - dsresaerch.suhumsci.loc
+    - duboislab.suhumsci.loc
+    - francestanford.suhumsci.loc
+    - mathematics.suhumsci.loc
+    - mrc.suhumsci.loc
+    - philit.suhumsci.loc
+    - shenlab.suhumsci.loc
+    - swshumscisandbox.suhumsci.loc
+    - symsys.suhumsci.loc
+services:
+  appserver:
+    ssl: true
+  archaeology:
+    type: mysql:5.7
+    creds:
+      user: drupal
+      password: drupal
+      database: archaeology
+  # dsresaerch:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: dsresaerch
+  # duboislab:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: duboislab
+  # francestanford:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: francestanford
+  # mathematics:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: mathematics
+  # mrc:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: mrc
+  # philit:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: philit
+  # shenlab:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: shenlab
+  # swshumscisandbox:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: swshumscisandbox
+  # symsys:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: symsys
+tooling:
+  blt:
+    service: appserver
+    cmd: /app/vendor/bin/blt
+  git:
+    service: appserver

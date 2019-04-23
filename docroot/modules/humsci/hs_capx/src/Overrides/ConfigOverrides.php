@@ -58,8 +58,8 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   public function loadOverrides($names) {
     $overrides = [];
-
-    if (!(in_array('migrate_plus.migration.hs_capx', $names) || in_array('migrate_plus.migration.hs_capx_images', $names))) {
+    $configs_to_override = $this->overrideTheseConfigs($names);
+    if (empty($configs_to_override)) {
       return [];
     }
 
@@ -71,23 +71,52 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
     // Set the migration urls and client credentials from the user entered
     // data.
-    $overrides['migrate_plus.migration.hs_capx'] = [
-      'source' => [
-        'authentication' => [
-          'client_id' => $config->get('username'),
-          'client_secret' => $password,
-          'plugin' => $password ? 'oauth2' : '',
+    foreach ($configs_to_override as $config_name => $needs_fields) {
+      $overrides[$config_name] = [
+        'source' => [
+          'authentication' => [
+            'client_id' => $config->get('username'),
+            'client_secret' => $password,
+            'plugin' => $password ? 'oauth2' : '',
+          ],
+          'urls' => $this->getCapxUrls(),
         ],
-        'urls' => $this->getCapxUrls(),
-      ],
-    ];
+      ];
 
-    // Image importer will have the same overrides.
-    $overrides['migrate_plus.migration.hs_capx_images'] = $overrides['migrate_plus.migration.hs_capx'];
+      if ($needs_fields) {
+        // Add tagging for profiles.
+        $overrides[$config_name] += $this->getFieldOverrides();
+      }
+    }
 
-    // Add tagging for profiles.
-    $overrides['migrate_plus.migration.hs_capx'] += $this->getFieldOverrides();
     return $overrides;
+  }
+
+  /**
+   * Get the migration config names that need to be overridden.
+   *
+   * @param array $names
+   *   Array of config names.
+   *
+   * @return array
+   *   Keyed array of configs names with the values if the config is for nodes.
+   */
+  protected function overrideTheseConfigs(array $names = []) {
+    $configs_to_override = [];
+    foreach ($names as $name) {
+      if (strpos($name, 'migrate_plus.migration.') !== FALSE) {
+        $migration_group = $this->configFactory->getEditable($name)
+          ->getOriginal('migration_group', FALSE);
+
+        if ($migration_group == 'hs_capx') {
+          $migrate_destination = $this->configFactory->getEditable($name)
+            ->getOriginal('destination.plugin', FALSE);
+
+          $configs_to_override[$name] = strpos($migrate_destination, 'node') !== FALSE;
+        }
+      }
+    }
+    return $configs_to_override;
   }
 
   /**

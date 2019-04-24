@@ -32,6 +32,22 @@ function hs_views_helper_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_config_schema_info_alter().
+ */
+function hs_views_helper_config_schema_info_alter(&$definitions) {
+  if (isset($definitions['views.style.serializer'])) {
+    $definitions['views.style.serializer']['mapping']['item_tag'] = [
+      'type' => 'string',
+      'label' => 'Item Tag',
+    ];
+    $definitions['views.style.serializer']['mapping']['root_tag'] = [
+      'type' => 'string',
+      'label' => 'Root Tag',
+    ];
+  }
+}
+
+/**
  * Implements hook_views_post_render().
  *
  * Views render arrays contain a cache tag "node_list". This cache tag is

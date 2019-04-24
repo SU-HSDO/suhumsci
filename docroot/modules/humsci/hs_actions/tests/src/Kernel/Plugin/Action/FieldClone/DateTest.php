@@ -2,9 +2,13 @@
 
 namespace Drupal\Tests\hs_actions\Kernel\Plugin\Action\FieldClone;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\hs_actions\Plugin\Action\FieldClone\Date;
+use Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneBase;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -87,6 +91,23 @@ class DateTest extends KernelTestBase {
   }
 
   /**
+   * Test the plugin form methods.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function testForm() {
+    /** @var \Drupal\hs_actions\Plugin\FieldCloneManagerInterface $field_manager */
+    $field_manager = $this->container->get('plugin.manager.hs_actions_field_clone');
+    /** @var \Drupal\hs_actions\Plugin\Action\FieldClone\Date $plugin */
+    $plugin = $field_manager->createInstance('date');
+    $this->assertInstanceOf(Date::class, $plugin);
+    $form = [];
+    $form_state = new FormState();
+    $form = $plugin->buildConfigurationForm($form, $form_state);
+    $this->assertCount(2, $form);
+  }
+
+  /**
    * Test the field clone values works as expected.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
@@ -116,6 +137,19 @@ class DateTest extends KernelTestBase {
     $this->currentDate->add($interval);
 
     $this->assertEquals($this->currentDate->format('Y-m-d'), $cloned_field_value);
+
+    $test_field_base = new TestFieldCloneBase([], NULL, NULL);
+    $form = [];
+    $form_state = new FormState();
+    $this->assertNull($test_field_base->validateConfigurationForm($form, $form_state));
+    $this->assertNull($test_field_base->submitConfigurationForm($form, $form_state));
+  }
+
+}
+
+class TestFieldCloneBase extends FieldCloneBase {
+
+  public function alterFieldValue(FieldableEntityInterface $original_entity, FieldableEntityInterface $new_entity, $field_name, array $config = []) {
   }
 
 }

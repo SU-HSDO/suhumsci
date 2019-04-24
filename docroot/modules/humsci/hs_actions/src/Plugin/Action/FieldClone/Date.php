@@ -27,7 +27,7 @@ class Date extends FieldCloneBase {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form = [];
+    $form = parent::buildConfigurationForm($form, $form_state);
 
     $increment = range(0, 12);
     unset($increment[0]);

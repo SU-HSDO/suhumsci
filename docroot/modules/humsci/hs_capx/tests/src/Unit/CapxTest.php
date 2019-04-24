@@ -4,6 +4,7 @@ namespace Drupal\Tests\hs_capx\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\hs_capx\Capx;
 use Drupal\Tests\UnitTestCase;
@@ -45,6 +46,10 @@ class CapxTest extends UnitTestCase {
     $this->guzzle = $this->createMock(Client::class);
     $this->cache = $this->createMock(CacheBackendInterface::class);
     $database = $this->createMock(Connection::class);
+    $merge = $this->createMock(Merge::class);
+    $merge->method('fields')->will($this->returnValue($merge));
+    $merge->method('key')->will($this->returnValue($merge));
+    $database->method('merge')->willReturn($merge);
 
     $logger = new LoggerChannelFactory();
     $logger->addLogger($this->createMock(Logger::class));
@@ -110,6 +115,14 @@ class CapxTest extends UnitTestCase {
     $this->testOrgData();
 
     $this->assertNotEmpty($this->capx->getAccessToken());
+  }
+
+  public function testSync() {
+    $this->cache->method('GET')
+      ->withAnyParameters()
+      ->will($this->returnCallback([$this, 'cacheGetCallback']));
+
+    $this->assertNull($this->capx->syncOrganizations($this->capx->getOrgData()));
   }
 
   /**

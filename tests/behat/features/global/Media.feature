@@ -4,13 +4,11 @@ Feature: Media
   As a user
   I should be able to create and edit media entities
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for valid documents.
-    Given I am logged in as a user with the "Contributor" role
+    Given I am logged in as a user with the "Developer" role
     Then I maximize the window
     Then I am on "/media/add"
-    And I should see "Audio" in the "content" region
-    And I should see "Video" in the "content" region
     And I should see "Upload File(s)" in the content region
     Then I click "Upload File(s)"
     And I should be on "/admin/content/media/add/bulk"
@@ -27,9 +25,9 @@ Feature: Media
     And I should be on "admin/content/media"
     And I should see "Demo Text File"
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for invalid documents.
-    Given I am logged in as a user with the "Contributor" role
+    Given I am logged in as a user with the "Developer" role
     Then I maximize the window
     And I am on "/admin/content/media/add/bulk"
     Then I drop "documents/test.php" file into dropzone
@@ -41,7 +39,7 @@ Feature: Media
 
   @api @safe @javascript @MediaCleanup
   Scenario: Test for valid Images.
-    Given I am logged in as a user with the "Contributor" role
+    Given I am logged in as a user with the "Developer" role
     Then I maximize the window
     Then I am on "/admin/content/media/add/bulk"
     Then I drop "images/logo.jpg" file into dropzone
@@ -49,7 +47,6 @@ Feature: Media
     And the "Name" field should contain "logo.jpg"
     Then I fill in "Name" with "Demo Image File"
     And I fill in "Alternative text" with "Stanford Logo"
-    And I fill in wysiwyg "Caption/Credit" with "Duis vel nibh at velit"
     And I press "Save"
     And I should see the success message "Saved 1 Media Items"
     And I should be on "admin/content/media"
@@ -62,18 +59,17 @@ Feature: Media
     And I wait for AJAX to finish
     Then I switch to "entity_browser_iframe_image_browser" iframe
     And I click the "td.views-field-rendered-entity" element
-    And I wait for AJAX to finish
+    And I wait 10 seconds
     Then I press "Continue"
     And I wait for AJAX to finish
     And I exit iframe
     Then I press "Save"
     And I should see 1 "picture" elements in the "content" region
     And the element ".media picture img" should have the attribute "alt" with the value "Stanford Logo"
-    And I should see "Duis vel nibh at velit" in the "figcaption" element
 
   @api @safe @javascript @MediaCleanup
   Scenario: Test for Audio creation.
-    Given I am logged in as a user with the "Contributor" role
+    Given I am logged in as a user with the "Developer" role
     Then I maximize the window
     Then I am on "/media/add"
     And I click "Audio" in the "content" region
@@ -87,9 +83,9 @@ Feature: Media
     Then I should be on "/admin/content/media"
     And I should see the message "Audio Donec vitae sapien ut has been created."
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for Video creation.
-    Given I am logged in as a user with the "Contributor" role
+    Given I am logged in as a user with the "Developer" role
     Then I maximize the window
     Then I am on "/media/add"
     And I click "Video" in the "content" region

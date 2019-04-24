@@ -1,4 +1,4 @@
-@global
+@global @mrc
 Feature: Main Menu Links
   In order to verify the main menu is functional
   As a visitor

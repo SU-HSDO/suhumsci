@@ -48,6 +48,8 @@ class AcademicDateFilterTest extends KernelTestBase {
     'hs_views_helper_test_config',
     'filter',
     'text',
+    'serialization',
+    'rest',
   ];
 
   /**

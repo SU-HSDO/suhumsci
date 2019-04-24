@@ -112,7 +112,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           $migrate_destination = $this->configFactory->getEditable($name)
             ->getOriginal('destination.plugin', FALSE);
 
-          $configs_to_override[$name] = strpos($migrate_destination, 'node') !== FALSE;
+          $configs_to_override[$name] = $migrate_destination == 'entity_reference_revisions:node';
         }
       }
     }

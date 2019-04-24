@@ -20,7 +20,7 @@ class BlockLazyLoader extends BlockViewBuilder {
    */
   public function __construct(EntityManager $entity_manager, LanguageManager $language_manager, ModuleHandler $module_handler) {
     $entity_type = $entity_manager->getStorage('node')->getEntityType();
-    parent::__construct($entity_type, $entity_manager, $language_manager, $module_handler);
+    parent::__construct($entity_type, $entity_manager, $language_manager);
   }
 
   /**
@@ -29,7 +29,7 @@ class BlockLazyLoader extends BlockViewBuilder {
    * @return array
    */
   public function buildBlock(BlockInterface $block) {
-    return static::buildPreRenderableBlock( $block, \Drupal::service('module_handler'));
+    return static::buildPreRenderableBlock($block, \Drupal::service('module_handler'));
   }
 
 }

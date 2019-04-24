@@ -299,7 +299,7 @@ class HumsciServerCommand extends AcHooksCommand {
       ->drush('cset')
       ->arg('config_split.config_split.not_live')
       ->arg('status')
-      ->arg('false')
+      ->arg(0)
       ->drush('cset')
       ->arg('domain_301_redirect.settings')
       ->arg('domain')

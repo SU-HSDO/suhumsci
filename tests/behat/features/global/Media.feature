@@ -59,7 +59,7 @@ Feature: Media
     And I wait for AJAX to finish
     Then I switch to "entity_browser_iframe_image_browser" iframe
     And I click the "td.views-field-rendered-entity" element
-    And I wait for AJAX to finish
+    And I wait 3 seconds
     Then I press "Continue"
     And I wait for AJAX to finish
     And I exit iframe
@@ -92,7 +92,8 @@ Feature: Media
     Then I fill in "Name" with "Aenean commodo ligula eget dolor"
     And I fill in "Video Url" with "http://google.com"
     Then I press "Save"
-    And I should see the error message "Could not find a video provider to handle the given URL"
+    And I should see the error message "1 error has been found: Video Url"
+    And I should see "Could not find a video provider to handle the given URL"
     Then I fill in "Video Url" with "https://youtu.be/-DYSucV1_9w"
     And I press "Save"
     Then I should be on "/admin/content/media"

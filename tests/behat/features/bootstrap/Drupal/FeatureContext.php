@@ -2,10 +2,12 @@
 
 namespace Drupal;
 
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\DrupalExtension\Context\RawDrupalContext;
+use PHPUnit\Framework\Assert;
 
 /**
  * FeatureContext class defines custom step definitions for Behat.
@@ -22,6 +24,68 @@ class FeatureContext extends RawDrupalContext {
    */
   public function __construct() {
 
+  }
+
+  /**
+   * Create an HTML file of the current page if a test failed.
+   *
+   * @AfterStep
+   */
+  public function afterStep(AfterStepScope $event) {
+    if (!$event->getTestResult()->isPassed()) {
+      $test_title = $event->getFeature()->getTitle();
+      $test_title = preg_replace("/[^a-z]/", '_', strtolower($test_title));
+      $line = $event->getStep()->getLine();
+      $page = $this->getSession()->getPage();
+      $drupal_directory = $this->getDrupalParameter('drupal')['drupal_root'];
+      if (!file_exists("$drupal_directory/../artifacts/")) {
+        mkdir("$drupal_directory/../artifacts/");
+      }
+      file_put_contents("$drupal_directory/../artifacts/$test_title-$line.html", $page->getOuterHtml());
+    }
+  }
+
+  /**
+   * @Then I create a screenshot
+   */
+  public function createScreenshot() {
+    $page = $this->getSession()->getPage();
+    file_put_contents(__DIR__ . '/test.html', $page->getOuterHtml());
+  }
+
+  /**
+   * @Then :button should be disabled
+   */
+  public function iShouldNotBeAbleToPress($button) {
+    $button = $this->getSession()->getPage()->findButton($button);
+    Assert::assertTrue($button->hasAttribute('disabled'));
+  }
+
+  /**
+   * @Then the role :role_id should have :count permissions
+   */
+  public function theRoleShouldHavePermissions($role_id, $count) {
+    $permissions = [];
+    $command = "rls --format=json";
+    $drush_output = $this->getDriver('drush')->$command();
+    $roles = json_decode($drush_output, TRUE);
+    if (isset($roles[$role_id])) {
+      $permissions = $roles[$role_id]['perms'];
+    }
+    Assert::assertCount((int) $count, $permissions);
+  }
+
+  /**
+   * Checks, that (?P<num>\d+) CSS elements exist in the given region
+   * Example: Then I should see 5 "div" elements in the "content" region
+   * Example: And I should see 5 "div" elements in the "header" region
+   *
+   * @Then /^(?:|I )should see (?P<num>\d+) "(?P<element>[^"]*)" elements in the "(?P<region>[^"]*)" region?$/
+   */
+  public function iShouldSeeElementsInTheRegion($num, $element, $region) {
+    $regionObj = $this->getRegion($region);
+    $this->assertSession()
+      ->elementsCount('css', $element, intval($num), $regionObj);
   }
 
   /**
@@ -133,6 +197,39 @@ class FeatureContext extends RawDrupalContext {
     }
 
     return $regionObj;
+  }
+
+  /**
+   * Cleans up files after every scenario.
+   *
+   * @AfterScenario @MediaCleanup
+   */
+  public function cleanUpMedia($event) {
+    $user = $this->getUserManager()->getCurrentUser();
+    $media_entities = \Drupal::entityTypeManager()
+      ->getStorage('media')
+      ->loadByProperties(['uid' => $user->uid]);
+
+    foreach ($media_entities as $media_item) {
+      $this->getDriver()->entityDelete('media', $media_item);
+    }
+
+    $files = \Drupal::entityTypeManager()
+      ->getStorage('file')
+      ->loadByProperties(['uid' => $user->uid]);
+
+    foreach ($files as $file) {
+      $this->getDriver()->entityDelete('file', $file);
+    }
+  }
+
+  /**
+   * @Then the element :element should have the attribute :attribute with the value :value
+   */
+  public function theElementShouldHaveAttribute($element, $attribute, $value) {
+    $this->getMink()
+      ->assertSession()
+      ->elementAttributeContains('css', $element, $attribute, $value);
   }
 
 }

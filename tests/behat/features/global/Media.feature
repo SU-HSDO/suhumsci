@@ -4,13 +4,11 @@ Feature: Media
   As a user
   I should be able to create and edit media entities
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for valid documents.
     Given I am logged in as a user with the "Developer" role
     Then I maximize the window
     Then I am on "/media/add"
-    And I should see "Audio" in the "content" region
-    And I should see "Video" in the "content" region
     And I should see "Upload File(s)" in the content region
     Then I click "Upload File(s)"
     And I should be on "/admin/content/media/add/bulk"
@@ -27,7 +25,7 @@ Feature: Media
     And I should be on "admin/content/media"
     And I should see "Demo Text File"
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for invalid documents.
     Given I am logged in as a user with the "Developer" role
     Then I maximize the window
@@ -49,7 +47,6 @@ Feature: Media
     And the "Name" field should contain "logo.jpg"
     Then I fill in "Name" with "Demo Image File"
     And I fill in "Alternative text" with "Stanford Logo"
-    And I fill in wysiwyg "Caption/Credit" with "Duis vel nibh at velit"
     And I press "Save"
     And I should see the success message "Saved 1 Media Items"
     And I should be on "admin/content/media"
@@ -86,7 +83,7 @@ Feature: Media
     Then I should be on "/admin/content/media"
     And I should see the message "Audio Donec vitae sapien ut has been created."
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for Video creation.
     Given I am logged in as a user with the "Developer" role
     Then I maximize the window
@@ -95,8 +92,7 @@ Feature: Media
     Then I fill in "Name" with "Aenean commodo ligula eget dolor"
     And I fill in "Video Url" with "http://google.com"
     Then I press "Save"
-    And I should see the error message "1 error has been found: Video Url"
-    And I should see "Could not find a video provider to handle the given URL"
+    And I should see the error message "Could not find a video provider to handle the given URL"
     Then I fill in "Video Url" with "https://youtu.be/-DYSucV1_9w"
     And I press "Save"
     Then I should be on "/admin/content/media"

@@ -109,7 +109,14 @@ class RoboFile extends Tasks {
     foreach ($sites as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
-      $collection->addTaskList($this->runBehatTests(['global', $site]));
+
+      if ($site == 'mrc') {
+        // MRC is special and needs to be tested more specific.
+        $collection->addTaskList($this->runBehatTests([$site]));
+      }
+      else {
+        $collection->addTaskList($this->runBehatTests(['global', $site]));
+      }
     }
     return $collection->run();
   }

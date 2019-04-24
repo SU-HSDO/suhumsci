@@ -59,7 +59,7 @@ Feature: Media
     And I wait for AJAX to finish
     Then I switch to "entity_browser_iframe_image_browser" iframe
     And I click the "td.views-field-rendered-entity" element
-    And I wait 3 seconds
+    And I wait 10 seconds
     Then I press "Continue"
     And I wait for AJAX to finish
     And I exit iframe

@@ -69,7 +69,6 @@ Feature: Media
     Then I press "Save"
     And I should see 1 "picture" elements in the "content" region
     And the element ".media picture img" should have the attribute "alt" with the value "Stanford Logo"
-    And I should see "Duis vel nibh at velit" in the "figcaption" element
 
   @api @safe @javascript @MediaCleanup
   Scenario: Test for Audio creation.

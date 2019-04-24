@@ -95,6 +95,21 @@ class RoboFile extends Tasks {
   }
 
   /**
+   * Command to run behat tests.
+   *
+   * @return \Robo\Result
+   *   The result tof the collection of tasks.
+   */
+  public function jobRunFreshInstallBehat() {
+    $collection = $this->collectionBuilder();
+    $collection->addTaskList($this->setupSite());
+    $collection->addTask($this->installDrupal('config_installer'));
+    $collection->addTask($this->drush()->arg('cim')->option('yes'));
+    $collection->addTaskList($this->runBehatTests(['global', 'install']));
+    return $collection->run();
+  }
+
+  /**
    * Run behat tests on the given sites.
    *
    * @param array $sites

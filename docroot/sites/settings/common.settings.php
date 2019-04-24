@@ -7,6 +7,22 @@
 
 use Drupal\Core\Serialization\Yaml;
 
+if (isset($_ENV['AH_SITE_GROUP'])) {
+  // Encryption and keys.
+  require "/mnt/files/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/apikeys.php";
+}
+
+// When the encryption environment variable is not provided (local/ci/etc),
+// fake the encryption string so that the site doesn't break.
+if (!getenv('REAL_AES_ENCRYPTION')) {
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $randomString = '';
+  for ($i = 0; $i < 256 / 8; $i++) {
+    $randomString .= $characters[rand(0, strlen($characters) - 1)];
+  }
+  putenv("REAL_AES_ENCRYPTION=$randomString");
+}
+
 // SimpleSAMLphp configuration
 // Provide universal absolute path to the installation.
 if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {

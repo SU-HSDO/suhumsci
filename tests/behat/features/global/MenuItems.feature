@@ -5,7 +5,7 @@ Feature: Main Menu Links
   I should get a valid response from all pages in the menu.
 
   @api @safe
-  Scenario: Test for Footer Links.
+  Scenario: Test for main menu Links.
     Given I am logged in as a user with the "Developer" role
     And I am on "/"
     Then the response status code should be 200

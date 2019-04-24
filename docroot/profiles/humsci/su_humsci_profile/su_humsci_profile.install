@@ -59,6 +59,7 @@ function _su_humsci_profile_create_default_content() {
 
   try {
     $content_importer->importContent('su_humsci_profile');
+    node_access_rebuild();
   }
   catch (Exception $e) {
     \Drupal::logger('su_humsci_profile')

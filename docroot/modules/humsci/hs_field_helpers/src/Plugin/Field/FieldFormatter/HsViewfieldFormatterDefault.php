@@ -21,8 +21,14 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
 
     // Add and customize the view title.
     foreach ($this->getFieldValues($items) as $delta => $value) {
+      $view = $elements[$delta]['#content']['#view'];
+
+      if (empty($view)) {
+        continue;
+      }
+
       // Either the view is empty or the user doesn't want to display the title.
-      if (!$value['show_title'] || !$this->viewHasResults($elements[$delta]['#content']['#view'])) {
+      if (!$value['show_title'] || !$this->viewHasResults($view)) {
         continue;
       }
 

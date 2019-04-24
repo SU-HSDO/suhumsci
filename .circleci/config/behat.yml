@@ -1,11 +1,16 @@
+imports:
+  - behat.yml
+
 default:
   suites:
     default:
       contexts:
         - Drupal\FeatureContext
+        - Drupal\FeatureMinkContext
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
+        - Drupal\DrupalExtension\Context\DrushContext
   extensions:
     Behat\MinkExtension:
       goutte: ~
@@ -23,14 +28,21 @@ default:
       api_driver: 'drupal'
       drush:
         alias: 'self'
+        binary: '/var/www/html/vendor/bin/drush'
       drupal:
         drupal_root: '/var/www/html/docroot'
       region_map:
         header: "#header"
-        content: "#main-content"
+        content: "#main-content, .region-content"
         footer: "#footer"
         global_footer: "#footer__global-footer"
       selectors:
         message_selector: '.messages'
         error_message_selector: '.messages.messages--error'
         success_message_selector: '.messages.messages--status'
+    Bex\Behat\ScreenshotExtension:
+      screenshot_taking_mode: failed_steps
+      image_drivers:
+        local:
+          screenshot_directory: /var/www/html/artifacts
+

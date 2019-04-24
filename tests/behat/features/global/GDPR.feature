@@ -4,16 +4,12 @@ Feature: GDPR Links
   As a visitor
   I should see a variety of links.
 
-#  @javascript
-#  Scenario: Test the Javascript works.
-#    Given I am on "/"
-#    Then I should be on "/"
-
   @api @safe
   Scenario: Test for Footer Links.
     Given I am logged in as a user with the "Developer" role
     And I am on "/"
     Then the response status code should be 200
+    And I should see 11 "a" elements in the "global_footer" region
     And I should see the link "Stanford Home" in the "global_footer" region
     And I should see the link "Maps & Directions" in the "global_footer" region
     And I should see the link "Search Stanford" in the "global_footer" region

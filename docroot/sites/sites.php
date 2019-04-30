@@ -61,6 +61,7 @@ $humsci_sites = [
   'dsresearch',
   'duboislab',
   'francestanford',
+  'lowe',
   'mrc',
   'mathematics',
   'philit',

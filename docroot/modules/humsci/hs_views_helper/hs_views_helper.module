@@ -14,6 +14,7 @@ use Drupal\hs_views_helper\Plugin\views\query\Sql as HsViewsSql;
 use Drupal\Core\Cache\Cache;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\node\NodeInterface;
+use Drupal\views\Plugin\views\filter\Bundle;
 
 /**
  * Implements hook_help().
@@ -63,6 +64,7 @@ function hs_views_helper_config_schema_info_alter(&$definitions) {
 function hs_views_helper_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   if (
     isset($view->filter['type']) &&
+    $view->filter['type'] instanceof Bundle &&
     $view->filter['type']->getEntityType() == 'node' &&
     $view->filter['type']->value
   ) {

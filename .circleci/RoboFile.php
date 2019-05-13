@@ -95,6 +95,21 @@ class RoboFile extends Tasks {
   }
 
   /**
+   * Command to run behat tests.
+   *
+   * @return \Robo\Result
+   *   The result tof the collection of tasks.
+   */
+  public function jobRunFreshInstallBehat() {
+    $collection = $this->collectionBuilder();
+    $collection->addTaskList($this->setupSite());
+    $collection->addTask($this->installDrupal('config_installer'));
+    $collection->addTask($this->drush()->arg('cim')->option('yes'));
+    $collection->addTaskList($this->runBehatTests(['global', 'install']));
+    return $collection->run();
+  }
+
+  /**
    * Run behat tests on the given sites.
    *
    * @param array $sites
@@ -109,7 +124,14 @@ class RoboFile extends Tasks {
     foreach ($sites as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
-      $collection->addTaskList($this->runBehatTests(['global', $site]));
+
+      if ($site == 'mrc') {
+        // MRC is special and needs to be tested more specific.
+        $collection->addTaskList($this->runBehatTests([$site]));
+      }
+      else {
+        $collection->addTaskList($this->runBehatTests(['global', $site]));
+      }
     }
     return $collection->run();
   }
@@ -182,8 +204,8 @@ class RoboFile extends Tasks {
     // Don't use blt to run behat here. It's dependencies conflict with
     // circleci too much.
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/behat.yml', 'tests/behat/behat.yml', TRUE);
-    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/behat.yml --tags=' . implode(',', $tags));
+      ->copy('.circleci/config/behat.yml', 'tests/behat/local.yml', TRUE);
+    $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/local.yml --tags=' . implode(',', $tags));
     return $tasks;
   }
 

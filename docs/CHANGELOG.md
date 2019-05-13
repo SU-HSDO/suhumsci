@@ -1,5 +1,13 @@
 # HumSci
 
+8.0.22
+--------------------------------------------------------------------------------  
+_Release Date: 2019-04-24_
+
+* HSD8-616 Ignore status key on migration configs, set initial status to disabled and enable capx migration when credentials are added
+* deleted hs_capx_images migration since we can now do this in the hs_capx migration directly
+* improved cache tags mechanism for views
+
 8.0.20
 --------------------------------------------------------------------------------  
 _Release Date: 2019-03-20_

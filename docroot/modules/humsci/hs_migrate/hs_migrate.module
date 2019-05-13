@@ -187,7 +187,7 @@ function hs_migrate_migration_list() {
   // Do not return any migrations which fail to meet requirements.
   /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
   foreach ($matched_migrations as $id => $migration) {
-    if ($migration->getSourcePlugin() instanceof RequirementsInterface) {
+    if ($migration->getSourcePlugin() instanceof RequirementsInterface && $migration->status) {
       try {
         $migration->getSourcePlugin()->checkRequirements();
       }

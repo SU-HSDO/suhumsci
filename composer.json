@@ -115,6 +115,7 @@
     "drupal/admin_toolbar": "~1.20",
     "drupal/allowed_formats": "~1.1",
     "drupal/anchor_link": "~2.0-alpha2",
+    "drupal/asset_injector": "^2.4",
     "drupal/audio_embed_field": "dev-1.x",
     "drupal/auto_entitylabel": "2.x-dev",
     "drupal/block_class": "dev-1.x#d77c4eb779840110535a0f9ab698a0733c06d368",
@@ -132,7 +133,7 @@
     "drupal/config_installer": "^1.8",
     "drupal/config_readonly": "dev-1.x",
     "drupal/config_update": "dev-1.x#5785588167279912d1e1f3a936fbf4a306265bd6",
-    "drupal/core": "~8.6.7",
+    "drupal/core": "^8.7",
     "drupal/default_content": "^1.0@alpha",
     "drupal/diff": "^1.0@RC",
     "drupal/domain_301_redirect": "1.x-dev",
@@ -175,7 +176,7 @@
     "drupal/path_redirect_import": "^1.0@beta",
     "drupal/pathauto": "~1.0",
     "drupal/porterstemmer": "^1.0",
-    "drupal/rabbit_hole": "1.0-beta4",
+    "drupal/rabbit_hole": "^1.0-beta4",
     "drupal/real_aes": "^2.1",
     "drupal/redirect": "~1.0-beta1",
     "drupal/restui": "^1.16",
@@ -208,12 +209,11 @@
     "sainsburys/guzzle-oauth2-plugin": "^3.0",
     "simplesamlphp/simplesamlphp": "~1.15.1",
     "su-sws/nobots": "dev-8.x-1.x",
-    "su-sws/stanford_basic": "dev-8.x-2.x#6b71770ac5cd4901e82def5387a5fea5de1e58d5",
+    "su-sws/stanford_basic": "dev-8.x-2.x#9d6391431de1aefa93c4dfe671e309cef1496d81",
     "su-sws/stanford_media": "dev-8.x-1.x",
     "su-sws/stanford_ssp": "dev-8.x-1.x"
   },
   "require-dev": {
-    "drupal/asset_injector": "~2.3",
     "drupal/config_inspector": "^1.0@beta",
     "drupal/console": "^1.8",
     "drupal/devel": "^1.2",
@@ -289,13 +289,17 @@
       },
       "drupal/core": {
         "https://www.drupal.org/project/drupal/issues/564106": "https://www.drupal.org/files/issues/2018-06-27/views-more-link-token-replacement_564106_171.patch",
-        "Simplify Field Samples": "patches/contrib/core-simplify-samples.patch"
+        "https://www.drupal.org/project/drupal/issues/2999491": "https://www.drupal.org/files/issues/2019-04-13/reusable-inline-blocks-2999491-9.patch",
+        "storage": "https://www.drupal.org/files/issues/2019-03-28/3044211-remove-broken-tempstore-section-storage-2.patch"
       },
       "drupal/config_ignore": {
         "https://www.drupal.org/project/config_ignore/issues/2857247": "https://www.drupal.org/files/issues/2018-10-14/support-for-export-2857247-24.patch"
       },
       "drupal/menu_block": {
         "https://www.drupal.org/project/menu_block/issues/2809699": "https://www.drupal.org/files/issues/2018-05-07/menu_block-label_configuration-2809699-77.patch"
+      },
+      "drupal/migrate_tools": {
+        "https://www.drupal.org/project/migrate_tools/issues/2894708": "https://www.drupal.org/files/issues/2019-02-28/disabled-migrations-list-2894708-17.patch"
       },
       "drupal/migrate_plus": {
         "https://www.drupal.org/project/migrate_plus/issues/2837684": "https://www.drupal.org/files/issues/2837684-8-migrate-plus-xml-return-as-xml.patch"
@@ -390,6 +394,12 @@
     "copy-saml": [
       "cp simplesamlphp/config/* vendor/simplesamlphp/simplesamlphp/config/",
       "cp simplesamlphp/config/* vendor/simplesamlphp/simplesamlphp/config/"
+    ],
+    "release-it-dry": [
+      "release-it --dry-run --no-npm.publish"
+    ],
+    "release-it": [
+      "release-it --no-npm.publish"
     ]
   },
   "config": {

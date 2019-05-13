@@ -59,6 +59,7 @@ function _su_humsci_profile_create_default_content() {
 
   try {
     $content_importer->importContent('su_humsci_profile');
+    node_access_rebuild();
   }
   catch (Exception $e) {
     \Drupal::logger('su_humsci_profile')
@@ -336,8 +337,24 @@ function su_humsci_profile_update_8014() {
 /**
  * Enables View unpublished module and sets permission for site managers.
  */
-function su_humsci_profile_update_8015(){
+function su_humsci_profile_update_8015() {
   \Drupal::service('module_installer')->install(['view_unpublished']);
-  Role::load('site_manager')->grantPermission('view any unpublished content')->save();
+  Role::load('site_manager')
+    ->grantPermission('view any unpublished content')
+    ->save();
   node_access_rebuild();
+}
+
+/**
+ * Modify config ignore settings.
+ */
+function su_humsci_profile_update_8016() {
+  $ignore_settings = \Drupal::configFactory()
+    ->getEditable('config_ignore.settings');
+  $entities = $ignore_settings->get('ignored_config_entities');
+  $entities[] = 'field.field.node.hs_basic_page.field_hs_page_hero:settings.handler_settings';
+  $entities[] = 'field.field.node.hs_basic_page.field_hs_page_components:settings.handler_settings';
+  $entities[] = 'migrate_plus.migration.custm*';
+  $ignore_settings->set('ignored_config_entities', $entities);
+  $ignore_settings->save();
 }

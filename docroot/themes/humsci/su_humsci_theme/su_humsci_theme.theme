@@ -41,10 +41,13 @@ function su_humsci_theme_preprocess_patterns_overview_page(&$variables) {
 function su_humsci_theme_preprocess_page(&$vars) {
   // Node pages are configured with layout builder so we dont need to set this
   // class.
-  $request = \Drupal::requestStack();
-  $attributes = $request->getCurrentRequest()->attributes->getIterator();
-  $controller = isset($attributes['_controller']) ? $attributes['_controller'] : '';
-  if (!isset($vars['node']) && strpos($controller, 'layout_builder') === FALSE) {
+  $route = \Drupal::routeMatch()->getRouteName();
+  $layout_routes = [
+    'layout_builder.overrides.node.view',
+    'layout_builder.defaults.node.view',
+  ];
+
+  if (!isset($vars['node']) && !in_array($route, $layout_routes)) {
     $vars['main_class'] = 'decanter-grid';
   }
 

@@ -11,6 +11,10 @@ use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_views_helper\Plugin\views\query\Sql as HsViewsSql;
+use Drupal\Core\Cache\Cache;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\node\NodeInterface;
+use Drupal\views\Plugin\views\filter\Bundle;
 
 /**
  * Implements hook_help().
@@ -26,6 +30,59 @@ function hs_views_helper_help($route_name, RouteMatchInterface $route_match) {
 
     default:
   }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function hs_views_helper_config_schema_info_alter(&$definitions) {
+  if (isset($definitions['views.style.serializer'])) {
+    $definitions['views.style.serializer']['mapping']['item_tag'] = [
+      'type' => 'string',
+      'label' => 'Item Tag',
+    ];
+    $definitions['views.style.serializer']['mapping']['root_tag'] = [
+      'type' => 'string',
+      'label' => 'Root Tag',
+    ];
+  }
+}
+
+/**
+ * Implements hook_views_post_render().
+ *
+ * Views render arrays contain a cache tag "node_list". This cache tag is
+ * cleared every time ANY node is created, edited or deleted. When this happens
+ * every view on the site gets its cache flushed. This causes poor performance
+ * since a view would get flushed even if it has no relation to that node. To
+ * assist in cache tags, we create a custom cache tag based on the node type
+ * filter on the view. Its a small improvement but will have huge impact in
+ * keeping cached renders much longer.
+ *
+ * @see hs_views_helper_node_presave()
+ */
+function hs_views_helper_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  if (
+    isset($view->filter['type']) &&
+    $view->filter['type'] instanceof Bundle &&
+    $view->filter['type']->getEntityType() == 'node' &&
+    $view->filter['type']->value
+  ) {
+    $node_list_position = array_search('node_list', $output['#cache']['tags']);
+    unset($output['#cache']['tags'][$node_list_position]);
+    foreach ($view->filter['type']->value as $node_type) {
+      $output['#cache']['tags'][] = "node_list:$node_type";
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ *
+ * @see hs_views_helper_views_post_render()
+ */
+function hs_views_helper_node_presave(NodeInterface $entity) {
+  Cache::invalidateTags(["node_list:{$entity->bundle()}"]);
 }
 
 /**

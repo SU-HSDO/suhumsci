@@ -1,6 +1,6 @@
 uuid: 18fe55a6-a1f6-47c9-b079-992ef831c99b
 langcode: en
-status: true
+status: false
 dependencies: {  }
 id: hs_capx
 class: null
@@ -16,6 +16,8 @@ source:
     basic_html: basic_html
     link_domain: 'https://profiles.stanford.edu'
     link_text: 'Stanford Profile'
+    file_destination: 'public://media/capx/'
+    file_extension: .jpg
   urls: {  }
   item_selector: values
   fields:
@@ -117,18 +119,65 @@ process:
         - constants/link_domain
         - profile_id
   field_hs_person_external_profile/title: constants/link_text
+  image_timestamp:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: profile_photo
+    -
+      plugin: explode
+      delimiter: '&'
+    -
+      plugin: str_replace
+      regex: true
+      search: '/^(?!ts=).+/'
+      replace: ''
+    -
+      plugin: str_replace
+      search: ts=
+      replace: ''
+    -
+      plugin: concat
+  image_path:
+    plugin: concat
+    source:
+      - constants/file_destination
+      - alias
+      - separator
+      - '@image_timestamp'
+      - constants/file_extension
+  image_file:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: profile_photo
+    -
+      plugin: file_import
+      destination: '@image_path'
+      id_only: true
+      reuse: true
   field_hs_person_image/target_id:
     -
-      plugin: migration_lookup
-      migration: hs_capx_images
-      source: sunetid
+      plugin: skip_on_empty
+      method: process
+      source: profile_photo
     -
-      plugin: default_value
-      default_value: null
+      plugin: skip_on_empty
+      method: process
+      source: '@image_file'
+    -
+      plugin: entity_generate
+      source: display_name
+      value_key: name
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_image: '@image_file'
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
   force_revision: true
 migration_dependencies:
-  required:
-    - hs_capx_images
+  required: {  }

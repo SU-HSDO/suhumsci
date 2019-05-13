@@ -92,6 +92,9 @@ functional_unit_tests: &functional_unit_tests
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests
+    - run:
+        name: Generate code coverage report
+        command: robo job:run-fresh-install-behat
     - store_test_results:
         path: /var/www/html/artifacts/phpunit
     - store_artifacts:

@@ -351,4 +351,42 @@ class HumsciCommand extends AcHooksCommand {
     file_put_contents("$new_subtheme/$new_machine_name.info.yml", Yaml::encode($info));
   }
 
+  /**
+   * Build the BackstopJS test json.
+   *
+   * @param string $site
+   *   Which site to build test.
+   *
+   * @command humsci:build-backstop
+   */
+  public function buildBackstopTest($site) {
+    $root = $this->getConfigValue('repo.root');
+    $json = json_decode(file_get_contents("$root/backstop.json"), TRUE);
+    $this->taskDrush()->alias("$site.stage")
+      ->drush('pmu')->arg('shield')
+      ->drush('cr')->run();
+    $production_site = file_get_contents("https://$site-prod.stanford.edu");
+
+    $dom = new \DOMDocument();
+    libxml_use_internal_errors(TRUE);
+    $dom->loadHTML($production_site);
+    $xpath = new \DOMXPath($dom);
+
+    $link_nodes = $xpath->query("//div[@id='menu-region']//a[@href]/@href");
+    $json['scenarios'] = [];
+    for ($i = 0; $i < $link_nodes->length; $i++) {
+      $href = $link_nodes->item($i)->nodeValue;
+      if (substr($href, 0, 1) != '/') {
+        continue;
+      }
+      $json['scenarios'][] = [
+        'label' => $href,
+        'referenceUrl' => "https://$site-prod.stanford.edu$href",
+        'url' => "https://$site-stage.stanford.edu$href",
+      ];
+    }
+
+    file_put_contents("$root/backstop.json", json_encode($json));
+  }
+
 }

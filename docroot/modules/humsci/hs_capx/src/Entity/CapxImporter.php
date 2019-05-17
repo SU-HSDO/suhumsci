@@ -42,6 +42,11 @@ use Drupal\hs_capx\Capx;
 class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
 
   /**
+   * How many profiles for each url.
+   */
+  const URL_CHUNKS = 50;
+
+  /**
    * The Capx importer ID.
    *
    * @var string
@@ -110,10 +115,12 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
   public function getCapxUrls() {
     $urls = [];
     if ($organizations = $this->getOrganizations(TRUE)) {
-      $urls[] = Capx::getOrganizationUrl($organizations, $this->includeChildrenOrgs());
+      $url = Capx::getOrganizationUrl($organizations, $this->includeChildrenOrgs());
+      $urls = self::getUrlChunks($url);
     }
     if ($workgroups = $this->getWorkgroups(TRUE)) {
-      $urls[] = Capx::getWorkgroupUrl($workgroups);
+      $url = Capx::getWorkgroupUrl($workgroups);
+      $urls = array_merge($urls, self::getUrlChunks($url));
     }
     return $urls;
   }
@@ -129,6 +136,32 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
       return $this->tagging[$field_name];
     }
     return [];
+  }
+
+  /**
+   * Break up the url into multiple urls based on the number of results.
+   *
+   * @param string $url
+   *   Cap API Url.
+   *
+   * @return string[]
+   *   Array of Cap API Urls.
+   */
+  protected static function getUrlChunks($url) {
+    /** @var \Drupal\hs_capx\Capx $capx */
+    $capx = \Drupal::service('capx');
+    $count = (int) $capx->getTotalProfileCount($url);
+    $number_chunks = ceil($count / self::URL_CHUNKS) + 1;
+
+    if ($number_chunks <= 1) {
+      return [$url];
+    }
+
+    $urls = [];
+    for ($i = 1; $i <= $number_chunks; $i++) {
+      $urls[] = "$url&p=$i&ps=" . self::URL_CHUNKS;
+    }
+    return $urls;
   }
 
 }

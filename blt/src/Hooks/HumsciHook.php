@@ -21,6 +21,11 @@ class HumsciHook extends BltTasks {
       ->arg('simplesamlphp_auth')
       ->option('yes')
       ->run();
+    $this->taskDrush()
+      ->drush('pmu')
+      ->arg('shield')
+      ->option('yes')
+      ->run();
     $this->taskDrush()->drush('uli')->run();
   }
 

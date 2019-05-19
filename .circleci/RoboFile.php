@@ -161,13 +161,6 @@ class RoboFile extends Tasks {
   protected function runUpdatePath($partial_config = FALSE) {
     $tasks = [];
 
-    // Get encryption keys first and only once.
-    static $keys_loaded = FALSE;
-    if (!$keys_loaded) {
-      $tasks[] = $this->blt()->arg('humsci:keys');
-      $keys_loaded = TRUE;
-    }
-
     // Update the database.
     $tasks[] = $this->drush()->args('updatedb')
       ->option('yes')

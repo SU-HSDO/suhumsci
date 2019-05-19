@@ -151,10 +151,7 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
     /** @var \Drupal\hs_capx\Capx $capx */
     $capx = \Drupal::service('capx');
     $count = (int) $capx->getTotalProfileCount($url);
-
-    // How many urls do we need. Add 1 to catch new profiles in case they are
-    // added.
-    $number_chunks = ceil($count / self::URL_CHUNKS) + 1;
+    $number_chunks = ceil($count / self::URL_CHUNKS);
 
     if ($number_chunks <= 1) {
       return [$url];

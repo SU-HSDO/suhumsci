@@ -6,7 +6,6 @@
  */
 
 use Drupal\block\Entity\Block;
-use Drupal\node\Entity\Node;
 
 /**
  * Outdated.

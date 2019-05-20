@@ -791,7 +791,7 @@ $settings['entity_update_batch_size'] = 50;
 # }
 
 if (file_exists('/var/www/site-php')) {
-  require '/var/www/site-php/swshumsci/symsys-settings.inc';
+  require '/var/www/site-php/swshumsci/williams-settings.inc';
 }
 
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";

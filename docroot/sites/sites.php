@@ -68,6 +68,7 @@ $humsci_sites = [
   'shenlab',
   'symsys',
   'swshumsci-sandbox',
+  'williams',
 ];
 
 foreach ($humsci_sites as $site) {

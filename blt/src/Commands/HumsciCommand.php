@@ -372,7 +372,7 @@ class HumsciCommand extends AcHooksCommand {
     $dom->loadHTML($production_site);
     $xpath = new \DOMXPath($dom);
 
-    $link_nodes = $xpath->query("//div[@id='menu-region']//a[@href]/@href");
+    $link_nodes = $xpath->query("//header[@id='header']//a[@href]/@href");
     $json['scenarios'] = [];
     for ($i = 0; $i < $link_nodes->length; $i++) {
       $href = $link_nodes->item($i)->nodeValue;
@@ -386,7 +386,7 @@ class HumsciCommand extends AcHooksCommand {
       ];
     }
 
-    file_put_contents("$root/backstop.json", json_encode($json));
+    file_put_contents("$root/backstop.json", json_encode($json, JSON_PRETTY_PRINT));
   }
 
 }

@@ -42,6 +42,9 @@ function su_humsci_profile_post_update_8_0_4() {
 
 /**
  * Fix layout builder block display.
+ *
+ * Views exposed filter blocks started showing the view title and we need to
+ * hide them as configured.
  */
 function su_humsci_profile_post_update_8_1_0() {
   $database = \Drupal::database();

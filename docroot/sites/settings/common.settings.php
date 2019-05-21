@@ -7,11 +7,6 @@
 
 use Drupal\Core\Serialization\Yaml;
 
-if (isset($_ENV['AH_SITE_GROUP'])) {
-  // Encryption and keys.
-  require "/mnt/files/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/apikeys.php";
-}
-
 // When the encryption environment variable is not provided (local/ci/etc),
 // fake the encryption string so that the site doesn't break.
 if (!getenv('REAL_AES_ENCRYPTION')) {

@@ -1,5 +1,18 @@
 # HumSci
 
+8.1.0
+--------------------------------------------------------------------------------  
+_Release Date: 2019-05-22_
+
+* Updated Drupal core to 8.7.1
+* Stubbed out Math sub-theme
+* Allow basic page paragraph fields to reorganize paragraph orders
+* ignore custom migrate entities
+* HSDO-1246 Provision Williams site
+* HSD8-641 refactor Capx urls to chunk up into 25 profile paged urls
+* MR-9 Events and seminars pattern for math theme
+
+
 8.0.22
 --------------------------------------------------------------------------------  
 _Release Date: 2019-04-24_

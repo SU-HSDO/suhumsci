@@ -5,6 +5,7 @@
  * Contains hs_migrate.module.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\RequirementsInterface;
@@ -97,6 +98,10 @@ function hs_migrate_entity_delete(EntityInterface $entity) {
  *   Ultimate cron entity.
  */
 function hs_migrate_ultimate_cron_task(CronJobInterface $cron_entity) {
+  // Invalidate migration plugins to gather any changes to config entities
+  // before running import. This allows for any changes to the source urls.
+  Cache::invalidateTags(['migration_plugins']);
+
   $logger = \Drupal::logger('hs_migrate');
   $migrations = hs_migrate_migration_list();
 

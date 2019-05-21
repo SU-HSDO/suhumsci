@@ -3,9 +3,10 @@
 namespace Drupal\hs_capx;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**
@@ -73,20 +74,34 @@ class Capx {
   /**
    * Capx constructor.
    *
-   * @param \GuzzleHttp\ClientInterface $guzzle
-   *   Guzzle Client service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache service.
    * @param \Drupal\Core\Database\Connection $database
    *   Database connection service.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   Database logging service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity type manager service.
    */
-  public function __construct(ClientInterface $guzzle, CacheBackendInterface $cache, Connection $database, LoggerChannelFactoryInterface $logger_factory) {
-    $this->client = $guzzle;
+  public function __construct(CacheBackendInterface $cache, Connection $database, LoggerChannelFactoryInterface $logger_factory, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
     $this->cache = $cache;
     $this->database = $database;
     $this->logger = $logger_factory->get('capx');
+    $capx_settings = $config_factory->get('hs_capx.settings');
+    if ($username = $capx_settings->get('username')) {
+      $this->setUsername($username);
+      try {
+        $key = $entity_type_manager->getStorage('key')
+          ->load($capx_settings->get('password'));
+        $password = $key->getKeyValue();
+        $this->setPassword($password);
+      }
+      catch (\Exception $e) {
+        $this->logger->error('Unable to load key entity: @id', ['@id' => $capx_settings->get('password')]);
+      }
+    }
   }
 
   /**
@@ -110,6 +125,31 @@ class Capx {
   }
 
   /**
+   * Call the API and return the response.
+   *
+   * @param string $url
+   *   API Url.
+   * @param array $options
+   *   Guzzle request options.
+   *
+   * @return bool|string
+   *   Response string or false if failed.
+   */
+  protected static function getApiResponse($url, array $options = []) {
+    /** @var \GuzzleHttp\ClientInterface $guzzle */
+    $guzzle = \Drupal::service('http_client');
+    try {
+      $response = $guzzle->request('GET', $url, $options);
+    }
+    catch (GuzzleException $e) {
+      // Most errors originate from the API itself.
+      \Drupal::logger('capx')->error($e->getMessage());
+      return FALSE;
+    }
+    return $response->getStatusCode() == 200 ? (string) $response->getBody() : FALSE;
+  }
+
+  /**
    * Get the url for CAPx for the given organizations.
    *
    * @param string $organizations
@@ -118,11 +158,11 @@ class Capx {
    *   Include all children of the organizations.
    *
    * @return string
-   *   CAPx URL.
+   *   CAPx URLs.
    */
   public static function getOrganizationUrl($organizations, $children = FALSE) {
     $organizations = preg_replace('/[^A-Z,]/', '', strtoupper($organizations));
-    $url = self::CAP_URL . "?orgCodes=$organizations&ps=1000";
+    $url = self::CAP_URL . "?orgCodes=$organizations";
     if ($children) {
       $url .= '&includeChildren=true';
     }
@@ -136,11 +176,29 @@ class Capx {
    *   Commas separated list of workgroups.
    *
    * @return string
-   *   CAPx URL.
+   *   CAPx URLs.
    */
   public static function getWorkgroupUrl($workgroups) {
     $workgroups = preg_replace('/[^A-Z,:-]/', '', strtoupper($workgroups));
-    return self::CAP_URL . "?privGroups=$workgroups&ps=1000";
+    return self::CAP_URL . "?privGroups=$workgroups";
+  }
+
+  /**
+   * Get the total number of profiles for the given cap url.
+   *
+   * @param string $url
+   *   Cap API Url.
+   *
+   * @return int
+   *   Total number of profiles.
+   */
+  public function getTotalProfileCount($url) {
+    $token = $this->getAccessToken();
+    $response = self::getApiResponse("$url&ps=1&access_token=$token");
+    if ($response) {
+      $response = json_decode($response, TRUE);
+      return $response['totalCount'] ?? 0;
+    }
   }
 
   /**
@@ -150,29 +208,15 @@ class Capx {
    *   The connection was successful.
    */
   public function testConnection() {
-    $parameters = ['grant_type' => 'client_credentials'];
-
-    try {
-      $response = $this->client->request('GET', self::AUTH_URL, [
-        'query' => $parameters,
-        'auth' => [$this->username, $this->password],
-      ]);
-    }
-    catch (GuzzleException $e) {
-      // Most errors originate from the API itself.
-      $this->logger->error($e->getMessage());
-      return FALSE;
-    }
-
-    // Just in case the API doesn't respond with an error, we also check the
-    // status code.
-    return $response->getStatusCode() == 200;
+    $options = [
+      'query' => ['grant_type' => 'client_credentials'],
+      'auth' => [$this->username, $this->password],
+    ];
+    return self::getApiResponse(self::AUTH_URL, $options);
   }
 
   /**
    * Sync the organization database with the api data from CAP.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function syncOrganizations() {
     $this->insertOrgData($this->getOrgData());
@@ -213,24 +257,25 @@ class Capx {
    *
    * @return array
    *   Keyed array of all organization data.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function getOrgData() {
     if ($cache = $this->cache->get('capx:org_data')) {
       return $cache->data;
     }
 
-    $token = $this->getAccessToken();
-
+    $options = ['query' => ['access_token' => $this->getAccessToken()]];
     // AA00 is the root level of all Stanford.
-    $result = $this->client->request('GET', self::API_URL . '/cap/v1/orgs/AA00', ['query' => ['access_token' => $token]]);
-    $result = json_decode($result->getBody()->getContents(), TRUE);
-    $this->cache->set('capx:org_data', $result, time() + 60 * 60 * 24 * 7, [
-      'capx',
-      'capx:ord-data',
-    ]);
-    return $result;
+    $result = self::getApiResponse(self::API_URL . '/cap/v1/orgs/AA00', $options);
+
+    if ($result) {
+      $result = json_decode($result, TRUE);
+      $this->cache->set('capx:org_data', $result, time() + 60 * 60 * 24 * 7, [
+        'capx',
+        'capx:ord-data',
+      ]);
+      return $result;
+    }
+    return [];
   }
 
   /**
@@ -238,26 +283,24 @@ class Capx {
    *
    * @return string
    *   API Token.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   protected function getAccessToken() {
     if ($cache = $this->cache->get('capx:access_token')) {
       return $cache->data['access_token'];
     }
 
-    $parameters = ['grant_type' => 'client_credentials'];
-    $result = $this->client->request('GET', self::AUTH_URL, [
-      'query' => $parameters,
+    $options = [
+      'query' => ['grant_type' => 'client_credentials'],
       'auth' => [$this->username, $this->password],
-    ]);
-
-    $result = json_decode($result->getBody()->getContents(), TRUE);
-    $this->cache->set('capx:access_token', $result, time() + $result['expires_in'], [
-      'capx',
-      'capx:token',
-    ]);
-    return $result['access_token'];
+    ];
+    if ($result = self::getApiResponse(self::AUTH_URL, $options)) {
+      $result = json_decode($result, TRUE);
+      $this->cache->set('capx:access_token', $result, time() + $result['expires_in'], [
+        'capx',
+        'capx:token',
+      ]);
+      return $result['access_token'];
+    }
   }
 
 }

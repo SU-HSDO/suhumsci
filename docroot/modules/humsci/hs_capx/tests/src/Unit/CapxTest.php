@@ -3,10 +3,16 @@
 namespace Drupal\Tests\hs_capx\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Database\Driver\mysql\Connection;
 use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityStorageBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\hs_capx\Capx;
+use Drupal\key\KeyInterface;
 use Drupal\Tests\UnitTestCase;
 use Drush\Log\Logger;
 use GuzzleHttp\Client;
@@ -44,6 +50,8 @@ class CapxTest extends UnitTestCase {
     parent::setUp();
 
     $this->guzzle = $this->createMock(Client::class);
+
+
     $this->cache = $this->createMock(CacheBackendInterface::class);
     $database = $this->createMock(Connection::class);
     $merge = $this->createMock(Merge::class);
@@ -51,9 +59,29 @@ class CapxTest extends UnitTestCase {
     $merge->method('key')->will($this->returnValue($merge));
     $database->method('merge')->willReturn($merge);
 
+    $config_object = $this->createMock(ImmutableConfig::class);
+    $config_object->method('get')->willReturn($this->randomMachineName());
+
     $logger = new LoggerChannelFactory();
     $logger->addLogger($this->createMock(Logger::class));
-    $this->capx = new TestCapx($this->guzzle, $this->cache, $database, $logger);
+
+    $config_factory = $this->createMock(ConfigFactoryInterface::class);
+    $config_factory->method('get')->willReturn($config_object);
+
+    $key = $this->createMock(KeyInterface::class);
+    $key->method('getKeyValue')->willReturn($this->randomMachineName());
+
+    $key_storage = $this->createMock(EntityStorageBase::class);
+    $key_storage->method('load')->willReturn($key);
+
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->method('getStorage')->willReturn($key_storage);
+    $this->capx = new TestCapx($this->cache, $database, $logger, $config_factory, $entity_type_manager);
+
+    $container = new ContainerBuilder();
+    $container->set('http_client', $this->guzzle);
+    $container->set('logger.factory', $logger);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -61,10 +89,10 @@ class CapxTest extends UnitTestCase {
    */
   public function testStaticMethods() {
     $url = Capx::getWorkgroupUrl('test:group');
-    $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=TEST:GROUP&ps=1000', $url);
+    $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=TEST:GROUP', $url);
 
     $url = Capx::getOrganizationUrl('test', TRUE);
-    $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?orgCodes=TEST&ps=1000&includeChildren=true', $url);
+    $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?orgCodes=TEST&includeChildren=true', $url);
   }
 
   /**
@@ -90,7 +118,7 @@ class CapxTest extends UnitTestCase {
 
     $this->capx->setUsername($this->getRandomGenerator()->string());
     $this->capx->setPassword($this->getRandomGenerator()->string());
-    $this->assertTrue($this->capx->testConnection());
+    $this->assertEquals('{}', $this->capx->testConnection());
   }
 
   /**

@@ -60,6 +60,7 @@ $humsci_sites = [
   'archaeology',
   'dsresearch',
   'duboislab',
+  'fetter',
   'francestanford',
   'lowe',
   'mrc',

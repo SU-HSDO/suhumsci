@@ -24,7 +24,7 @@ add_known_hosts: &add_known_hosts
 defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
-    - image: selenium/standalone-chrome:latest
+    - image: selenium/standalone-chrome:3.141.59-neon
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
@@ -83,7 +83,7 @@ behat_tests_second: &behat_tests_second
         path: /var/www/html/artifacts
 
 ## Job to run Unit and Kernel tests.
-functional_unit_tests: &functional_unit_tests
+fresh_install_tests: &fresh_install_tests
   <<: *defaults
   steps:
     - checkout
@@ -122,8 +122,8 @@ jobs:
      <<: *behat_tests_first
   run-behat-tests-second:
     <<: *behat_tests_second
-  run-functional-unit-tests:
-     <<: *functional_unit_tests
+  run-fresh-install-tests:
+     <<: *fresh_install_tests
   run-code-coverage:
      <<: *code_coverage
 
@@ -134,5 +134,5 @@ workflows:
     jobs:
       - run-behat-tests-first
       - run-behat-tests-second
-      - run-functional-unit-tests
+      - run-fresh-install-tests
       - run-code-coverage

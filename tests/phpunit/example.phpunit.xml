@@ -5,7 +5,7 @@
  or your current system user. See core/tests/README.md and
  https://www.drupal.org/node/2116263 for details.
 -->
-<phpunit bootstrap="tests/bootstrap.php" colors="true"
+<phpunit bootstrap="${docroot}/core/tests/bootstrap.php" colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
@@ -24,11 +24,11 @@
     <!-- Do not limit the amount of memory tests take to run. -->
     <ini name="memory_limit" value="-1"/>
     <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
-    <env name="SIMPLETEST_BASE_URL" value="http://localhost"/>
+    <env name="SIMPLETEST_BASE_URL" value="${project.local.uri}"/>
     <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
-    <env name="SIMPLETEST_DB" value="mysql://root@127.0.0.1/drupal8"/>
+    <env name="SIMPLETEST_DB" value="mysql://${drupal.db.username}:${drupal.db.password}@127.0.0.1/${drupal.db.database}"/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/docrootroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/docroot/sites/simpletest"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="${docroot}/sites/simpletest"/>
     <!-- To disable deprecation testing uncomment the next line. -->
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
     <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
@@ -37,18 +37,11 @@
     <!-- Example for changing the driver args to docrootdriver tests MINK_DRIVER_ARGS_docrootDRIVER value: '["firefox", null, "http://localhost:4444/wd/hub"]' -->
   </php>
   <testsuites>
-    <testsuite name="unit">
-      <file>./tests/TestSuites/UnitTestSuite.php</file>
-    </testsuite>
-    <testsuite name="kernel">
-      <file>./tests/TestSuites/KernelTestSuite.php</file>
-    </testsuite>
     <testsuite name="functional">
-      <file>./tests/TestSuites/FunctionalTestSuite.php</file>
+      <file>${repo.root}/tests/phpunit/TestSuites/Functional.php</file>
     </testsuite>
-    <testsuite name="nonfunctional">
-      <file>./tests/TestSuites/UnitTestSuite.php</file>
-      <file>./tests/TestSuites/KernelTestSuite.php</file>
+    <testsuite name="non-functional">
+      <file>${repo.root}/tests/phpunit/TestSuites/NonFunctional.php</file>
     </testsuite>
   </testsuites>
   <listeners>
@@ -61,15 +54,15 @@
   <!-- Filter for coverage reports. -->
   <filter>
     <whitelist addUncoveredFilesFromWhitelist="true">
-      <directory>../modules/humsci</directory>
+<!--      <directory>../modules/humsci</directory>-->
       <!--<directory suffix=".module">../modules/humsci</directory>-->
       <!-- By definition test classes have no tests. -->
-      <exclude>
-        <directory>../modules/humsci/*/tests</directory>
-        <directory>../modules/humsci/*/modules/*/tests</directory>
-        <directory suffix=".post_update.php">../modules/humsci/*/</directory>
-        <directory suffix=".post_update.php">../modules/humsci/*/modules/*/</directory>
-      </exclude>
+<!--      <exclude>-->
+<!--        <directory>../modules/humsci/*/tests</directory>-->
+<!--        <directory>../modules/humsci/*/modules/*/tests</directory>-->
+<!--        <directory suffix=".post_update.php">../modules/humsci/*/</directory>-->
+<!--        <directory suffix=".post_update.php">../modules/humsci/*/modules/*/</directory>-->
+<!--      </exclude>-->
     </whitelist>
   </filter>
 </phpunit>

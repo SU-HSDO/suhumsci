@@ -4,6 +4,7 @@ namespace Acquia\Blt\Custom\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 use Drupal\Core\Serialization\Yaml;
+use Robo\Contract\VerbosityThresholdInterface;
 
 /**
  * Defines commands in the "humsci" namespace.
@@ -11,6 +12,29 @@ use Drupal\Core\Serialization\Yaml;
 class HumsciCommand extends AcHooksCommand {
 
   use HumsciTrait;
+
+  /**
+   * Copies phpunit.xml with necessary changes.
+   *
+   * @command tests:phpunit:config
+   */
+  public function prePhpUnit() {
+    $example = $this->getConfigValue('repo.root') . '/tests/phpunit/example.phpunit.xml';
+    $destination = $this->getConfigValue('docroot') . '/core/phpunit.xml';
+    if (file_exists($destination) || !file_exists($example)) {
+      return;
+    }
+
+    $task = $this->taskFilesystemStack()
+      ->stopOnFail()
+      ->setVerbosityThreshold(VerbosityThresholdInterface::VERBOSITY_VERBOSE);
+
+    $this->say("Generating PhpUnit configuration files...");
+
+    $task->copy($example, $destination);
+    $task->run();
+    $this->getConfig()->expandFileProperties($destination);
+  }
 
   /**
    * Disables a list of modules for all sites in an environment.

@@ -54,6 +54,7 @@ behat_tests_first: &behat_tests_first
     - *add_known_hosts
     - checkout
     - *copy_robo
+    - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
         command: robo job:run-behat-tests-first
@@ -71,6 +72,7 @@ behat_tests_second: &behat_tests_second
     - *add_known_hosts
     - checkout
     - *copy_robo
+    - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
         command: robo job:run-behat-tests-second
@@ -86,6 +88,7 @@ fresh_install_tests: &fresh_install_tests
   steps:
     - checkout
     - *copy_robo
+    - restore_cache: *restore_cache
     - run:
         name: Run PHPUnit tests
         command: robo job:run-unit-tests

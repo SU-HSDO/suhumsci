@@ -7,7 +7,7 @@ Feature: Media
   @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for valid documents.
     Given I am logged in as a user with the "Developer" role
-    Then I I set window dimensions 1400 x 700
+    Then I set window dimensions 1400 x 700
     Then I am on "/media/add"
     And I should see "Upload File(s)" in the content region
     Then I click "Upload File(s)"
@@ -28,7 +28,7 @@ Feature: Media
   @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for invalid documents.
     Given I am logged in as a user with the "Developer" role
-    Then I I set window dimensions 1400 x 700
+    Then I set window dimensions 1400 x 700
     And I am on "/admin/content/media/add/bulk"
     Then I drop "documents/test.php" file into dropzone
     And I wait 1 seconds
@@ -40,7 +40,7 @@ Feature: Media
   @api @safe @javascript @MediaCleanup
   Scenario: Test for valid Images.
     Given I am logged in as a user with the "Developer" role
-    Then I I set window dimensions 1400 x 700
+    Then I set window dimensions 1400 x 700
     Then I am on "/admin/content/media/add/bulk"
     Then I drop "images/logo.jpg" file into dropzone
     Then I press "Upload" in the "content" region
@@ -70,7 +70,7 @@ Feature: Media
   @api @safe @javascript @MediaCleanup
   Scenario: Test for Audio creation.
     Given I am logged in as a user with the "Developer" role
-    Then I I set window dimensions 1400 x 700
+    Then I set window dimensions 1400 x 700
     Then I am on "/media/add"
     And I click "Audio" in the "content" region
     Then I fill in "Name" with "Donec vitae sapien ut"
@@ -86,7 +86,7 @@ Feature: Media
   @api @safe @mrc @javascript @MediaCleanup
   Scenario: Test for Video creation.
     Given I am logged in as a user with the "Developer" role
-    Then I I set window dimensions 1400 x 700
+    Then I set window dimensions 1400 x 700
     Then I am on "/media/add"
     And I click "Video" in the "content" region
     Then I fill in "Name" with "Aenean commodo ligula eget dolor"

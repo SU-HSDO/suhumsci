@@ -121,6 +121,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     // Set the cache keys so that each block will have its own cache, even if
     // it has the same machine name on different entity displays.
     $build['#cache']['keys'] = array_keys($build['components']);
+    $build['#attached']['library'][] = 'hs_blocks/block_group';
     return $build;
   }
 

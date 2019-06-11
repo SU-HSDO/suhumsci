@@ -58,26 +58,38 @@
 
 $humsci_sites = [
   'archaeology',
+  'dfetter__humsci',
   'dsresearch',
   'duboislab',
   'francestanford',
   'lowe',
-  'mrc',
   'mathematics',
+  'mrc',
   'philit',
   'shenlab',
-  'symsys',
   'swshumsci-sandbox',
+  'symsys',
   'williams',
 ];
 
 foreach ($humsci_sites as $site) {
-  $directory = preg_replace("/[^\da-z]/", "_", $site);;
+  $directory = preg_replace("/[^\da-z_]/", "_", $site);
+
+  // Provide the ability to have 4 part domains. The directory in the form
+  // `sitename__third_domain` will be added as
+  // `sitename-dev.third_domain.stanford.edu` and similarly for the other
+  // environments.
+  $domain = 'stanford.edu';
+  if (strpos($site, '__') !== FALSE) {
+    list($site, $domain) = explode('__', $site, 2);
+    $domain .= '.stanford.edu';
+  }
+
   $sites["$site.suhumsci.loc"] = $directory;
-  $sites["$site-dev.stanford.edu"] = $directory;
-  $sites["$site-stage.stanford.edu"] = $directory;
-  $sites["$site-prod.stanford.edu"] = $directory;
-  $sites["$site.stanford.edu"] = $directory;
+  $sites["$site-dev.$domain"] = $directory;
+  $sites["$site-stage.$domain"] = $directory;
+  $sites["$site-prod.$domain"] = $directory;
+  $sites["$site.$domain"] = $directory;
 }
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

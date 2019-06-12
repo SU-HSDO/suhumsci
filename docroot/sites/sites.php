@@ -56,41 +56,34 @@
  * @see https://www.drupal.org/documentation/install/multi-site
  */
 
-$humsci_sites = [
-  'archaeology',
-  'dfetter__humsci',
-  'dsresearch',
-  'duboislab',
-  'francestanford',
-  'lowe',
-  'mathematics',
-  'mrc',
-  'philit',
-  'shenlab',
-  'swshumsci-sandbox',
-  'symsys',
-  'williams',
-];
+$settings = glob(__DIR__ . '/*/settings.php');
 
-foreach ($humsci_sites as $site) {
-  $directory = preg_replace("/[^\da-z_]/", "_", $site);
+// For each directory with a settings.php file, create possible combinations
+// of the urls for that directory. A single underscore `_` in the direcotry name
+// represents a dash `-` in the url. A double underscore represents a period `.`
+// in the url. Using this standard we can easily keep track of what urls is for
+// each site directory.
+foreach ($settings as $settings_file) {
+  $site_dir = str_replace(__DIR__ . '/', '', $settings_file);
+  $site_dir = str_replace('/settings.php', '', $site_dir);
 
-  // Provide the ability to have 4 part domains. The directory in the form
-  // `sitename__third_domain` will be added as
-  // `sitename-dev.third_domain.stanford.edu` and similarly for the other
-  // environments.
-  $domain = 'stanford.edu';
-  if (strpos($site, '__') !== FALSE) {
-    list($site, $domain) = explode('__', $site, 2);
-    $domain .= '.stanford.edu';
+  if ($site_dir == 'default') {
+    $site_dir = 'swshumsci';
   }
 
-  $sites["$site.suhumsci.loc"] = $directory;
-  $sites["$site-dev.$domain"] = $directory;
-  $sites["$site-stage.$domain"] = $directory;
-  $sites["$site-prod.$domain"] = $directory;
-  $sites["$site.$domain"] = $directory;
+  $sitename = str_replace('_', '-', str_replace('__', '.', $site_dir));
+  $sites[$sitename] = $site_dir;
+  $sites["$sitename.stanford.edu"] = $site_dir;
+
+  $sitename = explode('.', $sitename);
+
+  foreach (['-dev', '-stage', '-prod'] as $environment) {
+    $environment_sitename = $sitename;
+    $environment_sitename[0] .= $environment;
+    $sites[implode('.', $environment_sitename) . '.stanford.edu'] = $site_dir;
+  }
 }
+
 
 if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';

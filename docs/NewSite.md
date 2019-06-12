@@ -1,5 +1,12 @@
 # Provisioning a new site
 
+## Choose a final url and machine name
+* To keep consistent with site directories, its important to structure the machine name
+and the url appropriately.
+* For a final URL of `site-name.stanford.edu` the site directory and database should be `site_name`
+* For a URL of `site-name.third-domain.stanford.edu` the site directory and database should be `site_name__third_domain`
+* Use these in the following steps.
+
 ## Establish domains with Stanford
 1. Add the domains to the [NetDB record](https://netdb.stanford.edu/node_info?name=swshumsci.stanford.edu&history=%252Fqsearch%253Fsearch_string%253Dswshumsci%2526search_type%253DNodes)
     * Keep with the pattern: [sitename]-dev, [sitename]-stage, and [sitename]-prod
@@ -9,8 +16,7 @@
 ## Site Directory and settings.
 1. Disable shield on all sites on the dev and test environments. this will help when the LE certs are generated. `blt drupal:module:uninstall shield [environment:dev,test]`
 1. Create a new database in [Acquia dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265866-23a85077-2967-41a4-be22-a84c24e0f81a/databases). Adding a database to one environment adds one to all environments.
-   * If the site is intended for a 4 part domain such as `sitename.third.stanford.edu` name the database in the form
-   `sitename__third` with two underscores to indicate the domain break. 
+   * Use the database name as defined above.
 1. execute blt command `blt recipes:multisite:init` and answer questions as desired. 
    * Machine name of the site should match the final vhost to be desired. Use the same name as the database above.
    * "remote drush alias" should be [machine_name].prod 
@@ -19,7 +25,6 @@
 1. Get the newly built SSL certs for each environment `humsci:letsencrypt:get-cert [environment]` and add them to [Acquia Dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl)
 1. From the database that was set up in Acquia, grab the PHP snippet and add it to the bottom of the new settings.php
    but above the blt.settings.php require statement.
-1. Add the machine name to [sites.php](../docroot/sites/sites.php)
 1. Add the machine name to the [blt settings](../blt/blt.yml) for the `multisites` array.
 1. Edit the new drush alias file in [drush/sites](../drush/sites) to add configuration for dev, test and prod environments.
    * Use the [default.yml](../drush/sites/default.site.yml) file as a template

@@ -31,13 +31,28 @@ class HsRemoveBlockForm extends RemoveBlockForm {
   /**
    * {@inheritdoc}
    */
+  public function getQuestion() {
+    $section = $this->sectionStorage->getSection($this->delta);
+    foreach ($section->getComponents() as $component) {
+      $component_config = $component->get('configuration');
+      if (!empty($component_config['machine_name']) && $component_config['machine_name'] == $this->region) {
+        $label = $component_config['children'][$this->uuid]['label'];
+        break;
+      }
+    }
+    return $this->t('Are you sure you want to remove the %label block?', ['%label' => $label]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
     $this->group = $group;
     $this->uuid = $uuid;
     // For some reason the uuid property doesn't carry through to the method
     // handlSectionStorage, so we just set it in the form state for easy access.
     $form_state->set('hs_blocks_uuid', $uuid);
-    return parent::buildForm($form, $form_state, $section_storage, $delta);
+    return parent::buildForm($form, $form_state, $section_storage, $delta, $group, $uuid);
   }
 
   /**

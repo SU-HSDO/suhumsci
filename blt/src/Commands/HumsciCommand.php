@@ -71,6 +71,31 @@ class HumsciCommand extends AcHooksCommand {
   }
 
   /**
+   * Add a permission to all sites on the multisite.
+   *
+   * @param string $role
+   *   Machine name of the role
+   * @param string $permission
+   *   Permission to be added.
+   * @param string $environment
+   *   Which environment to add the permission to.
+
+   * @command drupal:perm:add
+   *
+   * @throws \Robo\Exception\TaskException
+   */
+  public function roleAddPermission($role, $permission, $environment = 'prod') {
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      $this->taskDrush()
+        ->alias("$multisite.$environment")
+        ->drush('role:perm:add')
+        ->args($role)
+        ->arg($permission)
+        ->run();
+    }
+  }
+
+  /**
    * Enables a list of modules for all sites in an environment.
    *
    * @param string $modules
@@ -81,6 +106,8 @@ class HumsciCommand extends AcHooksCommand {
    *   Comma delimited list of sites to skip.
    *
    * @command drupal:module:enable
+   *
+   * @throws \Robo\Exception\TaskException
    */
   public function enableModules($modules, $environment, $excluded_sites = '') {
     if (is_string($modules)) {

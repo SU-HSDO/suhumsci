@@ -51,7 +51,9 @@
 
       // Desktop, apply the jquery ui menu and change any mobile classes.
       if (window.innerWidth >= 1201) {
-        $menu.menu();
+        $menu.menu({
+          position: {at: "left bottom"}
+        });
         $menu.removeClass('expanded');
         $menu.find('.fa-minus').addClass('fa-plus').removeClass('fa-minus');
         $menu.find('.expanded').removeClass('expanded');

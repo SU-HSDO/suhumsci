@@ -38,6 +38,7 @@ and the url appropriately.
     * verify the database name is something like `swshumscidb######`
     * verify the "Site URI" is something like `[newsite]-dev.stanford.ed`
 1. Install a new site `drush @[newsite].dev si config_installer -y`
-1. After installation, import all the configs again `drush @[sitename].dev cim -y`
+1. Disable config_ignore to ensure full install state `drush @[sitename].dev pmu config_ignore`
+1. Import all the configs again `drush @[sitename].dev cim -y`
 1. Visit the site and validate login and installation was successful
 1. Copy that database to stage and production environments. (This prevents deployment & testing errors)

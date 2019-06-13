@@ -1,5 +1,14 @@
 # HumSci
 
+8.1.1
+--------------------------------------------------------------------------------  
+_Release Date: 2019-06-13_
+
+* HSD8-649 added content_access module
+* Provision dfetter
+* Provision heidi-williams.humsci and move williams to it.
+* Removed content_lock
+
 8.1.0
 --------------------------------------------------------------------------------  
 _Release Date: 2019-05-22_

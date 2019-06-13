@@ -137,6 +137,18 @@ class RoboFile extends Tasks {
   }
 
   /**
+   * Deploy the current branch to Acquia.
+   *
+   * @return \Robo\Result
+   */
+  public function jobRunDeployBranch() {
+    $collection = $this->collectionBuilder();
+    $collection->addTask($this->installDependencies());
+    $collection->addTask($this->blt()->arg('deploy'));
+    return $collection->run();
+  }
+
+  /**
    * Perform some tasks to prepare the drupal environment.
    *
    * @return \Robo\Contract\TaskInterface[]
@@ -380,7 +392,8 @@ class RoboFile extends Tasks {
    */
   protected function blt() {
     return $this->taskExec('vendor/acquia/blt/bin/blt')
-      ->option('verbose');
+      ->option('verbose')
+      ->option('no-interaction');
   }
 
   /**

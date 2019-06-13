@@ -192,7 +192,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         ],
         [
           'attributes' => [
-            'class' => ['use-ajax','js-layout-builder-block-link', 'new-block__link'],
+            'class' => ['use-ajax', 'new-block__link'],
             'data-dialog-type' => 'dialog',
             'data-dialog-renderer' => 'off_canvas',
             'data-contextual-id' => 'add-group-link',

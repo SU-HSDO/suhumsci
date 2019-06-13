@@ -416,10 +416,9 @@ class RoboFile extends Tasks {
     foreach ($blt_config['multisites'] as $site) {
       // Sandbox sites are unpredictable, so lets ignore them.
       if (strpos($site, 'sandbox') === FALSE) {
-        $sites[] = $site;
+        $sites[$site] = $site;
       }
     }
-
     return array_rand($sites, self::SITES_TO_TEST);
   }
 

@@ -22,6 +22,13 @@ class RoboFile extends Tasks {
   const DB_URL = 'mysql://root@127.0.0.1/drupal8';
 
   /**
+   * Number of random sites to test behat.
+   *
+   * @var integer
+   */
+  const SITES_TO_TEST = 6;
+
+  /**
    * Directory of drupal installation.
    *
    * @var string
@@ -140,8 +147,9 @@ class RoboFile extends Tasks {
    * Deploy the current branch to Acquia.
    *
    * @return \Robo\Result
+   *   Task collection.
    */
-  public function jobRunDeployBranch() {
+  public function jobDeployBranch() {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
     $collection->addTask($this->blt()->arg('deploy'));
@@ -411,7 +419,8 @@ class RoboFile extends Tasks {
         $sites[] = $site;
       }
     }
-    return $sites;
+
+    return array_rand($sites, self::SITES_TO_TEST);
   }
 
   /**

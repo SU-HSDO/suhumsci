@@ -136,7 +136,7 @@ deploy_tag: &deploy_tag
     - checkout
     - restore_cache: *restore_cache
     - run:
-        name: Deploying branch to Acquia
+        name: Deploying Tag to Acquia
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
@@ -181,6 +181,6 @@ workflows:
       - run-deploy-tag:
           filters:
             tags:
-              only: /^8.*/
+              only: /.*/
             branches:
               ignore: /.*/

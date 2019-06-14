@@ -133,12 +133,16 @@ deploy_tag: &deploy_tag
   <<: *defaults
   steps:
     - *add_ssh
-    - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
     - run:
-        name: Deploying Tag to Acquia
-        command: robo job:deploy-tag
+        name: Deploying branch to Acquia
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+          DATE=`date +%Y-%m-%d`
+          vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
 
 # Declare all of the jobs we should run.
 version: 2
@@ -161,23 +165,27 @@ workflows:
   version: 2
   test_lint_deploy:
     jobs:
-      - run-deploy-branch
-#      - run-behat-tests-first
-#      - run-behat-tests-second
-#      - run-fresh-install-tests
-#      - run-code-coverage
-#      - run-deploy-branch:
-#          requires:
-#            - run-behat-tests-first
-#            - run-behat-tests-second
-#            - run-fresh-install-tests
-#            - run-code-coverage
-#      - run-deploy-tag:
-#          filters:
-#            branches:
-#              only: develop
-#          requires:
-#            - run-behat-tests-first
-#            - run-behat-tests-second
-#            - run-fresh-install-tests
-#            - run-code-coverage
+      - run-behat-tests-first
+      - run-behat-tests-second
+      - run-fresh-install-tests
+      - run-code-coverage
+      - run-deploy-branch:
+          requires:
+            - run-behat-tests-first
+            - run-behat-tests-second
+            - run-fresh-install-tests
+            - run-code-coverage
+          filters:
+            branches:
+              ignore: /^violinist.*/
+      - run-deploy-tag:
+          filters:
+            tags:
+              only: /^8.*/
+            branches:
+              ignore: /.*/
+          requires:
+            - run-behat-tests-first
+            - run-behat-tests-second
+            - run-fresh-install-tests
+            - run-code-coverage

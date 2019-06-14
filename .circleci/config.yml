@@ -34,9 +34,9 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-  - v1-dependencies-{{ checksum "composer.lock" }}
-  # fallback to using the latest cache if no exact match is found
-  - v1-dependencies-
+    - v1-dependencies-{{ checksum "composer.lock" }}
+    # fallback to using the latest cache if no exact match is found
+    - v1-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -115,6 +115,7 @@ code_coverage: &code_coverage
         path: /var/www/html/artifacts
     - save_cache: *save_cache
 
+## Job to deploy the current branch to Acquia hosting using BLT.
 deploy_branch: &deploy_branch
   <<: *defaults
   steps:
@@ -129,6 +130,7 @@ deploy_branch: &deploy_branch
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           vendor/bin/blt deploy --no-interaction
 
+## Job to deploy the new tag to Acquia hosting using BLT.
 deploy_tag: &deploy_tag
   <<: *defaults
   steps:
@@ -169,6 +171,7 @@ workflows:
       - run-behat-tests-second
       - run-fresh-install-tests
       - run-code-coverage
+      # If the above jobs complete successfully, deploy the branch.
       - run-deploy-branch:
           requires:
             - run-behat-tests-first
@@ -178,6 +181,7 @@ workflows:
           filters:
             branches:
               ignore: /^violinist.*/
+      # Tags are only created on successful code. Deploy the tag after creation.
       - run-deploy-tag:
           filters:
             tags:

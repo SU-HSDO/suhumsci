@@ -144,20 +144,6 @@ class RoboFile extends Tasks {
   }
 
   /**
-   * Deploy the current branch to Acquia.
-   *
-   * @return \Robo\Result
-   *   Task collection.
-   */
-  public function jobDeployBranch() {
-    $collection = $this->collectionBuilder();
-    $collection->addTask($this->installDependencies());
-
-    $collection->addTask($this->blt()->arg('deploy')->option('dry-run'));
-    return $collection->run();
-  }
-
-  /**
    * Perform some tasks to prepare the drupal environment.
    *
    * @return \Robo\Contract\TaskInterface[]

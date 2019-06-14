@@ -124,9 +124,9 @@ deploy_branch: &deploy_branch
     - run:
         name: Deploying branch to Acquia
         command: |
+          git status
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
-          composer install --no-dev --optimize-autoloader
-          vendor/bin/blt deploy --no-interaction --dry-run
+          vendor/bin/blt deploy --no-interaction
 
 deploy_tag: &deploy_tag
   <<: *defaults

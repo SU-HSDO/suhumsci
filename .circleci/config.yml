@@ -118,18 +118,22 @@ code_coverage: &code_coverage
 deploy_branch: &deploy_branch
   <<: *defaults
   steps:
+    - *add_ssh
+#    - *add_known_hosts
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Deploying branch to Acquia
-        command: robo job:deploy-branch
+        command: |
+          composer install --no-dev --optimize-autoloader
+          vendor/bin/blt deploy --no-interaction --dry-run
 
 deploy_tag: &deploy_tag
   <<: *defaults
   steps:
+    - *add_ssh
+    - *add_known_hosts
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Deploying Tag to Acquia

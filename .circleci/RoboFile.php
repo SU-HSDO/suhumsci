@@ -152,7 +152,8 @@ class RoboFile extends Tasks {
   public function jobDeployBranch() {
     $collection = $this->collectionBuilder();
     $collection->addTask($this->installDependencies());
-    $collection->addTask($this->blt()->arg('deploy'));
+
+    $collection->addTask($this->blt()->arg('deploy')->option('dry-run'));
     return $collection->run();
   }
 
@@ -399,7 +400,7 @@ class RoboFile extends Tasks {
    *   A drush exec command.
    */
   protected function blt() {
-    return $this->taskExec('vendor/acquia/blt/bin/blt')
+    return $this->taskExec('vendor/bin/blt')
       ->option('verbose')
       ->option('no-interaction');
   }

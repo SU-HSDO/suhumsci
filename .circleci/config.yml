@@ -124,7 +124,8 @@ deploy_branch: &deploy_branch
     - run:
         name: Deploying branch to Acquia
         command: |
-          git status
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           vendor/bin/blt deploy --no-interaction
 

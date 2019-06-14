@@ -124,7 +124,7 @@ deploy_branch: &deploy_branch
     - run:
         name: Deploying branch to Acquia
         command: |
-          ssh-keyscan srv-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+          ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           composer install --no-dev --optimize-autoloader
           vendor/bin/blt deploy --no-interaction --dry-run
 

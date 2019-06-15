@@ -25,6 +25,7 @@ defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
     - image: selenium/standalone-chrome:3.141.59-neon
+    - image: circleci/node:latest
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
@@ -130,6 +131,18 @@ deploy_branch: &deploy_branch
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           vendor/bin/blt deploy --no-interaction
 
+create_release: &create_release
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - checkout
+    - restore_cache: *restore_cache
+    - run:
+        name: Create Github Release
+        command: |
+          npm install --global release-it
+          release-it patch --non-interactive
+
 ## Job to deploy the new tag to Acquia hosting using BLT.
 deploy_tag: &deploy_tag
   <<: *defaults
@@ -161,6 +174,8 @@ jobs:
     <<: *deploy_branch
   run-deploy-tag:
     <<: *deploy_tag
+  run-create-release:
+    <<: *create_release
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -181,7 +196,22 @@ workflows:
           filters:
             branches:
               ignore: /^violinist.*/
+            tags:
+              ignore: /.*/
+      # Create a release when a release branch has merged into develop.
+      - run-create-release:
+          requires:
+            - run-behat-tests-first
+            - run-behat-tests-second
+            - run-fresh-install-tests
+            - run-code-coverage
+          filters:
+            branches:
+              only: develop
+            tags:
+              ignore: /.*/
       # Tags are only created on successful code. Deploy the tag after creation.
+      # This will trigger after the release is created above.
       - run-deploy-tag:
           filters:
             tags:

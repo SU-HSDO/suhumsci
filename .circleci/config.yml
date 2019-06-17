@@ -131,18 +131,6 @@ deploy_branch: &deploy_branch
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           vendor/bin/blt deploy --no-interaction
 
-create_release: &create_release
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - checkout
-    - restore_cache: *restore_cache
-    - run:
-        name: Create Github Release
-        command: |
-          npm install --global release-it
-          release-it patch --non-interactive
-
 ## Job to deploy the new tag to Acquia hosting using BLT.
 deploy_tag: &deploy_tag
   <<: *defaults
@@ -158,6 +146,19 @@ deploy_tag: &deploy_tag
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           DATE=`date +%Y-%m-%d`
           vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
+github_release: &github_release
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Create Github Release
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          robo job:github-release
 
 # Declare all of the jobs we should run.
 version: 2
@@ -174,8 +175,8 @@ jobs:
     <<: *deploy_branch
   run-deploy-tag:
     <<: *deploy_tag
-  run-create-release:
-    <<: *create_release
+  run-github-release:
+    <<: *github_release
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -199,7 +200,7 @@ workflows:
             tags:
               ignore: /.*/
       # Create a release when a release branch has merged into develop.
-      - run-create-release:
+      - run-github-release:
           requires:
             - run-behat-tests-first
             - run-behat-tests-second

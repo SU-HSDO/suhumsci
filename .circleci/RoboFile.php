@@ -135,16 +135,17 @@ class RoboFile extends Tasks {
    * Advance to the next SemVer version.
    *
    * The behavior depends on the parameter $stage.
-   *   - If $stage is empty, then the patch or minor version of $version is incremented
-   *   - If $stage matches the current stage in the current version, then add one
-   *     to the stage (e.g. alpha3 -> alpha4)
+   *   - If $stage is empty, then the patch or minor version of $version is
+   *     incremented
+   *   - If $stage matches the current stage in the current version, then add
+   *     one to the stage (e.g. alpha3 -> alpha4)
    *   - If $stage does not match the current stage in the current version, then
    *     reset to '1' (e.g. alpha4 -> beta1)
    *
    * Taken from consolidation/robo library.
    *
    * @param string $version
-   *   A SemVer version
+   *   A SemVer version.
    * @param string $stage
    *   Release stage: dev, alpha, beta, rc or an empty string for stable.
    *

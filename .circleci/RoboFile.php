@@ -88,11 +88,12 @@ class RoboFile extends Tasks {
       throw new Exception('Release commit was unsuccessful');
     }
 
+    $github_info = $this->getGitHubInfo();
     // Create a new release in github. This will generate a tag which will be
     // used in another CircleCI task.
     $result = $this->taskGitHubRelease($version)
       ->accessToken(getenv('GITHUB_TOKEN'))
-      ->uri('SU-HSDO/suhumsci')
+      ->uri($github_info['name'] . '/' . $github_info['name'])
       ->description("Release $version")
       ->changes($changes)
       ->run();
@@ -100,6 +101,27 @@ class RoboFile extends Tasks {
     if (!$result->wasSuccessful()) {
       throw new Exception('Release was unsuccessful');
     }
+  }
+
+  /**
+   * Git the information of the github remote.
+   *
+   * @return array
+   *   Keyed array with github owner and name.
+   */
+  protected function getGitHubInfo() {
+    $git_remote = exec('git config --get remote.origin.url');
+    $git_remote = str_replace('.git', '', $git_remote);
+    if (strpos($git_remote, 'https') !== FALSE) {
+      $parsed_url = parse_url($git_remote);
+      list($owner, $repo_name) = explode('/', trim($parsed_url['path'], '/'));
+      return ['owner' => $owner, 'name' => $repo_name];
+    }
+    list(, $repo_name) = explode(':', $git_remote);
+    str_replace('.git', '', $git_remote);
+
+    list($owner, $repo_name) = explode('/', $repo_name);
+    return ['owner' => $owner, 'name' => $repo_name];
   }
 
   /**

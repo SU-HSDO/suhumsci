@@ -84,7 +84,6 @@ foreach ($settings as $settings_file) {
   }
 }
 
-
 if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';
 }

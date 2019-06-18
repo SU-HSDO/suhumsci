@@ -121,6 +121,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     // Set the cache keys so that each block will have its own cache, even if
     // it has the same machine name on different entity displays.
     $build['#cache']['keys'] = array_keys($build['components']);
+    $build['#attached']['library'][] = 'hs_blocks/group_block';
     return $build;
   }
 
@@ -164,6 +165,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   protected function buildAdministrativeSection(array &$components) {
     $section_storage = $this->getSectionStorage();
     $section_delta = $this->getSectionDelta($section_storage);
+
     foreach (array_keys($components) as $uuid) {
       $components[$uuid]['#contextual_links'] = [
         'hs_blocks_block' => [
@@ -193,6 +195,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
             'class' => ['use-ajax', 'new-block__link'],
             'data-dialog-type' => 'dialog',
             'data-dialog-renderer' => 'off_canvas',
+            'data-contextual-id' => 'add-group-link',
           ],
         ]
       ),

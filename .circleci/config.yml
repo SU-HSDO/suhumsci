@@ -25,6 +25,7 @@ defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
     - image: selenium/standalone-chrome:3.141.59-neon
+    - image: circleci/node:latest
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
@@ -34,9 +35,9 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-  - v1-dependencies-{{ checksum "composer.lock" }}
-  # fallback to using the latest cache if no exact match is found
-  - v1-dependencies-
+    - v1-dependencies-{{ checksum "composer.lock" }}
+    # fallback to using the latest cache if no exact match is found
+    - v1-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -115,24 +116,106 @@ code_coverage: &code_coverage
         path: /var/www/html/artifacts
     - save_cache: *save_cache
 
+## Job to deploy the current branch to Acquia hosting using BLT.
+deploy_branch: &deploy_branch
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - checkout
+    - restore_cache: *restore_cache
+    - run:
+        name: Deploying branch to Acquia
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+          vendor/bin/blt deploy --no-interaction
+
+## Job to deploy the new tag to Acquia hosting using BLT.
+deploy_tag: &deploy_tag
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - checkout
+    - restore_cache: *restore_cache
+    - run:
+        name: Deploying Tag to Acquia
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+          DATE=`date +%Y-%m-%d`
+          vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
+github_release: &github_release
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - checkout
+    - *copy_robo
+    - restore_cache: *restore_cache
+    - run:
+        name: Create Github Release
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          robo job:github-release
+
 # Declare all of the jobs we should run.
 version: 2
 jobs:
   run-behat-tests-first:
-     <<: *behat_tests_first
+    <<: *behat_tests_first
   run-behat-tests-second:
     <<: *behat_tests_second
   run-fresh-install-tests:
-     <<: *fresh_install_tests
+    <<: *fresh_install_tests
   run-code-coverage:
-     <<: *code_coverage
+    <<: *code_coverage
+  run-deploy-branch:
+    <<: *deploy_branch
+  run-deploy-tag:
+    <<: *deploy_tag
+  run-github-release:
+    <<: *github_release
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2
-  test_and_lint:
+  test_lint_deploy:
     jobs:
       - run-behat-tests-first
       - run-behat-tests-second
       - run-fresh-install-tests
       - run-code-coverage
+      # If the above jobs complete successfully, deploy the branch.
+      - run-deploy-branch:
+          requires:
+            - run-behat-tests-first
+            - run-behat-tests-second
+            - run-fresh-install-tests
+            - run-code-coverage
+          filters:
+            branches:
+              ignore: /^violinist.*/
+            tags:
+              ignore: /.*/
+      # Create a release when a release branch has merged into develop.
+      - run-github-release:
+          requires:
+            - run-behat-tests-first
+            - run-behat-tests-second
+            - run-fresh-install-tests
+            - run-code-coverage
+          filters:
+            branches:
+              only: develop
+            tags:
+              ignore: /.*/
+      # Tags are only created on successful code. Deploy the tag after creation.
+      # This will trigger after the release is created above.
+      - run-deploy-tag:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/

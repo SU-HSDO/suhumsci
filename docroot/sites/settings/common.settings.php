@@ -103,10 +103,10 @@ if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRO
   }
 }
 
-//if ($is_ah_env && PHP_SAPI !== 'cli') {
-// Don't lock config when using drush.
-$settings['config_readonly'] = TRUE;
-//}
+if ($is_ah_env && PHP_SAPI !== 'cli') {
+  // Don't lock config when using drush.
+  $settings['config_readonly'] = TRUE;
+}
 
 // Lets whitelist everything because in our event subscriber we have the
 // ability to decide which forms are locked.

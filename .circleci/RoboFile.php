@@ -68,14 +68,14 @@ class RoboFile extends Tasks {
     // Build an array of change strings.
     foreach ($commit_hashes as $hash) {
       exec("git log --format=%B -n 1 $hash", $log);
-      $log = implode(';', array_filter($log));
+      $log = is_array($log) ? reset($log) : $log;
 
       // Don't record last release commit.
       if ($log == "Release $last_version") {
         continue;
       }
 
-      $changes[] = "* $log ($hash)";
+      $changes[] = "$log ($hash)";
     }
 
     if (empty($changes)) {
@@ -105,7 +105,7 @@ class RoboFile extends Tasks {
     $result = $this->taskGitHubRelease($version)
       ->accessToken(getenv('GITHUB_TOKEN'))
       ->uri($github_info['owner'] . '/' . $github_info['name'])
-      ->description("Release $version")
+      ->description("Release $version\n")
       ->changes($changes)
       ->name($version)
       ->comittish(getenv('CIRCLE_BRANCH'))

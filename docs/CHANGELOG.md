@@ -1,5 +1,21 @@
 # HumSci
 
+8.1.2
+--------------------------------------------------------------------------------
+_Release Date: 2019-06-26_
+
+* fixed github release command (ea7d8f1)
+* prevent infinite releases in circleci (c67b6fd)
+* updated configs after update (cd3f5c5)
+* Test circleci workflow (#301);* Use circleci workflow to deploy to acquia;* fixed deploy branch command;* fixed array_rand;* use shell commands instead of robo;* add known hosts;* add known hosts;* changed ssh-keyscan;* remove dryrun;* run only deploy task;* set git config email and name;* deploy tag;* use variables in deploy for tag;* removed unused code;* deploy any tag;* updated documentation;* use release it to automatically create a release;* Use robo commands instead of npm package to do github release;* cc fix;* parse git url instead of hard coded git uri (5c5cdc0)
+* Hsd8-653 Generic 3 column 1-5-1 variant (#307);* HSD8-653 Added 1-5-1 variant to generic three column pattern;* changed wildcard class to specific classes;* fixed update hook to ignore user roles (ee09c10)
+* ignore custom user roles (e9e65e9)
+* Adjusted configs and saml to allow for workgroup mapping (#306) (722b36f)
+* Removed williams since heidi_williams__humsci is in place (#299) (cd5e57b)
+* HSD8-659 Adding bottom margin for group blocks to space them better (#287);* Changed rules contrib module to dev branch;* Updated dependencies and removed core patch no longer needed;* changed phpunit config;* HSD8-659 Adding bottom margin for group blocks to space them better;* HSD8-649 added content_access module;* removed content_lock and core patch;* removed orphaned config;* update hook to remove configs;* removed orphaned config;* provision dfetter;* changed block_group to group_block;* fixed error when trying to delete block in group and when trying to add block;* removed unneccessary class;* removed unrelated link in document (942359f)
+* updated dependencies (10fe03c)
+* added more to new site documentation (2d1cfed)
+
 8.1.1
 --------------------------------------------------------------------------------  
 _Release Date: 2019-06-13_

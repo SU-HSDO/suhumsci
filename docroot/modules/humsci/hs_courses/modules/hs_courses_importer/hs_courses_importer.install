@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * hs_courses_importer.install
+ */
+
+/**
+ * Invalidate courses with links that contain an ampersand.
+ */
+function hs_courses_importer_update_8101() {
+  $database = \Drupal::database();
+  $entity_ids = $database->select('node__field_hs_course_link', 'l')
+    ->fields('l', ['entity_id', 'revision_id'])
+    ->condition('field_hs_course_link_uri', '%&%', 'LIKE')
+    ->execute()
+    ->fetchAllKeyed();
+
+  $database->update('migrate_map_hs_courses')
+    ->fields(['hash' => ''])
+    ->condition('destid1', array_keys($entity_ids), 'IN')
+    ->execute();
+}

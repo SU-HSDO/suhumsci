@@ -228,13 +228,20 @@ process:
     -
       plugin: substr
       start: 10
+  link_query:
+    -
+      plugin: concat
+      source:
+        - subject
+        - code
+    -
+      plugin: urlencode
   field_hs_course_link:
     -
       plugin: concat
       source:
         - constants/link
-        - subject
-        - code
+        - '@link_query'
   field_hs_course_section_days:
     -
       plugin: str_replace

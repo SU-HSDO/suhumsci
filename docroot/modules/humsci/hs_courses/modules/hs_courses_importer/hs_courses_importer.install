@@ -16,8 +16,10 @@ function hs_courses_importer_update_8101() {
     ->execute()
     ->fetchAllKeyed();
 
-  $database->update('migrate_map_hs_courses')
-    ->fields(['hash' => ''])
-    ->condition('destid1', array_keys($entity_ids), 'IN')
-    ->execute();
+  if ($entity_ids) {
+    $database->update('migrate_map_hs_courses')
+      ->fields(['hash' => ''])
+      ->condition('destid1', array_keys($entity_ids), 'IN')
+      ->execute();
+  }
 }

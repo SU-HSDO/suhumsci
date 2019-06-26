@@ -107,6 +107,8 @@ class RoboFile extends Tasks {
       ->uri($github_info['owner'] . '/' . $github_info['name'])
       ->description("Release $version")
       ->changes($changes)
+      ->name($version)
+      ->comittish(getenv('CIRCLE_BRANCH'))
       ->run();
 
     if (!$result->wasSuccessful()) {

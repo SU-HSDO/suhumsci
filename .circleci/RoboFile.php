@@ -69,7 +69,18 @@ class RoboFile extends Tasks {
     foreach ($commit_hashes as $hash) {
       exec("git log --format=%B -n 1 $hash", $log);
       $log = implode(';', array_filter($log));
+
+      // Don't record last release commit.
+      if ($log == "Release $last_version") {
+        continue;
+      }
+
       $changes[] = "* $log ($hash)";
+    }
+
+    if (empty($changes)) {
+      $this->say('No Changes to release.');
+      return;
     }
 
     // Set module and profile version. Then update the changelog.
@@ -93,7 +104,7 @@ class RoboFile extends Tasks {
     // used in another CircleCI task.
     $result = $this->taskGitHubRelease($version)
       ->accessToken(getenv('GITHUB_TOKEN'))
-      ->uri($github_info['name'] . '/' . $github_info['name'])
+      ->uri($github_info['owner'] . '/' . $github_info['name'])
       ->description("Release $version")
       ->changes($changes)
       ->run();

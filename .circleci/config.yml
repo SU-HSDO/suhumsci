@@ -196,9 +196,8 @@ workflows:
             - run-code-coverage
           filters:
             branches:
-              ignore: /^violinist.*/
-            tags:
-              ignore: /.*/
+              ignore:
+                - /violinist.*/
       # Create a release when a release branch has merged into develop.
       - run-github-release:
           requires:
@@ -209,8 +208,6 @@ workflows:
           filters:
             branches:
               only: develop
-            tags:
-              ignore: /.*/
       # Tags are only created on successful code. Deploy the tag after creation.
       # This will trigger after the release is created above.
       - run-deploy-tag:

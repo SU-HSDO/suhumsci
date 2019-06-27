@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Contains ui_patterns_field_variants.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\ui_patterns\Definition\PatternDefinition;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * Implements hook_help().
+ */
+function ui_patterns_field_variants_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the ui_patterns_field_variants module.
+    case 'help.page.ui_patterns_field_variants':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allows the configuration of UI Pattern Variants through field values') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_ui_patterns_layouts_display_settings_form_alter().
+ */
+function ui_patterns_field_variants_ui_patterns_layouts_display_settings_form_alter(array &$form, PatternDefinition $definition, array $configuration) {
+  $current_request = \Drupal::requestStack()->getCurrentRequest();
+  $entity_type = $current_request->attributes->get('entity_type_id');
+  $entity_bundle = $current_request->attributes->get('bundle');
+
+  /** @var \Drupal\Core\Entity\EntityFieldManager $field_manager */
+  $field_manager = \Drupal::service('entity_field.manager');
+  $fields = $field_manager->getFieldDefinitions($entity_type, $entity_bundle);
+
+  // Filter out fields that aren't config fields or allow multiple values.
+  $fields = array_filter($fields, function ($field_definition) {
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+    $field_storage = $field_definition->getFieldStorageDefinition();
+    return $field_definition instanceof FieldConfig && $field_storage->getCardinality() == 1;
+  });
+
+  // Walk through the array of fields to get just the label of the object.
+  array_walk($fields, function (&$field_definition) {
+    $field_definition = $field_definition->label();
+  });
+
+  $form['variant']['#options']['_field'] = t('- Use Field Value -');
+  $form['variant_field'] = [
+    '#type' => 'select',
+    '#title' => t('Field'),
+    '#options' => $fields,
+    '#default_value' => $configuration['pattern']['variant_field'] ?? NULL,
+    '#states' => [
+      'visible' => [
+        ':input[name="layout_configuration[pattern][variant]"]' => ['value' => '_field'],
+      ]
+    ]
+  ];
+
+  $form['variant_field_values'] = [
+    '#type' => 'details',
+    '#title' => t('Variant Values'),
+    '#tree' => TRUE,
+    '#states' => [
+      'visible' => [
+        ':input[name="layout_configuration[pattern][variant]"]' => ['value' => '_field'],
+      ]
+    ]
+  ];
+
+  foreach ($form['variant']['#options'] as $key => $label) {
+    if ($key == '_field') {
+      continue;
+    }
+    // TODO: find a way to render the field's form.
+    $form['variant_field_values'][$key] = [
+      '#type' => 'textfield',
+      '#title' => t('Field value for @variant variant', ['@variant' => $label]),
+      '#defautl_value' => $configuration['pattern']['variant_field_values'][$key] ?? NULL,
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function ui_patterns_field_variants_preprocess_ds_entity_view(&$variables) {
+  // If the display suite is using a pattern & it's configured to take the field
+  // value.
+  if ($variables['content']['#type'] == 'pattern' && $variables['content']['#variant'] == '_field') {
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+    $entity = $variables['content']['#entity'];
+
+    $pattern_settings = $variables['content']['#ds_configuration']['layout']['settings']['pattern'];
+
+    $field_variant = $pattern_settings['variant_field'];
+
+    // Grab the field value from the entity and use it's mapped variant.
+    if ($entity->hasField($field_variant)) {
+      $field_value = $entity->get($field_variant)->getString();
+      $variant = array_search($field_value, $pattern_settings['variant_field_values']);
+
+      $variables['content']['#variant'] = $variant ?: 'default';
+    }
+  }
+}

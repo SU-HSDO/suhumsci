@@ -4,10 +4,32 @@ status: true
 dependencies:
   config:
     - entity_browser.browser.image_browser
+    - field.field.paragraph.hs_hero_image.field_hs_hero_body
     - field.field.paragraph.hs_hero_image.field_hs_hero_image
+    - field.field.paragraph.hs_hero_image.field_hs_hero_link
+    - field.field.paragraph.hs_hero_image.field_hs_hero_title
     - paragraphs.paragraphs_type.hs_hero_image
   module:
     - entity_browser
+    - field_group
+    - link
+    - text
+third_party_settings:
+  field_group:
+    group_overlay:
+      children:
+        - field_hs_hero_title
+        - field_hs_hero_body
+        - field_hs_hero_link
+      parent_name: ''
+      weight: 1
+      format_type: details
+      format_settings:
+        id: ''
+        classes: ''
+        open: false
+        required_fields: false
+      label: Overlay
 _core:
   default_config_hash: 9gjvnxLjhl7QzbryAhyCD5MhdBr3m342YvJZktCuubw
 id: paragraph.hs_hero_image.default
@@ -15,6 +37,14 @@ targetEntityType: paragraph
 bundle: hs_hero_image
 mode: default
 content:
+  field_hs_hero_body:
+    weight: 3
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
   field_hs_hero_image:
     weight: 0
     settings:
@@ -29,6 +59,22 @@ content:
       field_widget_replace: false
     third_party_settings: {  }
     type: entity_browser_entity_reference
+    region: content
+  field_hs_hero_link:
+    weight: 4
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_hs_hero_title:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
 hidden:
   created: true

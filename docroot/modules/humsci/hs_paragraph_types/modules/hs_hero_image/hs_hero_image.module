@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * hs_hero_image.module
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function hs_hero_image_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  if ($entity->getEntityTypeId() == 'paragraph' && $entity->bundle() == 'hs_hero_image') {
+    // If the paragraph has any of the text fields populated, switch to the mode
+    // that uses the overlay pattern.
+    if (
+      $entity->get('field_hs_hero_title')->count() ||
+      $entity->get('field_hs_hero_body')->count() ||
+      $entity->get('field_hs_hero_link')->count()
+    ) {
+      $view_mode = 'hero_with_overlay';
+    }
+  }
+}

@@ -407,8 +407,8 @@ class CircleCiCommand extends BltTasks {
     // the beginning of the db dump. Without this, we would get the text
     // "Warning: Permanently added the RSA host key for IP address" at the top
     // of the db dump.
-    $tasks[] = $this->taskDrush()->drush('')->rawArg("@$site.prod sql-connect");
-    $tasks[] = $this->taskDrush()->drush('')->rawArg("@$site.prod sql-dump > dump.sql");
+    $tasks[] = $this->taskDrush()->alias("$site.prod")->drush('sql-connect');
+    $tasks[] = $this->taskDrush()->alias("$site.prod")->drush('sql-dump')->rawArg('> dump.sql');
 
     // At the end of the drush command, we need to remove the ssh connection
     // closed message.
@@ -416,7 +416,7 @@ class CircleCiCommand extends BltTasks {
       ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
 
     $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
-    $tasks[] = $this->taskDrush()->drush('')->rawArg('@self sql-cli < clean_dump.sql');
+    $tasks[] = $this->taskDrush()->drush('sql-cli ')->rawArg('< clean_dump.sql');
     return $tasks;
   }
 

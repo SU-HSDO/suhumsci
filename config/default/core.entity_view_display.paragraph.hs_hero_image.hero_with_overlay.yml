@@ -7,6 +7,7 @@ dependencies:
     - field.field.paragraph.hs_hero_image.field_hs_hero_body
     - field.field.paragraph.hs_hero_image.field_hs_hero_image
     - field.field.paragraph.hs_hero_image.field_hs_hero_link
+    - field.field.paragraph.hs_hero_image.field_hs_hero_overlay_color
     - field.field.paragraph.hs_hero_image.field_hs_hero_title
     - paragraphs.paragraphs_type.hs_hero_image
   module:
@@ -30,7 +31,12 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
-          variant: default
+          variant: _field
+          variant_field: field_hs_hero_overlay_color
+          variant_field_values:
+            default: 00008b
+            red: 8b0000
+            green: '006400'
     regions:
       image:
         - field_hs_hero_image
@@ -106,4 +112,5 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-hidden: {  }
+hidden:
+  field_hs_hero_overlay_color: true

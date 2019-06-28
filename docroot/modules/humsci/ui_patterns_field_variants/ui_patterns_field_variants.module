@@ -72,6 +72,7 @@ function ui_patterns_field_variants_ui_patterns_layouts_display_settings_form_al
       ]
     ]
   ];
+  dpm($configuration);
 
   foreach ($form['variant']['#options'] as $key => $label) {
     if ($key == '_field') {
@@ -81,7 +82,7 @@ function ui_patterns_field_variants_ui_patterns_layouts_display_settings_form_al
     $form['variant_field_values'][$key] = [
       '#type' => 'textfield',
       '#title' => t('Field value for @variant variant', ['@variant' => $label]),
-      '#defautl_value' => $configuration['pattern']['variant_field_values'][$key] ?? NULL,
+      '#default_value' => $configuration['pattern']['variant_field_values'][$key] ?? NULL,
     ];
   }
 }

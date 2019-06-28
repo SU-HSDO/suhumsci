@@ -226,7 +226,9 @@ class CircleCiCommand extends BltTasks {
     $collection->addTaskList($this->setupSite());
     $collection->addTask($this->installDrupal('config_installer'));
 
-    $collection->addTask($this->taskDrush()->drush('config-import')->option('yes'));
+    $collection->addTask($this->taskDrush()
+      ->drush('config-import')
+      ->option('yes'));
     $collection->addTaskList($this->runBehatTests(['global', 'install']));
     return $collection->run();
   }
@@ -408,7 +410,10 @@ class CircleCiCommand extends BltTasks {
     // "Warning: Permanently added the RSA host key for IP address" at the top
     // of the db dump.
     $tasks[] = $this->taskDrush()->alias("$site.prod")->drush('sql-connect');
-    $tasks[] = $this->taskDrush()->alias("$site.prod")->drush('sql-dump')->rawArg('> dump.sql');
+    $tasks[] = $this->taskDrush()
+      ->alias("$site.prod")
+      ->drush('sql-dump')
+      ->rawArg('> dump.sql');
 
     // At the end of the drush command, we need to remove the ssh connection
     // closed message.
@@ -416,7 +421,9 @@ class CircleCiCommand extends BltTasks {
       ->exec("grep -v '^Connection to' $docroot/dump.sql > $docroot/clean_dump.sql");
 
     $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
-    $tasks[] = $this->taskDrush()->drush('sql-cli ')->rawArg('< clean_dump.sql');
+    $tasks[] = $this->taskDrush()
+      ->drush('sql-cli ')
+      ->rawArg('< clean_dump.sql');
     return $tasks;
   }
 
@@ -469,7 +476,7 @@ class CircleCiCommand extends BltTasks {
       ->exec('vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer');
     $tasks[] = $this->taskFilesystemStack()->mkdir('artifacts/phpcs');
     $tasks[] = $this->taskExecStack()
-      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . $docroot. '/' . static::TEST_DIR)
+      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . $docroot . '/' . static::TEST_DIR)
       ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . $docroot . '/' . static::TEST_DIR);
     return $tasks;
   }

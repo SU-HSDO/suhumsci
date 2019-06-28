@@ -1,14 +1,30 @@
-#main-content .hero-text-overlay {
+.hero-text-overlay {
   position: relative;
-  .image:before {
-    background-image: linear-gradient(90deg, #00505c 14.95%, rgba(255, 255, 255, 0) 99.98%);
-    bottom: 0;
-    content: "";
-    display: flex;
-    height: 100%;
-    position: absolute;
-    width: 100%;
-    z-index: 1;
+  .image {
+    &:before {
+      bottom: 0;
+      content: "";
+      display: flex;
+      height: 100%;
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+    }
+    &.color-default:before {
+      background-image: linear-gradient(90deg, #00505c 14.95%, rgba(255, 255, 255, 0) 99.98%);
+    }
+    &.color-purple:before {
+      background-image: linear-gradient(90deg, #53284f 14.95%, rgba(255, 255, 255, 0) 99.98%);
+    }
+    &.color-paloalto:before {
+      background-image: linear-gradient(90deg, #175e54 14.95%, rgba(255, 255, 255, 0) 99.98%);
+    }
+    &.color-coolgrey:before {
+      background-image: linear-gradient(90deg, #4d4f53 14.95%, rgba(255, 255, 255, 0) 99.98%);
+    }
+    &.color-brown:before {
+      background-image: linear-gradient(90deg, #5e3032 14.95%, rgba(255, 255, 255, 0) 99.98%);
+    }
   }
   .overlay-text {
     border: 1px solid #fff;
@@ -33,35 +49,38 @@
     p {
       margin-bottom: 35px;
     }
-    a, .decanter-button {
-      background-color: transparent;
-      border: 1px solid #fff;
+  }
+}
+
+#main-content .hero-text-overlay .overlay-text {
+  a, .decanter-button {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-weight: 300;
+    padding: 1rem 2rem 1.5rem;
+    text-decoration: none;
+  }
+  a {
+    &:hover, &:focus {
+      background: #007e8f;
       color: #fff;
-      font-weight: 300;
-      padding: 1rem 2rem 1.5rem;
       text-decoration: none;
+      transition: background-color 0.5s ease;
     }
-    a {
-      &:hover, &:focus {
-        background: #007E8F;
-        color: #FFF;
-        text-decoration: none;
-        transition: background-color 0.5s ease;
-      }
-    }
-    .decanter-button {
-      &:hover, &:focus {
-        background: #007E8F;
-        color: #FFF;
-        text-decoration: none;
-        transition: background-color 0.5s ease;
-      }
+  }
+  .decanter-button {
+    &:hover, &:focus {
+      background: #007e8f;
+      color: #fff;
+      text-decoration: none;
+      transition: background-color 0.5s ease;
     }
   }
 }
 
 @media (min-width: 1500px) {
-  #main-content .hero-text-overlay .image {
+  .hero-text-overlay .image {
     height: 100%;
     max-height: 760px;
     object-fit: cover;
@@ -71,22 +90,36 @@
 }
 
 @media (max-width: 1200px) {
-  #main-content .hero-text-overlay .overlay-text {
+  .hero-text-overlay .overlay-text {
     width: 45%;
   }
 }
 
 @media (max-width: 1100px) {
-  #main-content .hero-text-overlay .overlay-text {
+  .hero-text-overlay .overlay-text {
     margin: 0 0 0 3em;
     width: 55%;
   }
 }
 
 @media (max-width: 1050px) {
-  #main-content .hero-text-overlay {
-    .image:before {
-      background-image: linear-gradient(90deg, #00505c 29.95%, rgba(0, 80, 92, 0) 150%);
+  .hero-text-overlay {
+    .image {
+      &.color-default:before {
+        background-image: linear-gradient(90deg, #00505c 29.95%, rgba(255, 255, 255, 0) 150%);
+      }
+      &.color-purple:before {
+        background-image: linear-gradient(90deg, #53284f 29.95%, rgba(255, 255, 255, 0) 150%);
+      }
+      &.color-paloalto:before {
+        background-image: linear-gradient(90deg, #175e54 29.95%, rgba(255, 255, 255, 0) 150%);
+      }
+      &.color-coolgrey:before {
+        background-image: linear-gradient(90deg, #4d4f53 29.95%, rgba(255, 255, 255, 0) 150%);
+      }
+      &.color-brown:before {
+        background-image: linear-gradient(90deg, #5e3032 29.95%, rgba(255, 255, 255, 0) 150%);
+      }
     }
     .overlay-text {
       margin: 0 0 0 1em;
@@ -97,23 +130,65 @@
 }
 
 @media (max-width: 975px) {
-  #main-content .hero-text-overlay {
-    .image:before {
-      background-image: linear-gradient(0deg, #00505c 50.95%, rgba(0, 80, 92, 0) 85%);
+  .hero-text-overlay {
+    .image {
+      &.color-default:before {
+        background-image: linear-gradient(0deg, #00505c 50.95%, rgba(255, 255, 255, 0) 85%);
+      }
+      &.color-purple:before {
+        background-image: linear-gradient(0deg, #53284f 50.95%, rgba(255, 255, 255, 0) 85%);
+      }
+      &.color-paloalto:before {
+        background-image: linear-gradient(0deg, #175e54 50.95%, rgba(255, 255, 255, 0) 85%);
+      }
+      &.color-coolgrey:before {
+        background-image: linear-gradient(0deg, #4d4f53 50.95%, rgba(255, 255, 255, 0) 85%);
+      }
+      &.color-brown:before {
+        background-image: linear-gradient(0deg, #5e3032 50.95%, rgba(255, 255, 255, 0) 85%);
+      }
     }
     .overlay-text {
-      background: #00505c;
       border: none;
       margin: 0;
       position: relative;
       transform: none;
       width: 100%;
+      &.color-default {
+        background: #00505c;
+      }
+      &.color-purple {
+        background: #53284f;
+      }
+      &.color-paloalto {
+        background: #175e54;
+      }
+      &.color-coolgrey {
+        background: #4d4f53;
+      }
+      &.color-brown {
+        background: #5e3032;
+      }
     }
   }
 }
 
 @media (max-width: 576px) {
-  #main-content .hero-text-overlay .image:before {
-    background-image: linear-gradient(0deg, #00505c 39.95%, rgba(0, 80, 92, 0) 95%);
+  .hero-text-overlay .image {
+    &.color-default:before {
+      background-image: linear-gradient(0deg, #00505c 39.95%, rgba(255, 255, 255, 0) 95%);
+    }
+    &.color-purple:before {
+      background-image: linear-gradient(0deg, #53284f 39.95%, rgba(255, 255, 255, 0) 95%);
+    }
+    &.color-paloalto:before {
+      background-image: linear-gradient(0deg, #175e54 39.95%, rgba(255, 255, 255, 0) 95%);
+    }
+    &.color-coolgrey:before {
+      background-image: linear-gradient(0deg, #4d4f53 39.95%, rgba(255, 255, 255, 0) 95%);
+    }
+    &.color-brown:before {
+      background-image: linear-gradient(0deg, #5e3032 39.95%, rgba(255, 255, 255, 0) 95%);
+    }
   }
 }

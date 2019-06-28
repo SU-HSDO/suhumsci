@@ -413,7 +413,7 @@ class CircleCiCommand extends BltTasks {
     // At the end of the drush command, we need to remove the ssh connection
     // closed message.
     $tasks[] = $this->taskExecStack()
-      ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
+      ->exec("grep -v '^Connection to' $docroot/dump.sql > $docroot/clean_dump.sql");
 
     $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
     $tasks[] = $this->taskDrush()->drush('sql-cli ')->rawArg('< clean_dump.sql');

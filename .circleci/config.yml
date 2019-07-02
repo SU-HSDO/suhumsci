@@ -2,12 +2,6 @@
 
 # Reusable steps.
 
-## Copies .circle/Robofile to the repository root.
-copy_robo: &copy_robo
-  run:
-    name: Copy RoboFile.php
-    command: cp .circleci/RoboFile.php .
-
 ## Add SSH Key
 add_ssh: &add_ssh
   add_ssh_keys:
@@ -54,11 +48,10 @@ behat_tests_first: &behat_tests_first
     - *add_ssh
     - *add_known_hosts
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
-        command: robo job:run-behat-tests-first
+        command: vendor/bin/blt circleci:behat:first
     - save_cache: *save_cache
     - store_test_results:
         path: /var/www/html/artifacts/behat
@@ -72,11 +65,10 @@ behat_tests_second: &behat_tests_second
     - *add_ssh
     - *add_known_hosts
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Run Behat tests
-        command: robo job:run-behat-tests-second
+        command: vendor/bin/blt circleci:behat:second
     - save_cache: *save_cache
     - store_test_results:
         path: /var/www/html/artifacts/behat
@@ -88,14 +80,13 @@ fresh_install_tests: &fresh_install_tests
   <<: *defaults
   steps:
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Run PHPUnit tests
-        command: robo job:run-unit-tests
+        command: vendor/bin/blt circleci:phpunit
     - run:
         name: Generate code coverage report
-        command: robo job:run-fresh-install-behat
+        command: vendor/bin/blt circleci:behat:install
     - store_test_results:
         path: /var/www/html/artifacts/phpunit
     - store_artifacts:
@@ -107,11 +98,10 @@ code_coverage: &code_coverage
   <<: *defaults
   steps:
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Generate code coverage report
-        command: robo job:generate-coverage-report
+        command: vendor/bin/blt circleci:phpunit:coverage
     - store_artifacts:
         path: /var/www/html/artifacts
     - save_cache: *save_cache
@@ -151,14 +141,13 @@ github_release: &github_release
   steps:
     - *add_ssh
     - checkout
-    - *copy_robo
     - restore_cache: *restore_cache
     - run:
         name: Create Github Release
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
-          robo job:github-release
+          vendor/bin/blt circleci:github:release
 
 # Declare all of the jobs we should run.
 version: 2

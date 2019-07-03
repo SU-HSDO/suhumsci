@@ -5,11 +5,6 @@ A "Launch" is any change to a domain that can impact visitors.
 ## Several days before
 1. Schedule the launch with the site owner including a content freeze the day of.
 1. Add the new domain to the [production environment](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/domains)
-1. Add the new domain to the SAML configuration [https://spdb.stanford.edu/spconfigs/3931/edit](https://spdb.stanford.edu/spconfigs/3931/edit)
-1. Ensure the new domain is in the "Trusted Domains" for the SAML setup:
-   1. Execute `blt humsci:keys` to get the keys and SAML configuration
-   1. Modify the file [acquia_configs.php](../keys/saml/acquia_configs.php) to ensure the `$config['trusted.url.domains']` array includes the new domain
-   1. If any changes were made, push the keys back to Acquia `blt humsci:keys:send prod`
 1. Schedule the release of the domain with the appropriate people.
    * Check who owns vhost and that it can be changed by SWS or AS Central Infrastructure Applications (CIA) (using one of the following methods):
      1. `host foo.stanford.edu`

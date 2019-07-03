@@ -133,9 +133,6 @@ class CapxCredsForm extends ConfigFormBase {
     $this->configFactory->getEditable('migrate_plus.migration.hs_capx')
       ->set('status', TRUE)
       ->save();
-    $this->configFactory->getEditable('migrate_plus.migration.hs_capx_images')
-      ->set('status', TRUE)
-      ->save();
 
     Cache::invalidateTags(['migration_plugins']);
   }

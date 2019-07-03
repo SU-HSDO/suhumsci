@@ -241,3 +241,17 @@ function su_humsci_profile_page_attachments(array &$attachments) {
     $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_key_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (empty($form['settings']['provider_section']['key_provider']['#default_value'])) {
+    return;
+  }
+  // Obscure the encrypted config values.
+  if ($form['settings']['provider_section']['key_provider']['#default_value'] == 'encrypted_config') {
+    $form['settings']['input_section']['key_input_settings']['key_value']['#type'] = 'password';
+    $form['settings']['input_section']['key_input_settings']['key_value']['#attributes']['disabled'] = TRUE;
+  }
+}

@@ -5,6 +5,7 @@ dependencies:
   module:
     - editor
     - entity_embed
+    - hs_table_filter
     - linkit
 name: 'Full HTML'
 format: full_html
@@ -14,37 +15,37 @@ filters:
     id: editor_file_reference
     provider: editor
     status: true
-    weight: -48
+    weight: -50
     settings: {  }
   entity_embed:
     id: entity_embed
     provider: entity_embed
     status: true
-    weight: -43
+    weight: -45
     settings: {  }
   filter_align:
     id: filter_align
     provider: filter
     status: true
-    weight: -47
+    weight: -49
     settings: {  }
   filter_autop:
     id: filter_autop
     provider: filter
     status: false
-    weight: -46
+    weight: -41
     settings: {  }
   filter_caption:
     id: filter_caption
     provider: filter
     status: true
-    weight: -42
+    weight: -46
     settings: {  }
   filter_html:
     id: filter_html
     provider: filter
     status: false
-    weight: -50
+    weight: -43
     settings:
       allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <table class="decanter-table--borderless"> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title class="decanter-button decanter-button--big decanter-button--secondary decanter-more-link decanter-external-link"> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button> <p class="decanter-font-lead decanter-font-splash decanter-short-line-length decanter-caption decanter-credits"> <h1> <pre> <span class="emphasized-text">'
       filter_html_help: true
@@ -53,13 +54,13 @@ filters:
     id: filter_htmlcorrector
     provider: filter
     status: true
-    weight: -44
+    weight: -47
     settings: {  }
   filter_html_escape:
     id: filter_html_escape
     provider: filter
     status: false
-    weight: -49
+    weight: -42
     settings: {  }
   filter_html_image_secure:
     id: filter_html_image_secure
@@ -71,13 +72,19 @@ filters:
     id: filter_url
     provider: filter
     status: true
-    weight: -45
+    weight: -48
     settings:
       filter_url_length: 72
   linkit:
     id: linkit
     provider: linkit
     status: true
-    weight: -41
+    weight: -44
     settings:
       title: true
+  hs_table_filter:
+    id: hs_table_filter
+    provider: hs_table_filter
+    status: false
+    weight: -39
+    settings: {  }

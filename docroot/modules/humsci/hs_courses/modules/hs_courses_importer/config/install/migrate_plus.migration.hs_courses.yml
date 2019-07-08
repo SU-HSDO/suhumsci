@@ -1,4 +1,3 @@
-uuid: accb1872-4298-4ae3-b66e-774497d16555
 langcode: en
 status: true
 dependencies:
@@ -11,14 +10,14 @@ id: hs_courses
 class: null
 field_plugin_method: null
 cck_plugin_method: null
-migration_tags: null
+migration_tags: {  }
 migration_group: hs_courses
 label: 'Course importer'
 source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: http
-  urls: /api/hs_courses
+  urls: 'http://events.stanford.edu/xml/drupal/v2.php?organization=0'
   data_parser_plugin: simple_xml
   item_selector: //courses/course/sections/section
   fields:
@@ -134,6 +133,7 @@ process:
   body/format: constants/basic_html
   field_hs_course_grading: grading
   field_hs_course_code: code
+  field_hs_course_code_int: code
   field_hs_course_id: course_id
   field_hs_course_requirements: requirements
   field_hs_course_section_id: section_id
@@ -227,13 +227,20 @@ process:
     -
       plugin: substr
       start: 10
+  link_query:
+    -
+      plugin: concat
+      source:
+        - subject
+        - code
+    -
+      plugin: urlencode
   field_hs_course_link:
     -
       plugin: concat
       source:
         - constants/link
-        - subject
-        - code
+        - '@link_query'
   field_hs_course_section_days:
     -
       plugin: str_replace

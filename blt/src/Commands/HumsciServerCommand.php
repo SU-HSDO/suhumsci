@@ -260,32 +260,7 @@ class HumsciServerCommand extends AcHooksCommand {
     $domains = $this->humsciLetsEncryptList($environment);
     $primary_domain = array_shift($domains);
 
-    $file = $this->askChoice('Which file would you like to get?', [
-      '- All -',
-      'Certificate',
-      'Private Key',
-      'Intermediate Certificates',
-    ], 'Certificate');
-    switch ($file) {
-      case '- All -':
-        $files = [
-          "$primary_domain.cer",
-          "$primary_domain.key",
-          'ca.cer',
-        ];
-        break;
-      case 'Private Key':
-        $files = ["$primary_domain.key"];
-        break;
-
-      case 'Intermediate Certificates':
-        $files = ['ca.cer'];
-        break;
-
-      default:
-        $files = ["$primary_domain.cer"];
-        break;
-    }
+    $files = $this->getWhichCertFiles($primary_domain);
 
     foreach ($files as $file) {
       $shell_command = "cd ~ && cat .acme.sh/$primary_domain/$file";
@@ -309,6 +284,46 @@ class HumsciServerCommand extends AcHooksCommand {
         ->arg($php_command)
         ->run();
     }
+  }
+
+  /**
+   * Ask the user and get which cert files to display.
+   *
+   * @param string $primary_domain
+   *   Primary domain on the cert.
+   *
+   * @return array
+   *   List of file names.
+   */
+  protected function getWhichCertFiles($primary_domain) {
+    $file = $this->askChoice('Which file would you like to get?', [
+      '- All -',
+      'Certificate',
+      'Private Key',
+      'Intermediate Certificates',
+    ], 'Certificate');
+    switch ($file) {
+      case '- All -':
+        $files = [
+          "$primary_domain.cer",
+          "$primary_domain.key",
+          'ca.cer',
+        ];
+        break;
+
+      case 'Private Key':
+        $files = ["$primary_domain.key"];
+        break;
+
+      case 'Intermediate Certificates':
+        $files = ['ca.cer'];
+        break;
+
+      default:
+        $files = ["$primary_domain.cer"];
+        break;
+    }
+    return $files;
   }
 
   /**

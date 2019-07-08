@@ -4,7 +4,7 @@ Feature: Install State Basic Page
   As an administrator
   I should have default content types, permissions, and content already created.
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @javascript @MediaCleanup @testthis
   Scenario: Test basic page with Hero paragraph creation
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
@@ -14,6 +14,10 @@ Feature: Install State Basic Page
     And I wait for AJAX to finish
     Then I should see "Hero Image"
     And I should see "Overlay Details"
+    And I should not see "Optionally add some overlay text on top of the image"
+    And I should not see "Body"
+    And I should not see "Link text"
+    And I should not see "Overlay Color"
     Then I click the "summary:contains(Hero Image)" element
     And I press "Continue"
     Then I wait for AJAX to finish
@@ -29,6 +33,10 @@ Feature: Install State Basic Page
     Then I exit iframe
     And I wait for AJAX to finish
     Then I click the "summary:contains(Overlay Details)" element
+    And I should see "Optionally add some overlay text on top of the image"
+    And I should see "Body"
+    And I should see "Link text"
+    And I should see "Overlay Color"
     And I fill in "field_hs_page_hero[0][subform][field_hs_hero_title][0][value]" with "Overlay Title"
     And I fill in wysiwyg "Body" with "Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem."
     And I fill in "URL" with "http://google.com"

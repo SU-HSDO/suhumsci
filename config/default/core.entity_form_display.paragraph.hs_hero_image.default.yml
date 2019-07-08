@@ -1,4 +1,4 @@
-uuid: 84d0b79d-b661-4294-ae40-8f7b2eaf4e6f
+uuid: f0c5afb0-e9e6-4035-a1ae-499a91a6f530
 langcode: en
 status: true
 dependencies:
@@ -13,80 +13,59 @@ dependencies:
   module:
     - color_field
     - entity_browser
-    - field_group
     - link
     - text
-third_party_settings:
-  field_group:
-    group_overlay:
-      children:
-        - field_hs_hero_title
-        - field_hs_hero_body
-        - field_hs_hero_link
-        - field_hs_hero_overlay_color
-      parent_name: ''
-      weight: 1
-      format_type: details
-      format_settings:
-        id: ''
-        classes: ''
-        open: false
-        required_fields: false
-      label: Overlay
-_core:
-  default_config_hash: 9gjvnxLjhl7QzbryAhyCD5MhdBr3m342YvJZktCuubw
 id: paragraph.hs_hero_image.default
 targetEntityType: paragraph
 bundle: hs_hero_image
 mode: default
 content:
   field_hs_hero_body:
+    type: text_textarea
     weight: 3
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_hs_hero_image:
+    type: entity_browser_entity_reference
     weight: 0
+    region: content
     settings:
       entity_browser: image_browser
       field_widget_display: rendered_entity
-      field_widget_edit: true
-      field_widget_remove: true
-      open: true
-      selection_mode: selection_append
       field_widget_display_settings:
         view_mode: thumbnail
+      field_widget_edit: true
+      field_widget_remove: true
+      selection_mode: selection_append
       field_widget_replace: false
+      open: false
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_hs_hero_link:
+    type: link_default
     weight: 4
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_hs_hero_overlay_color:
-    weight: 5
-    settings:
-      default_colors: '#00008B,#8B0000,#006400'
-    third_party_settings: {  }
     type: color_field_widget_box
+    weight: 5
     region: content
+    settings:
+      default_colors: '#00505C,#53284F,#175E54,#4D4F53,#5E3032'
+    third_party_settings: {  }
   field_hs_hero_title:
+    type: string_textfield
     weight: 2
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
 hidden:
   created: true
   status: true
-  uid: true

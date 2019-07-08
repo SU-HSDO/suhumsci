@@ -4,6 +4,42 @@ Feature: Install State Basic Page
   As an administrator
   I should have default content types, permissions, and content already created.
 
+  @api @safe @javascript @MediaCleanup
+  Scenario: Test basic page with Hero paragraph creation
+    Given I am logged in as a user with the "Contributor" role
+    Then I am on "/node/add/hs_basic_page"
+    And I set window dimensions 1200 x 3000
+    Then I fill in "Title" with "Demo Basic Page"
+    And I press "field_hs_page_hero_hs_hero_image_add_more"
+    And I wait for AJAX to finish
+    Then I should see "Hero Image"
+    And I should see "Overlay Details"
+    Then I click the "summary:contains(Hero Image)" element
+    And I press "Continue"
+    Then I wait for AJAX to finish
+    Then I switch to "entity_browser_iframe_image_browser" iframe
+    And I wait for AJAX to finish
+    Then I click "Embed a File"
+    And I wait for AJAX to finish
+    Then I drop "images/logo.jpg" file into dropzone
+    And I press "Add to Library"
+    Then I wait for AJAX to finish
+    And I press "Continue"
+    And I wait for AJAX to finish
+    Then I exit iframe
+    And I wait for AJAX to finish
+    Then I click the "summary:contains(Overlay Details)" element
+    And I fill in "field_hs_page_hero[0][subform][field_hs_hero_title][0][value]" with "Overlay Title"
+    And I fill in wysiwyg "Body" with "Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem."
+    And I fill in "URL" with "http://google.com"
+    And I fill in "Link text" with "Google CTA"
+    And I press "#4D4F53"
+    And I press "Save"
+    Then I should see 1 "img" elements in the "content" region
+    And I should see "Overlay Title"
+    And I should see "Vivamus in erat ut urna cursus vestibulum"
+    And I should see "Google CTA"
+
   @api @safe
   Scenario: Test basic page with postcard paragraph creation
     Given I am logged in as a user with the "Contributor" role

@@ -310,6 +310,10 @@ class CircleCiCommand extends BltTasks {
     if ($partial_config) {
       $config_import->option('partial');
     }
+    $tasks[] = $this->taskDrush()
+      ->drush('cdel')
+      ->arg('hs_courses_importer.importer_settings')
+      ->option('yes');
 
     $tasks[] = $config_import;
     $tasks[] = $this->taskDrush()->drush('cron');

@@ -1,18 +1,13 @@
-@mixin color-select($color, $max-width : 0) {
-  @if ($max-width == 1050px){
-    @media (max-width: 1050px) {
-      background-image: linear-gradient(90deg, $color 29.95%, rgba(255, 255, 255, 0) 150%);
-    }
-  } @else if ($max-width == 975px) {
-    @media (max-width: 975px) {
-      background-image: linear-gradient(0deg, $color 50.95%, rgba(255, 255, 255, 0) 85%);
-    }
-  } @else if ($max-width == 576px) {
-    @media (max-width: 576px) {
-      background-image: linear-gradient(0deg, $color 39.95%, rgba(255, 255, 255, 0) 95%);
-    }
-  } @else {
-    background-image: linear-gradient(90deg, $color 14.95%, rgba(255, 255, 255, 0) 99.98%);
+@mixin color-gradient($color) {
+  background-image: linear-gradient(90deg, $color 14.95%, rgba(255, 255, 255, 0) 99.98%);
+  @media (max-width: 1050px) {
+    background-image: linear-gradient(90deg, $color 29.95%, rgba(255, 255, 255, 0) 150%);
+  }
+  @media (max-width: 975px) {
+    background-image: linear-gradient(0deg, $color 50.95%, rgba(255, 255, 255, 0) 85%);
+  }
+  @media (max-width: 576px) {
+    background-image: linear-gradient(0deg, $color 39.95%, rgba(255, 255, 255, 0) 95%);
   }
 }
 
@@ -56,34 +51,19 @@
       position: absolute;
       width: 100%;
       z-index: 1;
-      @include color-select(#00505c);
-      @include color-select(#00505c, 1050px);
-      @include color-select(#00505c, 975px);
-      @include color-select(#00505c, 576px);
+      @include color-gradient(#00505c);
     }
     &.color-purple:before {
-      @include color-select(#53284f);
-      @include color-select(#53284f, 1050px);
-      @include color-select(#53284f, 975px);
-      @include color-select(#53284f, 576px);
+      @include color-gradient(#53284f);
     }
     &.color-paloalto:before {
-      @include color-select(#175e54);
-      @include color-select(#175e54, 1050px);
-      @include color-select(#175e54, 975px);
-      @include color-select(#175e54, 576px);
+      @include color-gradient(#175e54);
     }
     &.color-coolgrey:before {
-      @include color-select(#4d4f53);
-      @include color-select(#4d4f53, 1050px);
-      @include color-select(#4d4f53, 975px);
-      @include color-select(#4d4f53, 576px);
+      @include color-gradient(#4d4f53);
     }
     &.color-brown:before {
-      @include color-select(#5e3032);
-      @include color-select(#5e3032, 1050px);
-      @include color-select(#5e3032, 975px);
-      @include color-select(#5e3032, 576px);
+      @include color-gradient(#5e3032);
     }
   }
 

@@ -1,3 +1,36 @@
+@mixin color-select($color, $max-width : 0) {
+  @if ($max-width == 1050px){
+    @media (max-width: 1050px) {
+      background-image: linear-gradient(90deg, $color 29.95%, rgba(255, 255, 255, 0) 150%);
+    }
+  } @else if ($max-width == 975px) {
+    @media (max-width: 975px) {
+      background-image: linear-gradient(0deg, $color 50.95%, rgba(255, 255, 255, 0) 85%);
+    }
+  } @else if ($max-width == 576px) {
+    @media (max-width: 576px) {
+      background-image: linear-gradient(0deg, $color 39.95%, rgba(255, 255, 255, 0) 95%);
+    }
+  } @else {
+    background-image: linear-gradient(90deg, $color 14.95%, rgba(255, 255, 255, 0) 99.98%);
+  }
+}
+
+@mixin color-background($color) {
+  background: $color;
+}
+
+
+@mixin color-hover($color) {
+  a,
+  .decanter-button {
+    &:hover,
+    &:focus {
+      background: $color;
+    }
+  }
+}
+
 @media (min-width: 1500px) {
   .hero-text-overlay {
     .image,
@@ -23,23 +56,34 @@
       position: absolute;
       width: 100%;
       z-index: 1;
-      background-image: linear-gradient(90deg, #00505c 14.95%, rgba(255, 255, 255, 0) 99.98%);
+      @include color-select(#00505c);
+      @include color-select(#00505c, 1050px);
+      @include color-select(#00505c, 975px);
+      @include color-select(#00505c, 576px);
     }
-
     &.color-purple:before {
-      background-image: linear-gradient(90deg, #53284f 14.95%, rgba(255, 255, 255, 0) 99.98%);
+      @include color-select(#53284f);
+      @include color-select(#53284f, 1050px);
+      @include color-select(#53284f, 975px);
+      @include color-select(#53284f, 576px);
     }
-
     &.color-paloalto:before {
-      background-image: linear-gradient(90deg, #175e54 14.95%, rgba(255, 255, 255, 0) 99.98%);
+      @include color-select(#175e54);
+      @include color-select(#175e54, 1050px);
+      @include color-select(#175e54, 975px);
+      @include color-select(#175e54, 576px);
     }
-
     &.color-coolgrey:before {
-      background-image: linear-gradient(90deg, #4d4f53 14.95%, rgba(255, 255, 255, 0) 99.98%);
+      @include color-select(#4d4f53);
+      @include color-select(#4d4f53, 1050px);
+      @include color-select(#4d4f53, 975px);
+      @include color-select(#4d4f53, 576px);
     }
-
     &.color-brown:before {
-      background-image: linear-gradient(90deg, #5e3032 14.95%, rgba(255, 255, 255, 0) 99.98%);
+      @include color-select(#5e3032);
+      @include color-select(#5e3032, 1050px);
+      @include color-select(#5e3032, 975px);
+      @include color-select(#5e3032, 576px);
     }
   }
 
@@ -58,8 +102,7 @@
     width: 35%;
     z-index: 2;
 
-    h2,
-    .title h2 {
+    h2 {
       font-size: 35px;
       font-weight: 300;
       line-height: 42px;
@@ -93,53 +136,23 @@
   }
 
   &.color-default {
-    a,
-    .decanter-button {
-      &:hover,
-      &:focus {
-        background: #007e8f;
-      }
-    }
+    @include color-hover(#007e8f);
   }
 
   &.color-purple {
-    a,
-    .decanter-button {
-      &:hover,
-      &:focus {
-        background: #ac53a6;
-      }
-    }
+    @include color-hover(#ac53a6);
   }
 
   &.color-paloalto {
-    a,
-    .decanter-button {
-      &:hover,
-      &:focus {
-        background: #267f87;
-      }
-    }
+    @include color-hover(#267f87);
   }
 
   &.color-coolgrey {
-    a,
-    .decanter-button {
-      &:hover,
-      &:focus {
-        background: #72757e;
-      }
-    }
+    @include color-hover(#72757e);
   }
 
   &.color-brown {
-    a,
-    .decanter-button {
-      &:hover,
-      &:focus {
-        background: #ab5f61;
-      }
-    }
+    @include color-hover(#ab5f61);
   }
 }
 
@@ -157,111 +170,39 @@
 }
 
 @media (max-width: 1050px) {
-  .hero-text-overlay {
-    .image {
-      &.color-default:before {
-        background-image: linear-gradient(90deg, #00505c 29.95%, rgba(255, 255, 255, 0) 150%);
-      }
-
-      &.color-purple:before {
-        background-image: linear-gradient(90deg, #53284f 29.95%, rgba(255, 255, 255, 0) 150%);
-      }
-
-      &.color-paloalto:before {
-        background-image: linear-gradient(90deg, #175e54 29.95%, rgba(255, 255, 255, 0) 150%);
-      }
-
-      &.color-coolgrey:before {
-        background-image: linear-gradient(90deg, #4d4f53 29.95%, rgba(255, 255, 255, 0) 150%);
-      }
-
-      &.color-brown:before {
-        background-image: linear-gradient(90deg, #5e3032 29.95%, rgba(255, 255, 255, 0) 150%);
-      }
-    }
-
-    .overlay-text {
-      margin: 0 0 0 1em;
-      padding: 35px;
-      width: 95%;
-    }
+  .hero-text-overlay .overlay-text {
+    margin: 0 0 0 1em;
+    padding: 35px;
+    width: 95%;
   }
 }
 
 @media (max-width: 975px) {
-  .hero-text-overlay {
-    .image {
-      &.color-default:before {
-        background-image: linear-gradient(0deg, #00505c 50.95%, rgba(255, 255, 255, 0) 85%);
-      }
+  .hero-text-overlay .overlay-text {
+    border: 0;
+    margin: 0;
+    position: relative;
+    transform: none;
+    width: 100%;
 
-      &.color-purple:before {
-        background-image: linear-gradient(0deg, #53284f 50.95%, rgba(255, 255, 255, 0) 85%);
-      }
-
-      &.color-paloalto:before {
-        background-image: linear-gradient(0deg, #175e54 50.95%, rgba(255, 255, 255, 0) 85%);
-      }
-
-      &.color-coolgrey:before {
-        background-image: linear-gradient(0deg, #4d4f53 50.95%, rgba(255, 255, 255, 0) 85%);
-      }
-
-      &.color-brown:before {
-        background-image: linear-gradient(0deg, #5e3032 50.95%, rgba(255, 255, 255, 0) 85%);
-      }
+    &.color-default {
+      @include color-background(#00505c);
     }
 
-    .overlay-text {
-      border: 0;
-      margin: 0;
-      position: relative;
-      transform: none;
-      width: 100%;
-
-      &.color-default {
-        background: #00505c;
-      }
-
-      &.color-purple {
-        background: #53284f;
-      }
-
-      &.color-paloalto {
-        background: #175e54;
-      }
-
-      &.color-coolgrey {
-        background: #4d4f53;
-      }
-
-      &.color-brown {
-        background: #5e3032;
-      }
-    }
-  }
-}
-
-@media (max-width: 576px) {
-  .hero-text-overlay .image {
-    &.color-default:before {
-      background-image: linear-gradient(0deg, #00505c 39.95%, rgba(255, 255, 255, 0) 95%);
+    &.color-purple {
+      @include color-background(#53284f);
     }
 
-    &.color-purple:before {
-      background-image: linear-gradient(0deg, #53284f 39.95%, rgba(255, 255, 255, 0) 95%);
+    &.color-paloalto {
+      @include color-background(#175e54);
     }
 
-    &.color-paloalto:before {
-      background-image: linear-gradient(0deg, #175e54 39.95%, rgba(255, 255, 255, 0) 95%);
+    &.color-coolgrey {
+      @include color-background(#4d4f53);
     }
 
-    &.color-coolgrey:before {
-      background-image: linear-gradient(0deg, #4d4f53 39.95%, rgba(255, 255, 255, 0) 95%);
-    }
-
-    &.color-brown:before {
-      background-image: linear-gradient(0deg, #5e3032 39.95%, rgba(255, 255, 255, 0) 95%);
+    &.color-brown {
+      @include color-background(#5e3032);
     }
   }
 }

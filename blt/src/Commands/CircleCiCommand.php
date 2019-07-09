@@ -310,6 +310,10 @@ class CircleCiCommand extends BltTasks {
     if ($partial_config) {
       $config_import->option('partial');
     }
+    $tasks[] = $this->taskDrush()
+      ->drush('sqlq')
+      ->arg('DELETE FROM config where name = "hs_courses_importer.importer_settings"')
+      ->drush('cr');
 
     $tasks[] = $config_import;
     $tasks[] = $this->taskDrush()->drush('cron');

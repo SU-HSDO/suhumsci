@@ -112,8 +112,11 @@ class CircleCiCommand extends BltTasks {
    *   Array of change strings.
    */
   protected function updateChangelog($version, array $changes = []) {
+    array_walk($changes, function (&$change) {
+      $change = '* ' . $change;
+    });
     $divider = str_repeat('-', 80);
-    $this->taskChangelog(__DIR__ . '/docs/CHANGELOG.md')
+    $this->taskChangelog($this->getConfigValue('repo.root') . '/docs/CHANGELOG.md')
       ->setHeader("$version\n{$divider}\n_Release Date: " . date("Y-m-d") . "_\n\n")
       ->anchor("# HumSci")
       ->setBody(implode("\n", $changes))
@@ -146,9 +149,9 @@ class CircleCiCommand extends BltTasks {
         if (strpos($module->getPath(), 'tests') !== FALSE) {
           continue;
         }
-        $info_file = Yaml::parseFile($module->getRealPath());
+        $info_file = Yaml::decode(file_get_contents($module->getRealPath()));
         $info_file['version'] = $version;
-        file_put_contents($module->getRealPath(), Yaml::dump($info_file));
+        file_put_contents($module->getRealPath(), Yaml::encode($info_file));
       }
     }
   }

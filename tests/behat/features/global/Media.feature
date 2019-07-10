@@ -46,7 +46,7 @@ Feature: Media
     Then I press "Upload" in the "content" region
     And the "Name" field should contain "logo.jpg"
     Then I fill in "Name" with "Demo Image File"
-    And I fill in "Alternative text" with "Stanford Logo"
+    And I fill in "Alternate text" with "Stanford Logo"
     And I press "Save"
     And I should see the success message "Saved 1 Media Items"
     And I should be on "admin/content/media"

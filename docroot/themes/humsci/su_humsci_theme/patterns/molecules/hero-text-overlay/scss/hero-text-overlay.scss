@@ -11,11 +11,6 @@
   }
 }
 
-@mixin color-background($color) {
-  background: $color;
-}
-
-
 @mixin color-hover($color) {
   a,
   .decanter-button {
@@ -97,6 +92,8 @@
 }
 
 #main-content .hero-text-overlay .overlay-text {
+  @include color-hover(#007e8f);
+
   a,
   .link a,
   .decanter-button {
@@ -113,10 +110,6 @@
       text-decoration: none;
       transition: background-color 0.5s ease;
     }
-  }
-
-  &.color-default {
-    @include color-hover(#007e8f);
   }
 
   &.color-purple {
@@ -159,30 +152,27 @@
 
 @media (max-width: 975px) {
   .hero-text-overlay .overlay-text {
+    background: #00505c;
     border: 0;
     margin: 0;
     position: relative;
     transform: none;
     width: 100%;
 
-    &.color-default {
-      @include color-background(#00505c);
-    }
-
     &.color-purple {
-      @include color-background(#53284f);
+      background: #53284f;
     }
 
     &.color-paloalto {
-      @include color-background(#175e54);
+      background: #175e54;
     }
 
     &.color-coolgrey {
-      @include color-background(#4d4f53);
+      background: #4d4f53;
     }
 
     &.color-brown {
-      @include color-background(#5e3032);
+      background: #5e3032;
     }
   }
 }

@@ -1,5 +1,25 @@
 # HumSci
 
+8.1.3
+--------------------------------------------------------------------------------
+_Release Date: 2019-07-10_
+
+* install dependencies for circleci when doing github release (535c749)
+* fixed blt github release command (22852a3)
+* Fix behat tests when cron takes too long because of course importers (5c5c740)
+* patched paragraphs for fix for latest field_groups (2386893)
+* MR-25 Row with Background CSS (#317) (da87383)
+* Url encode course link (#313) (5007558)
+* updated field_group and the configs that it is used in (2853362)
+* improved letsencrypt commands (82d9dfe)
+* reorderd full html filters (8191a5f)
+* HSD8-666 Provision gavin-wright.humsci.stanford.edu (#325) (eaad7e6)
+*  Moved CircleCI Robo to a BLT command (#318) (0debf0d)
+* Fix table header color (#324) (002607c)
+* updated launch document and filter order (3b9fecb)
+* modified github release contents from circleci (bc96e01)
+* dont deploy violinist branches (2e59ac1)
+
 8.1.2
 --------------------------------------------------------------------------------
 _Release Date: 2019-06-26_

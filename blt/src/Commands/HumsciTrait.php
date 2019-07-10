@@ -87,7 +87,7 @@ trait HumsciTrait {
    *   Last semver version.
    */
   protected function getLastVersion() {
-    $profile_info = Yaml::decode($this->getConfigValue('docroot') . '/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml');
+    $profile_info = Yaml::decode(file_get_contents($this->getConfigValue('docroot') . '/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml'));
     return $profile_info['version'];
   }
 

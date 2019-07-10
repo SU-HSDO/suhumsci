@@ -42,6 +42,7 @@ class CircleCiCommand extends BltTasks {
    * @command circleci:github:release
    */
   public function jobGithubRelease() {
+    $this->installDependencies()->run();
 
     $last_version = $this->getLastVersion();
     // Increment the last version by 1.

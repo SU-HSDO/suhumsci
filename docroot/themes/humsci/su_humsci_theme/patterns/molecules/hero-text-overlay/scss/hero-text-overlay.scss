@@ -1,11 +1,14 @@
 @mixin color-gradient($color) {
   background-image: linear-gradient(90deg, $color 14.95%, rgba(255, 255, 255, 0) 99.98%);
+
   @media (max-width: 1050px) {
     background-image: linear-gradient(90deg, $color 29.95%, rgba(255, 255, 255, 0) 150%);
   }
+
   @media (max-width: 975px) {
     background-image: linear-gradient(0deg, $color 50.95%, rgba(255, 255, 255, 0) 85%);
   }
+
   @media (max-width: 576px) {
     background-image: linear-gradient(0deg, $color 39.95%, rgba(255, 255, 255, 0) 95%);
   }
@@ -48,15 +51,19 @@
       z-index: 1;
       @include color-gradient(#00505c);
     }
+
     &.color-purple:before {
       @include color-gradient(#53284f);
     }
+
     &.color-paloalto:before {
       @include color-gradient(#175e54);
     }
+
     &.color-coolgrey:before {
       @include color-gradient(#4d4f53);
     }
+
     &.color-brown:before {
       @include color-gradient(#5e3032);
     }

@@ -1,20 +1,19 @@
 <?php
 
+namespace Acquia\Blt\Custom\Commands;
+
+use Acquia\Blt\Robo\BltTasks;
+use Drupal\Core\Serialization\Yaml;
+use Exception;
 use Robo\Contract\VerbosityThresholdInterface;
-use Robo\Tasks;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
 
 /**
- * Base tasks for setting up a module to test within a full Drupal environment.
- *
- * This file expects to be called from the root of a Drupal site.
- *
- * @class RoboFile
- * @codeCoverageIgnore
- * @see https://github.com/lullabot/drupal8ci/
+ * Defines commands in the "humsci" namespace.
  */
-class RoboFile extends Tasks {
+class CircleCiCommand extends BltTasks {
+
+  use HumsciTrait;
 
   /**
    * The database URL.
@@ -31,13 +30,6 @@ class RoboFile extends Tasks {
   const SITES_TO_TEST = 6;
 
   /**
-   * Directory of drupal installation.
-   *
-   * @var string
-   */
-  const DRUPAL_ROOT = 'docroot';
-
-  /**
    * Directory to run unit tests, relative to drupal root.
    *
    * @var string
@@ -45,16 +37,12 @@ class RoboFile extends Tasks {
   const TEST_DIR = 'modules/humsci';
 
   /**
-   * Config from blt.yml file.
-   *
-   * @var array
-   */
-  protected $bltConfig;
-
-  /**
    * Perform a release in github.
+   *
+   * @command circleci:github:release
    */
   public function jobGithubRelease() {
+    $this->installDependencies()->run();
 
     $last_version = $this->getLastVersion();
     // Increment the last version by 1.
@@ -68,14 +56,14 @@ class RoboFile extends Tasks {
     // Build an array of change strings.
     foreach ($commit_hashes as $hash) {
       exec("git log --format=%B -n 1 $hash", $log);
-      $log = implode(';', array_filter($log));
+      $log = is_array($log) ? reset($log) : $log;
 
       // Don't record last release commit.
       if ($log == "Release $last_version") {
         continue;
       }
 
-      $changes[] = "* $log ($hash)";
+      $changes[] = "$log ($hash)";
     }
 
     if (empty($changes)) {
@@ -105,7 +93,7 @@ class RoboFile extends Tasks {
     $result = $this->taskGitHubRelease($version)
       ->accessToken(getenv('GITHUB_TOKEN'))
       ->uri($github_info['owner'] . '/' . $github_info['name'])
-      ->description("Release $version")
+      ->description("Release $version\n")
       ->changes($changes)
       ->name($version)
       ->comittish(getenv('CIRCLE_BRANCH'))
@@ -117,38 +105,6 @@ class RoboFile extends Tasks {
   }
 
   /**
-   * Git the information of the github remote.
-   *
-   * @return array
-   *   Keyed array with github owner and name.
-   */
-  protected function getGitHubInfo() {
-    $git_remote = exec('git config --get remote.origin.url');
-    $git_remote = str_replace('.git', '', $git_remote);
-    if (strpos($git_remote, 'https') !== FALSE) {
-      $parsed_url = parse_url($git_remote);
-      list($owner, $repo_name) = explode('/', trim($parsed_url['path'], '/'));
-      return ['owner' => $owner, 'name' => $repo_name];
-    }
-    list(, $repo_name) = explode(':', $git_remote);
-    str_replace('.git', '', $git_remote);
-
-    list($owner, $repo_name) = explode('/', $repo_name);
-    return ['owner' => $owner, 'name' => $repo_name];
-  }
-
-  /**
-   * Get the last version from the profile.
-   *
-   * @return string
-   *   Last semver version.
-   */
-  protected function getLastVersion() {
-    $profile_info = Yaml::parseFile(__DIR__ . '/docroot/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml');
-    return $profile_info['version'];
-  }
-
-  /**
    * Update the changelog file with the given changes.
    *
    * @param string $version
@@ -157,60 +113,16 @@ class RoboFile extends Tasks {
    *   Array of change strings.
    */
   protected function updateChangelog($version, array $changes = []) {
+    array_walk($changes, function (&$change) {
+      $change = '* ' . $change;
+    });
     $divider = str_repeat('-', 80);
-    $this->taskChangelog(__DIR__ . '/docs/CHANGELOG.md')
+    $this->taskChangelog($this->getConfigValue('repo.root') . '/docs/CHANGELOG.md')
       ->setHeader("$version\n{$divider}\n_Release Date: " . date("Y-m-d") . "_\n\n")
       ->anchor("# HumSci")
       ->setBody(implode("\n", $changes))
       ->setVerbosityThreshold(VerbosityThresholdInterface::VERBOSITY_VERBOSE)
       ->run();
-  }
-
-  /**
-   * Advance to the next SemVer version.
-   *
-   * The behavior depends on the parameter $stage.
-   *   - If $stage is empty, then the patch or minor version of $version is
-   *     incremented
-   *   - If $stage matches the current stage in the current version, then add
-   *     one to the stage (e.g. alpha3 -> alpha4)
-   *   - If $stage does not match the current stage in the current version, then
-   *     reset to '1' (e.g. alpha4 -> beta1)
-   *
-   * Taken from consolidation/robo library.
-   *
-   * @param string $version
-   *   A SemVer version.
-   * @param string $stage
-   *   Release stage: dev, alpha, beta, rc or an empty string for stable.
-   *
-   * @return string
-   *   New semver version.
-   */
-  protected function incrementVersion($version, $stage = '') {
-    $stable = empty($stage);
-
-    preg_match('/-([a-zA-Z]*)([0-9]*)/', $version, $match);
-    $match += ['', '', ''];
-    $versionStage = $match[1];
-    $versionStageNumber = $match[2];
-    if ($versionStage != $stage) {
-      $versionStageNumber = 0;
-    }
-    $version = preg_replace('/-.*/', '', $version);
-    $versionParts = explode('.', $version);
-    if ($stable) {
-      $versionParts[count($versionParts) - 1]++;
-    }
-    $version = implode('.', $versionParts);
-    if (!$stable) {
-      $version .= '-' . $stage;
-      if ($stage != 'dev') {
-        $versionStageNumber++;
-        $version .= $versionStageNumber;
-      }
-    }
-    return $version;
   }
 
   /**
@@ -238,9 +150,9 @@ class RoboFile extends Tasks {
         if (strpos($module->getPath(), 'tests') !== FALSE) {
           continue;
         }
-        $info_file = Yaml::parseFile($module->getRealPath());
+        $info_file = Yaml::decode(file_get_contents($module->getRealPath()));
         $info_file['version'] = $version;
-        file_put_contents($module->getRealPath(), Yaml::dump($info_file));
+        file_put_contents($module->getRealPath(), Yaml::encode($info_file));
       }
     }
   }
@@ -250,6 +162,8 @@ class RoboFile extends Tasks {
    *
    * @return \Robo\Result
    *   The result of the collection of tasks.
+   *
+   * @command circleci:phpunit
    */
   public function jobRunUnitTests() {
     $collection = $this->collectionBuilder();
@@ -264,6 +178,8 @@ class RoboFile extends Tasks {
    *
    * @return \Robo\Result
    *   The result of the collection of tasks.
+   *
+   * @command circleci:phpunit:coverage
    */
   public function jobGenerateCoverageReport() {
     $collection = $this->collectionBuilder();
@@ -278,6 +194,8 @@ class RoboFile extends Tasks {
    *
    * @return \Robo\Result
    *   The result tof the collection of tasks.
+   *
+   * @command circleci:behat:first
    */
   public function jobRunBehatTestsFirst() {
     $all_sites = $this->getSites();
@@ -290,6 +208,8 @@ class RoboFile extends Tasks {
    *
    * @return \Robo\Result
    *   The result tof the collection of tasks.
+   *
+   * @command circleci:behat:second
    */
   public function jobRunBehatTestsSecond() {
     $all_sites = $this->getSites();
@@ -302,12 +222,17 @@ class RoboFile extends Tasks {
    *
    * @return \Robo\Result
    *   The result tof the collection of tasks.
+   *
+   * @command circleci:behat:install
    */
   public function jobRunFreshInstallBehat() {
     $collection = $this->collectionBuilder();
     $collection->addTaskList($this->setupSite());
     $collection->addTask($this->installDrupal('config_installer'));
-    $collection->addTask($this->drush()->arg('cim')->option('yes'));
+
+    $collection->addTask($this->taskDrush()
+      ->drush('config-import')
+      ->option('yes'));
     $collection->addTaskList($this->runBehatTests(['global', 'install']));
     return $collection->run();
   }
@@ -372,7 +297,8 @@ class RoboFile extends Tasks {
     }
 
     // Update the database.
-    $tasks[] = $this->drush()->args('updatedb')
+    $tasks[] = $this->taskDrush()
+      ->drush('updatedb')
       ->option('yes')
       ->option('verbose');
 
@@ -381,15 +307,20 @@ class RoboFile extends Tasks {
       ->option('environment', 'ci', '=');
 
     // Import the configs.
-    $config_import = $this->drush()->args('config-import')
+    $config_import = $this->taskDrush()
+      ->drush('config-import')
       ->option('yes')
       ->option('verbose');
     if ($partial_config) {
       $config_import->option('partial');
     }
+    $tasks[] = $this->taskDrush()
+      ->drush('sqlq')
+      ->arg('DELETE FROM config where name = "hs_courses_importer.importer_settings"')
+      ->drush('cr');
 
     $tasks[] = $config_import;
-    $tasks[] = $this->drush()->arg('cron');
+    $tasks[] = $this->taskDrush()->drush('cron');
     return $tasks;
   }
 
@@ -442,8 +373,8 @@ class RoboFile extends Tasks {
    *   A task to install Drupal.
    */
   protected function installDrupal($profile = 'minimal') {
-    $task = $this->drush()
-      ->args('site-install')
+    $task = $this->taskDrush()
+      ->drush('site-install')
       ->args($profile)
       ->option('verbose')
       ->option('yes')
@@ -467,34 +398,40 @@ class RoboFile extends Tasks {
     $tasks = [];
     $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
 
+    $docroot = $this->getConfigValue('docroot');
+
     // To make things easy on setting up these tests, we'll just use the default
     // directory for all site tests. But that means we need to bring over the
     // site specific settings.php files too account for anything specific.
     if ($site != 'default' && $site != 'swshusmci') {
       $tasks[] = $this->taskFilesystemStack()
-        ->copy(static::DRUPAL_ROOT . "/sites/$site/settings.php", static::DRUPAL_ROOT . "/sites/default/settings.php", TRUE);
+        ->copy("$docroot/sites/$site/settings.php", "$docroot/sites/default/settings.php", TRUE);
     }
 
     // Copy circle.ci settings. This setting is included from blt.
     // @see https://github.com/acquia/blt/blob/9.x/settings/blt.settings.php#L284
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/circleci.settings.php', static::DRUPAL_ROOT . '/sites/default/settings/includes.settings.php', TRUE);
+      ->copy('.circleci/config/circleci.settings.php', "$docroot/sites/default/settings/includes.settings.php", TRUE);
 
     // This line is just to test connection and to prevent unwanted line at
     // the beginning of the db dump. Without this, we would get the text
     // "Warning: Permanently added the RSA host key for IP address" at the top
     // of the db dump.
-    $tasks[] = $this->drush()->rawArg("@$site.prod sql-connect");
-    $tasks[] = $this->drush()->rawArg("@$site.prod sql-dump > dump.sql");
+    $tasks[] = $this->taskDrush()->alias("$site.prod")->drush('sql-connect');
+    $tasks[] = $this->taskDrush()
+      ->alias("$site.prod")
+      ->drush('sql-dump')
+      ->rawArg('> dump.sql');
 
     // At the end of the drush command, we need to remove the ssh connection
     // closed message.
     $tasks[] = $this->taskExecStack()
-      ->exec("grep -v '^Connection to' dump.sql > clean_dump.sql");
+      ->exec("grep -v '^Connection to' $docroot/dump.sql > $docroot/clean_dump.sql");
 
-    $tasks[] = $this->drush()->arg('sql-drop')->option('yes');
-    $tasks[] = $this->drush()
-      ->rawArg('@self sql-cli < clean_dump.sql');
+    $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
+    $tasks[] = $this->taskDrush()
+      ->drush('sql-cli ')
+      ->rawArg('< clean_dump.sql');
     return $tasks;
   }
 
@@ -505,13 +442,13 @@ class RoboFile extends Tasks {
    *   An array of tasks.
    */
   protected function runUnitTests() {
-    $force = TRUE;
+    $docroot = $this->getConfigValue('docroot');
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', "$docroot/core/phpunit.xml", TRUE)
       ->mkdir('../artifacts/phpunit', 777);
 
-    $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
+    $tasks[] = $this->taskExecStack()->dir($docroot)
       ->exec('../vendor/bin/phpunit -c core --log-junit ../artifacts/phpunit/phpunit.xml --testsuite functional ' . static::TEST_DIR);
     return $tasks;
   }
@@ -523,13 +460,13 @@ class RoboFile extends Tasks {
    *   An array of tasks.
    */
   protected function runUnitTestsWithCoverage() {
-    $force = TRUE;
+    $docroot = $this->getConfigValue('docroot');
     $tasks = [];
     $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/phpunit.xml', static::DRUPAL_ROOT . '/core/phpunit.xml', $force)
+      ->copy('.circleci/config/phpunit.xml', "$docroot/core/phpunit.xml", TRUE)
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
-    $tasks[] = $this->taskExecStack()->dir(static::DRUPAL_ROOT)
+    $tasks[] = $this->taskExecStack()->dir($docroot)
       ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html --testsuite nonfunctional ' . static::TEST_DIR);
     return $tasks;
   }
@@ -541,38 +478,15 @@ class RoboFile extends Tasks {
    *   An array of tasks.
    */
   protected function runCodeSniffer() {
+    $docroot = $this->getConfigValue('docroot');
     $tasks = [];
     $tasks[] = $this->taskExecStack()
       ->exec('vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer');
     $tasks[] = $this->taskFilesystemStack()->mkdir('artifacts/phpcs');
     $tasks[] = $this->taskExecStack()
-      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/' . static::TEST_DIR)
-      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . static::DRUPAL_ROOT . '/' . static::TEST_DIR);
+      ->exec('vendor/bin/phpcs --standard=Drupal --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . $docroot . '/' . static::TEST_DIR)
+      ->exec('vendor/bin/phpcs --standard=DrupalPractice --report=junit --report-junit=artifacts/phpcs/phpcs.xml ' . $docroot . '/' . static::TEST_DIR);
     return $tasks;
-  }
-
-  /**
-   * Return drush with default arguments.
-   *
-   * @return \Robo\Task\Base\Exec
-   *   A drush exec command.
-   */
-  protected function drush() {
-    // Drush needs an absolute path to the docroot.
-    $docroot = $this->getDocroot() . '/' . static::DRUPAL_ROOT;
-    return $this->taskExec('vendor/bin/drush')
-      ->option('root', $docroot, '=');
-  }
-
-  /**
-   * Get the absolute path to the docroot.
-   *
-   * @return string
-   *   The repo directory.
-   */
-  protected function getDocroot() {
-    $docroot = (getcwd());
-    return $docroot;
   }
 
   /**
@@ -594,28 +508,15 @@ class RoboFile extends Tasks {
    *   Array of machine names for sites.
    */
   protected function getSites() {
-    $blt_config = $this->getBltConfig();
     $sites = [];
-    foreach ($blt_config['multisites'] as $site) {
+
+    foreach ($this->getConfigValue('multisites') as $site) {
       // Sandbox sites are unpredictable, so lets ignore them.
       if (strpos($site, 'sandbox') === FALSE) {
         $sites[$site] = $site;
       }
     }
     return array_rand($sites, self::SITES_TO_TEST);
-  }
-
-  /**
-   * Get BLT Config settings from blt.yml file.
-   *
-   * @return array
-   *   BLT Settings.
-   */
-  protected function getBltConfig() {
-    if (!isset($this->bltConfig)) {
-      $this->bltConfig = Yaml::parseFile($this->getDocroot() . '/blt/blt.yml');
-    }
-    return $this->bltConfig;
   }
 
 }

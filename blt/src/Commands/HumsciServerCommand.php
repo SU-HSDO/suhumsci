@@ -181,6 +181,14 @@ class HumsciServerCommand extends AcHooksCommand {
     $directory = "/mnt/gfs/swshumsci.$environment/files/";
     $shell_command = "cd ~ && .acme.sh/acme.sh --issue $domains -w $directory";
     $php_command = "return shell_exec('$shell_command');";
+
+    if ($environment != 'prod') {
+      $this->invokeCommand('drupal:module:uninstall', [
+        'modules' => 'shield',
+        'environment' => $environment,
+      ]);
+    }
+
     $this->taskDrush()
       ->alias($this->getConfigValue('drush.aliases.remote'))
       ->drush('eval')
@@ -243,7 +251,7 @@ class HumsciServerCommand extends AcHooksCommand {
    *
    * @throws \Robo\Exception\TaskException
    */
-  public function humsciLetsEncryptGet($environment = 'dev') {
+  public function humsciLetsEncryptGet($environment) {
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
       return;
@@ -252,32 +260,70 @@ class HumsciServerCommand extends AcHooksCommand {
     $domains = $this->humsciLetsEncryptList($environment);
     $primary_domain = array_shift($domains);
 
+    $files = $this->getWhichCertFiles($primary_domain);
+
+    foreach ($files as $file) {
+      $shell_command = "cd ~ && cat .acme.sh/$primary_domain/$file";
+      $php_command = "return shell_exec('$shell_command');";
+
+      $message = 'Certificate';
+      if (strpos($file, '.key') !== FALSE) {
+        $message = 'Private Key';
+      }
+      elseif ($file == 'ca.cer') {
+        $message = 'Intermediate Certificates';
+      }
+
+      $this->say(str_repeat('-', strlen($message) + 4));
+      $this->say("  $message  ");
+      $this->say(str_repeat('-', strlen($message) + 4));
+
+      $this->taskDrush()
+        ->alias($this->getConfigValue('drush.aliases.remote'))
+        ->drush('eval')
+        ->arg($php_command)
+        ->run();
+    }
+  }
+
+  /**
+   * Ask the user and get which cert files to display.
+   *
+   * @param string $primary_domain
+   *   Primary domain on the cert.
+   *
+   * @return array
+   *   List of file names.
+   */
+  protected function getWhichCertFiles($primary_domain) {
     $file = $this->askChoice('Which file would you like to get?', [
+      '- All -',
       'Certificate',
       'Private Key',
       'Intermediate Certificates',
     ], 'Certificate');
     switch ($file) {
+      case '- All -':
+        $files = [
+          "$primary_domain.cer",
+          "$primary_domain.key",
+          'ca.cer',
+        ];
+        break;
+
       case 'Private Key':
-        $file = "$primary_domain.key";
+        $files = ["$primary_domain.key"];
         break;
 
       case 'Intermediate Certificates':
-        $file = 'ca.cer';
+        $files = ['ca.cer'];
         break;
 
       default:
-        $file = "$primary_domain.cer";
+        $files = ["$primary_domain.cer"];
         break;
     }
-
-    $shell_command = "cd ~ && cat .acme.sh/$primary_domain/$file";
-    $php_command = "return shell_exec('$shell_command');";
-    $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
-      ->drush('eval')
-      ->arg($php_command)
-      ->run();
+    return $files;
   }
 
   /**

@@ -78,7 +78,7 @@ Feature: Install State Basic Page
     And I wait 2 seconds
     And I set window dimensions 1201 x 3001
     Then I select "Medium (220×220)" from "Image Style"
-    And I fill in "Alternative text" with "Stanford Logo"
+    And I fill in "Alternate text" with "Stanford Logo"
     Then I click the ".entity-select-dialog .form-actions button" element
     And I wait for AJAX to finish
     Then I press "Save"

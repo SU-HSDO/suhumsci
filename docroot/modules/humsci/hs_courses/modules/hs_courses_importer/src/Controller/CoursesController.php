@@ -62,7 +62,8 @@ class CoursesController extends ControllerBase {
    */
   public function courses() {
     $response = new Response();
-    $response->setMaxAge(0);
+    // Max age of 2 hours.
+    $response->setMaxAge(2 * 60 * 60);
     $response->headers->set('Content-Type', 'text/xml');
     $response->setContent($this->courseDom->saveXML());
     return $response;

@@ -29,7 +29,9 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - v1-dependencies-{{ checksum "composer.lock" }}
+    - v10-dependencies-{{ checksum "composer.lock" }}
+    # fallback to using the latest cache if no exact match is found
+    - v10-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -96,7 +98,7 @@ code_coverage: &code_coverage
   <<: *defaults
   steps:
     - checkout
-    - restore_cache: *restore_cache
+#    - restore_cache: *restore_cache
     - run:
         name: Generate code coverage report
         command: vendor/bin/blt circleci:phpunit:coverage

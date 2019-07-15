@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Commands;
+namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
 
@@ -9,7 +9,7 @@ use Acquia\Blt\Robo\Commands\Setup\ConfigCommand;
  *
  * @package Acquia\Blt\Custom\Commands
  */
-class HumsciConfigCommand extends ConfigCommand {
+class HumsciConfigCommands extends ConfigCommand {
 
   use HumsciTrait;
 

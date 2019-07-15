@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Commands;
+namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
@@ -11,7 +11,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * Defines commands in the "humsci" namespace.
  */
-class CircleCiCommand extends BltTasks {
+class CircleCiCommands extends BltTasks {
 
   use HumsciTrait;
 

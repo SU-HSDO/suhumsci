@@ -10,6 +10,10 @@
       "url": "https://packages.drupal.org/8"
     },
     {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    },
+    {
       "type": "vcs",
       "url": "https://github.com/SU-SWS/stanford_basic"
     },
@@ -90,12 +94,12 @@
     }
   ],
   "require": {
-    "acquia/blt": "9.x-dev",
+    "acquia/blt": "10.x-dev",
+    "acquia/drupal-spec-tool": ">=2.0.0",
     "beleneglorion/php-bugherd-api": "dev-master#f0fce97042bd05bc5560fbf37051cd74f802cea1",
     "ckeditor-plugin/fakeobjects": "4.10.1",
     "ckeditor-plugin/link": "4.10.1",
     "composer/installers": "^1.4",
-    "consolidation/robo": "~1.2.4",
     "consolidation/site-alias": "1.1.5",
     "cweagans/composer-patches": "^1.6",
     "davidbarratt/custom-installer": "~1.0",
@@ -124,6 +128,7 @@
     "drupal/config_import_de": "^1.0@alpha",
     "drupal/config_installer": "^1.8",
     "drupal/config_readonly": "dev-1.x",
+    "drupal/config_split": "^1.0.0",
     "drupal/config_update": "dev-1.x#5785588167279912d1e1f3a936fbf4a306265bd6",
     "drupal/content_access": "^1.0@alpha",
     "drupal/content_lock": "^1.0@alpha",
@@ -176,6 +181,7 @@
     "drupal/role_theme_switcher": "~1.0",
     "drupal/rules": "dev-3.x",
     "drupal/search_api": "^1.9",
+    "drupal/seckit": "^1.0.0-alpha2",
     "drupal/shield": "~1.1",
     "drupal/shortcut_menu": "^1.0@alpha",
     "drupal/simplesamlphp_auth": "^3.0",
@@ -198,6 +204,7 @@
     "enyo/dropzone": "^5.1",
     "harvesthq/chosen": "^1.8",
     "kenwheeler/slick": "^1.8",
+    "php": ">=7.1",
     "sainsburys/guzzle-oauth2-plugin": "^3.0",
     "simplesamlphp/simplesamlphp": "~1.15.1",
     "su-sws/nobots": "dev-8.x-1.x",
@@ -206,6 +213,7 @@
     "su-sws/stanford_ssp": "dev-8.x-1.x"
   },
   "require-dev": {
+    "acquia/blt-require-dev": "^10.0.0-alpha1",
     "drupal/config_inspector": "^1.0@beta",
     "drupal/console": "^1.8",
     "drupal/devel": "^1.2",
@@ -354,16 +362,6 @@
         "https://www.drupal.org/project/paragraphs/issues/2907094": "https://www.drupal.org/files/issues/2019-07-08/2907094_68.patch"
       }
     },
-    "merge-plugin": {
-      "require": [
-        "blt/blt.required.json"
-      ],
-      "merge-extra": true,
-      "merge-extra-deep": true,
-      "merge-scripts": true,
-      "replace": false,
-      "ignore-duplicates": true
-    },
     "violinist": {
       "allow_updates_beyond_constraint": 0,
       "blacklist": [],
@@ -371,6 +369,16 @@
       "timeframe_disallowed": "0",
       "timezone": "+0000",
       "update_with_dependencies": 1
+    },
+    "composer-exit-on-patch-failure": true,
+    "drupal-scaffold": {
+      "initial": {
+        "sites/default/default.services.yml": "sites/default/services.yml",
+        "sites/default/default.settings.php": "sites/default/settings.php"
+      }
+    },
+    "patchLevel": {
+      "drupal/core": "-p2"
     }
   },
   "autoload-dev": {
@@ -379,7 +387,8 @@
       "Drupal\\Tests\\hs_bugherd\\": "docroot/modules/humsci/hs_bugherd/tests",
       "Drupal\\Tests\\hs_courses_importer\\": "docroot/modules/humsci/hs_courses/modules/hs_courses_importer/tests",
       "Drupal\\Tests\\hs_field_helpers\\": "docroot/modules/humsci/hs_field_helpers/tests",
-      "Drupal\\Tests\\hs_table_filter\\": "docroot/modules/humsci/hs_table_filter/tests"
+      "Drupal\\Tests\\hs_table_filter\\": "docroot/modules/humsci/hs_table_filter/tests",
+      "Drupal\\Tests\\PHPUnit\\": "tests/phpunit/src/"
     }
   },
   "scripts": {
@@ -399,9 +408,20 @@
     ],
     "release-it": [
       "release-it --no-npm.publish"
+    ],
+    "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
+    "nuke": [
+      "rm -rf vendor composer.lock docroot/core docroot/modules/contrib docroot/profiles/contrib docroot/themes/contrib",
+      "@composer clearcache --ansi",
+      "@composer install --ansi"
     ]
   },
   "config": {
     "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Example\\": "blt/src/"
+    }
   }
 }

@@ -377,8 +377,7 @@ class CircleCiCommands extends BltTasks {
       ->drush('site-install')
       ->args($profile)
       ->option('verbose')
-      ->option('yes')
-      ->option('db-url', static::DB_URL, '=');
+      ->option('yes');
     return $task;
   }
 
@@ -407,11 +406,6 @@ class CircleCiCommands extends BltTasks {
       $tasks[] = $this->taskFilesystemStack()
         ->copy("$docroot/sites/$site/settings.php", "$docroot/sites/default/settings.php", TRUE);
     }
-
-    // Copy circle.ci settings. This setting is included from blt.
-    // @see https://github.com/acquia/blt/blob/9.x/settings/blt.settings.php#L284
-    $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/circleci.settings.php', "$docroot/sites/default/settings/includes.settings.php", TRUE);
 
     // This line is just to test connection and to prevent unwanted line at
     // the beginning of the db dump. Without this, we would get the text

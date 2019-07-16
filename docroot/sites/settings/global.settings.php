@@ -74,3 +74,6 @@ if (EnvironmentDetector::isLocalEnv()) {
 if (EnvironmentDetector::isAhEnv()) {
   require 'acquia.settings.php';
 }
+else {
+  $config['domain_301_redirect.settings']['enabled'] = FALSE;
+}

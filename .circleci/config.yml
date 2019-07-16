@@ -23,8 +23,6 @@ defaults: &defaults
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
-  environment:
-    CI: true
   working_directory: /var/www/html
 
 ## Defines the cache restoring mechanism.
@@ -103,9 +101,7 @@ code_coverage: &code_coverage
     - restore_cache: *restore_cache
     - run:
         name: Generate code coverage report
-        command: |
-          composer install
-          vendor/bin/blt circleci:phpunit:coverage
+        command: vendor/bin/blt circleci:phpunit:coverage
     - store_artifacts:
         path: /var/www/html/artifacts
     - save_cache: *save_cache

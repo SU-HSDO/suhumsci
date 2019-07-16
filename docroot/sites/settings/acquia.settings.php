@@ -41,7 +41,8 @@ switch (EnvironmentDetector::getAhEnv()) {
 
 if (EnvironmentDetector::isProdEnv()) {
   $config['system.file']['path']['temporary'] = "/mnt/gfs/$group.$environment/tmp";
-}else {
+}
+else {
   // Disables domain redirect on all environments except production.
   $config['domain_301_redirect.settings']['enabled'] = FALSE;
 }

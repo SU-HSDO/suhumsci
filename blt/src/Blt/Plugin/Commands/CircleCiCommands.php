@@ -273,7 +273,7 @@ class CircleCiCommands extends BltTasks {
   protected function setupSite() {
     $tasks[] = $this->installDependencies();
     $tasks[] = $this->waitForDatabase();
-    $tasks[] = $this->taskExec('service apache2 start');
+    $tasks[] = $this->taskExec('apachectl stop; apachectl start');
     return $tasks;
   }
 

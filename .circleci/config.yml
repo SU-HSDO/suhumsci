@@ -18,6 +18,8 @@ add_known_hosts: &add_known_hosts
 defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
+      environment:
+        CI: true
     - image: selenium/standalone-chrome:3.141.59-neon
     - image: circleci/node:latest
     - image: mariadb:10.3

@@ -23,7 +23,8 @@ defaults: &defaults
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
-        CI: true
+  environment:
+    CI: true
   working_directory: /var/www/html
 
 ## Defines the cache restoring mechanism.

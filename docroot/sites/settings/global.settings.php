@@ -5,6 +5,7 @@
  * This file gets added by blt.settings.php as an override configuration.
  */
 
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Core\Serialization\Yaml;
 
 // When the encryption environment variable is not provided (local/ci/etc),
@@ -18,30 +19,9 @@ if (!getenv('REAL_AES_ENCRYPTION')) {
   putenv("REAL_AES_ENCRYPTION=$randomString");
 }
 
-// SimpleSAMLphp configuration
-// Provide universal absolute path to the installation.
-if (isset($_ENV['AH_SITE_NAME']) && is_dir('/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp')) {
-  $settings['simplesamlphp_dir'] = '/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp';
-
-  // Set the workgroup api cert paths.
-  $config['stanford_ssp.settings'] = [
-    'workgroup_api_cert' => "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/saml/workgroup_api.cert",
-    'workgroup_api_key' => "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/saml/workgroup_api.key",
-  ];
-
-}
-else {
-  // Local SAML path.
-  if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
-    $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
-  }
-}
-
-if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT']) && $_ENV['AH_SITE_ENVIRONMENT'] == 'prod') {
-  $config['system.file']['path']['temporary'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/tmp";
-}
-else {
-  $config['system.file']['path']['temporary'] = sys_get_temp_dir();
+// Local SAML path.
+if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
+  $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
 }
 
 $config['simplesamlphp_auth.settings'] = [
@@ -78,54 +58,19 @@ $config['environment_indicator.indicator']['bg_color'] = '#086601';
 $config['environment_indicator.indicator']['fg_color'] = '#fff';
 $config['environment_indicator.indicator']['name'] = 'Local';
 
-if (isset($_ENV) && isset($_ENV['AH_SITE_GROUP']) && isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-  switch ($_ENV['AH_SITE_ENVIRONMENT']) {
-    case 'dev':
-      $config['environment_indicator.indicator']['bg_color'] = '#6B0500';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = 'Development';
-      break;
-    case 'test':
-      $config['environment_indicator.indicator']['bg_color'] = '#4127C2';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = 'Staging';
-      break;
-    case 'prod':
-      $config['environment_indicator.indicator']['bg_color'] = '#000';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = 'Production';
-      break;
-    default:
-      $config['environment_indicator.indicator']['bg_color'] = '#086601';
-      $config['environment_indicator.indicator']['fg_color'] = '#fff';
-      $config['environment_indicator.indicator']['name'] = $_ENV['AH_SITE_ENVIRONMENT'];
-      break;
-  }
-}
-
-if ($is_ah_env && PHP_SAPI !== 'cli') {
-  // Don't lock config when using drush.
-  $settings['config_readonly'] = TRUE;
-}
-
 // Lets whitelist everything because in our event subscriber we have the
 // ability to decide which forms are locked.
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
 
-// On acquia, load a salt from the server.
-if ($is_ah_env) {
-  $settings['hash_salt'] = file_get_contents("/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/nobackup/apikeys/salt.txt");
-  $settings['letsencrypt_challenge_directory'] = "/mnt/gfs/{$_ENV['AH_SITE_GROUP']}.{$_ENV['AH_SITE_ENVIRONMENT']}/files/";
-}
+$config['system.file']['path']['temporary'] = sys_get_temp_dir();
 
 // Set the config_ignore settings so that config imports will function on local.
-if ($is_local_env || (isset($split) && $split == 'local')) {
+if (EnvironmentDetector::isLocalEnv()) {
   $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
   $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
 }
 
-// Disables domain redirect on all environments except production.
-if (!$is_ah_prod_env) {
-  $config['domain_301_redirect.settings']['enabled'] = FALSE;
+if (EnvironmentDetector::isAhEnv()) {
+  require 'acquia.settings.php';
 }

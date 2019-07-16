@@ -18,13 +18,12 @@ add_known_hosts: &add_known_hosts
 defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
-      environment:
-        CI: true
     - image: selenium/standalone-chrome:3.141.59-neon
     - image: circleci/node:latest
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        CI: true
   working_directory: /var/www/html
 
 ## Defines the cache restoring mechanism.

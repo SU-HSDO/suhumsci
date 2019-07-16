@@ -151,6 +151,8 @@ class HumsciServerCommands extends AcHooksCommand {
    *
    * @param string $environment
    *   Which environment to add to cert.
+   * @param mixed $options
+   *   Parameter options.
    *
    * @command humsci:letsencrypt:add-domain
    *

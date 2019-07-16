@@ -74,12 +74,12 @@ class HumsciCommands extends AcHooksCommand {
    * Add a permission to all sites on the multisite.
    *
    * @param string $role
-   *   Machine name of the role
+   *   Machine name of the role.
    * @param string $permission
    *   Permission to be added.
    * @param string $environment
    *   Which environment to add the permission to.
-
+   *
    * @command drupal:perm:add
    *
    * @throws \Robo\Exception\TaskException
@@ -170,7 +170,7 @@ class HumsciCommands extends AcHooksCommand {
    */
   public function sync($options = [
     'sync-files' => FALSE,
-    'partial' => FALSE
+    'partial' => FALSE,
   ]) {
 
     $commands = $this->getConfigValue('sync.commands');

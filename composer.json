@@ -212,6 +212,9 @@
     "su-sws/stanford_media": "dev-8.x-1.x",
     "su-sws/stanford_ssp": "dev-8.x-1.x"
   },
+  "replace": {
+    "dealerdirect/phpcodesniffer-composer-installer": "*"
+  },
   "require-dev": {
     "acquia/blt-require-dev": "^10.0.0-alpha1",
     "drupal/config_inspector": "^1.0@beta",
@@ -381,6 +384,11 @@
       "drupal/core": "-p2"
     }
   },
+  "autoload": {
+    "psr-4": {
+      "Example\\": "blt/src/"
+    }
+  },
   "autoload-dev": {
     "psr-4": {
       "Drupal\\Tests\\hs_basic_page\\": "docroot/modules/humsci/hs_basic_page/tests",
@@ -418,10 +426,5 @@
   },
   "config": {
     "sort-packages": true
-  },
-  "autoload": {
-    "psr-4": {
-      "Example\\": "blt/src/"
-    }
   }
 }

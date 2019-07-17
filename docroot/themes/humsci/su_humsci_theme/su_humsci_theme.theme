@@ -16,10 +16,12 @@ use Drupal\Core\Template\Attribute;
  *
  * Use lazy loading on images.
  */
-function su_humsci_theme_preprocess_image(&$variables){
-  $variables['attributes']['data-src'] = $variables['attributes']['src'];
-  unset($variables['attributes']['src']);
-  $variables['attributes']['class'][] = 'lazy';
+function su_humsci_theme_preprocess_image(&$variables) {
+  if (isset($variables['attributes']['width']) && isset($variables['attributes']['height'])) {
+    $variables['attributes']['data-src'] = $variables['attributes']['src'];
+    unset($variables['attributes']['src']);
+    $variables['attributes']['class'][] = 'lazy';
+  }
 }
 
 /**

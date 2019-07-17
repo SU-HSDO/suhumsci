@@ -46,7 +46,7 @@
         });
       });
 
-      $("img.lazy").lazyload();
+      $("img.lazy", context).lazyload();
     }
   };
 })(jQuery, Drupal);

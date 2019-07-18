@@ -4,6 +4,7 @@ namespace Drupal\hs_blocks\Plugin\Block;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
@@ -11,7 +12,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\PrivateKey;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -57,6 +60,13 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   protected $uuidGenerator;
 
   /**
+   * Drupal core private key.
+   *
+   * @var string
+   */
+  protected $privateKey;
+
+  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -72,11 +82,12 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
    *   Uuid Service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo, UuidInterface $uuid_generator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo, UuidInterface $uuid_generator, PrivateKey $private_key) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->requestStack = $request_stack;
     $this->contextRepository = $context_repo;
     $this->uuidGenerator = $uuid_generator;
+    $this->privateKey = $private_key->get();
   }
 
   /**
@@ -89,7 +100,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       $plugin_definition,
       $container->get('request_stack'),
       $container->get('context.repository'),
-      $container->get('uuid')
+      $container->get('uuid'),
+      $container->get('private_key')
     );
   }
 
@@ -180,25 +192,36 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       ];
     }
 
+    $route_params = [
+      'section_storage_type' => $section_storage->getStorageType(),
+      'section_storage' => $section_storage->getStorageId(),
+      'delta' => $section_delta,
+      'group' => $this->configuration['machine_name'],
+    ];
+
+    // Build a contextual id that won't generate errors from ajax.
+    // @see _contextual_id_to_links()
+    // Use contextual link data attributes so that layout builder doesn't
+    // disable the link from being clicked.
+    // @see behaviors.layoutBuilderDisableInteractiveElements() in layout-builder.js
+    $contextual_id = $this->configuration['machine_name'] . ':' . http_build_query($route_params) . ':langcode=en';
+    // Generate a token that matches the contextual id.
+    // @see \Drupal\contextual\ContextualController::render()
+    $contextual_token = Crypt::hmacBase64($contextual_id, Settings::getHashSalt() . $this->privateKey);
+
+    $route_attributes = [
+      'class' => ['use-ajax', 'decanter-button--secondary'],
+      'data-dialog-type' => 'dialog',
+      'data-dialog-renderer' => 'off_canvas',
+      'data-contextual-id' => $contextual_id,
+      'data-contextual-token' => $contextual_token,
+    ];
+
+    // Add the "Add" link to the bottom of the group.
     $components['add_link'] = [
       '#type' => 'link',
       '#title' => $this->t('Add Block to Group'),
-      '#url' => Url::fromRoute('hs_blocks.choose_block',
-        [
-          'section_storage_type' => $section_storage->getStorageType(),
-          'section_storage' => $section_storage->getStorageId(),
-          'delta' => $section_delta,
-          'group' => $this->configuration['machine_name'],
-        ],
-        [
-          'attributes' => [
-            'class' => ['use-ajax', 'new-block__link'],
-            'data-dialog-type' => 'dialog',
-            'data-dialog-renderer' => 'off_canvas',
-            'data-contextual-id' => 'add-group-link',
-          ],
-        ]
-      ),
+      '#url' => Url::fromRoute('hs_blocks.choose_block', $route_params, ['attributes' => $route_attributes]),
     ];
   }
 

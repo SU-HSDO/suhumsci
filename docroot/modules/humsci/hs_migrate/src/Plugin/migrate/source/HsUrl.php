@@ -13,6 +13,25 @@ use Drupal\migrate_plus\Plugin\migrate\source\Url;
 class HsUrl extends Url {
 
   /**
+   * Get all ids that exist in the current source.
+   *
+   * @return array
+   *   Array of id data from the source.
+   */
+  public function getAllIds() {
+    $this->highWaterProperty = [
+      'name' => 'guid',
+    ];
+    $this->rewind();
+    $ids = [];
+    while ($this->current()) {
+      $ids[] = $this->currentSourceIds;
+      $this->next();
+    }
+    return $ids;
+  }
+
+  /**
    * {@inheritdoc}
    *
    * Modify the parent method by adding the current feed url into the source

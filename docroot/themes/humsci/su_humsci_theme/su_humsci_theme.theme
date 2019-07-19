@@ -13,6 +13,29 @@ use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_preprocess_HOOK().
+ *
+ * Fix table row pattern when using views.
+ */
+function su_humsci_theme_preprocess_pattern_views_row(&$variables) {
+  if ($variables['pattern']['#id'] !== 'table_row') {
+    return;
+  }
+  foreach ($variables['options']['pattern_mapping'] as $source => $destination) {
+    // If the column is mapped to a field, ensure the column in the table row
+    // has something in it. Without anything, the row will collapse on the
+    // column and will cause staggering data.
+    if (!isset($variables['pattern']['#fields'][$destination['destination']])) {
+      $variables['pattern']['#fields'][$destination['destination']] = [
+        [
+          '#markup' => '',
+        ],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
  */
 function su_humsci_theme_preprocess_pattern_accordion(&$variables) {
   $id = Html::getUniqueId('accordion');

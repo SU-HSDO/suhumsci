@@ -107,7 +107,10 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
   // UI Patterns cleanup to remove regions that don't have anything to render.
   if (isset($variables['context']) && $variables['context'] instanceof PatternContext) {
     $pattern_id = str_replace('pattern_', '', $hook);
-    _hs_field_helpers_cleanup_pattern_regions($variables, $pattern_id);
+    // Table patterns need to keep empty regions.
+    if (strpos($pattern_id, 'table') === FALSE) {
+      _hs_field_helpers_cleanup_pattern_regions($variables, $pattern_id);
+    }
   }
 
   // Layout Builder cleanup.

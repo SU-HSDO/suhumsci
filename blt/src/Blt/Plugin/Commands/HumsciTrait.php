@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Commands;
+namespace Example\Blt\Plugin\Commands;
 
 use Drupal\Core\Serialization\Yaml;
 use Zend\Stdlib\Glob;

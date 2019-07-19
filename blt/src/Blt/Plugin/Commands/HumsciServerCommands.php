@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Commands;
+namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 
@@ -9,7 +9,7 @@ use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
  *
  * @package Acquia\Blt\Custom\Commands
  */
-class HumsciServerCommand extends AcHooksCommand {
+class HumsciServerCommands extends AcHooksCommand {
 
   use HumsciTrait;
 
@@ -19,6 +19,7 @@ class HumsciServerCommand extends AcHooksCommand {
    * Get encryption keys from acquia.
    *
    * @command humsci:keys
+   * @description stuff
    */
   public function humsciKeys() {
     $this->taskDrush()
@@ -150,6 +151,8 @@ class HumsciServerCommand extends AcHooksCommand {
    *
    * @param string $environment
    *   Which environment to add to cert.
+   * @param mixed $options
+   *   Parameter options.
    *
    * @command humsci:letsencrypt:add-domain
    *

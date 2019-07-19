@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Hooks;
+namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
 use Consolidation\AnnotatedCommand\CommandData;
@@ -8,7 +8,7 @@ use Consolidation\AnnotatedCommand\CommandData;
 /**
  * This class defines example hooks.
  */
-class HumsciHook extends BltTasks {
+class HumsciHooksCommands extends BltTasks {
 
   /**
    * Disables saml & log in when drupal:sync finishes.

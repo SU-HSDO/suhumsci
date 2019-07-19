@@ -29,15 +29,15 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - v1-dependencies-{{ checksum "composer.lock" }}
+    - v10-dependencies-{{ checksum "composer.lock" }}
     # fallback to using the latest cache if no exact match is found
-    - v1-dependencies-
+    - v10-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
   paths:
     - ./vendor
-  key: v1-dependencies-{{ checksum "composer.lock" }}
+  key: v10-dependencies-{{ checksum "composer.lock" }}
 
 #Jobs
 

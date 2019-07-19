@@ -1,27 +1,25 @@
 #!/bin/sh
+#
+# Cloud Hook: post-db-copy
+#
+# The post-db-copy hook is run whenever you use the Workflow page to copy a
+# database from one environment to another.
+#
+# Usage: post-db-copy site target-env db-name source-env
 
 set -ev
 
-# swshumsci
-org="$1"
-# dev, test, prod
+site="$1"
 target_env="$2"
-# archaeology
-database="$3"
-# prod
-from_env="$4"
-
-
-echo "org: $org"
-echo "target_env: $target_env"
-echo "database: $database"
-echo "from_env: $from_env"
+db_name="$3"
+source_env="$4"
 
 # Prep for BLT commands.
-repo_root="/var/www/html/$org.$target_env"
+repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-blt artifact:update:drupal --site=$database --environment=$target_env
+blt artifact:update:drupal --site=$db_name --environment=$target_env
+#blt artifact:ac-hooks:post-db-copy $site $target_env $db_name $source_env --environment=$target_env -v --no-interaction -D drush.ansi=false
 
 set +v

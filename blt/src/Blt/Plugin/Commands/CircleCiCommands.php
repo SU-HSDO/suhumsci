@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Commands;
+namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
@@ -11,7 +11,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * Defines commands in the "humsci" namespace.
  */
-class CircleCiCommand extends BltTasks {
+class CircleCiCommands extends BltTasks {
 
   use HumsciTrait;
 
@@ -273,7 +273,7 @@ class CircleCiCommand extends BltTasks {
   protected function setupSite() {
     $tasks[] = $this->installDependencies();
     $tasks[] = $this->waitForDatabase();
-    $tasks[] = $this->taskExec('service apache2 start');
+    $tasks[] = $this->taskExec('apachectl stop; apachectl start');
     return $tasks;
   }
 
@@ -377,8 +377,7 @@ class CircleCiCommand extends BltTasks {
       ->drush('site-install')
       ->args($profile)
       ->option('verbose')
-      ->option('yes')
-      ->option('db-url', static::DB_URL, '=');
+      ->option('yes');
     return $task;
   }
 
@@ -407,11 +406,6 @@ class CircleCiCommand extends BltTasks {
       $tasks[] = $this->taskFilesystemStack()
         ->copy("$docroot/sites/$site/settings.php", "$docroot/sites/default/settings.php", TRUE);
     }
-
-    // Copy circle.ci settings. This setting is included from blt.
-    // @see https://github.com/acquia/blt/blob/9.x/settings/blt.settings.php#L284
-    $tasks[] = $this->taskFilesystemStack()
-      ->copy('.circleci/config/circleci.settings.php', "$docroot/sites/default/settings/includes.settings.php", TRUE);
 
     // This line is just to test connection and to prevent unwanted line at
     // the beginning of the db dump. Without this, we would get the text

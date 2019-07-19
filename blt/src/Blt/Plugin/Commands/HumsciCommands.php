@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Blt\Custom\Commands;
+namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 use Drupal\Core\Serialization\Yaml;
@@ -9,7 +9,7 @@ use Robo\Contract\VerbosityThresholdInterface;
 /**
  * Defines commands in the "humsci" namespace.
  */
-class HumsciCommand extends AcHooksCommand {
+class HumsciCommands extends AcHooksCommand {
 
   use HumsciTrait;
 
@@ -74,12 +74,12 @@ class HumsciCommand extends AcHooksCommand {
    * Add a permission to all sites on the multisite.
    *
    * @param string $role
-   *   Machine name of the role
+   *   Machine name of the role.
    * @param string $permission
    *   Permission to be added.
    * @param string $environment
    *   Which environment to add the permission to.
-
+   *
    * @command drupal:perm:add
    *
    * @throws \Robo\Exception\TaskException
@@ -171,7 +171,6 @@ class HumsciCommand extends AcHooksCommand {
   public function sync($options = [
     'sync-files' => FALSE,
     'partial' => FALSE,
-    'no-seven' => FALSE,
   ]) {
 
     $commands = $this->getConfigValue('sync.commands');
@@ -179,22 +178,6 @@ class HumsciCommand extends AcHooksCommand {
       $commands[] = 'drupal:sync:files';
     }
     $this->invokeCommands($commands);
-
-    if ($options['no-seven']) {
-      $admin_info = $this->taskDrush()->drush('uinf')->options([
-        'uid' => 1,
-        'fields' => 'name',
-        'format' => 'json',
-      ])->run()->getMessage();
-      $json = json_decode($admin_info, TRUE);
-      $user_name = $json[1]['name'];
-
-      return $this->taskDrush()
-        ->drush('user:role:remove')
-        ->arg('seven_admin_theme_user')
-        ->arg($user_name)
-        ->run();
-    }
   }
 
   /**

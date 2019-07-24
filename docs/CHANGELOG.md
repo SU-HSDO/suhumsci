@@ -1,5 +1,25 @@
 # HumSci
 
+8.1.4
+--------------------------------------------------------------------------------
+_Release Date: 2019-07-24_
+
+* Fixed circleci deploy branch ignore filter (0bc0ec8c)
+* Fixed add field form (146deefc)
+* updated composer dependencies (13ee9a49)
+* changed hero small image style size (3ab62bb8)
+* Fix group block links from generating js errors (#348) (13850549)
+* dont hide horizontal card category for math theme (37ed5dea)
+* patched extlink (895b9130)
+* fixed hero update hook to prevent field being deleted during config sync (55fd40b6)
+* Hsd8 667 hires image effect (#334) (574a1f38)
+* MR-23 Hero Text Overlay Addition (#316) (3dc389f1)
+* HSD8-676 Wrap views results when the view is grouped (#333) (5404c395)
+* Set course api endpoint to max age of 2 hours (215158fc)
+* MR-26 Move Hero with Text Overlay into SCSS (#315) (27367929)
+* HSD8-677 Full width lead font (#331) (510fdffa)
+* Deleted package.json and package-lock.json in nested repos (#335) (9f5ddb0f)
+
 8.1.3
 --------------------------------------------------------------------------------
 _Release Date: 2019-07-10_

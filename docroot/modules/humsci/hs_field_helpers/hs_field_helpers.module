@@ -58,24 +58,6 @@ function hs_field_helpers_field_info_alter(&$info) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- */
-function hs_field_helpers_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // When adding a new field, the select options for Reference optgroup is not
-  // clear what type of reference you are adding. This exposes the module
-  // that is doing the reference. It might be viewfield, entity_reference,
-  // bricks, or something else.
-  /** @var \Drupal\Core\StringTranslation\TranslatableMarkup $label */
-  foreach ($form['add']['new_storage_type']['#options']['Reference'] as $key => &$label) {
-    if (strpos($key, 'field_ui:') !== FALSE) {
-      list(, $module) = explode(':', $key);
-      $label = $label->render();
-      $label = render($label) . ": $module";
-    }
-  }
-}
-
-/**
  * Implements hook_help().
  */
 function hs_field_helpers_help($route_name, RouteMatchInterface $route_match) {

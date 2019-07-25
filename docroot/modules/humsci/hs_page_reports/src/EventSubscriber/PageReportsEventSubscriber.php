@@ -5,10 +5,14 @@ namespace Drupal\hs_page_reports\EventSubscriber;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Event subscriber to record kernel exceptions.
+ *
+ * @package Drupal\hs_page_reports\EventSubscriber
+ */
 class PageReportsEventSubscriber implements EventSubscriberInterface {
 
   /**
@@ -43,6 +47,13 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
     return $events;
   }
 
+  /**
+   * Event listener to record kernel exceptions.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *
+   * @throws \Exception
+   */
   public function onKernelException(GetResponseForExceptionEvent $event) {
     $path = $this->requestStack->getCurrentRequest()->getPathInfo();
 

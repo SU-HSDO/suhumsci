@@ -6,9 +6,16 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class PageReports to provide 404 and 403 report pages.
+ *
+ * @package Drupal\hs_page_reports\Controller
+ */
 class PageReports extends ControllerBase {
 
   /**
+   * Database connection service.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
@@ -24,6 +31,7 @@ class PageReports extends ControllerBase {
    * PageReports constructor.
    *
    * @param \Drupal\Core\Database\Connection $db_connection
+   *   Database connection service.
    */
   public function __construct(Connection $db_connection) {
     $this->database = $db_connection;

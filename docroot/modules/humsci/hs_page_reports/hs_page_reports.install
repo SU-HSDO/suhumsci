@@ -6,25 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function hs_page_reports_install() {
-  if (\Drupal::moduleHandler()->moduleExists('dblog')) {
-    $roles = \Drupal::entityTypeManager()
-      ->getStorage('user_role')
-      ->loadMultiple();
-    /** @var \Drupal\user\Entity\Role $role */
-    foreach ($roles as $role) {
-      if ($role->hasPermission('access site reports')) {
-        $role->grantPermission('view 404 reports');
-        $role->grantPermission('view 403 reports');
-        $role->save();
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_schema().
  */
 function hs_page_reports_schema() {

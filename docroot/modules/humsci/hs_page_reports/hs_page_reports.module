@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_page_reports.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_page_reports_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hs_page_reports module.
+    case 'help.page.hs_page_reports':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides 404 and 403 access reports without Database Log enabled') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_menu_local_actions_alter().
+ */
+function hs_page_reports_menu_local_actions_alter(&$local_actions) {
+  if (isset($local_actions['redirect_404.goto_fix_404'])) {
+    $local_actions['redirect_404.goto_fix_404']['appears_on'][] = 'hs_page_reports.page_not_found';
+  }
+}

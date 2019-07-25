@@ -1,0 +1,6 @@
+services:
+  hs_page_reports.event_subscriber:
+    class: Drupal\hs_page_reports\EventSubscriber\PageReportsEventSubscriber
+    arguments: ['@request_stack', '@database']
+    tags:
+      - { name: event_subscriber }

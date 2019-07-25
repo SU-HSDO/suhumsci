@@ -22,20 +22,20 @@ drush:
   default_alias: '${drush.aliases.local}'
 modules:
   local:
-    enable: [dblog, devel, devel_debug_log, devel_generate, seckit, views_ui, config_import_de]
+    enable: [dblog, devel, devel_debug_log, devel_generate, seckit, views_ui, config_import_de, stage_file_proxy]
     uninstall: [google_analytics, acquia_connector, purge, simplesamlphp_auth, shield, config_readonly, hs_bugherd]
   ci:
     enable: [hs_config_readonly, hs_bugherd]
     uninstall: [google_analytics, purge, acquia_connector, shield, simplesamlphp_auth]
   dev:
-    enable: [acquia_connector, shield, config_import_de]
+    enable: [acquia_connector, shield, config_import_de, stage_file_proxy]
     uninstall: [google_analytics, config_readonly, hs_bugherd]
   test:
-    enable: [acquia_connector, shield]
+    enable: [acquia_connector, shield, stage_file_proxy]
     uninstall: [google_analytics, config_readonly, hs_bugherd]
   prod:
     enable: [google_analytics, acquia_connector, hs_config_readonly, hs_bugherd]
-    uninstall: [shield]
+    uninstall: [shield, stage_file_proxy]
 multisites:
   - default
   - archaeology

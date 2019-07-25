@@ -23,6 +23,8 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
   public $requestStack;
 
   /**
+   * Database connection service.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
@@ -32,6 +34,8 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The Request Stack.
+   * @param \Drupal\Core\Database\Connection $db_connection
+   *   Database connection service.
    */
   public function __construct(RequestStack $request_stack, Connection $db_connection) {
     $this->requestStack = $request_stack;
@@ -51,6 +55,7 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
    * Event listener to record kernel exceptions.
    *
    * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   *   Thrown event.
    *
    * @throws \Exception
    */

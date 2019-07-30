@@ -31,3 +31,20 @@ function hs_page_reports_menu_local_actions_alter(&$local_actions) {
     $local_actions['redirect_404.goto_fix_404']['appears_on'][] = 'hs_page_reports.page_not_found';
   }
 }
+
+/**
+ * Implements hook_cron().
+ */
+function hs_page_reports_cron() {
+  $database = \Drupal::database();
+  $top_urls = $database->select('hs_page_reports', 'h')
+    ->fields('h', ['path'])
+    ->orderBy('count', 'DESC')
+    ->range(0, 1000)
+    ->execute()
+    ->fetchField();
+
+  $database->delete('hs_page_reports')
+    ->condition('path', $top_urls, 'NOT IN')
+    ->execute();
+}

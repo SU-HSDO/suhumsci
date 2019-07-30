@@ -1,9 +1,10 @@
 <?php
 
-namespace Drupal\hs_page_reports\Controller;
+namespace Drupal\hs_page_reports\Form;
 
-use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -11,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\hs_page_reports\Controller
  */
-class PageReports extends ControllerBase {
+class PageReports extends FormBase {
 
   /**
    * Database connection service.
@@ -21,10 +22,19 @@ class PageReports extends ControllerBase {
   protected $database;
 
   /**
+   * 404 or 403 report for the form.
+   *
+   * @var int
+   */
+  protected $report;
+
+  /**
    * {@inheritDoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('database'));
+    return new static(
+      $container->get('database')
+    );
   }
 
   /**
@@ -35,30 +45,38 @@ class PageReports extends ControllerBase {
    */
   public function __construct(Connection $db_connection) {
     $this->database = $db_connection;
+
+    $path = explode('/', trim($this->getRequest()->getPathInfo(), '/'));
+    $this->report = $path[2] == 'page-not-found' ? 404 : 403;
   }
 
   /**
-   * Get a table of the top 404 reports.
-   *
-   * @return array
-   *   Page render array.
+   * {@inheritDoc}
    */
-  public function pageNotFoundReport() {
-    $build = [];
-    $build['report_table'] = $this->getTable(404);
-    return $build;
+  public function getFormId() {
+    return 'hs_page_reports';
   }
 
   /**
-   * Get a table of the top 403 reports.
-   *
-   * @return array
-   *   Page render array.
+   * {@inheritDoc}
    */
-  public function accessDeniedReport() {
-    $build = [];
-    $build['report_table'] = $this->getTable(403);
-    return $build;
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['report_table'] = $this->getTable($this->report);
+
+    $form['delete'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Delete Report'),
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->database->delete('hs_page_reports')
+      ->condition('code', $this->report)
+      ->execute();
   }
 
   /**

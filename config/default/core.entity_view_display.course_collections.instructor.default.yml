@@ -5,11 +5,10 @@ dependencies:
   config:
     - eck.eck_type.course_collections.instructor
     - field.field.course_collections.instructor.field_instructor_person
+    - field.field.course_collections.instructor.field_instructor_role
   module:
     - field_formatter_class
     - hs_field_helpers
-    - layout_builder
-    - layout_discovery
 id: course_collections.instructor.default
 targetEntityType: course_collections
 bundle: instructor
@@ -38,4 +37,6 @@ content:
 hidden:
   changed: true
   created: true
+  field_instructor_role: true
+  search_api_excerpt: true
   uid: true

@@ -5,6 +5,7 @@ dependencies:
   config:
     - eck.eck_type.course_collections.instructor
     - field.field.course_collections.instructor.field_instructor_person
+    - field.field.course_collections.instructor.field_instructor_role
 id: course_collections.instructor.default
 targetEntityType: course_collections
 bundle: instructor
@@ -15,6 +16,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
+  field_instructor_role:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   title:
     type: string_textfield

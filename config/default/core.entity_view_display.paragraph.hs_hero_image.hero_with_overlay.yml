@@ -1,0 +1,119 @@
+uuid: 61e018e7-05e8-4ab0-8292-7fab15057d05
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.hero_with_overlay
+    - field.field.paragraph.hs_hero_image.field_hs_hero_body
+    - field.field.paragraph.hs_hero_image.field_hs_hero_image
+    - field.field.paragraph.hs_hero_image.field_hs_hero_link
+    - field.field.paragraph.hs_hero_image.field_hs_hero_overlay_color
+    - field.field.paragraph.hs_hero_image.field_hs_hero_title
+    - paragraphs.paragraphs_type.hs_hero_image
+  module:
+    - ds
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - link
+    - smart_trim
+    - stanford_media
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+  ds:
+    layout:
+      id: pattern_hero_text_overlay
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: _field
+          variant_field: field_hs_hero_overlay_color
+          variant_field_values:
+            default: 00505c
+            purple: 53284f
+            paloalto: '175e54'
+            coolgrey: 4d4f53
+            brown: '5e3032'
+    regions:
+      image:
+        - field_hs_hero_image
+      overlay_text:
+        - field_hs_hero_title
+        - field_hs_hero_body
+        - field_hs_hero_link
+_core:
+  default_config_hash: 0XHJtDawu0Y2nVqCFt4lhUUJHZTPShxAvkQndKdbqSw
+id: paragraph.hs_hero_image.hero_with_overlay
+targetEntityType: paragraph
+bundle: hs_hero_image
+mode: hero_with_overlay
+content:
+  field_hs_hero_body:
+    type: smart_trim
+    weight: 2
+    region: overlay_text
+    label: hidden
+    settings:
+      trim_length: 200
+      trim_type: chars
+      trim_suffix: ''
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      wrap_output: false
+      more_link: false
+      trim_options:
+        text: false
+        trim_zero: false
+      summary_handler: full
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+  field_hs_hero_image:
+    type: media_responsive_image_formatter
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: hero_with_text
+      link: 0
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    region: image
+  field_hs_hero_link:
+    type: link
+    weight: 3
+    region: overlay_text
+    label: hidden
+    settings:
+      trim_length: 80
+      rel: ''
+      target: ''
+      url_only: false
+      url_plain: false
+    third_party_settings: {  }
+  field_hs_hero_title:
+    type: entity_title_heading
+    weight: 1
+    region: overlay_text
+    label: hidden
+    settings:
+      tag: h2
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+hidden:
+  field_hs_hero_overlay_color: true
+  search_api_excerpt: true

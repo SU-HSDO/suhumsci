@@ -20,3 +20,55 @@ function hs_hero_image_install() {
   }
 
 }
+
+/**
+ * Set default value for existing hero image paragraphs.
+ */
+function hs_hero_image_update_8100() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Create the new field storage and the database table.
+  $field_storage = $entity_type_manager->getStorage('field_storage_config')
+    ->load('paragraph.field_hs_hero_overlay_color');
+  if (!$field_storage) {
+    $entity_type_manager->getStorage('field_storage_config')->create([
+      'uuid' => 'b1393f01-63e8-4bc6-9dae-6ab572b39387',
+      'id' => 'paragraph.field_hs_hero_overlay_color',
+      'field_name' => 'field_hs_hero_overlay_color',
+      'entity_type' => 'paragraph',
+      'type' => 'color_field_type',
+      'module' => 'color_field',
+      'cardinality' => 1,
+      'settings' => ['format' => 'hexhex'],
+    ])->save();
+  }
+
+  // Add the new field to the paragraph bundle.
+  $field_config = $entity_type_manager->getStorage('field_config')
+    ->load('paragraph.hs_hero_image.field_hs_hero_overlay_color');
+  if (!$field_config) {
+    $entity_type_manager->getStorage('field_config')->create([
+      'uuid' => 'a7643518-bc3d-4c85-add9-e99a0adfdf91',
+      'id' => 'paragraph.hs_hero_image.field_hs_hero_overlay_color',
+      'field_name' => 'field_hs_hero_overlay_color',
+      'field_type' => 'color_field_type',
+      'entity_type' => 'paragraph',
+      'bundle' => 'hs_hero_image',
+      'label' => 'Overlay Color',
+      'settings' => ['opacity' => 0],
+    ])->save();
+  }
+
+  // Set the default value on the paragraphs.
+  $paragraphs = $entity_type_manager->getStorage('paragraph')
+    ->loadByProperties(['type' => 'hs_hero_image']);
+
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  foreach ($paragraphs as $paragraph) {
+    $paragraph->set('field_hs_hero_overlay_color', [
+      'color' => '00505c',
+      'opacity' => NULL,
+    ]);
+    $paragraph->save();
+  }
+}

@@ -44,7 +44,9 @@
         $(figure).imagesLoaded(function () {
           $(figure).find('figcaption, picture').css('max-width', $(figure).find('img').width());
         });
-      })
+      });
+
+      $("img.lazy", context).lazyload();
     }
   };
 })(jQuery, Drupal);

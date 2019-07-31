@@ -24,6 +24,16 @@ function hs_page_reports_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function hs_page_reports_menu_links_discovered_alter(&$links) {
+  if (isset($links['dblog.page_not_found'])) {
+    $links['dblog.page_not_found']['parent'] = 'dblog.overview';
+    $links['dblog.access_denied']['parent'] = 'dblog.overview';
+  }
+}
+
+/**
  * Implements hook_menu_local_actions_alter().
  */
 function hs_page_reports_menu_local_actions_alter(&$local_actions) {

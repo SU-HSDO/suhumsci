@@ -4,3 +4,7 @@ services:
     arguments: ['@request_stack', '@database']
     tags:
       - { name: event_subscriber }
+  hs_page_reports.route_subscriber:
+    class: Drupal\hs_page_reports\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

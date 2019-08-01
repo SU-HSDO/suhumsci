@@ -249,6 +249,7 @@ class CircleCiCommands extends BltTasks {
   protected function runBehatTest(array $sites) {
     $collection = $this->collectionBuilder();
     $collection->addTaskList($this->setupSite());
+
     foreach ($sites as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTaskList($this->runUpdatePath(TRUE));
@@ -426,6 +427,10 @@ class CircleCiCommands extends BltTasks {
     $tasks[] = $this->taskDrush()
       ->drush('sql-cli ')
       ->rawArg('< clean_dump.sql');
+
+    $tasks[] = $this->taskExecStack()->exec("rm -rf $docroot/sites/default/files");
+    $tasks[] = $this->taskExecStack()->exec("mkdir $docroot/sites/default/files");
+    $tasks[] = $this->taskExecStack()->exec("chmod 777 -R $docroot/sites/");
     return $tasks;
   }
 

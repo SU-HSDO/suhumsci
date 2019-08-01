@@ -24,6 +24,18 @@ if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
   $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
 }
 
+// Stage file proxy settings.
+$site_domain = str_replace('__', '.', $site_dir);
+$site_domain = str_replace('_', '-', $site_domain);
+$site_domain = explode('.', $site_domain);
+$site_domain[0] .= '-prod';
+$site_domain = implode('.', $site_domain);
+
+$config['stage_file_proxy.settings'] = [
+  'origin' => "https://$site_domain.stanford.edu",
+  'origin_dir' => "sites/$site_dir/files",
+];
+
 $config['simplesamlphp_auth.settings'] = [
   'langcode' => 'en',
   'default_langcode' => 'en',

@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * hs_page_reports.install
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function hs_page_reports_schema() {
+  $schema['hs_page_reports'] = [
+    'description' => 'Stores reports of access issues.',
+    'fields' => [
+      'id' => [
+        'description' => 'The path of the request.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'path' => [
+        'description' => 'The path of the request.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'code' => [
+        'description' => 'Access Code.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'count' => [
+        'description' => 'Number of attempts at this path.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schema;
+}

@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.site_manager permissions"
-    Then the role "site_manager" should have 154 permissions
+    Then the role "site_manager" should have 155 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
     And drush output should contain "access contextual links"
@@ -15,7 +15,6 @@ Feature: Install State
     And drush output should contain "access image_browser entity browser pages"
     And drush output should contain "access media overview"
     And drush output should contain "access media_browser entity browser pages"
-    And drush output should contain "access site reports"
     And drush output should contain "access taxonomy overview"
     And drush output should contain "access toolbar"
     And drush output should contain "access video_browser entity browser pages"
@@ -145,6 +144,8 @@ Feature: Install State
     And drush output should contain "update media"
     And drush output should contain "use text format basic_html"
     And drush output should contain "use text format minimal_html"
+    And drush output should contain "view 403 reports"
+    And drush output should contain "view 404 reports"
     And drush output should contain "view any course_collections entities"
     And drush output should contain "view any event_collections entities"
     And drush output should contain "view any publications_collections entities"

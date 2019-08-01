@@ -22,7 +22,7 @@ class PageReports extends FormBase {
   protected $database;
 
   /**
-   * 404 or 403 report for the form.
+   * Which 404 or 403 report for the form.
    *
    * @var int
    */

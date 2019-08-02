@@ -11,7 +11,7 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * {@inheritDoc}}
+   * {@inheritDoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
     if ($route = $collection->get('dblog.page_not_found')) {

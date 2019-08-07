@@ -63,7 +63,7 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
     if (!method_exists($event->getException(), 'getStatusCode')) {
       return;
     }
-    
+
     $path = $this->requestStack->getCurrentRequest()->getPathInfo();
 
     $record = $this->database->select('hs_page_reports', 'h')

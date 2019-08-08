@@ -46,7 +46,13 @@
         });
       });
 
-      $("img.lazy", context).lazyload();
+      $('img.lazy', context).each(function () {
+        if ($(this).closest('.masonry')) {
+          $(this).attr('src', $(this).attr('data-src')).removeClass('lazy');
+          return;
+        }
+        $(this).lazyload().removeClass('lazy');
+      });
     }
   };
 })(jQuery, Drupal);

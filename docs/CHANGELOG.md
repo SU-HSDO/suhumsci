@@ -1,5 +1,21 @@
 # HumSci
 
+8.1.5
+--------------------------------------------------------------------------------
+_Release Date: 2019-08-08_
+
+* Fix lazy loading of masonry images by using a different lazy loading library (5d1fe138)
+* Updated all dependencies (67941d70)
+* dont throw error if getstatuscode not defined (f352bd0b)
+* HSD8-684 Added Views Ical module (d0488d3c)
+* HSD8-686 stage file proxy (#355) (55f6d36a)
+* HSD8-678 Map course instructor role (#345) (af3834cf)
+* lazy load images (#336) (069085c4)
+* added margin to hero with text overlay when in components field (4d28943e)
+* HSD8-681 prune courses (#349) (74e6a8bf)
+* HSD8-682 Fix table pattern when used in views (#346) (c725464f)
+* updated blt to 10.x-dev (#337) (fdc04c04)
+
 8.1.4
 --------------------------------------------------------------------------------
 _Release Date: 2019-07-24_

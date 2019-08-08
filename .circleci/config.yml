@@ -41,18 +41,31 @@ save_cache: &save_cache
 
 #Jobs
 
-### Job to run the update path and Behat tests.
-behat_tests_first: &behat_tests_first
+directory_setup: &directory_setup
   <<: *defaults
   steps:
     - *add_ssh
     - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
+    - run: composer install --optimize-autoloader
+    - save_cache: *save_cache
+    - persist_to_workspace:
+        root: .
+        paths:
+          - .
+
+### Job to run the update path and Behat tests.
+behat_tests_first: &behat_tests_first
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - *add_known_hosts
+    - attach_workspace:
+        at: .
     - run:
         name: Run Behat tests
         command: vendor/bin/blt circleci:behat:first
-    - save_cache: *save_cache
     - store_test_results:
         path: /var/www/html/artifacts/behat
     - store_artifacts:
@@ -64,12 +77,11 @@ behat_tests_second: &behat_tests_second
   steps:
     - *add_ssh
     - *add_known_hosts
-    - checkout
-    - restore_cache: *restore_cache
+    - attach_workspace:
+        at: .
     - run:
         name: Run Behat tests
         command: vendor/bin/blt circleci:behat:second
-    - save_cache: *save_cache
     - store_test_results:
         path: /var/www/html/artifacts/behat
     - store_artifacts:
@@ -79,8 +91,8 @@ behat_tests_second: &behat_tests_second
 fresh_install_tests: &fresh_install_tests
   <<: *defaults
   steps:
-    - checkout
-    - restore_cache: *restore_cache
+    - attach_workspace:
+        at: .
     - run:
         name: Run PHPUnit tests
         command: vendor/bin/blt circleci:phpunit
@@ -91,28 +103,26 @@ fresh_install_tests: &fresh_install_tests
         path: /var/www/html/artifacts/phpunit
     - store_artifacts:
         path: /var/www/html/artifacts
-    - save_cache: *save_cache
 
 ## Job to check test coverage.
 code_coverage: &code_coverage
   <<: *defaults
   steps:
-    - checkout
-    - restore_cache: *restore_cache
+    - attach_workspace:
+        at: .
     - run:
         name: Generate code coverage report
         command: vendor/bin/blt circleci:phpunit:coverage
     - store_artifacts:
         path: /var/www/html/artifacts
-    - save_cache: *save_cache
 
 ## Job to deploy the current branch to Acquia hosting using BLT.
 deploy_branch: &deploy_branch
   <<: *defaults
   steps:
     - *add_ssh
-    - checkout
-    - restore_cache: *restore_cache
+    - attach_workspace:
+        at: .
     - run:
         name: Deploying branch to Acquia
         command: |
@@ -126,8 +136,8 @@ deploy_tag: &deploy_tag
   <<: *defaults
   steps:
     - *add_ssh
-    - checkout
-    - restore_cache: *restore_cache
+    - attach_workspace:
+        at: .
     - run:
         name: Deploying Tag to Acquia
         command: |
@@ -136,12 +146,13 @@ deploy_tag: &deploy_tag
           ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           DATE=`date +%Y-%m-%d`
           vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
+
 github_release: &github_release
   <<: *defaults
   steps:
     - *add_ssh
-    - checkout
-    - restore_cache: *restore_cache
+    - attach_workspace:
+        at: .
     - run:
         name: Create Github Release
         command: |
@@ -152,6 +163,8 @@ github_release: &github_release
 # Declare all of the jobs we should run.
 version: 2
 jobs:
+  run-setup:
+    <<: *directory_setup
   run-behat-tests-first:
     <<: *behat_tests_first
   run-behat-tests-second:
@@ -172,10 +185,19 @@ workflows:
   version: 2
   test_lint_deploy:
     jobs:
-      - run-behat-tests-first
-      - run-behat-tests-second
-      - run-fresh-install-tests
-      - run-code-coverage
+      - run-setup
+      - run-behat-tests-first:
+          requires:
+            - run-setup
+      - run-behat-tests-second:
+          requires:
+            - run-setup
+      - run-fresh-install-tests:
+          requires:
+            - run-setup
+      - run-code-coverage:
+          requires:
+            - run-setup
       # If the above jobs complete successfully, deploy the branch.
       - run-deploy-branch:
           requires:
@@ -199,6 +221,8 @@ workflows:
       # Tags are only created on successful code. Deploy the tag after creation.
       # This will trigger after the release is created above.
       - run-deploy-tag:
+          requires:
+            - run-setup
           filters:
             tags:
               only: /.*/

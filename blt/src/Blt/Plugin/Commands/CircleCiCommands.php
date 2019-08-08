@@ -42,7 +42,6 @@ class CircleCiCommands extends BltTasks {
    * @command circleci:github:release
    */
   public function jobGithubRelease() {
-    $this->installDependencies()->run();
 
     $last_version = $this->getLastVersion();
     // Increment the last version by 1.
@@ -272,7 +271,6 @@ class CircleCiCommands extends BltTasks {
    *   List of tasks to set up site.
    */
   protected function setupSite() {
-    $tasks[] = $this->installDependencies();
     $tasks[] = $this->waitForDatabase();
     $tasks[] = $this->taskExec('apachectl stop; apachectl start');
     return $tasks;
@@ -342,16 +340,6 @@ class CircleCiCommands extends BltTasks {
       ->copy('.circleci/config/behat.yml', 'tests/behat/local.yml', TRUE);
     $tasks[] = $this->taskExec('vendor/bin/behat --verbose -c tests/behat/local.yml --tags=' . implode(',', $tags));
     return $tasks;
-  }
-
-  /**
-   * Installs composer dependencies.
-   *
-   * @return \Robo\Contract\TaskInterface
-   *   A task instance.
-   */
-  protected function installDependencies() {
-    return $this->taskComposerInstall()->optimizeAutoloader();
   }
 
   /**

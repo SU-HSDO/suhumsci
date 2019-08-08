@@ -32,6 +32,11 @@
             itemSelector: '.masonry-item',
             percentPosition: true
           });
+
+          // Listen for lazy loaded images and reset the layout of the masonry.
+          $container.find('img').on('lazy-image-loaded', function () {
+            $container.masonry('layout');
+          });
         });
       });
     }

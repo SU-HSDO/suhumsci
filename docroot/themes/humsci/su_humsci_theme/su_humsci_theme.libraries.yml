@@ -98,6 +98,15 @@ color.preview:
   dependencies:
     - color/drupal.color
 
+lazy_load:
+  version: 12.0.0
+  remote: https://github.com/verlok/lazyload
+  license:
+    name: LazyLoad
+    url: https://github.com/verlok/lazyload/blob/master/LICENSE
+  js:
+    //cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js: {type: external, minified: true }
+
 base:
   version: VERSION
   css:
@@ -109,10 +118,10 @@ base:
       css/colors.css: {}
   js:
     js/hover_menu.js: {}
-    js/lazyload.js: {}
     js/su_humsci_theme.js: {}
   dependencies:
     - su_humsci_theme/images_loaded
+    - su_humsci_theme/lazy_load
     - core/drupal
     - core/drupal.debounce
     - core/jquery

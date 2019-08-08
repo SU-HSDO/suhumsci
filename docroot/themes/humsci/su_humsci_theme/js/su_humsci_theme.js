@@ -46,12 +46,12 @@
         });
       });
 
-      $('img.lazy', context).each(function () {
-        if ($(this).closest('.masonry').length) {
-          $(this).attr('src', $(this).attr('data-src')).removeClass('lazy');
-          return;
+      // Set up the lazy loading of images.
+      new LazyLoad({
+        elements_selector: ".lazy",
+        callback_loaded: function (img) {
+          $(img).trigger('lazy-image-loaded');
         }
-        $(this).lazyload().removeClass('lazy');
       });
     }
   };

@@ -18,9 +18,10 @@ use Drupal\Core\Template\Attribute;
  */
 function su_humsci_theme_preprocess_image(&$variables) {
   if (isset($variables['attributes']['width']) && isset($variables['attributes']['height'])) {
+    global $base_path;
     $variables['attributes']['data-src'] = $variables['attributes']['src'];
-    unset($variables['attributes']['src']);
     $variables['attributes']['class'][] = 'lazy';
+    $variables['attributes']['src'] = $base_path . drupal_get_path('theme', 'su_humsci_theme') . '/img/loading.png';
   }
 }
 

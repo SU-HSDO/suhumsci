@@ -46,7 +46,13 @@
         });
       });
 
-      $("img.lazy", context).lazyload();
+      // Set up the lazy loading of images.
+      new LazyLoad({
+        elements_selector: ".lazy",
+        callback_loaded: function (img) {
+          $(img).trigger('lazy-image-loaded');
+        }
+      });
     }
   };
 })(jQuery, Drupal);

@@ -47,7 +47,7 @@
       });
 
       $('img.lazy', context).each(function () {
-        if ($(this).closest('.masonry')) {
+        if ($(this).closest('.masonry').length) {
           $(this).attr('src', $(this).attr('data-src')).removeClass('lazy');
           return;
         }

@@ -6,7 +6,7 @@ Feature: Permissions
 
   @api @safe
   Scenario: Test permission form submit
-    Given I run drush "role:add-perm site_manager 'administer nodes'"
+    Given I run drush "role-add-perm site_manager 'administer nodes'"
     Then I am logged in as a user with the "Developer" role
     And I am on "/admin/users/permissions"
     Then I press "Save permissions"

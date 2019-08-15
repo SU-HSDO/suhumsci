@@ -104,6 +104,7 @@ function su_humsci_profile_form_user_admin_permissions_alter(array &$form, FormS
       foreach ($roles as $role) {
         if (isset($form['permissions'][$permission_name][$role])) {
           $form['permissions'][$permission_name][$role]['#attributes']['disabled'] = TRUE;
+          $form['permissions'][$permission_name][$role]['#value'] = $form['permissions'][$permission_name][$role]['#default_value'] ?? 0;
         }
       }
     }

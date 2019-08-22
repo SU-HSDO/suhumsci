@@ -1,5 +1,17 @@
 # HumSci
 
+8.1.6
+--------------------------------------------------------------------------------
+_Release Date: 2019-08-22_
+
+* add known hosts (1821b1d3)
+* added github keyscan (2c5c080b)
+* added user display name field (618a6f80)
+* updated dependencies (e3c6e610)
+* HSD8-675 Dont remove custom permissions like "administer nodes" (#374) (dd818f07)
+* disable fast404 (8fef836f)
+* improve circleci workflow (5044629b)
+
 8.1.5
 --------------------------------------------------------------------------------
 _Release Date: 2019-08-08_

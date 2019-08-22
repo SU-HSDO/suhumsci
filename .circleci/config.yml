@@ -123,6 +123,7 @@ deploy_branch: &deploy_branch
   <<: *defaults
   steps:
     - *add_ssh
+    - *add_known_hosts
     - attach_workspace:
         at: .
     - run:
@@ -138,6 +139,7 @@ deploy_tag: &deploy_tag
   <<: *defaults
   steps:
     - *add_ssh
+    - *add_known_hosts
     - attach_workspace:
         at: .
     - run:
@@ -153,6 +155,7 @@ github_release: &github_release
   <<: *defaults
   steps:
     - *add_ssh
+    - *add_known_hosts
     - attach_workspace:
         at: .
     - run:

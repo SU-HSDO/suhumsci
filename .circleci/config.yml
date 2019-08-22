@@ -12,7 +12,9 @@ add_ssh: &add_ssh
 add_known_hosts: &add_known_hosts
   run:
     name: Add SSH Known Hosts
-    command: ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+    command: |
+      ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+      ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
 
 ## Defines images and working directory.
 defaults: &defaults

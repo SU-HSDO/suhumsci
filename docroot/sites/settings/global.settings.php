@@ -19,11 +19,6 @@ if (!getenv('REAL_AES_ENCRYPTION')) {
   putenv("REAL_AES_ENCRYPTION=$randomString");
 }
 
-// Local SAML path.
-if (is_dir(DRUPAL_ROOT . '/../simplesamlphp')) {
-  $settings['simplesamlphp_dir'] = DRUPAL_ROOT . '/../simplesamlphp';
-}
-
 // Stage file proxy settings.
 $site_domain = str_replace('__', '.', $site_dir);
 $site_domain = str_replace('_', '-', $site_domain);

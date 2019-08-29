@@ -6,10 +6,6 @@ $group = EnvironmentDetector::getAhGroup();
 $environment = EnvironmentDetector::getAhEnv();
 
 // SimpleSAMLphp configuration
-// Provide universal absolute path to the installation.
-
-$settings['simplesamlphp_dir'] = '/var/www/html/' . $_ENV['AH_SITE_NAME'] . '/simplesamlphp';
-
 // Set the workgroup api cert paths.
 $config['stanford_ssp.settings'] = [
   'workgroup_api_cert' => "/mnt/gfs/$group.$environment/nobackup/apikeys/saml/workgroup_api.cert",

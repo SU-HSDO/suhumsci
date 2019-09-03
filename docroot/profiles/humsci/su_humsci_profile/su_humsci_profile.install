@@ -408,3 +408,13 @@ function su_humsci_profile_update_8103() {
   }
 
 }
+
+/**
+ * Delete unused keys.
+ */
+function su_humsci_profile_update_8104() {
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('key.key.bugherd_api_key')->delete();
+  $config_factory->getEditable('key.key.jira_password')->delete();
+  \Drupal::service('module_installer')->uninstall(['hs_bugherd', 'bugherdapi']);
+}

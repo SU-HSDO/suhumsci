@@ -6,9 +6,8 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.anonymous permissions"
-    Then the role "anonymous" should have 10 permissions
+    Then the role "anonymous" should have 9 permissions
     And drush output should contain "access content"
-    And drush output should contain "restful post hs_bugherd_resource"
     And drush output should contain "search content"
     And drush output should contain "view any course_collections entities"
     And drush output should contain "view any event_collections entities"

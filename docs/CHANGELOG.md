@@ -1,5 +1,14 @@
 # HumSci
 
+8.1.7
+--------------------------------------------------------------------------------
+_Release Date: 2019-09-04_
+
+* remove unused bugherd configs and settings (87f0f39c)
+* temporary fix for https://github.com/webflo/drupal-core-require-dev/issues/14 (81441eb5)
+* removed saml dir since blt manages it (#386) (a6239888)
+* Updated dependencies (fff152ab)
+
 8.1.6
 --------------------------------------------------------------------------------
 _Release Date: 2019-08-22_

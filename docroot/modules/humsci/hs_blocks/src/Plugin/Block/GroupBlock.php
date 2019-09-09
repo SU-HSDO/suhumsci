@@ -133,6 +133,14 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     // Set the cache keys so that each block will have its own cache, even if
     // it has the same machine name on different entity displays.
     $build['#cache']['keys'] = array_keys($build['components']);
+
+    /** @var \Drupal\Core\Plugin\Context\EntityContext $entityContext */
+    $entityContext = $this->getContext('entity');
+    // Adds a cache key for each entity to make each block unique.
+    $build['#cache']['keys'][] = $entityContext->getContextData()
+      ->getValue()
+      ->id();
+
     $build['#attached']['library'][] = 'hs_blocks/group_block';
     return $build;
   }

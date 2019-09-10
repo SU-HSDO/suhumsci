@@ -1,0 +1,19 @@
+diff --git a/docroot/.htaccess b/docroot/.htaccess
+index 770c1ee0..de508239 100644
+--- a/docroot/.htaccess
++++ b/docroot/.htaccess
+@@ -77,6 +77,14 @@ AddEncoding gzip svgz
+   RewriteCond %{ENV:AH_SITE_ENVIRONMENT} dev [NC]
+   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [NE,L,R=301]
+
++  RewriteCond %{HTTP_HOST} ^symsys\.stanford\.edu [NC]
++  RewriteCond %{REQUEST_URI} ^/viewing/
++  RewriteRule ^(.*)$ https://%{HTTP_HOST} [NE,L,R=301]
++
++  RewriteCond %{REQUEST_URI} ^/wp-content [NC]
++  RewriteCond %{REQUEST_URI} (.js|.css|.jpg|.jpeg|.png|.pdf)$
++  RewriteRule .* - [F]
++
+   # Set "protossl" to "s" if we were accessed via https://.  This is used later
+   # if you enable "www." stripping or enforcement, in order to ensure that
+   # you don't bounce between http and https.

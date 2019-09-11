@@ -37,6 +37,36 @@ class CircleCiCommands extends BltTasks {
   const TEST_DIR = 'modules/humsci';
 
   /**
+   * @command circleci:update
+   */
+  public function updateDependencies() {
+    $collection = $this->collectionBuilder();
+    $collection->addTaskList($this->setupSite());
+    $collection->addTask($this->installDrupal('config_installer'));
+
+    $collection->addTask($this->taskDrush()
+      ->drush('config-import')
+      ->option('yes'));
+    $collection->addTask($this->taskComposerUpdate());
+    $collection->addTask($this->taskDrush()
+      ->drush('config-split:export')
+      ->option('yes'));
+
+    $date = date('d-m-Y');
+    $branch_name = $_ENV['CIRCLE_BRANCH'] . '-updates_' . $date;
+    $collection->addTask($this->taskGitStack()
+      ->checkout($branch_name)
+      ->add('composer.lock config')
+      ->commit('Updated dependencies')
+      ->push());
+
+    $command = sprintf('git request-pull %s %s %s', $_ENV['CIRCLE_BRANCH'], $_ENV['CIRCLE_REPOSITORY_URL'], $branch_name);
+    $collection->addTask($this->taskExec($command));
+
+    return $collection->run();
+  }
+
+  /**
    * Perform a release in github.
    *
    * @command circleci:github:release
@@ -416,8 +446,10 @@ class CircleCiCommands extends BltTasks {
       ->drush('sql-cli ')
       ->rawArg('< clean_dump.sql');
 
-    $tasks[] = $this->taskExecStack()->exec("rm -rf $docroot/sites/default/files");
-    $tasks[] = $this->taskExecStack()->exec("mkdir $docroot/sites/default/files");
+    $tasks[] = $this->taskExecStack()
+      ->exec("rm -rf $docroot/sites/default/files");
+    $tasks[] = $this->taskExecStack()
+      ->exec("mkdir $docroot/sites/default/files");
     $tasks[] = $this->taskExecStack()->exec("chmod 777 -R $docroot/sites/");
     return $tasks;
   }

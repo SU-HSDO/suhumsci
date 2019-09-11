@@ -211,8 +211,9 @@ workflows:
           requires:
             - run-setup
     triggers:
-      - schedule:
-          cron: "35 15 * * 3"
+      - schedule:=
+          # Wednesdays at 11:00 PST
+          cron: "0 16 * * 3"
           filter:
             branches:
               only:

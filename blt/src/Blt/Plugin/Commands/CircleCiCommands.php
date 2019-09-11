@@ -6,7 +6,6 @@ use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
 use Exception;
 use GuzzleHttp\Client;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Robo\Contract\VerbosityThresholdInterface;
 use Symfony\Component\Finder\Finder;
@@ -160,11 +159,12 @@ class CircleCiCommands extends BltTasks {
    * @param array $options
    *   Request options for post json data or headers.
    *
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   *
    * @see https://docs.acquia.com/acquia-cloud/develop/api/auth/
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
    */
-  protected function callAcquiaApi($path, $method = 'GET', $options = []) {
+  protected function callAcquiaApi($path, $method = 'GET', array $options = []) {
     $provider = new GenericProvider([
       'clientId' => $_ENV['ACP_KEY'],
       'clientSecret' => $_ENV['ACP_SECRET'],
@@ -173,27 +173,21 @@ class CircleCiCommands extends BltTasks {
       'urlResourceOwnerDetails' => '',
     ]);
 
-    try {
-      // Try to get an access token using the client credentials grant.
-      $accessToken = $provider->getAccessToken('client_credentials');
+    // Try to get an access token using the client credentials grant.
+    $accessToken = $provider->getAccessToken('client_credentials');
 
-      // Generate a request object using the access token.
-      $request = $provider->getAuthenticatedRequest(
-        $method,
-        'https://cloud.acquia.com/api/' . ltrim($path, '/'),
-        $accessToken
-      );
+    // Generate a request object using the access token.
+    $request = $provider->getAuthenticatedRequest(
+      $method,
+      'https://cloud.acquia.com/api/' . ltrim($path, '/'),
+      $accessToken
+    );
 
-      // Send the request.
-      $client = new Client();
-      $response = $client->send($request, $options);
+    // Send the request.
+    $client = new Client();
+    $response = $client->send($request, $options);
 
-      $this->say((string) $response->getBody());
-    }
-    catch (IdentityProviderException $e) {
-      // Failed to get the access token.
-      exit($e->getMessage());
-    }
+    $this->say((string) $response->getBody());
   }
 
   /**

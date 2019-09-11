@@ -165,9 +165,25 @@ github_release: &github_release
           git config --global user.name "CircleCI"
           vendor/bin/blt circleci:github:release
 
+update_dependencies: &update_dependencies
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - *add_known_hosts
+    - attach_workspace:
+        at: .
+    - run:
+        name: Update dependencies
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          vendor/bin/blt circleci:update
+
 # Declare all of the jobs we should run.
 version: 2
 jobs:
+  run-updates:
+    <<: *update_dependencies
   run-setup:
     <<: *directory_setup
   run-behat-tests-first:
@@ -188,6 +204,19 @@ jobs:
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2
+  wednesdays:
+    jobs:
+      - run-setup
+      - run-updates:
+          requires:
+            - run-setup
+    triggers:
+      - schedule:
+          cron: "35 15 * * 3"
+          filter:
+            branches:
+              only:
+                - /8.*-release/
   test_lint_deploy:
     jobs:
       - run-setup

@@ -37,6 +37,8 @@ class CircleCiCommands extends BltTasks {
   const TEST_DIR = 'modules/humsci';
 
   /**
+   * Update all dependencies and re-export the configuration.
+   *
    * @command circleci:update
    */
   public function updateDependencies() {
@@ -48,20 +50,19 @@ class CircleCiCommands extends BltTasks {
       ->drush('config-import')
       ->option('yes'));
     $collection->addTask($this->taskComposerUpdate());
+
+    $collection->addTask($this->taskDrush()->drush('updb')->option('yes'));
     $collection->addTask($this->taskDrush()
       ->drush('config-split:export')
       ->option('yes'));
 
-    $date = date('d-m-Y');
-    $branch_name = $_ENV['CIRCLE_BRANCH'] . '-updates_' . $date;
-    $collection->addTask($this->taskGitStack()
-      ->checkout($branch_name)
-      ->add('composer.lock config')
-      ->commit('Updated dependencies')
-      ->push());
+    $collection->addTaskList($this->runBehatTests(['global', 'install']));
 
-    $command = sprintf('git request-pull %s %s %s', $_ENV['CIRCLE_BRANCH'], $_ENV['CIRCLE_REPOSITORY_URL'], $branch_name);
-    $collection->addTask($this->taskExec($command));
+    $collection->addTask($this->taskGitStack()
+      ->checkout($_ENV['CIRCLE_BRANCH'])
+      ->add('composer.lock config')
+      ->commit('Updated dependencies ' . date('d-m-Y'))
+      ->push('origin', $_ENV['CIRCLE_BRANCH']));
 
     return $collection->run();
   }

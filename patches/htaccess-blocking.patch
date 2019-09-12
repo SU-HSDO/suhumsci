@@ -7,8 +7,9 @@ index 770c1ee0..de508239 100644
    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [NE,L,R=301]
 
 +  RewriteCond %{HTTP_HOST} ^symsys\.stanford\.edu [NC]
-+  RewriteCond %{REQUEST_URI} ^/viewing/
-+  RewriteRule ^(.*)$ https://%{HTTP_HOST} [NE,L,R=301]
++  RewriteCond %{REQUEST_URI} ^/viewing/ [OR]
++  RewriteCond %{QUERY_STRING} ^.*viewing
++  RewriteRule ^(.*)$ https://%{HTTP_HOST}? [NE,L,R=301]
 +
 +  RewriteCond %{REQUEST_URI} ^/wp-content [NC]
 +  RewriteCond %{REQUEST_URI} (.js|.css|.jpg|.jpeg|.png|.pdf)$

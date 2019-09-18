@@ -14,6 +14,7 @@ add_known_hosts: &add_known_hosts
     name: Add SSH Known Hosts
     command: |
       ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+      ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
       ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
 
 ## Defines images and working directory.
@@ -131,7 +132,6 @@ deploy_branch: &deploy_branch
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
-          ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           vendor/bin/blt deploy --no-interaction
 
 ## Job to deploy the new tag to Acquia hosting using BLT.
@@ -147,7 +147,6 @@ deploy_tag: &deploy_tag
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
-          ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
           DATE=`date +%Y-%m-%d`
           vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
 

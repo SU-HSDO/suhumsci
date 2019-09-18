@@ -5,6 +5,8 @@ namespace Example\Blt\Plugin\Commands;
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
 use Exception;
+use GuzzleHttp\Client;
+use League\OAuth2\Client\Provider\GenericProvider;
 use Robo\Contract\VerbosityThresholdInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -37,6 +39,8 @@ class CircleCiCommands extends BltTasks {
   const TEST_DIR = 'modules/humsci';
 
   /**
+   * Update all dependencies and re-export the configuration.
+   *
    * @command circleci:update
    */
   public function updateDependencies() {
@@ -48,20 +52,19 @@ class CircleCiCommands extends BltTasks {
       ->drush('config-import')
       ->option('yes'));
     $collection->addTask($this->taskComposerUpdate());
+
+    $collection->addTask($this->taskDrush()->drush('updb')->option('yes'));
     $collection->addTask($this->taskDrush()
       ->drush('config-split:export')
       ->option('yes'));
 
-    $date = date('d-m-Y');
-    $branch_name = $_ENV['CIRCLE_BRANCH'] . '-updates_' . $date;
-    $collection->addTask($this->taskGitStack()
-      ->checkout($branch_name)
-      ->add('composer.lock config')
-      ->commit('Updated dependencies')
-      ->push());
+    $collection->addTaskList($this->runBehatTests(['global', 'install']));
 
-    $command = sprintf('git request-pull %s %s %s', $_ENV['CIRCLE_BRANCH'], $_ENV['CIRCLE_REPOSITORY_URL'], $branch_name);
-    $collection->addTask($this->taskExec($command));
+    $collection->addTask($this->taskGitStack()
+      ->checkout($_ENV['CIRCLE_BRANCH'])
+      ->add('composer.lock config')
+      ->commit('Updated dependencies ' . date('d-m-Y'))
+      ->push('origin', $_ENV['CIRCLE_BRANCH']));
 
     return $collection->run();
   }
@@ -131,6 +134,60 @@ class CircleCiCommands extends BltTasks {
     if (!$result->wasSuccessful()) {
       throw new Exception('Release was unsuccessful');
     }
+
+    $new_branch = $this->incrementVersion($version) . "-release";
+    // Create the new release branch in github.
+    $this->taskGitStack()
+      ->checkout("-b $new_branch")
+      ->push('origin', $new_branch)
+      ->run();
+    // Deploy that release to Acquia.
+    $this->blt()->arg('artifact:deploy')->option('no-interaction')->run();
+    // Staging environment ID.
+    $environment_id = '265867-23a85077-2967-41a4-be22-a84c24e0f81a';
+    // Switch the code on staging to the new branch.
+    $this->callAcquiaApi("/environments/$environment_id/code/actions/switch", 'POST', ['json' => ['branch' => "$new_branch-build"]]);
+  }
+
+  /**
+   * Make an API call to Acquia Cloud API V2.
+   *
+   * @param string $path
+   *   API Endpoint, options from: https://cloudapi-docs.acquia.com/.
+   * @param string $method
+   *   Request method: GET, POST, PUT, DELETE.
+   * @param array $options
+   *   Request options for post json data or headers.
+   *
+   * @see https://docs.acquia.com/acquia-cloud/develop/api/auth/
+   *
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
+   */
+  protected function callAcquiaApi($path, $method = 'GET', array $options = []) {
+    $provider = new GenericProvider([
+      'clientId' => $_ENV['ACP_KEY'],
+      'clientSecret' => $_ENV['ACP_SECRET'],
+      'urlAuthorize' => '',
+      'urlAccessToken' => 'https://accounts.acquia.com/api/auth/oauth/token',
+      'urlResourceOwnerDetails' => '',
+    ]);
+
+    // Try to get an access token using the client credentials grant.
+    $accessToken = $provider->getAccessToken('client_credentials');
+
+    // Generate a request object using the access token.
+    $request = $provider->getAuthenticatedRequest(
+      $method,
+      'https://cloud.acquia.com/api/' . ltrim($path, '/'),
+      $accessToken
+    );
+
+    // Send the request.
+    $client = new Client();
+    $response = $client->send($request, $options);
+
+    $this->say((string) $response->getBody());
   }
 
   /**

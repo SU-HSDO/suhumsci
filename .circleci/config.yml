@@ -170,14 +170,16 @@ update_dependencies: &update_dependencies
   steps:
     - *add_ssh
     - *add_known_hosts
-    - attach_workspace:
-        at: .
+    - checkout
+    - restore_cache: *restore_cache
+    - run: composer install --optimize-autoloader
     - run:
         name: Update dependencies
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           vendor/bin/blt circleci:update
+    - save_cache: *save_cache
 
 # Declare all of the jobs we should run.
 version: 2
@@ -204,20 +206,6 @@ jobs:
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2
-  wednesdays:
-    jobs:
-      - run-setup
-      - run-updates:
-          requires:
-            - run-setup
-    triggers:
-      - schedule:
-          # Wednesdays at 11:00 PST
-          cron: "0 16 * * 3"
-          filter:
-            branches:
-              only:
-                - /8.*-release/
   test_lint_deploy:
     jobs:
       - run-setup
@@ -242,7 +230,8 @@ workflows:
             - run-code-coverage
           filters:
             branches:
-              ignore: /violinist.*/
+              ignore:
+                - /violinist.*/
       # Create a release when a release branch has merged into develop.
       - run-github-release:
           requires:
@@ -260,6 +249,18 @@ workflows:
             - run-setup
           filters:
             tags:
-              only: /.*/
+              only:
+                - /.*/
             branches:
-              ignore: /.*/
+              ignore:
+                - /.*/
+  dependency_updates:
+    triggers:
+      - schedule:
+          cron: "0 18 * * 3"
+          filters:
+            branches:
+              only:
+                - /8\..*-release/
+    jobs:
+      - run-updates

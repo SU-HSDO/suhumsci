@@ -1,5 +1,29 @@
 # HumSci
 
+8.1.8
+--------------------------------------------------------------------------------
+_Release Date: 2019-09-18_
+
+* Merge branch '8.1.8-release' into develop (83f747c1)
+* Updated dependencies 18-09-2019 (5a97b10d)
+* remove query string from symsys redirects (adaea8d2)
+* remove query string from symsys redirects (1629a2bd)
+* fixup! Deploy new branch after successfully triggering a release (63821733)
+* Deploy new branch after successfully triggering a release (96e81416)
+* moved circleci updates to bottom of config (860fe9fd)
+* fixed yaml syntax (fdc07692)
+* Merge branch 'develop' into 8.1.8-release (7f1f70e3)
+* changed wednesday cron time (963de392)
+* test out automated dependency updates (ef526521)
+* test out automated dependency updates (8eb6bf3e)
+* Merge branch 'develop' into 8.1.8-release (d773b648)
+* block some paths (d2537f4d)
+* updated dependencies (75b31bcd)
+* block some paths (899a0d1a)
+* HSD8-697 Add cache key for group blocks (#400) (bbf8cce4)
+* HSD8-697 Add cache key for group blocks (#400) (f139c98c)
+* Updated dependencies and stanford_media config (1290a2c8)
+
 8.1.7
 --------------------------------------------------------------------------------
 _Release Date: 2019-09-04_

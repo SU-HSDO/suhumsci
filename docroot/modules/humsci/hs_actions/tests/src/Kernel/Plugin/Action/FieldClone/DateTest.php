@@ -164,7 +164,7 @@ class DateTest extends KernelTestBase {
   /**
    * Test when the date is copied over a daylight savings, it displays correct.
    */
-  public function testDaylight() {
+  public function testDaylightSavingsFromJune() {
     $this->node->set($this->field->getName(), '2019-06-01T16:15:00');
     $this->node->save();
 
@@ -196,6 +196,43 @@ class DateTest extends KernelTestBase {
     $pre_render = $view_builder->view($new_node);
     $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
     $this->assertContains('December 2, 2019 2:15 AM', (string) $rendered_output);
+  }
+
+  /**
+   * Test when the date is copied over a daylight savings, it displays correct.
+   */
+  public function testDaylightSavingsFromDecember() {
+    $this->node->set($this->field->getName(), '2019-12-01T16:15:00');
+    $this->node->save();
+
+    /** @var \Drupal\Core\Action\ActionManager $action_manager */
+    $action_manager = $this->container->get('plugin.manager.action');
+    /** @var \Drupal\hs_actions\Plugin\Action\CloneNode $action */
+    $action = $action_manager->createInstance('node_clone_action');
+    $action->setConfiguration([
+      'field_clone' => [
+        'date' => [
+          $this->field->getName() => [
+            'increment' => 6,
+            'unit' => 'months',
+          ],
+        ],
+      ],
+    ]);
+    $action->execute($this->node);
+    $nodes = Node::loadMultiple();
+    /** @var \Drupal\node\NodeInterface $new_node */
+    $new_node = end($nodes);
+
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    $pre_render = $view_builder->view($this->node);
+    $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
+    $this->assertContains('December 2, 2019 3:15 AM', (string) $rendered_output);
+
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    $pre_render = $view_builder->view($new_node);
+    $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
+    $this->assertContains('June 2, 2020 3:15 AM', (string) $rendered_output);
   }
 
 }

@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\hs_actions\Kernel\Plugin\Action\FieldClone;
 
+use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
@@ -65,6 +67,8 @@ class DateTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
+    $this->installEntitySchema('date_format');
+    $this->installSchema('node', 'node_access');
 
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();
 
@@ -72,7 +76,7 @@ class DateTest extends KernelTestBase {
       'field_name' => strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'datetime',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATETIME],
     ]);
     $field_storage->save();
 
@@ -81,6 +85,18 @@ class DateTest extends KernelTestBase {
       'bundle' => 'page',
     ]);
     $this->field->save();
+
+    $node_display = EntityViewDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => 'page',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+
+    DateFormat::create(['id' => 'medium', 'pattern' => 'F j, Y g:i A'])
+      ->save();
+    $node_display->setComponent($this->field->getName());
+    $node_display->save();
 
     $this->node = Node::create([
       'title' => $this->randomMachineName(),
@@ -143,6 +159,45 @@ class DateTest extends KernelTestBase {
     $form_state = new FormState();
     $this->assertNull($test_field_base->validateConfigurationForm($form, $form_state));
     $this->assertNull($test_field_base->submitConfigurationForm($form, $form_state));
+  }
+
+  /**
+   * Test when the date is copied over a daylight savings, it displays correct.
+   */
+  public function testDaylight() {
+    $this->node->set($this->field->getName(), '2019-06-01T16:15:00');
+    $this->node->save();
+
+    /** @var \Drupal\Core\Action\ActionManager $action_manager */
+    $action_manager = $this->container->get('plugin.manager.action');
+    /** @var \Drupal\hs_actions\Plugin\Action\CloneNode $action */
+    $action = $action_manager->createInstance('node_clone_action');
+    $action->setConfiguration([
+      'field_clone' => [
+        'date' => [
+          $this->field->getName() => [
+            'increment' => 6,
+            'unit' => 'months',
+          ],
+        ],
+      ],
+    ]);
+    $action->execute($this->node);
+    $nodes = Node::loadMultiple();
+    /** @var \Drupal\node\NodeInterface $new_node */
+    $new_node = end($nodes);
+
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    $pre_render = $view_builder->view($this->node);
+    $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
+
+    $this->assertNotFalse(strpos($rendered_output, 'June 2, 2019 2:15 AM'));
+
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    $pre_render = $view_builder->view($new_node);
+    $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
+
+    $this->assertNotFalse(strpos($rendered_output, 'December 2, 2019 2:15 AM'));
   }
 
 }

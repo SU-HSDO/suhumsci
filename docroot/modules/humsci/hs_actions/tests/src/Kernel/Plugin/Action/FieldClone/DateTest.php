@@ -106,60 +106,60 @@ class DateTest extends KernelTestBase {
     $this->node->save();
   }
 
-  //  /**
-  //   * Test the plugin form methods.
-  //   *
-  //   * @throws \Drupal\Component\Plugin\Exception\PluginException
-  //   */
-  //  public function testForm() {
-  //    /** @var \Drupal\hs_actions\Plugin\FieldCloneManagerInterface $field_manager */
-  //    $field_manager = $this->container->get('plugin.manager.hs_actions_field_clone');
-  //    /** @var \Drupal\hs_actions\Plugin\Action\FieldClone\Date $plugin */
-  //    $plugin = $field_manager->createInstance('date');
-  //    $this->assertInstanceOf(Date::class, $plugin);
-  //    $form = [];
-  //    $form_state = new FormState();
-  //    $form = $plugin->buildConfigurationForm($form, $form_state);
-  //    $this->assertCount(2, $form);
-  //  }
-  //
-  //  /**
-  //   * Test the field clone values works as expected.
-  //   *
-  //   * @throws \Drupal\Component\Plugin\Exception\PluginException
-  //   */
-  //  public function testDateFieldClone() {
-  //    /** @var \Drupal\Core\Action\ActionManager $action_manager */
-  //    $action_manager = $this->container->get('plugin.manager.action');
-  //    /** @var \Drupal\hs_actions\Plugin\Action\CloneNode $action */
-  //    $action = $action_manager->createInstance('node_clone_action');
-  //    $action->setConfiguration([
-  //      'field_clone' => [
-  //        'date' => [
-  //          $this->field->getName() => [
-  //            'increment' => 3,
-  //            'unit' => 'years',
-  //          ],
-  //        ],
-  //      ],
-  //    ]);
-  //    $action->execute($this->node);
-  //    $nodes = Node::loadMultiple();
-  //    /** @var \Drupal\node\NodeInterface $new_node */
-  //    $new_node = end($nodes);
-  //    $cloned_field_value = $new_node->get($this->field->getName())->getString();
-  //
-  //    $interval = \DateInterval::createFromDateString('3 year');
-  //    $this->currentDate->add($interval);
-  //
-  //    $this->assertEquals($this->currentDate->format('Y-m-d'), $cloned_field_value);
-  //
-  //    $test_field_base = new TestFieldCloneBase([], NULL, NULL);
-  //    $form = [];
-  //    $form_state = new FormState();
-  //    $this->assertNull($test_field_base->validateConfigurationForm($form, $form_state));
-  //    $this->assertNull($test_field_base->submitConfigurationForm($form, $form_state));
-  //  }
+  /**
+   * Test the plugin form methods.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function testForm() {
+    /** @var \Drupal\hs_actions\Plugin\FieldCloneManagerInterface $field_manager */
+    $field_manager = $this->container->get('plugin.manager.hs_actions_field_clone');
+    /** @var \Drupal\hs_actions\Plugin\Action\FieldClone\Date $plugin */
+    $plugin = $field_manager->createInstance('date');
+    $this->assertInstanceOf(Date::class, $plugin);
+    $form = [];
+    $form_state = new FormState();
+    $form = $plugin->buildConfigurationForm($form, $form_state);
+    $this->assertCount(2, $form);
+  }
+
+  /**
+   * Test the field clone values works as expected.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function testDateFieldClone() {
+    /** @var \Drupal\Core\Action\ActionManager $action_manager */
+    $action_manager = $this->container->get('plugin.manager.action');
+    /** @var \Drupal\hs_actions\Plugin\Action\CloneNode $action */
+    $action = $action_manager->createInstance('node_clone_action');
+    $action->setConfiguration([
+      'field_clone' => [
+        'date' => [
+          $this->field->getName() => [
+            'increment' => 3,
+            'unit' => 'years',
+          ],
+        ],
+      ],
+    ]);
+    $action->execute($this->node);
+    $nodes = Node::loadMultiple();
+    /** @var \Drupal\node\NodeInterface $new_node */
+    $new_node = end($nodes);
+    $cloned_field_value = $new_node->get($this->field->getName())->getString();
+
+    $interval = \DateInterval::createFromDateString('3 year');
+    $this->currentDate->add($interval);
+
+    $this->assertEquals($this->currentDate->format('Y-m-d'), $cloned_field_value);
+
+    $test_field_base = new TestFieldCloneBase([], NULL, NULL);
+    $form = [];
+    $form_state = new FormState();
+    $this->assertNull($test_field_base->validateConfigurationForm($form, $form_state));
+    $this->assertNull($test_field_base->submitConfigurationForm($form, $form_state));
+  }
 
   /**
    * Test when the date is copied over a daylight savings, it displays correct.

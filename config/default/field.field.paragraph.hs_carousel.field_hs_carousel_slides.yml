@@ -1,23 +1,20 @@
-uuid: 89d0560a-eb7f-4782-ae67-b48508c5b073
+uuid: eeb48d1d-d9dc-4ed0-84de-a0e7c67a5f8e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_hs_page_hero
-    - node.type.hs_basic_page
+    - field.storage.paragraph.field_hs_carousel_slides
     - paragraphs.paragraphs_type.hs_carousel
     - paragraphs.paragraphs_type.hs_hero_image
   module:
     - entity_reference_revisions
-_core:
-  default_config_hash: CtjSYgQDCAfFJwXf-qNIHaI9AlmddmaBT13rtC0QYAI
-id: node.hs_basic_page.field_hs_page_hero
-field_name: field_hs_page_hero
-entity_type: node
-bundle: hs_basic_page
-label: 'Hero Image'
+id: paragraph.hs_carousel.field_hs_carousel_slides
+field_name: field_hs_carousel_slides
+entity_type: paragraph
+bundle: hs_carousel
+label: Slides
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -27,25 +24,24 @@ settings:
     negate: 0
     target_bundles:
       hs_hero_image: hs_hero_image
-      hs_carousel: hs_carousel
     target_bundles_drag_drop:
-      hs_hero_image:
-        enabled: true
-        weight: 3
-      hs_text_area:
-        weight: 4
-        enabled: false
       hs_accordion:
         weight: 9
         enabled: false
       hs_carousel:
-        enabled: true
         weight: 10
+        enabled: false
+      hs_hero_image:
+        enabled: true
+        weight: 11
       hs_postcard:
         weight: 12
         enabled: false
       hs_row:
         weight: 13
+        enabled: false
+      hs_text_area:
+        weight: 14
         enabled: false
       hs_view:
         weight: 15

@@ -3,6 +3,8 @@
 namespace Example\Blt\Plugin\Commands;
 
 use Drupal\Core\Serialization\Yaml;
+use GuzzleHttp\Client;
+use League\OAuth2\Client\Provider\GenericProvider;
 use Zend\Stdlib\Glob;
 
 /**

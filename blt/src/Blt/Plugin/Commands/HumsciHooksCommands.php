@@ -75,16 +75,4 @@ class HumsciHooksCommands extends BltTasks {
     }
   }
 
-  /**
-   * Generate a new CSR after multisite.
-   *
-   * @hook post-command recipes:multisite:init
-   */
-  public function postMultisite($result, CommandData $data) {
-    $add_domain = $this->askDefault('Would you like to add domains at this time?', 'y');
-    if (strtolower($add_domain[0]) == 'y') {
-      $this->invokeCommand('humsci:add-domain');
-    }
-  }
-
 }

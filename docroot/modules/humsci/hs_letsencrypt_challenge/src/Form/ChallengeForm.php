@@ -77,7 +77,7 @@ class ChallengeForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->state->set('letsencrypt_challenge.challenge', $form_state->getValue('challenge'));
 
-    drupal_set_message($this->t('The configuration options have been saved.'));
+    $this->messenger()->addMessage($this->t('The configuration options have been saved.'));
   }
 
 }

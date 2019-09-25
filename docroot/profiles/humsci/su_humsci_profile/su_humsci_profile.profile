@@ -17,6 +17,17 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
+ * Implements hook_contextual_links_alter().
+ */
+function su_humsci_profile_contextual_links_alter(array &$links, $group, array $route_parameters) {
+  if ($group == 'paragraph') {
+    // Paragraphs edit module clone link does not function correctly. Remove it
+    // from available links.
+    unset($links['paragraphs_edit.clone_form']);
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function su_humsci_profile_form_menu_link_content_menu_link_content_form_alter(array &$form, FormStateInterface $form_state) {

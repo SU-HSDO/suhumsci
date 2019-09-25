@@ -1,0 +1,50 @@
+uuid: 3dd9cd5b-8cd6-4b64-899c-630182f7e84f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_carousel.field_hs_carousel_slides
+    - paragraphs.paragraphs_type.hs_carousel
+  module:
+    - ds
+    - field_formatter_class
+    - hs_field_helpers
+    - slick_paragraphs
+id: paragraph.hs_carousel.default
+targetEntityType: paragraph
+bundle: hs_carousel
+mode: default
+content:
+  field_hs_carousel_slides:
+    type: slick_paragraphs_vanilla
+    weight: 0
+    label: hidden
+    settings:
+      optionset: hs_slideshow
+      skin: ''
+      view_mode: slideshow_slide
+      cache: 0
+      current_view_mode: default
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      skin_arrows: ''
+      skin_dots: ''
+      style: ''
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      ds:
+        ds_limit: ''
+      hs_field_helpers:
+        inline_contents: 0
+    region: content
+hidden:
+  search_api_excerpt: true

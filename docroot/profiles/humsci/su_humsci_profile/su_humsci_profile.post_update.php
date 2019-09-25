@@ -6,6 +6,7 @@
  */
 
 use Drupal\block\Entity\Block;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Outdated.
@@ -85,4 +86,20 @@ function su_humsci_profile_post_update_8_1_0() {
       }
     }
   }
+}
+
+/**
+ * Adds carousel to the hero field on basic pages.
+ */
+function su_humsci_profile_post_update_8_1_1() {
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = FieldConfig::load('node.hs_basic_page.field_hs_page_hero');
+  $settings = $field->getSettings();
+  $settings['handler_settings']['target_bundles']['hs_carousel'] = 'hs_carousel';
+  $settings['handler_settings']['target_bundles_drag_drop']['hs_carousel'] = [
+    'enabled' => TRUE,
+    'weight' => 9,
+  ];
+  $field->set('settings', $settings);
+  $field->save();
 }

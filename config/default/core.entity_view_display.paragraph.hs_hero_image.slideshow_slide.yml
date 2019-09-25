@@ -1,0 +1,48 @@
+uuid: d7aeeab0-c6aa-4b72-afc9-3aa48246fca9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.slideshow_slide
+    - field.field.paragraph.hs_hero_image.field_hs_hero_body
+    - field.field.paragraph.hs_hero_image.field_hs_hero_image
+    - field.field.paragraph.hs_hero_image.field_hs_hero_link
+    - field.field.paragraph.hs_hero_image.field_hs_hero_overlay_color
+    - field.field.paragraph.hs_hero_image.field_hs_hero_title
+    - paragraphs.paragraphs_type.hs_hero_image
+  module:
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - stanford_media
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+_core:
+  default_config_hash: 0XHJtDawu0Y2nVqCFt4lhUUJHZTPShxAvkQndKdbqSw
+id: paragraph.hs_hero_image.slideshow_slide
+targetEntityType: paragraph
+bundle: hs_hero_image
+mode: slideshow_slide
+content:
+  field_hs_hero_image:
+    type: media_responsive_image_formatter
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: hero_with_text
+      link: 0
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    region: content
+hidden:
+  field_hs_hero_body: true
+  field_hs_hero_link: true
+  field_hs_hero_overlay_color: true
+  field_hs_hero_title: true
+  search_api_excerpt: true

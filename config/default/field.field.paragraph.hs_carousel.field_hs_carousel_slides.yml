@@ -1,0 +1,52 @@
+uuid: eeb48d1d-d9dc-4ed0-84de-a0e7c67a5f8e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_carousel_slides
+    - paragraphs.paragraphs_type.hs_carousel
+    - paragraphs.paragraphs_type.hs_hero_image
+  module:
+    - entity_reference_revisions
+id: paragraph.hs_carousel.field_hs_carousel_slides
+field_name: field_hs_carousel_slides
+entity_type: paragraph
+bundle: hs_carousel
+label: Slides
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      hs_hero_image: hs_hero_image
+    target_bundles_drag_drop:
+      hs_accordion:
+        weight: 9
+        enabled: false
+      hs_carousel:
+        weight: 10
+        enabled: false
+      hs_hero_image:
+        enabled: true
+        weight: 11
+      hs_postcard:
+        weight: 12
+        enabled: false
+      hs_row:
+        weight: 13
+        enabled: false
+      hs_text_area:
+        weight: 14
+        enabled: false
+      hs_view:
+        weight: 15
+        enabled: false
+      hs_webform:
+        weight: 16
+        enabled: false
+field_type: entity_reference_revisions

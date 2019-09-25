@@ -32,10 +32,13 @@ class AcquiaApi {
    * AcquiaApi constructor.
    *
    * @param array $env_ids
+   *   Keyed array of Acquia environment IDS.
    * @param string $apiKey
+   *   Acquia API Key.
    * @param string $apiSecret
+   *   Acquia API Secret.
    */
-  public function __construct($env_ids = [], $apiKey = '', $apiSecret = '') {
+  public function __construct(array $env_ids, $apiKey = '', $apiSecret = '') {
     $this->envIds = $env_ids;
 
     $this->key = $apiKey;
@@ -50,36 +53,53 @@ class AcquiaApi {
   }
 
   /**
-   * @param $environment
-   * @param $domain
+   * Add a domain to a given environment.
+   *
+   * @param string $environment
+   *   Environment to effect.
+   * @param string $domain
+   *   Domain to add: foo.stanford.edu
    *
    * @return bool|string
+   *   API Response.
    */
   public function addDomain($environment, $domain) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/domains", 'POST', ['json' => ['hostname' => $domain]]);
   }
 
   /**
-   * @param $db_name
+   * Add a database to all environments.
+   *
+   * @param string $db_name
+   *   Database name to add.
    *
    * @return bool|string
+   *   API Response.
    */
   public function addDatabase($db_name) {
     return $this->callAcquiaApi("/applications/{$this->envIds['appId']}/databases", 'POST', ['json' => ['name' => $db_name]]);
   }
 
   /**
-   * @param $environment
-   * @param $cert
-   * @param $key
-   * @param $intermediate
-   * @param null $label
+   * Add an SSL Certificate to a given environment.
+   *
+   * @param string $environment
+   *   Environment to effect.
+   * @param string $cert
+   *   SSL Cert file contents.
+   * @param string $key
+   *   SSL Key file contents.
+   * @param string $intermediate
+   *   SSL Intermediate certificate file contents.
+   * @param string|null $label
+   *   Label for Acquia dashboard.
    *
    * @return bool|string
+   *   API Response.
    */
   public function addSSLCert($environment, $cert, $key, $intermediate, $label = NULL) {
     if (is_null($label)) {
-      $label = date('Y-m-d h:m');
+      $label = date('Y-m-d G:i');
     }
     $data = [
       'json' => [
@@ -94,19 +114,43 @@ class AcquiaApi {
   }
 
   /**
-   * @param $environment
-   * @param $certId
+   * Activate an SSL cert already installed on the environment.
+   *
+   * @param string $environment
+   *   Environment to effect.
+   * @param int $certId
+   *   Certificate ID to activate.
    *
    * @return bool|string
+   *   API Response.
    */
   public function activateSSLCert($environment, $certId) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/ssl/certificates/{$certId}/actions/activate", 'POST');
   }
 
   /**
-   * @param $environment
+   * Remove a cert from the environment.
    *
-   * @return bool|mixed|string
+   * @param string $environment
+   *   Environment to effect.
+   * @param int $certId
+   *   Certificate ID to remove.
+   *
+   * @return bool|string
+   *   API Response.
+   */
+  public function removeCert($environment, $certId){
+    return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/ssl/certificates/{$certId}", 'DELETE');
+  }
+
+  /**
+   * Get all SSL certs that are on the environment.
+   *
+   * @param string $environment
+   *   Environment to effect.
+   *
+   * @return bool|array
+   *   API Response.
    */
   public function getSSLCerts($environment) {
     if ($response = $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/ssl/certificates")) {
@@ -116,10 +160,15 @@ class AcquiaApi {
   }
 
   /**
-   * @param $environment
-   * @param $reference
+   * Deploy a git branch or tag to a certain environment.
+   *
+   * @param string $environment
+   *   Environment to effect.
+   * @param string $reference
+   *   Git branch or tag name.
    *
    * @return bool|string
+   *   API Response.
    */
   public function deployCode($environment, $reference) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/code/actions/switch", 'POST', ['json' => ['name' => $reference]]);

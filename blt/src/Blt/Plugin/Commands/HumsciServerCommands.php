@@ -3,6 +3,7 @@
 namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
+use GuzzleHttp\Client;
 
 /**
  * Class HumsciServerCommand.
@@ -110,12 +111,12 @@ class HumsciServerCommands extends AcHooksCommand {
    * @throws \Acquia\Blt\Robo\Exceptions\BltException
    * @throws \Robo\Exception\TaskException
    */
-  public function humsciLetsEncryptAdd($environment = 'dev', $options = ['domains' => []]) {
+  public function humsciLetsEncryptAdd($environment, $options = ['domains' => []]) {
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
       return;
     }
-
+    $this->checkDomains([]);
     $domains = $this->humsciLetsEncryptList($environment);
 
     $this->say('Existing domains on the cert:' . PHP_EOL . implode(PHP_EOL, $domains));
@@ -128,6 +129,7 @@ class HumsciServerCommands extends AcHooksCommand {
     $domains = array_merge($domains, $this->getDomains());
     $domains = array_unique($domains);
     $this->removeDomains($domains);
+    $this->checkDomains($domains);
 
     $primary_domain = array_shift($domains);
     asort($domains);
@@ -140,7 +142,7 @@ class HumsciServerCommands extends AcHooksCommand {
     if ($environment != 'prod') {
       $this->invokeCommand('drupal:module:uninstall', [
         'modules' => 'shield',
-        'environment' => $environment,
+        'environment' => $environment == 'test' ? 'stage' : $environment,
       ]);
     }
 
@@ -150,6 +152,65 @@ class HumsciServerCommands extends AcHooksCommand {
       ->arg($php_command)
       ->printOutput(FALSE)
       ->run();
+  }
+
+  /**
+   * @param array $domains
+   *   Array of string domains to check if access is ok.
+   *
+   * @throws \Exception
+   */
+  protected function checkDomains($domains) {
+    $this->say('Checking domains for access');
+    foreach ($domains as $domain) {
+      $client = new Client([
+        'base_uri' => "http://$domain",
+        'allow_redirects' => TRUE,
+        'timeout' => 0,
+      ]);
+      $response = $client->get('/');
+      if (empty($response->getHeader('X-AH-Environment'))) {
+        throw new \Exception("Domain $domain does not point to Acquia environment");
+      }
+    }
+  }
+
+  /**
+   * Update the cert on Acquia Cloud using the cert files on the server.
+   *
+   * @param string $environment
+   *   Environment to update cert.
+   *
+   * @command humsci:update-cert
+   *
+   * @throws \Robo\Exception\TaskException
+   */
+  public function updateSSLCert($environment) {
+    $cert_name = $environment == 'test' ? 'swshumsci-stage.stanford.edu' : "swshumsci-$environment.stanford.edu";
+    $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
+    $this->taskDrush()
+      ->drush("rsync --mode=rltDkz @default.prod:/home/swshumsci/.acme.sh/$cert_name/ @self:../certs")
+      ->run();
+    $api = new AcquiaApi($this->getConfigValue('cloud'), $this->getConfigValue('cloud.key'), $this->getConfigValue('cloud.secret'));
+
+    $cert = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.cer");
+    $key = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.key");
+    $intermediate = file_get_contents($this->getConfigValue('repo.root') . "/certs/ca.cer");
+    $label = 'LE ' . date('Y-m-d G:i');
+    $this->say($api->addSSLCert($environment, $cert, $key, $intermediate, $label));
+
+    $certs = $api->getSSLCerts($environment);
+    foreach ($certs['_embedded']['items'] as $cert) {
+      if ($cert['label'] == $label) {
+        $this->say($api->activateSSLCert($environment, $cert['id']));
+      }
+
+      if (strtotime($cert['expires_at']) < time()) {
+        $this->say($api->removeCert($environment, $cert['id']));
+      }
+    }
+
+    $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
   }
 
   /**

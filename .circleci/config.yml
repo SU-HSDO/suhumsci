@@ -278,6 +278,7 @@ workflows:
                 - /8\..*-release/
     jobs:
       - run-updates
+
   update_certs:
     triggers:
       - schedule:
@@ -285,6 +286,6 @@ workflows:
           filters:
             branches:
               only:
-                - /use-api-v2/
+                - use-api-v2
     jobs:
       - run-update-certs

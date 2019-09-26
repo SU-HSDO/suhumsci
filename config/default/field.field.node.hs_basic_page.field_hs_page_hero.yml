@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_hs_page_hero
     - node.type.hs_basic_page
+    - paragraphs.paragraphs_type.hs_carousel
     - paragraphs.paragraphs_type.hs_hero_image
   module:
     - entity_reference_revisions
@@ -26,11 +27,12 @@ settings:
     negate: 0
     target_bundles:
       hs_hero_image: hs_hero_image
+      hs_carousel: hs_carousel
     target_bundles_drag_drop:
       hs_hero_image:
         enabled: true
         weight: 3
-      hs_text_area:
-        weight: 4
-        enabled: false
+      hs_carousel:
+        enabled: true
+        weight: 10
 field_type: entity_reference_revisions

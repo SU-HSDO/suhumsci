@@ -188,10 +188,10 @@ update_certs: &update_certs
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
-     - run:
-         name: Update Prod SSL Certs
-         command: |
-           vendor/bin/blt humsci:update-cert prod
+    - run:
+        name: Update Prod SSL Certs
+        command: |
+          vendor/bin/blt humsci:update-cert prod
 
 # Declare all of the jobs we should run.
 version: 2

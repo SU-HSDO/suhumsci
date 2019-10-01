@@ -162,7 +162,7 @@ class AcquiaApi {
    * @return bool|array
    *   API Response.
    */
-  public function getSSLCerts($environment) {
+  public function getCerts($environment) {
     if ($response = $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/ssl/certificates")) {
       return json_decode($response, TRUE);
     }

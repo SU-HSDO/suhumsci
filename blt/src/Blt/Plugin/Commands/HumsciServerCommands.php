@@ -194,7 +194,7 @@ class HumsciServerCommands extends AcHooksCommand {
     $label = 'LE ' . date('Y-m-d G:i');
     $this->say($api->addCert($environment, $cert, $key, $intermediate, $label));
 
-    $certs = $api->getSSLCerts($environment);
+    $certs = $api->getCerts($environment);
     foreach ($certs['_embedded']['items'] as $cert) {
       if ($cert['label'] == $label) {
         $this->say($api->activateCert($environment, $cert['id']));

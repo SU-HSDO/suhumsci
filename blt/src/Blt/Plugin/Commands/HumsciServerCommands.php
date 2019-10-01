@@ -197,7 +197,7 @@ class HumsciServerCommands extends AcHooksCommand {
     $certs = $api->getSSLCerts($environment);
     foreach ($certs['_embedded']['items'] as $cert) {
       if ($cert['label'] == $label) {
-        $this->say($api->activateSSLCert($environment, $cert['id']));
+        $this->say($api->activateCert($environment, $cert['id']));
       }
 
       if (strtotime($cert['expires_at']) < time()) {

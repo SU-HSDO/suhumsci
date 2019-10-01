@@ -134,7 +134,7 @@ class AcquiaApi {
    * @return bool|string
    *   API Response.
    */
-  public function activateSSLCert($environment, $certId) {
+  public function activateCert($environment, $certId) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/ssl/certificates/{$certId}/actions/activate", 'POST');
   }
 

@@ -7,23 +7,33 @@ use League\OAuth2\Client\Provider\GenericProvider;
 use GuzzleHttp\Exception\GuzzleException;
 
 /**
- * Class AcquiaApi
+ * Class AcquiaApi.
  *
  * @package Example\Blt\Plugin\Commands
  */
 class AcquiaApi {
 
   /**
+   * Keyed array of environment IDs.
+   *
+   * Keys should be the environment and the values should be the UUID of the
+   * environment on Acquia hosting. The key 'appId' should be added to identify
+   * the Acquia cloud application.
+   *
    * @var array
    */
   protected $envIds = [];
 
   /**
+   * Acquia API Key.
+   *
    * @var string
    */
   protected $key;
 
   /**
+   * Acquia API Secret.
+   *
    * @var string
    */
   protected $secret;
@@ -58,7 +68,7 @@ class AcquiaApi {
    * @param string $environment
    *   Environment to effect.
    * @param string $domain
-   *   Domain to add: foo.stanford.edu
+   *   Domain to add: foo.stanford.edu.
    *
    * @return bool|string
    *   API Response.
@@ -97,7 +107,7 @@ class AcquiaApi {
    * @return bool|string
    *   API Response.
    */
-  public function addSSLCert($environment, $cert, $key, $intermediate, $label = NULL) {
+  public function addCert($environment, $cert, $key, $intermediate, $label = NULL) {
     if (is_null($label)) {
       $label = date('Y-m-d G:i');
     }
@@ -139,7 +149,7 @@ class AcquiaApi {
    * @return bool|string
    *   API Response.
    */
-  public function removeCert($environment, $certId){
+  public function removeCert($environment, $certId) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/ssl/certificates/{$certId}", 'DELETE');
   }
 

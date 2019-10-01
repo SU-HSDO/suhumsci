@@ -139,13 +139,6 @@ class HumsciServerCommands extends AcHooksCommand {
     $shell_command = "cd ~ && .acme.sh/acme.sh --issue $domains -w $directory";
     $php_command = "return shell_exec('$shell_command');";
 
-    if ($environment != 'prod') {
-      $this->invokeCommand('drupal:module:uninstall', [
-        'modules' => 'shield',
-        'environment' => $environment == 'test' ? 'stage' : $environment,
-      ]);
-    }
-
     $this->taskDrush()
       ->alias($this->getConfigValue('drush.aliases.remote'))
       ->drush('eval')
@@ -155,12 +148,14 @@ class HumsciServerCommands extends AcHooksCommand {
   }
 
   /**
+   * Loop through and verify each domain is available.
+   *
    * @param array $domains
    *   Array of string domains to check if access is ok.
    *
    * @throws \Exception
    */
-  protected function checkDomains($domains) {
+  protected function checkDomains(array $domains) {
     $this->say('Checking domains for access');
     foreach ($domains as $domain) {
       $client = new Client([
@@ -185,7 +180,7 @@ class HumsciServerCommands extends AcHooksCommand {
    *
    * @throws \Robo\Exception\TaskException
    */
-  public function updateSSLCert($environment) {
+  public function updateCert($environment) {
     $cert_name = $environment == 'test' ? 'swshumsci-stage.stanford.edu' : "swshumsci-$environment.stanford.edu";
     $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
     $this->taskDrush()
@@ -197,7 +192,7 @@ class HumsciServerCommands extends AcHooksCommand {
     $key = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.key");
     $intermediate = file_get_contents($this->getConfigValue('repo.root') . "/certs/ca.cer");
     $label = 'LE ' . date('Y-m-d G:i');
-    $this->say($api->addSSLCert($environment, $cert, $key, $intermediate, $label));
+    $this->say($api->addCert($environment, $cert, $key, $intermediate, $label));
 
     $certs = $api->getSSLCerts($environment);
     foreach ($certs['_embedded']['items'] as $cert) {

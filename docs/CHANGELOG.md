@@ -1,5 +1,22 @@
 # HumSci
 
+8.1.9
+--------------------------------------------------------------------------------
+_Release Date: 2019-10-02_
+
+* added post code deployment hooks to notify slack (ded6e2ea)
+* fixed commit date time (9407a22a)
+* Updated dependencies 02-10-2019 (bfe5c88d)
+* updated dependencies (495653fe)
+* Updated dependencies 25-09-2019 (2e229709)
+* HSD8-710 Provision Popstudies (#409) (db697618)
+* fixup! HSD8-704 Carousel paragraph type (#406) (14e85503)
+* HSD8-706 Contextual links for direct paragraph editing (#408) (b1e64b27)
+* HSD8-702 Test for correct display of date increment (#407) (fa6d1a80)
+* HSD8-704 Carousel paragraph type (#406) (5d2e29f9)
+* added publishcontent module (d89d9b1a)
+* Fixed keyscans for circleci tasks (8d458cb3)
+
 8.1.8
 --------------------------------------------------------------------------------
 _Release Date: 2019-09-18_

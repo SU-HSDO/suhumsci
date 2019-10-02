@@ -63,7 +63,7 @@ class CircleCiCommands extends BltTasks {
     $collection->addTask($this->taskGitStack()
       ->checkout($_ENV['CIRCLE_BRANCH'])
       ->add('composer.lock config')
-      ->commit('Updated dependencies ' . date('d-m-Y'))
+      ->commit('Updated dependencies ' . date('M j Y'))
       ->push('origin', $_ENV['CIRCLE_BRANCH']));
 
     return $collection->run();

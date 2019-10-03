@@ -1,0 +1,60 @@
+services:
+
+  # What to call the service hosting the site.
+  suhumsci:
+
+    # Use PHP 7.2 with Apache
+    image: pookmish/drupal8ci:latest
+
+    # Set this as the default service. This does a few things
+    #   1. Clones the git repository into the service container
+    #   2. Exposes port 80 to the Tugboat HTTP proxy
+    #   3. Routes requests to the preview URL to this service
+    default: true
+
+    # Wait until the mysql service is done building
+    depends: mysql
+
+    # A set of commands to run while building this service
+    commands:
+
+      # Commands that set up the basic preview infrastructure
+      init:
+        # Install drush-launcher
+        - wget -O /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
+        - chmod +x /usr/local/bin/drush
+        -
+        # Symlink the tugboat directory to the docker image expected path.
+        - rm -rf /var/www/html
+        - ln -snf ${TUGBOAT_ROOT} /var/www/html
+
+        # Copy the tugboat blt settings.
+        - cp "${TUGBOAT_ROOT}/.tugboat/tugboat.blt.yml" "${TUGBOAT_ROOT}/blt/local.blt.yml"
+        -
+        # Install/update packages managed by composer, including drush
+        - composer install --no-ansi
+
+        # Init the settings files.
+        - vendor/bin/blt blt:init:settings
+        - rm "${TUGBOAT_ROOT}/docroot/sites/default/local.drush.yml"
+
+        # Copy SimpleSAMLphp configuration to prevent annoying errors.
+        - vendor/bin/blt source:build:simplesamlphp-config
+      update:
+        - composer install --no-ansi
+      build:
+        - drush si config_installer -y
+        - drush cim -y
+        - drush cim -y
+        - drush user:create tugboat --password=tugboat
+        - drush user:role:add administrator tugboat
+    # Collection of urls to compare visual results.
+    visualdiffs:
+      - /
+
+  # What to call the service hosting MySQL. This name also acts as the
+  # hostname to access the service by from the php service.
+  mysql:
+
+    # Use the latest available 5.x version of MySQL
+    image: tugboatqa/mysql:5

@@ -42,7 +42,8 @@ services:
         - vendor/bin/blt source:build:simplesamlphp-config
       build:
         - drush si config_installer -y
-        - drush pmu simplesamlphp_auth -y
+        - drush cim -y
+        - drush cim -y
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
     # Collection of urls to compare visual results.

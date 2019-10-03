@@ -40,6 +40,8 @@ services:
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - vendor/bin/blt source:build:simplesamlphp-config
+      update:
+        - composer install --no-ansi
       build:
         - drush si config_installer -y
         - drush cim -y

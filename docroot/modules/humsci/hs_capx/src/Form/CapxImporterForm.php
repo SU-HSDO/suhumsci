@@ -197,14 +197,14 @@ class CapxImporterForm extends EntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created the %label Capx importer.', [
+        $this->messenger()->addMessage($this->t('Created the %label Capx importer.', [
           '%label' => $importer->label(),
         ]));
         break;
 
       default:
         $this->invalidateMigrationHashes();
-        drupal_set_message($this->t('Saved the %label Capx importer.', [
+        $this->messenger()->addMessage($this->t('Saved the %label Capx importer.', [
           '%label' => $importer->label(),
         ]));
     }

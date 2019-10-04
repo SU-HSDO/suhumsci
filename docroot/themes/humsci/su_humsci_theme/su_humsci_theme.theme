@@ -5,6 +5,7 @@
  * Preprocess functions for Stanford HumSci.
  */
 
+use Drupal\image\Entity\ImageStyle;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
@@ -47,17 +48,29 @@ function su_humsci_theme_pattern_process_contextual(array $element) {
  *
  * Use lazy loading on images.
  */
-function su_humsci_theme_preprocess_image(&$variables) {
-  // In the wysiwyg, we don't want to lazy load images.
-  if (\Drupal::routeMatch()->getRouteName() == 'entity_embed.preview') {
+function su_humsci_theme_preprocess_image_style(&$variables) {
+  if (
+    !isset($variables['image']['#width']) ||
+    !isset($variables['image']['#height']) ||
+    \Drupal::routeMatch()->getRouteName() == 'entity_embed.preview'
+  ) {
     return;
   }
-  if (isset($variables['attributes']['width']) && isset($variables['attributes']['height'])) {
-    global $base_path;
-    $variables['attributes']['data-src'] = $variables['attributes']['src'];
-    $variables['attributes']['class'][] = 'lazy';
-    $variables['attributes']['src'] = $base_path . drupal_get_path('theme', 'su_humsci_theme') . '/img/loading.png';
+
+  /** @var \Drupal\image\ImageStyleInterface $lazy_loading_style */
+  $lazy_loading_style = ImageStyle::load('lazy_loading');
+  if (!$lazy_loading_style) {
+    return;
   }
+
+  $lazy_thumbnail = $lazy_loading_style->buildUri($variables['uri']);
+  if (!file_exists($lazy_thumbnail)) {
+    $lazy_loading_style->createDerivative($variables['uri'], $lazy_thumbnail);
+  }
+
+  $variables['image']['#attributes']['data-src'] = $variables['image']['#uri'];
+  $variables['image']['#attributes']['class'][] = 'lazy';
+  $variables['image']['#uri'] = file_url_transform_relative($lazy_loading_style->buildUrl($variables['uri']));
 }
 
 /**

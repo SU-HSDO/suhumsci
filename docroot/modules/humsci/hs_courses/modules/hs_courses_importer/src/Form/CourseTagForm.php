@@ -81,13 +81,13 @@ class CourseTagForm extends EntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created the %label Course Tag Translation.', [
+        $this->messenger()->addMessage($this->t('Created the %label Course Tag Translation.', [
           '%label' => $hs_course_tag->label(),
         ]));
         break;
 
       default:
-        drupal_set_message($this->t('Saved the %label Course Tag Translation.', [
+        $this->messenger()->addMessage($this->t('Saved the %label Course Tag Translation.', [
           '%label' => $hs_course_tag->label(),
         ]));
     }

@@ -67,14 +67,12 @@ class CourseTagDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
     $this->invalidateHashes();
 
-    drupal_set_message(
-      $this->t('content @type: deleted @label.',
-        [
-          '@type' => $this->entity->bundle(),
-          '@label' => $this->entity->label(),
-        ]
-      )
-    );
+    $this->messenger()->addMessage($this->t('content @type: deleted @label.',
+      [
+        '@type' => $this->entity->bundle(),
+        '@label' => $this->entity->label(),
+      ]
+    ));
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

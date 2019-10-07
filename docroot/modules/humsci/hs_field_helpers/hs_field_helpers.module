@@ -316,16 +316,16 @@ function hs_field_helpers_node_validate_date(array &$element, FormStateInterface
 
   foreach ($entity->getFieldDefinitions() as $field_definition) {
     if ($field_definition->getType() == 'daterange') {
-      $date = $form_state->getValue($field_definition->getName());
+      $date = $form_state->getValue($element['#parents']);
 
       // If the start value is populated but end is empty, copy the start date
       // to the end date to pass validation.
-      if (!empty($date[0]['value']) && (!$date[0]['show_end'] || empty($date[0]['end_value']))) {
-        $date[0]['end_value'] = $date[0]['value'];
-        $element['end_value']['#value']['object'] = $date[0]['end_value'];
+      if (!empty($date['value']) && (!$element['show_end']['#value'] || empty($date['end_value']))) {
+        $date['end_value'] = $date['value'];
+        $element['end_value']['#value'] = $element['value']['#value'];
 
         /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
-        $form_state->setValue($field_definition->getName(), $date);
+        $form_state->setValue($element['#parents'], $date);
       }
     }
   }

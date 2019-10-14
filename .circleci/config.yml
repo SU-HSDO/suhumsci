@@ -207,7 +207,10 @@ workflows:
   version: 2
   test_lint_deploy:
     jobs:
-      - run-setup
+      - run-setup:
+          filters:
+            tags:
+              only: /.*/
       - run-behat-tests-first:
           requires:
             - run-setup

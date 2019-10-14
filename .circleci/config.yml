@@ -140,8 +140,9 @@ deploy_tag: &deploy_tag
   steps:
     - *add_ssh
     - *add_known_hosts
-    - attach_workspace:
-        at: .
+    - checkout
+    - restore_cache: *restore_cache
+    - run: composer install --optimize-autoloader
     - run:
         name: Deploying Tag to Acquia
         command: |
@@ -207,10 +208,7 @@ workflows:
   version: 2
   test_lint_deploy:
     jobs:
-      - run-setup:
-          filters:
-            tags:
-              only: /.*/
+      - run-setup
       - run-behat-tests-first:
           requires:
             - run-setup
@@ -247,8 +245,6 @@ workflows:
       # Tags are only created on successful code. Deploy the tag after creation.
       # This will trigger after the release is created above.
       - run-deploy-tag:
-          requires:
-            - run-setup
           filters:
             tags:
               only:

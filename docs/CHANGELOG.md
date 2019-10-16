@@ -1,5 +1,18 @@
 # HumSci
 
+8.1.10
+--------------------------------------------------------------------------------
+_Release Date: 2019-10-16_
+
+* Fix tag deployment (#416) (0744720a)
+* changed contrib patch (efc87009)
+* updated dependency patches (00282de0)
+* moved test environment slack hook (356128d5)
+* HSD8-721 Fix validation for date ranges when in ECKs (#412) (178a728a)
+* HSD8-711 blurry lazy image (#410) (9ecd08c2)
+* Toot toot.... Tugboat (#414) (644c3790)
+* HSD8-718 Added Layout Builder modal (543f86c1)
+
 8.1.9
 --------------------------------------------------------------------------------
 _Release Date: 2019-10-02_

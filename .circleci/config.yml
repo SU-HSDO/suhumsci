@@ -181,6 +181,19 @@ update_dependencies: &update_dependencies
           vendor/bin/blt circleci:update
     - save_cache: *save_cache
 
+update_certs: &update_certs
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - *add_known_hosts
+    - checkout
+    - restore_cache: *restore_cache
+    - run: composer install --optimize-autoloader
+    - run:
+        name: Update Prod SSL Certs
+        command: |
+          vendor/bin/blt humsci:update-cert prod
+
 # Declare all of the jobs we should run.
 version: 2
 jobs:
@@ -202,6 +215,8 @@ jobs:
     <<: *deploy_tag
   run-github-release:
     <<: *github_release
+  run-update-certs:
+    <<: *update_certs
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -262,3 +277,14 @@ workflows:
                 - /8\..*-release/
     jobs:
       - run-updates
+
+  update_certs:
+    triggers:
+      - schedule:
+          cron: "0 0 1 * *"
+          filters:
+            branches:
+              only:
+                - /develop/
+    jobs:
+      - run-update-certs

@@ -158,15 +158,18 @@ class HumsciServerCommands extends AcHooksCommand {
   protected function checkDomains(array $domains) {
     $this->say('Checking domains for access');
     foreach ($domains as $domain) {
+      $this->say($domain);
       $client = new Client([
         'base_uri' => "http://$domain",
         'allow_redirects' => TRUE,
         'timeout' => 0,
+        'verify' => FALSE,
       ]);
       $response = $client->get('/');
-      if (empty($response->getHeader('X-AH-Environment'))) {
-        throw new \Exception("Domain $domain does not point to Acquia environment");
+      if (!empty($response->getHeader('X-AH-Environment')) || $response->getHeader('via') != '1.1 login.stanford.edu') {
+        continue;
       }
+      throw new \Exception("Domain $domain does not point to Acquia environment");
     }
   }
 

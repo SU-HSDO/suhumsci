@@ -256,6 +256,30 @@ process:
         name: drupal_video_name
 destination:
   plugin: 'entity:node'
+  overwrite_properties:
+    - type
+    - title
+    - body/value
+    - body/format
+    - field_hs_event_admission/value
+    - field_hs_event_admission/format
+    - field_hs_event_contact_email
+    - field_hs_event_contact_phone
+    - field_hs_event_sponsor
+    - field_hs_event_location
+    - field_hs_event_map_link/uri
+    - field_hs_event_map_link/title
+    - field_hs_event_link/uri
+    - field_hs_event_link/title
+    - field_hs_event_date/value
+    - field_hs_event_date/end_value
+    - field_hs_event_category
+    - field_hs_event_audience
+    - field_hs_event_image/target_id
+    - field_hs_event_status
+    - field_hs_event_speaker
+    - field_hs_event_type
+    - field_hs_event_video
 migration_dependencies:
   required:
     - hs_events_image_importer

@@ -33,7 +33,7 @@ services:
         - cp "${TUGBOAT_ROOT}/.tugboat/tugboat.blt.yml" "${TUGBOAT_ROOT}/blt/local.blt.yml"
 
         # Install/update packages managed by composer, including drush
-        - composer install --no-ansi --no-dev
+        - composer install --no-ansi
 
         # Init the settings files.
         - vendor/bin/blt blt:init:settings
@@ -47,7 +47,7 @@ services:
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:
-        - composer install --no-ansi --no-dev
+        - composer install --no-ansi
         - vendor/bin/blt drupal:udpate
 
     # Collection of urls to compare visual results.

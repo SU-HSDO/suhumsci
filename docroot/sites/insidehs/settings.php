@@ -800,4 +800,3 @@ require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
  *
  * @link https://docs.acquia.com/blt/
  */
-$settings['install_profile'] = 'su_humsci_profile';

@@ -71,7 +71,15 @@ function hs_migrate_entity_delete(EntityInterface $entity) {
   foreach ($migrations as $migration) {
     $destination = $migration->get('destination');
 
-    if (isset($destination['plugin']) && strpos($destination['plugin'], 'entity:') !== FALSE) {
+    // It should always be set. but its just a safety valve - pookmish
+    if (!isset($destination['plugin'])) {
+      continue;
+    }
+
+    if (
+      strpos($destination['plugin'], 'entity:') !== FALSE ||
+      strpos($destination['plugin'], 'entity_reference_revisions:') !== FALSE
+    ) {
       list(, $type) = explode(':', $destination['plugin']);
 
       if ($type == $entity->getEntityTypeId()) {
@@ -82,7 +90,6 @@ function hs_migrate_entity_delete(EntityInterface $entity) {
             ->condition('destid1', $entity->id())
             ->execute();
         }
-        return;
       }
     }
   }

@@ -4,7 +4,7 @@ services:
   suhumsci:
 
     # Use PHP 7.2 with Apache
-    image: pookmish/drupal8ci:latest
+    image: pookmish/tugboat:latest
 
     # Set this as the default service. This does a few things
     #   1. Clones the git repository into the service container
@@ -23,14 +23,15 @@ services:
         # Install drush-launcher
         - wget -O /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
         - chmod +x /usr/local/bin/drush
-        -
+
         # Symlink the tugboat directory to the docker image expected path.
-        - rm -rf /var/www/html
-        - ln -snf ${TUGBOAT_ROOT} /var/www/html
+        - rm -rf /var/www/localhost
+        - ln -snf ${TUGBOAT_ROOT} /var/www/localhost
+        - ln -s docroot htdocs
 
         # Copy the tugboat blt settings.
         - cp "${TUGBOAT_ROOT}/.tugboat/tugboat.blt.yml" "${TUGBOAT_ROOT}/blt/local.blt.yml"
-        -
+
         # Install/update packages managed by composer, including drush
         - composer install --no-ansi
 
@@ -40,14 +41,15 @@ services:
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - vendor/bin/blt source:build:simplesamlphp-config
-      update:
-        - composer install --no-ansi
-      build:
         - drush si config_installer -y
         - drush cim -y
         - drush cim -y
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
+      build:
+        - composer install --no-ansi
+        - vendor/bin/blt drupal:update
+
     # Collection of urls to compare visual results.
     visualdiffs:
       - /

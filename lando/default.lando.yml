@@ -19,18 +19,23 @@ proxy:
 services:
   appserver:
     ssl: true
-  archaeology:
-    type: mysql:5.7
+  database: # Overrides the database that comes in the drupal8 recipe
     creds:
       user: drupal
       password: drupal
-      database: archaeology
-  # dsresaerch:
+      database: swshumsci
+  # archaeology:
   #   type: mysql:5.7
   #   creds:
   #     user: drupal
   #     password: drupal
-  #     database: dsresaerch
+  #     database: archaeology
+  # dsresearch:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: dsresearch
   # duboislab:
   #   type: mysql:5.7
   #   creds:
@@ -73,12 +78,12 @@ services:
   #     user: drupal
   #     password: drupal
   #     database: shenlab
-  # swshumscisandbox:
+  # swshumsci_sandbox:
   #   type: mysql:5.7
   #   creds:
   #     user: drupal
   #     password: drupal
-  #     database: swshumscisandbox
+  #     database: swshumsci_sandbox
   # symsys:
   #   type: mysql:5.7
   #   creds:

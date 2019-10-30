@@ -1,5 +1,19 @@
 # HumSci
 
+8.1.11
+--------------------------------------------------------------------------------
+_Release Date: 2019-10-30_
+
+* fixed code climate issue (4111dc04)
+* Updated dependencies Oct 30 2019 (e19c5825)
+* HSD8-730 Add sparkbox workgroup to default config (#420) (d49fb95f)
+* HSD8-729 Provision insidehs (#419) (24838e37)
+* HSD8-724 Allow overriding node status of migrated items (#418) (b910970f)
+* fixed domain add command (7c0e404b)
+* Squashed commit of the following: (2713cb39)
+* Updated dependencies Oct 23 2019 (d3c3291e)
+* HSD8-722 Adjust the display of contextual links (#415) (49e4d308)
+
 8.1.10
 --------------------------------------------------------------------------------
 _Release Date: 2019-10-16_

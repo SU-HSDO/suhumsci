@@ -28,3 +28,4 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
 
 ## Other useful links
 - [Lando Drupal 8 docs](https://docs.lando.dev/config/drupal8.html)
+- [Drush configuration and aliases](../drush/README.md)

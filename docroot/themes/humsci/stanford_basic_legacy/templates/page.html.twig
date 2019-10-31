@@ -1,0 +1,38 @@
+<header id="header">
+  <div class="decanter-grid">
+    {% if page.header %}
+      <div id="header-region" class="decanter-width-three-fourths">
+        {{ page.header }}
+      </div>
+    {% endif %}
+    {% if page.search %}
+      <div id="searc-region" class="decanter-width-one-fourth decanter-end-row">
+        {{ page.search }}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if page.menu %}
+    <div id="menu-region">
+      {{ page.menu }}
+    </div>
+  {% endif %}
+</header>
+
+{% if page.help %}
+  <div id="help-region">
+    {{ page.help }}
+  </div>
+{% endif %}
+
+<div id="main-content" class="main-container">
+  {{ page.content }}
+</div>
+
+{% if page.footer %}
+  <footer id="footer">
+    <div class="decanter-grid">
+      {{ page.footer }}
+    </div>
+  </footer>
+{% endif %}

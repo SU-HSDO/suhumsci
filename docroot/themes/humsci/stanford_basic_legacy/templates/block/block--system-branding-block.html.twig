@@ -1,0 +1,52 @@
+{% extends "block.html.twig" %}
+{% set attributes = attributes.addClass('block-grid-collapse') %}
+{#
+/**
+ * @file
+ * Theme override for a branding block.
+ *
+ * Each branding element variable (logo, name, slogan) is only available if
+ * enabled in the block configuration.
+ *
+ * Available variables:
+ * - site_logo: Logo for site as defined in Appearance or theme settings.
+ * - site_name: Name for site as defined in Site information settings.
+ * - site_slogan: Slogan for site as defined in Site information settings.
+ */
+#}
+{% block content %}
+  <div class="block--lockup">
+
+    {% if site_logo or lockup['lockup_4'] %}
+      <div class="block--lockup__site-logo-wrapper">
+        <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home" class="block--lockup__site-logo">
+          <img src="{{ site_logo }}" alt="{{ 'Home'|t }}"/>
+          {{ lockup['lockup_4'] }}
+        </a>
+      </div>
+    {% endif %}
+
+    <div class="block--lockup__site-name">
+      <a href="{{ path('<front>') }}" title="{{ 'Home'|t }}" rel="home">
+        {% if lockup['lockup_1'] or lockup['lockup_2'] or lockup['lockup_3'] %}
+          {{ lockup['lockup_1'] }}
+          {{ lockup['lockup_2'] }}
+          {{ lockup['lockup_3'] }}
+        {% else %}
+          {{ site_name }}
+        {% endif %}
+      </a>
+    </div>
+  </div>
+
+  {% if site_slogan or lockup['lockup_5'] %}
+    <div class="block--lockup__site-slogan">
+      {% if lockup['lockup_5'] %}
+        {{ lockup['lockup_5'] }}
+      {% else %}
+        {{ site_slogan }}
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% endblock %}

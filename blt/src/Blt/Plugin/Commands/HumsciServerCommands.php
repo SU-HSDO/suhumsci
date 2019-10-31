@@ -129,9 +129,7 @@ class HumsciServerCommands extends AcHooksCommand {
     $domains = array_merge($domains, $this->getDomains());
     $domains = array_unique($domains);
     $this->removeDomains($domains);
-    array_walk($domains, function (&$domain) {
-      $domain = trim($domain);
-    });
+    $domains = array_map('trim', $domains);
     $this->checkDomains($domains);
 
     $primary_domain = array_shift($domains);

@@ -141,7 +141,7 @@ class CircleCiCommands extends BltTasks {
       ->run();
     // Deploy that release to Acquia.
     $this->blt()->arg('artifact:deploy')->option('no-interaction')->run();
-
+    sleep(10);
     $api = new AcquiaApi($this->getConfigValue('cloud'));
     $this->say($api->deployCode('test', "$new_branch-build"));
   }

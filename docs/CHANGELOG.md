@@ -1,5 +1,16 @@
 # HumSci
 
+8.1.12
+--------------------------------------------------------------------------------
+_Release Date: 2019-11-13_
+
+* add sleep during release deployment (118fd4f5)
+* updated nobots to latest version (6111c991)
+* Updated dependencies Nov 13 2019 (6f17f13f)
+* Lando localdev adjustments (23dd0bc2)
+* Updated simplesamlphp library SSPSA 201911-01 (e9e5573e)
+* HSD8-727 Provision researchadmin site (e28afcfd)
+
 8.1.11
 --------------------------------------------------------------------------------
 _Release Date: 2019-10-30_

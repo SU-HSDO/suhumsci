@@ -2,6 +2,16 @@
 
 A "Launch" is any change to a domain that can impact visitors.
 
+Prerequisite:
+Set up `blt/local.blt.yml` to include the API key and secret so that you can connect to Acquia cloud API.
+Add the following snippet to `local.blt.yml`:
+```
+cloud:
+  key: [your-api-key]
+  secret: [your-api-secret
+```
+You can find your API key and secret from SWS credentials document or you can create your own API key/secret in [your profile settings](https://cloud.acquia.com/a/profile/tokens)
+
 ## Several days before
 1. Schedule the launch with the site owner including a content freeze the day of.
 1. Add the new domain to the [production environment](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/domains)
@@ -22,8 +32,7 @@ A "Launch" is any change to a domain that can impact visitors.
 1. Wait for the DNS Refresh. This occurs every half hour at :05 and :35 past the hour.
 1. Ensure the Vhost points to Acquia by pinging the url. `ping newvhost.stanford.edu`
 1. Add the domain to the LetsEncrypt Certificate `blt humsci:letsencrypt:add-domain prod`
-1. Add the new cert contents into [Acquia Dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl) `blt humsci:letsencrypt:get-cert prod`. All 3 cert files have to be added.
-1. Activate the new Cert.
+1. Add the new cert contents into [Acquia Dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl) `blt humsci:update-cert prod`. All 3 cert files have to be added.
 1. Execute the blt command `blt humsci:launch-site [site_machine_name]` and enter the new site domain. This command will
 configure necessary site configuration and clear caches.
 1. Submit the site to Google for indexing: [steps to index](https://asconfluence.stanford.edu/confluence/display/SWS/Submit+sitemap+to+Google+Webmaster+tools)

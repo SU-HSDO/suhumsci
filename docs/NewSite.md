@@ -9,20 +9,32 @@ and the url appropriately.
 
 ## Establish domains with Stanford
 1. Add the domains to the [NetDB record](https://netdb.stanford.edu/node_info?name=swshumsci.stanford.edu&history=%252Fqsearch%253Fsearch_string%253Dswshumsci%2526search_type%253DNodes)
-    * Keep with the pattern: [sitename]-dev, [sitename]-stage, and [sitename]-prod
+    * Keep with the pattern: [site-name]-dev, [site-name]-stage, and [site-name]-prod
 1. Wait for the DNS Refresh. This occurs every half hour at :05 and :35 past the hour.
 1. Ensure the Vhost points to Acquia by pinging the url. `ping newvhost.stanford.edu`
 
-## Site Directory and settings.
-1. Disable shield on all sites on the dev and test environments. this will help when the LE certs are generated. `blt drupal:module:uninstall shield [environment:dev,test]`
+## Setup Domains and SSL Certs in Acquia
+1. Disable the shield module for all sites on the dev and test environments. This ensures the the SSL certs can be verified when they are issued.
+  * `blt drupal:module:uninstall shield dev`
+  * `blt drupal:module:uninstall shield stage`
+1. Add the new domains to each of the Acquia environments (dev, stage, and prod). You can do this through the Acquia UI, or by using `blt humsci:add-domain`. For example:
+   * `blt humsci:add-domain dev [site-name]-dev.stanford.edu`
+   * `blt humsci:add-domain test [site-name]-test.stanford.edu`
+   * `blt humsci:add-domain prod [site-name]-prod.stanford.edu`
+1. Re-issue the SSL certs for each environment. For example:
+   * `blt humsci:letsencrypt:add-domain --domains=[site-name]-dev.stanford.edu -- dev`
+   * `blt humsci:letsencrypt:add-domain --domains=[site-name]-stage.stanford.edu -- test`
+   * `blt humsci:letsencrypt:add-domain --domains=[site-name]-prod.stanford.edu -- prod`
+1. Get the newly built SSL certs for each environment (`humsci:letsencrypt:get-cert [environment]`) and add them to their corresponding [Acquia Dashboards](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl) by clicking "Install SSL Certificate" and filling out the details.
+1. Once added, activate the new certs for each environment in the Acquia dashboard (which will deactivate the previously active certs).
+1. Confirm it worked by browsing to a new url and verifying that it has a valid certificate and is directed to the default site.
+
+## Site Directory and settings
 1. Create a new database in [Acquia dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265866-23a85077-2967-41a4-be22-a84c24e0f81a/databases). Adding a database to one environment adds one to all environments.
    * Use the database name as defined above.
-1. execute blt command `blt recipes:multisite:init` and answer questions as desired. 
+1. Execute blt command `blt recipes:multisite:init` and answer questions as desired.
    * Machine name of the site should match the final vhost to be desired. Use the same name as the database above.
-   * "remote drush alias" should be [machine_name].prod 
-   * During that command, it will ask to add domains. This is optional but highly suggested. This will prompt to add 
-     domain for each environment and it will initiate the new SSL certificate.
-1. Get the newly built SSL certs for each environment `humsci:letsencrypt:get-cert [environment]` and add them to [Acquia Dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl)
+   * "remote drush alias" should be [machine_name].prod
 1. Add the machine name to the [blt settings](../blt/blt.yml) for the `multisites` array.
 1. Edit the new drush alias file in [drush/sites](../drush/sites) to add configuration for dev, test and prod environments.
    * Use the [default.yml](../drush/sites/default.site.yml) file as a template
@@ -32,11 +44,11 @@ and the url appropriately.
 1. Deploy to Acquia with `blt deploy`, do not create a tag
 1. In Acquia choose the deployed branch for the development environment.
 1. Ensure the new site is recognized:
-    * Check drush status `drush @[sitename.dev] st`
+    * Check drush status `drush @[site-name.dev] st`
     * verify the database name is something like `swshumscidb######`
-    * verify the "Site URI" is something like `[newsite]-dev.stanford.ed`
-1. Install a new site `drush @[newsite].dev si config_installer -y`
-1. Disable config_ignore to ensure full install state `drush @[sitename].dev pmu config_ignore`
-1. Import all the configs again `drush @[sitename].dev cim -y`
+    * verify the "Site URI" is something like `[site-name]-dev.stanford.ed`
+1. Install a new site `drush @[site-name].dev si config_installer -y`
+1. Disable config_ignore to ensure full install state `drush @[site-name].dev pmu config_ignore`
+1. Import all the configs again `drush @[site-name].dev cim -y`
 1. Visit the site and validate login and installation was successful
 1. Copy that database to stage and production environments. (This prevents deployment & testing errors)

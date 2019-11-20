@@ -46,7 +46,7 @@ and the url appropriately.
 1. Ensure the new site is recognized:
     * Check drush status `drush @[site-name.dev] st`
     * verify the database name is something like `swshumscidb######`
-    * verify the "Site URI" is something like `[site-name]-dev.stanford.ed`
+    * verify the "Site URI" is something like `[site-name]-dev.stanford.edu`
 1. Install a new site `drush @[site-name].dev si config_installer -y`
 1. Disable config_ignore to ensure full install state `drush @[site-name].dev pmu config_ignore`
 1. Import all the configs again `drush @[site-name].dev cim -y`

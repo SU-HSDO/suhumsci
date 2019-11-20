@@ -15,10 +15,17 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
     ```
 4. Build your containers: `lando rebuild`
 5. Install your PHP dependencies: `lando composer install`
-6. Run `lando blt blt:init:settings` and confirm that it added a `local.settings.php` file to each of your `[multisite]/settings` folders (ex. `/docroot/sites/default/settings/local.settings.php`).
+6. Run `lando blt blt:init:settings` and confirm that it added a `local.settings.php` file to each of your `[my-multisite]/settings` folders (ex. `/docroot/sites/default/settings/local.settings.php`).
 7. Make sure the db settings in each of these `local.settings.php` files matches the settings in the `.lando.yml`. Note: the `database` service corresponds to the `default` multisite. The rest of the services have names that match their multisite.
 8. Run `lando blt drupal:sync --site=default --sync-files` to pull down a copy of the database and files for the default multisite.
 9. Run `lando info`, and browse to the url for your multisite.
+10. Depending on the local domains you've set up, you may need to add a `docroot/sites/local.sites.php` file, and use it to add your local domains to the `$sites` array. Otherwise, requests to your local multisite domains may get sent to the default site.
+
+# Switching between local sites
+1. In your `.lando.yml` file, uncomment the service for the site you want to run locally.
+2. Run `lando rebuild` (this needs to be run anytime you make changes to `.lando.yml`).
+3. Confirm that the new container is running and that the password, database, and hostname values in `sites/[my-multisite]/settings/local.settings.php` correctly match the values in your `.lando.yml` file.
+4. Sync the database and files with a copy from production: `lando blt drupal:sync --site=[my-multisite] --sync-files`
 
 ## Common commands
 - `lando drush uli` - Get a link for logging in as an admin user

@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+//
+// Horizontal Card
+//
+// Decanter
+@import 'decanter-no-markup';
+
+.generic-three-column {
+  justify-content: space-between;
+  @include margin(0 0 1.5em);
+
+  @include media($medium-screen) {
+    display: flex;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  > div {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin: 0 5px;
+
+    &.larger {
+      flex-grow: 2;
+    }
+
+    &:first-child {
+      margin: 0 5px 0 0;
+    }
+
+    &:last-child {
+      margin: 0 0 0 5px;
+    }
+  }
+
+  &.collapsible-1-5-1,
+  &.static-1-5-1 {
+    .middle-region {
+      flex-grow: 5;
+    }
+  }
+}

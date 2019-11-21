@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+//
+// Vertical Linked Card
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+.vertical-link-card {
+  height: 100%;
+
+  .paragraph-item &,
+  .view &,
+  .field-block .entity-reference & {
+    @include padding(0 0 1.5em);
+  }
+
+  > a {
+    display: table;
+    height: 100%;
+    text-decoration: none;
+    width: 100%;
+
+    &:hover,
+    &:focus,
+    #main-content &[class*="heading-link-"]:hover,
+    #main-content &[class*="heading-link-"]:focus{
+      color: $color-white;
+      text-decoration: underline;
+    }
+  }
+
+  .vertical-link-card__img {
+    display: table-row;
+    height: 1px;
+
+    .field-hs-postcard-image {
+      overflow: hidden;
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .vertical-link-card__content-container {
+    @include card;
+
+    background: $color-bright-red;
+    color: $color-white;
+    display: table-row;
+
+    @include padding(0);
+
+    .vertical-link-card__title {
+      @include margin(0 null null);
+      @include padding(0.5em 0.5em null);
+    }
+
+    .vertical-link-card__description {
+      @include padding(null 0.75em 0.75em);
+    }
+
+    > *:last-child > *:last-child {
+      @include margin(null null 0 null);
+    }
+  }
+
+  > * {
+    word-break: break-word;
+  }
+}

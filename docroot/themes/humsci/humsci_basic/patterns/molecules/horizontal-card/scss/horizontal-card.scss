@@ -1,0 +1,107 @@
+@charset "UTF-8";
+
+//
+// Horizontal Card
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+.horizontal-card {
+  @include card;
+  @include horizontal-card;
+
+  .horizontal-card__img {
+    @include margin(0);
+
+    flex-shrink: 0;
+    width: 100%;
+
+    img {
+      @include margin(0 0 0.5em 0);
+
+      display: block;
+      padding: 0;
+      width: 100%;
+      height: auto;
+    }
+
+    @include media($medium-screen) {
+      @include margin(0 0.75em 0 0);
+
+      width: 10em;
+
+      img {
+        @include margin(0);
+      }
+    }
+  }
+
+  .horizontal-card__content {
+    .horizontal-card__category {
+      @include margin(0 0 0.75em 0);
+
+      font-size: $small-font-size;
+      font-weight: $font-x-light;
+    }
+
+    .horizontal-card__date {
+      @include margin(0 0 0.25em 0);
+    }
+
+    .horizontal-card__subcontent {
+      @include margin(0 0 0.25em 0);
+
+      .horizontal-card__time {
+        float: left;
+      }
+
+      .pipe {
+        float: left;
+
+        @include padding(0 3px);
+      }
+    }
+
+    .horizontal-card__title {
+      clear: both;
+      font-weight: 600;
+
+      @include margin(0 0 0.35em);
+    }
+
+    .horizontal-card__speaker {
+      font-weight: $font-x-light;
+
+      @include margin(0.25em 0 0 0);
+
+      .views-label {
+        display: block;
+        float: left;
+      }
+    }
+
+    .horizontal-card__description {
+      clear: both;
+
+      @include margin(0);
+
+      > div {
+        @include margin(0 0 0.25em);
+      }
+    }
+
+    > *:last-child > *:last-child {
+      @include margin(null null 0 null);
+    }
+  }
+
+  > * {
+    word-break: break-word;
+  }
+}

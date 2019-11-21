@@ -9,25 +9,27 @@ and the url appropriately.
 
 ## Establish domains with Stanford
 1. Add the domains to the [NetDB record](https://netdb.stanford.edu/node_info?name=swshumsci.stanford.edu&history=%252Fqsearch%253Fsearch_string%253Dswshumsci%2526search_type%253DNodes)
-  * Keep with the pattern: [site-name]-dev, [site-name]-stage, and [site-name]-prod
+    * Keep with the pattern: [site-name]-dev, [site-name]-stage, and [site-name]-prod
 1. Wait for the DNS Refresh. This occurs every half hour at :05 and :35 past the hour.
 1. Ensure the Vhost points to Acquia by pinging the url. `ping newvhost.stanford.edu`
 
 ## Setup Domains and SSL Certs in Acquia
 1. Disable the shield module for all sites on the dev and test environments. This ensures the the SSL certs can be verified when they are issued.
-  * `blt drupal:module:uninstall shield dev`
-  * `blt drupal:module:uninstall shield stage`
+    * `blt drupal:module:uninstall shield dev`
+    * `blt drupal:module:uninstall shield stage`
 1. Add the new domains to each of the Acquia environments (dev, stage, and prod). You can do this through the Acquia UI, or by using `blt humsci:add-domain`. For example:
-  * `blt humsci:add-domain dev [site-name]-dev.stanford.edu`
-  * `blt humsci:add-domain test [site-name]-test.stanford.edu`
-  * `blt humsci:add-domain prod [site-name]-prod.stanford.edu`
+    * `blt humsci:add-domain dev [site-name]-dev.stanford.edu`
+    * `blt humsci:add-domain test [site-name]-test.stanford.edu`
+    * `blt humsci:add-domain prod [site-name]-prod.stanford.edu`
 1. Re-issue the SSL certs for each environment. For example:
-  * `blt humsci:letsencrypt:add-domain --domains=[site-name]-dev.stanford.edu -- dev`
-  * `blt humsci:letsencrypt:add-domain --domains=[site-name]-stage.stanford.edu -- test`
-  * `blt humsci:letsencrypt:add-domain --domains=[site-name]-prod.stanford.edu -- prod`
-1. Get the newly built SSL certs for each environment (`blt humsci:letsencrypt:get-cert [environment]`) and add them to their corresponding [Acquia Dashboards](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl) by clicking "Install SSL Certificate" and filling out the details.
-1. Once added, activate the new certs for each environment in the Acquia dashboard (which will deactivate the previously active certs).
-1. Confirm it worked by browsing to a new url and verifying that it has a valid certificate and is directed to the default site.
+    * `blt humsci:letsencrypt:add-domain --domains=[site-name]-dev.stanford.edu -- dev`
+    * `blt humsci:letsencrypt:add-domain --domains=[site-name]-stage.stanford.edu -- test`
+    * `blt humsci:letsencrypt:add-domain --domains=[site-name]-prod.stanford.edu -- prod`
+1. Add the new certs to each Acquia environment, and then activate them. This can be done [through the Acquia UI](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/ssl), or by using `blt humsci:update-cert [environment]`. For example:
+    * `blt humsci:update-cert dev`
+    * `blt humsci:update-cert test`
+    * `blt humsci:update-cert prod`
+1. Confirm it worked by browsing to one of the new domains and verifying that it has a valid certificate and is directed to the default site.
 
 ## Site Directory and settings
 1. Create a new database in [Acquia dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265866-23a85077-2967-41a4-be22-a84c24e0f81a/databases). Adding a database to one environment adds one to all environments.

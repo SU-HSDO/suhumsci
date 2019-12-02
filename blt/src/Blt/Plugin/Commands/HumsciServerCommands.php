@@ -213,6 +213,29 @@ class HumsciServerCommands extends AcHooksCommand {
   }
 
   /**
+   * Delete all on demand backups over 1 week old.
+   *
+   * @command humsci:clean-backups
+   */
+  public function cleanDatabaseBackups() {
+    $api = new AcquiaApi($this->getConfigValue('cloud'), $this->getConfigValue('cloud.key'), $this->getConfigValue('cloud.secret'));
+    $databases = json_decode($api->getDatabases('prod'), TRUE);
+    foreach ($databases['_embedded']['items'] as $database) {
+      $backups = json_decode($api->getDatabaseBackups('prod', $database['name']), TRUE);
+
+      $this->yell(sprintf('Cleaning backups on database %s', $database['name']));
+      foreach ($backups['_embedded']['items'] as $backup) {
+        $last_week_time = time() - 60 * 60 * 24 * 7;
+
+        if ($backup['type'] == 'ondemand' && strtotime($backup['completed_at']) < $last_week_time) {
+          $this->say($api->deleteDatabaseBackup('prod', $database['name'], $backup['id']));
+          $this->say(sprintf('deleted %s', $backup['id']));
+        }
+      }
+    }
+  }
+
+  /**
    * Get new domains to add to Cert.
    *
    * @return array

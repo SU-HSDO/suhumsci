@@ -78,6 +78,18 @@ class AcquiaApi extends Tasks {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/domains", 'POST', ['json' => ['hostname' => $domain]]);
   }
 
+  public function getDatabases($environment) {
+    return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/databases");
+  }
+
+  public function getDatabaseBackups($environment, $databaseName){
+    return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/databases/$databaseName/backups");
+  }
+
+  public function deleteDatabaseBackup($environment, $databaseName, $backupId){
+    return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/databases/$databaseName/backups/$backupId", 'DELETE');
+  }
+
   /**
    * Add a database to all environments.
    *

@@ -193,7 +193,23 @@ update_certs: &update_certs
         name: Update Prod SSL Certs
         command: |
           vendor/bin/blt humsci:update-cert prod
+          vendor/bin/blt humsci:clean-backups
 
+merge_to_develop: &merge_to_develop
+  <<: *defaults
+  steps:
+    - *add_ssh
+    - *add_known_hosts
+    - attach_workspace:
+        at: .
+    - run:
+        name: Create Github Release
+        command: |
+          git config --global user.email "sws-developers@lists.stanford.edu"
+          git config --global user.name "CircleCI"
+          git checkout develop
+          git merge ${CIRCLE_BRANCH}
+          git push origin develop
 # Declare all of the jobs we should run.
 version: 2
 jobs:
@@ -217,6 +233,8 @@ jobs:
     <<: *github_release
   run-update-certs:
     <<: *update_certs
+  run-merge-to-develop:
+    <<: *merge_to_develop
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
@@ -247,6 +265,20 @@ workflows:
             branches:
               ignore:
                 - /violinist.*/
+      - should-it-merge:
+          type: approval
+          requires:
+            - run-behat-tests-first
+            - run-behat-tests-second
+            - run-fresh-install-tests
+            - run-code-coverage
+          filters:
+            branches:
+              only:
+                - /8\..*-release/
+      - run-merge-to-develop:
+          requires:
+            - should-it-merge
       # Create a release when a release branch has merged into develop.
       - run-github-release:
           requires:

@@ -42,15 +42,14 @@ and the url appropriately.
    * Use the [default.yml](../drush/sites/default.site.yml) file as a template
 
 ## Deploy and test
-1. Checkout a new branch with all the new files and commit.
-1. Deploy to Acquia with `blt deploy`, do not create a tag
-1. In Acquia choose the deployed branch for the development environment.
-1. Ensure the new site is recognized:
-    * Check drush status `drush @[site-name.dev] st`
+Once the code with the new files is merged and deployed to an Acquia environment (like staging), we can setup the site database:
+
+1. Ensure the new site is recognized in the Acquia environment:
+    * Check drush status `drush @[site-name.stage] st`
     * verify the database name is something like `swshumscidb######`
-    * verify the "Site URI" is something like `[site-name]-dev.stanford.edu`
-1. Install a new site `drush @[site-name].dev si config_installer -y`
-1. Disable config_ignore to ensure full install state `drush @[site-name].dev pmu config_ignore`
-1. Import all the configs again `drush @[site-name].dev cim -y`
+    * verify the "Site URI" is something like `[site-name]-stage.stanford.edu`
+1. Install a new site `drush @[site-name].stage si config_installer -y`
+1. Disable config_ignore to ensure full install state `drush @[site-name].stage pmu config_ignore`
+1. Import all the configs again `drush @[site-name].stage cim -y`
 1. Visit the site and validate login and installation was successful
 1. Copy that database to stage and production environments. (This prevents deployment & testing errors)

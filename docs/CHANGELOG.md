@@ -1,5 +1,16 @@
 # HumSci
 
+8.1.13
+--------------------------------------------------------------------------------
+_Release Date: 2019-12-02_
+
+* STN-31 Minor docs updates for new site provisioning. (#428) (0eafd46e)
+* updated modules and dependencies (c9ceb6d6)
+* Provision Economics and IT-Humsci site (#427) (9ce16329)
+* updated dependencies (353e1d74)
+* HSD8-737 Increased menu z index (#424) (c765eccb)
+* updated launch documentation (5ae6389d)
+
 8.1.12
 --------------------------------------------------------------------------------
 _Release Date: 2019-11-13_

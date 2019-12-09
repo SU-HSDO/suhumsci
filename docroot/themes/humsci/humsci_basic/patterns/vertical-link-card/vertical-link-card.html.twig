@@ -1,0 +1,28 @@
+{% set attributes = attributes.addClass('vertical-link-card') %}
+
+<div{{ attributes }}>
+  {% if button %}
+    <a href="{{ button|render|striptags|trim }}" title="{{ title|render|striptags|trim }}">
+  {% endif %}
+
+    {% if image %}
+      <div class="vertical-link-card__img">
+        {{ image }}
+      </div>
+    {% endif %}
+
+    <div class="vertical-link-card__content-container">
+      {% if title %}
+        <h2 class="vertical-link-card__title">{{ title|render|striptags|trim|raw }}</h2>
+      {% endif %}
+      {% if description %}
+        <div class="vertical-link-card__description">
+          {{ description }}
+        </div>
+      {% endif %}
+    </div>
+
+  {% if button %}
+    </a>
+  {% endif %}
+</div>

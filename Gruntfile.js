@@ -45,6 +45,9 @@ module.exports = function (grunt) {
         ]
       },
       dist: {
+        // TODO: edit this glob to be: 'docroot/**/humsci/**/*.css'
+        // so that it includes all the css files.
+        // Note: be ready for a large number of file changes.
         src: [
           'docroot/**/humsci/*.css'
         ]
@@ -92,6 +95,4 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['availabletasks']);
   grunt.registerTask('compile', ['sass:dist', 'postcss:dist']);
-
-  grunt.registerTask('default', ['availabletasks']);
 };

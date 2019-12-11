@@ -1,17 +1,18 @@
 # READY FOR REVIEW
 
-# Summary
+## Summary
 _[briefly summarize the changes here]_
 
-# Need Review By (Date)
+## Need Review By (Date)
 _['10/30', 'asap', etc.]_
 
-# Urgency
+## Urgency
 _['low', 'medium', 'high', etc.]_
 
-# Steps to Test
+## Steps to Test
 1. _[First testing step]_
 2. ...
 
-# See Also
+## PR Checklist
 - [PR Checklist](https://gist.github.com/sherakama/0ba17601381e3adbe0cad566ad4d80a5)
+- [Sparkbox PR Checklist](../docs/SparkboxPRChecklist.md)

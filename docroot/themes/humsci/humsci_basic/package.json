@@ -5,20 +5,28 @@
   "main": "Gruntfile.js",
   "scripts": {
     "watch": "grunt watch",
-    "build:css": "grunt compile",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:sass": "grunt compile",
+    "lint:sass": "stylelint 'src/scss/**/*.scss' --config .stylelintrc",
+    "test:sass": "mocha 'tests/true-sass-spec.js'",
+    "test": "npm run lint:sass && npm run test:sass"
   },
-  "author": "",
   "browserslist": [
     "last 2 versions",
     "ie 11"
   ],
+  "license": "MIT",
   "devDependencies": {
+    "@sparkbox/stylelint-config-sparkbox": "^0.5.0",
     "autoprefixer": "^9.7.3",
     "grunt": "^1.0.4",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-postcss": "^0.9.0",
+    "grunt-run": "^0.8.1",
     "grunt-sass": "^3.1.0",
-    "node-sass": "^4.13.0"
+    "mocha": "^6.2.2",
+    "node-sass": "^4.13.0",
+    "sass-true": "^5.0.0",
+    "stylelint": "^12.0.0",
+    "stylelint-scss": "^3.13.0"
   }
 }

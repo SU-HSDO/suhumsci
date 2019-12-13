@@ -23,11 +23,16 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     watch: {
       css: {
-        files: ['**/*.{scss,sass}'],
+        files: ['src/**/*.{scss,sass}'],
         tasks: ['sass'],
         options: {
           interrupt: true
         }
+      }
+    },
+    run: {
+      stylelint: {
+        exec: 'npm run lint:css'
       }
     },
     postcss: {
@@ -73,6 +78,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-run');
 
   grunt.registerTask('compile', ['sass:dist', 'postcss:dist']);
 };

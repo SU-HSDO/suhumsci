@@ -2,17 +2,18 @@ html {
   font-size: 1em;
 
   @include colorful {
-    color: black;
+    color: purple;
   }
+
   @include airy {
-    color: red;
+    color: blue;
   }
+
   @include traditional {
     color: yellow;
   }
 
-  // TODO: Create mixin to support this
-  //@include theme(colorful, airy) {
-  //  background-color: gray;
-  //}
+  @include themes(('traditional', 'airy')) {
+    padding: 3rem;
+  }
 }

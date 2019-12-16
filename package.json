@@ -10,8 +10,13 @@
   "scripts": {
     "watch": "grunt watch",
     "build:css": "grunt compile",
+    "lint:css": "stylelint 'docroot/themes/humsci/{humsci_basic,humsci_airy}/scss/**/*.scss' --config .stylelintrc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "browserslist": [
+    "last 2 versions",
+    "ie 11"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SU-HSDO/suhumsci.git"
@@ -23,13 +28,17 @@
   },
   "homepage": "https://github.com/SU-HSDO/suhumsci#readme",
   "devDependencies": {
+    "@sparkbox/stylelint-config-sparkbox": "^0.5.0",
     "autoprefixer": "^9.4.7",
     "bourbon": "^5.1.0",
     "decanter": "^3.0.0",
     "grunt": "^1.0.3",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-postcss": "^0.9.0",
+    "grunt-run": "^0.8.1",
     "grunt-sass": "^3.0.2",
-    "node-sass": "^4.11.0"
+    "node-sass": "^4.11.0",
+    "stylelint": "^12.0.0",
+    "stylelint-scss": "^3.13.0"
   }
 }

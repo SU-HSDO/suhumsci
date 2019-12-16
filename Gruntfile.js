@@ -28,12 +28,19 @@ module.exports = function (grunt) {
     watch: {
       css: {
         files: ['**/*.{scss,sass}'],
-        tasks: ['sass'],
+        tasks: ['sass', 'run:stylelint'], // run stylelint for humsci_basic/airy at same time after each change
         options: {
           interrupt: true
         }
       }
     },
+    run: {
+      stylelint: {
+        exec: 'npm run lint:css'
+      }
+    },
+    // if we want to use postcss, might just have to do it for our own project right now
+    // or specific gruntfiles AND package.jsons in each humsci_basic, airy, etc directory
     postcss: {
       options: {
         map: true, // inline sourcemaps
@@ -92,6 +99,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-run');
 
   grunt.registerTask('default', ['availabletasks']);
   grunt.registerTask('compile', ['sass:dist', 'postcss:dist']);

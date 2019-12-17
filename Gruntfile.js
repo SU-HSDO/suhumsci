@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 
   function getIncludeFiles() {
     var patterns = [
-      'docroot/themes/humsci/**/*.scss',
+      'docroot/themes/humsci/!(humsci_basic)/**/*.scss',
       'docroot/modules/humsci/**/*.scss',
       'node_modules/decanter/scss',
       'node_modules/bourbon/core',
@@ -27,7 +27,11 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     watch: {
       css: {
-        files: ['**/*.{scss,sass}'],
+        files: [
+          '**/*.{scss,sass}',
+          '!**/node_modules/**',
+          '!docroot/themes/humsci/humsci_basic/**',
+        ],
         tasks: ['sass'],
         options: {
           interrupt: true
@@ -65,7 +69,10 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'docroot',
-            src: ['modules/humsci/**/[a-z]*.scss', 'themes/humsci/**/[a-z]*.scss'],
+            src: [
+              'modules/humsci/**/[a-z]*.scss',
+              'themes/humsci/!(humsci_basic)/**/[a-z]*.scss',
+            ],
             dest: 'docroot',
             ext: '.css',
             extDot: 'last',

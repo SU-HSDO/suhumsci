@@ -5,8 +5,10 @@ module.exports = function (grunt) {
 
   function getIncludeFiles() {
     const patterns = [
-      '**/*.scss',
-      'node_modules/decanter/scss',
+      'src/**/*.scss',
+      // Decanture uses Bourbon imports relative to this path
+      'node_modules/bourbon/core',
+      'node_modules',
     ];
 
     const libraries = [];
@@ -32,12 +34,12 @@ module.exports = function (grunt) {
     },
     run: {
       stylelint: {
-        exec: 'npm run lint:css'
+        exec: 'npm run lint:sass'
       }
     },
     postcss: {
       options: {
-        map: true, // inline sourcemaps
+        map: false, // inline sourcemaps
         processors: [
           require('autoprefixer')({
             grid: true,

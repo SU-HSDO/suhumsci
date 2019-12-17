@@ -26,7 +26,7 @@ module.exports = function (grunt) {
     watch: {
       css: {
         files: ['src/**/*.{scss,sass}'],
-        tasks: ['sass'],
+        tasks: ['dart-sass:dist'],
         options: {
           interrupt: true
         }
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
         ]
       }
     },
-    sass: {
+    'dart-sass': {
       options: {
         implementation: sass,
         sourceMap: false,
@@ -77,10 +77,10 @@ module.exports = function (grunt) {
     },
   });
 
-  grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-dart-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-run');
 
-  grunt.registerTask('compile', ['sass:dist', 'postcss:dist']);
+  grunt.registerTask('compile', ['dart-sass:dist', 'postcss:dist']);
 };

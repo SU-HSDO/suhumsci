@@ -1,18 +1,16 @@
-@charset "UTF-8";
-
-// Decanter's use of global variables won't allow us to import with @use
-// @use 'decanter/core/src/scss/components/brand-bar/index';
-@import 'decanter/core/src/scss/decanter-no-markup';
-
 html {
   font-size: 1em;
+  // how to get the Decanter Stanford Colors with a sass function
+  color: color(brand);
 
   @include colorful {
     color: purple;
+    background-color: theme-color(color-purple);
   }
 
   @include airy {
     color: blue;
+    font-family: $colorful-font--sans;
   }
 
   @include traditional {

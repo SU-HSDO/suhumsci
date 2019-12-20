@@ -1,0 +1,32 @@
+// Map over different theme-lists function
+// Params: ('string', existing-array-to-match), e.g.
+// map-over-theme-list(su-teal, $humsci-basic--theme-colors);
+@function map-over-theme-list($value, $list) {
+  // Value must be a string before being made lowercase
+  $key: to-lower-case(quote($value));
+
+  @if ($current-theme) {
+    $theme-specific-list: map-get($list, $current-theme);
+    $result: map-get($theme-specific-list, $key);
+
+    @if ($result) {
+      // Return value if it exists
+      @return $result;
+    } @else {
+      // Error if value doesn't exist
+      @error "Couldn't find a value for this key: #{$key}";
+    }
+  } @else {
+    // $current-theme not set
+    @return null;
+  }
+}
+
+// Theme Color Function
+// Maps over $humsci-basic--theme-colors array
+// with matching keys to the theme and color requested
+// Params: (variable-name), e.g. theme-color(color-teal)
+// $current-theme must be set
+@function theme-color($color) {
+  @return map-over-theme-list($color, $humsci-basic--theme-colors);
+}

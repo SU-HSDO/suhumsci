@@ -20,21 +20,6 @@
     {
       "type": "package",
       "package": {
-        "name": "harvesthq/chosen",
-        "version": "1.8.2",
-        "type": "drupal-library",
-        "dist": {
-          "url": "https://github.com/harvesthq/chosen/releases/download/v1.8.2/chosen_v1.8.2.zip",
-          "type": "zip"
-        },
-        "require": {
-          "composer/installers": "^1.2.0"
-        }
-      }
-    },
-    {
-      "type": "package",
-      "package": {
         "name": "kenwheeler/slick",
         "version": "1.8.0",
         "type": "drupal-library",
@@ -97,7 +82,6 @@
     "php": ">=7.1",
     "acquia/blt": "10.x-dev",
     "acquia/drupal-spec-tool": ">=2.0.0",
-    "beleneglorion/php-bugherd-api": "dev-master#f0fce97042bd05bc5560fbf37051cd74f802cea1",
     "ckeditor-plugin/fakeobjects": "4.10.1",
     "ckeditor-plugin/link": "4.10.1",
     "composer/installers": "^1.4",
@@ -138,7 +122,7 @@
     "drupal/domain_301_redirect": "^1.0-alpha",
     "drupal/dropzonejs": "~2.0@alpha",
     "drupal/ds": "3.2",
-    "drupal/eck": "~1.0@alpha",
+    "drupal/eck": "dev-1.x#54fef0ad1eca8c372aaad8dac2189afaf2a67de2",
     "drupal/editor_advanced_link": "^1.4",
     "drupal/embed": "~1.0",
     "drupal/encrypt": "^3.0@alpha",
@@ -287,7 +271,8 @@
         "type:component",
         "ckeditor/ckeditor",
         "enyo/dropzone",
-        "components/jquery"
+        "components/jquery",
+        "harvesthq/chosen"
       ],
       "vendor/{$vendor}/{$name}/": [
         "type:library"
@@ -298,7 +283,6 @@
         "patches": "patches/contrib/drush-partial.patch"
       },
       "drupal/core": {
-        "https://www.drupal.org/project/drupal/issues/564106": "https://www.drupal.org/files/issues/2018-06-27/views-more-link-token-replacement_564106_171.patch",
         "https://www.drupal.org/project/drupal/issues/2999491": "https://www.drupal.org/files/issues/2019-04-13/reusable-inline-blocks-2999491-9.patch",
         "https://www.drupal.org/project/drupal/issues/3044211": "https://www.drupal.org/files/issues/2019-03-28/3044211-remove-broken-tempstore-section-storage-2.patch",
         "https://www.drupal.org/project/drupal/issues/3045171": "https://www.drupal.org/files/issues/2019-05-12/3045171-nestedform-14.patch",

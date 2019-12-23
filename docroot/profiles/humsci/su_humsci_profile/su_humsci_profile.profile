@@ -28,18 +28,33 @@ function su_humsci_profile_contextual_links_alter(array &$links, $group, array $
   }
 }
 
+
+function mytestfun(){
+  $path = drupal_get_path('profile','su_humsci_profile');
+  $info  = \Drupal\Core\Serialization\Yaml::decode(file_get_contents($path . '/su_humsci_profile.info.yml'));
+  foreach ($info['dependencies'] as &$module) {
+    $module_path = drupal_get_path('module', $module);
+    if (strpos($module_path, 'core/') !== FALSE) {
+      $module = "drupal:$module";
+    }
+    else {
+      $parent = substr($module_path, strpos($module_path, 'contrib/') + 8);
+      if(strpos($parent, '/') !== false) {
+        $parent = substr($parent, 0, strpos($parent, '/'));
+      }
+      $module = "$parent:$module";
+    }
+  }
+  asort($info['dependencies']);
+  $info['dependencies'] = array_values($info['dependencies']);
+  file_put_contents($path . '/su_humsci_profile.info.yml', \Drupal\Core\Serialization\Yaml::encode($info));
+  dpm($info);
+}
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function su_humsci_profile_form_menu_link_content_menu_link_content_form_alter(array &$form, FormStateInterface $form_state) {
   $form['link']['widget'][0]['uri']['#description']['#items'][] = t('Enter "@text" for a menu item that is not clickable.', ['@text' => 'route:<nolink>']);
-}
-
-/**
- * Implements hook_install_tasks_alter().
- */
-function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
-  $tasks['install_finished']['function'] = 'su_humsci_profile_lock_config';
 }
 
 /**

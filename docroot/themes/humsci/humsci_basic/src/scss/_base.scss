@@ -1,36 +1,16 @@
-@charset "UTF-8";
-
-@import
-  // Decanter no markup will not compile any CSS unless used.
-  // It brings in everything in the utilities, like variables, mixins,
-  // functions, and placeholders.
-  'decanter/core/src/scss/decanter-no-markup',
-  'decanter/core/src/scss/core/normalize',
-  'decanter/core/src/scss/core/base',
-  // Decanter font imports and sources
-  'decanter/core/src/scss/core/fonts',
-  'decanter/core/src/scss/core/helpers',
-  'decanter/core/src/scss/elements',
-  'decanter/core/src/scss/core/flex-grid',
-  // Below here are Decanter specific components we probably want the styles for:
-  'decanter/core/src/scss/components/brand-bar',
-  'decanter/core/src/scss/components/lockup',
-  'decanter/core/src/scss/components/global-footer',
-  'decanter/core/src/scss/components/local-footer'
-;
-
-// Z-index system
-
-
 html {
   font-size: 1em;
+  // how to get the Decanter Stanford Colors with a sass function
+  color: color(brand);
 
   @include colorful {
     color: purple;
+    background-color: theme-color(su-purple);
   }
 
   @include airy {
     color: blue;
+    font-family: $colorful-font--sans;
   }
 
   @include traditional {

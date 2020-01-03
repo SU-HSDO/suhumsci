@@ -7,10 +7,14 @@ sassTrue.runSass(
   {
     file: sassFile,
     includePaths: [
-      // Decanture uses Bourbon imports relative to this path
+      // Decanter uses Bourbon imports relative to this path
       'node_modules/bourbon/core',
       'node_modules',
     ],
   },
-  { describe, it }
+  {
+    sass: require('sass'),
+    describe,
+    it,
+  }
 );

@@ -54,8 +54,8 @@ class PostInstall implements PostInstallInterface {
 
     node_access_rebuild();
 
-    // We install some menu links, so we have to rebuild the router, to ensure the
-    // menu links are valid.
+    // We install some menu links, so we have to rebuild the router, to ensure
+    // the menu links are valid.
     $this->routeBuilder->rebuildIfNeeded();
   }
 
@@ -63,6 +63,7 @@ class PostInstall implements PostInstallInterface {
    * Get the default content importer service if it exists.
    *
    * @return \Drupal\default_content\ImporterInterface|null
+   *   Importer service if available.
    */
   protected static function getContentImporter() {
     if (\Drupal::hasService('default_content.importer')) {

@@ -48,7 +48,7 @@ Once the code with the new files is merged and deployed to an Acquia environment
     * Check drush status `drush @[site-name.stage] st`
     * verify the database name is something like `swshumscidb######`
     * verify the "Site URI" is something like `[site-name]-stage.stanford.edu`
-1. Install a new site `drush @[site-name].stage si config_installer -y`
+1. Install a new site `drush @[site-name].stage si su_humsci_profile -y`
 1. Disable config_ignore to ensure full install state `drush @[site-name].stage pmu config_ignore`
 1. Import all the configs again `drush @[site-name].stage cim -y`
 1. Visit the site and validate login and installation was successful

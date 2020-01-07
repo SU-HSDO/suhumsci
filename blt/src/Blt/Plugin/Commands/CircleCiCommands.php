@@ -44,7 +44,7 @@ class CircleCiCommands extends BltTasks {
   public function updateDependencies() {
     $collection = $this->collectionBuilder();
     $collection->addTaskList($this->setupSite());
-    $collection->addTask($this->installDrupal('config_installer'));
+    $collection->addTask($this->installDrupal('su_humsci_profile'));
 
     $collection->addTask($this->taskDrush()
       ->drush('config-import')
@@ -270,7 +270,7 @@ class CircleCiCommands extends BltTasks {
   public function jobRunFreshInstallBehat() {
     $collection = $this->collectionBuilder();
     $collection->addTaskList($this->setupSite());
-    $collection->addTask($this->installDrupal('config_installer'));
+    $collection->addTask($this->installDrupal('su_humsci_profile'));
 
     $collection->addTask($this->taskDrush()
       ->drush('config-import')

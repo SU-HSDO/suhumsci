@@ -5,8 +5,6 @@
  * su_humsci_profile.install
  */
 
-use Drupal\user\Entity\User;
-
 /**
  * Implements hook_install_tasks().
  */
@@ -15,25 +13,15 @@ function su_humsci_profile_install_tasks(&$install_state) {
 }
 
 /**
- * Implements hook_install().
+ * Final profile installation task.
  */
 function su_humsci_profile_final_task() {
-  // Assign user 1 the "administrator" role.
-  $user = User::load(1);
-  $user->addRole('administrator');
-  $user->setUsername('sws-developers');
-  $user->save();
-
-  // We install some menu links, so we have to rebuild the router, to ensure the
-  // menu links are valid.
-  \Drupal::service('router.builder')->rebuildIfNeeded();
-
-  node_access_rebuild();
+  \Drupal::service('su_humsci_profile.post_install')->runTasks();
 }
 
 /**
  * Indicates version of profile.
  */
-function su_humsci_profile_update_8200(){
+function su_humsci_profile_update_8200() {
   // Intentionally left empty.
 }

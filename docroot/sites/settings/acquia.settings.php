@@ -35,10 +35,10 @@ switch (EnvironmentDetector::getAhEnv()) {
     break;
 }
 
-if (EnvironmentDetector::isProdEnv()) {
-  $config['system.file']['path']['temporary'] = "/mnt/gfs/$group.$environment/tmp";
-}
-else {
+// Set the temp directory as per https://docs.acquia.com/acquia-cloud/manage/files/temporary/
+$settings['file_temp_path'] = '/mnt/tmp/' . EnvironmentDetector::getAhGroup() . '.' . EnvironmentDetector::getAhEnv();
+
+if (!EnvironmentDetector::isProdEnv()) {
   // Disables domain redirect on all environments except production.
   $config['domain_301_redirect.settings']['enabled'] = FALSE;
 }

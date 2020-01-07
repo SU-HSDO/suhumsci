@@ -70,7 +70,7 @@ $config['environment_indicator.indicator']['name'] = 'Local';
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
 
-$config['system.file']['path']['temporary'] = sys_get_temp_dir();
+$settings['file_temp_path'] = sys_get_temp_dir();
 
 // Set the config_ignore settings so that config imports will function on local.
 if (EnvironmentDetector::isLocalEnv()) {

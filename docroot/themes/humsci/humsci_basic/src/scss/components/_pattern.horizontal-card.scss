@@ -1,0 +1,154 @@
+.hb_cmp-horizontal-card {
+  display: flex;
+  flex-direction: column;
+
+  @include grid-media-min("md") {
+    flex-direction: row;
+  }
+
+  @include grid-media-min("lg") {
+    align-items: center;
+  }
+
+  &__category {
+    @include hb_subheading;
+    text-transform: uppercase;
+
+    ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      display: inline-block;
+      list-style: none;
+      margin-right: 0.75rem;
+      margin-bottom: 0.3125rem;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      @include colorful {
+        padding-left: 0.5rem;
+        border-left: 0.1875rem solid hb_colorful-variation(secondary);
+      }
+    }
+
+    a {
+      @include hb_link;
+    }
+  }
+
+  &__subcontent {
+    display: flex;
+    margin-bottom: 1.25rem;
+  }
+
+  &__subcontent-item {
+    display: flex;
+    color: darken($su-color-driftwood, 45%);
+    font-size: 0.875rem;
+
+    @include grid-media-min("md") {
+      font-size: 1rem;
+    }
+
+    &::after {
+      content: '\007C';
+      margin: 0 0.5rem;
+      color: darken($su-color-driftwood, 45%);
+    }
+
+    &:last-of-type {
+      &::after {
+        content: '';
+        margin: 0;
+      }
+    }
+
+    a {
+      font-weight: hb_theme-font-weight(semibold);
+    }
+  }
+
+  &__img {
+    // override default link styles that might go here
+    a {
+      display: block;
+
+      &:hover,
+      &:focus {
+        box-shadow: none;
+        border-bottom: 0 none;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 1.25rem;
+    }
+
+    @include grid-media-min("md") {
+      @include flex-column(5);
+      margin-right: 3rem;
+      margin-bottom: 0;
+    }
+  }
+
+  &__content {
+    @include grid-media-min("md") {
+      @include flex-column(6);
+      // have to overwrite some Decanter things
+      // to allow this to grow if no image present
+      flex-grow: 1;
+      max-width: 100%;
+    }
+
+    @include colorful {
+      // hide the fontawesome icon that is configured by default in
+      // config/default/extlink.settings.yml
+      .fa-ext {
+        display: none;
+      }
+    }
+  }
+
+  &__title {
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @include hb_heading-3;
+      margin-top: 0;
+      margin-bottom: 0.875rem;
+
+      @include grid-media-min("md") {
+        margin-bottom: 1rem;
+      }
+
+      @include grid-media-min("lg") {
+        margin-bottom: 1.375rem;
+      }
+    }
+  }
+
+  &__description {
+    @include hb_body--medium;
+    margin-bottom: 1.75rem;
+  }
+
+  &__decorative-link {
+    svg {
+      transform: translateX(0);
+      transition: transform 200ms ease-in-out;
+
+      &:hover,
+      &:focus {
+        transform: translateX(0.625rem);
+      }
+    }
+  }
+}

@@ -6,11 +6,17 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 
 /**
  * Implements hook_form_alter().
  */
 function su_humsci_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Don't attach the library when on CI.
+  if (EnvironmentDetector::isCiEnv()) {
+    return;
+  }
+
   /** @var \Drupal\Core\Entity\EntityTypeBundleInfo $bundle_info */
   $bundle_info = \Drupal::service('entity_type.bundle.info');
   $bundles = $bundle_info->getBundleInfo('node');

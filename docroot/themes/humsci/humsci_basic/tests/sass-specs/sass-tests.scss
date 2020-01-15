@@ -1,0 +1,12 @@
+// $current-theme needs to be set otherwise the tests will fail
+$default-theme: 'colorful';
+$current-theme: $default-theme;
+
+@import "true";
+@import "../../src/scss/main.scss";
+
+// Import all test partials here
+@include describe('Sass Unit Tests') {
+  @import 'tools/mixins.themes';
+  @import 'tools/functions.colors';
+}

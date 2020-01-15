@@ -1,0 +1,47 @@
+// Mixin to apply styles to Airy theme
+@mixin airy() {
+  @if $current-theme == 'airy' {
+    @content;
+  }
+}
+
+// Mixin to apply styles to Colorful theme
+@mixin colorful() {
+  @if $current-theme == 'colorful' {
+    @content;
+  }
+}
+
+// Mixin to apply styles to Traditional theme
+@mixin traditional() {
+  @if $current-theme == 'traditional' {
+    @content;
+  }
+}
+
+// Mixin to apply styles to multiple themes
+// Params: (array), e.g. @themes(('airy', 'colorful'))
+// Will error if no array passed as params, but empty array will just return
+@mixin themes($theme-list) {
+  @each $theme in $theme-list {
+    @if index($global-theme-list, $theme) != null {
+      @if $theme == 'airy' {
+        @include airy {
+          @content;
+        }
+      }
+
+      @if $theme == 'colorful' {
+        @include colorful {
+          @content;
+        }
+      }
+
+      @if $theme == 'traditional' {
+        @include traditional {
+          @content;
+        }
+      }
+    }
+  }
+}

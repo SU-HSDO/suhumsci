@@ -1,0 +1,23 @@
+html {
+  font-size: 1em;
+  // how to get the Decanter Stanford Colors with a sass function
+  color: color(brand);
+
+  @include colorful {
+    color: purple;
+    background-color: theme-color(color-purple);
+  }
+
+  @include airy {
+    color: blue;
+    font-family: $colorful-font--sans;
+  }
+
+  @include traditional {
+    color: $su-color-cardinal-red;
+  }
+
+  @include themes(('traditional', 'airy')) {
+    padding: 3rem;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "humsci_basic",
+  "version": "1.0.0",
+  "description": "Humsci Basic",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "watch": "grunt watch",
+    "build:sass": "grunt compile",
+    "lint:sass": "stylelint 'src/scss/**/*.scss' --config .stylelintrc",
+    "test:sass": "mocha 'tests/true-sass-spec.js'",
+    "test": "npm run lint:sass && npm run test:sass"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "ie 11"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bourbon": "^5.1.0",
+    "decanter": "^6.0.0"
+  },
+  "devDependencies": {
+    "@sparkbox/stylelint-config-sparkbox": "^0.5.0",
+    "autoprefixer": "^9.7.3",
+    "grunt": "^1.0.4",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-dart-sass": "^1.1.3",
+    "grunt-postcss": "^0.9.0",
+    "grunt-run": "^0.8.1",
+    "mocha": "^6.2.2",
+    "sass": "^1.23.7",
+    "sass-true": "^5.0.0",
+    "stylelint": "^12.0.0",
+    "stylelint-scss": "^3.13.0"
+  }
+}

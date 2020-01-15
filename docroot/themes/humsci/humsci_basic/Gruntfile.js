@@ -6,7 +6,7 @@ module.exports = function (grunt) {
   function getIncludeFiles() {
     const patterns = [
       'src/**/*.scss',
-      // Decanture uses Bourbon imports relative to this path
+      // Decanter uses Bourbon imports relative to this path
       'node_modules/bourbon/core',
       'node_modules',
     ];
@@ -65,11 +65,13 @@ module.exports = function (grunt) {
             expand: true,
             cwd: 'src',
             src: ['scss/**/[a-z]*.scss'],
-            dest: 'dist',
+            dest: '../',
             ext: '.css',
             extDot: 'last',
             rename: function (dest, src) {
-              return dest + '/' + src.replace('scss', 'css');
+              const filenameRegularExpression = /\w+(?=\.)/;
+              const themeName = src.match(filenameRegularExpression)[0];
+              return `${dest}${themeName}/css/${themeName}.css`
             }
           }
         ]

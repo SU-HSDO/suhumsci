@@ -52,7 +52,10 @@
       // Desktop, apply the jquery ui menu and change any mobile classes.
       if (window.innerWidth >= 1201) {
         $menu.menu({
-          position: {at: "left bottom"}
+          position: {at: "left bottom"},
+          select: function(e, item){
+           window.location.href = $(item.item).children('a:first-child').attr("href");
+          }
         });
         $menu.removeClass('expanded');
         $menu.find('.fa-minus').addClass('fa-plus').removeClass('fa-minus');

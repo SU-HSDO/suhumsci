@@ -54,7 +54,7 @@
         $menu.menu({
           position: {at: "left bottom"},
           select: function(e, item){
-           window.location.href = $(item.item).find('a').attr("href");
+           window.location.href = $(item.item).find('a:first-child').attr("href");
           }
         });
         $menu.removeClass('expanded');

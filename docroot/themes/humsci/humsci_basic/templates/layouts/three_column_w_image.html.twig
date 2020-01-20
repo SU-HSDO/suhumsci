@@ -1,0 +1,47 @@
+{% set attributes = attributes.addClass([settings.section_width, 'hb_obj-three-column-w-image', 'hb_obj-page-width', 'clearfix']) %}
+
+{% if content %}
+  <div{{ attributes }}>
+    {% if content.left_sidebar %}
+      <div{{ region_attributes.left_sidebar.addClass(['hb_obj-three-column-w-image__sidebar-1', 'layout__region']) }}>
+        {{ content.left_sidebar }}
+      </div>
+    {% endif %}
+
+
+    <div class="main-content hb_obj-three-column-w-image__main">
+      {% if content.top %}
+        <div{{ region_attributes.top.addClass(['top', 'layout__region']) }}>
+          {{ content.top }}
+        </div>
+      {% endif %}
+
+      {% if content.image %}
+        <div{{ region_attributes.image.addClass(['image-wrapper', 'layout__region', settings.image_float ?: 'align-left']) }}>
+          {{ content.image }}
+        </div>
+      {% endif %}
+
+      <div class="main {% if content.main_below and content.main_above %}break-below-top{% endif %}">
+        {% if content.main_above %}
+          <div{{ region_attributes.main_above.addClass(['main-above', 'layout__region']) }}>
+            {{ content.main_above }}
+          </div>
+        {% endif %}
+
+        {% if content.main_below %}
+          <div{{ region_attributes.main_below.addClass(['main-below', 'layout__region']) }}>
+            {{ content.main_below }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if content.right_sidebar %}
+      <div{{ region_attributes.right_sidebar.addClass(['hb_obj-three-column-w-image__sidebar-2', 'layout__region']) }}>
+        {{ content.right_sidebar }}
+      </div>
+    {% endif %}
+  </div>
+
+{% endif %}

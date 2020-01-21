@@ -1,5 +1,17 @@
 # HumSci
 
+8.1.14
+--------------------------------------------------------------------------------
+_Release Date: 2020-01-21_
+
+* HSD8-744 fix menu keyboard (#446) (5d046360)
+* docs: updates lando readme for set up (#443) (5de16aae)
+* New themes (#445) (9208d685)
+* STN-61 Make minor adjustments to theme metadata (2dcb1667)
+* STN-61 Add placeholder folders for themes we're working on (c15615cf)
+* updated launch documentation (c6248244)
+* Added CircleCi workflow step that will ask to merge into develop for release (f4b5d5b5)
+
 8.1.13
 --------------------------------------------------------------------------------
 _Release Date: 2019-12-02_

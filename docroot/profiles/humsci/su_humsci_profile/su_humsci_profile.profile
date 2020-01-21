@@ -36,13 +36,6 @@ function su_humsci_profile_form_menu_link_content_menu_link_content_form_alter(a
 }
 
 /**
- * Implements hook_install_tasks_alter().
- */
-function su_humsci_profile_install_tasks_alter(&$tasks, $install_state) {
-  $tasks['install_finished']['function'] = 'su_humsci_profile_lock_config';
-}
-
-/**
  * Implements hook_link_alter().
  */
 function su_humsci_profile_link_alter(&$variables) {

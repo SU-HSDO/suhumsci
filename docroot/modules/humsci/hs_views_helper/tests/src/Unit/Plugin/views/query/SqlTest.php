@@ -5,6 +5,7 @@ namespace Drupal\Tests\hs_views_helper\Unit\Plugin\views\filter;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -36,9 +37,9 @@ class SqlTest extends UnitTestCase {
     $entity_storage = $this->createMock(FieldStorageConfigStorage::class);
     $entity_storage->method('load')->willReturn(new FakeFieldObject());
 
-    $entity_manager = $this->createMock(EntityManager::class);
-    $entity_manager->method('getStorage')->willReturn($entity_storage);
-    $container->set('entity.manager', $entity_manager);
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->method('getStorage')->willReturn($entity_storage);
+    $container->set('entity_type.manager', $entity_type_manager);
     \Drupal::setContainer($container);
   }
 

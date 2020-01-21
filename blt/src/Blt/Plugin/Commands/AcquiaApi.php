@@ -78,15 +78,48 @@ class AcquiaApi extends Tasks {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/domains", 'POST', ['json' => ['hostname' => $domain]]);
   }
 
+  /**
+   * Get a list of all databases on an environment.
+   *
+   * @param string $environment
+   *   Environment to list.
+   *
+   * @return bool|string
+   *   API Response.
+   */
   public function getDatabases($environment) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/databases");
   }
 
-  public function getDatabaseBackups($environment, $databaseName){
+  /**
+   * Get a list of all backups on an environment for a given database.
+   *
+   * @param string $environment
+   *   Acquia environment.
+   * @param string $databaseName
+   *   Acquia database name.
+   *
+   * @return bool|string
+   *   API Response.
+   */
+  public function getDatabaseBackups($environment, $databaseName) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/databases/$databaseName/backups");
   }
 
-  public function deleteDatabaseBackup($environment, $databaseName, $backupId){
+  /**
+   * Delete a single database backup.
+   *
+   * @param string $environment
+   *   Acquia environment.
+   * @param string $databaseName
+   *   Acquia database name.
+   * @param int $backupId
+   *   Database backup identifier.
+   *
+   * @return bool|string
+   *   API Response.
+   */
+  public function deleteDatabaseBackup($environment, $databaseName, $backupId) {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/databases/$databaseName/backups/$backupId", 'DELETE');
   }
 

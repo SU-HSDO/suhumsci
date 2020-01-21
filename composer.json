@@ -20,21 +20,6 @@
     {
       "type": "package",
       "package": {
-        "name": "harvesthq/chosen",
-        "version": "1.8.2",
-        "type": "drupal-library",
-        "dist": {
-          "url": "https://github.com/harvesthq/chosen/releases/download/v1.8.2/chosen_v1.8.2.zip",
-          "type": "zip"
-        },
-        "require": {
-          "composer/installers": "^1.2.0"
-        }
-      }
-    },
-    {
-      "type": "package",
-      "package": {
         "name": "kenwheeler/slick",
         "version": "1.8.0",
         "type": "drupal-library",
@@ -97,7 +82,6 @@
     "php": ">=7.1",
     "acquia/blt": "10.x-dev",
     "acquia/drupal-spec-tool": ">=2.0.0",
-    "beleneglorion/php-bugherd-api": "dev-master#f0fce97042bd05bc5560fbf37051cd74f802cea1",
     "ckeditor-plugin/fakeobjects": "4.10.1",
     "ckeditor-plugin/link": "4.10.1",
     "composer/installers": "^1.4",
@@ -126,7 +110,6 @@
     "drupal/conditional_fields": "^1.0@alpha",
     "drupal/config_ignore": "dev-2.x#2b1740411fd1eb8bb139711be5e10535c40ddbbf",
     "drupal/config_import_de": "^1.0@alpha",
-    "drupal/config_installer": "^1.8",
     "drupal/config_readonly": "dev-1.x",
     "drupal/config_split": "^1.0.0",
     "drupal/config_update": "dev-1.x#5785588167279912d1e1f3a936fbf4a306265bd6",
@@ -137,8 +120,8 @@
     "drupal/diff": "^1.0@RC",
     "drupal/domain_301_redirect": "^1.0-alpha",
     "drupal/dropzonejs": "~2.0@alpha",
-    "drupal/ds": "3.2",
-    "drupal/eck": "~1.0@alpha",
+    "drupal/ds": "^3.2",
+    "drupal/eck": "dev-1.x#54fef0ad1eca8c372aaad8dac2189afaf2a67de2",
     "drupal/editor_advanced_link": "^1.4",
     "drupal/embed": "~1.0",
     "drupal/encrypt": "^3.0@alpha",
@@ -287,7 +270,8 @@
         "type:component",
         "ckeditor/ckeditor",
         "enyo/dropzone",
-        "components/jquery"
+        "components/jquery",
+        "harvesthq/chosen"
       ],
       "vendor/{$vendor}/{$name}/": [
         "type:library"
@@ -298,10 +282,8 @@
         "patches": "patches/contrib/drush-partial.patch"
       },
       "drupal/core": {
-        "https://www.drupal.org/project/drupal/issues/564106": "https://www.drupal.org/files/issues/2018-06-27/views-more-link-token-replacement_564106_171.patch",
         "https://www.drupal.org/project/drupal/issues/2999491": "https://www.drupal.org/files/issues/2019-04-13/reusable-inline-blocks-2999491-9.patch",
-        "https://www.drupal.org/project/drupal/issues/3044211": "https://www.drupal.org/files/issues/2019-03-28/3044211-remove-broken-tempstore-section-storage-2.patch",
-        "https://www.drupal.org/project/drupal/issues/3045171": "https://www.drupal.org/files/issues/2019-05-12/3045171-nestedform-14.patch",
+        "https://www.drupal.org/project/drupal/issues/3045171": "https://www.drupal.org/files/issues/2019-11-15/drupal-layout_builder_unable_to_save-3045171-103.patch",
         "https://www.drupal.org/project/drupal/issues/2981837": "https://www.drupal.org/files/issues/2019-05-22/findMigrationDependencies-null-process-value-2981837-5.patch"
       },
       "drupal/extlink": {
@@ -327,8 +309,7 @@
         "patches": "patches/contrib/ui_patterns_views-preview.patch"
       },
       "drupal/ds": {
-        "https://www.drupal.org/project/ds/issues/2966959": "https://www.drupal.org/files/issues/2018-04-27/2966959-ds-namespace_form_for_layout_builder-4.patch",
-        "https://www.drupal.org/project/ds/issues/2939322": "https://www.drupal.org/files/issues/2018-06-20/ds-content_entity-2939322-2.patch"
+        "https://www.drupal.org/project/ds/issues/2939322": "https://www.drupal.org/files/issues/2020-01-07/ds-content_entity-2939322-11.patch"
       },
       "drupal/key": {
         "https://www.drupal.org/project/key/issues/2980072": "https://www.drupal.org/files/issues/2018-06-18/key-encrypt-2980072-4.patch"
@@ -348,9 +329,6 @@
       },
       "drupal/menu_link_weight": {
         "https://www.drupal.org/project/menu_link_weight/issues/2995896": "https://www.drupal.org/files/issues/2018-08-29/2995896-menu-admin-per-menu-support-fixes.patch"
-      },
-      "drupal/masquerade": {
-        "https://www.drupal.org/project/masquerade/issues/2975124": "https://www.drupal.org/files/issues/2018-05-24/remove-hook-logout-but-clear-template-cache-2975124-1.patch"
       },
       "drupal/bricks": {
         "https://www.drupal.org/project/bricks/issues/3003176": "https://www.drupal.org/files/issues/2018-09-28/bricks-entity_usage-3003176.patch"
@@ -373,14 +351,6 @@
       "drupal/fakeobjects": {
         "https://www.drupal.org/project/fakeobjects/issues/3002953": "https://www.drupal.org/files/issues/2019-02-12/fakeobjects-missing_plugin-3002953.patch"
       }
-    },
-    "violinist": {
-      "allow_updates_beyond_constraint": 0,
-      "blacklist": [],
-      "one_pull_request_per_package": 0,
-      "timeframe_disallowed": "0",
-      "timezone": "+0000",
-      "update_with_dependencies": 1
     },
     "composer-exit-on-patch-failure": true,
     "drupal-scaffold": {
@@ -413,18 +383,7 @@
       "blt source:build:simplesamlphp-config"
     ],
     "post-drupal-scaffold-cmd": [
-      "cd docroot && patch -p1 <../patches/htaccess-saml.patch",
-      "patch -p1 < patches/htaccess-https.patch"
-    ],
-    "copy-saml": [
-      "cp simplesamlphp/config/* vendor/simplesamlphp/simplesamlphp/config/",
-      "cp simplesamlphp/config/* vendor/simplesamlphp/simplesamlphp/config/"
-    ],
-    "release-it-dry": [
-      "release-it --dry-run --no-npm.publish"
-    ],
-    "release-it": [
-      "release-it --no-npm.publish"
+      "patch -p1 < patches/.htaccess.patch"
     ],
     "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
     "nuke": [

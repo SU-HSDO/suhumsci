@@ -41,9 +41,7 @@ services:
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - vendor/bin/blt source:build:simplesamlphp-config
-        - drush si config_installer -y
-        - drush cim -y
-        - drush cim -y
+        - drush si su_humsci_profile -y
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:

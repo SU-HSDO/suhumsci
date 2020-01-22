@@ -3,12 +3,12 @@
   @include describe('When given a valid key value,') {
     $current-theme: 'colorful' !global; // need to override default setting
 
-    @include describe('the hb_theme-color() function') {
+    @include describe('the hb-theme-color() function') {
       @include it('returns the Colorful theme teal color.') {
-        $test: hb_theme-color(color-teal);
+        $test: hb-theme-color(color-teal);
         $expect: #00505c;
 
-        @include assert-equal($test, $expect, "The Colorful color-teal color value either does not match or does not exist.");
+        @include assert-equal($test, $expect, 'The Colorful color-teal color value either does not match or does not exist.');
       }
     }
   }
@@ -17,12 +17,12 @@
     $current-theme: 'colorful' !global; // need to override default setting
     $colorful-variation: 'colorful-teal' !global;
 
-    @include describe('the hb_colorful-variation() function') {
+    @include describe('the hb-colorful-variation() function') {
       @include it('returns the Colorful teal theme variation primary color.') {
-        $test: hb_colorful-variation(primary);
+        $test: hb-colorful-variation(primary);
         $expect: #00505c;
 
-        @include assert-equal($test, $expect, "The Colorful Teal Theme variation primary color value either does not match or does not exist.");
+        @include assert-equal($test, $expect, 'The Colorful Teal Theme variation primary color value either does not match or does not exist.');
       }
     }
   }

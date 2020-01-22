@@ -1,17 +1,17 @@
-.hb_cmp-horizontal-card {
+.hb-cmp-horizontal-card {
   display: flex;
   flex-direction: column;
 
-  @include grid-media-min("md") {
+  @include grid-media-min('md') {
     flex-direction: row;
   }
 
-  @include grid-media-min("lg") {
+  @include grid-media-min('lg') {
     align-items: center;
   }
 
   &__category {
-    @include hb_subheading;
+    @include hb-subheading;
     text-transform: uppercase;
 
     ul {
@@ -31,12 +31,12 @@
 
       @include colorful {
         padding-left: 0.5rem;
-        border-left: 0.1875rem solid hb_colorful-variation(secondary);
+        border-left: 0.1875rem solid hb-colorful-variation(secondary);
       }
     }
 
     a {
-      @include hb_link;
+      @include hb-link;
     }
   }
 
@@ -50,7 +50,7 @@
     color: darken($su-color-driftwood, 45%);
     font-size: 0.875rem;
 
-    @include grid-media-min("md") {
+    @include grid-media-min('md') {
       font-size: 1rem;
     }
 
@@ -68,7 +68,7 @@
     }
 
     a {
-      font-weight: hb_theme-font-weight(semibold);
+      font-weight: hb-theme-font-weight(semibold);
     }
   }
 
@@ -90,7 +90,7 @@
       margin-bottom: 1.25rem;
     }
 
-    @include grid-media-min("md") {
+    @include grid-media-min('md') {
       @include flex-column(5);
       margin-right: 3rem;
       margin-bottom: 0;
@@ -98,7 +98,7 @@
   }
 
   &__content {
-    @include grid-media-min("md") {
+    @include grid-media-min('md') {
       @include flex-column(6);
       // have to overwrite some Decanter things
       // to allow this to grow if no image present
@@ -121,22 +121,22 @@
     h4,
     h5,
     h6 {
-      @include hb_heading-3;
+      @include hb-heading-3;
       margin-top: 0;
       margin-bottom: 0.875rem;
 
-      @include grid-media-min("md") {
+      @include grid-media-min('md') {
         margin-bottom: 1rem;
       }
 
-      @include grid-media-min("lg") {
+      @include grid-media-min('lg') {
         margin-bottom: 1.375rem;
       }
     }
   }
 
   &__description {
-    @include hb_body--medium;
+    @include hb-body--medium;
     margin-bottom: 1.75rem;
   }
 

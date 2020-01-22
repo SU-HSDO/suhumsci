@@ -1,15 +1,15 @@
-{% set attributes = attributes.addClass([settings.section_width, 'hb_obj-three-column-w-image', 'hb_obj-page-width', 'clearfix']) %}
+{% set attributes = attributes.addClass([settings.section_width, 'hb-obj-three-column-w-image', 'hb-obj-page-width', 'clearfix']) %}
 
 {% if content %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
-      <div{{ region_attributes.left_sidebar.addClass(['hb_obj-three-column-w-image__sidebar-1', 'layout__region']) }}>
+      <div{{ region_attributes.left_sidebar.addClass(['hb-obj-three-column-w-image__sidebar-1', 'layout__region']) }}>
         {{ content.left_sidebar }}
       </div>
     {% endif %}
 
 
-    <div class="main-content hb_obj-three-column-w-image__main">
+    <div class="main-content hb-obj-three-column-w-image__main">
       {% if content.top %}
         <div{{ region_attributes.top.addClass(['top', 'layout__region']) }}>
           {{ content.top }}
@@ -38,7 +38,7 @@
     </div>
 
     {% if content.right_sidebar %}
-      <div{{ region_attributes.right_sidebar.addClass(['hb_obj-three-column-w-image__sidebar-2', 'layout__region']) }}>
+      <div{{ region_attributes.right_sidebar.addClass(['hb-obj-three-column-w-image__sidebar-2', 'layout__region']) }}>
         {{ content.right_sidebar }}
       </div>
     {% endif %}

@@ -2,11 +2,17 @@ uuid: 5643883d-ecf4-4404-b508-79317968ceab
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - core.entity_view_mode.media.stanford_image_large
+    - core.entity_view_mode.media.stanford_image_medium
+    - core.entity_view_mode.media.thumbnail
   module:
+    - blazy
     - editor
-    - entity_embed
     - hs_table_filter
     - linkit
+    - media
 _core:
   default_config_hash: ka_t78yCnMTKJck4SNHsdY_bUbC-ZNBXReeiq90TaNc
 name: 'Basic HTML'
@@ -43,7 +49,7 @@ filters:
     status: true
     weight: -50
     settings:
-      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id class> <h3 id class> <h4 id class> <h5 id class> <h6 id class> <img src alt data-entity-type data-entity-uuid data-align data-caption class> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button class alt title> <table class> <caption class> <tbody class> <thead> <tfoot> <th scope class> <td class> <tr> <a id href name target hreflang data-entity-substitution data-entity-type data-entity-uuid title class> <p class> <div class> <br> <span class> <i class>'
+      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id class> <h3 id class> <h4 id class> <h5 id class> <h6 id class> <img src alt data-entity-type data-entity-uuid data-align data-caption class> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button class alt title> <table class> <caption class> <tbody class> <thead> <tfoot> <th scope class> <td class> <tr> <a id href name target hreflang data-entity-substitution data-entity-type data-entity-uuid title class> <p class> <div class> <br> <span class> <i class> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-* alt>'
       filter_html_help: true
       filter_html_nofollow: false
   filter_htmlcorrector:
@@ -78,15 +84,33 @@ filters:
     weight: -43
     settings:
       title: true
-  entity_embed:
-    id: entity_embed
-    provider: entity_embed
-    status: true
-    weight: -44
-    settings: {  }
   hs_table_filter:
     id: hs_table_filter
     provider: hs_table_filter
     status: true
     weight: -42
     settings: {  }
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: -44
+    settings:
+      default_view_mode: full
+      allowed_view_modes:
+        full: full
+        stanford_image_large: stanford_image_large
+        stanford_image_medium: stanford_image_medium
+        thumbnail: thumbnail
+      allowed_media_types: {  }
+  blazy_filter:
+    id: blazy_filter
+    provider: blazy
+    status: false
+    weight: 3
+    settings:
+      filter_tags:
+        img: img
+        iframe: iframe
+      media_switch: ''
+      use_data_uri: '0'

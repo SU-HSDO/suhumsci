@@ -2,11 +2,17 @@ uuid: 966ccc3b-0bbc-4980-87f7-7195663d89bf
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.media.full
+    - core.entity_view_mode.media.stanford_image_large
+    - core.entity_view_mode.media.stanford_image_medium
+    - core.entity_view_mode.media.thumbnail
   module:
+    - blazy
     - editor
-    - entity_embed
     - hs_table_filter
     - linkit
+    - media
 name: 'Full HTML'
 format: full_html
 weight: 0
@@ -16,12 +22,6 @@ filters:
     provider: editor
     status: true
     weight: -50
-    settings: {  }
-  entity_embed:
-    id: entity_embed
-    provider: entity_embed
-    status: true
-    weight: -45
     settings: {  }
   filter_align:
     id: filter_align
@@ -47,7 +47,7 @@ filters:
     status: false
     weight: -43
     settings:
-      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <table class="decanter-table--borderless"> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title class="decanter-button decanter-button--big decanter-button--secondary decanter-more-link decanter-external-link"> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button> <p class="decanter-font-lead decanter-font-splash decanter-short-line-length decanter-caption decanter-credits"> <h1> <pre> <span class="emphasized-text">'
+      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <table class="decanter-table--borderless"> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title class="decanter-button decanter-button--big decanter-button--secondary decanter-more-link decanter-external-link"> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button> <p class="decanter-font-lead decanter-font-splash decanter-short-line-length decanter-caption decanter-credits"> <h1> <pre> <span class="emphasized-text"> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-* alt>'
       filter_html_help: true
       filter_html_nofollow: false
   filter_htmlcorrector:
@@ -88,3 +88,27 @@ filters:
     status: false
     weight: -39
     settings: {  }
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: -45
+    settings:
+      default_view_mode: full
+      allowed_view_modes:
+        full: full
+        stanford_image_large: stanford_image_large
+        stanford_image_medium: stanford_image_medium
+        thumbnail: thumbnail
+      allowed_media_types: {  }
+  blazy_filter:
+    id: blazy_filter
+    provider: blazy
+    status: false
+    weight: 3
+    settings:
+      filter_tags:
+        img: img
+        iframe: iframe
+      media_switch: ''
+      use_data_uri: '0'

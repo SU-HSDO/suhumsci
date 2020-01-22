@@ -120,5 +120,5 @@ function su_humsci_profile_post_update_8200() {
 
   /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
   $module_installer = \Drupal::service('module_installer');
-  $module_installer->uninstall(['embed']);
+  $module_installer->uninstall(['embed', 'entity_browser']);
 }

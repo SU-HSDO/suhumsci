@@ -1,9 +1,11 @@
+/* stylelint-disable no-descending-specificity */
 .hb-cmp-horizontal-card {
   display: flex;
   flex-direction: column;
 
   @include grid-media-min('md') {
     flex-direction: row;
+    align-items: top;
   }
 
   @include grid-media-min('lg') {
@@ -13,6 +15,7 @@
   &__category {
     @include hb-subheading;
     text-transform: uppercase;
+    margin: 0 0 0.4rem;
 
     ul {
       padding: 0;
@@ -20,23 +23,38 @@
     }
 
     li {
+      color: $hb-color--black;
       display: inline-block;
       list-style: none;
       margin-right: 0.75rem;
       margin-bottom: 0.3125rem;
 
-      &:last-of-type {
-        margin-right: 0;
+      @include colorful {
+        &::before {
+          content: '';
+          display: inline-block;
+          height: 0.75rem;
+          width: 0.1875rem;
+          margin-right: 0.4rem;
+          background-color: hb-colorful-variation(secondary);
+        }
       }
 
-      @include colorful {
-        padding-left: 0.5rem;
-        border-left: 0.1875rem solid hb-colorful-variation(secondary);
+      &:last-of-type {
+        margin-right: 0;
       }
     }
 
     a {
-      @include hb-link;
+      color: $hb-color--black;
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        color: $hb-color--black;
+        border-bottom: 1px solid $hb-color--black;
+        box-shadow: none;
+      }
     }
   }
 
@@ -73,6 +91,9 @@
   }
 
   &__img {
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+
     // override default link styles that might go here
     a {
       display: block;
@@ -81,13 +102,18 @@
       &:focus {
         box-shadow: none;
         border-bottom: 0 none;
+
+        img {
+          transform: scale(1.2);
+        }
       }
     }
 
     img {
       width: 100%;
       height: auto;
-      margin-bottom: 1.25rem;
+      transform: scale(1);
+      transition: transform 200ms ease-in-out;
     }
 
     @include grid-media-min('md') {
@@ -104,14 +130,6 @@
       // to allow this to grow if no image present
       flex-grow: 1;
       max-width: 100%;
-    }
-
-    @include colorful {
-      // hide the fontawesome icon that is configured by default in
-      // config/default/extlink.settings.yml
-      .fa-ext {
-        display: none;
-      }
     }
   }
 
@@ -152,3 +170,5 @@
     }
   }
 }
+
+/* stylelint-enable no-descending-specificity */

@@ -14,9 +14,6 @@ use Drupal\Component\Utility\Html;
  */
 function humsci_basic_preprocess_field(&$variables, $hook) {
   // Make additional variables available to the template.
-  // $variables['bundle'] = $variables['element']['#bundle'];
-  // $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['entity_type']);
-  // $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['bundle']);
   $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_name']);
   $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_type']);
   $variables['attributes']['class'][] = Html::cleanCssIdentifier('label-' . $variables['label_display']);

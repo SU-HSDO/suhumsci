@@ -499,7 +499,7 @@ class CircleCiCommands extends BltTasks {
       ->mkdir('artifacts/coverage-xml', 777)
       ->mkdir('artifacts/coverage-html', 777);
     $tasks[] = $this->taskExecStack()->dir($docroot)
-      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html --testsuite nonfunctional ' . static::TEST_DIR);
+      ->exec('../vendor/bin/phpunit -c core --debug --verbose --coverage-xml ../artifacts/coverage-xml --coverage-html ../artifacts/coverage-html --filter "/(Unit|Kernel)/" ' . static::TEST_DIR);
     return $tasks;
   }
 

@@ -23,6 +23,7 @@ Feature: Install State Basic Page
     Then I drop "images/logo.jpg" file into dropzone
     And I press "Upload and Continue"
     Then I wait for AJAX to finish
+    And I wait 2 seconds
     And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
     And I wait for AJAX to finish
     And I wait 2 seconds

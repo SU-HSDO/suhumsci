@@ -18,18 +18,14 @@ Feature: Install State Basic Page
     And I should not see "Body"
     And I should not see "Link text"
     And I should not see "Overlay Color"
-    And I press "Continue"
+    And I press "Add media"
     Then I wait for AJAX to finish
-    Then I switch to "entity_browser_iframe_image_browser" iframe
-    And I wait for AJAX to finish
-    Then I click "Embed a File"
-    And I wait for AJAX to finish
     Then I drop "images/logo.jpg" file into dropzone
-    And I press "Add to Library"
+    And I press "Upload and Continue"
     Then I wait for AJAX to finish
-    And I press "Continue"
+    And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
     And I wait for AJAX to finish
-    Then I exit iframe
+    Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
     And I wait for AJAX to finish
     Then I click the "summary:contains(Overlay Details)" element
     And I should see "Optionally add some overlay text on top of the image"
@@ -88,7 +84,7 @@ Feature: Install State Basic Page
     And I should see "Sed augue ipsum egestas nec"
     And I should see "Vivamus in erat ut urna cursus vestibulum"
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @javascript @MediaCleanup  @testthis
   Scenario: Test basic page with Text Area paragraph creation
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
@@ -102,28 +98,19 @@ Feature: Install State Basic Page
     And I should be on "/demo-basic-page"
     And I should see the heading "Demo Basic Page" in the "content" region
     And I should see "Vivamus in erat ut urna cursus vestibulum"
+    And I should see 0 "img" elements in the "content" region
     Then I click "Edit"
     And I press "Edit" in the "content" region
     And I wait for AJAX to finish
     Then the "Text Area" field should contain "<p>Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.</p>"
-    Then I click the "a[title='Embed Media']" element
-    And I wait for AJAX to finish
-    Then I switch to "entity_browser_iframe_media_browser" iframe
-    Then I click "Embed a File"
+    Then I click the "a[title='Insert from Media Library']" element
     And I wait for AJAX to finish
     Then I drop "images/logo.jpg" file into dropzone
-    And I press "Add to Library"
-    And I wait for AJAX to finish
-    Then I press "Continue"
-    And I wait for AJAX to finish
-    And I wait for AJAX to finish
-    Then I exit iframe
-    And I wait 2 seconds
-    And I set window dimensions 1201 x 3001
-    Then I select "Medium (220×220)" from "Image Style"
-    And I fill in "Alternate text" with "Stanford Logo"
-    Then I click the ".entity-select-dialog .form-actions button" element
-    And I wait for AJAX to finish
+    And I press "Upload and Continue"
+    Then I wait for AJAX to finish
+    And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
+    Then I wait for AJAX to finish
+    Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
     Then I press "Save"
     And I should see 1 "img" elements in the "content" region
 

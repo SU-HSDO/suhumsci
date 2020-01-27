@@ -25,6 +25,7 @@ Feature: Install State Basic Page
     Then I wait for AJAX to finish
     And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
     And I wait for AJAX to finish
+    And I wait 2 seconds
     Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
     And I wait for AJAX to finish
     Then I click the "summary:contains(Overlay Details)" element
@@ -84,7 +85,7 @@ Feature: Install State Basic Page
     And I should see "Sed augue ipsum egestas nec"
     And I should see "Vivamus in erat ut urna cursus vestibulum"
 
-  @api @safe @javascript @MediaCleanup  @testthis
+  @api @safe @javascript @MediaCleanup
   Scenario: Test basic page with Text Area paragraph creation
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
@@ -111,6 +112,7 @@ Feature: Install State Basic Page
     And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
     Then I wait for AJAX to finish
     Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
+    Then I wait for AJAX to finish
     Then I press "Save"
     And I should see 1 "img" elements in the "content" region
 

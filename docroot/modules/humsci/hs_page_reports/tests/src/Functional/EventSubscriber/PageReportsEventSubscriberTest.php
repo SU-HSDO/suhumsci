@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\hs_page_reports\Kernel\EventSubscriber;
+namespace Drupal\Tests\hs_page_reports\Functional\EventSubscriber;
 
 use Drupal\Tests\BrowserTestBase;
 

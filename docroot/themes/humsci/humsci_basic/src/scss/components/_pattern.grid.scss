@@ -1,0 +1,25 @@
+.hb-grid {
+  @include hb-page-width;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  // Default to two column
+  &__card {
+    margin-bottom: 1.5rem;
+    width: 100%;
+
+    @include grid-media-min('sm') {
+      width: 48.75%;
+    }
+  }
+
+
+  &--three-column {
+    &__card {
+      @include grid-media-min('md') {
+        width: 31.75%;
+      }
+    }
+  }
+}

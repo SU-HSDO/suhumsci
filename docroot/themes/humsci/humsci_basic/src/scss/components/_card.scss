@@ -1,4 +1,4 @@
-.hb-cmp-card {
+.hb-card {
   display: flex;
   flex-direction: column;
 
@@ -30,7 +30,7 @@
       margin-right: 0.75rem;
       margin-bottom: 0.3125rem;
 
-      @include colorful {
+      @include hb-colorful {
         &::before {
           content: '';
           display: inline-block;
@@ -117,7 +117,7 @@
       transition: transform 200ms ease-in-out;
     }
 
-    .hb-cmp-card--horizontal & {
+    .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
         margin-right: 3rem;
@@ -127,7 +127,7 @@
   }
 
   &__content {
-    .hb-cmp-card--horizontal & {
+    .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(6);
         // have to overwrite some Decanter things
@@ -175,7 +175,7 @@
     }
 
     path {
-      @include colorful {
+      @include hb-colorful {
         fill: hb-colorful-variation(secondary);
       }
     }

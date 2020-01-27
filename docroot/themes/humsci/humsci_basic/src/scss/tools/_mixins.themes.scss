@@ -1,20 +1,20 @@
 // Mixin to apply styles to Airy theme
-@mixin airy() {
-  @if $current-theme == 'airy' {
+@mixin hb-airy() {
+  @if $hb-current-theme == 'airy' {
     @content;
   }
 }
 
 // Mixin to apply styles to Colorful theme
-@mixin colorful() {
-  @if $current-theme == 'colorful' {
+@mixin hb-colorful() {
+  @if $hb-current-theme == 'colorful' {
     @content;
   }
 }
 
 // Mixin to apply styles to Traditional theme
-@mixin traditional() {
-  @if $current-theme == 'traditional' {
+@mixin hb-traditional() {
+  @if $hb-current-theme == 'traditional' {
     @content;
   }
 }
@@ -22,23 +22,23 @@
 // Mixin to apply styles to multiple themes
 // Params: (array), e.g. @themes(('airy', 'colorful'))
 // Will error if no array passed as params, but empty array will just return
-@mixin themes($theme-list) {
+@mixin hb-themes($theme-list) {
   @each $theme in $theme-list {
-    @if index($global-theme-list, $theme) != null {
+    @if index($hb-global-theme-list, $theme) != null {
       @if $theme == 'airy' {
-        @include airy {
+        @include hb-airy {
           @content;
         }
       }
 
       @if $theme == 'colorful' {
-        @include colorful {
+        @include hb-colorful {
           @content;
         }
       }
 
       @if $theme == 'traditional' {
-        @include traditional {
+        @include hb-traditional {
           @content;
         }
       }

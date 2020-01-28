@@ -26,23 +26,15 @@
  * @ingroup themeable
  */
 #}
-{%
-  set classes = [
-  'hb-grid',
-  options.alignment,
-  'hb-grid--cols-' ~ options.columns,
-  'clearfix',
-]
-%}
+{% set viewItems = [] %}
 {% if title %}
   <h3>{{ title }}</h3>
 {% endif %}
-<div{{ attributes.addClass(classes) }}>
-  {% for row in items %}
-    {% for column in row.content %}
-      <div{{ create_attribute({'class': ['hb-grid__item']}) }}>
-        {{- column.content -}}
-      </div>
-    {% endfor %}
+
+{% for row in items %}
+  {% for column in row.content %}
+      {% set viewItems = viewItems|merge([column.content]) %}
   {% endfor %}
-</div>
+{% endfor %}
+
+{{ pattern('grid', {items: viewItems, columns: options.columns}) }}

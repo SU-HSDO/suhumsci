@@ -1,0 +1,58 @@
+.field-hs-news-categories {
+  @include hb-subheading;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem;
+
+  div {
+    display: inline-block;
+    margin-right: 0.75rem;
+    margin-bottom: 0.3125rem;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    @include colorful {
+      padding-left: 0.5rem;
+      border-left: 0.1875rem solid hb-colorful-variation(secondary);
+    }
+  }
+
+  a {
+    color: $hb-color--black;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: $hb-color--black;
+      border-bottom: 1px solid $hb-color--black;
+      box-shadow: none;
+    }
+  }
+}
+
+.field-hs-news-date {
+  color: darken($su-color-driftwood, 45%);
+}
+
+// This class is only present on the standalone page for this node, so we use it
+// for scoping styles that we don't want to appear in any other places (like
+// styling for accommodating layout-builder, etc).
+.node-news-item-full {
+  .field-hs-news-categories {
+    margin: 0 0 1.25rem;
+
+    @include grid-media('sm') {
+      margin-bottom: 1.625rem;
+    }
+  }
+
+  .field-hs-news-date {
+    line-height: 1.4;
+  }
+
+  .field-hs-news-link {
+    line-height: 1.4;
+  }
+}
+

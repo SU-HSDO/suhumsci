@@ -4,3 +4,36 @@
  * @file
  * Functions to support theming in the HumSci Basic theme.
  */
+
+use Drupal\Component\Utility\Html;
+
+
+ /**
+ * Prepares variables for the field.html.twig template.
+ * Originally sourced from stanford_basic 8.4.0-alpha.3
+ */
+function humsci_basic_preprocess_field(&$variables, $hook) {
+  // Make additional variables available to the template.
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_name']);
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_type']);
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier('label-' . $variables['label_display']);
+
+  $first_item = isset($variables['element'][0]) ? $variables['element'][0] : NULL;
+  $is_paragraph = isset($first_item['#paragraph']) ? $first_item['#paragraph'] : FALSE;
+  $has_items = isset($variables['items']) ? count($variables['items']) : FALSE;
+
+  // Add additional information to paragraph fields.
+  // Bricks has a different field type and structures the array differently, so
+  // we need to check if its actual normal paragraph fields as well.
+  if ($variables['field_type'] == 'entity_reference_revisions' && $is_paragraph && $has_items) {
+    foreach ($variables['items'] as &$pitem) {
+      $paragraph_type = $pitem['content']['#paragraph']->getType();
+      $ptype = Html::cleanCssIdentifier("ptype-" . $paragraph_type);
+      if (!isset($pitem['attributes']['class'])) {
+        $pitem['attributes']['class'] = [];
+      }
+      $pitem['attributes']['class'][] = "paragraph-item";
+      $pitem['attributes']['class'][] = $ptype;
+    }
+  }
+}

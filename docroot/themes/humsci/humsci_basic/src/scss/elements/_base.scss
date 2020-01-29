@@ -4,15 +4,6 @@ html {
   }
 }
 
-// Including this across the board is a topic for future discussion.
-//
-// html {
-//   box-sizing: border-box;
-// }
-// *, *:before, *:after {
-//   box-sizing: inherit;
-// }
-
 a:not([class]) {
   @include hb-link--inline;
 }
@@ -66,5 +57,29 @@ h6:not([class]) {
 }
 
 p:not([class]) {
-  @include hb-body--small;
+  @include hb-body--medium;
+  margin-top: 0;
+}
+
+
+// Hide the FontAwesome icon that is configured by default in
+// config/default/extlink.settings.yml
+// and replace with different icon
+.fa-ext {
+  @include colorful {
+    &::before {
+      content: '';
+      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTExLjI3MyA1LjgxOHY1LjQ1NUguNzI3Vi43MjdoNS4wOTFNNy4yNzMuNzI3aDR2NE0xMS4yNzMuNzI3TDYuMTgyIDUuODE4IiBzdHJva2U9IiMwMDdDOEYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIi8+Cjwvc3ZnPgo=') center center no-repeat;
+      height: 0.75rem;
+      width: 0.75rem;
+      background-size: 0.75rem 0.75rem;
+      margin-left: 0.3125rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .fa-arrow-right {
+      display: none;
+    }
+  }
 }

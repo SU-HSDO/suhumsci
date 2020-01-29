@@ -8,14 +8,17 @@ $sidebar-width: 16.5rem;
     flex-wrap: nowrap;
   }
 
+  &--no-sidebar {
+    max-width: 49rem;
+    margin: auto;
+  }
+
   &__sidebar-1 {
     flex: 1 1 100%;
-    order: 2;
     margin-right: 0;
 
     @include grid-media('md') {
       flex: 0 0 $sidebar-width;
-      order: 1;
       margin-right: map-get($hb-screen-margins, 'md');
     }
 
@@ -30,21 +33,89 @@ $sidebar-width: 16.5rem;
 
   &__main {
     flex: 1 1 100%;
-    order: 1;
+  }
+
+  &__main-top {
+    display: flex;
+    flex-wrap: wrap;
+
+    .hb-obj-three-column-w-image--one-sidebar & {
+      @include grid-media('lg') {
+        flex-wrap: nowrap;
+      }
+    }
+
+    .hb-obj-three-column-w-image--no-sidebar & {
+      @include grid-media('md') {
+        flex-wrap: nowrap;
+      }
+    }
+  }
+
+  &__main-top-text {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .hb-obj-three-column-w-image--one-sidebar & {
+      @include grid-media('lg') {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .hb-obj-three-column-w-image--no-sidebar & {
+      @include grid-media('md') {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  &__main-top-image {
+    width: 100%;
+    margin-bottom: 1rem;
 
     @include grid-media('md') {
-      order: 2;
+      margin-bottom: 3rem;
     }
+
+    .hb-obj-three-column-w-image--one-sidebar & {
+      @include grid-media('lg') {
+        width: 40%;
+        margin-left: 1.25rem;
+      }
+    }
+
+    .hb-obj-three-column-w-image--no-sidebar & {
+      @include grid-media('md') {
+        width: 40%;
+        margin-left: 1.25rem;
+      }
+    }
+
+    img {
+      display: block;
+
+      @supports (object-fit: cover) {
+        object-fit: cover;
+        width: 100%;
+        max-height: 250px;
+      }
+    }
+  }
+
+  &__main-body {
+    max-width: 49rem;
   }
 
   &__sidebar-2 {
     flex: 1 1 100%;
-    order: 3;
     margin-left: 0;
 
     @include grid-media('md') {
       flex: 0 0 $sidebar-width;
-      order: 3;
       margin-left: map-get($hb-screen-margins, 'md');
     }
 

@@ -33,7 +33,6 @@ Feature: Media
     Then I drop "documents/test.php" file into dropzone
     And I wait 1 seconds
     And I should see an ".dz-error.dz-complete" element
-    And "Upload" should be disabled
     Then I click the ".dropzonejs-remove-icon" element
     And I should see 0 ".dz-preview" elements
 
@@ -55,14 +54,11 @@ Feature: Media
     And I fill in "Title" with "Fusce fermentum odio"
     And I press "Add Hero Image"
     Then I wait for AJAX to finish
-    And I press "Continue"
+    And I press "Add media"
     And I wait for AJAX to finish
-    Then I switch to "entity_browser_iframe_image_browser" iframe
-    And I click the "td.views-field-rendered-entity" element
-    And I wait 10 seconds
-    Then I press "Continue"
+    And I check the box "Select Demo Image File"
+    Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
     And I wait for AJAX to finish
-    And I exit iframe
     Then I press "Save"
     And I should see 1 "picture" elements in the "content" region
     And the element ".media picture img" should have the attribute "alt" with the value "Stanford Logo"
@@ -90,11 +86,11 @@ Feature: Media
     Then I am on "/media/add"
     And I click "Video" in the "content" region
     Then I fill in "Name" with "Aenean commodo ligula eget dolor"
-    And I fill in "Video Url" with "http://google.com"
+    And I fill in "Video URL" with "http://google.com"
     Then I press "Save"
-    And I should see the error message "1 error has been found: Video Url"
-    And I should see "Could not find a video provider to handle the given URL"
-    Then I fill in "Video Url" with "https://youtu.be/-DYSucV1_9w"
+    And I should see the error message "1 error has been found: Video URL"
+    And I should see "The given URL does not match any known oEmbed providers"
+    Then I fill in "Video URL" with "https://youtu.be/-DYSucV1_9w"
     And I press "Save"
     Then I should be on "/admin/content/media"
     And I should see the message "Video Aenean commodo ligula eget dolor has been created."

@@ -577,3 +577,10 @@ function hs_field_helpers_field_storage_config_presave(FieldStorageConfigInterfa
     $entity->calculateDependencies();
   }
 }
+
+/**
+ * Implements hook_audio_embed_field_provider_info_alter().
+ */
+function hs_field_helpers_audio_embed_field_provider_info_alter(&$definitions) {
+  $definitions['soundcloud']['class'] = '\Drupal\hs_field_helpers\Plugin\audio_embed_field\Provider\StanfordSoundCloud';
+}

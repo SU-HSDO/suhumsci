@@ -7,6 +7,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Outdated.
@@ -102,4 +103,22 @@ function su_humsci_profile_post_update_8_1_1() {
   ];
   $field->set('settings', $settings);
   $field->save();
+}
+
+/**
+ * Uninstall unwanted modules.
+ */
+function su_humsci_profile_post_update_8200() {
+  /** @var \Drupal\filter\FilterFormatInterface $filter_format */
+  foreach (FilterFormat::loadMultiple() as $filter_format) {
+    $filters = $filter_format->get('filters');
+    unset($filters['entity_embed']);
+    $filter_format->set('filters', $filters);
+    $filter_format->calculateDependencies();
+    $filter_format->save();
+  }
+
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  $module_installer->uninstall(['embed', 'entity_browser']);
 }

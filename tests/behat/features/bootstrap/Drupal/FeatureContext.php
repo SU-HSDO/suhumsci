@@ -76,19 +76,6 @@ class FeatureContext extends RawDrupalContext {
   }
 
   /**
-   * Checks, that (?P<num>\d+) CSS elements exist in the given region
-   * Example: Then I should see 5 "div" elements in the "content" region
-   * Example: And I should see 5 "div" elements in the "header" region
-   *
-   * @Then /^(?:|I )should see (?P<num>\d+) "(?P<element>[^"]*)" elements in the "(?P<region>[^"]*)" region?$/
-   */
-  public function iShouldSeeElementsInTheRegion($num, $element, $region) {
-    $regionObj = $this->getRegion($region);
-    $this->assertSession()
-      ->elementsCount('css', $element, intval($num), $regionObj);
-  }
-
-  /**
    * @Then every link in the :region( region) should work
    *
    *
@@ -179,13 +166,13 @@ class FeatureContext extends RawDrupalContext {
   /**
    * Return a region from the current page.
    *
-   * @throws \Exception
-   *   If region cannot be found.
-   *
    * @param string $region
    *   The machine name of the region to return.
    *
    * @return \Behat\Mink\Element\NodeElement
+   *
+   * @throws \Exception
+   *   If region cannot be found.
    *
    * @todo this should be a trait when PHP 5.3 support is dropped.
    */
@@ -206,6 +193,9 @@ class FeatureContext extends RawDrupalContext {
    */
   public function cleanUpMedia($event) {
     $user = $this->getUserManager()->getCurrentUser();
+    if (!$user) {
+      return;
+    }
     $media_entities = \Drupal::entityTypeManager()
       ->getStorage('media')
       ->loadByProperties(['uid' => $user->uid]);

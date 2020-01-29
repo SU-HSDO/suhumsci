@@ -119,6 +119,8 @@ code_coverage: &code_coverage
         name: Generate code coverage report
         command: vendor/bin/blt circleci:phpunit:coverage
     - store_artifacts:
+        path: /var/www/html/artifacts/coverage
+    - store_test_results:
         path: /var/www/html/artifacts
 
 ## Job to deploy the current branch to Acquia hosting using BLT.

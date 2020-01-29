@@ -53,8 +53,11 @@
       if (window.innerWidth >= 1201) {
         $menu.menu({
           position: {at: "left bottom"},
-          select: function(e, item){
-           window.location.href = $(item.item).children('a:first-child').attr("href");
+          select: function (e, item) {
+            const $selectedLink = $(item.item).children('a:first-child');
+            if ($selectedLink.attr('href')) {
+              window.location.href = $selectedLink.attr("href");
+            }
           }
         });
         $menu.removeClass('expanded');

@@ -33,6 +33,16 @@
           border-bottom: solid 3px $color-black;
         }
 
+        // Its not great to have !important, but this is a hotfix for now.
+        // We'd need to rebuild the css to improve this.
+        a {
+          border-bottom: solid 3px transparent !important;
+
+          &.ui-state-active {
+            border-bottom: solid 3px $color-black !important;
+          }
+        }
+
         li {
           @include margin(null 0 null null);
 
@@ -170,7 +180,6 @@
         .decanter-nav-submenu .menu-item a:hover,
         .decanter-nav-submenu .menu-item span:hover {
           background-color: transparent;
-          border: 0;
           color: $color-black;
         }
       }

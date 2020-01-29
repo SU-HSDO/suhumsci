@@ -1,0 +1,13 @@
+@include describe('Font Functions') {
+
+  @include describe('When given a valid key value,') {
+    @include describe('the hb-theme-font-weight() function') {
+      @include it('returns the Colorful font-weight for semibold.') {
+        $test: hb-theme-font-weight(semibold);
+        $expect: 600;
+
+        @include assert-equal($test, $expect, 'The Colorful semibold font-weight value either does not match or does not exist.');
+      }
+    }
+  }
+}

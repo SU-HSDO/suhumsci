@@ -1,49 +1,55 @@
-{% set attributes = attributes.addClass('horizontal-card') %}
+{%
+  set classes = [
+    'hb-cmp-card',
+    'hb-cmp-card--horizontal'
+  ]
+ %}
+
+{%- set attributes = attributes.addClass(classes) -%}
+{%- set url = url|render|striptags('<drupal-render-placeholder>')|trim -%}
+{%- set has_image = image|render|striptags('<drupal-render-placeholder><span><div><picture><source><img>')|trim -%}
 
 <div{{ attributes }}>
 
-  {% if image %}
-    <div class="horizontal-card__img">
+  {% if has_image is not empty %}
+    <div class="hb-cmp-card__img">
       {{ image }}
     </div>
   {% endif %}
 
-  <div class="horizontal-card__content">
+  <div class="hb-cmp-card__content">
     {% if category %}
-      <div class="horizontal-card__category accent-dash">{{ category }}</div>
-    {% endif %}
-
-    {% if date %}
-      <div class="horizontal-card__date">{{ date }}</div>
-    {% endif %}
-
-    {% if time|render|trim or location|render|trim %}
-      <div class=horizontal-card__subcontent>
-        {% if time|render|trim %}
-          <div class="horizontal-card__time">{{ time }}</div>
-        {% endif %}
-
-        {% if time|render|trim and location|render|trim %}
-          <div class="pipe">|</div>
-        {% endif %}
-
-        {% if location|render|trim %}
-          <div class="horizontal-card__location">{{ location }}</div>
-        {% endif %}
-      </div>
+        <div class="hb-cmp-card__category hb-cmp-card__category--accent">{{ category }}</div>
     {% endif %}
 
     {% if title %}
-      <div class="horizontal-card__title">{{ title }}</div>
+      <div class="hb-cmp-card__title">{{ title }}</div>
     {% endif %}
 
-    {% if speaker %}
-      <div class="horizontal-card__speaker">{{ speaker }}</div>
+    {% if time|render|trim or location|render|trim or date or speaker|render|trim %}
+      {#  create array and cycle through with pipes? #}
+      {# /set will probably work - not sure abt arrays #}
+      {% set general_variants = {'date': date, 'time': time, 'location': location, 'speaker': speaker} %}
+
+      <div class="hb-cmp-card__subcontent">
+        {% for key, variant in general_variants %}
+          {% if variant %}
+            <div class="hb-cmp-card__subcontent-item">{{ variant }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
     {% endif %}
 
     {% if description %}
-      <div class="horizontal-card__description">{{ description }}</div>
+      <div class="hb-cmp-card__description">{{ description }}</div>
     {% endif %}
 
+    {% if url %}
+    <a href="{{ url }}" class="hb-cmp-card__decorative-link">
+      <svg aria-label="external link" xmlns="http://www.w3.org/2000/svg" width="23" height="24" viewBox="0 0 23 24">
+        <path d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/>
+      </svg>
+    </a>
+    {% endif %}
   </div>
 </div>

@@ -1,7 +1,7 @@
 // Map over different theme-lists function
 // Params: ('string', existing-array-to-match), e.g.
-// map-over-theme-list(su-teal, $humsci-basic--theme-colors);
-@function map-over-theme-list($value, $list) {
+// hb-map-over-theme-list(su-teal, $hb-theme--colors);
+@function hb-map-over-theme-list($value, $list) {
   // Value must be a string before being made lowercase
   $key: to-lower-case(quote($value));
 
@@ -14,7 +14,7 @@
       @return $result;
     } @else {
       // Error if value doesn't exist
-      @error "Couldn't find a value for this key: #{$key}";
+      @error 'Couldn\'t find a value for this key: #{$key}';
     }
   } @else {
     // $current-theme not set
@@ -23,10 +23,37 @@
 }
 
 // Theme Color Function
-// Maps over $humsci-basic--theme-colors array
+// Maps over $hb-theme--colors array
 // with matching keys to the theme and color requested
 // Params: (variable-name), e.g. theme-color(color-teal)
 // $current-theme must be set
-@function theme-color($color) {
-  @return map-over-theme-list($color, $humsci-basic--theme-colors);
+@function hb-theme-color($color) {
+  @return hb-map-over-theme-list($color, $hb-theme--colors);
+}
+
+// Colorful Theme Variation Key Function
+// Maps over $hb-colorful--variations array
+// with matching keys to the variation and key requested
+// Params: (variable-name), e.g. hb-colorful-variation(secondary)
+// Colorful theme $colorful-variation must be set
+@function hb-colorful-variation($value) {
+  // Value must be a string before being made lowercase
+  $key: to-lower-case(quote($value));
+
+  @if ($colorful-variation) {
+    // map over $colorful-theme--variations to find the current $colorful-variation
+    $variation-specific-list: map-get($hb-colorful--variations, $colorful-variation);
+    $result: map-get($variation-specific-list, $key);
+
+    @if ($result) {
+      // Return value if it exists
+      @return $result;
+    } @else {
+      // Error if value doesn't exist
+      @error 'Couldn\'t find a value for this key: #{$key}';
+    }
+  } @else {
+    // $current-variation not set
+    @return null;
+  }
 }

@@ -1,0 +1,121 @@
+@mixin hb-heading-1 {
+  @include colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 2.5rem;
+    line-height: 126%;
+
+    @include grid-media-min('lg') {
+      font-size: 3.625rem;
+      line-height: 117%;
+    }
+  }
+}
+
+@mixin hb-heading-2 {
+  @include colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 2.0625rem;
+    line-height: 125%;
+
+    @include grid-media-min('lg') {
+      font-size: 3rem;
+      line-height: 112%;
+    }
+  }
+}
+
+@mixin hb-heading-3 {
+  @include colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 1.6875rem;
+    line-height: 109%;
+
+    @include grid-media-min('lg') {
+      font-size: 2.375rem;
+    }
+  }
+}
+
+@mixin hb-heading-4 {
+  @include colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 1.375rem;
+    line-height: 121%;
+
+    @include grid-media-min('lg') {
+      font-size: 2rem;
+    }
+  }
+}
+
+@mixin hb-heading-5 {
+  @include colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 1.25rem;
+    line-height: 117%;
+  }
+}
+
+@mixin hb-heading-6 {
+  @include colorful {
+    text-transform: uppercase;
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 1rem;
+    line-height: 117%;
+  }
+}
+
+@mixin hb-subheading {
+  @include colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: 0.9375rem;
+    line-height: 131%;
+  }
+}
+
+@mixin hb-body--small {
+  @include colorful {
+    font-weight: hb-theme-font-weight(regular);
+    font-size: 1rem;
+    line-height: 122%;
+  }
+}
+
+@mixin hb-body--medium {
+  @include colorful {
+    font-weight: hb-theme-font-weight(regular);
+    font-size: 1.125rem;
+    line-height: 127%;
+  }
+}
+
+@mixin hb-link {
+  // no font size by default
+  @include colorful {
+    color: darken($su-color-driftwood, 45%);
+    text-decoration: none;
+    font-weight: hb-theme-font-weight(bold);
+    margin-bottom: 0.1875rem;
+
+    &:hover,
+    &:focus {
+      box-shadow: inset 0 -0.5625rem 0 lighten(hb-colorful-variation(primary), 70%);
+      border-bottom: 0.125rem solid lighten(hb-colorful-variation(primary), 20%);
+      // accommodate for 0.125rem border bottom by reducing margin
+      margin-bottom: 0.0625rem;
+    }
+  }
+}
+
+@mixin hb-link--inline {
+  // no font size by default
+  @include colorful {
+    color: lighten(hb-colorful-variation(primary), 10%);
+
+    &:hover,
+    &:focus {
+      color: hb-colorful-variation(primary);
+      box-shadow: inset 0 -0.5625rem 0 lighten(hb-colorful-variation(primary), 70%);
+    }
+  }
+}

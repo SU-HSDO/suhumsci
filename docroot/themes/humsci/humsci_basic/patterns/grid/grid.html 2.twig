@@ -1,0 +1,16 @@
+{%
+  set classes = [
+  'hb-grid',
+  'hb-grid--cols-' ~ columns,
+]
+%}
+
+{% if items|length > 0 %}
+<div{{ create_attribute({'class': classes}) }}>
+  {% for item in items %}
+    <div{{ create_attribute({'class': ['hb-grid__item']}) }}>
+      {{- item -}}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}

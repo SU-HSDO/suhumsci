@@ -10,7 +10,7 @@
     width: 100%;
 
     @include grid-media-min('sm') {
-      width: calc(50% - (3rem / 2)); // 3rem is the margin between the 2 elements
+      width: calc(50% - (#{$hb-gutter-width} / 2)); // for two elements, there is 1 gutter-width between
       margin-right: 3rem;
     }
 
@@ -20,7 +20,7 @@
 
     .hb-grid--cols-3 & {
       @include grid-media-min('md') {
-        width: calc(33.33% - (6rem / 3)); // 6rem is the margin between the 3 elements
+        width: calc(33.33% - (2 * (#{$hb-gutter-width}) / 3)); // for 3 elements, 2 have gutter-width
 
         &:nth-child(2n) {
           margin-right: 3rem;

@@ -8,14 +8,6 @@
   {% set attributes = attributes.addClass(['hb-three-column-w-image--no-sidebar']) %}
 {% endif %}
 
-{% if content.left_sidebar and content.right_sidebar %}
-  {% set attributes = attributes.addClass(['hb-obj-three-column-w-image--two-sidebar']) %}
-{% elseif content.left_sidebar or content.right_sidebar %}
-  {% set attributes = attributes.addClass(['hb-obj-three-column-w-image--one-sidebar']) %}
-{% else %}
-  {% set attributes = attributes.addClass(['hb-obj-three-column-w-image--no-sidebar']) %}
-{% endif %}
-
 {% if content %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
@@ -23,7 +15,6 @@
         {{ content.left_sidebar }}
       </div>
     {% endif %}
-
 
     <div class="main-content hb-three-column-w-image__main">
 

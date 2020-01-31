@@ -10,6 +10,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\PrivateKey;
@@ -162,6 +164,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     // Pass the contexts from the block into the component.
     $contexts = $this->contextRepository->getAvailableContexts();
     $contexts['layout_builder.entity'] = $this->getContext('entity');
+    $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'full');
 
     // Build the render array for each component.
     foreach ($this->configuration['children'] as $uuid => $child) {
@@ -259,7 +262,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     foreach ($section_storage->getSections() as $section) {
       foreach ($section->getComponents() as $component) {
         $component_config = $component->get('configuration');
-        list($component_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
+        [$component_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
 
         // We found the delta, so send it back.
         if ($component_id == 'group_block' && isset($component_config['machine_name']) && $component_config['machine_name'] == $this->configuration['machine_name']) {

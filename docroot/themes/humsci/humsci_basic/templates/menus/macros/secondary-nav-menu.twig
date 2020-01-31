@@ -5,36 +5,40 @@
 #}
 {% macro secondary_nav_menu(items, menu_level, class_prefix, parent) %}
   {% import _self as menus %}
-  <ul class="{{ class_prefix }}__menu {{ class_prefix }}__menu-lv{{ menu_level }}">
+  <ul class="su-secondary-nav__menu {{ class_prefix }}__menu su-secondary-nav__menu-lv{{ menu_level }} {{ class_prefix }}__menu-lv{{ menu_level }}">
   {% for item in items %}
 
-    {# Link Attribtues #}
-    {% set link_attributes = item.attributes %}
-    {% set link_attributes = link_attributes.addClass(class_prefix ~ "__link") %}
-    {% set link_attributes = link_attributes.setAttribute('href', item.url|render) %}
-
-    {# Item Attributes #}
+    {# List Item Attributes #}
     {% set list_attributes = create_attribute() %}
     {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item") %}
+    {% set list_attributes = list_attributes.addClass("su-secondary-nav__item") %}
+
     {% if item.below is not empty %}
       {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--parent") %}
+      {% set list_attributes = list_attributes.addClass("su-secondary-nav__item--parent") %}
     {% endif %}
     {% if item.in_active_trail == true %}
       {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--active-trail") %}
+      {% set list_attributes = list_attributes.addClass("su-secondary-nav__item--active-trail") %}
     {% endif %}
-    {% if item.is_active == true %}
+    {# {% if item.is_active == true %}
       {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--current") %}
-    {% endif %}
+    {% endif %} #}
 
     {# Skip non-trail items below the first level. #}
-    {% if item.in_active_trail == true or menu_level == 1 or parent.in_active_trail == true %}
+    {# {% if item.in_active_trail == true or menu_level == 1 or parent.in_active_trail == true %} #}
       <li{{ list_attributes }}>
-        <a{{ link_attributes }}>{{ item.title }}</a>
+        {{ link(item.title, item.url, {'class': "#{class_prefix}__link su-secondary-nav__link"}) }}
         {% if item.below %}
+          {# Button toggle Attributes #}
+          {% set button_attributes = create_attribute() %}
+          {% set button_attributes = button_attributes.addClass(class_prefix ~ "__toggle") %}
+          {% set button_attributes = button_attributes.addClass("su-nav-toggle") %}
+          <button{{button_attributes}} aria-expanded="true">Expand Menu</button>
           {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
         {% endif %}
       </li>
-    {% endif %}
+    {# {% endif %} #}
   {% endfor %}
   </ul>
 {% endmacro %}

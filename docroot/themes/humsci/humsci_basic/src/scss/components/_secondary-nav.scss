@@ -1,13 +1,28 @@
-.su-secondary-nav {
+.hb-secondary-nav {
   background-color: transparent;
+
+  &__heading {
+    @include hb-heading-4;
+    margin: 0 0 2.4375rem;
+
+    a {
+      @include hb-link;
+    }
+  }
 
   &__menu {
     background-color: transparent;
     list-style-type: none;
+    padding-left: 1rem;
+  }
+
+  &__menu-lv1 {
+    padding-left: 0;
+    border-top: 1px solid lighten($su-color-driftwood, 15%);
   }
 
   &__menu-lv1 > &__item > &__link {
-      font-weight: hb-theme-font-weight(semibold);
+    font-weight: hb-theme-font-weight(semibold);
   }
 
   &__item,
@@ -16,45 +31,93 @@
     font-size: 1rem;
   }
 
+  &__item {
+    position: relative;
+
+    &--active-trail > .hb-secondary-nav__link {
+      font-weight: hb-theme-font-weight(semibold);
+
+      @include hb-colorful {
+        @include hb-fancy-hover(darken($su-color-driftwood, 30%), darken($su-color-driftwood, 50%), 'left');
+      }
+    }
+
+    &--parent {
+      .hb-secondary-nav__link {
+        &::after {
+          content: '';
+          display: block;
+        }
+      }
+    }
+  }
+
   &__link {
     display: block;
     border-bottom: 1px solid lighten($su-color-driftwood, 15%);
     padding: 1rem 0 1rem 1rem;
-
-    @include hb-colorful {
-      @include fancy-hover(darken($su-color-driftwood, 30%), darken($su-color-driftwood, 30%), 'left');
-    }
+    text-decoration: none;
 
     &.is-active {
       font-weight: hb-theme-font-weight(semibold);
 
       @include hb-colorful {
-        background-color: lighten(hb-colorful-variation(secondary), 40%);
-        @include fancy-hover(hb-colorful-variation(secondary), hb-colorful-variation(secondary), 'left');
+        $grey-mint: rgba(darken(hb-colorful-variation(secondary), 2%), 0.2);
+
+        background-color: $grey-mint;
+        @include hb-fancy-hover(hb-colorful-variation(secondary), darken(hb-colorful-variation(secondary), 8%), 'left');
+
+        &:hover,
+        &:focus {
+          background-color: darken($grey-mint, 5%);
+        }
       }
     }
 
     &:hover,
     &:focus {
+      text-decoration: none;
+
       &:not(.is-active) {
         background-color: lighten($su-color-driftwood, 25%);
       }
     }
-    // &::before {
-    //   visibility: visible;
-    //   height: 100%;
-    //   width: 6px;
-    //   transform: scaleY(1);
-    //   // background-color: color(border--active, $su-secondary-nav-colors);
-    // }
+  }
 
-    // &:hover,
-    // &:focus {
-    //   &::before {
-    //     left: 6px;
-    //     transition: left 0.1s ease-out;
-    //     background-color: color(border--active, $su-secondary-nav-colors);
-    //   }
-    // }
+  &__toggle {
+    margin: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 0;
+    overflow: hidden;
+    position: absolute;
+    background: transparent;
+    outline: none;
+    border: 0 none;
+    height: 2rem;
+    width: 2rem;
+    top: 5px;
+    right: 10px;
+
+    &::before {
+      content: "+";
+      color: black;
+      height: 2rem;
+      width: 2rem;
+      font-size: 2rem;
+      display: block;
+    }
+
+    &:focus,
+    &:hover {
+      &::before {
+        content: "-";
+      }
+    }
+
+    &[aria-expanded="true"] {
+      transform: rotate(180deg);
+    }
   }
 }

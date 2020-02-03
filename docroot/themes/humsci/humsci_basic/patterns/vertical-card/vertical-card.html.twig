@@ -5,29 +5,23 @@
 <div{{ attributes }}>
 
   {% if has_image is not empty %}
-    <div class="hb-card__img">
+    <div class="hb-card__img hb-card__graphics">
       {{ image }}
     </div>
   {% endif %}
 
   <div class="hb-card__content">
     {% if category %}
-        <div class="hb-card__category hb-card__category--accent">{{ category }}</div>
+        <div class="hb-card__category">{{ category }}</div>
     {% endif %}
 
     {% if title %}
       <div class="hb-card__title">{{ title }}</div>
     {% endif %}
 
-    {% if date %}
-      {% set general_variants = {'date': date} %}
-
+    {% if subcontent %}
       <div class="hb-card__subcontent">
-        {% for key, variant in general_variants %}
-          {% if variant %}
-            <div class="hb-card__subcontent-item">{{ variant }}</div>
-          {% endif %}
-        {% endfor %}
+        <div class="hb-card__subcontent-item">{{ subcontent }}</div>
       </div>
     {% endif %}
 

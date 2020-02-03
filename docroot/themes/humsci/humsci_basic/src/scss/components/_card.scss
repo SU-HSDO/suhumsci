@@ -61,7 +61,10 @@
 
   &__subcontent {
     display: flex;
-    margin-bottom: 1.25rem;
+
+    &:not(:last-child) {
+      margin-bottom: 1.25rem;
+    }
   }
 
   &__subcontent-item {
@@ -74,15 +77,16 @@
     }
 
     &::after {
-      content: '\007C';
+      content: '';
       margin: 0 0.5rem;
-      color: darken($su-color-driftwood, 45%);
+      border-left: 1px solid darken($su-color-driftwood, 45%);
     }
 
     &:last-of-type {
       &::after {
         content: '';
         margin: 0;
+        border: none;
       }
     }
 
@@ -91,8 +95,33 @@
     }
   }
 
-  &__img {
+  &__highlighted {
+    color: darken($su-color-driftwood, 45%);
+    font-size: 0.875rem;
+
+    @include grid-media-min('md') {
+      font-size: 1rem;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  .views-field-label {
+    font-weight: hb-theme-font-weight(bold);
+
+    @include hb-colorful {
+      color: hb-colorful-variation(secondary);
+    }
+  }
+
+  &__graphics {
+    position: relative;
     margin-bottom: 1.25rem;
+  }
+
+  &__img {
     overflow: hidden;
 
     // override default link styles that might go here
@@ -124,6 +153,41 @@
         margin-bottom: 0;
       }
     }
+  }
+
+  &__date-tile {
+    display: inline-block;
+    text-align: center;
+    background: $hb-color--black;
+    color: $hb-color--white;
+    min-width: 6.25rem;
+    padding: 0.75rem .625rem 0.5rem;
+    position: absolute;
+    bottom: 1.125rem;
+    left: -0.625rem;
+
+    @include hb-colorful {
+      background: hb-colorful-variation(secondary);
+    }
+
+    @include grid-media-min('sm') {
+      bottom: 1.375rem;
+      left: -0.875rem;
+    }
+
+    &:only-child {
+      position: initial;
+    }
+  }
+
+  &__date-tile-month {
+    text-transform: uppercase;
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
+  &__date-tile-day {
+    font-size: 3.25rem;
+    font-weight: hb-theme-font-weight(semibold);
   }
 
   &__content {
@@ -160,7 +224,14 @@
 
   &__description {
     @include hb-body--medium;
-    margin-bottom: 1.75rem;
+
+    &:not(:last-child) {
+      margin-bottom: 1.75rem;
+    }
+  }
+
+  &__description-field:not(:last-child) {
+    margin-bottom: 1rem;
   }
 
   &__decorative-link {
@@ -180,4 +251,5 @@
       }
     }
   }
+
 }

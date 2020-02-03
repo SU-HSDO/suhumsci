@@ -1,40 +1,70 @@
-{% set attributes = attributes.addClass('date-stacked-vertical-card') %}
+{% set attributes = attributes.addClass('hb-card') %}
 
 <div{{ attributes }}>
 
-  <div class="date-stacked-vertical-card__container">
-    {% if image %}
-      <div class="date-stacked-vertical-card__img">
-        {{ image }}
+  {% if image or month or day %}
+    <div class="hb-card__graphics">
 
-        <div class="date-stacked">
+      {% if image %}
+        <div class="hb-card__img">
+          {{ image }}
+        </div>
+      {% endif %}
+
+      {% if month or day %}
+        <div class="hb-card__date-tile">
           {% if month %}
-            <div class="date-month">{{ month }}</div>
+            <div class="hb-card__date-tile-month">{{ month }}</div>
           {% endif %}
 
           {% if day %}
-            <div class="date-day">{{ day }}</div>
+            <div class="hb-card__date-tile-day">{{ day }}</div>
           {% endif %}
-
         </div>
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+  <div class="hb-card__content">
+    {% if category %}
+      <div class="hb-card__category">{{ category }}</div>
+    {% endif %}
+
+    {% if title %}
+      <div class="hb-card__title">{{ title }}</div>
+    {% endif %}
+
+    {% if date or time|render|trim or location|render|trim %}
+
+      {% set general_variants = {'date': date, 'time': time, 'location': location} %}
+
+      <div class="hb-card__subcontent">
+        {% for key, variant in general_variants %}
+          {% if variant %}
+            <div class="hb-card__subcontent-item">{{ variant }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    {% endif %}
+
+    {% if description %}
+      <div class="hb-card__description">
+        {% if description['#sources'] %}
+          {% for field in description['#sources'] %}
+            <div class="hb-card__description-field">
+              {{ field }}
+            </div>
+          {% endfor %}
+        {% else %}
+          {{ description }}
+        {% endif %}
       </div>
     {% endif %}
 
-    <div class="date-stacked-vertical-card__content-container">
-      {% if time %}
-        <div class="date-stacked-vertical-card__time">{{ time }}</div>
-      {% endif %}
 
-      {% if location %}
-        <div class="date-stacked-vertical-card__location">{{ location }}</div>
-      {% endif %}
-
-      {% if title %}
-        <div class="date-stacked-vertical-card__title">
-          <h2>{{ title }}</h2>
-        </div>
-      {% endif %}
-    </div>
   </div>
+  {# </div> #}
 
 </div>

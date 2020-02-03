@@ -12,24 +12,24 @@
 <div{{ attributes }}>
 
   {% if has_image is not empty %}
-    <div class="hb-card__img">
+    <div class="hb-card__img hb-card__graphics">
       {{ image }}
     </div>
   {% endif %}
 
   <div class="hb-card__content">
     {% if category %}
-        <div class="hb-card__category hb-card__category--accent">{{ category }}</div>
+      <div class="hb-card__category">{{ category }}</div>
     {% endif %}
 
     {% if title %}
       <div class="hb-card__title">{{ title }}</div>
     {% endif %}
 
-    {% if time|render|trim or location|render|trim or date or speaker|render|trim %}
+    {% if date or time|render|trim or location|render|trim %}
       {#  create array and cycle through with pipes? #}
       {# /set will probably work - not sure abt arrays #}
-      {% set general_variants = {'date': date, 'time': time, 'location': location, 'speaker': speaker} %}
+      {% set general_variants = {'date': date, 'time': time, 'location': location} %}
 
       <div class="hb-card__subcontent">
         {% for key, variant in general_variants %}
@@ -40,8 +40,24 @@
       </div>
     {% endif %}
 
+    {% if speaker|render|trim %}
+      <div class="hb-card__highlighted">
+        {{ speaker }}
+      </div>
+    {% endif %}
+
     {% if description %}
-      <div class="hb-card__description">{{ description }}</div>
+      <div class="hb-card__description">
+        {% if description['#sources'] %}
+          {% for field in description['#sources'] %}
+            <div class="hb-card__description-field">
+              {{ field }}
+            </div>
+          {% endfor %}
+        {% else %}
+          {{ description }}
+        {% endif %}
+      </div>
     {% endif %}
 
     {% if url %}

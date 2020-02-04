@@ -1,5 +1,20 @@
 # HumSci
 
+8.2.1
+--------------------------------------------------------------------------------
+_Release Date: 2020-02-04_
+
+* HSD8-749 Fixes for the media module & core updates (#464) (338fa69f)
+* fix: add all node view displays to config ignore (#461) (2984b659)
+* feat: adds better preview for grid ui pattern (#460) (39be46b6)
+* Upgrade stanford media (#450) (cc8a93a1)
+* feat(88,105,106,109): Sparkbox Sprint 4 (#457) (3e97a801)
+* Merge branch 'develop' into 8.2.1-release (62ea25b5)
+* Hotfix: Fix broken menu when no link for a menu item. (f2721bb8)
+* fix: code climate scss-lint issues (#452) (3e0d94ae)
+* feat(STN101,STN83):  node detail page layout and news in horizontal card pattern (#448) (31d79418)
+* Update drupal core to 8.8  and all contrib modules (#442) (d6a2009d)
+
 8.1.14
 --------------------------------------------------------------------------------
 _Release Date: 2020-01-21_

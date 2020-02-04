@@ -80,7 +80,7 @@ class CircleCiCommands extends BltTasks {
     $this->yell("Releasing $version");
 
     // Get a list of all commits since the last version until now.
-    exec("git log --pretty=format:%h 8.1.14...HEAD", $commit_hashes);
+    exec("git log --pretty=format:%h $last_version...HEAD", $commit_hashes);
 
     $changes = [];
     // Build an array of change strings.

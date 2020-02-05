@@ -3,6 +3,8 @@
   flex-direction: column;
 
   &--horizontal {
+    margin-bottom: $hb-gutter-width;
+
     @include grid-media-min('md') {
       flex-direction: row;
       align-items: top;
@@ -18,6 +20,7 @@
     text-transform: uppercase;
     margin: 0 0 0.4rem;
 
+    ol,
     ul {
       padding: 0;
       margin: 0;
@@ -149,7 +152,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
-        margin-right: 3rem;
+        margin-right: $hb-gutter-width;
         margin-bottom: 0;
       }
     }
@@ -211,6 +214,7 @@
       @include hb-heading-3;
       margin-top: 0;
       margin-bottom: 0.875rem;
+      overflow-wrap: break-word;
 
       @include grid-media-min('md') {
         margin-bottom: 1rem;
@@ -236,19 +240,20 @@
   }
 
   &__decorative-link {
-    svg {
+    display: flex;
+    align-items: center;
+    height: 44px; // WCAG AAA target size
+    width: 44px;
+
+    @include hb-colorful {
+      background: no-repeat left/55% svg('<svg viewBox="0 0 23 24"><path fill="#{hb-colorful-variation(secondary)}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>');
+
       transform: translateX(0);
       transition: transform 200ms ease-in-out;
 
       &:hover,
       &:focus {
         transform: translateX(0.625rem);
-      }
-    }
-
-    path {
-      @include hb-colorful {
-        fill: hb-colorful-variation(secondary);
       }
     }
   }

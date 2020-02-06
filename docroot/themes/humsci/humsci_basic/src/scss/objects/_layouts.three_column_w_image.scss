@@ -1,6 +1,6 @@
-$sidebar-width: 16.5rem;
+$hb-sidebar-width: 16.5rem;
 
-.hb-obj-three-column-w-image {
+.hb-three-column-w-image {
   display: flex;
   flex-wrap: wrap;
 
@@ -18,7 +18,7 @@ $sidebar-width: 16.5rem;
     margin-right: 0;
 
     @include grid-media('md') {
-      flex: 0 0 $sidebar-width;
+      flex: 0 0 $hb-sidebar-width;
       margin-right: map-get($hb-screen-margins, 'md');
     }
 
@@ -39,13 +39,13 @@ $sidebar-width: 16.5rem;
     display: flex;
     flex-wrap: wrap;
 
-    .hb-obj-three-column-w-image--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         flex-wrap: nowrap;
       }
     }
 
-    .hb-obj-three-column-w-image--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         flex-wrap: nowrap;
       }
@@ -56,7 +56,7 @@ $sidebar-width: 16.5rem;
     width: 100%;
     margin-bottom: 1rem;
 
-    .hb-obj-three-column-w-image--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         width: 60%;
         display: flex;
@@ -64,7 +64,7 @@ $sidebar-width: 16.5rem;
       }
     }
 
-    .hb-obj-three-column-w-image--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         width: 60%;
         display: flex;
@@ -81,14 +81,14 @@ $sidebar-width: 16.5rem;
       margin-bottom: 3rem;
     }
 
-    .hb-obj-three-column-w-image--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         width: 40%;
         margin-left: 1.25rem;
       }
     }
 
-    .hb-obj-three-column-w-image--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         width: 40%;
         margin-left: 1.25rem;
@@ -101,7 +101,11 @@ $sidebar-width: 16.5rem;
       @supports (object-fit: cover) {
         object-fit: cover;
         width: 100%;
-        max-height: 250px;
+        max-height: 23.4375rem;
+
+        @include grid-media('md') {
+          max-height: 15.625rem;
+        }
       }
     }
   }
@@ -115,7 +119,7 @@ $sidebar-width: 16.5rem;
     margin-left: 0;
 
     @include grid-media('md') {
-      flex: 0 0 $sidebar-width;
+      flex: 0 0 $hb-sidebar-width;
       margin-left: map-get($hb-screen-margins, 'md');
     }
 

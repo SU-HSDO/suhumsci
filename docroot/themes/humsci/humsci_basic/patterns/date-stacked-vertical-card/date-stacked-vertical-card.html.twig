@@ -1,40 +1,69 @@
-{% set attributes = attributes.addClass('date-stacked-vertical-card') %}
+{% set attributes = attributes.addClass('hb-card') %}
+{%- set url = url|render|striptags('<drupal-render-placeholder>')|trim -%}
+{%- set has_image = image|render|striptags('<drupal-render-placeholder><img>')|trim -%}
 
 <div{{ attributes }}>
 
-  <div class="date-stacked-vertical-card__container">
-    {% if image %}
-      <div class="date-stacked-vertical-card__img">
-        {{ image }}
+  {% if image or month or day %}
+    <div class="hb-card__graphics">
 
-        <div class="date-stacked">
+      {% if has_image is not empty %}
+        <div class="hb-card__img">
+          {{ image }}
+        </div>
+      {% endif %}
+
+      {% if month or day %}
+        <div class="hb-card__date-tile">
           {% if month %}
-            <div class="date-month">{{ month }}</div>
+            <div class="hb-card__date-tile-month">{{ month }}</div>
           {% endif %}
 
           {% if day %}
-            <div class="date-day">{{ day }}</div>
+            <div class="hb-card__date-tile-day">{{ day }}</div>
           {% endif %}
-
         </div>
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+  <div class="hb-card__content">
+    {% if category %}
+      <div class="hb-card__category">{{ category }}</div>
+    {% endif %}
+
+    {% if title %}
+      <div class="hb-card__title">{{ title }}</div>
+    {% endif %}
+
+    {% if time|render|trim or location|render|trim %}
+
+      {% set general_variants = {'time': time, 'location': location} %}
+
+      <div class="hb-card__subcontent">
+        {% for key, variant in general_variants %}
+          {% if variant|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            <div class="hb-card__subcontent-item">{{ variant }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+    {% endif %}
+
+    {% if description %}
+      <div class="hb-card__description">
+        {{ description }}
       </div>
     {% endif %}
 
-    <div class="date-stacked-vertical-card__content-container">
-      {% if time %}
-        <div class="date-stacked-vertical-card__time">{{ time }}</div>
-      {% endif %}
+    {% if url %}
+      <a href="{{ url }}" class="hb-card__decorative-link">
+        <svg aria-label="external link" xmlns="http://www.w3.org/2000/svg" width="23" height="24" viewBox="0 0 23 24">
+          <path d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/>
+        </svg>
+      </a>
+    {% endif %}
 
-      {% if location %}
-        <div class="date-stacked-vertical-card__location">{{ location }}</div>
-      {% endif %}
-
-      {% if title %}
-        <div class="date-stacked-vertical-card__title">
-          <h2>{{ title }}</h2>
-        </div>
-      {% endif %}
-    </div>
   </div>
-
 </div>

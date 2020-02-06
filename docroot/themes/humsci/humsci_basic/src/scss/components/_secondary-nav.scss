@@ -1,0 +1,141 @@
+.hb-secondary-nav {
+  background-color: transparent;
+
+  &__heading {
+    @include hb-heading-4;
+    margin: 0 0 2.4375rem;
+
+    a {
+      @include hb-link;
+    }
+  }
+
+  &__menu {
+    background-color: transparent;
+    list-style-type: none;
+    padding-left: 1rem;
+    display: none;
+
+    .no-js & {
+      // no JS - keep all menus expanded
+      display: block;
+    }
+  }
+
+  .su-secondary-nav__item--expanded {
+    & > .hb-secondary-nav__menu {
+      display: block;
+    }
+  }
+
+  &__menu-lv1 {
+    padding-left: 0;
+    // always show top menu
+    display: block;
+    border-top: 1px solid lighten($su-color-driftwood, 15%);
+  }
+
+  &__menu-lv1 > &__item > &__link {
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
+  &__item,
+  &__link {
+    color: $hb-color--black;
+    font-size: 1rem;
+  }
+
+  &__item {
+    position: relative;
+
+    &--active-trail > .hb-secondary-nav__link {
+      font-weight: hb-theme-font-weight(semibold);
+
+      @include hb-colorful {
+        @include hb-fancy-hover(darken($su-color-driftwood, 30%), darken($su-color-driftwood, 50%), 'left');
+      }
+    }
+
+    &--parent {
+      .hb-secondary-nav__link {
+        &::after {
+          content: '';
+          display: block;
+        }
+      }
+    }
+  }
+
+  &__link {
+    display: block;
+    border-bottom: 1px solid lighten($su-color-driftwood, 15%);
+    padding: 1rem 0 1rem 1rem;
+    text-decoration: none;
+
+    &.is-active {
+      font-weight: hb-theme-font-weight(semibold);
+
+      @include hb-colorful {
+        $grey-mint: rgba(darken(hb-colorful-variation(secondary), 2%), 0.2);
+
+        background-color: $grey-mint;
+        @include hb-fancy-hover(hb-colorful-variation(secondary), darken(hb-colorful-variation(secondary), 8%), 'left');
+
+        &:hover,
+        &:focus {
+          background-color: darken($grey-mint, 5%);
+        }
+      }
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+
+      &:not(.is-active) {
+        background-color: lighten($su-color-driftwood, 25%);
+      }
+    }
+  }
+
+  &__toggle,
+  .su-nav-toggle {
+    // Use Decanter classes for Accordion Button JS
+    margin: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 0;
+    font-weight: hb-theme-font-weight(regular);
+    overflow: hidden;
+    position: absolute;
+    background: transparent;
+    border: 0 none;
+    height: 2rem;
+    width: 2rem;
+    top: 0.3125rem;
+    right: 0.625rem;
+
+    &::before {
+      content: "+";
+      color: darken($su-color-driftwood, 30%);
+      height: 2rem;
+      width: 2rem;
+      font-size: 2rem;
+      display: block;
+    }
+
+    &:hover,
+    &:focus {
+      &::before {
+        color: darken($su-color-driftwood, 50%);
+      }
+    }
+
+    &[aria-expanded="true"] {
+      &::before {
+        content: "—";
+      }
+    }
+  }
+}

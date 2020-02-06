@@ -5,8 +5,8 @@
   // Value must be a string before being made lowercase
   $key: to-lower-case(quote($value));
 
-  @if ($current-theme) {
-    $theme-specific-list: map-get($list, $current-theme);
+  @if ($hb-current-theme) {
+    $theme-specific-list: map-get($list, $hb-current-theme);
     $result: map-get($theme-specific-list, $key);
 
     @if ($result) {
@@ -17,7 +17,7 @@
       @error 'Couldn\'t find a value for this key: #{$key}';
     }
   } @else {
-    // $current-theme not set
+    // $hb-current-theme not set
     @return null;
   }
 }
@@ -26,7 +26,7 @@
 // Maps over $hb-theme--colors array
 // with matching keys to the theme and color requested
 // Params: (variable-name), e.g. theme-color(color-teal)
-// $current-theme must be set
+// $hb-current-theme must be set
 @function hb-theme-color($color) {
   @return hb-map-over-theme-list($color, $hb-theme--colors);
 }
@@ -40,9 +40,9 @@
   // Value must be a string before being made lowercase
   $key: to-lower-case(quote($value));
 
-  @if ($colorful-variation) {
+  @if ($hb-colorful-variation) {
     // map over $colorful-theme--variations to find the current $colorful-variation
-    $variation-specific-list: map-get($hb-colorful--variations, $colorful-variation);
+    $variation-specific-list: map-get($hb-colorful--variations, $hb-colorful-variation);
     $result: map-get($variation-specific-list, $key);
 
     @if ($result) {

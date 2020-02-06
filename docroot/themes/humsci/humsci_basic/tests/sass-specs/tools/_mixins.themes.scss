@@ -2,13 +2,13 @@
 @include describe('Theme-specific mixins') {
 
   // Colorful
-  @include describe('colorful() mixin') {
-    $current-theme: 'colorful' !global; // need to override default setting
+  @include describe('hb-colorful() mixin') {
+    $hb-current-theme: 'colorful' !global; // need to override default setting
 
     @include it('returns some properties specific to Colorful') {
       @include assert {
         @include output {
-          @include colorful {
+          @include hb-colorful {
             color: green;
           }
         }
@@ -18,10 +18,10 @@
       }
     }
 
-    @include it('does not return styles because the mixin does not match the $current-theme') {
+    @include it('does not return styles because the mixin does not match the $hb-current-theme') {
       @include assert {
         @include output {
-          @include airy {
+          @include hb-airy {
             color: yellow;
           }
         }
@@ -31,13 +31,13 @@
   }
 
   // Airy
-  @include describe('airy() mixin') {
-    $current-theme: 'airy' !global;
+  @include describe('hb-airy() mixin') {
+    $hb-current-theme: 'airy' !global;
 
     @include it('returns some properties specific to Airy') {
       @include assert {
         @include output {
-          @include airy {
+          @include hb-airy {
             color: yellow;
           }
         }
@@ -47,10 +47,10 @@
       }
     }
 
-    @include it('does not return styles because the mixin does not match the $current-theme') {
+    @include it('does not return styles because the mixin does not match the $hb-current-theme') {
       @include assert {
         @include output {
-          @include traditional {
+          @include hb-traditional {
             color: purple;
           }
         }
@@ -60,13 +60,13 @@
   }
 
   // Traditional
-  @include describe('traditional() mixin') {
-    $current-theme: 'traditional' !global;
+  @include describe('hb-traditional() mixin') {
+    $hb-current-theme: 'traditional' !global;
 
     @include it('returns some properties specific to Traditional') {
       @include assert {
         @include output {
-          @include traditional {
+          @include hb-traditional {
             color: purple;
           }
         }
@@ -76,10 +76,10 @@
       }
     }
 
-    @include it('does not return styles because the mixin does not match the $current-theme') {
+    @include it('does not return styles because the mixin does not match the $hb-current-theme') {
       @include assert {
         @include output {
-          @include colorful {
+          @include hb-colorful {
             color: green;
           }
         }
@@ -89,13 +89,13 @@
   }
 
   // Multi-theme
-  @include describe('Multi-theme themes() mixin') {
-    $current-theme: 'colorful' !global;
+  @include describe('Multi-theme hb-themes() mixin') {
+    $hb-current-theme: 'colorful' !global;
 
     @include it('returns some properties specific to Colorful') {
       @include assert {
         @include output {
-          @include themes(('colorful', 'traditional')) {
+          @include hb-themes(('colorful', 'traditional')) {
             color: brown;
           }
         }
@@ -105,10 +105,10 @@
       }
     }
 
-    @include it('does not return styles because the mixin does not include a reference to the $current-theme') {
+    @include it('does not return styles because the mixin does not include a reference to the $hb-current-theme') {
       @include assert {
         @include output {
-          @include themes(('airy', 'traditional')) {
+          @include hb-themes(('airy', 'traditional')) {
             color: orchid;
           }
         }
@@ -120,7 +120,7 @@
       // the mixin just returns since the array is empty
       @include assert {
         @include output {
-          @include themes(()) {
+          @include hb-themes(()) {
             color: papayawhip;
           }
         }

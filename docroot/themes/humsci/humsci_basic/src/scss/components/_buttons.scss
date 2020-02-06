@@ -1,0 +1,26 @@
+.button {
+  @include unbuttonize;
+  padding: 0 1.25rem;
+  border-radius: 1.875rem;
+  font-weight: hb-theme-font-weight(semibold);
+
+  @include hb-colorful {
+    color: $hb-color--white;
+    background-color: hb-colorful-variation(secondary);
+    border: 0.125rem solid hb-colorful-variation(secondary);
+
+    transition: 125ms background-color ease-out, 125ms border-color ease-out;
+
+    &:hover {
+      background-color: darken(hb-colorful-variation(secondary), 10%);
+      border-color: darken(hb-colorful-variation(secondary), 10%);
+    }
+
+    &:active,
+    &:focus {
+      background-color: hb-colorful-variation(secondary);
+      border-color: $hb-color--white;
+      box-shadow: 0 0 0 0.125rem lighten(hb-colorful-variation(secondary), 10%);
+    }
+  }
+}

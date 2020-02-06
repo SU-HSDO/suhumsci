@@ -1,0 +1,259 @@
+// In order to avoid specificity issues the vendor chosen.js sass file has been
+// copied to this file and all styles removed, leaving only the nested classes.
+// https://github.com/harvesthq/chosen/blob/master/sass/chosen.scss
+
+// Any unused classes have been commented out to prevent linter errors but have
+// not been deleted in case they are needed for future use.
+
+// Base
+.chosen-container {
+  width: 100% !important; // This overrides an inline width
+
+  .chosen-drop {
+    @include hb-input-focus;
+    font-size: 1rem;
+    border-top: $hb-input-border;
+  }
+  //
+  // &.chosen-with-drop .chosen-drop {
+  //
+  // }
+  //
+  // a {
+  //
+  // }
+  //
+  // .search-choice, .chosen-single {
+  //   .group-name {
+  //
+  //     &:after {
+  //
+  //     }
+  //   }
+  // }
+}
+
+// Single Chosen
+.chosen-container-single {
+  .chosen-single {
+    display: block;
+    background: none;
+    box-shadow: none;
+
+    font-size: 1rem;
+    line-height: 1;
+
+    height: auto;
+    min-height: $hb-input-min-height;
+
+    padding: 0.5rem;
+    padding-right: $hb-input-icon-spacing;
+
+    @include hb-input-border;
+
+    &:focus {
+      @include hb-input-focus;
+    }
+  }
+  //
+  // .chosen-default {
+  //
+  // }
+  //
+  .chosen-single span {
+    margin-right: 0;
+  }
+  //
+  // .chosen-single-with-deselect span {
+  //
+  // }
+  //
+  // .chosen-single abbr {
+  //
+  //   &:hover {
+  //
+  //   }
+  // }
+  //
+  // &.chosen-disabled .chosen-single abbr:hover {
+  //
+  // }
+  //
+  .chosen-single div {
+    width: $hb-input-icon-spacing;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0.75rem 0.5rem;
+
+    @include hb-colorful {
+      background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+    }
+
+    b {
+      display: none; // hides the chosen.js icon
+    }
+  }
+
+  .chosen-search {
+    // We cannot completely hide the search input without losing keyboard
+    // accessibility. The search input will still be accessible to screen reader
+    // users.
+
+    // Note: This does create an edge case where if someone types while the focus
+    // is in the search it will attempt to search the dropdown list. This should
+    // be a rare occurance.
+    @include visually-hidden;
+
+    // input[type="text"] {
+    //
+    // }
+  }
+  //
+  // .chosen-drop {
+  //
+  // }
+  //
+  // &.chosen-container-single-nosearch .chosen-search {
+  //
+  // }
+}
+
+// Results
+.chosen-container .chosen-results {
+  margin: 0;
+  padding: 0;
+
+  li {
+    padding: $hb-input-padding;
+
+    &:last-child {
+      border-radius: 0 0 $hb-input-border-radius $hb-input-border-radius;
+    }
+    //
+    // &.active-result {
+    //
+    // }
+    //
+    // &.disabled-result {
+    //
+    // }
+    //
+    &.highlighted {
+      color: $hb-color--black;
+      font-weight: hb-theme-font-weight(semibold);
+      background-image: none;
+      background-color: $hb-input-hover-bg;
+    }
+    //
+    // &.no-results {
+    //
+    // }
+    //
+    // &.group-result {
+    //
+    // }
+    //
+    // &.group-option {
+    //
+    // }
+    //
+    // em {
+    //
+    // }
+  }
+}
+
+// Multi Chosen
+// .chosen-container-multi {
+//   .chosen-choices {
+//
+//   }
+//
+//   .chosen-choices li {
+//     &.search-field {
+//       input[type="text"] {
+//
+//       }
+//     }
+//
+//     &.search-choice {
+//
+//       span {
+//
+//       }
+//
+//       .search-choice-close {
+//
+//         &:hover {
+//
+//         }
+//       }
+//     }
+//
+//     &.search-choice-disabled {
+//
+//     }
+//
+//     &.search-choice-focus {
+//
+//       .search-choice-close {
+//
+//       }
+//     }
+//   }
+//
+//   .chosen-results {
+//
+//   }
+//
+//   .chosen-drop .result-selected {
+//
+//   }
+// }
+
+// Active
+.chosen-container-active {
+  .chosen-single {
+    @include hb-input-focus;
+  }
+
+  &.chosen-with-drop {
+    .chosen-single {
+      @include hb-input-focus;
+    }
+
+    .chosen-single div {
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 0.75rem 0.5rem;
+      transform: rotate(180deg);
+
+      @include hb-colorful {
+        background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+      }
+      //
+      // b {
+      //
+      // }
+    }
+  }
+
+  // .chosen-choices {
+  //
+  //   li.search-field input[type="text"] {
+  //
+  //   }
+  // }
+}
+
+// Disabled Support
+// .chosen-disabled {
+//
+//   .chosen-single {
+//
+//   }
+//
+//   .chosen-choices .search-choice .search-choice-close {
+//
+//   }
+// }

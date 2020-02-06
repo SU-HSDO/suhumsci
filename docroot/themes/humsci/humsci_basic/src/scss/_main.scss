@@ -1,8 +1,10 @@
 @charset 'UTF-8';
 
 @import
+  // =====================================================================
   // DECANTER (matching how they bring in their imports in decanter.scss)
-  //
+  // =====================================================================
+
   // Normalize, Vendors
   'decanter/core/src/scss/core/normalize',
 
@@ -26,8 +28,25 @@
   'decanter/core/src/scss/components/lockup',
   'decanter/core/src/scss/components/global-footer',
   'decanter/core/src/scss/components/local-footer',
+  'decanter/core/src/scss/components/main-nav',
 
-  // humsci_basic (ITSCSS)
+  // =====================================================================
+  // HUMSCI BASIC
+  // =====================================================================
+
+  // Namespacing
+  // ---------------------------------------------------------------------
+  // All classes, variables, and mixins that belong to the humsci_basic theme will
+  // be prefixed with `hb-` to prevent confusion between our theme and Decanter.
+  // Example classes: .hb-card, .hb-card--horizontal, .hb-card__title
+
+  // ITCSS:
+  // ---------------------------------------------------------------------
+  // Our CSS is organized using Harry Roberts' (csswizardry.com) Inverted
+  // Triangle CSS (ITCSS) organizational approach. This method is mixed with
+  // Block Element Modifier (BEM) naming convention for class names throughout
+  // the stylesheet.
+
   // 1. Settings
   // 2. Tools
   // 3. Generic
@@ -53,6 +72,7 @@
   'settings/variables.zindex',
   'settings/variables.theme.colors',
   'settings/variables.fonts',
+  'settings/variables.forms',
 
   // =====================================================================
   // 2. Tools
@@ -61,9 +81,13 @@
   //    partials in this section.
   'tools/functions.colors',
   'tools/functions.fonts',
+  'tools/functions.svg',
+  'tools/mixins.general',
   'tools/mixins.themes',
   'tools/mixins.fonts',
   'tools/mixins.layout',
+  'tools/mixins.forms',
+  'tools/mixins.general',
 
   // =====================================================================
   // 3. Generic
@@ -77,6 +101,7 @@
   //    Styling for bare HTML elements (like H1, A, etc.). These come with
   //    default styling from the browser so we can redefine them here.
   'elements/base',
+  'elements/forms',
 
   // =====================================================================
   // 5. Objects
@@ -89,11 +114,16 @@
   // 6. Components
   //    Specific UI components. This is where majority of our work takes place
   //    and our UI components are often composed of Objects and Components
+  'components/buttons',
   'components/card',
   'components/pattern.grid',
   'components/masthead',
   'components/node',
   'components/node--news-item',
+  'components/views-exposed-form',
+  'components/chosen', // chosen.js overrides
+  'components/main-nav',
+  'components/secondary-nav',
 
   // =====================================================================
   // 8. Utilities

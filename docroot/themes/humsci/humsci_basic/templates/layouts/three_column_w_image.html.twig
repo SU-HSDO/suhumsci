@@ -1,36 +1,36 @@
-{% set attributes = attributes.addClass([settings.section_width, 'hb-obj-three-column-w-image', 'hb-obj-page-width', 'clearfix']) %}
+{% set attributes = attributes.addClass([settings.section_width, 'hb-three-column-w-image', 'hb-page-width', 'clearfix']) %}
 
 {% if content.left_sidebar and content.right_sidebar %}
-  {% set attributes = attributes.addClass(['hb-obj-three-column-w-image--two-sidebar']) %}
+  {% set attributes = attributes.addClass(['hb-three-column-w-image--two-sidebar']) %}
 {% elseif content.left_sidebar or content.right_sidebar %}
-  {% set attributes = attributes.addClass(['hb-obj-three-column-w-image--one-sidebar']) %}
+  {% set attributes = attributes.addClass(['hb-three-column-w-image--one-sidebar']) %}
 {% else %}
-  {% set attributes = attributes.addClass(['hb-obj-three-column-w-image--no-sidebar']) %}
+  {% set attributes = attributes.addClass(['hb-three-column-w-image--no-sidebar']) %}
 {% endif %}
 
 {% if content %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
-      <div{{ region_attributes.left_sidebar.addClass(['hb-obj-three-column-w-image__sidebar-1', 'layout__region']) }}>
+      <div{{ region_attributes.left_sidebar.addClass(['hb-three-column-w-image__sidebar-1', 'layout__region']) }}>
         {{ content.left_sidebar }}
       </div>
     {% endif %}
 
 
-    <div class="main-content hb-obj-three-column-w-image__main">
+    <div class="main-content hb-three-column-w-image__main">
 
       {% if content.top or content.image %}
-        <div class="hb-obj-three-column-w-image__main-top">
+        <div class="hb-three-column-w-image__main-top">
 
           {% if content.top %}
-            <div{{ region_attributes.top.addClass(['layout__region', 'hb-obj-three-column-w-image__main-top-text']) }}>
+            <div{{ region_attributes.top.addClass(['layout__region', 'hb-three-column-w-image__main-top-text']) }}>
               {{ content.top }}
             </div>
           {% endif %}
 
           {% if content.image %}
             {# If settings.image_float exists, put it's value (either 'align-left' or 'align-right'), else, put 'align-right' #}
-            <div{{ region_attributes.image.addClass(['hb-obj-three-column-w-image__main-top-image', 'layout__region', settings.image_float ?: 'align-right']) }}>
+            <div{{ region_attributes.image.addClass(['hb-three-column-w-image__main-top-image', 'layout__region', settings.image_float ?: 'align-right']) }}>
               {{ content.image }}
             </div>
           {% endif %}
@@ -38,7 +38,7 @@
         </div>
       {% endif %}
 
-      <div class="hb-obj-three-column-w-image__main-body {% if content.main_below and content.main_above %}break-below-top{% endif %}">
+      <div class="hb-three-column-w-image__main-body {% if content.main_below and content.main_above %}break-below-top{% endif %}">
         {% if content.main_above %}
           <div{{ region_attributes.main_above.addClass(['main-above', 'layout__region']) }}>
             {{ content.main_above }}
@@ -54,7 +54,7 @@
     </div>
 
     {% if content.right_sidebar %}
-      <div{{ region_attributes.right_sidebar.addClass(['hb-obj-three-column-w-image__sidebar-2', 'layout__region']) }}>
+      <div{{ region_attributes.right_sidebar.addClass(['hb-three-column-w-image__sidebar-2', 'layout__region']) }}>
         {{ content.right_sidebar }}
       </div>
     {% endif %}

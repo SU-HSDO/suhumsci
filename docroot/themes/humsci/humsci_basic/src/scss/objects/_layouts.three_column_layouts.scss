@@ -1,6 +1,7 @@
 $hb-sidebar-width: 16.5rem;
 
-.hb-three-column-w-image {
+.hb-three-column-w-image,
+.hb-three-column {
   display: flex;
   flex-wrap: wrap;
 
@@ -39,13 +40,15 @@ $hb-sidebar-width: 16.5rem;
     display: flex;
     flex-wrap: wrap;
 
-    .hb-three-column-w-image--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar &,
+    .hb-three-column--one-sidebar & {
       @include grid-media('lg') {
         flex-wrap: nowrap;
       }
     }
 
-    .hb-three-column-w-image--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar &,
+    .hb-three-column--no-sidebar & {
       @include grid-media('md') {
         flex-wrap: nowrap;
       }
@@ -56,7 +59,8 @@ $hb-sidebar-width: 16.5rem;
     width: 100%;
     margin-bottom: 1rem;
 
-    .hb-three-column-w-image--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar &,
+    .hb-three-column--one-sidebar & {
       @include grid-media('lg') {
         width: 60%;
         display: flex;
@@ -64,7 +68,8 @@ $hb-sidebar-width: 16.5rem;
       }
     }
 
-    .hb-three-column-w-image--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar &,
+    .hb-three-column--no-sidebar & {
       @include grid-media('md') {
         width: 60%;
         display: flex;
@@ -81,14 +86,16 @@ $hb-sidebar-width: 16.5rem;
       margin-bottom: 3rem;
     }
 
-    .hb-three-column-w-image--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar &,
+    .hb-three-column--one-sidebar & {
       @include grid-media('lg') {
         width: 40%;
         margin-left: 1.25rem;
       }
     }
 
-    .hb-three-column-w-image--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar &,
+    .hb-three-column--no-sidebar & {
       @include grid-media('md') {
         width: 40%;
         margin-left: 1.25rem;

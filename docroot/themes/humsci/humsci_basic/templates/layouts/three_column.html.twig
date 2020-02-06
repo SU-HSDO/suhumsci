@@ -1,0 +1,63 @@
+{% set attributes = attributes.addClass([settings.section_width, 'hb-three-column', 'hb-page-width', 'clearfix']) %}
+
+{% if content.left_sidebar and content.right_sidebar %}
+  {% set attributes = attributes.addClass(['hb-three-column--two-sidebar']) %}
+{% elseif content.left_sidebar or content.right_sidebar %}
+  {% set attributes = attributes.addClass(['hb-three-column--one-sidebar']) %}
+{% else %}
+  {% set attributes = attributes.addClass(['hb-three-column--no-sidebar']) %}
+{% endif %}
+
+{% if content %}
+  <div{{ attributes }}>
+    {% if content.left_sidebar %}
+      <div{{ region_attributes.left_sidebar.addClass(['hb-three-column__sidebar-1', 'layout__region']) }}>
+        {{ content.left_sidebar }}
+      </div>
+    {% endif %}
+
+
+    <div class="main-content hb-three-column__main">
+
+      {% if content.top or content.image %}
+        <div class="hb-three-column__main-top">
+
+          {% if content.top %}
+            <div{{ region_attributes.top.addClass(['layout__region', 'hb-three-column__main-top-text']) }}>
+              {{ content.top }}
+            </div>
+          {% endif %}
+
+          {% if content.image %}
+            {# If settings.image_float exists, put it's value (either 'align-left' or 'align-right'), else, put 'align-right' #}
+            <div{{ region_attributes.image.addClass(['hb-three-column__main-top-image', 'layout__region', settings.image_float ?: 'align-right']) }}>
+              {{ content.image }}
+            </div>
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+      <div class="hb-three-column__main-body {% if content.main_below and content.main_above %}break-below-top{% endif %}">
+        {% if content.main_above %}
+          <div{{ region_attributes.main_above.addClass(['main-above', 'layout__region']) }}>
+            {{ content.main_above }}
+          </div>
+        {% endif %}
+
+        {% if content.main_below %}
+          <div{{ region_attributes.main_below.addClass(['main-below', 'layout__region']) }}>
+            {{ content.main_below }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if content.right_sidebar %}
+      <div{{ region_attributes.right_sidebar.addClass(['hb-three-column__sidebar-2', 'layout__region']) }}>
+        {{ content.right_sidebar }}
+      </div>
+    {% endif %}
+  </div>
+
+{% endif %}

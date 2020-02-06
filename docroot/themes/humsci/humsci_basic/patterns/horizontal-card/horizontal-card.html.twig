@@ -33,7 +33,7 @@
 
       <div class="hb-card__subcontent">
         {% for key, variant in general_variants %}
-          {% if variant %}
+          {% if variant|render|striptags('<drupal-render-placeholder><a>')|trim %}
             <div class="hb-card__subcontent-item">{{ variant }}</div>
           {% endif %}
         {% endfor %}

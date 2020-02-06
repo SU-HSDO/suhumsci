@@ -31,16 +31,16 @@
  * @ingroup themeable
  */
 #}
-
+{%- set has_content = field.content|render|striptags('<span><div>')|trim -%}
 {{ field.separator }}
 {%- if field.wrapper_element -%}
   <{{ field.wrapper_element }}{{ field.wrapper_attributes }}>
 {%- endif %}
-{%- if field.label -%}
+{%- if field.label and has_content -%}
   {%- if field.label_element -%}
-    <span class="views-field-label"><{{ field.label_element }}{{ field.label_attributes }}>{{ field.label }}{{ field.label_suffix }}</{{ field.label_element }}></span>
+    <{{ field.label_element }}{{ field.label_attributes }}>{{ field.label }}{{ field.label_suffix }}</{{ field.label_element }}>
   {%- else -%}
-    <span class="views-field-label">{{ field.label }}{{ field.label_suffix }}</span>
+    {{ field.label }}{{ field.label_suffix }}
   {%- endif %}
 {%- endif %}
 {%- if field.element_type -%}

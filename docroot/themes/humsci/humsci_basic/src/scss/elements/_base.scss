@@ -58,12 +58,36 @@ h6:not([class]) {
 }
 
 p:not([class]) {
-  @include hb-body--medium;
+  @include hb-body--small;
   margin-top: 0;
 
   &:last-of-type {
     margin-bottom: 0;
   }
+}
+
+strong:not([class]) {
+  font-weight: hb-theme-font-weight(semibold);
+  font-size: inherit;
+}
+
+em:not([class]) {
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+blockquote:not([class]) {
+  @include hb-body--medium;
+  color: darken($su-color-driftwood, 45%);
+  font-style: italic;
+  line-height: 140%;
+  position: relative;
+}
+
+caption:not([class]) {
+  font-size: 0.875rem;
+  color: darken($su-color-driftwood, 45%);
 }
 
 // Hide the FontAwesome icon that is configured by default in

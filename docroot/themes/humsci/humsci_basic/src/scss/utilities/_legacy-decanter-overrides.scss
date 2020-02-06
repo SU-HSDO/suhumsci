@@ -1,0 +1,77 @@
+h1 .title .node__title {
+  @include hb-heading-1;
+}
+
+.decanter-credits {
+  font-size: 0.875rem;
+  color: darken($su-color-driftwood, 45%);
+  font-style: italic;
+}
+
+.emphasized-text {
+  font-style: italic;
+  font-weight: hb-theme-font-weight(regular);
+}
+
+.decanter-font-lead {
+  color: darken($su-color-driftwood, 30%);
+  font-size: 1.25rem;
+  font-weight: hb-theme-font-weight(regular);
+}
+
+// just to test out how it looks with page layout
+.field-hs-text-area {
+  margin: 0 48px;
+}
+
+.decanter-caption {
+  font-size: 0.875rem;
+  color: darken($su-color-driftwood, 45%);
+}
+
+.decanter-button {
+  @include button-style;
+  text-decoration: none;
+  font-family: $hb-colorful-font--sans;
+  font-size: 1rem;
+  display: inline-block;
+  padding: 0.25rem 1.25rem;
+}
+
+.decanter-button--big {
+  @include button-style;
+  text-decoration: none;
+  font-family: $hb-colorful-font--sans;
+  font-size: 1.125rem;
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+}
+
+.decanter-button--secondary {
+  @include button-style;
+  text-decoration: none;
+  font-family: $hb-colorful-font--sans;
+  font-size: 1rem;
+  display: inline-block;
+  padding: 0.25rem 1.25rem;
+  background-color: transparent;
+  @include hb-colorful {
+  color: hb-colorful-variation(secondary);
+  }
+
+  &:hover {
+    @include hb-colorful {
+    background-color: hb-colorful-variation(secondary);
+    border-color: hb-colorful-variation(secondary);
+  }
+  color: #fff;
+  }
+
+  &:focus {
+    background-color: transparent;
+    border-color: white;
+    @include hb-colorful {
+    color: hb-colorful-variation(secondary);
+  }
+  }
+}

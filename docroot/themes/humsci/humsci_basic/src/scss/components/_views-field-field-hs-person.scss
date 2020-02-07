@@ -1,0 +1,48 @@
+.views-field-field-hs-person {
+  &-title {
+    font-size: 1.125rem;
+    font-weight: hb-theme-font-weight(semibold);
+    line-height: 122%;
+    margin-bottom: 0.8125rem;
+  }
+
+  &-image {
+    // margin-bottom: 1.25rem; // messes with the scaling of the image!!!
+  }
+
+  &-email {
+    word-break: break-all;
+
+    a span {
+      display: none; // hide email icon
+    }
+  }
+
+  &-interests {
+    margin-bottom: 1.75rem;
+
+    .views-label-field-hs-person-interests {
+      display: inline-block;
+      margin-bottom: 0.875rem;
+      color: $hb-color--black;
+    }
+  }
+
+  &-education {
+    margin-bottom: 1.75rem;
+
+    .views-label-field-hs-person-education {
+      display: inline-block;
+      margin-bottom: 0.875rem;
+      color: $hb-color--black;
+    }
+
+    li {
+      @include hb-colorful {
+        &::before {
+          background-color: hb-colorful-variation(tertiary);
+        }
+      }
+    }
+  }
+}

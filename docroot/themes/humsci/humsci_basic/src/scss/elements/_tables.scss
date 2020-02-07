@@ -1,0 +1,51 @@
+.hb-table-wrap {
+  margin: auto;
+  overflow-x: auto;
+}
+
+table {
+  $border-color: lighten($su-color-driftwood, 15%);
+  $header-background-color: $su-color-warm-grey;
+  $header-foreground-color: $hb-color--white;
+  $header-border-color: $hb-color--white;
+
+  @include hb-colorful {
+    $header-background-color: hb-colorful-variation(secondary);
+  }
+
+  // DO NOT set display: block; on a table
+  // Tables need display: table; in order to semantically be a table
+  // display: block; will negatively affect screen reader a11y
+  width: 100%;
+  border: 1px solid $border-color;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  text-align: left;
+
+  @include grid-media('sm') {
+    font-size: 1rem;
+  }
+
+  th, td {
+    border: 1px solid $border-color;
+    padding: 1rem;
+    vertical-align: top;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    border-color: $header-border-color;
+  }
+
+  thead tr {
+    background: $header-background-color;
+    color: $header-foreground-color;
+    font-weight: hb-theme-font-weight(regular);
+    text-transform: uppercase;
+  }
+
+  tr:nth-child(even) {
+    background: lighten($su-color-driftwood, 25%);
+  }
+}

@@ -1,22 +1,23 @@
-$hb-sidebar-width: 16.5rem;
-
-.hb-three-column-w-image,
-.hb-three-column {
+.hb-three-column-w-image {
   display: flex;
   flex-wrap: wrap;
 
-  @include grid-media('md') {
+  @include grid-media('lg') {
     flex-wrap: nowrap;
   }
 
+  &.hb-page-width {
+    @include hb-page-width;
+  }
+
   &--no-sidebar {
-    max-width: 49rem;
+    max-width: $hb-three-column-w-image-main-width;
     margin: auto;
   }
 
   &__sidebar-1 {
     flex: 1 1 100%;
-    margin-right: 0;
+    margin: 0 0 $hb-gutter-width 0;
 
     @include grid-media('md') {
       flex: 0 0 $hb-sidebar-width;
@@ -34,21 +35,34 @@ $hb-sidebar-width: 16.5rem;
 
   &__main {
     flex: 1 1 100%;
+    margin-bottom: $hb-gutter-width;
+
+    @include grid-media('md') {
+      flex: 0 0 calc(100% - #{$hb-sidebar-width} - #{map-get($hb-screen-margins, 'md')});
+
+      .hb-three-column-w-image--no-sidebar & {
+        flex: 1 1 100%;
+        margin-bottom: 0;
+      }
+    }
+
+    @include grid-media('lg') {
+      flex: 1 1 100%;
+      margin-bottom: 0;
+    }
   }
 
   &__main-top {
     display: flex;
     flex-wrap: wrap;
 
-    .hb-three-column-w-image--one-sidebar &,
-    .hb-three-column--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         flex-wrap: nowrap;
       }
     }
 
-    .hb-three-column-w-image--no-sidebar &,
-    .hb-three-column--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         flex-wrap: nowrap;
       }
@@ -59,8 +73,7 @@ $hb-sidebar-width: 16.5rem;
     width: 100%;
     margin-bottom: 1rem;
 
-    .hb-three-column-w-image--one-sidebar &,
-    .hb-three-column--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         width: 60%;
         display: flex;
@@ -68,8 +81,7 @@ $hb-sidebar-width: 16.5rem;
       }
     }
 
-    .hb-three-column-w-image--no-sidebar &,
-    .hb-three-column--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         width: 60%;
         display: flex;
@@ -83,19 +95,17 @@ $hb-sidebar-width: 16.5rem;
     margin-bottom: 1rem;
 
     @include grid-media('md') {
-      margin-bottom: 3rem;
+      margin-bottom: $hb-gutter-width;
     }
 
-    .hb-three-column-w-image--one-sidebar &,
-    .hb-three-column--one-sidebar & {
+    .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         width: 40%;
         margin-left: 1.25rem;
       }
     }
 
-    .hb-three-column-w-image--no-sidebar &,
-    .hb-three-column--no-sidebar & {
+    .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         width: 40%;
         margin-left: 1.25rem;
@@ -118,19 +128,22 @@ $hb-sidebar-width: 16.5rem;
   }
 
   &__main-body {
-    max-width: 49rem;
+    max-width: $hb-three-column-w-image-main-width;
   }
 
   &__sidebar-2 {
     flex: 1 1 100%;
     margin-left: 0;
 
-    @include grid-media('md') {
-      flex: 0 0 $hb-sidebar-width;
-      margin-left: map-get($hb-screen-margins, 'md');
+    .hb-three-column-w-image--one-sidebar & {
+      @include grid-media('md') {
+        flex: 0 0 $hb-sidebar-width;
+        margin-left: map-get($hb-screen-margins, 'md');
+      }
     }
 
     @include grid-media('lg') {
+      flex: 0 0 $hb-sidebar-width;
       margin-left: map-get($hb-screen-margins, 'lg');
     }
 

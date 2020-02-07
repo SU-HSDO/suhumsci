@@ -2,12 +2,12 @@ uuid: 7bf9ca79-227b-4edb-91a4-725e33cf8640
 langcode: en
 status: true
 dependencies:
+  module:
+    - node
+    - search_api
   config:
     - search_api.server.default_server
     - core.entity_view_mode.node.search_index
-  module:
-    - search_api
-    - node
 id: default_index
 name: 'Default content index'
 description: 'Default content index created by the Database Search Defaults module'
@@ -44,12 +44,18 @@ field_settings:
     type: boolean
     indexed_locked: true
     type_locked: true
+    dependencies:
+      module:
+        - node
   title:
     label: Title
     datasource_id: 'entity:node'
     property_path: title
     type: text
     boost: !!float 5
+    dependencies:
+      module:
+        - node
   uid:
     label: 'Author ID'
     datasource_id: 'entity:node'
@@ -57,11 +63,15 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+    dependencies:
+      module:
+        - node
 datasource_settings:
   'entity:node':
     bundles:
       default: true
-      selected: {  }
+      selected:
+        - hs_private_page
     languages:
       default: true
       selected: {  }
@@ -110,6 +120,7 @@ processor_settings:
     weights:
       preprocess_index: -5
       preprocess_query: -48
+  language_with_fallback: {  }
   rendered_item:
     weights:
       add_properties: 0

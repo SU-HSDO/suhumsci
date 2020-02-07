@@ -10,7 +10,7 @@
 //  Function to create an optimized svg url
 @function svg($svg) {
   //  Add missing namespace
-  @if not str-index($svg,xmlns) {
+  @if not str-index($svg, xmlns) {
     $svg: str-replace($svg, '<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
   }
   //  Chunk up string in order to avoid
@@ -22,7 +22,7 @@
   @for $i from 1 through $loops {
     $chunk: str-slice($svg, $index, $index + $slice - 1);
     //   Encode
-    $chunk: str-replace($chunk, '"', '\'');
+    $chunk: str-replace($chunk, '"', "'");
     $chunk: str-replace($chunk, '%', '%25');
     $chunk: str-replace($chunk, '&', '%26');
     $chunk: str-replace($chunk, '#', '%23');

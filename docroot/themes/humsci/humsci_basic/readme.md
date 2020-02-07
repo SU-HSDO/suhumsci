@@ -29,6 +29,7 @@ Frontend assets are built using the Grunt task runner, but are run using npm scr
 
 - `npm run build:sass` - Compile Sass for production
 - `npm run watch` - Compile a CSS build and watch for changes in the existing `.scss` files
+- `npm run build:js - Compile Javascript with Webpack
 
 ## Testing
 

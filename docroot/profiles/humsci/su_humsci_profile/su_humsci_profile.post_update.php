@@ -147,4 +147,20 @@ function su_humsci_profile_post_update_8201() {
   ];
   user_role_grant_permissions('site_manager', $new_perms);
   user_role_grant_permissions(AccountInterface::AUTHENTICATED_ROLE, ['use text format basic_html_without_media']);
+
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->load('node.hs_basic_page.field_hs_page_components');
+  $settings = $field->getSettings();
+
+  if ($settings['handler_settings']['negate']) {
+    $settings['handler_settings']['target_bundles']['hs_private_files'] = 'hs_private_files';
+    $settings['handler_settings']['target_bundles']['hs_priv_text_area'] = 'hs_priv_text_area';
+    $settings['handler_settings']['target_bundles_drag_drop']['hs_private_files'] = ['enabled' => FALSE];
+    $settings['handler_settings']['target_bundles_drag_drop']['hs_priv_text_area'] = ['enabled' => FALSE];;
+    $field->set('settings', $settings);
+    $field->calculateDependencies();
+    $field->save();
+  }
 }

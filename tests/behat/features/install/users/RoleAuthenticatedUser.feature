@@ -6,10 +6,11 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.authenticated permissions"
-    Then the role "authenticated" should have 10 permissions
+    Then the role "authenticated" should have 11 permissions
     And drush output should contain "access content"
     And drush output should contain "access shortcuts"
     And drush output should contain "search content"
+    And drush output should contain "use text format basic_html_without_media"
     And drush output should contain "view any course_collections entities"
     And drush output should contain "view any event_collections entities"
     And drush output should contain "view any publications_collections entities"

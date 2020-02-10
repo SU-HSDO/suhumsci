@@ -7,6 +7,7 @@
 
 {%- set attributes = attributes.addClass(classes) -%}
 {%- set has_image = image|render|striptags('<drupal-render-placeholder><span><div><picture><source><img>')|trim -%}
+{%- set has_columns = columns|render|striptags('<drupal-render-placeholder>')|trim -%}
 
 <div{{ attributes }}>
   {% if has_image is not empty %}
@@ -26,7 +27,7 @@
       <div class="hb-card__description">{{ description }}</div>
     {% endif %}
 
-    {% if columns %}
+    {% if has_columns is not empty %}
       <div class="hb-card__columns">{{ columns }}</div>
     {% endif %}
 

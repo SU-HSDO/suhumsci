@@ -1,0 +1,48 @@
+{%
+  set classes = [
+    'hb-card',
+    'hb-card--horizontal'
+  ]
+%}
+
+{%- set attributes = attributes.addClass(classes) -%}
+{%- set has_image = image|render|striptags('<drupal-render-placeholder><span><div><picture><source><img>')|trim -%}
+
+<div{{ attributes }}>
+  {% if has_image is not empty %}
+    <div class="hb-card__img">{{ image }}</div>
+  {% endif %}
+
+  <div class="hb-card__content">
+    {% if title %}
+      <div class="hb-card__title">{{ title }}</div>
+    {% endif %}
+
+    {% if subtitle %}
+      <div class="hb-card__subtitle">{{ subtitle }}</div>
+    {% endif %}
+
+    {% if description %}
+      <div class="hb-card__description">{{ description }}</div>
+    {% endif %}
+
+    {% if columns %}
+      <div class="hb-card__columns">{{ columns }}</div>
+    {% endif %}
+
+    {% if category %}
+      <div class="hb-card__category">{{ category }}</div>
+    {% endif %}
+
+    {% if bottom %}
+      {# Note:
+        It makes sense to reuse the .hb-card__description class here since both
+        elements should be styled the same.
+
+        If we find that we need to reuse this class again we should consider
+        renaming to something more reusable.
+      #}
+      <div class="hb-card__description">{{ bottom }}</div>
+    {% endif %}
+  </div>
+</div>

@@ -16,11 +16,11 @@
   }
 
   &__sidebar-1 {
-    flex: 1 1 100%;
+    width: 100%;
     margin: 0 0 $hb-gutter-width 0;
 
     @include grid-media('md') {
-      flex: 0 0 $hb-sidebar-width;
+      width: $hb-sidebar-width;
       margin-right: map-get($hb-screen-margins, 'md');
     }
 
@@ -34,21 +34,28 @@
   }
 
   &__main {
-    flex: 1 1 100%;
+    width: 100%;
     margin-bottom: $hb-gutter-width;
 
     @include grid-media('md') {
-      flex: 0 0 calc(100% - #{$hb-sidebar-width} - #{map-get($hb-screen-margins, 'md')});
+      .hb-three-column-w-image--one-sidebar &,
+      .hb-three-column-w-image--two-sidebar & {
+        width: calc(100% - #{$hb-sidebar-width} - #{map-get($hb-screen-margins, 'md')});
+      }
 
       .hb-three-column-w-image--no-sidebar & {
-        flex: 1 1 100%;
+        width: 100%;
         margin-bottom: 0;
       }
     }
 
     @include grid-media('lg') {
-      flex: 1 1 100%;
+      width: 100%;
       margin-bottom: 0;
+
+      .hb-three-column-w-image--two-sidebar & {
+        width: calc(100% - #{2 * $hb-sidebar-width} - 2 * #{map-get($hb-screen-margins, 'md')});
+      }
     }
   }
 
@@ -129,21 +136,25 @@
 
   &__main-body {
     max-width: $hb-three-column-w-image-main-width;
+
+    .hb-three-column-w-image--no-sidebar & {
+      margin: 0 auto;
+    }
   }
 
   &__sidebar-2 {
-    flex: 1 1 100%;
+    width: 100%;
     margin-left: 0;
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media('md') {
-        flex: 0 0 $hb-sidebar-width;
+        width: $hb-sidebar-width;
         margin-left: map-get($hb-screen-margins, 'md');
       }
     }
 
     @include grid-media('lg') {
-      flex: 0 0 $hb-sidebar-width;
+      width: $hb-sidebar-width;
       margin-left: map-get($hb-screen-margins, 'lg');
     }
 

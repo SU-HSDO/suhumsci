@@ -11,17 +11,17 @@
   }
 
   &__sidebar-1 {
-    flex: 1 1 100%;
+    width: 100%;
     margin: 0 0 $hb-gutter-width 0;
 
     @include grid-media('md') {
-      flex: 0 0 $hb-sidebar-width;
+      width: $hb-sidebar-width;
       margin: 0 $hb-gutter-width 0 0;
     }
   }
 
   &__main {
-    flex: 1 1 100%;
+    width: 100%;
     margin-bottom: $hb-gutter-width;
 
     .hb-three-column--no-sidebar & {
@@ -29,17 +29,24 @@
     }
 
     @include grid-media('md') {
-      flex: 0 0 calc(100% - #{$hb-sidebar-width} - #{$hb-gutter-width});
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        width: calc(100% - #{$hb-sidebar-width} - #{$hb-gutter-width});
+      }
 
       .hb-three-column--no-sidebar & {
-        flex: 1 1 100%;
+        width: 100%;
         margin-bottom: 0;
       }
     }
 
     @include grid-media('lg') {
-      flex: 1 1 100%;
+      width: 100%;
       margin-bottom: 0;
+
+      .hb-three-column--two-sidebar & {
+        width: calc(100% - #{2 * $hb-sidebar-width} - #{2 * $hb-gutter-width});
+      }
     }
 
     .hb-three-column--one-sidebar & {
@@ -50,18 +57,18 @@
   }
 
   &__sidebar-2 {
-    flex: 1 1 100%;
+    width: 100%;
     margin: 0;
 
     .hb-three-column--one-sidebar & {
       @include grid-media('md') {
-        flex: 0 0 $hb-sidebar-width;
+        width: $hb-sidebar-width;
         margin: 0 0 0 $hb-gutter-width;
       }
     }
 
     @include grid-media('lg') {
-      flex: 0 0 $hb-sidebar-width;
+      width: $hb-sidebar-width;
       margin: 0 0 0 $hb-gutter-width;
     }
   }

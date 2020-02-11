@@ -1,12 +1,15 @@
 {%
   set classes = [
     'hb-card',
-    'hb-card--horizontal'
+    'hb-card--horizontal',
+    'hb-card--structured'
   ]
 %}
 
 {%- set attributes = attributes.addClass(classes) -%}
 {%- set has_image = image|render|striptags('<drupal-render-placeholder><span><div><picture><source><img>')|trim -%}
+{%- set has_columns = columns|render|striptags('<drupal-render-placeholder>')|trim -%}
+{%- set has_categories = category|render|striptags('<drupal-render-placeholder>')|trim -%}
 
 <div{{ attributes }}>
   {% if has_image is not empty %}
@@ -26,12 +29,36 @@
       <div class="hb-card__description">{{ description }}</div>
     {% endif %}
 
-    {% if columns %}
-      <div class="hb-card__columns">{{ columns }}</div>
+    {% if has_columns is not empty %}
+
+      {% if columns['#sources'] %}
+        <div class="hb-card__columns">
+          {% for columns_field in columns['#sources'] %}
+            {% if columns_field|render|striptags('<drupal-render-placeholder>')|trim %}
+              {{ columns_field }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="hb-card__columns">{{ columns }}</div>
+      {% endif %}
+
     {% endif %}
 
-    {% if category %}
-      <div class="hb-card__category">{{ category }}</div>
+    {% if has_categories is not empty %}
+
+      {% if category['#sources'] %}
+        <div class="hb-card__category">
+          {% for category_field in category['#sources'] %}
+            {% if category_field|render|striptags('<drupal-render-placeholder>')|trim %}
+              {{ category_field }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="hb-card__category">{{ category }}</div>
+      {% endif %}
+
     {% endif %}
 
     {% if bottom %}

@@ -23,13 +23,13 @@ This theme contains its own node module dependencies and build system which is s
 
 - `npm install` - Install all node dependencies
 
-## Builds 
+## Builds
 
 Frontend assets are built using the Grunt task runner, but are run using npm scripts as shortcuts. Assets are compiled to a `dist/` directory with a stylesheet generated for each sub-theme.
 
 - `npm run build:sass` - Compile Sass for production
 - `npm run watch` - Compile a CSS build and watch for changes in the existing `.scss` files
-- `npm run build:js - Compile Javascript with Webpack
+- `npm run build:js` - Compile Javascript with Webpack
 
 ## Testing
 
@@ -41,7 +41,7 @@ We use the [Sass True](https://github.com/oddbird/true) testing framework to tes
 
 ### Linting
 
-We use [stylelint](https://stylelint.io/) to lint all of our Sass code to maintain a consistent code style. 
+We use [stylelint](https://stylelint.io/) to lint all of our Sass code to maintain a consistent code style.
 
 Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbox/stylelint-config-sparkbox) as a base for our linting rules.
 
@@ -67,4 +67,3 @@ This theme aims to **partially** integrate [Decanter](https://github.com/SU-SWS/
 - Import variables, function and mixins
 - Compile various helpers classes
 - Compile specific components such as Brand Bar, Logo, Lockup and Footer
-

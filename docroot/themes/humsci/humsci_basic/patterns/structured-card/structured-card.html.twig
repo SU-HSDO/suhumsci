@@ -29,7 +29,19 @@
     {% endif %}
 
     {% if has_columns is not empty %}
-      <div class="hb-card__columns">{{ columns }}</div>
+
+      {% if columns['#sources'] %}
+        <div class="hb-card__columns">
+          {% for columns_field in columns['#sources'] %}
+            {% if columns_field|render|striptags('<drupal-render-placeholder>')|trim %}
+              {{ columns_field }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="hb-card__columns">{{ columns }}</div>
+      {% endif %}
+
     {% endif %}
 
     {% if category %}

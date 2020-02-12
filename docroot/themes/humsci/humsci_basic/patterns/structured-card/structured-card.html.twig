@@ -1,0 +1,75 @@
+{%
+  set classes = [
+    'hb-card',
+    'hb-card--horizontal',
+    'hb-card--structured'
+  ]
+%}
+
+{%- set attributes = attributes.addClass(classes) -%}
+{%- set has_image = image|render|striptags('<drupal-render-placeholder><span><div><picture><source><img>')|trim -%}
+{%- set has_columns = columns|render|striptags('<drupal-render-placeholder>')|trim -%}
+{%- set has_categories = category|render|striptags('<drupal-render-placeholder>')|trim -%}
+
+<div{{ attributes }}>
+  {% if has_image is not empty %}
+    <div class="hb-card__img">{{ image }}</div>
+  {% endif %}
+
+  <div class="hb-card__content">
+    {% if title %}
+      <div class="hb-card__title">{{ title }}</div>
+    {% endif %}
+
+    {% if subtitle %}
+      <div class="hb-card__subtitle">{{ subtitle }}</div>
+    {% endif %}
+
+    {% if description %}
+      <div class="hb-card__description">{{ description }}</div>
+    {% endif %}
+
+    {% if has_columns is not empty %}
+
+      {% if columns['#sources'] %}
+        <div class="hb-card__columns">
+          {% for columns_field in columns['#sources'] %}
+            {% if columns_field|render|striptags('<drupal-render-placeholder>')|trim %}
+              {{ columns_field }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="hb-card__columns">{{ columns }}</div>
+      {% endif %}
+
+    {% endif %}
+
+    {% if has_categories is not empty %}
+
+      {% if category['#sources'] %}
+        <div class="hb-card__category">
+          {% for category_field in category['#sources'] %}
+            {% if category_field|render|striptags('<drupal-render-placeholder>')|trim %}
+              {{ category_field }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="hb-card__category">{{ category }}</div>
+      {% endif %}
+
+    {% endif %}
+
+    {% if bottom %}
+      {# Note:
+        It makes sense to reuse the .hb-card__description class here since both
+        elements should be styled the same.
+
+        If we find that we need to reuse this class again we should consider
+        renaming to something more reusable.
+      #}
+      <div class="hb-card__description">{{ bottom }}</div>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,38 @@
+{% set attributes = attributes.addClass([settings.section_width, 'hb-three-column', 'hb-page-width', 'clearfix']) %}
+{# Unlike the 3 column with image layout, this one doesnt seem to support main_above, main_below, image, and top #}
+
+{% if content.left_sidebar and content.right_sidebar %}
+  {% set attributes = attributes.addClass(['hb-three-column--two-sidebar']) %}
+{% elseif content.left_sidebar or content.right_sidebar %}
+  {% set attributes = attributes.addClass(['hb-three-column--one-sidebar']) %}
+{% else %}
+  {% set attributes = attributes.addClass(['hb-three-column--no-sidebar']) %}
+{% endif %}
+
+{% if content %}
+  <div{{ attributes }}>
+    {% if content.left_sidebar %}
+      <div{{ region_attributes.left_sidebar.addClass(['hb-three-column__sidebar-1', 'layout__region']) }}>
+        {{ content.left_sidebar }}
+      </div>
+    {% endif %}
+
+
+    <div class="main-content hb-three-column__main">
+
+      <div class="hb-three-column__main-body {% if content.main_below and content.main_above %}break-below-top{% endif %}">
+        {% if content.main %}
+          <div{{ region_attributes.main.addClass(['layout__region']) }}>
+            {{ content.main }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if content.right_sidebar %}
+      <div{{ region_attributes.right_sidebar.addClass(['hb-three-column__sidebar-2', 'layout__region']) }}>
+        {{ content.right_sidebar }}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

@@ -7,7 +7,9 @@
 
 // Base
 .chosen-container {
+  // scss-lint:disable ImportantRule
   width: 100% !important; // This overrides an inline width
+  // scss-lint:enable ImportantRule
 
   .chosen-drop {
     @include hb-input-focus;
@@ -31,6 +33,52 @@
   //     }
   //   }
   // }
+  //
+  // Results
+  .chosen-results {
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: $hb-input-padding;
+      line-height: 122%;
+
+      &:last-child {
+        border-radius: 0 0 $hb-input-border-radius $hb-input-border-radius;
+      }
+      //
+      // &.active-result {
+      //
+      // }
+      //
+      // &.disabled-result {
+      //
+      // }
+      //
+      &.highlighted {
+        color: $hb-color--black;
+        font-weight: hb-theme-font-weight(semibold);
+        background-image: none;
+        background-color: $hb-input-hover-bg;
+      }
+      //
+      // &.no-results {
+      //
+      // }
+      //
+      // &.group-result {
+      //
+      // }
+      //
+      // &.group-option {
+      //
+      // }
+      //
+      // em {
+      //
+      // }
+    }
+  }
 }
 
 // Single Chosen
@@ -54,15 +102,34 @@
     &:focus {
       @include hb-input-focus;
     }
+
+    span {
+      margin-right: 0;
+      // hack so that overflow-y of descenders isnt hidden:
+      margin-bottom: -3px;
+      padding-bottom: 3px;
+    }
+
+    div {
+      width: $hb-input-icon-spacing;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 0.75rem 0.5rem;
+
+      @include hb-colorful {
+        background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+      }
+
+      b {
+        display: none; // hides the chosen.js icon
+      }
+    }
   }
   //
   // .chosen-default {
   //
   // }
   //
-  .chosen-single span {
-    margin-right: 0;
-  }
   //
   // .chosen-single-with-deselect span {
   //
@@ -79,21 +146,6 @@
   //
   // }
   //
-  .chosen-single div {
-    width: $hb-input-icon-spacing;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 0.75rem 0.5rem;
-
-    @include hb-colorful {
-      background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
-    }
-
-    b {
-      display: none; // hides the chosen.js icon
-    }
-  }
-
   .chosen-search {
     // We cannot completely hide the search input without losing keyboard
     // accessibility. The search input will still be accessible to screen reader
@@ -116,51 +168,6 @@
   // &.chosen-container-single-nosearch .chosen-search {
   //
   // }
-}
-
-// Results
-.chosen-container .chosen-results {
-  margin: 0;
-  padding: 0;
-
-  li {
-    padding: $hb-input-padding;
-
-    &:last-child {
-      border-radius: 0 0 $hb-input-border-radius $hb-input-border-radius;
-    }
-    //
-    // &.active-result {
-    //
-    // }
-    //
-    // &.disabled-result {
-    //
-    // }
-    //
-    &.highlighted {
-      color: $hb-color--black;
-      font-weight: hb-theme-font-weight(semibold);
-      background-image: none;
-      background-color: $hb-input-hover-bg;
-    }
-    //
-    // &.no-results {
-    //
-    // }
-    //
-    // &.group-result {
-    //
-    // }
-    //
-    // &.group-option {
-    //
-    // }
-    //
-    // em {
-    //
-    // }
-  }
 }
 
 // Multi Chosen
@@ -220,21 +227,21 @@
   &.chosen-with-drop {
     .chosen-single {
       @include hb-input-focus;
-    }
 
-    .chosen-single div {
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 0.75rem 0.5rem;
-      transform: rotate(180deg);
+      div {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 0.75rem 0.5rem;
+        transform: rotate(180deg);
 
-      @include hb-colorful {
-        background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+        @include hb-colorful {
+          background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+        }
+        //
+        // b {
+        //
+        // }
       }
-      //
-      // b {
-      //
-      // }
     }
   }
 

@@ -1,29 +1,28 @@
 @mixin visually-hidden($status:null) {
-  position: absolute !important;
-  clip: rect(1px 1px 1px 1px); // IE6, IE7
+  position: absolute;
   clip: rect(1px, 1px, 1px, 1px);
-  padding: 0 !important;
-  border: 0 !important;
-  height: 1px !important;
-  width: 1px !important;
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
   overflow: hidden;
 
   @if $status == 'disable' {
-    position: static !important;
-    clip: auto !important;
-    height: auto !important;
-    width: auto !important;
+    position: static;
+    clip: auto;
+    height: auto;
+    width: auto;
     overflow: visible;
   }
 }
 
+// This removes styles added by default to button elements.
+// For when something should semantically be a button,
+// but isn't buttony in appearance.
 @mixin unbuttonize {
-  // This removes styles added by default to button elements.
-  // For when something should semantically be a button,
-  // but isn't buttony in appearance.
   background-color: transparent;
   color: inherit;
-  border: none;
+  border: 0;
   margin: 0;
   padding: 0;
   text-align: inherit;
@@ -42,7 +41,7 @@
   position: relative;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     visibility: visible;
     background-color: $color;
@@ -64,7 +63,9 @@
     &::before {
       width: 100%;
       height: #{$thickness};
+      //scss-lint:disable EmptyLineBetweenBlocks
       left: 0;
+      //scss-lint:enable EmptyLineBetweenBlocks
     } @if ($position == 'bottom') {
       @include padding(null null 0.8em);
 
@@ -82,7 +83,9 @@
     &::before {
       height: 100%;
       width: #{$thickness};
+      //scss-lint:disable EmptyLineBetweenBlocks
       bottom: 0;
+      //scss-lint:enable EmptyLineBetweenBlocks
     } @if ($position == 'left') {
       &::before {
         left: 0;

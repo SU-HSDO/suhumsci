@@ -37,6 +37,9 @@ function hs_paragraphs_between_field_widget_multivalue_paragraphs_form_alter(arr
   if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
     return;
   }
+  if (empty($elements['add_more']['operations']['#links'])) {
+    return;
+  }
 
   $elements['#attached']['library'][] = 'hs_paragraphs_between/field_widget';
 

@@ -6,6 +6,7 @@
  */
 
 use Drupal\block\Entity\Block;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 
@@ -121,4 +122,45 @@ function su_humsci_profile_post_update_8200() {
   /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
   $module_installer = \Drupal::service('module_installer');
   $module_installer->uninstall(['embed', 'entity_browser']);
+}
+
+/**
+ * Add setting to content access to restrict access to private page.
+ */
+function su_humsci_profile_post_update_8201() {
+  $config = \Drupal::configFactory()->getEditable('content_access.settings');
+  $node_access = $config->get('content_access_node_type') ?: [];
+
+  $settings = ['view' => ['authenticated'], 'per_node' => 1];
+  $node_access['hs_private_page'] = serialize($settings);
+
+  $config->set('content_access_node_type', $node_access);
+
+  $new_perms = [
+    'create hs_private_page content',
+    'delete any hs_private_page content',
+    'delete own hs_private_page content',
+    'edit any hs_private_page content',
+    'edit own hs_private_page content',
+    'revert hs_private_page revisions',
+    'view hs_private_page revisions',
+  ];
+  user_role_grant_permissions('site_manager', $new_perms);
+  user_role_grant_permissions(AccountInterface::AUTHENTICATED_ROLE, ['use text format basic_html_without_media']);
+
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->load('node.hs_basic_page.field_hs_page_components');
+  $settings = $field->getSettings();
+
+  if ($settings['handler_settings']['negate']) {
+    $settings['handler_settings']['target_bundles']['hs_private_files'] = 'hs_private_files';
+    $settings['handler_settings']['target_bundles']['hs_priv_text_area'] = 'hs_priv_text_area';
+    $settings['handler_settings']['target_bundles_drag_drop']['hs_private_files'] = ['enabled' => FALSE];
+    $settings['handler_settings']['target_bundles_drag_drop']['hs_priv_text_area'] = ['enabled' => FALSE];;
+    $field->set('settings', $settings);
+    $field->calculateDependencies();
+    $field->save();
+  }
 }

@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.storage.node.field_hs_page_components
     - node.type.hs_basic_page
+    - paragraphs.paragraphs_type.hs_priv_text_area
+    - paragraphs.paragraphs_type.hs_private_files
   module:
     - entity_reference_revisions
 _core:
@@ -23,5 +25,12 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     negate: 1
-    target_bundles: null
+    target_bundles:
+      hs_private_files: hs_private_files
+      hs_priv_text_area: hs_priv_text_area
+    target_bundles_drag_drop:
+      hs_private_files:
+        enabled: false
+      hs_priv_text_area:
+        enabled: false
 field_type: entity_reference_revisions

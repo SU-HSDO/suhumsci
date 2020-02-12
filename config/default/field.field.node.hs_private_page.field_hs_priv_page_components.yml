@@ -1,0 +1,60 @@
+uuid: 9a4e2daa-d674-4079-b624-da8e9e231de6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_priv_page_components
+    - node.type.hs_private_page
+    - paragraphs.paragraphs_type.hs_priv_text_area
+    - paragraphs.paragraphs_type.hs_private_files
+  module:
+    - entity_reference_revisions
+id: node.hs_private_page.field_hs_priv_page_components
+field_name: field_hs_priv_page_components
+entity_type: node
+bundle: hs_private_page
+label: Components
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      hs_private_files: hs_private_files
+      hs_priv_text_area: hs_priv_text_area
+    target_bundles_drag_drop:
+      hs_accordion:
+        weight: 9
+        enabled: false
+      hs_carousel:
+        weight: 10
+        enabled: false
+      hs_hero_image:
+        weight: 11
+        enabled: false
+      hs_postcard:
+        weight: 12
+        enabled: false
+      hs_row:
+        weight: 13
+        enabled: false
+      hs_private_files:
+        enabled: true
+        weight: 14
+      hs_text_area:
+        weight: 14
+        enabled: false
+      hs_view:
+        weight: 15
+        enabled: false
+      hs_priv_text_area:
+        enabled: true
+        weight: 16
+      hs_webform:
+        weight: 16
+        enabled: false
+field_type: entity_reference_revisions

@@ -1,5 +1,5 @@
 {
-  "name": "acquia/blt-project",
+  "name": "hsdo/suhumsci",
   "description": "Project template for Drupal 8 sites built with BLT.",
   "type": "project",
   "minimum-stability": "dev",
@@ -201,20 +201,17 @@
     "dealerdirect/phpcodesniffer-composer-installer": "*"
   },
   "require-dev": {
-    "acquia/blt-require-dev": "^11.0.0-alpha1",
     "behat/mink-selenium2-driver": "dev-master as 1.3.x-dev",
     "drupal/config_inspector": "^1.0@beta",
     "drupal/console": "^1.8",
-    "drupal/devel": "^2.0",
+    "drupal/devel": "^1.2",
     "drupal/devel_debug_log": "^1.0@beta",
-    "drupal/devel_php": "^1.1",
     "drupal/restui": "^1.17",
     "drupal/search_kint": "1.0",
     "drupal/seckit": "^1.0@alpha",
     "jcalderonzumba/gastonjs": "^1.2",
     "jcalderonzumba/mink-phantomjs-driver": "^0.3.3",
     "league/oauth2-client": "^2.4",
-    "mikey179/vfsstream": "^1.6",
     "su-sws/stanford-caravan": "dev-8.x-1.x",
     "symfony/phpunit-bridge": "*"
   },
@@ -380,7 +377,7 @@
   },
   "scripts": {
     "post-update-cmd": [
-      "blt source:build:simplesamlphp-config"
+      "vendor/bin/blt source:build:simplesamlphp-config"
     ],
     "post-drupal-scaffold-cmd": [
       "patch -p1 < patches/.htaccess.patch"

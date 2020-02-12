@@ -9,6 +9,7 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Outdated.
@@ -162,5 +163,23 @@ function su_humsci_profile_post_update_8201() {
     $field->set('settings', $settings);
     $field->calculateDependencies();
     $field->save();
+  }
+}
+
+/**
+ * Create the private page entity form and entity display configs.
+ */
+function su_humsci_profile_post_update_8202() {
+  $configs = [
+    'core.entity_form_display.node.hs_private_page.default',
+    'core.entity_view_display.node.hs_private_page.default',
+    'core.entity_view_display.node.hs_private_page.teaser',
+  ];
+  $config_factory = \Drupal::configFactory();
+  foreach ($configs as $config) {
+    $data = Yaml::decode(file_get_contents(DRUPAL_ROOT . "/../config/default/$config.yml"));
+    $config_factory->getEditable($config)
+      ->setData($data)
+      ->save();
   }
 }

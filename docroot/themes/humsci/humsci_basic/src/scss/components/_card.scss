@@ -238,18 +238,30 @@
   &__decorative-link {
     display: flex;
     align-items: center;
-    height: 44px; // WCAG AAA target size
-    width: 44px;
+    width: 100%; // large area to click
 
-    @include hb-colorful {
-      background: no-repeat left / 55% svg('<svg viewBox="0 0 23 24"><path fill="#{hb-colorful-variation(secondary)}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>');
+    &::before {
+      content: '';
+      display: block;
+      height: 44px; // WCAG AAA target size
+      width: 44px;
 
-      transform: translateX(0);
-      transition: transform 200ms ease-in-out;
+      @include hb-colorful {
+        background: no-repeat left / 55% svg('<svg viewBox="0 0 23 24"><path fill="#{hb-colorful-variation(secondary)}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>');
 
-      &:hover,
-      &:focus {
-        transform: translateX(hb-calculate-rems(10px));
+        transform: translateX(0);
+        transition: transform 200ms ease-in-out;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      &::before {
+        transform: translateX(0.625rem);
+
+        @include hb-colorful {
+          background: no-repeat left / 55% svg('<svg viewBox="0 0 23 24"><path fill="#{darken(hb-colorful-variation(secondary), 10%)}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>');
+        }
       }
     }
   }

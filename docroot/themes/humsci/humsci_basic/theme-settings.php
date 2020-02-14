@@ -127,7 +127,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#title' => t('Global Footer Settings'),
   ];
 
-  $form['options_settings']['humsci_basic_global_footer']['global_footer_variant'] = [
+  $form['options_settings']['humsci_basic_global_footer']['global_footer_variant_classname'] = [
     '#type' => 'select',
     '#title' => t('Global Footer Variant'),
     '#options' => [
@@ -135,7 +135,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
       'bright' => t('Bright'),
       'dark' => t('Dark')
     ],
-    '#default_value' => theme_get_setting('global_footer_variant'),
+    '#default_value' => theme_get_setting('global_footer_variant_classname'),
   ];
 
 }

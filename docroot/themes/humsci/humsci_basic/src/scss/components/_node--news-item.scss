@@ -1,12 +1,12 @@
 .field-hs-news-categories {
   @include hb-subheading;
   text-transform: uppercase;
-  margin: 0 0 0.4rem;
+  margin: 0 0 calculate-rems(6.4px);
 
   div {
     display: inline-block;
-    margin-right: 0.75rem;
-    margin-bottom: 0.3125rem;
+    margin-right: calculate-rems(12px);
+    margin-bottom: calculate-rems(5px);
 
     &:last-of-type {
       margin-right: 0;
@@ -16,9 +16,9 @@
       &::before {
         content: '';
         display: inline-block;
-        height: 0.75rem;
-        width: 0.1875rem;
-        margin-right: 0.4rem;
+        height: calculate-rems(12px);
+        width: calculate-rems(3px);
+        margin-right: calculate-rems(6.4px);
         background-color: hb-colorful-variation(secondary);
       }
     }
@@ -46,10 +46,10 @@
 // styling for accommodating layout-builder, etc).
 .node-news-item-full {
   .field-hs-news-categories {
-    margin: 0 0 1.25rem;
+    margin: 0 0 calculate-rems(20px);
 
     @include grid-media('sm') {
-      margin-bottom: 1.625rem;
+      margin-bottom: calculate-rems(26px);
     }
   }
 
@@ -65,7 +65,7 @@
   @include hb-colorful {
     $hb-color--primary: hb-colorful-variation(primary);
     position: relative;
-    margin-right: 1.5rem;
+    margin-right: calculate-rems(24px);
     display: inline-block;
     border-bottom: 1px solid lighten(hb-colorful-variation(primary), 10%);
 

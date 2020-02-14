@@ -6,12 +6,12 @@
 
   // Default to two column
   &__item {
-    margin-bottom: 1.5rem;
+    margin-bottom: calculate-rems(24px);
     width: 100%;
 
     @include grid-media-min('sm') {
       width: calc(50% - (#{$hb-gutter-width} / 2)); // for two elements, there is 1 gutter-width between
-      margin-right: 3rem;
+      margin-right: calculate-rems(48px);
     }
 
     &:nth-child(2n) {
@@ -23,7 +23,7 @@
         width: calc(33.33% - (2 * (#{$hb-gutter-width}) / 3)); // for 3 elements, 2 have gutter-width
 
         &:nth-child(2n) {
-          margin-right: 3rem;
+          margin-right: calculate-rems(48px);
         }
 
         &:nth-child(3n) {

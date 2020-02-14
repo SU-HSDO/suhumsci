@@ -78,7 +78,7 @@
 
   &__main-top-text {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: calculate-rems(16px);
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
@@ -99,7 +99,7 @@
 
   &__main-top-image {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: calcualte-rems(16px);
 
     @include grid-media('md') {
       margin-bottom: $hb-gutter-width;
@@ -108,14 +108,14 @@
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         width: 40%;
-        margin-left: 1.25rem;
+        margin-left: calculate-rems(20px);
       }
     }
 
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         width: 40%;
-        margin-left: 1.25rem;
+        margin-left: calculate-rems(20px);
       }
     }
 
@@ -125,10 +125,10 @@
       @supports (object-fit: cover) {
         object-fit: cover;
         width: 100%;
-        max-height: 23.4375rem;
+        max-height: calculate-rems(375px);
 
         @include grid-media('md') {
-          max-height: 15.625rem;
+          max-height: calculate-rems(250px);
         }
       }
     }

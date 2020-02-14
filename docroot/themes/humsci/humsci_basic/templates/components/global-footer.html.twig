@@ -1,0 +1,53 @@
+{#
+  /**
+  * @file
+  * Global Footer Component.
+  *
+  * Stanford Universal Footer as defined at https://decanter.stanford.edu/component/identity-global-footer/
+  * And which complies with Stanford brand guidelines at https://identity.stanford.edu/web-mobile.html#build-something-new
+  * This component was modeled after the global footer in the Stanford Basic theme at https://github.com/SU-SWS/stanford_basic/blob/8.x-4.x/dist/templates/decanter/components/global-footer/global-footer.twig
+  * This component should be added into the footer region of your site below site-specific footer section, if any.
+  * The entire footer can be made to "stick" to the bottom of the browser window by including the @sticky-footer mixin.
+  */
+#}
+
+{% if template_path_logo is empty -%}
+  {%- set template_path_logo = "/themes/humsci/humsci_basic/templates/components/logo.html.twig" -%}
+{%- endif %}
+
+<footer class="hb-global-footer su-global-footer hb-page-width{{ modifier_class }}">
+  <div class="su-global-footer__container">
+    <div class="su-global-footer__brand">
+      {%- include humsci_basic ~ template_path_logo -%}
+    </div>
+    <div class="su-global-footer__content">
+      <nav aria-label="global footer">
+        <ul class="su-global-footer__menu su-global-footer__menu--global">
+          {# The class of hb-global-footer__link has been added to all links to prevent a:not([class]) styles in humsci_basic/src/scss/elements/_base.scss from overriding Decanter styles #}
+          <li><a class="hb-global-footer__link" href="https://www.stanford.edu">Stanford Home</a></li>
+          <li><a class="hb-global-footer__link" href="https://visit.stanford.edu/plan/">Maps &amp; Directions</a></li>
+          <li><a class="hb-global-footer__link" href="https://www.stanford.edu/search/">Search Stanford</a></li>
+          <li><a class="hb-global-footer__link" href="https://emergency.stanford.edu">Emergency Info</a></li>
+        </ul>
+        <ul class="su-global-footer__menu su-global-footer__menu--policy">
+          <li><a class="hb-global-footer__link" href="https://www.stanford.edu/site/terms/"
+                 title="Terms of use for sites">Terms of Use</a></li>
+          <li><a class="hb-global-footer__link" href="https://www.stanford.edu/site/privacy/"
+                 title="Privacy and cookie policy">Privacy</a></li>
+          <li><a class="hb-global-footer__link" href="https://uit.stanford.edu/security/copyright-infringement"
+                 title="Report alleged copyright infringement">Copyright</a></li>
+          <li><a class="hb-global-footer__link" href="https://adminguide.stanford.edu/chapter-1/subchapter-5/policy-1-5-4"
+                 title="Ownership and use of Stanford trademarks and images">Trademarks</a></li>
+          <li><a class="hb-global-footer__link" href="http://exploredegrees.stanford.edu/nonacademicregulations/nondiscrimination/"
+                 title="Non-discrimination policy">Non-Discrimination</a></li>
+          <li><a class="hb-global-footer__link" href="https://www.stanford.edu/site/accessibility"
+                 title="Report web accessibility issues">Accessibility</a></li>
+        </ul>
+      </nav>
+      <div class="su-global-footer__copyright">
+        <span>&copy; Stanford University.</span>
+        <span>&nbsp; Stanford, California 94305.</span>
+      </div>
+    </div>
+  </div>
+</footer> <!-- su-global-footer end -->

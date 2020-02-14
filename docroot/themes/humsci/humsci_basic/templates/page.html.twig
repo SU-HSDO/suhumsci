@@ -25,8 +25,12 @@
   {{ page.content }}
 </div>
 
+{# Local Footer #}
 {% if page.footer %}
   <div id="footer">
     {{ page.footer }}
   </div>
 {% endif %}
+
+{# Global Footer #}
+{% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/global-footer.html.twig' with { modifier_class : global_footer_variant_classname } %}

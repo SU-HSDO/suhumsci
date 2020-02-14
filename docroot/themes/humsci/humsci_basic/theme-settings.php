@@ -121,4 +121,21 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#description' => t("Last line full width option."),
   ];
 
+  // Global Footer
+  $form['options_settings']['humsci_basic_global_footer'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Global Footer Settings'),
+  ];
+
+  $form['options_settings']['humsci_basic_global_footer']['global_footer_variant'] = [
+    '#type' => 'select',
+    '#title' => t('Global Footer Variant'),
+    '#options' => [
+      'default' => '- Default -',
+      'bright' => t('Bright'),
+      'dark' => t('Dark')
+    ],
+    '#default_value' => theme_get_setting('global_footer_variant'),
+  ];
+
 }

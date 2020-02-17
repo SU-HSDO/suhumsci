@@ -12,26 +12,26 @@
 
   &__sidebar-1 {
     width: 100%;
-    margin: 0 0 $hb-gutter-width;
+    margin: 0 0 hb-calculate-rems($hb-gutter-width);
 
     @include grid-media('md') {
       width: $hb-sidebar-width;
-      margin: 0 $hb-gutter-width 0 0;
+      margin: 0 hb-calculate-rems($hb-gutter-width) 0 0;
     }
   }
 
   &__main {
     width: 100%;
-    margin-bottom: $hb-gutter-width;
+    margin-bottom: hb-calculate-rems($hb-gutter-width);
 
     .hb-three-column--no-sidebar & {
-      max-width: $hb-three-column-main-width;
+      max-width: hb-calculate-rems($hb-three-column-main-width);
     }
 
     @include grid-media('md') {
       .hb-three-column--one-sidebar &,
       .hb-three-column--two-sidebar & {
-        width: calc(100% - #{$hb-sidebar-width} - #{$hb-gutter-width});
+        width: calc(100% - #{$hb-sidebar-width} - #{hb-calculate-rems($hb-gutter-width)});
       }
 
       .hb-three-column--no-sidebar & {
@@ -45,13 +45,13 @@
       margin-bottom: 0;
 
       .hb-three-column--two-sidebar & {
-        width: calc(100% - #{2 * $hb-sidebar-width} - #{2 * $hb-gutter-width});
+        width: calc(100% - #{2 * $hb-sidebar-width} - (2 * #{hb-calculate-rems($hb-gutter-width)}));
       }
     }
 
     .hb-three-column--one-sidebar & {
       @include grid-media('2xl') {
-        max-width: $hb-three-column-one-sidebar-width;
+        max-width: hb-calcuate-rems($hb-three-column-one-sidebar-width);
       }
     }
   }
@@ -63,13 +63,13 @@
     .hb-three-column--one-sidebar & {
       @include grid-media('md') {
         width: $hb-sidebar-width;
-        margin: 0 0 0 $hb-gutter-width;
+        margin: 0 0 0 hb-calculate-rems($hb-gutter-width);
       }
     }
 
     @include grid-media('lg') {
       width: $hb-sidebar-width;
-      margin: 0 0 0 $hb-gutter-width;
+      margin: 0 0 0 hb-calculate-rems($hb-gutter-width);
     }
   }
 }

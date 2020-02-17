@@ -3,7 +3,7 @@
   flex-direction: column;
 
   &--horizontal {
-    margin-bottom: $hb-gutter-width;
+    margin-bottom: hb-calculate-rems($hb-gutter-width);
 
     @include grid-media-min('md') {
       flex-direction: row;
@@ -14,7 +14,7 @@
   &__category {
     @include hb-subheading;
     text-transform: uppercase;
-    margin: 0 0 0 calculate-rems(6.4px);
+    margin: 0 0 0 hb-calculate-rems(6px);
 
     ol,
     ul {
@@ -26,16 +26,16 @@
       color: $hb-color--black;
       display: inline-block;
       list-style: none;
-      margin-right: calculate-rems(12px);
-      margin-bottom: calculate-rems(5px);
+      margin-right: hb-calculate-rems(12px);
+      margin-bottom: hb-calculate-rems(5px);
 
       @include hb-colorful {
         &::before {
           content: '';
           display: inline-block;
-          height: calculate-rems(12px);
-          width: calculate-rems(3px);
-          margin-right: calculate-rems(6.4px);
+          height: hb-calculate-rems(12px);
+          width: hb-calculate-rems(3px);
+          margin-right: hb-calculate-rems(6px);
           background-color: hb-colorful-variation(secondary);
         }
       }
@@ -62,22 +62,22 @@
     display: flex;
 
     &:not(:last-child) {
-      margin-bottom: calculate-rems(20px);
+      margin-bottom: hb-calculate-rems(20px);
     }
   }
 
   &__subcontent-item {
     display: flex;
     color: darken($su-color-driftwood, 45%);
-    font-size: calculate-rems(14px);
+    font-size: hb-calculate-rems(14px);
 
     @include grid-media-min('md') {
-      font-size: calculate-rems(16px);
+      font-size: hb-calculate-rems(16px);
     }
 
     &::after {
       content: '';
-      margin: 0 calculate-rems(8px);
+      margin: 0 hb-calculate-rems(8px);
       border-left: 1px solid darken($su-color-driftwood, 45%);
     }
 
@@ -91,20 +91,19 @@
 
     a {
       font-weight: hb-theme-font-weight(semibold);
-      position: relative;
     }
   }
 
   &__highlighted {
     color: darken($su-color-driftwood, 45%);
-    font-size: calculate-rems(14px);
+    font-size: hb-calculate-rems(14px);
 
     @include grid-media-min('md') {
-      font-size: calculate-rems(16px);
+      font-size: hb-calculate-rems(16px);
     }
 
     &:not(:last-child) {
-      margin-bottom: calculate-rems(20px);
+      margin-bottom: hb-calculate-rems(20px);
     }
   }
 
@@ -118,7 +117,7 @@
 
   &__graphics {
     position: relative;
-    margin-bottom: calculate-rems(20px);
+    margin-bottom: hb-calculate-rems(20px);
   }
 
   &__img {
@@ -149,7 +148,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
-        margin-right: $hb-gutter-width;
+        margin-right: hb-calculate-rems($hb-gutter-width);
         margin-bottom: 0;
       }
     }
@@ -160,19 +159,19 @@
     text-align: center;
     background: $hb-color--black;
     color: $hb-color--white;
-    min-width: calculate-rems(100px);
-    padding: calculate-rems(12px) calculate-rems(10px) calculate-rems(8px);
+    min-width: hb-calculate-rems(100px);
+    padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
     position: absolute;
-    bottom: calculate-rems(18px);
-    left: calculate-rems(-10px);
+    bottom: hb-calculate-rems(18px);
+    left: hb-calculate-rems(-10px);
 
     @include hb-colorful {
       background: hb-colorful-variation(secondary);
     }
 
     @include grid-media-min('sm') {
-      bottom: calculate-rems(22px);
-      left: calculate-rems(-14px);
+      bottom: hb-calculate-rems(22px);
+      left: hb-calculate-rems(-14px);
     }
 
     &:only-child {
@@ -186,7 +185,7 @@
   }
 
   &__date-tile-day {
-    font-size: calculate-rems(52px);
+    font-size: hb-calculate-rems(52px);
     font-weight: hb-theme-font-weight(semibold);
   }
 
@@ -210,15 +209,15 @@
     h6 {
       @include hb-heading-3;
       margin-top: 0;
-      margin-bottom: calculate-rems(14px);
+      margin-bottom: hb-calculate-rems(14px);
       overflow-wrap: break-word;
 
       @include grid-media-min('md') {
-        margin-bottom: calculate-rems(16px);
+        margin-bottom: hb-calculate-rems(16px);
       }
 
       @include grid-media-min('lg') {
-        margin-bottom: calculate-rems(22px);
+        margin-bottom: hb-calculate-rems(22px);
       }
     }
   }
@@ -227,12 +226,12 @@
     @include hb-body--medium;
 
     &:not(:last-child) {
-      margin-bottom: calculate-rems(28px);
+      margin-bottom: hb-calculate-rems(28px);
     }
 
     .views-field:not(:last-child) {
       display: block;
-      margin-bottom: calculate-rems(16px);
+      margin-bottom: hb-calculate-rems(16px);
     }
   }
 
@@ -250,7 +249,7 @@
 
       &:hover,
       &:focus {
-        transform: translateX(calculate-rems(10px));
+        transform: translateX(hb-calculate-rems(10px));
       }
     }
   }

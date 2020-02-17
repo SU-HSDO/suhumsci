@@ -11,36 +11,36 @@
   }
 
   &--no-sidebar {
-    max-width: $hb-three-column-w-image-main-width;
+    max-width: hb-calculate-rems($hb-three-column-w-image-main-width);
     margin: auto;
   }
 
   &__sidebar-1 {
     width: 100%;
-    margin: 0 0 $hb-gutter-width;
+    margin: 0 0 hb-calculate-rems($hb-gutter-width);
 
     @include grid-media('md') {
       width: $hb-sidebar-width;
-      margin-right: map-get($hb-screen-margins, 'md');
+      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
     }
 
     @include grid-media('lg') {
-      margin-right: map-get($hb-screen-margins, 'lg');
+      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
     }
 
     @include grid-media('xl') {
-      margin-right: map-get($hb-screen-margins, 'xl');
+      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
     }
   }
 
   &__main {
     width: 100%;
-    margin-bottom: $hb-gutter-width;
+    margin-bottom: hb-calculate-rems($hb-gutter-width);
 
     @include grid-media('md') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{$hb-sidebar-width} - #{map-get($hb-screen-margins, 'md')});
+        width: calc(100% - #{$hb-sidebar-width} - #{hb-calculate-rems(map-get($hb-screen-margins, 'md'))});
       }
 
       .hb-three-column-w-image--no-sidebar & {
@@ -54,7 +54,7 @@
       margin-bottom: 0;
 
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{2 * $hb-sidebar-width} - 2 * #{map-get($hb-screen-margins, 'md')});
+        width: calc(100% - #{2 * $hb-sidebar-width} - 2 * #{hb-calculate-rems(map-get($hb-screen-margins, 'md'))});
       }
     }
   }
@@ -78,7 +78,7 @@
 
   &__main-top-text {
     width: 100%;
-    margin-bottom: calculate-rems(16px);
+    margin-bottom: hb-calculate-rems(16px);
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
@@ -99,23 +99,23 @@
 
   &__main-top-image {
     width: 100%;
-    margin-bottom: calcualte-rems(16px);
+    margin-bottom: hb-calcualte-rems(16px);
 
     @include grid-media('md') {
-      margin-bottom: $hb-gutter-width;
+      margin-bottom: hb-calculate-rems($hb-gutter-width);
     }
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media('lg') {
         width: 40%;
-        margin-left: calculate-rems(20px);
+        margin-left: hb-calculate-rems(20px);
       }
     }
 
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media('md') {
         width: 40%;
-        margin-left: calculate-rems(20px);
+        margin-left: hb-calculate-rems(20px);
       }
     }
 
@@ -125,17 +125,17 @@
       @supports (object-fit: cover) {
         object-fit: cover;
         width: 100%;
-        max-height: calculate-rems(375px);
+        max-height: hb-calculate-rems(375px);
 
         @include grid-media('md') {
-          max-height: calculate-rems(250px);
+          max-height: hb-calculate-rems(250px);
         }
       }
     }
   }
 
   &__main-body {
-    max-width: $hb-three-column-w-image-main-width;
+    max-width: hb-calculate-rems($hb-three-column-w-image-main-width);
 
     .hb-three-column-w-image--no-sidebar & {
       margin: 0 auto;
@@ -149,17 +149,17 @@
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media('md') {
         width: $hb-sidebar-width;
-        margin-left: map-get($hb-screen-margins, 'md');
+        margin-left: hb-calcualte-rems(map-get($hb-screen-margins, 'md'));
       }
     }
 
     @include grid-media('lg') {
       width: $hb-sidebar-width;
-      margin-left: map-get($hb-screen-margins, 'lg');
+      margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
     }
 
     @include grid-media('xl') {
-      margin-left: map-get($hb-screen-margins, 'xl');
+      margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
     }
   }
 }

@@ -1,17 +1,22 @@
-{% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/brandbar.html.twig' with { modifier_class : brand_bar_variant_classname } %}
+<header class="su-masthead">
+  <a href="#main-content" class="su-skiplinks ">{{ 'Skip to main content'|t }}</a>
 
-<header class="hb-masthead">
-  <section>
-  {% if page.header %}
-    {{ page.header }}
-  {% endif %}
+  {% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/brandbar.html.twig' with { modifier_class : brand_bar_variant_classname } %}
 
-  {% if page.search %}
-    {{ page.search }}
-  {% endif %}
-  {% if page.menu %}
-    {{ page.menu }}
-  {% endif %}
+  <section class="hb-page-width">
+    {% if page.header %}
+      {{ page.header }}
+    {% endif %}
+
+    {% if page.search %}
+    <div class="su-site-search">
+      {{ page.search }}
+    </div>
+    {% endif %}
+
+    {% if page.menu %}
+      {{ page.menu }}
+    {% endif %}
   </section>
 </header>
 

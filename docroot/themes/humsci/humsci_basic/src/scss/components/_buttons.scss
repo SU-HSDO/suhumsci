@@ -1,14 +1,14 @@
 .button {
   @include unbuttonize;
-  padding: 0 1.25rem;
-  border-radius: 1.875rem;
+  padding: 0 hb-calculate-rems(20px);
+  border-radius: hb-calculate-rems(30px);
   font-weight: hb-theme-font-weight(semibold);
   text-align: center;
 
   @include hb-colorful {
     color: $hb-color--white;
     background-color: hb-colorful-variation(secondary);
-    border: 0.125rem solid hb-colorful-variation(secondary);
+    border: hb-calculate-rems(2px) solid hb-colorful-variation(secondary);
 
     transition: 125ms background-color ease-out, 125ms border-color ease-out;
 
@@ -21,7 +21,7 @@
     &:focus {
       background-color: hb-colorful-variation(secondary);
       border-color: $hb-color--white;
-      box-shadow: 0 0 0 0.125rem lighten(hb-colorful-variation(secondary), 10%);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) lighten(hb-colorful-variation(secondary), 10%);
     }
   }
 
@@ -31,7 +31,7 @@
     border-color: transparent;
     border-radius: 0;
 
-    padding: 0.25rem 0;
+    padding: hb-calculate-rems(4px) 0;
     line-height: 1;
     min-height: auto;
 

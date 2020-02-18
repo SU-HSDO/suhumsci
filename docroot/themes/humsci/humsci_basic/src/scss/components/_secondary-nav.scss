@@ -3,7 +3,7 @@
 
   &__heading {
     @include hb-heading-4;
-    margin: 0 0 2.4375rem;
+    margin: 0 0 hb-calculate-rems(39px);
 
     a {
       @include hb-link;
@@ -13,7 +13,7 @@
   &__menu {
     background-color: transparent;
     list-style-type: none;
-    padding-left: 1rem;
+    padding-left: hb-calculate-rems(16px);
     display: none;
 
     .no-js & {
@@ -42,7 +42,7 @@
   &__item,
   &__link {
     color: $hb-color--black;
-    font-size: 1rem;
+    font-size: hb-calculate-rems(16px);
   }
 
   &__item {
@@ -69,7 +69,7 @@
   &__link {
     display: block;
     border-bottom: 1px solid lighten($su-color-driftwood, 15%);
-    padding: 1rem 0 1rem 1rem;
+    padding: hb-calculate-rems(16px) 0 hb-calculate-rems(16px) hb-calculate-rems(16px);
     text-decoration: none;
 
     &.is-active {
@@ -111,17 +111,17 @@
     position: absolute;
     background: transparent;
     border: 0 none;
-    height: 2rem;
-    width: 2rem;
-    top: 0.3125rem;
-    right: 0.625rem;
+    height: hb-calculate-rems(32px);
+    width: hb-calculate-rems(32px);
+    top: hb-calculate-rems(5px);
+    right: hb-calculate-rems(10px);
 
     &::before {
       content: '+';
       color: darken($su-color-driftwood, 30%);
-      height: 2rem;
-      width: 2rem;
-      font-size: 2rem;
+      height: hb-calculate-rems(32px);
+      width: hb-calculate-rems(32px);
+      font-size: hb-calculate-rems(32px);
       display: block;
     }
 

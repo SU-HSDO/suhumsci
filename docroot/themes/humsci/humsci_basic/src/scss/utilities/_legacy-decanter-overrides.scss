@@ -1,0 +1,119 @@
+// WYSIWYG text area --> should this be considered a component? Rename & move file?
+.field-hs-text-area {
+  margin: 0 hb-calculate-rems(48px);
+
+  // The text area blockquote content is placed inside of a paragraph tag.
+  blockquote {
+    p {
+      @include hb-blockquote;
+    }
+  }
+
+  .emphasized-text {
+    font-style: italic;
+    font-weight: inherit;
+    font-size: inherit;
+  }
+
+  // add icon to external links only
+  p {
+    a[href^="http"]:not([class]) {
+      @include hb-link--inline;
+      @include hb-external-link-icon;
+    }
+  }
+
+  // media
+  .align {
+    &-right {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(48px) hb-calculate-rems(48px);
+    }
+
+    &-left {
+      margin: hb-calculate-rems(48px) hb-calculate-rems(48px) hb-calculate-rems(48px) 0;
+    }
+
+    &-center {
+      img {
+        margin: hb-calculate-rems(48px) auto;
+      }
+    }
+  }
+}
+
+// Decanter WYSIWYG classes - TODO: rewrite these sass style! .decanter { &-credits ........ }
+.decanter-credits {
+  color: darken($su-color-driftwood, 45%);
+  font-size: hb-calculate-rems(14px);
+  font-style: italic;
+}
+
+.decanter-font-lead {
+  color: darken($su-color-driftwood, 30%);
+  font-size: hb-calculate-rems(20px);
+  font-weight: hb-theme-font-weight(regular);
+}
+
+.decanter-font-splash {
+  font-size: hb-calculate-rems(37px);
+  font-weight: hb-theme-font-weight(semibold);
+
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(53px);
+  }
+}
+
+.decanter-caption {
+  color: darken($su-color-driftwood, 45%);
+  font-size: hb-calculate-rems(14px);
+}
+
+.decanter-button {
+  @include button-style;
+  display: inline-block;
+  font-family: $hb-colorful-font--sans;
+  font-size: hb-calculate-rems(16px);
+  text-decoration: none;
+  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+}
+
+.decanter-button--big {
+  @include button-style;
+  display: inline-block;
+  font-family: $hb-colorful-font--sans;
+  font-size: hb-calculate-rems(18px);
+  text-decoration: none;
+  padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
+}
+
+.decanter-button--secondary {
+  @include button-style;
+  display: inline-block;
+  font-family: $hb-colorful-font--sans;
+  font-size: hb-calculate-rems(16px);
+  text-decoration: none;
+  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  background-color: transparent;
+
+  @include hb-colorful {
+    color: hb-colorful-variation(secondary);
+  }
+
+  &:hover {
+    color: $hb-color--white;
+
+    @include hb-colorful {
+      background-color: hb-colorful-variation(secondary);
+      border-color: hb-colorful-variation(secondary);
+    }
+  }
+
+  &:focus {
+    background-color: transparent;
+    border-color: $hb-color--white;
+
+    @include hb-colorful {
+      color: hb-colorful-variation(secondary);
+    }
+  }
+}

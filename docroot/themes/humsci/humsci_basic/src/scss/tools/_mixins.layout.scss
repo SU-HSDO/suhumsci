@@ -1,5 +1,5 @@
 @mixin hb-page-width {
-  max-width: $hb-layout-max-width;
+  max-width: hb-calculate-rems($hb-layout-max-width);
   margin: 0 auto;
-  width: calc(100% - #{2 * $hb-gutter-width});
+  width: calc(100% - (2 * #{hb-calculate-rems($hb-gutter-width)}));
 }

@@ -1,5 +1,48 @@
 # HumSci
 
+8.2.2
+--------------------------------------------------------------------------------
+_Release Date: 2020-02-19_
+
+* Updated dependencies Feb 19 2020 (034d298a)
+* HSD8-756 Provision internationalrelations (719db743)
+* HSD8-755 HSD8-757 Table pattern header and sidebar menu heading fixes (74fcd20b)
+* Use an update hook to create the new private page form and display configs (88a6ce88)
+* updated depedendencies (a7e786f5)
+* D8CORE-747 Private page content type with a couple paragraphs (#479) (34642a19)
+* Sparkbox Sprint 6 (5bef6bb2)
+* fix: Sparkbox Sprint 5 & 6 CodeClimate Errors (#475) (999d5900)
+* feat: Add styles for UI People Pattern (#480) (78733329)
+* refactor(STN-162): flexbox 3 col layouts to use widths (6f066908)
+* feat(STN-162): Add styling and javascript for table elements (710c01bd)
+* chore: add npm script to build Javascript (cbdb46ac)
+* fix(STN-167): chosen dropdown text (4c71152d)
+* feat(STN-155): refining column styles between 3-col-w-image and 3-col (3dbd781b)
+* feat(STN-155): adds template and styles for 3 column layout (1792336d)
+* feat(STN-110): add people ui pattern (#476) (38a802d9)
+* feat: implement feedback from QA of sprints 3 and 4 (2e08524b)
+* refactor: update the input and dropdown border colors, request from design (70583bdc)
+* fix: add missing reset button styles for exposed filters (83352eaa)
+* Sparkbox Sprint 5 PR (#470) (95b6afb4)
+* Dependencies Updated (568abb58)
+* fixes from review (d769f04b)
+* feat: fixes and fallbacks when content isn't available. (db742aab)
+* feat: style the date-stacked vertical card pattern for events. (696bf81b)
+* reverted temporary fix for release command (390f2f76)
+* feat(STN-99): getting decanter button accordion js working and added new relevant styles (c090673c)
+* feat(STN-99): decided to move logic from menu--secondary-nav into menu--menu-block--main (0e20939b)
+* feat(STN-99): adds secondary nav to block html and styling (3ece0a56)
+* refactor: input and button focus colors (fdb322c6)
+* refactor: use SVG function for chose dropdown icon (a974c270)
+* feat: update button styles for exposed filters (501f2b61)
+* feat: style the exposed form layout (3b86f927)
+* feat: add input and chosen.js dropdown styles (3620e2d1)
+* chore: add start task that builds and then watches for scss changes (d1c56ce7)
+* fix: external link url path and missing icon (53da2899)
+* feat(STN-143): increase news node detail mobile image height (#463) (65d1443f)
+* feat(STN136) design polish of horizontal card for news (04040ea9)
+* Refactor: update humsci basic theme scss for namespaced consistency (#455) (754afbed)
+
 8.2.1
 --------------------------------------------------------------------------------
 _Release Date: 2020-02-04_

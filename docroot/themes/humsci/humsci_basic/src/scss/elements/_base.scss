@@ -1,4 +1,11 @@
 html {
+  // Use Decanter's root font size
+  font-size: $hb-root-font-size;
+}
+
+body {
+  font-size: hb-calculate-rems(16px);
+
   @include hb-colorful {
     font-family: $hb-colorful-font--sans;
   }
@@ -72,21 +79,36 @@ p:not([class]) {
 .fa-ext {
   @include hb-colorful {
     $hb-lighten-color--primary: lighten(hb-colorful-variation(primary), 10%);
+    position: relative;
 
     &::before {
       content: '';
       background: svg('<svg viewBox="0 0 12 12"><path d="M11.273 5.818v5.455H.727V.727h5.091m1.455 0h4v4m0-4L6.182 5.818" fill="transparent" stroke="#{$hb-lighten-color--primary}" stroke-width="2" stroke-miterlimit="10"/></svg>') center center no-repeat;
-      height: 0.75rem;
-      width: 0.75rem;
+      height: hb-calculate-rems(12px);
+      width: hb-calculate-rems(12px);
       display: inline-block;
       vertical-align: middle;
       position: absolute;
-      top: 0.25rem;
-      right: -1.125rem;
+      top: hb-calculate-rems(4px);
+      right: hb-calculate-rems(-18px);
     }
 
     .fa-arrow-right {
       display: none;
     }
   }
+}
+
+// Update the base of all regions to use 1.6 rems.
+// This is necessary so that items which were inheriting a font-size of 1rem render at 16px and not 10px.
+.contextual-region {
+  font-size: hb-calculate-rems(16px);
+}
+
+// Improve readability of the Drupal admin interface
+.layout-builder-form,
+.ui-dialog-off-canvas,
+.block-categories,
+.layout-builder-discard-changes {
+  font-size: hb-calculate-rems(16px);
 }

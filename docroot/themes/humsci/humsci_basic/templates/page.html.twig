@@ -1,15 +1,22 @@
-<header class="hb-masthead">
-  <section>
-  {% if page.header %}
-    {{ page.header }}
-  {% endif %}
+<header class="su-masthead">
+  <a href="#main-content" class="su-skiplinks ">{{ 'Skip to main content'|t }}</a>
 
-  {% if page.search %}
-    {{ page.search }}
-  {% endif %}
-  {% if page.menu %}
-    {{ page.menu }}
-  {% endif %}
+  {% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/brandbar.html.twig' with { modifier_class : brand_bar_variant_classname } %}
+
+  <section class="hb-page-width">
+    {% if page.header %}
+      {{ page.header }}
+    {% endif %}
+
+    {% if page.search %}
+    <div class="su-site-search">
+      {{ page.search }}
+    </div>
+    {% endif %}
+
+    {% if page.menu %}
+      {{ page.menu }}
+    {% endif %}
   </section>
 </header>
 
@@ -23,8 +30,12 @@
   {{ page.content }}
 </div>
 
+{# Local Footer #}
 {% if page.footer %}
   <div id="footer">
     {{ page.footer }}
   </div>
 {% endif %}
+
+{# Global Footer #}
+{% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/global-footer.html.twig' with { modifier_class : global_footer_variant_classname } %}

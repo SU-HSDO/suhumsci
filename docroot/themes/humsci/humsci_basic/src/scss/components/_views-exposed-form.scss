@@ -1,31 +1,31 @@
-.views-exposed-form {
+.main-content .views-exposed-form {
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
 
-  margin-bottom: 2rem;
+  margin-bottom: hb-calculate-rems(32px);
 
   .form-item {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: hb-calculate-rems(16px);
 
     @include grid-media-min('md') {
-      width: calc(50% - 1rem);
-      margin-right: 1rem;
+      width: calc(50% - #{hb-calculate-rems(16px)});
+      margin-right: hb-calculate-rems(16px);
     }
 
     @include grid-media-min('lg') {
-      width: calc(33% - 1rem);
+      width: calc(33% - #{hb-calculate-rems(16px)});
     }
   }
 
   .form-actions {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: hb-calculate-rems(16px);
   }
 
   .form-submit:not(:last-child) {
-    margin-right: 1rem;
+    margin-right: hb-calculate-rems(16px);
   }
 }

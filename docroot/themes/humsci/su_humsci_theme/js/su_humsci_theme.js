@@ -2,8 +2,19 @@
   'use strict';
   Drupal.behaviors.suHumSciTheme = {
     attach: function (context, settings) {
-      var headings = ['h2', 'h3', 'h4', 'h5', 'h6'];
-      headings.map(function (heading) {
+
+      $('.table-pattern', context).each(function (i, table) {
+        const headers = [];
+        $('.table-header .table-row > div', table).each(function (i, header) {
+          headers[i] = $(header).text().trim();
+        });
+
+        $('.table-body .table-row > div', table).each(function (i, row) {
+          $(row).attr('aria-label', headers[i]);
+        });
+      });
+
+      ['h2', 'h3', 'h4', 'h5', 'h6'].map(function (heading) {
         $('a:has(' + heading + ')', context).addClass('heading-link-' + heading);
       });
 

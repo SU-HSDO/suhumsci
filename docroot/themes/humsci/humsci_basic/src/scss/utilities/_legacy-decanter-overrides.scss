@@ -4,6 +4,12 @@
 
   // The text area blockquote content is placed inside of a paragraph tag.
   blockquote {
+    // remove content set in the base default styles set on the blockquote tag
+    &::after,
+    &::before {
+      content: '';
+    }
+
     p {
       @include hb-blockquote;
     }
@@ -17,19 +23,30 @@
     }
   }
 
+  // jump to link target - remove link styles from anchor tag
+  a:not([href]):not([class]) {
+    border-bottom: 0;
+    transition: none;
+
+    &:focus,
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
   // media
   .align {
     &-right {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(48px) hb-calculate-rems(48px);
+      margin: hb-calculate-rems(28px) 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
     }
 
     &-left {
-      margin: hb-calculate-rems(48px) hb-calculate-rems(48px) hb-calculate-rems(48px) 0;
+      margin: hb-calculate-rems(28px) hb-calculate-rems(28px) hb-calculate-rems(28px) 0;
     }
 
     &-center {
       img {
-        margin: hb-calculate-rems(48px) auto;
+        margin: hb-calculate-rems(28px) auto;
       }
     }
   }
@@ -50,13 +67,21 @@
 
   &-font-lead {
     color: darken($su-color-driftwood, 30%);
-    font-size: hb-calculate-rems(20px);
+    font-size: hb-calculate-rems(18px);
     font-weight: hb-theme-font-weight(regular);
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(20px);
+    }
   }
 
   &-font-splash {
     font-size: hb-calculate-rems(37px);
     font-weight: hb-theme-font-weight(semibold);
+
+    @include hb-colorful {
+      color: hb-colorful-variation(primary);
+    }
 
     @include grid-media-min('lg') {
       font-size: hb-calculate-rems(53px);
@@ -117,6 +142,15 @@
         }
       }
     }
+  }
+
+  &-more-link {
+    @include hb-link--inline;
+  }
+
+  &-external-link {
+    @include hb-link--inline;
+    @include hb-external-link-icon;
   }
 }
 

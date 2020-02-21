@@ -1,0 +1,147 @@
+.hb-hero-overlay {
+  &--1 {
+    display: grid;
+    @include clearfix;
+    grid-template-columns: 2% 5% 93%; // 3 cols, position 1-4
+    grid-template-rows: $hb-gutter-width 1fr 1fr auto auto $hb-gutter-width; // 6 rows, position 1-7
+    margin: 0 0 $hb-gutter-width;
+
+    @include grid-media-min('md') {
+      grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
+      grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
+    }
+
+    @include grid-media-min('xl') {
+      grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+    }
+
+    // Offset background color psuedo element
+    &::before {
+      background-color: lighten($su-color-driftwood, 25%);
+      grid-column-start: 2;
+      grid-column-end: 4;
+      grid-row-start: 1;
+      grid-row-end: 7;
+
+      @include grid-media-min('md') {
+        grid-column-start: 1;
+        grid-column-end: 5;
+        grid-row-start: 1;
+        grid-row-end: 6;
+      }
+    }
+
+    // Secondary color block psuedo element
+    @include hb-colorful {
+      &::after {
+        background-color: hb-colorful-variation(secondary);
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row-start: 3;
+        grid-row-end: 4;
+        z-index: $hb-z-index-block-background;
+
+        @include grid-media-min('md') {
+          grid-column-start: 1;
+          grid-column-end: 2;
+          grid-row-start: 3;
+          grid-row-end: 4;
+        }
+      }
+    }
+  }
+
+  &__image-wrapper {
+    .hb-hero-overlay--1 & {
+      grid-column-start: 2;
+      grid-column-end: 4;
+      grid-row-start: 2;
+      grid-row-end: 5;
+
+      // This will make sure that the image fills the entire area
+      display: flex;
+
+      @include grid-media-min('md') {
+        grid-column-start: 3;
+        grid-column-end: 6;
+        grid-row-start: 2;
+        grid-row-end: 5;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        min-height: 55vh;
+      }
+    }
+  }
+
+  &__text {
+    background-color: darken($su-color-driftwood, 10%);
+    color: $hb-color--white;
+    display: block;
+
+    @include hb-colorful {
+      background-color: adjust-color(hb-colorful-variation(primary), $lightness: -9%, $alpha: -0.05);
+    }
+
+    .hb-hero-overlay--1 & {
+      grid-column-start: 3;
+      grid-column-end: 4;
+      grid-row-start: 4;
+      grid-row-end: 6;
+      padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
+      position: relative;
+
+      @include grid-media-min('md') {
+        grid-column-start: 2;
+        grid-column-end: 4;
+        grid-row-start: 4;
+        grid-row-end: 7;
+      }
+
+      h2 {
+        @include hb-heading-4;
+      }
+
+      @include hb-colorful {
+        // Line decoration pseudo element
+        &::after {
+          display: block;
+          top: hb-calculate-rems(56px);
+
+          @include psuedo-background-box(
+            lighten(hb-colorful-variation(primary), 30%),
+            hb-calculate-rems(4px),
+            hb-calculate-rems(65px)
+          );
+        }
+      }
+    }
+
+    .text-long,
+    a {
+      font-size: hb-calculate-rems(16px);
+
+      @include grid-media-min('md') {
+        font-size: hb-calculate-rems(18px);
+      }
+    }
+
+    a,
+    button {
+      @include hb-border-button;
+
+      .fa-ext {
+        display: none;
+      }
+    }
+  }
+}

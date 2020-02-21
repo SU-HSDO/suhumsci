@@ -93,60 +93,6 @@ caption:not([class]) {
   color: darken($su-color-driftwood, 45%);
 }
 
-// heather TODO: News horizontal card - check out news categories pipeline
-ol:not([class]) {
-  counter-reset: li;
-  list-style-type: none;
-
-  li {
-    position: relative;
-    line-height: 122%;
-    padding-bottom: hb-calculate-rems(16px);
-
-    &::before {
-      content: counter(li) '.';
-      counter-increment: li;
-      font-size: hb-calculate-rems(16px);
-      font-weight: hb-theme-font-weight(semibold);
-      color: inherit;
-
-      position: absolute;
-      left: hb-calculate-rems(-18px);
-
-      @include hb-colorful {
-        color: hb-colorful-variation(secondary);
-      }
-    }
-  }
-}
-
-ul:not([class]) {
-  list-style-type: none;
-
-  li {
-    position: relative;
-    line-height: 122%;
-    padding-bottom: hb-calculate-rems(16px);
-
-    &::before {
-      content: '';
-      display: block;
-      height: hb-calculate-rems(6px);
-      width: hb-calculate-rems(6px);
-      border-radius: 50%;
-      background-color: $hb-color--black;
-
-      position: absolute;
-      left: hb-calculate-rems(-18px);
-      top: hb-calculate-rems(8px);
-
-      @include hb-colorful {
-        background-color: hb-colorful-variation(secondary);
-      }
-    }
-  }
-}
-
 // Hide the FontAwesome icon that is configured by default in
 // config/default/extlink.settings.yml
 // and replace with different icon

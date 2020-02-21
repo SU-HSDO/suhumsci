@@ -2,19 +2,6 @@
 .field-hs-text-area {
   margin: 0 hb-calculate-rems(48px);
 
-  // The text area blockquote content is placed inside of a paragraph tag.
-  blockquote {
-    // remove content set in the base default styles set on the blockquote tag
-    &::after,
-    &::before {
-      content: '';
-    }
-
-    p {
-      @include hb-blockquote;
-    }
-  }
-
   // add icon to external links only
   p {
     a[href^="http"]:not([class]) {
@@ -32,15 +19,6 @@
     &:hover {
       box-shadow: none;
     }
-  }
-
-  // lists
-  ul {
-    @include hb-unordered-list;
-  }
-
-  ol {
-    @include hb-ordered-list;
   }
 }
 
@@ -81,10 +59,13 @@
     font-size: hb-calculate-rems(14px);
   }
 
-  &-button { // shouldn't we have base button, secondary, and big styles are separate
+  &-short-line-length {
+    max-width: hb-calculate-rems(700px);
+  }
+
+  &-button {
     @include button-style;
     display: inline-block;
-    font-family: $hb-colorful-font--sans;
     font-size: hb-calculate-rems(16px);
     text-decoration: none;
     padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
@@ -92,7 +73,6 @@
     &--big {
       @include button-style;
       display: inline-block;
-      font-family: $hb-colorful-font--sans;
       font-size: hb-calculate-rems(18px);
       text-decoration: none;
       padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
@@ -101,7 +81,6 @@
     &--secondary {
       @include button-style;
       display: inline-block;
-      font-family: $hb-colorful-font--sans;
       font-size: hb-calculate-rems(16px);
       text-decoration: none;
       padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
@@ -163,5 +142,19 @@
     img {
       margin: hb-calculate-rems(28px) auto;
     }
+  }
+}
+
+// blockquotes
+// The text area blockquote content is placed inside of a paragraph tag.
+blockquote:nth-child(n) {
+  // remove content set in the base default styles set on the blockquote tag
+  &::after,
+  &::before {
+    content: '';
+  }
+
+  p {
+    @include hb-blockquote;
   }
 }

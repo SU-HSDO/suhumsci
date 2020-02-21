@@ -21,12 +21,14 @@
       margin: 0;
     }
 
-    li {
+    li:not([class]) { // increase specificity so that these styles override the base list styles
       color: $hb-color--black;
       display: inline-block;
       list-style: none;
       margin-right: hb-calculate-rems(12px);
       margin-bottom: hb-calculate-rems(5px);
+      padding-bottom: 0;
+      line-height: 1;
 
       @include hb-colorful {
         &::before {
@@ -36,6 +38,10 @@
           width: hb-calculate-rems(3px);
           margin-right: hb-calculate-rems(6px);
           background-color: hb-colorful-variation(secondary);
+          border-radius: 0;
+          position: relative;
+          left: 0;
+          top: 0;
         }
       }
 

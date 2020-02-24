@@ -16,50 +16,6 @@
   }
 }
 
-// This removes styles added by default to button elements.
-// For when something should semantically be a button,
-// but isn't buttony in appearance.
-@mixin unbuttonize {
-  background-color: transparent;
-  color: inherit;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  text-align: inherit;
-  font: inherit;
-  border-radius: 0;
-  appearance: none; // Just in case we missed anything.
-}
-
-@mixin button-style {
-  @include unbuttonize;
-  padding: 0 hb-calculate-rems(20px);
-  border-radius: hb-calculate-rems(30px);
-  font-family: $hb-colorful-font--sans;
-  font-weight: hb-theme-font-weight(semibold);
-  text-align: center;
-
-  @include hb-colorful {
-    color: $hb-color--white;
-    background-color: hb-colorful-variation(secondary);
-    border: hb-calculate-rems(2px) solid hb-colorful-variation(secondary);
-
-    transition: 125ms background-color ease-out, 125ms border-color ease-out;
-
-    &:hover {
-      background-color: darken(hb-colorful-variation(secondary), 10%);
-      border-color: darken(hb-colorful-variation(secondary), 10%);
-    }
-
-    &:active,
-    &:focus {
-      background-color: hb-colorful-variation(secondary);
-      border-color: $hb-color--white;
-      box-shadow: 0 0 0 hb-calculate-rems(2px) lighten(hb-colorful-variation(secondary), 10%);
-    }
-  }
-}
-
 // Taken and modified from Decanter fancy-hover
 // @param {variable} $color [$su-color-dark-red]  - background color, e.g., #eeeeee.
 // @param {variable} $active [$su-color-black]  - hover/focus border color.
@@ -124,27 +80,6 @@
         right: 0;
       }
     }
-  }
-}
-
-@mixin hb-blockquote {
-  @include hb-body--medium;
-  color: darken($su-color-driftwood, 45%);
-  font-style: italic;
-  line-height: 140%;
-  position: relative;
-  quotes: '"' '"';
-
-  &::before {
-    position: absolute;
-    content: open-quote;
-    margin-left: -10px;
-  }
-
-  &::after {
-    position: absolute;
-    content: close-quote;
-    margin-right: 10px;
   }
 }
 

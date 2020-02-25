@@ -2,5 +2,18 @@
 
 /**
  * @file
- * Functions to support theming in the HumSci Colorful theme.
+ * Functions to support theming in the HumSci Basic theme.
  */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function humsci_colorful_preprocess_page(&$vars) {
+  // Variant setting for the local footer.
+  $lfv = theme_get_setting('local_footer_variant_classname');
+  if ($lfv !== "none") {
+    $vars['local_footer_variant_classname'] = 'hb-local-footer--' . $lfv;
+  }
+}

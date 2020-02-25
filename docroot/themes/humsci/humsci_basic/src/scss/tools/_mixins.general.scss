@@ -16,21 +16,6 @@
   }
 }
 
-// This removes styles added by default to button elements.
-// For when something should semantically be a button,
-// but isn't buttony in appearance.
-@mixin unbuttonize {
-  background-color: transparent;
-  color: inherit;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  text-align: inherit;
-  font: inherit;
-  border-radius: 0;
-  appearance: none; // Just in case we missed anything.
-}
-
 // Taken and modified from Decanter fancy-hover
 // @param {variable} $color [$su-color-dark-red]  - background color, e.g., #eeeeee.
 // @param {variable} $active [$su-color-black]  - hover/focus border color.
@@ -93,6 +78,86 @@
     } @else if ($position == 'right') {
       &::before {
         right: 0;
+      }
+    }
+  }
+}
+
+@mixin hb-external-link-icon {
+  margin-right: hb-calculate-rems(20px);
+
+  @include hb-colorful {
+    $hb-lighten-color--primary: lighten(hb-colorful-variation(primary), 10%);
+    $hb-color--primary: hb-colorful-variation(primary);
+    position: relative;
+
+    &::before {
+      content: '';
+      background: svg('<svg viewBox="0 0 12 12"><path d="M11.273 5.818v5.455H.727V.727h5.091m1.455 0h4v4m0-4L6.182 5.818" fill="transparent" stroke="#{$hb-lighten-color--primary}" stroke-width="2" stroke-miterlimit="10"/></svg>') center center no-repeat;
+      height: hb-calculate-rems(12px);
+      width: hb-calculate-rems(12px);
+      display: inline-block;
+      vertical-align: middle;
+      position: absolute;
+      top: hb-calculate-rems(4px);
+      right: hb-calculate-rems(-18px);
+    }
+
+    &:hover::before,
+    &:focus::before {
+      background: svg('<svg viewBox="0 0 12 12"><path d="M11.273 5.818v5.455H.727V.727h5.091m1.455 0h4v4m0-4L6.182 5.818" fill="transparent" stroke="#{$hb-color--primary}" stroke-width="2" stroke-miterlimit="10"/></svg>') center center no-repeat;
+    }
+  }
+}
+
+@mixin hb-unordered-list {
+  list-style-type: none;
+
+  li {
+    position: relative;
+    line-height: 122%;
+    padding-bottom: hb-calculate-rems(16px);
+
+    &::before {
+      content: '';
+      display: block;
+      height: hb-calculate-rems(6px);
+      width: hb-calculate-rems(6px);
+      border-radius: 50%;
+      background-color: $hb-color--black;
+
+      position: absolute;
+      left: hb-calculate-rems(-18px);
+      top: hb-calculate-rems(8px);
+
+      @include hb-colorful {
+        background-color: hb-colorful-variation(secondary);
+      }
+    }
+  }
+}
+
+@mixin hb-ordered-list {
+  counter-reset: li;
+  list-style-type: none;
+
+  li {
+    position: relative;
+    line-height: 122%;
+    padding-bottom: hb-calculate-rems(16px);
+
+    &::before {
+      content: counter(li) '.';
+      counter-increment: li;
+      font-size: hb-calculate-rems(16px);
+      font-weight: hb-theme-font-weight(semibold);
+      color: inherit;
+
+      position: absolute;
+      left: hb-calculate-rems(-18px);
+
+      @include hb-colorful {
+        color: hb-colorful-variation(secondary);
       }
     }
   }

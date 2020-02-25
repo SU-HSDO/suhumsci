@@ -6,10 +6,14 @@
   }
 
   .hb-card__subtitle {
-    font-size: hb-calculate-rems(18px);
     font-weight: hb-theme-font-weight(semibold);
     line-height: 122%;
     margin-bottom: hb-calculate-rems(13px);
+    font-size: hb-calculate-rems(16px);
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(18px);
+    }
   }
 
   .hb-card__description {

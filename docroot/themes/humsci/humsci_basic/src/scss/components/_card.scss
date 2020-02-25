@@ -228,7 +228,11 @@
   }
 
   &__description {
-    @include hb-body--medium;
+    @include hb-body--small;
+
+    @include grid-media-min('lg') {
+      @include hb-body--medium;
+    }
 
     &:not(:last-child) {
       margin-bottom: hb-calculate-rems(28px);

@@ -65,10 +65,15 @@ h6:not([class]) {
 }
 
 p:not([class]) {
+  @include hb-body--small;
   margin-top: 0;
 
   &:last-of-type {
     margin-bottom: 0;
+  }
+
+  @include grid-media-min('lg') {
+    @include hb-body--medium;
   }
 }
 

@@ -9,8 +9,10 @@
           headers[i] = $(header).text().trim();
         });
 
-        $('.table-body .table-row > div', table).each(function (i, row) {
-          $(row).attr('aria-label', headers[i]);
+        $('.table-body .table-row', table).each(function (i, row) {
+          $(row).children().each(function (i, cell) {
+            $(cell).attr('aria-label', headers[i]);
+          });
         });
       });
 

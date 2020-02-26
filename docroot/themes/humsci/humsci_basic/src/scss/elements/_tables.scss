@@ -37,6 +37,18 @@ table {
     position: sticky;
     top: 0;
     border-color: $header-border-color;
+
+    a:not([class]) {
+      @include hb-colorful {
+        color: lighten(hb-colorful-variation(secondary), 55%);
+      }
+
+      &:hover,
+      &:focus {
+        box-shadow: none;
+        color: $hb-color--white;
+      }
+    }
   }
 
   thead tr {

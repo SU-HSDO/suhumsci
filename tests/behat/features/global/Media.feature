@@ -61,7 +61,7 @@ Feature: Media
     And I wait for AJAX to finish
     Then I press "Save"
     And I should see 1 "picture" elements in the "content" region
-    And the element ".media picture img" should have the attribute "alt" with the value "Stanford Logo"
+    And the element ".field-media-image picture img" should have the attribute "alt" with the value "Stanford Logo"
 
   @api @safe @javascript @MediaCleanup
   Scenario: Test for Audio creation.

@@ -42,13 +42,15 @@ module.exports = function (grunt) {
         map: false, // inline sourcemaps
         processors: [
           require('autoprefixer')({
-            grid: true,
+            grid: true
           }) // add vendor prefixes
         ]
       },
       dist: {
         src: [
-          'dist/**/*.css'
+          '../humsci_colorful/**/*.css',
+          '../humsci_airy/**/*.css',
+          '../humsci_traditional/**/*.css'
         ]
       }
     },

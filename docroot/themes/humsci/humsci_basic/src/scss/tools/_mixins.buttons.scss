@@ -48,3 +48,28 @@
   appearance: none; // Just in case we missed anything.
   text-decoration: none;
 }
+
+@mixin hb-border-button {
+  display: block;
+  background-color: transparent;
+  border-radius: hb-calculate-rems(42px);
+  font-weight: hb-theme-font-weight(semibold);
+  margin-top: hb-calculate-rems($hb-gutter-width);
+  max-width: hb-calculate-rems(184px);
+  padding: hb-calculate-rems(10px);
+  text-decoration: none;
+  text-align: center;
+  transition: all 200ms ease-in-out;
+
+  @include hb-colorful {
+    border: 3px solid lighten(hb-colorful-variation(primary), 30%);
+    color: lighten(hb-colorful-variation(primary), 30%);
+
+    &:hover,
+    &:focus {
+      box-shadow: none;
+      border: 3px solid lighten(hb-colorful-variation(primary), 70%);
+      color: lighten(hb-colorful-variation(primary), 70%);
+    }
+  }
+}

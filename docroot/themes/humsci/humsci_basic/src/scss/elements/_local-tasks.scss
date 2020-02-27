@@ -4,7 +4,11 @@ $hb-color--drupal-light: #53B0EB;
 $hb-color--drupal-dark: #0678BE;
 
 .block--local-tasks {
-  border-bottom: 1px solid $hb-color--drupal-light;
+  @include hb-page-width;
+  // scss-lint:disable ImportantRule
+  margin-bottom: hb-calculate-rems(40px) !important; // override margin-bottom set in hb-page-width
+  // scss-lint:enable ImportantRule
+  border-bottom: 2px solid $hb-color--drupal-dark;
 
   .tabs {
     margin: hb-calculate-rems(40px) 0 0 0;
@@ -12,7 +16,7 @@ $hb-color--drupal-dark: #0678BE;
 
     &__tab {
       display: inline-block;
-      background-color: tint($hb-color--drupal-light, 93%);
+      background-color: tint($hb-color--drupal-light, 88%);
       list-style-type: none;
       padding: hb-calculate-rems(8px) hb-calculate-rems(12px);
       margin-top: hb-calculate-rems(4px);
@@ -38,7 +42,7 @@ $hb-color--drupal-dark: #0678BE;
       }
 
       &:hover:not(.tabs__tab--active) {
-        background-color: tint($hb-color--drupal-light, 83%);
+        background-color: tint($hb-color--drupal-light, 73%);
 
         a {
           box-shadow: none;

@@ -126,3 +126,24 @@
     }
   }
 }
+
+@mixin hb-blockquote {
+  @include hb-body--medium;
+  color: darken($su-color-driftwood, 45%);
+  font-style: italic;
+  line-height: 140%;
+  position: relative;
+  quotes: '"' '"';
+
+  &::before {
+    position: absolute;
+    content: open-quote;
+    margin-left: -10px;
+  }
+
+  &::after {
+    position: absolute;
+    content: close-quote;
+    margin-right: 10px;
+  }
+}

@@ -1,29 +1,6 @@
-.button {
-  @include unbuttonize;
-  padding: 0 hb-calculate-rems(20px);
-  border-radius: hb-calculate-rems(30px);
-  font-weight: hb-theme-font-weight(semibold);
-  text-align: center;
-
-  @include hb-colorful {
-    color: $hb-color--white;
-    background-color: hb-colorful-variation(secondary);
-    border: hb-calculate-rems(2px) solid hb-colorful-variation(secondary);
-
-    transition: 125ms background-color ease-out, 125ms border-color ease-out;
-
-    &:hover {
-      background-color: darken(hb-colorful-variation(secondary), 10%);
-      border-color: darken(hb-colorful-variation(secondary), 10%);
-    }
-
-    &:active,
-    &:focus {
-      background-color: hb-colorful-variation(secondary);
-      border-color: $hb-color--white;
-      box-shadow: 0 0 0 hb-calculate-rems(2px) lighten(hb-colorful-variation(secondary), 10%);
-    }
-  }
+.button,
+a.button {
+  @include button-style;
 
   // This is our only option for targeting the exposed filters reset button
   &[data-drupal-selector="edit-reset"] {
@@ -46,6 +23,11 @@
 
       &:focus {
         border-bottom-color: transparent;
+      }
+
+      &:hover,
+      &:focus {
+        cursor: pointer;
       }
     }
   }

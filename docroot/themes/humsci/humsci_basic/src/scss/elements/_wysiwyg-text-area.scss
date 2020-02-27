@@ -1,0 +1,160 @@
+// WYSIWYG text area component
+.field-hs-text-area {
+  margin: 0 hb-calculate-rems(48px);
+
+  // add icon to external links only
+  p {
+    a[href^="http"]:not([class]) {
+      @include hb-link--inline;
+      @include hb-external-link-icon;
+    }
+  }
+
+  // jump to link target - remove link styles from anchor tag
+  a:not([href]):not([class]) {
+    border-bottom: 0;
+    transition: none;
+
+    &:focus,
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+// Decanter classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+.decanter {
+  &-credits {
+    color: darken($su-color-driftwood, 45%);
+    font-size: hb-calculate-rems(14px);
+    font-style: italic;
+  }
+
+  &-font-lead {
+    color: darken($su-color-driftwood, 30%);
+    font-size: hb-calculate-rems(18px);
+    font-weight: hb-theme-font-weight(regular);
+    line-height: 127%;
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(20px);
+    }
+  }
+
+  &-font-splash {
+    font-size: hb-calculate-rems(37px);
+    font-weight: hb-theme-font-weight(semibold);
+
+    @include hb-colorful {
+      color: hb-colorful-variation(primary);
+    }
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(53px);
+    }
+  }
+
+  &-caption {
+    color: darken($su-color-driftwood, 45%);
+    font-size: hb-calculate-rems(14px);
+  }
+
+  &-short-line-length {
+    max-width: hb-calculate-rems(700px);
+  }
+
+  &-button {
+    @include button-style;
+    display: inline-block;
+    font-size: hb-calculate-rems(16px);
+    text-decoration: none;
+    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+
+    &--big {
+      @include button-style;
+      display: inline-block;
+      font-size: hb-calculate-rems(18px);
+      text-decoration: none;
+      padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
+    }
+
+    &--secondary {
+      @include button-style;
+      display: inline-block;
+      font-size: hb-calculate-rems(16px);
+      text-decoration: none;
+      padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+      background-color: transparent;
+
+      @include hb-colorful {
+        color: hb-colorful-variation(secondary);
+      }
+
+      &:hover {
+        color: $hb-color--white;
+
+        @include hb-colorful {
+          background-color: hb-colorful-variation(secondary);
+          border-color: hb-colorful-variation(secondary);
+        }
+      }
+
+      &:active,
+      &:focus {
+        background-color: transparent;
+        border-color: $hb-color--white;
+
+        @include hb-colorful {
+          color: hb-colorful-variation(secondary);
+        }
+      }
+    }
+  }
+
+  &-more-link {
+    @include hb-link--inline;
+  }
+
+  &-external-link {
+    @include hb-link--inline;
+    @include hb-external-link-icon;
+  }
+}
+
+// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+.emphasized-text {
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+// media
+.align {
+  &-right {
+    margin: hb-calculate-rems(28px) 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
+  }
+
+  &-left {
+    margin: hb-calculate-rems(28px) hb-calculate-rems(28px) hb-calculate-rems(28px) 0;
+  }
+
+  &-center {
+    img {
+      margin: hb-calculate-rems(28px) auto;
+    }
+  }
+}
+
+// blockquotes
+// The text area blockquote content is placed inside of a paragraph tag.
+blockquote:nth-child(n) {
+  // remove content set in the base default styles set on the blockquote tag
+  &::after,
+  &::before {
+    content: '';
+  }
+
+  p {
+    @include hb-blockquote;
+  }
+}

@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  font-size: hb-calculate-rems(16px);
+  @include hb-body--small;
 
   @include hb-colorful {
     font-family: $hb-colorful-font--sans;
@@ -65,11 +65,48 @@ h6:not([class]) {
 }
 
 p:not([class]) {
-  @include hb-body--medium;
   margin-top: 0;
 
   &:last-of-type {
     margin-bottom: 0;
+  }
+
+  @include grid-media-min('lg') {
+    @include hb-body--medium;
+  }
+}
+
+strong:not([class]) {
+  font-weight: hb-theme-font-weight(semibold);
+  font-size: inherit;
+}
+
+em:not([class]) {
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+blockquote:not([class]) {
+  @include hb-blockquote;
+}
+
+ul:not([class]) {
+  @include hb-unordered-list;
+}
+
+ol:not([class]) {
+  @include hb-ordered-list;
+}
+
+caption:not([class]) {
+  font-size: hb-calculate-rems(14px);
+  color: darken($su-color-driftwood, 45%);
+}
+
+button:not([class]) {
+  &:hover {
+    cursor: pointer;
   }
 }
 

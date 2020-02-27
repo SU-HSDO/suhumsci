@@ -1,0 +1,75 @@
+@mixin button-style {
+  @include unbuttonize;
+  display: inline-block;
+  padding: 0 hb-calculate-rems(20px);
+  border-radius: hb-calculate-rems(30px);
+  font-family: $hb-colorful-font--sans;
+  font-weight: hb-theme-font-weight(semibold);
+  text-align: center;
+
+  @include hb-colorful {
+    color: $hb-color--white;
+    background-color: hb-colorful-variation(secondary);
+    border: hb-calculate-rems(2px) solid hb-colorful-variation(secondary);
+
+    transition: 125ms background-color ease-out, 125ms border-color ease-out;
+
+    &:hover {
+      background-color: darken(hb-colorful-variation(secondary), 10%);
+      border-color: darken(hb-colorful-variation(secondary), 10%);
+    }
+
+    &:active,
+    &:focus {
+      background-color: hb-colorful-variation(secondary);
+      border-color: $hb-color--white;
+      box-shadow: 0 0 0 hb-calculate-rems(2px) lighten(hb-colorful-variation(secondary), 10%);
+    }
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+    }
+  }
+}
+
+// This removes styles added by default to button elements.
+// For when something should semantically be a button,
+// but isn't buttony in appearance.
+@mixin unbuttonize {
+  background-color: transparent;
+  color: inherit;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  text-align: inherit;
+  font: inherit;
+  border-radius: 0;
+  appearance: none; // Just in case we missed anything.
+  text-decoration: none;
+}
+
+@mixin hb-border-button {
+  display: block;
+  background-color: transparent;
+  border-radius: hb-calculate-rems(42px);
+  font-weight: hb-theme-font-weight(semibold);
+  margin-top: hb-calculate-rems($hb-gutter-width);
+  max-width: hb-calculate-rems(184px);
+  padding: hb-calculate-rems(10px);
+  text-decoration: none;
+  text-align: center;
+  transition: all 200ms ease-in-out;
+
+  @include hb-colorful {
+    border: 3px solid lighten(hb-colorful-variation(primary), 30%);
+    color: lighten(hb-colorful-variation(primary), 30%);
+
+    &:hover,
+    &:focus {
+      box-shadow: none;
+      border: 3px solid lighten(hb-colorful-variation(primary), 70%);
+      color: lighten(hb-colorful-variation(primary), 70%);
+    }
+  }
+}

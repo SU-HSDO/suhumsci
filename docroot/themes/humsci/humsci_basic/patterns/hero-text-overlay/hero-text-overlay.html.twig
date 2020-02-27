@@ -1,15 +1,25 @@
-{% set attributes = attributes.addClass('hero-text-overlay') %}
+{%
+  set classes = [
+    'hb-hero-overlay',
+    'hb-hero-overlay--1'
+  ]
+ %}
+
+{%- set attributes = attributes.addClass(classes) -%}
+
+{% if variant %}
+  {% set variant_class = "hb-hero-overlay--color-#{variant}" %}
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
 
 {% spaceless %}
   <div{{ attributes }}>
-
-    <div class="image color-{{ variant }}">
+    <div class="hb-hero-overlay__image-wrapper">
       {{ image }}
     </div>
 
-    <div class="overlay-text color-{{ variant }}">
+    <div class="hb-hero-overlay__text">
       {{ overlay_text }}
     </div>
-
   </div>
 {% endspaceless %}

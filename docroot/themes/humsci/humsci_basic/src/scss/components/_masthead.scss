@@ -7,8 +7,8 @@
     display: block;
     padding-top: hb-calculate-rems(12px);
     padding-bottom: hb-calculate-rems(28px);
-    max-width: hb-calculate-rems(265px);
-    z-index: $hb-z-index-2;
+    max-width: $hb-input-max-width;
+    z-index: $hb-z-index-search;
   }
 
   .su-main-nav {
@@ -26,20 +26,21 @@
       }
     }
 
-    // The positioning of the nav set here will change as Decanter overlays the mobile nav on top of other content and our designs have the mobile nav inline with the content.
+    // The positioning of the nav set here will change as Decanter overlays the mobile
+    // nav on top of other content and our designs have the mobile nav inline with the content.
     .su-main-nav__menu {
-      top: hb-calculate-rems(-34px);
-
-      @include grid-media-min('sm') {
-        top: hb-calculate-rems(-10px);
-      }
+      top: hb-calculate-rems(58px);
 
       @include grid-media-min('md') {
-        top: hb-calculate-rems(-28px);
+        top: hb-calculate-rems(15px);
       }
 
       @include grid-media-min('lg') {
         top: unset;
+      }
+
+      &-lv2 {
+        top: hb-calculate-rems(67px);
       }
     }
   }

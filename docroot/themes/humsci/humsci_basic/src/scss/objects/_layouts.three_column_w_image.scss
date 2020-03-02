@@ -8,6 +8,10 @@
 
   &.hb-page-width {
     @include hb-page-width;
+    // scss-lint:disable ImportantRule
+    margin-top: hb-calculate-rems($hb-gutter-width) !important;
+    margin-bottom: hb-calculate-rems($hb-gutter-width) !important;
+    // scss-lint:enable ImportantRule
   }
 
   &--no-sidebar {
@@ -17,14 +21,9 @@
 
   &__sidebar-1 {
     width: 100%;
-    margin: 0 0 hb-calculate-rems($hb-gutter-width);
 
-    @include grid-media-min('md') {
+    @include grid-media('lg') {
       width: $hb-sidebar-width;
-      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
-    }
-
-    @include grid-media-min('lg') {
       margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
     }
 
@@ -37,19 +36,7 @@
     width: 100%;
     margin-bottom: hb-calculate-rems($hb-gutter-width);
 
-    @include grid-media-min('md') {
-      .hb-three-column-w-image--one-sidebar &,
-      .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{$hb-sidebar-width} - #{hb-calculate-rems(map-get($hb-screen-margins, 'md'))});
-      }
-
-      .hb-three-column-w-image--no-sidebar & {
-        max-width: hb-calculate-rems($hb-three-column-w-image-main-width);
-        margin: 0 auto;
-      }
-    }
-
-    @include grid-media-min('lg') {
+    @include grid-media('lg') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
         width: 100%;

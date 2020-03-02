@@ -1,6 +1,6 @@
 {#
 /**
- * Macro for creating nested menus.
+ * Macro for creating nested menus in the main navigation.
  */
 #}
 {% macro nav_menu(items, menu_level, class_prefix) %}
@@ -27,9 +27,26 @@
     {% endif %}
 
     <li{{ list_attributes }}>
-      <a{{ link_attributes }}>{{ item.title }}</a>
-      {% if item.below %}
-        {{ menus.nav_menu(item.below, menu_level + 1, class_prefix) }}
+      {% if item.url.toString() is empty %}
+        {% set link_attributes = link_attributes.addClass('hb-nested-toggler') %}
+        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">{{ item.title }}</a>
+
+        {% if item.below %}
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
+            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix) }}
+          </div>
+        {% endif %}
+      {% else %}
+        <a{{ link_attributes }}>{{ item.title }}</a>
+
+        {% if item.below %}
+          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
+            Toggle {{ item.title }}
+          </button>
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
+            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix) }}
+          </div>
+        {% endif %}
       {% endif %}
     </li>
   {% endfor %}

@@ -1,20 +1,10 @@
-// Override some decanter styles for Main Nav
+// scss-lint:disable ImportantRule
 .su-main-nav {
-  z-index: $hb-z-index-main-menu;
-
-  button {
-    font-size: hb-calculate-rems(16px);
-  }
-
-  // scss-lint:disable ImportantRule
-  // Dropdown Arrow
-  &__item--parent > a::after {
-    background: svg('<svg viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.4887 5.41566C24.1363 6.00024 24.1737 6.98449 23.5725 7.61404L13.1725 18.5029C12.8697 18.8199 12.4449 19 12 19C11.5551 19 11.1303 18.8199 10.8275 18.5029L0.427538 7.61404C-0.173746 6.98449 -0.136251 6.00024 0.511286 5.41566C1.15882 4.83108 2.17119 4.86753 2.77248 5.49708L12 15.1584L21.2275 5.49708C21.8288 4.86753 22.8412 4.83108 23.4887 5.41566Z" fill="#2e2d29"/></svg>') !important;
-    // Is rotated to point up when the submenu is open
-  }
-
   &__toggle {
     border-width: 0 !important;
+    position: absolute;
+    right: 0;
+    top: hb-calculate-rems(-120px);
 
     // Hamburger Icon
     &::after {
@@ -26,5 +16,89 @@
       background-image: svg('<svg viewBox="0 0 24 24"><path d="M10.56,12,.32,22.21a1,1,0,0,0,1.41,1.41L12,13.39,22.21,23.62a1,1,0,0,0,1.41-1.41L13.39,12,23.62,1.74a1,1,0,0,0,0-1.42,1,1,0,0,0-1.41,0L12,10.56,1.74.32A1,1,0,0,0,.32,1.74Z" fill="#2e2d29" transform="translate(-0.03 -0.03)"/></svg>') !important;
     }
   }
-  // scss-lint:enable ImportantRule
+
+  &__menu {
+    box-shadow: none !important;
+    transform: translate(0) !important;
+    width: auto !important;
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    line-height: 2;
+
+    @include grid-media-min('sm') {
+      max-width: none;
+    }
+
+    &-lv1 {
+      position: relative !important;
+
+      &[aria-hidden="true"] {
+        display: none !important;
+      }
+
+      @include grid-media('md') {
+        display: flex;
+        max-width: none !important;
+      }
+
+      @include grid-media('lg') {
+        .su-main-nav__menu-container {
+          position: absolute;
+        }
+      }
+    }
+
+    &-lv2 {
+      @include grid-media('lg') {
+        // Hide any nested menus that are level 3 or greater
+        .su-main-nav__button,
+        .su-main-nav__menu-container {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &__menu-container {
+    padding-left: 20px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  &__item {
+    position: relative;
+  }
+
+  &__link {
+    &::after {
+      display: none !important;
+    }
+  }
+
+  &__button {
+    @include unbuttonize;
+    cursor: pointer;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 44px;
+    height: 68px;
+
+    overflow: hidden;
+    text-indent: -9999px;
+    background: no-repeat center / 50% svg('<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="plus" fill="#{darken($su-color-driftwood, 30%)}"><path d="M10,1 C10,0.447715 9.55228,0 9,0 C8.44771,0 8,0.447715 8,1 L8,8 L1,8 C0.447715,8 0,8.44772 0,9 C0,9.55229 0.447715,10 1,10 L8,10 L8,17 C8,17.5523 8.44772,18 9,18 C9.55229,18 10,17.5523 10,17 L10,10 L17,10 C17.5523,10 18,9.55229 18,9 C18,8.44772 17.5523,8 17,8 L10,8 L10,1 Z" id="Shape"></path></g></g></svg>');
+
+    &[aria-expanded="true"] {
+      background: no-repeat center / 50% svg('<svg width="18px" height="2px" viewBox="0 0 18 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="bevel"><g id="minus" transform="translate(1.000000, 0.000000)" stroke="#{darken($su-color-driftwood, 30%)}" stroke-width="2"><path d="M0,1 L16,1" id="Line"></path></g></g></svg>');
+    }
+  }
 }
+// scss-lint:enable ImportantRule

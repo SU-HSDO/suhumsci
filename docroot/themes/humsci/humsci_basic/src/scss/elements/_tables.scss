@@ -10,7 +10,7 @@ table {
   $header-border-color: $hb-color--white;
 
   @include hb-colorful {
-    $header-background-color: hb-colorful-variation(secondary);
+    $header-background-color: darken(hb-colorful-variation(secondary), 10%);
   }
 
   // DO NOT set display: block; on a table
@@ -37,6 +37,18 @@ table {
     position: sticky;
     top: 0;
     border-color: $header-border-color;
+
+    a:not([class]) {
+      @include hb-colorful {
+        color: lighten(hb-colorful-variation(secondary), 55%);
+      }
+
+      &:hover,
+      &:focus {
+        box-shadow: none;
+        color: $hb-color--white;
+      }
+    }
   }
 
   thead tr {

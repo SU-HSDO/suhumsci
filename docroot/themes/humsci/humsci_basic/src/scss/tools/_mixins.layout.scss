@@ -3,5 +3,13 @@
   max-width: hb-calculate-rems($hb-layout-max-width) !important;
   margin: 0 auto !important;
   width: calc(100% - (2 * #{hb-calculate-rems($hb-gutter-width)})) !important;
+
+  &--padded {
+    margin: hb-calculate-rems($hb-gutter-width) auto !important;
+
+    @include grid-media("md") {
+      margin: calc(2 * #{hb-calculate-rems($hb-gutter-width)}) auto !important;
+    }
+  }
   // scss-lint:enable ImportantRule
 }

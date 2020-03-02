@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
 
-  @include grid-media('lg') {
+  @include grid-media-min('lg') {
     flex-wrap: nowrap;
   }
 
@@ -19,16 +19,16 @@
     width: 100%;
     margin: 0 0 hb-calculate-rems($hb-gutter-width);
 
-    @include grid-media('md') {
+    @include grid-media-min('md') {
       width: $hb-sidebar-width;
       margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
     }
 
-    @include grid-media('lg') {
+    @include grid-media-min('lg') {
       margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
     }
 
-    @include grid-media('xl') {
+    @include grid-media-min('xl') {
       margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
     }
   }
@@ -37,7 +37,7 @@
     width: 100%;
     margin-bottom: hb-calculate-rems($hb-gutter-width);
 
-    @include grid-media('md') {
+    @include grid-media-min('md') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
         width: calc(100% - #{$hb-sidebar-width} - #{hb-calculate-rems(map-get($hb-screen-margins, 'md'))});
@@ -49,7 +49,7 @@
       }
     }
 
-    @include grid-media('lg') {
+    @include grid-media-min('lg') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
         width: 100%;
@@ -67,13 +67,13 @@
     flex-wrap: wrap;
 
     .hb-three-column-w-image--one-sidebar & {
-      @include grid-media('lg') {
+      @include grid-media-min('lg') {
         flex-wrap: nowrap;
       }
     }
 
     .hb-three-column-w-image--no-sidebar & {
-      @include grid-media('md') {
+      @include grid-media-min('md') {
         flex-wrap: nowrap;
       }
     }
@@ -84,7 +84,7 @@
     margin-bottom: hb-calculate-rems(16px);
 
     .hb-three-column-w-image--one-sidebar & {
-      @include grid-media('lg') {
+      @include grid-media-min('lg') {
         width: 60%;
         display: flex;
         flex-direction: column;
@@ -92,7 +92,7 @@
     }
 
     .hb-three-column-w-image--no-sidebar & {
-      @include grid-media('md') {
+      @include grid-media-min('md') {
         width: 60%;
         display: flex;
         flex-direction: column;
@@ -104,19 +104,19 @@
     width: 100%;
     margin-bottom: hb-calcualte-rems(16px);
 
-    @include grid-media('md') {
+    @include grid-media-min('md') {
       margin-bottom: hb-calculate-rems($hb-gutter-width);
     }
 
     .hb-three-column-w-image--one-sidebar & {
-      @include grid-media('lg') {
+      @include grid-media-min('lg') {
         width: 40%;
         margin-left: hb-calculate-rems(20px);
       }
     }
 
     .hb-three-column-w-image--no-sidebar & {
-      @include grid-media('md') {
+      @include grid-media-min('md') {
         width: 40%;
         margin-left: hb-calculate-rems(20px);
       }
@@ -130,7 +130,7 @@
         width: 100%;
         max-height: hb-calculate-rems(375px);
 
-        @include grid-media('md') {
+        @include grid-media-min('md') {
           max-height: hb-calculate-rems(250px);
         }
       }
@@ -146,18 +146,18 @@
     margin-left: 0;
 
     .hb-three-column-w-image--one-sidebar & {
-      @include grid-media('md') {
+      @include grid-media-min('md') {
         width: $hb-sidebar-width;
         margin-left: hb-calcualte-rems(map-get($hb-screen-margins, 'md'));
       }
     }
 
-    @include grid-media('lg') {
+    @include grid-media-min('lg') {
       width: $hb-sidebar-width;
       margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
     }
 
-    @include grid-media('xl') {
+    @include grid-media-min('xl') {
       margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
     }
   }

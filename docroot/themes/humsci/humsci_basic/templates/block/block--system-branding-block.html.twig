@@ -54,20 +54,20 @@
   {% set attributes = attributes.addClass(["su-lockup--option-" ~ lockup.option]) %}
 {% endif %}
 
-{# If line 5 set #}
-{% if lockup.line5 is not empty %}
- {% set line5 = lockup.line5|render|striptags %}
-{% endif %}
-
 {# If line 2 set #}
 {% if lockup.line2 is not empty %}
  {% set line2 = lockup.line2|render|striptags %}
 {% endif %}
 
-{# If ALL lines 1-5 are not set, allow default Site Name and Slogan to be used #}
+{# If line 5 set #}
+{% if lockup.line5 is not empty %}
+ {% set line5 = lockup.line5|render|striptags %}
+{% endif %}
+
+{# If ALL lines 1-5 are not set, allow default Slogan and Site Name to be used #}
 {% if lockup.line1 is empty and line2 is empty and lockup.line3 is empty and lockup.line4 is empty and line5 is empty %}
-  {% set line5 = content.site_name|render %}
   {% set line2 = content.site_slogan|render %}
+  {% set line5 = content.site_name|render %}
 {% endif %}
 
 {# In case we ever want to pipe this through to a decanter template: #}

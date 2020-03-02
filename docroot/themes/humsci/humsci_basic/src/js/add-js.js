@@ -1,7 +1,6 @@
 /**
- * Add .js class, and remove .no-js (if javaScript loads on the page)
- * This allows us to apply specific styles for noJS solutions.
- * TODO: I tried adding this custom js instead of modernizr, but I dont think it's working
+ * Add .js class, and remove .no-js (if JavaScript loads on the page)
+ * This allows us to apply specific styles for no-JS solutions.
  */
 
 /**

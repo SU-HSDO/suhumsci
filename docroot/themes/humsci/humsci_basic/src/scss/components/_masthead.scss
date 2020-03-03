@@ -1,3 +1,4 @@
+// scss-lint:disable ImportantRule
 .su-masthead {
   .su-lockup {
     z-index: $hb-z-index-lockup;
@@ -12,36 +13,14 @@
   }
 
   .su-main-nav {
-    padding-bottom: hb-calculate-rems(14px);
+    margin: 0 !important;
+    width: 100% !important;
+    z-index: $hb-z-index-main-menu;
 
-    .su-main-nav__toggle {
-      position: absolute;
-      right: 0;
-      bottom: 80%;
-      transform: translate(0, -80%); // Center the toggle on nav styles implementation. It is not centered while using Decanter's default nav styles because they overlay ontop of the lockup which makes the content inaccessible.
-
-      @include grid-media-min('sm') {
-        bottom: 60%;
-        transform: translate(0, -60%);
-      }
-    }
-
-    // The positioning of the nav set here will change as Decanter overlays the mobile
-    // nav on top of other content and our designs have the mobile nav inline with the content.
-    .su-main-nav__menu {
-      top: hb-calculate-rems(58px);
-
-      @include grid-media-min('md') {
-        top: hb-calculate-rems(15px);
-      }
-
-      @include grid-media-min('lg') {
-        top: unset;
-      }
-
-      &-lv2 {
-        top: hb-calculate-rems(67px);
-      }
+    @include grid-media-min('sm') {
+      flex: unset;
+      width: 100% !important;
+      max-width: none;
     }
   }
 }
@@ -51,3 +30,4 @@
     margin-bottom: hb-calculate-rems(2px);
   }
 }
+// scss-lint:enable ImportantRule

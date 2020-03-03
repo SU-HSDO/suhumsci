@@ -44,15 +44,17 @@ if (togglers) {
       // like a button when the spacebar is pressed
       toggler.addEventListener('keydown', (e) => {
         // 32 is the keycode for the spacebar
-        if (e.which === 32) {
-          e.preventDefault();
-          if (isHidden) {
-            changeNav(toggler, togglerContent, true);
-            isHidden = false;
-          } else {
-            changeNav(toggler, togglerContent, false);
-            isHidden = true;
-          }
+        if (e.which !== 32) {
+          return;
+        }
+
+        e.preventDefault();
+        if (isHidden) {
+          changeNav(toggler, togglerContent, true);
+          isHidden = false;
+        } else {
+          changeNav(toggler, togglerContent, false);
+          isHidden = true;
         }
       });
 
@@ -69,20 +71,17 @@ if (togglers) {
         }
       });
 
-      // When tabbing through the navigation the previously opened dropdown closes
-      document.body.addEventListener('focusin', (e) => {
-        if (windowWidth >= mobileNavBreakpoint && !togglerParent.contains(e.target)) {
-          changeNav(toggler, togglerContent, false);
-          isHidden = true;
-        }
-      });
-
-      // When clicking outside of the dropdown area it will close
-      document.body.addEventListener('click', (e) => {
-        if (windowWidth >= mobileNavBreakpoint && !togglerParent.contains(e.target)) {
-          changeNav(toggler, togglerContent, false);
-          isHidden = true;
-        }
+      // We want to close open dropdowns on desktop when the following events happen
+      // on the body, outside of the toggler component:
+      // 1. (focusin) When tabbing through the navigation the previously opened dropdown closes
+      // 2. (click) When clicking outside of the dropdown area it will close
+      ["focusin", "click"].forEach(function(event) {
+        document.body.addEventListener(event, (e) => {
+          if (windowWidth >= mobileNavBreakpoint && !togglerParent.contains(e.target)) {
+            changeNav(toggler, togglerContent, false);
+            isHidden = true;
+          }
+        }, false);
       });
     }
   }

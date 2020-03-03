@@ -43,6 +43,20 @@ if (togglers) {
       }
     });
 
+    // Some togglers will be anchor tags instead of buttons and they should behave
+    // like a button when the spacebar is pressed
+    toggler.addEventListener('keydown', (e) => {
+      // 32 is the keycode for the spacebar
+      if (e.which === 32) {
+        e.preventDefault();
+        if (isHidden) {
+          showMenu();
+        } else {
+          collapseMenu();
+        }
+      }
+    });
+
     // At larger screen sizes:
     // =========================================================================
     // All menus collapse when resizing larger than the lg breakpoint

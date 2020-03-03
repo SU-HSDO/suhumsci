@@ -27,9 +27,15 @@
     {% endif %}
 
     <li{{ list_attributes }}>
+      {# This check whether or not there is a URL #}
       {% if item.url.toString() is empty %}
+        {#
+          If there is no URL (<nolink>) then we need the toggler classes to be
+          on the anchor tag. We also don't need the button because the anchor tag
+          acts as the button to toggle the nested navigation.
+        #}
         {% set link_attributes = link_attributes.addClass('hb-nested-toggler') %}
-        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">{{ item.title }}</a>
+        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" role="button">{{ item.title }}</a>
 
         {% if item.below %}
           <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
@@ -37,6 +43,10 @@
           </div>
         {% endif %}
       {% else %}
+        {#
+          If there is a URL then we use a separate button element to toggle the
+          nested navigation and the anchor tag will just act as a link.
+        #}
         <a{{ link_attributes }}>{{ item.title }}</a>
 
         {% if item.below %}

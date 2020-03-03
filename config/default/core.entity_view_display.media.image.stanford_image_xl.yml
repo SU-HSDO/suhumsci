@@ -1,34 +1,41 @@
-uuid: c6237701-ef06-4350-b23c-6568d5fb769d
+uuid: 663c51b0-2399-4ea8-9763-7382b6f983e6
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.media.stanford_image_medium
+    - core.entity_view_mode.media.stanford_image_xl
     - field.field.media.image.field_media_image
     - field.field.media.image.field_media_image_caption
-    - image.style.hs_medium_square_360x360
+    - image.style.hs_xlarge_square_700x700
     - media.type.image
   module:
     - field_formatter_class
     - hs_field_helpers
     - image
-id: media.image.stanford_image_medium
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+_core:
+  default_config_hash: UHOBG3TcAwserLclcHcEOGnkPaJlP9n_tSpy7TmELFQ
+id: media.image.stanford_image_xl
 targetEntityType: media
 bundle: image
-mode: stanford_image_medium
+mode: stanford_image_xl
 content:
   field_media_image:
     label: hidden
-    type: image
     settings:
-      image_style: hs_medium_square_360x360
+      image_style: hs_xlarge_square_700x700
       image_link: ''
-    weight: 6
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    type: image
+    weight: 0
     region: content
 hidden:
   created: true

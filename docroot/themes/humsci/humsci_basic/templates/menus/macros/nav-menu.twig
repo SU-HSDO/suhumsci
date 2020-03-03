@@ -44,7 +44,7 @@
           acts as the button to toggle the nested navigation.
         #}
         {% set link_attributes = link_attributes.addClass('hb-nested-toggler') %}
-        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-exanded="true" role="button">{{ item.title }}</a>
+        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true" role="button">{{ item.title }}</a>
 
         {% if item.below %}
           <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
@@ -59,7 +59,7 @@
         <a{{ link_attributes }}>{{ item.title }}</a>
 
         {% if item.below %}
-          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-exanded="true">
+          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true">
             Toggle {{ item.title }}
           </button>
           <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">

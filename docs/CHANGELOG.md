@@ -1,5 +1,37 @@
 # HumSci
 
+8.2.3
+--------------------------------------------------------------------------------
+_Release Date: 2020-03-04_
+
+* Updated composer.lock (b40bf4aa)
+* fix: add ids to humsci_basic that match our behat config's region map (#500) (5fba2498)
+* Sparkbox Sprint 8 (6baf0a12)
+* fix: resolve codeclimate errors (696206e5)
+* HSD8-754 Patched simplesaml to allow for masquerading (ace4e3eb)
+* HSD8-755 Fixed tables on mobile display (1a577e6c)
+* Updated dependencies Feb 26 2020 (f5d68f7f)
+* chore: commit compiled css (7dd05b64)
+* feat(STN-125):  hero 1 styles (#495) (3c977297)
+* feat(STN-184): qa feedback styling changes (#497) (8dc2f15d)
+* STN-172: Local Footer (#496) (027d6ca6)
+* STN-127 : WYSIWYG Text Area Styles (#494) (c2a54bc9)
+* fixed anchor link module update (970b313b)
+* Merge branch 'develop' into 8.2.3-release (7560524b)
+* Added missing configuration to display saml link on login page (3b67837d)
+* hotfix media fix (c93c0cbc)
+* Merge pull request #488 from SU-HSDO/sparkbox-sprint-7 (9ba24b9b)
+* feat: checkin compiled css assets (40f224c7)
+* fix: resolve CodeClimate errors (47b2e68b)
+* feat(STN-117): Decanter Masthead (#492) (73ebefc7)
+* feat: QA feedback from Sprint 6 (#490) (289b5493)
+* STN-192 : root font size (#491) (94d9b2d1)
+* fix: global footer theme implementation (226b4794)
+* fix: global footer classes snafu (#489) (32d0f630)
+* STN-69 : Create Global Footer for New Themes (#484) (f6bb3128)
+* feat(STN-70): Decanter lockup templates and theme settings and global var (#485) (c85e18af)
+* feat: adds brandbar component (#486) (dcb312fc)
+
 8.2.2
 --------------------------------------------------------------------------------
 _Release Date: 2020-02-19_

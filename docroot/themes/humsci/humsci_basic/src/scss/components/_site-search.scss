@@ -1,7 +1,6 @@
 // Note:
 // This was copied from Decanter and then updated to target HMTL elements in the
-// site search instead of classes. Whoever modifies the site-search in STN-116
-// will have to look in to using the correct Decanter classes in the search block.
+// site search.
 // Source: `/node_modules/decanter/core/src/scss/components/site-search/_site-search.scss`
 .su-site-search {
   position: relative;
@@ -10,37 +9,42 @@
     @include hide-visually;
   }
 
+  .form-actions {
+    position: relative;
+  }
+
   input {
     @include font-smoothing;
-    @include padding(0.6rem 2rem);
+    padding: hb-calculate-rems(12px) hb-calculate-rems(36px) hb-calculate-rems(10px) hb-calculate-rems(14px);
 
     display: inline-block;
-    height: 4rem;
+    height: hb-calculate-rems(38px);
     max-width: 100%;
-    border-radius: 3rem;
-    font-size: 1.6rem;
+    border-radius: hb-calculate-rems(4px);
+    font-size: hb-calculate-rems(16px);
 
     &::placeholder {
-      color: $su-color-black;
+      color: darken($su-color-driftwood, 35%);
       opacity: 1; // For Firefox
     }
   }
 
   input[type="submit"] {
-    @include padding(0);
     @include margin(0 0 0 null);
+    padding: 0;
 
     background-color: transparent;
-    background-image: svg('<svg viewBox="0 0 24 25"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.4737 10.2016C21.4737 14.0385 18.3632 17.149 14.5263 17.149C10.6894 17.149 7.57895 14.0385 7.57895 10.2016C7.57895 6.36466 10.6894 3.25422 14.5263 3.25422C18.3632 3.25422 21.4737 6.36466 21.4737 10.2016ZM24 10.2016C24 15.4338 19.7585 19.6753 14.5263 19.6753C12.5029 19.6753 10.6277 19.0409 9.08862 17.9603L2.11994 24.3929C1.60732 24.8661 0.808175 24.8341 0.334991 24.3215C-0.138192 23.8089 -0.106226 23.0098 0.406389 22.5366L7.22679 16.2408C5.86882 14.6013 5.05264 12.4968 5.05264 10.2016C5.05264 4.96942 9.29415 0.727905 14.5263 0.727905C19.7585 0.727905 24 4.96942 24 10.2016Z" fill="#2E2D29"/></svg>');
+    background-image: svg('<svg viewBox="0 0 25 26"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.4737 10.2016C21.4737 14.0385 18.3632 17.149 14.5263 17.149C10.6894 17.149 7.57895 14.0385 7.57895 10.2016C7.57895 6.36466 10.6894 3.25422 14.5263 3.25422C18.3632 3.25422 21.4737 6.36466 21.4737 10.2016ZM24 10.2016C24 15.4338 19.7585 19.6753 14.5263 19.6753C12.5029 19.6753 10.6277 19.0409 9.08862 17.9603L2.11994 24.3929C1.60732 24.8661 0.808175 24.8341 0.334991 24.3215C-0.138192 23.8089 -0.106226 23.0098 0.406389 22.5366L7.22679 16.2408C5.86882 14.6013 5.05264 12.4968 5.05264 10.2016C5.05264 4.96942 9.29415 0.727905 14.5263 0.727905C19.7585 0.727905 24 4.96942 24 10.2016Z" stroke="#{darken($su-color-driftwood, 40%)}" stroke-width="0.5" stroke-linecap="square" fill="#{darken($su-color-driftwood, 40%)}" /></svg>');
     background-repeat: no-repeat;
     background-position: center center;
     border-width: 0;
-    opacity: 0.6;
     position: absolute;
-    top: 0;
-    right: 1.2rem;
-    width: 24px;
-    height: 25px;
+    bottom: 0;
+    right: hb-calculate-rems(14px);
+    width: hb-calculate-rems(18px);
+    height: hb-calculate-rems(15px);
+    transform: scaleX(-1);
+    opacity: 0.6;
 
     text-indent: -99999px;
     overflow: hidden;

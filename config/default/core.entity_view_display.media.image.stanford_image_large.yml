@@ -6,9 +6,11 @@ dependencies:
     - core.entity_view_mode.media.stanford_image_large
     - field.field.media.image.field_media_image
     - field.field.media.image.field_media_image_caption
-    - image.style.large
+    - image.style.hs_large_square_480x480
     - media.type.image
   module:
+    - field_formatter_class
+    - hs_field_helpers
     - image
 id: media.image.stanford_image_large
 targetEntityType: media
@@ -19,10 +21,14 @@ content:
     label: hidden
     type: image
     settings:
-      image_style: large
+      image_style: hs_large_square_480x480
       image_link: ''
     weight: 6
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     region: content
 hidden:
   created: true

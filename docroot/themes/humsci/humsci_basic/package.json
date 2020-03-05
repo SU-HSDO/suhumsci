@@ -5,11 +5,12 @@
   "main": "Gruntfile.js",
   "scripts": {
     "start": "npm run build:sass && npm run watch",
-    "watch:sass": "grunt watch",
     "build:sass": "grunt compile",
+    "build:js": "webpack",
+    "build": "npm run build:sass & npm run build:js",
     "lint:sass": "stylelint 'src/scss/**/*.scss' --config .stylelintrc",
     "test:sass": "mocha 'tests/true-sass-spec.js'",
-    "build:js": "webpack",
+    "watch:sass": "grunt watch",
     "watch:js": "webpack --watch",
     "watch": "npm run watch:sass & npm run watch:js",
     "test": "npm run lint:sass && npm run test:sass"

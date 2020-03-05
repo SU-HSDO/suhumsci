@@ -4,9 +4,10 @@
     @include clearfix;
     grid-template-columns: 2% 5% 93%; // 3 cols, position 1-4
     grid-template-rows: $hb-gutter-width 1fr 1fr auto auto $hb-gutter-width; // 6 rows, position 1-7
-    margin: 0 0 $hb-gutter-width;
+    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
 
     @include grid-media-min('md') {
+      margin-top: calc(-2 * #{hb-calculate-rems($hb-gutter-width)});
       grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
       grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
     }

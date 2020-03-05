@@ -33,9 +33,9 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
       '#type' => 'select',
       '#title' => $this->t('Section Width'),
       '#description' => $this->t('Choose if the sections should be full width or limited.'),
-      '#empty_option' => $this->t('Full Width'),
-      '#default_value' => $this->configuration['section_width'] ?: NULL,
+      '#default_value' => $this->configuration['section_width'] ?: 'hs-full-width',
       '#options' => [
+        'hs-full-width' => $this->t('Full Width'),
         'decanter-grid' => $this->t('Limited Width'),
       ],
     ];

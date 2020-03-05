@@ -4,8 +4,6 @@ namespace Example\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
-use Exception;
-use Robo\Contract\VerbosityThresholdInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -14,13 +12,6 @@ use Symfony\Component\Finder\Finder;
 class CircleCiCommands extends BltTasks {
 
   use HumsciTrait;
-
-  /**
-   * The database URL.
-   *
-   * @var string
-   */
-  const DB_URL = 'mysql://root@127.0.0.1/drupal8';
 
   /**
    * Number of random sites to test behat.
@@ -68,102 +59,35 @@ class CircleCiCommands extends BltTasks {
   }
 
   /**
-   * Perform a release in github.
+   * Create a new branch for the next release.
    *
-   * @command circleci:github:release
+   * @command circleci:new-release-branch
+   *
+   * @param string $last_version
+   *   Semver version.
    */
-  public function jobGithubRelease() {
-
-    $last_version = $this->getLastVersion();
+  public function jobNewReleaseBranch($last_version) {
     // Increment the last version by 1.
-    $version = $this->incrementVersion($last_version);
-    $this->yell("Releasing $version");
-
-    // Get a list of all commits since the last version until now.
-    exec("git log --pretty=format:%h $last_version...HEAD", $commit_hashes);
-
-    $changes = [];
-    // Build an array of change strings.
-    foreach ($commit_hashes as $hash) {
-      exec("git log --format=%B -n 1 $hash", $log);
-      $log = is_array($log) ? reset($log) : $log;
-
-      // Don't record last release commit.
-      if ($log == "Release $last_version") {
-        continue;
-      }
-
-      $changes[] = "$log ($hash)";
-    }
-
-    if (empty($changes)) {
-      $this->say('No Changes to release.');
-      return;
-    }
+    $new_version = $this->incrementVersion($last_version);
+    $this->yell("Creating new release: $new_version");
 
     // Set module and profile version. Then update the changelog.
-    $this->setVersions($version);
-    $this->updateChangelog($version, $changes);
+    $this->setVersions($new_version);
 
-    // Commit all the changes and push to github.
-    $result = $this->taskGitStack()
+    $new_branch = "$new_version-release";
+    // Create the new release branch in github.
+    $this->taskGitStack()
+      ->checkout("-b $new_branch")
+      ->run();
+
+    $this->taskGitStack()
       ->add('-A')
-      ->commit("Release $version")
+      ->commit("Release $new_version")
       ->pull()
       ->push()
       ->run();
 
-    if (!$result->wasSuccessful()) {
-      throw new Exception('Release commit was unsuccessful');
-    }
-
-    $github_info = $this->getGitHubInfo();
-    // Create a new release in github. This will generate a tag which will be
-    // used in another CircleCI task.
-    $result = $this->taskGitHubRelease($version)
-      ->accessToken(getenv('GITHUB_TOKEN'))
-      ->uri($github_info['owner'] . '/' . $github_info['name'])
-      ->description("Release $version\n")
-      ->changes($changes)
-      ->name($version)
-      ->comittish(getenv('CIRCLE_BRANCH'))
-      ->run();
-
-    if (!$result->wasSuccessful()) {
-      throw new Exception('Release was unsuccessful');
-    }
-
-    $new_branch = $this->incrementVersion($version) . "-release";
-    // Create the new release branch in github.
-    $this->taskGitStack()
-      ->checkout("-b $new_branch")
-      ->push('origin', $new_branch)
-      ->run();
-    // Deploy that release to Acquia.
-    $this->blt()->arg('artifact:deploy')->option('no-interaction')->run();
-    sleep(10);
-    $api = new AcquiaApi($this->getConfigValue('cloud'));
-    $this->say($api->deployCode('test', "$new_branch-build"));
-  }
-
-  /**
-   * Update the changelog file with the given changes.
-   *
-   * @param string $version
-   *   New version.
-   * @param array $changes
-   *   Array of change strings.
-   */
-  protected function updateChangelog($version, array $changes = []) {
-    array_walk($changes, function (&$change) {
-      $change = '* ' . $change;
-    });
-    $divider = str_repeat('-', 80);
-    $this->taskChangelog($this->getConfigValue('repo.root') . '/docs/CHANGELOG.md')
-      ->setHeader("$version\n{$divider}\n_Release Date: " . date("Y-m-d") . "_\n\n")
-      ->anchor("# HumSci")
-      ->setBody(implode("\n", $changes))
-      ->setVerbosityThreshold(VerbosityThresholdInterface::VERBOSITY_VERBOSE)
+    $this->taskExec("hub pull-request -b develop -m '$new_version Release'")
       ->run();
   }
 

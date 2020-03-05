@@ -1,0 +1,69 @@
+.ptype-hs-postcard { // not sure if this class will be needed. if not, remove it!!!
+  background-color: whitesmoke;
+
+  .hb-card {
+    &__content {
+      background-color: magenta; // only inside of postcards!!
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__subcontent {
+      order: 2; // note: from an accessibility standup, this is super icky!!! It takes the content out of it's normal flow
+    }
+
+    &__subcontent-item {
+      width: 100%;
+      // eight: hb-calculate-rems(44px); // need adequate touch area
+    }
+  }
+}
+
+.field-hs-postcard {
+  &-title {
+    @include hb-heading-3;
+    margin-top: 0;
+    margin-bottom: hb-calculate-rems(14px);
+    overflow-wrap: break-word;
+
+    @include grid-media-min('md') {
+      margin-bottom: hb-calculate-rems(16px);
+    }
+
+    @include grid-media-min('lg') {
+      margin-bottom: hb-calculate-rems(22px);
+    }
+  }
+
+  &-link { // needs to be 44px high minimum and extend the width of the block
+    background-color: yellowgreen; // step one! LOL!!!
+    width: 100%;
+    position: relative;
+
+    a {
+      background-color: pink;
+      opacity: 0; // dirty? What will VoiceOver say?
+      display: block;
+      height: 44px;
+    }
+
+    &::before {
+      content: 'arrow please!';
+      position: absolute;
+      top: 50%;
+    }
+
+    .fa-ext {
+      display: none;
+    }
+  }
+
+  &-body {
+    @include hb-body--small;
+    margin-bottom: hb-calculate-rems(28px); // make room for arrow link
+
+    @include grid-media-min('lg') {
+      @include hb-body--medium;
+    }
+  }
+}

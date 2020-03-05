@@ -6,7 +6,11 @@
     flex-wrap: nowrap;
   }
 
-  &.decanter-grid {
+  // If this uses the "limited width" section width
+  // option in layout builder, then apply our
+  // hb-page-width mixin. Otherwise, the section will
+  // go full width.
+  &:not(.hs-full-width) {
     @include hb-page-width;
   }
 

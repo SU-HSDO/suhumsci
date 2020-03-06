@@ -1,9 +1,9 @@
-.ptype-hs-postcard { // not sure if this class will be needed. if not, remove it!!!
+.ptype-hs-postcard {
   background-color: whitesmoke;
 
   .hb-card {
     &__content {
-      background-color: magenta; // only inside of postcards!!
+      // background-color: magenta; // only inside of postcards!!
       display: flex;
       flex-direction: column;
     }
@@ -14,7 +14,6 @@
 
     &__subcontent-item {
       width: 100%;
-      // eight: hb-calculate-rems(44px); // need adequate touch area
     }
   }
 }
@@ -35,22 +34,40 @@
     }
   }
 
-  &-link { // needs to be 44px high minimum and extend the width of the block
-    background-color: yellowgreen; // step one! LOL!!!
+  &-link {
+    // background-color: palegreen;
     width: 100%;
     position: relative;
 
     a {
-      background-color: pink;
       opacity: 0; // dirty? What will VoiceOver say?
       display: block;
-      height: 44px;
+      height: hb-calculate-rems(44px);
     }
 
     &::before {
-      content: 'arrow please!';
+      content: '';
       position: absolute;
-      top: 50%;
+      height: hb-calculate-rems(44px); // WCAG AAA target size
+      width: hb-calculate-rems(44px);
+
+      @include hb-colorful {
+        @include hb-link-arrow-icon($color: hb-colorful-variation(secondary));
+
+        transform: translateX(0);
+        transition: transform 200ms ease-in-out;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      &::before {
+        transform: translateX(0.625rem);
+
+        @include hb-colorful {
+          @include hb-link-arrow-icon(darken(hb-colorful-variation(secondary), 10%));
+        }
+      }
     }
 
     .fa-ext {
@@ -60,7 +77,7 @@
 
   &-body {
     @include hb-body--small;
-    margin-bottom: hb-calculate-rems(28px); // make room for arrow link
+    margin-bottom: hb-calculate-rems(28px);
 
     @include grid-media-min('lg') {
       @include hb-body--medium;

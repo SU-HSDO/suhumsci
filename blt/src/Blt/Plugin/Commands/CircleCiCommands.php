@@ -82,7 +82,7 @@ class CircleCiCommands extends BltTasks {
 
     $this->taskGitStack()
       ->add('-A')
-      ->commit("Release $new_version")
+      ->commit("$new_version")
       ->pull()
       ->push()
       ->run();

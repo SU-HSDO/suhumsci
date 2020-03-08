@@ -207,23 +207,25 @@
   }
 
   &__title {
+    margin-top: 0;
+    margin-bottom: hb-calculate-rems(14px);
+
+    @include grid-media-min('md') {
+      margin-bottom: hb-calculate-rems(16px);
+    }
+
+    @include grid-media-min('lg') {
+      margin-bottom: hb-calculate-rems(22px);
+    }
+
     h2,
     h3,
     h4,
     h5,
     h6 {
       @include hb-heading-3;
-      margin-top: 0;
-      margin-bottom: hb-calculate-rems(14px);
+      margin: 0;
       overflow-wrap: break-word;
-
-      @include grid-media-min('md') {
-        margin-bottom: hb-calculate-rems(16px);
-      }
-
-      @include grid-media-min('lg') {
-        margin-bottom: hb-calculate-rems(22px);
-      }
     }
   }
 

@@ -20,10 +20,8 @@
 
 .field-hs-postcard {
   &-title {
-    @include hb-heading-3;
     margin-top: 0;
     margin-bottom: hb-calculate-rems(14px);
-    overflow-wrap: break-word;
 
     @include grid-media-min('md') {
       margin-bottom: hb-calculate-rems(16px);
@@ -32,47 +30,57 @@
     @include grid-media-min('lg') {
       margin-bottom: hb-calculate-rems(22px);
     }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @include hb-heading-3;
+      margin: 0;
+      overflow-wrap: break-word;
+    }
   }
 
   &-link {
-    // background-color: palegreen;
-    width: 100%;
-    position: relative;
+    background-color: palegreen; // horizontal card links
+  //   width: 100%;
+  //   position: relative;
 
-    a {
-      opacity: 0; // dirty? What will VoiceOver say?
-      display: block;
-      height: hb-calculate-rems(44px);
-    }
+  //   a {
+  //     opacity: 0; // dirty? What will VoiceOver say?
+  //     display: block;
+  //     height: hb-calculate-rems(44px);
+  //   }
 
-    &::before {
-      content: '';
-      position: absolute;
-      height: hb-calculate-rems(44px); // WCAG AAA target size
-      width: hb-calculate-rems(44px);
+  //   &::before {
+  //     content: '';
+  //     position: absolute;
+  //     height: hb-calculate-rems(44px); // WCAG AAA target size
+  //     width: hb-calculate-rems(44px);
 
-      @include hb-colorful {
-        @include hb-link-arrow-icon($color: hb-colorful-variation(secondary));
+  //     @include hb-colorful {
+  //       @include hb-link-arrow-icon($color: hb-colorful-variation(secondary));
 
-        transform: translateX(0);
-        transition: transform 200ms ease-in-out;
-      }
-    }
+  //       transform: translateX(0);
+  //       transition: transform 200ms ease-in-out;
+  //     }
+  //   }
 
-    &:hover,
-    &:focus {
-      &::before {
-        transform: translateX(0.625rem);
+  //   &:hover,
+  //   &:focus {
+  //     &::before {
+  //       transform: translateX(0.625rem);
 
-        @include hb-colorful {
-          @include hb-link-arrow-icon(darken(hb-colorful-variation(secondary), 10%));
-        }
-      }
-    }
+  //       @include hb-colorful {
+  //         @include hb-link-arrow-icon(darken(hb-colorful-variation(secondary), 10%));
+  //       }
+  //     }
+  //   }
 
-    .fa-ext {
-      display: none;
-    }
+  //   .fa-ext {
+  //     display: none;
+  //   }
   }
 
   &-body {

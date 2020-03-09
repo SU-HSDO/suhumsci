@@ -11,7 +11,11 @@
           e.preventDefault();
 
           // Reset the form and trigger chosen select fields.
-          ajaxView['$exposed_form'][0].reset();
+          $(':input', ajaxView['$exposed_form'][0])
+            .not(':button, :submit, :reset, :hidden')
+            .val('')
+            .prop('checked', false)
+            .prop('selected', false);
           $(ajaxView['$exposed_form'][0]).find('select').trigger("chosen:updated");
 
           // Trigger('RefreshView') causes the view to reload twice. So we use

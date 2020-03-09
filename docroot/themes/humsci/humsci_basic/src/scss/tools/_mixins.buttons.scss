@@ -49,7 +49,10 @@
   text-decoration: none;
 }
 
-@mixin hb-border-button {
+@mixin hb-border-button(
+  $button-color: $su-color-cardinal-red,
+  $button-color-hover: darken($su-color-cardinal-red, 10%)
+) {
   display: block;
   background-color: transparent;
   border-radius: hb-calculate-rems(42px);
@@ -62,14 +65,14 @@
   transition: all 200ms ease-in-out;
 
   @include hb-colorful {
-    border: 3px solid lighten(hb-colorful-variation(primary), 30%);
-    color: lighten(hb-colorful-variation(primary), 30%);
+    border: 3px solid $button-color;
+    color: $button-color;
 
     &:hover,
     &:focus {
       box-shadow: none;
-      border: 3px solid lighten(hb-colorful-variation(primary), 70%);
-      color: lighten(hb-colorful-variation(primary), 70%);
+      border: 3px solid $button-color-hover;
+      color: $button-color-hover;
     }
   }
 }

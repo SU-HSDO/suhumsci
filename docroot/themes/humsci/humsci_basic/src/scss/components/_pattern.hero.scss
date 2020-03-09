@@ -11,7 +11,7 @@
     }
   }
 }
-  
+
 .hb-hero-overlay {
   &--1 {
     display: grid;
@@ -167,7 +167,7 @@
       li {
         &::before {
           @include hb-colorful {
-            background-color: lighten(hb-colorful-variation(secondary), 20%);
+            background-color: lighten(hb-colorful-variation(secondary), 10%);
           }
         }
       }
@@ -177,7 +177,7 @@
       li {
         &::before {
           @include hb-colorful {
-            color: lighten(hb-colorful-variation(secondary), 20%);
+            color: lighten(hb-colorful-variation(secondary), 10%);
           }
         }
       }
@@ -195,7 +195,7 @@
     a {
       @include hb-colorful {
         color: lighten(hb-colorful-variation(primary), 30%);
-    
+
         &:hover,
         &:focus {
           box-shadow: none;
@@ -208,6 +208,12 @@
       a,
       button {
         @include hb-border-button;
+        @include hb-colorful {
+          @include hb-border-button(
+            lighten(hb-colorful-variation(primary), 30%),
+            lighten(hb-colorful-variation(primary), 70%)
+          );
+        }
 
         .fa-ext {
           display: none;

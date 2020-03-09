@@ -6,11 +6,15 @@
     flex-wrap: nowrap;
   }
 
-  &.hb-page-width {
+  // If this uses the "limited width" section width
+  // option in layout builder, then apply our
+  // hb-page-width mixin. Otherwise, the section will
+  // go full width.
+  &:not(.hs-full-width) {
     @include hb-page-width;
   }
 
-  &--no-sidebar {
+  &--no-sidebar:not(.hs-full-width) {
     max-width: hb-calculate-rems($hb-three-column-w-image-main-width);
     margin: auto;
   }
@@ -121,7 +125,9 @@
   }
 
   &__main-body {
-    max-width: hb-calculate-rems($hb-three-column-w-image-main-body-width);
+    .hb-three-column-w-image--no-sidebar:not(.hs-full-width) & {
+      max-width: hb-calculate-rems($hb-three-column-w-image-main-body-width);
+    }
   }
 
   &__sidebar-2 {

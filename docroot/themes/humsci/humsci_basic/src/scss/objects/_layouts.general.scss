@@ -2,6 +2,16 @@
   @include hb-page-width;
 }
 
+.hb-vertical-page-padding {
+  // scss-lint:disable ImportantRule
+  margin: hb-calculate-rems($hb-gutter-width) auto !important;
+
+  @include grid-media('md') {
+    margin: calc(2 * #{hb-calculate-rems($hb-gutter-width)}) auto !important;
+  }
+  // scss-lint:enable ImportantRule
+}
+
 // If a component needs *any* additional styles, move the rule into /src/scss/components.
 .layout-builder__message {
   @include hb-page-width;

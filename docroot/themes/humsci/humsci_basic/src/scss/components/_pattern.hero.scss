@@ -1,3 +1,17 @@
+// If only the image is present (no overlay text) or hero wrapper,
+// make sure vertical margin is present
+.field-hs-hero-image {
+  .hs-full-width & {
+    // Special negative margin for the hero
+    // to get rid of the vertical padding on all basic pages
+    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
+
+    @include grid-media-min('md') {
+      margin: calc(-2 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
+    }
+  }
+}
+  
 .hb-hero-overlay {
   &--1 {
     display: grid;
@@ -68,6 +82,14 @@
   }
 
   &__image-wrapper {
+    // If inside an img wrapper,
+    // no margin should be added
+    .field-hs-hero-image {
+      .hs-full-width & {
+        margin: 0;
+      }
+    }
+
     .hb-hero-overlay--1 & {
       grid-column-start: 2;
       grid-column-end: 3;
@@ -141,12 +163,44 @@
       }
     }
 
+    ul {
+      li {
+        &::before {
+          @include hb-colorful {
+            background-color: lighten(hb-colorful-variation(secondary), 20%);
+          }
+        }
+      }
+    }
+
+    ol {
+      li {
+        &::before {
+          @include hb-colorful {
+            color: lighten(hb-colorful-variation(secondary), 20%);
+          }
+        }
+      }
+    }
+
     .text-long,
     a {
       font-size: hb-calculate-rems(16px);
 
       @include grid-media-min('md') {
         font-size: hb-calculate-rems(18px);
+      }
+    }
+
+    a {
+      @include hb-colorful {
+        color: lighten(hb-colorful-variation(primary), 30%);
+    
+        &:hover,
+        &:focus {
+          box-shadow: none;
+          color: lighten(hb-colorful-variation(primary), 70%);
+        }
       }
     }
 

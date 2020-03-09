@@ -1,15 +1,18 @@
 .ptype-hs-postcard {
-  background-color: whitesmoke;
-
   .hb-card {
     &__content {
-      // background-color: magenta; // only inside of postcards!!
+      background-color: magenta; // only inside of postcards!!
       display: flex;
       flex-direction: column;
     }
 
+    &__description {
+      margin-bottom: 0;
+    }
+
     &__subcontent {
-      order: 2; // note: from an accessibility standup, this is super icky!!! It takes the content out of it's normal flow
+      order: 2; // Note: From an accessibility standup, this not recommended. It takes the content out of it's normal flow in the DOM.
+      margin-bottom: 0;
     }
 
     &__subcontent-item {
@@ -20,17 +23,6 @@
 
 .field-hs-postcard {
   &-title {
-    margin-top: 0;
-    margin-bottom: hb-calculate-rems(14px);
-
-    @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems(16px);
-    }
-
-    @include grid-media-min('lg') {
-      margin-bottom: hb-calculate-rems(22px);
-    }
-
     h2,
     h3,
     h4,
@@ -43,44 +35,50 @@
   }
 
   &-link {
-    background-color: palegreen; // horizontal card links
-  //   width: 100%;
-  //   position: relative;
+    width: 100%;
+    position: relative;
 
-  //   a {
-  //     opacity: 0; // dirty? What will VoiceOver say?
-  //     display: block;
-  //     height: hb-calculate-rems(44px);
-  //   }
+    a {
+      opacity: 0;
+      display: block;
+      height: hb-calculate-rems(44px);
+    }
 
-  //   &::before {
-  //     content: '';
-  //     position: absolute;
-  //     height: hb-calculate-rems(44px); // WCAG AAA target size
-  //     width: hb-calculate-rems(44px);
+    &.decanter-button {
+      height: 100%;
+      width: 100%;
+      // opacity: 0;
+      background-color: yellow;
+    }
 
-  //     @include hb-colorful {
-  //       @include hb-link-arrow-icon($color: hb-colorful-variation(secondary));
+    &::before {
+      content: '';
+      position: absolute;
+      height: hb-calculate-rems(44px); // WCAG AAA target size
+      width: hb-calculate-rems(44px);
 
-  //       transform: translateX(0);
-  //       transition: transform 200ms ease-in-out;
-  //     }
-  //   }
+      @include hb-colorful {
+        @include hb-link-arrow-icon($color: hb-colorful-variation(secondary));
 
-  //   &:hover,
-  //   &:focus {
-  //     &::before {
-  //       transform: translateX(0.625rem);
+        transform: translateX(0);
+        transition: transform 200ms ease-in-out;
+      }
+    }
 
-  //       @include hb-colorful {
-  //         @include hb-link-arrow-icon(darken(hb-colorful-variation(secondary), 10%));
-  //       }
-  //     }
-  //   }
+    &:hover,
+    &:focus {
+      &::before {
+        transform: translateX(0.625rem);
 
-  //   .fa-ext {
-  //     display: none;
-  //   }
+        @include hb-colorful {
+          @include hb-link-arrow-icon(darken(hb-colorful-variation(secondary), 10%));
+        }
+      }
+    }
+
+    .fa-ext {
+      display: none;
+    }
   }
 
   &-body {

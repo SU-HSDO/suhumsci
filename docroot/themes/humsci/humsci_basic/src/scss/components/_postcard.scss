@@ -1,7 +1,6 @@
 .ptype-hs-postcard {
   .hb-card {
     &__content {
-      background-color: magenta; // only inside of postcards!!
       display: flex;
       flex-direction: column;
     }
@@ -35,25 +34,35 @@
   }
 
   &-link {
-    width: 100%;
     position: relative;
+    width: 100%;
 
     a {
-      opacity: 0;
       display: block;
+      color: transparent; // `hide` the text but make sure screen readers can still read it
       height: hb-calculate-rems(44px);
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        box-shadow: unset;
+        color: transparent;
+      }
     }
 
     &.decanter-button {
-      height: 100%;
-      width: 100%;
-      // opacity: 0;
-      background-color: yellow;
+      @include unbuttonize;
+      // margin-left: hb-calculate-rems(-44px);
+
+      &:hover {
+        background-color: transparent;
+      }
     }
 
-    &::before {
+    &::before { // horizontal postcard arrow
       content: '';
       position: absolute;
+      left: 0;
       height: hb-calculate-rems(44px); // WCAG AAA target size
       width: hb-calculate-rems(44px);
 

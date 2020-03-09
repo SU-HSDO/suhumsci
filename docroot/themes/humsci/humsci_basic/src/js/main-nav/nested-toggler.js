@@ -10,7 +10,7 @@ if (togglers) {
     const togglerID = toggler.getAttribute('id');
     const togglerContent = document.querySelector(`[aria-labelledby="${togglerID}"]`);
     const togglerParent = toggler.parentNode;
-    const subnavShouldBeExpanded = togglerParent.classList.contains('su-main-nav__item--active-trail') ? true : false;
+    const subnavIsExpanded = togglerParent.classList.contains('hb-main-nav__item--active-trail') ? true : false;
     let isHidden;
 
     // Togglers should always have content but in the event that they don't we
@@ -19,7 +19,7 @@ if (togglers) {
       // On page load:
       // - All menus in the active section should be open
       // - All other menus should be hidden
-      if (subnavShouldBeExpanded && windowWidth < mobileNavBreakpoint) {
+      if (subnavIsExpanded && windowWidth < mobileNavBreakpoint) {
         changeNav(toggler, togglerContent, true);
         isHidden = false;
       } else {

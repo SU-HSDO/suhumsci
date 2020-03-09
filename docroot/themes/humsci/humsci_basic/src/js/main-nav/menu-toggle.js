@@ -1,7 +1,7 @@
 import changeNav from './change-nav';
 
-const menuToggle = document.querySelector('.su-main-nav__toggle');
-const mainMenu = document.querySelector('.su-main-nav__menu-lv1');
+const menuToggle = document.querySelector('.hb-main-nav__toggle');
+const mainMenu = document.querySelector('.hb-main-nav__menu-lv1');
 const mobileNavBreakpoint = 992;
 let windowWidth = window.innerWidth;
 let isHidden;

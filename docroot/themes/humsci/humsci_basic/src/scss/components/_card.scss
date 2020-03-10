@@ -59,7 +59,6 @@
         color: $hb-color--black;
         border-bottom: 1px solid $hb-color--black;
         box-shadow: none;
-        cursor: pointer;
       }
     }
   }
@@ -202,7 +201,10 @@
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;
-        max-width: 100%;
+
+        @supports (max-width: 100%) {
+          max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
+        }
       }
     }
   }
@@ -264,9 +266,8 @@
 
       &:hover,
       &:focus {
-        box-shadow: unset;
+        box-shadow: none;
         color: transparent;
-        cursor: pointer;
       }
     }
 

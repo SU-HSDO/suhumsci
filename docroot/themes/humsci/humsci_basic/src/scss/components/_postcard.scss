@@ -1,4 +1,5 @@
 .ptype-hs-postcard {
+  // override the hb-card styles so that they display correctly within paragraph postcard components
   .hb-card {
     &__content {
       display: flex;
@@ -10,7 +11,7 @@
     }
 
     &__subcontent {
-      order: 2; // Note: From an accessibility standup, this not recommended. It takes the content out of it's normal flow in the DOM.
+      order: 2; // Note: From an accessibility standpoint, this not recommended. It takes the content out of it's normal flow in the DOM.
       margin-bottom: 0;
     }
 
@@ -28,11 +29,7 @@
 
 .field-hs-postcard {
   &-title {
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    h2 {
       @include hb-heading-3;
       margin: 0;
       overflow-wrap: break-word;
@@ -53,12 +50,12 @@
       &:focus {
         box-shadow: unset;
         color: transparent;
+        cursor: pointer;
       }
     }
 
     &.decanter-button {
       @include unbuttonize;
-      // margin-left: hb-calculate-rems(-44px);
 
       &:hover {
         background-color: transparent;
@@ -82,6 +79,8 @@
 
     &:hover,
     &:focus {
+      cursor: pointer;
+
       &::before {
         transform: translateX(0.625rem);
 

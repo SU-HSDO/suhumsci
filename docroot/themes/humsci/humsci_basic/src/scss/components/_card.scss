@@ -59,6 +59,7 @@
         color: $hb-color--black;
         border-bottom: 1px solid $hb-color--black;
         box-shadow: none;
+        cursor: pointer;
       }
     }
   }
@@ -218,11 +219,7 @@
       margin-bottom: hb-calculate-rems(22px);
     }
 
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    h2 {
       @include hb-heading-3;
       margin: 0;
       overflow-wrap: break-word;
@@ -253,6 +250,7 @@
 
     .views-field {
       width: 100%;
+      z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the horizontal card
     }
 
     a {
@@ -262,12 +260,13 @@
       width: 100%;
       margin-left: hb-calculate-rems(-44px);
       text-decoration: none;
-      z-index: $hb-z-index-decorative-link;
+      z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
 
       &:hover,
       &:focus {
         box-shadow: unset;
         color: transparent;
+        cursor: pointer;
       }
     }
 
@@ -287,6 +286,8 @@
 
     &:hover,
     &:focus {
+      cursor: pointer;
+
       &::before {
         transform: translateX(0.625rem);
 

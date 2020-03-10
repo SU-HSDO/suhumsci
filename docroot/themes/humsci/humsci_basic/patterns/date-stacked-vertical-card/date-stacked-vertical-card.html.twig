@@ -39,18 +39,18 @@
       </div>
     {% endif %}
 
-    {% if time|render|trim or location|render|trim %}
-
-      {% set general_variants = {'time': time, 'location': location} %}
-
+    {% if time|render|trim  %}
       <div class="hb-card__subcontent">
-        {% for key, variant in general_variants %}
-          {% if variant|render|striptags('<drupal-render-placeholder><a>')|trim  %}
-            <div class="hb-card__subcontent-item">{{ variant }}</div>
-          {% endif %}
-        {% endfor %}
+      {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+        {{ time }}
+      {% endif %}
       </div>
+    {% endif %}
 
+    {% if location|render|trim %}
+      <div class="hb-card__location">
+        {{ location }}
+      </div>
     {% endif %}
 
     {% if speaker|render|trim %}

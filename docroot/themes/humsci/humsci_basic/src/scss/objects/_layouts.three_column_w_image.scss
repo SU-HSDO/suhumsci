@@ -15,8 +15,7 @@
   }
 
   &--no-sidebar:not(.hs-full-width) {
-    max-width: hb-calculate-rems($hb-three-column-w-image-main-width);
-    margin: auto;
+    max-width: hb-calculate-rems($hb-three-column-w-image-main-width) !important;
   }
 
   &__sidebar-1 {
@@ -52,6 +51,7 @@
   &__main-top {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
@@ -89,10 +89,17 @@
 
   &__main-top-image {
     width: 100%;
-    margin-bottom: hb-calcualte-rems(16px);
 
-    @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems($hb-gutter-width);
+    // Override class for WYSIWYG defaults
+    &.align {
+      &-right,
+      &-left {
+        margin: 0 0 hb-calculate-rems(16px);
+
+        @include grid-media-min('md') {
+          margin-bottom: hb-calculate-rems($hb-gutter-width);
+        }
+      }
     }
 
     .hb-three-column-w-image--one-sidebar & {
@@ -137,7 +144,7 @@
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('md') {
         width: $hb-sidebar-width;
-        margin-left: hb-calcualte-rems(map-get($hb-screen-margins, 'md'));
+        margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
       }
     }
 

@@ -1,11 +1,20 @@
-// Font Awesome Icons
+// Principles for how theme styles interact with font-awesome icons:
+//
+// - Font awesome icons inherit their color from the theme (and color pairing,
+//   if applicable). This color is consistent everywhere on the site, and isn't
+//   configurable by end-users.
+// - Font awesome sizes (1x, 2x, etc), styles (solid, regular, etc), and layout
+//   (float, fixed-width) are NOT imposed by the theme. Instead they are chosen
+//   by end-users via `fa-` utility classes in the WYSIWYG editor.
+//
+// For details on how the font awesome class names work, see:
+// https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
+
+.fa,
 .fab,
-a.fab {
-  font-size: hb-calculate-rems(34px);
-  text-decoration: none;
-  display: inline-block;
-  margin-right: hb-calculate-rems(14px);
-  margin-bottom: hb-calculate-rems(14px);
+.fal,
+.far,
+.fas {
   transition: 125ms color ease-out;
 
   @include hb-colorful {
@@ -13,10 +22,28 @@ a.fab {
   }
 }
 
-a.fab {
-  @include hb-colorful {
-    &:hover {
-      color: darken(hb-colorful-variation(secondary), 10%);
+a {
+  &.fa,
+  &.fab,
+  &.fal,
+  &.far,
+  &.fas,
+  > .fa,
+  > .fab,
+  > .fal,
+  > .far,
+  > .fas {
+    text-decoration: none;
+
+    @include hb-colorful {
+      &:hover {
+        color: darken(hb-colorful-variation(secondary), 10%);
+      }
     }
   }
+}
+
+// Fixes a layout bug for fixed-width icons with a border
+.fa-fw.fa-border {
+  box-sizing: content-box;
 }

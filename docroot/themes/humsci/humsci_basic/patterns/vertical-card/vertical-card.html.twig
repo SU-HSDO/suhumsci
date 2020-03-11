@@ -16,7 +16,9 @@
     {% endif %}
 
     {% if title %}
-      <div class="hb-card__title">{{ title }}</div>
+      <div class="hb-card__title">
+        <h2>{{ title }}</h2>
+      </div>
     {% endif %}
 
     {% if subcontent %}
@@ -29,8 +31,10 @@
       <div class="hb-card__description">{{ description }}</div>
     {% endif %}
 
-    {% if url %}
-      <a href="{{ url }}" class="hb-card__decorative-link" aria-label="{{ url }}"></a>
+    {% if button %}
+      <div class="hb-card__decorative-link">
+        {{ button }}
+      </div>
     {% endif %}
   </div>
 </div>

@@ -201,29 +201,30 @@
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;
-        max-width: 100%;
+
+        @supports (max-width: 100%) {
+          max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
+        }
       }
     }
   }
 
   &__title {
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    margin-top: 0;
+    margin-bottom: hb-calculate-rems(14px);
+
+    @include grid-media-min('md') {
+      margin-bottom: hb-calculate-rems(16px);
+    }
+
+    @include grid-media-min('lg') {
+      margin-bottom: hb-calculate-rems(22px);
+    }
+
+    h2 {
       @include hb-heading-3;
-      margin-top: 0;
-      margin-bottom: hb-calculate-rems(14px);
+      margin: 0;
       overflow-wrap: break-word;
-
-      @include grid-media-min('md') {
-        margin-bottom: hb-calculate-rems(16px);
-      }
-
-      @include grid-media-min('lg') {
-        margin-bottom: hb-calculate-rems(22px);
-      }
     }
   }
 
@@ -249,14 +250,35 @@
     align-items: center;
     width: 100%; // large area to click
 
+    .views-field {
+      width: 100%;
+      z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the horizontal card
+    }
+
+    a {
+      display: block;
+      color: transparent; // `hide` the text but make sure screen readers can still read it
+      height: hb-calculate-rems(44px);
+      width: 100%;
+      margin-left: hb-calculate-rems(-44px);
+      text-decoration: none;
+      z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
+
+      &:hover,
+      &:focus {
+        box-shadow: none;
+        color: transparent;
+      }
+    }
+
     &::before {
       content: '';
       display: block;
-      height: 44px; // WCAG AAA target size
-      width: 44px;
+      height: hb-calculate-rems(44px); // WCAG AAA target size
+      width: hb-calculate-rems(44px);
 
       @include hb-colorful {
-        background: no-repeat left / 55% svg('<svg viewBox="0 0 23 24"><path fill="#{hb-colorful-variation(secondary)}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>');
+        @include hb-icon-link-arrow($color: hb-colorful-variation(secondary));
 
         transform: translateX(0);
         transition: transform 200ms ease-in-out;
@@ -265,11 +287,13 @@
 
     &:hover,
     &:focus {
+      cursor: pointer;
+
       &::before {
         transform: translateX(0.625rem);
 
         @include hb-colorful {
-          background: no-repeat left / 55% svg('<svg viewBox="0 0 23 24"><path fill="#{darken(hb-colorful-variation(secondary), 10%)}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>');
+          @include hb-icon-link-arrow(darken(hb-colorful-variation(secondary), 10%));
         }
       }
     }

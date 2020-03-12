@@ -11,7 +11,7 @@ use Drupal\Core\Serialization\Yaml;
  */
 class HumsciHooksCommands extends BltTasks {
 
-   /**
+  /**
    * After a multisite is created, modify the drush alias with default values.
    *
    * @hook post-command recipes:multisite:init
@@ -22,6 +22,7 @@ class HumsciHooksCommands extends BltTasks {
 
     $default_alias = Yaml::decode(file_get_contents("$root/drush/sites/default.site.yml"));
     $sites = glob("$root/drush/sites/*.site.yml");
+
     foreach ($sites as $site_file) {
       $alias = Yaml::decode(file_get_contents($site_file));
       preg_match('/sites\/(.*)\.site\.yml/', $site_file, $matches);
@@ -30,7 +31,7 @@ class HumsciHooksCommands extends BltTasks {
       $multisites[] = $site_name;
       if (count($alias) != count($default_alias)) {
         foreach ($default_alias as $environment => $env_alias) {
-          $env_alias['uri'] = "$site_name-$environment.stanford.edu";
+          $env_alias['uri'] = $this->getAliasUrl($site_name, $environment);
           $alias[$environment] = $env_alias;
         }
       }
@@ -49,6 +50,20 @@ class HumsciHooksCommands extends BltTasks {
     if (substr(strtolower($create_db), 0, 1) == 'y') {
       $this->invokeCommand('humsci:create-database');
     }
+  }
+
+  protected function getAliasUrl($site_name, $environment) {
+    $site_name = str_replace('_', '-', str_replace('__', '.', $site_name));
+    if ($environment == 'local') {
+      return $site_name;
+    }
+
+    $site_url = explode('.', $site_name, 2);
+    if (count($site_url) >= 2) {
+      [$site, $subdomain] = $site_url;
+      return "$site-$environment.$subdomain.stanford.edu";
+    }
+    return "$site_name-$environment.stanford.edu";
   }
 
   /**

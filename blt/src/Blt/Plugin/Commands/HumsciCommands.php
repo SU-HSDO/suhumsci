@@ -5,6 +5,7 @@ namespace Example\Blt\Plugin\Commands;
 use Acquia\Blt\Robo\Commands\Artifact\AcHooksCommand;
 use Drupal\Core\Serialization\Yaml;
 use Robo\Contract\VerbosityThresholdInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Defines commands in the "humsci" namespace.
@@ -12,6 +13,16 @@ use Robo\Contract\VerbosityThresholdInterface;
 class HumsciCommands extends AcHooksCommand {
 
   use HumsciTrait;
+
+  /**
+   * Create a new database on Acquia environment.
+   *
+   * @command humsci:create-database
+   */
+  public function createDatabase() {
+    $database = $this->getMachineName('What is the name of the database? This ideally will match the site directory name. No special characters please.');
+    $this->say(var_export($this->getAcquiaApi()->addDatabase($database), TRUE));
+  }
 
   /**
    * Copies phpunit.xml with necessary changes.
@@ -178,35 +189,6 @@ class HumsciCommands extends AcHooksCommand {
       $commands[] = 'drupal:sync:files';
     }
     $this->invokeCommands($commands);
-  }
-
-  /**
-   * Get the database name of the multisite.
-   *
-   * @param string $multisite
-   *   Site name.
-   * @param string $default
-   *   Default database name.
-   *
-   * @return string
-   *   Database name.
-   */
-  protected function getDatabaseName($multisite = 'default', $default = 'drupal') {
-    $database_name = '';
-    $count = 0;
-    while (!preg_match("/^[a-z0-9_]+$/", $database_name)) {
-
-      if (!$count) {
-        $this->say('<info>Only lower case alphanumeric characters and underscores are allowed in the database name.</info>');
-      }
-      $question = "Database name for $multisite site?";
-      if ($multisite == 'default') {
-        $question = 'Database name?';
-      }
-      $database_name = $this->askDefault($question, $default);
-      $count++;
-    }
-    return $database_name;
   }
 
   /**
@@ -421,6 +403,30 @@ class HumsciCommands extends AcHooksCommand {
     }
 
     file_put_contents("$root/backstop.json", json_encode($json, JSON_PRETTY_PRINT));
+  }
+
+  /**
+   * Ask the user for a new stanford url and validate the entry.
+   *
+   * @param string $message
+   *   Prompt for the user.
+   *
+   * @return string
+   *   User entered value.
+   */
+  protected function getMachineName($message) {
+    $question = new Question($this->formatQuestion($message));
+    $question->setValidator(function ($answer) {
+      $modified_answer = strtolower($answer);
+      $modified_answer = preg_replace("/[^a-z0-9_]/", '_', $modified_answer);
+      if ($modified_answer != $answer) {
+        throw new \RuntimeException(
+          'Only lower case alphanumeric characters with underscores are allowed.'
+        );
+      }
+      return $answer;
+    });
+    return $this->doAsk($question);
   }
 
 }

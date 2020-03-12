@@ -40,6 +40,10 @@ restore_cache: &restore_cache
 save_cache: &save_cache
   paths:
     - ./vendor
+    - ./docroot/libraries
+    - ./docroot/core
+    - ./docroot/modules/contrib
+    - ./docroot/modules/custom
   key: v10-dependencies-{{ checksum "composer.lock" }}
 
 #Jobs
@@ -51,7 +55,10 @@ directory_setup: &directory_setup
     - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
-    - run: composer install --optimize-autoloader
+    - run:
+        name: Composer setup
+        command: |
+          composer install --optimize-autoloader --no-interaction
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .

@@ -23,7 +23,23 @@
 
     {% if subcontent %}
       <div class="hb-card__subcontent">
-        <div class="hb-card__subcontent-item">{{ subcontent }}</div>
+
+        {% if subcontent['#sources'] %}
+          {% for field in subcontent['#sources'] %}
+            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+              <div class="hb-card__subcontent-item">
+                {{ field }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            <div class="hb-card__subcontent-item">
+              {{ subcontent }}
+            </div>
+          {% endif %}
+        {% endif %}
+
       </div>
     {% endif %}
 

@@ -45,12 +45,16 @@
         {% if time['#sources'] %}
           {% for field in time['#sources'] %}
             {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
-              {{ field }}
+              <div class="hb-card__subcontent-item">
+                {{ field }}
+              </div>
             {% endif %}
           {% endfor %}
         {% else %}
           {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
-            {{ time }}
+            <div class="hb-card__subcontent-item">
+              {{ time }}
+            </div>
           {% endif %}
         {% endif %}
 

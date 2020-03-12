@@ -5,3 +5,70 @@
   width: calc(100% - (2 * #{hb-calculate-rems($hb-gutter-width)})) !important;
   // scss-lint:enable ImportantRule
 }
+
+@mixin hb-column-width($percentage, $margin, $cols) {
+  width: calc(#{$percentage} - (#{$margin} / #{$cols})); // for 3 elements, 2 have gutter-width
+}
+
+// For this mixin:
+//
+// @param(integer) $col-number
+// For grids with 2 cols, it will remain 2 cols after sm.
+// For grids with 3 or 4 cols, it will become 3 or 4 cols at md and remain.
+// All grids above 4 cols will have:
+// 1 col at mobile,
+// 2 cols at sm,
+// 3 cols at md,
+// and then the requested number at lg.
+// Cols over 12 are not supported.
+@mixin hb-column($col-number: 2) {
+  $percentage-width: 100% / $col-number;
+  $one-less-col: $col-number - 1;
+  $total-margin: calc(#{$one-less-col} * #{hb-calculate-rems($hb-gutter-width)});
+
+  @if ($col-number > 1) {
+    // 2 cols
+    @include grid-media-min('sm') {
+      @include hb-column-width(50%, calc(1 * #{hb-calculate-rems($hb-gutter-width)}), 2); // for two elements, there is 1 gutter-width between
+      margin-right: hb-calculate-rems(48px);
+
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+    }
+
+    @if ($col-number > 2) {
+      @if ($col-number != 4) {
+        // 3 cols
+        @include grid-media-min('md') {
+          @include hb-column-width(33.33%, calc(2 * #{hb-calculate-rems($hb-gutter-width)}), 3); // for 3 elements, 2 have gutter-width
+
+          &:nth-child(2n) {
+            margin-right: hb-calculate-rems(48px);
+          }
+
+          &:nth-child(3n) {
+            margin-right: 0;
+          }
+        }
+      }
+
+      // above 3 cols
+      @include grid-media("lg") {
+        @include hb-column-width($percentage-width, $total-margin, $col-number);
+
+        &:nth-child(2n) {
+          margin-right: hb-calculate-rems(48px);
+        }
+
+        &:nth-child(3n) {
+          margin-right: hb-calculate-rems(48px);
+        }
+
+        &:nth-child(#{$col-number}n) {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}

@@ -39,11 +39,21 @@
       </div>
     {% endif %}
 
-    {% if time|render|trim  %}
+    {% if time %}
       <div class="hb-card__subcontent">
-      {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
-        {{ time }}
-      {% endif %}
+
+        {% if time['#sources'] %}
+          {% for field in time['#sources'] %}
+            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+              {{ field }}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            {{ time }}
+          {% endif %}
+        {% endif %}
+
       </div>
     {% endif %}
 

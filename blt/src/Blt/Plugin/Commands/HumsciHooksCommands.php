@@ -52,6 +52,17 @@ class HumsciHooksCommands extends BltTasks {
     }
   }
 
+  /**
+   * Get the url for the drush alias.
+   *
+   * @param string $site_name
+   *   Site machine name, same as the directory.
+   * @param string $environment
+   *   Acquia environment.
+   *
+   * @return string
+   *   Url that can be used in drush.
+   */
   protected function getAliasUrl($site_name, $environment) {
     $site_name = str_replace('_', '-', str_replace('__', '.', $site_name));
     if ($environment == 'local') {

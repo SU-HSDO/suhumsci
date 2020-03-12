@@ -15,6 +15,8 @@ class HumsciCommands extends AcHooksCommand {
   use HumsciTrait;
 
   /**
+   * Create a new database on Acquia environment.
+   *
    * @command humsci:create-database
    */
   public function createDatabase() {

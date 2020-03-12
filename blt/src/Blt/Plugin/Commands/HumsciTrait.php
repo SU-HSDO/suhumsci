@@ -2,7 +2,6 @@
 
 namespace Example\Blt\Plugin\Commands;
 
-use Drupal\Core\Serialization\Yaml;
 use StanfordCaravan\Robo\Tasks\AcquiaApi;
 use Zend\Stdlib\Glob;
 
@@ -34,7 +33,6 @@ trait HumsciTrait {
     return $files;
   }
 
-
   /**
    * Get initialized Acquia api object.
    *
@@ -46,7 +44,6 @@ trait HumsciTrait {
     $secret = $this->getConfigValue('cloud.secret') ?: $_ENV['ACP_SECRET'];
     return new AcquiaApi($this->getConfigValue('cloud.appId'), $key, $secret);
   }
-
 
   /**
    * Ask a question to the user.
@@ -73,7 +70,6 @@ trait HumsciTrait {
     }
     return $response;
   }
-
 
   /**
    * Advance to the next SemVer version.

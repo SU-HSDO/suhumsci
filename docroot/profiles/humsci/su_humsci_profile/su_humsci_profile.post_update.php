@@ -185,6 +185,9 @@ function su_humsci_profile_post_update_8202() {
   }
 }
 
+/**
+ * Copy the media module icon to the site's files directory.
+ */
 function su_humsci_profile_post_update_8203() {
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');

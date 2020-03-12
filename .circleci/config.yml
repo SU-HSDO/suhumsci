@@ -58,8 +58,7 @@ directory_setup: &directory_setup
     - run:
         name: Composer setup
         command: |
-          composer clearcache
-          composer install --optimize-autoloader
+          composer install --optimize-autoloader --no-interaction
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .

@@ -6,14 +6,19 @@
     flex-wrap: nowrap;
   }
 
-  &.hb-page-width {
+  // If this uses the "limited width" section width
+  // option in layout builder, then apply our
+  // hb-page-width mixin. Otherwise, the section will
+  // go full width.
+  &:not(.hs-full-width) {
     @include hb-page-width;
   }
 
-  &--no-sidebar {
-    max-width: hb-calculate-rems($hb-three-column-w-image-main-width);
-    margin: auto;
+  // scss-lint:disable ImportantRule
+  &--no-sidebar:not(.hs-full-width) {
+    max-width: hb-calculate-rems($hb-three-column-w-image-main-width) !important;
   }
+  // scss-lint:enable ImportantRule
 
   &__sidebar-1 {
     width: 100%;
@@ -48,6 +53,7 @@
   &__main-top {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
@@ -85,10 +91,17 @@
 
   &__main-top-image {
     width: 100%;
-    margin-bottom: hb-calcualte-rems(16px);
 
-    @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems($hb-gutter-width);
+    // Override class for WYSIWYG defaults
+    &.align {
+      &-right,
+      &-left {
+        margin: 0 0 hb-calculate-rems(16px);
+
+        @include grid-media-min('md') {
+          margin-bottom: hb-calculate-rems($hb-gutter-width);
+        }
+      }
     }
 
     .hb-three-column-w-image--one-sidebar & {
@@ -121,7 +134,9 @@
   }
 
   &__main-body {
-    max-width: hb-calculate-rems($hb-three-column-w-image-main-body-width);
+    .hb-three-column-w-image--no-sidebar:not(.hs-full-width) & {
+      max-width: hb-calculate-rems($hb-three-column-w-image-main-body-width);
+    }
   }
 
   &__sidebar-2 {
@@ -131,7 +146,7 @@
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('md') {
         width: $hb-sidebar-width;
-        margin-left: hb-calcualte-rems(map-get($hb-screen-margins, 'md'));
+        margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
       }
     }
 

@@ -1,5 +1,25 @@
-$hb-color--black: #000;
-$hb-color--white: #fff;
+// Grayscale
+@function hb-gray($level) {
+  @return lighten(#000, $level * 1%);
+}
+
+$hb-gray--95: hb-gray(95);
+$hb-gray--90: hb-gray(90);
+$hb-gray--85: hb-gray(85);
+$hb-gray--80: hb-gray(80);
+$hb-gray--75: hb-gray(75);
+$hb-gray--70: hb-gray(70);
+$hb-gray--60: hb-gray(60);
+$hb-gray--50: hb-gray(50);
+$hb-gray--45: hb-gray(45);
+$hb-gray--40: hb-gray(40);
+$hb-gray--30: hb-gray(30);
+$hb-gray--20: hb-gray(20);
+$hb-gray--15: hb-gray(15);
+$hb-gray--10: hb-gray(10);
+
+$hb-color--black: hb-gray(0);
+$hb-color--white: hb-gray(100);
 
 // We can see if this ends up being useful with future themes
 $hb-theme--colors: (

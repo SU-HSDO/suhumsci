@@ -1,0 +1,91 @@
+// ICON CONTAINER
+// ==============
+@mixin hb-menu-icon-wrapper($height, $width) {
+  height: hb-calculate-rems($height);
+  width: hb-calculate-rems($width);
+
+  overflow: hidden;
+  text-indent: -9999px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+// ICONS AS BACKGROUND IMAGES
+// ==========================
+@mixin hb-menu-plus-icon {
+  background-size: hb-calculate-rems(18px);
+  background-image: svg($hb-icon-plus);
+  transition: transform 200ms ease-in-out;
+}
+
+@mixin hb-menu-minus-icon {
+  background-size: hb-calculate-rems(18px);
+  background-image: svg($hb-icon-minus);
+  transform: rotate(180deg);
+}
+
+@mixin hb-menu-down-arrow-icon {
+  background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
+  background-image: svg($hb-icon-down-arrow);
+  transition: transform 200ms ease-in-out;
+}
+
+@mixin hb-menu-up-arrow-icon {
+  background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
+  background-image: svg($hb-icon-down-arrow);
+  transform: rotate(180deg);
+}
+
+// SPECIAL ICONS
+// =============
+@mixin hb-menu-hamburger-icon {
+  // The toggle icon element acts as a hamburger icon. We can't use an SVG here
+  // because we need to be able to animate the hamburger into a close icon.
+  display: block;
+  position: relative;
+  height: hb-calculate-rems(3px);
+  width: hb-calculate-rems(16px);
+  background: $hb-color--black;
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    height: hb-calculate-rems(3px);
+    width: hb-calculate-rems(16px);
+    background: $hb-color--black;
+
+    position: absolute;
+    left: 0;
+
+    transition: top 0.2s ease 0.2s, transform 0.2s ease;
+  }
+
+  &::before {
+    top: hb-calculate-rems(-7px);
+  }
+
+  &::after {
+    top: hb-calculate-rems(7px);
+  }
+}
+
+@mixin hb-menu-close-icon {
+  // Converts the CSS hamburger icon into a close icon when the mobile nav is open.
+  // Must be used with the hb-menu-hamburger-icon.
+  background: transparent;
+
+  &::before,
+  &::after {
+    top: 0;
+    transition: top 0.2s ease, transform 0.2s ease 0.2s;
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}

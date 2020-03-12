@@ -16,12 +16,30 @@
     {% endif %}
 
     {% if title %}
-      <div class="hb-card__title">{{ title }}</div>
+      <div class="hb-card__title">
+        <h2>{{ title }}</h2>
+      </div>
     {% endif %}
 
     {% if subcontent %}
       <div class="hb-card__subcontent">
-        <div class="hb-card__subcontent-item">{{ subcontent }}</div>
+
+        {% if subcontent['#sources'] %}
+          {% for field in subcontent['#sources'] %}
+            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+              <div class="hb-card__subcontent-item">
+                {{ field }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            <div class="hb-card__subcontent-item">
+              {{ subcontent }}
+            </div>
+          {% endif %}
+        {% endif %}
+
       </div>
     {% endif %}
 
@@ -29,8 +47,10 @@
       <div class="hb-card__description">{{ description }}</div>
     {% endif %}
 
-    {% if url %}
-      <a href="{{ url }}" class="hb-card__decorative-link" aria-label="{{ url }}"></a>
+    {% if button %}
+      <div class="hb-card__decorative-link">
+        {{ button }}
+      </div>
     {% endif %}
   </div>
 </div>

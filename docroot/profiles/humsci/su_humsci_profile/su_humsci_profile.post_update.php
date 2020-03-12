@@ -192,7 +192,7 @@ function su_humsci_profile_post_update_8203() {
   $destination = $file_system->realpath('public://media-icons/generic/generic.png');
   if (!file_exists($destination)) {
     $directory = 'public://media-icons/generic';
-    $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+    $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     $file_system->copy($source, $destination, FileSystemInterface::EXISTS_REPLACE);
   }
 }

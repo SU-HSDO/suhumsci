@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\File\FileSystemInterface;
 
 /**
  * Outdated.
@@ -181,5 +182,16 @@ function su_humsci_profile_post_update_8202() {
     $config_factory->getEditable($config)
       ->setData($data)
       ->save();
+  }
+}
+
+function su_humsci_profile_post_update_8203() {
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  $source = DRUPAL_ROOT . '/' . drupal_get_path('module', 'media') . '/images/icons/generic.png';
+  $destination = $file_system->realpath('public://media-icons/generic/generic.png');
+
+  if (!file_exists($destination)) {
+    $file_system->copy($source, $destination, FileSystemInterface::EXISTS_REPLACE);
   }
 }

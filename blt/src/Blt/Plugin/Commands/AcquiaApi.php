@@ -11,6 +11,7 @@ use Robo\Tasks;
  * Class AcquiaApi.
  *
  * @package Example\Blt\Plugin\Commands
+ * @deprecated
  */
 class AcquiaApi extends Tasks {
 

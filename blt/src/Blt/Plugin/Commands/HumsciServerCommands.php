@@ -137,15 +137,10 @@ class HumsciServerCommands extends AcHooksCommand {
     $domains = "-d $primary_domain -d " . implode(' -d ', $domains);
 
     $directory = "/mnt/gfs/swshumsci.$environment/files/";
-    $shell_command = "cd ~ && .acme.sh/acme.sh --issue $domains -w $directory";
-    $php_command = "return shell_exec('$shell_command');";
 
-    $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
-      ->drush('eval')
-      ->arg($php_command)
-      ->printOutput(FALSE)
-      ->run();
+    $ssh_url = sprintf('swshumsci.%s@srv-7503.devcloud.hosting.acquia.com', $environment);
+    $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s --debug"', $ssh_url, $domains, $directory);
+    $this->taskExec($command)->run();
   }
 
   /**

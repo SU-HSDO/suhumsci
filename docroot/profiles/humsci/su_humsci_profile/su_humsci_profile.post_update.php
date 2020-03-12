@@ -189,13 +189,13 @@ function su_humsci_profile_post_update_8202() {
  * Copy the media module icon to the site's files directory.
  */
 function su_humsci_profile_post_update_8203() {
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  /** @var \Drupal\Core\File\FileSystem $file_system */
   $file_system = \Drupal::service('file_system');
   $source = DRUPAL_ROOT . '/' . drupal_get_path('module', 'media') . '/images/icons/generic.png';
   $destination = $file_system->realpath('public://media-icons/generic/generic.png');
   if (!file_exists($destination)) {
     $directory = 'public://media-icons/generic';
     $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
-    $file_system->copy($source, $destination, FileSystemInterface::EXISTS_REPLACE);
+    $file_system->copy($source, "$directory/generic.png", FileSystemInterface::EXISTS_REPLACE);
   }
 }

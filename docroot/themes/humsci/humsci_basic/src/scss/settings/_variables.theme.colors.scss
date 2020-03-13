@@ -21,12 +21,14 @@ $hb-gray--10: hb-gray(10);
 $hb-color--black: hb-gray(0);
 $hb-color--white: hb-gray(100);
 
+$hb-color--mint: #148762; // darken $sb-color-mint to pass color contrast
+
 // We can see if this ends up being useful with future themes
 $hb-theme--colors: (
   airy: (),
   colorful: (
     color-teal: $su-color-teal,
-    color-mint: $su-color-mint,
+    color-mint: $hb-color--mint,
     color-sun: $su-color-sun,
     color-poppy: $su-color-poppy,
     color-purple: $su-color-purple,
@@ -38,11 +40,11 @@ $hb-theme--colors: (
 $hb-colorful--variations: (
   colorful-teal: (
     primary: $su-color-teal,
-    secondary: $su-color-mint,
+    secondary: $hb-color--mint,
     tertiary: $su-color-sky
   ),
   colorful-mint: (
-    primary: $su-color-mint,
+    primary: $hb-color--mint,
     secondary: $su-color-purple,
     tertiary: darken($su-color-sky, 30%)
   )

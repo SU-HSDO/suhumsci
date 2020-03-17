@@ -1,0 +1,33 @@
+// Table row styles specific to the Table UI Pattern
+.hb-table-row {
+  display: table-row;
+  width: 100%;
+
+  &:nth-child(even) {
+    background: lighten($su-color-driftwood, 25%);
+  }
+
+  &__column {
+    padding: hb-calculate-rems(16px);
+    vertical-align: top;
+
+    @include grid-media-min('md') {
+      display: table-cell;
+      border: 1px solid $border-color;
+    }
+  }
+
+  &__heading {
+    text-transform: uppercase;
+
+    // heading display at mobile
+    @include grid-media-min('md') {
+      @include visually-hidden;
+    }
+
+    // modifier to hide heading at all times
+    &--hidden {
+      @include visually-hidden;
+    }
+  }
+}

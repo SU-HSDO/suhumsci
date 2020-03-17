@@ -1,0 +1,38 @@
+// Table styles specific to the Table UI Pattern
+.hb-table-pattern {
+  display: table;
+  width: 100%;
+  border: 1px solid $border-color;
+  border-collapse: collapse;
+  font-size: hb-calculate-rems(13px);
+  text-align: left;
+
+  @include grid-media-min('sm') {
+    font-size: hb-calculate-rems(16px);
+  }
+
+  &__caption {
+    //
+  }
+
+  &__header {
+    display: none;
+
+    @include grid-media-min('md') {
+      display: table-header-group;
+    }
+  }
+
+  &__row {
+    display: table-row;
+
+    .Cell { // column header cells
+      display: table-cell;
+    }
+  }
+
+  &__body {
+    display: table-row-group;
+    width: 100%;
+  }
+}

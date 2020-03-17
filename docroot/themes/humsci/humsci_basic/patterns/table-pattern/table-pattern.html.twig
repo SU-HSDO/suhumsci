@@ -1,4 +1,4 @@
-{% set attributes = attributes.addClass('table-pattern') %}
+{% set attributes = attributes.addClass('hb-table-pattern') %}
 
 {% set columns = {
   'column_1': 0,
@@ -32,20 +32,20 @@
 
 <div{{ attributes.setAttribute('role', 'grid').setAttribute('aria-readonly', 'true') }}>
   {% if caption | render | striptags | trim %}
-    <div class="table-caption">
+    <div class="hb-table-pattern__caption">
       {{ caption }}
     </div>
   {% endif %}
 
   {% if header %}
-    <div class="table-header" role="row">
-      <div class="table-row">
+    <div class="hb-table-pattern__header" role="row">
+      <div class="hb-table-pattern__row">
         {{ header }}
       </div>
     </div>
   {% endif %}
 
-  <div class="table-body">
+  <div class="hb-table-pattern__body">
     {% for item in items %}
       {% if not item['#column_1'] and columns.column_1 %}
         {% set item = item | merge({'#column_1': empty_cell}) %}

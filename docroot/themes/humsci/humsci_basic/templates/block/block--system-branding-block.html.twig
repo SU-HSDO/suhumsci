@@ -66,8 +66,8 @@
 
 {# If ALL lines 1-5 are not set, allow default Slogan and Site Name to be used #}
 {% if lockup.line1 is empty and line2 is empty and lockup.line3 is empty and lockup.line4 is empty and line5 is empty %}
-  {% set line2 = content.site_slogan|render %}
-  {% set line5 = content.site_name|render %}
+  {% set line2 = content.site_name|render %}
+  {% set line5 = content.site_slogan|render %}
 {% endif %}
 
 {# In case we ever want to pipe this through to a decanter template: #}

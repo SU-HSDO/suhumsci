@@ -1,0 +1,118 @@
+.hb-vertical-linked-card {
+  position: relative;
+  // The margin-top matches the margin-top on both the title and image to prevent
+  // overlap issues.
+  // The margin-left matches the negative margin-left on the title to prevent
+  // overlap issues.
+  margin: hb-calculate-rems(24px) 0 hb-calculate-rems($hb-gutter-width) hb-calculate-rems(31px);
+  padding-bottom: hb-calculate-rems(28px);
+
+  @include hb-colorful {
+    color: $hb-color--white;
+
+    // The gradient adds a 20px height white block at the top of the linked card
+    // so that the title looks like it has a negative margin on the top when
+    // there isn't an image.
+    background-image: linear-gradient(to bottom, $hb-color--white, $hb-color--white hb-calculate-rems(20px), darken(hb-colorful-variation(tertiary), 30%) hb-calculate-rems(20px));
+    // The gradient looks intimidating but it's only because of all the mixins
+    // we have to use. If we get rid of those it looks more like this:
+    // linear-gradient(to bottom, white, white 20px, colorful-color 20px);
+  }
+
+  &__img {
+    margin-top: hb-calculate-rems(-24px);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: hb-transition(transform);
+
+      .hb-vertical-linked-card:hover &,
+      .hb-vertical-linked-card:focus & {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
+  }
+
+  &__title {
+    // Without this the negative margins on the title cause it to lay under the
+    // image. Adding position relative makes sure everything is layered correctly.
+    position: relative;
+    margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+    padding: hb-calculate-rems(20px) hb-calculate-rems(68px) hb-calculate-rems(20px) hb-calculate-rems(20px);
+
+    font-size: hb-calculate-rems(20px);
+    line-height: 118%;
+
+    @include grid-media-min('sm') {
+      font-size: hb-calculate-rems(24px);
+    }
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(27px);
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      height: hb-calculate-rems(48px);
+      width: hb-calculate-rems(48px);
+      @include hb-icon-link-arrow($hb-color--white);
+
+      position: absolute;
+      right: 0;
+      bottom: hb-calculate-rems(10px);
+
+      transition: hb-transition(background-position);
+    }
+
+    .hb-vertical-linked-card:hover &::after,
+    .hb-vertical-linked-card:focus &::after {
+      background-position: 6px;
+    }
+
+    @include hb-colorful {
+      background-color: hb-colorful-variation(secondary);
+      transition: hb-transition(background-color);
+
+      .hb-vertical-linked-card:hover &,
+      .hb-vertical-linked-card:focus & {
+        background-color: darken(hb-colorful-variation(secondary), 15%);
+      }
+    }
+  }
+
+  &__link {
+    // We need the entire hb-vertical-linked-card to be a link but wrapping the entire
+    // element or wrapping individual elements in anchor tags is not very accessible.
+    // Instead we'll add a link at the bottom of the card (with an aria-label)
+    // and use the Pseudo Content Trick to make the entire card a link:
+    // https://inclusive-components.design/cards/#thepseudocontenttrick
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .fa-ext {
+      display: none;
+    }
+  }
+
+  &__description {
+    padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+    font-size: hb-calculate-rems(16px);
+    line-height: 127%;
+
+    @include grid-media-min('sm') {
+      font-size: hb-calculate-rems(18px);
+    }
+
+    .field-hs-postcard-body {
+      margin-bottom: 0;
+    }
+  }
+}

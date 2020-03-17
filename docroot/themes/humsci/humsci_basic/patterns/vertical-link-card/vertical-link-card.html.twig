@@ -1,28 +1,27 @@
-{% set attributes = attributes.addClass('vertical-link-card') %}
+{% set attributes = attributes.addClass('hb-vertical-linked-card') %}
+{%- set has_image = image|render|striptags('<drupal-render-placeholder><img>')|trim -%}
+{%- set has_description = description|render|striptags('<drupal-render-placeholder><img>')|trim -%}
 
 <div{{ attributes }}>
-  {% if button %}
-    <a href="{{ button|render|striptags|trim }}" title="{{ title|render|striptags|trim }}">
+  {% if has_image %}
+    <div class="hb-vertical-linked-card__img">
+      {{ image }}
+    </div>
   {% endif %}
 
-    {% if image %}
-      <div class="vertical-link-card__img">
-        {{ image }}
-      </div>
-    {% endif %}
+  {% if title %}
+    <h2 class="hb-vertical-linked-card__title">
+      {{ title|render|striptags|trim|raw }}
+    </h2>
+  {% endif %}
 
-    <div class="vertical-link-card__content-container">
-      {% if title %}
-        <h2 class="vertical-link-card__title">{{ title|render|striptags|trim|raw }}</h2>
-      {% endif %}
-      {% if description %}
-        <div class="vertical-link-card__description">
-          {{ description }}
-        </div>
-      {% endif %}
+  {% if has_description %}
+    <div class="hb-vertical-linked-card__description">
+      {{ description }}
     </div>
+  {% endif %}
 
   {% if button %}
-    </a>
+    <a href="{{ button|render|striptags|trim }}" aria-label="{{ title|render|striptags|trim }}" class="hb-vertical-linked-card__link"></a>
   {% endif %}
 </div>

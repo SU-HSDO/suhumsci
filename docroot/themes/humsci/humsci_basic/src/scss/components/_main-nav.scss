@@ -93,10 +93,6 @@
       font-weight: hb-theme-font-weight(regular);
       font-size: hb-calculate-rems(18px);
 
-      .hb-main-nav__link {
-        color: darken($su-color-driftwood, 30%);
-      }
-
       @include grid-media-min('md') {
         font-size: hb-calculate-rems(22px);
       }
@@ -151,10 +147,6 @@
     color: $hb-color--black;
     text-decoration: none;
     line-height: 120.3%;
-
-    // .hb-main-nav__menu-lv2 & {
-    //   color: hotpink; // WIP
-    // }
 
     @include grid-media-min('md') {
       line-height: 128%;
@@ -218,11 +210,18 @@
     }
 
     .hb-main-nav__menu-lv2 & {
+      color: darken($su-color-driftwood, 30%);
+
       @include grid-media-min('lg') {
         .js & {
           font-size: hb-calculate-rems(16px);
           padding: hb-calculate-rems(10px) hb-calculate-rems(14px);
         }
+      }
+
+      &:focus {
+        background-color: $hb-menu-link-background-hover;
+        color: $hb-color--black;
       }
     }
 
@@ -242,6 +241,7 @@
       &.is-active {
         @include hb-colorful {
           background: rgba(darken(hb-colorful-variation(secondary), 2%), 0.2);
+          color: $hb-color--black;
 
           &::before {
             background: hb-colorful-variation(secondary);
@@ -344,7 +344,7 @@
 
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
-    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.1);
     border-top: $hb-menu-light-border;
 
     &[aria-hidden="true"] {

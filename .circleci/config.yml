@@ -40,6 +40,10 @@ restore_cache: &restore_cache
 save_cache: &save_cache
   paths:
     - ./vendor
+    - ./docroot/libraries
+    - ./docroot/core
+    - ./docroot/modules/contrib
+    - ./docroot/modules/custom
   key: v10-dependencies-{{ checksum "composer.lock" }}
 
 #Jobs
@@ -51,7 +55,10 @@ directory_setup: &directory_setup
     - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
-    - run: composer install --optimize-autoloader
+    - run:
+        name: Composer setup
+        command: |
+          composer install --optimize-autoloader --no-interaction
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .
@@ -154,20 +161,7 @@ deploy_tag: &deploy_tag
           git config --global user.name "CircleCI"
           DATE=`date +%Y-%m-%d`
           vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
-
-github_release: &github_release
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - *add_known_hosts
-    - attach_workspace:
-        at: .
-    - run:
-        name: Create Github Release
-        command: |
-          git config --global user.email "sws-developers@lists.stanford.edu"
-          git config --global user.name "CircleCI"
-          vendor/bin/blt circleci:github:release
+          vendor/bin/blt circleci:new-release-branch ${CIRCLE_TAG}
 
 update_dependencies: &update_dependencies
   <<: *defaults
@@ -199,21 +193,6 @@ update_certs: &update_certs
           vendor/bin/blt humsci:update-cert prod
           vendor/bin/blt humsci:clean-backups
 
-merge_to_develop: &merge_to_develop
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - *add_known_hosts
-    - attach_workspace:
-        at: .
-    - run:
-        name: Create Github Release
-        command: |
-          git config --global user.email "sws-developers@lists.stanford.edu"
-          git config --global user.name "CircleCI"
-          git checkout develop
-          git merge ${CIRCLE_BRANCH}
-          git push origin develop
 # Declare all of the jobs we should run.
 version: 2
 jobs:
@@ -233,16 +212,24 @@ jobs:
     <<: *deploy_branch
   run-deploy-tag:
     <<: *deploy_tag
-  run-github-release:
-    <<: *github_release
   run-update-certs:
     <<: *update_certs
-  run-merge-to-develop:
-    <<: *merge_to_develop
 
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2
+  deploy_tag:
+    jobs:
+      # Tags are only created on successful code. Deploy the tag after creation.
+      # This will trigger after the release is created above.
+      - run-deploy-tag:
+          filters:
+            tags:
+              only:
+                - /.*/
+            branches:
+              ignore:
+                - /.*/
   test_lint_deploy:
     jobs:
       - run-setup
@@ -265,48 +252,10 @@ workflows:
             - run-behat-tests-second
             - run-fresh-install-tests
             - run-code-coverage
-          filters:
-            branches:
-              ignore:
-                - /violinist.*/
-      - should-it-merge:
-          type: approval
-          requires:
-            - run-behat-tests-first
-            - run-behat-tests-second
-            - run-fresh-install-tests
-            - run-code-coverage
-          filters:
-            branches:
-              only:
-                - /8\..*-release/
-      - run-merge-to-develop:
-          requires:
-            - should-it-merge
-      # Create a release when a release branch has merged into develop.
-      - run-github-release:
-          requires:
-            - run-behat-tests-first
-            - run-behat-tests-second
-            - run-fresh-install-tests
-            - run-code-coverage
-          filters:
-            branches:
-              only: develop
-      # Tags are only created on successful code. Deploy the tag after creation.
-      # This will trigger after the release is created above.
-      - run-deploy-tag:
-          filters:
-            tags:
-              only:
-                - /.*/
-            branches:
-              ignore:
-                - /.*/
   dependency_updates:
     triggers:
       - schedule:
-          cron: "0 18 * * 3"
+          cron: "0 16 * * 3"
           filters:
             branches:
               only:

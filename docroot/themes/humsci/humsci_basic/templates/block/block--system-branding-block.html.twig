@@ -54,23 +54,20 @@
   {% set attributes = attributes.addClass(["su-lockup--option-" ~ lockup.option]) %}
 {% endif %}
 
-{# Do not default the line 1 on variant O, S, or T #}
-{# See if Site Name is set #}
-{% if lockup.option != "o" and lockup.option != "s" and lockup.option != "t" %}
-  {% set line1 = content.site_name|render %}
-{% endif %}
-
-{# If line 1 set, override #}
-{% if lockup.line1 is not empty %}
- {% set line1 = lockup.line1|render|striptags %}
-{% endif %}
-
-{# See if Site Slogan is set #}
-{% set line2 = content.site_slogan|render %}
-
-{# If line 2 set, override #}
+{# If line 2 set #}
 {% if lockup.line2 is not empty %}
  {% set line2 = lockup.line2|render|striptags %}
+{% endif %}
+
+{# If line 5 set #}
+{% if lockup.line5 is not empty %}
+ {% set line5 = lockup.line5|render|striptags %}
+{% endif %}
+
+{# If ALL lines 1-5 are not set, allow default Slogan and Site Name to be used #}
+{% if lockup.line1 is empty and line2 is empty and lockup.line3 is empty and lockup.line4 is empty and line5 is empty %}
+  {% set line2 = content.site_slogan|render %}
+  {% set line5 = content.site_name|render %}
 {% endif %}
 
 {# In case we ever want to pipe this through to a decanter template: #}
@@ -79,11 +76,11 @@
   'attributes': attributes|without('class'),
   'modifier_class': attributes.class,
   'link': url('<front>'),
-  'line1': line1,
+  'line1': lockup.line1|render|striptags,
   'line2': line2,
   'line3': lockup.line3|render|striptags,
   'line4': lockup.line4|render|striptags,
-  'line5': lockup.line5|render|striptags
+  'line5': line5
   }
 %}
 

@@ -115,20 +115,7 @@ button:not([class]) {
 // and replace with different icon
 .fa-ext {
   @include hb-colorful {
-    $hb-lighten-color--primary: lighten(hb-colorful-variation(primary), 10%);
-    position: relative;
-
-    &::before {
-      content: '';
-      background: svg('<svg viewBox="0 0 12 12"><path d="M11.273 5.818v5.455H.727V.727h5.091m1.455 0h4v4m0-4L6.182 5.818" fill="transparent" stroke="#{$hb-lighten-color--primary}" stroke-width="2" stroke-miterlimit="10"/></svg>') center center no-repeat;
-      height: hb-calculate-rems(12px);
-      width: hb-calculate-rems(12px);
-      display: inline-block;
-      vertical-align: middle;
-      position: absolute;
-      top: hb-calculate-rems(4px);
-      right: hb-calculate-rems(-18px);
-    }
+    @include hb-external-link-icon;
 
     .fa-arrow-right {
       display: none;

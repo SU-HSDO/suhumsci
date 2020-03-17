@@ -5,6 +5,7 @@
 const srcDir = path.resolve( __dirname, 'src/' );
  
  module.exports = {
+  mode: 'production',
   entry: srcDir + "/js/index.js",
   output: {
     path: srcDir + "/js/build/",

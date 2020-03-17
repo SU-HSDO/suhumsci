@@ -1,5 +1,11 @@
+// Note: This code should be refactored to match styles in the _main-nav.scss
 .hb-secondary-nav {
   background-color: transparent;
+  display: none;
+
+  @include grid-media-min('lg') {
+    display: block;
+  }
 
   &__heading {
     @include hb-heading-4;
@@ -113,7 +119,11 @@
 
     &::before {
       content: '';
-      background: no-repeat left / 100% svg('<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="plus" fill="#{darken($su-color-driftwood, 30%)}"><path d="M10,1 C10,0.447715 9.55228,0 9,0 C8.44771,0 8,0.447715 8,1 L8,8 L1,8 C0.447715,8 0,8.44772 0,9 C0,9.55229 0.447715,10 1,10 L8,10 L8,17 C8,17.5523 8.44772,18 9,18 C9.55229,18 10,17.5523 10,17 L10,10 L17,10 C17.5523,10 18,9.55229 18,9 C18,8.44772 17.5523,8 17,8 L10,8 L10,1 Z" id="Shape"></path></g></g></svg>');
+      background-repeat: no-repeat;
+      background-position: center right;
+      background-size: hb-calculate-rems(18px);
+      background-image: svg($hb-icon-plus);
+
       color: darken($su-color-driftwood, 30%);
       height: hb-calculate-rems(18px);
       width: hb-calculate-rems(18px);
@@ -125,7 +135,7 @@
     &[aria-expanded="true"] {
       &::before {
         transform: rotate(180deg);
-        background: no-repeat left / 100% svg('<svg width="18px" height="2px" viewBox="0 0 18 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="bevel"><g id="minus" transform="translate(1.000000, 0.000000)" stroke="#{darken($su-color-driftwood, 30%)}" stroke-width="2"><path d="M0,1 L16,1" id="Line"></path></g></g></svg>');
+        background-image: svg($hb-icon-minus);
       }
     }
   }

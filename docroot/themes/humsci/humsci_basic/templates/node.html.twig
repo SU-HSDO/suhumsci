@@ -72,7 +72,8 @@
 {% set node_classes = node_classes|merge([
   node.type ? node.type.entity.label|clean_class,
   view_mode ? 'node-layout-' ~ view_mode|clean_class,
-  node.type and view_mode ? 'node-' ~ node.type.entity.label|clean_class ~ '-' ~ view_mode|clean_class
+  node.type and view_mode ? 'node-' ~ node.type.entity.label|clean_class ~ '-' ~ view_mode|clean_class,
+  "hb-vertical-page-padding"
 ]) %}
 {% set title_classes = [ node.bundle|clean_class ~ '__title'] %}
 {% set attributes = attributes.addClass(node_classes) %}

@@ -3,25 +3,12 @@ langcode: en
 status: true
 dependencies:
   module:
-    - blazy
-    - hs_table_filter
     - linkit
     - media
 name: 'Basic HTML Without Media'
 format: basic_html_without_media
 weight: 0
 filters:
-  blazy_filter:
-    id: blazy_filter
-    provider: blazy
-    status: false
-    weight: 3
-    settings:
-      filter_tags:
-        img: img
-        iframe: iframe
-      media_switch: ''
-      use_data_uri: '0'
   filter_html:
     id: filter_html
     provider: filter
@@ -36,12 +23,6 @@ filters:
     provider: filter
     status: true
     weight: 10
-    settings: {  }
-  hs_table_filter:
-    id: hs_table_filter
-    provider: hs_table_filter
-    status: true
-    weight: 0
     settings: {  }
   linkit:
     id: linkit

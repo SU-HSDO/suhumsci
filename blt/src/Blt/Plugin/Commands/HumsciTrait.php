@@ -2,7 +2,7 @@
 
 namespace Example\Blt\Plugin\Commands;
 
-use Drupal\Core\Serialization\Yaml;
+use StanfordCaravan\Robo\Tasks\AcquiaApi;
 use Zend\Stdlib\Glob;
 
 /**
@@ -34,6 +34,18 @@ trait HumsciTrait {
   }
 
   /**
+   * Get initialized Acquia api object.
+   *
+   * @return \StanfordCaravan\Robo\Tasks\AcquiaApi
+   *   Acquia API.
+   */
+  protected function getAcquiaApi() {
+    $key = $this->getConfigValue('cloud.key') ?: $_ENV['ACP_KEY'];
+    $secret = $this->getConfigValue('cloud.secret') ?: $_ENV['ACP_SECRET'];
+    return new AcquiaApi($this->getConfigValue('cloud.appId'), $key, $secret);
+  }
+
+  /**
    * Ask a question to the user.
    *
    * @param string $question
@@ -57,38 +69,6 @@ trait HumsciTrait {
       return $this->askQuestion($question, $default, $required);
     }
     return $response;
-  }
-
-  /**
-   * Git the information of the github remote.
-   *
-   * @return array
-   *   Keyed array with github owner and name.
-   */
-  protected function getGitHubInfo() {
-    $git_remote = exec('git config --get remote.origin.url');
-    $git_remote = str_replace('.git', '', $git_remote);
-    if (strpos($git_remote, 'https') !== FALSE) {
-      $parsed_url = parse_url($git_remote);
-      list($owner, $repo_name) = explode('/', trim($parsed_url['path'], '/'));
-      return ['owner' => $owner, 'name' => $repo_name];
-    }
-    list(, $repo_name) = explode(':', $git_remote);
-    str_replace('.git', '', $git_remote);
-
-    list($owner, $repo_name) = explode('/', $repo_name);
-    return ['owner' => $owner, 'name' => $repo_name];
-  }
-
-  /**
-   * Get the last version from the profile.
-   *
-   * @return string
-   *   Last semver version.
-   */
-  protected function getLastVersion() {
-    $profile_info = Yaml::decode(file_get_contents($this->getConfigValue('docroot') . '/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml'));
-    return $profile_info['version'];
   }
 
   /**

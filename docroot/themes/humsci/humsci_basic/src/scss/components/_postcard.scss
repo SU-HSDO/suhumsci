@@ -1,0 +1,113 @@
+.ptype-hs-postcard {
+  // Override the hb-card styles so that they display correctly within paragraph postcard components.
+  .hb-card {
+    &__img {
+      flex-shrink: 0; // prevent horizontal card image from collapsing
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__description {
+      margin-bottom: 0;
+    }
+
+    // For horizontal postcards, Content to Link (which is represented by
+    // the arrow link / decorative link style) is mapped to the Time field,
+    // this places the Content to Link within the subcontent.
+    &__subcontent {
+      order: 2; // Note: From an accessibility standpoint, this not recommended. It takes the content out of it's normal flow in the DOM.
+      margin-bottom: 0;
+    }
+
+    &__subcontent-item {
+      width: 100%;
+    }
+
+    &__decorative-link {
+      &::before {
+        display: none; // The decorative link for postcards is added via the field-hs-postcard-link class.
+      }
+    }
+  }
+}
+
+.field-hs-postcard {
+  &-title {
+    h2 {
+      @include hb-heading-3;
+      margin: 0;
+      overflow-wrap: break-word;
+    }
+  }
+
+  &-link {
+    position: relative;
+    width: 100%;
+
+    a {
+      display: block;
+      color: transparent; // `hide` the text but make sure screen readers can still read it
+      height: hb-calculate-rems(44px);
+      text-decoration: none;
+
+      &:hover,
+      &:focus {
+        box-shadow: none;
+        color: transparent;
+        cursor: pointer;
+      }
+    }
+
+    &.decanter-button {
+      @include unbuttonize;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &::before { // horizontal postcard arrow
+      content: '';
+      position: absolute;
+      left: 0;
+      height: hb-calculate-rems(44px); // WCAG AAA target size
+      width: hb-calculate-rems(44px);
+
+      @include hb-colorful {
+        @include hb-icon-link-arrow($color: hb-colorful-variation(secondary));
+
+        transform: translateX(0);
+        transition: transform 200ms ease-in-out;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      cursor: pointer;
+
+      &::before {
+        transform: translateX(0.625rem);
+
+        @include hb-colorful {
+          @include hb-icon-link-arrow(darken(hb-colorful-variation(secondary), 10%));
+        }
+      }
+    }
+
+    .fa-ext {
+      display: none;
+    }
+  }
+
+  &-body {
+    @include hb-body--small;
+    margin-bottom: hb-calculate-rems(28px);
+
+    @include grid-media-min('lg') {
+      @include hb-body--medium;
+    }
+  }
+}

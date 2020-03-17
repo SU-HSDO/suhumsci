@@ -62,7 +62,7 @@
     }
 
     &-lv1 {
-      font-weight: hb-theme-font-weight(bold);
+      font-weight: hb-theme-font-weight(semibold);
       font-size: hb-calculate-rems(22px);
       border-bottom: $hb-menu-light-border;
 
@@ -171,6 +171,7 @@
 
     &:hover:not(.is-active) {
       background-color: $hb-menu-link-background-hover;
+      color: $hb-color--black;
     }
 
     // Targeting only the first level of navigation on desktop
@@ -209,11 +210,18 @@
     }
 
     .hb-main-nav__menu-lv2 & {
+      color: darken($su-color-driftwood, 30%);
+
       @include grid-media-min('lg') {
         .js & {
           font-size: hb-calculate-rems(16px);
           padding: hb-calculate-rems(10px) hb-calculate-rems(14px);
         }
+      }
+
+      &:focus {
+        background-color: $hb-menu-link-background-hover;
+        color: $hb-color--black;
       }
     }
 
@@ -233,6 +241,7 @@
       &.is-active {
         @include hb-colorful {
           background: rgba(darken(hb-colorful-variation(secondary), 2%), 0.2);
+          color: $hb-color--black;
 
           &::before {
             background: hb-colorful-variation(secondary);
@@ -335,7 +344,7 @@
 
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
-
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.1);
     border-top: $hb-menu-light-border;
 
     &[aria-hidden="true"] {

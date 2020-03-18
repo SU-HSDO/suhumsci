@@ -59,8 +59,8 @@
       }
 
       // above 3 cols
-      @include grid-media('lg') {
-        @include hb-column-width($percentage-width, hb-calculate-rems($total-margin), $col-number);
+      @include grid-media-min('lg') {
+        @include hb-column-width($percentage-width, $total-margin, $col-number);
 
         &:nth-child(2n) {
           margin-right: hb-calculate-rems(48px);

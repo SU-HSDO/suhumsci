@@ -1,18 +1,15 @@
 // Table styles specific to the Table UI Pattern
 .hb-table-pattern {
-  display: table;
-  width: 100%;
-  border: 1px solid $border-color;
-  border-collapse: collapse;
-  font-size: hb-calculate-rems(13px);
-  text-align: left;
-
   @include grid-media-min('sm') {
     font-size: hb-calculate-rems(16px);
   }
 
+  @include grid-media-min('md') {
+    display: table;
+  }
+
   &__caption {
-    //
+    // DO THIS!!!!!!!
   }
 
   &__header {
@@ -24,15 +21,21 @@
   }
 
   &__row {
-    display: table-row;
+    @include grid-media-min('md') {
+      display: table-row;
+    }
 
-    .Cell { // column header cells
-      display: table-cell;
+    // column header cells
+    > :nth-child(n) {
+      @include grid-media-min('md') {
+        display: table-cell;
+      }
     }
   }
 
   &__body {
-    display: table-row-group;
-    width: 100%;
+    @include grid-media-min('md') {
+      display: table-row-group;
+    }
   }
 }

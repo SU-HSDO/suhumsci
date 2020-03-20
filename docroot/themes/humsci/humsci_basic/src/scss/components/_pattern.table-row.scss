@@ -1,17 +1,49 @@
 // Table row styles specific to the Table UI Pattern
 .hb-table-row {
+  padding-bottom: hb-calculate-rems(14px);
+
   @include grid-media-min('md') {
     display: table-row;
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    height: hb-calculate-rems(11px);
+    background-color: $hb-color--black;
+
+    @include hb-colorful {
+      background-color: darken(hb-colorful-variation(secondary), 10%);
+    }
+
+    @include grid-media-min('md') {
+      display: none;
+    }
   }
 
   &__column {
     @include grid-media-min('md') {
       display: table-cell;
     }
+
+    &:first-of-type {
+      margin-top: hb-calculate-rems(4px);
+    }
+
+    .hb-table-pattern & {
+      border: none;
+
+      @include grid-media-min('md') {
+        border: 1px solid $border-color;
+      }
+    }
   }
 
   &__heading {
-    // heading display at mobile
+    font-weight: hb-theme-font-weight(semibold);
+    margin: 0 0 hb-calculate-rems(2px) 0;
+    text-transform: uppercase;
+
     @include grid-media-min('md') {
       @include visually-hidden;
     }

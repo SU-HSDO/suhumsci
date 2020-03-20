@@ -97,7 +97,7 @@
 
   &:hover,
   &:focus {
-    box-shadow: inset 0 -0.5625em 0 $box-shadow-color;
+    box-shadow: inset 0 -0.475em 0 $box-shadow-color;
     transition-delay: 0s, 0s;
     border-bottom-color: $border-color;
   }
@@ -123,6 +123,26 @@
     &:focus {
       color: hb-colorful-variation(primary);
       box-shadow: inset 0 hb-calculate-rems(-9px) 0 lighten(hb-colorful-variation(primary), 70%);
+    }
+  }
+
+  .hb-local-footer & {
+    &:hover,
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .hb-local-footer--dark & {
+    @include hb-colorful {
+      color: lighten(hb-colorful-variation(primary), 30%);
+
+      &:hover,
+      &:focus {
+        // scss-lint:disable ImportantRule
+        color: lighten(hb-colorful-variation(primary), 70%) !important; // override default element styles
+        // scss-lint:enable ImportantRule
+      }
     }
   }
 }

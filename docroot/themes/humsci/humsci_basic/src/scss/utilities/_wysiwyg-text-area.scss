@@ -28,6 +28,10 @@
     color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
     font-style: italic;
+
+    .hb-local-footer--dark & {
+      color: $hb-color--white;
+    }
   }
 
   &-font-lead {
@@ -35,6 +39,14 @@
     font-size: hb-calculate-rems(18px);
     font-weight: hb-theme-font-weight(regular);
     line-height: 127%;
+
+    .hb-local-footer--dark & {
+      color: $hb-color--white;
+
+      @include hb-colorful {
+        color: lighten(hb-colorful-variation(secondary), 10%);
+      }
+    }
 
     @include grid-media-min('lg') {
       font-size: hb-calculate-rems(20px);
@@ -59,6 +71,10 @@
   &-caption {
     color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
+
+    .hb-local-footer--dark & {
+      color: $hb-color--white;
+    }
   }
 
   &-short-line-length {
@@ -156,7 +172,19 @@ blockquote:nth-child(n) {
     content: '';
   }
 
+  .hb-local-footer & {
+    margin: 0 0 2rem; // adjust blockquote browser spacing defaults when placed in the local footer
+  }
+
   p {
     @include hb-blockquote;
+
+    .hb-local-footer--dark & {
+      color: $hb-color--white;
+
+      @include hb-colorful {
+        color: lighten(hb-colorful-variation(secondary), 10%);
+      }
+    }
   }
 }

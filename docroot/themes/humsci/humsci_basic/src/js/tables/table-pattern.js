@@ -13,7 +13,7 @@ let tableRows = document.querySelectorAll('.hb-table-row');
 let tableRowHeaders = document.querySelectorAll('.hb-table-row__heading');
 
 // For each row in the table
-for (let x = 0; x < tableRows.length; x +=4) {
+for (let x = 0; x < tableRows.length; x += columnHeaders.length) {
   // For each cell in the row populate the table header text
   // that will display on mobile screen sizes.
    for (let y = 0; y < columnHeaders.length; y += 1) {

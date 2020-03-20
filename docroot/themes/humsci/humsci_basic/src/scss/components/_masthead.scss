@@ -20,8 +20,16 @@
     display: block;
     padding-top: hb-calculate-rems(11px);
     padding-bottom: hb-calculate-rems(28px);
-    max-width: $hb-input-max-width;
     z-index: $hb-z-index-search;
+    width: 100%;
+
+    @include grid-media-min('sm') {
+      width: 60%;
+    }
+
+    @include grid-media-min('lg') {
+      max-width: $hb-input-max-width;
+    }
   }
 
   .su-main-nav {

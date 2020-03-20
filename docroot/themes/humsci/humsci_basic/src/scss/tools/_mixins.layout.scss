@@ -23,13 +23,14 @@
 // Cols over 12 are not supported.
 @mixin hb-column($col-number: 2) {
   $percentage-width: 100% / $col-number;
-  $one-less-col: $col-number - 1;
-  $total-margin: calc(#{$one-less-col} * #{hb-calculate-rems($hb-gutter-width)});
 
   @if ($col-number > 1) {
+    $one-less-col: $col-number - 1;
+    $total-margin: $one-less-col * $hb-gutter-width;
+
     // 2 cols
     @include grid-media-min('sm') {
-      @include hb-column-width(50%, calc(1 * #{hb-calculate-rems($hb-gutter-width)}), 2); // for two elements, there is 1 gutter-width between
+      @include hb-column-width(50%, (hb-calculate-rems($hb-gutter-width)), 2); // for two elements, there is 1 gutter-width between
       margin-right: hb-calculate-rems(48px);
 
       &:nth-child(2n) {
@@ -41,7 +42,7 @@
       @if ($col-number != 4) {
         // 3 cols
         @include grid-media-min('md') {
-          @include hb-column-width(33.33%, calc(2 * #{hb-calculate-rems($hb-gutter-width)}), 3); // for 3 elements, 2 have gutter-width
+          @include hb-column-width(33.33%, #{hb-calculate-rems(2 * $hb-gutter-width)}, 3); // for 3 elements, 2 have gutter-width
 
           &:nth-child(2n) {
             margin-right: hb-calculate-rems(48px);
@@ -55,7 +56,7 @@
 
       // above 3 cols
       @include grid-media('lg') {
-        @include hb-column-width($percentage-width, $total-margin, $col-number);
+        @include hb-column-width($percentage-width, hb-calculate-rems($total-margin), $col-number);
 
         &:nth-child(2n) {
           margin-right: hb-calculate-rems(48px);

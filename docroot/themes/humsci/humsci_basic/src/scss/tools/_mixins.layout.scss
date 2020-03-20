@@ -2,7 +2,11 @@
   // scss-lint:disable ImportantRule
   max-width: hb-calculate-rems($hb-layout-max-width) !important;
   margin: 0 auto !important;
-  width: calc(100% - (2 * #{hb-calculate-rems($hb-gutter-width)})) !important;
+  width: calc(100% - (2 * #{hb-calculate-rems($hb-gutter-width--small)})) !important;
+
+  @include grid-media-min('md') {
+    width: calc(100% - (2 * #{hb-calculate-rems($hb-gutter-width)})) !important;
+  }
   // scss-lint:enable ImportantRule
 }
 

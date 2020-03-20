@@ -54,12 +54,17 @@
   }
 
   &-font-splash {
-    font-size: hb-calculate-rems(37px);
+    font-size: hb-calculate-rems(27px);
     font-weight: hb-theme-font-weight(semibold);
-    line-height: 125%;
+    line-height: 109%;
 
     @include hb-colorful {
       color: hb-colorful-variation(primary);
+    }
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(37px);
+      line-height: 112%;
     }
 
     @include grid-media-min('lg') {

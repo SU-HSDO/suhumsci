@@ -15,3 +15,29 @@
     @include hb-category-link;
   }
 }
+
+.hb-pill-list {
+  ol,
+  ul {
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      margin-right: hb-calculate-rems(8px);
+      padding-bottom: hb-calculate-rems(8px);
+
+      // Hide ol & ul list-style-type of items in the pill list.
+      // Normally this would be implemented as ul, ol { list-style-type: none; },
+      // display: none is used here to override the specificity of the
+      // ul & ol base element styles :not pseudo class selector
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  a {
+    @include hb-pill;
+  }
+}

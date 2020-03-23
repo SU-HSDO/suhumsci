@@ -13,7 +13,7 @@
     background-color: $hb-color--black;
 
     @include hb-colorful {
-      background-color: darken(hb-colorful-variation(secondary), 10%);
+      background-color: hb-colorful-variation(primary);
     }
 
     @include grid-media-min('md') {
@@ -55,9 +55,13 @@
   }
 
   &__heading {
-    font-weight: hb-theme-font-weight(semibold);
-    margin: 0 0 hb-calculate-rems(2px) 0;
+    font-weight: hb-theme-font-weight(bold);
+    margin: 0 0 hb-calculate-rems(4px) 0;
     text-transform: uppercase;
+
+    @include grid-media-min('sm') {
+      margin: 0 0 hb-calculate-rems(6px) 0;
+    }
 
     @include grid-media-min('md') {
       @include visually-hidden;

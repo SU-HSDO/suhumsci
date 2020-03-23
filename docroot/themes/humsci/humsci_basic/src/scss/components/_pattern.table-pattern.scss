@@ -21,13 +21,14 @@
   }
 
   &__caption {
-    display: table-row-group;
-    border: 1px solid $border-color;
-  }
+    color: darken($su-color-driftwood, 45%);
+    font-size: hb-calculate-rems(14px);
+    padding: hb-calculate-rems(20px) 0;
 
-  &__description {
-    font-weight: hb-theme-font-weight(semibold);
-    padding: hb-calculate-rems(16px);
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(16px);
+      padding: hb-calculate-rems(28px) 0;
+    }
   }
 
   &__row {

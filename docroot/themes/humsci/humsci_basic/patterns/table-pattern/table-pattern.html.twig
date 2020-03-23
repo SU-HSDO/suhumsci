@@ -31,14 +31,6 @@
 } %}
 
 <div{{ attributes.setAttribute('role', 'grid').setAttribute('aria-readonly', 'true') }}>
-  {# {% if caption | render | striptags | trim %} #}
-    <div class="hb-table-pattern__caption">
-      <div class="hb-table-pattern__description">
-        {{ caption }} Test caption!!!!!!
-      </div>
-    </div>
-  {# {% endif %} #}
-
   {% if header %}
     <div class="hb-table-pattern__header" role="row">
       <div class="hb-table-pattern__row">
@@ -69,3 +61,9 @@
     {% endfor %}
   </div>
 </div>
+
+  {% if caption | render | striptags | trim %}
+    <div class="hb-table-pattern__caption">
+      {{ caption }}
+    </div>
+  {% endif %}

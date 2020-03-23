@@ -31,11 +31,13 @@
 } %}
 
 <div{{ attributes.setAttribute('role', 'grid').setAttribute('aria-readonly', 'true') }}>
-  {% if caption | render | striptags | trim %}
+  {# {% if caption | render | striptags | trim %} #}
     <div class="hb-table-pattern__caption">
-      {{ caption }}
+      <div class="hb-table-pattern__description">
+        {{ caption }} Test caption!!!!!!
+      </div>
     </div>
-  {% endif %}
+  {# {% endif %} #}
 
   {% if header %}
     <div class="hb-table-pattern__header" role="row">

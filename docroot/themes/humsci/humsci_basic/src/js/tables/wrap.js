@@ -19,8 +19,6 @@ function wrapElement(element) {
 // Select every table element
 const elements = document.querySelectorAll('table');
 const uiPatternTable = document.querySelectorAll('.hb-table-pattern');
-console.log(elements);
-console.log(uiPatternTable);
 
 // Wrap every table element
 for (let i = 0; i < elements.length; i++) {

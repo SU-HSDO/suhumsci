@@ -167,3 +167,23 @@
     margin-right: 10px;
   }
 }
+
+@mixin hb-field-label {
+  display: block;
+  font-weight: hb-theme-font-weight(bold);
+  font-size: hb-calculate-rems(15px);
+  font-style: normal;
+  color: $hb-color--black;
+  text-transform: uppercase;
+  margin-bottom: hb-calculate-rems(4px);
+}
+
+@mixin hb-field-label--featured {
+  font-size: hb-calculate-rems(16px);
+  font-style: normal;
+  text-transform: inherit;
+
+  @include hb-colorful {
+    color: hb-colorful-variation(secondary);
+  }
+}

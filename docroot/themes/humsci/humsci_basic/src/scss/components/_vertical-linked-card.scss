@@ -52,6 +52,21 @@
       font-size: hb-calculate-rems(27px);
     }
 
+    // If this title is in a grid or row,
+    // keep it smaller longer.
+    .hb-grid &,
+    .ptype-hs-row & {
+      @include grid-media-min('sm') {
+        font-size: hb-calculate-rems(20px);
+        line-height: 118%;
+      }
+
+      @include grid-media-min('lg') {
+        font-size: hb-calculate-rems(24px);
+        line-height: 121%;
+      }
+    }
+
     &::after {
       content: '';
       display: block;

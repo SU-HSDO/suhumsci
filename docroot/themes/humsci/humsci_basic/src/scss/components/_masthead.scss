@@ -9,10 +9,21 @@
     &__line1,
     &__line2,
     &__line3,
-    &__line4, {
-      margin-bottom: hb-calculate-rems(12px);
+    &__line4 {
       word-break: break-all;
       line-height: 1em;
+    }
+
+    &__wordmark,
+    &__line1,
+    &__line2,
+    &__line3,
+    &__line4 {
+      margin-bottom: hb-calculate-rems(8px);
+
+      @include grid-media-min('md') {
+        margin-bottom: 0;
+      }
     }
   }
 

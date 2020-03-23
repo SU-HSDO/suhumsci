@@ -239,7 +239,19 @@
       margin: 0;
       overflow-wrap: break-word;
 
-      // If this h2 is in a grid,
+      @include grid-media-min('sm') {
+        font-weight: hb-theme-font-weight(semibold);
+        font-size: hb-calculate-rems(24px);
+        line-height: 121%;
+      }
+
+      @include grid-media-min('md') {
+        font-weight: hb-theme-font-weight(semibold);
+        font-size: hb-calculate-rems(27px);
+        line-height: 109%;
+      }
+
+      // If this h2 is in a grid or row,
       // keep it smaller longer.
       .hb-grid &,
       .ptype-hs-row & {
@@ -252,18 +264,6 @@
           font-size: hb-calculate-rems(24px);
           line-height: 121%;
         }
-      }
-
-      @include grid-media-min('sm') {
-        font-weight: hb-theme-font-weight(semibold);
-        font-size: hb-calculate-rems(24px);
-        line-height: 121%;
-      }
-
-      @include grid-media-min('md') {
-        font-weight: hb-theme-font-weight(semibold);
-        font-size: hb-calculate-rems(27px);
-        line-height: 109%;
       }
     }
   }

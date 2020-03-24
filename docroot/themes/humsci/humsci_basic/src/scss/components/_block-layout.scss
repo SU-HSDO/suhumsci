@@ -1,0 +1,86 @@
+.block-layout-builder:not(:last-child) {
+  margin-bottom: hb-calculate-rems(20px);
+}
+
+.block-hs-blocks {
+  padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
+  border: $hb-menu-light-border;
+
+  &:not(:last-child) {
+    margin-bottom: hb-calculate-rems(18px);
+  }
+}
+
+.block__title {
+  @include hb-block-heading;
+  margin-top: 0;
+  margin-bottom: hb-calculate-rems(20px);
+  width: 100%;
+}
+
+.field-label,
+.views-label {
+  @include hb-field-label;
+}
+
+.label-inline {
+  display: flex;
+
+  .field-label {
+    margin-right: hb-calculate-rems(6px);
+  }
+}
+
+.email {
+  [class^="fa-"] {
+    display: none;
+  }
+}
+
+.datetime {
+  color: darken($su-color-driftwood, 45%);
+}
+
+.address {
+  margin: 0;
+  font-style: italic;
+  color: darken($su-color-driftwood, 45%);
+}
+
+.given-name,
+.family-name {
+  font-weight: hb-theme-font-weight(semibold);
+  font-style: normal;
+}
+
+.string {
+  // Adds spacing between lines of text
+  div div {
+    margin-bottom: hb-calculate-rems(6px);
+  }
+}
+
+// Improve readability of the Drupal admin interface
+.layout-builder-form,
+.ui-dialog-off-canvas,
+.block-categories,
+.layout-builder-discard-changes {
+  font-size: hb-calculate-rems(16px);
+}
+
+// Hide the FontAwesome icon that is configured by default in
+// config/default/extlink.settings.yml
+// and replace with different icon
+.fa-ext {
+  // scss-lint:disable ImportantRule
+  margin-right: 0 !important; // removes link underline from icon
+  // scss-lint:enable ImportantRule
+
+  @include hb-colorful {
+    @include hb-external-link-icon;
+
+    .fa-arrow-right {
+      display: none;
+    }
+  }
+}

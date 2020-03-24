@@ -9,6 +9,10 @@ body {
   @include hb-colorful {
     font-family: $hb-colorful-font--sans;
   }
+
+  @include grid-media-min('lg') {
+    @include hb-body--medium;
+  }
 }
 
 a:not([class]) {
@@ -84,10 +88,6 @@ p:not([class]) {
   &:last-of-type {
     margin-bottom: 0;
   }
-
-  @include grid-media-min('lg') {
-    @include hb-body--medium;
-  }
 }
 
 strong:not([class]) {
@@ -122,35 +122,4 @@ button:not([class]) {
   &:hover {
     cursor: pointer;
   }
-}
-
-// Hide the FontAwesome icon that is configured by default in
-// config/default/extlink.settings.yml
-// and replace with different icon
-.fa-ext {
-  // scss-lint:disable ImportantRule
-  margin-right: 0 !important; // removes link underline from icon
-  // scss-lint:enable ImportantRule
-
-  @include hb-colorful {
-    @include hb-external-link-icon;
-
-    .fa-arrow-right {
-      display: none;
-    }
-  }
-}
-
-// Update the base of all regions to use 1.6 rems.
-// This is necessary so that items which were inheriting a font-size of 1rem render at 16px and not 10px.
-.contextual-region {
-  font-size: hb-calculate-rems(16px);
-}
-
-// Improve readability of the Drupal admin interface
-.layout-builder-form,
-.ui-dialog-off-canvas,
-.block-categories,
-.layout-builder-discard-changes {
-  font-size: hb-calculate-rems(16px);
 }

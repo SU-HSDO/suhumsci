@@ -111,7 +111,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['machine_name' => NULL, 'children' => []];
+    return ['machine_name' => NULL, 'children' => [], 'class' => NULL];
   }
 
   /**
@@ -277,12 +277,27 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   /**
    * {@inheritdoc}
    */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    $form['class'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Class'),
+      '#description' => $this->t('Add a class to the group'),
+      '#default_value' => $this->configuration['class'] ?? '',
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     // Set the machine name to a uuid value only if its a new block.
     if (!$form_state->getErrors() && empty($this->configuration['machine_name'])) {
       $this->setUniqueUuid();
     }
+    $this->configuration['class'] = $form_state->getValue('class');
   }
 
   /**

@@ -17,6 +17,7 @@
     @include clearfix;
     margin: 0 0 $hb-gutter-width;
     padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;
+    position: relative;
 
     @include grid-media-min('md') {
       padding: 0;
@@ -49,6 +50,7 @@
       width: 100%;
       top: 0;
       left: 0;
+      z-index: $hb-z-index-hero1-background;
 
       @include grid-media-min('md') {
         position: unset;
@@ -63,7 +65,7 @@
     // Secondary color block psuedo element that shows up in the grid
     @include hb-colorful {
       &::after {
-        z-index: $hb-z-index-block-background;
+        z-index: $hb-z-index-hero1-overlay;
         background-color: hb-colorful-variation(secondary);
 
         @include grid-media-min('md') {
@@ -74,6 +76,11 @@
         }
       }
     }
+  }
+
+  &__image-wrapper,
+  &__text {
+    z-index: $hb-z-index-hero1-overlay;
   }
 
   &__image-wrapper {
@@ -95,7 +102,7 @@
           display: block;
           bottom: 0;
           left: -8.75%;
-          z-index: $hb-z-index-block-background;
+          z-index: $hb-z-index-hero1-overlay;
           @include psuedo-background-box(
             hb-colorful-variation(secondary),
             50%,

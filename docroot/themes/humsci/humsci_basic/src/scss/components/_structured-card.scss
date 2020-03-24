@@ -28,8 +28,21 @@
     }
   }
 
-  .hb-card__category {
+  .hb-card__category,
+  .hb-card__columns {
     .views-field {
+      margin-bottom: hb-calculate-rems(14px);
+
+      @include grid-media-min('sm') {
+        margin-bottom: hb-calculate-rems(28px);
+      }
+    }
+  }
+
+  .hb-card__category {
+    margin-bottom: hb-calculate-rems(14px);
+
+    @include grid-media-min('sm') {
       margin-bottom: hb-calculate-rems(28px);
     }
 
@@ -45,9 +58,12 @@
     flex-wrap: wrap;
 
     .views-field {
-      margin-bottom: hb-calculate-rems(28px);
       padding-right: hb-calculate-rems(11px);
-      width: 50%;
+      width: 100%;
+
+      @include grid-media-min('sm') {
+        width: 50%;
+      }
 
       .views-label {
         display: inline-block;

@@ -3,65 +3,23 @@
   overflow-x: auto;
 }
 
-table,
-.hb-table-pattern {
-  // DO NOT set display: block; on a table
-  // Tables need display: table; in order to semantically be a table
-  // display: block; will negatively affect screen reader a11y
-  width: 100%;
-  border: 1px solid $border-color;
-  border-collapse: collapse;
-  font-size: hb-calculate-rems(13px);
-  text-align: left;
-
-  @include grid-media-min('sm') {
-    font-size: hb-calculate-rems(16px);
-  }
+table {
+  @include table;
 
   th,
-  td,
-  .hb-table-row__column,
-  .hb-table-pattern__row > :nth-child(n) {
-    border: 1px solid $border-color;
-    padding: hb-calculate-rems(16px);
-    vertical-align: top;
+  td {
+    @include table-data;
   }
 
-  thead th,
-  .hb-table-pattern__row > :nth-child(n) {
-    position: sticky;
-    top: 0;
-    border-color: $header-border-color;
-
-    a:not([class]) {
-      @include hb-colorful {
-        color: lighten(hb-colorful-variation(secondary), 55%);
-      }
-
-      &:hover,
-      &:focus {
-        box-shadow: none;
-        color: $hb-color--white;
-      }
-    }
+  thead th {
+    @include table-heading;
   }
 
-  thead tr,
-  .hb-table-pattern__row {
-    @include hb-colorful {
-      // set themed color for header background color table variable
-      $header-background-color: hb-colorful-variation(primary);
-
-      background: $header-background-color;
-    }
-
-    color: $header-foreground-color;
-    font-weight: hb-theme-font-weight(bold);
-    text-transform: uppercase;
+  thead tr {
+    @include table-head-row;
   }
 
-  tr:nth-child(even),
-  .hb-table-row:nth-child(even) {
-    background: lighten($su-color-driftwood, 25%);
+  tr:nth-child(even) {
+    @include table-row;
   }
 }

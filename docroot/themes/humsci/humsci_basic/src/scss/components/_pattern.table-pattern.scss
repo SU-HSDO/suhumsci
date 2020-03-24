@@ -1,12 +1,6 @@
 // Table styles specific to the Table UI Pattern
 .hb-table-pattern {
-  .views-view-pattern & {
-    overflow-x: auto; // prevent horizontal page scroll on 5 column tables
-  }
-
-  @include grid-media-min('sm') {
-    font-size: hb-calculate-rems(16px);
-  }
+  @include table;
 
   @include grid-media-min('md') {
     display: table;
@@ -32,12 +26,17 @@
   }
 
   &__row {
+    @include table-head-row;
+
     @include grid-media-min('md') {
       display: table-row;
     }
 
     // column header cells
     > :nth-child(n) {
+      @include table-heading;
+      @include table-data;
+
       @include grid-media-min('md') {
         display: table-cell;
       }

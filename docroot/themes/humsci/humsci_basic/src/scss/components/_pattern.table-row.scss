@@ -1,0 +1,81 @@
+// Table row styles specific to the Table UI Pattern
+.hb-table-row {
+  padding-bottom: hb-calculate-rems(14px);
+
+  @include grid-media-min('md') {
+    display: table-row;
+  }
+
+  &::before {
+    content: '';
+    display: block;
+    height: hb-calculate-rems(11px);
+    background-color: $hb-color--black;
+
+    @include hb-colorful {
+      background-color: hb-colorful-variation(primary);
+    }
+
+    @include grid-media-min('md') {
+      display: none;
+    }
+  }
+
+  &:nth-child(even) {
+    @include table-row;
+  }
+
+  &__column {
+    @include table-data;
+
+    @include grid-media-min('md') {
+      display: table-cell;
+    }
+
+    &:first-of-type {
+      margin-top: hb-calculate-rems(4px);
+    }
+
+    .hb-table-pattern & {
+      border: none;
+
+      @include grid-media-min('md') {
+        border: 1px solid $border-color;
+      }
+    }
+
+    .views-field-body {
+      padding-bottom: hb-calculate-rems(28px);
+
+      .field-content {
+        p {
+          font-size: hb-calculate-rems(13px);
+          margin: hb-calculate-rems(14px) 0 hb-calculate-rems(10px) 0;
+
+          @include grid-media-min('sm') {
+            font-size: hb-calculate-rems(16px);
+          }
+        }
+      }
+    }
+  }
+
+  &__heading {
+    font-weight: hb-theme-font-weight(bold);
+    margin: 0 0 hb-calculate-rems(4px) 0;
+    text-transform: uppercase;
+
+    @include grid-media-min('sm') {
+      margin: 0 0 hb-calculate-rems(6px) 0;
+    }
+
+    @include grid-media-min('md') {
+      @include visually-hidden;
+    }
+
+    // modifier to hide heading at all times
+    &--hidden {
+      @include visually-hidden;
+    }
+  }
+}

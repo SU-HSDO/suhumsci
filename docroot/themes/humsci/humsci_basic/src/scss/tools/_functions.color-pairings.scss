@@ -1,0 +1,9 @@
+// Map through all color pairings to find and set color palette
+@function get-color($key, $palette) { // move to functions.color-pairings
+
+  // Set color-map to get the palette for a specific color pairing
+  $color-map: map-get($color-pairings, $palette);
+
+  // Retun a single color from the mapped palette
+  @return map-get($color-map, $key);
+}

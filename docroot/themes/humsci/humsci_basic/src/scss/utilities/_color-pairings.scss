@@ -1,0 +1,9 @@
+// Generate Color Palette Classes
+@each $palette, $color-swatches in $color-pairings {
+  // These are the classes that update the CSS --palette variable.
+  // They should be applied to the parent element.
+  .hb-colorful-#{$palette} {
+    --palette--primary: #{get-color("primary", $palette)};
+    --palette--secondary: #{get-color("secondary", $palette)};
+  }
+}

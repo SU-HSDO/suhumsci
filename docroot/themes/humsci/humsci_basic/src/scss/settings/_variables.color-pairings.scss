@@ -1,7 +1,25 @@
-$default-theme: "teal"; // move to settings.color-pairings
-$hb-colorful-default: "colorful-teal";
+// Set the default color pairing value
+// The default color pairing also serves as the fallback color
+// pairing for browsers that do not support CSS custom properties
+$hb-colorful-default: "ocean";
 $hb-colorful-variation: 'colorful-teal'; // WIP!!! We may or may not need both $hb-colorful-default AND $hb-colorful-variation
 
-// Colorful Ocean Theme (primary: teal, secondary: mint, tertiary: sky)
-// Colorful Mountain Theme (primary: purple, secondary: sky, tertiary: mint)
-// Colorful Stanford Theme (primary: cardinal, secondary: gold, tertiary: driftwood)
+// TODO: UPDATE COLOR VALUES!!!!!!!!!!!!!
+// Each color pairing has a palette of color swatches
+$color-pairings: (
+  "ocean": (
+    "primary": $su-color-teal,
+    "secondary": $hb-color--mint,
+    "tertiary": $su-color-sky
+  ),
+  "mountain": (
+    "primary": $hb-color--mint,
+    "secondary": $su-color-purple,
+    "tertiary": darken($su-color-sky, 30%)
+  ),
+  "stanford": (
+    "primary": red,
+    "secondary": orange,
+    "tertiary": magenta
+  )
+);

@@ -66,8 +66,7 @@
     @include hb-colorful {
       &::after {
         z-index: $hb-z-index-hero1-overlay;
-        background-color: hb-colorful-variation(secondary);
-        @include add-theme("background-color", "secondary"); // WIP color-pairing
+        @include add-palette("background-color", "secondary");
 
         @include grid-media-min('md') {
           grid-column-start: 1;
@@ -145,8 +144,8 @@
     display: block;
 
     @include hb-colorful {
-      background-color: adjust-color(hb-colorful-variation(primary), $lightness: -9%, $alpha: -0.05);
-      @include add-theme("background-color", "primary"); // WIP color-pairing // update with correct primary variable reference
+      // background-color: adjust-color(hb-colorful-variation(primary), $lightness: -9%, $alpha: -0.05);
+      @include add-palette("background-color", "primary"); // TODO: update with correct primary variable. See how the background-color on line 147 passed through adjust-color.
     }
 
     .hb-hero-overlay--1 & {

@@ -1,3 +1,11 @@
+@mixin hb-block-heading {
+  @include hb-colorful {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(27px);
+    line-height: 109%;
+  }
+}
+
 @mixin hb-heading-1 {
   @include hb-colorful {
     font-weight: hb-theme-font-weight(semibold);
@@ -26,9 +34,7 @@
 
 @mixin hb-heading-3 {
   @include hb-colorful {
-    font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(27px);
-    line-height: 109%;
+    @include hb-block-heading;
 
     @include grid-media-min('lg') {
       font-size: hb-calculate-rems(38px);
@@ -62,6 +68,17 @@
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(16px);
     line-height: 117%;
+  }
+}
+
+@mixin hb-subtitle {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 122%;
+
+  font-size: hb-calculate-rems(16px);
+
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(18px);
   }
 }
 
@@ -165,5 +182,25 @@
     position: absolute;
     content: close-quote;
     margin-right: 10px;
+  }
+}
+
+@mixin hb-field-label {
+  display: block;
+  font-weight: hb-theme-font-weight(bold);
+  font-size: hb-calculate-rems(15px);
+  font-style: normal;
+  color: $hb-color--black;
+  text-transform: uppercase;
+  margin-bottom: hb-calculate-rems(4px);
+}
+
+@mixin hb-field-label--featured {
+  font-size: hb-calculate-rems(16px);
+  font-style: normal;
+  text-transform: inherit;
+
+  @include hb-colorful {
+    color: hb-colorful-variation(secondary);
   }
 }

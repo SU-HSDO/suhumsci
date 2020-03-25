@@ -5,8 +5,9 @@
  * Contains hs_blocks.module.
  */
 
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
@@ -54,11 +55,23 @@ function hs_blocks_preprocess_block__block_content(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_blocks_preprocess_block__group_block(&$variables) {
+  if (!empty($variables['elements']['#configuration']['class'])) {
+    $classes = explode(' ', $variables['elements']['#configuration']['class']);
+    foreach ($classes as $class) {
+      $variables['attributes']['class'][] = Html::cleanCssIdentifier($class);
+    }
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_blocks_form_layout_builder_update_block_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\layout_builder\SectionStorageInterface $section_storage */
-  list($section_storage, $delta, , $uuid) = $form_state->getBuildInfo()['args'];
+  [$section_storage, $delta, , $uuid] = $form_state->getBuildInfo()['args'];
   $section = $section_storage->getSection($delta);
   $component = $section->getComponent($uuid);
   $component_id = $component->get('configuration')['id'];
@@ -77,7 +90,7 @@ function hs_blocks_form_layout_builder_update_block_alter(&$form, FormStateInter
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_blocks_form_layout_builder_add_block_alter(&$form, FormStateInterface $form_state) {
-  list(, , , $field_id) = $form_state->getBuildInfo()['args'];
+  [, , , $field_id] = $form_state->getBuildInfo()['args'];
 
   // We only want to hide the label display checkbox for fields, not regular
   // blocks.

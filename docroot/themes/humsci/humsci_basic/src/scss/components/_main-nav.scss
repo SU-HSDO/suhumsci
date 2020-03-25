@@ -63,7 +63,7 @@
 
     &-lv1 {
       font-weight: hb-theme-font-weight(semibold);
-      font-size: hb-calculate-rems(22px);
+      font-size: hb-calculate-rems(20px);
       border-bottom: $hb-menu-light-border;
 
       &[aria-hidden="false"] {
@@ -71,7 +71,7 @@
       }
 
       @include grid-media-min('md') {
-        font-size: hb-calculate-rems(30px);
+        font-size: hb-calculate-rems(24px);
       }
 
       @include grid-media-min('lg') {
@@ -98,6 +98,10 @@
       }
 
       @include grid-media-min('lg') {
+        // scss-lint:disable ImportantRule
+        box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.1) !important;
+        // scss-lint:enable ImportantRule
+
         .js & {
           font-weight: hb-theme-font-weight(semibold);
           font-size: inherit;
@@ -344,7 +348,6 @@
 
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
-    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.1);
     border-top: $hb-menu-light-border;
 
     &[aria-hidden="true"] {

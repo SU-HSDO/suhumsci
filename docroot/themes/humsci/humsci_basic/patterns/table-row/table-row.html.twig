@@ -1,34 +1,39 @@
-{% set attributes = attributes.addClass('table-row') %}
+{% set attributes = attributes.addClass('hb-table-row') %}
 
 {# Remove data-column-label from each column div once dynamic funtionality is added #}
 
 <div{{ attributes.setAttribute('role', 'row') }}>
   {% if column_1 %}
-    <div class="column-1" role="gridcell" data-column-label="Column 1">
+    <div class="hb-table-row__column" role="gridcell" data-column-label="Column 1">
+      <p class="hb-table-row__heading hb-table-row__heading--hidden"></p>
       {{ column_1 }}
     </div>
   {% endif %}
 
   {% if column_2 %}
-    <div class="column-2" role="gridcell" data-column-label="Column 2">
+    <div class="hb-table-row__column" role="gridcell" data-column-label="Column 2">
+      <p class="hb-table-row__heading"></p>
       {{ column_2 }}
     </div>
   {% endif %}
 
   {% if column_3 %}
-    <div class="column-3" role="gridcell" data-column-label="Column 3">
+    <div class="hb-table-row__column" role="gridcell" data-column-label="Column 3">
+      <p class="hb-table-row__heading"></p>
       {{ column_3 }}
     </div>
   {% endif %}
 
   {% if column_4 %}
-    <div class="column-4" role="gridcell" data-column-label="Column 4">
+    <div class="hb-table-row__column" role="gridcell" data-column-label="Column 4">
+      <p class="hb-table-row__heading"></p>
       {{ column_4 }}
     </div>
   {% endif %}
 
   {% if column_5 %}
-    <div class="column-5" role="gridcell" data-column-label="Column 5">
+    <div class="hb-table-row__column" role="gridcell" data-column-label="Column 5">
+      <p class="hb-table-row__heading"></p>
       {{ column_5 }}
     </div>
   {% endif %}

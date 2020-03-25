@@ -44,15 +44,18 @@ function humsci_basic_preprocess_field(&$variables, $hook) {
 function humsci_basic_preprocess_page(&$vars) {
   // Variant setting for the brand bar.
   $bbv = theme_get_setting('brand_bar_variant_classname');
-  if ($bbv !== "none") {
+  if ($bbv) {
     $vars['brand_bar_variant_classname'] = 'su-brand-bar--' . $bbv;
   }
 
   // Variant setting for the global footer.
   $gfv = theme_get_setting('global_footer_variant_classname');
-  if ($gfv !== "none") {
+  if ($gfv) {
     $vars['global_footer_variant_classname'] = 'su-global-footer--' . $gfv;
   }
+
+  // Variant setting for the local footer to be used in children themes
+  $vars['local_footer_variant_classname'] = '';
 }
 
 /**

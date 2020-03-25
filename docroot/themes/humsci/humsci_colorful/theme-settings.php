@@ -16,13 +16,31 @@ $theme_name = \Drupal::theme()->getActiveTheme()->getName();
  * Form override for theme settings.
  */
 function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStateInterface $form_state) {
+  // Colorful theme color pairing setting
+  // theme_color_pairing
+  $form['options_settings']['humsci_colorful_color_pairing'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Color Pairing'),
+  ];
+
+  $form['options_settings']['humsci_colorful_color_pairing']['theme_color_pairing'] = [
+    '#type' => 'select',
+    '#title' => t('Color Pairing'),
+    '#options' => [
+      'ocean' => t('Ocean'),
+      'mountain' => t('Mountain'),
+      'sand' => t('Sand'),
+    ],
+    '#default_value' => theme_get_setting('theme_color_pairing'),
+  ];
+
   // Local Footer
-  $form['options_settings']['humsci_basic_local_footer'] = [
+  $form['options_settings']['humsci_colorful_local_footer'] = [
     '#type' => 'fieldset',
     '#title' => t('Local Footer Settings'),
   ];
 
-  $form['options_settings']['humsci_basic_local_footer']['local_footer_variant_classname'] = [
+  $form['options_settings']['humsci_colorful_local_footer']['local_footer_variant_classname'] = [
     '#type' => 'select',
     '#title' => t('Local Footer Variant'),
     '#options' => [

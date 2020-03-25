@@ -1,0 +1,59 @@
+// $default-theme: "teal"; // move to settings.color-pairings
+
+// Color Pairing Groups // move to settings.color-pairings --> wrap in colorful theme
+$color-groups: (
+  "teal": (
+    "primary": $su-color-teal,
+    "secondary": $hb-color--mint,
+    "tertiary": $su-color-sky
+  ),
+  "mint": (
+    "primary": $hb-color--mint,
+    "secondary": $su-color-purple,
+    "tertiary": darken($su-color-sky, 30%)
+  )
+);
+
+// Map through all color groups to find and set theme
+@function get-color($key, $theme) { // move to functions.color-pairings
+  // Set color-map to get the color pairings for a specific theme
+  $color-map: map-get($color-groups, $theme);
+
+  // Retun a single color from the mapped color pairing
+  @return map-get($color-map, $key);
+}
+
+// GENERATE DEFAULT THEME VARIABLES // move to elements.base
+// ------------------------
+:root {
+  // This variable will be used to style all themed patterns.
+  // This variable will be updated depending on the parent theme.
+  // We have to set the variable here and give it a default value.
+  --theme--primary: #{get-color("primary", $default-theme)};
+  --theme--secondary: #{get-color("secondary", $default-theme)};
+}
+
+// GENERATE THEME CLASSES // move to utilities.color-pairings
+// ----------------------
+@each $theme, $pairings in $color-groups {
+  // These are the classes that update the CSS --theme variable.
+  // They should be applied to the parent element.
+  .t-#{$theme} {
+    --theme--primary: #{get-color("primary", $theme)};
+    --theme--secondary: #{get-color("secondary", $theme)};
+  }
+}
+
+// GENERATE FALLBACK CLASSES // move to mixins.color-pairings
+// -------------------------
+// The add-theme() mixin is used in place of the css property that needs to be themed:
+// .example {
+//   @include add-theme('color');
+// }
+@mixin add-theme($property, $color) {
+  // Fallback for browsers that do not support CSS variables
+  #{$property}: get-color($color, $default-theme);
+
+  // All modern browsers that support CSS variables
+  #{$property}: var(--theme--#{$color});
+}

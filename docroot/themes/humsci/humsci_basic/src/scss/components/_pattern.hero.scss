@@ -66,7 +66,7 @@
     @include hb-colorful {
       &::after {
         z-index: $hb-z-index-hero1-overlay;
-        @include hb-add-palette("background-color", "secondary");
+        @include hb-pairing-color("background-color", "secondary");
 
         @include grid-media-min('md') {
           grid-column-start: 1;
@@ -103,6 +103,7 @@
           bottom: 0;
           left: -8.75%;
           z-index: $hb-z-index-hero1-overlay;
+          // TODO: rewrite psuedo-background-box mixin to work with the color-pairing mixins
           @include psuedo-background-box(
             hb-colorful-variation(secondary),
             50%,
@@ -139,12 +140,13 @@
   }
 
   &__text {
-    background-color: darken($su-color-driftwood, 10%);
-    color: $hb-color--white;
+    // background-color: darken($su-color-driftwood, 10%);
+    @include hb-global-color("background-color", "gray");
+    @include hb-global-color("color", "white");
     display: block;
 
     @include hb-colorful {
-      @include hb-add-palette("background-color", "primary-hero-overlay");
+      @include hb-pairing-color("background-color", "primary-hero-overlay");
     }
 
     .hb-hero-overlay--1 & {
@@ -192,7 +194,7 @@
       li {
         &::before {
           @include hb-colorful {
-            background-color: lighten(hb-colorful-variation(secondary), 10%);
+            @include hb-pairing-color("background-color", "secondary");
           }
         }
       }
@@ -202,7 +204,10 @@
       li {
         &::before {
           @include hb-colorful {
-            color: lighten(hb-colorful-variation(secondary), 10%);
+            color: hb-colorful-variation(secondary); // #148762
+            color: lighten(hb-colorful-variation(secondary), 10%);  // original setting
+            // @include hb-pairing-color("color", "secondary");
+            @include hb-pairing-color-lighten("color", "secondary", var(--color-pairing), 10); // testing
           }
         }
       }

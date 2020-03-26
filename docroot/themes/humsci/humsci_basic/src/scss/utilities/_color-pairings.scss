@@ -2,7 +2,8 @@
 @each $palette, $color-swatches in $color-pairings {
   // These are the classes that update the CSS --palette variable.
   // They should be applied to the parent element.
-  .hb-colorful-#{$palette} {
+  // Note: There is not a .hc-pairing base class as all of the values in each coloring pairing are unique.
+  .hc-pairing-#{$palette} {
     --palette--primary: #{get-color("primary", $palette)};
     --palette--secondary: #{get-color("secondary", $palette)};
     --palette--tertiary: #{get-color("tertiary", $palette)};

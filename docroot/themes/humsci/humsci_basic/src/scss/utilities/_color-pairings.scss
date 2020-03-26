@@ -1,15 +1,15 @@
 // Generate Color Palette Classes
-@each $palette, $color-swatches in $color-pairings {
+@each $palette, $color-swatches in $hc-colorful-pairings {
   // These are the classes that update the CSS --palette variable.
   // They should be applied to the parent element.
-  // Note: There is not a .hc-pairing base class as all of the values in each coloring pairing are unique.
+  // Note: If a hc-pairing- class is not applied, hc-pairing-ocean will apply as the default / fallback color pairing.
   .hc-pairing-#{$palette} {
-    --palette--primary: #{get-color("primary", $palette)};
-    --palette--secondary: #{get-color("secondary", $palette)};
-    --palette--tertiary: #{get-color("tertiary", $palette)};
-    --palette--primary-hero-overlay: #{get-color("primary-hero-overlay", $palette)};
-    --palette--secondary-active: #{get-color("secondary-active", $palette)};
-    --palette--secondary-highlight: #{get-color("secondary-highlight", $palette)};
-    --palette--tertiary-reversed: #{get-color("tertiary-reversed", $palette)};
+    --palette--primary: #{hb-get-pairing-color("primary", $palette, $hc-colorful-pairings)};
+    --palette--secondary: #{hb-get-pairing-color("secondary", $palette, $hc-colorful-pairings)};
+    --palette--tertiary: #{hb-get-pairing-color("tertiary", $palette, $hc-colorful-pairings)};
+    --palette--primary-hero-overlay: #{hb-get-pairing-color("primary-hero-overlay", $palette, $hc-colorful-pairings)};
+    --palette--secondary-active: #{hb-get-pairing-color("secondary-active", $palette, $hc-colorful-pairings)};
+    --palette--secondary-highlight: #{hb-get-pairing-color("secondary-highlight", $palette, $hc-colorful-pairings)};
+    --palette--tertiary-reversed: #{hb-get-pairing-color("tertiary-reversed", $palette, $hc-colorful-pairings)};
   }
 }

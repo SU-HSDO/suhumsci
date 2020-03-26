@@ -31,7 +31,15 @@
     display: flex;
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(10px);
+      margin-bottom: hb-calculate-rems(14px);
+
+      @include grid-media-min('md') {
+        margin-bottom: hb-calculate-rems(16px);
+      }
+
+      @include grid-media-min('lg') {
+        margin-bottom: hb-calculate-rems(18px);
+      }
     }
 
     &-item {

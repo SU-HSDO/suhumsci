@@ -1,9 +1,14 @@
-// Map through all color pairings to find and set color palette
-@function get-color($key, $palette) {
+// Map through all color pairings to find and set a color palette
+@function hb-get-pairing-color($key, $palette, $theme-map) {
 
   // Set color-map to get the palette for a specific color pairing
-  $color-map: map-get($color-pairings, $palette);
+  $color-map: map-get($theme-map, $palette);
 
   // Retun a single color from the mapped palette
   @return map-get($color-map, $key);
+}
+
+// Map through all global grays
+@function hb-get-global-color($key, $globals-map) {
+  @return map-get($globals-map, $key);
 }

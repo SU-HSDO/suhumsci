@@ -4,17 +4,15 @@
 $hb-colorful-default: "ocean";
 $hb-colorful-variation: "colorful-teal"; // WIP!!! We may or may not need both $hb-colorful-default AND $hb-colorful-variation
 
-// TODO: UPDATE hex codes with color variables
-// TODO: UPDATE variables.themes.colors with new color swatches
-// TODO: Check to see if any of the global grays much the hb-gray function output
-// TODO: Finish updating pattern.hero.scss colors and background-colors to use add-palette mixin
-// TODO: write tests for add-palette mixin
+// TODO: UPDATE hex codes with color variables that currently exisit
+// TODO: Finish updating pattern.hero.scss colors and background-colors to use hb-add-palette mixin
+// TODO: write tests for hb-add-palette mixin
 
 // Each color pairing has a palette of color swatches
-$color-pairings: (
+$hc-colorful-pairings: (
   "ocean": (
-    "primary": $su-color-teal, // #00050C
-    "secondary": $hb-color--mint, // #148762
+    "primary": $su-color-teal,
+    "secondary": $hb-color--mint,
     "tertiary": #007C8F,
     "primary-hero-overlay": rgba(0, 36, 41, 0.97),
     "secondary-active": #00CE9D,
@@ -39,4 +37,14 @@ $color-pairings: (
     "secondary-highlight": #F4ECD7,
     "tertiary-reversed": #D9D7D2
   )
+);
+
+// Specific shades of gray that compliment all color pairing palettes
+$hc-colorful-globals: (
+  "gray": #B6B1A9,
+  "gray-dark": #413E39,
+  "gray-medium": #D9D7D2,
+  "gray-light": #F1F0EE,
+  "white": #FFFFFF,
+  "black": #000000
 );

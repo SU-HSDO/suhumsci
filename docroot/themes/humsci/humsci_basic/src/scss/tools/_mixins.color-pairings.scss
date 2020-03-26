@@ -1,12 +1,20 @@
-// The add-palette() mixin is used in place of the css property that needs
+// The hb-add-palette() mixin is used in place of the css property that needs
 // to have a color pairing:
 // .example {
-//   @include add-palette('background-color', 'primary');
+//   @include hb-add-palette('background-color', 'primary');
 // }
-@mixin add-palette($property, $color-swatch) {
-  // Fallback for browsers that do not support CSS variables
-  #{$property}: get-color($color-swatch, $hb-colorful-default);
+@mixin hb-add-palette($property, $color-swatch) {
+  @include hb-colorful {
+    // Fallback for browsers that do not support CSS variables
+    #{$property}: hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings);
 
-  // All modern browsers that support CSS variables
-  #{$property}: var(--palette--#{$color-swatch});
+    // All modern browsers that support CSS variables
+    #{$property}: var(--palette--#{$color-swatch});
+  }
+}
+
+@mixin hb-global-color($property, $color-swatch) {
+  @include hb-colorful {
+    #{$property}: hb-get-global-color($color-swatch, $hc-colorful-globals);
+  }
 }

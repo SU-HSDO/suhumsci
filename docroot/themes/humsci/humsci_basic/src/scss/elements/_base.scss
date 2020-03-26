@@ -2,13 +2,15 @@
   // These variables will be used to style color pairings.
   // They will be updated depending on the parent color pairing.
   // We have to set the variables here and give them default values.
-  --palette--primary: #{get-color("primary", $hb-colorful-default)};
-  --palette--secondary: #{get-color("secondary", $hb-colorful-default)};
-  --palette--tertiary: #{get-color("tertiary", $hb-colorful-default)};
-  --palette--primary-hero-overlay: #{get-color("primary-hero-overlay", $hb-colorful-default)};
-  --palette--secondary-active: #{get-color("secondary-active", $hb-colorful-default)};
-  --palette--secondary-highlight: #{get-color("secondary-highlight", $hb-colorful-default)};
-  --palette--tertiary-reversed: #{get-color("tertiary-reversed", $hb-colorful-default)};
+  @include hb-colorful {
+    --palette--primary: #{hb-get-pairing-color("primary", $hb-colorful-default, $hc-colorful-pairings)};
+    --palette--secondary: #{hb-get-pairing-color("secondary", $hb-colorful-default, $hc-colorful-pairings)};
+    --palette--tertiary: #{hb-get-pairing-color("tertiary", $hb-colorful-default, $hc-colorful-pairings)};
+    --palette--primary-hero-overlay: #{hb-get-pairing-color("primary-hero-overlay", $hb-colorful-default, $hc-colorful-pairings)};
+    --palette--secondary-active: #{hb-get-pairing-color("secondary-active", $hb-colorful-default, $hc-colorful-pairings)};
+    --palette--secondary-highlight: #{hb-get-pairing-color("secondary-highlight", $hb-colorful-default, $hc-colorful-pairings)};
+    --palette--tertiary-reversed: #{hb-get-pairing-color("tertiary-reversed", $hb-colorful-default, $hc-colorful-pairings)};
+  }
 }
 
 html {

@@ -1,15 +1,38 @@
-// The hb-add-palette() mixin is used in place of the css property that needs
+// The hb-pairing-color() mixin is used in place of the css property that needs
 // to have a color pairing:
 // .example {
-//   @include hb-add-palette('background-color', 'primary');
+//   @include hb-pairing-color('background-color', 'primary');
 // }
-@mixin hb-add-palette($property, $color-swatch) {
+@mixin hb-pairing-color($property, $color-swatch) {
   @include hb-colorful {
     // Fallback for browsers that do not support CSS variables
     #{$property}: hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings);
 
     // All modern browsers that support CSS variables
     #{$property}: var(--palette--#{$color-swatch});
+  }
+}
+
+// TESTING!!!!!
+@mixin hb-pairing-color-lighten($property, $color-swatch, $color-pairing, $percentage) {
+  @include hb-colorful {
+
+    // Fallback for browsers that do not support CSS variables - works!
+    #{$property}: lighten(hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings), $percentage);
+
+    // All modern browsers that support CSS variables
+    // #{$property}: var(--palette--#{$color-swatch}); // adding the lighten Sass function will not work with CSS custom properties
+
+    $hb-colorful-default: "mountain"; // testing - I need this value.
+    $hb-colorful-default: $color-pairing;
+
+    @if $color-pairing == sand {
+      $hb-colorful-default: "sand";
+    }
+
+    // @warn $hb-colorful-default;
+
+    #{$property}: lighten(hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings), $percentage);
   }
 }
 

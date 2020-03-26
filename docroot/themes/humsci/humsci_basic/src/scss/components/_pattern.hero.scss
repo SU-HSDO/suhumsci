@@ -162,6 +162,11 @@
 
       h2 {
         @include hb-heading-4;
+        margin-top: hb-calculate-rems(24px);
+
+        @include grid-media-min('lg') {
+          margin-top: hb-calculate-rems(28px);
+        }
       }
 
       @include hb-colorful {
@@ -207,7 +212,7 @@
     a {
       font-size: hb-calculate-rems(16px);
 
-      @include grid-media-min('md') {
+      @include grid-media-min('lg') {
         font-size: hb-calculate-rems(18px);
       }
     }
@@ -227,12 +232,17 @@
     .field-hs-hero-link {
       a,
       button {
+        max-width: 80%;
         @include hb-border-button;
         @include hb-colorful {
           @include hb-border-button(
             lighten(hb-colorful-variation(primary), 30%),
             lighten(hb-colorful-variation(primary), 70%)
           );
+        }
+
+        @include grid-media-min('lg') {
+          max-width: 75%;
         }
 
         .fa-ext {

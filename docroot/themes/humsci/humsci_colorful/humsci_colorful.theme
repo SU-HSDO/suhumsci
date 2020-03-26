@@ -2,10 +2,23 @@
 
 /**
  * @file
- * Functions to support theming in the HumSci Basic theme.
+ * Functions to support theming in the HumSci Colorful theme.
  */
 
 use Drupal\Component\Utility\Html;
+
+/**
+ * Prepares variables for the html.html.twig template.
+ */
+function humsci_colorful_preprocess_html(&$vars) {
+
+  // Theme color pairing setting to set the way the Colorful theme will appear.
+  $color_pairing = theme_get_setting('theme_color_pairing');
+  if ($color_pairing) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('hc-pairing-' . $color_pairing);
+  }
+}
 
 /**
  * Implements hook_preprocess_page().
@@ -13,7 +26,7 @@ use Drupal\Component\Utility\Html;
 function humsci_colorful_preprocess_page(&$vars) {
   // Variant setting for the local footer.
   $lfv = theme_get_setting('local_footer_variant_classname');
-  if ($lfv !== "none") {
+  if ($lfv) {
     $vars['local_footer_variant_classname'] = 'hb-local-footer--' . $lfv;
   }
 }

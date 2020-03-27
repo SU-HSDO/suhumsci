@@ -28,26 +28,37 @@
   }
 
   &__subcontent {
-    display: flex;
+
+    @include grid-media-min('sm') {
+      display: flex;
+    }
 
     &:not(:last-child) {
       margin-bottom: hb-calculate-rems(16px);
     }
 
     &-item {
-      display: flex;
+      @include grid-media-min('sm') {
+        display: flex;
+      }
       color: darken($su-color-driftwood, 45%);
-      font-size: hb-calculate-rems(14px);
+      font-size: hb-calculate-rems(16px);
 
-      @include grid-media-min('md') {
-        font-size: hb-calculate-rems(16px);
+      &:not(:last-child) {
+        margin-bottom: hb-calculate-rems(2px);
+
+        @include grid-media-min('sm') {
+          margin-bottom: 0;
+        }
       }
 
       // Adds a "pipe" after each field
       &::after {
+        @include grid-media-min('sm') {
         content: '';
         margin: 0 hb-calculate-rems(8px);
         border-left: 1px solid darken($su-color-driftwood, 45%);
+      }
       }
 
       // Removes the pipe from the last field

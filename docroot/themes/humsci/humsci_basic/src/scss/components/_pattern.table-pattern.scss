@@ -15,7 +15,10 @@
   }
 
   &__caption {
-    color: darken($su-color-driftwood, 45%);
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
+    }
+
     font-size: hb-calculate-rems(14px);
     padding: hb-calculate-rems(20px) 0;
 

@@ -4,7 +4,11 @@
 
 .block-hs-blocks {
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
-  border: $hb-menu-light-border;
+
+  @include hb-colorful {
+    border: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
+  }
 
   &:not(:last-child) {
     margin-bottom: hb-calculate-rems(18px);
@@ -38,13 +42,17 @@
 }
 
 .datetime {
-  color: darken($su-color-driftwood, 45%);
+  @include hb-colorful {
+    @include hb-global-color('color', 'gray-dark');
+  }
 }
 
 .address {
   margin: 0;
   font-style: italic;
-  color: darken($su-color-driftwood, 45%);
+  @include hb-colorful {
+    @include hb-global-color('color', 'gray-dark');
+  }
 }
 
 .given-name,

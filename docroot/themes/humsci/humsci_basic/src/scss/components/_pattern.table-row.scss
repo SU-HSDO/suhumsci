@@ -10,10 +10,9 @@
     content: '';
     display: block;
     height: hb-calculate-rems(11px);
-    background-color: $hb-color--black;
 
     @include hb-colorful {
-      background-color: hb-colorful-variation(primary);
+      @include hb-pairing-color('background-color', 'primary');
     }
 
     @include grid-media-min('md') {
@@ -40,7 +39,10 @@
       border: 0 none;
 
       @include grid-media-min('md') {
-        border: 1px solid $border-color;
+        @include hb-colorful {
+          border: $hb-thin-border;
+          @include hb-global-color('border-color', 'gray-medium');
+        }
       }
     }
 

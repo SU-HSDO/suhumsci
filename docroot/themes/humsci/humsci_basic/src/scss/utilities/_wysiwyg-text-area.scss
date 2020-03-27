@@ -68,25 +68,28 @@
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 .hs {
   &-credits {
-    color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
     font-style: italic;
 
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
+    }
+
     .hb-local-footer--dark & {
-      color: $hb-color--white;
+      @include hb-global-color('color', 'white');
     }
   }
 
   &-font-lead {
-    color: darken($su-color-driftwood, 30%);
     font-size: hb-calculate-rems(18px);
     font-weight: hb-theme-font-weight(regular);
     line-height: 127%;
 
-    .hb-local-footer--dark & {
-      color: $hb-color--white;
-      @include hb-colorful {
-        color: lighten(hb-colorful-variation(secondary), 10%);
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
+
+      .hb-local-footer--dark & {
+        @include hb-global-color('color', 'gray-light');
       }
     }
 
@@ -97,21 +100,31 @@
 
   &-font-splash {
     @include hb-heading-1;
+
     @include hb-colorful {
-      color: hb-colorful-variation(primary);
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+      @include hb-pairing-color('color', 'primary');
+
       @include grid-media-min('md') {
         margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+      }
+
+      .hb-local-footer--dark & {
+        @include hb-global-color('color', 'gray-light');
       }
     }
   }
 
   &-caption {
-    color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
 
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
+    }
+
     .hb-local-footer--dark & {
-      color: $hb-color--white;
+      @include hb-colorful {
+        @include hb-global-color('color', 'white');
+      }
     }
   }
 
@@ -144,25 +157,43 @@
     background-color: transparent;
 
     @include hb-colorful {
-      color: hb-colorful-variation(secondary);
+      @include hb-pairing-color('color', 'secondary');
+
+      .hb-local-footer--dark & {
+        @include hb-pairing-color('color', 'tertiary-reversed');
+        @include hb-pairing-color('border-color', 'tertiary-reversed');
+      }
     }
 
-    &:hover,
-    &:focus {
-      color: $hb-color--white;
-
+    &:hover {
       @include hb-colorful {
-        background-color: hb-colorful-variation(secondary);
-        border-color: hb-colorful-variation(secondary);
+        @include hb-global-color('color', 'white');
+        @include hb-pairing-color('background-color', 'secondary');
+        @include hb-pairing-color('border-color', 'secondary');
+
+        .hb-local-footer--dark & {
+          background-color: transparent;
+
+          @include hb-pairing-color('color', 'secondary-highlight');
+          @include hb-pairing-color('border-color', 'secondary-highlight');
+        }
       }
     }
 
     &:active,
     &:focus {
       background-color: transparent;
-      border-color: $hb-color--white;
+
       @include hb-colorful {
-        color: hb-colorful-variation(secondary);
+        @include hb-pairing-color('color', 'secondary');
+        @include hb-global-color('border-color', 'white');
+
+        .hb-local-footer--dark & {
+          background-color: transparent;
+
+          @include hb-pairing-color('color', 'secondary-highlight-darken');
+          @include hb-pairing-color('border-color', 'secondary-highlight-darken');
+        }
       }
     }
   }
@@ -231,9 +262,8 @@ blockquote:nth-child(n) {
     @include hb-blockquote;
 
     .hb-local-footer--dark & {
-      color: $hb-color--white;
       @include hb-colorful {
-        color: lighten(hb-colorful-variation(secondary), 10%);
+        @include hb-global-color('color', 'gray-light');
       }
     }
   }

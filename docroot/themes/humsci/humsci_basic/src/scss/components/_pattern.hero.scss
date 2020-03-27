@@ -44,7 +44,7 @@
 
     // Offset background color psuedo element
     &::before {
-      @include hb-global-color("background-color", "gray-light");
+      @include hb-global-color('background-color', 'gray-light');
       position: absolute;
       height: 100%;
       width: 100%;
@@ -66,7 +66,7 @@
     @include hb-colorful {
       &::after {
         z-index: $hb-z-index-hero1-overlay;
-        @include hb-pairing-color("background-color", "secondary");
+        @include hb-pairing-color('background-color', 'secondary');
 
         @include grid-media-min('md') {
           grid-column-start: 1;
@@ -103,7 +103,7 @@
           bottom: 0;
           left: -8.75%;
           z-index: $hb-z-index-hero1-overlay;
-          // TODO: rewrite psuedo-background-box mixin to work with the color-pairing mixins
+          // TODO: MIXIN TO BE UPDATED!!!!!!!
           @include psuedo-background-box(
             hb-colorful-variation(secondary),
             50%,
@@ -140,13 +140,11 @@
   }
 
   &__text {
-    // background-color: darken($su-color-driftwood, 10%);
-    @include hb-global-color("background-color", "gray");
-    @include hb-global-color("color", "white");
     display: block;
 
     @include hb-colorful {
-      @include hb-pairing-color("background-color", "primary-hero-overlay");
+      @include hb-global-color('color', 'white');
+      @include hb-pairing-color('background-color', 'primary-hero-overlay');
     }
 
     .hb-hero-overlay--1 & {
@@ -177,6 +175,7 @@
           display: block;
           top: hb-calculate-rems(32px);
 
+          // TODO: MIXIN TO BE UPDATED!!!!!!!
           @include psuedo-background-box(
             lighten(hb-colorful-variation(primary), 30%),
             hb-calculate-rems(4px),
@@ -194,7 +193,7 @@
       li {
         &::before {
           @include hb-colorful {
-            @include hb-pairing-color("background-color", "secondary");
+            @include hb-pairing-color('background-color', 'secondary');
           }
         }
       }
@@ -204,8 +203,7 @@
       li {
         &::before {
           @include hb-colorful {
-            color: lighten(hb-colorful-variation(secondary), 10%);  // original setting
-            @include hb-pairing-color("color", "secondary-active");
+            @include hb-pairing-color('color', 'secondary-active');
           }
         }
       }
@@ -222,12 +220,12 @@
 
     a {
       @include hb-colorful {
-        color: lighten(hb-colorful-variation(primary), 30%);
+        @include hb-pairing-color('color', 'tertiary-reversed');
 
         &:hover,
         &:focus {
           box-shadow: none;
-          color: lighten(hb-colorful-variation(primary), 70%);
+          @include hb-pairing-color('color', 'tertiary-highlight');
         }
       }
     }
@@ -238,6 +236,7 @@
         max-width: 80%;
         @include hb-border-button;
         @include hb-colorful {
+          // TODO: MIXIN TO BE UPDATED!!!!!!!
           @include hb-border-button(
             lighten(hb-colorful-variation(primary), 30%),
             lighten(hb-colorful-variation(primary), 70%)

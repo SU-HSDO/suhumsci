@@ -194,7 +194,7 @@
       li {
         &::before {
           @include hb-colorful {
-            @include hb-pairing-color("background-color", "secondary");
+            @include hb-pairing-color("background-color", "secondary-active");
           }
         }
       }
@@ -204,10 +204,7 @@
       li {
         &::before {
           @include hb-colorful {
-            color: hb-colorful-variation(secondary); // #148762
-            color: lighten(hb-colorful-variation(secondary), 10%);  // original setting
-            // @include hb-pairing-color("color", "secondary");
-            @include hb-pairing-color-lighten("color", "secondary", var(--color-pairing), 10); // testing
+            @include hb-pairing-color("color", "secondary-active");
           }
         }
       }

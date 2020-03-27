@@ -1,0 +1,39 @@
+// Describe what you're testing
+@include describe('Color Pairing mixin') {
+
+  // Default Colorful
+  // Other color pairings cannot be tested as the CSS variables
+  // for other pairing are only set via a class applied to
+  // the HTML tag.
+  @include describe('hb-pairing-color() mixin') {
+
+    @include it('returns the property and value for a color pairing') {
+      @include assert {
+        @include output {
+          @include hb-pairing-color('color', 'primary');
+        }
+        @include contains {
+          color: #00505c;
+        }
+      }
+    }
+  }
+}
+
+@include describe('Global colors mixin') {
+
+  // Global colors
+  @include describe('hb-global-color() mixin') {
+
+    @include it('returns the property and value for a global color') {
+      @include assert {
+        @include output {
+          @include hb-global-color('color', 'gray-dark');
+        }
+        @include contains {
+          color: #413E39;
+        }
+      }
+    }
+  }
+}

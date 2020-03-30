@@ -22,8 +22,8 @@
   }
 }
 
-// Decanter classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
-.decanter {
+// Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+.hs {
   &-credits {
     color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
@@ -102,36 +102,37 @@
       text-decoration: none;
       padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
     }
+  }
 
-    &--secondary {
-      @include button-style;
-      display: inline-block;
-      font-size: hb-calculate-rems(16px);
-      text-decoration: none;
-      padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  &-secondary-button {
+    @include button-style;
+    display: inline-block;
+    font-size: hb-calculate-rems(16px);
+    text-decoration: none;
+    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+    background-color: transparent;
+
+    @include hb-colorful {
+      color: hb-colorful-variation(secondary);
+    }
+
+    &:hover,
+    &:focus {
+      color: $hb-color--white;
+
+      @include hb-colorful {
+        background-color: hb-colorful-variation(secondary);
+        border-color: hb-colorful-variation(secondary);
+      }
+    }
+
+    &:active,
+    &:focus {
       background-color: transparent;
+      border-color: $hb-color--white;
 
       @include hb-colorful {
         color: hb-colorful-variation(secondary);
-      }
-
-      &:hover {
-        color: $hb-color--white;
-
-        @include hb-colorful {
-          background-color: hb-colorful-variation(secondary);
-          border-color: hb-colorful-variation(secondary);
-        }
-      }
-
-      &:active,
-      &:focus {
-        background-color: transparent;
-        border-color: $hb-color--white;
-
-        @include hb-colorful {
-          color: hb-colorful-variation(secondary);
-        }
       }
     }
   }

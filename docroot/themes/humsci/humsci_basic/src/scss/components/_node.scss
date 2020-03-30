@@ -1,10 +1,20 @@
 .node__title {
   h1 {
-    @include hb-heading-2;
-    margin: 0 0 hb-calculate-rems(20px);
-
-    @include grid-media-min('sm') {
+    @include hb-colorful {
+      font-weight: hb-theme-font-weight(semibold);
+      font-size: hb-calculate-rems(33px);
+      line-height: 124%;
       margin: 0 0 hb-calculate-rems(28px);
+
+      @include grid-media-min('md') {
+        font-size: hb-calculate-rems(40px);
+        line-height: 120%;
+      }
+
+      @include grid-media-min('lg') {
+        font-size: hb-calculate-rems(48px);
+        line-height: 117%;
+      }
     }
   }
 }

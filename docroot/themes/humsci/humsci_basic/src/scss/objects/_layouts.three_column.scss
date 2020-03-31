@@ -17,7 +17,7 @@
   &__sidebar-1 {
     width: 100%;
 
-    @include grid-media('lg') {
+    @include grid-media-min('lg') {
       width: $hb-sidebar-width;
       margin: 0 hb-calculate-rems($hb-gutter-width) 0 0;
     }
@@ -30,7 +30,7 @@
       max-width: hb-calculate-rems($hb-three-column-main-width);
     }
 
-    @include grid-media('lg') {
+    @include grid-media-min('lg') {
       .hb-three-column--one-sidebar &,
       .hb-three-column--two-sidebar & {
         width: calc(100% - #{$hb-sidebar-width} - #{hb-calculate-rems($hb-gutter-width)});
@@ -63,7 +63,7 @@
     margin: 0;
 
     .hb-three-column--one-sidebar & {
-      @include grid-media('lg') {
+      @include grid-media-min('lg') {
         width: $hb-sidebar-width;
         margin: 0 0 0 hb-calculate-rems($hb-gutter-width);
       }

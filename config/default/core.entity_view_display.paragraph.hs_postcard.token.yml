@@ -15,8 +15,8 @@ dependencies:
     - field_formatter_class
     - hs_field_helpers
     - link
+    - smart_trim
     - stanford_media
-    - text
 third_party_settings:
   ds:
     layout:
@@ -27,6 +27,7 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
+          variant_field: field_hs_postcard_body
     regions:
       title:
         - field_hs_postcard_title
@@ -46,9 +47,25 @@ content:
   field_hs_postcard_body:
     weight: 2
     label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
+    settings:
+      trim_length: 25
+      trim_type: words
+      trim_suffix: …
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      wrap_output: false
+      more_link: false
+      trim_options:
+        text: false
+        trim_zero: false
+      summary_handler: full
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    type: smart_trim
     region: description
   field_hs_postcard_image:
     type: media_responsive_image_formatter
@@ -69,13 +86,13 @@ content:
     label: hidden
     settings:
       trim_length: 80
-      url_only: false
+      url_only: true
       url_plain: false
       rel: '0'
       target: '0'
     third_party_settings:
       field_formatter_class:
-        class: decanter-button
+        class: ''
     type: link
     region: button
   field_hs_postcard_title:

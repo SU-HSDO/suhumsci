@@ -199,3 +199,10 @@ function su_humsci_profile_post_update_8203() {
     $file_system->copy($source, "$directory/generic.png", FileSystemInterface::EXISTS_REPLACE);
   }
 }
+
+/**
+ * Uninstall update module.
+ */
+function su_humsci_profile_post_update_8204() {
+  \Drupal::service('module_installer')->uninstall(['update']);
+}

@@ -1,0 +1,51 @@
+// Table styles specific to the Table UI Pattern
+.hb-table-pattern {
+  @include table;
+
+  @include grid-media-min('md') {
+    display: table;
+  }
+
+  &__header {
+    display: none;
+
+    @include grid-media-min('md') {
+      display: table-header-group;
+    }
+  }
+
+  &__caption {
+    color: darken($su-color-driftwood, 45%);
+    font-size: hb-calculate-rems(14px);
+    padding: hb-calculate-rems(20px) 0;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(16px);
+      padding: hb-calculate-rems(28px) 0;
+    }
+  }
+
+  &__row {
+    @include table-head-row;
+
+    @include grid-media-min('md') {
+      display: table-row;
+    }
+
+    // column header cells
+    > :nth-child(n) {
+      @include table-heading;
+      @include table-data;
+
+      @include grid-media-min('md') {
+        display: table-cell;
+      }
+    }
+  }
+
+  &__body {
+    @include grid-media-min('md') {
+      display: table-row-group;
+    }
+  }
+}

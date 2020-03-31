@@ -104,11 +104,12 @@
 
 @mixin hb-unordered-list {
   list-style-type: none;
+  margin: hb-calculate-rems(28px) 0;
 
   li {
     position: relative;
     line-height: 122%;
-    padding-bottom: hb-calculate-rems(16px);
+    padding-bottom: hb-calculate-rems(10px);
 
     &::before {
       content: '';
@@ -132,11 +133,12 @@
 @mixin hb-ordered-list {
   counter-reset: li;
   list-style-type: none;
+  margin: hb-calculate-rems(28px) 0;
 
   li {
     position: relative;
     line-height: 122%;
-    padding-bottom: hb-calculate-rems(16px);
+    padding-bottom: hb-calculate-rems(10px);
 
     &::before {
       content: counter(li) '.';

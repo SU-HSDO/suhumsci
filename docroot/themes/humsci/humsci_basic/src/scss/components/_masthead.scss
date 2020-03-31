@@ -5,14 +5,42 @@
 
   .su-lockup {
     z-index: $hb-z-index-lockup;
+
+    &__line1,
+    &__line2,
+    &__line3,
+    &__line4 {
+      word-break: break-all;
+      line-height: 1em;
+    }
+
+    &__wordmark,
+    &__line1,
+    &__line2,
+    &__line3,
+    &__line4 {
+      margin-bottom: hb-calculate-rems(8px);
+
+      @include grid-media-min('md') {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .su-site-search {
     display: block;
-    padding-top: hb-calculate-rems(12px);
+    padding-top: hb-calculate-rems(11px);
     padding-bottom: hb-calculate-rems(28px);
-    max-width: $hb-input-max-width;
     z-index: $hb-z-index-search;
+    width: 100%;
+
+    @include grid-media-min('sm') {
+      width: 60%;
+    }
+
+    @include grid-media-min('lg') {
+      max-width: $hb-input-max-width;
+    }
   }
 
   .su-main-nav {

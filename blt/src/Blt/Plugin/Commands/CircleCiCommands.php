@@ -83,11 +83,11 @@ class CircleCiCommands extends BltTasks {
     $this->taskGitStack()
       ->add('-A')
       ->commit("$new_version")
-      ->pull()
-      ->push()
+      ->push('origin', $new_branch)
       ->run();
 
-    $this->taskExec("hub pull-request -b develop -m '$new_version Release'")
+    $message = "$new_version Release" . PHP_EOL . '# DO NOT DELETE';
+    $this->taskExec("hub pull-request -b develop -m '$message'")
       ->run();
   }
 

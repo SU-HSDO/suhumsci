@@ -1,5 +1,4 @@
 .hb-grid {
-  @include hb-page-width;
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -9,26 +8,14 @@
     margin-bottom: hb-calculate-rems(24px);
     width: 100%;
 
-    @include grid-media-min('sm') {
-      width: calc(50% - (#{hb-calculate-rems($hb-gutter-width)} / 2)); // for two elements, there is 1 gutter-width between
-      margin-right: hb-calculate-rems(48px);
-    }
-
-    &:nth-child(2n) {
-      margin-right: 0;
-    }
-
-    .hb-grid--cols-3 & {
-      @include grid-media-min('md') {
-        width: calc(33.33% - (2 * (#{hb-calculate-rems($hb-gutter-width)}) / 3)); // for 3 elements, 2 have gutter-width
-
-        &:nth-child(2n) {
-          margin-right: hb-calculate-rems(48px);
-        }
-
-        &:nth-child(3n) {
-          margin-right: 0;
-        }
+    // This is our grid maker, it defines classes for each breakdown
+    // of the grid and gives human readable versions when it can.
+    // 1-2 cols exist starting at the "sm" breakpoint
+    // 3-4 cols start at the "md" breakpoint
+    // all others start at "lg"
+    @for $i from 1 through $hb-grid-count {
+      .hb-grid--cols-#{$i} & {
+        @include hb-column($i);
       }
     }
   }

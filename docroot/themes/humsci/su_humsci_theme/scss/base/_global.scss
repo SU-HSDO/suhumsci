@@ -8,6 +8,57 @@
 // SU HumSci
 @import '../utilities/mixins/index';
 
+// Need to ensure that the new WYSIWYG text-editor classes are supported with the
+// update made by the Sparkbox team to the Humsci Basic Theme
+// For example, instead of .decanter-font-splash, you can now use
+// .hs-font-splash as a more unspecific override of WYSIWYG styles
+.hs-external-link {
+  @include external-link(external-link, external-link-hover);
+}
+
+.hs-more-link {
+  @include more-link(more-link, more-link-hover);
+}
+
+.hs-table--borderless {
+  @include table-borderless;
+}
+
+.hs-font-lead {
+  @include font-lead;
+}
+
+.hs-font-splash {
+  @include font-splash;
+}
+
+.hs-short-line-length {
+  @include short-line-length;
+}
+
+.hs-caption {
+  @include caption;
+}
+
+.hs-credits {
+  @include credits;
+}
+
+.hs-button,
+a.hs-button {
+  @include button-primary;
+}
+
+.hs-secondary-button,
+a.hs-secondary-button {
+  @include button-secondary;
+}
+
+.hs-button--big,
+a.hs-button--big {
+  @include button-big;
+}
+
 // Logged in fixes
 
 // Move entity queue contextual links so they don't cover view contextual links.
@@ -98,7 +149,8 @@ div[data-contextual-id^="entityqueue"] {
 }
 
 // Emphasized text style
-.emphasized-text {
+.emphasized-text,
+.hs-emphasized-text {
   font-weight: $font-bold;
   font-style: italic;
 }
@@ -106,7 +158,8 @@ div[data-contextual-id^="entityqueue"] {
 // Further nesting of Decanter's button styles
 
 body {
-  .decanter-button:not(a) {
+  .decanter-button:not(a),
+  .hs-button:not(a) {
     padding: 0;
 
     a {
@@ -121,7 +174,8 @@ body {
     }
   }
 
-  .decanter-button--secondary:not(a) {
+  .decanter-button--secondary:not(a),
+  .hs-secondary-button:not(a) {
     padding: 0;
 
     a {
@@ -225,11 +279,13 @@ body *:focus {
 }
 
 .brand-bar *:focus,
-.decanter-button *:focus {
+.decanter-button *:focus,
+.hs-button *:focus {
   outline: #fff auto 5px;
 }
 
-.decanter-font-lead {
+.decanter-font-lead,
+.hs-font-lead {
   max-width: 100%;
 }
 

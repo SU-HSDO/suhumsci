@@ -1,4 +1,5 @@
 // WYSIWYG text area styles
+
 .field-hs-text-area {
   margin-bottom: hb-calculate-rems(48px);
 
@@ -10,9 +11,9 @@
     @include hb-colorful {
       margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
 
-    @include grid-media-min('md') {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
-    }
+      @include grid-media-min('md') {
+        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+      }
     }
   }
 
@@ -20,9 +21,9 @@
     @include hb-colorful {
       margin: hb-calculate-rems(48px) 0 hb-calculate-rems(12px);
 
-    @include grid-media-min('md') {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
-    }
+      @include grid-media-min('md') {
+        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+      }
     }
   }
 
@@ -40,16 +41,15 @@
 
   h5 {
     @include hb-colorful {
-    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
     }
   }
 
   h6 {
     @include hb-colorful {
-    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
     }
   }
-
   // add icon to external links only
   p {
     a[href^="http"]:not([class]) {
@@ -57,7 +57,6 @@
       @include hb-external-link-icon;
     }
   }
-
   // jump to link target - remove link styles from anchor tag
   a:not([href]):not([class]) {
     border-bottom: 0;
@@ -90,7 +89,6 @@
 
     .hb-local-footer--dark & {
       color: $hb-color--white;
-
       @include hb-colorful {
         color: lighten(hb-colorful-variation(secondary), 10%);
       }
@@ -103,11 +101,9 @@
 
   &-font-splash {
     @include hb-heading-1;
-
     @include hb-colorful {
       color: hb-colorful-variation(primary);
       margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
-
       @include grid-media-min('md') {
         margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
       }
@@ -165,13 +161,13 @@
       }
     }
 
-    &:active,
-    &:focus {
-      background-color: transparent;
-      border-color: $hb-color--white;
-
-      @include hb-colorful {
-        color: hb-colorful-variation(secondary);
+      &:active,
+      &:focus {
+        background-color: transparent;
+        border-color: $hb-color--white;
+        @include hb-colorful {
+          color: hb-colorful-variation(secondary);
+        }
       }
     }
   }
@@ -198,15 +194,15 @@
     }
   }
 }
-
 // Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+
 .emphasized-text {
   font-style: italic;
   font-weight: inherit;
   font-size: inherit;
 }
-
 // media
+
 .align {
   &-right {
     margin: hb-calculate-rems(28px) 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
@@ -222,9 +218,9 @@
     }
   }
 }
-
 // blockquotes
 // The text area blockquote content is placed inside of a paragraph tag.
+
 blockquote:nth-child(n) {
   // remove content set in the base default styles set on the blockquote tag
   &::after,
@@ -241,7 +237,6 @@ blockquote:nth-child(n) {
 
     .hb-local-footer--dark & {
       color: $hb-color--white;
-
       @include hb-colorful {
         color: lighten(hb-colorful-variation(secondary), 10%);
       }

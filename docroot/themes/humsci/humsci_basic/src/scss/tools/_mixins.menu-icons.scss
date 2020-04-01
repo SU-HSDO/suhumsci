@@ -13,27 +13,35 @@
 // ICONS AS BACKGROUND IMAGES
 // ==========================
 @mixin hb-menu-plus-icon {
-  background-size: hb-calculate-rems(18px);
-  background-image: svg($hb-icon-plus);
-  transition: transform 150ms ease-in-out;
+  @include hb-colorful {
+    @include hb-icon-background('plus', 'gray-dark');
+    background-size: hb-calculate-rems(18px);
+    transition: transform 150ms ease-in-out;
+  }
 }
 
 @mixin hb-menu-minus-icon {
-  background-size: hb-calculate-rems(18px);
-  background-image: svg($hb-icon-minus);
-  transform: rotate(180deg);
+  @include hb-colorful {
+    @include hb-icon-background('minus', 'gray-dark');
+    background-size: hb-calculate-rems(18px);
+    transform: rotate(180deg);
+  }
 }
 
 @mixin hb-menu-down-arrow-icon {
-  background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
-  background-image: svg($hb-icon-down-arrow);
-  transition: transform 150ms ease-in-out;
+  @include hb-colorful {
+    @include hb-icon-background('chevron', 'black');
+    background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
+    transition: transform 150ms ease-in-out;
+  }
 }
 
 @mixin hb-menu-up-arrow-icon {
-  background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
-  background-image: svg($hb-icon-down-arrow);
-  transform: rotate(180deg);
+  @include hb-colorful {
+    @include hb-icon-background('chevron', 'black');
+    background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
+    transform: rotate(180deg);
+  }
 }
 
 // SPECIAL ICONS
@@ -45,7 +53,11 @@
   position: relative;
   height: hb-calculate-rems(3px);
   width: hb-calculate-rems(16px);
-  background: $hb-color--black;
+
+  @include hb-colorful {
+    @include hb-global-color('background-color', 'black');
+  }
+
 
   &::before,
   &::after {
@@ -53,7 +65,10 @@
     display: block;
     height: hb-calculate-rems(3px);
     width: hb-calculate-rems(16px);
-    background: $hb-color--black;
+
+    @include hb-colorful {
+      @include hb-global-color('background-color', 'black');
+    }
 
     position: absolute;
     left: 0;

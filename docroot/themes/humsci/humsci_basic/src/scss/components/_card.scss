@@ -15,7 +15,7 @@
     ul {
       list-style-type: none;
       padding: 0;
-      margin: 0;
+      margin: 0 0 hb-calculate-rems(10px);
     }
 
     li:not([class]) { // increase specificity so that these styles override the base list styles
@@ -28,26 +28,47 @@
   }
 
   &__subcontent {
-    display: flex;
+    width: 100%;
+    @include grid-media-min('sm') {
+      display: flex;
+    }
+
+    .hb-grid &,
+    .ptype-hs-row & {
+      display: block;
+    }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(10px);
+      margin-bottom: hb-calculate-rems(16px);
     }
 
     &-item {
-      display: flex;
       color: darken($su-color-driftwood, 45%);
-      font-size: hb-calculate-rems(14px);
+      font-size: hb-calculate-rems(16px);
+      @include grid-media-min('sm') {
+        display: flex;
+      }
 
-      @include grid-media-min('md') {
-        font-size: hb-calculate-rems(16px);
+      &:not(:last-child) {
+        margin-bottom: hb-calculate-rems(4px);
+
+        @include grid-media-min('sm') {
+          margin-bottom: 0;
+        }
       }
 
       // Adds a "pipe" after each field
       &::after {
-        content: '';
-        margin: 0 hb-calculate-rems(8px);
-        border-left: 1px solid darken($su-color-driftwood, 45%);
+        @include grid-media-min('sm') {
+          content: '';
+          margin: 0 hb-calculate-rems(8px);
+          border-left: 1px solid darken($su-color-driftwood, 45%);
+        }
+
+        .hb-grid &,
+        .ptype-hs-row & {
+          border-left: 0 none;
+        }
       }
 
       // Removes the pipe from the last field
@@ -68,7 +89,7 @@
   &__location {
     color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
-    margin-bottom: hb-calculate-rems(10px);
+    margin-bottom: hb-calculate-rems(16px);
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
@@ -186,14 +207,10 @@
 
   &__title {
     margin-top: 0;
-    margin-bottom: hb-calculate-rems(14px);
+    margin-bottom: hb-calculate-rems(20px);
 
     @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems(16px);
-    }
-
-    @include grid-media-min('lg') {
-      margin-bottom: hb-calculate-rems(22px);
+      margin-bottom: hb-calculate-rems(24px);
     }
 
     h2 {
@@ -204,13 +221,13 @@
       @include grid-media-min('sm') {
         font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(24px);
-        line-height: 121%;
+        line-height: 124%;
       }
 
       @include grid-media-min('md') {
         font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(27px);
-        line-height: 109%;
+        line-height: 119%;
       }
 
       // If this h2 is in a grid or row,
@@ -224,7 +241,7 @@
         @include grid-media-min('lg') {
           font-weight: hb-theme-font-weight(semibold);
           font-size: hb-calculate-rems(24px);
-          line-height: 121%;
+          line-height: 124%;
         }
       }
     }
@@ -238,7 +255,7 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(28px);
+      margin-bottom: hb-calculate-rems(24px);
     }
 
     .views-field:not(:last-child) {

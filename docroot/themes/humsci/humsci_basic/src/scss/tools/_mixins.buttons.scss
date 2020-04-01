@@ -25,8 +25,10 @@
     &:focus {
       @include hb-pairing-color('background-color', 'secondary');
       @include hb-global-color('border-color', 'white');
+      // scss-lint:disable DuplicateProperty
       box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+      // scss-lint:enable DuplicateProperty
     }
 
     &:hover,

@@ -103,12 +103,7 @@
           bottom: 0;
           left: -8.75%;
           z-index: $hb-z-index-hero1-overlay;
-          // TODO: MIXIN TO BE UPDATED!!!!!!!
-          @include psuedo-background-box(
-            hb-colorful-variation(secondary),
-            50%,
-            8.75%
-          );
+          @include psuedo-background-box('secondary', 50%, 8.75%);
 
           @include grid-media-min('md') {
             display: none;
@@ -175,13 +170,7 @@
         &::after {
           display: block;
           top: hb-calculate-rems(32px);
-
-          // TODO: MIXIN TO BE UPDATED!!!!!!!
-          @include psuedo-background-box(
-            lighten(hb-colorful-variation(primary), 30%),
-            hb-calculate-rems(4px),
-            hb-calculate-rems(65px)
-          );
+          @include psuedo-background-box('tertiary-reversed', hb-calculate-rems(4px), hb-calculate-rems(65px));
 
           @include grid-media-min('md') {
             top: hb-calculate-rems(56px);
@@ -235,13 +224,9 @@
       a,
       button {
         max-width: 80%;
-        @include hb-border-button;
+
         @include hb-colorful {
-          // TODO: MIXIN TO BE UPDATED!!!!!!!
-          @include hb-border-button(
-            lighten(hb-colorful-variation(primary), 30%),
-            lighten(hb-colorful-variation(primary), 70%)
-          );
+          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
         }
 
         @include grid-media-min('lg') {

@@ -14,7 +14,11 @@
   .chosen-drop {
     @include hb-input-focus;
     font-size: hb-calculate-rems(16px);
-    border-top: $hb-input-border;
+
+    @include hb-colorful {
+      border-top: $hb-thin-border;
+      @include hb-global-color('border-color', 'gray');
+    }
   }
   //
   // &.chosen-with-drop .chosen-drop {
@@ -44,7 +48,7 @@
       line-height: 122%;
 
       &:last-child {
-        border-radius: 0 0 $hb-input-border-radius $hb-input-border-radius;
+        border-radius: 0 0 $hb-border-radius $hb-border-radius;
       }
       //
       // &.active-result {
@@ -56,10 +60,10 @@
       // }
       //
       &.highlighted {
-        color: $hb-color--black;
+        @include hb-global-color('color', 'black');
         font-weight: hb-theme-font-weight(semibold);
         background-image: none;
-        background-color: $hb-input-hover-bg;
+        @include hb-global-color('background-color', 'gray-light');
       }
       //
       // &.no-results {
@@ -117,7 +121,7 @@
       background-size: hb-calculate-rems(12px) hb-calculate-rems(8px);
 
       @include hb-colorful {
-        background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+        @include hb-icon-background('chevron', 'secondary');
       }
 
       b {
@@ -235,7 +239,7 @@
         transform: rotate(180deg);
 
         @include hb-colorful {
-          background-image: svg('<svg viewBox="0 0 12 8"><path d="M1 1L6 6L11 1" fill="transparent" stroke="#{hb-colorful-variation(secondary)}" stroke-width="2"/></svg>');
+          @include hb-icon-background('chevron', 'secondary');
         }
         //
         // b {

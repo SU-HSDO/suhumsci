@@ -43,7 +43,7 @@
     }
 
     &-item {
-      color: darken($su-color-driftwood, 45%);
+      @include hb-global-color('color', 'gray-dark');
       font-size: hb-calculate-rems(16px);
       @include grid-media-min('sm') {
         display: flex;
@@ -62,7 +62,8 @@
         @include grid-media-min('sm') {
           content: '';
           margin: 0 hb-calculate-rems(8px);
-          border-left: 1px solid darken($su-color-driftwood, 45%);
+          border-left: $hb-thin-border;
+          @include hb-global-color('border-color', 'gray-dark');
         }
 
         .hb-grid &,
@@ -87,7 +88,7 @@
   }
 
   &__location {
-    color: darken($su-color-driftwood, 45%);
+    @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
     margin-bottom: hb-calculate-rems(16px);
 
@@ -97,7 +98,7 @@
   }
 
   &__highlighted {
-    color: darken($su-color-driftwood, 45%);
+    @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
 
     @include grid-media-min('md') {
@@ -157,17 +158,15 @@
   &__date-tile {
     display: inline-block;
     text-align: center;
-    background: $hb-color--black;
-    color: $hb-color--white;
+    @include hb-global-color('background-color', 'black');
+    @include hb-global-color('color', 'white');
     min-width: hb-calculate-rems(100px);
     padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
     position: absolute;
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
 
-    @include hb-colorful {
-      background: hb-colorful-variation(secondary);
-    }
+    @include hb-pairing-color('background-color', 'secondary');
 
     @include grid-media-min('sm') {
       bottom: hb-calculate-rems(22px);
@@ -297,7 +296,7 @@
       width: hb-calculate-rems(44px);
 
       @include hb-colorful {
-        @include hb-icon-link-arrow($color: hb-colorful-variation(secondary));
+        @include hb-icon-link-arrow('secondary');
 
         transform: translateX(0);
         transition: transform 200ms ease-in-out;
@@ -312,7 +311,7 @@
         transform: translateX(0.625rem);
 
         @include hb-colorful {
-          @include hb-icon-link-arrow(darken(hb-colorful-variation(secondary), 10%));
+          @include hb-icon-link-arrow('secondary-darken-12');
         }
       }
     }

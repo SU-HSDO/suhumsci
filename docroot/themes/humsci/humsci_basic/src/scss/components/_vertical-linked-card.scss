@@ -8,12 +8,17 @@
   padding-bottom: hb-calculate-rems(28px);
 
   @include hb-colorful {
-    color: $hb-color--white;
+    @include hb-global-color('color', 'white');
 
     // The gradient adds a 20px height white block at the top of the linked card
     // so that the title looks like it has a negative margin on the top when
     // there isn't an image.
-    background-image: linear-gradient(to bottom, $hb-color--white, $hb-color--white hb-calculate-rems(20px), darken(hb-colorful-variation(tertiary), 30%) hb-calculate-rems(20px));
+    $hb-bg--white: hb-get-global-color('white', $hc-colorful-globals);
+    $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
+    $hb-bg--pairing: var(--palette--primary-dark);
+
+    background-image: linear-gradient(to bottom, $hb-bg--white, $hb-bg--white hb-calculate-rems(20px), $hb-bg--fallback hb-calculate-rems(20px));
+    background-image: linear-gradient(to bottom, $hb-bg--white, $hb-bg--white hb-calculate-rems(20px), $hb-bg--pairing hb-calculate-rems(20px));
     // The gradient looks intimidating but it's only because of all the mixins
     // we have to use. If we get rid of those it looks more like this:
     // linear-gradient(to bottom, white, white 20px, colorful-color 20px);
@@ -72,7 +77,7 @@
       display: block;
       height: hb-calculate-rems(48px);
       width: hb-calculate-rems(48px);
-      @include hb-icon-link-arrow($hb-color--white);
+      @include hb-icon-link-arrow('white');
 
       position: absolute;
       right: 0;
@@ -87,12 +92,12 @@
     }
 
     @include hb-colorful {
-      background-color: hb-colorful-variation(secondary);
+      @include hb-pairing-color('background-color', 'secondary');
       transition: hb-transition(background-color);
 
       .hb-vertical-linked-card:hover &,
       .hb-vertical-linked-card:focus & {
-        background-color: darken(hb-colorful-variation(secondary), 15%);
+        @include hb-pairing-color('background-color', 'secondary-darken-12');
       }
     }
   }

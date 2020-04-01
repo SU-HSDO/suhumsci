@@ -19,26 +19,33 @@
         height: hb-calculate-rems(12px);
         width: hb-calculate-rems(3px);
         margin-right: hb-calculate-rems(6px);
-        background-color: hb-colorful-variation(secondary);
+        @include hb-pairing-color('background-color', 'secondary');
       }
     }
   }
 
   a {
-    color: $hb-color--black;
+    @include hb-colorful {
+      @include hb-global-color('color', 'black');
+    }
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: $hb-color--black;
-      border-bottom: 1px solid $hb-color--black;
+      @include hb-colorful {
+        @include hb-global-color('color', 'black');
+        border-bottom: $hb-thin-border;
+        @include hb-global-color('border-color', 'black');
+      }
       box-shadow: none;
     }
   }
 }
 
 .field-hs-news-date {
-  color: darken($su-color-driftwood, 45%);
+  @include hb-colorful {
+    @include hb-global-color('color', 'gray-dark');
+  }
 }
 
 // This class is only present on the standalone page for this node, so we use it
@@ -63,18 +70,19 @@
 .views-field-field-hs-news-link a, // horizontal view link to external article default class
 .field-hs-news-link a {
   @include hb-colorful {
-    $hb-color--primary: hb-colorful-variation(primary);
     position: relative;
     margin-right: hb-calculate-rems(24px);
     display: inline-block;
-    border-bottom: 1px solid lighten(hb-colorful-variation(primary), 10%);
-
-    @include hb-link--hover-style(lighten(hb-colorful-variation(primary), 70%), (hb-colorful-variation(primary)));
+    border-bottom: $hb-thin-border;
+    @include hb-pairing-color('border-color', 'tertiary');
+    @include hb-link--hover-style('tertiary-highlight', 'primary');
 
     &:hover,
     &:focus {
       .fa-ext::before {
-        background: svg('<svg viewBox="0 0 12 12"><path d="M11.273 5.818v5.455H.727V.727h5.091m1.455 0h4v4m0-4L6.182 5.818" fill="transparent" stroke="#{$hb-color--primary}" stroke-width="2" stroke-miterlimit="10"/></svg>') center center no-repeat;
+        @include hb-icon-background('ext-link', 'tertiary');
+        background-repeat: no-repeat;
+        background-position: center;
       }
     }
   }

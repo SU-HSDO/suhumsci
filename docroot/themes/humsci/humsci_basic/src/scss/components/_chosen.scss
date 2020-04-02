@@ -190,14 +190,15 @@
     line-height: 1;
 
     height: auto;
+    max-height: $hb-input-min-height;
     min-height: $hb-input-min-height;
 
-    padding: hb-calculate-rems(8px);
+    padding: 0 hb-calculate-rems(8px);
     padding-right: $hb-input-icon-spacing;
 
     @include hb-input-border;
 
-    &:focus {
+    &:focus-within {
       @include hb-input-focus;
     }
   }
@@ -205,7 +206,8 @@
   .chosen-choices li {
     &.search-field {
       input[type="text"] {
-
+        margin: 0;
+        padding: 0;
       }
     }
 
@@ -230,13 +232,13 @@
     &.search-choice-focus {
 
       .search-choice-close {
-
+        @include hb-input-focus;
       }
     }
   }
 
   .chosen-results {
-
+    margin-top: hb-calculate-rems(-3px);
   }
 
   .chosen-drop .result-selected {

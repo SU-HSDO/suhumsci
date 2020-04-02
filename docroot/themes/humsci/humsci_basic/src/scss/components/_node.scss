@@ -15,7 +15,8 @@
 
   &::before {
     @include hb-colorful {
-      border-bottom: solid hb-calculate-rems(4px) hb-colorful-variation(secondary);
+      border-bottom: solid hb-calculate-rems(4px);
+      @include hb-pairing-color('border-color', 'secondary');
       content: '';
       display: inline-block;
       vertical-align: middle;

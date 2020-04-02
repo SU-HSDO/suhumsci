@@ -1,4 +1,4 @@
-// If only the image is present (no overlay text) or hero wrapper,
+// For all themes, if only the hero image is present (no overlay text) or hero wrapper,
 // make sure vertical margin is present
 .field-hs-hero-image {
   .hs-full-width & {
@@ -13,57 +13,60 @@
 }
 
 .hb-hero-overlay {
-  &--1 {
-    @include clearfix;
-    margin: 0 0 $hb-gutter-width;
-    padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;
+  .hs-full-width & {
+    // Special negative margin for the hero
+    // to get rid of the vertical padding on all basic pages
+    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
+  }
+
+  @include hb-colorful {
     position: relative;
+    margin: 0 0 $hb-gutter-width;
+  }
 
-    @include grid-media-min('md') {
-      padding: 0;
-      display: grid;
-      grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
-      grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
-    }
-
-    @include grid-media-min('xl') {
-      grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
-    }
-
-    .hs-full-width & {
-      // Special negative margin for the hero
-      // to get rid of the vertical padding on all basic pages
-      margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
-    }
-
-    &::before,
-    &::after {
-      content: '';
-      display: block;
-    }
-
-    // Offset background color psuedo element
-    &::before {
-      @include hb-global-color('background-color', 'gray-light');
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      top: 0;
-      left: 0;
-      z-index: $hb-z-index-hero1-background;
+  .paragraph--type--hs-carousel & {
+    @include hb-colorful {
+      @include clearfix;
+      padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;
 
       @include grid-media-min('md') {
-        position: unset;
-        padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 10%;
-        grid-column-start: 1;
-        grid-column-end: 5;
-        grid-row-start: 1;
-        grid-row-end: 6;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
+        grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
       }
-    }
 
-    // Secondary color block psuedo element that shows up in the grid
-    @include hb-colorful {
+      @include grid-media-min('xl') {
+        grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+      }
+
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+      }
+
+      // Offset background color psuedo element
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        @include hb-global-color('background-color', 'gray-light');
+        z-index: $hb-z-index-hero1-background;
+
+        @include grid-media-min('md') {
+          position: unset;
+          padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 10%;
+          grid-column-start: 1;
+          grid-column-end: 5;
+          grid-row-start: 1;
+          grid-row-end: 6;
+        }
+      }
+
+      // Secondary color block psuedo element that shows up in the grid
       &::after {
         z-index: $hb-z-index-hero1-overlay;
         @include hb-pairing-color('background-color', 'secondary');
@@ -78,13 +81,15 @@
     }
   }
 
-  &__image-wrapper,
-  &__text {
-    z-index: $hb-z-index-hero1-overlay;
+  @include hb-colorful {
+    &__image-wrapper,
+    &__text {
+      z-index: $hb-z-index-hero1-overlay;
+    }
   }
 
   &__image-wrapper {
-    // If inside an img wrapper,
+    // For all themes, if inside an img wrapper,
     // no margin should be added
     .field-hs-hero-image {
       .hs-full-width & {
@@ -92,80 +97,211 @@
       }
     }
 
-    .hb-hero-overlay--1 & {
+    @include hb-colorful {
       position: relative;
 
-      @include hb-colorful {
+      &::before {
+        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.9;
+        z-index: $hb-z-index-hero1-overlay;
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        min-height: 60vh;
+        object-fit: cover;
+
+        @include grid-media-min('sm') {
+          min-height: 55vh;
+        }
+      }
+
+      .paragraph--type--hs-carousel & {
         // On mobile, make the secondary color box out of psuedo element,
         // then on 'md' breakpoint, it becomes part of the grid
         &::before {
           display: block;
           bottom: 0;
           left: -8.75%;
-          z-index: $hb-z-index-hero1-overlay;
+          top: initial;
           @include psuedo-background-box('secondary', 50%, 8.75%);
+          opacity: 1;
 
           @include grid-media-min('md') {
             display: none;
           }
         }
-      }
-
-      @include grid-media-min('md') {
-        // This will make sure that the image fills the entire area
-        display: flex;
-        margin-top: 0;
-        grid-column-start: 3;
-        grid-column-end: 6;
-        grid-row-start: 2;
-        grid-row-end: 5;
-        padding-top: 0;
-      }
-
-      img {
-        height: 100%;
-        width: 100%;
 
         @include grid-media-min('md') {
-          min-height: 55vh;
-          object-fit: cover;
+          // This will make sure that the image fills the entire area
+          display: flex;
+          margin-top: 0;
+          grid-column-start: 3;
+          grid-column-end: 6;
+          grid-row-start: 2;
+          grid-row-end: 5;
+          padding-top: 0;
+        }
+
+        img {
+          object-fit: initial;
+          min-height: auto;
+
+          @include grid-media-min('sm') {
+            min-height: auto;
+          }
+
+          @include grid-media-min('md') {
+            min-height: 55vh;
+            object-fit: cover;
+          }
         }
       }
     }
   }
 
   &__text {
-    display: block;
-
     @include hb-colorful {
+      display: block;
       @include hb-global-color('color', 'white');
-      @include hb-pairing-color('background-color', 'primary-hero-overlay');
-    }
-
-    .hb-hero-overlay--1 & {
-      padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2);
-      position: relative;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      width: 90%;
 
       @include grid-media-min('md') {
-        transform: none;
-        grid-column-start: 2;
-        grid-column-end: 4;
-        grid-row-start: 4;
-        grid-row-end: 7;
-        padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
+        transform: translate(0%, -50%);
+        width: 80%;
+        left: 8%;
+      }
+
+      @include grid-media-min('lg') {
+        width: 60%;
+        left: 12%;
       }
 
       h2 {
-        @include hb-heading-4;
-        margin-top: hb-calculate-rems(24px);
+        font-weight: hb-theme-font-weight(semibold);
+        font-size: hb-calculate-rems(27px);
+        line-height: 117%;
+        margin: 0 0 hb-calculate-rems($hb-gutter-width--small);
+
+        @include grid-media-min('md') {
+          @include hb-heading-2;
+          margin: 0 0 hb-calculate-rems($hb-gutter-width);
+        }
 
         @include grid-media-min('lg') {
-          @include hb-heading-3;
-          margin-top: hb-calculate-rems(28px);
+          @include hb-heading-1;
         }
       }
 
+      ul {
+        li {
+          &::before {
+            @include hb-pairing-color('background-color', 'secondary');
+          }
+        }
+      }
+
+      ol {
+        li {
+          &::before {
+            @include hb-pairing-color('color', 'secondary-active');
+          }
+        }
+      }
+
+      .field-hs-hero-body {
+        width: 90%;
+
+        @include grid-media-min('sm') {
+          width: 70%;
+        }
+
+        @include grid-media-min('xl') {
+          width: 60%;
+        }
+      }
+
+      .field-hs-hero-body,
+      a {
+        font-size: hb-calculate-rems(16px);
+
+        @include grid-media-min('lg') {
+          font-size: hb-calculate-rems(18px);
+        }
+      }
+
+      a {
+        @include hb-pairing-color('color', 'tertiary-reversed');
+
+        &:hover,
+        &:focus {
+          box-shadow: none;
+          @include hb-pairing-color('color', 'tertiary-highlight');
+        }
+      }
+
+      .field-hs-hero-link {
+        a,
+        button {
+          max-width: 80%;
+          margin-top: hb-calculate-rems($hb-gutter-width--small);
+          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
+
+          @include grid-media-min('md') {
+            margin-top: hb-calculate-rems($hb-gutter-width);
+          }
+
+          @include grid-media-min('lg') {
+            max-width: 75%;
+          }
+
+          .fa-ext {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .paragraph--type--hs-carousel & {
       @include hb-colorful {
+        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2);
+        position: relative;
+        width: auto;
+        transform: none;
+        top: initial;
+        left: initial;
+
+        @include grid-media-min('md') {
+          top: initial;
+          left: initial;
+          transform: none;
+          grid-column-start: 2;
+          grid-column-end: 4;
+          grid-row-start: 4;
+          grid-row-end: 7;
+          padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
+          width: auto;
+        }
+
+        @include grid-media-min('lg') {
+          top: initial;
+          left: initial;
+          transform: none;
+          width: auto;
+        }
+
         // Line decoration pseudo element
         &::after {
           display: block;
@@ -176,65 +312,32 @@
             top: hb-calculate-rems(56px);
           }
         }
-      }
-    }
 
-    ul {
-      li {
-        &::before {
-          @include hb-colorful {
-            @include hb-pairing-color('background-color', 'secondary');
+        h2 {
+          @include hb-heading-4;
+          margin: hb-calculate-rems(24px) 0;
+
+          @include grid-media-min('md') {
+            @include hb-heading-4;
+            margin: hb-calculate-rems(24px) 0;
+          }
+
+          @include grid-media-min('lg') {
+            @include hb-heading-3;
+            margin: hb-calculate-rems(28px) 0;
           }
         }
-      }
-    }
 
-    ol {
-      li {
-        &::before {
-          @include hb-colorful {
-            @include hb-pairing-color('color', 'secondary-active');
+        .field-hs-hero-body {
+          width: auto;
+
+          @include grid-media-min('sm') {
+            width: auto;
           }
-        }
-      }
-    }
 
-    .text-long,
-    a {
-      font-size: hb-calculate-rems(16px);
-
-      @include grid-media-min('lg') {
-        font-size: hb-calculate-rems(18px);
-      }
-    }
-
-    a {
-      @include hb-colorful {
-        @include hb-pairing-color('color', 'tertiary-reversed');
-
-        &:hover,
-        &:focus {
-          box-shadow: none;
-          @include hb-pairing-color('color', 'tertiary-highlight');
-        }
-      }
-    }
-
-    .field-hs-hero-link {
-      a,
-      button {
-        max-width: 80%;
-
-        @include hb-colorful {
-          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
-        }
-
-        @include grid-media-min('lg') {
-          max-width: 75%;
-        }
-
-        .fa-ext {
-          display: none;
+          @include grid-media-min('xl') {
+            width: auto;
+          }
         }
       }
     }

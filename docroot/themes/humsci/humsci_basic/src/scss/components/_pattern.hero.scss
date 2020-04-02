@@ -22,6 +22,23 @@
   @include hb-colorful {
     position: relative;
     margin: 0 0 $hb-gutter-width;
+
+    min-height: 60vh;
+
+    @include grid-media-min('sm') {
+      min-height: 55vh;
+    }
+
+    &::before {
+      @include hb-pairing-color('background-color', 'primary-hero-overlay');
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: $hb-z-index-hero1-overlay;
+    }
   }
 
   .paragraph--type--hs-carousel & {
@@ -40,19 +57,8 @@
         grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
       }
 
-      &::before,
-      &::after {
-        content: '';
-        display: block;
-      }
-
       // Offset background color psuedo element
       &::before {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
         @include hb-global-color('background-color', 'gray-light');
         z-index: $hb-z-index-hero1-background;
 
@@ -68,6 +74,8 @@
 
       // Secondary color block psuedo element that shows up in the grid
       &::after {
+        content: '';
+        display: block;
         z-index: $hb-z-index-hero1-overlay;
         @include hb-pairing-color('background-color', 'secondary');
 
@@ -175,18 +183,7 @@
       top: 50%;
       transform: translate(-50%, -50%);
       left: 50%;
-      width: 90%;
-
-      @include grid-media-min('md') {
-        transform: translate(0%, -50%);
-        width: 80%;
-        left: 8%;
-      }
-
-      @include grid-media-min('lg') {
-        width: 60%;
-        left: 12%;
-      }
+      @include hb-page-width;
 
       h2 {
         font-weight: hb-theme-font-weight(semibold);
@@ -220,15 +217,20 @@
         }
       }
 
+      h2,
       .field-hs-hero-body {
         width: 90%;
 
         @include grid-media-min('sm') {
+          width: 80%;
+        }
+
+        @include grid-media-min('md') {
           width: 70%;
         }
 
-        @include grid-media-min('xl') {
-          width: 60%;
+        @include grid-media-min('lg') {
+          width: 50%;
         }
       }
 
@@ -278,28 +280,22 @@
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
         padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2);
         position: relative;
-        width: auto;
+        width: auto !important;
         transform: none;
         top: initial;
         left: initial;
 
         @include grid-media-min('md') {
-          top: initial;
-          left: initial;
-          transform: none;
           grid-column-start: 2;
           grid-column-end: 4;
           grid-row-start: 4;
           grid-row-end: 7;
           padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
-          width: auto;
+          width: auto !important;
         }
 
         @include grid-media-min('lg') {
-          top: initial;
-          left: initial;
-          transform: none;
-          width: auto;
+          width: auto !important;
         }
 
         // Line decoration pseudo element
@@ -328,6 +324,7 @@
           }
         }
 
+        h2,
         .field-hs-hero-body {
           width: auto;
 
@@ -335,7 +332,11 @@
             width: auto;
           }
 
-          @include grid-media-min('xl') {
+          @include grid-media-min('md') {
+            width: auto;
+          }
+
+          @include grid-media-min('lg') {
             width: auto;
           }
         }

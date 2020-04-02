@@ -89,9 +89,11 @@
 .chosen-container-single {
   .chosen-single {
     display: block;
-    background: none;
-    box-shadow: none;
+    // scss-lint:disable ImportantRule
+    background: none !important;
+    // scss-lint:enable ImportantRule
 
+    box-shadow: none;
     font-size: hb-calculate-rems(16px);
     line-height: 1;
 
@@ -174,53 +176,73 @@
   // }
 }
 
+// MER: copy and paste styles from above
 // Multi Chosen
-// .chosen-container-multi {
-//   .chosen-choices {
-//
-//   }
-//
-//   .chosen-choices li {
-//     &.search-field {
-//       input[type="text"] {
-//
-//       }
-//     }
-//
-//     &.search-choice {
-//
-//       span {
-//
-//       }
-//
-//       .search-choice-close {
-//
-//         &:hover {
-//
-//         }
-//       }
-//     }
-//
-//     &.search-choice-disabled {
-//
-//     }
-//
-//     &.search-choice-focus {
-//
-//       .search-choice-close {
-//
-//       }
-//     }
-//   }
-//
-//   .chosen-results {
-//
-//   }
-//
-//   .chosen-drop .result-selected {
-//
-//   }
-// }
+.chosen-container-multi {
+  .chosen-choices {
+    display: block;
+    // scss-lint:disable ImportantRule
+    background: none !important;
+    // scss-lint:enable ImportantRule
+
+    box-shadow: none;
+    font-size: hb-calculate-rems(16px);
+    line-height: 1;
+
+    height: auto;
+    min-height: $hb-input-min-height;
+
+    padding: hb-calculate-rems(8px);
+    padding-right: $hb-input-icon-spacing;
+
+    @include hb-input-border;
+
+    &:focus {
+      @include hb-input-focus;
+    }
+  }
+
+  .chosen-choices li {
+    &.search-field {
+      input[type="text"] {
+
+      }
+    }
+
+    &.search-choice {
+
+      span {
+
+      }
+
+      .search-choice-close {
+
+        &:hover {
+
+        }
+      }
+    }
+
+    &.search-choice-disabled {
+
+    }
+
+    &.search-choice-focus {
+
+      .search-choice-close {
+
+      }
+    }
+  }
+
+  .chosen-results {
+
+  }
+
+  .chosen-drop .result-selected {
+
+  }
+}
 
 // Active
 .chosen-container-active {

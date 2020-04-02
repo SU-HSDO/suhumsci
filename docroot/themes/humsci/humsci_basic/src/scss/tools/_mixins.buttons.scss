@@ -8,22 +8,27 @@
   text-align: center;
 
   @include hb-colorful {
-    color: $hb-color--white;
-    background-color: hb-colorful-variation(secondary);
-    border: hb-calculate-rems(2px) solid hb-colorful-variation(secondary);
+    @include hb-global-color('color', 'white');
+    @include hb-pairing-color('background-color', 'secondary');
+    @include hb-pairing-color('border-color', 'secondary');
+    border-width: hb-calculate-rems(2px);
+    border-style: solid;
 
     transition: 125ms background-color ease-out, 125ms border-color ease-out;
 
     &:hover {
-      background-color: darken(hb-colorful-variation(secondary), 10%);
-      border-color: darken(hb-colorful-variation(secondary), 10%);
+      @include hb-pairing-color('background-color', 'secondary-darken-12');
+      @include hb-pairing-color('border-color', 'secondary-darken-12');
     }
 
     &:active,
     &:focus {
-      background-color: hb-colorful-variation(secondary);
-      border-color: $hb-color--white;
-      box-shadow: 0 0 0 hb-calculate-rems(2px) lighten(hb-colorful-variation(secondary), 10%);
+      @include hb-pairing-color('background-color', 'secondary');
+      @include hb-global-color('border-color', 'white');
+      // scss-lint:disable DuplicateProperty
+      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+      // scss-lint:enable DuplicateProperty
     }
 
     &:hover,
@@ -49,30 +54,28 @@
   text-decoration: none;
 }
 
-@mixin hb-border-button(
-  $button-color: $su-color-cardinal-red,
-  $button-color-hover: darken($su-color-cardinal-red, 10%)
-) {
-  display: block;
+@mixin hb-border-button($button-color, $button-color-hover) {
+  display: inline-block;
   background-color: transparent;
   border-radius: hb-calculate-rems(42px);
   font-weight: hb-theme-font-weight(semibold);
   margin-top: hb-calculate-rems($hb-gutter-width);
-  max-width: hb-calculate-rems(184px);
-  padding: hb-calculate-rems(10px);
+  padding: hb-calculate-rems(12px);
   text-decoration: none;
   text-align: center;
   transition: all 200ms ease-in-out;
 
   @include hb-colorful {
-    border: 3px solid $button-color;
-    color: $button-color;
+    @include hb-pairing-color('color', $button-color);
+    @include hb-pairing-color('border-color', $button-color);
+    border-width: 3px;
+    border-style: solid;
 
     &:hover,
     &:focus {
+      @include hb-pairing-color('border-color', $button-color-hover);
+      @include hb-pairing-color('color', $button-color-hover);
       box-shadow: none;
-      border: 3px solid $button-color-hover;
-      color: $button-color-hover;
     }
   }
 }

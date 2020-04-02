@@ -4,10 +4,19 @@
   // Tables need display: table; in order to semantically be a table
   // display: block; will negatively affect screen reader a11y
   width: 100%;
-  border: 1px solid $border-color;
   border-collapse: collapse;
   font-size: hb-calculate-rems(13px);
   text-align: left;
+
+  @include hb-colorful {
+    border: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray-medium');
+
+    .hb-local-footer--dark & {
+      @include hb-global-color('color', 'black');
+      @include hb-global-color('background-color', 'white');
+    }
+  }
 
   @include grid-media-min('sm') {
     font-size: hb-calculate-rems(16px);
@@ -18,17 +27,18 @@
 @mixin table-heading {
   position: sticky;
   top: 0;
-  border-color: $header-border-color;
 
-  a:not([class]) {
-    @include hb-colorful {
-      color: lighten(hb-colorful-variation(secondary), 55%);
-    }
+  @include hb-colorful {
+    @include hb-global-color('border-color', 'white');
 
-    &:hover,
-    &:focus {
-      box-shadow: none;
-      color: $hb-color--white;
+    a:not([class]) {
+      @include hb-pairing-color('color', 'secondary-highlight');
+
+      &:hover,
+      &:focus {
+        @include hb-global-color('color', 'white');
+        box-shadow: none;
+      }
     }
   }
 }
@@ -37,23 +47,30 @@
 @mixin table-head-row {
   @include hb-colorful {
     // set themed color for header background color table variable
-    $header-background-color: hb-colorful-variation(primary);
+    @include hb-pairing-color('background-color', 'primary');
+    @include hb-global-color('color', 'white');
+    font-weight: hb-theme-font-weight(bold);
+    text-transform: uppercase;
 
-    background: $header-background-color;
+    .hb-local-footer--dark & {
+      @include hb-pairing-color('background-color', 'secondary-darken-12');
+    }
   }
-
-  color: $header-foreground-color;
-  font-weight: hb-theme-font-weight(bold);
-  text-transform: uppercase;
 }
 
 @mixin table-row {
-  background: lighten($su-color-driftwood, 25%);
+  @include hb-colorful {
+    @include hb-global-color('background-color', 'gray-light');
+  }
 }
 
 // Table Data
 @mixin table-data {
-  border: 1px solid $border-color;
   padding: hb-calculate-rems(16px);
   vertical-align: top;
+
+  @include hb-colorful {
+    border: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray-medium');
+  }
 }

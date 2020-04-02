@@ -1,10 +1,26 @@
 .node__title {
   h1 {
-    @include hb-heading-2;
-    margin: 0 0 hb-calculate-rems(20px);
+    @include hb-colorful {
+      font-weight: hb-theme-font-weight(semibold);
+      font-size: hb-calculate-rems(38px);
+      line-height: 112%;
+      margin: 0 0 hb-calculate-rems(48px);
 
-    @include grid-media-min('sm') {
-      margin: 0 0 hb-calculate-rems(28px);
+      @include grid-media-min('md') {
+        font-size: hb-calculate-rems(48px);
+        margin: 0 0 hb-calculate-rems(48px);
+      }
+    }
+  }
+
+  &::before {
+    @include hb-colorful {
+      border-bottom: solid hb-calculate-rems(4px) hb-colorful-variation(secondary);
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      width: hb-calculate-rems(55px);
+      margin-right: hb-calculate-rems(10px);
     }
   }
 }

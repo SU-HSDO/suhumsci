@@ -1,20 +1,24 @@
 @mixin hb-block-heading {
   @include hb-colorful {
     font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(24px);
+    line-height: 120%;
+  }
+
+  @include grid-media-min('md') {
     font-size: hb-calculate-rems(27px);
-    line-height: 109%;
+    line-height: 117%;
   }
 }
 
 @mixin hb-heading-1 {
   @include hb-colorful {
     font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(40px);
-    line-height: 126%;
+    font-size: hb-calculate-rems(38px);
+    line-height: 112%;
 
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(58px);
-      line-height: 117%;
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(48px);
     }
   }
 }
@@ -22,12 +26,11 @@
 @mixin hb-heading-2 {
   @include hb-colorful {
     font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(33px);
-    line-height: 125%;
+    font-size: hb-calculate-rems(32px);
+    line-height: 112%;
 
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(48px);
-      line-height: 112%;
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(38px);
     }
   }
 }
@@ -35,30 +38,22 @@
 @mixin hb-heading-3 {
   @include hb-colorful {
     @include hb-block-heading;
-
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(38px);
-    }
   }
 }
 
 @mixin hb-heading-4 {
   @include hb-colorful {
     font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(22px);
-    line-height: 121%;
-
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(32px);
-    }
+    font-size: hb-calculate-rems(20px);
+    line-height: 122%;
   }
 }
 
 @mixin hb-heading-5 {
   @include hb-colorful {
     font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(20px);
-    line-height: 117%;
+    font-size: hb-calculate-rems(18px);
+    line-height: 124%;
   }
 }
 
@@ -67,14 +62,13 @@
     text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(16px);
-    line-height: 117%;
+    line-height: 128%;
   }
 }
 
 @mixin hb-subtitle {
   font-weight: hb-theme-font-weight(semibold);
   line-height: 122%;
-
   font-size: hb-calculate-rems(16px);
 
   @include grid-media-min('lg') {
@@ -114,51 +108,60 @@
 
   &:hover,
   &:focus {
-    box-shadow: inset 0 -0.475em 0 $box-shadow-color;
     transition-delay: 0s, 0s;
     border-bottom-color: $border-color;
+
+    @include hb-colorful {
+      @include hb-pairing-color('border-bottom-color', $border-color);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
+    }
   }
 }
 
 @mixin hb-link {
   // no font size by default
   @include hb-colorful {
-    color: $hb-color--black;
+    @include hb-global-color('color', 'black');
     font-weight: hb-theme-font-weight(semibold);
-    border-bottom: 2px solid transparent;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    @include hb-global-color('border-bottom-color', 'gray-medium');
 
-    @include hb-link--hover-style(lighten(hb-colorful-variation(primary), 70%), lighten(hb-colorful-variation(primary), 20%));
+
+    @include hb-link--hover-style('tertiary-highlight', 'tertiary-reversed');
   }
 }
 
 @mixin hb-link--inline {
   // no font size by default
   @include hb-colorful {
-    color: lighten(hb-colorful-variation(primary), 10%);
+    @include hb-pairing-color('color', 'tertiary');
 
     &:hover,
     &:focus {
-      color: hb-colorful-variation(primary);
-      box-shadow: inset 0 hb-calculate-rems(-9px) 0 lighten(hb-colorful-variation(primary), 70%);
+      @include hb-pairing-color('color', 'tertiary-darken-20');
+      // scss-lint:disable DuplicateProperty
+      box-shadow: inset 0 hb-calculate-rems(-10px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: inset 0 hb-calculate-rems(-10px) 0 var(--palette--tertiary-highlight);
+      // scss-lint:enable DuplicateProperty
     }
   }
 
   .hb-local-footer & {
-    &:hover,
-    &:focus {
+    &:focus,
+    &:hover {
       box-shadow: none;
     }
   }
 
   .hb-local-footer--dark & {
     @include hb-colorful {
-      color: lighten(hb-colorful-variation(primary), 30%);
+      @include hb-pairing-color('color', 'tertiary-reversed');
 
       &:hover,
       &:focus {
-        // scss-lint:disable ImportantRule
-        color: lighten(hb-colorful-variation(primary), 70%) !important; // override default element styles
-        // scss-lint:enable ImportantRule
+        @include hb-pairing-color('color', 'tertiary-highlight', $important: true);
       }
     }
   }
@@ -166,11 +169,14 @@
 
 @mixin hb-blockquote {
   @include hb-body--medium;
-  color: darken($su-color-driftwood, 45%);
   font-style: italic;
   line-height: 140%;
   position: relative;
   quotes: '"' '"';
+
+  @include hb-colorful {
+    @include hb-global-color('color', 'gray-dark');
+  }
 
   &::before {
     position: absolute;
@@ -190,9 +196,12 @@
   font-weight: hb-theme-font-weight(bold);
   font-size: hb-calculate-rems(15px);
   font-style: normal;
-  color: $hb-color--black;
   text-transform: uppercase;
   margin-bottom: hb-calculate-rems(4px);
+
+  @include hb-colorful {
+    @include hb-global-color('color', 'black');
+  }
 }
 
 @mixin hb-field-label--featured {
@@ -201,6 +210,10 @@
   text-transform: inherit;
 
   @include hb-colorful {
-    color: hb-colorful-variation(secondary);
+    @include hb-pairing-color('color', 'secondary');
+
+    .hb-well & {
+      @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
+    }
   }
 }

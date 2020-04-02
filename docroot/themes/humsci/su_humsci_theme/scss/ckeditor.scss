@@ -15,6 +15,58 @@
   'elements/index',
   'components/index';
 
+
+// Need to ensure that the new WYSIWYG text-editor classes are supported with the
+// update made by the Sparkbox team to the Humsci Basic Theme
+// For example, instead of .decanter-font-splash, you can now use
+// .hs-font-splash as a more unspecific override of WYSIWYG styles
+.hs-external-link {
+  @include external-link(external-link, external-link-hover);
+}
+
+.hs-more-link {
+  @include more-link(more-link, more-link-hover);
+}
+
+.hs-table--borderless {
+  @include table-borderless;
+}
+
+.hs-font-lead {
+  @include font-lead;
+}
+
+.hs-font-splash {
+  @include font-splash;
+}
+
+.hs-short-line-length {
+  @include short-line-length;
+}
+
+.hs-caption {
+  @include caption;
+}
+
+.hs-credits {
+  @include credits;
+}
+
+.hs-button,
+a.hs-button {
+  @include button-primary;
+}
+
+.hs-secondary-button,
+a.hs-secondary-button {
+  @include button-secondary;
+}
+
+.hs-button--big,
+a.hs-button--big {
+  @include button-big;
+}
+
 .hide-logged-in:hover {
   outline: 1px dashed #ffc0cb;
 
@@ -58,7 +110,8 @@
     border: 1px solid #b6b1a9;
   }
 
-  &.decanter-table--borderless {
+  &.decanter-table--borderless,
+  &.hs-table--borderless {
     > thead > tr {
       background-color: transparent;
     }

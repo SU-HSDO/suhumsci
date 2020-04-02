@@ -1,0 +1,38 @@
+// The hb-pairing-color() mixin is used in place of the css property that needs
+// to have a color pairing:
+// .example {
+//   @include hb-pairing-color('background-color', 'primary', $important: true);
+// }
+// There is an option to add `!important` to any style rule if we ever need the
+// extra specificity. This is set to false by default.
+@mixin hb-pairing-color($property, $color-swatch, $important: false) {
+  @include hb-colorful {
+    @if ($important) {
+      // scss-lint:disable ImportantRule
+      // Fallback for browsers that do not support CSS variables
+      #{$property}: hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings) !important;
+
+      // All modern browsers that support CSS variables
+      #{$property}: var(--palette--#{$color-swatch}) !important;
+      // scss-lint:enable ImportantRule
+    } @else {
+      // Fallback for browsers that do not support CSS variables
+      #{$property}: hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings);
+
+      // All modern browsers that support CSS variables
+      #{$property}: var(--palette--#{$color-swatch});
+    }
+  }
+}
+
+@mixin hb-global-color($property, $color-swatch, $important: false) {
+  @include hb-colorful {
+    @if ($important) {
+      // scss-lint:disable ImportantRule
+      #{$property}: hb-get-global-color($color-swatch, $hc-colorful-globals) !important;
+      // scss-lint:enable ImportantRule
+    } @else {
+      #{$property}: hb-get-global-color($color-swatch, $hc-colorful-globals);
+    }
+  }
+}

@@ -7,22 +7,26 @@
 
   .form-item {
     width: 100%;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-calculate-rems(24px);
 
     @include grid-media-min('md') {
-      width: calc(50% - #{hb-calculate-rems(16px)});
-      margin-right: hb-calculate-rems(16px);
+      width: calc(50% - #{hb-calculate-rems(18px)});
+      margin-right: hb-calculate-rems(18px);
     }
 
     @include grid-media-min('lg') {
-      width: calc(33% - #{hb-calculate-rems(16px)});
+      width: calc(33% - #{hb-calculate-rems(18px)});
     }
   }
 
   .form-actions {
     display: flex;
     align-items: center;
-    margin-bottom: hb-calculate-rems(16px);
+    margin-bottom: 0;
+
+    @include grid-media-min('md') {
+    margin-bottom: hb-calculate-rems(24px);
+  }
   }
 
   .form-submit:not(:last-child) {

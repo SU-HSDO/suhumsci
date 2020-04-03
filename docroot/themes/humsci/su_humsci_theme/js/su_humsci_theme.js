@@ -3,6 +3,9 @@
   Drupal.behaviors.suHumSciTheme = {
     attach: function (context, settings) {
 
+      $('figure .media.video', context).each(function () {
+        $(this).closest('figure').css('width', '100%');
+      });
       $('.table-pattern', context).each(function (i, table) {
         const headers = [];
         $('.table-header .table-row > div', table).each(function (i, header) {

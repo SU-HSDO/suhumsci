@@ -180,6 +180,8 @@ class CircleCiCommands extends BltTasks {
   public function jobRunBehatTestsSecond() {
     $all_sites = $this->getSites();
     $sites = array_slice($all_sites, count($all_sites) / 2);
+    $sites[] = 'mrc';
+    $sites = array_unique($sites);
     return $this->runBehatTest($sites);
   }
 

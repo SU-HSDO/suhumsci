@@ -264,11 +264,7 @@ class CircleCiCommands extends BltTasks {
       $keys_loaded = TRUE;
     }
 
-    $tasks[] = $this->taskDrush()
-      ->drush("updb");
-
-    $tasks[] = $this->blt()->arg('drupal:config:import')
-      ->option('partial', $partial_config, '=');
+    $tasks[] = $this->blt()->arg('drupal:config:import');
     $tasks[] = $this->blt()->arg('drupal:toggle:modules');
 
     $tasks[] = $this->taskDrush()

@@ -97,15 +97,6 @@ class HumsciHooksCommands extends BltTasks {
   }
 
   /**
-   * Toggle modules first.
-   *
-   * @hook pre-command drupal:config:import
-   */
-  public function preConfigImport() {
-    $this->invokeCommand('drupal:toggle:modules');
-  }
-
-  /**
    * Update database first.
    *
    * @hook pre-command drupal:toggle:modules

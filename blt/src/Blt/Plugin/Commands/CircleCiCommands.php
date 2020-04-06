@@ -262,30 +262,14 @@ class CircleCiCommands extends BltTasks {
       $keys_loaded = TRUE;
     }
 
+    $this->input()->setOption('partial', $partial_config);
+
     // Update the database.
-    $tasks[] = $this->taskDrush()
-      ->drush('updatedb')
-      ->option('yes')
-      ->option('verbose');
-
-    // Toggle modules for CI environment. Modules should match production.
-    $tasks[] = $this->blt()->arg('drupal:toggle:modules')
-      ->option('environment', 'ci', '=');
-
-    // Import the configs.
-    $config_import = $this->taskDrush()
-      ->drush('config-import')
-      ->option('yes')
-      ->option('verbose');
-    if ($partial_config) {
-      $config_import->option('partial');
-    }
+    $tasks[] = $this->blt()->arg('drupal:update');
     $tasks[] = $this->taskDrush()
       ->drush('sqlq')
       ->arg('DELETE FROM config where name = "hs_courses_importer.importer_settings"')
       ->drush('cr');
-
-    $tasks[] = $config_import;
     $tasks[] = $this->taskDrush()->drush('cron');
     return $tasks;
   }

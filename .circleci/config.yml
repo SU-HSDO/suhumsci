@@ -102,18 +102,11 @@ behat_tests_second: &behat_tests_second
 fresh_install_tests: &fresh_install_tests
   <<: *defaults
   steps:
-#    - attach_workspace:
-#        at: .
-#    - run:
-#        name: Run PHPUnit tests
-#        command: vendor/bin/blt circleci:phpunit
-    - checkout
+    - attach_workspace:
+        at: .
     - run:
-        name: Composer setup
-        command: |
-          composer install --optimize-autoloader --no-interaction
-          mkdir /root/.config/blt -p
-          vendor/bin/blt blt:telemetry:disable --no-interaction
+        name: Run PHPUnit tests
+        command: vendor/bin/blt circleci:phpunit
     - run:
         name: Run behat tests on fresh install
         command: |

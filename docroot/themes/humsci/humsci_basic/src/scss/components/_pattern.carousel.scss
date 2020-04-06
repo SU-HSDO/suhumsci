@@ -1,5 +1,16 @@
-.hb-hero-overlay {
+.field-hs-hero-image {
+  // For the humsci_colorful theme carousel with just an image, get rid of colorful overlay
   .paragraph--type--hs-carousel & {
+    @include hb-colorful {
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+  .paragraph--type--hs-carousel {
+  .hb-hero-overlay {
     @include hb-colorful {
       @include clearfix;
       padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;

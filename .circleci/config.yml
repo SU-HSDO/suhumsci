@@ -50,8 +50,6 @@ save_cache: &save_cache
 directory_setup: &directory_setup
   <<: *defaults
   steps:
-#    - *add_ssh
-#    - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
     - run:
@@ -74,7 +72,9 @@ behat_tests_first: &behat_tests_first
         at: .
     - run:
         name: Run Behat tests
-        command: vendor/bin/blt circleci:behat:first
+        command: |
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:behat:first
     - store_test_results:
         path: /var/www/html/artifacts/behat
     - store_artifacts:
@@ -90,7 +90,9 @@ behat_tests_second: &behat_tests_second
         at: .
     - run:
         name: Run Behat tests
-        command: vendor/bin/blt circleci:behat:second
+        command: |
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:behat:second
     - store_test_results:
         path: /var/www/html/artifacts/behat
     - store_artifacts:
@@ -100,14 +102,23 @@ behat_tests_second: &behat_tests_second
 fresh_install_tests: &fresh_install_tests
   <<: *defaults
   steps:
-    - attach_workspace:
-        at: .
+#    - attach_workspace:
+#        at: .
+#    - run:
+#        name: Run PHPUnit tests
+#        command: vendor/bin/blt circleci:phpunit
+    - checkout
     - run:
-        name: Run PHPUnit tests
-        command: vendor/bin/blt circleci:phpunit
+        name: Composer setup
+        command: |
+          composer install --optimize-autoloader --no-interaction
+          mkdir /root/.config/blt -p
+          vendor/bin/blt blt:telemetry:disable --no-interaction
     - run:
-        name: Generate code coverage report
-        command: vendor/bin/blt circleci:behat:install
+        name: Run behat tests on fresh install
+        command: |
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:behat:install
     - store_test_results:
         path: /var/www/html/artifacts/phpunit
     - store_artifacts:
@@ -120,7 +131,11 @@ code_coverage: &code_coverage
     - attach_workspace:
         at: .
     - run: composer require pcov/clobber --dev
-    - run: vendor/bin/pcov clobber
+    - run:
+        name: Clobber
+        command: |
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/pcov clobber
     - run:
         name: Generate code coverage report
         command: vendor/bin/blt circleci:phpunit:coverage
@@ -142,6 +157,7 @@ deploy_branch: &deploy_branch
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt deploy --no-interaction
 
 ## Job to deploy the new tag to Acquia hosting using BLT.
@@ -159,6 +175,7 @@ deploy_tag: &deploy_tag
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           DATE=`date +%Y-%m-%d`
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
           vendor/bin/blt circleci:new-release-branch ${CIRCLE_TAG}
 
@@ -175,6 +192,7 @@ update_dependencies: &update_dependencies
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt circleci:update
     - save_cache: *save_cache
 
@@ -189,6 +207,7 @@ update_certs: &update_certs
     - run:
         name: Update Prod SSL Certs
         command: |
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt humsci:update-cert prod
           vendor/bin/blt humsci:clean-backups
 

@@ -63,5 +63,14 @@ a.hb-pill {
 }
 
 .hb-blockquote {
-  @include hb-blockquote;
+  // remove content set in the base default styles set on the blockquote tag
+  &::after,
+  &::before {
+    content: '';
+  }
+
+  > p,
+  > div {
+    @include hb-blockquote;
+  }
 }

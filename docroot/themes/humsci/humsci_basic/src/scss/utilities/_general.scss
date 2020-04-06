@@ -13,11 +13,39 @@
 }
 
 .hb-inline {
-  display: flex;
-  flex-wrap: wrap;
+  @include hb-colorful {
+    @include grid-media-min('sm') {
+      display: flex;
+      flex-wrap: wrap;
+    }
 
-  > div {
-    padding-right: hb-calculate-rems(20px);
+    > div {
+      margin-bottom: hb-calculate-rems(16px);
+
+      @include grid-media-min('sm') {
+        display: flex;
+      }
+
+      &::after {
+        @include grid-media-min('sm') {
+          margin: 0 hb-calculate-rems(10px);
+          content: '|';
+          @include hb-global-color('color', 'gray-dark');
+        }
+      }
+
+      &:last-child {
+        margin-bottom: 2rem;
+
+        @include grid-media-min('sm') {
+          margin-bottom: initial;
+        }
+
+        &::after {
+          content: '';
+        }
+      }
+    }
   }
 }
 

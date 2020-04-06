@@ -56,6 +56,7 @@ directory_setup: &directory_setup
         name: Composer setup
         command: |
           composer install --optimize-autoloader --no-interaction
+          mkdir -p docroot/files-private && chmod 777 docroot/files-private
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .
@@ -106,11 +107,12 @@ fresh_install_tests: &fresh_install_tests
         at: .
     - run:
         name: Run PHPUnit tests
-        command: vendor/bin/blt circleci:phpunit
+        command: |
+          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:phpunit
     - run:
         name: Run behat tests on fresh install
         command: |
-          mkdir /root/.config/blt -p && vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt circleci:behat:install
     - store_test_results:
         path: /var/www/html/artifacts/phpunit

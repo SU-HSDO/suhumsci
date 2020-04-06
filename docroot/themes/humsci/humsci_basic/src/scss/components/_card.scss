@@ -32,11 +32,19 @@
 
     @include grid-media-min('sm') {
       display: flex;
-    }
-
-    .hb-grid &,
-    .ptype-hs-row & {
-      display: block;
+      // from grid--col 3 and above we'll display block
+          .hb-grid--cols-3 &,
+          .hb-grid--cols-4 &,
+          .hb-grid--cols-5 &,
+          .hb-grid--cols-6 &,
+          .hb-grid--cols-7 &,
+          .hb-grid--cols-8 &,
+          .hb-grid--cols-9 &,
+          .hb-grid--cols-10 &,
+          .hb-grid--cols-11 &,
+          .hb-grid--cols-12 &, {
+            display: block;
+          }
     }
 
     &:not(:last-child) {
@@ -66,21 +74,29 @@
           margin: 0 hb-calculate-rems(8px);
           border-left: $hb-thin-border;
           @include hb-global-color('border-color', 'gray-dark');
-        }
-
-        .hb-grid &,
-        .ptype-hs-row & {
-          border-left: 0 none;
+        // from grid--col 3 and above we won't display pipes
+        .hb-grid--cols-3 &,
+        .hb-grid--cols-4 &,
+        .hb-grid--cols-5 &,
+        .hb-grid--cols-6 &,
+        .hb-grid--cols-7 &,
+        .hb-grid--cols-8 &,
+        .hb-grid--cols-9 &,
+        .hb-grid--cols-10 &,
+        .hb-grid--cols-11 &,
+        .hb-grid--cols-12 &, {
+            display: none;
+            }
         }
       }
 
       // Removes the pipe from the last field
       &:last-of-type {
         &::after {
-          content: '';
-          margin: 0;
-          border: 0;
-        }
+            content: '';
+            margin: 0;
+            border: 0;
+          }
       }
 
       a {

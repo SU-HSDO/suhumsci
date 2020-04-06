@@ -264,8 +264,8 @@ class CircleCiCommands extends BltTasks {
       $keys_loaded = TRUE;
     }
 
-    $tasks[] = $this->blt()->arg('drupal:config:import');
     $tasks[] = $this->blt()->arg('drupal:toggle:modules');
+    $tasks[] = $this->blt()->arg('drupal:config:import');
 
     $tasks[] = $this->taskDrush()
       ->drush('sqlq')

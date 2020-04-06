@@ -264,10 +264,13 @@ class CircleCiCommands extends BltTasks {
       $keys_loaded = TRUE;
     }
 
-    $this->input()->setOption('partial', $partial_config);
+    $tasks[] = $this->taskDrush()
+      ->drush("updb");
 
-    // Update the database.
-    $tasks[] = $this->blt()->arg('drupal:update');
+    $tasks[] = $this->blt()->arg('drupal:config:import')
+      ->option('partial', $partial_config, '=');
+    $tasks[] = $this->blt()->arg('drupal:toggle:modules');
+
     $tasks[] = $this->taskDrush()
       ->drush('sqlq')
       ->arg('DELETE FROM config where name = "hs_courses_importer.importer_settings"')

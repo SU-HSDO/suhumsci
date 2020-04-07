@@ -18,7 +18,8 @@
       margin: 0 0 hb-calculate-rems(10px);
     }
 
-    li:not([class]) { // increase specificity so that these styles override the base list styles
+    li:not([class]) {
+      // increase specificity so that these styles override the base list styles
       @include hb-category-item;
     }
 
@@ -29,22 +30,22 @@
 
   &__subcontent {
     width: 100%;
-
     @include grid-media-min('sm') {
       display: flex;
       // from grid--col 3 and above we'll display block
-          .hb-grid--cols-3 &,
-          .hb-grid--cols-4 &,
-          .hb-grid--cols-5 &,
-          .hb-grid--cols-6 &,
-          .hb-grid--cols-7 &,
-          .hb-grid--cols-8 &,
-          .hb-grid--cols-9 &,
-          .hb-grid--cols-10 &,
-          .hb-grid--cols-11 &,
-          .hb-grid--cols-12 &, {
-            display: block;
-          }
+      ,
+      .hb-grid--cols-10 &,
+      .hb-grid--cols-11 &,
+      .hb-grid--cols-12 &,
+      .hb-grid--cols-3 &,
+      .hb-grid--cols-4 &,
+      .hb-grid--cols-5 &,
+      .hb-grid--cols-6 &,
+      .hb-grid--cols-7 &,
+      .hb-grid--cols-8 &,
+      .hb-grid--cols-9 & {
+        display: block;
+      }
     }
 
     &:not(:last-child) {
@@ -54,19 +55,16 @@
     &-item {
       @include hb-global-color('color', 'gray-dark');
       font-size: hb-calculate-rems(16px);
-
       @include grid-media-min('sm') {
         display: flex;
       }
 
       &:not(:last-child) {
         margin-bottom: hb-calculate-rems(4px);
-
         @include grid-media-min('sm') {
           margin-bottom: 0;
         }
       }
-
       // Adds a "pipe" after each field
       &::after {
         @include grid-media-min('sm') {
@@ -74,32 +72,31 @@
           margin: 0 hb-calculate-rems(8px);
           border-left: $hb-thin-border;
           @include hb-global-color('border-color', 'gray-dark');
-        // from grid--col 3 and above we won't display pipes
-        .hb-grid--cols-3 &,
-        .hb-grid--cols-4 &,
-        .hb-grid--cols-5 &,
-        .hb-grid--cols-6 &,
-        .hb-grid--cols-7 &,
-        .hb-grid--cols-8 &,
-        .hb-grid--cols-9 &,
-        .hb-grid--cols-10 &,
-        .hb-grid--cols-11 &,
-        .hb-grid--cols-12 &, {
+          // from grid--col 3 and above we won't display pipes
+          ,
+          .hb-grid--cols-10 &,
+          .hb-grid--cols-11 &,
+          .hb-grid--cols-12 &,
+          .hb-grid--cols-3 &,
+          .hb-grid--cols-4 &,
+          .hb-grid--cols-5 &,
+          .hb-grid--cols-6 &,
+          .hb-grid--cols-7 &,
+          .hb-grid--cols-8 &,
+          .hb-grid--cols-9 & {
             display: none;
-            }
+          }
         }
       }
-
       // Removes the pipe from the last field
       &:last-of-type {
         &::after {
-            content: '';
-            margin: 0;
-            border: 0;
-          }
+          content: '';
+          margin: 0;
+          border: 0;
+        }
       }
-
-// this is being added to fix a safari bug with our external links
+      // this is being added to fix a safari bug with our external links
       .field-content {
         display: flex;
       }
@@ -114,7 +111,6 @@
     @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
     margin-bottom: hb-calculate-rems(16px);
-
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
     }
@@ -123,7 +119,6 @@
   &__highlighted {
     @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
-
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
     }
@@ -146,13 +141,12 @@
 
   &__img {
     overflow: hidden;
-
     // override default link styles that might go here
     a {
       display: block;
 
-      &:hover,
-      &:focus {
+      &:focus,
+      &:hover {
         box-shadow: none;
         border-bottom: 0 none;
 
@@ -188,9 +182,7 @@
     position: absolute;
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
-
     @include hb-pairing-color('background-color', 'secondary');
-
     @include grid-media-min('sm') {
       bottom: hb-calculate-rems(22px);
       left: hb-calculate-rems(-14px);
@@ -219,7 +211,6 @@
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;
-
         @supports (max-width: 100%) {
           max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
         }
@@ -230,7 +221,6 @@
   &__title {
     margin-top: 0;
     margin-bottom: hb-calculate-rems(20px);
-
     @include grid-media-min('md') {
       margin-bottom: hb-calculate-rems(24px);
     }
@@ -239,19 +229,16 @@
       @include hb-heading-5;
       margin: 0;
       overflow-wrap: break-word;
-
       @include grid-media-min('sm') {
         font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(24px);
         line-height: 124%;
       }
-
       @include grid-media-min('md') {
         font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(27px);
         line-height: 119%;
       }
-
       // If this h2 is in a grid or row,
       // keep it smaller longer.
       .hb-grid &,
@@ -259,7 +246,6 @@
         @include grid-media-min('sm') {
           @include hb-heading-5;
         }
-
         @include grid-media-min('lg') {
           font-weight: hb-theme-font-weight(semibold);
           font-size: hb-calculate-rems(24px);
@@ -271,7 +257,6 @@
 
   &__description {
     @include hb-body--small;
-
     @include grid-media-min('lg') {
       @include hb-body--medium;
     }
@@ -305,8 +290,8 @@
       text-decoration: none;
       z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
 
-      &:hover,
-      &:focus {
+      &:focus,
+      &:hover {
         box-shadow: none;
         color: transparent;
       }
@@ -317,22 +302,19 @@
       display: block;
       height: hb-calculate-rems(44px); // WCAG AAA target size
       width: hb-calculate-rems(44px);
-
       @include hb-colorful {
         @include hb-icon-link-arrow('secondary');
-
         transform: translateX(0);
         transition: transform 200ms ease-in-out;
       }
     }
 
-    &:hover,
-    &:focus {
+    &:focus,
+    &:hover {
       cursor: pointer;
 
       &::before {
         transform: translateX(0.625rem);
-
         @include hb-colorful {
           @include hb-icon-link-arrow('secondary-darken-12');
         }

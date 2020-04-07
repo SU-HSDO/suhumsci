@@ -1,20 +1,16 @@
 // In order to avoid specificity issues the vendor chosen.js sass file has been
 // copied to this file and all styles removed, leaving only the nested classes.
 // https://github.com/harvesthq/chosen/blob/master/sass/chosen.scss
-
 // Any unused classes have been commented out to prevent linter errors but have
 // not been deleted in case they are needed for future use.
-
 // Base
 .chosen-container {
   // scss-lint:disable ImportantRule
   width: 100% !important; // This overrides an inline width
   // scss-lint:enable ImportantRule
-
   .chosen-drop {
     @include hb-input-focus;
     font-size: hb-calculate-rems(16px);
-
     @include hb-colorful {
       border-top: $hb-thin-border;
       @include hb-global-color('border-color', 'gray');
@@ -84,7 +80,6 @@
     }
   }
 }
-
 // Single Chosen
 .chosen-container-single {
   .chosen-single {
@@ -92,17 +87,12 @@
     // scss-lint:disable ImportantRule
     background: none !important;
     // scss-lint:enable ImportantRule
-
     box-shadow: none;
     font-size: hb-calculate-rems(16px);
     line-height: 1;
-
     height: auto;
     min-height: $hb-input-min-height;
-
-    padding: hb-calculate-rems(8px);
-    padding-right: $hb-input-icon-spacing;
-
+    padding: hb-calculate-rems(8px) $hb-input-icon-spacing hb-calculate-rems(8px) hb-calculate-rems(8px);
     @include hb-input-border;
 
     &:focus {
@@ -121,7 +111,6 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: hb-calculate-rems(12px) hb-calculate-rems(8px);
-
       @include hb-colorful {
         @include hb-icon-background('chevron', 'secondary');
       }
@@ -156,12 +145,10 @@
     // We cannot completely hide the search input without losing keyboard
     // accessibility. The search input will still be accessible to screen reader
     // users.
-
     // Note: This does create an edge case where if someone types while the focus
     // is in the search it will attempt to search the dropdown list. This should
     // be a rare occurance.
     @include visually-hidden;
-
     // input[type="text"] {
     //
     // }
@@ -175,7 +162,6 @@
   //
   // }
 }
-
 // Multi Chosen
 .chosen-container-multi {
   .chosen-choices {
@@ -183,18 +169,13 @@
     // scss-lint:disable ImportantRule
     background: none !important;
     // scss-lint:enable ImportantRule
-
     box-shadow: none;
     font-size: hb-calculate-rems(16px);
     line-height: 1;
-
     height: auto;
     max-height: $hb-input-min-height;
     min-height: $hb-input-min-height;
-
-    padding: 0 hb-calculate-rems(8px);
-    padding-right: $hb-input-icon-spacing;
-
+    padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
     @include hb-input-border;
 
     &:focus-within {
@@ -212,26 +193,17 @@
       }
     }
 
-    &.search-choice {
+    // &.search-choice {
+    //   span {}
+    //
+    //   .search-choice-close {
+    //     &:hover {}
+    //   }
+    // }
 
-      span {
-
-      }
-
-      .search-choice-close {
-
-        &:hover {
-
-        }
-      }
-    }
-
-    &.search-choice-disabled {
-
-    }
+    // &.search-choice-disabled {}
 
     &.search-choice-focus {
-
       .search-choice-close {
         @include hb-input-focus;
       }
@@ -242,11 +214,8 @@
     margin-top: hb-calculate-rems(-3px);
   }
 
-  .chosen-drop .result-selected {
-
-  }
+  // .chosen-drop .result-selected {}
 }
-
 // Active
 .chosen-container-active {
   .chosen-single {
@@ -262,7 +231,6 @@
         background-position: center;
         background-size: hb-calculate-rems(12px) hb-calculate-rems(8px);
         transform: rotate(180deg);
-
         @include hb-colorful {
           @include hb-icon-background('chevron', 'secondary');
         }
@@ -273,7 +241,6 @@
       }
     }
   }
-
   // .chosen-choices {
   //
   //   li.search-field input[type="text"] {
@@ -281,7 +248,6 @@
   //   }
   // }
 }
-
 // Disabled Support
 // .chosen-disabled {
 //

@@ -58,42 +58,38 @@
         box-shadow: none;
         color: transparent;
         cursor: pointer;
+
+        &::before {
+          transform: translateX(0.625rem);
+
+          @include hb-colorful {
+            @include hb-icon-link-arrow('secondary-darken-12');
+          }
+        }
+      }
+
+      &::before { // postcard arrow
+        content: '';
+        position: absolute;
+        left: 0;
+        height: hb-calculate-rems(44px); // WCAG AAA target size
+        width: hb-calculate-rems(44px);
+
+        @include hb-colorful {
+          @include hb-icon-link-arrow('secondary');
+
+          transform: translateX(0);
+          transition: transform 200ms ease-in-out;
+        }
       }
     }
 
     &.decanter-button {
       @include unbuttonize;
 
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: transparent;
-      }
-    }
-
-    &::before { // horizontal postcard arrow
-      content: '';
-      position: absolute;
-      left: 0;
-      height: hb-calculate-rems(44px); // WCAG AAA target size
-      width: hb-calculate-rems(44px);
-
-      @include hb-colorful {
-        @include hb-icon-link-arrow('secondary');
-
-        transform: translateX(0);
-        transition: transform 200ms ease-in-out;
-      }
-    }
-
-    &:hover,
-    &:focus {
-      cursor: pointer;
-
-      &::before {
-        transform: translateX(0.625rem);
-
-        @include hb-colorful {
-          @include hb-icon-link-arrow('secondary-darken-12');
-        }
       }
     }
 

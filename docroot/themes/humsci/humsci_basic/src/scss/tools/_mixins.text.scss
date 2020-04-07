@@ -217,3 +217,14 @@
     }
   }
 }
+
+@mixin hb-descriptor {
+  @include hb-colorful {
+    @include hb-global-color('color', 'gray-dark');
+    font-size: hb-calculate-rems(16px);
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(18px);
+    }
+  }
+}

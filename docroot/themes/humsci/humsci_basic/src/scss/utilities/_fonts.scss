@@ -50,10 +50,27 @@
   @include hb-subtitle;
 }
 
+.hb-descriptor {
+  @include hb-descriptor;
+}
+
 .hb-pill {
   @include hb-pill($link: false);
 }
 
 a.hb-pill {
   @include hb-pill;
+}
+
+.hb-blockquote {
+  // remove content set in the base default styles set on the blockquote tag
+  &::after,
+  &::before {
+    content: '';
+  }
+
+  > p,
+  > div {
+    @include hb-blockquote;
+  }
 }

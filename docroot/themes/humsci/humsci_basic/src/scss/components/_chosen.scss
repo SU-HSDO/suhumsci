@@ -193,13 +193,80 @@
       }
     }
 
-    // &.search-choice {
-    //   span {}
-    //
-    //   .search-choice-close {
-    //     &:hover {}
-    //   }
-    // }
+    &.search-choice {
+      margin: hb-calculate-rems(5px) hb-calculate-rems(5px) hb-calculate-rems(5px) 0;
+      @include hb-global-color('background-color', 'white');
+      font-family: inherit;
+      background-image: none;
+      box-shadow: none;
+      @include hb-global-color('color', 'gray-dark');
+      border-radius: hb-calculate-rems($hb-border-radius);
+      padding: hb-calculate-rems(6px) hb-calculate-rems(22px) hb-calculate-rems(6px) hb-calculate-rems(6px);
+      transition: 100ms ease-in-out;
+
+      &:hover {
+        @include hb-global-color('background-color', 'gray-light');
+        @include hb-global-color('color', 'black');
+      }
+
+      // when you click on the close button
+      &:focus {
+        @include hb-input-focus;
+      }
+
+      // span {}
+
+      .search-choice-close {
+        // scss-lint:disable ImportantRule
+        background: none !important;
+        // scss-lint:enable ImportantRule
+        // scss-lint:disable ImportantRule
+        background-size: 0 !important;
+        // scss-lint:enable ImportantRule
+        // scss-lint:disable ImportantRule
+        background-repeat: no-repeat !important;
+        // scss-lint:enable ImportantRule
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+
+        &:focus {
+          @include hb-input-focus;
+        }
+
+        &::before,
+        &::after {
+          content: '';
+          display: block;
+          height: hb-calculate-rems(2px);
+          width: hb-calculate-rems(12px);
+
+          @include hb-colorful {
+            @include hb-global-color('background-color', 'gray-dark');
+          }
+
+          position: absolute;
+          right: 4px;
+          top: 12px;
+        }
+
+        &::before {
+          transform: rotate(45deg);
+        }
+
+        &::after {
+          transform: rotate(-45deg);
+        }
+
+        &:hover {
+          &::before,
+          &::after {
+            @include hb-global-color('background-color', 'black');
+          }
+        }
+      }
+    }
 
     // &.search-choice-disabled {}
 

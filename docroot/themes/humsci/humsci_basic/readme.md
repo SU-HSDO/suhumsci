@@ -33,7 +33,7 @@ Frontend assets are built using the Grunt task runner, but are run using npm scr
 
 ## Testing
 
-- `npm test` - Run linting and Sass True tests
+- `npm test` - Run linting and sass true tests
 
 ### Sass True
 

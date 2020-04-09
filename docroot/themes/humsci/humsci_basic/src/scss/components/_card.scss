@@ -18,7 +18,8 @@
       margin: 0 0 hb-calculate-rems(10px);
     }
 
-    li:not([class]) { // increase specificity so that these styles override the base list styles
+    li:not([class]) {
+      // increase specificity so that these styles override the base list styles
       @include hb-category-item;
     }
 
@@ -32,11 +33,20 @@
 
     @include grid-media-min('sm') {
       display: flex;
-    }
 
-    .hb-grid &,
-    .ptype-hs-row & {
-      display: block;
+      // from grid--col 3 and above we'll display block
+      .hb-grid--cols-10 &,
+      .hb-grid--cols-11 &,
+      .hb-grid--cols-12 &,
+      .hb-grid--cols-3 &,
+      .hb-grid--cols-4 &,
+      .hb-grid--cols-5 &,
+      .hb-grid--cols-6 &,
+      .hb-grid--cols-7 &,
+      .hb-grid--cols-8 &,
+      .hb-grid--cols-9 & {
+        display: block;
+      }
     }
 
     &:not(:last-child) {
@@ -46,14 +56,12 @@
     &-item {
       @include hb-global-color('color', 'gray-dark');
       font-size: hb-calculate-rems(16px);
-
       @include grid-media-min('sm') {
         display: flex;
       }
 
       &:not(:last-child) {
         margin-bottom: hb-calculate-rems(4px);
-
         @include grid-media-min('sm') {
           margin-bottom: 0;
         }
@@ -66,11 +74,20 @@
           margin: 0 hb-calculate-rems(8px);
           border-left: $hb-thin-border;
           @include hb-global-color('border-color', 'gray-dark');
-        }
 
-        .hb-grid &,
-        .ptype-hs-row & {
-          border-left: 0 none;
+          // from grid--col 3 and above we won't display pipes
+          .hb-grid--cols-10 &,
+          .hb-grid--cols-11 &,
+          .hb-grid--cols-12 &,
+          .hb-grid--cols-3 &,
+          .hb-grid--cols-4 &,
+          .hb-grid--cols-5 &,
+          .hb-grid--cols-6 &,
+          .hb-grid--cols-7 &,
+          .hb-grid--cols-8 &,
+          .hb-grid--cols-9 & {
+            display: none;
+          }
         }
       }
 
@@ -81,6 +98,11 @@
           margin: 0;
           border: 0;
         }
+      }
+
+      // this is being added to fix a safari bug with our external links
+      .field-content {
+        display: flex;
       }
 
       a {
@@ -130,8 +152,8 @@
     a {
       display: block;
 
-      &:hover,
-      &:focus {
+      &:focus,
+      &:hover {
         box-shadow: none;
         border-bottom: 0 none;
 
@@ -167,7 +189,6 @@
     position: absolute;
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
-
     @include hb-pairing-color('background-color', 'secondary');
 
     @include grid-media-min('sm') {
@@ -198,7 +219,6 @@
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;
-
         @supports (max-width: 100%) {
           max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
         }
@@ -284,8 +304,8 @@
       text-decoration: none;
       z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
 
-      &:hover,
-      &:focus {
+      &:focus,
+      &:hover {
         box-shadow: none;
         color: transparent;
       }
@@ -299,14 +319,13 @@
 
       @include hb-colorful {
         @include hb-icon-link-arrow('secondary');
-
         transform: translateX(0);
         transition: transform 200ms ease-in-out;
       }
     }
 
-    &:hover,
-    &:focus {
+    &:focus,
+    &:hover {
       cursor: pointer;
 
       &::before {

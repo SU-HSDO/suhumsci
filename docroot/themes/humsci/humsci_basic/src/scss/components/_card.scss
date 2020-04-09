@@ -30,10 +30,11 @@
 
   &__subcontent {
     width: 100%;
+
     @include grid-media-min('sm') {
       display: flex;
+
       // from grid--col 3 and above we'll display block
-      ,
       .hb-grid--cols-10 &,
       .hb-grid--cols-11 &,
       .hb-grid--cols-12 &,
@@ -75,7 +76,6 @@
           @include hb-global-color('border-color', 'gray-dark');
 
           // from grid--col 3 and above we won't display pipes
-          ,
           .hb-grid--cols-10 &,
           .hb-grid--cols-11 &,
           .hb-grid--cols-12 &,
@@ -115,6 +115,7 @@
     @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
     margin-bottom: hb-calculate-rems(16px);
+
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
     }
@@ -123,6 +124,7 @@
   &__highlighted {
     @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
+
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
     }
@@ -188,6 +190,7 @@
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
     @include hb-pairing-color('background-color', 'secondary');
+
     @include grid-media-min('sm') {
       bottom: hb-calculate-rems(22px);
       left: hb-calculate-rems(-14px);
@@ -226,6 +229,7 @@
   &__title {
     margin-top: 0;
     margin-bottom: hb-calculate-rems(20px);
+
     @include grid-media-min('md') {
       margin-bottom: hb-calculate-rems(24px);
     }
@@ -234,11 +238,13 @@
       @include hb-heading-5;
       margin: 0;
       overflow-wrap: break-word;
+
       @include grid-media-min('sm') {
         font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(24px);
         line-height: 124%;
       }
+
       @include grid-media-min('md') {
         font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(27px);
@@ -252,6 +258,7 @@
         @include grid-media-min('sm') {
           @include hb-heading-5;
         }
+
         @include grid-media-min('lg') {
           font-weight: hb-theme-font-weight(semibold);
           font-size: hb-calculate-rems(24px);
@@ -263,6 +270,7 @@
 
   &__description {
     @include hb-body--small;
+
     @include grid-media-min('lg') {
       @include hb-body--medium;
     }
@@ -308,6 +316,7 @@
       display: block;
       height: hb-calculate-rems(44px); // WCAG AAA target size
       width: hb-calculate-rems(44px);
+
       @include hb-colorful {
         @include hb-icon-link-arrow('secondary');
         transform: translateX(0);
@@ -321,6 +330,7 @@
 
       &::before {
         transform: translateX(0.625rem);
+
         @include hb-colorful {
           @include hb-icon-link-arrow('secondary-darken-12');
         }

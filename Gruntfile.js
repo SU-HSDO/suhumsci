@@ -5,7 +5,6 @@ module.exports = function (grunt) {
 
   function getIncludeFiles() {
     var patterns = [
-      'docroot/themes/humsci/!(humsci_basic)/**/*.scss',
       'docroot/modules/humsci/**/*.scss',
       'node_modules/decanter/scss',
       'node_modules/bourbon/core',
@@ -30,7 +29,6 @@ module.exports = function (grunt) {
         files: [
           '**/*.{scss,sass}',
           '!**/node_modules/**',
-          '!docroot/themes/humsci/humsci_basic/**',
         ],
         tasks: ['sass'],
         options: {
@@ -71,7 +69,6 @@ module.exports = function (grunt) {
             cwd: 'docroot',
             src: [
               'modules/humsci/**/[a-z]*.scss',
-              'themes/humsci/!(humsci_basic)/**/[a-z]*.scss',
             ],
             dest: 'docroot',
             ext: '.css',

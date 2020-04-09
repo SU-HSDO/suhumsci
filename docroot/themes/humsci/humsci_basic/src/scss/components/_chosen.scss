@@ -1,10 +1,8 @@
 // In order to avoid specificity issues the vendor chosen.js sass file has been
 // copied to this file and all styles removed, leaving only the nested classes.
 // https://github.com/harvesthq/chosen/blob/master/sass/chosen.scss
-
 // Any unused classes have been commented out to prevent linter errors but have
 // not been deleted in case they are needed for future use.
-
 // Base
 .chosen-container {
   // scss-lint:disable ImportantRule
@@ -89,18 +87,15 @@
 .chosen-container-single {
   .chosen-single {
     display: block;
-    background: none;
+    // scss-lint:disable ImportantRule
+    background: none !important;
+    // scss-lint:enable ImportantRule
     box-shadow: none;
-
     font-size: hb-calculate-rems(16px);
     line-height: 1;
-
     height: auto;
     min-height: $hb-input-min-height;
-
-    padding: hb-calculate-rems(8px);
-    padding-right: $hb-input-icon-spacing;
-
+    padding: hb-calculate-rems(8px) $hb-input-icon-spacing hb-calculate-rems(8px) hb-calculate-rems(8px);
     @include hb-input-border;
 
     &:focus {
@@ -149,17 +144,15 @@
   // &.chosen-disabled .chosen-single abbr:hover {
   //
   // }
-  //
+
   .chosen-search {
     // We cannot completely hide the search input without losing keyboard
     // accessibility. The search input will still be accessible to screen reader
     // users.
-
     // Note: This does create an edge case where if someone types while the focus
     // is in the search it will attempt to search the dropdown list. This should
     // be a rare occurance.
     @include visually-hidden;
-
     // input[type="text"] {
     //
     // }
@@ -175,52 +168,122 @@
 }
 
 // Multi Chosen
-// .chosen-container-multi {
-//   .chosen-choices {
-//
-//   }
-//
-//   .chosen-choices li {
-//     &.search-field {
-//       input[type="text"] {
-//
-//       }
-//     }
-//
-//     &.search-choice {
-//
-//       span {
-//
-//       }
-//
-//       .search-choice-close {
-//
-//         &:hover {
-//
-//         }
-//       }
-//     }
-//
-//     &.search-choice-disabled {
-//
-//     }
-//
-//     &.search-choice-focus {
-//
-//       .search-choice-close {
-//
-//       }
-//     }
-//   }
-//
-//   .chosen-results {
-//
-//   }
-//
-//   .chosen-drop .result-selected {
-//
-//   }
-// }
+.chosen-container-multi {
+  .chosen-choices {
+    display: block;
+    // scss-lint:disable ImportantRule
+    background: none !important;
+    // scss-lint:enable ImportantRule
+    box-shadow: none;
+    font-size: hb-calculate-rems(16px);
+    line-height: 1;
+    height: auto;
+    max-height: $hb-input-min-height;
+    min-height: $hb-input-min-height;
+    padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
+    @include hb-input-border;
+
+    &:focus-within {
+      @include hb-input-focus;
+    }
+  }
+
+  .chosen-choices li {
+    &.search-field {
+      input[type="text"] {
+        margin: 0;
+        padding: 0;
+        font-size: hb-calculate-rems(16px);
+        font-family: inherit;
+      }
+    }
+
+    &.search-choice {
+      margin: hb-calculate-rems(5px) hb-calculate-rems(5px) hb-calculate-rems(5px) 0;
+      @include hb-global-color('background-color', 'white');
+      font-family: inherit;
+      background-image: none;
+      box-shadow: none;
+      @include hb-global-color('color', 'gray-dark');
+      border-radius: hb-calculate-rems($hb-border-radius);
+      padding: hb-calculate-rems(6px) hb-calculate-rems(22px) hb-calculate-rems(6px) hb-calculate-rems(6px);
+      transition: 100ms ease-in-out;
+
+      &:hover {
+        @include hb-global-color('background-color', 'gray-light');
+        @include hb-global-color('color', 'black');
+      }
+
+      // when you click on the close button
+      &:focus {
+        @include hb-input-focus;
+      }
+
+      // span {}
+
+      .search-choice-close {
+        // scss-lint:disable ImportantRule
+        background: none !important;
+        background-size: 0 !important;
+        background-repeat: no-repeat !important;
+        // scss-lint:enable ImportantRule
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+
+        &:focus {
+          @include hb-input-focus;
+        }
+
+        &::before,
+        &::after {
+          content: '';
+          display: block;
+          height: hb-calculate-rems(2px);
+          width: hb-calculate-rems(12px);
+
+          @include hb-colorful {
+            @include hb-global-color('background-color', 'gray-dark');
+          }
+
+          position: absolute;
+          right: 4px;
+          top: 12px;
+        }
+
+        &::before {
+          transform: rotate(45deg);
+        }
+
+        &::after {
+          transform: rotate(-45deg);
+        }
+
+        &:hover {
+          &::before,
+          &::after {
+            @include hb-global-color('background-color', 'black');
+          }
+        }
+      }
+    }
+
+    // &.search-choice-disabled {}
+
+    &.search-choice-focus {
+      .search-choice-close {
+        @include hb-input-focus;
+      }
+    }
+  }
+
+  .chosen-results {
+    margin-top: hb-calculate-rems(-3px);
+  }
+
+  // .chosen-drop .result-selected {}
+}
 
 // Active
 .chosen-container-active {
@@ -248,7 +311,7 @@
       }
     }
   }
-
+  //
   // .chosen-choices {
   //
   //   li.search-field input[type="text"] {

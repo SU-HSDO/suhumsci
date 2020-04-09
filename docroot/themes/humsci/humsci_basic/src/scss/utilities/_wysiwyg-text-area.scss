@@ -48,9 +48,10 @@
   }
   // add icon to external links only
   p {
-    a[href^="http"]:not([class]) {
+    a[href^="http"]:not([class]) { // TODO: refactor WIP
       @include hb-link--inline;
       @include hb-external-link-icon;
+      background-color: lightsteelblue;
     }
   }
   // jump to link target - remove link styles from anchor tag

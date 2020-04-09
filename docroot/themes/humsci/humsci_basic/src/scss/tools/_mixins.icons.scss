@@ -27,39 +27,39 @@
   }
 }
 
-// Used with the decanter-external-link class to add an external link icon
+// Used with the hs-external-link and fa-ext classes to add an external link icon
 @mixin hb-external-link-icon {
   margin-right: hb-calculate-rems(20px);
 
   @include hb-colorful {
     position: relative;
 
-    &::before {
+    &::after { // TODO: why was this before and not after?
       content: '';
+      // background-color: hotpink;
       @include hb-icon-background('ext-link', 'tertiary');
       background-position: center;
       background-repeat: no-repeat;
       height: hb-calculate-rems(11px);
       width: hb-calculate-rems(11px);
-      display: inline-block;
       vertical-align: middle;
       position: absolute;
-      top: hb-calculate-rems(4px);
-      right: hb-calculate-rems(-18px);
+      bottom: hb-calculate-rems(5px);
+      margin-left: hb-calculate-rems(4px);
     }
 
-    &:hover::before,
-    &:focus::before {
+    &:hover::after,
+    &:focus::after {
       @include hb-icon-background('ext-link', 'primary');
     }
 
     .hb-local-footer--dark & {
-      &::before {
+      &::after {
         @include hb-icon-background('ext-link', 'tertiary-reversed');
       }
 
-      &:hover::before,
-      &:focus::before {
+      &:hover::after,
+      &:focus::after {
         @include hb-icon-background('ext-link', 'tertiary-highlight');
       }
     }

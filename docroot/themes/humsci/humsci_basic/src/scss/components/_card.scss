@@ -65,6 +65,7 @@
           margin-bottom: 0;
         }
       }
+
       // Adds a "pipe" after each field
       &::after {
         @include grid-media-min('sm') {
@@ -72,6 +73,7 @@
           margin: 0 hb-calculate-rems(8px);
           border-left: $hb-thin-border;
           @include hb-global-color('border-color', 'gray-dark');
+
           // from grid--col 3 and above we won't display pipes
           ,
           .hb-grid--cols-10 &,
@@ -88,6 +90,7 @@
           }
         }
       }
+
       // Removes the pipe from the last field
       &:last-of-type {
         &::after {
@@ -96,6 +99,7 @@
           border: 0;
         }
       }
+
       // this is being added to fix a safari bug with our external links
       .field-content {
         display: flex;
@@ -141,6 +145,7 @@
 
   &__img {
     overflow: hidden;
+
     // override default link styles that might go here
     a {
       display: block;
@@ -239,6 +244,7 @@
         font-size: hb-calculate-rems(27px);
         line-height: 119%;
       }
+
       // If this h2 is in a grid or row,
       // keep it smaller longer.
       .hb-grid &,

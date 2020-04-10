@@ -1,0 +1,90 @@
+{
+  "id": "backstop_default",
+  "viewports": [
+    {
+      "label": "small",
+      "width": 576,
+      "height": 900
+    },
+    {
+      "label": "medium",
+      "width": 768,
+      "height": 900
+    },
+    {
+      "label": "large",
+      "width": 992,
+      "height": 900
+    },
+    {
+      "label": "extra large",
+      "width": 1200,
+      "height": 900
+    },
+    {
+      "label": "extra large x2",
+      "width": 1500,
+      "height": 900
+    }
+  ],
+  "scenarios": [
+    {
+      "label": "Customize site",
+      "url": "http://swshumsci.suhumsci.loc/site-building/customize-site",
+      "referenceUrl": "https://swshumsci-prod.stanford.edu/site-building/customize-site",
+      "delay": 0,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Tickets",
+      "url": "http://swshumsci.suhumsci.loc/tickets",
+      "referenceUrl": "https://swshumsci-prod.stanford.edu/tickets",
+      "delay": 0,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "collab",
+      "url": "http://swshumsci.suhumsci.loc/collaboration/teams",
+      "referenceUrl": "https://swshumsci-prod.stanford.edu/collaboration/teams",
+      "delay": 0,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "ical feed",
+      "url": "http://swshumsci.suhumsci.loc/site-building/setting-ical-feed",
+      "referenceUrl": "https://swshumsci-prod.stanford.edu/site-building/setting-ical-feed",
+      "delay": 0,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "home",
+      "url": "http://swshumsci.suhumsci.loc/",
+      "referenceUrl": "https://swshumsci-prod.stanford.edu/",
+      "delay": 0,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "impact",
+      "url": "http://swshumsci.suhumsci.loc/legacy",
+      "referenceUrl": "https://swshumsci-prod.stanford.edu/legacy",
+      "delay": 0,
+      "requireSameDimensions": true
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "backstop_data/bitmaps_reference",
+    "bitmaps_test": "backstop_data/bitmaps_test",
+    "engine_scripts": "backstop_data/engine_scripts",
+    "html_report": "backstop_data/html_report",
+    "ci_report": "backstop_data/ci_report"
+  },
+  "report": ["browser"],
+  "engine": "puppeteer",
+  "engineOptions": {
+    "args": ["--no-sandbox"]
+  },
+  "asyncCaptureLimit": 5,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false
+}

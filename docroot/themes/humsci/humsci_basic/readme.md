@@ -49,8 +49,20 @@ Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbo
 [Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
 The visual regression tests are ran locally and used to compare what is on Production versus what is on your local machine.
 
-1. Run `npx backstop reference` to generate reference images, in our case reference is production:
-1. Run `npx backstop test` to run the tests.
+1. Add new scenarios in the `backstop/backstop.json`. The format should look like the following (take a look in `backstop/scenarios.json` for more code you can pull from):
+```
+"scenarios": [
+  {
+    "label": "Customize site",
+    "url": "http://swshumsci.suhumsci.loc/site-building/customize-site",
+    "referenceUrl": "https://swshumsci-prod.stanford.edu/site-building/customize-site",
+    "delay": 0,
+    "requireSameDimensions": true
+  }
+]
+```
+1. Run `npm backstop:init` to generate reference images, in our case reference is production:
+1. Run `npm run backstop:test` to run the tests.
 1. Backstop will open an HTML page that contains the report which highlights errors.
 _Note: Differences in content will also be reported as failures._
 

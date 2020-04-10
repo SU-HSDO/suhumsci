@@ -184,10 +184,7 @@
 }
 
 @mixin hb-link {
-  // TODO: used on headings - update name for clarity?????
-  // hb-secondary-nav--heading
   // no font size by default
-  background-color: violet;
   @include hb-colorful {
     @include hb-global-color('color', 'black');
     font-weight: hb-theme-font-weight(semibold);
@@ -202,7 +199,7 @@
 
 @mixin hb-link--inline {
   // no font size by default
-  background-color: tomato;
+  // background-color: tomato; // TODO: make sure all external links are usuing this mixin!
   @include hb-colorful {
     @include hb-pairing-color('color', 'tertiary');
 
@@ -235,6 +232,14 @@
 
 @mixin hb-ext-link($color) {
   .fa-ext::before {
+    @include hb-icon-background('ext-link', $color);
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+@mixin hb-ext-link($color) {
+  .fa-ext::before { // TODO: How does this work with ::after? May need to update after Kasey's work is merged.
     @include hb-icon-background('ext-link', $color);
     background-repeat: no-repeat;
     background-position: center;

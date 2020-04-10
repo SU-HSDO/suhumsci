@@ -69,24 +69,9 @@
   }
 }
 
-.views-field-field-hs-news-link a, // horizontal view link to external article default class
+// external link in a news view list item
+.views-field-field-hs-news-link .field-content a, // this creates a duplicate icon
+// external link in a news node detail page
 .field-hs-news-link a {
-  background-color: cyan;
-  @include hb-colorful {
-    position: relative;
-    margin-right: hb-calculate-rems(24px);
-    display: inline;
-    border-bottom: $hb-thin-border;
-    @include hb-pairing-color('border-color', 'tertiary');
-    @include hb-link--hover-style('tertiary-highlight', 'primary');
-
-    &:hover,
-    &:focus {
-      .fa-ext::before { // TODO: update to use mixin?
-        @include hb-icon-background('ext-link', 'tertiary');
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-    }
-  }
+  @include hb-external-link-icon;
 }

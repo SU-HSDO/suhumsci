@@ -234,7 +234,11 @@
       margin-bottom: hb-calculate-rems(24px);
     }
 
-    h2 {
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       @include hb-heading-5;
       margin: 0;
       overflow-wrap: break-word;
@@ -251,7 +255,7 @@
         line-height: 119%;
       }
 
-      // If this h2 is in a grid or row,
+      // If the heading is in a grid or row,
       // keep it smaller longer.
       .hb-grid &,
       .ptype-hs-row & {
@@ -265,6 +269,10 @@
           line-height: 124%;
         }
       }
+    }
+
+    h6 {
+      text-transform: initial;
     }
   }
 

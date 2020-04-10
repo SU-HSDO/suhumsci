@@ -45,6 +45,15 @@ We use [stylelint](https://stylelint.io/) to lint all of our Sass code to mainta
 
 Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbox/stylelint-config-sparkbox) as a base for our linting rules.
 
+### Visual Regression Testing
+[Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
+The visual regression tests are ran locally and used to compare what is on Production versus what is on your local machine.
+
+1. Run `npx backstop reference` to generate reference images, in our case reference is production:
+1. Run `npx backstop test` to run the tests.
+1. Backstop will open an HTML page that contains the report which highlights errors.
+_Note: Differences in content will also be reported as failures._
+
 ## Contributing
 
 ### Commit Messages

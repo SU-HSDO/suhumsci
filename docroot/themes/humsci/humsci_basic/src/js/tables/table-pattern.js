@@ -1,7 +1,7 @@
 // account for different ways in which a table heading may be declared
-let div = "div.hb-table-pattern__header > div.hb-table-pattern__row > div";
-let span = "div.hb-table-pattern__header > div.hb-table-pattern__row > span";
-let paragraph = "div.hb-table-pattern__header > div.hb-table-pattern__row > p";
+const div = "div.hb-table-pattern__header > div.hb-table-pattern__row > div";
+const span = "div.hb-table-pattern__header > div.hb-table-pattern__row > span";
+const paragraph = "div.hb-table-pattern__header > div.hb-table-pattern__row > p";
 
 // retrieve table column headings
 const columnHeaders = document.querySelectorAll(`${div}, ${span}, ${paragraph}`);

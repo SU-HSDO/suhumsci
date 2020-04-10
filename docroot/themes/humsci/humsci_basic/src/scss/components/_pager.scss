@@ -1,0 +1,91 @@
+.pager {
+  &__items {
+    list-style: none;
+    margin: hb-calculate-rems(10px) 0 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  &__item {
+    display: inline;
+    font-weight: hb-theme-font-weight(semibold);
+    margin: hb-calculate-rems(10px);
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    a {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-dark');
+      }
+
+      display: inline-block;
+      padding: hb-calculate-rems(6px);
+      border-radius: $hb-button-border-radius;
+      min-width: hb-calculate-rems(31px);
+      text-align: center;
+      text-decoration: none;
+      transition: background-color $hb-animation-duration $hb-animation-timing-function;
+
+      &:hover {
+        @include hb-colorful {
+          @include hb-global-color('background-color', 'gray-medium');
+        }
+
+        box-shadow: none;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    &.is-active {
+      @include hb-colorful {
+        @include hb-global-color('background-color', 'gray-dark');
+      }
+
+      display: inline-block;
+      border-radius: $hb-button-border-radius;
+      padding: 0;
+
+      a {
+        @include hb-colorful {
+          @include hb-global-color('color', 'white');
+        }
+
+        &:hover {
+          cursor: default;
+          background-color: transparent;
+        }
+      }
+    }
+
+    &--first,
+    &--last,
+    &--previous,
+    &--next {
+      a {
+        @include hb-colorful {
+          @include hb-pairing-color('color', 'secondary');
+        }
+        width: auto;
+
+        &:focus,
+        &:hover {
+          @include hb-colorful {
+            @include hb-pairing-color('color', 'secondary');
+          }
+
+          background-color: transparent;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

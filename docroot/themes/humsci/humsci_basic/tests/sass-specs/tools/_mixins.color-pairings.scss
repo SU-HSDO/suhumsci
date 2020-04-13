@@ -1,11 +1,11 @@
 // Describe what you're testing
 @include describe('Color Pairing mixin') {
 
-  // Default Colorful
+  // Default Colorful Pairing - Ocean
   // Other color pairings cannot be tested as the CSS variables
   // for other pairing are only set via a class applied to
   // the HTML tag.
-  @include describe('hb-pairing-color() mixin') {
+  @include describe('hb-pairing-color() mixin for the Colorful Theme') {
 
     @include it('returns the property and value for a color pairing') {
       @include assert {
@@ -18,12 +18,32 @@
       }
     }
   }
+
+  // Default Traditional Pairing - Default
+  // Other color pairings cannot be tested as the CSS variables
+  // for other pairing are only set via a class applied to
+  // the HTML tag.
+  @include describe('hb-pairing-color() mixin for the Traditional Theme') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include it('returns the property and value for a color pairing') {
+      @include assert {
+        @include output {
+          @include hb-pairing-color('color', 'primary');
+        }
+        @include contains {
+          color: #8c1515;
+        }
+      }
+    }
+  }
 }
 
 @include describe('Global colors mixin') {
 
   // Global colors
-  @include describe('hb-global-color() mixin') {
+  @include describe('hb-global-color() mixin for the Colorful Theme') {
+    $hb-current-theme: 'colorful' !global;
 
     @include it('returns the property and value for a global color') {
       @include assert {
@@ -32,6 +52,21 @@
         }
         @include contains {
           color: #413e39;
+        }
+      }
+    }
+  }
+
+  @include describe('hb-global-color() mixin for the Traditional Theme') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include it('returns the property and value for a global color') {
+      @include assert {
+        @include output {
+          @include hb-global-color('color', 'gray');
+        }
+        @include contains {
+          color: #2f2424;
         }
       }
     }

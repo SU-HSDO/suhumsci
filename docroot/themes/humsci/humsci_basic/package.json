@@ -5,10 +5,12 @@
   "main": "Gruntfile.js",
   "scripts": {
     "start": "npm run build:sass && npm run watch",
+    "backstop:init": "backstop reference --config='./backstop/backstop.json'",
+    "backstop:test": "backstop test --config='./backstop/backstop.json'",
     "build:sass": "grunt compile",
     "build:js": "webpack",
     "build": "npm run build:sass && npm run build:js",
-    "lint:sass": "stylelint 'src/scss/**/*.scss' --config .stylelintrc",
+    "lint:sass": "stylelint 'src/scss/**/*.scss' --config ../../../../.stylelintrc",
     "test:sass": "mocha 'tests/true-sass-spec.js'",
     "watch:sass": "grunt watch",
     "watch:js": "webpack --watch",
@@ -22,11 +24,11 @@
     "webpack-cli": "^3.3.10"
   },
   "devDependencies": {
-    "@sparkbox/stylelint-config-sparkbox": "^0.5.0",
     "autoprefixer": "^9.7.3",
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "babel-loader": "^8.0.6",
+    "backstopjs": "^4.5.0",
     "grunt": "^1.0.4",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-dart-sass": "^1.1.3",

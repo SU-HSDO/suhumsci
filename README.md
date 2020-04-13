@@ -20,6 +20,17 @@ To set up your local environment and begin developing for this project, refer to
 1. A full sync from a site should be accomplished with `blt drupal:sync --sync-files --site=[sitename]`
 1. If you plan to use drupal console, and `drupal` produces an error, try the steps found on [this comment](https://github.com/hechoendrupal/drupal-console/issues/3302#issuecomment-306590885)
 
+## Builds
+
+CSS assets are built using the Grunt task runner, but are run using npm scripts as shortcuts.
+
+- `npm run build` - Compile Sass for production for all themes, **except Humsci_basic** which requires additional Grunt tasks to compile sub-theme specific CSS.
+- `npm run watch` - Compile a CSS build and watch for changes in the existing `.scss` files (other than humsci_basic)
+
+## Testing
+
+- `npm test` - Run linting for all Sass in the project (including humsci_basic).
+
 ## Other documentation
 * [Change Log](docs/CHANGELOG.md)
 * [Code Deployment Process](docs/CodeDeploy.md)

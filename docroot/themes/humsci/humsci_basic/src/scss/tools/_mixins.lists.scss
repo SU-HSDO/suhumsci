@@ -42,7 +42,7 @@
 
 @mixin hb-pill($link: true) {
   @include hb-colorful {
-    @include hb-pairing-color('background-color', 'secondary-active');
+    @include hb-pairing-color('background-color', 'secondary-active'); // secondary-active // design pairing on color? This feels dark compared to what we had before the color pairing work. Perhaps use `tertiary-highlight-darken-10` instead?
     @include hb-global-color('color', 'black');
     display: inline-block;
     font-size: hb-calculate-rems(14px);
@@ -50,6 +50,7 @@
     text-decoration: none;
     border-radius: hb-calculate-rems(13px);
     border: 2px solid transparent;
+    // line-height: 1; // TODO: test - how does this affect things overall?
     transition: background-color $hb-animation-duration $hb-animation-timing-function;
   }
 

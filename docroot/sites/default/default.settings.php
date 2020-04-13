@@ -618,6 +618,7 @@ if ($settings['hash_salt']) {
  * change events.
  */
 # $config['system.site']['name'] = 'My Drupal site';
+# $config['system.theme']['default'] = 'stark';
 # $config['user.settings']['anonymous'] = 'Visitor';
 
 /**

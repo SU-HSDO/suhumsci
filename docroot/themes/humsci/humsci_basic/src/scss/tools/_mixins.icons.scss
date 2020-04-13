@@ -28,20 +28,19 @@
 }
 
 // Used with the hs-external-link and fa-ext classes to add an external link icon
-@mixin hb-external-link-icon {
+@mixin hb-external-link-icon { // TODO: add two variables for color and hover states
   margin-right: hb-calculate-rems(20px);
 
   @include hb-colorful {
     position: relative;
 
-    &::after { // TODO: why was this before and not after? May need to refactor hb-pill external link once Kasey's QA work has been merged.
+    &::after { // TODO: Refactor hb-pill external link once Kasey's QA work has been merged.
       content: '';
       @include hb-icon-background('ext-link', 'tertiary');
       background-position: center;
       background-repeat: no-repeat;
       height: hb-calculate-rems(11px);
       width: hb-calculate-rems(11px);
-      vertical-align: middle;
       position: absolute;
       bottom: hb-calculate-rems(5px);
       margin-left: hb-calculate-rems(4px);

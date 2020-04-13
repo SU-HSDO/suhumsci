@@ -1,6 +1,6 @@
 .hb-categories {
   &.entity-reference {
-    div:not([class]) {
+    div div:not([class]) {
       @include hb-category-item;
     }
   }
@@ -11,33 +11,75 @@
     }
   }
 
+  &.label-hidden > div:not([class]) {
+    @include hb-category-item;
+  }
+
+  ol,
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 hb-calculate-rems(10px);
+
+    li {
+      @include hb-category-item;
+    }
+  }
+
   a {
     @include hb-category-link;
   }
 }
 
+// Styling the inline list for both the regular pill list and the pill list with links
+.hb-pill-link-list,
 .hb-pill-list {
   ol,
   ul {
     padding: 0;
     margin: 0;
+  }
 
-    li {
-      display: inline-block;
-      margin-right: hb-calculate-rems(8px);
-      padding-bottom: hb-calculate-rems(8px);
+  li {
+    display: inline-block;
+    margin-right: hb-calculate-rems(8px);
+    margin-bottom: hb-calculate-rems(8px);
 
-      // Hide ol & ul list-style-type of items in the pill list.
-      // Normally this would be implemented as ul, ol { list-style-type: none; },
-      // display: none is used here to override the specificity of the
-      // ul & ol base element styles :not pseudo class selector
-      &::before {
-        display: none;
-      }
+    // Hide ol & ul list-style-type of items in the pill list.
+    // Normally this would be implemented as ul, ol { list-style-type: none; },
+    // display: none is used here to override the specificity of the
+    // ul & ol base element styles :not pseudo class selector
+    &::before {
+      display: none;
     }
   }
 
+  // for when the pill-list is a series of nested divs
+  div:not([class]) > div:not([class]) {
+    display: inline-block;
+    margin-right: hb-calculate-rems(8px);
+    margin-bottom: hb-calculate-rems(8px);
+  }
+
+  // We have to do this because the markup is different when there is no label
+  &.label-hidden > div:not([class]) {
+    display: inline-block;
+    margin-right: hb-calculate-rems(8px);
+    margin-bottom: hb-calculate-rems(8px);
+  }
+}
+
+// Styling the pills
+.hb-pill-link-list {
   a {
     @include hb-pill;
+  }
+}
+
+.hb-pill-list {
+  div:not([class]) > div:not([class]),
+  &.label-hidden > div:not([class]),
+  li {
+    @include hb-pill($link: false);
   }
 }

@@ -70,8 +70,13 @@
 }
 
 // external link in a news view list item
-.views-field-field-hs-news-link .field-content a, // this creates a duplicate icon
-// external link in a news node detail page
-.field-hs-news-link a {
-  @include hb-external-link-icon;
+.views-field-field-hs-news-link .field-content {
+  a {
+    &:hover,
+    &:focus {
+      @include hb-colorful {
+        @include hb-ext-icon-color('primary');
+      }
+    }
+  }
 }

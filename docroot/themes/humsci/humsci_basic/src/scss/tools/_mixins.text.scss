@@ -183,6 +183,7 @@
   }
 }
 
+// Link style for headings
 @mixin hb-link {
   // no font size by default
   @include hb-colorful {
@@ -197,9 +198,9 @@
   }
 }
 
+// Link style for main content that is not a heading
 @mixin hb-link--inline {
   // no font size by default
-  // background-color: tomato; // TODO: make sure all external links are usuing this mixin!
   @include hb-colorful {
     @include hb-pairing-color('color', 'tertiary');
 
@@ -227,23 +228,6 @@
         @include hb-pairing-color('color', 'tertiary-highlight', $important: true);
       }
     }
-  }
-}
-
-@mixin hb-ext-link($color) {
-  .fa-ext::before {
-    @include hb-icon-background('ext-link', $color);
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-}
-
- // TODO: compare with hb-external-link-icon mixin and refactor as needed. Decide which to keep. This doesn't give a hover state and it only works when fa-ext exists. It does not work for WYWIWYG external links because they are missing the fa-ext class.
-@mixin hb-ext-link($color) {
-  .fa-ext::after {
-    @include hb-icon-background('ext-link', $color);
-    background-repeat: no-repeat;
-    background-position: center;
   }
 }
 

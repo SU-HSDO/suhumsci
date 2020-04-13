@@ -25,11 +25,10 @@ This theme contains its own node module dependencies and build system which is s
 
 ## Builds
 
-Frontend assets are built using the Grunt task runner, but are run using npm scripts as shortcuts. Assets are compiled to a `dist/` directory with a stylesheet generated for each sub-theme.
+Frontend assets are built using the Grunt task runner, but are run using npm scripts as shortcuts. CSS assets are compiled to their respective child theme `css/` directory. JS assets are compiled to the `src/js/scripts.js` file.
 
-- `npm run build:sass` - Compile Sass for production
-- `npm run watch` - Compile a CSS build and watch for changes in the existing `.scss` files
-- `npm run build:js` - Compile Javascript with Webpack
+- `npm run build` - Compile Sass  and JS for production
+- `npm run watch` - Compile a CSS and JS build and watch for changes in the existing `.scss` or `.js` files
 
 ## Testing
 
@@ -47,9 +46,10 @@ Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbo
 
 ### Visual Regression Testing
 [Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
-The visual regression tests are ran locally and used to compare what is on Production versus what is on your local machine.
 
-1. Add new scenarios in the `backstop/backstop.json`. The format should look like the following (take a look in `backstop/scenarios.json` for more code you can pull from):
+The visual regression tests are run locally and used to compare what is on Production versus what is on your local machine.
+
+1. Add new scenarios in the `backstop/backstop.json`. The format should look like the following:
 ```
 "scenarios": [
   {
@@ -61,7 +61,7 @@ The visual regression tests are ran locally and used to compare what is on Produ
   }
 ]
 ```
-1. Run `npm backstop:init` to generate reference images, in our case reference is production:
+1. Run `npm run backstop:init` to generate reference images, in our case reference is production:
 1. Run `npm run backstop:test` to run the tests.
 1. Backstop will open an HTML page that contains the report which highlights errors.
 _Note: Differences in content will also be reported as failures._

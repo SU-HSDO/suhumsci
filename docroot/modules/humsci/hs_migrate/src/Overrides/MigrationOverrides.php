@@ -15,6 +15,8 @@ use Drupal\Core\Config\StorageInterface;
 class MigrationOverrides implements ConfigFactoryOverrideInterface {
 
   /**
+   * Config pages loader service.
+   *
    * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
    */
   protected $configPagesLoader;
@@ -23,6 +25,7 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
    * MigrationOverrides constructor.
    *
    * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
+   *   Config pages loader service.
    */
   public function __construct(ConfigPagesLoaderServiceInterface $config_pages_loader) {
     $this->configPagesLoader = $config_pages_loader;

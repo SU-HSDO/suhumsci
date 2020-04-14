@@ -1,7 +1,11 @@
 .su-masthead {
   box-shadow: none;
-  border-bottom: $hb-menu-light-border;
   z-index: $hb-z-index-masthead;
+
+  @include hb-colorful {
+    border-bottom: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
+  }
 
   .su-lockup {
     z-index: $hb-z-index-lockup;

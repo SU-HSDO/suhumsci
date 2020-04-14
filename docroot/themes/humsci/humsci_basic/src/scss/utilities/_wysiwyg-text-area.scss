@@ -1,7 +1,51 @@
 // WYSIWYG text area styles
+
 .field-hs-text-area {
   margin-bottom: hb-calculate-rems(48px);
 
+  h1 {
+    @include hb-colorful {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+
+      @include grid-media-min('md') {
+        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+      }
+    }
+  }
+
+  h2 {
+    @include hb-colorful {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(12px);
+
+      @include grid-media-min('md') {
+        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+      }
+    }
+  }
+
+  h3 {
+    @include hb-colorful {
+      margin: hb-calculate-rems(28px) 0 hb-calculate-rems(10px);
+    }
+  }
+
+  h4 {
+    @include hb-colorful {
+      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(4px);
+    }
+  }
+
+  h5 {
+    @include hb-colorful {
+      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+    }
+  }
+
+  h6 {
+    @include hb-colorful {
+      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+    }
+  }
   // add icon to external links only
   p {
     a[href^="http"]:not([class]) {
@@ -9,7 +53,6 @@
       @include hb-external-link-icon;
     }
   }
-
   // jump to link target - remove link styles from anchor tag
   a:not([href]):not([class]) {
     border-bottom: 0;
@@ -22,29 +65,31 @@
   }
 }
 
-// Decanter classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
-.decanter {
+// Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+.hs {
   &-credits {
-    color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
     font-style: italic;
 
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
+    }
+
     .hb-local-footer--dark & {
-      color: $hb-color--white;
+      @include hb-global-color('color', 'white');
     }
   }
 
   &-font-lead {
-    color: darken($su-color-driftwood, 30%);
     font-size: hb-calculate-rems(18px);
     font-weight: hb-theme-font-weight(regular);
     line-height: 127%;
 
-    .hb-local-footer--dark & {
-      color: $hb-color--white;
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
 
-      @include hb-colorful {
-        color: lighten(hb-colorful-variation(secondary), 10%);
+      .hb-local-footer--dark & {
+        @include hb-global-color('color', 'gray-light');
       }
     }
 
@@ -54,33 +99,32 @@
   }
 
   &-font-splash {
-    font-size: hb-calculate-rems(29px);
-    font-weight: hb-theme-font-weight(semibold);
-    line-height: 110%;
-    margin-top: 0;
-    margin-bottom: hb-calculate-rems(20px);
+    @include hb-heading-1;
 
     @include hb-colorful {
-      color: hb-colorful-variation(primary);
-    }
+      @include hb-pairing-color('color', 'primary');
 
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(34px);
-      line-height: 112%;
-      margin-bottom: hb-calculate-rems(24px);
-    }
+      @include grid-media-min('md') {
+        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+      }
 
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(42px);
+      .hb-local-footer--dark & {
+        @include hb-global-color('color', 'gray-light');
+      }
     }
   }
 
   &-caption {
-    color: darken($su-color-driftwood, 45%);
     font-size: hb-calculate-rems(14px);
 
+    @include hb-colorful {
+      @include hb-global-color('color', 'gray-dark');
+    }
+
     .hb-local-footer--dark & {
-      color: $hb-color--white;
+      @include hb-colorful {
+        @include hb-global-color('color', 'white');
+      }
     }
   }
 
@@ -102,35 +146,53 @@
       text-decoration: none;
       padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
     }
+  }
 
-    &--secondary {
-      @include button-style;
-      display: inline-block;
-      font-size: hb-calculate-rems(16px);
-      text-decoration: none;
-      padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  &-secondary-button {
+    @include button-style;
+    display: inline-block;
+    font-size: hb-calculate-rems(16px);
+    text-decoration: none;
+    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+    background-color: transparent;
+
+    @include hb-colorful {
+      @include hb-pairing-color('color', 'secondary');
+
+      .hb-local-footer--dark & {
+        @include hb-pairing-color('color', 'tertiary-reversed');
+        @include hb-pairing-color('border-color', 'tertiary-reversed');
+      }
+    }
+
+    &:hover {
+      @include hb-colorful {
+        @include hb-global-color('color', 'white');
+        @include hb-pairing-color('background-color', 'secondary');
+        @include hb-pairing-color('border-color', 'secondary');
+
+        .hb-local-footer--dark & {
+          background-color: transparent;
+
+          @include hb-pairing-color('color', 'secondary-highlight');
+          @include hb-pairing-color('border-color', 'secondary-highlight');
+        }
+      }
+    }
+
+    &:active,
+    &:focus {
       background-color: transparent;
 
       @include hb-colorful {
-        color: hb-colorful-variation(secondary);
-      }
+        @include hb-pairing-color('color', 'secondary');
+        @include hb-global-color('border-color', 'white');
 
-      &:hover {
-        color: $hb-color--white;
+        .hb-local-footer--dark & {
+          background-color: transparent;
 
-        @include hb-colorful {
-          background-color: hb-colorful-variation(secondary);
-          border-color: hb-colorful-variation(secondary);
-        }
-      }
-
-      &:active,
-      &:focus {
-        background-color: transparent;
-        border-color: $hb-color--white;
-
-        @include hb-colorful {
-          color: hb-colorful-variation(secondary);
+          @include hb-pairing-color('color', 'secondary-highlight-darken');
+          @include hb-pairing-color('border-color', 'secondary-highlight-darken');
         }
       }
     }
@@ -144,16 +206,29 @@
     @include hb-link--inline;
     @include hb-external-link-icon;
   }
-}
 
+  &-table--borderless {
+    thead {
+      th {
+        border: 0;
+      }
+    }
+
+    td {
+      border-left: 0;
+      border-right: 0;
+    }
+  }
+}
 // Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+
 .emphasized-text {
   font-style: italic;
   font-weight: inherit;
   font-size: inherit;
 }
-
 // media
+
 .align {
   &-right {
     margin: hb-calculate-rems(28px) 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
@@ -169,9 +244,9 @@
     }
   }
 }
-
 // blockquotes
 // The text area blockquote content is placed inside of a paragraph tag.
+
 blockquote:nth-child(n) {
   // remove content set in the base default styles set on the blockquote tag
   &::after,
@@ -187,10 +262,8 @@ blockquote:nth-child(n) {
     @include hb-blockquote;
 
     .hb-local-footer--dark & {
-      color: $hb-color--white;
-
       @include hb-colorful {
-        color: lighten(hb-colorful-variation(secondary), 10%);
+        @include hb-global-color('color', 'gray-light');
       }
     }
   }

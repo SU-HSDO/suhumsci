@@ -1,0 +1,31 @@
+// Map through all color pairings to find and set a color palette
+@function hb-get-pairing-color($key, $palette, $theme-map) {
+
+  // Set color-map to get the palette for a specific color pairing
+  $color-map: map-get($theme-map, $palette);
+
+  // Assign a single color from the mapped palette
+  $result: map-get($color-map, $key);
+
+  @if ($result) {
+    // Return value if it exists
+    @return $result;
+  } @else {
+    // Error if value doesn't exist
+    @error 'Couldn\'t find a value for this key: #{$key}';
+  }
+}
+
+// Map through all global colors
+@function hb-get-global-color($key, $globals-map) {
+
+  $result: map-get($globals-map, $key);
+
+  @if ($result) {
+    // Return value if it exists
+    @return $result;
+  } @else {
+    // Error if value doesn't exist
+    @error 'Couldn\'t find a value for this key: #{$key}';
+  }
+}

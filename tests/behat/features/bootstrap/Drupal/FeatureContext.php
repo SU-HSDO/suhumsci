@@ -213,13 +213,4 @@ class FeatureContext extends RawDrupalContext {
     }
   }
 
-  /**
-   * @Then the element :element should have the attribute :attribute with the value :value
-   */
-  public function theElementShouldHaveAttribute($element, $attribute, $value) {
-    $this->getMink()
-      ->assertSession()
-      ->elementAttributeContains('css', $element, $attribute, $value);
-  }
-
 }

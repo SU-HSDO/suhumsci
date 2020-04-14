@@ -44,7 +44,7 @@
 
     // Offset background color psuedo element
     &::before {
-      background-color: lighten($su-color-driftwood, 25%);
+      @include hb-global-color('background-color', 'gray-light');
       position: absolute;
       height: 100%;
       width: 100%;
@@ -66,7 +66,7 @@
     @include hb-colorful {
       &::after {
         z-index: $hb-z-index-hero1-overlay;
-        background-color: hb-colorful-variation(secondary);
+        @include hb-pairing-color('background-color', 'secondary');
 
         @include grid-media-min('md') {
           grid-column-start: 1;
@@ -103,11 +103,7 @@
           bottom: 0;
           left: -8.75%;
           z-index: $hb-z-index-hero1-overlay;
-          @include psuedo-background-box(
-            hb-colorful-variation(secondary),
-            50%,
-            8.75%
-          );
+          @include psuedo-background-box('secondary', 50%, 8.75%);
 
           @include grid-media-min('md') {
             display: none;
@@ -139,12 +135,11 @@
   }
 
   &__text {
-    background-color: darken($su-color-driftwood, 10%);
-    color: $hb-color--white;
     display: block;
 
     @include hb-colorful {
-      background-color: adjust-color(hb-colorful-variation(primary), $lightness: -9%, $alpha: -0.05);
+      @include hb-global-color('color', 'white');
+      @include hb-pairing-color('background-color', 'primary-hero-overlay');
     }
 
     .hb-hero-overlay--1 & {
@@ -162,6 +157,12 @@
 
       h2 {
         @include hb-heading-4;
+        margin-top: hb-calculate-rems(24px);
+
+        @include grid-media-min('lg') {
+          @include hb-heading-3;
+          margin-top: hb-calculate-rems(28px);
+        }
       }
 
       @include hb-colorful {
@@ -169,12 +170,7 @@
         &::after {
           display: block;
           top: hb-calculate-rems(32px);
-
-          @include psuedo-background-box(
-            lighten(hb-colorful-variation(primary), 30%),
-            hb-calculate-rems(4px),
-            hb-calculate-rems(65px)
-          );
+          @include psuedo-background-box('tertiary-reversed', hb-calculate-rems(4px), hb-calculate-rems(65px));
 
           @include grid-media-min('md') {
             top: hb-calculate-rems(56px);
@@ -187,7 +183,7 @@
       li {
         &::before {
           @include hb-colorful {
-            background-color: lighten(hb-colorful-variation(secondary), 10%);
+            @include hb-pairing-color('background-color', 'secondary');
           }
         }
       }
@@ -197,7 +193,7 @@
       li {
         &::before {
           @include hb-colorful {
-            color: lighten(hb-colorful-variation(secondary), 10%);
+            @include hb-pairing-color('color', 'secondary-active');
           }
         }
       }
@@ -207,19 +203,19 @@
     a {
       font-size: hb-calculate-rems(16px);
 
-      @include grid-media-min('md') {
+      @include grid-media-min('lg') {
         font-size: hb-calculate-rems(18px);
       }
     }
 
     a {
       @include hb-colorful {
-        color: lighten(hb-colorful-variation(primary), 30%);
+        @include hb-pairing-color('color', 'tertiary-reversed');
 
         &:hover,
         &:focus {
           box-shadow: none;
-          color: lighten(hb-colorful-variation(primary), 70%);
+          @include hb-pairing-color('color', 'tertiary-highlight');
         }
       }
     }
@@ -227,12 +223,14 @@
     .field-hs-hero-link {
       a,
       button {
-        @include hb-border-button;
+        max-width: 80%;
+
         @include hb-colorful {
-          @include hb-border-button(
-            lighten(hb-colorful-variation(primary), 30%),
-            lighten(hb-colorful-variation(primary), 70%)
-          );
+          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
+        }
+
+        @include grid-media-min('lg') {
+          max-width: 75%;
         }
 
         .fa-ext {

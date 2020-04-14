@@ -3,11 +3,17 @@
 
   a {
     font-weight: hb-theme-font-weight(bold);
-    color: $hb-gray--15;
     text-decoration: none;
 
     @include hb-colorful {
-      border-bottom: 2px solid lighten(hb-colorful-variation(primary), 10%);
+      border-bottom: 2px solid;
+      @include hb-pairing-color('border-bottom-color', 'tertiary');
+      @include hb-global-color('color', 'black');
+
+      &:hover,
+      &:focus {
+        @include hb-global-color('color', 'black');
+      }
     }
   }
 }

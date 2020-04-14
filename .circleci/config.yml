@@ -22,7 +22,6 @@ defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:pcov
     - image: selenium/standalone-chrome:3.141.59-neon
-    - image: circleci/node:latest
     - image: mariadb:10.3
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
@@ -51,8 +50,8 @@ save_cache: &save_cache
 directory_setup: &directory_setup
   <<: *defaults
   steps:
-    - *add_ssh
-    - *add_known_hosts
+#    - *add_ssh
+#    - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
     - run:

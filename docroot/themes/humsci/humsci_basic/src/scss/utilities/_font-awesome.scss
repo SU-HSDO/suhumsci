@@ -18,7 +18,11 @@
   transition: 125ms color ease-out;
 
   @include hb-colorful {
-    color: hb-colorful-variation(secondary);
+    @include hb-pairing-color('color', 'secondary');
+
+    .hb-local-footer--dark & {
+      @include hb-pairing-color('color', 'secondary-highlight');
+    }
   }
 }
 
@@ -38,7 +42,12 @@ a {
     @include hb-colorful {
       &:hover,
       &:focus {
-        color: darken(hb-colorful-variation(secondary), 10%);
+        @include hb-pairing-color('color', 'secondary-darken-12');
+      }
+
+      .hb-local-footer--dark &:hover,
+      .hb-local-footer--dark &:focus {
+        @include hb-pairing-color('color', 'secondary-highlight-darken', $important: true);
       }
     }
   }

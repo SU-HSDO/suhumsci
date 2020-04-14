@@ -39,6 +39,7 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
         // Point the migration to our local url where we process the feed into
         // usable data.
         $overrides['migrate_plus.migration.hs_d7_news'] = [
+          'status' => TRUE,
           'source' => [
             'urls' => $urls,
           ],

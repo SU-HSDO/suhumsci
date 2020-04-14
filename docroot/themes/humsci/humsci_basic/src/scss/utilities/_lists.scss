@@ -74,10 +74,11 @@
   a {
     @include hb-pill;
 
-    // If a link is an external icon, make space for it.
     .fa-ext {
       &::after {
         background-color: transparent;
+        height: hb-calculate-rems(11px); // center icon in pill
+        margin-bottom: 0; // center icon in pill
       }
     }
   }

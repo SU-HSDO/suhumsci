@@ -15,6 +15,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\filter\Bundle;
+use Drupal\views\Plugin\views\query\Sql as ViewsSql;
+use Drupal\views\Plugin\views\pager\None as ViewsNonePager;
 
 /**
  * Implements hook_help().
@@ -150,4 +152,56 @@ function hs_views_helper_preprocess_views_view_pattern(&$variables) {
   $view = $variables['view'];
   $pattern = $view->style_plugin->options['pattern'];
   $variables['pattern'] = $pattern;
+}
+
+/**
+ * Implements hook_views_pre_execute().
+ */
+function hs_views_helper_views_pre_execute(ViewExecutable $view) {
+  if (!$view->getQuery() instanceof ViewsSql) {
+    return;
+  }
+
+  // Alter the query to return all possible items that will be used in
+  // post_execute hook to slice through.
+  $distinct_views = &drupal_static(__FUNCTION__, []);
+  if (!$view->pager instanceof ViewsNonePager && $view->getQuery()->distinct) {
+    $distinct_views[$view->id()][$view->getDisplay()->display['id']] = [
+      'offset' => $view->getQuery()->offset,
+      'limit' => $view->getQuery()->getLimit(),
+    ];
+
+    $view->getQuery()->setOffset(0);
+    $view->getQuery()->setLimit(0);
+  }
+}
+
+/**
+ * Implements hook_views_post_execute().
+ */
+function hs_views_helper_views_post_execute(ViewExecutable $view) {
+  if (!$view->getQuery() instanceof ViewsSql) {
+    return;
+  }
+
+  if ($view->getQuery()->distinct) {
+    $row_ids = [];
+    $distinct_results = [];
+    foreach ($view->result as $row) {
+      $row_id = $row->_entity->id();
+      if (!in_array($row_id, $row_ids)) {
+        $row_ids[] = $row_id;
+        $distinct_results[] = $row;
+      }
+    }
+
+    // When the view has a pager it uses offsets and limits to determine which
+    // items to display. We will set those as the result rows to use.
+    $pagers = drupal_static('hs_views_helper_views_pre_execute');
+    if (!empty($pagers[$view->id()][$view->getDisplay()->display['id']])) {
+      $pager_settings = $pagers[$view->id()][$view->getDisplay()->display['id']];
+      $distinct_results = array_slice($distinct_results, $pager_settings['offset'], $pager_settings['limit']);
+    }
+    $view->result = $distinct_results;
+  }
 }

@@ -49,7 +49,7 @@
   // add icon to external links only
   p {
     a[href^="http"]:not([class]) {
-      @include hb-link--inline;
+      @include hb-link--inline($icon: true);
       @include hb-external-link-icon;
     }
   }
@@ -203,7 +203,7 @@
   }
 
   &-external-link {
-    @include hb-link--inline;
+    @include hb-link--inline($icon: true);
     @include hb-external-link-icon;
   }
 

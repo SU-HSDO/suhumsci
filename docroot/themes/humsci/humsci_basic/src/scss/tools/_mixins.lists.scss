@@ -30,12 +30,13 @@
     border-bottom: $hb-thin-border;
     border-color: transparent;
     transition: 100ms ease-in-out;
+    background-image: none;
 
     &:hover,
     &:focus {
       @include hb-global-color('color', 'black');
       @include hb-global-color('border-color', 'black');
-      box-shadow: none;
+      box-shadow: none; // TODO: maybe remove in favor of background-image?
     }
   }
 }
@@ -56,12 +57,13 @@
   @if $link {
     @include hb-colorful {
       @include hb-ext-icon-color('black');
+      background-image: none;
 
       &:focus,
       &:hover {
         @include hb-pairing-color('border-color', 'secondary-active');
         @include hb-global-color('background-color', 'white');
-        box-shadow: none;
+        box-shadow: none; // TODO: maybe remove in favor of background-image?
       }
     }
   }

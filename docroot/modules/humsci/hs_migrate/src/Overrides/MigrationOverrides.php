@@ -8,7 +8,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 
 /**
- * Class MigrationOverrides
+ * Migration configuration overrides from config pages values.
  *
  * @package Drupal\hs_migrate\Overrides
  */
@@ -49,6 +49,12 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
     return $overrides;
   }
 
+  /**
+   * Get the news urls that are configured in the config pages.
+   *
+   * @return array
+   *   Array of urls.
+   */
   protected function getNewsMigrationUrls() {
     $field_values = $this->configPagesLoader->getValue('hs_migrate_news', 'field_news_xml_feed');
     $urls = [];

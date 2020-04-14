@@ -32,6 +32,19 @@ function hs_migrate_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Migrate callback to get the current time.
+ *
+ * @param mixed $arg
+ *   Argument passed from the callback migrate process plugin.
+ *
+ * @return int
+ *   Current time.
+ */
+function _hs_migrate_get_time($arg = null){
+  return time();
+}
+
+/**
  * Implements hook_migrate_process_info_alter().
  */
 function hs_migrate_migrate_process_info_alter(array &$definitions) {
@@ -80,7 +93,7 @@ function hs_migrate_entity_delete(EntityInterface $entity) {
       strpos($destination['plugin'], 'entity:') !== FALSE ||
       strpos($destination['plugin'], 'entity_reference_revisions:') !== FALSE
     ) {
-      list(, $type) = explode(':', $destination['plugin']);
+      [, $type] = explode(':', $destination['plugin']);
 
       if ($type == $entity->getEntityTypeId()) {
         $table = 'migrate_map_' . $migration->id();

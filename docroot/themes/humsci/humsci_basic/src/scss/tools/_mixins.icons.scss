@@ -30,7 +30,7 @@
 // Used alongside the hb-link--inline mixin when an external icon is needed.
 // And within the fa-ext class in block-layout.scss to add an external link icon.
 @mixin hb-external-link-icon {
-  margin-right: hb-calculate-rems(20px);
+  margin-right: hb-calculate-rems(2px);
 
   @include hb-colorful {
     position: relative;
@@ -38,13 +38,16 @@
     &::after {
       content: '';
       @include hb-icon-background('ext-link', 'tertiary');
-      background-position: center;
+      @include hb-global-color('background-color', 'white');
+      display: inline-block;
+      position: relative;
+      background-position: center right;
       background-repeat: no-repeat;
-      height: hb-calculate-rems(11px);
+      background-size: hb-calculate-rems(11px);
+      height: hb-calculate-rems(20px);
       width: hb-calculate-rems(11px);
-      position: absolute;
-      bottom: hb-calculate-rems(3px);
-      margin-left: hb-calculate-rems(4px);
+      margin-bottom: hb-calculate-rems(-5px);
+      padding-left: hb-calculate-rems(15px);
     }
 
     &:hover::after,
@@ -70,7 +73,7 @@
   .fa-ext::after {
     @include hb-icon-background('ext-link', $color);
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center right;
   }
 }
 

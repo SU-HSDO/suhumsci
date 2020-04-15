@@ -183,6 +183,7 @@
   }
 }
 
+// Link style for headings
 @mixin hb-link {
   // no font size by default
   @include hb-colorful {
@@ -197,23 +198,45 @@
   }
 }
 
-@mixin hb-link--inline {
+// Link style for main content that is not a heading
+@mixin hb-link--inline($icon: false) {
   // no font size by default
   @include hb-colorful {
     @include hb-pairing-color('color', 'tertiary');
+    background-size: 100% 200%;
+    background-position-y: -100%;
+    background-repeat: no-repeat;
+
+    // For links without an icon
+    // Fallback for IE
+    background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 50%);
+
+    // Color Pairing Custom Variable
+    background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
+
+    // For links with an icon
+    // Changes the value passed into background-image to
+    // create space for the external link space to exist
+    @if $icon {
+      // Fallback for IE
+      background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 16px);
+
+      // Color Pairing Custom Variable
+      background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
+    }
+
 
     &:hover,
     &:focus {
       @include hb-pairing-color('color', 'tertiary-darken-20');
-      box-shadow: inset 0 hb-calculate-rems(-10px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
-      box-shadow: inset 0 hb-calculate-rems(-10px) 0 var(--palette--tertiary-highlight);
+      background-position-y: -50%;
     }
   }
 
   .hb-local-footer & {
     &:focus,
     &:hover {
-      box-shadow: none;
+      background-image: none;
     }
   }
 
@@ -226,14 +249,6 @@
         @include hb-pairing-color('color', 'tertiary-highlight', $important: true);
       }
     }
-  }
-}
-
-@mixin hb-ext-link($color) {
-  .fa-ext::before {
-    @include hb-icon-background('ext-link', $color);
-    background-repeat: no-repeat;
-    background-position: center;
   }
 }
 

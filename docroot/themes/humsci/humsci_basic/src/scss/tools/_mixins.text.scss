@@ -199,23 +199,27 @@
 }
 
 // Link style for main content that is not a heading
-@mixin hb-link--inline($icon: false) { // TODO: change to $ext-icon for clarity?
+@mixin hb-link--inline($icon: false) {
   // no font size by default
   @include hb-colorful {
     @include hb-pairing-color('color', 'tertiary');
-
-    // testing with Alternative #3
     background-size: 100% 200%;
     background-position-y: -100%;
     background-repeat: no-repeat;
 
     // For links without an icon
-    // TODO: write fallback for IE
+    // Fallback for IE
+    background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 50%);
+
+    // Color Pairing Custom Variable
     background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
 
     // For links with an icon
     @if $icon {
-      // TODO: write fallback for IE
+      // Fallback for IE
+      background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 16px);
+
+      // Color Pairing Custom Variable
       background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
     }
 
@@ -223,30 +227,13 @@
     &:hover,
     &:focus {
       @include hb-pairing-color('color', 'tertiary-darken-20');
-
-      // box-shadow: inset 0 hb-calculate-rems(-10px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
-      // box-shadow: inset 0 hb-calculate-rems(-10px) 0 var(--palette--tertiary-highlight);
-
-      // Alternative #1
-      // box-shadow: inset 0 hb-calculate-rems(-20px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
-      // box-shadow: inset 0 hb-calculate-rems(-20px) 0 var(--palette--tertiary-highlight);
-
-      // Alternative #2
-      // box-shadow: inset 0 hb-calculate-rems(-5px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
-      // box-shadow: inset 0 hb-calculate-rems(-5px) 0 var(--palette--tertiary-highlight);
-
-      // Alternative #3
       background-position-y: -50%;
-
-      // Alternative #4
-      // Apply box-shadow to a span wrapped around the text via JS
     }
   }
 
   .hb-local-footer & {
     &:focus,
     &:hover {
-      // box-shadow: none;
       background-image: none;
     }
   }

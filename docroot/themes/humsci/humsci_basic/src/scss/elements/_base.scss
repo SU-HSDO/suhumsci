@@ -57,6 +57,13 @@ a:not([class]) {
   @include hb-link--inline;
 }
 
+// Target all external URLs
+// The use of `//` allows users to input a vareity of URLs
+// examples: `https://google.com` `http://google.com` and `//google.com`
+a[href*="//"][data-extlink] {
+  @include hb-link--inline($icon: true);
+}
+
 h1:not([class]) {
   @include hb-heading-1;
 

@@ -2,5 +2,31 @@
 
 /**
  * @file
- * Functions to support theming in the HumSci Airy theme.
+ * Functions to support theming in the HumSci Traditional theme.
  */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Prepares variables for the html.html.twig template.
+ */
+function humsci_traditional_preprocess_html(&$vars) {
+
+  // Theme color pairing setting to set the way the Traditional theme will appear.
+  $color_pairing = theme_get_setting('theme_color_pairing');
+  if ($color_pairing) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('ht-pairing-' . $color_pairing);
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function humsci_traditional_preprocess_page(&$vars) {
+  // Variant setting for the local footer.
+  $lfv = theme_get_setting('local_footer_variant_classname');
+  if ($lfv) {
+    $vars['local_footer_variant_classname'] = 'hb-local-footer--' . $lfv;
+  }
+}

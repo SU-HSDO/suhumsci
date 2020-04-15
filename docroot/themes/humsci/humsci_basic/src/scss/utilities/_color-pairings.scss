@@ -1,4 +1,4 @@
-// Generate Color Palette Classes
+// Generate Color Palette Classes for Colorful
 @each $palette, $color-swatches in $hc-colorful-pairings {
   // These are the classes that update the CSS --palette variable.
   // They should be applied to the parent element.
@@ -23,5 +23,18 @@
     --palette--tertiary-reversed: #{hb-get-pairing-color("tertiary-reversed", $palette, $hc-colorful-pairings)};
     --palette--tertiary-reversed-darken-10: #{hb-get-pairing-color("tertiary-reversed-darken-10", $palette, $hc-colorful-pairings)};
     --palette--tertiary-darken-20: #{hb-get-pairing-color("tertiary-darken-20", $palette, $hc-colorful-pairings)};
+  }
+}
+
+// Generate Color Palette Classes for Traditional
+@each $palette, $color-swatches in $ht-traditional-pairings {
+  // These are the classes that update the CSS --palette variable.
+  // They should be applied to the parent element.
+  // Note: If a ht-pairing- class is not applied, ht-pairing-default will apply as the default / fallback color pairing.
+  .ht-pairing-#{$palette} {
+    // BASE
+    --palette--primary: #{hb-get-pairing-color("primary", $palette, $ht-traditional-pairings)};
+    --palette--secondary: #{hb-get-pairing-color("secondary", $palette, $ht-traditional-pairings)};
+    --palette--tertiary: #{hb-get-pairing-color("tertiary", $palette, $ht-traditional-pairings)};
   }
 }

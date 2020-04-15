@@ -15,30 +15,13 @@ use Drupal\Core\Config\StorageInterface;
 class MigrationOverrides implements ConfigFactoryOverrideInterface {
 
   /**
-   * Config pages loader service.
-   *
-   * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
-   */
-  protected $configPagesLoader;
-
-  /**
-   * MigrationOverrides constructor.
-   *
-   * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
-   *   Config pages loader service.
-   */
-  public function __construct(ConfigPagesLoaderServiceInterface $config_pages_loader) {
-    $this->configPagesLoader = $config_pages_loader;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
     $overrides = [];
 
     if (in_array('migrate_plus.migration.hs_d7_news', $names)) {
-      if ($urls = $this->getNewsMigrationUrls()) {
+      if ($urls = self::getNewsMigrationUrls()) {
         // Point the migration to our local url where we process the feed into
         // usable data.
         $overrides['migrate_plus.migration.hs_d7_news'] = [
@@ -58,8 +41,13 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
    * @return array
    *   Array of urls.
    */
-  protected function getNewsMigrationUrls() {
-    $field_values = $this->configPagesLoader->getValue('hs_migrate_news', 'field_news_xml_feed');
+  protected static function getNewsMigrationUrls() {
+    if (!\Drupal::hasService('config_pages.loader')) {
+      return [];
+    }
+
+    $config_pages = \Drupal::service('config_pages.loader');
+    $field_values = $config_pages->getValue('hs_migrate_news', 'field_news_xml_feed');
     $urls = [];
     foreach ($field_values as $value) {
       $urls[] = $value['uri'];

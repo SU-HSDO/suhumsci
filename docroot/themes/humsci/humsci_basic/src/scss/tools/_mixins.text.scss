@@ -21,6 +21,18 @@
       font-size: hb-calculate-rems(48px);
     }
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(58px);
+    line-height: 117%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(40px);
+      line-height: 127%;
+    }
+  }
 }
 
 @mixin hb-heading-2 {
@@ -33,11 +45,35 @@
       font-size: hb-calculate-rems(38px);
     }
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(48px);
+    line-height: 112%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(33px);
+      line-height: 125%;
+    }
+  }
 }
 
 @mixin hb-heading-3 {
   @include hb-colorful {
     @include hb-block-heading;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(38px);
+    line-height: 110%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(27px);
+      line-height: 109%;
+    }
   }
 }
 
@@ -47,6 +83,17 @@
     font-size: hb-calculate-rems(20px);
     line-height: 122%;
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(32px);
+    line-height: 121%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+  }
 }
 
 @mixin hb-heading-5 {
@@ -55,14 +102,28 @@
     font-size: hb-calculate-rems(18px);
     line-height: 124%;
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(20px);
+    line-height: 117%;
+  }
 }
 
 @mixin hb-heading-6 {
+  text-transform: uppercase;
+
   @include hb-colorful {
-    text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(16px);
     line-height: 128%;
+  }
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(16px);
+    line-height: 117%;
   }
 }
 
@@ -82,22 +143,25 @@
     font-size: hb-calculate-rems(15px);
     line-height: 131%;
   }
+
+  @include hb-traditional {
+    text-transform: uppercase;
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(15px);
+    line-height: 131%;
+  }
 }
 
 @mixin hb-body--small {
-  @include hb-colorful {
-    font-weight: hb-theme-font-weight(regular);
-    font-size: hb-calculate-rems(16px);
-    line-height: 122%;
-  }
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(16px);
+  line-height: 122%;
 }
 
 @mixin hb-body--medium {
-  @include hb-colorful {
-    font-weight: hb-theme-font-weight(regular);
-    font-size: hb-calculate-rems(18px);
-    line-height: 127%;
-  }
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(18px);
+  line-height: 127%;
 }
 
 @mixin hb-link--hover-style($box-shadow-color, $border-color) {

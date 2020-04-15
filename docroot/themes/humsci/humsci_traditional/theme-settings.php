@@ -17,7 +17,7 @@ $theme_name = \Drupal::theme()->getActiveTheme()->getName();
  */
 function humsci_traditional_form_system_theme_settings_alter(array &$form, FormStateInterface $form_state) {
   // Traditional theme color pairing setting
-  // theme_color_pairing
+  // theme_color_pairing:
   $form['options_settings']['humsci_traditional_color_pairing'] = [
     '#type' => 'fieldset',
     '#title' => t('Color Pairing'),
@@ -28,12 +28,12 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     '#title' => t('Color Pairing'),
     '#options' => [
       'ocean' => t('Default'),
-      'mountain' => t('Light')
+      'mountain' => t('Light'),
     ],
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];
 
-  // Local Footer
+  // Local Footer:
   $form['options_settings']['humsci_traditional_local_footer'] = [
     '#type' => 'fieldset',
     '#title' => t('Local Footer Settings'),

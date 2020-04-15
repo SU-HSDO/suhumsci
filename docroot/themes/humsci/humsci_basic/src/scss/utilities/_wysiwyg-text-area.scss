@@ -49,7 +49,7 @@
   // add icon to external links only
   p {
     a[href^="http"]:not([class]) {
-      @include hb-link--inline;
+      @include hb-link--inline($icon: true);
       @include hb-external-link-icon;
     }
   }
@@ -57,11 +57,7 @@
   a:not([href]):not([class]) {
     border-bottom: 0;
     transition: none;
-
-    &:focus,
-    &:hover {
-      box-shadow: none;
-    }
+    background-image: none;
   }
 }
 
@@ -203,7 +199,7 @@
   }
 
   &-external-link {
-    @include hb-link--inline;
+    @include hb-link--inline($icon: true);
     @include hb-external-link-icon;
   }
 
@@ -255,7 +251,7 @@ blockquote:nth-child(n) {
   }
 
   .hb-local-footer & {
-    margin: 0 0 2rem; // adjust blockquote browser spacing defaults when placed in the local footer
+    margin: 0 0 hb-calculate-rems(20px); // adjust blockquote browser spacing defaults when placed in the local footer
   }
 
   p {

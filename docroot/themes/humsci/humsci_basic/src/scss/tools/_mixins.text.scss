@@ -21,6 +21,18 @@
       font-size: hb-calculate-rems(48px);
     }
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(58px);
+    line-height: 117%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(40px);
+      line-height: 127%;
+    }
+  }
 }
 
 @mixin hb-heading-2 {
@@ -33,11 +45,35 @@
       font-size: hb-calculate-rems(38px);
     }
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(48px);
+    line-height: 112%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(33px);
+      line-height: 125%;
+    }
+  }
 }
 
 @mixin hb-heading-3 {
   @include hb-colorful {
     @include hb-block-heading;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(38px);
+    line-height: 110%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(27px);
+      line-height: 109%;
+    }
   }
 }
 
@@ -47,6 +83,17 @@
     font-size: hb-calculate-rems(20px);
     line-height: 122%;
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(32px);
+    line-height: 121%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+  }
 }
 
 @mixin hb-heading-5 {
@@ -55,14 +102,28 @@
     font-size: hb-calculate-rems(18px);
     line-height: 124%;
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(20px);
+    line-height: 117%;
+  }
 }
 
 @mixin hb-heading-6 {
+  text-transform: uppercase;
+
   @include hb-colorful {
-    text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(16px);
     line-height: 128%;
+  }
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(16px);
+    line-height: 117%;
   }
 }
 
@@ -82,22 +143,25 @@
     font-size: hb-calculate-rems(15px);
     line-height: 131%;
   }
+
+  @include hb-traditional {
+    text-transform: uppercase;
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(15px);
+    line-height: 131%;
+  }
 }
 
 @mixin hb-body--small {
-  @include hb-colorful {
-    font-weight: hb-theme-font-weight(regular);
-    font-size: hb-calculate-rems(16px);
-    line-height: 122%;
-  }
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(16px);
+  line-height: 122%;
 }
 
 @mixin hb-body--medium {
-  @include hb-colorful {
-    font-weight: hb-theme-font-weight(regular);
-    font-size: hb-calculate-rems(18px);
-    line-height: 127%;
-  }
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(18px);
+  line-height: 127%;
 }
 
 @mixin hb-link--hover-style($box-shadow-color, $border-color) {
@@ -119,6 +183,7 @@
   }
 }
 
+// Link style for headings
 @mixin hb-link {
   // no font size by default
   @include hb-colorful {
@@ -133,25 +198,45 @@
   }
 }
 
-@mixin hb-link--inline {
+// Link style for main content that is not a heading
+@mixin hb-link--inline($icon: false) {
   // no font size by default
   @include hb-colorful {
     @include hb-pairing-color('color', 'tertiary');
+    background-size: 100% 200%;
+    background-position-y: -100%;
+    background-repeat: no-repeat;
+
+    // For links without an icon
+    // Fallback for IE
+    background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 50%);
+
+    // Color Pairing Custom Variable
+    background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
+
+    // For links with an icon
+    // Changes the value passed into background-image to
+    // create space for the external link space to exist
+    @if $icon {
+      // Fallback for IE
+      background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 16px);
+
+      // Color Pairing Custom Variable
+      background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
+    }
+
 
     &:hover,
     &:focus {
       @include hb-pairing-color('color', 'tertiary-darken-20');
-      // scss-lint:disable DuplicateProperty
-      box-shadow: inset 0 hb-calculate-rems(-10px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
-      box-shadow: inset 0 hb-calculate-rems(-10px) 0 var(--palette--tertiary-highlight);
-      // scss-lint:enable DuplicateProperty
+      background-position-y: -50%;
     }
   }
 
   .hb-local-footer & {
     &:focus,
     &:hover {
-      box-shadow: none;
+      background-image: none;
     }
   }
 
@@ -214,6 +299,17 @@
 
     .hb-well & {
       @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
+    }
+  }
+}
+
+@mixin hb-descriptor {
+  @include hb-colorful {
+    @include hb-global-color('color', 'gray-dark');
+    font-size: hb-calculate-rems(16px);
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(18px);
     }
   }
 }

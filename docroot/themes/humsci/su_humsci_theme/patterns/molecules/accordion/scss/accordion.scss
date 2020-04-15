@@ -9,8 +9,8 @@ details {
     summary {
       border-bottom: 1px solid #ccc;
 
-      &:after {
-        content: "\f068"
+      &::after {
+        content: "\f068";
       }
     }
 
@@ -29,13 +29,15 @@ details {
       display: none;
     }
 
-    &:after {
+    &::after {
+      /* stylelint-disable font-family-no-missing-generic-family-keyword */
       content: "\f067";
       font-family: Font Awesome\ 5 Free;
       font-weight: 900;
       position: absolute;
       right: 20px;
       top: calc(50% - 9px);
+      /* stylelint-enable font-family-no-missing-generic-family-keyword */
     }
 
     > * {
@@ -47,7 +49,7 @@ details {
   .revealed-details {
     width: calc(100% - 40px);
     padding: 10px 20px;
-    animation: bounceInUp .5s ease both;
+    animation: bounceInUp 0.5s ease both;
     display: none;
   }
 }

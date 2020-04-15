@@ -18,6 +18,7 @@
 
   .menu-item {
     margin-bottom: hb-calculate-rems(14px);
+    padding-right: hb-calculate-rems(18px);
 
     @include grid-media-min('lg') {
       font-size: hb-calculate-rems(18px);
@@ -27,11 +28,7 @@
       a {
         &:hover,
         &:focus {
-          .fa-ext::before {
-            @include hb-icon-background('ext-link', 'primary');
-            background-repeat: no-repeat;
-            background-position: center;
-          }
+          @include hb-ext-icon-color('tertiary-darken-20');
         }
       }
     }
@@ -47,9 +44,10 @@
 
   @include hb-colorful {
     a:not([class]) {
+      background-image: none;
+
       &:hover,
       &:focus {
-        box-shadow: none;
         @include hb-pairing-color('color', 'tertiary-darken-20');
       }
     }
@@ -68,11 +66,7 @@
       a {
         &:hover,
         &:focus {
-          .fa-ext::before {
-            @include hb-icon-background('ext-link', 'secondary-active');
-            background-repeat: no-repeat;
-            background-position: center;
-          }
+          @include hb-ext-icon-color('tertiary-highlight');
         }
       }
     }

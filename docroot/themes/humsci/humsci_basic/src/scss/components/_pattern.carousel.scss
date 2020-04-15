@@ -1,0 +1,169 @@
+.paragraph--type--hs-carousel {
+  // Get rid of the colorful overlay on carousels (for both image-only and text-content ones)
+  .field-hs-hero-image::before {
+    display: none;
+  }
+
+  .hb-hero-overlay {
+    @include hb-colorful {
+      @include clearfix;
+      padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;
+
+      @include grid-media-min('md') {
+        padding: 0;
+        display: grid;
+        grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
+        grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
+      }
+
+      @include grid-media-min('xl') {
+        grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+      }
+
+      // Offset background color psuedo element
+      &::before {
+        @include hb-global-color('background-color', 'gray-light');
+        z-index: $hb-z-index-hero1-background;
+
+        @include grid-media-min('md') {
+          position: unset;
+          padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 10%;
+          grid-column-start: 1;
+          grid-column-end: 5;
+          grid-row-start: 1;
+          grid-row-end: 6;
+        }
+      }
+
+      // Secondary color block psuedo element that shows up in the grid
+      &::after {
+        content: '';
+        display: block;
+        z-index: $hb-z-index-hero1-overlay;
+        @include hb-pairing-color('background-color', 'secondary');
+
+        @include grid-media-min('md') {
+          grid-column-start: 1;
+          grid-column-end: 2;
+          grid-row-start: 3;
+          grid-row-end: 4;
+        }
+      }
+    }
+
+    &__image-wrapper {
+      @include hb-colorful {
+        position: relative;
+
+        @include grid-media-min('md') {
+          // This will make sure that the image fills the entire area
+          display: flex;
+          margin-top: 0;
+          grid-column-start: 3;
+          grid-column-end: 6;
+          grid-row-start: 2;
+          grid-row-end: 5;
+          padding-top: 0;
+        }
+
+        // On mobile, make the secondary color box out of psuedo element,
+        // then on 'md' breakpoint, it becomes part of the grid
+        &::before {
+          display: block;
+          bottom: 0;
+          left: -8.75%;
+          top: initial;
+          @include psuedo-background-box('secondary', 50%, 8.75%);
+          opacity: 1;
+
+          @include grid-media-min('md') {
+            display: none;
+          }
+        }
+
+        img {
+          object-fit: initial;
+          min-height: auto;
+
+          @include grid-media-min('sm') {
+            min-height: auto;
+          }
+
+          @include grid-media-min('md') {
+            min-height: 55vh;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+
+    &__text {
+      @include hb-colorful {
+        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2);
+        position: relative;
+        width: auto !important;
+        margin: 0 0 !important;
+        transform: none;
+        top: 0;
+        left: 0;
+
+        @include grid-media-min('md') {
+          grid-column-start: 2;
+          grid-column-end: 4;
+          grid-row-start: 4;
+          grid-row-end: 7;
+          padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
+          width: auto !important;
+        }
+
+        @include grid-media-min('lg') {
+          width: auto !important;
+        }
+
+        // Line decoration pseudo element
+        &::after {
+          display: block;
+          top: hb-calculate-rems(32px);
+          @include psuedo-background-box('tertiary-reversed', hb-calculate-rems(4px), hb-calculate-rems(65px));
+
+          @include grid-media-min('md') {
+            top: hb-calculate-rems(56px);
+          }
+        }
+
+        h2 {
+          @include hb-heading-4;
+          margin: hb-calculate-rems(24px) 0;
+
+          @include grid-media-min('md') {
+            @include hb-heading-4;
+            margin: hb-calculate-rems(24px) 0;
+          }
+
+          @include grid-media-min('lg') {
+            @include hb-heading-3;
+            margin: hb-calculate-rems(28px) 0;
+          }
+        }
+
+        h2,
+        .field-hs-hero-body {
+          width: auto;
+
+          @include grid-media-min('sm') {
+            width: auto;
+          }
+
+          @include grid-media-min('md') {
+            width: auto;
+          }
+
+          @include grid-media-min('lg') {
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}

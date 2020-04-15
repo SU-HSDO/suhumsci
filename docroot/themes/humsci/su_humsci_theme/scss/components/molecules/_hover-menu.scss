@@ -53,20 +53,24 @@
 
             @include margin(0 1em 0 0);
             @include padding(6px 0);
+            /* stylelint-disable max-nesting-depth */
             @include media($large-screen) {
               @include margin(null 1.5em null null);
             }
+            /* stylelint-enable max-nesting-depth */
           }
         }
       }
     }
   }
 
-  .fa:before,
-  .far:before,
-  .fas:before {
+  .fa::before,
+  .far::before,
+  .fas::before {
+    /* stylelint-disable font-family-no-missing-generic-family-keyword */
     font-family: Font Awesome\ 5 Free;
     font-weight: 900;
+    /* stylelint-enable font-family-no-missing-generic-family-keyword */
   }
 
   .js & .decanter-main-menu--hover-reveal {
@@ -113,9 +117,11 @@
           .ui-menu-item-wrapper {
             @include margin(0 1em -1rem 0);
             @include padding(6px 0);
+            /* stylelint-disable max-nesting-depth */
             @include media($large-screen) {
               @include margin(null 1.5em null null);
             }
+            /* stylelint-enable max-nesting-depth */
           }
         }
 
@@ -131,9 +137,11 @@
           > a {
             font-weight: $font-normal;
 
+            /* stylelint-disable max-nesting-depth */
             @media (min-width: 951px) {
               font-size: $base-font-size;
             }
+            /* stylelint-enable max-nesting-depth */
           }
 
           // If menu is too close to right edge, make it hug the right (js menuEdgeCheck function).
@@ -332,7 +340,7 @@ nav.menu-block {
   font-size: $base-font-size;
 
   ul ul {
-    font-size: .9em;
+    font-size: 0.9em;
   }
 
   .menu-item--expanded {

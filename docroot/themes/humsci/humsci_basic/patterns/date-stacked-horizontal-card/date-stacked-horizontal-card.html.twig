@@ -1,0 +1,89 @@
+{% set attributes = attributes.addClass('hb-card') %}
+{%- set url = url|render|striptags('<drupal-render-placeholder>')|trim -%}
+{%- set has_image = image|render|striptags('<drupal-render-placeholder><img>')|trim -%}
+
+<div{{ attributes }}>
+
+  {% if image or month or day %}
+    <div class="hb-card__graphics">
+
+      {% if has_image is not empty %}
+        <div class="hb-card__img">
+          {{ image }}
+        </div>
+      {% endif %}
+
+      {% if month or day %}
+        <div class="hb-card__date-tile">
+          {% if month %}
+            <div class="hb-card__date-tile-month">{{ month }}</div>
+          {% endif %}
+
+          {% if day %}
+            <div class="hb-card__date-tile-day">{{ day }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+  <div class="hb-card__content">
+    {% if category %}
+      <div class="hb-card__category">{{ category }}</div>
+    {% endif %}
+
+    {% if title %}
+      <div class="hb-card__title">
+        <h2>{{ title }}</h2>
+      </div>
+    {% endif %}
+
+    {% if time %}
+      <div class="hb-card__subcontent">
+
+        {% if time['#sources'] %}
+          {% for field in time['#sources'] %}
+            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+              <div class="hb-card__subcontent-item">
+                {{ field }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            <div class="hb-card__subcontent-item">
+              {{ time }}
+            </div>
+          {% endif %}
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+    {% if location|render|trim %}
+      <div class="hb-card__location">
+        {{ location }}
+      </div>
+    {% endif %}
+
+    {% if speaker|render|trim %}
+      <div class="hb-card__highlighted">
+        {{ speaker }}
+      </div>
+    {% endif %}
+
+    {% if description %}
+      <div class="hb-card__description">
+        {{ description }}
+      </div>
+    {% endif %}
+
+    {% if button %}
+      <div class="hb-card__decorative-link">
+        {{ button }}
+      </div>
+    {% endif %}
+
+  </div>
+</div>

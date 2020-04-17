@@ -1,4 +1,12 @@
-{% set attributes = attributes.addClass('hb-card') %}
+{%
+  set classes = [
+    'hb-card',
+    'hb-card--horizontal',
+    'hb-card--horizontal-date-stacked'
+  ]
+%}
+
+{%- set attributes = attributes.addClass(classes) -%}
 {%- set url = url|render|striptags('<drupal-render-placeholder>')|trim -%}
 {%- set has_image = image|render|striptags('<drupal-render-placeholder><img>')|trim -%}
 
@@ -35,13 +43,48 @@
 
     {% if title %}
       <div class="hb-card__title">
-        <h2>{{ title }}</h2>
+        {{ title }}
       </div>
     {% endif %}
 
     {% if time %}
       <div class="hb-card__subcontent">
 
+        {% if time['#sources'] %}
+          {% for field in time['#sources'] %}
+            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+              <div class="hb-card__subcontent-detail">
+                {{ field }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            <div class="hb-card__subcontent-detail">
+              {{ time }}
+            </div>
+          {% endif %}
+        {% endif %}
+
+        {% if location %}
+          <div class="hb-card__subcontent-detail">
+            {% if location|render|trim %}
+                {{ location }}
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if speaker|render|trim %}
+          <div class="hb-card__subcontent-detail">
+            {{ speaker }}
+          </div>
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+    {# {% if time %}
+      <div class="hb-card__subcontent">
         {% if time['#sources'] %}
           {% for field in time['#sources'] %}
             {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
@@ -58,20 +101,30 @@
           {% endif %}
         {% endif %}
 
-      </div>
-    {% endif %}
+        {% if location %}
+          <div class="hb-card__subcontent-item">
+            {% if location|render|trim %}
+                {{ location }}
+            {% endif %}
+          </div>
+        {% endif %}
 
-    {% if location|render|trim %}
+      </div>
+    {% endif %} #}
+
+    {# {% if location %}
       <div class="hb-card__location">
-        {{ location }}
+        {% if location|render|trim %}
+            {{ location }}
+        {% endif %}
       </div>
-    {% endif %}
+    {% endif %} #}
 
-    {% if speaker|render|trim %}
+    {# {% if speaker|render|trim %}
       <div class="hb-card__highlighted">
         {{ speaker }}
       </div>
-    {% endif %}
+    {% endif %} #}
 
     {% if description %}
       <div class="hb-card__description">

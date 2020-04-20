@@ -53,18 +53,13 @@ body {
   }
 }
 
-a:not([class]) {
+a:not([class]),
+a.ext,
+a.mailto {
   @include hb-link--inline;
 }
 
-// Target all external URLs
-// The use of `//` allows users to input a vareity of URLs
-// examples: `https://google.com` `http://google.com` and `//google.com`
-a[href*="//"][data-extlink] {
-  @include hb-link--inline($icon: true);
-}
-
-h1:not([class]) {
+h1 {
   @include hb-heading-1;
 
   a:not([class]) {
@@ -72,7 +67,7 @@ h1:not([class]) {
   }
 }
 
-h2:not([class]) {
+h2 {
   @include hb-heading-2;
 
   a.is-active,
@@ -81,7 +76,7 @@ h2:not([class]) {
   }
 }
 
-h3:not([class]) {
+h3 {
   @include hb-heading-3;
 
   a:not([class]) {
@@ -89,7 +84,7 @@ h3:not([class]) {
   }
 }
 
-h4:not([class]) {
+h4 {
   @include hb-heading-4;
 
   a:not([class]) {
@@ -97,7 +92,7 @@ h4:not([class]) {
   }
 }
 
-h5:not([class]) {
+h5 {
   @include hb-heading-5;
 
   a:not([class]) {
@@ -105,7 +100,7 @@ h5:not([class]) {
   }
 }
 
-h6:not([class]) {
+h6 {
   @include hb-heading-6;
 
   a:not([class]) {

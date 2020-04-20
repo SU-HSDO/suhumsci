@@ -66,15 +66,13 @@
           {% endif %}
         {% endif %}
 
-        {% if location %}
+        {% if location|render|striptags('<drupal-render-placeholder><a>')|trim %}
           <div class="hb-card__subcontent-detail">
-            {% if location|render|trim %}
-                {{ location }}
-            {% endif %}
+            {{ location }}
           </div>
         {% endif %}
 
-        {% if speaker|render|trim %}
+        {% if speaker|render|striptags('<drupal-render-placeholder><a>')|trim %}
           <div class="hb-card__subcontent-detail">
             {{ speaker }}
           </div>

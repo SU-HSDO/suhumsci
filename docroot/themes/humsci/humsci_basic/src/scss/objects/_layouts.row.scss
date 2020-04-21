@@ -1,0 +1,17 @@
+// Row Paragraph Styles
+.hs-paragraph-style {
+  &--hs-well {
+    @include hb-colorful {
+      @include hb-global-color('background-color', 'gray-light');
+    }
+
+    padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
+    width: 100%;
+
+    .hb-three-column--no-sidebar & {
+      left: calc(-50vw + 50%);
+      position: relative;
+      width: 100vw;
+    }
+  }
+}

@@ -680,7 +680,7 @@ display:
         operator: AND
         groups:
           1: AND
-      group_by: true
+      group_by: false
     cache_metadata:
       max-age: -1
       contexts:
@@ -696,7 +696,6 @@ display:
         - 'config:field.storage.node.field_hs_publication_image'
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
-        - extensions
   author_list:
     display_plugin: block
     id: author_list
@@ -1116,7 +1115,6 @@ display:
         - 'config:field.storage.node.field_hs_publication_image'
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
-        - extensions
   masonry_list:
     display_plugin: block
     id: masonry_list
@@ -1449,6 +1447,15 @@ display:
           plugin_id: field
       defaults:
         fields: false
+        query: false
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: true
+          replica: false
+          query_comment: ''
+          query_tags: null
     cache_metadata:
       max-age: -1
       contexts:
@@ -1464,7 +1471,6 @@ display:
         - 'config:field.storage.node.field_hs_publication_image'
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
-        - extensions
   single_featured:
     display_plugin: block
     id: single_featured

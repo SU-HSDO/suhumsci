@@ -47,6 +47,17 @@
   }
 }
 
+.title {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
+}
+
 .email {
   [class^="fa-"] {
     display: none;
@@ -54,6 +65,8 @@
 }
 
 .datetime {
+  line-height: 1.4;
+
   @include hb-colorful {
     @include hb-global-color('color', 'gray-dark');
   }
@@ -87,19 +100,4 @@
 .block-categories,
 .layout-builder-discard-changes {
   font-size: hb-calculate-rems(16px);
-}
-
-// Hide the FontAwesome icon that is configured by default in
-// config/default/extlink.settings.yml
-// and replace with different icon
-.fa-ext {
-  margin-right: 0 !important; // removes link underline from icon
-
-  @include hb-colorful {
-    @include hb-external-link-icon;
-
-    .fa-arrow-right {
-      display: none;
-    }
-  }
 }

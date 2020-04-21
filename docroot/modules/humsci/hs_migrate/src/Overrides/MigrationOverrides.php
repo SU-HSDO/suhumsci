@@ -72,7 +72,7 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function getCacheSuffix() {
-    return 'CourseImporterOverrides';
+    return 'MigrationImporterOverrides';
   }
 
 }

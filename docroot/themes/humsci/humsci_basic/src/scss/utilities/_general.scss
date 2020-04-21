@@ -87,3 +87,37 @@
     }
   }
 }
+
+// testing no changes to image
+// .hb-no-image-resizing {
+//   height: 100vh;
+
+//   .contextual-region,
+//   .field-media-image {
+//     height: 100%;
+//   }
+
+//   img {
+//     border: 2px solid hotpink;
+//     max-height: 100%; // better
+//     height: 100%;
+//     object-fit: contain;
+//   }
+// }
+
+// Option 1 keeps the width of 360px
+// This can result in an exorbitant amount of whitespace below the heading.
+// .hb-no-image-resizing {
+//   img {
+//     max-height: 100%;
+//   }
+// }
+
+// Option 2 keeps the height
+.hb-no-image-resizing {
+  padding: 0 !important; // remove padding for when it is used with hb-well class // TODO: test
+
+  img {
+    object-fit: contain;
+  }
+}

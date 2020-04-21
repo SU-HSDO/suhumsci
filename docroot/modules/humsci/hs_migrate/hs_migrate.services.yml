@@ -4,3 +4,7 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }
+  hs_migrate.overrider:
+    class: \Drupal\hs_migrate\Overrides\MigrationOverrides
+    tags:
+      - {name: config.factory.override, priority: 5}

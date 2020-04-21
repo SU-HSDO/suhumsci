@@ -46,13 +46,7 @@
       margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
     }
   }
-  // add icon to external links only
-  p {
-    a[href^="http"]:not([class]) {
-      @include hb-link--inline($icon: true);
-      @include hb-external-link-icon;
-    }
-  }
+
   // jump to link target - remove link styles from anchor tag
   a:not([href]):not([class]) {
     border-bottom: 0;
@@ -77,8 +71,8 @@
   }
 
   &-font-lead {
-    font-size: hb-calculate-rems(18px);
-    font-weight: hb-theme-font-weight(regular);
+    font-size: hb-calculate-rems(20px);
+    font-weight: hb-theme-font-weight(semibold);
     line-height: 127%;
 
     @include hb-colorful {
@@ -90,7 +84,7 @@
     }
 
     @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(20px);
+      font-size: hb-calculate-rems(22px);
     }
   }
 
@@ -128,79 +122,8 @@
     max-width: hb-calculate-rems(700px);
   }
 
-  &-button {
-    @include button-style;
-    display: inline-block;
-    font-size: hb-calculate-rems(16px);
-    text-decoration: none;
-    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-
-    &--big {
-      @include button-style;
-      display: inline-block;
-      font-size: hb-calculate-rems(18px);
-      text-decoration: none;
-      padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
-    }
-  }
-
-  &-secondary-button {
-    @include button-style;
-    display: inline-block;
-    font-size: hb-calculate-rems(16px);
-    text-decoration: none;
-    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-    background-color: transparent;
-
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'secondary');
-
-      .hb-local-footer--dark & {
-        @include hb-pairing-color('color', 'tertiary-reversed');
-        @include hb-pairing-color('border-color', 'tertiary-reversed');
-      }
-    }
-
-    &:hover {
-      @include hb-colorful {
-        @include hb-global-color('color', 'white');
-        @include hb-pairing-color('background-color', 'secondary');
-        @include hb-pairing-color('border-color', 'secondary');
-
-        .hb-local-footer--dark & {
-          background-color: transparent;
-
-          @include hb-pairing-color('color', 'secondary-highlight');
-          @include hb-pairing-color('border-color', 'secondary-highlight');
-        }
-      }
-    }
-
-    &:active,
-    &:focus {
-      background-color: transparent;
-
-      @include hb-colorful {
-        @include hb-pairing-color('color', 'secondary');
-        @include hb-global-color('border-color', 'white');
-
-        .hb-local-footer--dark & {
-          background-color: transparent;
-
-          @include hb-pairing-color('color', 'secondary-highlight-darken');
-          @include hb-pairing-color('border-color', 'secondary-highlight-darken');
-        }
-      }
-    }
-  }
-
   &-more-link {
     @include hb-link--inline;
-  }
-
-  &-external-link {
-    @include hb-link--inline($icon: true);
-    @include hb-external-link-icon;
   }
 
   &-table--borderless {
@@ -263,4 +186,85 @@ blockquote:nth-child(n) {
       }
     }
   }
+}
+
+a.hs-button,
+button.hs-button,
+.hs-button a,
+.hs-button button {
+  @include button-style;
+  display: inline-block;
+  font-size: hb-calculate-rems(16px);
+  text-decoration: none;
+  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+}
+
+a.hs-button--big,
+button.hs-button--big,
+.hs-button--big a,
+.hs-button--big button {
+  @include button-style;
+  display: inline-block;
+  font-size: hb-calculate-rems(18px);
+  text-decoration: none;
+  padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
+}
+
+a.hs-secondary-button,
+button.hs-secondary-button,
+.hs-secondary-button a,
+.hs-secondary-button button {
+  @include button-style;
+  display: inline-block;
+  font-size: hb-calculate-rems(16px);
+  text-decoration: none;
+  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  background-color: transparent;
+
+  @include hb-colorful {
+    @include hb-pairing-color('color', 'secondary', $important: true);
+
+    .hb-local-footer--dark & {
+      @include hb-pairing-color('color', 'tertiary-reversed');
+      @include hb-pairing-color('border-color', 'tertiary-reversed');
+    }
+  }
+
+  &:hover {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white', $important: true);
+      @include hb-pairing-color('background-color', 'secondary');
+      @include hb-pairing-color('border-color', 'secondary');
+
+      .hb-local-footer--dark & {
+        background-color: transparent;
+
+        @include hb-pairing-color('color', 'secondary-highlight');
+        @include hb-pairing-color('border-color', 'secondary-highlight');
+      }
+    }
+  }
+
+  &:active,
+  &:focus {
+    background-color: transparent;
+
+    @include hb-colorful {
+      @include hb-pairing-color('color', 'secondary');
+      @include hb-global-color('border-color', 'white');
+
+      .hb-local-footer--dark & {
+        background-color: transparent;
+
+        @include hb-pairing-color('color', 'secondary-highlight-darken');
+        @include hb-pairing-color('border-color', 'secondary-highlight-darken');
+      }
+    }
+  }
+}
+
+a[href*="//"].hs-external-link,
+.hs-external-link a[href*="//"] {
+  @include hb-link--inline($icon: true);
+  @include hb-external-link-icon;
 }

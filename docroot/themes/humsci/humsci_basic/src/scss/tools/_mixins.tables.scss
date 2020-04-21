@@ -7,11 +7,10 @@
   border-collapse: collapse;
   font-size: hb-calculate-rems(13px);
   text-align: left;
+  border: $hb-thin-border;
+  @include hb-global-color('border-color', 'gray-medium');
 
   @include hb-colorful {
-    border: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray-medium');
-
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'black');
       @include hb-global-color('background-color', 'white');
@@ -27,50 +26,71 @@
 @mixin table-heading {
   position: sticky;
   top: 0;
+  @include hb-global-color('border-color', 'white');
+
+  a {
+    &:hover,
+    &:focus {
+      @include hb-global-color('color', 'white');
+      box-shadow: none;
+    }
+  }
 
   @include hb-colorful {
-    @include hb-global-color('border-color', 'white');
-
     a:not([class]) {
       @include hb-pairing-color('color', 'secondary-highlight');
+      background-image: none;
+    }
+  }
 
-      &:hover,
-      &:focus {
-        @include hb-global-color('color', 'white');
-        box-shadow: none;
-      }
+  @include hb-traditional {
+    a:not([class]) {
+      @include hb-pairing-color('color', 'secondary');
+      background-image: none;
     }
   }
 }
 
 // Table Rows
 @mixin table-head-row {
+  text-transform: uppercase;
+
   @include hb-colorful {
     // set themed color for header background color table variable
     @include hb-pairing-color('background-color', 'primary');
     @include hb-global-color('color', 'white');
     font-weight: hb-theme-font-weight(bold);
-    text-transform: uppercase;
 
     .hb-local-footer--dark & {
       @include hb-pairing-color('background-color', 'secondary-darken-12');
     }
   }
+
+  @include hb-traditional {
+    // set themed color for header background color table variable
+    @include hb-pairing-color('background-color', 'primary');
+    @include hb-global-color('color', 'white');
+    font-weight: hb-theme-font-weight(semibold);
+  }
 }
 
 @mixin table-row {
-  @include hb-colorful {
-    @include hb-global-color('background-color', 'gray-light');
-  }
+  @include hb-global-color('background-color', 'gray-light');
 }
 
 // Table Data
 @mixin table-data {
   padding: hb-calculate-rems(16px);
   vertical-align: top;
+  border: $hb-thin-border;
+  @include hb-global-color('border-color', 'gray-medium');
 
-  @include hb-colorful {
-    border: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray-medium');
+  a {
+    &:hover,
+    &:focus {
+      @include hb-colorful {
+        @include hb-ext-icon-color('tertiary-darken-20');
+      }
+    }
   }
 }

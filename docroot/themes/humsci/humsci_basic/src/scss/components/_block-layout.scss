@@ -1,5 +1,17 @@
-.block-layout-builder:not(:last-child) {
-  margin-bottom: hb-calculate-rems(20px);
+.block-layout-builder {
+  &:not(:last-child) {
+    margin-bottom: hb-calculate-rems(20px);
+  }
+
+  // Trigger change in fa-ext icon color when hovering over it's associated link text.
+  .link a {
+    &:hover,
+    &:focus {
+      @include hb-colorful {
+        @include hb-ext-icon-color('tertiary-darken-20');
+      }
+    }
+  }
 }
 
 .block-hs-blocks {
@@ -81,9 +93,7 @@
 // config/default/extlink.settings.yml
 // and replace with different icon
 .fa-ext {
-  // scss-lint:disable ImportantRule
   margin-right: 0 !important; // removes link underline from icon
-  // scss-lint:enable ImportantRule
 
   @include hb-colorful {
     @include hb-external-link-icon;

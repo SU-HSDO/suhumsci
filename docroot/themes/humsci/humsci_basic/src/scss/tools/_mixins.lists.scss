@@ -30,12 +30,12 @@
     border-bottom: $hb-thin-border;
     border-color: transparent;
     transition: 100ms ease-in-out;
+    background-image: none;
 
     &:hover,
     &:focus {
       @include hb-global-color('color', 'black');
       @include hb-global-color('border-color', 'black');
-      box-shadow: none;
     }
   }
 }
@@ -46,7 +46,7 @@
     @include hb-global-color('color', 'black');
     display: inline-block;
     font-size: hb-calculate-rems(14px);
-    padding: hb-calculate-rems(3px) hb-calculate-rems(12px);
+    padding: hb-calculate-rems(1px) hb-calculate-rems(12px);
     text-decoration: none;
     border-radius: hb-calculate-rems(13px);
     border: 2px solid transparent;
@@ -55,11 +55,13 @@
 
   @if $link {
     @include hb-colorful {
+      @include hb-ext-icon-color('black');
+      background-image: none;
+
       &:focus,
       &:hover {
         @include hb-pairing-color('border-color', 'secondary-active');
         @include hb-global-color('background-color', 'white');
-        box-shadow: none;
       }
     }
   }

@@ -41,12 +41,16 @@
 @mixin hb-unordered-list {
   @include hb-colorful {
     list-style-type: none;
-    margin: 0 0 hb-calculate-rems(24px);
+    margin: 0 0 hb-calculate-rems(32px);
+
+    ul {
+      margin: hb-calculate-rems(10px) 0 0;
+    }
 
     li {
       position: relative;
       line-height: 122%;
-      padding-bottom: hb-calculate-rems(10px);
+      margin-bottom: hb-calculate-rems(10px);
 
       &::before {
         content: '';
@@ -72,12 +76,16 @@
   @include hb-colorful {
     counter-reset: li;
     list-style-type: none;
-    margin: 0 0 hb-calculate-rems(24px);
+    margin: 0 0 hb-calculate-rems(32px);
+
+    ol {
+      margin: hb-calculate-rems(10px) 0 0;
+    }
 
     li {
       position: relative;
       line-height: 122%;
-      padding-bottom: hb-calculate-rems(10px);
+      margin-bottom: hb-calculate-rems(10px);
 
       &::before {
         content: counter(li) '.';
@@ -94,5 +102,14 @@
         }
       }
     }
+  }
+}
+
+@mixin hb-divider {
+  width: 100%;
+
+  @include hb-colorful {
+    border-bottom: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
   }
 }

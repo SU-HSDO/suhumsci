@@ -100,7 +100,7 @@ class CircleCiCommands extends BltTasks {
   protected function setVersions($version) {
     // Update only modules in humsci and the appropriate profiles.
     $dirs = [
-      '*/modules/humsci/*',
+      // '*/modules/humsci/*',
       '*/profiles/humsci/su_*',
     ];
 

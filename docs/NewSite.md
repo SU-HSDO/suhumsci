@@ -19,7 +19,7 @@ and the url appropriately.
     * `blt drupal:module:uninstall shield stage`
 1. Add the new domains to each of the Acquia environments (dev, stage, and prod). You can do this through the Acquia UI, or by using `blt humsci:add-domain`. For example:
     * `blt humsci:add-domain dev [site-name]-dev.stanford.edu`
-    * `blt humsci:add-domain test [site-name]-test.stanford.edu`
+    * `blt humsci:add-domain test [site-name]-stage.stanford.edu`
     * `blt humsci:add-domain prod [site-name]-prod.stanford.edu`
 1. Re-issue the SSL certs for each environment. For example:
     * `blt humsci:letsencrypt:add-domain --domains=[site-name]-dev.stanford.edu -- dev`

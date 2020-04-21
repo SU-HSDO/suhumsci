@@ -12,17 +12,17 @@
 
 // ICONS AS BACKGROUND IMAGES
 // ==========================
-@mixin hb-menu-plus-icon {
+@mixin hb-menu-plus-icon($color: 'gray-dark') {
   @include hb-colorful {
-    @include hb-icon-background('plus', 'gray-dark');
+    @include hb-icon-background('plus', $color);
     background-size: hb-calculate-rems(18px);
     transition: transform 150ms ease-in-out;
   }
 }
 
-@mixin hb-menu-minus-icon {
+@mixin hb-menu-minus-icon($color: 'gray-dark') {
   @include hb-colorful {
-    @include hb-icon-background('minus', 'gray-dark');
+    @include hb-icon-background('minus', $color);
     background-size: hb-calculate-rems(18px);
     transform: rotate(180deg);
   }

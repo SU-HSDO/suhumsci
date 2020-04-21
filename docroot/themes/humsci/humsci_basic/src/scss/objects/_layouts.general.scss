@@ -3,9 +3,7 @@
 }
 
 .hb-vertical-page-padding {
-  // scss-lint:disable ImportantRule
   margin: hb-calculate-rems($hb-gutter-width) auto !important;
-  // scss-lint:enable ImportantRule
 }
 
 // If a component needs *any* additional styles, move the rule into /src/scss/components.
@@ -15,4 +13,18 @@
 
 .layout-builder-form .form-actions {
   @include hb-page-width;
+
+  .button {
+    width: auto;
+  }
+}
+
+.block-help {
+  @include hb-page-width;
+  padding-top: hb-calculate-rems(40px);
+}
+
+// Add margin bottom to all paragraph rows
+.ptype-hs-row {
+  margin-bottom: $hb-gutter-width;
 }

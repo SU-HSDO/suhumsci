@@ -53,3 +53,9 @@ Once the code with the new files is merged and deployed to an Acquia environment
 1. Import all the configs again `drush @[site-name].stage cim -y`
 1. Visit the site and validate login and installation was successful
 1. Copy that database to stage and production environments. (This prevents deployment & testing errors)
+
+### Notes on the Install Profile
+
+New sites are launched using the `su_humsci_profile` (as shown above).
+
+Configs in `su_humsci_profile` aren't really relevant because they get overridden by the config/default ones during the site-install process. `su_humsci_profile` is valuable because it serves as place to add update hooks and placeholder content new multisites.

@@ -2,7 +2,6 @@
   @include unbuttonize;
   display: inline-block;
   padding: 0 hb-calculate-rems(20px);
-  border-radius: hb-calculate-rems(30px);
   font-family: $hb-colorful-font--sans;
   font-weight: hb-theme-font-weight(semibold);
   text-align: center;
@@ -11,6 +10,7 @@
     @include hb-global-color('color', 'white');
     @include hb-pairing-color('background-color', 'secondary');
     @include hb-pairing-color('border-color', 'secondary');
+    border-radius: $hb-button-border-radius;
     border-width: hb-calculate-rems(2px);
     border-style: solid;
 
@@ -25,10 +25,8 @@
     &:focus {
       @include hb-pairing-color('background-color', 'secondary');
       @include hb-global-color('border-color', 'white');
-      // scss-lint:disable DuplicateProperty
       box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
-      // scss-lint:enable DuplicateProperty
     }
 
     &:hover,
@@ -59,7 +57,6 @@
   background-color: transparent;
   border-radius: hb-calculate-rems(42px);
   font-weight: hb-theme-font-weight(semibold);
-  margin-top: hb-calculate-rems($hb-gutter-width);
   padding: hb-calculate-rems(12px);
   text-decoration: none;
   text-align: center;

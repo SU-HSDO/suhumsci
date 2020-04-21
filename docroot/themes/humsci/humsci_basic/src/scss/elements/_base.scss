@@ -23,6 +23,13 @@
     --palette--tertiary-reversed-darken-10: #{hb-get-pairing-color("tertiary-reversed-darken-10", $hb-colorful-default, $hc-colorful-pairings)};
     --palette--tertiary-darken-20: #{hb-get-pairing-color("tertiary-darken-20", $hb-colorful-default, $hc-colorful-pairings)};
   }
+
+  @include hb-traditional {
+    // BASE
+    --palette--primary: #{hb-get-pairing-color("primary", $hb-traditional-default, $ht-traditional-pairings)};
+    --palette--secondary: #{hb-get-pairing-color("secondary", $hb-traditional-default, $ht-traditional-pairings)};
+    --palette--tertiary: #{hb-get-pairing-color("tertiary", $hb-traditional-default, $ht-traditional-pairings)};
+  }
 }
 
 html {
@@ -31,11 +38,15 @@ html {
 }
 
 body {
-  @include hb-body--small;
-
   @include hb-colorful {
     font-family: $hb-colorful-font--sans;
   }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
+  }
+
+  @include hb-body--small;
 
   @include grid-media-min('lg') {
     @include hb-body--medium;
@@ -44,6 +55,13 @@ body {
 
 a:not([class]) {
   @include hb-link--inline;
+}
+
+// Target all external URLs
+// The use of `//` allows users to input a vareity of URLs
+// examples: `https://google.com` `http://google.com` and `//google.com`
+a[href*="//"][data-extlink] {
+  @include hb-link--inline($icon: true);
 }
 
 h1:not([class]) {

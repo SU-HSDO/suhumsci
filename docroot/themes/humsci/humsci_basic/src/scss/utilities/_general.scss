@@ -12,10 +12,78 @@
   }
 }
 
+.hb-inline,
+.hb-inline-pipe {
+  margin-bottom: 2rem;
+
+  @include hb-colorful {
+    @include grid-media-min('sm') {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    > div {
+      margin-bottom: hb-calculate-rems(16px);
+      padding-right: hb-calculate-rems(20px);
+    }
+  }
+}
+
+.hb-inline-pipe {
+  > div {
+    padding-right: 0;
+
+    @include grid-media-min('sm') {
+      display: flex;
+    }
+
+    &::after {
+      @include grid-media-min('sm') {
+        margin: 0 hb-calculate-rems(10px);
+        content: '|';
+        @include hb-global-color('color', 'gray-dark');
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 2rem;
+
+      @include grid-media-min('sm') {
+        margin-bottom: initial;
+      }
+
+      &::after {
+        content: '';
+      }
+    }
+  }
+}
+
 .hb-well {
   @include hb-colorful {
     @include hb-global-color('background-color', 'gray-light');
   }
 
+  padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
   border: 0 none;
+}
+
+.hb-divider {
+  @include hb-divider;
+}
+
+// To create a borderless Group block
+.hb-borderless {
+  border: 0 none;
+  padding: 0;
+}
+
+// View utility wrapper class
+.hb-views-divider {
+  .views-row:not(:last-of-type) {
+    @include hb-colorful {
+      @include hb-divider;
+      margin-bottom: hb-calculate-rems(48px);
+    }
+  }
 }

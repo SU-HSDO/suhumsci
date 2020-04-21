@@ -27,42 +27,56 @@
   }
 }
 
-// Used with the decanter-external-link class to add an external link icon
+// The external link icon base implementation which sets the sizing and spacing.
+// This has two use cases.
+// It is used alongside the hb-link--inline mixin when an external icon is needed. The WYSIWYG hs-external-link class is an example of this.
+// And within the fa-ext class in block-layout.scss to add an external link icon.
 @mixin hb-external-link-icon {
-  margin-right: hb-calculate-rems(20px);
+  margin-right: hb-calculate-rems(2px);
 
   @include hb-colorful {
     position: relative;
 
-    &::before {
+    &::after {
       content: '';
       @include hb-icon-background('ext-link', 'tertiary');
-      background-position: center;
-      background-repeat: no-repeat;
-      height: hb-calculate-rems(11px);
-      width: hb-calculate-rems(11px);
       display: inline-block;
-      vertical-align: middle;
-      position: absolute;
-      top: hb-calculate-rems(4px);
-      right: hb-calculate-rems(-18px);
+      position: relative;
+      background-position: center right;
+      background-repeat: no-repeat;
+      background-size: hb-calculate-rems(11px);
+      height: hb-calculate-rems(20px);
+      width: hb-calculate-rems(11px);
+      margin-bottom: hb-calculate-rems(-5px);
+      padding-left: hb-calculate-rems(15px);
     }
 
-    &:hover::before,
-    &:focus::before {
-      @include hb-icon-background('ext-link', 'primary');
+    &:hover::after,
+    &:focus::after {
+      @include hb-icon-background('ext-link', 'tertiary-darken-20');
     }
 
     .hb-local-footer--dark & {
-      &::before {
+      &::after {
         @include hb-icon-background('ext-link', 'tertiary-reversed');
       }
 
-      &:hover::before,
-      &:focus::before {
+      &:hover::after,
+      &:focus::after {
         @include hb-icon-background('ext-link', 'tertiary-highlight');
       }
     }
+  }
+}
+
+// Return a specific color of the fa-ext icon
+// This mixin can be used to trigger the icon to change colors when the
+// containing element it is associated with changes state (such as hover and/or focus).
+@mixin hb-ext-icon-color($color) {
+  .fa-ext::after {
+    @include hb-icon-background('ext-link', $color);
+    background-repeat: no-repeat;
+    background-position: center right;
   }
 }
 

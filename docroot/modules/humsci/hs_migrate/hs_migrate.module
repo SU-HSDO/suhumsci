@@ -32,6 +32,26 @@ function hs_migrate_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Migration callback to just get the current timestamp.
+ *
+ * We use this function in migration callback processes because using `time` as
+ * the callback produces messages about "function accepts 0 arguments, 1
+ * argument passed". So we just have our own callback that takes the argument
+ * from the migration process and does nothing with it.
+ *
+ * @param mixed $arg
+ *   Passed parameter from migration plugin `callback`.
+ *
+ * @return int
+ *   Current timestamp.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\process\Callback::transform()
+ */
+function _hs_migrate_get_time($arg = NULL) {
+  return time();
+}
+
+/**
  * Implements hook_migrate_process_info_alter().
  */
 function hs_migrate_migrate_process_info_alter(array &$definitions) {

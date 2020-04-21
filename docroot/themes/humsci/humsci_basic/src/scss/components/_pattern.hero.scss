@@ -1,10 +1,29 @@
-// If only the image is present (no overlay text) or hero wrapper,
-// make sure vertical margin is present
+// Note: this scss is the base of the hero, AND the carousel patterns
+// If you change something here, you will likely need to change it and override it in the carousel.scss
 .field-hs-hero-image {
+  // For the humsci_colorful theme hero, ensure there is a background color added to the image alone
+  @include hb-colorful {
+    position: relative;
+
+    &::before {
+      @include hb-pairing-color('background-color', 'primary-hero-overlay');
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.9;
+      z-index: $hb-z-index-hero1-overlay;
+    }
+  }
+
+  // For all themes, if only the hero image is present (no overlay text) or hero wrapper,
+  // make sure vertical margin is present on full width layout
   .hs-full-width & {
     // Special negative margin for the hero
     // to get rid of the vertical padding on all basic pages
-    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
+    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 hb-calculate-rems($hb-gutter-width);
 
     img {
       width: 100%;
@@ -13,78 +32,43 @@
 }
 
 .hb-hero-overlay {
-  &--1 {
-    @include clearfix;
-    margin: 0 0 $hb-gutter-width;
-    padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;
+  margin: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width);
+
+  .hs-full-width & {
+    // Special negative margin for the hero
+    // to get rid of the vertical padding on all basic pages
+    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 hb-calculate-rems($hb-gutter-width);
+  }
+
+  @include hb-colorful {
     position: relative;
+    min-height: 60vh;
 
-    @include grid-media-min('md') {
-      padding: 0;
-      display: grid;
-      grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
-      grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
+    @include grid-media-min('sm') {
+      min-height: 55vh;
     }
 
-    @include grid-media-min('xl') {
-      grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
-    }
-
-    .hs-full-width & {
-      // Special negative margin for the hero
-      // to get rid of the vertical padding on all basic pages
-      margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 $hb-gutter-width;
-    }
-
-    &::before,
-    &::after {
-      content: '';
-      display: block;
-    }
-
-    // Offset background color psuedo element
     &::before {
-      @include hb-global-color('background-color', 'gray-light');
+      @include hb-pairing-color('background-color', 'primary-hero-overlay');
+      content: "";
       position: absolute;
-      height: 100%;
-      width: 100%;
       top: 0;
       left: 0;
-      z-index: $hb-z-index-hero1-background;
-
-      @include grid-media-min('md') {
-        position: unset;
-        padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 10%;
-        grid-column-start: 1;
-        grid-column-end: 5;
-        grid-row-start: 1;
-        grid-row-end: 6;
-      }
-    }
-
-    // Secondary color block psuedo element that shows up in the grid
-    @include hb-colorful {
-      &::after {
-        z-index: $hb-z-index-hero1-overlay;
-        @include hb-pairing-color('background-color', 'secondary');
-
-        @include grid-media-min('md') {
-          grid-column-start: 1;
-          grid-column-end: 2;
-          grid-row-start: 3;
-          grid-row-end: 4;
-        }
-      }
+      width: 100%;
+      height: 100%;
+      z-index: $hb-z-index-hero-fallback;
     }
   }
 
-  &__image-wrapper,
-  &__text {
-    z-index: $hb-z-index-hero1-overlay;
+  @include hb-colorful {
+    &__image-wrapper,
+    &__text {
+      z-index: $hb-z-index-hero1-overlay;
+    }
   }
 
   &__image-wrapper {
-    // If inside an img wrapper,
+    // For all themes, if inside an img wrapper,
     // no margin should be added
     .field-hs-hero-image {
       .hs-full-width & {
@@ -92,149 +76,116 @@
       }
     }
 
-    .hb-hero-overlay--1 & {
-      position: relative;
-
-      @include hb-colorful {
-        // On mobile, make the secondary color box out of psuedo element,
-        // then on 'md' breakpoint, it becomes part of the grid
-        &::before {
-          display: block;
-          bottom: 0;
-          left: -8.75%;
-          z-index: $hb-z-index-hero1-overlay;
-          @include psuedo-background-box('secondary', 50%, 8.75%);
-
-          @include grid-media-min('md') {
-            display: none;
-          }
-        }
-      }
-
-      @include grid-media-min('md') {
-        // This will make sure that the image fills the entire area
-        display: flex;
-        margin-top: 0;
-        grid-column-start: 3;
-        grid-column-end: 6;
-        grid-row-start: 2;
-        grid-row-end: 5;
-        padding-top: 0;
-      }
-
+    @include hb-colorful {
       img {
         height: 100%;
         width: 100%;
+        min-height: 60vh;
+        object-fit: cover;
 
-        @include grid-media-min('md') {
+        @include grid-media-min('sm') {
           min-height: 55vh;
-          object-fit: cover;
         }
       }
     }
   }
 
   &__text {
-    display: block;
-
     @include hb-colorful {
+      display: block;
       @include hb-global-color('color', 'white');
-      @include hb-pairing-color('background-color', 'primary-hero-overlay');
-    }
-
-    .hb-hero-overlay--1 & {
-      padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2);
-      position: relative;
-
-      @include grid-media-min('md') {
-        transform: none;
-        grid-column-start: 2;
-        grid-column-end: 4;
-        grid-row-start: 4;
-        grid-row-end: 7;
-        padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
-      }
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      @include hb-page-width;
 
       h2 {
-        @include hb-heading-4;
-        margin-top: hb-calculate-rems(24px);
+        font-weight: hb-theme-font-weight(semibold);
+        font-size: hb-calculate-rems(27px);
+        line-height: 117%;
+        margin: 0 0 hb-calculate-rems($hb-gutter-width--small);
+
+        @include grid-media-min('md') {
+          @include hb-heading-2;
+          margin: 0 0 hb-calculate-rems($hb-gutter-width);
+        }
 
         @include grid-media-min('lg') {
-          @include hb-heading-3;
-          margin-top: hb-calculate-rems(28px);
+          @include hb-heading-1;
         }
       }
 
-      @include hb-colorful {
-        // Line decoration pseudo element
-        &::after {
-          display: block;
-          top: hb-calculate-rems(32px);
-          @include psuedo-background-box('tertiary-reversed', hb-calculate-rems(4px), hb-calculate-rems(65px));
-
-          @include grid-media-min('md') {
-            top: hb-calculate-rems(56px);
-          }
-        }
-      }
-    }
-
-    ul {
-      li {
-        &::before {
-          @include hb-colorful {
+      ul {
+        li {
+          &::before {
             @include hb-pairing-color('background-color', 'secondary');
           }
         }
       }
-    }
 
-    ol {
-      li {
-        &::before {
-          @include hb-colorful {
+      ol {
+        li {
+          &::before {
             @include hb-pairing-color('color', 'secondary-active');
           }
         }
       }
-    }
 
-    .text-long,
-    a {
-      font-size: hb-calculate-rems(16px);
+      h2,
+      .field-hs-hero-body {
+        width: 90%;
 
-      @include grid-media-min('lg') {
-        font-size: hb-calculate-rems(18px);
-      }
-    }
-
-    a {
-      @include hb-colorful {
-        @include hb-pairing-color('color', 'tertiary-reversed');
-
-        &:hover,
-        &:focus {
-          box-shadow: none;
-          @include hb-pairing-color('color', 'tertiary-highlight');
+        @include grid-media-min('sm') {
+          width: 80%;
         }
-      }
-    }
 
-    .field-hs-hero-link {
-      a,
-      button {
-        max-width: 80%;
-
-        @include hb-colorful {
-          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
+        @include grid-media-min('md') {
+          width: 70%;
         }
 
         @include grid-media-min('lg') {
-          max-width: 75%;
+          width: 50%;
         }
+      }
 
-        .fa-ext {
-          display: none;
+      .field-hs-hero-body,
+      a {
+        font-size: hb-calculate-rems(16px);
+
+        @include grid-media-min('lg') {
+          font-size: hb-calculate-rems(18px);
+        }
+      }
+
+      a {
+        @include hb-pairing-color('color', 'tertiary-reversed');
+        background-image: none;
+
+        &:hover,
+        &:focus {
+          @include hb-pairing-color('color', 'tertiary-highlight');
+        }
+      }
+
+      .field-hs-hero-link {
+        a,
+        button {
+          max-width: 80%;
+          margin-top: hb-calculate-rems($hb-gutter-width--small);
+          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
+
+          @include grid-media-min('md') {
+            margin-top: hb-calculate-rems($hb-gutter-width);
+          }
+
+          @include grid-media-min('lg') {
+            max-width: 75%;
+          }
+
+          .fa-ext {
+            display: none;
+          }
         }
       }
     }

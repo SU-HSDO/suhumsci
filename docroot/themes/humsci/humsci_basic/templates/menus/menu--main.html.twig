@@ -28,8 +28,47 @@
   {% if items is iterable %}
     {{ menus.nav_menu(items, 1, 'hb-main-nav') }}
   {% else %}
-    {# If custom markup is provided, emit it as is #}
+    {# If custom markup is provided, emit it as-is #}
     {{ items }}
   {% endif %}
   {% endspaceless %}
 </nav>
+
+{#
+  All menus in the main nav are expanded by default, which allows navigation if JavaScript is
+  disabled. If JavaScript is enabled, the code below will collapse the extraneous navigation.
+  We run this inline to ensure it runs immediately after the elements are added to the DOM,
+  preventing unsightly flashing on the page.
+#}
+<script>
+  (function() {
+    const togglers = document.querySelectorAll('.hb-nested-toggler');
+    const isBelowMobileNavBreakpoint = (window.innerWidth < 992);
+
+    // Collapse the main hamburger nav on mobile
+    if (isBelowMobileNavBreakpoint) {
+      document.querySelector('.hb-main-nav__toggle').setAttribute('aria-expanded', false);
+      document.querySelector('.hb-main-nav__menu-lv1').setAttribute('aria-hidden', true);
+    }
+
+    // Collapse the subnavs at all screen sizes
+    if (togglers) {
+      for (let i = 0; i < togglers.length; i += 1) {
+        const toggler = togglers[i];
+        const togglerID = toggler.getAttribute('id');
+        const togglerContent = document.querySelector(`[aria-labelledby="${togglerID}"]`);
+        const subnavIsActive = toggler.parentNode.classList.contains('hb-main-nav__item--active-trail') ? true : false;
+
+        if (!togglerContent) {
+          return;
+        }
+
+        // On page load, all menus in the active section should be expanded on mobile. All other menus should be hidden.
+        const isExpanded = (subnavIsActive && isBelowMobileNavBreakpoint) ? true : false;
+
+        toggler.setAttribute('aria-expanded', isExpanded);
+        togglerContent.setAttribute('aria-hidden', !isExpanded);
+      }
+    }
+  })();
+</script>

@@ -25,7 +25,7 @@ This theme contains its own node module dependencies and build system which is s
 
 ## Builds
 
-Frontend assets are built using the Grunt task runner, but are run using npm scripts as shortcuts. CSS assets are compiled to their respective child theme `css/` directory. JS assets are compiled to the `src/js/scripts.js` file.
+Frontend assets are built using the Grunt task runner, but are run using npm scripts as shortcuts. CSS assets are compiled to their respective child theme `css/` directory. JS assets are compiled to the `scripts/build/scripts.js` file.
 
 - `npm run build` - Compile Sass  and JS for production
 - `npm run watch` - Compile a CSS and JS build and watch for changes in the existing `.scss` or `.js` files

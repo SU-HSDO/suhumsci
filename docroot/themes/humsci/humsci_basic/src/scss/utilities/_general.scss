@@ -94,7 +94,43 @@
     width: auto;
 
     @include grid-media-min('lg') {
-      margin-left: 28px;
+      margin-left: hb-calculate-rems(28px);
+    }
+  }
+}
+
+.hb-image-full {
+  img {
+    max-height: 100%;
+  }
+}
+
+.hb-image-medium {
+  img {
+    max-height: 100%;
+
+    @include grid-media-min('sm') {
+      width: 50%;
+    }
+
+    @include grid-media-min('lg') {
+      max-height: 32.5rem;
+      width: 100%;
+    }
+  }
+}
+
+.hb-image-large {
+  img {
+    max-height: 100%;
+
+    @include grid-media-min('sm') {
+      width: 50%;
+    }
+
+    @include grid-media-min('lg') {
+      max-height: 45rem;
+      width: 100%;
     }
   }
 }

@@ -1,17 +1,32 @@
 // Row Paragraph Styles
 .hs-paragraph-style {
-  &--hs-well {
+  .field-hs-row-components {
+    @include hb-page-width;
+  }
+
+  &--well,
+  &--well-full-width {
     @include hb-colorful {
       @include hb-global-color('background-color', 'gray-light');
     }
 
     padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
-    width: 100%;
+  }
 
-    .hb-three-column--no-sidebar & {
-      left: calc(-50vw + 50%);
-      position: relative;
-      width: 100vw;
+  &--well {
+    width: 100%;
+  }
+
+  &--well-full-width {
+    left: calc(-50vw + 50%);
+    position: relative;
+    width: 100vw;
+
+    .hb-three-column--one-sidebar &,
+    .hb-three-column--two-sidebar & {
+      left: inherit;
+      position: static;
+      width: 100%;
     }
   }
 }

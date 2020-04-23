@@ -88,49 +88,14 @@
   }
 }
 
-.hb-image-fit-contain {
-  img {
-    object-fit: contain;
-    width: auto;
-
-    @include grid-media-min('lg') {
-      margin-left: hb-calculate-rems(28px);
-    }
-  }
-}
-
-.hb-image-full {
-  img {
-    max-height: 100%;
-  }
-}
-
-.hb-image-medium {
-  img {
-    max-height: 100%;
-
-    @include grid-media-min('sm') {
-      width: 50%;
-    }
-
-    @include grid-media-min('lg') {
-      max-height: 32.5rem;
-      width: 100%;
-    }
-  }
-}
-
-.hb-image-large {
-  img {
-    max-height: 100%;
-
-    @include grid-media-min('sm') {
-      width: 50%;
-    }
-
-    @include grid-media-min('lg') {
-      max-height: 45rem;
-      width: 100%;
+// Used specifically on node detail pages when the image
+// is placed within the main content of the page in layout builder
+.hb-main-body-detail-image {
+  .hb-three-column-w-image & {
+    @include grid-media-min('md') {
+      @include clearfix;
+      float: right;
+      margin: 0 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
     }
   }
 }

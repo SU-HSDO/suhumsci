@@ -52,37 +52,17 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    // align-items: flex-start;
-
-    @include grid-media-min('sm') {
-      background-color: mediumpurple;
-    }
 
     @include grid-media-min('md') {
-      background-color: mediumaquamarine;
       flex-wrap: nowrap;
-    }
-
-    .hb-three-column-w-image--one-sidebar & {  // TODO: remove if nowrap is added above
-      @include grid-media-min('lg') {
-        flex-wrap: nowrap;
-      }
-    }
-
-    .hb-three-column-w-image--no-sidebar & { // TODO: may be able to remove
-      @include grid-media-min('md') {
-        flex-wrap: nowrap;
-      }
     }
   }
 
   &__main-top-text {
-    // width: 100%;
     margin: 0 hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
-        // width: 60%;
         display: flex;
         flex-direction: column;
       }
@@ -90,7 +70,6 @@
 
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media-min('md') {
-        // width: 60%;
         display: flex;
         flex-direction: column;
       }
@@ -98,8 +77,6 @@
   }
 
   &__main-top-image {
-    // width: 100%;
-
     // Override class for WYSIWYG defaults
     &.align {
       &-right,
@@ -114,36 +91,28 @@
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
-        // width: 40%;
         margin-left: hb-calculate-rems(20px);
       }
     }
 
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media-min('md') {
-        // width: 40%;
         margin-left: hb-calculate-rems(20px);
       }
     }
 
     img {
       display: block;
-
-      // @supports (object-fit: cover) {
-      //   object-fit: cover;
-      //   width: 100%;
-      //   max-height: hb-calculate-rems(375px);
-
-      //   @include grid-media-min('md') {
-      //     max-height: hb-calculate-rems(250px);
-      //   }
-      // }
     }
   }
 
   &__main-body {
     .hb-three-column-w-image--no-sidebar:not(.hs-full-width) & {
       max-width: hb-calculate-rems($hb-three-column-w-image-main-body-width);
+    }
+
+    .layout__region {
+      margin-bottom: hb-calculate-rems(20px);
     }
   }
 

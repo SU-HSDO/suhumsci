@@ -274,6 +274,11 @@ button.hs-more-link,
   font-size: hb-calculate-rems(18px);
   text-decoration: none;
 
+  // Overrides button styles when used on a button
+  border: none;
+  background: none;
+  padding: 0;
+
   @include hb-colorful {
     @include hb-pairing-color('color', 'secondary');
 
@@ -287,7 +292,7 @@ button.hs-more-link,
 
       @include hb-icon-link-arrow('secondary');
       background-size: 85%;
-      transition: transform 200ms ease-in-out;
+      transition: transform $hb-animation-duration $hb-animation-timing-function;
     }
 
     &:hover,

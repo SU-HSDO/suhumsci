@@ -2,7 +2,7 @@
   // These variables will be used to style color pairings.
   // They will be updated depending on the parent color pairing.
   // We have to set the variables here and give them default values.
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     // BASE
     --palette--primary: #{hb-get-pairing-color("primary", $hb-colorful-default, $hc-colorful-pairings)};
     --palette--secondary: #{hb-get-pairing-color("secondary", $hb-colorful-default, $hc-colorful-pairings)};
@@ -53,7 +53,7 @@ html {
 }
 
 body {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-family: $hb-colorful-font--sans;
   }
 

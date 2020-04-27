@@ -12,24 +12,22 @@ a.button {
     line-height: 1;
     min-height: auto;
 
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'secondary', $important: true);
-      border-bottom: $hb-thin-border;
-      @include hb-pairing-color('border-bottom-color', 'secondary');
+    @include hb-pairing-color('color', 'secondary', $important: true);
+    border-bottom: $hb-thin-border;
+    @include hb-pairing-color('border-bottom-color', 'secondary');
 
-      &:hover {
-        @include hb-pairing-color('color', 'secondary-darken-12');
-        @include hb-pairing-color('border-bottom-color', 'secondary-darken-12');
-      }
+    &:hover {
+      @include hb-pairing-color('color', 'secondary-darken-12');
+      @include hb-pairing-color('border-bottom-color', 'secondary-darken-12');
+    }
 
-      &:focus {
-        border-bottom-color: transparent;
-      }
+    &:focus {
+      border-bottom-color: transparent;
+    }
 
-      &:hover,
-      &:focus {
-        cursor: pointer;
-      }
+    &:hover,
+    &:focus {
+      cursor: pointer;
     }
   }
 }

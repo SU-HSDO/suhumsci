@@ -91,16 +91,20 @@
   &-font-splash {
     @include hb-heading-1;
 
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'primary');
+    @include grid-media-min('md') {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+    }
 
-      @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
-      }
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('color', 'primary');
 
       .hb-local-footer--dark & {
         @include hb-global-color('color', 'gray-light');
       }
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('color', 'gray-dark');
     }
   }
 

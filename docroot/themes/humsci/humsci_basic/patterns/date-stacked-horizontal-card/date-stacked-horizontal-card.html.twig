@@ -47,39 +47,36 @@
       </div>
     {% endif %}
 
-    {% if time %}
       <div class="hb-card__subcontent">
-
-        {% if time['#sources'] %}
-          {% for field in time['#sources'] %}
-            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
-              <div class="hb-card__subcontent-detail">
-                {{ field }}
-              </div>
+        {% if time %}
+          <div class="hb-card__subcontent-detail">
+            {% if time['#sources'] %}
+              {% for field in time['#sources'] %}
+                {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+                  {{ field }}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+                {{ time }}
+              {% endif %}
             {% endif %}
-          {% endfor %}
-        {% else %}
-          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+          </div>
+
+          {% if location|render|striptags('<drupal-render-placeholder><a>')|trim %}
             <div class="hb-card__subcontent-detail">
-              {{ time }}
+              {{ location }}
             </div>
           {% endif %}
-        {% endif %}
 
-        {% if location|render|striptags('<drupal-render-placeholder><a>')|trim %}
-          <div class="hb-card__subcontent-detail">
-            {{ location }}
-          </div>
-        {% endif %}
+          {% if speaker|render|striptags('<drupal-render-placeholder><a>')|trim %}
+            <div class="hb-card__subcontent-detail">
+              {{ speaker }}
+            </div>
+          {% endif %}
 
-        {% if speaker|render|striptags('<drupal-render-placeholder><a>')|trim %}
-          <div class="hb-card__subcontent-detail">
-            {{ speaker }}
-          </div>
         {% endif %}
-
       </div>
-    {% endif %}
 
     {% if description %}
       <div class="hb-card__description">

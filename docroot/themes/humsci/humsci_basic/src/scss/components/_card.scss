@@ -94,18 +94,32 @@
     // used to style the date, time, location, and speaker
     // within the date stacked horizontal UI pattern
     &-detail {
-      width: 50%;
-      margin-bottom: hb-calculate-rems(16px);
-      padding-right: hb-calculate-rems(11px);
+      padding-right: hb-calculate-rems(28px);
 
-      &:last-child {
-        margin-bottom: 0;
+      .views-label {
+        @include visually-hidden;
       }
 
-      @include grid-media-min('sm') {
-        &:nth-child(n + 3) {
-          margin-bottom: 0;
+      .field-content {
+        font-size: hb-calculate-rems(16px);
+        padding-left: hb-calculate-rems(28px);
+      }
+
+      // only apply calendar icon when the label exists
+      .views-label-field-hs-event-date + .field-content {
+        @include hb-colorful {
+          @include hb-icon-calendar($color: 'secondary');
         }
+      }
+
+      // only apply location pin icon when the label exists
+      .views-label-field-hs-event-location + .field-content {
+        background-color: magenta;
+      }
+
+      // only apply speaker icon when the label exists
+      .views-label-field-hs-event-speaker + .field-content {
+        background-color: mediumspringgreen;
       }
     }
   }

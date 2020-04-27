@@ -1,0 +1,28 @@
+// Row Paragraph Styles
+.hs-paragraph-style {
+  .field-hs-row-components {
+    @include hb-page-width;
+  }
+
+  &--well,
+  &--well-full-width {
+    @extend .hb-well;
+  }
+
+  &--well {
+    width: 100%;
+  }
+
+  &--well-full-width {
+    left: calc(-50vw + 50%);
+    position: relative;
+    width: 100vw;
+
+    .hb-three-column--one-sidebar &,
+    .hb-three-column--two-sidebar & {
+      left: inherit;
+      position: static;
+      width: 100%;
+    }
+  }
+}

@@ -9,6 +9,20 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
 /**
+ * Implements template_preprocess_paragraph().
+ */
+function hs_row_display_preprocess_paragraph__hs_row(&$variables) {
+  $paragraph = $variables['paragraph'];
+
+  if (isset($paragraph->field_paragraph_style)) {
+    if (!$paragraph->field_paragraph_style->isEmpty()) {
+      $style = $paragraph->field_paragraph_style->value;
+      $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $style;
+    }
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_view().
  */
 function hs_row_display_paragraph_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {

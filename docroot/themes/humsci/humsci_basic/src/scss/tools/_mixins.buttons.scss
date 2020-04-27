@@ -2,39 +2,47 @@
   @include unbuttonize;
   display: inline-block;
   padding: 0 hb-calculate-rems(20px);
-  font-family: $hb-colorful-font--sans;
   font-weight: hb-theme-font-weight(semibold);
   text-align: center;
+  border-width: hb-calculate-rems(2px);
+  border-style: solid;
+  @include hb-global-color('color', 'white', $important: true);
+  @include hb-pairing-color('background-color', 'secondary');
+  @include hb-pairing-color('border-color', 'secondary');
+  transition: 125ms background-color ease-out, 125ms border-color ease-out;
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+    @include hb-pairing-color('background-color', 'secondary-darken-12');
+    @include hb-pairing-color('border-color', 'secondary-darken-12');
+  }
+
+  &:active,
+  &:focus {
+    @include hb-pairing-color('background-color', 'secondary');
+    @include hb-global-color('border-color', 'white');
+  }
 
   @include hb-colorful {
-    @include hb-global-color('color', 'white', $important: true);
-    @include hb-pairing-color('background-color', 'secondary');
-    @include hb-pairing-color('border-color', 'secondary');
+    font-family: $hb-colorful-font--sans;
     border-radius: $hb-button-border-radius;
-    border-width: hb-calculate-rems(2px);
-    border-style: solid;
 
-    transition: 125ms background-color ease-out, 125ms border-color ease-out;
-
-    &:hover {
-      @include hb-pairing-color('background-color', 'secondary-darken-12');
-      @include hb-pairing-color('border-color', 'secondary-darken-12');
+    &:hover,
+    &:focus {
       background-image: none;
     }
 
     &:active,
     &:focus {
-      @include hb-pairing-color('background-color', 'secondary');
-      @include hb-global-color('border-color', 'white');
       box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
       background-image: none;
     }
+  }
 
-    &:hover,
-    &:focus {
-      cursor: pointer;
-    }
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
   }
 }
 
@@ -63,18 +71,15 @@
   text-decoration: none;
   text-align: center;
   transition: all 200ms ease-in-out;
+  @include hb-pairing-color('color', $button-color);
+  @include hb-pairing-color('border-color', $button-color);
+  border-width: 3px;
+  border-style: solid;
 
-  @include hb-colorful {
-    @include hb-pairing-color('color', $button-color);
-    @include hb-pairing-color('border-color', $button-color);
-    border-width: 3px;
-    border-style: solid;
-
-    &:hover,
-    &:focus {
-      @include hb-pairing-color('border-color', $button-color-hover);
-      @include hb-pairing-color('color', $button-color-hover);
-      box-shadow: none;
-    }
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('border-color', $button-color-hover);
+    @include hb-pairing-color('color', $button-color-hover);
+    box-shadow: none;
   }
 }

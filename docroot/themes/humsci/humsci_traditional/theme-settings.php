@@ -27,8 +27,7 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     '#type' => 'select',
     '#title' => t('Color Pairing'),
     '#options' => [
-      'ocean' => t('Default'),
-      'mountain' => t('Light'),
+      'cardinal' => t('Cardinal'),
     ],
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];

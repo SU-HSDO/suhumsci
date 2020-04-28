@@ -9,15 +9,16 @@ const columnHeaders = document.querySelectorAll(`${div}, ${span}, ${paragraph}`)
 // retrieve all rows
 const tableRows = document.querySelectorAll('.hb-table-row');
 
-// For each row in the table
-tableRows.forEach((row) => {
-  // find the row headers in each cell
-  const tableRowHeaders = [...row.querySelectorAll('.hb-table-row__heading')];
-  // we need i to step through columnHeaders and get the correct heading text
-  let i = 0;
 
-  tableRowHeaders.forEach((header) => {
-    header.innerHTML = columnHeaders[i].innerHTML;
-    i += 1;
-  });
-});
+if (tableRows) {
+  // For each row in the table
+  for (let i = 0; i < tableRows.length; i += 1) {
+    // find the row headers in each cell
+    const tableRowHeaders = tableRows[i].querySelectorAll('.hb-table-row__heading');
+
+    // we need h to step through columnHeaders and get the correct heading text
+    for (let h = 0; h < tableRowHeaders.length; h += 1) {
+      tableRowHeaders[h].innerHTML = columnHeaders[h].innerHTML;
+    }
+  }
+}

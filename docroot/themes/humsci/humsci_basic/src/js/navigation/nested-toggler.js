@@ -8,7 +8,7 @@ if (togglers) {
   for (let i = 0; i < togglers.length; i += 1) {
     const toggler = togglers[i];
     const togglerID = toggler.getAttribute('id');
-    const togglerContent = document.querySelector(`[aria-labelledby="${togglerID}"]`);
+    const togglerContent = document.querySelector("[aria-labelledby=\"".concat(togglerID, "\"]"));
     const togglerParent = toggler.parentNode;
 
     // Togglers should always have content but in the event that they don't we

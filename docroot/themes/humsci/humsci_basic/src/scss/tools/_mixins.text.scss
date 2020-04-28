@@ -211,48 +211,14 @@
   background-size: 100% 200%;
   background-position-y: -100%;
   background-repeat: no-repeat;
+  @include hb-pairing-color('color', 'tertiary');
 
-  // TODO need a mixin or function for all this
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-pairing-color('color', 'tertiary');
-    // For links without an icon
-    // Fallback for IE
-    background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 50%);
-
-    // Color Pairing Custom Variable
-    background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
-
-    // For links with an icon
-    // Changes the value passed into background-image to
-    // create space for the external link space to exist
-    @if $icon {
-      // Fallback for IE
-      background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 16px);
-
-      // Color Pairing Custom Variable
-      background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
-    }
+    @include hb-link-background-image($icon, $hb-colorful-default, $hc-colorful-pairings);
   }
 
   @include hb-traditional {
-    @include hb-pairing-color('color', 'tertiary');
-    // For links without an icon
-    // Fallback for IE
-    background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $hb-traditional-default, $ht-traditional-pairings) 50%);
-
-    // Color Pairing Custom Variable
-    background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
-
-    // For links with an icon
-    // Changes the value passed into background-image to
-    // create space for the external link space to exist
-    @if $icon {
-      // Fallback for IE
-      background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $hb-traditional-default, $ht-traditional-pairings) 16px);
-
-      // Color Pairing Custom Variable
-      background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
-    }
+    @include hb-link-background-image($icon, $hb-traditional-default, $ht-traditional-pairings);
   }
 
   &:hover,

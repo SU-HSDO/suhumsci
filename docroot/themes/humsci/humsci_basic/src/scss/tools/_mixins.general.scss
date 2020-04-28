@@ -106,3 +106,24 @@
   border-bottom: $hb-thin-border;
   @include hb-global-color('border-color', 'gray');
 }
+
+// Used for link typography mixins across all themes
+// both with and without icons
+@mixin hb-link-background-image($icon, $default-palette, $palette-array) {
+  // For links without an icon
+  // Fallback for IE
+  background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) 50%);
+
+  // Color Pairing Custom Variable
+  background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
+  // For links with an icon
+  // Changes the value passed into background-image to
+  // create space for the external link space to exist
+  @if $icon {
+    // Fallback for IE
+    background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) 16px);
+
+    // Color Pairing Custom Variable
+    background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
+  }
+}

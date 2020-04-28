@@ -47,9 +47,9 @@
       </div>
     {% endif %}
 
-      <div class="hb-card__subcontent hb-card__subcontent--label-icon">
+      <div class="hb-card__subcontent hb-card__subcontent--with-icons">
         {% if time %}
-          <div class="hb-card__subcontent-detail">
+          <div class="hb-card__subcontent-detail hb-card__icon hb-card__icon--date">
             {% if time['#sources'] %}
               {% for field in time['#sources'] %}
                 {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
@@ -64,13 +64,13 @@
           </div>
 
           {% if location|render|striptags('<drupal-render-placeholder><a>')|trim %}
-            <div class="hb-card__subcontent-detail">
+            <div class="hb-card__subcontent-detail hb-card__icon hb-card__icon--location">
               {{ location }}
             </div>
           {% endif %}
 
           {% if speaker|render|striptags('<drupal-render-placeholder><a>')|trim %}
-            <div class="hb-card__subcontent-detail">
+            <div class="hb-card__subcontent-detail hb-card__icon hb-card__icon--speaker">
               {{ speaker }}
             </div>
           {% endif %}

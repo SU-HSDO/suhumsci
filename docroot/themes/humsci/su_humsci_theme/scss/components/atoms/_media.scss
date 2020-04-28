@@ -27,4 +27,29 @@
   .align-right & {
     margin: 0 0 1em 1em;
   }
+
+  &.file {
+    a {
+      &:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f15c";
+        margin-right: 10px;
+      }
+
+      &[href*=".pdf"]:before {
+        content: "\f1c1";
+      }
+
+      &[href*=".doc"],
+      &[href*=".txt"],
+      &[href*=".rtf"] {
+        content: "\f1c2";
+      }
+
+      &[href*=".xls"],
+      &[href*=".csv"] {
+        content: "\f1c3";
+      }
+    }
+  }
 }

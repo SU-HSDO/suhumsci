@@ -1,6 +1,7 @@
 // Note: In the event that there is no JS enabled we want to show the mobile
-// navigation with all links being visible. We use the .js class on the HTML
-// element to only show large screen styles if JS is enabled.
+// navigation, with all links being visible, at all screen sizes. The desktop
+// styles require two things: 1) larger screen widths and 2) JS to be enabled.
+// Thus we require media queries AND the .js class to show these larger screen styles.
 .hb-main-nav {
   position: relative;
   font-size: hb-calculate-rems(18px);
@@ -395,5 +396,22 @@
         right: 0;
       }
     }
+  }
+}
+
+// If JS is enabled, but the menu JavaScript is still loading, we preemptively
+// force-collapse all menus to prevent a flash of expanded menu content. This
+// class gets removed once the menu JS has loaded and manually collapsed the menus.
+.js .hb-main-nav--is-still-loading {
+  .hb-main-nav__menu-lv1 {
+    display: none;
+
+    @include grid-media-min('lg') {
+      display: flex; // the default value defined above.
+    }
+  }
+
+  .hb-main-nav__menu-container {
+    display: none;
   }
 }

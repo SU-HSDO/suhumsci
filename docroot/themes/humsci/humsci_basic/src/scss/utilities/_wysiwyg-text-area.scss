@@ -216,46 +216,25 @@ button.hs-secondary-button,
   text-decoration: none;
   padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   background-color: transparent;
-
-  @include hb-colorful {
-    @include hb-pairing-color('color', 'secondary', $important: true);
-
-    .hb-local-footer--dark & {
-      @include hb-pairing-color('color', 'tertiary-reversed');
-      @include hb-pairing-color('border-color', 'tertiary-reversed');
-    }
-  }
+  @include hb-pairing-color('color', 'secondary');
 
   &:hover {
-    @include hb-colorful {
-      @include hb-global-color('color', 'white', $important: true);
-      @include hb-pairing-color('background-color', 'secondary');
-      @include hb-pairing-color('border-color', 'secondary');
-
-      .hb-local-footer--dark & {
-        background-color: transparent;
-
-        @include hb-pairing-color('color', 'secondary-highlight');
-        @include hb-pairing-color('border-color', 'secondary-highlight');
-      }
-    }
+    @include hb-global-color('color', 'white');
+    @include hb-pairing-color('background-color', 'secondary');
+    @include hb-pairing-color('border-color', 'secondary');
   }
 
   &:active,
   &:focus {
     background-color: transparent;
+    @include hb-pairing-color('color', 'secondary');
+    @include hb-global-color('border-color', 'white');
+  }
 
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'secondary');
-      @include hb-global-color('border-color', 'white');
-
-      .hb-local-footer--dark & {
-        background-color: transparent;
-
-        @include hb-pairing-color('color', 'secondary-highlight-darken');
-        @include hb-pairing-color('border-color', 'secondary-highlight-darken');
-      }
-    }
+  .hb-local-footer--dark & {
+    // This mixin includes the hover and focus states.
+    @include hb-border-button('tertiary-reversed', 'secondary-highlight');
+    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   }
 }
 

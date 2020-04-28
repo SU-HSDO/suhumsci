@@ -1,3 +1,4 @@
-import './menu-toggle';
-import './nested-toggler';
+import './main-menu-toggle';
+import './main-menu-nested-toggler';
+import './collapse-main-menu';
 import './secondary-toggler';

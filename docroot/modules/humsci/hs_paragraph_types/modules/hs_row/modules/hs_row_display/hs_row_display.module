@@ -14,10 +14,11 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 function hs_row_display_preprocess_paragraph__hs_row(&$variables) {
   $paragraph = $variables['paragraph'];
 
-  if (isset($paragraph->field_paragraph_style)) {
-    if (!$paragraph->field_paragraph_style->isEmpty()) {
-      $style = $paragraph->field_paragraph_style->value;
-      $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $style;
+  if ($paragraph->hasField('field_paragraph_style')) {
+    $row_style = $paragraph->get('field_paragraph_style')->getString();
+
+    if (!empty($row_style)) {
+      $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $row_style;
     }
   }
 }

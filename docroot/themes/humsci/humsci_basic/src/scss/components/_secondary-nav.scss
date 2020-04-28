@@ -21,28 +21,20 @@
     }
   }
 
+  &__menu-container {
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
   &__menu {
     background-color: transparent;
     list-style-type: none;
     padding-left: hb-calculate-rems(16px);
-    display: none;
-
-    .no-js & {
-      // no JS - keep all menus expanded
-      display: block;
-    }
-  }
-
-  .su-secondary-nav__item--expanded {
-    > .hb-secondary-nav__menu {
-      display: block;
-    }
   }
 
   &__menu-lv1 {
     padding-left: 0;
-    // always show top menu
-    display: block;
 
     @include hb-colorful {
       border-top: $hb-thin-border;
@@ -130,41 +122,24 @@
     }
   }
 
-  &__toggle,
-  .su-nav-toggle {
-    // Use Decanter classes for Accordion Button JS
-    margin: 0;
+  &__button {
+    @include unbuttonize;
+    @include hb-menu-icon-wrapper(48px, 48px);
+    @include hb-menu-plus-icon;
     cursor: pointer;
-    font-size: 0;
-    font-weight: hb-theme-font-weight(regular);
-    background: transparent;
-    border: 0 none;
-    top: hb-calculate-rems(15px);
-    right: hb-calculate-rems(15px);
+
     position: absolute;
+    top: hb-calculate-rems(3px);
+    right: 0;
 
-    &::before {
-      content: '';
-      background-repeat: no-repeat;
-      background-position: center right;
-      background-size: hb-calculate-rems(18px);
-      @include hb-icon-background('plus', 'gray-dark');
-      height: hb-calculate-rems(18px);
-      width: hb-calculate-rems(18px);
-      display: block;
-      transform: rotate(0deg);
-      transition: transform $hb-animation-duration $hb-animation-timing-function;
-
-      @include hb-colorful {
-        @include hb-global-color('color', 'gray-dark');
-      }
+    // If there is no JS then the navigation is automatically expanded and
+    // toggle buttons are unnecessary.
+    .no-js & {
+      display: none;
     }
 
     &[aria-expanded="true"] {
-      &::before {
-        transform: rotate(180deg);
-        @include hb-icon-background('minus', 'gray-dark');
-      }
+      @include hb-menu-minus-icon;
     }
   }
 }

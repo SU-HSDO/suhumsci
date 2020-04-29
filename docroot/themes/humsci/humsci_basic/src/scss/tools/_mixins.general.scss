@@ -38,68 +38,77 @@
   }
 }
 
+// Adds a background linear gradient for use in the
+// vertical linked card
+// The gradient adds a 20px height white block at the top of the linked card
+// so that the title looks like it has a negative margin on the top when
+// there isn't an image.
+@mixin hb-vertical-card-background-block($white, $fallback, $background) {
+  // The gradient looks intimidating but it's only because of all the mixins
+  // we have to use. If we get rid of those it looks more like this:
+  // linear-gradient(to bottom, white, white 20px, traditional-color 20px);
+  background-image: linear-gradient(to bottom, $white, $white hb-calculate-rems(20px), $fallback hb-calculate-rems(20px));
+  background-image: linear-gradient(to bottom, $white, $white hb-calculate-rems(20px), $background hb-calculate-rems(20px));
+}
+
 @mixin hb-unordered-list {
-  @include hb-colorful {
-    list-style-type: none;
-    margin: 0 0 hb-calculate-rems(32px);
+  list-style-type: none;
+  margin: 0 0 hb-calculate-rems(32px);
 
-    ul {
-      margin: hb-calculate-rems(10px) 0 0;
-    }
+  ul {
+    margin: hb-calculate-rems(10px) 0 0;
+  }
 
-    li {
-      position: relative;
-      line-height: 122%;
-      margin-bottom: hb-calculate-rems(10px);
+  li {
+    position: relative;
+    line-height: 122%;
+    margin-bottom: hb-calculate-rems(10px);
 
-      &::before {
-        content: '';
-        display: block;
-        height: hb-calculate-rems(6px);
-        width: hb-calculate-rems(6px);
-        border-radius: 50%;
-        @include hb-pairing-color('background-color', 'secondary');
+    &::before {
+      content: '';
+      display: block;
+      height: hb-calculate-rems(6px);
+      width: hb-calculate-rems(6px);
+      border-radius: 50%;
+      @include hb-pairing-color('background-color', 'secondary');
 
-        position: absolute;
-        left: hb-calculate-rems(-18px);
-        top: hb-calculate-rems(8px);
+      position: absolute;
+      left: hb-calculate-rems(-18px);
+      top: hb-calculate-rems(8px);
 
-        .hb-local-footer--dark & {
-          @include hb-pairing-color('background-color', 'secondary-highlight');
-        }
+      .hb-local-footer--dark & {
+        @include hb-pairing-color('background-color', 'secondary-highlight');
       }
     }
   }
 }
 
 @mixin hb-ordered-list {
-  @include hb-colorful {
-    counter-reset: li;
-    list-style-type: none;
-    margin: 0 0 hb-calculate-rems(32px);
+  counter-reset: li;
+  list-style-type: none;
+  margin: 0 0 hb-calculate-rems(32px);
 
-    ol {
-      margin: hb-calculate-rems(10px) 0 0;
-    }
+  ol {
+    margin: hb-calculate-rems(10px) 0 0;
+  }
 
-    li {
-      position: relative;
-      line-height: 122%;
-      margin-bottom: hb-calculate-rems(10px);
+  li {
+    position: relative;
+    line-height: 122%;
+    margin-bottom: hb-calculate-rems(10px);
 
-      &::before {
-        content: counter(li) '.';
-        counter-increment: li;
-        font-size: hb-calculate-rems(16px);
-        font-weight: hb-theme-font-weight(semibold);
-        @include hb-pairing-color('color', 'secondary');
+    &::before {
+      content: counter(li) '.';
+      counter-increment: li;
+      font-size: hb-calculate-rems(16px);
+      font-weight: hb-theme-font-weight(semibold);
+      @include hb-pairing-color('color', 'secondary');
 
-        position: absolute;
-        left: hb-calculate-rems(-18px);
+      position: absolute;
+      left: hb-calculate-rems(-18px);
 
-        .hb-local-footer--dark & {
-          @include hb-pairing-color('color', 'secondary-highlight');
-        }
+      .hb-local-footer--dark & {
+        @include hb-pairing-color('color', 'secondary-highlight');
       }
     }
   }
@@ -107,9 +116,27 @@
 
 @mixin hb-divider {
   width: 100%;
+  border-bottom: $hb-thin-border;
+  @include hb-global-color('border-color', 'gray');
+}
 
-  @include hb-colorful {
-    border-bottom: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray');
+// Used for link typography mixins across all themes
+// both with and without icons
+@mixin hb-link-background-image($icon, $default-palette, $palette-array) {
+  // For links without an icon
+  // Fallback for IE
+  background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) 50%);
+
+  // Color Pairing Custom Variable
+  background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
+  // For links with an icon
+  // Changes the value passed into background-image to
+  // create space for the external link space to exist
+  @if $icon {
+    // Fallback for IE
+    background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) 16px);
+
+    // Color Pairing Custom Variable
+    background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
   }
 }

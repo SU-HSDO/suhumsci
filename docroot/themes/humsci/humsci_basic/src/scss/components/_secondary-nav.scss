@@ -9,12 +9,9 @@
 
   &__heading {
     margin: 0 0 hb-calculate-rems(39px);
-
-    @include hb-colorful {
-      font-weight: hb-theme-font-weight(semibold);
-      font-size: hb-calculate-rems(24px);
-      line-height: 116%;
-    }
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(24px);
+    line-height: 116%;
 
     a {
       @include hb-link;
@@ -49,10 +46,7 @@
   &__item,
   &__link {
     font-size: hb-calculate-rems(16px);
-
-    @include hb-colorful {
-      @include hb-global-color('color', 'black');
-    }
+    @include hb-global-color('color', 'black');
   }
 
   &__item {
@@ -62,19 +56,17 @@
       position: relative;
       font-weight: hb-theme-font-weight(semibold);
 
-      @include hb-colorful {
-        &::before {
-          content: '';
-          display: block;
-          @include hb-global-color('background-color', 'gray-dark');
+      &::before {
+        content: '';
+        display: block;
+        @include hb-global-color('background-color', 'gray-dark');
 
-          position: absolute;
-          height: 100%;
-          width: hb-calculate-rems(5px);
-          top: 0;
-          bottom: 0;
-          left: 0;
-        }
+        position: absolute;
+        height: 100%;
+        width: hb-calculate-rems(5px);
+        top: 0;
+        bottom: 0;
+        left: 0;
       }
     }
 
@@ -92,21 +84,15 @@
     display: block;
     padding: hb-calculate-rems(16px) hb-calculate-rems(48px) hb-calculate-rems(16px) hb-calculate-rems(18px);
     text-decoration: none;
-
-    @include hb-colorful {
-      border-bottom: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray-medium');
-    }
+    border-bottom: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray-medium');
 
     &.is-active {
       font-weight: hb-theme-font-weight(semibold);
+      @include hb-pairing-color('background-color', 'secondary-highlight');
 
-      @include hb-colorful {
-        @include hb-pairing-color('background-color', 'secondary-highlight');
-
-        &::before {
-          @include hb-pairing-color('background-color', 'secondary');
-        }
+      &::before {
+        @include hb-pairing-color('background-color', 'secondary');
       }
     }
 
@@ -115,9 +101,7 @@
       text-decoration: none;
 
       &:not(.is-active) {
-        @include hb-colorful {
-          @include hb-global-color('background-color', 'gray-light');
-        }
+        @include hb-global-color('background-color', 'gray-light');
       }
     }
   }

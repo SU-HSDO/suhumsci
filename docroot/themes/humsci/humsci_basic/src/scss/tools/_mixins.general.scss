@@ -122,7 +122,7 @@
 
 // Used for link typography mixins across all themes
 // both with and without icons
-@mixin hb-link-background-image($icon, $default-palette, $palette-array) {
+@mixin hb-link-background-image($icon, $icon-width, $default-palette, $palette-array) {
   // For links without an icon
   // Fallback for IE
   background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) 50%);
@@ -134,9 +134,9 @@
   // create space for the external link space to exist
   @if $icon {
     // Fallback for IE
-    background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) 16px);
+    background-image: linear-gradient(to left, transparent $icon-width, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) $icon-width);
 
     // Color Pairing Custom Variable
-    background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
+    background-image: linear-gradient(to left, transparent $icon-width, var(--palette--tertiary-highlight) $icon-width);
   }
 }

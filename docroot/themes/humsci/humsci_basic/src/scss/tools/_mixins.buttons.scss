@@ -11,38 +11,43 @@
   @include hb-pairing-color('border-color', 'secondary');
   transition: 125ms background-color ease-out, 125ms border-color ease-out;
 
-  &:hover,
-  &:focus {
+  &:hover {
     cursor: pointer;
     @include hb-pairing-color('background-color', 'secondary-darken-12');
     @include hb-pairing-color('border-color', 'secondary-darken-12');
   }
 
+  &:hover,
+  &:focus {
+    background-image: none;
+  }
+
   &:active,
   &:focus {
     @include hb-pairing-color('background-color', 'secondary');
-    @include hb-global-color('border-color', 'white');
+    @include hb-pairing-color('border-color', 'secondary');
+    background-image: none;
   }
 
   @include hb-themes(('colorful', 'airy')) {
     font-family: $hb-colorful-font--sans;
     border-radius: $hb-button-border-radius;
 
-    &:hover,
-    &:focus {
-      background-image: none;
-    }
-
     &:active,
     &:focus {
       box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
-      background-image: none;
     }
   }
 
   @include hb-traditional {
     font-family: $hb-traditional-font--sans;
+
+    &:active,
+    &:focus {
+      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+    }
   }
 }
 

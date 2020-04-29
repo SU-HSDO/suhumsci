@@ -163,6 +163,7 @@ blockquote:nth-child(n) {
   }
 }
 
+// Note: why aren't we using button mixins for the border button here?
 a.hs-button,
 button.hs-button,
 .hs-button a,
@@ -202,8 +203,7 @@ button.hs-secondary-button,
     @include hb-pairing-color('border-color', 'tertiary-reversed');
   }
 
-  &:hover,
-  &:focus {
+  &:hover {
     @include hb-global-color('color', 'white', $important: true);
     @include hb-pairing-color('background-color', 'secondary');
     @include hb-pairing-color('border-color', 'secondary');

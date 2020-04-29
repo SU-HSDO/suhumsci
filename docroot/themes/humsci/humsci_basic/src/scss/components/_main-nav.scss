@@ -63,11 +63,8 @@
     &-lv1 {
       font-weight: hb-theme-font-weight(semibold);
       font-size: hb-calculate-rems(20px);
-
-      @include hb-colorful {
-        border-bottom: $hb-thin-border;
-        @include hb-global-color('border-color', 'gray');
-      }
+      border-bottom: $hb-thin-border;
+      @include hb-global-color('border-color', 'gray');
 
       &[aria-hidden="false"] {
         margin-bottom: hb-calculate-rems(28px);
@@ -123,10 +120,8 @@
     position: relative;
 
     .hb-main-nav__menu-lv1 > & {
-      @include hb-colorful {
-        border-top: $hb-thin-border;
-        @include hb-global-color('border-color', 'gray');
-      }
+      border-top: $hb-thin-border;
+      @include hb-global-color('border-color', 'gray');
 
       @include grid-media-min('lg') {
         .js & {
@@ -137,10 +132,8 @@
     }
 
     .hb-main-nav__menu-lv2 &:not(:last-child) {
-      @include hb-colorful {
-        border-bottom: $hb-thin-border;
-        @include hb-global-color('border-color', 'gray');
-      }
+      border-bottom: $hb-thin-border;
+      @include hb-global-color('border-color', 'gray');
 
       @include grid-media-min('lg') {
         .js & {
@@ -156,10 +149,7 @@
     padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
     text-decoration: none;
     line-height: 120.3%;
-
-    @include hb-colorful {
-      @include hb-global-color('color', 'black');
-    }
+    @include hb-global-color('color', 'black');
 
     @include grid-media-min('md') {
       line-height: 128%;
@@ -183,10 +173,8 @@
     }
 
     &:hover:not(.is-active) {
-      @include hb-colorful {
-        @include hb-global-color('background-color', 'gray-light');
-        @include hb-global-color('color', 'black');
-      }
+      @include hb-global-color('background-color', 'gray-light');
+      @include hb-global-color('color', 'black');
     }
 
     // Targeting only the first level of navigation on desktop
@@ -209,20 +197,14 @@
         }
 
         .js &.hb-main-nav__link--active-trail::before {
-          @include hb-colorful {
-            @include hb-pairing-color('background-color', 'secondary');
-          }
+          @include hb-pairing-color('background-color', 'secondary');
         }
 
         .js &:hover {
           background-color: transparent;
 
           &:not(.is-active):not(.hb-main-nav__link--active-trail)::before {
-            // stylelint-disable
-            @include hb-colorful {
-              @include hb-global-color('background-color', 'gray');
-            }
-            // stylelint-enabled
+            @include hb-global-color('background-color', 'gray');
           }
         }
       }
@@ -237,10 +219,8 @@
       }
 
       &:focus {
-        @include hb-colorful {
-          @include hb-global-color('background-color', 'gray-light');
-          @include hb-global-color('color', 'black');
-        }
+        @include hb-global-color('background-color', 'gray-light');
+        @include hb-global-color('color', 'black');
       }
     }
 
@@ -253,20 +233,15 @@
         top: 0;
         bottom: 0;
         left: 0;
-
-        @include hb-colorful {
-          @include hb-global-color('background-color', 'gray-dark');
-        }
+        @include hb-global-color('background-color', 'gray-dark');
       }
 
       &.is-active {
-        @include hb-colorful {
-          @include hb-pairing-color('background-color', 'secondary-highlight');
-          @include hb-global-color('color', 'black');
+        @include hb-pairing-color('background-color', 'secondary-highlight');
+        @include hb-global-color('color', 'black');
 
-          &::before {
-            @include hb-pairing-color('background-color', 'secondary');
-          }
+        &::before {
+          @include hb-pairing-color('background-color', 'secondary');
         }
       }
     }
@@ -365,11 +340,8 @@
 
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
-
-    @include hb-colorful {
-      border-top: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray');
-    }
+    border-top: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
 
     &[aria-hidden="true"] {
       display: none;
@@ -382,12 +354,9 @@
         min-width: hb-calculate-rems(200px);
         width: 100%;
         padding: 0;
-
-        @include hb-colorful {
-          border: $hb-thin-border;
-          @include hb-global-color('border-color', 'gray');
-          @include hb-global-color('background-color', 'white');
-        }
+        border: $hb-thin-border;
+        @include hb-global-color('border-color', 'gray');
+        @include hb-global-color('background-color', 'white');
       }
 
       // Prevents the last dropdown from hanging off the edge of the screen if

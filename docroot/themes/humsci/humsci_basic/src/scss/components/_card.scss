@@ -379,12 +379,9 @@
       display: block;
       height: hb-calculate-rems(44px); // WCAG AAA target size
       width: hb-calculate-rems(44px);
-
-      @include hb-colorful {
-        @include hb-icon-link-arrow('secondary');
-        transform: translateX(0);
-        transition: transform $hb-animation-duration $hb-animation-timing-function;
-      }
+      @include hb-icon-link-arrow('secondary');
+      transform: translateX(0);
+      transition: transform $hb-animation-duration $hb-animation-timing-function;
     }
 
     &:focus,
@@ -393,10 +390,7 @@
 
       &::before {
         transform: translateX(0.625rem);
-
-        @include hb-colorful {
-          @include hb-icon-link-arrow('secondary-darken-12');
-        }
+        @include hb-icon-link-arrow('secondary-darken-12');
       }
     }
   }

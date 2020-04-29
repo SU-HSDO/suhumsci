@@ -1,18 +1,18 @@
 @mixin hb-block-heading {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(24px);
     line-height: 120%;
-  }
 
-  @include grid-media-min('md') {
-    font-size: hb-calculate-rems(27px);
-    line-height: 117%;
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(27px);
+      line-height: 117%;
+    }
   }
 }
 
 @mixin hb-heading-1 {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(38px);
     line-height: 112%;
@@ -36,7 +36,7 @@
 }
 
 @mixin hb-heading-2 {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(32px);
     line-height: 112%;
@@ -60,7 +60,7 @@
 }
 
 @mixin hb-heading-3 {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     @include hb-block-heading;
   }
 
@@ -78,7 +78,7 @@
 }
 
 @mixin hb-heading-4 {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(20px);
     line-height: 122%;
@@ -97,7 +97,7 @@
 }
 
 @mixin hb-heading-5 {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(18px);
     line-height: 124%;
@@ -114,7 +114,7 @@
 @mixin hb-heading-6 {
   text-transform: uppercase;
 
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(16px);
     line-height: 128%;
@@ -138,7 +138,7 @@
 }
 
 @mixin hb-subheading {
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(15px);
     line-height: 131%;
@@ -165,19 +165,30 @@
 }
 
 @mixin hb-link--hover-style($box-shadow-color, $border-color) {
-  text-decoration: none;
   margin-bottom: 0.0625em;
-  transition: box-shadow 100ms, border-bottom-color 0s;
-  transition-delay: 0s, 100ms;
+  text-decoration: none;
+  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
 
   &:hover,
   &:focus {
     transition-delay: 0s, 0s;
     border-bottom-color: $border-color;
+  }
 
-    @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
+    &:hover,
+    &:focus {
       @include hb-pairing-color('border-bottom-color', $border-color);
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
+    }
+  }
+
+  @include hb-traditional {
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('border-bottom-color', $border-color);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-traditional-default, $ht-traditional-pairings);
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
     }
   }
@@ -186,51 +197,34 @@
 // Link style for headings
 @mixin hb-link {
   // no font size by default
-  @include hb-colorful {
-    @include hb-global-color('color', 'black');
-    font-weight: hb-theme-font-weight(semibold);
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    @include hb-global-color('border-bottom-color', 'gray-medium');
-
-
-    @include hb-link--hover-style('tertiary-highlight', 'tertiary-reversed');
-  }
+  @include hb-global-color('color', 'black');
+  font-weight: hb-theme-font-weight(semibold);
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  @include hb-global-color('border-bottom-color', 'gray-medium');
+  @include hb-link--hover-style('tertiary-highlight', 'tertiary-reversed');
 }
 
 // Link style for main content that is not a heading
 @mixin hb-link--inline($icon: false) {
   // no font size by default
-  @include hb-colorful {
-    @include hb-pairing-color('color', 'tertiary');
-    background-size: 100% 200%;
-    background-position-y: -100%;
-    background-repeat: no-repeat;
+  background-size: 100% 200%;
+  background-position-y: -100%;
+  background-repeat: no-repeat;
+  @include hb-pairing-color('color', 'tertiary');
 
-    // For links without an icon
-    // Fallback for IE
-    background-image: linear-gradient(to top, transparent 50%, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 50%);
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image($icon, $hb-colorful-default, $hc-colorful-pairings);
+  }
 
-    // Color Pairing Custom Variable
-    background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
+  @include hb-traditional {
+    @include hb-link-background-image($icon, $hb-traditional-default, $ht-traditional-pairings);
+  }
 
-    // For links with an icon
-    // Changes the value passed into background-image to
-    // create space for the external link space to exist
-    @if $icon {
-      // Fallback for IE
-      background-image: linear-gradient(to left, transparent 16px, hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings) 16px);
-
-      // Color Pairing Custom Variable
-      background-image: linear-gradient(to left, transparent 16px, var(--palette--tertiary-highlight) 16px);
-    }
-
-
-    &:hover,
-    &:focus {
-      @include hb-pairing-color('color', 'tertiary-darken-20');
-      background-position-y: -50%;
-    }
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'tertiary-darken-20');
+    background-position-y: -50%;
   }
 
   .hb-local-footer & {
@@ -241,13 +235,11 @@
   }
 
   .hb-local-footer--dark & {
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'tertiary-reversed');
+    @include hb-pairing-color('color', 'tertiary-reversed');
 
-      &:hover,
-      &:focus {
-        @include hb-pairing-color('color', 'tertiary-highlight', $important: true);
-      }
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-highlight', $important: true);
     }
   }
 }
@@ -258,10 +250,7 @@
   line-height: 140%;
   position: relative;
   quotes: '"' '"';
-
-  @include hb-colorful {
-    @include hb-global-color('color', 'gray-dark');
-  }
+  @include hb-global-color('color', 'gray-dark');
 
   &::before {
     position: absolute;
@@ -278,14 +267,19 @@
 
 @mixin hb-field-label {
   display: block;
-  font-weight: hb-theme-font-weight(bold);
-  font-size: hb-calculate-rems(15px);
   font-style: normal;
   text-transform: uppercase;
   margin-bottom: hb-calculate-rems(4px);
+  @include hb-global-color('color', 'black');
 
-  @include hb-colorful {
-    @include hb-global-color('color', 'black');
+  @include hb-themes(('colorful', 'airy')) {
+    font-weight: hb-theme-font-weight(bold);
+    font-size: hb-calculate-rems(15px);
+  }
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(14px);
   }
 }
 
@@ -293,23 +287,18 @@
   font-size: hb-calculate-rems(16px);
   font-style: normal;
   text-transform: inherit;
+  @include hb-pairing-color('color', 'secondary');
 
-  @include hb-colorful {
-    @include hb-pairing-color('color', 'secondary');
-
-    .hb-well & {
-      @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
-    }
+  .hb-well & {
+    @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
   }
 }
 
 @mixin hb-descriptor {
-  @include hb-colorful {
-    @include hb-global-color('color', 'gray-dark');
-    font-size: hb-calculate-rems(16px);
+  @include hb-global-color('color', 'gray-dark');
+  font-size: hb-calculate-rems(16px);
 
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(18px);
-    }
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(18px);
   }
 }

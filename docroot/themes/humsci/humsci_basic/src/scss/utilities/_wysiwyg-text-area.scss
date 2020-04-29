@@ -4,47 +4,35 @@
   margin-bottom: hb-calculate-rems(48px);
 
   h1 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+    margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
 
-      @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
-      }
+    @include grid-media-min('md') {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
     }
   }
 
   h2 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(12px);
+    margin: hb-calculate-rems(48px) 0 hb-calculate-rems(12px);
 
-      @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
-      }
+    @include grid-media-min('md') {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
     }
   }
 
   h3 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(28px) 0 hb-calculate-rems(10px);
-    }
+    margin: hb-calculate-rems(28px) 0 hb-calculate-rems(10px);
   }
 
   h4 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(4px);
-    }
+    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(4px);
   }
 
   h5 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
-    }
+    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
   }
 
   h6 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
-    }
+    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
   }
 
   // jump to link target - remove link styles from anchor tag
@@ -60,10 +48,7 @@
   &-credits {
     font-size: hb-calculate-rems(14px);
     font-style: italic;
-
-    @include hb-colorful {
-      @include hb-global-color('color', 'gray-dark');
-    }
+    @include hb-global-color('color', 'gray-dark');
 
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'white');
@@ -74,13 +59,10 @@
     font-size: hb-calculate-rems(20px);
     font-weight: hb-theme-font-weight(semibold);
     line-height: 127%;
+    @include hb-global-color('color', 'gray-dark');
 
-    @include hb-colorful {
-      @include hb-global-color('color', 'gray-dark');
-
-      .hb-local-footer--dark & {
-        @include hb-global-color('color', 'gray-light');
-      }
+    .hb-local-footer--dark & {
+      @include hb-global-color('color', 'gray-light');
     }
 
     @include grid-media-min('lg') {
@@ -91,30 +73,29 @@
   &-font-splash {
     @include hb-heading-1;
 
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'primary');
+    @include grid-media-min('md') {
+      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+    }
 
-      @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
-      }
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('color', 'primary');
 
       .hb-local-footer--dark & {
         @include hb-global-color('color', 'gray-light');
       }
     }
+
+    @include hb-traditional {
+      @include hb-global-color('color', 'gray-dark');
+    }
   }
 
   &-caption {
     font-size: hb-calculate-rems(14px);
-
-    @include hb-colorful {
-      @include hb-global-color('color', 'gray-dark');
-    }
+    @include hb-global-color('color', 'gray-dark');
 
     .hb-local-footer--dark & {
-      @include hb-colorful {
-        @include hb-global-color('color', 'white');
-      }
+      @include hb-global-color('color', 'white');
     }
   }
 
@@ -177,13 +158,12 @@ blockquote:nth-child(n) {
     @include hb-blockquote;
 
     .hb-local-footer--dark & {
-      @include hb-colorful {
-        @include hb-global-color('color', 'gray-light');
-      }
+      @include hb-global-color('color', 'gray-light');
     }
   }
 }
 
+// Note: why aren't we using button mixins for the border button here?
 a.hs-button,
 button.hs-button,
 .hs-button a,
@@ -257,35 +237,32 @@ button.hs-more-link,
   border: none;
   background: none;
   padding: 0;
+  @include hb-pairing-color('color', 'secondary');
 
-  @include hb-colorful {
-    @include hb-pairing-color('color', 'secondary');
+  &::after {
+    content: '';
+    display: inline-block;
+    height: hb-calculate-rems(19px);
+    width: hb-calculate-rems(19px);
+    margin-left: hb-calculate-rems(8px);
+    margin-bottom: hb-calculate-rems(-4px);
+
+    @include hb-icon-link-arrow('secondary');
+    background-size: 85%;
+    transition: transform $hb-animation-duration $hb-animation-timing-function;
+  }
+
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'secondary-darken-12');
+
+    background-image: none;
+    background-color: transparent;
 
     &::after {
-      content: '';
-      display: inline-block;
-      height: hb-calculate-rems(19px);
-      width: hb-calculate-rems(19px);
-      margin-left: hb-calculate-rems(8px);
-      margin-bottom: hb-calculate-rems(-4px);
-
-      @include hb-icon-link-arrow('secondary');
+      @include hb-icon-link-arrow('secondary-darken-12');
       background-size: 85%;
-      transition: transform $hb-animation-duration $hb-animation-timing-function;
-    }
-
-    &:hover,
-    &:focus {
-      @include hb-pairing-color('color', 'secondary-darken-12');
-
-      background-image: none;
-      background-color: transparent;
-
-      &::after {
-        @include hb-icon-link-arrow('secondary-darken-12');
-        background-size: 85%;
-        transform: translateX(0.25rem);
-      }
+      transform: translateX(0.25rem);
     }
   }
 }

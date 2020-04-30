@@ -206,6 +206,7 @@
 }
 
 // Link style for main content that is not a heading
+// The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px) {
   // no font size by default
   background-size: 100% 200%;
@@ -214,11 +215,11 @@
   @include hb-pairing-color('color', 'tertiary');
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image($icon, $hb-colorful-default, $hc-colorful-pairings);
+    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
   }
 
   @include hb-traditional {
-    @include hb-link-background-image($icon, $hb-traditional-default, $ht-traditional-pairings);
+    @include hb-link-background-image($icon, $icon-width, $hb-traditional-default, $ht-traditional-pairings);
   }
 
   &:hover,

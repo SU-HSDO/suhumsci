@@ -1,4 +1,4 @@
-.hb-layout-builder-main-content .views-exposed-form {
+.views-exposed-form { // TODO: ask Merani about Reset button hover state
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
@@ -7,25 +7,40 @@
   .form-item {
     width: 100%;
     margin-bottom: hb-calculate-rems(24px);
+
     @include grid-media-min('md') {
       width: calc(50% - #{hb-calculate-rems(18px)});
       margin-right: hb-calculate-rems(18px);
     }
-    @include grid-media-min('lg') {
-      width: calc(33% - #{hb-calculate-rems(18px)});
+
+    .hb-layout-builder-main-content & {
+      @include grid-media-min('lg') {
+        width: calc(33% - #{hb-calculate-rems(18px)});
+      }
+    }
+
+    .hb-three-column__sidebar-1 & {
+      @include grid-media-min('lg') {
+        width: 100%;
+      }
     }
   }
 
   .form-actions {
     display: flex;
     align-items: center;
+    width: auto;
     margin-bottom: 0;
     @include grid-media-min('md') {
       margin-bottom: hb-calculate-rems(24px);
     }
   }
 
-  .form-submit:not(:last-child) {
-    margin-right: hb-calculate-rems(16px);
+  .form-submit {
+    width: auto;
+
+    &:not(:last-child) {
+      margin-right: hb-calculate-rems(16px);
+    }
   }
 }

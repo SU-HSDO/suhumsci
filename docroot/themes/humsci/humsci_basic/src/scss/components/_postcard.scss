@@ -52,36 +52,16 @@
     width: 100%;
 
     a {
-      display: block;
-      color: transparent; // `hide` the text but make sure screen readers can still read it
-      height: hb-calculate-rems(44px);
-      text-decoration: none;
-      background-image: none;
-
       .fa-mailto {
         display: none;
       }
 
-      &:hover,
-      &:focus {
-        color: transparent;
-        cursor: pointer;
-
-        &::before {
-          transform: translateX(0.625rem);
-          @include hb-icon-link-arrow('secondary-darken-12');
-        }
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-card-arrow-link;
       }
 
-      &::before { // postcard arrow
-        content: '';
-        position: absolute;
-        left: 0;
-        height: hb-calculate-rems(44px); // WCAG AAA target size
-        width: hb-calculate-rems(44px);
-        @include hb-icon-link-arrow('secondary');
-        transform: translateX(0);
-        transition: transform $hb-animation-duration $hb-animation-timing-function;
+      @include hb-traditional {
+        @include hb-more-link;
       }
     }
 

@@ -5,27 +5,33 @@
 #}
 {% macro secondary_nav_menu(items, menu_level, class_prefix, parent) %}
   {% import _self as menus %}
-  <ul class="su-secondary-nav__menu {{ class_prefix }}__menu su-secondary-nav__menu-lv{{ menu_level }} {{ class_prefix }}__menu-lv{{ menu_level }}">
+  <ul class="hb-secondary-nav__menu {{ class_prefix }}__menu hb-secondary-nav__menu-lv{{ menu_level }} {{ class_prefix }}__menu-lv{{ menu_level }}">
   {% for item in items %}
 
     {# List Item Attributes #}
     {% set list_attributes = create_attribute() %}
     {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item") %}
-    {% set list_attributes = list_attributes.addClass("su-secondary-nav__item") %}
+    {% set list_attributes = list_attributes.addClass("hb-secondary-nav__item") %}
 
     {% if item.below is not empty %}
       {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--parent") %}
-      {% set list_attributes = list_attributes.addClass("su-secondary-nav__item--parent") %}
+      {% set list_attributes = list_attributes.addClass("hb-secondary-nav__item--parent") %}
     {% endif %}
     {% if item.in_active_trail == true %}
       {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--active-trail") %}
-      {% set list_attributes = list_attributes.addClass("su-secondary-nav__item--active-trail") %}
+      {% set list_attributes = list_attributes.addClass("hb-secondary-nav__item--active-trail") %}
     {% endif %}
 
     <li{{ list_attributes }}>
-      {{ link(item.title, item.url, {'class': "#{class_prefix}__link su-secondary-nav__link"}) }}
+      {{ link(item.title, item.url, {'class': "#{class_prefix}__link hb-secondary-nav__link"}) }}
+
       {% if item.below %}
-        {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
+        <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true">
+          Toggle {{ item.title }}
+        </button>
+        <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
+          {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
+        </div>
       {% endif %}
     </li>
   {% endfor %}

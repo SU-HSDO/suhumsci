@@ -94,10 +94,21 @@
 }
 
 @mixin hb-icon-link-arrow($color: 'black') {
-  @include hb-icon-background('arrow-right', $color);
   background-repeat: no-repeat;
   background-position: left;
   background-size: 55%;
+
+  @if ($hb-current-theme == 'airy') {
+    @include hb-icon-background('arrow-right', $color);
+  }
+
+  @if ($hb-current-theme == 'colorful') {
+    @include hb-icon-background('arrow-right', $color);
+  }
+
+  @if ($hb-current-theme == 'traditional') {
+    @include hb-icon-background('arrow-right-long', $color);
+  }
 }
 
 @mixin hb-icon-calendar($color: 'black') {

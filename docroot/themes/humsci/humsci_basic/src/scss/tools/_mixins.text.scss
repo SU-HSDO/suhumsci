@@ -249,6 +249,65 @@
   }
 }
 
+@mixin hb-more-link {
+  font-size: hb-calculate-rems(18px);
+  text-decoration: none;
+
+  // Overrides button styles when used on a button
+  border: none;
+  background: none;
+  padding: 0;
+  @include hb-pairing-color('color', 'secondary');
+
+  &::after {
+    content: '';
+    display: inline-block;
+    @include hb-icon-link-arrow('secondary');
+    margin-left: hb-calculate-rems(8px);
+    background-size: 85%;
+    transition: transform $hb-animation-duration $hb-animation-timing-function;
+  }
+
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'secondary-darken-12');
+
+    background-image: none;
+    background-color: transparent;
+
+    &::after {
+      @include hb-icon-link-arrow('secondary-darken-12');
+      background-size: 85%;
+      transform: translateX(0.25rem);
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-weight: hb-theme-font-weight(bold);
+
+    &::after {
+      height: hb-calculate-rems(19px);
+      width: hb-calculate-rems(19px);
+      margin-bottom: hb-calculate-rems(-4px);
+    }
+  }
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+
+    &::after {
+      height: hb-calculate-rems(25px);
+      width: hb-calculate-rems(25px);
+      margin-bottom: hb-calculate-rems(-6px);
+    }
+  }
+}
+
 @mixin hb-blockquote {
   @include hb-body--medium;
   font-style: italic;

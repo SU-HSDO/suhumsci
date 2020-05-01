@@ -1,0 +1,28 @@
+@include describe('HB Gutter Width Function') {
+
+  @include describe('When given a valid key value,') {
+    $hb-current-theme: 'colorful' !global;
+
+    @include describe('the hb-gutter-width() function') {
+      @include it('returns the small pixel value for the Colorful theme.') {
+        $test: hb-gutter-width('small');
+        $expect: 32px;
+
+        @include assert-equal($test, $expect, 'The small value either does not match or does not exist.');
+      }
+    }
+  }
+
+  @include describe('When given a valid key value,') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include describe('the hb-gutter-width() function') {
+      @include it('returns the small pixel value for the Traditional theme.') {
+        $test: hb-gutter-width('small');
+        $expect: 24px;
+
+        @include assert-equal($test, $expect, 'The small value either does not match or does not exist.');
+      }
+    }
+  }
+}

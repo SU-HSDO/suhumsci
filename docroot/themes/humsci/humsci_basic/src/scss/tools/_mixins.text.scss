@@ -164,6 +164,20 @@
   line-height: 127%;
 }
 
+@mixin hb-description {
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-body--small;
+
+    @include grid-media-min('lg') {
+      @include hb-body--medium;
+    }
+  }
+
+  @include hb-traditional {
+    @include hb-body--small;
+  }
+}
+
 @mixin hb-blockquote {
   @include hb-body--medium;
   font-style: italic;

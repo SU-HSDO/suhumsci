@@ -6,3 +6,29 @@
   $size-in-rems: $size-in-pixels / $hb-root-font-size;
   @return #{$size-in-rems}rem;
 }
+
+// Returns the proper gutter width based on the theme
+@function hb-gutter-width($size: 'default') {
+  $is-valid-theme: false;
+
+  @each $theme in $hb-global-theme-list {
+    @if ($theme == $hb-current-theme) {
+      $is-valid-theme: true;
+    }
+  }
+
+  @if ($is-valid-theme) {
+    $theme-gutter-list: map-get($hb-gutter-list, $hb-current-theme);
+    $result: map-get($theme-gutter-list, $size);
+
+    @if ($result) {
+      // Return gutter value if it exists
+      @return $result;
+    } @else {
+      // Error if value doesn't exist
+      @error "Couldn't find a value for this gutter size: #{$size}";
+    }
+  } @else {
+    @return null;
+  }
+}

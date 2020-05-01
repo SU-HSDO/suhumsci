@@ -78,18 +78,19 @@
 .hb-views-divider {
   .views-row:not(:last-of-type) {
     @include hb-divider;
-    margin-bottom: hb-calculate-rems(48px);
+    margin-bottom: hb-calculate-rems(hb-spacing-width());
   }
 }
 
 // Used specifically on node detail pages when the image
 // is placed within the main content of the page in layout builder
+// WHERE IS THIS USED?
 .hb-main-body-detail-image {
   .hb-three-column-w-image & {
     @include grid-media-min('md') {
       @include clearfix;
       float: right;
-      margin: 0 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
+      margin: 0 0 hb-calculate-rems(hb-spacing-width('xs')) hb-calculate-rems(hb-spacing-width('xs'));
     }
   }
 }

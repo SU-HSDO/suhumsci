@@ -1,10 +1,10 @@
 @mixin hb-page-width {
   max-width: hb-calculate-rems($hb-layout-max-width) !important;
   margin: 0 auto !important;
-  width: calc(100% - (2 * #{hb-calculate-rems(hb-gutter-width('small'))})) !important;
+  width: calc(100% - (2 * #{hb-calculate-rems(hb-spacing-width('sm'))})) !important;
 
   @include grid-media-min('md') {
-    width: calc(100% - (2 * #{hb-calculate-rems(hb-gutter-width())})) !important;
+    width: calc(100% - (2 * #{hb-calculate-rems(hb-spacing-width())})) !important;
   }
 }
 
@@ -28,12 +28,12 @@
 
   @if ($col-number > 1) {
     $one-less-col: $col-number - 1;
-    $total-margin: $one-less-col * hb-gutter-width();
+    $total-margin: $one-less-col * hb-spacing-width();
 
     // 2 cols
     @include grid-media-min('sm') {
-      @include hb-column-width(50%, (hb-calculate-rems(hb-gutter-width())), 2); // for two elements, there is 1 gutter-width between
-      margin-right: hb-calculate-rems(hb-gutter-width());
+      @include hb-column-width(50%, (hb-calculate-rems(hb-spacing-width())), 2); // for two elements, there is 1 gutter-width between
+      margin-right: hb-calculate-rems(hb-spacing-width());
 
       &:nth-child(2n) {
         margin-right: 0;
@@ -44,10 +44,10 @@
       @if ($col-number != 4) {
         // 3 cols
         @include grid-media-min('md') {
-          @include hb-column-width(33.33%, #{hb-calculate-rems(2 * hb-gutter-width())}, 3); // for 3 elements, 2 have gutter-width
+          @include hb-column-width(33.33%, #{hb-calculate-rems(2 * hb-spacing-width())}, 3); // for 3 elements, 2 have gutter-width
 
           &:nth-child(2n) {
-            margin-right: hb-calculate-rems(hb-gutter-width());
+            margin-right: hb-calculate-rems(hb-spacing-width());
           }
 
           &:nth-child(3n) {
@@ -61,11 +61,11 @@
         @include hb-column-width($percentage-width, $total-margin, $col-number);
 
         &:nth-child(2n) {
-          margin-right: hb-calculate-rems(hb-gutter-width());
+          margin-right: hb-calculate-rems(hb-spacing-width());
         }
 
         &:nth-child(3n) {
-          margin-right: hb-calculate-rems(hb-gutter-width());
+          margin-right: hb-calculate-rems(hb-spacing-width());
         }
 
         &:nth-child(#{$col-number}n) {

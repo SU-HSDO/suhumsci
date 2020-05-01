@@ -1,25 +1,27 @@
 // WYSIWYG text area styles
 
 .field-hs-text-area {
-  margin-bottom: hb-calculate-rems(48px);
   @include clearfix;
+  margin-bottom: hb-calculate-rems(hb-spacing-width());
 
   h1 {
-    margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+    margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(14px);
 
     @include grid-media-min('md') {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+      margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(16px);
     }
   }
 
   h2 {
-    margin: hb-calculate-rems(48px) 0 hb-calculate-rems(12px);
+    margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(12px);
 
     @include grid-media-min('md') {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+      margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(14px);
     }
   }
 
+  // Note: Merani and J might like to refine heading sizes further
+  // before touching margin
   h3 {
     margin: hb-calculate-rems(28px) 0 hb-calculate-rems(10px);
   }
@@ -82,7 +84,7 @@
     @include hb-heading-1;
 
     @include grid-media-min('md') {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
+      margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(16px);
     }
 
     @include hb-themes(('colorful', 'airy')) {
@@ -137,16 +139,16 @@
 
 .align {
   &-right {
-    margin: hb-calculate-rems(28px) 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
+    margin: hb-calculate-rems(hb-spacing-width('xs')) 0 hb-calculate-rems(hb-spacing-width('xs')) hb-calculate-rems(hb-spacing-width('xs'));
   }
 
   &-left {
-    margin: hb-calculate-rems(28px) hb-calculate-rems(28px) hb-calculate-rems(28px) 0;
+    margin: hb-calculate-rems(hb-spacing-width('xs')) hb-calculate-rems(hb-spacing-width('xs')) hb-calculate-rems(hb-spacing-width('xs')) 0;
   }
 
   &-center {
     img {
-      margin: hb-calculate-rems(28px) auto;
+      margin: hb-calculate-rems(hb-spacing-width('xs')) auto;
     }
   }
 }

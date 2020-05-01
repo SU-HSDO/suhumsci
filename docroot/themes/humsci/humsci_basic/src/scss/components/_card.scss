@@ -1,5 +1,5 @@
 .hb-card {
-  margin-bottom: hb-calculate-rems(hb-gutter-width());
+  margin-bottom: hb-calculate-rems(hb-spacing-width());
   display: flex;
   flex-direction: column;
 
@@ -178,7 +178,7 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(20px);
+      margin-bottom: hb-calculate-rems(16px);
     }
 
     .views-label {
@@ -190,7 +190,7 @@
 
   &__graphics {
     position: relative;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-calculate-rems(hb-spacing-width('xxs'));
   }
 
   &__img {
@@ -221,7 +221,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
-        margin-right: hb-calculate-rems(hb-gutter-width());
+        margin-right: hb-calculate-rems(hb-spacing-width());
         margin-bottom: 0;
       }
     }
@@ -240,7 +240,7 @@
     @include hb-global-color('color', 'white');
     min-width: hb-calculate-rems(100px);
     padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
-    margin-right: hb-calculate-rems(hb-gutter-width());
+    margin-right: hb-calculate-rems(hb-spacing-width());
     position: absolute;
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
@@ -283,10 +283,10 @@
 
   &__title {
     margin-top: 0;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-calculate-rems(hb-spacing-width('xxs'));
 
     @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems(24px);
+      margin-bottom: hb-calculate-rems(hb-spacing-width('xs'));
     }
 
     h2,
@@ -335,7 +335,7 @@
     @include hb-description;
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(24px);
+      margin-bottom: hb-calculate-rems(hb-spacing-width('xxs'));
     }
 
     .views-field:not(:last-child) {

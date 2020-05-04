@@ -1,13 +1,19 @@
-// Base pager styles
+// Base pager styles use by both the mini and full pagers
 .js-pager__items {
   padding: 0;
   text-align: center;
 
-  li:not(.pager__item) { // pager__item styles are written below
+  li {
     display: inline;
     font-weight: hb-theme-font-weight(semibold);
     margin: hb-calculate-rems(10px);
+  }
 
+  li:not(.pager__item),
+  .pager__item--first,
+  .pager__item--last,
+  .pager__item--next,
+  .pager__item--previous {
     a {
       @include hb-pairing-color('color', 'secondary');
       text-decoration: none;
@@ -17,12 +23,14 @@
         @include hb-pairing-color('color', 'secondary');
         text-decoration: underline;
         background-image: none;
+        background-color: transparent;
       }
     }
   }
 }
 
 // Full pager classes
+// These styles are for the page numbers only shown in the full pager.
 .pager {
   &__items {
     list-style: none;
@@ -30,10 +38,6 @@
   }
 
   &__item {
-    display: inline;
-    font-weight: hb-theme-font-weight(semibold);
-    margin: hb-calculate-rems(10px);
-
     &:first-of-type {
       margin-left: 0;
     }
@@ -76,24 +80,6 @@
         &:focus {
           cursor: default;
           background-color: transparent;
-        }
-      }
-    }
-
-    &--first,
-    &--last,
-    &--previous,
-    &--next {
-      a {
-        @include hb-pairing-color('color', 'secondary');
-        text-decoration: none;
-
-        &:focus,
-        &:hover {
-          @include hb-pairing-color('color', 'secondary');
-          text-decoration: underline;
-          background-color: transparent;
-          background-image: none;
         }
       }
     }

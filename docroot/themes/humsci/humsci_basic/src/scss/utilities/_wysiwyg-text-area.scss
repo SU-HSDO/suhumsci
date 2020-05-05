@@ -86,7 +86,9 @@
     }
 
     @include hb-traditional {
-      @include hb-global-color('color', 'gray-dark');
+      @include hb-pairing-color('color', 'primary');
+      font-size: hb-calculate-rems(37px);
+      line-height: 125%;
     }
   }
 
@@ -160,61 +162,6 @@ blockquote:nth-child(n) {
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'gray-light');
     }
-  }
-}
-
-// Note: why aren't we using button mixins for the border button here?
-a.hs-button,
-button.hs-button,
-.hs-button a,
-.hs-button button {
-  @include button-style;
-  display: inline-block;
-  font-size: hb-calculate-rems(16px);
-  text-decoration: none;
-  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-}
-
-a.hs-button--big,
-button.hs-button--big,
-.hs-button--big a,
-.hs-button--big button {
-  @include button-style;
-  display: inline-block;
-  font-size: hb-calculate-rems(18px);
-  text-decoration: none;
-  padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
-}
-
-a.hs-secondary-button,
-button.hs-secondary-button,
-.hs-secondary-button a,
-.hs-secondary-button button {
-  @include button-style;
-  display: inline-block;
-  font-size: hb-calculate-rems(16px);
-  text-decoration: none;
-  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-  background-color: transparent;
-  @include hb-pairing-color('color', 'secondary');
-
-  &:hover {
-    @include hb-global-color('color', 'white');
-    @include hb-pairing-color('background-color', 'secondary');
-    @include hb-pairing-color('border-color', 'secondary');
-  }
-
-  &:active,
-  &:focus {
-    background-color: transparent;
-    @include hb-pairing-color('color', 'secondary');
-    @include hb-global-color('border-color', 'white');
-  }
-
-  .hb-local-footer--dark & {
-    // This mixin includes the hover and focus states.
-    @include hb-border-button('tertiary-reversed', 'secondary-highlight');
-    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   }
 }
 

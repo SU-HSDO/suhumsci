@@ -228,8 +228,11 @@
   }
 
   .hb-local-footer & {
-    &:focus,
-    &:hover {
+    background-image: none;
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-darken-20');
       background-image: none;
     }
   }
@@ -239,7 +242,8 @@
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('color', 'tertiary-highlight', $important: true);
+      @include hb-pairing-color('color', 'tertiary-highlight');
+      @include hb-ext-icon-color('tertiary-highlight');
     }
   }
 }

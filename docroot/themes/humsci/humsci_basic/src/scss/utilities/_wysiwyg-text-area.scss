@@ -4,38 +4,78 @@
   @include clearfix;
   margin-bottom: hb-calculate-rems(hb-spacing-width());
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-left: 0;
+    margin-right: 0;
+
+    @include hb-traditional {
+      margin-bottom: hb-calculate-rems(4px);
+    }
+  }
+
   h1 {
-    margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(14px);
+    margin-top: hb-calculate-rems(hb-spacing-width());
+    margin-bottom: hb-calculate-rems(14px);
 
     @include grid-media-min('md') {
-      margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(16px);
+      margin-top: hb-calculate-rems(hb-spacing-width());
+      margin-bottom: hb-calculate-rems(16px);
     }
   }
 
   h2 {
-    margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(12px);
+    margin-top: hb-calculate-rems(hb-spacing-width('sm'));
 
-    @include grid-media-min('md') {
-      margin: hb-calculate-rems(hb-spacing-width()) 0 hb-calculate-rems(14px);
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(12px);
+
+      @include grid-media-min('md') {
+        margin-top: hb-calculate-rems(hb-spacing-width());
+        margin-bottom: hb-calculate-rems(14px);
+      }
     }
   }
 
   // Note: Merani and J might like to refine heading sizes further
   // before touching margin
   h3 {
-    margin: hb-calculate-rems(28px) 0 hb-calculate-rems(10px);
+    @include hb-traditional {
+      margin-top: hb-calculate-rems(hb-spacing-width('xxs'));
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-top: hb-calculate-rems(hb-spacing-width('xs'));
+      margin-bottom: hb-calculate-rems(10px);
+    }
   }
 
   h4 {
-    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(4px);
+    margin-top: hb-calculate-rems(18px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(4px);
+    }
   }
 
   h5 {
-    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+    margin-top: hb-calculate-rems(18px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(3px);
+    }
   }
 
   h6 {
-    margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+    margin-top: hb-calculate-rems(18px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(3px);
+    }
   }
 
   // jump to link target - remove link styles from anchor tag

@@ -7,6 +7,8 @@ proxy:
   appserver:
     - swshumsci.suhumsci.loc
     - archaeology.suhumsci.loc
+    - artexhibitions.suhumsci.loc
+    - buddhiststudies.suhumsci.loc
     - dsresearch.suhumsci.loc
     - duboislab.suhumsci.loc
     - economics.suhumsci.loc
@@ -15,6 +17,7 @@ proxy:
     - it-humsci.suhumsci.loc
     - lowe.suhumsci.loc
     - mathematics.suhumsci.loc
+    - mcs.suhumsci.loc
     - mrc.suhumsci.loc
     - philit.suhumsci.loc
     - popstudies.suhumsci.loc
@@ -35,6 +38,18 @@ services:
   #     user: drupal
   #     password: drupal
   #     database: archaeology
+  # artexhibitions:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: artexhibitions
+  # buddhiststudies:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: buddhiststudies
   # dsresearch:
   #   type: mysql:5.7
   #   creds:
@@ -77,6 +92,12 @@ services:
   #     user: drupal
   #     password: drupal
   #     database: mathematics
+  # mcs:
+  #   type: mysql:5.7
+  #   creds:
+  #     user: drupal
+  #     password: drupal
+  #     database: mcs
   # mrc:
   #   type: mysql:5.7
   #   creds:
@@ -111,5 +132,8 @@ tooling:
   blt:
     service: appserver
     cmd: /app/vendor/bin/blt
+  behat:
+    service: appserver
+    cmd: "/app/vendor/bin/behat -c /app/tests/behat/local.yml"
   git:
     service: appserver

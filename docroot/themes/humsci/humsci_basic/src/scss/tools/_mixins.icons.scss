@@ -98,15 +98,11 @@
   background-position: left;
   background-size: 55%;
 
-  @if ($hb-current-theme == 'airy') {
+  @include hb-themes(('airy', 'colorful')) {
     @include hb-icon-background('arrow-right', $color);
   }
 
-  @if ($hb-current-theme == 'colorful') {
-    @include hb-icon-background('arrow-right', $color);
-  }
-
-  @if ($hb-current-theme == 'traditional') {
+  @include hb-traditional {
     @include hb-icon-background('arrow-right-long', $color);
   }
 }

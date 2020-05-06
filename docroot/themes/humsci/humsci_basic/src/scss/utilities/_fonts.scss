@@ -78,18 +78,11 @@ a.hb-pill {
   h4,
   h5,
   h6 {
-    font-size: hb-calculate-rems(38px);
-    line-height: 112%;
+    @include hb-heading-1;
     margin: 0;
-
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(48px);
-    }
   }
 
   @include hb-themes(('colorful', 'airy')) {
-    font-weight: hb-theme-font-weight(semibold);
-
     &::before {
       border-bottom: solid hb-calculate-rems(4px);
       @include hb-pairing-color('border-color', 'secondary');
@@ -100,15 +93,13 @@ a.hb-pill {
       margin-right: hb-calculate-rems(10px);
     }
   }
-
-  @include hb-traditional {
-    font-weight: hb-theme-font-weight(regular);
-  }
 }
 
 
-// Only for use on the Traditional Theme
-.ht-serif {
-  font-family: $hb-traditional-font--serif;
-  font-weight: hb-theme-font-weight(regular);
+// Apply serif font to Traditional Theme
+.hb-serif {
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+  }
 }

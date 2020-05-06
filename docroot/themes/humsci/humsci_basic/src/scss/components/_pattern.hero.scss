@@ -2,20 +2,18 @@
 // If you change something here, you will likely need to change it and override it in the carousel.scss
 .field-hs-hero-image {
   // For the humsci_colorful theme hero, ensure there is a background color added to the image alone
-  @include hb-colorful {
-    position: relative;
+  position: relative;
 
-    &::before {
-      @include hb-pairing-color('background-color', 'primary-hero-overlay');
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.9;
-      z-index: $hb-z-index-hero1-overlay;
-    }
+  &::before {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    z-index: $hb-z-index-hero1-overlay;
   }
 
   // For all themes, if only the hero image is present (no overlay text) or hero wrapper,
@@ -40,31 +38,39 @@
     margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
   }
 
-  @include hb-colorful {
-    position: relative;
-    min-height: 60vh;
+  position: relative;
 
-    @include grid-media-min('sm') {
-      min-height: 55vh;
-    }
+  // TODO: pair with Merani or J to get feedback on different heights for no-sidebar and sidebar heros
+  min-height: 60vh;
 
-    &::before {
-      @include hb-pairing-color('background-color', 'primary-hero-overlay');
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: $hb-z-index-hero-fallback;
+  @include grid-media-min('sm') {
+    min-height: 55vh;
+  }
+
+  .hb-three-column--no-sidebar & {
+    @include hb-traditional {
+      min-height: 60vh;
+
+      @include grid-media-min('md') {
+        min-height: 75vh;
+      }
     }
   }
 
-  @include hb-colorful {
-    &__image-wrapper,
-    &__text {
-      z-index: $hb-z-index-hero1-overlay;
-    }
+  &::before {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: $hb-z-index-hero-fallback;
+  }
+
+  &__image-wrapper,
+  &__text {
+    z-index: $hb-z-index-hero1-overlay;
   }
 
   &__image-wrapper {
@@ -76,122 +82,170 @@
       }
     }
 
-    @include hb-colorful {
-      img {
-        height: 100%;
-        width: 100%;
-        min-height: 60vh;
-        object-fit: cover;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
 
-        @include grid-media-min('sm') {
-          min-height: 55vh;
+      min-height: 60vh;
+
+      @include grid-media-min('sm') {
+        min-height: 55vh;
+      }
+
+      .hb-three-column--no-sidebar & {
+        @include hb-traditional {
+          min-height: 60vh;
+
+          @include grid-media-min('md') {
+            min-height: 75vh;
+          }
         }
       }
     }
   }
 
   &__text {
-    @include hb-colorful {
-      display: block;
-      @include hb-global-color('color', 'white');
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      left: 50%;
-      @include hb-page-width;
+    display: block;
+    @include hb-global-color('color', 'white');
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    @include hb-page-width;
 
-      h2 {
-        font-weight: hb-theme-font-weight(semibold);
-        font-size: hb-calculate-rems(27px);
-        line-height: 117%;
-        margin: 0 0 hb-spacing-width('md');
+    @include hb-traditional {
+      text-align: center;
+    }
+
+    h2 {
+      font-weight: hb-theme-font-weight(semibold);
+      font-size: hb-calculate-rems(27px);
+      line-height: 117%;
+      margin: 0 0 hb-spacing-width('md');
+
+      @include grid-media-min('md') {
+        @include hb-heading-2;
+        margin: 0 0 hb-spacing-width();
+      }
+
+      @include grid-media-min('lg') {
+        @include hb-heading-1;
+      }
+    }
+
+    // must increase specificity of h2 to override line-height value set in hb-heading mixins
+    .field-hs-hero-title h2 {
+      @include hb-traditional {
+        line-height: 112%;
+      }
+    }
+
+    ul {
+      li {
+        &::before {
+          @include hb-pairing-color('background-color', 'secondary');
+        }
+      }
+    }
+
+    ol {
+      li {
+        &::before {
+          @include hb-pairing-color('color', 'secondary-active');
+        }
+      }
+    }
+
+    h2,
+    .field-hs-hero-body {
+      width: 90%;
+
+      @include grid-media-min('sm') {
+        width: 80%;
+      }
+
+      @include grid-media-min('md') {
+        width: 70%;
+      }
+
+      @include grid-media-min('lg') {
+        width: 50%;
+      }
+
+      @include hb-traditional {
+        margin: 0 auto;
+      }
+    }
+
+    .field-hs-hero-body {
+      @include hb-traditional {
+        margin-top: hb-calculate-rems(16px);
 
         @include grid-media-min('md') {
-          @include hb-heading-2;
-          margin: 0 0 hb-spacing-width();
+          margin-top: hb-calculate-rems(24px);
         }
 
         @include grid-media-min('lg') {
-          @include hb-heading-1;
+          margin-top: hb-calculate-rems(32px);
         }
       }
-
-      ul {
-        li {
-          &::before {
-            @include hb-pairing-color('background-color', 'secondary');
-          }
-        }
-      }
-
-      ol {
-        li {
-          &::before {
-            @include hb-pairing-color('color', 'secondary-active');
-          }
-        }
-      }
-
-      h2,
-      .field-hs-hero-body {
-        width: 90%;
-
-        @include grid-media-min('sm') {
-          width: 80%;
-        }
-
-        @include grid-media-min('md') {
-          width: 70%;
-        }
-
-        @include grid-media-min('lg') {
-          width: 50%;
-        }
-      }
+    }
 
       .field-hs-hero-body,
       a {
         @include hb-description;
       }
+    }
 
-      a {
-        @include hb-pairing-color('color', 'tertiary-reversed');
-        background-image: none;
+    a {
+      @include hb-pairing-color('color', 'tertiary-reversed');
+      background-image: none;
 
-        &:hover,
-        &:focus {
-          @include hb-pairing-color('color', 'tertiary-highlight');
-        }
+      &:hover,
+      &:focus {
+        @include hb-pairing-color('color', 'tertiary-highlight');
       }
+    }
 
-      .field-hs-hero-link {
-        a,
-        button {
-          max-width: 80%;
+    .field-hs-hero-link {
+      a,
+      button {
+        max-width: 80%;
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
           margin-top: hb-spacing-width('md');
+        }
 
-          @include hb-themes(('colorful', 'airy')) {
-            @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
-          }
-
-          @include hb-traditional {
-            @include hb-hero-button('secondary', 'secondary-darken-12');
-          }
-
-          // Override the padding from the hb-border-button mixin above.
-          padding: hb-calculate-rems(12px);
+        @include hb-traditional {
+          @include hb-hero-button('secondary', 'secondary-darken-12');
+          margin-top: hb-calculate-rems(24px);
 
           @include grid-media-min('md') {
-            margin-top: hb-spacing-width();
+            margin-top: hb-calculate-rems(36px);
           }
 
           @include grid-media-min('lg') {
-            max-width: 75%;
+            margin-top: hb-calculate-rems($hb-gutter-width); // 48px
           }
+        }
 
-          .fa-ext {
-            display: none;
+        // Override the padding from the hb-border-button mixin above.
+        padding: hb-calculate-rems(12px);
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include grid-media-min('md') {
+            margin-top: hb-spacing-width();
           }
+        }
+
+        @include grid-media-min('lg') {
+          max-width: 75%;
+        }
+
+        .fa-ext {
+          display: none;
         }
       }
     }

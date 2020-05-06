@@ -11,6 +11,7 @@
     @include hb-input-border;
     @include hb-input-focus;
     font-size: hb-calculate-rems(16px);
+    border-top: 0 none; // Overwrite this border because the input above it already has the borer.
   }
   //
   // &.chosen-with-drop .chosen-drop {
@@ -169,7 +170,6 @@
     font-size: hb-calculate-rems(16px);
     line-height: 1;
     height: auto;
-    max-height: $hb-input-min-height;
     min-height: $hb-input-min-height;
     padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
     @include hb-input-border;
@@ -263,10 +263,6 @@
         @include hb-input-focus;
       }
     }
-  }
-
-  .chosen-results {
-    margin-top: hb-calculate-rems(-3px);
   }
 
   // .chosen-drop .result-selected {}

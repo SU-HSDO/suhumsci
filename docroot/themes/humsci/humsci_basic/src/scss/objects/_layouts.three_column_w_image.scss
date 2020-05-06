@@ -51,28 +51,18 @@
   &__main-top {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    justify-content: space-between;
 
-    .hb-three-column-w-image--one-sidebar & {
-      @include grid-media-min('lg') {
-        flex-wrap: nowrap;
-      }
-    }
-
-    .hb-three-column-w-image--no-sidebar & {
-      @include grid-media-min('md') {
-        flex-wrap: nowrap;
-      }
+    @include grid-media-min('md') {
+      flex-wrap: nowrap;
     }
   }
 
   &__main-top-text {
-    width: 100%;
-    margin-bottom: hb-calculate-rems(16px);
+    margin: 0 hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
-        width: 60%;
         display: flex;
         flex-direction: column;
       }
@@ -80,16 +70,21 @@
 
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media-min('md') {
-        width: 60%;
         display: flex;
         flex-direction: column;
       }
     }
   }
 
+  // An note on the functionality of images
+  // --------------------------------------
+  // The height and width of images are set and can be changed in layout builder configuration for images.
+  // Only images medium or large scale to 100% on mobile screens.
+  // Once an image is larger than the mobile screen size, they scale down to fit.
+  // Small images are only 200px width therefore will not scale at mobile.
+  // Adding styles to make small image style will cause the image to pixelate which is not recommended.
+  // Image will also wrap and scale at different breakpoints depending upon the length of the text in the title.
   &__main-top-image {
-    width: 100%;
-
     // Override class for WYSIWYG defaults
     &.align {
       &-right,
@@ -104,36 +99,28 @@
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
-        width: 40%;
         margin-left: hb-calculate-rems(20px);
       }
     }
 
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media-min('md') {
-        width: 40%;
         margin-left: hb-calculate-rems(20px);
       }
     }
 
     img {
       display: block;
-
-      @supports (object-fit: cover) {
-        object-fit: cover;
-        width: 100%;
-        max-height: hb-calculate-rems(375px);
-
-        @include grid-media-min('md') {
-          max-height: hb-calculate-rems(250px);
-        }
-      }
     }
   }
 
   &__main-body {
     .hb-three-column-w-image--no-sidebar:not(.hs-full-width) & {
       max-width: hb-calculate-rems($hb-three-column-w-image-main-body-width);
+    }
+
+    .layout__region {
+      margin-bottom: hb-calculate-rems(20px);
     }
   }
 

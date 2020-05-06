@@ -2,15 +2,17 @@
 
 namespace Drupal\su_humsci_profile\Overrides;
 
+use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\encrypt\EncryptService;
 
 /**
- * Example configuration override.
+ * Humsci config overrides on the whole platform.
  */
 class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
@@ -36,6 +38,20 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $encryption;
 
   /**
+   * Entity Type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Config Pages loader service.
+   *
+   * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
+   */
+  protected $configPages;
+
+  /**
    * ConfigOverrides constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -44,11 +60,17 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Config Factory Service.
    * @param \Drupal\encrypt\EncryptService $encrypt_service
    *   Encryption Service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity Type manager service.
+   * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages
+   *   Config Pages loader service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages) {
     $this->moduleHandler = $module_handler;
     $this->configFactory = $config_factory;
     $this->encryption = $encrypt_service;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->configPages = $config_pages;
   }
 
   /**
@@ -66,7 +88,48 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         ],
       ];
     }
+
+    if (in_array('field.field.node.hs_person.field_hs_person_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_image', 'field_people_image');
+    }
+
+    if (in_array('field.field.node.hs_news.field_hs_news_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_news.field_hs_news_image', 'field_news_image');
+    }
     return $overrides;
+  }
+
+  /**
+   * Set the config overrides for media fields from config pages values.
+   *
+   * @param array $overrides
+   *   Config overrides.
+   * @param string $config_name
+   *   Config entity name.
+   * @param string $config_pages_field
+   *   Field on the config pages to grab the value.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function setMediaFieldOverrides(array &$overrides, $config_name, $config_pages_field) {
+    $media_field_value = $this->configPages->getValue('field_default_values', $config_pages_field);
+
+    if (empty($media_field_value[0]['target_id'])) {
+      return;
+    }
+
+    $media_entity = $this->entityTypeManager->getStorage('media')
+      ->load($media_field_value[0]['target_id']);
+    if (!$media_entity) {
+      return;
+    }
+
+    $overrides[$config_name]['default_value'][0] = [
+      'weight' => 0,
+      'target_uuid' => $media_entity->uuid(),
+    ];
+
   }
 
   /**

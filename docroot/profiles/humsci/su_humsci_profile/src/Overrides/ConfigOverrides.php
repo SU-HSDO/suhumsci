@@ -93,8 +93,8 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_image', 'field_people_image');
     }
 
-    if (in_array('field.field.node.hs_news.field_hs_news_image	', $names)) {
-      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_news_image	', 'field_news_image');
+    if (in_array('field.field.node.hs_news.field_hs_news_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_news.field_hs_news_image', 'field_news_image');
     }
     return $overrides;
   }

@@ -2,6 +2,7 @@
 
 .field-hs-text-area {
   margin-bottom: hb-calculate-rems(48px);
+  @include clearfix;
 
   h1 {
     margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
@@ -40,6 +41,13 @@
     border-bottom: 0;
     transition: none;
     background-image: none;
+  }
+
+  // Unordered and ordered lists within the WYSIWYG need flexbox to implement proper alignment around floated images
+  ol,
+  ul {
+    display: flex;
+    flex-direction: column;
   }
 }
 

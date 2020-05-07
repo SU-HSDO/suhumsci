@@ -1,0 +1,20 @@
+// Drupal Administration Toolbar
+// Override anchor link styles written for the Humsci Colorful theme.
+.toolbar {
+  &-tab {
+    a.ext {
+      background-image: none;
+
+      // hide arrow and external link icons
+      .fa-ext {
+        display: none;
+      }
+
+      // Because we removed the background-image styles on line 6, let's
+      // add the default Drupal background-image styles for the toolbar back upon hover.
+      &:hover {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
+      }
+    }
+  }
+}

@@ -236,15 +236,25 @@
   &__date-tile {
     display: inline-block;
     text-align: center;
-    @include hb-global-color('background-color', 'black');
-    @include hb-global-color('color', 'white');
     min-width: hb-calculate-rems(100px);
-    padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
     margin-right: hb-spacing-width();
     position: absolute;
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
-    @include hb-pairing-color('background-color', 'secondary');
+
+    @include hb-themes(('airy', 'colorful')) {
+      @include hb-pairing-color('background-color', 'secondary');
+      @include hb-global-color('color', 'white');
+      padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
+    }
+
+    @include hb-traditional {
+      border: $hb-thin-border;
+      @include hb-global-color('background-color', 'white');
+      @include hb-global-color('border-color', 'gray-medium');
+      @include hb-pairing-color('color', 'primary');
+      padding: 0 0 hb-calculate-rems(8px);
+    }
 
     @include grid-media-min('sm') {
       bottom: hb-calculate-rems(22px);
@@ -259,6 +269,14 @@
   &__date-tile-month {
     text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
+
+    @include hb-traditional {
+      @include hb-pairing-color('background-color', 'primary');
+      @include hb-global-color('color', 'white');
+      font-size: hb-calculate-rems(14px);
+      padding: hb-calculate-rems(10px);
+      width: 100%;
+    }
   }
 
   &__date-tile-day {

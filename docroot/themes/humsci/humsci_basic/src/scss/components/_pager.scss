@@ -1,16 +1,43 @@
-.pager {
-  &__items {
-    list-style: none;
-    margin: hb-calculate-rems(10px) 0 0;
-    padding: 0;
-    text-align: center;
-  }
+// Base pager styles use by both the mini and full pagers
+.js-pager__items {
+  padding: 0;
+  text-align: center;
 
-  &__item {
+  li {
     display: inline;
     font-weight: hb-theme-font-weight(semibold);
     margin: hb-calculate-rems(10px);
+  }
 
+  li:not(.pager__item),
+  .pager__item--first,
+  .pager__item--last,
+  .pager__item--next,
+  .pager__item--previous {
+    a {
+      @include hb-pairing-color('color', 'secondary');
+      text-decoration: none;
+
+      &:focus,
+      &:hover {
+        @include hb-pairing-color('color', 'secondary');
+        text-decoration: underline;
+        background-image: none;
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+// Full pager classes
+// These styles are for the page numbers only shown in the full pager.
+.pager {
+  &__items {
+    list-style: none;
+    margin: hb-calculate-rems(6px) 0 0;
+  }
+
+  &__item {
     &:first-of-type {
       margin-left: 0;
     }
@@ -22,13 +49,18 @@
     a {
       @include hb-global-color('color', 'gray-dark');
       display: inline-block;
-      padding: hb-calculate-rems(6px);
+      padding: hb-calculate-rems(6px) hb-calculate-rems(9px);
       border-radius: $hb-button-border-radius;
       min-width: hb-calculate-rems(31px);
       text-align: center;
       text-decoration: none;
       transition: background-color $hb-animation-duration $hb-animation-timing-function;
       background-image: none;
+
+      // adjust padding for increase of font-size and line-height
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(6px) hb-calculate-rems(12px);
+      }
 
       &:hover,
       &:focus {
@@ -40,7 +72,6 @@
       @include hb-global-color('background-color', 'gray-dark');
       display: inline-block;
       border-radius: $hb-button-border-radius;
-      padding: 0;
 
       a {
         @include hb-global-color('color', 'white');
@@ -49,23 +80,6 @@
         &:focus {
           cursor: default;
           background-color: transparent;
-        }
-      }
-    }
-
-    &--first,
-    &--last,
-    &--previous,
-    &--next {
-      a {
-        @include hb-pairing-color('color', 'secondary');
-        width: auto;
-
-        &:focus,
-        &:hover {
-          @include hb-pairing-color('color', 'secondary');
-          background-color: transparent;
-          text-decoration: underline;
         }
       }
     }

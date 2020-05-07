@@ -10,7 +10,7 @@
 // Returns the proper spacing based on the theme.
 // Filters through $hb-spacing-list array to find the relevant
 // spacing $size for the theme.
-@function hb-spacing-width($size: 'default') {
+@function hb-spacing-width($size: 'default', $convert-to-rem: true) {
   $is-valid-theme: false;
 
   @each $theme in $hb-global-theme-list {
@@ -25,7 +25,13 @@
 
     @if ($result) {
       // Return spacing value if it exists
-      @return $result;
+      @if ($convert-to-rem) {
+        // use hb-calculate-rems and then return rem value
+        @return hb-calculate-rems($result);
+      } @else {
+        // return pixel value
+        @return $result;
+      }
     } @else {
       // Error if value doesn't exist
       @error "Couldn't find a value for this spacing size: #{$size}";

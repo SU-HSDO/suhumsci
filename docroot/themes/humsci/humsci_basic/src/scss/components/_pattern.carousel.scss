@@ -1,11 +1,13 @@
 .paragraph--type--hs-carousel {
   // Get rid of the colorful overlay on carousels (for both image-only and text-content ones)
   .field-hs-hero-image::before {
-    display: none;
+    @include hb-themes(('colorful', 'airy')) {
+      display: none;
+    }
   }
 
   .hb-hero-overlay {
-    @include hb-colorful {
+    @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
       padding: hb-spacing-width() 0 hb-spacing-width() 8%;
 
@@ -49,10 +51,14 @@
           grid-row-end: 4;
         }
       }
+
+      @include hb-traditional { // TODO: determine what is shared between both
+        // add stuff here??
+      }
     }
 
     &__image-wrapper {
-      @include hb-colorful {
+      @include hb-themes(('colorful', 'airy')) {
         position: relative;
 
         @include grid-media-min('md') {
@@ -98,7 +104,7 @@
     }
 
     &__text {
-      @include hb-colorful {
+      @include hb-themes(('colorful', 'airy')) {
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
         padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;

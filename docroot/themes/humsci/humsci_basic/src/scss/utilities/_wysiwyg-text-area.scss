@@ -1,5 +1,4 @@
 // WYSIWYG text area styles
-
 .field-hs-text-area {
   @include clearfix;
   margin-bottom: hb-calculate-rems(hb-spacing-width());
@@ -12,7 +11,13 @@
   h6 {
     margin-left: 0;
     margin-right: 0;
+  }
 
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @include hb-traditional {
       margin-bottom: hb-calculate-rems(4px);
     }
@@ -20,7 +25,10 @@
 
   h1 {
     margin-top: hb-calculate-rems(hb-spacing-width());
-    margin-bottom: hb-calculate-rems(hb-spacing-width('xxs'));
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(hb-spacing-width('xxs'));
+    }
   }
 
   h2 {
@@ -36,8 +44,6 @@
     }
   }
 
-  // Note: Merani and J might like to refine heading sizes further
-  // before touching margin
   h3 {
     @include hb-traditional {
       margin-top: hb-calculate-rems(hb-spacing-width('xs'));

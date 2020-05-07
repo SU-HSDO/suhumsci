@@ -1,9 +1,7 @@
 .paragraph--type--hs-carousel {
   // Get rid of the colorful overlay on carousels (for both image-only and text-content ones)
   .field-hs-hero-image::before {
-    @include hb-themes(('colorful', 'airy')) {
-      display: none;
-    }
+    display: none;
   }
 
   .hb-hero-overlay {
@@ -50,10 +48,6 @@
           grid-row-start: 3;
           grid-row-end: 4;
         }
-      }
-
-      @include hb-traditional { // TODO: determine what is shared between both
-        // add stuff here??
       }
     }
 
@@ -168,6 +162,51 @@
           @include grid-media-min('lg') {
             width: auto;
           }
+        }
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        padding: hb-calculate-rems(100px) 0;
+        text-align: left;
+        left: $hb-gutter-width--small;
+        transform: translate(0, -50%);
+
+        @include grid-media-min('md') {
+          left: $hb-gutter-width;
+          width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        h2 {
+          width: auto;
+          margin: 0 hb-calculate-rems(70px);
+        }
+
+        // TODO: fyi these styles match the hero - see line 185. If one is changed, the other should be as well.
+        .field-hs-hero-body {
+          margin: hb-calculate-rems(16px) hb-calculate-rems(28px) 0;
+          width: auto;
+
+          @include grid-media-min('sm') {
+            margin: hb-calculate-rems(16px) hb-calculate-rems(70px) 0;
+          }
+
+          @include grid-media-min('md') {
+            margin-top: hb-calculate-rems(24px);
+            width: calc(70% - #{hb-calculate-rems(70px)});
+          }
+
+          @include grid-media-min('lg') {
+            margin-top: hb-calculate-rems(32px);
+          }
+
+          @include grid-media-min('xl') {
+            width: calc(60% - #{hb-calculate-rems(70px)});
+          }
+        }
+
+        .field-hs-hero-link {
+          margin: 0 hb-calculate-rems(70px);
         }
       }
     }

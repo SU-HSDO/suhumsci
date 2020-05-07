@@ -138,6 +138,10 @@
     .field-hs-hero-title h2 {
       @include hb-traditional {
         line-height: 112%;
+
+        @include grid-media-min('xl') {
+          font-size: hb-calculate-rems(48px);
+        }
       }
     }
 
@@ -170,7 +174,7 @@
       }
 
       @include grid-media-min('lg') {
-        width: 50%;
+        width: 60%;
       }
 
       @include hb-traditional {
@@ -227,7 +231,7 @@
           }
 
           @include grid-media-min('lg') {
-            margin-top: hb-calculate-rems($hb-gutter-width); // 48px
+            margin-top: hb-calculate-rems($hb-gutter-width);
           }
         }
 

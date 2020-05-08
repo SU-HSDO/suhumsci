@@ -140,35 +140,3 @@
     background-image: linear-gradient(to left, transparent $icon-width, var(--palette--tertiary-highlight) $icon-width);
   }
 }
-
-@mixin hb-card-arrow-link {
-  display: block;
-  color: transparent; // `hide` the text but make sure screen readers can still read it
-  height: hb-calculate-rems(44px);
-  text-decoration: none;
-  background-image: none;
-  width: 100%;
-  z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
-
-  &:hover,
-  &:focus {
-    color: transparent;
-    cursor: pointer;
-
-    &::before {
-      transform: translateX(0.625rem);
-      @include hb-icon-link-arrow('secondary-darken-12');
-    }
-  }
-
-  &::before { // postcard arrow
-    content: '';
-    position: absolute;
-    left: 0;
-    height: hb-calculate-rems(44px); // WCAG AAA target size
-    width: hb-calculate-rems(44px);
-    @include hb-icon-link-arrow('secondary');
-    transform: translateX(0);
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
-  }
-}

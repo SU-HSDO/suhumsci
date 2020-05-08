@@ -11,7 +11,6 @@
     @include hb-input-border;
     @include hb-input-focus;
     font-size: hb-calculate-rems(16px);
-    border-top: 0 none; // Overwrite this border because the input above it already has the borer.
   }
   //
   // &.chosen-with-drop .chosen-drop {
@@ -161,6 +160,12 @@
 
 // Multi Chosen
 .chosen-container-multi {
+  @include hb-input-border;
+
+  &:focus-within {
+    @include hb-input-focus;
+  }
+
   .chosen-choices {
     display: block;
     // scss-lint:disable ImportantRule
@@ -171,12 +176,9 @@
     line-height: 1;
     height: auto;
     min-height: $hb-input-min-height;
+    margin: -1px 0;
     padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
-    @include hb-input-border;
-
-    &:focus-within {
-      @include hb-input-focus;
-    }
+    border: 0 none;
   }
 
   .chosen-choices li {
@@ -263,6 +265,11 @@
         @include hb-input-focus;
       }
     }
+  }
+
+  .chosen-drop {
+    margin: 1px 0;
+    border-top: 0 none; // Overwrite this border because the input above it already has the borer.
   }
 
   // .chosen-drop .result-selected {}

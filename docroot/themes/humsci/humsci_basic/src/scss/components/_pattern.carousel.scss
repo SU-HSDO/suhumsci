@@ -95,6 +95,14 @@
           }
         }
       }
+
+      // @include hb-traditional {
+      //   img {
+      //     @include grid-media-min('md') {
+      //       min-height: 65vh;
+      //     }
+      //   }
+      // }
     }
 
     &__text {
@@ -182,10 +190,9 @@
           margin: 0 hb-calculate-rems(70px);
         }
 
-        // TODO: fyi these styles match the hero - see line 185. If one is changed, the other should be as well.
         .field-hs-hero-body {
           margin: hb-calculate-rems(16px) hb-calculate-rems(28px) 0;
-          width: auto;
+          // width: auto; // do i need this? It's already set above. // TODO: double check
 
           @include grid-media-min('sm') {
             margin: hb-calculate-rems(16px) hb-calculate-rems(70px) 0;
@@ -193,20 +200,41 @@
 
           @include grid-media-min('md') {
             margin-top: hb-calculate-rems(24px);
-            width: calc(70% - #{hb-calculate-rems(70px)});
           }
 
           @include grid-media-min('lg') {
             margin-top: hb-calculate-rems(32px);
           }
-
-          @include grid-media-min('xl') {
-            width: calc(60% - #{hb-calculate-rems(70px)});
-          }
         }
 
         .field-hs-hero-link {
           margin: 0 hb-calculate-rems(70px);
+        }
+
+        .field-hs-hero-link a {
+          max-width: unset;
+        }
+
+        .field-hs-hero-body,
+        .field-hs-hero-link {
+          @include grid-media-min('sm') {
+            width: calc(90% - #{hb-calculate-rems(140px)}); // looks good on no-sidebar page
+            background-color: hotpink;
+          }
+
+          @include grid-media-min('md') {
+            background-color: cyan;
+          }
+
+          @include grid-media-min('lg') {
+            width: calc(85% - #{hb-calculate-rems(140px)}); // looks good on no-sidebar page
+            background-color: mediumaquamarine;
+          }
+
+          @include grid-media-min('xl') {
+            width: calc(80% - #{hb-calculate-rems(140px)}); // looks good on no-sidebar page
+            background-color: yellowgreen;
+          }
         }
       }
     }

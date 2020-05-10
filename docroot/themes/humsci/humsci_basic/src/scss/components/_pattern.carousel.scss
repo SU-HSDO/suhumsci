@@ -95,14 +95,6 @@
           }
         }
       }
-
-      // @include hb-traditional {
-      //   img {
-      //     @include grid-media-min('md') {
-      //       min-height: 65vh;
-      //     }
-      //   }
-      // }
     }
 
     &__text {
@@ -175,24 +167,29 @@
 
       @include hb-traditional {
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
-        padding: hb-calculate-rems(100px) 0;
+        padding: 8% 0;
         text-align: left;
         left: $hb-gutter-width--small;
         transform: translate(0, -50%);
 
         @include grid-media-min('md') {
+          padding: 5.5% 0;
           left: $hb-gutter-width;
           width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
 
         h2 {
           width: auto;
-          margin: 0 hb-calculate-rems(70px);
+          margin: 0 hb-calculate-rems(28px);
+
+          @include grid-media-min('sm') {
+            margin: 0 hb-calculate-rems(70px);
+          }
         }
 
         .field-hs-hero-body {
           margin: hb-calculate-rems(16px) hb-calculate-rems(28px) 0;
-          // width: auto; // do i need this? It's already set above. // TODO: double check
+          width: auto;
 
           @include grid-media-min('sm') {
             margin: hb-calculate-rems(16px) hb-calculate-rems(70px) 0;
@@ -208,7 +205,11 @@
         }
 
         .field-hs-hero-link {
-          margin: 0 hb-calculate-rems(70px);
+          margin: 0 hb-calculate-rems(28px);
+
+          @include grid-media-min('sm') {
+            margin: 0 hb-calculate-rems(70px);
+          }
         }
 
         .field-hs-hero-link a {
@@ -218,22 +219,27 @@
         .field-hs-hero-body,
         .field-hs-hero-link {
           @include grid-media-min('sm') {
-            width: calc(90% - #{hb-calculate-rems(140px)}); // looks good on no-sidebar page
-            background-color: hotpink;
-          }
-
-          @include grid-media-min('md') {
-            background-color: cyan;
+            width: calc(90% - #{hb-calculate-rems(140px)});
           }
 
           @include grid-media-min('lg') {
-            width: calc(85% - #{hb-calculate-rems(140px)}); // looks good on no-sidebar page
-            background-color: mediumaquamarine;
+            width: calc(85% - #{hb-calculate-rems(140px)});
           }
 
           @include grid-media-min('xl') {
-            width: calc(80% - #{hb-calculate-rems(140px)}); // looks good on no-sidebar page
-            background-color: yellowgreen;
+            width: calc(80% - #{hb-calculate-rems(140px)});
+          }
+
+          .hb-three-column--one-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              width: calc(95% - #{hb-calculate-rems(140px)});
+            }
+
+            @include grid-media-min('xl') {
+              width: calc(90% - #{hb-calculate-rems(140px)});
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
       }

@@ -1,0 +1,180 @@
+// Link hover style for headings
+@mixin hb-link--hover-style($box-shadow-color, $border-color) {
+  margin-bottom: 0.0625em;
+  text-decoration: none;
+  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
+
+  &:hover,
+  &:focus {
+    transition-delay: 0s, 0s;
+    border-bottom-color: $border-color;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('border-bottom-color', $border-color);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
+    }
+  }
+
+  @include hb-traditional {
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('border-bottom-color', $border-color);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
+    }
+  }
+}
+
+// Link style for headings
+@mixin hb-link {
+  // no font size by default
+  @include hb-global-color('color', 'black');
+  font-weight: hb-theme-font-weight(semibold);
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  @include hb-global-color('border-bottom-color', 'gray-medium');
+  @include hb-link--hover-style('tertiary-highlight', 'tertiary-reversed');
+}
+
+// Link style for main content that is not a heading
+// The default $icon-width is set for the width of external link icons
+@mixin hb-link--inline($icon: false, $icon-width: 16px) {
+  // no font size by default
+  background-size: 100% 200%;
+  background-position-y: -100%;
+  background-repeat: no-repeat;
+  @include hb-pairing-color('color', 'tertiary');
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
+  }
+
+  @include hb-traditional {
+    @include hb-link-background-image($icon, $icon-width, $hb-traditional-default, $ht-traditional-pairings);
+  }
+
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'tertiary-darken-20');
+    background-position-y: -50%;
+  }
+
+  .hb-local-footer & {
+    background-image: none;
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-darken-20');
+      background-image: none;
+    }
+  }
+
+  .hb-local-footer--dark & {
+    @include hb-pairing-color('color', 'tertiary-reversed');
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-highlight');
+      @include hb-ext-icon-color('tertiary-highlight');
+    }
+  }
+}
+
+// More Link Styles
+// For Traditional Theme, this is used on cards in combination with a long arrow
+@mixin hb-more-link {
+  font-size: hb-calculate-rems(18px);
+  text-decoration: none;
+
+  // Overrides button styles when used on a button
+  border: none;
+  background: none;
+  padding: 0;
+  @include hb-pairing-color('color', 'secondary');
+
+  &::after {
+    content: '';
+    display: inline-block;
+    @include hb-icon-link-arrow('secondary');
+    margin-left: hb-calculate-rems(8px);
+    background-size: 85%;
+    transition: transform $hb-animation-duration $hb-animation-timing-function;
+  }
+
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'secondary-darken-12');
+
+    background-image: none;
+    background-color: transparent;
+
+    &::after {
+      @include hb-icon-link-arrow('secondary-darken-12');
+      background-size: 85%;
+      transform: translateX(0.25rem);
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-weight: hb-theme-font-weight(bold);
+
+    &::after {
+      height: hb-calculate-rems(19px);
+      width: hb-calculate-rems(19px);
+      margin-bottom: hb-calculate-rems(-4px);
+    }
+  }
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+
+    &::after {
+      height: hb-calculate-rems(25px);
+      width: hb-calculate-rems(25px);
+      margin-bottom: hb-calculate-rems(-6px);
+    }
+  }
+}
+
+// Arrow style link for Colorful Theme
+// Used on cards
+@mixin hb-card-arrow-link {
+  display: block;
+  color: transparent; // `hide` the text but make sure screen readers can still read it
+  height: hb-calculate-rems(44px);
+  text-decoration: none;
+  background-image: none;
+  width: 100%;
+  z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
+
+  &:hover,
+  &:focus {
+    color: transparent;
+    cursor: pointer;
+
+    &::before {
+      transform: translateX(0.625rem);
+      @include hb-icon-link-arrow('secondary-darken-12');
+    }
+  }
+
+  &::before { // postcard arrow
+    content: '';
+    position: absolute;
+    left: 0;
+    height: hb-calculate-rems(44px); // WCAG AAA target size
+    width: hb-calculate-rems(44px);
+    @include hb-icon-link-arrow('secondary');
+    transform: translateX(0);
+    transition: transform $hb-animation-duration $hb-animation-timing-function;
+  }
+}

@@ -78,23 +78,28 @@ a.hb-pill {
   h4,
   h5,
   h6 {
-    font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(38px);
-    line-height: 112%;
+    @include hb-heading-1;
     margin: 0;
-
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(48px);
-    }
   }
 
-  &::before {
-    border-bottom: solid hb-calculate-rems(4px);
-    @include hb-pairing-color('border-color', 'secondary');
-    content: '';
-    display: inline-block;
-    vertical-align: middle;
-    width: hb-calculate-rems(55px);
-    margin-right: hb-calculate-rems(10px);
+  @include hb-themes(('colorful', 'airy')) {
+    &::before {
+      border-bottom: solid hb-calculate-rems(4px);
+      @include hb-pairing-color('border-color', 'secondary');
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      width: hb-calculate-rems(55px);
+      margin-right: hb-calculate-rems(10px);
+    }
+  }
+}
+
+
+// Apply serif font to Traditional Theme
+.hb-serif {
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
   }
 }

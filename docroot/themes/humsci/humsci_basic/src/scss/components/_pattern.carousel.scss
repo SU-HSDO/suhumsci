@@ -136,11 +136,6 @@
           @include hb-heading-4;
           margin: hb-calculate-rems(24px) 0;
 
-          @include grid-media-min('md') {
-            @include hb-heading-4;
-            margin: hb-calculate-rems(24px) 0;
-          }
-
           @include grid-media-min('lg') {
             @include hb-heading-3;
             margin: hb-calculate-rems(28px) 0;
@@ -169,45 +164,45 @@
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
         padding: 8% 0;
         text-align: left;
-        left: $hb-gutter-width--small;
+        left: hb-calculate-rems(32px);
         transform: translate(0, -50%);
 
         @include grid-media-min('md') {
           padding: 5.5% 0;
-          left: $hb-gutter-width;
+          left: hb-calculate-rems(48px);
           width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
 
         h2 {
           width: auto;
-          margin: 0 hb-calculate-rems(28px);
+          margin: 0 hb-calculate-rems(32px);
 
-          @include grid-media-min('sm') {
+          @include grid-media-min('lg') {
             margin: 0 hb-calculate-rems(70px);
           }
         }
 
         .field-hs-hero-body {
-          margin: hb-calculate-rems(16px) hb-calculate-rems(28px) 0;
+          margin: hb-calculate-rems(14px) hb-calculate-rems(32px) 0;
           width: auto;
 
-          @include grid-media-min('sm') {
-            margin: hb-calculate-rems(16px) hb-calculate-rems(70px) 0;
-          }
-
           @include grid-media-min('md') {
-            margin-top: hb-calculate-rems(24px);
+            margin: hb-calculate-rems(24px) hb-calculate-rems(32px) 0;
           }
 
           @include grid-media-min('lg') {
-            margin-top: hb-calculate-rems(32px);
+            margin: hb-calculate-rems(24px) hb-calculate-rems(70px) 0;
           }
         }
 
         .field-hs-hero-link {
-          margin: 0 hb-calculate-rems(28px);
+          margin: 0 hb-calculate-rems(32px);
 
-          @include grid-media-min('sm') {
+          @include grid-media-min('md') {
+            margin: 0 hb-calculate-rems(32px);
+          }
+
+          @include grid-media-min('lg') {
             margin: 0 hb-calculate-rems(70px);
           }
         }
@@ -218,8 +213,8 @@
 
         .field-hs-hero-body,
         .field-hs-hero-link {
-          @include grid-media-min('sm') {
-            width: calc(90% - #{hb-calculate-rems(140px)});
+          @include grid-media-min('md') {
+            width: calc(90% - #{hb-calculate-rems(64px)});
           }
 
           @include grid-media-min('lg') {

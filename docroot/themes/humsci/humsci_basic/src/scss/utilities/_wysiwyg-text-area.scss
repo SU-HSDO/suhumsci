@@ -184,40 +184,5 @@ button.hs-more-link,
 .hs-more-link a,
 .hs-more-link button {
   margin-bottom: hb-calculate-rems(20px);
-  font-weight: hb-theme-font-weight(bold);
-  font-size: hb-calculate-rems(18px);
-  text-decoration: none;
-
-  // Overrides button styles when used on a button
-  border: none;
-  background: none;
-  padding: 0;
-  @include hb-pairing-color('color', 'secondary');
-
-  &::after {
-    content: '';
-    display: inline-block;
-    height: hb-calculate-rems(19px);
-    width: hb-calculate-rems(19px);
-    margin-left: hb-calculate-rems(8px);
-    margin-bottom: hb-calculate-rems(-4px);
-
-    @include hb-icon-link-arrow('secondary');
-    background-size: 85%;
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
-  }
-
-  &:hover,
-  &:focus {
-    @include hb-pairing-color('color', 'secondary-darken-12');
-
-    background-image: none;
-    background-color: transparent;
-
-    &::after {
-      @include hb-icon-link-arrow('secondary-darken-12');
-      background-size: 85%;
-      transform: translateX(0.25rem);
-    }
-  }
+  @include hb-more-link;
 }

@@ -33,12 +33,12 @@
 
   &__main {
     width: 100%;
-    margin-bottom: hb-calculate-rems($hb-gutter-width);
+    margin-bottom: hb-spacing-width();
 
     @include grid-media-min('lg') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{$hb-sidebar-width} - #{hb-calculate-rems($hb-gutter-width)});
+        width: calc(100% - #{$hb-sidebar-width} - #{hb-spacing-width()});
         margin-bottom: 0;
       }
 
@@ -59,7 +59,7 @@
   }
 
   &__main-top-text {
-    margin: 0 hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
+    margin: 0 hb-spacing-width('xxs') hb-spacing-width('xxs') 0;
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('lg') {
@@ -89,10 +89,10 @@
     &.align {
       &-right,
       &-left {
-        margin: 0 0 hb-calculate-rems(16px);
+        margin: 0 0 hb-spacing-width('xxs');
 
         @include grid-media-min('md') {
-          margin-bottom: hb-calculate-rems($hb-gutter-width);
+          margin-bottom: hb-spacing-width();
         }
       }
     }

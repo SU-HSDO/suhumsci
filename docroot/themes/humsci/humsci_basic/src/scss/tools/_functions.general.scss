@@ -6,3 +6,41 @@
   $size-in-rems: $size-in-pixels / $hb-root-font-size;
   @return #{$size-in-rems}rem;
 }
+
+// Returns the proper spacing based on the theme.
+// Filters through $hb-spacing-list array to find the relevant
+// spacing $size for the theme.
+// Additionally, this function allows for a $convert-to-rem parameter
+// to get passed in to convert the result to rem or not.
+// By default, we'll convert to rem, but every once in a while, you'll want to
+// pass `false` to get pixel values for doing math with the grid, columns, etc.
+@function hb-spacing-width($size: 'default', $convert-to-rem: true) {
+  $is-valid-theme: false;
+
+  @each $theme in $hb-global-theme-list {
+    @if ($theme == $hb-current-theme) {
+      $is-valid-theme: true;
+    }
+  }
+
+  @if ($is-valid-theme) {
+    $theme-spacing-list: map-get($hb-spacing-list, $hb-current-theme);
+    $result: map-get($theme-spacing-list, $size);
+
+    @if ($result) {
+      // Return spacing value if it exists
+      @if ($convert-to-rem) {
+        // use hb-calculate-rems and then return rem value
+        @return hb-calculate-rems($result);
+      } @else {
+        // return pixel value
+        @return $result;
+      }
+    } @else {
+      // Error if value doesn't exist
+      @error "Couldn't find a value for this spacing size: #{$size}";
+    }
+  } @else {
+    @return null;
+  }
+}

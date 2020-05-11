@@ -1,5 +1,5 @@
 .hb-card {
-  margin-bottom: $hb-gutter-width;
+  margin-bottom: hb-spacing-width();
   display: flex;
   flex-direction: column;
 
@@ -32,7 +32,7 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(16px);
+      margin-bottom: hb-spacing-width('xxs');
     }
 
     // date stacked vertical UI pattern item
@@ -105,7 +105,7 @@
     // date stacked horizontal UI pattern item
     &-detail {
       padding-right: hb-calculate-rems(26px);
-      margin-bottom: hb-calculate-rems(16px);
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 
@@ -162,7 +162,7 @@
   &__location {
     @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
-    margin-bottom: hb-calculate-rems(16px);
+    margin-bottom: hb-spacing-width('xxs');
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
@@ -178,7 +178,7 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(20px);
+      margin-bottom: hb-spacing-width('xxs');
     }
 
     .views-label {
@@ -190,7 +190,7 @@
 
   &__graphics {
     position: relative;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-spacing-width('xs');
   }
 
   &__img {
@@ -221,7 +221,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
-        margin-right: hb-calculate-rems($hb-gutter-width);
+        margin-right: hb-spacing-width();
         margin-bottom: 0;
       }
     }
@@ -240,7 +240,7 @@
     @include hb-global-color('color', 'white');
     min-width: hb-calculate-rems(100px);
     padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
-    margin-right: hb-calculate-rems($hb-gutter-width);
+    margin-right: hb-spacing-width();
     position: absolute;
     bottom: hb-calculate-rems(18px);
     left: hb-calculate-rems(-10px);
@@ -283,10 +283,10 @@
 
   &__title {
     margin-top: 0;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-spacing-width('xs');
 
     @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems(24px);
+      margin-bottom: hb-spacing-width('sm');
     }
 
     h2,
@@ -320,7 +320,7 @@
 
         @include grid-media-min('lg') {
           font-weight: hb-theme-font-weight(semibold);
-          font-size: hb-calculate-rems(24px);
+          font-size: hb-calculate-rems(20px);
           line-height: 124%;
         }
       }
@@ -332,19 +332,15 @@
   }
 
   &__description {
-    @include hb-body--small;
-
-    @include grid-media-min('lg') {
-      @include hb-body--medium;
-    }
+    @include hb-description;
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(24px);
+      margin-bottom: hb-spacing-width('xs');
     }
 
     .views-field:not(:last-child) {
       display: block;
-      margin-bottom: hb-calculate-rems(16px);
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 

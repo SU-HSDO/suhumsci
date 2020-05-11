@@ -10,6 +10,10 @@
 // Returns the proper spacing based on the theme.
 // Filters through $hb-spacing-list array to find the relevant
 // spacing $size for the theme.
+// Additionally, this function allows for a $convert-to-rem parameter
+// to get passed in to convert the result to rem or not.
+// By default, we'll convert to rem, but every once in a while, you'll want to
+// pass `false` to get pixel values for doing math with the grid, columns, etc.
 @function hb-spacing-width($size: 'default', $convert-to-rem: true) {
   $is-valid-theme: false;
 

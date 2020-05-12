@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_hs_row_components
+    - paragraphs.paragraphs_type.hs_priv_text_area
     - paragraphs.paragraphs_type.hs_row
   module:
     - entity_reference_revisions
@@ -24,9 +25,37 @@ settings:
   handler_settings:
     negate: 1
     target_bundles:
+      hs_priv_text_area: hs_priv_text_area
       hs_row: hs_row
     target_bundles_drag_drop:
-      row:
+      hs_accordion:
+        weight: 11
+        enabled: false
+      hs_carousel:
+        weight: 12
+        enabled: false
+      hs_hero_image:
+        weight: 13
+        enabled: false
+      hs_postcard:
+        weight: 14
+        enabled: false
+      hs_private_files:
+        weight: 15
+        enabled: false
+      hs_priv_text_area:
         enabled: true
-        weight: 8
+        weight: 16
+      hs_row:
+        enabled: true
+        weight: 17
+      hs_text_area:
+        weight: 18
+        enabled: false
+      hs_view:
+        weight: 19
+        enabled: false
+      hs_webform:
+        weight: 20
+        enabled: false
 field_type: entity_reference_revisions

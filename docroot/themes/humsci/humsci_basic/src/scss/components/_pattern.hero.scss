@@ -1,7 +1,7 @@
 // Note: this scss is the base of the hero, AND the carousel patterns
 // If you change something here, you will likely need to change it and override it in the carousel.scss
 .field-hs-hero-image {
-  // For the humsci_colorful theme hero, ensure there is a background color added to the image alone
+  // Ensure there is a background color added to the image alone
   position: relative;
 
   &::before {
@@ -32,14 +32,14 @@
 .hb-hero-overlay {
   margin: hb-spacing-width() 0 hb-spacing-width();
 
+  position: relative;
+  min-height: 60vh;
+
   .hs-full-width & {
     // Special negative margin for the hero
     // to get rid of the vertical padding on all basic pages
     margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
   }
-
-  position: relative;
-  min-height: 60vh;
 
   @include hb-themes(('colorful', 'airy')) {
     @include grid-media-min('sm') {
@@ -145,20 +145,18 @@
       @include grid-media-min('lg') {
         @include hb-heading-1;
       }
-    }
 
-    // must increase specificity of h2 to override line-height value set in hb-heading mixins
-    .field-hs-hero-title h2 {
       @include hb-traditional {
         line-height: 112%;
-        font-size: hb-calculate-rems(27px);
 
         @include grid-media-min('md') {
           font-size: hb-calculate-rems(33px);
+          line-height: 112%;
         }
 
         @include grid-media-min('lg') {
           font-size: hb-calculate-rems(38px);
+          line-height: 112%;
         }
 
         @include grid-media-min('xl') {
@@ -213,10 +211,10 @@
 
     .field-hs-hero-body {
       @include hb-traditional {
-        margin-top: hb-calculate-rems(14px);
+        margin-top: hb-spacing-width('xxs');
 
         @include grid-media-min('md') {
-          margin-top: hb-calculate-rems(24px);
+          margin-top: hb-spacing-width('sm');
           width: 60%;
         }
 
@@ -256,7 +254,7 @@
 
         @include hb-traditional {
           @include hb-hero-button('secondary', 'secondary-darken-12');
-          margin-top: hb-calculate-rems(20px);
+          margin-top: hb-spacing-width('xs');
 
           @include grid-media-min('sm') {
             max-width: 80%;
@@ -272,7 +270,7 @@
           }
 
           @include grid-media-min('xl') {
-            margin-top: hb-calculate-rems(32px);
+            margin-top: hb-spacing-width();
           }
         }
 

@@ -1,35 +1,37 @@
 .button,
 a.button {
-  @include button-style;
+  @include hb-button;
+  font-size: hb-calculate-rems(18px);
 
   // This is our only option for targeting the exposed filters reset button
   &[data-drupal-selector="edit-reset"] {
-    background-color: transparent;
-    border-color: transparent;
-    border-radius: 0;
-
-    padding: hb-calculate-rems(4px) 0;
-    line-height: 1;
-    min-height: auto;
-
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'secondary');
-      border-bottom: $hb-thin-border;
-      @include hb-pairing-color('border-bottom-color', 'secondary');
-
-      &:hover {
-        @include hb-pairing-color('color', 'secondary-darken-12');
-        @include hb-pairing-color('border-bottom-color', 'secondary-darken-12');
-      }
-
-      &:focus {
-        border-bottom-color: transparent;
-      }
-
-      &:hover,
-      &:focus {
-        cursor: pointer;
-      }
-    }
+    @include hb-reset-button;
   }
+}
+
+a.hs-button,
+button.hs-button,
+.hs-button a,
+.hs-button button,
+.hs-button a:not([class]),
+.hs-button button:not([class]) {
+  @include hb-button;
+}
+
+a.hs-button--big,
+button.hs-button--big,
+.hs-button--big a,
+.hs-button--big button,
+.hs-button--big a:not([class]),
+.hs-button--big button:not([class]) {
+  @include hb-big-button;
+}
+
+a.hs-secondary-button,
+button.hs-secondary-button,
+.hs-secondary-button a,
+.hs-secondary-button button,
+.hs-secondary-button a:not([class]),
+.hs-secondary-button button:not([class]) {
+  @include hb-secondary-button;
 }

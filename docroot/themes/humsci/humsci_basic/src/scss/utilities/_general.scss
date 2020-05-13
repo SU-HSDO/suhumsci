@@ -16,16 +16,14 @@
 .hb-inline-pipe {
   margin-bottom: 2rem;
 
-  @include hb-colorful {
-    @include grid-media-min('sm') {
-      display: flex;
-      flex-wrap: wrap;
-    }
+  @include grid-media-min('sm') {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-    > div {
-      margin-bottom: hb-calculate-rems(16px);
-      padding-right: hb-calculate-rems(20px);
-    }
+  > div {
+    margin-bottom: hb-spacing-width('xxs');
+    padding-right: hb-calculate-rems(20px);
   }
 }
 
@@ -60,9 +58,7 @@
 }
 
 .hb-well {
-  @include hb-colorful {
-    @include hb-global-color('background-color', 'gray-light');
-  }
+  @include hb-global-color('background-color', 'gray-light');
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
   border: 0 none;
@@ -81,21 +77,20 @@
 // View utility wrapper class
 .hb-views-divider {
   .views-row:not(:last-of-type) {
-    @include hb-colorful {
-      @include hb-divider;
-      margin-bottom: hb-calculate-rems(48px);
-    }
+    @include hb-divider;
+    margin-bottom: hb-spacing-width();
   }
 }
 
-// Used specifically on node detail pages when the image
-// is placed within the main content of the page in layout builder
+// Used specifically on node detail pages to float an image.
+// If the image is placed within the main content of the page
+// in layout builder, this class can be applied.
 .hb-main-body-detail-image {
   .hb-three-column-w-image & {
     @include grid-media-min('md') {
       @include clearfix;
       float: right;
-      margin: 0 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
+      margin: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
     }
   }
 }

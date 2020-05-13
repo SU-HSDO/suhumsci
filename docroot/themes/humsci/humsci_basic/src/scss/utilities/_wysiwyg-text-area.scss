@@ -1,49 +1,81 @@
 // WYSIWYG text area styles
-
 .field-hs-text-area {
-  margin-bottom: hb-calculate-rems(48px);
+  @include clearfix;
+  margin-bottom: hb-spacing-width();
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @include hb-traditional {
+      margin-bottom: hb-calculate-rems(4px);
+    }
+  }
 
   h1 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+    margin-top: hb-spacing-width();
 
-      @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
-      }
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 
   h2 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(48px) 0 hb-calculate-rems(12px);
+    margin-top: hb-spacing-width('md');
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(12px);
 
       @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(14px);
+        margin-top: hb-spacing-width();
+        margin-bottom: hb-calculate-rems(14px);
       }
     }
   }
 
   h3 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(28px) 0 hb-calculate-rems(10px);
+    @include hb-traditional {
+      margin-top: hb-spacing-width('xs');
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-top: hb-spacing-width('sm');
+      margin-bottom: hb-calculate-rems(10px);
     }
   }
 
   h4 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(4px);
+    margin-top: hb-calculate-rems(18px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(4px);
     }
   }
 
   h5 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+    margin-top: hb-calculate-rems(18px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(3px);
     }
   }
 
   h6 {
-    @include hb-colorful {
-      margin: hb-calculate-rems(18px) 0 hb-calculate-rems(3px);
+    margin-top: hb-calculate-rems(18px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(3px);
     }
   }
 
@@ -53,6 +85,13 @@
     transition: none;
     background-image: none;
   }
+
+  // Unordered and ordered lists within the WYSIWYG need flexbox to implement proper alignment around floated images
+  ol,
+  ul {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
@@ -60,10 +99,7 @@
   &-credits {
     font-size: hb-calculate-rems(14px);
     font-style: italic;
-
-    @include hb-colorful {
-      @include hb-global-color('color', 'gray-dark');
-    }
+    @include hb-global-color('color', 'gray-dark');
 
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'white');
@@ -74,13 +110,10 @@
     font-size: hb-calculate-rems(20px);
     font-weight: hb-theme-font-weight(semibold);
     line-height: 127%;
+    @include hb-global-color('color', 'gray-dark');
 
-    @include hb-colorful {
-      @include hb-global-color('color', 'gray-dark');
-
-      .hb-local-footer--dark & {
-        @include hb-global-color('color', 'gray-light');
-      }
+    .hb-local-footer--dark & {
+      @include hb-global-color('color', 'gray-light');
     }
 
     @include grid-media-min('lg') {
@@ -91,30 +124,31 @@
   &-font-splash {
     @include hb-heading-1;
 
-    @include hb-colorful {
-      @include hb-pairing-color('color', 'primary');
+    @include grid-media-min('md') {
+      margin: hb-spacing-width() 0 hb-spacing-width('xxs');
+    }
 
-      @include grid-media-min('md') {
-        margin: hb-calculate-rems(48px) 0 hb-calculate-rems(16px);
-      }
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('color', 'primary');
 
       .hb-local-footer--dark & {
         @include hb-global-color('color', 'gray-light');
       }
     }
+
+    @include hb-traditional {
+      @include hb-pairing-color('color', 'primary');
+      font-size: hb-calculate-rems(37px);
+      line-height: 125%;
+    }
   }
 
   &-caption {
     font-size: hb-calculate-rems(14px);
-
-    @include hb-colorful {
-      @include hb-global-color('color', 'gray-dark');
-    }
+    @include hb-global-color('color', 'gray-dark');
 
     .hb-local-footer--dark & {
-      @include hb-colorful {
-        @include hb-global-color('color', 'white');
-      }
+      @include hb-global-color('color', 'white');
     }
   }
 
@@ -146,16 +180,16 @@
 
 .align {
   &-right {
-    margin: hb-calculate-rems(28px) 0 hb-calculate-rems(28px) hb-calculate-rems(28px);
+    margin: hb-spacing-width('sm') 0 hb-spacing-width('sm') hb-spacing-width('sm');
   }
 
   &-left {
-    margin: hb-calculate-rems(28px) hb-calculate-rems(28px) hb-calculate-rems(28px) 0;
+    margin: hb-spacing-width('sm') hb-spacing-width('sm') hb-spacing-width('sm') 0;
   }
 
   &-center {
     img {
-      margin: hb-calculate-rems(28px) auto;
+      margin: hb-spacing-width('sm') auto;
     }
   }
 }
@@ -177,64 +211,8 @@ blockquote:nth-child(n) {
     @include hb-blockquote;
 
     .hb-local-footer--dark & {
-      @include hb-colorful {
-        @include hb-global-color('color', 'gray-light');
-      }
+      @include hb-global-color('color', 'gray-light');
     }
-  }
-}
-
-a.hs-button,
-button.hs-button,
-.hs-button a,
-.hs-button button {
-  @include button-style;
-  display: inline-block;
-  font-size: hb-calculate-rems(16px);
-  text-decoration: none;
-  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-}
-
-a.hs-button--big,
-button.hs-button--big,
-.hs-button--big a,
-.hs-button--big button {
-  @include button-style;
-  display: inline-block;
-  font-size: hb-calculate-rems(18px);
-  text-decoration: none;
-  padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
-}
-
-a.hs-secondary-button,
-button.hs-secondary-button,
-.hs-secondary-button a,
-.hs-secondary-button button {
-  @include button-style;
-  display: inline-block;
-  font-size: hb-calculate-rems(16px);
-  text-decoration: none;
-  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-  background-color: transparent;
-  @include hb-pairing-color('color', 'secondary');
-
-  &:hover {
-    @include hb-global-color('color', 'white');
-    @include hb-pairing-color('background-color', 'secondary');
-    @include hb-pairing-color('border-color', 'secondary');
-  }
-
-  &:active,
-  &:focus {
-    background-color: transparent;
-    @include hb-pairing-color('color', 'secondary');
-    @include hb-global-color('border-color', 'white');
-  }
-
-  .hb-local-footer--dark & {
-    // This mixin includes the hover and focus states.
-    @include hb-border-button('tertiary-reversed', 'secondary-highlight');
-    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   }
 }
 
@@ -249,43 +227,5 @@ button.hs-more-link,
 .hs-more-link a,
 .hs-more-link button {
   margin-bottom: hb-calculate-rems(20px);
-  font-weight: hb-theme-font-weight(bold);
-  font-size: hb-calculate-rems(18px);
-  text-decoration: none;
-
-  // Overrides button styles when used on a button
-  border: none;
-  background: none;
-  padding: 0;
-
-  @include hb-colorful {
-    @include hb-pairing-color('color', 'secondary');
-
-    &::after {
-      content: '';
-      display: inline-block;
-      height: hb-calculate-rems(19px);
-      width: hb-calculate-rems(19px);
-      margin-left: hb-calculate-rems(8px);
-      margin-bottom: hb-calculate-rems(-4px);
-
-      @include hb-icon-link-arrow('secondary');
-      background-size: 85%;
-      transition: transform $hb-animation-duration $hb-animation-timing-function;
-    }
-
-    &:hover,
-    &:focus {
-      @include hb-pairing-color('color', 'secondary-darken-12');
-
-      background-image: none;
-      background-color: transparent;
-
-      &::after {
-        @include hb-icon-link-arrow('secondary-darken-12');
-        background-size: 85%;
-        transform: translateX(0.25rem);
-      }
-    }
-  }
+  @include hb-more-link;
 }

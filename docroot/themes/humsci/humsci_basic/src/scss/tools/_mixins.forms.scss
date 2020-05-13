@@ -1,16 +1,27 @@
 @mixin hb-input-border {
-  @include hb-colorful {
+  border: $hb-thin-border;
+  @include hb-global-color('border-color', 'gray');
+
+  @include hb-themes(('colorful', 'airy')) {
     border-radius: $hb-border-radius;
-    border: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray');
+  }
+
+  @include hb-traditional {
+    // Need this to override Chosen JS
+    border-radius: 0;
   }
 }
 
 @mixin hb-input-focus {
-  @include hb-colorful {
-    @include hb-global-color('background-color', 'white');
+  @include hb-global-color('background-color', 'white');
+  box-shadow: none;
+  outline: none;
+
+  @include hb-themes(('colorful', 'airy')) {
     @include hb-pairing-color('border-color', 'secondary-active');
-    box-shadow: none;
-    outline: none;
+  }
+
+  @include hb-traditional {
+    @include hb-global-color('border-color', 'gray-dark');
   }
 }

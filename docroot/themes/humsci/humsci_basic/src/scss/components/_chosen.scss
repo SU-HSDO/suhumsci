@@ -8,13 +8,9 @@
   width: 100% !important; // This overrides an inline width
 
   .chosen-drop {
+    @include hb-input-border;
     @include hb-input-focus;
     font-size: hb-calculate-rems(16px);
-
-    @include hb-colorful {
-      border-top: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray');
-    }
   }
   //
   // &.chosen-with-drop .chosen-drop {
@@ -112,10 +108,7 @@
       background-repeat: no-repeat;
       background-position: center;
       background-size: hb-calculate-rems(12px) hb-calculate-rems(8px);
-
-      @include hb-colorful {
-        @include hb-icon-background('chevron', 'secondary');
-      }
+      @include hb-icon-background('chevron', 'secondary');
 
       b {
         display: none; // hides the chosen.js icon
@@ -167,6 +160,12 @@
 
 // Multi Chosen
 .chosen-container-multi {
+  @include hb-input-border;
+
+  &:focus-within {
+    @include hb-input-focus;
+  }
+
   .chosen-choices {
     display: block;
     // scss-lint:disable ImportantRule
@@ -176,14 +175,10 @@
     font-size: hb-calculate-rems(16px);
     line-height: 1;
     height: auto;
-    max-height: $hb-input-min-height;
     min-height: $hb-input-min-height;
+    margin: -1px 0;
     padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
-    @include hb-input-border;
-
-    &:focus-within {
-      @include hb-input-focus;
-    }
+    border: 0 none;
   }
 
   .chosen-choices li {
@@ -202,8 +197,7 @@
       font-family: inherit;
       background-image: none;
       box-shadow: none;
-      @include hb-global-color('color', 'gray-dark');
-      border-radius: hb-calculate-rems($hb-border-radius);
+      @include hb-input-border;
       padding: hb-calculate-rems(6px) hb-calculate-rems(22px) hb-calculate-rems(6px) hb-calculate-rems(6px);
       transition: 100ms ease-in-out;
 
@@ -240,10 +234,7 @@
           display: block;
           height: hb-calculate-rems(2px);
           width: hb-calculate-rems(12px);
-
-          @include hb-colorful {
-            @include hb-global-color('background-color', 'gray-dark');
-          }
+          @include hb-global-color('background-color', 'gray-dark');
 
           position: absolute;
           right: 4px;
@@ -276,8 +267,9 @@
     }
   }
 
-  .chosen-results {
-    margin-top: hb-calculate-rems(-3px);
+  .chosen-drop {
+    margin: 1px 0;
+    border-top: 0 none; // Overwrite this border because the input above it already has the borer.
   }
 
   // .chosen-drop .result-selected {}
@@ -298,10 +290,7 @@
         background-position: center;
         background-size: hb-calculate-rems(12px) hb-calculate-rems(8px);
         transform: rotate(180deg);
-
-        @include hb-colorful {
-          @include hb-icon-background('chevron', 'secondary');
-        }
+        @include hb-icon-background('chevron', 'secondary');
         //
         // b {
         //

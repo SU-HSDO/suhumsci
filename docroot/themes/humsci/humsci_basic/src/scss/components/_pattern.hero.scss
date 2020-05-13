@@ -1,21 +1,19 @@
 // Note: this scss is the base of the hero, AND the carousel patterns
 // If you change something here, you will likely need to change it and override it in the carousel.scss
 .field-hs-hero-image {
-  // For the humsci_colorful theme hero, ensure there is a background color added to the image alone
-  @include hb-colorful {
-    position: relative;
+  // Ensure there is a background color added to the image alone
+  position: relative;
 
-    &::before {
-      @include hb-pairing-color('background-color', 'primary-hero-overlay');
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.9;
-      z-index: $hb-z-index-hero1-overlay;
-    }
+  &::before {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    z-index: $hb-z-index-hero1-overlay;
   }
 
   // For all themes, if only the hero image is present (no overlay text) or hero wrapper,
@@ -23,7 +21,7 @@
   .hs-full-width & {
     // Special negative margin for the hero
     // to get rid of the vertical padding on all basic pages
-    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 hb-calculate-rems($hb-gutter-width);
+    margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
 
     img {
       width: 100%;
@@ -32,39 +30,53 @@
 }
 
 .hb-hero-overlay {
-  margin: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width);
+  margin: hb-spacing-width() 0 hb-spacing-width();
+
+  position: relative;
+  min-height: 60vh;
 
   .hs-full-width & {
     // Special negative margin for the hero
     // to get rid of the vertical padding on all basic pages
-    margin: calc(-1 * #{hb-calculate-rems($hb-gutter-width)}) 0 hb-calculate-rems($hb-gutter-width);
+    margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
   }
 
-  @include hb-colorful {
-    position: relative;
-    min-height: 60vh;
-
+  @include hb-themes(('colorful', 'airy')) {
     @include grid-media-min('sm') {
       min-height: 55vh;
     }
+  }
 
-    &::before {
-      @include hb-pairing-color('background-color', 'primary-hero-overlay');
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: $hb-z-index-hero-fallback;
+  .hb-three-column--one-sidebar & {
+    @include hb-traditional {
+      @include grid-media-min('md') {
+        min-height: 65vh;
+      }
     }
   }
 
-  @include hb-colorful {
-    &__image-wrapper,
-    &__text {
-      z-index: $hb-z-index-hero1-overlay;
+  .hb-three-column--no-sidebar & {
+    @include hb-traditional {
+      @include grid-media-min('md') {
+        min-height: 75vh;
+      }
     }
+  }
+
+  &::before {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: $hb-z-index-hero-fallback;
+  }
+
+  &__image-wrapper,
+  &__text {
+    z-index: $hb-z-index-hero1-overlay;
   }
 
   &__image-wrapper {
@@ -76,117 +88,203 @@
       }
     }
 
-    @include hb-colorful {
-      img {
-        height: 100%;
-        width: 100%;
-        min-height: 60vh;
-        object-fit: cover;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      min-height: 60vh;
 
+      @include hb-themes(('colorful', 'airy')) {
         @include grid-media-min('sm') {
           min-height: 55vh;
+        }
+      }
+
+      .hb-three-column--one-sidebar & {
+        @include hb-traditional {
+          @include grid-media-min('md') {
+            min-height: 65vh;
+          }
+        }
+      }
+
+      .hb-three-column--no-sidebar & {
+        @include hb-traditional {
+          @include grid-media-min('md') {
+            min-height: 75vh;
+          }
         }
       }
     }
   }
 
   &__text {
-    @include hb-colorful {
-      display: block;
-      @include hb-global-color('color', 'white');
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      left: 50%;
-      @include hb-page-width;
+    display: block;
+    @include hb-global-color('color', 'white');
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    @include hb-page-width;
 
-      h2 {
-        font-weight: hb-theme-font-weight(semibold);
-        font-size: hb-calculate-rems(27px);
-        line-height: 117%;
-        margin: 0 0 hb-calculate-rems($hb-gutter-width--small);
+    @include hb-traditional {
+      text-align: center;
+    }
+
+    h2 {
+      font-weight: hb-theme-font-weight(semibold);
+      font-size: hb-calculate-rems(27px);
+      line-height: 117%;
+      margin: 0 0 hb-spacing-width('md');
+
+      @include grid-media-min('md') {
+        @include hb-heading-2;
+        margin: 0 0 hb-spacing-width();
+      }
+
+      @include grid-media-min('lg') {
+        @include hb-heading-1;
+      }
+
+      @include hb-traditional {
+        line-height: 112%;
 
         @include grid-media-min('md') {
-          @include hb-heading-2;
-          margin: 0 0 hb-calculate-rems($hb-gutter-width);
+          font-size: hb-calculate-rems(33px);
+          line-height: 112%;
         }
 
         @include grid-media-min('lg') {
-          @include hb-heading-1;
+          font-size: hb-calculate-rems(38px);
+          line-height: 112%;
+        }
+
+        @include grid-media-min('xl') {
+          font-size: hb-calculate-rems(48px);
         }
       }
+    }
 
-      ul {
-        li {
-          &::before {
-            @include hb-pairing-color('background-color', 'secondary');
-          }
+    ul {
+      li {
+        &::before {
+          @include hb-pairing-color('background-color', 'secondary');
         }
       }
+    }
 
-      ol {
-        li {
-          &::before {
-            @include hb-pairing-color('color', 'secondary-active');
-          }
+    ol {
+      li {
+        &::before {
+          @include hb-pairing-color('color', 'secondary-active');
         }
       }
+    }
 
-      h2,
-      .field-hs-hero-body {
+    h2,
+    .field-hs-hero-body {
+      @include grid-media-min('sm') {
+        width: 80%;
+      }
+
+      @include grid-media-min('md') {
+        width: 70%;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
         width: 90%;
-
-        @include grid-media-min('sm') {
-          width: 80%;
-        }
-
-        @include grid-media-min('md') {
-          width: 70%;
-        }
 
         @include grid-media-min('lg') {
           width: 50%;
         }
       }
 
-      .field-hs-hero-body,
-      a {
-        font-size: hb-calculate-rems(16px);
+      @include hb-traditional {
+        margin: 0 auto;
+        width: 100%;
 
         @include grid-media-min('lg') {
-          font-size: hb-calculate-rems(18px);
+          width: 60%;
         }
       }
+    }
 
-      a {
-        @include hb-pairing-color('color', 'tertiary-reversed');
-        background-image: none;
+    .field-hs-hero-body {
+      @include hb-traditional {
+        margin-top: hb-spacing-width('xxs');
 
-        &:hover,
-        &:focus {
-          @include hb-pairing-color('color', 'tertiary-highlight');
+        @include grid-media-min('md') {
+          margin-top: hb-spacing-width('sm');
+          width: 60%;
+        }
+
+        @include grid-media-min('lg') {
+          width: 50%;
         }
       }
+    }
 
-      .field-hs-hero-link {
-        a,
-        button {
+    .field-hs-hero-body,
+    a {
+      @include hb-description;
+    }
+
+    a {
+      @include hb-pairing-color('color', 'tertiary-reversed');
+      background-image: none;
+
+      &:hover,
+      &:focus {
+        @include hb-pairing-color('color', 'tertiary-highlight');
+      }
+    }
+
+    .field-hs-hero-link {
+      a,
+      button {
+        @include hb-themes(('colorful', 'airy')) {
           max-width: 80%;
-          margin-top: hb-calculate-rems($hb-gutter-width--small);
-          @include hb-border-button('tertiary-reversed', 'secondary-highlight');
-          padding: hb-calculate-rems(12px);
-
-          @include grid-media-min('md') {
-            margin-top: hb-calculate-rems($hb-gutter-width);
-          }
+          @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
+          margin-top: hb-spacing-width('md');
 
           @include grid-media-min('lg') {
             max-width: 75%;
           }
+        }
 
-          .fa-ext {
-            display: none;
+        @include hb-traditional {
+          @include hb-hero-button('secondary', 'secondary-darken-12');
+          margin-top: hb-spacing-width('xs');
+
+          @include grid-media-min('sm') {
+            max-width: 80%;
           }
+
+          @include grid-media-min('md') {
+            margin-top: hb-calculate-rems(24px);
+            max-width: 60%;
+          }
+
+          @include grid-media-min('lg') {
+            max-width: 50%;
+          }
+
+          @include grid-media-min('xl') {
+            margin-top: hb-spacing-width();
+          }
+        }
+
+        // Override the padding from the hb-hero-button mixin used above
+        padding: hb-calculate-rems(12px);
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include grid-media-min('md') {
+            margin-top: hb-spacing-width();
+          }
+        }
+
+        .fa-ext {
+          display: none;
         }
       }
     }

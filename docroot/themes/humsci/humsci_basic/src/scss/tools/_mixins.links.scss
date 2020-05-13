@@ -2,7 +2,7 @@
 @mixin hb-link--hover-style($box-shadow-color, $border-color) {
   margin-bottom: 0.0625em;
   text-decoration: none;
-  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
+  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms; // TODO: update? Wrap unique hover states for each theme?
 
   &:hover,
   &:focus {
@@ -132,7 +132,7 @@
     @include hb-icon-link-arrow('secondary');
     margin-left: hb-calculate-rems(8px);
     background-size: 85%;
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
+    transition: hb-transition(transform);
   }
 
   &:hover,
@@ -205,6 +205,6 @@
     width: hb-calculate-rems(44px);
     @include hb-icon-link-arrow('secondary');
     transform: translateX(0);
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
+    transition: hb-transition(transform);
   }
 }

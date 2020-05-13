@@ -15,7 +15,7 @@
 @mixin hb-menu-plus-icon($color: 'gray-dark') {
   @include hb-icon-background('plus', $color);
   background-size: hb-calculate-rems(18px);
-  transition: transform 150ms ease-in-out;
+  transition: hb-transition(transform);
 }
 
 @mixin hb-menu-minus-icon($color: 'gray-dark') {
@@ -27,7 +27,7 @@
 @mixin hb-menu-down-arrow-icon {
   @include hb-icon-background('chevron', 'black');
   background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
-  transition: transform 150ms ease-in-out;
+  transition: hb-transition(transform);
 }
 
 @mixin hb-menu-up-arrow-icon {
@@ -58,7 +58,7 @@
     position: absolute;
     left: 0;
 
-    transition: top 0.2s ease 0.2s, transform 0.2s ease;
+    transition: top 0.2s ease 0.2s, transform 0.2s ease; // TODO: update?
   }
 
   &::before {
@@ -78,7 +78,7 @@
   &::before,
   &::after {
     top: 0;
-    transition: top 0.2s ease, transform 0.2s ease 0.2s;
+    transition: top 0.2s ease, transform 0.2s ease 0.2s; // TODO: update?
   }
 
   &::before {

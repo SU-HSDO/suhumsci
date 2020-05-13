@@ -31,8 +31,16 @@
       }
     }
 
-    &:not(:last-child) {
-      margin-bottom: hb-spacing-width('xxs');
+    @include hb-themes(('airy', 'colorful')) {
+      &:not(:last-child) {
+        margin-bottom: hb-spacing-width('xxs');
+      }
+    }
+
+    @include hb-traditional {
+      &:not(:last-child) {
+        margin-bottom: hb-calculate-rems(10px);
+      }
     }
 
     // date stacked vertical UI pattern item
@@ -184,7 +192,15 @@
 
   &__graphics {
     position: relative;
-    margin-bottom: hb-spacing-width('xs');
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('xs');
+    }
+
+    @include hb-traditional {
+      // do we want to add 10px in spacing as new unit?
+      margin-bottom: hb-calculate-rems(10px);
+    }
   }
 
   &__img {
@@ -274,15 +290,19 @@
   }
 
   &__date-tile-day {
-    font-size: hb-calculate-rems(52px);
     font-weight: hb-theme-font-weight(semibold);
     line-height: 100%;
+
+    @include hb-themes(('airy', 'colorful')) {
+      font-size: hb-calculate-rems(52px);
+    }
 
     @include hb-traditional {
       border: $hb-thin-border;
       border-top-width: 0;
+      font-size: hb-calculate-rems(36px);
       @include hb-global-color('border-color', 'gray-medium');
-      padding: hb-calculate-rems(5px) 0 hb-calculate-rems(5px);
+      padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px);
     }
   }
 
@@ -302,10 +322,17 @@
 
   &__title {
     margin-top: 0;
-    margin-bottom: hb-spacing-width('xs');
 
-    @include grid-media-min('md') {
-      margin-bottom: hb-spacing-width('sm');
+    @include hb-themes(('airy', 'colorful')) {
+      margin-bottom: hb-spacing-width('xs');
+
+      @include grid-media-min('md') {
+        margin-bottom: hb-spacing-width('sm');
+      }
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xxs');
     }
 
     h2,
@@ -333,14 +360,22 @@
       // keep it smaller longer.
       .hb-grid &,
       .ptype-hs-row & {
-        @include grid-media-min('sm') {
-          @include hb-heading-5;
+        @include hb-themes(('colorful', 'airy')) {
+          @include grid-media-min('sm') {
+            @include hb-heading-5;
+          }
+
+          @include grid-media-min('lg') {
+            font-weight: hb-theme-font-weight(semibold);
+            font-size: hb-calculate-rems(20px);
+            line-height: 124%;
+          }
         }
 
-        @include grid-media-min('lg') {
-          font-weight: hb-theme-font-weight(semibold);
-          font-size: hb-calculate-rems(20px);
-          line-height: 124%;
+        @include hb-traditional {
+          @include grid-media-min('sm') {
+            @include hb-heading-5;
+          }
         }
       }
     }
@@ -353,8 +388,16 @@
   &__description {
     @include hb-description;
 
-    &:not(:last-child) {
-      margin-bottom: hb-spacing-width('xs');
+    @include hb-themes(('airy', 'colorful')) {
+      &:not(:last-child) {
+        margin-bottom: hb-spacing-width('xs');
+      }
+    }
+
+    @include hb-traditional {
+      &:not(:last-child) {
+        margin-bottom: hb-calculate-rems(10px);
+      }
     }
 
     .views-field:not(:last-child) {

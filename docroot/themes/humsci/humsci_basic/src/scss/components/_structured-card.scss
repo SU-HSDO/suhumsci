@@ -1,47 +1,76 @@
 .hb-card--structured {
   .hb-card__img {
     margin-bottom: hb-spacing-width('xs');
+
+    @include grid-media-min('md') {
+      margin-bottom: 0;
+    }
   }
 
   .hb-card__subtitle {
     @include hb-subtitle;
-    margin-bottom: hb-calculate-rems(13px);
+    margin-bottom: hb-calculate-rems(14px);
   }
 
-  .hb-card__category,
-  .hb-card__columns {
-    .views-field {
+  .hb-card__category {
+    // TODO clean this up to match and use styles below
+    @include hb-themes(('airy', 'colorful')) {
       margin-bottom: hb-calculate-rems(14px);
 
       @include grid-media-min('sm') {
         margin-bottom: hb-spacing-width('sm');
       }
     }
-  }
 
-  .hb-card__category {
-    margin-bottom: hb-calculate-rems(14px);
-
-    @include grid-media-min('sm') {
-      margin-bottom: hb-spacing-width('sm');
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xxs');
     }
 
     .views-label {
-      margin-bottom: hb-calculate-rems(14px);
+      @include hb-themes(('airy', 'colorful')) {
+        margin-bottom: hb-calculate-rems(14px);
+      }
+
+      @include hb-traditional {
+        margin-bottom: hb-calculate-rems(4px);
+      }
     }
   }
+
+  .hb-card__category,
+  .hb-card__columns {
+    .views-field {
+      @include hb-themes(('airy', 'colorful')) {
+        margin-bottom: hb-calculate-rems(14px);
+
+        @include grid-media-min('sm') {
+          margin-bottom: hb-spacing-width('sm');
+        }
+      }
+
+      @include hb-traditional {
+        margin-bottom: hb-spacing-width('xxs');
+      }
+    }
+  }
+
 
   .hb-card__columns {
     display: flex;
     flex-wrap: wrap;
 
     .views-field {
-      margin-bottom: hb-spacing-width('sm');
       padding-right: hb-calculate-rems(11px);
       width: 100%;
 
       @include grid-media-min('sm') {
         width: 50%;
+      }
+
+      @include hb-traditional {
+        @include grid-media-min('2xl') {
+          width: 33.33%;
+        }
       }
     }
   }

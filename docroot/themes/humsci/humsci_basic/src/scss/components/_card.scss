@@ -13,6 +13,10 @@
   &__subcontent {
     width: 100%;
 
+    .hb-card--horizontal-date-stacked & {
+      flex-wrap: wrap;
+    }
+
     @include grid-media-min('sm') {
       display: flex;
 
@@ -96,24 +100,34 @@
       }
     }
 
-    .hb-card--horizontal-date-stacked & {
-      flex-wrap: wrap;
-    }
-
     // Target subcontent container of date stacked horizontal cards which feature icons in place of labels.
     &--with-icons {
-      padding-top: 6px;
-      margin-bottom: 8px !important;
+      @include hb-themes(('airy', 'colorful')) {
+        padding-top: hb-calculate-rems(6px);
+        margin-bottom: hb-calculate-rems(8px) !important;
 
-      @include grid-media-min('sm') {
-        padding-top: 12px;
+        @include grid-media-min('sm') {
+          padding-top: hb-calculate-rems(12px);
+        }
+      }
+
+      @include hb-traditional {
+        padding-top: 0;
+        margin-bottom: 0 !important;
       }
     }
 
     // date stacked horizontal UI pattern item
     &-detail {
       padding-right: hb-calculate-rems(26px);
-      margin-bottom: hb-spacing-width('xxs');
+
+      @include hb-themes(('colorful', 'airy')) {
+        margin-bottom: hb-spacing-width('xxs');
+      }
+
+      @include hb-traditional {
+        margin-bottom: hb-calculate-rems(10px);
+      }
     }
   }
 
@@ -200,6 +214,12 @@
     @include hb-traditional {
       // do we want to add 10px in spacing as new unit?
       margin-bottom: hb-calculate-rems(10px);
+
+      .hb-card--horizontal-date-stacked & {
+        @include grid-media-min('md') {
+          margin-bottom: 0;
+        }
+      }
     }
   }
 

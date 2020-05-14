@@ -35,12 +35,12 @@
       $icon-color: hb-get-pairing-color($color, $hb-traditional-default, $ht-traditional-pairings);
       background-image: svg(hc-get-icons($icon, $icon-color));
 
-      .hc-pairing-cardinal & {
+      .ht-pairing-cardinal & {
         $icon-color: hb-get-pairing-color($color, 'cardinal', $ht-traditional-pairings);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
-      .hc-pairing-bluejay & {
+      .ht-pairing-bluejay & {
         $icon-color: hb-get-pairing-color($color, 'bluejay', $ht-traditional-pairings);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
@@ -77,12 +77,25 @@
 
   .hb-local-footer--dark & {
     &::after {
-      @include hb-icon-background('ext-link', 'tertiary-reversed');
+      @include hb-themes(('colorufl', 'airy')) {
+        @include hb-icon-background('ext-link', 'tertiary-reversed');
+      }
+
+      @include hb-traditional {
+        @include hb-icon-background('ext-link', 'tertiary-highlight');
+      }
     }
 
     &:hover::after,
     &:focus::after {
-      @include hb-icon-background('ext-link', 'tertiary-highlight');
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-icon-background('ext-link', 'tertiary-highlight');
+      }
+
+      @include hb-traditional {
+        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10'); // TODO: wip - stumped!
+        // background-color: pink;
+      }
     }
   }
 }

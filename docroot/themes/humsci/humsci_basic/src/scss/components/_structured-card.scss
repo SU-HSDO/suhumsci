@@ -9,26 +9,13 @@
 
   .hb-card__subtitle {
     @include hb-subtitle;
-    margin-bottom: hb-calculate-rems(14px);
+    margin-bottom: hb-spacing-width('xxxs');
   }
 
   .hb-card__category {
-    // TODO clean this up to match and use styles below
-    @include hb-themes(('airy', 'colorful')) {
-      margin-bottom: hb-calculate-rems(14px);
-
-      @include grid-media-min('sm') {
-        margin-bottom: hb-spacing-width('sm');
-      }
-    }
-
-    @include hb-traditional {
-      margin-bottom: hb-spacing-width('xxs');
-    }
-
     .views-label {
       @include hb-themes(('airy', 'colorful')) {
-        margin-bottom: hb-calculate-rems(14px);
+        margin-bottom: hb-spacing-width('xxxs');
       }
 
       @include hb-traditional {
@@ -38,19 +25,18 @@
   }
 
   .hb-card__category,
-  .hb-card__columns {
-    .views-field {
-      @include hb-themes(('airy', 'colorful')) {
-        margin-bottom: hb-calculate-rems(14px);
+  .hb-card__category .views-field,
+  .hb-card__columns .views-field {
+    @include hb-themes(('airy', 'colorful')) {
+      margin-bottom: hb-spacing-width('xxxs');
 
-        @include grid-media-min('sm') {
-          margin-bottom: hb-spacing-width('sm');
-        }
+      @include grid-media-min('sm') {
+        margin-bottom: hb-spacing-width('sm');
       }
+    }
 
-      @include hb-traditional {
-        margin-bottom: hb-spacing-width('xxs');
-      }
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 

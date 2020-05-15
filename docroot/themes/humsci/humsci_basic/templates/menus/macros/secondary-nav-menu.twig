@@ -7,6 +7,10 @@
   {% import _self as menus %}
   <ul class="hb-secondary-nav__menu {{ class_prefix }}__menu hb-secondary-nav__menu-lv{{ menu_level }} {{ class_prefix }}__menu-lv{{ menu_level }}">
   {% for item in items %}
+    {# Link Attribtues #}
+    {% set link_attributes = item.attributes %}
+    {% set link_attributes = link_attributes.addClass(class_prefix ~ "__link") %}
+    {% set link_attributes = link_attributes.addClass("hb-secondary-nav__link") %}
 
     {# List Item Attributes #}
     {% set list_attributes = create_attribute() %}
@@ -23,7 +27,7 @@
     {% endif %}
 
     <li{{ list_attributes }}>
-      {{ link(item.title, item.url, {'class': "#{class_prefix}__link hb-secondary-nav__link"}) }}
+      {{ link(item.title, item.url, link_attributes) }}
 
       {% if item.below %}
         <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true">

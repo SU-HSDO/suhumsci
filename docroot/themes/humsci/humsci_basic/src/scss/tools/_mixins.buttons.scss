@@ -120,25 +120,6 @@
     box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-global-color('white', $hc-colorful-globals), 0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
   }
 
-  .hb-local-footer--dark & {
-    @include hb-pairing-color('color', 'tertiary-reversed');
-    @include hb-pairing-color('border-color', 'tertiary-reversed');
-
-    &:hover {
-      background-color: transparent;
-      @include hb-pairing-color('color', 'secondary-highlight');
-      @include hb-pairing-color('border-color', 'secondary-highlight');
-    }
-
-    &:active,
-    &:focus {
-      background-color: transparent;
-      box-shadow: none;
-      @include hb-pairing-color('color', 'secondary-highlight');
-      @include hb-pairing-color('border-color', 'secondary-highlight');
-    }
-  }
-
   @include hb-traditional {
     border-width: hb-calculate-rems(1px);
 
@@ -156,6 +137,42 @@
       @include hb-global-color('outline-color', 'white');
       box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--secondary-active);
+    }
+  }
+
+  .hb-local-footer--dark & {
+    &:hover {
+      background-color: transparent;
+    }
+
+    &:active,
+    &:focus {
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('color', 'tertiary-reversed');
+      @include hb-pairing-color('border-color', 'tertiary-reversed');
+
+      &:hover,
+      &:active,
+      &:focus {
+        @include hb-pairing-color('color', 'secondary-highlight');
+        @include hb-pairing-color('border-color', 'secondary-highlight');
+      }
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('color', 'secondary-highlight');
+      @include hb-pairing-color('border-color', 'secondary-highlight');
+
+      &:hover,
+      &:active,
+      &:focus {
+        @include hb-pairing-color('color', 'secondary-highlight-darken');
+        @include hb-pairing-color('border-color', 'secondary-highlight-darken');
+      }
     }
   }
 }

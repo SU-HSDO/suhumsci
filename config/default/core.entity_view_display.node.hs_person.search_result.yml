@@ -1,0 +1,145 @@
+uuid: a20fe904-41ef-4bf3-afbc-71a4441f624d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.hs_person.body
+    - field.field.node.hs_person.field_hs_person_affiliation
+    - field.field.node.hs_person.field_hs_person_education
+    - field.field.node.hs_person.field_hs_person_email
+    - field.field.node.hs_person.field_hs_person_external_profile
+    - field.field.node.hs_person.field_hs_person_faculty_status
+    - field.field.node.hs_person.field_hs_person_first_name
+    - field.field.node.hs_person.field_hs_person_image
+    - field.field.node.hs_person.field_hs_person_interests
+    - field.field.node.hs_person.field_hs_person_last_name
+    - field.field.node.hs_person.field_hs_person_links
+    - field.field.node.hs_person.field_hs_person_mail
+    - field.field.node.hs_person.field_hs_person_middle_name
+    - field.field.node.hs_person.field_hs_person_office
+    - field.field.node.hs_person.field_hs_person_office_hours
+    - field.field.node.hs_person.field_hs_person_research
+    - field.field.node.hs_person.field_hs_person_staff_type
+    - field.field.node.hs_person.field_hs_person_student_cohort
+    - field.field.node.hs_person.field_hs_person_student_dissert
+    - field.field.node.hs_person.field_hs_person_student_grad
+    - field.field.node.hs_person.field_hs_person_student_type
+    - field.field.node.hs_person.field_hs_person_telephone
+    - field.field.node.hs_person.field_hs_person_title
+    - node.type.hs_person
+  module:
+    - ds
+    - layout_builder
+    - link
+    - smart_trim
+    - telephone
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+  ds:
+    layout:
+      id: pattern_structured_card
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant_field: body
+    regions:
+      title:
+        - node_title
+      subtitle:
+        - field_hs_person_title
+      description:
+        - search_api_excerpt
+      columns:
+        - field_hs_person_email
+        - field_hs_person_links
+        - field_hs_person_telephone
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+_core:
+  default_config_hash: U4KaBt5WFq5Stk4LtsuLpOq1yCgH8xgf45YYqIX7lUU
+id: node.hs_person.search_result
+targetEntityType: node
+bundle: hs_person
+mode: search_result
+content:
+  field_hs_person_email:
+    type: email_mailto
+    weight: 3
+    region: columns
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_person_links:
+    type: link
+    weight: 4
+    region: columns
+    label: above
+    settings:
+      trim_length: 80
+      rel: ''
+      target: ''
+      url_only: false
+      url_plain: false
+    third_party_settings: {  }
+  field_hs_person_telephone:
+    type: telephone_link
+    weight: 5
+    region: columns
+    label: above
+    settings:
+      title: ''
+    third_party_settings: {  }
+  field_hs_person_title:
+    type: smart_trim
+    weight: 1
+    region: subtitle
+    label: above
+    settings:
+      trim_length: 600
+      trim_type: chars
+      trim_suffix: ''
+      wrap_output: false
+      wrap_class: trimmed
+      more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
+      trim_options: {  }
+    third_party_settings: {  }
+  search_api_excerpt:
+    weight: 2
+    region: description
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  body: true
+  field_hs_person_affiliation: true
+  field_hs_person_education: true
+  field_hs_person_external_profile: true
+  field_hs_person_faculty_status: true
+  field_hs_person_first_name: true
+  field_hs_person_image: true
+  field_hs_person_interests: true
+  field_hs_person_last_name: true
+  field_hs_person_mail: true
+  field_hs_person_middle_name: true
+  field_hs_person_office: true
+  field_hs_person_office_hours: true
+  field_hs_person_research: true
+  field_hs_person_staff_type: true
+  field_hs_person_student_cohort: true
+  field_hs_person_student_dissert: true
+  field_hs_person_student_grad: true
+  field_hs_person_student_type: true
+  links: true

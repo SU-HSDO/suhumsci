@@ -1,3 +1,4 @@
+uuid: abbfc785-69a1-4ba6-8bc4-5dd5707c3d16
 langcode: en
 status: true
 dependencies:
@@ -938,6 +939,149 @@ display:
         - 'config:field.storage.node.field_hs_event_image'
         - 'config:field.storage.node.field_hs_event_location'
         - 'config:field.storage.node.field_hs_event_speaker'
+  past_event:
+    display_plugin: block
+    id: past_event
+    display_title: 'Past Events'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      title: 'Past Events'
+      defaults:
+        title: false
+        sorts: false
+        filters: false
+        filter_groups: false
+        style: true
+        row: true
+        pager: false
+      sorts:
+        field_hs_event_date_value:
+          id: field_hs_event_date_value
+          table: node__field_hs_event_date
+          field: field_hs_event_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: datetime
+      filters:
+        status:
+          value: '1'
+          table: node_field_data
+          field: status
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+          id: status
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          group: 1
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          value:
+            hs_event: hs_event
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        field_hs_event_date_value:
+          id: field_hs_event_date_value
+          table: node__field_hs_event_date
+          field: field_hs_event_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '<='
+          value:
+            min: ''
+            max: ''
+            value: now
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: datetime
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      block_hide_empty: true
+      pager:
+        type: full
+        options:
+          items_per_page: 5
+          offset: 0
+          id: 2
+          total_pages: null
+          tags:
+            previous: '‹ Previous'
+            next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_hs_event_date'
+        - 'config:field.storage.node.field_hs_event_image'
+        - 'config:field.storage.node.field_hs_event_location'
+        - 'config:field.storage.node.field_hs_event_speaker'
   series_list:
     display_plugin: block
     id: series_list
@@ -1315,149 +1459,6 @@ display:
       tags:
         - 'config:field.storage.node.body'
         - 'config:field.storage.node.field_hs_event_series_image'
-  past_event:
-    display_plugin: block
-    id: past_event
-    display_title: 'Past Events'
-    position: 2
-    display_options:
-      display_extenders: {  }
-      display_description: ''
-      title: 'Past Events'
-      defaults:
-        title: false
-        sorts: false
-        filters: false
-        filter_groups: false
-        style: true
-        row: true
-        pager: false
-      sorts:
-        field_hs_event_date_value:
-          id: field_hs_event_date_value
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
-          plugin_id: datetime
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_event: hs_event
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-        field_hs_event_date_value:
-          id: field_hs_event_date_value
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '<='
-          value:
-            min: ''
-            max: ''
-            value: now
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: datetime
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-      block_hide_empty: true
-      pager:
-        type: full
-        options:
-          items_per_page: 5
-          offset: 0
-          id: 2
-          total_pages: null
-          tags:
-            previous: '‹ Previous'
-            next: 'Next ›'
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-        - 'user.node_grants:view'
-        - user.permissions
-      tags:
-        - 'config:field.storage.node.body'
-        - 'config:field.storage.node.field_hs_event_date'
-        - 'config:field.storage.node.field_hs_event_image'
-        - 'config:field.storage.node.field_hs_event_location'
-        - 'config:field.storage.node.field_hs_event_speaker'
   upcoming_event:
     display_plugin: block
     id: upcoming_event

@@ -1,9 +1,9 @@
-uuid: 3c5ba43c-2892-4faf-8c8f-5abaa54545ce
+uuid: aba4ffec-a1be-426f-b2ae-2b756720bba0
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.hs_vertical_card
+    - core.entity_view_mode.node.search_result
     - field.field.node.hs_event.body
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
@@ -24,38 +24,49 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
   module:
+    - datetime_range
     - ds
     - field_formatter_class
     - hs_field_helpers
+    - layout_builder
     - stanford_media
+    - taxonomy
     - user
 third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
   ds:
     layout:
-      id: pattern_date_stacked_vertical_card
+      id: pattern_horizontal_card
       library: null
       disable_css: false
       entity_classes: all_classes
       settings:
         pattern:
           field_templates: default
+          variant_field: body
     regions:
+      title:
+        - node_title
       image:
         - field_hs_event_image
-      month:
+      date:
         - field_hs_event_date
-      day:
-        - 'dynamic_block_field:node-hs_event_day'
       time:
         - 'dynamic_block_field:node-hs_event_time'
       location:
         - field_hs_event_location
-      title:
-        - node_title
+      category:
+        - field_hs_event_category
+      speaker:
+        - field_hs_event_speaker
+      description:
+        - search_api_excerpt
     fields:
-      'dynamic_block_field:node-hs_event_day':
-        plugin_id: 'dynamic_block_field:node-hs_event_day'
-        weight: 2
+      node_title:
+        plugin_id: node_title
+        weight: 0
         label: hidden
         formatter: default
       'dynamic_block_field:node-hs_event_time':
@@ -63,46 +74,53 @@ third_party_settings:
         weight: 3
         label: hidden
         formatter: default
-      node_title:
-        plugin_id: node_title
-        weight: 5
-        label: hidden
-        formatter: default
-        settings:
-          link: true
-          wrapper: span
-          class: ''
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
-id: node.hs_event.hs_vertical_card
+id: node.hs_event.search_result
 targetEntityType: node
 bundle: hs_event
-mode: hs_vertical_card
+mode: search_result
 content:
+  field_hs_event_category:
+    type: entity_reference_rss_category
+    weight: 5
+    region: category
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
   field_hs_event_date:
-    type: datetime_hs
-    weight: 1
-    region: month
+    type: daterange_default
+    weight: 2
+    region: date
     label: hidden
     settings:
       timezone_override: ''
-      date_format: M
-      display: start_date
-    third_party_settings: {  }
-  field_hs_event_image:
-    type: media_responsive_image_formatter
-    weight: 0
-    region: image
-    label: hidden
-    settings:
-      view_mode: default
-      image_style: landscape_rectangle
-      link: true
+      format_type: standard_date
+      separator: '-'
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+  field_hs_event_image:
+    type: media_multimedia_formatter
+    weight: 1
+    region: image
+    label: hidden
+    settings:
+      image:
+        image_formatter: image_style
+        image_formatter_image_style: large
+        image_formatter_responsive_image_style: full_responsive
+        image_formatter_view_mode: default
+      video:
+        video_formatter: entity
+        video_formatter_view_mode: default
+      other:
+        view_mode: default
+      view_mode: default
+      link: false
+    third_party_settings: {  }
   field_hs_event_location:
     type: basic_string
     weight: 4
@@ -110,21 +128,37 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
+  field_hs_event_speaker:
+    type: entity_reference_label
+    weight: 6
+    region: speaker
+    label: inline
+    settings:
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      ds:
+        ds_limit: ''
+      hs_field_helpers:
+        inline_contents: '1'
+  search_api_excerpt:
+    weight: 7
+    region: description
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   body: true
   field_hs_event_admission: true
   field_hs_event_audience: true
   field_hs_event_audio: true
-  field_hs_event_category: true
   field_hs_event_contact_email: true
   field_hs_event_contact_phone: true
   field_hs_event_link: true
   field_hs_event_map_link: true
   field_hs_event_series: true
-  field_hs_event_speaker: true
   field_hs_event_sponsor: true
   field_hs_event_status: true
   field_hs_event_type: true
   field_hs_event_video: true
   links: true
-  search_api_excerpt: true

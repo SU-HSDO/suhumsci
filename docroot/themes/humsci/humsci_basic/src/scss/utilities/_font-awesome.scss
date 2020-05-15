@@ -18,8 +18,18 @@
   transition: 125ms color ease-out;
   @include hb-pairing-color('color', 'secondary');
 
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'secondary-darken-12');
+  }
+
   .hb-local-footer--dark & {
     @include hb-pairing-color('color', 'secondary-highlight');
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+    }
   }
 }
 
@@ -43,11 +53,7 @@ a {
 
     .hb-local-footer--dark &:hover,
     .hb-local-footer--dark &:focus {
-      @include hb-pairing-color('color', 'secondary-highlight-darken', $important: true);
-
-      @include hb-traditional {
-        color: hotpink;
-      }
+      @include hb-pairing-color('color', 'tertiary-highlight-darken-10', $important: true);
     }
   }
 }

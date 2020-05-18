@@ -2,7 +2,7 @@
 @mixin hb-link--hover-style($box-shadow-color, $border-color) {
   margin-bottom: 0.0625em;
   text-decoration: none;
-  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms; // TODO: update? Wrap unique hover states for each theme?
+  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
 
   &:hover,
   &:focus {
@@ -44,14 +44,13 @@
 
   @include hb-traditional {
     text-decoration: underline;
-    transition: text-decoration-color 300ms 0s;
+    transition: hb-transition(text-decoration-color);
     @include hb-global-color('text-decoration-color', 'gray-medium');
 
     &:hover,
     &:focus {
       @include hb-global-color('color', 'black');
       background-image: none;
-      transition-delay: 0s, 0s;
       @include hb-pairing-color('text-decoration-color', 'primary');
     }
   }
@@ -71,7 +70,7 @@
   }
 
   @include hb-traditional {
-    @include hb-link-background-image($icon, $icon-width, $hb-traditional-default, $ht-traditional-pairings);
+    background-image: none;
   }
 
   &:hover,

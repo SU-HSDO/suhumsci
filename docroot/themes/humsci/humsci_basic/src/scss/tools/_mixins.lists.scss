@@ -42,21 +42,31 @@
   text-decoration: none;
   border-bottom: $hb-thin-border;
   border-color: transparent;
-  transition: 100ms ease-in-out; // TODO: update?
+  transition: hb-transition(border-color);
   background-image: none;
 
   @include hb-themes(('airy', 'colorful')) {
     @include hb-global-color('color', 'black');
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('border-color', 'black');
+    }
   }
 
   @include hb-traditional {
     @include hb-global-color('color', 'gray-dark');
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('border-color', 'primary');
+    }
   }
 
   &:hover,
   &:focus {
     @include hb-global-color('color', 'black');
-    @include hb-global-color('border-color', 'black');
+    // @include hb-global-color('border-color', 'black');
   }
 }
 

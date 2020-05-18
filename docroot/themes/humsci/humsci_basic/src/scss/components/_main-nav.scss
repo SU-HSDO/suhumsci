@@ -149,7 +149,14 @@
     padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
     text-decoration: none;
     line-height: 120.3%;
-    @include hb-global-color('color', 'black');
+
+    @include hb-themes(('airy', 'colorful')) {
+      @include hb-global-color('color', 'black');
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('color', 'gray-dark');
+    }
 
     @include grid-media-min('md') {
       line-height: 128%;
@@ -173,12 +180,21 @@
     }
 
     &:hover:not(.is-active) {
-      @include hb-global-color('background-color', 'gray-light');
       @include hb-global-color('color', 'black');
+
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-global-color('background-color', 'gray-light');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'tertiary-highlight');
+      }
     }
 
     // Targeting only the first level of navigation on desktop
     .hb-main-nav__menu-lv1 > li > & {
+      @include hb-global-color('color', 'black');
+
       @include grid-media-min('lg') {
         .js &::before {
           content: '';
@@ -219,8 +235,15 @@
       }
 
       &:focus {
-        @include hb-global-color('background-color', 'gray-light');
         @include hb-global-color('color', 'black');
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include hb-global-color('background-color', 'gray-light');
+        }
+
+        @include hb-traditional {
+          @include hb-pairing-color('background-color', 'tertiary-highlight');
+        }
       }
     }
 

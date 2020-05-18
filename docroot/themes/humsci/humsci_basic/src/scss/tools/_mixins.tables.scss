@@ -48,7 +48,13 @@
   @include hb-global-color('color', 'white');
 
   .hb-local-footer--dark & {
-    @include hb-pairing-color('background-color', 'secondary-darken-12');
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('background-color', 'secondary-darken-12');
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('background-color', 'primary');
+    }
   }
 
   @include hb-themes(('colorful', 'airy')) {

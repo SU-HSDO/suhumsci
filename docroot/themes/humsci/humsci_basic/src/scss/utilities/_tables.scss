@@ -1,0 +1,25 @@
+// Loops through the number of available columns (12) in our grid system to determine
+// the number of "columns" a table column should span.
+@mixin hb-table-column-sizes {
+  @for $i from 1 through 12 {
+    &-#{$i}-of-12 {
+      width: percentage($i / 12);
+    }
+  }
+}
+
+.hb-table-col {
+  // Creates the base classes that are not tied to a media query
+  // Example: .hb-table-col-4-of-12
+  @include hb-table-column-sizes;
+
+  // Loops though the media query breakpoints to create responsive classes
+  // Example: .hb-table-col-md-4-of-12
+  @each $bp-key, $bp-value in $hb-grid-media {
+    @include grid-media-min($bp-key) {
+      &-#{$bp-key} {
+        @include hb-table-column-sizes;
+      }
+    }
+  }
+}

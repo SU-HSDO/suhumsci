@@ -60,23 +60,27 @@
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px) {
   // no font size by default
-  background-size: 100% 200%;
-  background-position-y: -100%;
-  background-repeat: no-repeat;
   @include hb-pairing-color('color', 'tertiary');
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
-  }
-
-  @include hb-traditional {
-    background-image: none;
-  }
 
   &:hover,
   &:focus {
     @include hb-pairing-color('color', 'tertiary-darken-20');
-    background-position-y: -50%;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
+    background-size: 100% 200%;
+    background-position-y: -100%;
+    background-repeat: no-repeat;
+
+    &:hover,
+    &:focus {
+      background-position-y: -50%;
+    }
+  }
+
+  @include hb-traditional {
+    background-image: none;
   }
 
   .hb-local-footer & {

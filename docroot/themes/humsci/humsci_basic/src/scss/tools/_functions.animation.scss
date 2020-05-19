@@ -11,11 +11,12 @@
   }
 
   @if ($is-valid-theme) {
-    $theme-animation-list: map-get($hb-animation-list, $hb-current-theme);
-    $hb-animation: $theme-animation-list[];
+    $animation-transition: map-get($hb-animation-list, $hb-current-theme);
 
-    @if ($theme-animation-list) {
-      @return $property $hb-animation;
+    @if (length($animation-transition) > 0) {
+      $duration: nth($animation-transition, 1);
+      $timing-function: nth($animation-transition, 2);
+      @return $property $duration $timing-function;
     } @else {
       // Error if value doesn't exist
       @error "Couldn't find a value for this property: #{$property}";

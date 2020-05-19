@@ -1,0 +1,28 @@
+@include describe('HB Spacing Width Function') {
+
+  @include describe('When given a valid key value,') {
+    $hb-current-theme: 'colorful' !global;
+
+    @include describe('the hb-spacing-width() function') {
+      @include it('returns the small pixel value for the Colorful theme.') {
+        $test: hb-spacing-width('md');
+        $expect: '3.2rem';
+
+        @include assert-equal($test, $expect, 'The small value either does not match or does not exist.');
+      }
+    }
+  }
+
+  @include describe('When given a valid key value,') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include describe('the hb-spacing-width() function') {
+      @include it('returns the small pixel value for the Traditional theme.') {
+        $test: hb-spacing-width('md');
+        $expect: '2.8rem';
+
+        @include assert-equal($test, $expect, 'The small value either does not match or does not exist.');
+      }
+    }
+  }
+}

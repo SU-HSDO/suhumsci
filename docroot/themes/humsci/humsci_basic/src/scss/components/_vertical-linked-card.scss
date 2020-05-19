@@ -1,32 +1,33 @@
 .hb-vertical-linked-card {
   position: relative;
-  // The margin-top matches the margin-top on both the title and image to prevent
-  // overlap issues.
-  // The margin-left matches the negative margin-left on the title to prevent
-  // overlap issues.
-  margin: hb-calculate-rems(24px) 0 hb-calculate-rems($hb-gutter-width) hb-calculate-rems(31px);
-  padding-bottom: hb-calculate-rems(28px);
 
-  @include hb-colorful {
+  @include hb-themes(('colorful', 'airy')) {
+    // The margin-top matches the margin-top on both the title and image to prevent
+    // overlap issues.
+    // The margin-left matches the negative margin-left on the title to prevent
+    // overlap issues.
+    margin: hb-spacing-width('xs') 0 hb-spacing-width() hb-calculate-rems(31px);
+    padding-bottom: hb-calculate-rems(28px);
     @include hb-global-color('color', 'white');
 
-    // The gradient adds a 20px height white block at the top of the linked card
-    // so that the title looks like it has a negative margin on the top when
-    // there isn't an image.
     $hb-bg--white: hb-get-global-color('white', $hc-colorful-globals);
     $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
     $hb-bg--pairing: var(--palette--primary-dark);
 
-    background-image: linear-gradient(to bottom, $hb-bg--white, $hb-bg--white hb-calculate-rems(20px), $hb-bg--fallback hb-calculate-rems(20px));
-    background-image: linear-gradient(to bottom, $hb-bg--white, $hb-bg--white hb-calculate-rems(20px), $hb-bg--pairing hb-calculate-rems(20px));
-    // The gradient looks intimidating but it's only because of all the mixins
-    // we have to use. If we get rid of those it looks more like this:
-    // linear-gradient(to bottom, white, white 20px, colorful-color 20px);
+    @include hb-vertical-card-background-block($hb-bg--white, $hb-bg--fallback, $hb-bg--pairing);
+  }
+
+  @include hb-traditional {
+    @include hb-global-color('background-color', 'gray-medium');
+    margin-bottom: hb-spacing-width();
   }
 
   &__img {
-    margin-top: hb-calculate-rems(-24px);
     overflow: hidden;
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-top: hb-calculate-rems(-24px);
+    }
 
     img {
       width: 100%;
@@ -43,13 +44,12 @@
     // Without this the negative margins on the title cause it to lay under the
     // image. Adding position relative makes sure everything is layered correctly.
     position: relative;
-    margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
-    padding: hb-calculate-rems(20px) hb-calculate-rems(54px) hb-calculate-rems(20px) hb-calculate-rems(20px);
-
     font-size: hb-calculate-rems(20px);
     hyphens: auto;
     line-height: 118%;
     word-break: break-word;
+    transition: hb-transition(background-color);
+    padding: hb-calculate-rems(20px) hb-calculate-rems(54px) hb-calculate-rems(20px) hb-calculate-rems(20px);
 
     @include grid-media-min('sm') {
       font-size: hb-calculate-rems(24px);
@@ -57,6 +57,34 @@
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(27px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+      @include hb-pairing-color('background-color', 'secondary');
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('color', 'white');
+      @include hb-pairing-color('background-color', 'primary');
+      margin: 0;
+    }
+
+    .hb-vertical-linked-card:hover &,
+    .hb-vertical-linked-card:focus & {
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-pairing-color('background-color', 'secondary-darken-12');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'primary-dark');
+        text-decoration: underline;
+      }
+    }
+
+    .hb-vertical-linked-card:hover &::after,
+    .hb-vertical-linked-card:focus &::after {
+      background-position: 6px;
     }
 
     // If this title is in a grid or row,
@@ -87,21 +115,6 @@
 
       transition: hb-transition(background-position);
     }
-
-    .hb-vertical-linked-card:hover &::after,
-    .hb-vertical-linked-card:focus &::after {
-      background-position: 6px;
-    }
-
-    @include hb-colorful {
-      @include hb-pairing-color('background-color', 'secondary');
-      transition: hb-transition(background-color);
-
-      .hb-vertical-linked-card:hover &,
-      .hb-vertical-linked-card:focus & {
-        @include hb-pairing-color('background-color', 'secondary-darken-12');
-      }
-    }
   }
 
   &__link {
@@ -119,15 +132,22 @@
       bottom: 0;
     }
 
-    .fa-ext {
+    .fa-ext,
+    .fa-mailto {
       display: none;
     }
   }
 
   &__description {
-    padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
-    font-size: hb-calculate-rems(16px);
-    line-height: 127%;
+    @include hb-description;
+
+    @include hb-themes(('airy', 'colorful')) {
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px) hb-calculate-rems(28px);
+    }
 
     @include grid-media-min('sm') {
       font-size: hb-calculate-rems(18px);

@@ -1,47 +1,7 @@
-@mixin button-style {
-  @include unbuttonize;
-  display: inline-block;
-  padding: 0 hb-calculate-rems(20px);
-  font-family: $hb-colorful-font--sans;
-  font-weight: hb-theme-font-weight(semibold);
-  text-align: center;
-
-  @include hb-colorful {
-    @include hb-global-color('color', 'white');
-    @include hb-pairing-color('background-color', 'secondary');
-    @include hb-pairing-color('border-color', 'secondary');
-    border-radius: $hb-button-border-radius;
-    border-width: hb-calculate-rems(2px);
-    border-style: solid;
-
-    transition: 125ms background-color ease-out, 125ms border-color ease-out;
-
-    &:hover {
-      @include hb-pairing-color('background-color', 'secondary-darken-12');
-      @include hb-pairing-color('border-color', 'secondary-darken-12');
-      background-image: none;
-    }
-
-    &:active,
-    &:focus {
-      @include hb-pairing-color('background-color', 'secondary');
-      @include hb-global-color('border-color', 'white');
-      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
-      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
-      background-image: none;
-    }
-
-    &:hover,
-    &:focus {
-      cursor: pointer;
-    }
-  }
-}
-
 // This removes styles added by default to button elements.
 // For when something should semantically be a button,
 // but isn't buttony in appearance.
-@mixin unbuttonize {
+@mixin hb-unbuttonize {
   background-color: transparent;
   color: inherit;
   border: 0;
@@ -52,19 +12,218 @@
   border-radius: 0;
   appearance: none; // Just in case we missed anything.
   text-decoration: none;
+  outline: none;
 }
 
-@mixin hb-border-button($button-color, $button-color-hover) {
+@mixin hb-button-base {
+  @include hb-unbuttonize;
   display: inline-block;
+  width: auto;
+  font-weight: hb-theme-font-weight(semibold);
+  font-size: hb-calculate-rems(16px);
+  line-height: 1.4;
+  text-decoration: none;
+  text-align: center;
+  border-width: hb-calculate-rems(2px);
+  border-style: solid;
+  transition: 125ms background-color ease-out, 125ms border-color ease-out;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-image: none;
+    outline: none;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-family: $hb-colorful-font--sans;
+    border-radius: $hb-button-border-radius;
+    padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
+    padding: hb-calculate-rems(6px) hb-calculate-rems(26px);
+  }
+}
+
+@mixin hb-button {
+  @include hb-button-base;
+  @include hb-global-color('color', 'white');
+  @include hb-pairing-color('background-color', 'secondary');
+  @include hb-pairing-color('border-color', 'secondary');
+
+  &:hover {
+    @include hb-pairing-color('background-color', 'secondary-darken-12');
+    @include hb-pairing-color('border-color', 'secondary-darken-12');
+    @include hb-global-color('color', 'white');
+  }
+
+  &:active,
+  &:focus {
+    @include hb-pairing-color('background-color', 'secondary');
+    @include hb-global-color('border-color', 'white');
+    @include hb-global-color('color', 'white');
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &:active,
+    &:focus {
+      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+    }
+  }
+
+  @include hb-traditional {
+    &:active,
+    &:focus {
+      box-shadow: 0 0 0 hb-calculate-rems(1px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(1px) var(--palette--secondary-active);
+    }
+  }
+}
+
+@mixin hb-big-button {
+  @include hb-button;
+  font-size: hb-calculate-rems(18px);
+  border-width: hb-calculate-rems(3px);
+
+  @include hb-themes(('colorful', 'airy')) {
+    padding: hb-calculate-rems(8px) hb-calculate-rems(20px);
+  }
+
+  @include hb-traditional {
+    padding: hb-calculate-rems(8px) hb-calculate-rems(35px);
+  }
+}
+
+@mixin hb-secondary-button {
+  @include hb-button-base;
+  @include hb-pairing-color('border-color', 'secondary');
+  @include hb-pairing-color('color', 'secondary');
+
+  &:hover {
+    @include hb-global-color('color', 'white');
+    @include hb-pairing-color('background-color', 'secondary');
+    @include hb-pairing-color('border-color', 'secondary');
+  }
+
+  &:active,
+  &:focus {
+    background-color: transparent;
+    @include hb-pairing-color('color', 'secondary');
+    box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-global-color('white', $hc-colorful-globals), 0 0 0 hb-calculate-rems(4px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
+    box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-global-color('white', $hc-colorful-globals), 0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
+  }
+
+  .hb-local-footer--dark & {
+    @include hb-pairing-color('color', 'tertiary-reversed');
+    @include hb-pairing-color('border-color', 'tertiary-reversed');
+
+    &:hover {
+      background-color: transparent;
+      @include hb-pairing-color('color', 'secondary-highlight');
+      @include hb-pairing-color('border-color', 'secondary-highlight');
+    }
+
+    &:active,
+    &:focus {
+      background-color: transparent;
+      box-shadow: none;
+      @include hb-pairing-color('color', 'secondary-highlight');
+      @include hb-pairing-color('border-color', 'secondary-highlight');
+    }
+  }
+
+  @include hb-traditional {
+    border-width: hb-calculate-rems(1px);
+
+    &:active,
+    &:focus,
+    &:hover {
+      @include hb-pairing-color('color', 'primary');
+      @include hb-pairing-color('border-color', 'primary');
+      background-color: transparent;
+    }
+
+    &:active,
+    &:focus {
+      outline: hb-calculate-rems(2px) solid;
+      @include hb-global-color('outline-color', 'white');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--secondary-active);
+    }
+  }
+}
+
+@mixin hb-reset-button {
   background-color: transparent;
-  border-radius: hb-calculate-rems(42px);
+  border-color: transparent;
+  border-radius: 0;
+
+  line-height: 1;
+  min-height: auto;
+
+  @include hb-pairing-color('color', 'secondary');
+
+  &:hover {
+    @include hb-pairing-color('color', 'secondary-darken-12');
+  }
+
+  &:focus {
+    border-bottom-color: transparent;
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    padding: hb-calculate-rems(4px) 0;
+    border-bottom: $hb-thin-border;
+    @include hb-pairing-color('border-bottom-color', 'secondary');
+
+    &:hover {
+      @include hb-pairing-color('border-bottom-color', 'secondary-darken-12');
+    }
+  }
+
+  @include hb-traditional {
+    text-decoration: underline;
+    line-height: 1.4;
+    border: $hb-thin-border;
+    border-color: transparent;
+    padding: hb-calculate-rems(3px) hb-calculate-rems(6px);
+
+    &:focus,
+    &:active {
+      @include hb-pairing-color('border-color', 'secondary');
+      box-shadow: none;
+    }
+  }
+}
+
+@mixin hb-hero-button($button-color, $button-color-hover) {
+  display: inline-block;
   font-weight: hb-theme-font-weight(semibold);
   padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
   text-decoration: none;
   text-align: center;
   transition: all 200ms ease-in-out;
 
-  @include hb-colorful {
+  &:hover,
+  &:focus {
+    box-shadow: none;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    background-color: transparent;
+    border-radius: hb-calculate-rems(42px);
     @include hb-pairing-color('color', $button-color);
     @include hb-pairing-color('border-color', $button-color);
     border-width: 3px;
@@ -74,7 +233,27 @@
     &:focus {
       @include hb-pairing-color('border-color', $button-color-hover);
       @include hb-pairing-color('color', $button-color-hover);
-      box-shadow: none;
+    }
+  }
+
+  @include hb-traditional {
+    @include hb-pairing-color('background-color', $button-color);
+    @include hb-global-color('color', 'white');
+    border-color: transparent;
+    border-width: 3px;
+    border-style: solid;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      @include hb-pairing-color('border-color', $button-color);
+    }
+
+    &:focus {
+      outline: hb-calculate-rems(2px) solid;
+      @include hb-global-color('outline-color', 'white');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--primary);
     }
   }
 }

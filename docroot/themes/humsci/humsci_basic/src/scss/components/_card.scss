@@ -1,5 +1,5 @@
 .hb-card {
-  margin-bottom: $hb-gutter-width;
+  margin-bottom: hb-spacing-width();
   display: flex;
   flex-direction: column;
 
@@ -32,7 +32,7 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(16px);
+      margin-bottom: hb-spacing-width('xxs');
     }
 
     // date stacked vertical UI pattern item
@@ -105,7 +105,7 @@
     // date stacked horizontal UI pattern item
     &-detail {
       padding-right: hb-calculate-rems(26px);
-      margin-bottom: hb-calculate-rems(16px);
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 
@@ -126,21 +126,17 @@
     &--date {
       // only apply calendar icon when the label exists
       .views-label-field-hs-event-date + .field-content {
-        @include hb-colorful {
-          @include hb-icon-calendar($color: 'secondary');
-        }
+        @include hb-icon-calendar($color: 'secondary');
       }
     }
 
     &--location {
       // only apply location pin icon when the label exists
       .views-label-field-hs-event-location + .field-content {
-        @include hb-colorful {
-          @include hb-icon-location($color: 'secondary');
+        @include hb-icon-location($color: 'secondary');
 
-          @include grid-media-min('sm') {
-            padding-left: hb-calculate-rems(24px); // width of icon + 10px
-          }
+        @include grid-media-min('sm') {
+          padding-left: hb-calculate-rems(24px); // width of icon + 10px
         }
       }
     }
@@ -148,12 +144,10 @@
     &--speaker {
       // only apply speaker icon when the label exists
       .views-label-field-hs-event-speaker + .field-content {
-        @include hb-colorful {
-          @include hb-icon-speaker($color: 'secondary');
+        @include hb-icon-speaker($color: 'secondary');
 
-          @include grid-media-min('sm') {
-            padding-left: hb-calculate-rems(30px); // width of icon + 10px
-          }
+        @include grid-media-min('sm') {
+          padding-left: hb-calculate-rems(30px); // width of icon + 10px
         }
       }
     }
@@ -162,7 +156,7 @@
   &__location {
     @include hb-global-color('color', 'gray-dark');
     font-size: hb-calculate-rems(14px);
-    margin-bottom: hb-calculate-rems(16px);
+    margin-bottom: hb-spacing-width('xxs');
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
@@ -178,7 +172,7 @@
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(20px);
+      margin-bottom: hb-spacing-width('xxs');
     }
 
     .views-label {
@@ -190,7 +184,7 @@
 
   &__graphics {
     position: relative;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-spacing-width('xs');
   }
 
   &__img {
@@ -221,7 +215,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
-        margin-right: hb-calculate-rems($hb-gutter-width);
+        margin-right: hb-spacing-width();
         margin-bottom: 0;
       }
     }
@@ -236,19 +230,29 @@
   &__date-tile {
     display: inline-block;
     text-align: center;
-    @include hb-global-color('background-color', 'black');
-    @include hb-global-color('color', 'white');
     min-width: hb-calculate-rems(100px);
-    padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
-    margin-right: hb-calculate-rems($hb-gutter-width);
+    margin-right: hb-spacing-width();
     position: absolute;
-    bottom: hb-calculate-rems(18px);
-    left: hb-calculate-rems(-10px);
-    @include hb-pairing-color('background-color', 'secondary');
 
-    @include grid-media-min('sm') {
-      bottom: hb-calculate-rems(22px);
-      left: hb-calculate-rems(-14px);
+    @include hb-themes(('airy', 'colorful')) {
+      @include hb-pairing-color('background-color', 'secondary');
+      @include hb-global-color('color', 'white');
+      padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
+      bottom: hb-calculate-rems(18px);
+      left: hb-calculate-rems(-10px);
+
+      @include grid-media-min('sm') {
+        bottom: hb-calculate-rems(22px);
+        left: hb-calculate-rems(-14px);
+      }
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('background-color', 'white');
+      @include hb-pairing-color('color', 'primary');
+      padding: 0;
+      top: 0;
+      left: 0;
     }
 
     &:only-child {
@@ -259,12 +263,27 @@
   &__date-tile-month {
     text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
+
+    @include hb-traditional {
+      @include hb-pairing-color('background-color', 'primary');
+      @include hb-global-color('color', 'white');
+      font-size: hb-calculate-rems(14px);
+      padding: hb-calculate-rems(10px);
+      width: 100%;
+    }
   }
 
   &__date-tile-day {
     font-size: hb-calculate-rems(52px);
     font-weight: hb-theme-font-weight(semibold);
     line-height: 100%;
+
+    @include hb-traditional {
+      border: $hb-thin-border;
+      border-top-width: 0;
+      @include hb-global-color('border-color', 'gray-medium');
+      padding: hb-calculate-rems(5px) 0 hb-calculate-rems(5px);
+    }
   }
 
   &__content {
@@ -283,10 +302,10 @@
 
   &__title {
     margin-top: 0;
-    margin-bottom: hb-calculate-rems(20px);
+    margin-bottom: hb-spacing-width('xs');
 
     @include grid-media-min('md') {
-      margin-bottom: hb-calculate-rems(24px);
+      margin-bottom: hb-spacing-width('sm');
     }
 
     h2,
@@ -320,7 +339,7 @@
 
         @include grid-media-min('lg') {
           font-weight: hb-theme-font-weight(semibold);
-          font-size: hb-calculate-rems(24px);
+          font-size: hb-calculate-rems(20px);
           line-height: 124%;
         }
       }
@@ -332,19 +351,15 @@
   }
 
   &__description {
-    @include hb-body--small;
-
-    @include grid-media-min('lg') {
-      @include hb-body--medium;
-    }
+    @include hb-description;
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(24px);
+      margin-bottom: hb-spacing-width('xs');
     }
 
     .views-field:not(:last-child) {
       display: block;
-      margin-bottom: hb-calculate-rems(16px);
+      margin-bottom: hb-spacing-width('xxs');
     }
   }
 
@@ -352,6 +367,7 @@
     display: flex;
     align-items: center;
     width: 100%; // large area to click
+    position: relative;
 
     .views-field {
       width: 100%;
@@ -359,44 +375,12 @@
     }
 
     a {
-      display: block;
-      color: transparent; // `hide` the text but make sure screen readers can still read it
-      height: hb-calculate-rems(44px);
-      width: 100%;
-      margin-left: hb-calculate-rems(-44px);
-      text-decoration: none;
-      z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the vertical card
-      background-image: none;
-
-      &:focus,
-      &:hover {
-        color: transparent;
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-card-arrow-link;
       }
-    }
 
-    &::before {
-      content: '';
-      display: block;
-      height: hb-calculate-rems(44px); // WCAG AAA target size
-      width: hb-calculate-rems(44px);
-
-      @include hb-colorful {
-        @include hb-icon-link-arrow('secondary');
-        transform: translateX(0);
-        transition: transform $hb-animation-duration $hb-animation-timing-function;
-      }
-    }
-
-    &:focus,
-    &:hover {
-      cursor: pointer;
-
-      &::before {
-        transform: translateX(0.625rem);
-
-        @include hb-colorful {
-          @include hb-icon-link-arrow('secondary-darken-12');
-        }
+      @include hb-traditional {
+        @include hb-more-link;
       }
     }
   }

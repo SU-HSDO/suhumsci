@@ -5,9 +5,9 @@
   }
 
   .hb-hero-overlay {
-    @include hb-colorful {
+    @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
-      padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 8%;
+      padding: hb-spacing-width() 0 hb-spacing-width() 8%;
 
       @include grid-media-min('md') {
         padding: 0;
@@ -27,7 +27,7 @@
 
         @include grid-media-min('md') {
           position: unset;
-          padding: hb-calculate-rems($hb-gutter-width) 0 hb-calculate-rems($hb-gutter-width) 10%;
+          padding: hb-spacing-width() 0 hb-spacing-width() 10%;
           grid-column-start: 1;
           grid-column-end: 5;
           grid-row-start: 1;
@@ -52,7 +52,7 @@
     }
 
     &__image-wrapper {
-      @include hb-colorful {
+      @include hb-themes(('colorful', 'airy')) {
         position: relative;
 
         @include grid-media-min('md') {
@@ -98,9 +98,9 @@
     }
 
     &__text {
-      @include hb-colorful {
+      @include hb-themes(('colorful', 'airy')) {
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
-        padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2) calc(#{hb-calculate-rems($hb-gutter-width)} / 2);
+        padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
         width: auto !important;
         margin: 0 0 !important;
@@ -113,7 +113,7 @@
           grid-column-end: 4;
           grid-row-start: 4;
           grid-row-end: 7;
-          padding: hb-calculate-rems(64px) hb-calculate-rems($hb-gutter-width) hb-calculate-rems($hb-gutter-width);
+          padding: hb-calculate-rems(64px) hb-spacing-width() hb-spacing-width();
           width: auto !important;
         }
 
@@ -134,16 +134,11 @@
 
         h2 {
           @include hb-heading-4;
-          margin: hb-calculate-rems(24px) 0;
-
-          @include grid-media-min('md') {
-            @include hb-heading-4;
-            margin: hb-calculate-rems(24px) 0;
-          }
+          margin: hb-spacing-width('xs') 0;
 
           @include grid-media-min('lg') {
             @include hb-heading-3;
-            margin: hb-calculate-rems(28px) 0;
+            margin: hb-spacing-width('sm') 0;
           }
         }
 
@@ -161,6 +156,113 @@
 
           @include grid-media-min('lg') {
             width: auto;
+          }
+        }
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        padding: 8% 0;
+        text-align: left;
+        left: hb-calculate-rems(32px);
+        transform: translate(0, -50%);
+
+        @include grid-media-min('md') {
+          padding: 5.5% 0;
+          left: hb-calculate-rems(48px);
+          width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        h2 {
+          width: auto;
+          margin: 0 hb-spacing-width();
+
+          @include grid-media-min('lg') {
+            margin: 0 hb-calculate-rems(70px);
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              margin: 0 hb-spacing-width();
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        .field-hs-hero-body {
+          margin: hb-spacing-width('xxs') hb-spacing-width() 0;
+          width: auto;
+
+          @include grid-media-min('md') {
+            margin: hb-spacing-width('sm') hb-spacing-width() 0;
+          }
+
+          @include grid-media-min('lg') {
+            margin: hb-spacing-width('sm') hb-calculate-rems(70px) 0;
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              margin: hb-spacing-width('sm') hb-spacing-width() 0;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        .field-hs-hero-link {
+          margin: 0 hb-spacing-width();
+
+          @include grid-media-min('lg') {
+            margin: 0 hb-calculate-rems(70px);
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              margin: 0 hb-spacing-width();
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        .field-hs-hero-link a {
+          max-width: unset;
+        }
+
+        .field-hs-hero-body,
+        .field-hs-hero-link {
+          @include grid-media-min('md') {
+            width: calc(90% - #{hb-calculate-rems(64px)});
+          }
+
+          @include grid-media-min('lg') {
+            width: calc(85% - #{hb-calculate-rems(140px)});
+          }
+
+          @include grid-media-min('xl') {
+            width: calc(80% - #{hb-calculate-rems(140px)});
+          }
+
+          .hb-three-column--one-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              width: calc(95% - #{hb-calculate-rems(140px)});
+            }
+
+            @include grid-media-min('xl') {
+              width: calc(90% - #{hb-calculate-rems(140px)});
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              width: calc(100% - #{hb-calculate-rems(64px)});
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
       }

@@ -77,23 +77,10 @@
 
     @include describe('the hb-get-pairing-color() function') {
       @include it('returns the Traditional Default palette.') {
-        $test: hb-get-pairing-color('primary', 'default', $ht-traditional-pairings);
-        $expect: #8c1515;
+        $test: hb-get-pairing-color('primary', 'cardinal', $ht-traditional-pairings);
+        $expect: #600e0e;
 
         @include assert-equal($test, $expect, 'The Default color pairing primary color value either does not match or does not exist.');
-      }
-    }
-  }
-
-  // LIGHT
-  @include describe('When given a valid key value,') {
-
-    @include describe('the hb-get-pairing-color() function') {
-      @include it('returns the Traditional Light palette.') {
-        $test: hb-get-pairing-color('primary', 'light', $ht-traditional-pairings);
-        $expect: #2F2424;
-
-        @include assert-equal($test, $expect, 'The Light color pairing primary color value either does not match or does not exist.');
       }
     }
   }
@@ -107,7 +94,7 @@
     @include describe('the hb-get-global-color() function') {
       @include it('returns the Traditional Global Gray.') {
         $test: hb-get-global-color('gray', $ht-traditional-globals);
-        $expect: #2F2424;
+        $expect: #b3b5b9;
 
         @include assert-equal($test, $expect, 'The global color value gray either does not match or does not exist.');
       }

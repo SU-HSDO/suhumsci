@@ -1,5 +1,5 @@
 details {
-  margin: hb-calculate-rems(16px) 0;
+  margin: hb-spacing-width('xxs') 0;
 }
 
 summary {
@@ -7,13 +7,10 @@ summary {
   position: relative;
   font-weight: hb-theme-font-weight('semibold');
   cursor: pointer;
-
-  @include hb-colorful {
-    border: $hb-thin-border;
-    @include hb-pairing-color('border-color', 'secondary');
-    @include hb-pairing-color('background-color', 'secondary');
-    @include hb-global-color('color', 'white');
-  }
+  border: $hb-thin-border;
+  @include hb-pairing-color('border-color', 'secondary');
+  @include hb-pairing-color('background-color', 'secondary');
+  @include hb-global-color('color', 'white');
 
   // This is to position everything correctly in browsers that do not support the
   // -webkit-details-marker pseudo element
@@ -42,34 +39,33 @@ summary {
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
-
-    @include hb-colorful {
-      @include hb-menu-plus-icon('white');
-    }
+    @include hb-menu-plus-icon('white');
 
     details[open] & {
-      @include hb-colorful {
-        @include hb-menu-minus-icon('white');
-      }
+      @include hb-menu-minus-icon('white');
     }
   }
 
   &:hover,
   details[open] & {
-    @include hb-colorful {
-      @include hb-pairing-color('background-color', 'secondary-darken-12');
-      @include hb-pairing-color('border-color', 'secondary-darken-12');
-    }
+    @include hb-pairing-color('background-color', 'secondary-darken-12');
+    @include hb-pairing-color('border-color', 'secondary-darken-12');
   }
 
   &:focus,
   details[open] &:focus {
-    @include hb-colorful {
-      outline: none;
-      @include hb-global-color('border-color', 'white');
+    outline: none;
+    @include hb-global-color('border-color', 'white');
+
+    @include hb-themes(('colorful', 'airy')) {
       box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
-      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
     }
+
+    @include hb-traditional {
+      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
+    }
+
+    box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
   }
 
   // Modern browsers don't use anchor tags in the summary but IE adds an anchor
@@ -84,10 +80,7 @@ summary {
 // target the details contents.
 .revealed-details {
   padding: hb-calculate-rems(20px) hb-calculate-rems(16px);
-
-  @include hb-colorful {
-    border: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray-medium');
-    border-top: none;
-  }
+  border: $hb-thin-border;
+  @include hb-global-color('border-color', 'gray-medium');
+  border-top: none;
 }

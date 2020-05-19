@@ -1,0 +1,65 @@
+uuid: fa4e1e99-31a3-4d64-8212-6bcd410ff0f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_result
+    - field.field.node.hs_basic_page.field_hs_page_components
+    - field.field.node.hs_basic_page.field_hs_page_hero
+    - field.field.node.hs_basic_page.layout_builder__layout
+    - node.type.hs_basic_page
+  module:
+    - ds
+    - layout_builder
+    - paragraphs
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+  ds:
+    layout:
+      id: pattern_horizontal_card
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant_field: field_hs_page_hero
+    regions:
+      title:
+        - node_title
+      image:
+        - field_hs_page_hero
+      description:
+        - search_api_excerpt
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 0
+        label: hidden
+        formatter: default
+_core:
+  default_config_hash: uC1KAjQU7_UN3WcFmpXZ4VWYZm1HoMqsKmmZneOeolM
+id: node.hs_basic_page.search_result
+targetEntityType: node
+bundle: hs_basic_page
+mode: search_result
+content:
+  field_hs_page_hero:
+    type: paragraph_summary
+    weight: 1
+    region: image
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  search_api_excerpt:
+    weight: 2
+    region: description
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_hs_page_components: true
+  layout_builder__layout: true
+  links: true

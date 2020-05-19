@@ -179,7 +179,7 @@ class Capx {
    *   CAPx URLs.
    */
   public static function getWorkgroupUrl($workgroups) {
-    $workgroups = preg_replace('/[^A-Z,:-_]/', '', strtoupper($workgroups));
+    $workgroups = preg_replace('/[^A-Z,:\-_]/', '', strtoupper($workgroups));
     return self::CAP_URL . "?privGroups=$workgroups";
   }
 

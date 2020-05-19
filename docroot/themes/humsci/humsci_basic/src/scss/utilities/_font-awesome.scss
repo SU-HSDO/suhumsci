@@ -16,13 +16,10 @@
 .far,
 .fas {
   transition: 125ms color ease-out;
+  @include hb-pairing-color('color', 'secondary');
 
-  @include hb-colorful {
-    @include hb-pairing-color('color', 'secondary');
-
-    .hb-local-footer--dark & {
-      @include hb-pairing-color('color', 'secondary-highlight');
-    }
+  .hb-local-footer--dark & {
+    @include hb-pairing-color('color', 'secondary-highlight');
   }
 }
 
@@ -39,16 +36,14 @@ a {
   > .fas {
     text-decoration: none;
 
-    @include hb-colorful {
-      &:hover,
-      &:focus {
-        @include hb-pairing-color('color', 'secondary-darken-12');
-      }
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'secondary-darken-12');
+    }
 
-      .hb-local-footer--dark &:hover,
-      .hb-local-footer--dark &:focus {
-        @include hb-pairing-color('color', 'secondary-highlight-darken', $important: true);
-      }
+    .hb-local-footer--dark &:hover,
+    .hb-local-footer--dark &:focus {
+      @include hb-pairing-color('color', 'secondary-highlight-darken', $important: true);
     }
   }
 }

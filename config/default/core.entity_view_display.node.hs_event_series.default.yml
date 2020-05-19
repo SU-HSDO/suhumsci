@@ -7,7 +7,6 @@ dependencies:
     - field.field.node.hs_event_series.field_hs_event_series_image
     - node.type.hs_event_series
     - system.menu.main
-    - views.view.hs_event_series
   module:
     - hs_layouts
     - layout_builder
@@ -23,27 +22,9 @@ third_party_settings:
         layout_settings:
           label: ''
           section_width: decanter-grid
-          region_widths: ''
-          image_float: align-left
+          region_widths: center
+          image_float: align-right
         components:
-          ac071a08-6029-47fa-b730-cd243245b7f5:
-            uuid: ac071a08-6029-47fa-b730-cd243245b7f5
-            region: top
-            configuration:
-              id: 'field_block:node:hs_event_series:title'
-              label: Title
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_title_heading
-                settings:
-                  tag: h1
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 0
           fbe5858f-5475-462e-bef2-091725548e82:
             uuid: fbe5858f-5475-462e-bef2-091725548e82
             region: left_sidebar
@@ -61,23 +42,6 @@ third_party_settings:
               suggestion: menu_block__main
               label_type: root
               context_mapping: {  }
-            additional: {  }
-            weight: 0
-          742501f5-37d3-439b-96ef-dfc89065c037:
-            uuid: 742501f5-37d3-439b-96ef-dfc89065c037
-            region: main_below
-            configuration:
-              id: 'field_block:node:hs_event_series:body'
-              label: Body
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: text_default
-                settings: {  }
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
             additional: {  }
             weight: 0
           5c34a580-713a-4908-bc21-8992dc2a3a3a:
@@ -100,34 +64,41 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
-          49171903-5f9d-4b11-9c38-959f826c5d24:
-            uuid: 49171903-5f9d-4b11-9c38-959f826c5d24
-            region: main_below
+          ac071a08-6029-47fa-b730-cd243245b7f5:
+            uuid: ac071a08-6029-47fa-b730-cd243245b7f5
+            region: top
             configuration:
-              id: 'views_block:hs_event_series-upcoming_event'
-              label: ''
-              provider: views
-              label_display: visible
-              views_label: ''
-              items_per_page: none
+              id: 'field_block:node:hs_event_series:title'
+              label: Title
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_title_heading
+                settings:
+                  tag: h1
+                third_party_settings: {  }
               context_mapping:
-                field_hs_event_series_target_id: layout_builder.entity
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
+          742501f5-37d3-439b-96ef-dfc89065c037:
+            uuid: 742501f5-37d3-439b-96ef-dfc89065c037
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_event_series:body'
+              label: Body
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
             additional: {  }
             weight: 1
-          502be47a-67af-428b-ba2a-a75de37d79a6:
-            uuid: 502be47a-67af-428b-ba2a-a75de37d79a6
-            region: main_below
-            configuration:
-              id: 'views_block:hs_event_series-past_event'
-              label: ''
-              provider: views
-              label_display: visible
-              views_label: ''
-              items_per_page: none
-              context_mapping:
-                field_hs_event_series_target_id: layout_builder.entity
-            additional: {  }
-            weight: 2
         third_party_settings: {  }
     enabled: true
     allow_custom: false

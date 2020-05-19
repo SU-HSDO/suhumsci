@@ -154,7 +154,7 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
     $number_chunks = ceil($count / self::URL_CHUNKS);
 
     if ($number_chunks <= 1) {
-      return [$url];
+      return ["$url&ps=" . self::URL_CHUNKS];
     }
 
     $urls = [];

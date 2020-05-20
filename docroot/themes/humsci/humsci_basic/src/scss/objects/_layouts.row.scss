@@ -11,12 +11,30 @@
     .counted-items-2.field-hs-row-components > .paragraph-item,
     .counted-items-3.field-hs-row-components > .paragraph-item,
     .counted-items-4.field-hs-row-components > .paragraph-item,
-    .paragraph-item {
-      margin-top: hb-calculate-rems(48px);
+    .paragraph-item { // ALL paragraph items.
+      margin-top: hb-calculate-rems(28px);
+      background-color: violet;
 
       .field__item__label {
         margin-top: 0;
       }
+
+      &.ptype-hs-priv-text-area,
+      &.ptype-hs-accordion {
+        margin-bottom: hb-calculate-rems(28px);
+      }
+
+      &.ptype-hs-accordion {
+        details {
+          margin: 0;
+          background-color: white;
+        }
+      }
+    }
+
+    // When there is only one accordion in the row, make it grow to the entire width. This property is not needed on accordions when they are placed in a row with other items.
+    .counted-items-1 .ptype-hs-accordion {
+      flex-grow: 1;
     }
   }
 

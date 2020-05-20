@@ -1,3 +1,27 @@
+// Returns the proper transition based on the theme.
+// Filters through $hb-animation-list array to find the relevant
+// duration and timing values for the theme.
 @function hb-transition($property) {
-  @return $property $hb-animation-duration $hb-animation-timing-function;
+  $is-valid-theme: false;
+
+  @each $theme in $hb-global-theme-list {
+    @if ($theme == $hb-current-theme) {
+      $is-valid-theme: true;
+    }
+  }
+
+  @if ($is-valid-theme) {
+    $theme-animation-list: map-get($hb-animation-list, $hb-current-theme);
+
+    @if (length($theme-animation-list) > 0) {
+      $duration: nth($theme-animation-list, 1);
+      $timing-function: nth($theme-animation-list, 2);
+      @return $property $duration $timing-function;
+    } @else {
+      // Error if value doesn't exist
+      @error "Couldn't find a value for this property: #{$property}";
+    }
+  } @else {
+    @return null;
+  }
 }

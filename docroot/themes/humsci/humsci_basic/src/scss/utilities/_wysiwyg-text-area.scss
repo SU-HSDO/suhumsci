@@ -92,6 +92,20 @@
     display: flex;
     flex-direction: column;
   }
+
+  a {
+    overflow: hidden;
+
+    img {
+      transform: scale(1);
+      transition: hb-transition(transform);
+
+      &:hover,
+      &:focus {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
+  }
 }
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components

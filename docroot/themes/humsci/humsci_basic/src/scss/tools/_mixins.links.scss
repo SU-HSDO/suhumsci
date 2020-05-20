@@ -44,14 +44,13 @@
 
   @include hb-traditional {
     text-decoration: underline;
-    transition: text-decoration-color 300ms 0s;
+    transition: hb-transition(text-decoration-color);
     @include hb-global-color('text-decoration-color', 'gray-medium');
 
     &:hover,
     &:focus {
       @include hb-global-color('color', 'black');
       background-image: none;
-      transition-delay: 0s, 0s;
       @include hb-pairing-color('text-decoration-color', 'primary');
     }
   }
@@ -61,23 +60,27 @@
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px) {
   // no font size by default
-  background-size: 100% 200%;
-  background-position-y: -100%;
-  background-repeat: no-repeat;
   @include hb-pairing-color('color', 'tertiary');
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
-  }
-
-  @include hb-traditional {
-    @include hb-link-background-image($icon, $icon-width, $hb-traditional-default, $ht-traditional-pairings);
-  }
 
   &:hover,
   &:focus {
     @include hb-pairing-color('color', 'tertiary-darken-20');
-    background-position-y: -50%;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
+    background-size: 100% 200%;
+    background-position-y: -100%;
+    background-repeat: no-repeat;
+
+    &:hover,
+    &:focus {
+      background-position-y: -50%;
+    }
+  }
+
+  @include hb-traditional {
+    background-image: none;
   }
 
   .hb-local-footer & {
@@ -132,7 +135,7 @@
     @include hb-icon-link-arrow('secondary');
     margin-left: hb-calculate-rems(8px);
     background-size: 85%;
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
+    transition: hb-transition(transform);
   }
 
   &:hover,
@@ -205,6 +208,6 @@
     width: hb-calculate-rems(44px);
     @include hb-icon-link-arrow('secondary');
     transform: translateX(0);
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
+    transition: hb-transition(transform);
   }
 }

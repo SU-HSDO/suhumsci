@@ -1,27 +1,29 @@
 // Creates vertical linked cards with the same height
 // across a paragraph type row or grid row
 .hb-vertical-linked-card--equal {
-  // TODO breaking things in IE
-
-  // For use in paragraphs in a row:
-  @include grid-media-min('md') {
-    .paragraph-item,
-    .paragraph-item > div {
-      // Since the default values for flex are flex-grow: 1 this
-      // allows content to grow to the height of the container
-      display: flex;
-    }
-  }
-
-  // For use in linked vertical card views in a grid:
-  .hb-grid__item {
+  // Don't allow this feature in IE
+  // (IE doesn't support @supports)
+  @supports (display:flex) {
+    // For use in paragraphs in a row:
     @include grid-media-min('md') {
-      display: flex;
+      .paragraph-item,
+      .paragraph-item > div {
+        // Since the default values for flex are flex-grow: 1 this
+        // allows content to grow to the height of the container
+        display: flex;
+      }
     }
 
-    .hb-vertical-linked-card {
+    // For use in linked vertical card views in a grid:
+    .hb-grid__item {
       @include grid-media-min('md') {
-        flex-grow: 1;
+        display: flex;
+      }
+
+      .hb-vertical-linked-card {
+        @include grid-media-min('md') {
+          flex-grow: 1;
+        }
       }
     }
   }

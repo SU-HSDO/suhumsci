@@ -81,6 +81,20 @@
       }
     }
   }
+
+  // prevent ordered lists nested within unordered lists from receiving ordered list styles
+  li > ol {
+    li {
+      &:first-of-type {
+        margin-top: 1rem;
+      }
+
+      &::before {
+        height: 0;
+        top: 0;
+      }
+    }
+  }
 }
 
 @mixin hb-ordered-list {
@@ -109,6 +123,20 @@
 
       .hb-local-footer--dark & {
         @include hb-pairing-color('color', 'secondary-highlight');
+      }
+    }
+  }
+
+  // prevent unordered lists nested within ordered lists from receiving unordered list styles
+  li > ul {
+    li {
+      &:first-of-type {
+        margin-top: 1rem;
+      }
+
+      &::before {
+        content: '';
+        counter-increment: inherit;
       }
     }
   }

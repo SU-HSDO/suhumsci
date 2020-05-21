@@ -11,9 +11,9 @@
     .counted-items-2.field-hs-row-components > .paragraph-item,
     .counted-items-3.field-hs-row-components > .paragraph-item,
     .counted-items-4.field-hs-row-components > .paragraph-item,
-    .paragraph-item { // ALL paragraph items.
+    .paragraph-item {
       margin-top: hb-calculate-rems(28px);
-      background-color: violet;
+      // background-color: violet; // TODO: remove
 
       .field__item__label {
         margin-top: 0;
@@ -27,7 +27,22 @@
       &.ptype-hs-accordion {
         details {
           margin: 0;
-          background-color: white;
+          @include hb-global-color('background-color', 'white');
+        }
+      }
+
+      &.ptype-hs-hero-image,
+      &.ptype-hs-carousel {
+        .hb-hero-overlay {
+          margin: 0 0 hb-calculate-rems(28px);
+
+          &::before {
+            @include hb-global-color('background-color', 'gray-medium');
+          }
+        }
+
+        .field-media-image {
+          margin-bottom: hb-calculate-rems(28px);
         }
       }
     }

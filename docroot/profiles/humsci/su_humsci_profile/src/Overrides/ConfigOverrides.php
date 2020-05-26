@@ -92,6 +92,8 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
     $this->setNewsOverrides($names, $overrides);
     $this->setCoursesOverrides($names, $overrides);
+    $this->setEventOverrides($names, $overrides);
+    $this->setPublicationOverrides($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
@@ -147,6 +149,40 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
           'redirect' => '',
         ];
       }
+    }
+  }
+
+  /**
+   * Set any configuration overrides for things related to events content type.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function setEventOverrides(array $names, array &$overrides) {
+    if (in_array('field.field.node.hs_event.field_hs_event_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_event.field_hs_event_image', 'field_events_image');
+    }
+  }
+
+  /**
+   * Set any configuration overrides for things related to publication content.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function setPublicationOverrides(array $names, array &$overrides) {
+    if (in_array('field.field.node.hs_publications.field_hs_publication_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_publications.field_hs_publication_image', 'field_publication_image');
     }
   }
 

@@ -112,9 +112,16 @@
 
       position: absolute;
       right: 0;
-      bottom: hb-calculate-rems(10px);
 
       transition: hb-transition(background-position);
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: hb-calculate-rems(10px);
+      }
+
+      @include hb-traditional {
+        bottom: hb-calculate-rems(7px);
+      }
     }
   }
 

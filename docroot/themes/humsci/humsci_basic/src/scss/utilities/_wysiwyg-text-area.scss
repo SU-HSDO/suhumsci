@@ -152,8 +152,6 @@
 
     @include hb-traditional {
       @include hb-pairing-color('color', 'primary');
-      font-size: hb-calculate-rems(37px);
-      line-height: 125%;
     }
   }
 
@@ -194,16 +192,36 @@
 
 .align {
   &-right {
-    margin: hb-spacing-width('sm') 0 hb-spacing-width('sm') hb-spacing-width('sm');
+    @include hb-themes(('colorful', 'airy')) {
+      margin: hb-spacing-width('sm') 0 hb-spacing-width('sm') hb-spacing-width('sm');
+    }
+
+    @include hb-traditional {
+      margin: hb-spacing-width('xs') 0 hb-spacing-width('xs') hb-spacing-width('xs');
+    }
   }
 
   &-left {
-    margin: hb-spacing-width('sm') hb-spacing-width('sm') hb-spacing-width('sm') 0;
+    @include hb-themes(('colorful', 'airy')) {
+      margin: hb-spacing-width('sm') hb-spacing-width('sm') hb-spacing-width('sm') 0;
+    }
+
+    @include hb-traditional {
+      margin: hb-spacing-width('xs') hb-spacing-width('xs') hb-spacing-width('xs') 0;
+    }
   }
 
   &-center {
-    img {
+    @include hb-themes(('colorful', 'airy')) {
       margin: hb-spacing-width('sm') auto;
+    }
+
+    @include hb-traditional {
+      margin: hb-spacing-width('xs') auto;
+    }
+
+    img {
+      margin: 0 auto;
     }
   }
 }

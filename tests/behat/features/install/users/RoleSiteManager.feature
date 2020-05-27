@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.site_manager permissions"
-    Then the role "site_manager" should have 167 permissions
+    Then the role "site_manager" should have 170 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
@@ -27,6 +27,7 @@ Feature: Install State
     And drush output should contain "assign contributor role"
     And drush output should contain "assign site_manager role"
     And drush output should contain "create event_collections entities"
+    And drush output should contain "create field_hs_hero_overlay_color"
     And drush output should contain "create field_paragraph_style"
     And drush output should contain "create file media"
     And drush output should contain "create hs_basic_page content"
@@ -99,6 +100,8 @@ Feature: Install State
     And drush output should contain "dropzone upload files"
     And drush output should contain "edit any course_collections entities"
     And drush output should contain "edit any event_collections entities"
+    And drush output should contain "edit field_hs_hero_overlay_color"
+    And drush output should contain "edit field_paragraph_style"
     And drush output should contain "edit any file media"
     And drush output should contain "edit any hs_basic_page content"
     And drush output should contain "edit any hs_course content"
@@ -112,8 +115,8 @@ Feature: Install State
     And drush output should contain "edit any image media"
     And drush output should contain "edit any publications_collections entities"
     And drush output should contain "edit any video media"
-    And drush output should contain "edit field_paragraph_style"
     And drush output should contain "edit own course_collections entities"
+    And drush output should contain "edit own field_hs_hero_overlay_color"
     And drush output should contain "edit own field_paragraph_style"
     And drush output should contain "edit own file media"
     And drush output should contain "edit own hs_basic_page content"

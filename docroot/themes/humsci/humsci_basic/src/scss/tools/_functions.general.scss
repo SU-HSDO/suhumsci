@@ -44,3 +44,29 @@
     @return null;
   }
 }
+
+// Returns the proper sidebar width based on the theme.
+// Filters through $hb-sidebar-list array to find the relevant
+// sidebar width for the theme.
+@function hb-sidebar-width() {
+  $is-valid-theme: false;
+
+  @each $theme in $hb-global-theme-list {
+    @if ($theme == $hb-current-theme) {
+      $is-valid-theme: true;
+    }
+  }
+
+  @if ($is-valid-theme) {
+    $result: map-get($hb-sidebar-list, $hb-current-theme);
+
+    @if ($result) {
+      @return $result;
+    } @else {
+      // Error if value doesn't exist
+      @error "Couldn't find the sidebar width for this theme: #{$hb-current-theme}";
+    }
+  } @else {
+    @return null;
+  }
+}

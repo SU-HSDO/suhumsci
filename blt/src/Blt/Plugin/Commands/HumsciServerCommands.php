@@ -397,4 +397,97 @@ class HumsciServerCommands extends AcHooksCommand {
       ->run();
   }
 
+  /**
+   * Sync the staging sites databases with that from production.
+   *
+   * @command humsci:sync-stage
+   *
+   * @options exclude Comma separated list of database names to skip.
+   */
+  public function syncStaging(array $options = ['exclude' => NULL]) {
+    $task_started = time() - (60 * 60 * 24);
+
+    $api = new AcquiaApi($this->getConfigValue('cloud'), $this->getConfigValue('cloud.key'), $this->getConfigValue('cloud.secret'));
+    $sites = $this->getSitesToSync($api, $task_started, $options);
+    $count = count($sites);
+    $copy_sites = array_splice($sites, 0, 4);
+
+    foreach ($copy_sites as $site) {
+      $this->say("Copying $site database to staging.");
+      $api->copyDatabase($site, 'prod', 'test');
+    }
+
+    while (!empty($sites)) {
+      echo '.';
+      sleep(10);
+      $finished_databases = $this->getCompletedDatabaseCopies($api, $task_started);
+
+      if ($finished = array_intersect($copy_sites, $finished_databases)) {
+        echo PHP_EOL;
+        foreach ($finished as $copied_db) {
+          $db_position = array_search($copied_db, $copy_sites);
+          $new_site = array_splice($sites, 0, 1);
+          $new_site = reset($new_site);
+          $copy_sites[$db_position] = $new_site;
+          $this->say("Copying $new_site database to staging.");
+          $api->copyDatabase($new_site, 'prod', 'test');
+        }
+      }
+    }
+    $this->yell("$count database have been copied to staging.");
+  }
+
+  /**
+   * Get an overall list of database names to sync.
+   *
+   * @param \Example\Blt\Plugin\Commands\AcquiaApi $api
+   *   Acquia API.
+   * @param int $task_started
+   *   Time to compare the completed task.
+   * @param array $options
+   *   Array of keyed command options.
+   *
+   * @return array
+   *   Array of database names to sync.
+   */
+  protected function getSitesToSync(AcquiaApi $api, $task_started, array $options) {
+    $finished_databases = $this->getCompletedDatabaseCopies($api, $task_started);
+
+    $sites = $this->getConfigValue('multisites');
+    foreach ($sites as &$db_name) {
+      $db_name = $db_name == 'default' ? 'swshumsci' : $db_name;
+    }
+    if (!empty($options['exclude'])) {
+      $exclude = explode(',', $options['exclude']);
+      $sites = array_diff($sites, $exclude);
+    }
+    return array_diff($sites, $finished_databases);
+  }
+
+  /**
+   * Get a list of all databases that have finished copying after a time.
+   *
+   * @param \Example\Blt\Plugin\Commands\AcquiaApi $api
+   *   Acquia API.
+   * @param int $time_comparison
+   *   Time to compare the completed task.
+   *
+   * @return array
+   *   Array of database names.
+   */
+  protected function getCompletedDatabaseCopies(AcquiaApi $api, $time_comparison) {
+    $databases = [];
+    $notifications = json_decode($api->getNotifications(), TRUE);
+    foreach ($notifications['_embedded']['items'] as $notification) {
+      if (
+        $notification['event'] == 'DatabaseCopied' &&
+        $notification['status'] == 'completed' &&
+        strtotime($notification['created_at']) >= $time_comparison
+      ) {
+        $databases = array_merge($databases, $notification['context']['database']['names']);
+      }
+    }
+    return array_values(array_unique($databases));
+  }
+
 }

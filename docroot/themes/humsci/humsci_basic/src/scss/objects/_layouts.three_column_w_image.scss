@@ -23,11 +23,7 @@
 
     @include grid-media-min('lg') {
       width: $hb-sidebar-width;
-      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
-    }
-
-    @include grid-media-min('xl') {
-      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
+      margin-right: hb-spacing-width();
     }
   }
 
@@ -43,7 +39,7 @@
       }
 
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{2 * $hb-sidebar-width} - 2 * #{hb-calculate-rems(map-get($hb-screen-margins, 'md'))});
+        width: calc(100% - #{2 * $hb-sidebar-width} - 2 * #{hb-spacing-width()});
       }
     }
   }
@@ -137,17 +133,13 @@
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('md') {
         width: $hb-sidebar-width;
-        margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
+        margin-left: hb-spacing-width();
       }
     }
 
     @include grid-media-min('lg') {
       width: $hb-sidebar-width;
-      margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
-    }
-
-    @include grid-media-min('xl') {
-      margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
+      margin-left: hb-spacing-width();
     }
   }
 }

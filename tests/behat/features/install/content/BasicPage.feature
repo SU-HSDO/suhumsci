@@ -71,6 +71,23 @@ Feature: Install State Basic Page
     And I should see "Maecenas vestibulum mollis diam."
     And I should see the link "Praesent egestas tristique nib"
 
+  @api @safe
+  Scenario: Test basic page with Row paragraph creation
+    Given I am logged in as a user with the "Contributor" role
+    Then I am on "/node/add/hs_basic_page"
+    And I fill in "Title" with "Demo Basic Page"
+    And I press "Add Row"
+    And I should see 8 "#edit-field-hs-page-components-3-subform-field-hs-row-components-add-more-operations input" elements
+    And I should see 3 "#edit-field-hs-page-components-3-subform-field-paragraph-style options" elements
+    And I press "Add Accordion"
+    Then I fill in "Summary" with "Sed augue ipsum egestas nec"
+    And I fill in "Description" with "Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem."
+    Then I press "Save"
+    And I should be on "/demo-basic-page"
+    And I should see the heading "Demo Basic Page" in the "content" region
+    And I should see "Sed augue ipsum egestas nec"
+    And I should see "Vivamus in erat ut urna cursus vestibulum"
+
 
   @api @safe
   Scenario: Test basic page with Accordion paragraph creation

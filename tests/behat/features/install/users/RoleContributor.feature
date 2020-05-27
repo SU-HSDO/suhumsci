@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.contributor permissions"
-    Then the role "contributor" should have 85 permissions
+    Then the role "contributor" should have 90 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
     And drush output should contain "access contextual links"
@@ -21,6 +21,8 @@ Feature: Install State
     And drush output should contain "administer blocks provided by block_content"
     And drush output should contain "administer main menu items"
     And drush output should contain "create event_collections entities"
+    And drush output should contain "create field_hs_hero_overlay_color"
+    And drush output should contain "create field_paragraph_style"
     And drush output should contain "create file media"
     And drush output should contain "create hs_basic_block block content"
     And drush output should contain "create hs_basic_page content"
@@ -51,7 +53,11 @@ Feature: Install State
     And drush output should contain "edit any hs_publications content"
     And drush output should contain "edit any hs_research content"
     And drush output should contain "edit any publications_collections entities"
+    And drush output should contain "edit field_hs_hero_overlay_color"
+    And drush output should contain "edit field_paragraph_style"
     And drush output should contain "edit own course_collections entities"
+    And drush output should contain "edit own field_hs_hero_overlay_color"
+    And drush output should contain "edit own field_paragraph_style"
     And drush output should contain "edit own file media"
     And drush output should contain "edit own hs_basic_page content"
     And drush output should contain "edit own hs_course content"
@@ -77,6 +83,7 @@ Feature: Install State
     And drush output should contain "view any course_collections entities"
     And drush output should contain "view any event_collections entities"
     And drush output should contain "view any publications_collections entities"
+    And drush output should contain "view field_paragraph_style"
     And drush output should contain "view hs_basic_page revisions"
     And drush output should contain "view hs_course revisions"
     And drush output should contain "view hs_event revisions"
@@ -85,6 +92,7 @@ Feature: Install State
     And drush output should contain "view hs_person revisions"
     And drush output should contain "view hs_publications revisions"
     And drush output should contain "view hs_research revisions"
+    And drush output should contain "view own field_paragraph_style"
     And drush output should contain "view own unpublished content"
     And drush output should contain "view restricted block content"
     And drush output should contain "view the administration theme"

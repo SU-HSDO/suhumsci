@@ -1,6 +1,25 @@
 .ptype-hs-postcard {
   // Override the hb-card styles so that they display correctly within paragraph postcard components.
   .hb-card {
+    &__title {
+      @include hb-traditional {
+        margin-bottom: hb-spacing-width('xxxs');
+
+        // If the heading is in a grid or row,
+        // keep it smaller longer.
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          .hb-grid &,
+          .ptype-hs-row & {
+            font-size: hb-calculate-rems(22px);
+          }
+        }
+      }
+    }
+
     &__img {
       flex-shrink: 0; // prevent horizontal card image from collapsing
     }
@@ -81,6 +100,13 @@
 
   &-body {
     @include hb-description;
-    margin-bottom: hb-spacing-width('xs');
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('xs');
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xxxs');
+    }
   }
 }

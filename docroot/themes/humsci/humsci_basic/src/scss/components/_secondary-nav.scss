@@ -101,7 +101,13 @@
       text-decoration: none;
 
       &:not(.is-active) {
-        @include hb-global-color('background-color', 'gray-light');
+        @include hb-themes(('airy', 'colorful')) {
+          @include hb-global-color('background-color', 'gray-light');
+        }
+
+        @include hb-traditional {
+          @include hb-pairing-color('background-color', 'tertiary-highlight');
+        }
       }
     }
   }

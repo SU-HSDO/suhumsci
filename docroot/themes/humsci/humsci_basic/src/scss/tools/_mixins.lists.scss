@@ -42,21 +42,30 @@
   text-decoration: none;
   border-bottom: $hb-thin-border;
   border-color: transparent;
-  transition: 100ms ease-in-out;
+  transition: hb-transition(border-color);
   background-image: none;
 
   @include hb-themes(('airy', 'colorful')) {
     @include hb-global-color('color', 'black');
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('border-color', 'black');
+    }
   }
 
   @include hb-traditional {
     @include hb-global-color('color', 'gray-dark');
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('border-color', 'primary');
+    }
   }
 
   &:hover,
   &:focus {
     @include hb-global-color('color', 'black');
-    @include hb-global-color('border-color', 'black');
   }
 }
 
@@ -64,10 +73,10 @@
   display: inline-block;
   font-size: hb-calculate-rems(14px);
   text-decoration: none;
-  transition: background-color $hb-animation-duration $hb-animation-timing-function;
+  transition: hb-transition(background-color);
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-pairing-color('background-color', 'secondary-active');
+    @include hb-pairing-color('background-color', 'tertiary-highlight-darken-10');
     @include hb-global-color('color', 'gray-dark');
     padding: hb-calculate-rems(1px) hb-calculate-rems(12px);
     border-radius: hb-calculate-rems(13px);
@@ -89,7 +98,7 @@
     &:focus,
     &:hover {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('border-color', 'secondary-active');
+        @include hb-pairing-color('border-color', 'tertiary-highlight-darken-10');
         @include hb-global-color('background-color', 'white');
       }
 

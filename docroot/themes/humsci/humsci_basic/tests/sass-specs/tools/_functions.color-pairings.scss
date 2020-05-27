@@ -26,18 +26,19 @@
     }
   }
 
-  // SAND
+  // CARDINAL
   @include describe('When given a valid key value,') {
 
     @include describe('the hb-get-pairing-color() function') {
-      @include it('returns the Colorful Sand palette.') {
-        $test: hb-get-pairing-color('primary', 'sand', $hc-colorful-pairings);
+      @include it('returns the Colorful Cardinal palette.') {
+        $test: hb-get-pairing-color('primary', 'cardinal', $hc-colorful-pairings);
         $expect: #600E0E;
 
-        @include assert-equal($test, $expect, 'The Sand color pairing primary color value either does not match or does not exist.');
+        @include assert-equal($test, $expect, 'The Cardinal color pairing primary color value either does not match or does not exist.');
       }
     }
   }
+
 
   // PENDING TEST FOR INVALID KEY
   // https://www.educative.io/blog/sass-tutorial-unit-testing-with-sass-true
@@ -72,15 +73,30 @@
 
 @include describe('HB Traditional Color Pairing Function') {
 
-  // DEFAULT
+  // CARDINAL
   @include describe('When given a valid key value,') {
 
     @include describe('the hb-get-pairing-color() function') {
-      @include it('returns the Traditional Default palette.') {
+      @include it('returns the Traditional Cardinal palette.') {
         $test: hb-get-pairing-color('primary', 'cardinal', $ht-traditional-pairings);
         $expect: #600e0e;
 
-        @include assert-equal($test, $expect, 'The Default color pairing primary color value either does not match or does not exist.');
+        @include assert-equal($test, $expect, 'The Cardinal color pairing primary color value either does not match or does not exist.');
+      }
+    }
+  }
+
+  // BLUE JAY
+  @include describe('When given a valid key value,') {
+
+    @include describe('the hb-get-pairing-color() function') {
+      @include it('returns the Traditional Blue Jay palette.') {
+        // Many of the colors on the Cardinal and Blue Jay palettes are the same.
+        // Test a color that is not the same between the two palettes.
+        $test: hb-get-pairing-color('secondary-highlight', 'bluejay', $ht-traditional-pairings);
+        $expect: #daebed;
+
+        @include assert-equal($test, $expect, 'The Blue Jay color pairing primary color value either does not match or does not exist.');
       }
     }
   }

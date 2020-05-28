@@ -100,6 +100,21 @@
       }
     }
   }
+
+  // HUMMINGBIRD
+  @include describe('When given a valid key value,') {
+
+    @include describe('the hb-get-pairing-color() function') {
+      @include it('returns the Traditional Hummingbird palette.') {
+        // Many of the colors on the Cardinal and Blue Jay palettes are the same.
+        // Test a color that is not the same between the two palettes.
+        $test: hb-get-pairing-color('secondary-highlight', 'hummingbird', $ht-traditional-pairings);
+        $expect: #daebed;
+
+        @include assert-equal($test, $expect, 'The Hummingbird color pairing primary color value either does not match or does not exist.');
+      }
+    }
+  }
 }
 
 @include describe('HB Traditional Global Color Function') {

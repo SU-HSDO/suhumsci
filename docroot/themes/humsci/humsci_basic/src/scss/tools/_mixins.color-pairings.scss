@@ -6,7 +6,7 @@
 // There is an option to add `!important` to any style rule if we ever need the
 // extra specificity. This is set to false by default.
 @mixin hb-pairing-color($property, $color-swatch, $important: false) {
-  @include hb-themes(('colorful', 'airy')) {
+  @include hb-colorful {
     @if ($important) {
       // Fallback for browsers that do not support CSS variables
       #{$property}: hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings) !important;
@@ -39,10 +39,28 @@
       #{$property}: var(--palette--#{$color-swatch});
     }
   }
+
+  @include hb-airy {
+    @if ($important) {
+      // scss-lint:disable ImportantRule
+      // Fallback for browsers that do not support CSS variables
+      #{$property}: hb-get-pairing-color($color-swatch, $hb-airy-default, $ha-airy-pairings) !important;
+
+      // All modern browsers that support CSS variables
+      #{$property}: var(--palette--#{$color-swatch}) !important;
+      // scss-lint:enable ImportantRule
+    } @else {
+      // Fallback for browsers that do not support CSS variables
+      #{$property}: hb-get-pairing-color($color-swatch, $hb-airy-default, $ha-airy-pairings);
+
+      // All modern browsers that support CSS variables
+      #{$property}: var(--palette--#{$color-swatch});
+    }
+  }
 }
 
 @mixin hb-global-color($property, $color-swatch, $important: false) {
-  @include hb-themes(('colorful', 'airy')) {
+  @include hb-colorful {
     @if ($important) {
       #{$property}: hb-get-global-color($color-swatch, $hc-colorful-globals) !important;
     } @else {
@@ -58,5 +76,24 @@
     } @else {
       #{$property}: hb-get-global-color($color-swatch, $ht-traditional-globals);
     }
+  }
+
+  @include hb-airy {
+    @if ($important) {
+      // scss-lint:disable ImportantRule
+      #{$property}: hb-get-global-color($color-swatch, $ha-airy-globals) !important;
+      // scss-lint:enable ImportantRule
+    } @else {
+      #{$property}: hb-get-global-color($color-swatch, $ha-airy-globals);
+    }
+  }
+}
+
+// Generates a list of custom properties for a specific color pairing
+@mixin hb-pairing-custom-properties($theme-list, $color-pairing) {
+  $color-list: hb-get-pairing-list($theme-list, $color-pairing);
+
+  @each $key, $value in $color-list {
+    --palette--#{$key}: #{$value};
   }
 }

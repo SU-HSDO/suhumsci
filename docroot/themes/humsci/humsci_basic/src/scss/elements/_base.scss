@@ -53,6 +53,10 @@ html {
 }
 
 body {
+  // Apply font smoothing for Mac OS when possible
+  // Gives refined look to fonts with more clarity, crispness, and thinner lines.
+  @include font-smoothing;
+
   @include hb-themes(('colorful', 'airy')) {
     font-family: $hb-colorful-font--sans;
   }

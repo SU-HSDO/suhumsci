@@ -4,7 +4,7 @@
 // defined in elements/_base.scss
 
 // Generate Color Palette Classes for Colorful
-@include hb-colorful {
+@include hb-themes(('colorful', 'airy')) {
   @each $palette, $color-swatches in $hc-colorful-pairings {
     .hc-pairing-#{$palette} {
       @include hb-pairing-custom-properties($hc-colorful-pairings, $palette);
@@ -17,15 +17,6 @@
   @each $palette, $color-swatches in $ht-traditional-pairings {
     .ht-pairing-#{$palette} {
       @include hb-pairing-custom-properties($ht-traditional-pairings, $palette);
-    }
-  }
-}
-
-// Generate Color Palette Classes for Airy
-@include hb-airy {
-  @each $palette, $color-swatches in $ha-airy-pairings {
-    .ha-pairing-#{$palette} {
-      @include hb-pairing-custom-properties($ha-airy-pairings, $palette);
     }
   }
 }

@@ -4,16 +4,3 @@
  * @file
  * Functions to support theming in the HumSci Airy theme.
  */
-
-/**
-* Prepares variables for the html.html.twig template.
-*/
-function humsci_airy_preprocess_html(&$vars) {
-
- // Theme color pairing setting to set the way the Colorful theme will appear.
- $color_pairing = theme_get_setting('theme_color_pairing');
- if ($color_pairing) {
-   // Set html_attributes for html DOM element
-   $vars['html_attributes']->addClass('ha-pairing-' . $color_pairing);
- }
-}

@@ -1,3 +1,4 @@
+// Map through a list of color pairings to retrun a list of colors
 @function hb-get-pairing-list($theme-map, $palette) {
   $result: map-get($theme-map, $palette);
 
@@ -10,7 +11,7 @@
   }
 }
 
-// Map through all color pairings to find and set a color palette
+// Map through all color pairings to return a single color
 @function hb-get-pairing-color($key, $palette, $theme-map) {
   // Assign a single color from the mapped palette
   $result: map-get(hb-get-pairing-list($theme-map, $palette), $key);
@@ -24,7 +25,7 @@
   }
 }
 
-// Map through all global colors
+// Map through all global colors and return a single color
 @function hb-get-global-color($key, $globals-map) {
 
   $result: map-get($globals-map, $key);

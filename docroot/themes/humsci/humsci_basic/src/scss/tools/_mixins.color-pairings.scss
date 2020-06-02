@@ -60,3 +60,14 @@
     }
   }
 }
+
+// Generates a list of custom properties for a specific color pairing
+// These custom properties are used in the CSS :root and utility classes to
+// update the colors used in a theme.
+@mixin hb-pairing-custom-properties($theme-list, $color-pairing) {
+  $palette-list: hb-get-pairing-list($theme-list, $color-pairing);
+
+  @each $key, $value in $palette-list {
+    --palette--#{$key}: #{$value};
+  }
+}

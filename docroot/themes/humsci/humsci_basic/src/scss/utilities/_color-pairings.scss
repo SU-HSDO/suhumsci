@@ -1,55 +1,22 @@
+// The following are the classes that update the CSS --palette variables.
+// They should be applied to a parent element.
+// Note: If a utility class is not specified colors will fallback to the defaults
+// defined in elements/_base.scss
+
 // Generate Color Palette Classes for Colorful
-@each $palette, $color-swatches in $hc-colorful-pairings {
-  // These are the classes that update the CSS --palette variable.
-  // They should be applied to the parent element.
-  // Note: If a hc-pairing- class is not applied, hc-pairing-ocean will apply as the default / fallback color pairing.
-  .hc-pairing-#{$palette} {
-    // BASE
-    --palette--primary: #{hb-get-pairing-color("primary", $palette, $hc-colorful-pairings)};
-    --palette--secondary: #{hb-get-pairing-color("secondary", $palette, $hc-colorful-pairings)};
-    --palette--tertiary: #{hb-get-pairing-color("tertiary", $palette, $hc-colorful-pairings)};
-    // HERO
-    --palette--primary-hero-overlay: #{hb-get-pairing-color("primary-hero-overlay", $palette, $hc-colorful-pairings)};
-    // PRIMARY VARIANTS
-    --palette--primary-dark: #{hb-get-pairing-color("primary-dark", $palette, $hc-colorful-pairings)};
-    // SECONDARY VARIANTS
-    --palette--secondary-active: #{hb-get-pairing-color("secondary-active", $palette, $hc-colorful-pairings)};
-    --palette--secondary-highlight: #{hb-get-pairing-color("secondary-highlight", $palette, $hc-colorful-pairings)};
-    --palette--secondary-highlight-darken: #{hb-get-pairing-color("secondary-highlight-darken", $palette, $hc-colorful-pairings)};
-    --palette--secondary-darken-12: #{hb-get-pairing-color("secondary-darken-12", $palette, $hc-colorful-pairings)};
-    // TERTIARY VARIANTS
-    --palette--tertiary-highlight: #{hb-get-pairing-color("tertiary-highlight", $palette, $hc-colorful-pairings)};
-    --palette--tertiary-highlight-darken-10: #{hb-get-pairing-color("tertiary-highlight-darken-10", $palette, $hc-colorful-pairings)};
-    --palette--tertiary-reversed: #{hb-get-pairing-color("tertiary-reversed", $palette, $hc-colorful-pairings)};
-    --palette--tertiary-reversed-darken-10: #{hb-get-pairing-color("tertiary-reversed-darken-10", $palette, $hc-colorful-pairings)};
-    --palette--tertiary-darken-20: #{hb-get-pairing-color("tertiary-darken-20", $palette, $hc-colorful-pairings)};
+@include hb-themes(('colorful', 'airy')) {
+  @each $palette, $color-swatches in $hc-colorful-pairings {
+    .hc-pairing-#{$palette} {
+      @include hb-pairing-custom-properties($hc-colorful-pairings, $palette);
+    }
   }
 }
 
 // Generate Color Palette Classes for Traditional
-@each $palette, $color-swatches in $ht-traditional-pairings {
-  // These are the classes that update the CSS --palette variable.
-  // They should be applied to the parent element.
-  // Note: If a ht-pairing- class is not applied, ht-pairing-default will apply as the default / fallback color pairing.
-  .ht-pairing-#{$palette} {
-    // BASE
-    --palette--primary: #{hb-get-pairing-color("primary", $palette, $ht-traditional-pairings)};
-    --palette--secondary: #{hb-get-pairing-color("secondary", $palette, $ht-traditional-pairings)};
-    --palette--tertiary: #{hb-get-pairing-color("tertiary", $palette, $ht-traditional-pairings)};
-    // HERO
-    --palette--primary-hero-overlay: #{hb-get-pairing-color("primary-hero-overlay", $palette, $ht-traditional-pairings)};
-    // PRIMARY VARIANTS
-    --palette--primary-dark: #{hb-get-pairing-color("primary-dark", $palette, $ht-traditional-pairings)};
-    // SECONDARY VARIANTS
-    --palette--secondary-active: #{hb-get-pairing-color("secondary-active", $palette, $ht-traditional-pairings)};
-    --palette--secondary-highlight: #{hb-get-pairing-color("secondary-highlight", $palette, $ht-traditional-pairings)};
-    --palette--secondary-highlight-darken: #{hb-get-pairing-color("secondary-highlight-darken", $palette, $ht-traditional-pairings)};
-    --palette--secondary-darken-12: #{hb-get-pairing-color("secondary-darken-12", $palette, $ht-traditional-pairings)};
-    // TERTIARY VARIANTS
-    --palette--tertiary-highlight: #{hb-get-pairing-color("tertiary-highlight", $palette, $ht-traditional-pairings)};
-    --palette--tertiary-highlight-darken-10: #{hb-get-pairing-color("tertiary-highlight-darken-10", $palette, $ht-traditional-pairings)};
-    --palette--tertiary-reversed: #{hb-get-pairing-color("tertiary-reversed", $palette, $ht-traditional-pairings)};
-    --palette--tertiary-reversed-darken-10: #{hb-get-pairing-color("tertiary-reversed-darken-10", $palette, $ht-traditional-pairings)};
-    --palette--tertiary-darken-20: #{hb-get-pairing-color("tertiary-darken-20", $palette, $ht-traditional-pairings)};
+@include hb-traditional {
+  @each $palette, $color-swatches in $ht-traditional-pairings {
+    .ht-pairing-#{$palette} {
+      @include hb-pairing-custom-properties($ht-traditional-pairings, $palette);
+    }
   }
 }

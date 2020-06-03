@@ -4,13 +4,24 @@ status: true
 dependencies:
   config:
     - config_pages.type.field_default_values
+    - field.field.config_pages.field_default_values.field_events_image
     - field.field.config_pages.field_default_values.field_news_image
     - field.field.config_pages.field_default_values.field_people_image
+    - field.field.config_pages.field_default_values.field_publication_image
 id: config_pages.field_default_values.default
 targetEntityType: config_pages
 bundle: field_default_values
 mode: default
 content:
+  field_events_image:
+    type: entity_reference_entity_view
+    weight: 2
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
   field_news_image:
     type: entity_reference_entity_view
     weight: 1
@@ -23,6 +34,15 @@ content:
   field_people_image:
     type: entity_reference_entity_view
     weight: 0
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_publication_image:
+    type: entity_reference_entity_view
+    weight: 3
     label: above
     settings:
       view_mode: default

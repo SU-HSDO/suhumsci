@@ -5,6 +5,8 @@
  * su_humsci_profile.install
  */
 
+use Drupal\user\UserInterface;
+
 /**
  * Implements hook_install_tasks().
  */
@@ -24,4 +26,23 @@ function su_humsci_profile_final_task() {
  */
 function su_humsci_profile_update_8200() {
   // Intentionally left empty.
+}
+
+/**
+ * Set the permissions for the hero overlay field.
+ */
+function su_humsci_profile_update_8201() {
+  $perms = [
+    'view field_hs_hero_overlay_color',
+    'view own field_hs_hero_overlay_color',
+  ];
+  user_role_grant_permissions(UserInterface::ANONYMOUS_ROLE, $perms);
+  $perms = [
+    'create field_hs_hero_overlay_color',
+    'edit field_hs_hero_overlay_color',
+    'edit own field_hs_hero_overlay_color',
+    'view field_hs_hero_overlay_color',
+    'view own field_hs_hero_overlay_color'
+  ];
+  user_role_grant_permissions(UserInterface::AUTHENTICATED_ROLE, $perms);
 }

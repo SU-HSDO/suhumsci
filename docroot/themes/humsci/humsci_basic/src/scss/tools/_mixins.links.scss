@@ -1,4 +1,4 @@
-// Link hover style for headings
+// Link hover style for certain elements
 @mixin hb-link--hover-style($box-shadow-color, $border-color) {
   margin-bottom: 0.0625em;
   text-decoration: none;
@@ -34,33 +34,53 @@
   // no font size by default
   @include hb-global-color('color', 'black');
   font-weight: hb-theme-font-weight(semibold);
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-  @include hb-global-color('border-bottom-color', 'gray-medium');
-  @include hb-link--hover-style('tertiary-highlight', 'tertiary-reversed');
+
+  @include hb-themes(('colorful', 'airy')) {
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    @include hb-global-color('border-bottom-color', 'gray-medium');
+    @include hb-link--hover-style('tertiary-highlight', 'tertiary-reversed');
+  }
+
+  @include hb-traditional {
+    text-decoration: underline;
+    transition: hb-transition(text-decoration-color);
+    @include hb-global-color('text-decoration-color', 'gray-medium');
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('color', 'black');
+      background-image: none;
+      @include hb-pairing-color('text-decoration-color', 'primary');
+    }
+  }
 }
 
 // Link style for main content that is not a heading
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px) {
   // no font size by default
-  background-size: 100% 200%;
-  background-position-y: -100%;
-  background-repeat: no-repeat;
   @include hb-pairing-color('color', 'tertiary');
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
-  }
-
-  @include hb-traditional {
-    @include hb-link-background-image($icon, $icon-width, $hb-traditional-default, $ht-traditional-pairings);
-  }
 
   &:hover,
   &:focus {
     @include hb-pairing-color('color', 'tertiary-darken-20');
-    background-position-y: -50%;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image($icon, $icon-width, $hb-colorful-default, $hc-colorful-pairings);
+    background-size: 100% 200%;
+    background-position-y: -100%;
+    background-repeat: no-repeat;
+
+    &:hover,
+    &:focus {
+      background-position-y: -50%;
+    }
+  }
+
+  @include hb-traditional {
+    background-image: none;
   }
 
   .hb-local-footer & {
@@ -74,12 +94,25 @@
   }
 
   .hb-local-footer--dark & {
-    @include hb-pairing-color('color', 'tertiary-reversed');
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('color', 'tertiary-reversed');
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('color', 'tertiary-highlight');
+    }
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('color', 'tertiary-highlight');
-      @include hb-ext-icon-color('tertiary-highlight');
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-pairing-color('color', 'tertiary-highlight');
+        @include hb-ext-icon-color('tertiary-highlight');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        @include hb-ext-icon-color('tertiary-highlight-darken-10');
+      }
     }
   }
 }
@@ -102,7 +135,7 @@
     @include hb-icon-link-arrow('secondary');
     margin-left: hb-calculate-rems(8px);
     background-size: 85%;
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
+    transition: hb-transition(transform);
   }
 
   &:hover,
@@ -140,7 +173,26 @@
     &::after {
       height: hb-calculate-rems(25px);
       width: hb-calculate-rems(25px);
-      margin-bottom: hb-calculate-rems(-6px);
+      margin-bottom: hb-calculate-rems(-7px);
+    }
+  }
+
+  .hb-local-footer--dark & {
+    @include hb-pairing-color('color', 'tertiary-reversed');
+
+    &::after {
+      @include hb-icon-link-arrow('tertiary-reversed');
+      background-size: 85%;
+    }
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'secondary-highlight');
+
+      &::after {
+        @include hb-icon-link-arrow('secondary-highlight');
+        background-size: 85%;
+      }
     }
   }
 }
@@ -175,6 +227,6 @@
     width: hb-calculate-rems(44px);
     @include hb-icon-link-arrow('secondary');
     transform: translateX(0);
-    transition: transform $hb-animation-duration $hb-animation-timing-function;
+    transition: hb-transition(transform);
   }
 }

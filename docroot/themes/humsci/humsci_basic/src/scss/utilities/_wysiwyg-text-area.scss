@@ -39,7 +39,7 @@
 
       @include grid-media-min('md') {
         margin-top: hb-spacing-width();
-        margin-bottom: hb-calculate-rems(14px);
+        margin-bottom: hb-spacing-width('xxxs');
       }
     }
   }
@@ -91,6 +91,20 @@
   ul {
     display: flex;
     flex-direction: column;
+  }
+
+  a {
+    overflow: hidden;
+
+    img {
+      transform: scale(1);
+      transition: hb-transition(transform);
+
+      &:hover,
+      &:focus {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
   }
 }
 

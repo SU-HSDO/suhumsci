@@ -7,6 +7,55 @@
   &--well,
   &--well-full-width {
     @extend .hb-well;
+
+    .counted-items-2.field-hs-row-components > .paragraph-item,
+    .counted-items-3.field-hs-row-components > .paragraph-item,
+    .counted-items-4.field-hs-row-components > .paragraph-item,
+    .paragraph-item {
+      margin-top: hb-calculate-rems(28px);
+
+      .field__item__label {
+        margin-top: 0;
+      }
+
+      &.ptype-hs-priv-text-area,
+      &.ptype-hs-accordion {
+        margin-bottom: hb-calculate-rems(28px);
+      }
+
+      &.ptype-hs-accordion {
+        details {
+          margin: 0;
+          @include hb-global-color('background-color', 'white');
+
+          summary {
+            padding-right: hb-calculate-rems(52px);
+          }
+        }
+      }
+
+      &.ptype-hs-hero-image,
+      &.ptype-hs-carousel {
+        width: 100%;
+
+        .hb-hero-overlay {
+          margin: 0 0 hb-calculate-rems(28px);
+
+          &::before {
+            @include hb-global-color('background-color', 'gray-medium');
+          }
+        }
+
+        .field-media-image {
+          margin-bottom: hb-calculate-rems(28px);
+        }
+      }
+    }
+
+    // When there is only one accordion in the row, make it grow to the entire width. This property is not needed on accordions when they are placed in a row with other items.
+    .counted-items-1 .ptype-hs-accordion {
+      flex-grow: 1;
+    }
   }
 
   &--well {

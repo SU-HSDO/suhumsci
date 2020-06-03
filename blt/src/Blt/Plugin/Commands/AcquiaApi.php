@@ -10,8 +10,8 @@ use Robo\Tasks;
 /**
  * Class AcquiaApi.
  *
- * @package Example\Blt\Plugin\Commands
  * @deprecated
+ * @package Example\Blt\Plugin\Commands
  */
 class AcquiaApi extends Tasks {
 
@@ -231,6 +231,28 @@ class AcquiaApi extends Tasks {
     return $this->callAcquiaApi("/environments/{$this->envIds[$environment]}/code/actions/switch", 'POST', ['json' => ['name' => $reference]]);
   }
 
+  public function copyDatabase($database_name, $from, $to) {
+    if (!in_array($from, ['dev', 'test', 'prod'])) {
+      throw new \Exception('Invalid source database');
+    }
+    if (!in_array($to, ['test', 'dev'])) {
+      throw new \Exception('Invalid database destination');
+    }
+
+    $from = $this->envIds[$from];
+    $to = $this->envIds[$to];
+    return $this->callAcquiaApi("/environments/$to/databases", 'POST', [
+      'json' => [
+        'name' => $database_name,
+        'source' => $from,
+      ],
+    ]);
+  }
+
+  public function getNotifications(){
+    return $this->callAcquiaApi("/applications/{$this->envIds['appId']}/notifications");
+  }
+
   /**
    * Make an API call to Acquia Cloud API V2.
    *
@@ -258,8 +280,7 @@ class AcquiaApi extends Tasks {
 
       // Try to get an access token using the client credentials grant.
       $accessToken = $provider->getAccessToken('client_credentials');
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $this->say($e->getMessage());
       return FALSE;
     }
@@ -276,8 +297,7 @@ class AcquiaApi extends Tasks {
     try {
       $response = $client->send($request, $options);
       return (string) $response->getBody();
-    }
-    catch (GuzzleException $e) {
+    } catch (GuzzleException $e) {
       $this->say($e->getMessage());
       return FALSE;
     }

@@ -1,0 +1,38 @@
+uuid: 152cb589-7a58-4488-949b-57e0a56e5238
+langcode: en
+status: true
+dependencies:
+  config:
+    - config_pages.type.hs_site_options
+    - field.field.config_pages.hs_site_options.field_site_courses_rabbit
+    - field.field.config_pages.hs_site_options.field_site_ga_account
+    - field.field.config_pages.hs_site_options.field_site_news_rabbit
+id: config_pages.hs_site_options.default
+targetEntityType: config_pages
+bundle: hs_site_options
+mode: default
+content:
+  field_site_courses_rabbit:
+    weight: 2
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_site_ga_account:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: UA-
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_site_news_rabbit:
+    weight: 1
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+hidden:
+  label: true

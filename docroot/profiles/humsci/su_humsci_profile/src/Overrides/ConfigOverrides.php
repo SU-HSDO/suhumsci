@@ -75,8 +75,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * Override the path to the key for the encryption profile.
    */
   public function loadOverrides($names) {
     $overrides = [];
@@ -92,11 +90,100 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if (in_array('field.field.node.hs_person.field_hs_person_image', $names)) {
       $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_image', 'field_people_image');
     }
+    $this->setNewsOverrides($names, $overrides);
+    $this->setCoursesOverrides($names, $overrides);
+    $this->setEventOverrides($names, $overrides);
+    $this->setPublicationOverrides($names, $overrides);
 
+    if (in_array('google_analytics.settings', $names)) {
+      if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
+        $overrides['google_analytics.settings']['account'] = $value[0]['value'];
+      }
+    }
+    return $overrides;
+  }
+
+  /**
+   * Set any configuration overrides for things related to news content type.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function setNewsOverrides(array $names, array &$overrides) {
     if (in_array('field.field.node.hs_news.field_hs_news_image', $names)) {
       $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_news.field_hs_news_image', 'field_news_image');
     }
-    return $overrides;
+
+    if (in_array('rabbit_hole.behavior_settings.node_type_hs_news', $names)) {
+      $disabled = $this->configPages->getValue('hs_site_options', 'field_site_news_rabbit');
+      if (!empty($disabled[0]['value'])) {
+        $overrides['rabbit_hole.behavior_settings.node_type_hs_news'] = [
+          'action' => 'display_page',
+          'allow_override' => 0,
+          'redirect' => '',
+        ];
+      }
+    }
+  }
+
+  /**
+   * Set any configuration overrides for things related to course content type.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
+  protected function setCoursesOverrides(array $names, array &$overrides) {
+    if (in_array('rabbit_hole.behavior_settings.node_type_hs_course', $names)) {
+      $disabled = $this->configPages->getValue('hs_site_options', 'field_site_courses_rabbit');
+      if (!empty($disabled[0]['value'])) {
+        $overrides['rabbit_hole.behavior_settings.node_type_hs_course'] = [
+          'action' => 'display_page',
+          'allow_override' => 0,
+          'redirect' => '',
+        ];
+      }
+    }
+  }
+
+  /**
+   * Set any configuration overrides for things related to events content type.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function setEventOverrides(array $names, array &$overrides) {
+    if (in_array('field.field.node.hs_event.field_hs_event_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_event.field_hs_event_image', 'field_events_image');
+    }
+  }
+
+  /**
+   * Set any configuration overrides for things related to publication content.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function setPublicationOverrides(array $names, array &$overrides) {
+    if (in_array('field.field.node.hs_publications.field_hs_publication_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_publications.field_hs_publication_image', 'field_publication_image');
+    }
   }
 
   /**

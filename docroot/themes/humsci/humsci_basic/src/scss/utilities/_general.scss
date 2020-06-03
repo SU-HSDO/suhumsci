@@ -58,7 +58,13 @@
 }
 
 .hb-well {
-  @include hb-global-color('background-color', 'gray-light');
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-global-color('background-color', 'gray-light');
+  }
+
+  @include hb-traditional {
+    @include hb-pairing-color('background-color', 'tertiary-highlight');
+  }
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
   border: 0 none;

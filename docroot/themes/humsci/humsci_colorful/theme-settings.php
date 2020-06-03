@@ -29,7 +29,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
     '#options' => [
       'ocean' => t('Ocean'),
       'mountain' => t('Mountain'),
-      'sand' => t('Sand'),
+      'cardinal' => t('Cardinal'),
     ],
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];

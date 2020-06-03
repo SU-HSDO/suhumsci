@@ -19,7 +19,14 @@
   ul {
     list-style-type: none;
     padding: 0;
-    margin: 0 0 hb-calculate-rems(10px);
+
+    @include hb-themes(('airy', 'colorful')) {
+      margin: 0 0 hb-calculate-rems(10px);
+    }
+
+    @include hb-traditional {
+      margin: 0 0 hb-calculate-rems(5px);
+    }
 
     li {
       @include hb-category-item;

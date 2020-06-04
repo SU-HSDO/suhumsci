@@ -22,6 +22,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
     127.0.0.1           philit.suhumsci.loc
     127.0.0.1           popstudies.suhumsci.loc
     127.0.0.1           shenlab.suhumsci.loc
+    127.0.0.1           sparkbox-sandbox.suhumsci.loc
     127.0.0.1           swshumsci-sandbox.suhumsci.loc
     127.0.0.1           symsys.suhumsci.loc
     ```

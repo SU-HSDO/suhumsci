@@ -1,0 +1,27 @@
+// We need to use this ID selector to match the specificity of the styles we are overriding.
+#layout-builder-modal {
+  summary {
+    @include hb-global-color('color', 'white');
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('color', 'white');
+    }
+
+    &::after {
+      top: 1.2rem;
+    }
+  }
+
+  details {
+    .form-item {
+      margin: 0.75em; // Use ems, to match the other padding styles being applied to this element.
+    }
+
+    summary {
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}

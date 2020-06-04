@@ -1,10 +1,8 @@
 {%- set attributes = attributes.addClass('hb-card') -%}
-{%- set url = url|render|striptags('<drupal-render-placeholder>')|trim -%}
-{%- set has_image = image|render|striptags('<drupal-render-placeholder><span><div><picture><source><img>')|trim -%}
 
 <div{{ attributes }}>
 
-  {% if has_image is not empty %}
+  {% if image %}
     <div class="hb-card__img hb-card__graphics">
       {{ image }}
     </div>
@@ -26,14 +24,14 @@
 
         {% if subcontent['#sources'] %}
           {% for field in subcontent['#sources'] %}
-            {% if field|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+            {% if field %}
               <div class="hb-card__subcontent-item">
                 {{ field }}
               </div>
             {% endif %}
           {% endfor %}
         {% else %}
-          {% if time|render|striptags('<drupal-render-placeholder><a>')|trim  %}
+          {% if time %}
             <div class="hb-card__subcontent-item">
               {{ subcontent }}
             </div>

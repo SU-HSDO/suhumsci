@@ -22,12 +22,8 @@
     width: 100%;
 
     @include grid-media-min('lg') {
-      width: $hb-sidebar-width;
-      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
-    }
-
-    @include grid-media-min('xl') {
-      margin-right: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
+      width: hb-sidebar-width();
+      margin-right: hb-spacing-width();
     }
   }
 
@@ -38,12 +34,12 @@
     @include grid-media-min('lg') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{$hb-sidebar-width} - #{hb-spacing-width()});
+        width: calc(100% - #{hb-sidebar-width()} - #{hb-spacing-width()});
         margin-bottom: 0;
       }
 
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{2 * $hb-sidebar-width} - 2 * #{hb-calculate-rems(map-get($hb-screen-margins, 'md'))});
+        width: calc(100% - #{2 * hb-sidebar-width()} - 2 * #{hb-spacing-width()});
       }
     }
   }
@@ -136,18 +132,14 @@
 
     .hb-three-column-w-image--one-sidebar & {
       @include grid-media-min('md') {
-        width: $hb-sidebar-width;
-        margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'md'));
+        width: hb-sidebar-width();
+        margin-left: hb-spacing-width();
       }
     }
 
     @include grid-media-min('lg') {
-      width: $hb-sidebar-width;
-      margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'lg'));
-    }
-
-    @include grid-media-min('xl') {
-      margin-left: hb-calculate-rems(map-get($hb-screen-margins, 'xl'));
+      width: hb-sidebar-width();
+      margin-left: hb-spacing-width();
     }
   }
 }

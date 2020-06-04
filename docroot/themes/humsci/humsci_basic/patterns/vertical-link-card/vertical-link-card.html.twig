@@ -1,9 +1,7 @@
 {% set attributes = attributes.addClass('hb-vertical-linked-card') %}
-{%- set has_image = image|render|striptags('<drupal-render-placeholder><img>')|trim -%}
-{%- set has_description = description|render|striptags('<drupal-render-placeholder><img>')|trim -%}
 
 <div{{ attributes }}>
-  {% if has_image %}
+  {% if image %}
     <div class="hb-vertical-linked-card__img">
       {{ image }}
     </div>
@@ -11,11 +9,11 @@
 
   {% if title %}
     <h2 class="hb-vertical-linked-card__title">
-      {{ title|render|striptags|trim|raw }}
+      {{ title }}
     </h2>
   {% endif %}
 
-  {% if has_description %}
+  {% if description %}
     <div class="hb-vertical-linked-card__description">
       {{ description }}
     </div>

@@ -101,7 +101,19 @@ class EventsImporterForm extends ConfigFormBase {
     }
 
     $url_headers = get_headers($url, 1);
-    if (!isset($url_headers['Content-Type']) || strpos($url_headers['Content-Type'], 'text/xml') === FALSE) {
+    $content_type_header = $url_headers['Content-Type'] ?? [];
+
+    $is_xml = is_string($content_type_header) ? strpos($content_type_header, 'text/xml') === FALSE : FALSE;
+
+    if (is_array($content_type_header)) {
+      foreach ($content_type_header as $value) {
+        if (strpos($value, 'text/xml') === FALSE) {
+          $is_xml = TRUE;
+          break;
+        }
+      }
+    }
+    if (!$is_xml) {
       $form_state->setError($form['urls'], $this->t('@url is not an xml url.', ['@url' => $url]));
     }
   }

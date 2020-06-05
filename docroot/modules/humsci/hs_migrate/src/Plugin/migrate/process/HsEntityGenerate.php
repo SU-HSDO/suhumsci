@@ -49,7 +49,7 @@ class HsEntityGenerate extends EntityGenerate {
    */
   protected function entityValues($value, $entity_id) {
     try {
-      $entity = $this->entityManager
+      $entity = $this->entityTypeManager
         ->getStorage($this->lookupEntityType)
         ->load($entity_id);
 

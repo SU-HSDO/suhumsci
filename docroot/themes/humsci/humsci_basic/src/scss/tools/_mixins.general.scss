@@ -63,6 +63,10 @@
     position: relative;
     line-height: 122%;
     margin-bottom: hb-calculate-rems(10px);
+    padding-left: hb-calculate-rems(18px);
+
+    // This prevents the list item to float behind images that are floated to the left
+    overflow: hidden;
 
     &::before {
       content: '';
@@ -73,7 +77,7 @@
       @include hb-pairing-color('background-color', 'secondary');
 
       position: absolute;
-      left: hb-calculate-rems(-18px);
+      left: 0;
       top: hb-calculate-rems(8px);
 
       .hb-local-footer--dark & {
@@ -110,6 +114,10 @@
     position: relative;
     line-height: 122%;
     margin-bottom: hb-calculate-rems(10px);
+    padding-left: hb-calculate-rems(18px);
+
+    // This prevents the list item to float behind images that are floated to the left
+    overflow: hidden;
 
     &::before {
       content: counter(li) '.';
@@ -119,7 +127,7 @@
       @include hb-pairing-color('color', 'secondary');
 
       position: absolute;
-      left: hb-calculate-rems(-18px);
+      left: 0;
 
       .hb-local-footer--dark & {
         @include hb-pairing-color('color', 'secondary-highlight');

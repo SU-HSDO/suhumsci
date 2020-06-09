@@ -21,6 +21,10 @@
     @include hb-traditional {
       margin-bottom: hb-calculate-rems(4px);
     }
+
+    &:only-child {
+      margin: 0;
+    }
   }
 
   h1 {
@@ -86,15 +90,12 @@
     background-image: none;
   }
 
-  // Unordered and ordered lists within the WYSIWYG need flexbox to implement proper alignment around floated images
-  ol,
-  ul {
-    display: flex;
-    flex-direction: column;
-  }
-
   // media
   figure {
+    position: relative;
+    z-index: $hb-z-index-figure;
+
+
     @include hb-themes(('colorful', 'airy')) {
       margin-bottom: hb-spacing-width('sm');
     }
@@ -265,6 +266,10 @@ a[href*="//"].hs-external-link,
   @include hb-external-link-icon;
 }
 
+.hs-mailto-link .fa-mailto {
+  display: initial;
+}
+
 a.hs-more-link,
 button.hs-more-link,
 .hs-more-link a,
@@ -272,3 +277,12 @@ button.hs-more-link,
   margin-bottom: hb-calculate-rems(20px);
   @include hb-more-link;
 }
+
+// Makes sure that all images in the WYSIWYG editor are a level above the other
+// content and can be selected to edit.
+/* stylelint-disable */
+drupal-media {
+  position: relative;
+  z-index: $hb-z-index-figure;
+}
+/* stylelint-enable */

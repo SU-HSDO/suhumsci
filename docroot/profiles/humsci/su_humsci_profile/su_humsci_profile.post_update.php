@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Outdated.
@@ -229,6 +230,7 @@ function su_humsci_profile_post_update_8211(&$sandbox) {
     'type' => 'varchar',
     'length' => '255',
     'not null' => TRUE,
+    'initial' => '[replace]',
   ];
 
   if (!$schema->fieldExists('migrate_map_hs_events_importer', 'sourceid2')) {
@@ -247,7 +249,12 @@ function su_humsci_profile_post_update_8211(&$sandbox) {
   $guzzle = \Drupal::httpClient();
 
   foreach ($event_urls as $url) {
-    $response = $guzzle->request('GET', $url);
+    try {
+      $response = $guzzle->request('GET', $url);
+    } catch (GuzzleException | \Exception $e) {
+      continue;
+    }
+
     $body = (string) $response->getBody();
     $xml = simplexml_load_string($body);
 

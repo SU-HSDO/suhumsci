@@ -16,6 +16,11 @@ class SubProcess extends OriginalSubProcess {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $return = [];
+    if ($this->configuration['include_source']) {
+      $key = $this->configuration['source_key'];
+      $source[$key] = $row->getSource();
+    }
+
     if (is_array($value) || $value instanceof \Traversable) {
       foreach ($value as $key => $new_value) {
         // This is the difference with the original process plugin. When using

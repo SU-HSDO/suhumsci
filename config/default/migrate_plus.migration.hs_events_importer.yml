@@ -26,6 +26,10 @@ source:
       label: GUID
       selector: guid
     -
+      name: event_id
+      label: 'Event ID'
+      selector: eventID
+    -
       name: title
       label: 'Event Title'
       selector: title
@@ -101,8 +105,16 @@ source:
       name: drupal_video_name
       label: 'Drupal Video Name'
       selector: drupalVideoName
+    -
+      name: image
+      label: 'Image URL'
+      selector: imageUrl
   ids:
-    guid:
+    event_id:
+      type: string
+    event_start:
+      type: string
+    event_end:
       type: string
   constants:
     status: 1
@@ -112,6 +124,7 @@ source:
     minimal_html: minimal_html
     map_link_text: 'View on a map'
     external_link_text: 'See more on Stanford Events'
+    image_path: 'public://events/'
 process:
   status: constants/status
   type: constants/type
@@ -180,14 +193,36 @@ process:
     -
       plugin: default_value
       default_value: null
+  image_file:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: image
+    -
+      plugin: file_import
+      destination: constants/image_path
+      id_only: true
+      reuse: true
   field_hs_event_image/target_id:
     -
-      plugin: migration_lookup
-      migration: hs_events_image_importer
-      source: guid
+      plugin: skip_on_empty
+      method: process
+      source: image
     -
-      plugin: default_value
-      default_value: null
+      plugin: skip_on_empty
+      method: process
+      source: '@image_file'
+    -
+      plugin: entity_generate
+      source: title
+      value_key: name
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_image/target_id: '@image_file'
+        field_media_image/alt: '@title'
   field_hs_event_status:
     -
       source: event_status
@@ -280,6 +315,4 @@ destination:
     - field_hs_event_speaker
     - field_hs_event_type
     - field_hs_event_video
-migration_dependencies:
-  required:
-    - hs_events_image_importer
+migration_dependencies: {  }

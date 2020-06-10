@@ -280,3 +280,10 @@ function su_humsci_profile_post_update_8211(&$sandbox) {
     }
   }
 }
+
+/**
+ * Implements hook_post_update_NAME().
+ */
+function su_humsci_profile_post_update_8212(&$sandbox) {
+  \Drupal::service('module_installer')->uninstall(['jira_rest']);
+}

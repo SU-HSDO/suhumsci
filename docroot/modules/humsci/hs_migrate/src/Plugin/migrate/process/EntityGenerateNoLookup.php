@@ -10,7 +10,8 @@ use Drupal\migrate_plus\Plugin\migrate\process\EntityGenerate;
  * This plugin generates entities within the process plugin.
  *
  * @MigrateProcessPlugin(
- *   id = "entity_generate_no_lookup"
+ *   id = "entity_generate_no_lookup",
+ *   handle_multiples = TRUE
  * )
  *
  * @see EntityLookup
@@ -51,6 +52,14 @@ class EntityGenerateNoLookup extends EntityGenerate {
     $destinationProperty = reset($parts);
     $this->determineLookupProperties($destinationProperty);
     $this->destinationProperty = isset($this->configuration['destination_field']) ? $this->configuration['destination_field'] : NULL;
+
+    if (is_array($value)) {
+      $entities = [];
+      foreach ($value as $item) {
+        $entities[] = $this->generateEntity($item);
+      }
+      return $entities;
+    }
     return $this->generateEntity($value);
   }
 

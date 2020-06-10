@@ -251,7 +251,8 @@ function su_humsci_profile_post_update_8211(&$sandbox) {
   foreach ($event_urls as $url) {
     try {
       $response = $guzzle->request('GET', $url);
-    } catch (GuzzleException | \Exception $e) {
+    }
+    catch (GuzzleException | \Exception $e) {
       continue;
     }
 

@@ -86,15 +86,16 @@ Feature: Install State Basic Page
     And I should see "Sed augue ipsum egestas nec"
     And I should see "Vivamus in erat ut urna cursus vestibulum"
 
-  @api @safe @javascript @MediaCleanup
+  @api @safe @javascript @MediaCleanup @testme
   Scenario: Test basic page with Text Area paragraph creation
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
     And I set window dimensions 1200 x 3000
     And I fill in "Title" with "Demo Basic Page"
-    And I press "List additional actions"
-    And I press "Add Text Area"
-    And I wait for AJAX to finish
+#    And I press "List additional actions"
+#    And I wait 30 seconds
+#    And I press "Add Text Area"
+#    And I wait for AJAX to finish
     And I fill in wysiwyg "Text Area" with "Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem."
     Then I press "Save"
     And I should be on "/demo-basic-page"
@@ -102,6 +103,7 @@ Feature: Install State Basic Page
     And I should see "Vivamus in erat ut urna cursus vestibulum"
     And I should see 0 "img" elements in the "content" region
     Then I click "Edit"
+    And I wait 30 seconds
     And I press "Edit" in the "content" region
     And I wait for AJAX to finish
     Then the "Text Area" field should contain "<p>Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.</p>"

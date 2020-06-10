@@ -37,6 +37,10 @@ source:
       label: Image
       selector: image
     -
+      name: authors
+      label: Authors
+      selector: author/article
+    -
       name: body
       label: Body
       selector: body
@@ -100,6 +104,14 @@ process:
     source: publication_year
     start: 0
     length: 10
+  field_hs_publication_author:
+    -
+      plugin: entity_generate_no_lookup
+      source: authors
+      entity_type: publications_collections
+      bundle_key: type
+      bundle: publication_author
+      value_key: title
   image_file:
     -
       plugin: skip_on_empty

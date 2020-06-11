@@ -95,7 +95,6 @@
     position: relative;
     z-index: $hb-z-index-figure;
 
-
     @include hb-themes(('colorful', 'airy')) {
       margin-bottom: hb-spacing-width('sm');
     }
@@ -204,6 +203,16 @@
 
 .align {
   &-right {
+    max-width: 100%;
+
+    @include grid-media-min('sm') {
+      max-width: 50%;
+    }
+
+    @include grid-media-min('md') {
+      max-width: 75%;
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       margin: hb-spacing-width('sm') 0 hb-spacing-width('sm') hb-spacing-width('sm');
     }
@@ -214,6 +223,16 @@
   }
 
   &-left {
+    max-width: 100%;
+
+    @include grid-media-min('sm') {
+      max-width: 50%;
+    }
+
+    @include grid-media-min('md') {
+      max-width: 75%;
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       margin: hb-spacing-width('sm') hb-spacing-width('sm') hb-spacing-width('sm') 0;
     }

@@ -16,15 +16,17 @@ class HsBackToTopBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
+
   public function build() {
-      return array(
-          '#type' => 'inline_template',
-          '#template' => '<a href="#main-content" class="hs-back-to-top">Back to Top</a>',
-          '#attached' => array(
-              'library' => array(
-                  'hs_blocks/back_to_top',
-              ),
-          ),
-      );
+    return [
+      '#type' => 'inline_template',
+      '#template' => '<a href="#main-content" class="hs-back-to-top" hidden>Back to Top</a>',
+      '#attached' => [
+        'library' => [
+            'hs_blocks/back_to_top',
+        ],
+      ],
+    ];
   }
+
 }

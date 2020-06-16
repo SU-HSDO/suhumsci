@@ -409,6 +409,9 @@ class HumsciServerCommands extends AcHooksCommand {
 
     $api = new AcquiaApi($this->getConfigValue('cloud'), $this->getConfigValue('cloud.key'), $this->getConfigValue('cloud.secret'));
     $sites = $this->getSitesToSync($api, $task_started, $options);
+    if (!$this->confirm(sprintf('Are you sure you wish to stage the following sites: <comment>%s</comment>', implode(', ', $sites)))) {
+      return;
+    }
     $count = count($sites);
     $copy_sites = array_splice($sites, 0, 4);
 
@@ -454,8 +457,12 @@ class HumsciServerCommands extends AcHooksCommand {
     $finished_databases = $this->getCompletedDatabaseCopies($api, $task_started);
 
     $sites = $this->getConfigValue('multisites');
-    foreach ($sites as &$db_name) {
+    foreach ($sites as $key => &$db_name) {
       $db_name = $db_name == 'default' ? 'swshumsci' : $db_name;
+
+      if ($db_name == 'economics' || strpos($db_name, 'sandbox') !== FALSE) {
+        unset($sites[$key]);
+      }
     }
     if (!empty($options['exclude'])) {
       $exclude = explode(',', $options['exclude']);

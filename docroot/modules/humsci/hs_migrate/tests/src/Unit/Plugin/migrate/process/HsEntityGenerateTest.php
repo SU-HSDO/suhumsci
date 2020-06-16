@@ -3,10 +3,11 @@
 namespace Drupal\Tests\hs_migrate\Unit\Plulgin\migrate\process;
 
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\hs_migrate\Plugin\migrate\process\HsEntityGenerate;
 use Drupal\migrate\MigrateExecutable;
@@ -54,13 +55,16 @@ class HsEntityGenerateTest extends UnitTestCase {
     $entity_storage->method('getQuery')
       ->willReturn($query);
 
-    $entity_manager = $this->createMock(EntityManager::class);
+    $entity_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_manager->method('getStorage')
       ->willReturn($entity_storage);
 
-    $this->container->set('entity.manager', $entity_manager);
+    $field_manager = $this->createMock(EntityFieldManagerInterface::class);
+
+    $this->container->set('entity_type.manager', $entity_manager);
     $this->container->set('plugin.manager.entity_reference_selection', $this->createMock(SelectionPluginManagerInterface::class));
     $this->container->set('plugin.manager.migrate.process', $this->createMock(MigratePluginManager::class));
+    $this->container->set('entity_field.manager', $field_manager);
   }
 
   /**

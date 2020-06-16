@@ -3,10 +3,11 @@
 namespace Drupal\Tests\hs_migrate\Unit\Plulgin\migrate\process;
 
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\hs_migrate\Plugin\migrate\process\EntityGenerateNoLookup;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
@@ -36,13 +37,16 @@ class EntityGenerateNoLookupTest extends UnitTestCase {
     $entity_storage->method('create')
       ->willReturn($entity);
 
-    $entity_manager = $this->createMock(EntityManager::class);
+    $entity_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_manager->method('getStorage')
       ->willReturn($entity_storage);
 
-    $container->set('entity.manager', $entity_manager);
+    $field_manager = $this->createMock(EntityFieldManagerInterface::class);
+
+    $container->set('entity_type.manager', $entity_manager);
     $container->set('plugin.manager.entity_reference_selection', $this->createMock(SelectionPluginManagerInterface::class));
     $container->set('plugin.manager.migrate.process', $this->createMock(MigratePluginManager::class));
+    $container->set('entity_field.manager', $field_manager);
 
     $migration = $this->createMock(MigrationInterface::class);
     $migration->method('getDestinationPlugin')
@@ -52,6 +56,8 @@ class EntityGenerateNoLookupTest extends UnitTestCase {
       'value_key' => 'key',
     ];
     $definition = [];
+
+
     $plugin = EntityGenerateNoLookup::create($container, $configuration, 'entity_generate_no_lookup', $definition, $migration);
 
     $this->assertInstanceOf(EntityGenerateNoLookup::class, $plugin);

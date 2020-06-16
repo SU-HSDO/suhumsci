@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Outdated.
@@ -205,4 +206,84 @@ function su_humsci_profile_post_update_8203() {
  */
 function su_humsci_profile_post_update_8204() {
   \Drupal::service('module_installer')->uninstall(['update']);
+}
+
+/**
+ * Modify the events importer database to use the new unique IDS.
+ */
+function su_humsci_profile_post_update_8211(&$sandbox) {
+  $schema = \Drupal::database()->schema();
+
+  \Drupal::configFactory()
+    ->getEditable('migrate_plus.migration.hs_events_image_importer')
+    ->delete();
+  if ($schema->tableExists('migrate_map_hs_events_image_importer')) {
+    $schema->dropTable('migrate_map_hs_events_image_importer');
+  }
+
+  if (!$schema->tableExists('migrate_map_hs_events_importer') ||
+    ($schema->fieldExists('migrate_map_hs_events_importer', 'sourceid2') && $schema->fieldExists('migrate_map_hs_events_importer', 'sourceid3'))
+  ) {
+    return;
+  }
+  $field_info = [
+    'type' => 'varchar',
+    'length' => '255',
+    'not null' => TRUE,
+    'initial' => '[replace]',
+  ];
+
+  if (!$schema->fieldExists('migrate_map_hs_events_importer', 'sourceid2')) {
+    $schema->addField('migrate_map_hs_events_importer', 'sourceid2', $field_info);
+  }
+  if (!$schema->fieldExists('migrate_map_hs_events_importer', 'sourceid3')) {
+    $schema->addField('migrate_map_hs_events_importer', 'sourceid3', $field_info);
+  }
+
+  $event_urls = \Drupal::config('hs_events_importer.settings')->get('urls');
+  if (empty($event_urls)) {
+    return;
+  }
+
+  $database = \Drupal::database();
+  $guzzle = \Drupal::httpClient();
+
+  foreach ($event_urls as $url) {
+    try {
+      $response = $guzzle->request('GET', $url);
+    }
+    catch (GuzzleException | \Exception $e) {
+      continue;
+    }
+
+    $body = (string) $response->getBody();
+    $xml = simplexml_load_string($body);
+
+    /** @var \SimpleXMLElement $event */
+    foreach ($xml->xpath('//Event') as $event) {
+      $guid = (string) $event->xpath('guid')[0];
+      $event_id = (string) $event->xpath('eventID')[0];
+      $start = (string) $event->xpath('isoEventDate')[0];
+      $end = (string) $event->xpath('isoEventEndDate')[0];
+      $source_id_values = [$event_id, $start, $end];
+      $hash = hash('sha256', serialize(array_map('strval', $source_id_values)));;
+
+      $database->update('migrate_map_hs_events_importer')
+        ->condition('sourceid1', $guid)
+        ->fields([
+          'source_ids_hash' => $hash,
+          'sourceid1' => $event_id,
+          'sourceid2' => $start,
+          'sourceid3' => $end,
+        ])
+        ->execute();
+    }
+  }
+}
+
+/**
+ * Implements hook_post_update_NAME().
+ */
+function su_humsci_profile_post_update_8212(&$sandbox) {
+  \Drupal::service('module_installer')->uninstall(['jira_rest']);
 }

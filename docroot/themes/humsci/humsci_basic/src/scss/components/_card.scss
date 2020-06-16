@@ -220,6 +220,26 @@
         }
       }
     }
+
+    &--has-date {
+      // This ensures there is always enough height for the date tile in case
+      // the images is too short (can happen with util classes)
+      min-height: hb-calculate-rems(100px);
+    }
+
+    .hb-card--horizontal & {
+      @include grid-media-min('md') {
+        @include flex-column(5);
+        margin-right: hb-spacing-width();
+        margin-bottom: 0;
+      }
+    }
+
+    .hb-card--horizontal-date-stacked & {
+      @include grid-media-min('md') {
+        max-width: 100%;
+      }
+    }
   }
 
   &__img {
@@ -245,20 +265,6 @@
       height: auto;
       transform: scale(1);
       transition: hb-transition(transform);
-    }
-
-    .hb-card--horizontal & {
-      @include grid-media-min('md') {
-        @include flex-column(5);
-        margin-right: hb-spacing-width();
-        margin-bottom: 0;
-      }
-    }
-
-    .hb-card--horizontal-date-stacked & {
-      @include grid-media-min('md') {
-        max-width: 100%;
-      }
     }
   }
 
@@ -438,7 +444,6 @@
 
     .views-field {
       width: 100%;
-      z-index: $hb-z-index-decorative-link; // align the link above the arrow icon to make it clickable on the horizontal card
     }
 
     a {

@@ -28,7 +28,6 @@ const equalHeightGrid = (element, specialWrapperClass) => {
         setTimeout(() => {
           const maxHeight = Math.max.apply(null, elementHeights);
           const tallestElementIndex = elementHeights.indexOf(maxHeight);
-          console.log('whta is height', maxHeight, element);
 
           Array.prototype.forEach.call(elementList, (el, index) => {
             // Ignore the tallest element as it is already set to the right height

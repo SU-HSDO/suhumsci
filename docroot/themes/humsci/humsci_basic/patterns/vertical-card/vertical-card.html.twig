@@ -21,7 +21,6 @@
 
     {% if subcontent %}
       <div class="hb-card__subcontent">
-
         {% if subcontent['#sources'] %}
           {% for field in subcontent['#sources'] %}
             {% if field %}
@@ -31,18 +30,23 @@
             {% endif %}
           {% endfor %}
         {% else %}
-          {% if time %}
-            <div class="hb-card__subcontent-item">
-              {{ subcontent }}
-            </div>
-          {% endif %}
+          <div class="hb-card__subcontent-item">
+            {{ subcontent }}
+          </div>
         {% endif %}
-
       </div>
     {% endif %}
 
     {% if description %}
       <div class="hb-card__description">{{ description }}</div>
+    {% endif %}
+
+    {% if author %}
+      <div class="hb-card__author">{{ author }}</div>
+    {% endif %}
+
+    {% if year %}
+      <div class="hb-card__year">{{ year }}</div>
     {% endif %}
 
     {% if button %}

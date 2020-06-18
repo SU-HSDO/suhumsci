@@ -30,10 +30,11 @@
       {{ link(item.title, item.url, link_attributes) }}
 
       {% if item.below %}
-        <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true">
+        {% set randomInt = random(0, 100) %}
+        <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true">
           Toggle {{ item.title }}
         </button>
-        <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
+        <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}">
           {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
         </div>
       {% endif %}

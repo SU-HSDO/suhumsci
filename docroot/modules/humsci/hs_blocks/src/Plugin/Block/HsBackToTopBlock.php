@@ -13,14 +13,16 @@ use Drupal\Core\Block\BlockBase;
  * )
  */
 class HsBackToTopBlock extends BlockBase {
+
   /**
    * {@inheritdoc}
    */
-
   public function build() {
     return [
-      '#type' => 'inline_template',
-      '#template' => '<a href="#main-content" class="hs-back-to-top" hidden>Back to Top</a>',
+      '#type' => 'html_tag',
+      '#tag' => 'a',
+      '#attributes' => ['href' => ['#main-content'], 'class' => ['hs-back-to-top']],
+      '#value' => $this->t('Back to Top'),
       '#attached' => [
         'library' => [
           'hs_blocks/back_to_top',

@@ -1,0 +1,18 @@
+{%- set attributes = attributes.addClass('hb-spotlight') -%}
+
+{% if variant %}
+  {% set variant_class = "hb-spotlight--color-#{variant}" %}
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
+
+{% spaceless %}
+  <div{{ attributes }}>
+    <div class="hb-spotlight__image-wrapper">
+      {{ image }}
+    </div>
+
+    <div class="hb-spotlight__text">
+      {{ overlay_text }}
+    </div>
+  </div>
+{% endspaceless %}

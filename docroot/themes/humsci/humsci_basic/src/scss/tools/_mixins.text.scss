@@ -231,7 +231,6 @@
 }
 
 @mixin hb-hero-title {
-  font-weight: hb-theme-font-weight(semibold);
   font-size: hb-calculate-rems(27px);
   line-height: 117%;
   margin: 0 0 hb-spacing-width('md');
@@ -245,7 +244,12 @@
     @include hb-heading-1;
   }
 
+  @include hb-themes(('airy', 'colorful')) {
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
   @include hb-traditional {
+    font-weight: hb-theme-font-weight(regular);
     line-height: 112%;
 
     @include grid-media-min('md') {

@@ -10,7 +10,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a 'Par of H&S' block.
+ * Provides a 'Part of H&S' block.
  *
  * @Block(
  *  id = "part_of_hs",
@@ -56,6 +56,12 @@ class PartOfHsBlock extends BlockBase implements ContainerFactoryPluginInterface
 
     $url = Url::fromUri('https://humsci.stanford.edu/');
     $link = Link::fromTextAndUrl($this->t('School of Humanities and Sciences'), $url);
+
+    $markup = $this->t('The @sitename is part of the @link.', [
+      '@sitename' => $site_name,
+      '@link' => $link->toString(),
+    ]);
+
     if ($lock_line_1 && $lock_line_2) {
       $markup = $this->t('The @lock1 @lock2 is part of the @link.', [
         '@lock1' => $lock_line_1,
@@ -63,9 +69,7 @@ class PartOfHsBlock extends BlockBase implements ContainerFactoryPluginInterface
         '@link' => $link->toString(),
       ]);
     }
-    else {
-      $markup = $this->t('The @sitename is part of the @link.', ['@sitename' => $site_name, '@link' => $link->toString(),]);
-    }
+
     return [
       '#type' => 'html_tag',
       '#tag' => 'p',

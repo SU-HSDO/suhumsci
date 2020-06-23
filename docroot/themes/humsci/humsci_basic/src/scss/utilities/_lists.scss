@@ -3,6 +3,12 @@
     div div:not([class]) {
       @include hb-category-item;
     }
+
+    & > a:not([class]),
+    & > div > a:not([class]) {
+      // TODO this isn't perfect, link hover style gets applied to the psuedo element
+      @include hb-category-item;
+    }
   }
 
   &.string {

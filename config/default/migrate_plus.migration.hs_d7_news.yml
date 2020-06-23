@@ -20,6 +20,7 @@ source:
     type: hs_news
     basic_html: basic_html
     image_destination: 'public://media/image/news/'
+    alt: ''
   item_selector: /NewsList/NewsItem
   fields:
     -
@@ -116,7 +117,8 @@ process:
       entity_type: media
       ignore_case: true
       values:
-        field_media_image: '@image_file'
+        field_media_image/target_id: '@image_file'
+        field_media_image/alt: constants/alt
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true

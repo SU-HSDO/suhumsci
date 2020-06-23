@@ -11,7 +11,7 @@ Feature: Install State
     And I should see an "input[type='text']" element
     And I should see the button "Search"
     And I should see "Class aptent taciti sociosqu ad litora torquent per conubia nostra"
-    And I should see the heading "About"
+    And I should see the link "School of Humanities and Sciences" in the "footer" region
     And I should see the heading "People"
     And I should see the heading "Connect With Us"
     And I should see the heading "Contact Us"

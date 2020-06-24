@@ -1,7 +1,7 @@
 // WYSIWYG text area styles
 .field-hs-text-area {
   @include clearfix;
-  margin-bottom: hb-spacing-width();
+  margin-bottom: hb-calculate-rems(28px);
 
   h1,
   h2,
@@ -20,6 +20,10 @@
   h6 {
     @include hb-traditional {
       margin-bottom: hb-calculate-rems(4px);
+    }
+
+    &:only-child {
+      margin: 0;
     }
   }
 
@@ -86,15 +90,11 @@
     background-image: none;
   }
 
-  // Unordered and ordered lists within the WYSIWYG need flexbox to implement proper alignment around floated images
-  ol,
-  ul {
-    display: flex;
-    flex-direction: column;
-  }
-
   // media
   figure {
+    position: relative;
+    z-index: $hb-z-index-figure;
+
     @include hb-themes(('colorful', 'airy')) {
       margin-bottom: hb-spacing-width('sm');
     }
@@ -203,6 +203,16 @@
 
 .align {
   &-right {
+    max-width: 100%;
+
+    @include grid-media-min('sm') {
+      max-width: 50%;
+    }
+
+    @include grid-media-min('md') {
+      max-width: 75%;
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       margin: hb-spacing-width('sm') 0 hb-spacing-width('sm') hb-spacing-width('sm');
     }
@@ -213,6 +223,16 @@
   }
 
   &-left {
+    max-width: 100%;
+
+    @include grid-media-min('sm') {
+      max-width: 50%;
+    }
+
+    @include grid-media-min('md') {
+      max-width: 75%;
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       margin: hb-spacing-width('sm') hb-spacing-width('sm') hb-spacing-width('sm') 0;
     }
@@ -265,6 +285,10 @@ a[href*="//"].hs-external-link,
   @include hb-external-link-icon;
 }
 
+.hs-mailto-link .fa-mailto {
+  display: initial;
+}
+
 a.hs-more-link,
 button.hs-more-link,
 .hs-more-link a,
@@ -272,3 +296,12 @@ button.hs-more-link,
   margin-bottom: hb-calculate-rems(20px);
   @include hb-more-link;
 }
+
+// Makes sure that all images in the WYSIWYG editor are a level above the other
+// content and can be selected to edit.
+/* stylelint-disable */
+drupal-media {
+  position: relative;
+  z-index: $hb-z-index-figure;
+}
+/* stylelint-enable */

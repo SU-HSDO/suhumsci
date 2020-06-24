@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eck\Entity\EckEntityType;
+use Drupal\Core\Installer\InstallerKernel;
 
 /**
  * Implements hook_help().
@@ -74,7 +75,7 @@ function hs_config_prefix_custom_form_validate(array &$form, FormStateInterface 
  * Implements hook_entity_presave().
  */
 function hs_config_prefix_entity_presave(EntityInterface $entity) {
-  if (drupal_installation_attempted() || empty($GLOBALS['_REQUEST'])) {
+  if (InstallerKernel::installationAttempted() || empty($GLOBALS['_REQUEST'])) {
     return;
   }
   if ($entity->isNew() && $entity instanceof ConfigEntityBase) {
@@ -84,6 +85,7 @@ function hs_config_prefix_entity_presave(EntityInterface $entity) {
       'entity_form_display',
       'entity_view_display',
       'field_storage_config',
+      'behavior_settings',
     ];
 
     if (\Drupal::moduleHandler()->moduleExists('eck')) {

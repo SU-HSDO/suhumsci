@@ -46,7 +46,7 @@ source:
     -
       name: documents
       label: Documents
-      selector: documents/section
+      selector: documents
     -
       name: publication_link_url
       label: 'Publication Link Url'
@@ -151,6 +151,7 @@ process:
       callable: simplexml_load_string
     -
       plugin: sub_process
+      key: '@id'
       process:
         document_name:
           plugin: callback

@@ -20,8 +20,10 @@ class SubProcess extends OriginalSubProcess {
       $key = $this->configuration['source_key'];
       $source[$key] = $row->getSource();
     }
+    var_dump($value);
 
     if (is_array($value) || $value instanceof \Traversable) {
+      $i = 0;
       foreach ($value as $key => $new_value) {
         // This is the difference with the original process plugin. When using
         // SimpleXML parters, the `$new_value` is a SimpleXmlElement. So we have
@@ -31,10 +33,15 @@ class SubProcess extends OriginalSubProcess {
         $destination = $new_row->getDestination();
         if (array_key_exists('key', $this->configuration)) {
           $key = $this->transformKey($key, $migrate_executable, $new_row);
+          if ($this->configuration['key'] === '@id') {
+            $key = $i;
+          }
         }
         $return[$key] = $destination;
+        $i++;
       }
     }
+    var_dump($return);
     return $return;
   }
 

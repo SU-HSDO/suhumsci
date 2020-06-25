@@ -224,7 +224,7 @@
     &--has-date {
       // This ensures there is always enough height for the date tile in case
       // the images is too short (can happen with util classes)
-      min-height: hb-calculate-rems(100px);
+      min-height: hb-calculate-rems(130px);
     }
 
     .hb-card--horizontal & {
@@ -269,13 +269,16 @@
   }
 
   &__date-tile {
-    display: inline-block;
     text-align: center;
-    min-width: hb-calculate-rems(100px);
     margin-right: hb-spacing-width();
     position: absolute;
 
     @include hb-themes(('airy', 'colorful')) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: hb-calculate-rems(110px);
+      height: hb-calculate-rems(110px);
       @include hb-pairing-color('background-color', 'secondary');
       @include hb-global-color('color', 'white');
       padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
@@ -289,8 +292,9 @@
     }
 
     @include hb-traditional {
+      display: inline-block;
+      min-width: hb-calculate-rems(100px);
       @include hb-global-color('background-color', 'white');
-      @include hb-pairing-color('color', 'primary');
       padding: 0;
       top: 0;
       left: 0;
@@ -304,6 +308,11 @@
   &__date-tile-month {
     text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
+
+    @include hb-themes(('airy', 'colorful')) {
+      font-size: hb-calculate-rems(16px);
+      line-height: 122%;
+    }
 
     @include hb-traditional {
       @include hb-pairing-color('background-color', 'primary');
@@ -325,8 +334,9 @@
     @include hb-traditional {
       border: $hb-thin-border;
       border-top-width: 0;
-      font-size: hb-calculate-rems(36px);
       @include hb-global-color('border-color', 'gray-medium');
+      @include hb-pairing-color('color', 'primary');
+      font-size: hb-calculate-rems(36px);
       padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px);
     }
   }

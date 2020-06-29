@@ -4,7 +4,9 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_body
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_display
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_image_align
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_link
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_title
     - paragraphs.paragraphs_type.hs_spotlight
@@ -19,7 +21,7 @@ bundle: hs_spotlight
 mode: default
 content:
   field_hs_spotlight_body:
-    weight: 0
+    weight: 3
     settings:
       rows: 5
       placeholder: ''
@@ -29,15 +31,27 @@ content:
         hide_guidelines: '0'
     type: text_textarea
     region: content
+  field_hs_spotlight_display:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   field_hs_spotlight_image:
     type: media_library_widget
-    weight: 1
+    weight: 2
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
+  field_hs_spotlight_image_align:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   field_hs_spotlight_link:
-    weight: 3
+    weight: 4
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -45,7 +59,7 @@ content:
     type: link_default
     region: content
   field_hs_spotlight_title:
-    weight: 2
+    weight: -1
     settings:
       size: 60
       placeholder: ''

@@ -1,23 +1,21 @@
 {%- set attributes = attributes.addClass('hb-spotlight') -%}
 
 {% if variant %}
-  {# left / right could be variants #}
-  {# but will we want color variants too? then one should be another field #}
-  {% set variant_class = "hb-spotlight--color-#{variant}" %} 
+  {% set variant_class = "hb-spotlight--image-#{variant}" %} 
   {% set attributes = attributes.addClass(variant_class) %}
 {% endif %}
 
 {% spaceless %}
   <div{{ attributes }}>
     <div class="hb-spotlight__wrapper">
-      {% if overlay_text %}
-        <div class="hb-spotlight__text">
-          {{ overlay_text }}
-        </div>
-      {% endif %}
       {% if image %}
         <div class="hb-spotlight__image-wrapper">
           {{ image }}
+        </div>
+      {% endif %}
+      {% if overlay_text %}
+        <div class="hb-spotlight__text">
+          {{ overlay_text }}
         </div>
       {% endif %}
     </div>

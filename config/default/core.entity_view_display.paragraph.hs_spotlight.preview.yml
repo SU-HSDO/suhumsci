@@ -1,8 +1,9 @@
-uuid: 2b77dd38-89be-49bc-9335-fa1474646216
+uuid: 09aaf0b7-62f4-4455-a97c-164d22e692f8
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_body
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_display
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image
@@ -14,6 +15,7 @@ dependencies:
     - ds
     - field_formatter_class
     - hs_field_helpers
+    - layout_builder
     - link
     - smart_trim
     - stanford_media
@@ -39,10 +41,13 @@ third_party_settings:
         - field_hs_spotlight_link
       image:
         - field_hs_spotlight_image
-id: paragraph.hs_spotlight.default
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.hs_spotlight.preview
 targetEntityType: paragraph
 bundle: hs_spotlight
-mode: default
+mode: preview
 content:
   field_hs_spotlight_body:
     weight: 1
@@ -73,7 +78,7 @@ content:
     label: hidden
     settings:
       view_mode: default
-      image_style: spotlight_portrait_responsive
+      image_style: landscape_rectangle
       link: false
     third_party_settings:
       field_formatter_class:

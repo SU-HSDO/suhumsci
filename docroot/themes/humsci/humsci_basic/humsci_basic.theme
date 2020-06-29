@@ -89,11 +89,15 @@ function humsci_basic_preprocess_menu(&$vars) {
 }
 
 /**
- * Add an attribute to menu items that point to unpublished nodes.
+ * Marks menu items that point to unpublished nodes and private pages.
  *
  * Unpublished nodes menu items still show in the main menu and the menu block
  * in the side navigation. We will target the attribute with css to give a
  * visual indicator that something is different with that menu item.
+
+ * Menu items for pages with a content type of hs_private_page will show in the
+ * main menu and the menu block with the class hb-private-page-link which adds a
+ * lock icon to the left of the link text.
  *
  * @param array $link_items
  *   Keyed array of menu items.
@@ -107,6 +111,12 @@ function _humsci_basic_check_link_access(array &$link_items) {
       $parameters = $url->getRouteParameters();
       $nid = $parameters['node'];
       $node = Node::load($nid);
+      $type = $node->bundle();
+
+      if ($node && $type == 'hs_private_page') {
+        $link_item['attributes']->addClass('hb-private-page-link');
+      }
+
       if ($node && !$node->isPublished()) {
         $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
       }

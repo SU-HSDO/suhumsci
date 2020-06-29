@@ -285,6 +285,23 @@ a[href*="//"].hs-external-link,
   @include hb-external-link-icon;
 }
 
+.hs-private-link {
+  @include hb-link--inline;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    height: hb-calculate-rems(16px);
+    width: hb-calculate-rems(16px);
+    margin-bottom: hb-calculate-rems(-2px);
+    margin-right: hb-calculate-rems(2px);
+
+    @include hb-icon-background('lock', 'black');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
 .hs-mailto-link .fa-mailto {
   display: initial;
 }

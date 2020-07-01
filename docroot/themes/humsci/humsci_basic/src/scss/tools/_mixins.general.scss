@@ -172,19 +172,12 @@
   // Changes the value passed into background-image to
   // create space for the external link space to exist
   @if $icon {
-    $gradient-direction: left;
-
-    // If the icon is positioned to the left of the link text we need the gradient
-    // to flow towards the opposite direction so that the transparent part sits
-    // behind the icon
-    @if ($icon-position == 'left') {
-      $gradient-direction: right;
-    }
+    $icon-width: calc(100% - #{$icon-width});
 
     // Fallback for IE
-    background-image: linear-gradient(to $gradient-direction, transparent $icon-width, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) $icon-width);
+    background-image: linear-gradient(to $icon-position, hb-get-pairing-color('tertiary-highlight', $default-palette, $palette-array) $icon-width transparent $icon-width);
 
     // Color Pairing Custom Variable
-    background-image: linear-gradient(to $gradient-direction, transparent $icon-width, var(--palette--tertiary-highlight) $icon-width);
+    background-image: linear-gradient(to $icon-position, var(--palette--tertiary-highlight) $icon-width, transparent $icon-width);
   }
 }

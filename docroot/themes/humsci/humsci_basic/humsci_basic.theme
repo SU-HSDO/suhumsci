@@ -81,9 +81,12 @@ function humsci_basic_preprocess_block__system_branding_block(&$vars) {
 
 /**
  * Implements hook_preprocess_menu().
+ * All menus will get this hook run on them, including:
+ * main menus, devel menus, custom menus, admin menus, and
+ * shortcut menus.
  */
 function humsci_basic_preprocess_menu(&$vars) {
-  if ($vars['menu_name'] == 'main') {
+  if (isset($vars['items'])) {
     _humsci_basic_check_link_access($vars['items']);
   }
 }
@@ -94,9 +97,9 @@ function humsci_basic_preprocess_menu(&$vars) {
  * Unpublished nodes menu items still show in the main menu and the menu block
  * in the side navigation. We will target the attribute with css to give a
  * visual indicator that something is different with that menu item.
-
- * Menu items for pages with a content type of hs_private_page will show in the
- * main menu and the menu block with the class hb-private-page-link which adds a
+ * 
+ * Menu items for pages with a content type of hs_private_page will show in
+ * any menu block with the class hb-private-page-link which adds a
  * lock icon to the left of the link text.
  *
  * @param array $link_items
@@ -113,12 +116,12 @@ function _humsci_basic_check_link_access(array &$link_items) {
       $node = Node::load($nid);
       $type = $node->bundle();
 
-      if ($node && $type == 'hs_private_page') {
-        $link_item['attributes']->addClass('hb-private-page-link');
-      }
-
       if ($node && !$node->isPublished()) {
         $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
+      }
+
+      if ($node && $type == 'hs_private_page') {
+        $link_item['attributes']->addClass('hb-private-page-link');
       }
     }
 
@@ -127,3 +130,4 @@ function _humsci_basic_check_link_access(array &$link_items) {
     }
   }
 }
+

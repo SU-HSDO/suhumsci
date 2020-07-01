@@ -1,5 +1,6 @@
 // WYSIWYG text area styles
-.field-hs-text-area {
+.field-hs-text-area,
+.field-hs-priv-text-area {
   @include clearfix;
   margin-bottom: hb-calculate-rems(28px);
 
@@ -285,8 +286,13 @@ a[href*="//"].hs-external-link,
   @include hb-external-link-icon;
 }
 
-.hs-private-link {
+a.hs-private-link,
+.hs-private-link a {
   @include hb-link--inline;
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image(true, 18px, left, $hb-colorful-default, $hc-colorful-pairings);
+  }
 
   &::before {
     content: '';

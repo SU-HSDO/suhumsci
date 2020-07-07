@@ -52,6 +52,10 @@ class RouteSubscriber extends RouteSubscriberBase {
     if ($route = $collection->get('stanford_ssp.create_user')) {
       $route->setRequirement('_permission', 'add saml user');
     }
+
+    if ($route = $collection->get('publishcontent.settings')) {
+      $route->setRequirement('_permission', 'administer content types');
+    }
   }
 
 }

@@ -12,6 +12,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use Drupal\user\Entity\Role;
 
 /**
  * Outdated.
@@ -286,4 +287,15 @@ function su_humsci_profile_post_update_8211(&$sandbox) {
  */
 function su_humsci_profile_post_update_8212(&$sandbox) {
   \Drupal::service('module_installer')->uninstall(['jira_rest']);
+}
+
+/**
+ * Adjust media permissions.
+ */
+function su_humsci_profile_post_update_8213() {
+  foreach (Role::loadMultiple() as $role) {
+    user_role_revoke_permissions($role->id(), ['administer media']);
+  }
+  user_role_grant_permissions('site_manager', ['access media overview']);
+  user_role_grant_permissions('contributor', ['access media overview']);
 }

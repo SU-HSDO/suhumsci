@@ -236,6 +236,16 @@ function _su_humci_profile_clean_shortcut_links(array &$links, AccountInterface 
 }
 
 /**
+ * Implements hook_toolbar_alter().
+ */
+function su_humsci_profile_toolbar_alter(&$items) {
+  $user_roles = \Drupal::currentUser()->getRoles();
+  if (!in_array('administrator', $user_roles)) {
+    unset($items['acquia_connector']);
+  }
+}
+
+/**
  * Implements hook_page_attachments().
  */
 function su_humsci_profile_page_attachments(array &$attachments) {

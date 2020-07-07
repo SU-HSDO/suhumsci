@@ -27,10 +27,6 @@
         details {
           margin: 0;
           @include hb-global-color('background-color', 'white');
-
-          summary {
-            padding-right: hb-calculate-rems(52px);
-          }
         }
       }
 
@@ -50,11 +46,6 @@
           margin-bottom: hb-calculate-rems(28px);
         }
       }
-    }
-
-    // When there is only one accordion in the row, make it grow to the entire width. This property is not needed on accordions when they are placed in a row with other items.
-    .counted-items-1 .ptype-hs-accordion {
-      flex-grow: 1;
     }
   }
 
@@ -76,6 +67,13 @@
   }
 }
 
-.ptype-hs-text-area {
+// When there is more than one item in a row it uses flexbox however when there
+// is only one item in a row and we use flexbox it causes overflow issues in IE 11.
+.counted-items-1.field-hs-row-components {
+  display: block;
+}
+
+.ptype-hs-text-area,
+.ptype-hs-accordion {
   width: 100%;
 }

@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.site_manager permissions"
-    Then the role "site_manager" should have 170 permissions
+    Then the role "site_manager" should have 169 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
@@ -22,7 +22,6 @@ Feature: Install State
     And drush output should contain "administer block settings for theme su_humsci_theme"
     And drush output should contain "administer blocks provided by block_content"
     And drush output should contain "administer main menu items"
-    And drush output should contain "administer media"
     And drush output should contain "administer nodes"
     And drush output should contain "assign contributor role"
     And drush output should contain "assign site_manager role"

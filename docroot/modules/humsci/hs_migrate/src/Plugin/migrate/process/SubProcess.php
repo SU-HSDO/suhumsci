@@ -20,7 +20,6 @@ class SubProcess extends OriginalSubProcess {
       $key = $this->configuration['source_key'];
       $source[$key] = $row->getSource();
     }
-    var_dump($value);
 
     if (is_array($value) || $value instanceof \Traversable) {
       $i = 0;
@@ -41,7 +40,6 @@ class SubProcess extends OriginalSubProcess {
         $i++;
       }
     }
-    var_dump($return);
     return $return;
   }
 

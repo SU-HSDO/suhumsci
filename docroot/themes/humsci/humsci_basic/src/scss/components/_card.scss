@@ -221,12 +221,6 @@
       }
     }
 
-    &--has-date {
-      // This ensures there is always enough height for the date tile in case
-      // the images is too short (can happen with util classes)
-      min-height: hb-calculate-rems(130px);
-    }
-
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(5);
@@ -238,6 +232,18 @@
     .hb-card--horizontal-date-stacked & {
       @include grid-media-min('md') {
         max-width: 100%;
+      }
+
+      &--has-date {
+        // This ensures there is always enough height for the date tile in case
+        // the images is too short (can happen with util classes)
+        min-height: hb-calculate-rems(130px);
+      }
+
+      &--no-image {
+        flex: initial;
+        max-width: initial;
+        margin-right: 0;
       }
     }
   }
@@ -301,7 +307,7 @@
     }
 
     &:only-child {
-      position: static;
+      position: relative;
     }
   }
 

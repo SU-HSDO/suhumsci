@@ -34,7 +34,7 @@ Feature: Install State
   Scenario: Test shortcut menu items for contributor role
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/"
-    And I should see 21 "#toolbar-item-shortcuts-tray a" elements
+    And I should see 22 "#toolbar-item-shortcuts-tray a" elements
 
   @api @safe
   Scenario: Test shortcut menu items for site manager role

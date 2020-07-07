@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.site_manager permissions"
-    Then the role "site_manager" should have 170 permissions
+    Then the role "site_manager" should have 169 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"

@@ -67,6 +67,10 @@ source:
       name: publisher
       label: Publisher
       selector: publisher
+    -
+      name: citation
+      label: Citation
+      selector: citation
   ids:
     guid:
       type: string
@@ -86,6 +90,7 @@ process:
   field_hs_publication_link/uri: publication_link_url
   field_hs_publication_link/title: publication_link_title
   field_hs_publication_publisher: publisher
+  field_hs_publication_citation: citation
   field_hs_publication_type:
     -
       plugin: skip_on_empty
@@ -147,16 +152,25 @@ process:
       method: process
       source: documents
     -
+      plugin: str_replace
+      search: '<details/>'
+      replace: ''
+    -
       plugin: callback
       callable: simplexml_load_string
     -
       plugin: sub_process
       key: '@id'
       process:
-        document_name:
+        basename:
           plugin: callback
           callable: basename
           source: article
+        document_name:
+          plugin: null_coalesce
+          source:
+            - details
+            - '@basename'
         document_file:
           -
             plugin: file_import
@@ -175,7 +189,6 @@ process:
             ignore_case: true
             values:
               field_media_file/target_id: '@document_file'
-              field_media_file/description: details
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true

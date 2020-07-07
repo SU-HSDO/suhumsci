@@ -132,7 +132,37 @@
     }
 
     h2 {
-      @include hb-hero-title;
+      font-weight: hb-theme-font-weight(semibold);
+      font-size: hb-calculate-rems(27px);
+      line-height: 117%;
+      margin: 0 0 hb-spacing-width('md');
+
+      @include grid-media-min('md') {
+        @include hb-heading-2;
+        margin: 0 0 hb-spacing-width();
+      }
+
+      @include grid-media-min('lg') {
+        @include hb-heading-1;
+      }
+
+      @include hb-traditional {
+        line-height: 112%;
+
+        @include grid-media-min('md') {
+          font-size: hb-calculate-rems(33px);
+          line-height: 112%;
+        }
+
+        @include grid-media-min('lg') {
+          font-size: hb-calculate-rems(38px);
+          line-height: 112%;
+        }
+
+        @include grid-media-min('xl') {
+          font-size: hb-calculate-rems(48px);
+        }
+      }
     }
 
     ul {

@@ -22,7 +22,6 @@ Feature: Install State
     And drush output should contain "administer block settings for theme su_humsci_theme"
     And drush output should contain "administer blocks provided by block_content"
     And drush output should contain "administer main menu items"
-    And drush output should contain "administer media"
     And drush output should contain "administer nodes"
     And drush output should contain "assign contributor role"
     And drush output should contain "assign site_manager role"

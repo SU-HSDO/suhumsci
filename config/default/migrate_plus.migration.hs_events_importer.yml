@@ -109,6 +109,14 @@ source:
       name: image
       label: 'Image URL'
       selector: imageUrl
+    -
+      name: event_series_title
+      label: 'Event Series Title'
+      selector: eventSeriesTitle
+    -
+      name: event_series_body
+      label: 'Event Series Body'
+      selector: eventSeriesBody
   ids:
     event_id:
       type: string
@@ -289,6 +297,23 @@ process:
       value_key: field_media_video_embed_field
       values:
         name: drupal_video_name
+  field_hs_event_series:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: event_series_title
+    -
+      plugin: entity_generate
+      entity_type: node
+      bundle_key: type
+      bundle: hs_event_series
+      value_key: title
+      values:
+        title: event_series_title
+        body: event_series_body
+    -
+      plugin: default_value
+      default_value: null
 destination:
   plugin: 'entity:node'
   overwrite_properties:

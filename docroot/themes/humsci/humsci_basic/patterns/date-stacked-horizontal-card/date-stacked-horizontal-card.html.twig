@@ -7,11 +7,14 @@
 %}
 
 {%- set attributes = attributes.addClass(classes) -%}
+{% if not image %}
+  {%- set attributes = attributes.addClass('hb-card--no-image') -%}
+{% endif %}
 
 <div{{ attributes }}>
 
   {% if image or month or day %}
-<div class="hb-card__graphics{% if month or day %} hb-card__graphics--has-date{% endif %} {% if not image %} hb-card__graphics--no-image{% endif %}">
+    <div class="hb-card__graphics{% if month or day %} hb-card__graphics--has-date{% endif %}">
 
       {% if image %}
         <div class="hb-card__img">

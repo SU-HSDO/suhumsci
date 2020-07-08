@@ -233,18 +233,19 @@
       @include grid-media-min('md') {
         max-width: 100%;
       }
+    }
 
-      &--has-date {
-        // This ensures there is always enough height for the date tile in case
-        // the images is too short (can happen with util classes)
-        min-height: hb-calculate-rems(130px);
-      }
+    &--has-date {
+      // This ensures there is always enough height for the date tile in case
+      // the images is too short (can happen with util classes)
+      min-height: hb-calculate-rems(130px);
+    }
 
-      &--no-image {
-        flex: initial;
-        max-width: initial;
-        margin-right: 0;
-      }
+    .hb-card--no-image &,
+    [class^="hb-card-image-"] .hb-card--no-image & {
+      flex: initial;
+      max-width: initial;
+      margin-right: 0;
     }
   }
 
@@ -308,6 +309,7 @@
 
     &:only-child {
       position: relative;
+      bottom: auto;
     }
   }
 

@@ -4,13 +4,15 @@
 // This JS sets a width of 100% to figures that contain videos.
 const videos = document.querySelectorAll('.field-media-oembed-video');
 
-if (videos) {
+if (videos && videos.length > 0) {
   for (let i = 0; i < videos.length; i++) {
     const video = videos[i];
-    const figure = video.parentNode.parentNode;
+    if (video.parentNode && video.parentNode.parentNode && video.parentNode.parentNode.classList.nodeName == 'figure')
+      const figure = video.parentNode.parentNode;
 
-    if (figure.classList.contains('caption')) {
-      figure.style.width = '100%';
+      if (figure.classList.contains('caption')) {
+        figure.style.width = '100%';
+      }
     }
   }
 }

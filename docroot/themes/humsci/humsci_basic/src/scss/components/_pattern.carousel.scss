@@ -182,6 +182,10 @@
 
         @include grid-media-min('lg') {
           width: 43% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+
+          .hb-three-column--two-sidebar & {
+            width: calc(100% - (2 * #{hb-calculate-rems(hb-spacing-width('default', false))})) !important;
+          }
         }
 
         @include grid-media-min('xl') {
@@ -318,6 +322,12 @@
           right: calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
         }
 
+        @include grid-media-min('lg') {
+          .hb-three-column--two-sidebar & {
+            @include visually-hidden;
+          }
+        }
+
         @include grid-media-min('xl') {
           right: calc(50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
         }
@@ -329,12 +339,15 @@
         right: calc(50% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
 
         @include grid-media-min('md') {
-          right: inherit;
           right: calc(50% + #{hb-calculate-rems(95px)}); // move it past the slick-next arrow
         }
 
         @include grid-media-min('lg') {
           right: calc(57% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
+
+          .hb-three-column--two-sidebar & {
+            right: hb-calculate-rems(135px); // move it past the slick arrows
+          }
         }
 
         @include grid-media-min('xl') {
@@ -473,6 +486,13 @@
 
           @include grid-media-min('lg') {
             left: calc(43% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--two-sidebar & {
+              left: inherit;
+              right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick arrows
+            }
+            /* stylelint-enable max-nesting-depth */
           }
 
           @include grid-media-min('xl') {
@@ -511,6 +531,13 @@
 
           @include grid-media-min('lg') {
             left: calc(43% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--two-sidebar & {
+              left: inherit;
+              right: hb-calculate-rems(50px); // move it past the slick arrows
+            }
+            /* stylelint-enable max-nesting-depth */
           }
 
           @include grid-media-min('xl') {

@@ -15,6 +15,7 @@
         display: grid;
         grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
         grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
+        min-height: 60vh;
       }
 
       @include grid-media-min('xl') {
@@ -183,9 +184,13 @@
           width: 43% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
 
-        // under 2xl bp, we do a percentage, maybe 35%
-        // over 2xl goes to 650px max
-        // todo test with 1 col and 2 col layout
+        @include grid-media-min('xl') {
+          width: 37% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        @include grid-media-min('2xl') {
+          width: 650px !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
 
         h2 {
           width: auto;
@@ -323,6 +328,23 @@
         margin: 0 0 hb-calculate-rems(18px);
         right: calc(50% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
 
+        @include grid-media-min('md') {
+          right: inherit;
+          right: calc(50% + #{hb-calculate-rems(95px)}); // move it past the slick-next arrow
+        }
+
+        @include grid-media-min('lg') {
+          right: calc(57% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
+        }
+
+        @include grid-media-min('xl') {
+          right: calc(63% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
+        }
+
+        @include grid-media-min('2xl') {
+          right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(95px)}); // move it past the slick arrows
+        }
+
         .hs-full-width & {
           bottom: calc(15% + #{hb-calculate-rems(15px)});
         }
@@ -446,7 +468,19 @@
 
           @include grid-media-min('md') {
             right: inherit;
-            left: calc(50% - 85px); // move it past the slick-next arrow
+            left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick-next arrow
+          }
+
+          @include grid-media-min('lg') {
+            left: calc(43% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+          }
+
+          @include grid-media-min('xl') {
+            left: calc(37% - #{hb-calculate-rems(85px)}); // move it past the slick arrows;
+          }
+
+          @include grid-media-min('2xl') {
+            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(85px)}); // move it past the slick arrows;;
           }
         }
       }
@@ -473,6 +507,18 @@
           @include grid-media-min('md') {
             right: inherit;
             left: calc(50% - #{hb-calculate-rems(40px)});
+          }
+
+          @include grid-media-min('lg') {
+            left: calc(43% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+          }
+
+          @include grid-media-min('xl') {
+            left: calc(37% - #{hb-calculate-rems(40px)}); // move it past the slick arrows;
+          }
+
+          @include grid-media-min('2xl') {
+            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(40px)}); // move it past the slick arrows;;
           }
         }
       }

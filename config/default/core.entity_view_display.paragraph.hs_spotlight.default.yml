@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_body
-    - field.field.paragraph.hs_spotlight.field_hs_spotlight_display
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_height
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image_align
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_link
@@ -33,19 +33,19 @@ third_party_settings:
             default: image-right
             left: image-left
     regions:
+      image:
+        - field_hs_spotlight_image
       overlay_text:
         - field_hs_spotlight_title
         - field_hs_spotlight_body
         - field_hs_spotlight_link
-      image:
-        - field_hs_spotlight_image
 id: paragraph.hs_spotlight.default
 targetEntityType: paragraph
 bundle: hs_spotlight
 mode: default
 content:
   field_hs_spotlight_body:
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       trim_length: 200
@@ -69,7 +69,7 @@ content:
     region: overlay_text
   field_hs_spotlight_image:
     type: media_responsive_image_formatter
-    weight: 1
+    weight: 0
     label: hidden
     settings:
       view_mode: default
@@ -82,7 +82,7 @@ content:
         inline_contents: 0
     region: image
   field_hs_spotlight_link:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       trim_length: 80
@@ -98,7 +98,7 @@ content:
     type: link
     region: overlay_text
   field_hs_spotlight_title:
-    weight: 0
+    weight: 1
     label: hidden
     settings:
       tag: h2
@@ -110,6 +110,6 @@ content:
     type: entity_title_heading
     region: overlay_text
 hidden:
-  field_hs_spotlight_display: true
+  field_hs_spotlight_height: true
   field_hs_spotlight_image_align: true
   search_api_excerpt: true

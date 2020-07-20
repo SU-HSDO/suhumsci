@@ -42,7 +42,17 @@ function su_humsci_profile_update_8201() {
     'edit field_hs_hero_overlay_color',
     'edit own field_hs_hero_overlay_color',
     'view field_hs_hero_overlay_color',
-    'view own field_hs_hero_overlay_color'
+    'view own field_hs_hero_overlay_color',
   ];
   user_role_grant_permissions(UserInterface::AUTHENTICATED_ROLE, $perms);
+}
+
+/**
+ * Enable new themes.
+ */
+function su_humsci_profile_update_8202() {
+  \Drupal::service('theme_installer')->install([
+    'humsci_traditional',
+    'humsci_colorful',
+  ]);
 }

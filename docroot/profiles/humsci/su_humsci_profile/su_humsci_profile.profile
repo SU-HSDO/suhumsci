@@ -273,3 +273,13 @@ function su_humsci_profile_form_key_edit_form_alter(&$form, FormStateInterface $
     $form['settings']['input_section']['key_input_settings']['key_value']['#attributes']['disabled'] = TRUE;
   }
 }
+
+/**
+ * Implements hook_config_readonly_whitelist_patterns().
+ */
+function su_humsci_profile_config_readonly_whitelist_patterns() {
+  return [
+    'field.field.node.hs_basic_page.field_hs_page_components',
+    'field.field.node.hs_basic_page.field_hs_page_hero'
+  ];
+}

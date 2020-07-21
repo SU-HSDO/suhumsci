@@ -299,3 +299,16 @@ function su_humsci_profile_post_update_8213() {
   user_role_grant_permissions('site_manager', ['access media overview']);
   user_role_grant_permissions('contributor', ['access media overview']);
 }
+
+/**
+ * Exclude private files and text area from basic page.
+ */
+function su_humsci_profile_post_update_8214() {
+  $field_config = \Drupal::configFactory()
+    ->getEditable('field.field.node.hs_basic_page.field_hs_page_components');
+  $settings = 'settings.handler_settings.target_bundles_drag_drop';
+  $negate = (bool) $field_config->get('settings.handler_settings.negate');
+  $field_config->set("$settings.hs_private_files.enabled", $negate);
+  $field_config->set("$settings.hs_priv_text_area.enabled", $negate);
+  $field_config->save();
+}

@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.contributor permissions"
-    Then the role "contributor" should have 92 permissions
+    Then the role "contributor" should have 91 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
     And drush output should contain "access contextual links"
@@ -97,5 +97,4 @@ Feature: Install State
     And drush output should contain "view hs_research revisions"
     And drush output should contain "view own field_paragraph_style"
     And drush output should contain "view own unpublished content"
-    And drush output should contain "view restricted block content"
     And drush output should contain "view the administration theme"

@@ -1,9 +1,58 @@
 .hb-raised-cards {
-  // Only works for Traditional Theme right now
   .hb-card {
     @include hb-traditional {
       padding: hb-spacing-width('xs');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) hb-get-global-color('gray-medium', $ht-traditional-globals);
+    }
+
+    @include hb-themes(('airy', 'colorful')) {
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
+
+      @supports (object-fit: cover) {
+        align-items: stretch;
+
+        &__graphics {
+          margin: 0;
+
+          img {
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        &__img,
+        &__img * {
+          height: 100%;
+        }
+      }
+
+      &__content {
+        padding: hb-spacing-width('xs');
+
+        @include grid-media-min('lg') {
+          padding: hb-spacing-width();
+        }
+      }
+
+      &.hb-card--horizontal-date-stacked.hb-card--no-image {
+        .hb-card__date-tile {
+          top: hb-calculate-rems(22px);
+        }
+
+        .hb-card__content {
+          padding-left: 0;
+        }
+      }
+
+      &.hb-card--date-stacked.hb-card--no-image {
+        .hb-card__date-tile {
+          top: hb-calculate-rems(22px);
+        }
+      }
+
+      &__title:only-child {
+        margin: 0;
+      }
     }
   }
 }

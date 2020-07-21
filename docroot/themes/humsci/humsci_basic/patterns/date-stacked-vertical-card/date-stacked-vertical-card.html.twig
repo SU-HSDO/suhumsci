@@ -1,4 +1,14 @@
-{% set attributes = attributes.addClass('hb-card') %}
+{%
+  set classes = [
+    'hb-card',
+    'hb-card--date-stacked'
+  ]
+%}
+
+{%- set attributes = attributes.addClass(classes) -%}
+{% if not image %}
+  {%- set attributes = attributes.addClass('hb-card--no-image') -%}
+{% endif %}
 
 <div{{ attributes }}>
 

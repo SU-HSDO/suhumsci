@@ -9,3 +9,23 @@ li.cke_panel_listItem a:focus {
 body.cke_editable {
   margin: hb-calculate-rems(8px);
 }
+
+// Makes sure that all images in the WYSIWYG editor are a level above the other
+// content and can be selected to edit.
+/* stylelint-disable */
+drupal-media {
+  position: relative;
+  z-index: $hb-z-index-figure;
+
+  figure,
+  article {
+    display: block;
+    width: 100%;
+  }
+}
+/* stylelint-enable */
+
+// The media edit button should always lay on top of the drupal-media content
+.media-library-item__edit {
+  z-index: $hb-z-index-ckedit-button;
+}

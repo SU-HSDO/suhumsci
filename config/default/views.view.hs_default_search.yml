@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.body
+    - field.storage.node.field_hs_course_section_days
     - field.storage.node.field_hs_course_section_end_time
     - field.storage.node.field_hs_course_section_st_time
     - field.storage.node.field_hs_event_category
@@ -119,6 +120,7 @@ display:
             field_hs_person_office: 0
             field_hs_person_office_hours: 0
             field_hs_person_telephone: 0
+            field_hs_course_section_days: 0
             field_hs_course_section_st_time: 0
             field_hs_course_section_end_time: 0
             field_hs_person_image_1: 0
@@ -136,69 +138,59 @@ display:
               weight: 0
               plugin: views_row
               source: title
+            'views_row:field_hs_course_section_days':
+              destination: date
+              weight: 1
+              plugin: views_row
+              source: field_hs_course_section_days
             'views_row:search_api_excerpt':
               destination: description
-              weight: 1
+              weight: 2
               plugin: views_row
               source: search_api_excerpt
             'views_row:field_hs_person_title':
               destination: speaker
-              weight: 2
+              weight: 3
               plugin: views_row
               source: field_hs_person_title
             'views_row:field_hs_person_email':
               destination: date
-              weight: 3
-              plugin: views_row
-              source: field_hs_person_email
-            'views_row:field_hs_person_telephone':
-              destination: time
               weight: 4
               plugin: views_row
-              source: field_hs_person_telephone
-            'views_row:field_hs_person_office_hours':
-              destination: location
-              weight: 5
-              plugin: views_row
-              source: field_hs_person_office_hours
+              source: field_hs_person_email
             'views_row:field_hs_person_office':
               destination: location
-              weight: 6
+              weight: 5
               plugin: views_row
               source: field_hs_person_office
             'views_row:field_hs_event_map_link':
               destination: speaker
-              weight: 7
+              weight: 6
               plugin: views_row
               source: field_hs_event_map_link
             'views_row:field_hs_person_image':
               destination: image
-              weight: 8
+              weight: 7
               plugin: views_row
               source: field_hs_person_image
             'views_row:type':
               destination: category
-              weight: 9
+              weight: 8
               plugin: views_row
               source: type
-            'views_row:field_hs_course_section_end_time':
-              destination: time
-              weight: 10
-              plugin: views_row
-              source: field_hs_course_section_end_time
             'views_row:field_hs_course_section_st_time':
-              destination: date
-              weight: 11
+              destination: location
+              weight: 9
               plugin: views_row
               source: field_hs_course_section_st_time
             'views_row:field_hs_event_date':
               destination: date
-              weight: 12
+              weight: 10
               plugin: views_row
               source: field_hs_event_date
             'views_row:field_hs_event_location':
               destination: location
-              weight: 13
+              weight: 11
               plugin: views_row
               source: field_hs_event_location
       fields:
@@ -1823,6 +1815,77 @@ display:
             multi_separator: ', '
           entity_type: node
           plugin_id: search_api_field
+        field_hs_course_section_days:
+          id: field_hs_course_section_days
+          table: search_api_datasource_default_index_entity_node
+          field: field_hs_course_section_days
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: true
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          field_rendering: true
+          fallback_handler: search_api
+          fallback_options:
+            link_to_item: false
+            use_highlighting: false
+            multi_type: separator
+            multi_separator: ', '
+          entity_type: node
+          plugin_id: search_api_field
         field_hs_course_section_st_time:
           id: field_hs_course_section_st_time
           table: search_api_datasource_default_index_entity_node
@@ -2241,7 +2304,7 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
-      use_ajax: true
+      use_ajax: false
       css_class: ''
       use_more: false
       use_more_always: false
@@ -2256,6 +2319,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_hs_course_section_days'
         - 'config:field.storage.node.field_hs_course_section_end_time'
         - 'config:field.storage.node.field_hs_course_section_st_time'
         - 'config:field.storage.node.field_hs_event_category'
@@ -2283,7 +2347,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: site-search
+      path: search
       exposed_block: true
     cache_metadata:
       max-age: -1
@@ -2295,6 +2359,7 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_hs_course_section_days'
         - 'config:field.storage.node.field_hs_course_section_end_time'
         - 'config:field.storage.node.field_hs_course_section_st_time'
         - 'config:field.storage.node.field_hs_event_category'

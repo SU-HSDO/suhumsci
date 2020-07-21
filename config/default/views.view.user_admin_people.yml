@@ -74,16 +74,18 @@ display:
           default_row_class: true
           override: true
           sticky: false
+          caption: ''
           summary: ''
+          description: ''
           columns:
             user_bulk_form: user_bulk_form
             name: name
             status: status
-            rid: rid
+            roles_target_id: roles_target_id
             created: created
             access: access
-            edit_node: edit_node
-            dropbutton: dropbutton
+            operations: operations
+            mail: mail
           info:
             user_bulk_form:
               align: ''
@@ -104,13 +106,13 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            rid:
+            roles_target_id:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
-              responsive: priority-low
+              responsive: ''
             created:
               sortable: true
               default_sort_order: desc
@@ -125,19 +127,19 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            edit_node:
+            operations:
               align: ''
               separator: ''
               empty_column: false
-              responsive: priority-low
-            dropbutton:
+              responsive: ''
+            mail:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-          default: created
+          default: access
           empty_table: true
       row:
         type: fields

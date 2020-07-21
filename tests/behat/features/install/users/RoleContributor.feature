@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.contributor permissions"
-    Then the role "contributor" should have 90 permissions
+    Then the role "contributor" should have 91 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
     And drush output should contain "access contextual links"
@@ -69,6 +69,8 @@ Feature: Install State
     And drush output should contain "edit own image media"
     And drush output should contain "edit own video media"
     And drush output should contain "notify of path changes"
+    And drush output should contain "publish editable content"
+    And drush output should contain "rabbit hole bypass node"
     And drush output should contain "revert hs_basic_page revisions"
     And drush output should contain "revert hs_course revisions"
     And drush output should contain "revert hs_event revisions"
@@ -77,6 +79,7 @@ Feature: Install State
     And drush output should contain "revert hs_person revisions"
     And drush output should contain "revert hs_publications revisions"
     And drush output should contain "revert hs_research revisions"
+    And drush output should contain "unpublish editable content"
     And drush output should contain "update any hs_basic_block block content"
     And drush output should contain "use text format basic_html"
     And drush output should contain "use text format minimal_html"
@@ -94,5 +97,4 @@ Feature: Install State
     And drush output should contain "view hs_research revisions"
     And drush output should contain "view own field_paragraph_style"
     And drush output should contain "view own unpublished content"
-    And drush output should contain "view restricted block content"
     And drush output should contain "view the administration theme"

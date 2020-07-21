@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_hs_publication_author
     - field.storage.node.field_hs_publication_image
-    - field.storage.node.field_hs_publication_link
     - field.storage.node.field_hs_publication_publisher
     - field.storage.node.field_hs_publication_type
     - field.storage.node.field_hs_publication_year
@@ -15,13 +14,11 @@ dependencies:
     - datetime
     - eck
     - hs_views_helper
-    - link
     - node
     - stanford_media
     - taxonomy
     - ui_patterns_views
     - user
-    - views_infinite_scroll
 id: hs_default_publications
 label: 'Default Publications'
 module: views
@@ -62,15 +59,17 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: infinite_scroll
+        type: full
         options:
-          items_per_page: 8
+          items_per_page: 20
           offset: 0
-          id: 1
+          id: 2
           total_pages: null
           tags:
             previous: '‹ Previous'
             next: 'Next ›'
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -79,9 +78,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          views_infinite_scroll:
-            button_text: 'Show More'
-            automatically_load_content: false
+          quantity: 5
       style:
         type: pattern
         options:
@@ -683,6 +680,11 @@ display:
         groups:
           1: AND
       group_by: false
+      use_more: false
+      use_more_always: false
+      use_more_text: 'See More Publications'
+      link_url: /research/publications
+      link_display: '0'
     cache_metadata:
       max-age: -1
       contexts:
@@ -1441,7 +1443,7 @@ display:
         filters: false
         filter_groups: false
         group_by: true
-        pager: false
+        pager: true
       style:
         type: grid
         options:
@@ -1661,16 +1663,13 @@ display:
         groups:
           1: AND
           2: OR
-      pager:
-        type: none
-        options:
-          offset: 0
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - user
         - 'user.node_grants:view'
         - user.permissions
@@ -1702,11 +1701,11 @@ display:
         sorts: false
         style: false
         row: false
-        use_more: false
-        use_more_always: false
-        use_more_text: false
-        link_display: false
-        link_url: false
+        use_more: true
+        use_more_always: true
+        use_more_text: true
+        link_display: true
+        link_url: true
       relationships: {  }
       group_by: false
       filters:
@@ -2179,11 +2178,6 @@ display:
               weight: 4
               plugin: views_row
               source: field_hs_publication_author
-      use_more: false
-      use_more_always: false
-      use_more_text: 'See More Publications'
-      link_display: custom_url
-      link_url: /research/publications
     cache_metadata:
       max-age: -1
       contexts:
@@ -2523,7 +2517,7 @@ display:
         group_by: true
         sorts: false
         query: true
-        pager: false
+        pager: true
       style:
         type: table
         options:
@@ -2531,30 +2525,20 @@ display:
           row_class: ''
           default_row_class: true
           override: true
-          sticky: false
+          sticky: true
           caption: ''
           summary: ''
           description: ''
           columns:
             field_hs_publication_year: field_hs_publication_year
-            field_hs_publication_author: field_hs_publication_author
             title: title
+            field_hs_publication_author: field_hs_publication_author
             field_hs_publication_publisher: field_hs_publication_publisher
-            field_hs_publication_image: field_hs_publication_image
-            field_hs_publication_type: field_hs_publication_type
-            view_node: view_node
-            field_hs_publication_link: field_hs_publication_link
-            field_hs_publication_author_2: field_hs_publication_author_2
             edit_node: field_hs_publication_publisher
           info:
             field_hs_publication_year:
               sortable: false
               default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_publication_author:
               align: ''
               separator: ''
               empty_column: false
@@ -2566,44 +2550,16 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_hs_publication_author:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             field_hs_publication_publisher:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ' | '
-              empty_column: false
-              responsive: ''
-            field_hs_publication_image:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_publication_type:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            view_node:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_publication_link:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_publication_author_2:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
               empty_column: false
               responsive: ''
             edit_node:
@@ -2829,16 +2785,13 @@ display:
           expose:
             label: ''
           granularity: second
-      pager:
-        type: none
-        options:
-          offset: 0
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:

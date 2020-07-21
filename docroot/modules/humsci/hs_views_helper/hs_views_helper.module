@@ -195,12 +195,16 @@ function hs_views_helper_views_post_execute(ViewExecutable $view) {
       }
     }
 
+    $view->total_rows = count($distinct_results);
+
     // When the view has a pager it uses offsets and limits to determine which
     // items to display. We will set those as the result rows to use.
     $pagers = drupal_static('hs_views_helper_views_pre_execute');
     if (!empty($pagers[$view->id()][$view->getDisplay()->display['id']])) {
       $pager_settings = $pagers[$view->id()][$view->getDisplay()->display['id']];
       $distinct_results = array_slice($distinct_results, $pager_settings['offset'], $pager_settings['limit']);
+      $view->pager->total_items = $view->total_rows;
+      $view->pager->updatePageInfo();
     }
 
     $i = 0;

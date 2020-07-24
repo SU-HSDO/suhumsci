@@ -41,10 +41,8 @@
       padding-top: hb-spacing-width('md');
 
       &::before {
-        // TODO make this a mixin
-        display: block;
         top: 0;
-        @include psuedo-background-box('secondary', hb-calculate-rems(4px), hb-calculate-rems(65px));
+        @include hb-colorful-text-bar('secondary');
       }
     }
 
@@ -52,12 +50,6 @@
       flex-basis: 50%;
       flex-grow: 1;
       max-width: 75%;
-    }
-
-    .hb-spotlight--image-left & {
-      @include grid-media-min('md') {
-        margin-left: hb-spacing-width();
-      }
     }
 
     .field-hs {
@@ -102,6 +94,12 @@
     .hb-spotlight--image-default & {
       @include grid-media-min('md') {
         margin-left: hb-spacing-width();
+      }
+    }
+
+    .hb-spotlight--image-left & {
+      @include grid-media-min('md') {
+        margin-right: hb-spacing-width();
       }
     }
 

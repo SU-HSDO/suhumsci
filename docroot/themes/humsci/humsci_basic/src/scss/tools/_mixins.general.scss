@@ -38,6 +38,15 @@
   }
 }
 
+// Meant for the Colorful theme
+// Applies a colorful bar above text to a psuedo element
+// You can choose the color and width
+// Remember to add position: relative to the parent element
+@mixin hb-colorful-text-bar($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
+  display: block;
+  @include psuedo-background-box($color, $height, $width);
+}
+
 // Adds a background linear gradient for use in the
 // vertical linked card
 // The gradient adds a 20px height white block at the top of the linked card

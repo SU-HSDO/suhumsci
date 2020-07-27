@@ -1,14 +1,7 @@
 .hb-spotlight {
   padding: hb-spacing-width('md') 0;
   margin: hb-spacing-width() 0;
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-global-color('background-color', 'gray-light');
-  }
-
-  @include hb-traditional {
-    @include hb-pairing-color('background-color', 'tertiary-highlight');
-  }
+  @include hb-pairing-color('background-color', 'spotlight');
 
   @include grid-media-min('md') {
     padding: hb-calculate-rems(2 * hb-spacing-width('default', false)) 0;
@@ -43,16 +36,20 @@
   }
 
   &__text {
+    @include hb-themes(('colorful', 'airy')) {
+      position: relative;
+      padding-top: hb-spacing-width('md');
+
+      &::before {
+        top: 0;
+        @include hb-colorful-text-bar('secondary');
+      }
+    }
+
     @include grid-media-min('md') {
       flex-basis: 50%;
       flex-grow: 1;
       max-width: 75%;
-    }
-
-    .hb-spotlight--image-left & {
-      @include grid-media-min('md') {
-        margin-left: hb-spacing-width();
-      }
     }
 
     .field-hs {
@@ -72,7 +69,14 @@
 
         a,
         button {
-          @include hb-button;
+          @include hb-themes(('colorful', 'airy')) {
+            @include hb-secondary-button;
+          }
+
+          @include hb-traditional {
+            @include hb-button;
+          }
+
           padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
         }
       }
@@ -90,6 +94,12 @@
     .hb-spotlight--image-default & {
       @include grid-media-min('md') {
         margin-left: hb-spacing-width();
+      }
+    }
+
+    .hb-spotlight--image-left & {
+      @include grid-media-min('md') {
+        margin-right: hb-spacing-width();
       }
     }
 

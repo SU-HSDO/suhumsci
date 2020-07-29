@@ -34,6 +34,10 @@ source:
       label: 'Last Name'
       selector: names/preferred/lastName
     -
+      name: middle_name
+      label: 'Middle Name'
+      selector: names/preferred/middleName
+    -
       name: first_name
       label: 'First Name'
       selector: names/preferred/firstName
@@ -85,6 +89,14 @@ source:
       name: etag
       label: 'CAP API Etag'
       selector: meta/etag
+    -
+      name: links
+      label: 'Internet Links'
+      selector: internetLinks
+    -
+      name: education
+      label: 'Education'
+      selector: education
   ids:
     sunetid:
       type: string
@@ -102,6 +114,7 @@ process:
   type: constants/type
   field_hs_person_first_name: first_name
   field_hs_person_last_name: last_name
+  field_hs_person_middle_name: middle_name
   field_hs_person_title: long_title
   body/value: bio_html
   body/format: constants/basic_html
@@ -176,6 +189,29 @@ process:
       values:
         field_media_image/target_id: '@image_file'
         field_media_image/alt: '@title'
+  field_hs_person_links:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: links
+    -
+      plugin: sub_process
+      process:
+        uri:
+          plugin: str_replace
+          source: url
+          search: '/^(?![a-z][a-z0-9]*:\/\/).*?$/i'
+          replace: ''
+          regex: true
+        title: label/text
+  field_hs_person_education:
+    -
+      plugin: sub_process
+      source: education
+      process:
+        value: label/text
+    -
+      plugin: flatten
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
@@ -186,6 +222,7 @@ destination:
     - revision_translation_affected
     - type
     - field_hs_person_first_name
+    - field_hs_person_middle_name
     - field_hs_person_last_name
     - field_hs_person_title
     - body/value
@@ -195,5 +232,7 @@ destination:
     - field_hs_person_external_profile/uri
     - field_hs_person_external_profile/title
     - field_hs_person_image/target_id
+    - field_hs_person_links
+    - field_hs_person_education
 migration_dependencies:
   required: {  }

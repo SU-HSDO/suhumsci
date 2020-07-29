@@ -1,0 +1,111 @@
+.hb-spotlight {
+  padding: hb-spacing-width('md') 0;
+  margin: hb-spacing-width('md') 0;
+  @include hb-pairing-color('background-color', 'spotlight');
+
+  @include grid-media-min('md') {
+    padding: hb-spacing-width() 0;
+    margin: hb-spacing-width() 0;
+  }
+
+  .hs-full-width & {
+    // Special negative margin for the Spotlight
+    // to get rid of the vertical padding on all basic pages
+    margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
+  }
+
+  &__wrapper {
+    @include hb-page-width;
+    display: block;
+
+    @include grid-media-min('md') {
+      display: flex;
+      align-items: center;
+    }
+
+    .hb-spotlight--image-default & {
+      @include grid-media-min('md') {
+        flex-direction: row-reverse;
+      }
+    }
+
+    .hb-spotlight--image-left & {
+      @include grid-media-min('md') {
+        flex-direction: row;
+      }
+    }
+  }
+
+  &__text {
+    @include hb-themes(('colorful', 'airy')) {
+      position: relative;
+      padding-top: hb-spacing-width('md');
+
+      &::before {
+        top: 0;
+        @include hb-colorful-text-bar('secondary');
+      }
+    }
+
+    @include grid-media-min('md') {
+      flex-basis: 55%;
+      flex-grow: 1;
+      max-width: 75%;
+    }
+
+    .field-hs {
+      &-spotlight-title {
+        h2 {
+          @include hb-hero-title;
+          margin: 0 0 hb-spacing-width('xs');
+
+          @include grid-media-min('md') {
+            margin: 0 0 hb-spacing-width('xs');
+          }
+        }
+      }
+
+      &-spotlight-link {
+        margin-top: hb-spacing-width('md');
+
+        a,
+        button {
+          @include hb-themes(('colorful', 'airy')) {
+            @include hb-secondary-button;
+          }
+
+          @include hb-traditional {
+            @include hb-button;
+          }
+
+          padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+        }
+      }
+    }
+  }
+
+  &__image-wrapper {
+    margin-bottom: hb-spacing-width('md');
+
+    @include grid-media-min('md') {
+      width: 45%;
+      margin-bottom: 0;
+    }
+
+    .hb-spotlight--image-default & {
+      @include grid-media-min('md') {
+        margin-left: hb-spacing-width();
+      }
+    }
+
+    .hb-spotlight--image-left & {
+      @include grid-media-min('md') {
+        margin-right: hb-spacing-width();
+      }
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,113 @@
+@charset "UTF-8";
+
+//
+// Vertical Card
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+.hb-spotlight {
+  padding: 3.2rem 0;
+  margin: 0 0 3.2rem;
+  background-color: $color-fog;
+
+  @media (min-width: 992px) {
+    padding: 4.8rem 0;
+    margin: 0 0 4.8rem;
+  }
+
+  .hs-full-width & {
+    // Special negative margin for the Spotlight
+    // to get rid of the vertical padding on all basic pages
+    margin: 0 0 4.8rem;
+  }
+
+  &__wrapper {
+    width: calc(100% - 3rem);
+    max-width: $site-max-width;
+    display: block;
+    margin: 0 auto;
+
+    @media (min-width: 600px) {
+      width: calc(100% - 6rem);
+    }
+
+    @media (min-width: 992px) {
+      display: flex;
+      align-items: center;
+    }
+
+    .hb-spotlight--image-default & {
+      @media (min-width: 992px) {
+        flex-direction: row-reverse;
+      }
+    }
+
+    .hb-spotlight--image-left & {
+      @media (min-width: 992px) {
+        flex-direction: row;
+      }
+    }
+  }
+
+  &__text {
+    @media (min-width: 992px) {
+      flex-basis: 55%;
+      flex-grow: 1;
+      max-width: 75%;
+    }
+
+    .field-hs {
+      &-spotlight-title {
+        h2 {
+          margin: 0 0 2.4rem;
+
+          @media (min-width: 992px) {
+            margin: 0 0 2.4rem;
+          }
+        }
+      }
+
+      &-spotlight-link {
+        margin-top: 3.2rem;
+
+        a,
+        button {
+          @include button-big;
+          color: $color-white !important;
+        }
+      }
+    }
+  }
+
+  &__image-wrapper {
+    margin-bottom: 3.2rem;
+
+    @media (min-width: 992px) {
+      width: 45%;
+      margin-bottom: 0;
+    }
+
+    .hb-spotlight--image-default & {
+      @media (min-width: 992px) {
+        margin-left: 4.8rem;
+      }
+    }
+
+    .hb-spotlight--image-left & {
+      @media (min-width: 992px) {
+        margin-right: 4.8rem;
+      }
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+}

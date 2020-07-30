@@ -1,26 +1,18 @@
 // Row Paragraph Styles
 .hs-paragraph-style {
-  .field-hs-row-components {
-    @include hb-page-width;
-  }
-
   &--well,
   &--well-full-width {
     @extend .hb-well;
+    // This needs to be refactored into the mixin once STN-365 is merged
+    padding: 0 hb-spacing-width() 0 !important;
+    overflow: auto;
 
     .counted-items-2.field-hs-row-components > .paragraph-item,
     .counted-items-3.field-hs-row-components > .paragraph-item,
     .counted-items-4.field-hs-row-components > .paragraph-item,
     .paragraph-item {
-      margin-top: hb-calculate-rems(28px);
-
       .field__item__label {
         margin-top: 0;
-      }
-
-      &.ptype-hs-priv-text-area,
-      &.ptype-hs-accordion {
-        margin-bottom: hb-calculate-rems(28px);
       }
 
       &.ptype-hs-accordion {
@@ -34,16 +26,8 @@
       &.ptype-hs-carousel {
         width: 100%;
 
-        .hb-hero-overlay {
-          margin: 0 0 hb-calculate-rems(28px);
-
-          &::before {
-            @include hb-global-color('background-color', 'gray-medium');
-          }
-        }
-
-        .field-media-image {
-          margin-bottom: hb-calculate-rems(28px);
+        .hb-hero-overlay::before {
+          @include hb-global-color('background-color', 'gray-medium');
         }
       }
     }
@@ -64,6 +48,10 @@
       position: static;
       width: 100%;
     }
+
+    .field-hs-row-components {
+      @include hb-page-width;
+    }
   }
 }
 
@@ -71,9 +59,4 @@
 // is only one item in a row and we use flexbox it causes overflow issues in IE 11.
 .counted-items-1.field-hs-row-components {
   display: block;
-}
-
-.ptype-hs-text-area,
-.ptype-hs-accordion {
-  width: 100%;
 }

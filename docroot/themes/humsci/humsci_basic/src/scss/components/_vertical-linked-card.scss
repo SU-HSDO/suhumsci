@@ -6,7 +6,7 @@
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
-    margin: hb-spacing-width('xs') 0 hb-spacing-width() hb-calculate-rems(31px);
+    margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
     @include hb-global-color('color', 'white');
 
@@ -18,7 +18,6 @@
 
   @include hb-traditional {
     @include hb-pairing-color('background-color', 'tertiary-reversed');
-    margin-bottom: hb-spacing-width();
   }
 
   &__img {
@@ -37,6 +36,10 @@
         transform: scale($hb-image-hover-scale);
       }
     }
+  }
+
+  .field-media-image {
+    margin: 0;
   }
 
   &__title {

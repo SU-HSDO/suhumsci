@@ -2,7 +2,6 @@
 .field-hs-text-area,
 .field-hs-priv-text-area {
   @include clearfix;
-  margin-bottom: hb-calculate-rems(28px);
 
   h1,
   h2,
@@ -312,8 +311,18 @@ a.hs-private-link,
   }
 }
 
-.hs-mailto-link .fa-mailto {
-  display: initial;
+.hs-mailto-link a,
+a.hs-mailto-link {
+  @include hb-fa-mailto-icon;
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image(true, 22px, right, $hb-colorful-default, $hc-colorful-pairings);
+  }
+
+  // The font awesome icon is hidden by default in themes, this shows it
+  .fa-mailto {
+    display: initial;
+  }
 }
 
 a.hs-more-link,

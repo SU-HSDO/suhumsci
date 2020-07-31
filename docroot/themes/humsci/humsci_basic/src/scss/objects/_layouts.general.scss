@@ -24,8 +24,23 @@
   padding-top: hb-calculate-rems(40px);
 }
 
-// Add margin bottom to all paragraph rows
+.ptype-hs-text-area,
+.ptype-hs-priv-text-area,
+.ptype-hs-accordion,
+.ptype-hs-postcard,
+.ptype-hs-hero-image,
 .ptype-hs-row,
 .ptype-hs-view {
-  margin-bottom: hb-spacing-width();
+  width: 100%;
+  margin-bottom: hb-spacing-width() !important;
+
+  .hs-paragraph-style--well &,
+  .hs-paragraph-style--well-full-width & {
+    margin-top: hb-spacing-width() !important;
+  }
 }
+
+.views-row:not(:last-child) {
+  margin-bottom: hb-spacing-width() !important;
+}
+

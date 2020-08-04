@@ -50,7 +50,7 @@ Feature: Install State Basic Page
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
     And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
-    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
+    And I should see 10 "#edit-field-hs-page-components-add-more input" elements
     Then I fill in "Title" with "Demo Basic Page"
     And I press "Add Postcard"
     And I should see "Card Title"
@@ -85,6 +85,26 @@ Feature: Install State Basic Page
     And I should see the heading "Demo Basic Page" in the "content" region
     And I should see "Sed augue ipsum egestas nec"
     And I should see "Vivamus in erat ut urna cursus vestibulum"
+
+    @api @safe @javascript @MediaCleanup
+    Scenario: Test basic page with Banner paragraph creation
+      Given I am logged in as a user with the "Contributor" role
+      Then I am on "/node/add/hs_basic_page"
+      And I fill in "Title" with "Demo Basic Page"
+      And I press "Add Banner"
+      And I press "Add Media"
+      Then I wait for AJAX to finish
+      Then I drop "images/logo.jpg" file into dropzone
+      And I press "Upload and Continue"
+      Then I wait for AJAX to finish
+      And I wait 2 seconds
+      Then I press "Save"
+      Then I wait for AJAX to finish
+      And I wait 2 seconds
+      Then I press "Insert Selected"
+      And I should be on "/demo-basic-page"
+      And I should see the heading "Demo Basic Page" in the "content" region
+      Then I should see 1 ".ptype-hs-banner" elements in the "content" region
 
   @api @safe @javascript @MediaCleanup @testme
   Scenario: Test basic page with Text Area paragraph creation

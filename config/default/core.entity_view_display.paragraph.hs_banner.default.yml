@@ -1,0 +1,32 @@
+uuid: 87f9cf8c-0282-4e7b-a4a0-2e80d2c9dec1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_banner.field_hs_banner_image
+    - paragraphs.paragraphs_type.hs_banner
+  module:
+    - field_formatter_class
+    - hs_field_helpers
+    - stanford_media
+id: paragraph.hs_banner.default
+targetEntityType: paragraph
+bundle: hs_banner
+mode: default
+content:
+  field_hs_banner_image:
+    type: media_responsive_image_formatter
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      image_style: hero_image
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    region: content
+hidden:
+  search_api_excerpt: true

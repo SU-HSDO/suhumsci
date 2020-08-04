@@ -80,18 +80,27 @@ lando behat --tags='@global&&~@javascript'
 For more info, (including Lando setup details) see [these Behat testing notes](https://docs.google.com/document/d/11lEDdzDk5CYMKoXAON05LIlfmzbdk00tex6DNdo-U74/edit?ts=5eb32acf).
 
 ## Contributing
+### Github
+To make it easier to find work being done we should use the following naming conventions:
 
-### Commit Messages
+### Branch Names:
+`STN-XXX--descriptive-message`
 
-We are using a conventional commit message format, e.g.:
-
-`feat(STN-XX): descriptive message shorter than 80 chars`
+#### Commit Messages:
+`feat(STN-XXX): descriptive message shorter than 80 chars`
+`fix(STN-XXX): descriptive message shorter than 80 chars`
+`refactor(STN-XXX): descriptive message shorter than 80 chars`
+`chore(STN-XXX): descriptive message shorter than 80 chars`
 `docs(STN-XXX): descriptive message shorter than 80 chars`
 
 https://www.conventionalcommits.org/en/v1.0.0-beta.2/
 
-### Green Button Merging
+#### Pull Request Titles:
+`STN-XXX: Short Descriptive Titles`
 
+Pull request descriptions should follow the PR template that is generated when creating a new commit.
+
+#### Green Button Merging:
 After receiving a review and getting a PR approved, we do green-button merges for our PRs ("Rebase and Merge") because Github includes a link to the PR in our commit message header.
 
 ## Decanter Integration
@@ -101,3 +110,13 @@ This theme aims to **partially** integrate [Decanter](https://github.com/SU-SWS/
 - Import variables, function and mixins
 - Compile various helpers classes
 - Compile specific components such as Brand Bar, Logo, Lockup and Footer
+
+## CSS / Sass
+The CSS is organized using [Harry Roberts’](https://csswizardry.com) [Inverted Triangle CSS](https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/) (ITCSS) organizational approach. This method is mixed with [Block Element Modifier](http://getbem.com/) (BEM) naming convention for class names throughout the Sass files.
+
+| Class References                                                                      |
+|---------------------------------------------------------------------------------------|
+| [Prefixing of Class Names](/docroot/themes/humsci/humsci_basic/docs/css-prefixing.md) |
+| [Utility Classes](/docroot/themes/humsci/humsci_basic/docs/utility-classes.md)        |
+| [Sass Mixins](/docroot/themes/humsci/humsci_basic/docs/mixins.md)                     |
+| [Color Pairings](/docroot/themes/humsci/humsci_basic/docs/color-pairings.md)          |

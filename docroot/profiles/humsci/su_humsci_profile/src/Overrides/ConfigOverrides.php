@@ -94,6 +94,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->setCoursesOverrides($names, $overrides);
     $this->setEventOverrides($names, $overrides);
     $this->setPublicationOverrides($names, $overrides);
+    $this->setThemeSettingsOverrides($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
@@ -101,6 +102,29 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       }
     }
     return $overrides;
+  }
+
+  /**
+   * Add all the themes' settings configs to be ignored.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
+  protected function setThemeSettingsOverrides(array $names, array &$overrides) {
+    if (in_array('config_ignore.settings', $names)) {
+      $themes = $this->configFactory->getEditable('core.extension')
+        ->getOriginal('theme');
+      $ignored = $this->configFactory->getEditable('config_ignore.settings')
+        ->getOriginal('ignored_config_entities');
+
+      // Add all of the enabled themes' settings configs to be ignored.
+      foreach (array_keys($themes) as $theme) {
+        $ignored[] = "$theme.settings";
+      }
+      $overrides['config_ignore.settings']['ignored_config_entities'] = $ignored;
+    }
   }
 
   /**

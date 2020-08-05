@@ -25,7 +25,7 @@ const equalHeightGrid = (element, specialWrapperClass) => {
       // If there is only 1 unique value, then all elements are the same height,
       // and in that case, we don't need to change the height at all
       if (uniqueHeights.length > 1) {
-        setTimeout(() => {
+        return new Promise((resolve, reject) => {
           const maxHeight = Math.max.apply(null, elementHeights);
           const tallestElementIndex = elementHeights.indexOf(maxHeight);
 
@@ -35,7 +35,8 @@ const equalHeightGrid = (element, specialWrapperClass) => {
               el.style.height =`${maxHeight}px`;
             }
           });
-        }, 200);
+        resolve();
+        });
       }
     }
   } else {

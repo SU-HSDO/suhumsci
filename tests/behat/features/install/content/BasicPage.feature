@@ -109,7 +109,7 @@ Feature: Install State Basic Page
     And I press "Save"
     And I should be on "/demo-basic-page"
     And I should see the heading "Demo Basic Page" in the "content" region
-    Then I should see 1 ".ptype-hs-banner" elements in the "content" region
+    And I should see 1 "img" elements in the "banner" region
 
   @api @safe @javascript @MediaCleanup @testme
   Scenario: Test basic page with Text Area paragraph creation

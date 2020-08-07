@@ -8,6 +8,31 @@
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
 
+/**
+ * Implements hook_preprocess_block().
+ */
+function humsci_basic_preprocess_block(&$vars) {
+  // The following code block (lines 16 - 30) is an adaptation of the code found within the su_humsci theme preprocess block. `docroot/themes/humsci/su_humsci_theme/su_humsci_theme.theme`
+
+  $block_ids = ['local_tasks_block'];
+
+  if (in_array($vars['elements']['#plugin_id'], $block_ids)) {
+    $vars['attributes']['class'][] = 'decanter-grid';
+  }
+
+  // The default permissions for the block label only allow developers to change
+  // the block title. In order to allow site owners to change the block label,
+  // it must be updated to block description.
+  // Change the block label to the block description so that users (such as site owners)
+  // can change the block label without needing the permission to administer blocks.
+  // The role would only need the "Edit any block content" permission.
+  if ($vars['base_plugin_id'] == 'block_content') {
+    /** @var \Drupal\block_content\Entity\BlockContent $block */
+    $block = $vars['content']['#block_content'];
+    $description = $block->get('info')->get(0)->getValue();
+    $vars['label'] = reset($description) ?: $vars['label'];
+  }
+}
 
  /**
  * Prepares variables for the field.html.twig template.
@@ -143,4 +168,3 @@ function _humsci_basic_check_link_access(array &$link_items) {
     }
   }
 }
-

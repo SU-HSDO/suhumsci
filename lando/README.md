@@ -62,6 +62,12 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
 4. Sync the database and files with a copy from production: `lando blt drupal:sync --site=[my-multisite] --sync-files`.
 5. From now on, when you run a cache clear or try to get an admin link, you'll need to specify which Drupal site you are performing the action, for instance, for the default site: `lando drush @default.local cr` and for the economics site: `lando drush @economics.local uli`.
 
+## Syncing from Staging
+In order to sync from a staging or dev site, you will have to do the following:
+
+1. In `suhumsci/docroot/sites/sparkbox_sandbox/blt.yml` or whichever relevant site you are working with, change line 10 for remote to: `remote: sparkbox_sandbox.stage` or `remote: sparkbox_sandbox.dev`.
+2.  Sync the database as you normally would: `lando blt drupal:sync --site=[my-multisite] --sync-files`.
+
 ## Common commands
 - `lando drush uli` - Get a link for logging in as an admin user
 - `docker ps` - Check that your docker containers are running

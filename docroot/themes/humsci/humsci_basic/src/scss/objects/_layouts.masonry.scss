@@ -1,20 +1,65 @@
 // citing use of this codepen https://codepen.io/chriscoyier/pen/NeRNBO
 
+// SOLN 1 - CSS ONLY
+// PRO: no js, works in IE11
+// CON: rows are vertically placed
+
 // .hb-masonry {
 //   columns: 3 200px;
 //   column-gap: hb-spacing-width();
-  
+
 //   .hb-card {
 //     display: inline-block;
 //     width: 100%;
-//   } 
+//   }
 // }
 
+
+// SOLN 2 - requires JS
+// PRO: does everything we want. no extra pattern required
 .hb-masonry {
-  .hb-card {
+  &__gutter {
+    // mobile width:
+    width: 0;
+
+    @include grid-media-min('md') {
+      width: hb-spacing-width();
+    }
+  }
+
+  &__gutter,
+  &__sizer {
+    // Ensure these are hidden from visible view
     display: block;
-    flex-direction: unset;
-    width: 30%;
-    background-color: goldenrod;
+    visibility: hidden;
+    height: 0;
+  }
+
+  &__sizer,
+  .hb-card {
+    // mobile width:
+    width: 100%;
+
+    @include grid-media-min('md') {
+      // There's one gutters in between 2 columns,
+      // so we need to subtract 1/2 of that gutter from each column width
+      width: calc(50% - (#{hb-spacing-width('default', false)} / 2));
+    }
+
+    @include grid-media-min('lg') {
+      // There's two gutters in between 3 columns,
+      // so we need to subtract 1/3 of that gutter from each column width
+      width: calc(33.33% - (2 * #{hb-spacing-width('default', false)} / 3));
+    }
+  }
+
+  .hb-card {
+    margin-bottom: hb-spacing-width();
+
+    // unset defaults if .js class present
+    .js & {
+      display: block;
+      flex-direction: unset;
+    }
   }
 }

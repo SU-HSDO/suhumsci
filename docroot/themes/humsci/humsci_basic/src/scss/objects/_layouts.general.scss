@@ -24,6 +24,7 @@
   padding-top: hb-calculate-rems(40px);
 }
 
+// The !important rules are needed to override default drupal settings
 .ptype-hs-text-area,
 .ptype-hs-priv-text-area,
 .ptype-hs-accordion,
@@ -31,6 +32,8 @@
 .ptype-hs-hero-image,
 .ptype-hs-spotlight,
 .ptype-hs-banner,
+.ptype-hs-carousel,
+.field-hs-page-hero,
 .ptype-hs-row,
 .ptype-hs-view {
   width: 100%;
@@ -44,4 +47,13 @@
 
 .views-row:not(:last-child) {
   margin-bottom: hb-spacing-width() !important;
+}
+
+.ptype-hs-accordion {
+  margin-bottom: hb-spacing-width(xxs) !important;
+
+  .hs-paragraph-style--well &:last-child,
+  .hs-paragraph-style--well-full-width &:last-child {
+    margin-bottom: hb-spacing-width() !important;
+  }
 }

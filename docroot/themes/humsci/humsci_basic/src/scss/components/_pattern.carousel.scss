@@ -4,6 +4,12 @@
     display: none;
   }
 
+  .hs-full-width & {
+    // Special negative margin for the Spotlight
+    // to get rid of the vertical padding on all basic pages
+    margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
+  }
+
   .hb-hero-overlay {
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
@@ -551,5 +557,3 @@
     }
   }
 }
-
-

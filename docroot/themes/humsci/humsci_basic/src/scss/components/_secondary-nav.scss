@@ -8,7 +8,7 @@
   }
 
   &__heading {
-    margin: 0 0 hb-calculate-rems(39px);
+    margin: 0 0 hb-spacing-width();
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(24px);
     line-height: 116%;
@@ -32,11 +32,8 @@
 
   &__menu-lv1 {
     padding-left: 0;
-
-    @include hb-colorful {
-      border-top: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray-medium');
-    }
+    border-top: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray-medium');
   }
 
   &__menu-lv1 > &__item > &__link {

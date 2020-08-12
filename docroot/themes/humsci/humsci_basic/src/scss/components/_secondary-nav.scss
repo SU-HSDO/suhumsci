@@ -8,10 +8,17 @@
   }
 
   &__heading {
-    margin: 0 0 hb-spacing-width();
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(24px);
     line-height: 116%;
+
+    @include hb-traditional {
+      margin: 0 0 hb-spacing-width();
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin: 0 0 hb-spacing-width('md');
+    }
 
     a {
       @include hb-link;

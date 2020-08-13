@@ -272,6 +272,10 @@
     &.hb-nested-toggler {
       position: relative;
 
+      @include grid-media-min('lg') {
+        padding-right: hb-calculate-rems(20px);
+      }
+
       &::after {
         @include hb-menu-icon-wrapper(48px, 48px);
         @include hb-menu-plus-icon;
@@ -303,8 +307,10 @@
         }
       }
 
-
-      &[aria-expanded="true"]::after {
+      // The minus and arrow up icons representing the expanded state of a nav item
+      // should only apply when item has the .hb-main-nav__item--parent class.
+      // This class is only added when there are children in the nested toggler.
+      .hb-main-nav__item--parent &[aria-expanded="true"]::after {
         @include hb-menu-minus-icon;
 
         @include grid-media-min('lg') {

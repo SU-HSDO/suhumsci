@@ -27,6 +27,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
     127.0.0.1           symsys.suhumsci.loc
     ```
 4. Build your containers: `lando rebuild`
+    * Note: After running `lando rebuild` you should see a list a APPSERVER URLS. A `green` URL signifies the `.loc` domain has been added to your `/ect/hosts` file. If you see a `red` URL, go back to step 3 and add the `.loc` domain to your `/ect/hosts` file.
 5. Install your PHP dependencies: `lando composer install`
 6. Run `lando blt blt:init:settings` and confirm that it added a `local.settings.php` file to each of your `[my-multisite]/settings` folders (ex. `/docroot/sites/default/settings/local.settings.php`).
 7. Make sure the db settings in each of these `local.settings.php` files matches the settings in the `.lando.yml`. Note: the `database` service corresponds to the `default` multisite. The rest of the services have names that match their multisite. For example, for the default site, make sure that these values, and key-value pairs match:
@@ -43,7 +44,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
 1. In your `.lando.yml` file, uncomment the service for the site you want to run locally.
 2. Run `lando rebuild` (this needs to be run anytime you make changes to `.lando.yml`).
 3. Confirm that the password, database, and hostname values in `sites/[my-multisite]/settings/local.settings.php` correctly match the values in your `.lando.yml` file.
-3. Create a new file in `/docroot/sites` called `local.sites.php`. This adds new routing based on our local environments and local `sites/` folders. Add the following code there:
+4. Create a new file in `/docroot/sites` called `local.sites.php`. This adds new routing based on our local environments and local `sites/` folders. Add the following code there:
 ```
     <?php
     // This is required if you have localdev domains that are different from the
@@ -59,8 +60,10 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
     $sites["$sitename.suhumsci.loc"] = $site_dir; // Do we need to add more things to our sites array, to get requests to reach our multisites?
     }
 ```
-4. Sync the database and files with a copy from production: `lando blt drupal:sync --site=[my-multisite] --sync-files`.
-5. From now on, when you run a cache clear or try to get an admin link, you'll need to specify which Drupal site you are performing the action, for instance, for the default site: `lando drush @default.local cr` and for the economics site: `lando drush @economics.local uli`.
+5. Sync the database and files with a copy from production: `lando blt drupal:sync --site=[my-multisite] --sync-files`.
+6. From now on, when you run a cache clear or try to get an admin link, you'll need to specify which Drupal site you are performing the action, for instance, for the default site: `lando drush @default.local cr` and for the economics site: `lando drush @economics.local uli`.
+
+Troubleshooting Note for local sites: If multisite setup is causing you issues, try setting up the default setup first and then attempt a multisite configuration.
 
 ## Syncing from Staging
 In order to sync from a staging or dev site, you will have to do the following:
@@ -76,6 +79,14 @@ In order to sync from a staging or dev site, you will have to do the following:
 - `lando drush cr` - clear cache
 - `lando drush config-export` - export your local database settings
 - `lando drush config-import` - import new database settings to your local.
+
+Utilizing these commands with specific sites in your multisite setup looks like this: `lando drush @[]my-multisite] cr`.
+
+## Troubleshooting
+### Importing Configuration
+- If you run into issues importing new config files try running the command with the partial flag: `lando drush config-import --partial`.
+- If the partial flag doesn't work, you may be missing a dependency. Re-sync your whole database, then run `lando composer install`.
+- If you find yourself in a position where starting fresh is your best plan of action, `lando destroy` will completely clear your running lando instances for a clean start.
 
 ## Other useful links
 - [Lando Drupal 8 docs](https://docs.lando.dev/config/drupal8.html)

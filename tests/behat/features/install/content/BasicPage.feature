@@ -50,7 +50,7 @@ Feature: Install State Basic Page
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
     And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
-    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
+    And I should see 10 "#edit-field-hs-page-components-add-more input" elements
     Then I fill in "Title" with "Demo Basic Page"
     And I press "Add Postcard"
     And I should see "Card Title"
@@ -85,6 +85,31 @@ Feature: Install State Basic Page
     And I should see the heading "Demo Basic Page" in the "content" region
     And I should see "Sed augue ipsum egestas nec"
     And I should see "Vivamus in erat ut urna cursus vestibulum"
+
+  @api @safe @javascript @MediaCleanup
+  Scenario: Test basic page with Banner paragraph creation
+    Given I am logged in as a user with the "Contributor" role
+    Then I am on "/node/add/hs_basic_page"
+    And I set window dimensions 1200 x 3000
+    Then I fill in "Title" with "Demo Basic Page"
+    And I press "field_hs_page_hero_hs_banner_add_more"
+    And I wait for AJAX to finish
+    Then I should see "Banner Image"
+    And I press "Add media"
+    Then I wait for AJAX to finish
+    Then I drop "images/logo.jpg" file into dropzone
+    And I press "Upload and Continue"
+    Then I wait for AJAX to finish
+    And I wait 2 seconds
+    And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
+    And I wait for AJAX to finish
+    And I wait 2 seconds
+    Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
+    And I wait for AJAX to finish
+    And I press "Save"
+    And I should be on "/demo-basic-page"
+    And I should see the heading "Demo Basic Page" in the "content" region
+    And I should see 1 "img" elements in the "content" region
 
   @api @safe @javascript @MediaCleanup @testme
   Scenario: Test basic page with Text Area paragraph creation

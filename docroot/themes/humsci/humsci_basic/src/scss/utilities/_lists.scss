@@ -67,6 +67,7 @@
     display: inline-block;
     margin-right: hb-calculate-rems(8px);
     margin-bottom: hb-calculate-rems(8px);
+    padding-left: 0;
 
     // Hide ol & ul list-style-type of items in the pill list.
     // Normally this would be implemented as ul, ol { list-style-type: none; },
@@ -111,7 +112,7 @@
 .hb-pill-list {
   div:not([class]) > div:not([class]),
   &.label-hidden > div:not([class]),
-  li {
+  li:nth-child(n) {
     @include hb-pill($link: false);
   }
 }

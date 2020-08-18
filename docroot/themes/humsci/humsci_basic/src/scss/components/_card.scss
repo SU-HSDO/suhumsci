@@ -139,9 +139,16 @@
 
     .field-content {
       display: block;
-      font-size: hb-calculate-rems(16px);
       padding: 0 hb-calculate-rems(4px) 0 hb-calculate-rems(28px);
       line-height: 127%; // keep icons from being cropped at smaller screen sizes
+
+      @include hb-themes(('colorful', 'airy')) {
+        font-size: hb-calculate-rems(16px);
+      }
+
+      @include hb-traditional {
+        font-size: hb-calculate-rems(18px);
+      }
     }
 
     &--date {

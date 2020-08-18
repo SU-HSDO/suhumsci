@@ -274,3 +274,25 @@
     }
   }
 }
+
+@mixin hb-caption($italic: false) {
+  @include hb-global-color('color', 'gray-dark');
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-size: hb-calculate-rems(14px);
+  }
+
+  @include hb-traditional {
+    font-size: hb-calculate-rems(16px);
+  }
+
+  .hb-local-footer--dark & {
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-global-color('color', 'white');
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('color', 'gray-light');
+    }
+  }
+}

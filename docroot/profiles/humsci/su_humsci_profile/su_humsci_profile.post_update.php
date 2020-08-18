@@ -312,3 +312,10 @@ function su_humsci_profile_post_update_8214() {
   $field_config->set("$settings.hs_priv_text_area.enabled", $negate);
   $field_config->save();
 }
+
+/**
+ * Uninstall rules module.
+ */
+function su_humsci_profile_post_update_8215(&$sandbox) {
+  \Drupal::service('module_installer')->uninstall(['rules']);
+}

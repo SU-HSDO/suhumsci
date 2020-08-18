@@ -153,7 +153,14 @@
 @mixin hb-body--medium {
   font-weight: hb-theme-font-weight(regular);
   font-size: hb-calculate-rems(18px);
-  line-height: 127%;
+
+  @include hb-themes(('colorful', 'airy')) {
+    line-height: 127%;
+  }
+
+  @include hb-traditional {
+    line-height: 130%;
+  }
 }
 
 @mixin hb-description {
@@ -166,7 +173,7 @@
   }
 
   @include hb-traditional {
-    @include hb-body--small;
+    @include hb-body--medium;
   }
 }
 
@@ -267,4 +274,3 @@
     }
   }
 }
-

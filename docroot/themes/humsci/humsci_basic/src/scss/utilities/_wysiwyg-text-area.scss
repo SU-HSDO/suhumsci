@@ -127,9 +127,16 @@
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 .hs {
   &-credits {
-    font-size: hb-calculate-rems(14px);
     font-style: italic;
     @include hb-global-color('color', 'gray-dark');
+
+    @include hb-themes(('colorful', 'airy')) {
+      font-size: hb-calculate-rems(14px);
+    }
+
+    @include hb-traditional {
+      font-size: hb-calculate-rems(16px);
+    }
 
     .hb-local-footer--dark & {
       @include hb-themes(('colorful', 'airy')) {
@@ -178,8 +185,15 @@
   }
 
   &-caption {
-    font-size: hb-calculate-rems(14px);
     @include hb-global-color('color', 'gray-dark');
+
+    @include hb-themes(('colorful', 'airy')) {
+      font-size: hb-calculate-rems(14px);
+    }
+
+    @include hb-traditional {
+      font-size: hb-calculate-rems(16px);
+    }
 
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'white');

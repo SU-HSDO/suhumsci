@@ -19,6 +19,14 @@
 
     <div class="hb-layout-builder-main-content hb-three-column-w-image__main">
 
+      {% if content.title %}
+        <div class="hb-three-column-w-image__main-title">
+          <div{{ region_attributes.title.addClass(['layout__region', 'hb-three-column-w-image__title-text']) }}>
+            {{ content.title }}
+          </div>
+        </div>
+      {% endif %}
+
       {% if content.top or content.image %}
         <div class="hb-three-column-w-image__main-top">
 

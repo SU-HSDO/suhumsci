@@ -201,7 +201,9 @@ class FeatureContext extends RawDrupalContext {
       ->loadByProperties(['uid' => $user->uid]);
 
     foreach ($media_entities as $media_item) {
-      $this->getDriver()->entityDelete('media', $media_item);
+      $entity = new \stdClass();
+      $entity->id = $media_item->id();
+      $this->getDriver()->entityDelete('media', $entity);
     }
 
     $files = \Drupal::entityTypeManager()
@@ -209,7 +211,11 @@ class FeatureContext extends RawDrupalContext {
       ->loadByProperties(['uid' => $user->uid]);
 
     foreach ($files as $file) {
-      $this->getDriver()->entityDelete('file', $file);
+      $entity = new \stdClass();
+      $entity->id = $file->id();
+      $this->getDriver()->entityDelete('file', $entity);
+      /** @var \Drupal\Core\File\FileSystemInterface $fs */
+      $fs = \Drupal::service("file_system");echo $fs->realpath("private://");
     }
   }
 

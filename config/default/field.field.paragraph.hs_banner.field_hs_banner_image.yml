@@ -1,0 +1,30 @@
+uuid: 51b0c2b7-d9cc-4a8d-82d1-031477104d4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_banner_image
+    - media.type.image
+    - media.type.video
+    - paragraphs.paragraphs_type.hs_banner
+id: paragraph.hs_banner.field_hs_banner_image
+field_name: field_hs_banner_image
+entity_type: paragraph
+bundle: hs_banner
+label: 'Banner Image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      video: video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: image
+field_type: entity_reference

@@ -30,6 +30,9 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
       'ocean' => t('Ocean'),
       'mountain' => t('Mountain'),
       'cardinal' => t('Cardinal'),
+      'lake' => t('Lake'),
+      'canyon' => t('Canyon'),
+      'cliff' => t('Cliff'),
     ],
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];

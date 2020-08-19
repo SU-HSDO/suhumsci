@@ -8,6 +8,32 @@
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
 
+/**
+ * Implements hook_preprocess_block().
+ * The following code block (lines 16 - 30) is an adaptation of the code found
+ * within the su_humsci theme preprocess block.
+ * `docroot/themes/humsci/su_humsci_theme/su_humsci_theme.theme`
+ */
+function humsci_basic_preprocess_block(&$vars) {
+  $block_ids = ['local_tasks_block'];
+
+  if (in_array($vars['elements']['#plugin_id'], $block_ids)) {
+    $vars['attributes']['class'][] = 'decanter-grid';
+  }
+
+  // The default permissions for the block label only allow developers to change
+  // the block title. In order to allow site owners to change the block label,
+  // it must be updated to block description.
+  // Change the block label to the block description so that users (such as site owners)
+  // can change the block label without needing the permission to administer blocks.
+  // The role would only need the "Edit any block content" permission.
+  if ($vars['base_plugin_id'] == 'block_content') {
+    /** @var \Drupal\block_content\Entity\BlockContent $block */
+    $block = $vars['content']['#block_content'];
+    $description = $block->get('info')->get(0)->getValue();
+    $vars['label'] = reset($description) ?: $vars['label'];
+  }
+}
 
  /**
  * Prepares variables for the field.html.twig template.
@@ -36,6 +62,19 @@ function humsci_basic_preprocess_field(&$variables, $hook) {
       $pitem['attributes']['class'][] = "paragraph-item";
       $pitem['attributes']['class'][] = $ptype;
     }
+  }
+}
+
+/**
+ * Prepares variables for the html.html.twig template.
+ */
+function humsci_basic_preprocess_html(&$vars) {
+
+  // Animation enhancements setting.
+  $animation_enhancement = theme_get_setting('animation_toggle');
+  if ($animation_enhancement) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('hb-has-animation-enhancements');
   }
 }
 
@@ -97,7 +136,7 @@ function humsci_basic_preprocess_menu(&$vars) {
  * Unpublished nodes menu items still show in the main menu and the menu block
  * in the side navigation. We will target the attribute with css to give a
  * visual indicator that something is different with that menu item.
- * 
+ *
  * Menu items for pages with a content type of hs_private_page will show in
  * any menu block with the class hb-private-page-link which adds a
  * lock icon to the left of the link text.
@@ -130,4 +169,3 @@ function _humsci_basic_check_link_access(array &$link_items) {
     }
   }
 }
-

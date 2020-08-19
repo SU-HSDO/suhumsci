@@ -6,20 +6,18 @@
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
-    margin: hb-spacing-width('xs') 0 hb-spacing-width() hb-calculate-rems(31px);
+    margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
     @include hb-global-color('color', 'white');
 
-    $hb-bg--white: hb-get-global-color('white', $hc-colorful-globals);
     $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
     $hb-bg--pairing: var(--palette--primary-dark);
 
-    @include hb-vertical-card-background-block($hb-bg--white, $hb-bg--fallback, $hb-bg--pairing);
+    @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
   }
 
   @include hb-traditional {
     @include hb-pairing-color('background-color', 'tertiary-reversed');
-    margin-bottom: hb-spacing-width();
   }
 
   &__img {
@@ -38,6 +36,10 @@
         transform: scale($hb-image-hover-scale);
       }
     }
+  }
+
+  .field-media-image {
+    margin: 0;
   }
 
   &__title {

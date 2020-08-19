@@ -74,7 +74,9 @@ behat_tests_first: &behat_tests_first
         at: .
     - run:
         name: Run Behat tests
-        command: vendor/bin/blt circleci:behat:first
+        command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:behat:first
     - store_test_results:
         path: /var/www/html/artifacts/behat
     - store_artifacts:
@@ -90,7 +92,9 @@ behat_tests_second: &behat_tests_second
         at: .
     - run:
         name: Run Behat tests
-        command: vendor/bin/blt circleci:behat:second
+        command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:behat:second
     - store_test_results:
         path: /var/www/html/artifacts/behat
     - store_artifacts:
@@ -107,7 +111,9 @@ fresh_install_tests: &fresh_install_tests
         command: vendor/bin/blt circleci:phpunit
     - run:
         name: Generate code coverage report
-        command: vendor/bin/blt circleci:behat:install
+        command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:behat:install
     - store_test_results:
         path: /var/www/html/artifacts/phpunit
     - store_artifacts:
@@ -123,7 +129,9 @@ code_coverage: &code_coverage
     - run: vendor/bin/pcov clobber
     - run:
         name: Generate code coverage report
-        command: vendor/bin/blt circleci:phpunit:coverage
+        command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt circleci:phpunit:coverage
     - store_artifacts:
         path: /var/www/html/artifacts/coverage
     - store_test_results:
@@ -140,6 +148,7 @@ deploy_branch: &deploy_branch
     - run:
         name: Deploying branch to Acquia
         command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           vendor/bin/blt deploy --no-interaction
@@ -156,6 +165,7 @@ deploy_tag: &deploy_tag
     - run:
         name: Deploying Tag to Acquia
         command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           DATE=`date +%Y-%m-%d`
@@ -173,6 +183,7 @@ update_dependencies: &update_dependencies
     - run:
         name: Update dependencies
         command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           vendor/bin/blt circleci:update
@@ -189,6 +200,7 @@ update_certs: &update_certs
     - run:
         name: Update Prod SSL Certs
         command: |
+          vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt humsci:update-cert prod
           vendor/bin/blt humsci:clean-backups
 

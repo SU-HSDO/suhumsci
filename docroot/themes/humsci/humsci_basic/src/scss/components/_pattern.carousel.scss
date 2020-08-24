@@ -20,12 +20,18 @@
         padding: 0;
         display: grid;
         grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
-        grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
+        grid-template-rows: 120px 100px auto auto 25px 15px; // 6 rows, position 1-7
         min-height: 60vh;
+
+        .hb-three-column--one-sidebar &,
+        .hb-three-column--two-sidebar & {
+          grid-template-columns: 8% 22% 30% 20% 20%;
+          grid-template-rows: 60px 60px auto auto 20px 15px;
+        }
       }
 
       @include grid-media-min('xl') {
-        grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+        grid-template-columns: 8% 22% 20% 25% 25%; // 5 cols, position 1-6
       }
 
       // Offset background color psuedo element
@@ -39,7 +45,7 @@
           grid-column-start: 1;
           grid-column-end: 5;
           grid-row-start: 1;
-          grid-row-end: 6;
+          grid-row-end: 5;
         }
       }
 
@@ -53,8 +59,8 @@
         @include grid-media-min('md') {
           grid-column-start: 1;
           grid-column-end: 2;
-          grid-row-start: 3;
-          grid-row-end: 4;
+          grid-row-start: 2;
+          grid-row-end: 3;
         }
       }
     }
@@ -69,7 +75,7 @@
           margin-top: 0;
           grid-column-start: 3;
           grid-column-end: 6;
-          grid-row-start: 2;
+          grid-row-start: 1;
           grid-row-end: 5;
           padding-top: 0;
         }
@@ -98,8 +104,13 @@
           }
 
           @include grid-media-min('md') {
-            min-height: 55vh;
             object-fit: cover;
+            min-height: 45rem;
+            max-height: 49rem;
+          }
+
+          @include grid-media-min('lg') {
+            min-height: 49rem;
           }
         }
       }
@@ -119,7 +130,7 @@
         @include grid-media-min('md') {
           grid-column-start: 2;
           grid-column-end: 4;
-          grid-row-start: 4;
+          grid-row-start: 3;
           grid-row-end: 7;
           padding: hb-calculate-rems(64px) hb-spacing-width() hb-spacing-width();
           width: auto !important;
@@ -325,6 +336,11 @@
           bottom: hb-spacing-width();
           margin: 0 0 hb-calculate-rems(10px);
           right: calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: 0;
+          }
         }
 
         @include grid-media-min('lg') {
@@ -335,6 +351,11 @@
 
         @include grid-media-min('xl') {
           right: calc(50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            right: calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)});
+          }
         }
       }
 
@@ -427,6 +448,13 @@
 
           @include grid-media-min('md') {
             bottom: hb-spacing-width();
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              bottom: 0;
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
 
@@ -477,6 +505,13 @@
 
           @include grid-media-min('xl') {
             right: calc(50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              right: calc(40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)});
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
 
@@ -522,6 +557,13 @@
 
           @include grid-media-min('xl') {
             right: calc(50% + 25px);
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              right: calc(40% + #{hb-calculate-rems(25px)});
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
 

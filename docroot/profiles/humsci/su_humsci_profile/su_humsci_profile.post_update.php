@@ -5,14 +5,15 @@
  * su_humsci_profile.post_update.php
  */
 
-use Drupal\block\Entity\Block;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\filter\Entity\FilterFormat;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\File\FileSystemInterface;
-use GuzzleHttp\Exception\GuzzleException;
+use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\block\Entity\Block;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\user\Entity\Role;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Outdated.
@@ -318,4 +319,52 @@ function su_humsci_profile_post_update_8214() {
  */
 function su_humsci_profile_post_update_8215(&$sandbox) {
   \Drupal::service('module_installer')->uninstall(['rules']);
+}
+
+/**
+ * Convert event date field to smart date field.
+ */
+function su_humsci_profile_post_update_8216() {
+  $db = \Drupal::database();
+
+  $tables = ['node__field_hs_event_date', 'node_revision__field_hs_event_date'];
+  $table_data = [];
+  foreach ($tables as $table) {
+    $query = $db->select($table, 't')->fields('t')->execute();
+
+    while ($row = $query->fetchAssoc()) {
+      $row['field_hs_event_date_value'] = strtotime($row['field_hs_event_date_value']) - 7 * 60 * 60;
+      $row['field_hs_event_date_end_value'] = strtotime($row['field_hs_event_date_end_value']) - 7 * 60 * 60;
+      $table_data[$table][] = $row;
+    }
+    $db->truncate($table)->execute();
+  }
+  FieldConfig::load('node.hs_event.field_hs_event_date')->delete();
+
+  // Add an untranslatable node reference field.
+  FieldStorageConfig::create([
+    'uuid' => 'e7c58e93-8004-4486-983e-f6c0522f4fde',
+    'field_name' => 'field_hs_event_date',
+    'type' => 'smartdate',
+    'entity_type' => 'node',
+  ])->save();
+  FieldConfig::create([
+    'uuid' => '9e106871-97fc-4960-ac4f-f24a78ca7da6',
+    'field_name' => 'field_hs_event_date',
+    'entity_type' => 'node',
+    'bundle' => 'hs_event',
+    'label' => 'Event Date',
+  ])->save();
+
+  $key_value = \Drupal::keyValue('entity.definitions.bundle_field_map')
+    ->get('node');
+  $key_value['field_hs_event_date']['type'] = 'smartdate';
+  \Drupal::keyValue('entity.definitions.bundle_field_map')
+    ->set('node', $key_value);
+
+  foreach ($table_data as $table => $rows) {
+    foreach ($rows as $row) {
+      $db->insert($table)->fields($row)->execute();
+    }
+  }
 }

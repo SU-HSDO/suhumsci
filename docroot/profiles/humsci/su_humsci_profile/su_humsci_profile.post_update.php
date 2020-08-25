@@ -325,7 +325,7 @@ function su_humsci_profile_post_update_8215(&$sandbox) {
  * Convert event date field to smart date field.
  */
 function su_humsci_profile_post_update_8216() {
-  \Drupal::service('module_installer')->install('smart_date');
+  \Drupal::service('module_installer')->install(['smart_date']);
   $db = \Drupal::database();
 
   $tables = ['node__field_hs_event_date', 'node_revision__field_hs_event_date'];

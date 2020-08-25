@@ -23,6 +23,21 @@
         $icon-color: hb-get-pairing-color($color, 'cardinal', $hc-colorful-pairings);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
+
+      .hc-pairing-lake & {
+        $icon-color: hb-get-pairing-color($color, 'lake', $hc-colorful-pairings);
+        background-image: svg(hc-get-icons($icon, $icon-color));
+      }
+
+      .hc-pairing-canyon & {
+        $icon-color: hb-get-pairing-color($color, 'canyon', $hc-colorful-pairings);
+        background-image: svg(hc-get-icons($icon, $icon-color));
+      }
+
+      .hc-pairing-cliff & {
+        $icon-color: hb-get-pairing-color($color, 'cliff', $hc-colorful-pairings);
+        background-image: svg(hc-get-icons($icon, $icon-color));
+      }
     }
   }
 
@@ -124,6 +139,20 @@
   }
 }
 
+@mixin hb-icon-link-arrow-box-shadow($color: 'black') {
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 55%;
+
+  @include hb-themes(('airy', 'colorful')) {
+    @include hb-icon-background('arrow-right-box-shadow', $color);
+  }
+
+  @include hb-traditional {
+    @include hb-icon-background('arrow-right-long-box-shadow', $color);
+  }
+}
+
 @mixin hb-icon-calendar($color: 'black') {
   @include hb-icon-background('calendar', $color);
   background-repeat: no-repeat;
@@ -138,6 +167,18 @@
 
 @mixin hb-icon-speaker($color: 'black') {
   @include hb-icon-background('speaker', $color);
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+
+@mixin hb-icon-ellipse($color: 'black') {
+  @include hb-icon-background('ellipse', $color);
+  background-repeat: no-repeat;
+  background-position: top left;
+}
+
+@mixin hb-icon-ellipse-border($color: 'black') {
+  @include hb-icon-background('ellipse-border', $color);
   background-repeat: no-repeat;
   background-position: top left;
 }

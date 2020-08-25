@@ -2,7 +2,6 @@
 .field-hs-text-area,
 .field-hs-priv-text-area {
   @include clearfix;
-  margin-bottom: hb-calculate-rems(28px);
 
   h1,
   h2,
@@ -118,6 +117,11 @@
       }
     }
   }
+
+  // Only in the textarea, does the well get display: table for being floated
+  .hs-well {
+    display: table;
+  }
 }
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
@@ -180,6 +184,10 @@
     max-width: hb-calculate-rems(700px);
   }
 
+  &-well {
+    @include hb-well;
+  }
+
   &-table--borderless {
     thead {
       th {
@@ -215,11 +223,11 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      margin: hb-spacing-width('sm') 0 hb-spacing-width('sm') hb-spacing-width('sm');
+      margin: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
     }
 
     @include hb-traditional {
-      margin: hb-spacing-width('xs') 0 hb-spacing-width('xs') hb-spacing-width('xs');
+      margin: 0 0 hb-spacing-width('xs') hb-spacing-width('xs');
     }
   }
 
@@ -235,21 +243,21 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      margin: hb-spacing-width('sm') hb-spacing-width('sm') hb-spacing-width('sm') 0;
+      margin: 0 hb-spacing-width('sm') hb-spacing-width('sm') 0;
     }
 
     @include hb-traditional {
-      margin: hb-spacing-width('xs') hb-spacing-width('xs') hb-spacing-width('xs') 0;
+      margin: 0 hb-spacing-width('xs') hb-spacing-width('xs') 0;
     }
   }
 
   &-center {
     @include hb-themes(('colorful', 'airy')) {
-      margin: hb-spacing-width('sm') auto;
+      margin: 0 auto hb-spacing-width('sm');
     }
 
     @include hb-traditional {
-      margin: hb-spacing-width('xs') auto;
+      margin: 0 auto hb-spacing-width('xs');
     }
 
     img {
@@ -308,8 +316,18 @@ a.hs-private-link,
   }
 }
 
-.hs-mailto-link .fa-mailto {
-  display: initial;
+.hs-mailto-link a,
+a.hs-mailto-link {
+  @include hb-fa-mailto-icon;
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-link-background-image(true, 22px, right, $hb-colorful-default, $hc-colorful-pairings);
+  }
+
+  // The font awesome icon is hidden by default in themes, this shows it
+  .fa-mailto {
+    display: initial;
+  }
 }
 
 a.hs-more-link,

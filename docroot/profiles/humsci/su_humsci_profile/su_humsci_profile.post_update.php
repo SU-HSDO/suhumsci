@@ -341,6 +341,9 @@ function su_humsci_profile_post_update_8216() {
     $db->truncate($table)->execute();
   }
   FieldConfig::load('node.hs_event.field_hs_event_date')->delete();
+  if ($field_storage = FieldStorageConfig::load('node.field_hs_event_date')) {
+    $field_storage->delete();
+  }
 
   // Add an untranslatable node reference field.
   FieldStorageConfig::create([

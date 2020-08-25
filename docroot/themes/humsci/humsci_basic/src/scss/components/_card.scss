@@ -193,10 +193,21 @@
 
   &__highlighted {
     @include hb-global-color('color', 'gray-dark');
-    font-size: hb-calculate-rems(14px);
 
-    @include grid-media-min('md') {
+    @include hb-themes(('colorful', 'airy')) {
+      font-size: hb-calculate-rems(14px);
+
+      @include grid-media-min('md') {
+        font-size: hb-calculate-rems(16px);
+      }
+    }
+
+    @include hb-traditional {
       font-size: hb-calculate-rems(16px);
+
+      @include grid-media-min('md') {
+        font-size: hb-calculate-rems(18px);
+      }
     }
 
     &:not(:last-child) {

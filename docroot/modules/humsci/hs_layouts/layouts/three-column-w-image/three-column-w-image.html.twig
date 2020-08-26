@@ -16,6 +16,12 @@
 
 
     <div class="main-content {{ main_class }}">
+      {% if content.title %}
+        <div{{ region_attributes.title.addClass(['layout__region', 'decanter-width-one-whole']) }}>
+          {{ content.title }}
+        </div>
+      {% endif %}
+
       {% if content.top %}
         <div{{ region_attributes.top.addClass(['top', 'layout__region']) }}>
           {{ content.top }}

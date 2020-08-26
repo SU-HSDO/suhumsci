@@ -1,0 +1,21 @@
+uuid: afd3ccfa-79ce-4ab8-bec2-5d375321ce30
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+id: event_series_by_content_type
+label: 'Event Series by content type'
+menu_name: main
+parent: 'menu_link_content:85077122-2465-40b9-8226-d8d521c00b1c'
+menu_link: 'menu_position_link:event_series_by_content_type'
+enabled: true
+weight: -1
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      hs_event_series: hs_event_series
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

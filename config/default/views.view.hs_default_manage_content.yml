@@ -1,6 +1,6 @@
-uuid: a395d3ef-3df7-4a96-9ab8-48d257cbdeba
+uuid: 265c4a34-3e07-48cf-8899-7833f41af2f3
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - field.storage.node.field_hs_course_academic_year
@@ -18,6 +18,7 @@ dependencies:
     - field.storage.node.field_hs_person_last_name
     - field.storage.node.field_hs_person_staff_type
     - field.storage.node.field_hs_person_student_type
+    - field.storage.node.field_hs_publication_citation
     - field.storage.node.field_hs_publication_image
     - field.storage.node.field_hs_publication_publisher
     - field.storage.node.field_hs_publication_type
@@ -27,6 +28,7 @@ dependencies:
     - node.type.hs_event_series
     - node.type.hs_news
     - node.type.hs_person
+    - node.type.hs_private_page
     - node.type.hs_publications
     - node.type.hs_research
     - system.menu.admin
@@ -46,8 +48,8 @@ dependencies:
     - taxonomy
     - user
     - views_bulk_operations
-id: hs_manage_content
-label: 'Manage Content'
+id: hs_default_manage_content
+label: 'Default Manage Content'
 module: views
 description: ''
 tag: ''
@@ -116,14 +118,14 @@ display:
           description: ''
           columns:
             views_bulk_operations_bulk_form: views_bulk_operations_bulk_form
+            field_hs_publication_image: field_hs_publication_image
             title: title
+            field_hs_publication_citation: field_hs_publication_citation
             status: status
             changed: changed
             uid: uid
-            field_hs_event_date: field_hs_event_date
-            field_hs_event_series: field_hs_event_series
-            field_hs_event_type: field_hs_event_type
-            field_hs_event_location: field_hs_event_location
+            field_hs_publication_publisher: field_hs_publication_publisher
+            field_hs_publication_type: field_hs_publication_type
             operations: operations
           info:
             views_bulk_operations_bulk_form:
@@ -131,7 +133,21 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_hs_publication_image:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             title:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_hs_publication_citation:
               sortable: true
               default_sort_order: asc
               align: ''
@@ -159,24 +175,14 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            field_hs_event_date:
-              sortable: true
+            field_hs_publication_publisher:
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_hs_event_series:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_event_type:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_event_location:
+            field_hs_publication_type:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -3140,26 +3146,20 @@ display:
           clear_on_exposed: false
           action_title: Action
           selected_actions:
-            -
+            0:
               action_id: node_clone_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_unpublish_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_publish_action
-              preconfiguration:
-                label_override: ''
-            -
+            1:
               action_id: node_assign_owner_action
+            4:
+              action_id: node_publish_action
+            8:
+              action_id: node_unpublish_action
+            10:
+              action_id: views_bulk_edit
               preconfiguration:
-                label_override: ''
-            -
+                get_bundles_from_results: 1
+            11:
               action_id: views_bulk_operations_delete_entity
-              preconfiguration:
-                label_override: ''
           plugin_id: views_bulk_operations_bulk_form
         title:
           id: title
@@ -4593,26 +4593,20 @@ display:
           clear_on_exposed: false
           action_title: Action
           selected_actions:
-            -
+            0:
               action_id: node_clone_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_unpublish_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_publish_action
-              preconfiguration:
-                label_override: ''
-            -
+            1:
               action_id: node_assign_owner_action
+            4:
+              action_id: node_publish_action
+            8:
+              action_id: node_unpublish_action
+            10:
+              action_id: views_bulk_edit
               preconfiguration:
-                label_override: ''
-            -
+                get_bundles_from_results: 1
+            11:
               action_id: views_bulk_operations_delete_entity
-              preconfiguration:
-                label_override: ''
           plugin_id: views_bulk_operations_bulk_form
         title:
           id: title
@@ -5055,7 +5049,7 @@ display:
     display_plugin: page
     id: page_1
     display_title: 'Research Areas'
-    position: 9
+    position: 10
     display_options:
       display_extenders: {  }
       path: admin/content/manage/research-areas
@@ -5648,6 +5642,603 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: 'Private Pages'
+    position: 8
+    display_options:
+      display_extenders: {  }
+      path: admin/content/manage/private-pages
+      menu:
+        type: tab
+        title: 'Private Pages'
+        description: ''
+        expanded: true
+        parent: system.admin_content
+        weight: 1
+        context: '0'
+        menu_name: admin
+      display_description: ''
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: All
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: Published
+            description: ''
+            use_operator: false
+            operator: status_op
+            identifier: status
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            operator_limit_selection: false
+            operator_list: {  }
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: boolean
+          entity_type: node
+          entity_field: status
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: title_op
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            placeholder: ''
+            operator_limit_selection: false
+            operator_list: {  }
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+        uid:
+          id: uid
+          table: node_field_data
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: uid_op
+            label: Author
+            description: ''
+            use_operator: false
+            operator: uid_op
+            identifier: uid
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              seven_admin_theme_user: '0'
+            reduce: false
+            operator_limit_selection: false
+            operator_list: {  }
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: uid
+          plugin_id: user_name
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            hs_private_page: hs_private_page
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+      defaults:
+        filters: false
+        filter_groups: false
+        fields: false
+        title: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      fields:
+        views_bulk_operations_bulk_form:
+          id: views_bulk_operations_bulk_form
+          table: views
+          field: views_bulk_operations_bulk_form
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Actions
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          batch: true
+          batch_size: 10
+          form_step: true
+          buttons: false
+          clear_on_exposed: false
+          action_title: Action
+          selected_actions:
+            -
+              action_id: node_clone_action
+              preconfiguration:
+                label_override: ''
+            -
+              action_id: node_unpublish_action
+              preconfiguration:
+                label_override: ''
+            -
+              action_id: node_publish_action
+              preconfiguration:
+                label_override: ''
+            -
+              action_id: node_assign_owner_action
+              preconfiguration:
+                label_override: ''
+            -
+              action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                label_override: ''
+          plugin_id: views_bulk_operations_bulk_form
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          entity_type: node
+          entity_field: title
+          alter:
+            alter_text: false
+            make_link: false
+            absolute: false
+            trim: false
+            word_boundary: false
+            ellipsis: false
+            strip_tags: false
+            html: false
+          hide_empty: false
+          empty_zero: false
+          settings:
+            link_to_entity: true
+          plugin_id: field
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Title
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Published
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: boolean
+          settings:
+            format: unicode-yes-no
+            format_custom_true: ''
+            format_custom_false: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: status
+          plugin_id: field
+        changed:
+          id: changed
+          table: node_field_data
+          field: changed
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Updated Date'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'M j Y g:i a'
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: changed
+          plugin_id: field
+        uid:
+          id: uid
+          table: node_field_data
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Author
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: node
+          entity_field: uid
+          plugin_id: field
+        operations:
+          id: operations
+          table: node
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Operations
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: false
+          entity_type: node
+          plugin_id: entity_operations
+      tab_options:
+        type: normal
+        title: 'Manage Content'
+        description: ''
+        weight: 0
+      title: 'Private Pages'
+    cache_metadata:
+      max-age: 0
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
   people:
     display_plugin: page
     id: people
@@ -6112,26 +6703,20 @@ display:
           clear_on_exposed: false
           action_title: Action
           selected_actions:
-            -
+            0:
               action_id: node_clone_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_unpublish_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_publish_action
-              preconfiguration:
-                label_override: ''
-            -
+            1:
               action_id: node_assign_owner_action
+            4:
+              action_id: node_publish_action
+            8:
+              action_id: node_unpublish_action
+            10:
+              action_id: views_bulk_edit
               preconfiguration:
-                label_override: ''
-            -
+                get_bundles_from_results: 1
+            11:
               action_id: views_bulk_operations_delete_entity
-              preconfiguration:
-                label_override: ''
           plugin_id: views_bulk_operations_bulk_form
         field_hs_person_image:
           id: field_hs_person_image
@@ -6849,7 +7434,7 @@ display:
     display_plugin: page
     id: publications
     display_title: Publications
-    position: 8
+    position: 9
     display_options:
       display_extenders: {  }
       filters:
@@ -7098,7 +7683,7 @@ display:
         description: ''
         expanded: false
         parent: system.admin_content
-        weight: 0
+        weight: 2
         context: '0'
         menu_name: admin
       path: admin/content/manage/publications
@@ -7159,26 +7744,20 @@ display:
           clear_on_exposed: false
           action_title: Action
           selected_actions:
-            -
+            0:
               action_id: node_clone_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_unpublish_action
-              preconfiguration:
-                label_override: ''
-            -
-              action_id: node_publish_action
-              preconfiguration:
-                label_override: ''
-            -
+            1:
               action_id: node_assign_owner_action
+            4:
+              action_id: node_publish_action
+            8:
+              action_id: node_unpublish_action
+            10:
+              action_id: views_bulk_edit
               preconfiguration:
-                label_override: ''
-            -
+                get_bundles_from_results: 1
+            11:
               action_id: views_bulk_operations_delete_entity
-              preconfiguration:
-                label_override: ''
           plugin_id: views_bulk_operations_bulk_form
         field_hs_publication_image:
           id: field_hs_publication_image
@@ -7292,6 +7871,68 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_hs_publication_citation:
+          id: field_hs_publication_citation
+          table: node__field_hs_publication_citation
+          field: field_hs_publication_citation
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Citation
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: basic_string
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
         status:
           id: status
           table: node_field_data
@@ -7679,6 +8320,7 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
+        - 'config:field.storage.node.field_hs_publication_citation'
         - 'config:field.storage.node.field_hs_publication_image'
         - 'config:field.storage.node.field_hs_publication_publisher'
         - 'config:field.storage.node.field_hs_publication_type'

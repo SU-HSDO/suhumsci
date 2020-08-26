@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\menu_position\Entity\MenuPositionRule;
 
 /**
  * Implements hook_contextual_links_alter().
@@ -59,6 +60,22 @@ function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $e
   // attribute so all menu items are expanded by default.
   if ($entity->isNew()) {
     $entity->set('expanded', TRUE);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function su_humsci_profile_menu_link_content_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  /** @var \Drupal\menu_position\MenuPositionRuleInterface $menu_position */
+  foreach (MenuPositionRule::loadMultiple() as $menu_position) {
+    if ($menu_position->getParent() == 'menu_link_content:' . $entity->uuid()) {
+      \Drupal::database()->update('menu_tree')
+        ->fields(['parent' => $menu_position->getParent()])
+        ->condition('menu_name', $menu_position->getMenuName())
+        ->condition('id', $menu_position->getMenuLink())
+        ->execute();
+    }
   }
 }
 

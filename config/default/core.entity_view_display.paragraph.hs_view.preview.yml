@@ -1,18 +1,24 @@
-uuid: 2faf9c99-08eb-4f01-b828-a9b51488217c
+uuid: 2e6eec04-4aae-469e-abc2-388b5123f042
 langcode: en
-status: true
+status: false
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.hs_view.field_hs_view
     - paragraphs.paragraphs_type.hs_view
   module:
+    - layout_builder
     - viewfield
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
 _core:
   default_config_hash: ROagQRyXu7b9dF0QKGoP9iNlpe7tPEn9cpIOfzmVTcM
-id: paragraph.hs_view.default
+id: paragraph.hs_view.preview
 targetEntityType: paragraph
 bundle: hs_view
-mode: default
+mode: preview
 content:
   field_hs_view:
     weight: 0

@@ -615,7 +615,7 @@ display:
           automatic_width: false
           alignment: horizontal
           col_class_default: true
-          col_class_custom: decanter-width-one-third
+          col_class_custom: ''
           row_class_default: true
           row_class_custom: ''
       row:
@@ -2620,10 +2620,12 @@ display:
             field_hs_event_speaker: 0
             field_hs_event_location: 0
             view_node: 0
+            edit_node: 0
           separator: ''
           hide_empty: 1
           pattern: date_stacked_horizontal_card
           variants:
+            spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
@@ -2683,6 +2685,11 @@ display:
               weight: 10
               plugin: views_row
               source: view_node
+            'views_row:edit_node':
+              destination: description
+              weight: 11
+              plugin: views_row
+              source: edit_node
       fields:
         field_hs_event_series:
           id: field_hs_event_series
@@ -3378,6 +3385,59 @@ display:
           absolute: false
           entity_type: node
           plugin_id: entity_link
+        edit_node:
+          id: edit_node
+          table: node
+          field: edit_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: span
+          element_class: hs-secondary-button
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: edit
+          output_url_as_text: false
+          absolute: false
+          entity_type: node
+          plugin_id: entity_link_edit
       pager:
         type: full
         options:
@@ -4369,7 +4429,7 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: false
+          default_row_class: true
       row:
         type: ui_patterns
         options:
@@ -4387,10 +4447,12 @@ display:
             field_hs_event_speaker: 0
             field_hs_event_location: 0
             view_node: 0
+            edit_node: 0
           separator: ''
           hide_empty: 1
           pattern: date_stacked_horizontal_card
           variants:
+            spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
@@ -4450,9 +4512,14 @@ display:
               weight: 10
               plugin: views_row
               source: field_hs_event_location
+            'views_row:edit_node':
+              destination: description
+              weight: 11
+              plugin: views_row
+              source: edit_node
             'views_row:view_node':
               destination: button
-              weight: 11
+              weight: 12
               plugin: views_row
               source: view_node
       fields:
@@ -5213,6 +5280,59 @@ display:
           absolute: false
           entity_type: node
           plugin_id: entity_link
+        edit_node:
+          id: edit_node
+          table: node
+          field: edit_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: span
+          element_class: hs-secondary-button
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: edit
+          output_url_as_text: false
+          absolute: false
+          entity_type: node
+          plugin_id: entity_link_edit
       pager:
         type: full
         options:
@@ -5262,51 +5382,6 @@ display:
             operator_limit_selection: false
             operator_list: {  }
           group: 1
-        field_hs_event_date_value:
-          id: field_hs_event_date_value
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '>='
-          value:
-            min: ''
-            max: ''
-            value: now
-            type: offset
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          plugin_id: datetime
         combine:
           id: combine
           table: views
@@ -5460,6 +5535,51 @@ display:
           sort_by: '1'
           get_unpublished: '1'
           get_filter_no_results: '0'
+        field_hs_event_date_end_value:
+          id: field_hs_event_date_end_value
+          table: node__field_hs_event_date
+          field: field_hs_event_date_end_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '>='
+          value:
+            min: ''
+            max: ''
+            value: now
+            type: offset
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: datetime
       filter_groups:
         operator: AND
         groups:

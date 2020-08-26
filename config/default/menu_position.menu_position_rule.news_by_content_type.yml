@@ -1,0 +1,21 @@
+uuid: e94f1abd-9297-4324-a7ea-ce89e176197f
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+id: news_by_content_type
+label: 'News by content type'
+menu_name: main
+parent: 'menu_link_content:85077122-2465-40b9-8226-d8d521c00b1c'
+menu_link: 'menu_position_link:news_by_content_type'
+enabled: true
+weight: 0
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      hs_news: hs_news
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

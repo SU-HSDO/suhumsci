@@ -1,0 +1,16 @@
+// The helper link text is displayed by default in the Traditional
+// theme but visually hidden in the Colorful theme. This utility
+// class should be used to display the helper link text
+// in date stacked horizontal, date stacked vertical, horizontal,
+// and vertical cards in the Colorful theme.
+
+.hb-display-more-link-text {
+  .hb-card__decorative-link a, // cards in views
+  .field-hs-postcard-link a { // postcards in layout
+    @include hb-more-link;
+
+    &::before {
+      display: none; // hide large arrow icon when helper link text is displayed
+    }
+  }
+}

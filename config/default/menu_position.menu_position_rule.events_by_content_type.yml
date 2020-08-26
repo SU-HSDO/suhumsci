@@ -1,0 +1,21 @@
+uuid: a7199bbb-b6ee-4c41-b7e2-76dc4d7e5db2
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+id: events_by_content_type
+label: 'Events by content type'
+menu_name: main
+parent: 'menu_link_content:85077122-2465-40b9-8226-d8d521c00b1c'
+menu_link: 'menu_position_link:events_by_content_type'
+enabled: true
+weight: -2
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      hs_event: hs_event
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

@@ -132,7 +132,13 @@
     @include hb-global-color('color', 'gray-dark');
 
     .hb-local-footer--dark & {
-      @include hb-global-color('color', 'white');
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-global-color('color', 'white');
+      }
+
+      @include hb-traditional {
+        @include hb-global-color('color', 'gray-light');
+      }
     }
   }
 

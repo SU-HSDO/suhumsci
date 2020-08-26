@@ -75,7 +75,7 @@ function hs_config_prefix_custom_form_validate(array &$form, FormStateInterface 
  * Implements hook_entity_presave().
  */
 function hs_config_prefix_entity_presave(EntityInterface $entity) {
-  if (InstallerKernel::installationAttempted() || empty($GLOBALS['_REQUEST'])) {
+  if (InstallerKernel::installationAttempted() || empty($GLOBALS['_REQUEST']) || PHP_SAPI === 'cli') {
     return;
   }
   if ($entity->isNew() && $entity instanceof ConfigEntityBase) {

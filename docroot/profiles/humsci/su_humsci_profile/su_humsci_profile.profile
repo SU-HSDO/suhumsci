@@ -66,7 +66,7 @@ function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $e
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function su_humsci_profile_menu_link_content_insert(Drupal\Core\Entity\EntityInterface $entity) {
+function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $entity) {
   /** @var \Drupal\menu_position\MenuPositionRuleInterface $menu_position */
   foreach (MenuPositionRule::loadMultiple() as $menu_position) {
     if ($menu_position->getParent() == 'menu_link_content:' . $entity->uuid()) {

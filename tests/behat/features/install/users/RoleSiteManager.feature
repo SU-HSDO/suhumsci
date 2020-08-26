@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.site_manager permissions"
-    Then the role "site_manager" should have 176 permissions
+    Then the role "site_manager" should have 177 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
     And drush output should contain "access contextual links"
@@ -52,6 +52,7 @@ Feature: Install State
     And drush output should contain "create terms in hs_person_staff_type"
     And drush output should contain "create terms in hs_person_student_type"
     And drush output should contain "create terms in hs_publication_type"
+    And drush output should contain "create url aliases"
     And drush output should contain "create video media"
     And drush output should contain "delete any course_collections entities"
     And drush output should contain "delete any event_collections entities"

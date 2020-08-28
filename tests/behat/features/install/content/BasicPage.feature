@@ -160,7 +160,7 @@ Feature: Install State Basic Page
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
     And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
-    And I should see 10 "#edit-field-hs-page-components-add-more input" elements
+    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
     Then I fill in "Title" with "Demo Basic Page"
     And I press "Add Row"
     Then I should see "Paragraph Style"
@@ -174,9 +174,9 @@ Feature: Install State Basic Page
   @api @safe @javascript
   Scenario: Test basic page with Spotlight paragraph creation in Hero Image Area
     Given I am logged in as a user with the "Contributor" role
-    Then I am on "/node/add/hs_basic_page"    
+    Then I am on "/node/add/hs_basic_page"
     And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
-    And I should see 10 "#edit-field-hs-page-components-add-more input" elements
+    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
     Then I fill in "Title" with "Demo Basic Page"
     And I press "Add Spotlight"
     Then I should see "Title"

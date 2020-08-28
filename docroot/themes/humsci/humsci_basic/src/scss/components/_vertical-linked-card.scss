@@ -24,7 +24,11 @@
     overflow: hidden;
 
     @include hb-themes(('colorful', 'airy')) {
-      margin-top: hb-calculate-rems(-24px);
+      @include grid-media-min('sm') {
+        .field-hs-row-components & {
+          margin-top: hb-calculate-rems(-24px);
+        }
+      }
     }
 
     img {
@@ -62,8 +66,12 @@
 
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(54px) hb-calculate-rems(20px) hb-calculate-rems(20px);
-      margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+      margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
       @include hb-pairing-color('background-color', 'secondary');
+
+      @include grid-media-min('sm') {
+        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+      }
     }
 
     @include hb-traditional {

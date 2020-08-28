@@ -169,7 +169,7 @@ class EventsImporterForm extends ConfigFormBase {
         $form['url_set'][$delta]['remove'] = [
           '#type' => 'submit',
           '#name' => "remove_$delta",
-          '#value' => t('Remove'),
+          '#value' => $this->t('Remove'),
           '#submit' => ['::removeCallback'],
           '#element_validate' => [],
           '#ajax' => [
@@ -183,7 +183,7 @@ class EventsImporterForm extends ConfigFormBase {
     $form['add_one'] = [
       '#type' => 'submit',
       '#name' => 'add_one',
-      '#value' => t('Add one'),
+      '#value' => $this->t('Add one'),
       '#submit' => ['::addOne'],
       '#ajax' => [
         'callback' => '::addMoreCallback',
@@ -458,7 +458,7 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Separate out the urls that do target events.stanford.edu
+   * Separate out the urls that do target events.stanford.edu.
    *
    * @param array $urls
    *   Array of urls.

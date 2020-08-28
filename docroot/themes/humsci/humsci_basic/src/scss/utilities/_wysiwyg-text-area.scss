@@ -148,12 +148,16 @@
     line-height: 127%;
     @include hb-global-color('color', 'gray-dark');
 
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(22px);
+    }
+
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'gray-light');
     }
 
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(22px);
+    li & {
+      margin: hb-calculate-rems(-3px) 0 0;
     }
   }
 
@@ -174,6 +178,10 @@
 
     @include hb-traditional {
       @include hb-pairing-color('color', 'primary');
+    }
+
+    li & {
+      margin: hb-calculate-rems(-3px) 0 0;
     }
   }
 

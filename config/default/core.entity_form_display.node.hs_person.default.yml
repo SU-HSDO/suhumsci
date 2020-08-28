@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.hs_person.body
     - field.field.node.hs_person.field_hs_person_affiliation
+    - field.field.node.hs_person.field_hs_person_department
     - field.field.node.hs_person.field_hs_person_education
     - field.field.node.hs_person.field_hs_person_email
     - field.field.node.hs_person.field_hs_person_external_profile
@@ -96,6 +97,7 @@ third_party_settings:
       children:
         - body
         - field_hs_person_title
+        - field_hs_person_department
         - field_hs_person_education
         - field_hs_person_research
         - field_hs_person_interests
@@ -116,7 +118,7 @@ third_party_settings:
       children:
         - field_hs_person_faculty_status
       parent_name: group_tabs
-      weight: 4
+      weight: 5
       format_type: tab
       format_settings:
         id: ''
@@ -133,7 +135,7 @@ third_party_settings:
         - field_hs_person_student_grad
         - field_hs_person_student_dissert
       parent_name: group_tabs
-      weight: 5
+      weight: 6
       format_type: tab
       format_settings:
         id: ''
@@ -147,7 +149,7 @@ third_party_settings:
       children:
         - field_hs_person_staff_type
       parent_name: group_tabs
-      weight: 6
+      weight: 7
       format_type: tab
       format_settings:
         id: ''
@@ -186,8 +188,18 @@ content:
     third_party_settings: {  }
     type: options_select
     region: content
-  field_hs_person_education:
+  field_hs_person_department:
     weight: 10
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_hs_person_education:
+    weight: 11
     settings:
       size: 60
       placeholder: ''
@@ -203,7 +215,7 @@ content:
     type: email_default
     region: content
   field_hs_person_external_profile:
-    weight: 14
+    weight: 15
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -232,7 +244,7 @@ content:
     third_party_settings: {  }
     region: content
   field_hs_person_interests:
-    weight: 12
+    weight: 13
     settings:
       size: 60
       placeholder: ''
@@ -248,7 +260,7 @@ content:
     type: string_textfield
     region: content
   field_hs_person_links:
-    weight: 13
+    weight: 14
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -286,13 +298,13 @@ content:
     type: string_textfield
     region: content
   field_hs_person_research:
-    weight: 11
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_hs_person_staff_type:
-    weight: 33
+    weight: 58
     settings: {  }
     third_party_settings: {  }
     type: options_select

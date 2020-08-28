@@ -301,3 +301,12 @@ function su_humsci_profile_config_readonly_whitelist_patterns() {
     'field.field.node.hs_private_page.field_hs_priv_page_components',
   ];
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_node_type_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Disable preview mode and prevent it from being changed.
+  $form['submission']['preview_mode']['#default_value'] = DRUPAL_DISABLED;
+  $form['submission']['preview_mode']['#attributes']['disabled'] = TRUE;
+}

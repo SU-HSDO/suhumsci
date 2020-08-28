@@ -171,6 +171,7 @@
 }
 
 @mixin hb-blockquote {
+  //@include hb-text-reset;
   @include hb-body--medium;
   font-style: italic;
   line-height: 140%;
@@ -222,6 +223,7 @@
 }
 
 @mixin hb-descriptor {
+  //@include hb-text-reset;
   @include hb-global-color('color', 'gray-dark');
   font-size: hb-calculate-rems(16px);
 
@@ -293,3 +295,20 @@
     }
   }
 }
+@mixin hb-text-reset {
+  background: initial;
+  border: initial;
+  color: initial;
+  font-size: inherit;
+  font-style: initial;
+  font-weight: initial;
+  line-height: inherit;
+  margin: initial;
+  padding: initial;
+  position: initial;
+  quotes: initial;
+  text-decoration: initial;
+  text-transform: initial;
+  transition: none;
+}
+

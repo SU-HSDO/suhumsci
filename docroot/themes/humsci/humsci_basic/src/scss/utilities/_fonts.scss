@@ -1,3 +1,8 @@
+.hb-text-reset {
+  // Reset text styles to default using this class
+  @include hb-text-reset;
+}
+
 .hb-heading-1 {
   @include hb-heading-1;
 }
@@ -39,6 +44,7 @@
 }
 
 .hb-highlighted-label .field-label {
+  //@include hb-text-reset;
   @include hb-field-label--featured;
 }
 
@@ -46,7 +52,16 @@
   @include hb-subtitle;
 }
 
-.hb-descriptor {
+.hb-descriptor,
+.hb-card__title h1 .hb-descriptor,
+.hb-card__title h2 .hb-descriptor,
+.hb-card__title h3 .hb-descriptor,
+.hb-card__title h4 .hb-descriptor,
+.hb-card__title h5 .hb-descriptor,
+.hb-card__title h6 .hb-descriptor,
+.hb-descriptor ul:not([class]) li,
+.hb-descriptor p {
+  @include hb-text-reset;
   @include hb-descriptor;
 }
 
@@ -78,6 +93,7 @@ a.hb-pill {
   h4,
   h5,
   h6 {
+    //@include hb-text-reset;
     @include hb-heading-1;
     margin: 0;
   }

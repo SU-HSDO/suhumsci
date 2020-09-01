@@ -60,7 +60,11 @@
 .hb-card__title h5 .hb-descriptor,
 .hb-card__title h6 .hb-descriptor,
 .hb-descriptor ul:not([class]) li,
-.hb-descriptor p {
+.hb-descriptor a,
+.hb-descriptor a.is-active, 
+.hb-descriptor a:not([class]),
+.hb-descriptor p,
+.hb-descriptor p:not([class]):last-of-type {
   @include hb-text-reset;
   @include hb-descriptor;
 }
@@ -73,8 +77,21 @@ a.hb-pill {
   @include hb-pill;
 }
 
-.hb-blockquote {
+.hb-blockquote,
+.hb-card__title h1 .hb-blockquote,
+.hb-card__title h2 .hb-blockquote,
+.hb-card__title h3 .hb-blockquote,
+.hb-card__title h4 .hb-blockquote,
+.hb-card__title h5 .hb-blockquote,
+.hb-card__title h6 .hb-blockquote,
+.hb-blockquote ul:not([class]) li,
+.hb-blockquote a,
+.hb-blockquote a.is-active, 
+.hb-blockquote a:not([class]),
+.hb-blockquote p,
+.hb-blockquote p:not([class]):last-of-type {
   // remove content set in the base default styles set on the blockquote tag
+  @include hb-text-reset;
   &::after,
   &::before {
     content: '';

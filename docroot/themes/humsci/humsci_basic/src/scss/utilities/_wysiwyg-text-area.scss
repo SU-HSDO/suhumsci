@@ -102,6 +102,10 @@
     @include hb-traditional {
       margin-bottom: hb-spacing-width('xs');
     }
+
+    figcaption {
+      @include hb-caption;
+    }
   }
 
   a {
@@ -126,20 +130,12 @@
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 .hs {
+  &-caption {
+    @include hb-caption;
+  }
+
   &-credits {
-    font-size: hb-calculate-rems(14px);
-    font-style: italic;
-    @include hb-global-color('color', 'gray-dark');
-
-    .hb-local-footer--dark & {
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-global-color('color', 'white');
-      }
-
-      @include hb-traditional {
-        @include hb-global-color('color', 'gray-light');
-      }
-    }
+    @include hb-caption($italic: true);
   }
 
   &-font-lead {
@@ -182,15 +178,6 @@
 
     li & {
       margin: hb-calculate-rems(-3px) 0 0;
-    }
-  }
-
-  &-caption {
-    font-size: hb-calculate-rems(14px);
-    @include hb-global-color('color', 'gray-dark');
-
-    .hb-local-footer--dark & {
-      @include hb-global-color('color', 'white');
     }
   }
 

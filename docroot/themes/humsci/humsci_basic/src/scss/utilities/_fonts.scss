@@ -43,7 +43,9 @@
   @include hb-link--inline;
 }
 
-.hb-highlighted-label .field-label {
+.hb-highlighted-label .field-label,
+.views-row .hb-highlighted-label,
+.views-row .hb-highlighted-label a {
   //@include hb-text-reset;
   @include hb-field-label--featured;
 }
@@ -61,7 +63,7 @@
 .hb-card__title h6 .hb-descriptor,
 .hb-descriptor ul:not([class]) li,
 .hb-descriptor a,
-.hb-descriptor a.is-active, 
+.hb-descriptor a.is-active,
 .hb-descriptor a:not([class]),
 .hb-descriptor p,
 .hb-descriptor p:not([class]):last-of-type {
@@ -86,12 +88,13 @@ a.hb-pill {
 .hb-card__title h6 .hb-blockquote,
 .hb-blockquote ul:not([class]) li,
 .hb-blockquote a,
-.hb-blockquote a.is-active, 
+.hb-blockquote a.is-active,
 .hb-blockquote a:not([class]),
 .hb-blockquote p,
 .hb-blockquote p:not([class]):last-of-type {
   // remove content set in the base default styles set on the blockquote tag
   @include hb-text-reset;
+
   &::after,
   &::before {
     content: '';
@@ -110,7 +113,6 @@ a.hb-pill {
   h4,
   h5,
   h6 {
-    //@include hb-text-reset;
     @include hb-heading-1;
     margin: 0;
   }
@@ -120,7 +122,7 @@ a.hb-pill {
       border-bottom: solid hb-calculate-rems(4px);
       @include hb-pairing-color('border-color', 'secondary');
       content: '';
-      display: inline-block;
+      display: block;
       vertical-align: middle;
       width: hb-calculate-rems(55px);
       margin-right: hb-calculate-rems(10px);

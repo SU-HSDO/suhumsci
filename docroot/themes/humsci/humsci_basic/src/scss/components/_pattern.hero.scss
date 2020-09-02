@@ -30,34 +30,18 @@
 
 .hb-hero-overlay {
   position: relative;
-  min-height: 60vh;
+  min-height: 45vh;
+  display: flex;
+  align-items: center;
+
+  @include grid-media-min('md') {
+    min-height: 60vh;
+  }
 
   .hs-full-width & {
     // Special negative margin for the hero
     // to get rid of the vertical padding on all basic pages
     margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
-  }
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include grid-media-min('sm') {
-      min-height: 55vh;
-    }
-  }
-
-  .hb-three-column--one-sidebar & {
-    @include hb-traditional {
-      @include grid-media-min('md') {
-        min-height: 65vh;
-      }
-    }
-  }
-
-  .hb-three-column--no-sidebar & {
-    @include hb-traditional {
-      @include grid-media-min('md') {
-        min-height: 75vh;
-      }
-    }
   }
 
   &::before {
@@ -71,61 +55,58 @@
     z-index: $hb-z-index-hero-fallback;
   }
 
-  &__image-wrapper,
   &__text {
     z-index: $hb-z-index-hero1-overlay;
   }
 
   &__image-wrapper {
+    position: absolute;
+    border: 2px solid oragne;
+    height: 100%;
+    object-fit: cover;
+
     // For all themes, if inside an img wrapper,
     // no margin should be added
     .field-hs-hero-image {
+      height: inherit;
+
       .hs-full-width & {
         margin: 0;
       }
     }
 
+    // In order to have the hero image cover the entire size of the hero overlay,
+    // the height of the hero must be inherited by all elements which follow down to the image.
+    article,
+    picture,
+    .field-media-image {
+      height: inherit;
+    }
+
     img {
-      height: 100%;
+      height: inherit;
       width: 100%;
       object-fit: cover;
-      min-height: 60vh;
-
-      @include hb-themes(('colorful', 'airy')) {
-        @include grid-media-min('sm') {
-          min-height: 55vh;
-        }
-      }
-
-      .hb-three-column--one-sidebar & {
-        @include hb-traditional {
-          @include grid-media-min('md') {
-            min-height: 65vh;
-          }
-        }
-      }
-
-      .hb-three-column--no-sidebar & {
-        @include hb-traditional {
-          @include grid-media-min('md') {
-            min-height: 75vh;
-          }
-        }
-      }
     }
   }
 
   &__text {
     display: block;
     @include hb-global-color('color', 'white');
-    position: absolute;
-    bottom: 50%;
-    transform: translateX(-50%) translateY(50%);
-    left: 50%;
+    position: relative;
+    padding: hb-calculate-rems(54px) 0;
     @include hb-page-width;
 
     @include hb-traditional {
       text-align: center;
+    }
+
+    @include grid-media-min('sm') {
+      padding: hb-calculate-rems(60px) 0;
+    }
+
+    @include grid-media-min('lg') {
+      padding: hb-calculate-rems(66px) 0;
     }
 
     h2 {

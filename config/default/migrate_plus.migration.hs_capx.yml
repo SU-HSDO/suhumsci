@@ -97,6 +97,10 @@ source:
       name: education
       label: Education
       selector: education
+    -
+      name: department
+      label: Departement
+      selector: 'academicOffices/0/department'
   ids:
     sunetid:
       type: string
@@ -212,6 +216,18 @@ process:
         value: label/text
     -
       plugin: flatten
+  field_hs_person_department:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: department
+    -
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: hs_person_department
+      value_key: name
+      ignore_case: true
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
@@ -234,5 +250,6 @@ destination:
     - field_hs_person_image/target_id
     - field_hs_person_links
     - field_hs_person_education
+    - field_hs_person_department
 migration_dependencies:
   required: {  }

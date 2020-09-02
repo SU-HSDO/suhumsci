@@ -50,7 +50,7 @@ Feature: Install State Basic Page
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/node/add/hs_basic_page"
     And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
-    And I should see 10 "#edit-field-hs-page-components-add-more input" elements
+    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
     Then I fill in "Title" with "Demo Basic Page"
     And I press "Add Postcard"
     And I should see "Card Title"
@@ -70,7 +70,6 @@ Feature: Install State Basic Page
     And I should see the heading "Nam at tortor in tellus" in the "content" region
     And I should see "Maecenas vestibulum mollis diam."
     And I should see the link "Praesent egestas tristique nib"
-
 
   @api @safe
   Scenario: Test basic page with Accordion paragraph creation
@@ -155,3 +154,45 @@ Feature: Install State Basic Page
     And I should be on "/demo-basic-page"
     And I should see the heading "Demo Basic Page" in the "content" region
     And I should see "Vivamus in erat ut urna cursus vestibulum"
+
+  @api @safe
+  Scenario: Test basic page with Row paragraph creation
+    Given I am logged in as a user with the "Contributor" role
+    Then I am on "/node/add/hs_basic_page"
+    And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
+    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
+    Then I fill in "Title" with "Demo Basic Page"
+    And I press "Add Row"
+    Then I should see "Paragraph Style"
+    Then I press "Add Text Area"
+    And I fill in "Text Area" with "Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem."
+    Then I press "Save"
+    And I should be on "/demo-basic-page"
+    And I should see the heading "Demo Basic Page" in the "content" region
+    And I should see "Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem."
+
+  @api @safe @javascript
+  Scenario: Test basic page with Spotlight paragraph creation in Hero Image Area
+    Given I am logged in as a user with the "Contributor" role
+    Then I am on "/node/add/hs_basic_page"
+    And I should see 1 "#edit-field-hs-page-hero-wrapper" elements
+    And I should see 9 "#edit-field-hs-page-components-add-more input" elements
+    Then I fill in "Title" with "Demo Basic Page"
+    And I press "Add Spotlight"
+    Then I should see "Title"
+    And I should see "Image"
+    And I press "Add media"
+    Then I wait for AJAX to finish
+    Then I drop "images/logo.jpg" file into dropzone
+    And I press "Upload and Continue"
+    Then I wait for AJAX to finish
+    And I wait 2 seconds
+    And I click the ".media-library-widget-modal .ui-dialog-buttonpane .button" element
+    And I wait for AJAX to finish
+    And I wait 2 seconds
+    Then I click the ".ui-dialog-buttonpane .media-library-select.button" element
+    And I wait for AJAX to finish
+    Then I press "Save"
+    And I should be on "/demo-basic-page"
+    And I should see the heading "Demo Basic Page" in the "content" region
+    Then I should see 1 "img" elements in the "content" region

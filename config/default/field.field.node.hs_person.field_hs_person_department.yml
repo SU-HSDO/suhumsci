@@ -1,0 +1,29 @@
+uuid: 10abbc70-8afd-4ab0-ba94-4c21d92e0cdc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_person_department
+    - node.type.hs_person
+    - taxonomy.vocabulary.hs_person_department
+id: node.hs_person.field_hs_person_department
+field_name: field_hs_person_department
+entity_type: node
+bundle: hs_person
+label: Department
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_person_department: hs_person_department
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

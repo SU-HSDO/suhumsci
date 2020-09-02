@@ -120,7 +120,6 @@ class EventsImporterForm extends ConfigFormBase {
         '#title' => $this->t("Event Group Option"),
         '#empty_option' => $this->t("- Select Option -"),
         '#default_value' => $defaults[$delta]['type'] ?? '',
-        '#required' => TRUE,
         '#options' => [
           'organization' => $this->t("Organization"),
           'category' => $this->t("Category"),

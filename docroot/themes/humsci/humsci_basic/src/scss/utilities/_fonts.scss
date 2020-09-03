@@ -51,6 +51,7 @@
 .views-row .hb-highlighted-label,
 .views-row .hb-highlighted-label a {
   @include hb-text-reset;
+  @include hb-field-label;
   @include hb-field-label--featured;
 }
 
@@ -83,22 +84,7 @@ a.hb-pill {
   @include hb-pill;
 }
 
-.hb-blockquote,
-.hb-card__title h1 .hb-blockquote,
-.hb-card__title h2 .hb-blockquote,
-.hb-card__title h3 .hb-blockquote,
-.hb-card__title h4 .hb-blockquote,
-.hb-card__title h5 .hb-blockquote,
-.hb-card__title h6 .hb-blockquote,
-.hb-blockquote ul:not([class]) li,
-.hb-blockquote a,
-.hb-blockquote a.is-active,
-.hb-blockquote a:not([class]),
-.hb-blockquote p,
-.hb-blockquote p:not([class]):last-of-type {
-  // remove content set in the base default styles set on the blockquote tag
-  @include hb-text-reset;
-
+.hb-blockquote {
   &::after,
   &::before {
     content: '';
@@ -107,6 +93,20 @@ a.hb-pill {
   > p,
   > div {
     @include hb-blockquote;
+  }
+}
+
+// hb-blockquote styling applied to views fields
+.views-row .hb-blockquote,
+.views-row .hb-blockquote a {
+  @include hb-text-reset;
+  @include hb-blockquote;
+
+  > p::before,
+  > p::after,
+  > div::before,
+  > div::after {
+    content: none;
   }
 }
 

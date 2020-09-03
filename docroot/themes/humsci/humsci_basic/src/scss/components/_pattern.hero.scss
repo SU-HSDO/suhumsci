@@ -30,12 +30,12 @@
 
 .hb-hero-overlay {
   position: relative;
-  min-height: 45vh;
+  min-height: 39rem;
   display: flex;
   align-items: center;
 
   @include grid-media-min('md') {
-    min-height: 60vh;
+    min-height: 49rem;
   }
 
   .hs-full-width & {
@@ -55,15 +55,16 @@
     z-index: $hb-z-index-hero-fallback;
   }
 
-  &__text {
-    z-index: $hb-z-index-hero1-overlay;
-  }
-
   &__image-wrapper {
     position: absolute;
     border: 2px solid oragne;
     height: 100%;
     object-fit: cover;
+    // z-index: $hb-z-index-hero1-overlay;
+
+    @include hb-themes(('colorful', 'airy')) {
+      z-index: $hb-z-index-hero1-overlay;
+    }
 
     // For all themes, if inside an img wrapper,
     // no margin should be added
@@ -96,6 +97,7 @@
     position: relative;
     padding: hb-calculate-rems(54px) 0;
     @include hb-page-width;
+    z-index: $hb-z-index-hero1-overlay;
 
     @include hb-traditional {
       text-align: center;

@@ -1,8 +1,22 @@
-.hb-single-category,
-.views-row .hb-single-category {
+.hb-single-category {
   &.label-hidden {
     @include hb-category-item;
   }
+
+  &.entity-reference {
+    div:not([class]) {
+      @include hb-category-item;
+    }
+  }
+
+  a {
+    @include hb-category-link;
+  }
+}
+
+// hb-single-category styling applied to Views fields and labels
+.views-row .hb-single-category {
+  @include hb-category-item;
 
   &.entity-reference {
     div:not([class]) {

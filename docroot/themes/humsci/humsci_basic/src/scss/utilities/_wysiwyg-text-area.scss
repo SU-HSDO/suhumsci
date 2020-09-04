@@ -135,18 +135,8 @@
   }
 
   &-credits,
-  .hb-card__title h1 &-credits,
-  .hb-card__title h2 &-credits,
-  .hb-card__title h3 &-credits,
-  .hb-card__title h4 &-credits,
-  .hb-card__title h5 &-credits,
-  .hb-card__title h6 &-credits,
-  &-credits ul:not([class]) li,
-  &-credits a,
-  &-credits a.is-active,
-  &-credits a:not([class]),
-  &-credits p,
-  &-credits p:not([class]):last-of-type {
+  .views-row &-credits,
+  .views-row &-credits a {
     @include hb-text-reset;
     @include hb-caption($italic: true);
   }
@@ -195,18 +185,8 @@
   }
 
   &-caption,
-  .hb-card__title h1 &-caption,
-  .hb-card__title h2 &-caption,
-  .hb-card__title h3 &-caption,
-  .hb-card__title h4 &-caption,
-  .hb-card__title h5 &-caption,
-  .hb-card__title h6 &-caption,
-  &-caption ul:not([class]) li,
-  &-caption a,
-  &-caption a.is-active,
-  &-caption a:not([class]),
-  &-caption p,
-  &-caption p:not([class]):last-of-type {
+  .views-row &-caption,
+  .views-row &-caption a {
     @include hb-text-reset;
     font-size: hb-calculate-rems(14px);
     @include hb-global-color('color', 'gray-dark');
@@ -237,22 +217,18 @@
     }
   }
 }
-// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 
+// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 .emphasized-text,
-.hs-emphasized-text,
-.hb-card__title h1 .hs-emphasized-text,
-.hb-card__title h2 .hs-emphasized-text,
-.hb-card__title h3 .hs-emphasized-text,
-.hb-card__title h4 .hs-emphasized-text,
-.hb-card__title h5 .hs-emphasized-text,
-.hb-card__title h6 .hs-emphasized-text,
-.hs-emphasized-text ul:not([class]) li,
-.hs-emphasized-text a,
-.hs-emphasized-text a.is-active,
-.hs-emphasized-text a:not([class]),
-.hs-emphasized-text p,
-.hs-emphasized-text p:not([class]):last-of-type {
+.hs-emphasized-text {
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+// Views style application for hs-emphasized-text
+.views-row .hs-emphasized-text,
+.views-row .hs-emphasized-text a {
   @include hb-text-reset;
   font-style: italic;
   font-weight: inherit;

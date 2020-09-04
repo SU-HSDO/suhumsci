@@ -112,17 +112,19 @@
       @supports (display: grid) {
         display: grid;
       }
+
+      .hs-paragraph-style--well &,
+      .hs-paragraph-style--well-full-width & {
+        margin: hb-spacing-width() 0;
+      }
     }
 
     .paragraph-item {
       margin-bottom: hb-spacing-width() !important;
 
-      @include grid-media-min('sm') {
-        margin-bottom: 0 !important;
-
-        .hs-paragraph-style--well &,
-        .hs-paragraph-style--well-full-width & {
-          margin-bottom: hb-spacing-width() !important;
+      @supports (display: grid) {
+        @include grid-media-min('sm') {
+          margin: 0 !important;
         }
       }
     }

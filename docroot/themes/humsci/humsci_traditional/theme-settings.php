@@ -56,15 +56,15 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     '#title' => t('Font Family Settings'),
   ];
 
-  $form['options_settings']['humsci_traditional_font_family']['heading_font_family'] = [
+  $form['options_settings']['humsci_traditional_font_family']['humsci_font_family'] = [
     '#type' => 'select',
     '#title' => t('Font Family Selection'),
     '#options' => [
       'serif' => t('Serif'),
       'sans-serif' => t('Sans-Serif')
     ],
-    '#default_value' => theme_get_setting('heading_font_family'),
-    '#description' => t('The default font family selection is a Serif font family.'),
+    '#default_value' => theme_get_setting('humsci_font_family'),
+    '#description' => t('The default font family selection is Serif.'),
   ];
   
 }

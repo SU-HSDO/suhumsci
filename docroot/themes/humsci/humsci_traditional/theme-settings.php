@@ -49,4 +49,22 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     ],
     '#default_value' => theme_get_setting('local_footer_variant_classname'),
   ];
+
+  // Header Font Family:
+  $form['options_settings']['humsci_traditional_font_family'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Font Family Settings'),
+  ];
+
+  $form['options_settings']['humsci_traditional_font_family']['heading_font_family'] = [
+    '#type' => 'select',
+    '#title' => t('Heading Font Family Selection'),
+    '#options' => [
+      'serif' => t('Serif'),
+      'sans-serif' => t('Sans-Serif')
+    ],
+    '#default_value' => theme_get_setting('heading_font_family'),
+    '#description' => t('The default font family selection is a Serif font family.'),
+  ];
+  
 }

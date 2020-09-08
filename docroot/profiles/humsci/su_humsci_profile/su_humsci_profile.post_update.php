@@ -45,9 +45,17 @@ function su_humsci_profile_removed_post_updates() {
 function su_humsci_profile_post_update_8216() {
 
   $view_config_names = \Drupal::configFactory()->listAll('views.view');
+  $display_config_names = \Drupal::configFactory()
+    ->listAll('core.entity_view_display.node.hs_event.');
   $views = [];
+  $displays = [];
   foreach ($view_config_names as $config_name) {
     $views[$config_name] = \Drupal::configFactory()
+      ->getEditable($config_name)
+      ->getRawData();
+  };
+  foreach ($display_config_names as $config_name) {
+    $displays[$config_name] = \Drupal::configFactory()
       ->getEditable($config_name)
       ->getRawData();
   };
@@ -101,6 +109,7 @@ function su_humsci_profile_post_update_8216() {
   }
 
   array_walk($views, '_suhumsci_profile_post_update_fix_view');
+  array_walk($displays, '_suhumsci_profile_post_update_fix_node_display');
 }
 
 /**
@@ -161,4 +170,62 @@ function _suhumsci_profile_post_update_fix_view(array $old_view) {
     ->getEditable('views.view.' . $old_view['id'])
     ->setData($fixed_data)
     ->save();
+}
+
+/**
+ * Adjust the display config array to set up the new smart date field.
+ *
+ * @param array $display
+ *   Raw config data.
+ */
+function _suhumsci_profile_post_update_fix_node_display(array $display) {
+  $display_changed = FALSE;
+
+  if (isset($display['content']['field_hs_event_date'])) {
+    $display_changed = TRUE;
+    switch ($display['content']['field_hs_event_date']['type']) {
+      case 'datetime_hs':
+        $display['content']['field_hs_event_date'] = [
+          'type' => 'smartdatetime_hs',
+          'weight' => $display['content']['field_hs_event_date']['weight'],
+          'region' => $display['content']['field_hs_event_date']['region'],
+          'label' => $display['content']['field_hs_event_date']['label'],
+          'settings' => [
+            'display' => $display['content']['field_hs_event_date']['settings']['display'] == 'start_date' ? 'start' : 'end',
+            'date_format' => $display['content']['field_hs_event_date']['settings']['date_format'],
+            'time_format' => '',
+          ],
+        ];
+        break;
+    }
+  }
+
+  if (!empty($display['third_party_settings']['layout_builder']['sections'])) {
+    foreach ($display['third_party_settings']['layout_builder']['sections'] as &$section) {
+      if (!empty($section['components'])) {
+        foreach ($section['components'] as &$component) {
+          if ($component['configuration']['id'] == 'field_block:node:hs_event:field_hs_event_date') {
+            $display_changed = TRUE;
+            switch ($component['configuration']['formatter']['type']) {
+              case 'datetime_hs':
+                $component['configuration']['formatter']['type'] = 'smartdatetime_hs';
+                $component['configuration']['formatter']['settings'] = [
+                  'display' => $component['configuration']['formatter']['settings']['display'] == 'start_date' ? 'start' : 'end',
+                  'date_format' => $component['configuration']['formatter']['settings']['date_format'],
+                  'time_format' => '',
+                ];
+                break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if ($display_changed) {
+    \Drupal::configFactory()
+      ->getEditable('core.entity_view_display.node.hs_event.' . $display['mode'])
+      ->setData($display)
+      ->save();
+  }
 }

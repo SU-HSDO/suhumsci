@@ -4,8 +4,6 @@ namespace Drupal\hs_field_helpers\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeCustomFormatter;
-use Drupal\datetime_range\DateTimeRangeTrait;
 use Drupal\smart_date\Plugin\Field\FieldFormatter\SmartDateCustomFormatter;
 
 /**

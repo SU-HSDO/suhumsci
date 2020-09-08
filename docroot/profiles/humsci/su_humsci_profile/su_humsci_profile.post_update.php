@@ -5,15 +5,8 @@
  * su_humsci_profile.post_update.php
  */
 
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Serialization\Yaml;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\block\Entity\Block;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\filter\Entity\FilterFormat;
-use Drupal\user\Entity\Role;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Implements hook_removed_post_updates().

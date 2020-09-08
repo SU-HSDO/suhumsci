@@ -46,9 +46,9 @@ class SmartDateTime extends SmartDateCustomFormatter {
         continue;
       }
       $element = [
-        'date' => $element['end']['date']??$element['start']['date'],
-        'join' => $element['end']['join']??$element['start']['join'],
-        'time' => $element['end']['time']??$element['start']['time'],
+        'date' => $element['end']['date'] ?? $element['start']['date'],
+        'join' => $element['end']['join'] ?? $element['start']['join'],
+        'time' => $element['end']['time'] ?? $element['start']['time'],
       ];
     }
     return $elements;

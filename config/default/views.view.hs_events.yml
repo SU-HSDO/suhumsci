@@ -266,7 +266,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -313,10 +313,6 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -327,11 +323,13 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Time'
@@ -378,10 +376,6 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'g:i A'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -392,7 +386,9 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
+          date_format: custom
+          custom_date_format: 'g:i A'
         field_hs_event_location:
           id: field_hs_event_location
           table: node__field_hs_event_location

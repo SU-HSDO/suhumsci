@@ -255,8 +255,7 @@ class EventsImporterForm extends ConfigFormBase {
       $urls[] = $this->getFullUrl($url_settings);
     }
     asort($urls);
-    $urls = array_values(array_unique($urls));
-
+    $urls = array_values(array_unique(array_filter($urls)));
     $form_state->setValue('urls', $urls);
   }
 
@@ -279,13 +278,14 @@ class EventsImporterForm extends ConfigFormBase {
     if ($type == 'featured' || $type == 'today') {
       return static::STANFORD_EVENTS_IMPORTER_XML . '?' . $type;
     }
-
-    $url = static::STANFORD_EVENTS_IMPORTER_XML . '?' . $type . '=' . $val;
-    // Organizations have extra options.
-    if ($type == 'organization' && $extra) {
-      $url .= '&' . $extra;
+    if ($type && $val) {
+      $url = static::STANFORD_EVENTS_IMPORTER_XML . '?' . $type . '=' . $val;
+      // Organizations have extra options.
+      if ($type == 'organization' && $extra) {
+        $url .= '&' . $extra;
+      }
+      return $url;
     }
-    return $url;
   }
 
   /**

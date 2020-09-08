@@ -14,6 +14,21 @@
   }
 }
 
+// hb-single-category styling applied to Views fields and labels
+.views-row .hb-single-category {
+  @include hb-category-item;
+
+  &.entity-reference {
+    div:not([class]) {
+      @include hb-category-item;
+    }
+  }
+
+  a {
+    @include hb-category-link;
+  }
+}
+
 .hb-categories {
   &.entity-reference {
     div div:not([class]) {

@@ -134,7 +134,10 @@
     @include hb-caption;
   }
 
-  &-credits {
+  &-credits,
+  .views-row &-credits,
+  .views-row &-credits a {
+    @include hb-text-reset;
     @include hb-caption($italic: true);
   }
 
@@ -181,6 +184,18 @@
     }
   }
 
+  &-caption,
+  .views-row &-caption,
+  .views-row &-caption a {
+    @include hb-text-reset;
+    font-size: hb-calculate-rems(14px);
+    @include hb-global-color('color', 'gray-dark');
+
+    .hb-local-footer--dark & {
+      @include hb-global-color('color', 'white');
+    }
+  }
+
   &-short-line-length {
     max-width: hb-calculate-rems(700px);
   }
@@ -202,13 +217,24 @@
     }
   }
 }
-// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 
-.emphasized-text {
+// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+.emphasized-text,
+.hs-emphasized-text {
   font-style: italic;
   font-weight: inherit;
   font-size: inherit;
 }
+
+// Views style application for hs-emphasized-text
+.views-row .hs-emphasized-text,
+.views-row .hs-emphasized-text a {
+  @include hb-text-reset;
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
 // media
 
 .align {

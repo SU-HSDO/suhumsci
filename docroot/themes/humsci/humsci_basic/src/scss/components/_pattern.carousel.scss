@@ -11,6 +11,8 @@
   }
 
   .hb-hero-overlay {
+    display: block;
+
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
       padding: hb-spacing-width() 0 hb-spacing-width() 8%;
@@ -53,6 +55,7 @@
       &::after {
         content: '';
         display: block;
+        height: 100%;
         z-index: $hb-z-index-hero1-overlay;
         @include hb-pairing-color('background-color', 'secondary');
 
@@ -122,6 +125,7 @@
         padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
         width: auto !important;
+        height: 100%;
         margin: 0 0 !important;
         transform: none;
         top: 0;
@@ -182,6 +186,7 @@
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
         bottom: 15%;
         padding: 8% 0;
+        margin: 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         text-align: left;
         left: hb-spacing-width('md');
         transform: translateX(0) translateY(0);

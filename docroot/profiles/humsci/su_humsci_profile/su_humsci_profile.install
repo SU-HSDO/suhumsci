@@ -58,3 +58,18 @@ function su_humsci_profile_update_8202() {
   ]);
   drupal_flush_all_caches();
 }
+
+/**
+ * Disable preview mode on all content types.
+ */
+function su_humsci_profile_update_8203() {
+  $node_types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $config_factory = \Drupal::configFactory();
+  foreach (array_keys($node_types) as $type) {
+    $config_factory->getEditable("node.type.$type")
+      ->set('preview_mode', 0)
+      ->save();
+  }
+}

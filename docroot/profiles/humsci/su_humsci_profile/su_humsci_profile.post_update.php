@@ -183,6 +183,7 @@ function _suhumsci_profile_post_update_fix_node_display(array $display) {
           'weight' => $display['content']['field_hs_event_date']['weight'],
           'region' => $display['content']['field_hs_event_date']['region'],
           'label' => $display['content']['field_hs_event_date']['label'],
+          'third_party_settings' => [],
           'settings' => [
             'display' => $display['content']['field_hs_event_date']['settings']['display'] == 'start_date' ? 'start' : 'end',
             'date_format' => $display['content']['field_hs_event_date']['settings']['date_format'],

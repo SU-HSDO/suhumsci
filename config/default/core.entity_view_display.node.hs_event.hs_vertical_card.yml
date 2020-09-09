@@ -39,6 +39,7 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
+          variant_field: body
     regions:
       image:
         - field_hs_event_image
@@ -53,6 +54,15 @@ third_party_settings:
       title:
         - node_title
     fields:
+      node_title:
+        plugin_id: node_title
+        weight: 5
+        label: hidden
+        formatter: default
+        settings:
+          link: true
+          wrapper: span
+          class: ''
       'dynamic_block_field:node-hs_event_day':
         plugin_id: 'dynamic_block_field:node-hs_event_day'
         weight: 2
@@ -63,15 +73,6 @@ third_party_settings:
         weight: 3
         label: hidden
         formatter: default
-      node_title:
-        plugin_id: node_title
-        weight: 5
-        label: hidden
-        formatter: default
-        settings:
-          link: true
-          wrapper: span
-          class: ''
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
 id: node.hs_event.hs_vertical_card
@@ -80,15 +81,27 @@ bundle: hs_event
 mode: hs_vertical_card
 content:
   field_hs_event_date:
-    type: datetime_hs
+    type: smartdatetime_hs
     weight: 1
     region: month
     label: hidden
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     settings:
-      timezone_override: ''
+      display: start
       date_format: M
-      display: start_date
-    third_party_settings: {  }
+      custom_date_format: ''
+      time_format: ''
+      time_hour_format: ''
+      allday_label: 'All day'
+      date_first: '1'
+      ampm_reduce: '1'
+      separator: ' - '
+      join: ', '
+      timezone: ''
   field_hs_event_image:
     type: media_responsive_image_formatter
     weight: 0

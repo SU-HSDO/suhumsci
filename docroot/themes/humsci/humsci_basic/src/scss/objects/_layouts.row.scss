@@ -60,16 +60,12 @@
 // See docroot/modules/humsci/hs_paragraph_types/modules/hs_row/modules/hs_row_display/scss/hs_row_display.scss
 // for fallback styles.
 .field-hs-row-components {
-  // When there is more than one item in a row it uses flexbox however when there
-  // is only one item in a row and we use flexbox it causes overflow issues in IE 11.
-  &.counted-items-1 {
-    display: block;
-  }
-
+  // When there is more than one item in a row it uses grid (and flexbox as a fallback)
+  // however when there is only one item in a row and we use flexbox it causes overflow issues in IE 11.
   @supports (display: grid) {
     @include grid-media-min('sm') {
       display: grid;
-      column-gap: hb-spacing-width();
+      gap: hb-spacing-width();
     }
 
     @for $i from 1 through $hb-counted-items-count {
@@ -96,6 +92,39 @@
       &.counted-items-#{$i} {
         .paragraph-item {
           @include hb-column($i);
+        }
+      }
+    }
+  }
+
+  &.counted-items-1 {
+    display: block;
+  }
+
+  &.counted-items-2,
+  &.counted-items-3,
+  &.counted-items-4 {
+    display: block;
+
+    @include grid-media-min('sm') {
+      display: flex;
+
+      @supports (display: grid) {
+        display: grid;
+      }
+
+      .hs-paragraph-style--well &,
+      .hs-paragraph-style--well-full-width & {
+        margin: hb-spacing-width() 0;
+      }
+    }
+
+    .paragraph-item {
+      margin-bottom: hb-spacing-width() !important;
+
+      @supports (display: grid) {
+        @include grid-media-min('sm') {
+          margin: 0 !important;
         }
       }
     }

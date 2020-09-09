@@ -15,8 +15,13 @@
 
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
-      padding: hb-spacing-width() 0 hb-spacing-width() 8%;
+      padding: hb-calculate-rems(40px) 0 hb-spacing-width() 8%;
       min-height: auto;
+
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        padding-top: 0;
+      }
 
       @include grid-media-min('md') {
         padding: 0;
@@ -40,9 +45,11 @@
       &::before {
         @include hb-global-color('background-color', 'gray-light');
         z-index: $hb-z-index-hero1-background;
+        width: 75%;
 
         @include grid-media-min('md') {
           position: unset;
+          width: unset;
           padding: hb-spacing-width() 0 hb-spacing-width() 10%;
           grid-column-start: 1;
           grid-column-end: 5;
@@ -90,7 +97,7 @@
           bottom: 0;
           left: -8.75%;
           top: initial;
-          @include psuedo-background-box('secondary', 50%, 8.75%);
+          @include psuedo-background-box('secondary', 28%, 8.75%);
           opacity: 1;
 
           @include grid-media-min('md') {

@@ -61,10 +61,8 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     '#title' => t('Font Family Selection'),
     '#options' => [
       'serif' => t('Serif'),
-      'sans-serif' => t('Sans-Serif')
+      'sans-serif' => t('Sans-Serif'),
     ],
     '#default_value' => theme_get_setting('humsci_font_family'),
-    '#description' => t('The default font family selection is Serif.'),
   ];
-  
 }

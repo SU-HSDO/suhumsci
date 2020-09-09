@@ -1,3 +1,8 @@
+.hb-text-reset {
+  // Reset text styles to default using this class
+  @include hb-text-reset;
+}
+
 .hb-heading-1 {
   @include hb-heading-1;
 }
@@ -42,11 +47,26 @@
   @include hb-field-label--featured;
 }
 
+// hb-highlighted-label styling applied to Views fields with reset
+.views-row .hb-highlighted-label,
+.views-row .hb-highlighted-label a {
+  @include hb-text-reset;
+  @include hb-field-label;
+  @include hb-field-label--featured;
+}
+
 .hb-subtitle {
   @include hb-subtitle;
 }
 
 .hb-descriptor {
+  @include hb-descriptor;
+}
+
+// hb-descriptor styling applied to Views fields with reset
+.views-row .hb-descriptor,
+.views-row .hb-descriptor a {
+  @include hb-text-reset;
   @include hb-descriptor;
 }
 
@@ -59,7 +79,6 @@ a.hb-pill {
 }
 
 .hb-blockquote {
-  // remove content set in the base default styles set on the blockquote tag
   &::after,
   &::before {
     content: '';
@@ -68,6 +87,20 @@ a.hb-pill {
   > p,
   > div {
     @include hb-blockquote;
+  }
+}
+
+// hb-blockquote styling applied to Views fields with reset
+.views-row .hb-blockquote,
+.views-row .hb-blockquote a {
+  @include hb-text-reset;
+  @include hb-blockquote;
+
+  > p::before,
+  > p::after,
+  > div::before,
+  > div::after {
+    content: none;
   }
 }
 
@@ -87,14 +120,13 @@ a.hb-pill {
       border-bottom: solid hb-calculate-rems(4px);
       @include hb-pairing-color('border-color', 'secondary');
       content: '';
-      display: inline-block;
+      display: block;
       vertical-align: middle;
       width: hb-calculate-rems(55px);
       margin-right: hb-calculate-rems(10px);
     }
   }
 }
-
 
 // Apply serif font to Traditional Theme
 .hb-serif {

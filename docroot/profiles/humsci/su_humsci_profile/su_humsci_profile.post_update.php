@@ -105,10 +105,11 @@ function su_humsci_profile_post_update_8216() {
     }
   }
 
-  $form_display = EntityFormDisplay::load('node.hs_event.default');
-  $form_display->setComponent('field_hs_event_date', ['weight' => $form_field['weight']]);
   array_walk($views, '_suhumsci_profile_post_update_fix_view');
   array_walk($displays, '_suhumsci_profile_post_update_fix_node_display');
+  $form_display = EntityFormDisplay::load('node.hs_event.default');
+  $form_display->setComponent('field_hs_event_date', ['weight' => $form_field['weight']])
+    ->save();
 }
 
 /**

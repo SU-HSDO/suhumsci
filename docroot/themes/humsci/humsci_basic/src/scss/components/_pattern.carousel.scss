@@ -68,6 +68,16 @@
       }
     }
 
+    @include hb-traditional { // hb-hero-overly
+      margin-top: 0;
+      display: flex;
+      min-height: 32rem;
+
+      @include grid-media-min('md') {
+        min-height: 42rem;
+      }
+    }
+
     &__image-wrapper {
       @include hb-themes(('colorful', 'airy')) {
         position: relative;
@@ -184,16 +194,12 @@
 
       @include hb-traditional {
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
-        bottom: 15%;
-        padding: 8% 0;
-        margin: 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         text-align: left;
         left: hb-spacing-width('md');
         transform: translateX(0) translateY(0);
-
-        @include grid-media-min('sm') {
-          bottom: 25%;
-        }
+        position: relative;
+        margin: hb-spacing-width() 0 !important;
+        align-self: unset;
 
         @include grid-media-min('md') {
           padding: 5rem 0 5rem;
@@ -210,7 +216,8 @@
         }
 
         @include grid-media-min('xl') {
-          width: 37% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+          width: 48% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+          margin: 5.2rem 0 !important;
         }
 
         @include grid-media-min('2xl') {
@@ -365,39 +372,55 @@
       }
 
       @include hb-traditional {
-        bottom: 15%;
-        margin: 0 0 hb-calculate-rems(18px);
-        right: calc(50% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
-
+        // slick dots do not display until the medium breakpoint
+        // default positioning styles are applied to the full width hero
+        // main content styles are applied by targeting the sidebar classes
+        // even though the sidebars do not display until the next breakpoint,
+        // the classes exist for styling
         @include grid-media-min('md') {
-          right: calc(50% + #{hb-calculate-rems(95px)}); // move it past the slick-next arrow
+          right: calc(50% + #{hb-calculate-rems(77px)}); // move it past the slick-next arrow
+          bottom: hb-calculate-rems(53px);
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(23px);
+          }
         }
 
+        // the sidebar(s) appear at this breakpoint
         @include grid-media-min('lg') {
-          right: calc(57% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
+          right: calc(57% + #{hb-calculate-rems(80px)});
+
+          .hb-three-column--one-sidebar & {
+            right: calc(57% + #{hb-calculate-rems(84px)});
+          }
 
           .hb-three-column--two-sidebar & {
-            right: hb-calculate-rems(135px); // move it past the slick arrows
+            right: hb-calculate-rems(130px);
           }
         }
 
         @include grid-media-min('xl') {
-          right: calc(63% + #{hb-calculate-rems(95px)}); // move it past the slick arrows
+          right: calc(63% - #{hb-calculate-rems(60px)});
+          bottom: hb-calculate-rems(77px);
+
+          .hb-three-column--one-sidebar & {
+            right: calc(57% + #{hb-calculate-rems(36px)});
+            bottom: hb-calculate-rems(48px);
+          }
+
+          .hb-three-column--two-sidebar & {
+            right: hb-calculate-rems(130px);
+            bottom: hb-calculate-rems(48px);
+          }
         }
 
         @include grid-media-min('2xl') {
-          right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(95px)}); // move it past the slick arrows
-        }
+          right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)});
 
-        .hs-full-width & {
-          bottom: calc(15% + #{hb-calculate-rems(15px)});
-        }
-
-        @include grid-media-min('sm') {
-          bottom: 27%;
-
-          .hs-full-width & {
-            bottom: calc(27% + #{hb-calculate-rems(15px)});
+          .hb-three-column--one-sidebar & {
+            right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)});
+            bottom: hb-calculate-rems(48px);
           }
         }
       }
@@ -420,7 +443,7 @@
         font-size: 0;
 
         &::before {
-          color: white;
+          @include hb-global-color('color', 'white');
           content: '';
           @include hb-icon-ellipse-border('gray-light');
           height: hb-calculate-rems(11px);
@@ -464,20 +487,10 @@
         }
 
         @include hb-traditional {
-          bottom: 16%;
+          bottom: 3rem;
 
           .hs-full-width & {
-            bottom: calc(16% + #{hb-calculate-rems(15px)});
-          }
-
-          @include grid-media-min('sm') {
-            bottom: 27%;
-
-            /* stylelint-disable max-nesting-depth */
-            .hs-full-width & {
-              bottom: calc(27% + #{hb-calculate-rems(15px)});
-            }
-            /* stylelint-enable max-nesting-depth */
+            bottom: 6rem;
           }
         }
 
@@ -521,31 +534,32 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(30px);
+          margin-bottom: hb-calculate-rems(25px);
           right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
 
           @include grid-media-min('md') {
             right: inherit;
-            left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick-next arrow
+            left: calc(53% - #{hb-calculate-rems(85px)});
           }
 
           @include grid-media-min('lg') {
-            left: calc(43% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+            left: calc(45% - #{hb-calculate-rems(85px)});
 
             /* stylelint-disable max-nesting-depth */
             .hb-three-column--two-sidebar & {
               left: inherit;
-              right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick arrows
+              right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)});
             }
             /* stylelint-enable max-nesting-depth */
           }
 
           @include grid-media-min('xl') {
-            left: calc(37% - #{hb-calculate-rems(85px)}); // move it past the slick arrows;
+            left: calc(50% - #{hb-calculate-rems(85px)});
+            margin-bottom: hb-calculate-rems(50px);
           }
 
           @include grid-media-min('2xl') {
-            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(85px)}); // move it past the slick arrows;;
+            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)});
           }
         }
       }
@@ -573,31 +587,32 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(20px);
+          margin-bottom: hb-calculate-rems(15px);
           right: hb-calculate-rems(50px);
 
           @include grid-media-min('md') {
             right: inherit;
-            left: calc(50% - #{hb-calculate-rems(40px)});
+            left: calc(53% - #{hb-calculate-rems(40px)});
           }
 
           @include grid-media-min('lg') {
-            left: calc(43% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+            left: calc(45% - #{hb-calculate-rems(40px)});
 
             /* stylelint-disable max-nesting-depth */
             .hb-three-column--two-sidebar & {
               left: inherit;
-              right: hb-calculate-rems(50px); // move it past the slick arrows
+              right: hb-calculate-rems(50px);
             }
             /* stylelint-enable max-nesting-depth */
           }
 
           @include grid-media-min('xl') {
-            left: calc(37% - #{hb-calculate-rems(40px)}); // move it past the slick arrows;
+            left: calc(50% - #{hb-calculate-rems(40px)});
+            margin-bottom: hb-calculate-rems(40px);
           }
 
           @include grid-media-min('2xl') {
-            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(40px)}); // move it past the slick arrows;;
+            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)});
           }
         }
       }

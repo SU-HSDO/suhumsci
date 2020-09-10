@@ -7,6 +7,7 @@
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
  * Implements hook_removed_post_updates().
@@ -36,6 +37,9 @@ function su_humsci_profile_removed_post_updates() {
  * Convert event date field to smart date field.
  */
 function su_humsci_profile_post_update_8216() {
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+  $form_display = EntityFormDisplay::load('node.hs_event.default');
+  $form_field = $form_display->getComponent('field_hs_event_date');
 
   $view_config_names = \Drupal::configFactory()->listAll('views.view');
   $display_config_names = \Drupal::configFactory()
@@ -63,8 +67,8 @@ function su_humsci_profile_post_update_8216() {
     $query = $db->select($table, 't')->fields('t')->execute();
 
     while ($row = $query->fetchAssoc()) {
-      $row['field_hs_event_date_value'] = strtotime($row['field_hs_event_date_value']);
-      $row['field_hs_event_date_end_value'] = strtotime($row['field_hs_event_date_end_value']);
+      $row['field_hs_event_date_value'] = ((int) (strtotime($row['field_hs_event_date_value']) / 100)) * 100;
+      $row['field_hs_event_date_end_value'] = ((int) (strtotime($row['field_hs_event_date_end_value']) / 100)) * 100;
       $table_data[$table][] = $row;
     }
     $db->truncate($table)->execute();
@@ -101,6 +105,8 @@ function su_humsci_profile_post_update_8216() {
     }
   }
 
+  $form_display = EntityFormDisplay::load('node.hs_event.default');
+  $form_display->setComponent('field_hs_event_date', ['weight' => $form_field['weight']]);
   array_walk($views, '_suhumsci_profile_post_update_fix_view');
   array_walk($displays, '_suhumsci_profile_post_update_fix_node_display');
 }

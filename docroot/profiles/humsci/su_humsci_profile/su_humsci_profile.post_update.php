@@ -63,8 +63,8 @@ function su_humsci_profile_post_update_8216() {
     $query = $db->select($table, 't')->fields('t')->execute();
 
     while ($row = $query->fetchAssoc()) {
-      $row['field_hs_event_date_value'] = strtotime($row['field_hs_event_date_value']) - 7 * 60 * 60;
-      $row['field_hs_event_date_end_value'] = strtotime($row['field_hs_event_date_end_value']) - 7 * 60 * 60;
+      $row['field_hs_event_date_value'] = strtotime($row['field_hs_event_date_value']);
+      $row['field_hs_event_date_end_value'] = strtotime($row['field_hs_event_date_end_value']);
       $table_data[$table][] = $row;
     }
     $db->truncate($table)->execute();

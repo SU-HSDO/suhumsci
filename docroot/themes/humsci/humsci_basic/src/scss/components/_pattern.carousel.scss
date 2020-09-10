@@ -458,6 +458,11 @@
         @include hb-themes(('airy', 'colorful')) {
           bottom: calc(#{hb-spacing-width()} * 2);
 
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(48px);
+          }
+
           @include grid-media-min('md') {
             bottom: hb-spacing-width();
 

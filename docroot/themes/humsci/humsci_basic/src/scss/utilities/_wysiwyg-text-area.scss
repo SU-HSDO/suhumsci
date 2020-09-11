@@ -104,7 +104,7 @@
     }
 
     figcaption {
-      @include hb-caption;
+      @include hb-caption($italic: true);
     }
   }
 
@@ -129,14 +129,15 @@
 }
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
-.hs-caption {
+.hs-caption,
+.views-row .hs-caption,
+.views-row .hs-caption a {
   @include hb-caption;
 }
 
 .hs-credits,
 .views-row .hs-credits,
 .views-row .hs-credits a {
-  @include hb-text-reset;
   @include hb-caption($italic: true);
 }
 
@@ -180,18 +181,6 @@
 
   li & {
     margin: hb-calculate-rems(-3px) 0 0;
-  }
-}
-
-.hs-caption,
-.views-row .hs-caption,
-.views-row .hs-caption a {
-  @include hb-text-reset;
-  font-size: hb-calculate-rems(14px);
-  @include hb-global-color('color', 'gray-dark');
-
-  .hb-local-footer--dark & {
-    @include hb-global-color('color', 'white');
   }
 }
 

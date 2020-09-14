@@ -14,11 +14,9 @@ dependencies:
     - node.type.hs_event
     - taxonomy.vocabulary.hs_event_type
   module:
-    - datetime
-    - datetime_range
     - entity_reference_exposed_filters
-    - hs_field_helpers
     - node
+    - smart_date
     - stanford_media
     - taxonomy
     - text
@@ -272,7 +270,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -319,10 +317,6 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -333,11 +327,13 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Time'
@@ -384,10 +380,6 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'g:i A'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -398,7 +390,9 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
+          date_format: custom
+          custom_date_format: 'g:i A'
         field_hs_event_location:
           id: field_hs_event_location
           table: node__field_hs_event_location
@@ -587,7 +581,6 @@ display:
         - user.permissions
       tags:
         - 'config:field.storage.node.body'
-        - 'config:field.storage.node.field_hs_event_date'
         - 'config:field.storage.node.field_hs_event_image'
         - 'config:field.storage.node.field_hs_event_location'
         - 'config:field.storage.node.field_hs_event_speaker'
@@ -766,7 +759,7 @@ display:
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Month'
@@ -811,12 +804,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: F
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -827,11 +819,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_2:
           id: field_hs_event_date_2
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Day'
@@ -876,12 +868,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: j
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: j
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -892,7 +883,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_series:
           id: field_hs_event_series
           table: node__field_hs_event_series
@@ -1024,7 +1015,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Event Date'
@@ -1069,12 +1060,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1085,7 +1075,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_3:
           id: field_hs_event_date_3
           table: node__field_hs_event_date
@@ -1135,11 +1125,18 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: daterange_custom
+          type: smartdate_custom
           settings:
-            timezone_override: ''
             date_format: 'g:i a'
+            custom_date_format: ''
+            timezone: ''
             separator: to
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1722,7 +1719,7 @@ display:
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Month'
@@ -1767,12 +1764,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: F
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1783,11 +1779,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_2:
           id: field_hs_event_date_2
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Day'
@@ -1832,12 +1828,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: j
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: j
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1848,7 +1843,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_image:
           id: field_hs_event_image
           table: node__field_hs_event_image
@@ -2044,7 +2039,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Event Date'
@@ -2089,12 +2084,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -2105,7 +2099,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_3:
           id: field_hs_event_date_3
           table: node__field_hs_event_date
@@ -2155,11 +2149,18 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: daterange_custom
+          type: smartdate_custom
           settings:
-            timezone_override: ''
             date_format: 'g:i a'
+            custom_date_format: ''
+            timezone: ''
             separator: to
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -2822,7 +2823,7 @@ display:
         field_hs_event_date_2:
           id: field_hs_event_date_2
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Month'
@@ -2867,12 +2868,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: F
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -2883,11 +2883,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_3:
           id: field_hs_event_date_3
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Day'
@@ -2932,12 +2932,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: j
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: j
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -2948,7 +2947,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         title:
           id: title
           table: node_field_data
@@ -3080,7 +3079,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Event Date'
@@ -3125,12 +3124,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3141,7 +3139,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
@@ -3191,11 +3189,18 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: daterange_custom
+          type: smartdate_custom
           settings:
-            timezone_override: ''
             date_format: 'g:i a'
+            custom_date_format: ''
+            timezone: ''
             separator: 'to '
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3645,7 +3650,7 @@ display:
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Month'
@@ -3690,12 +3695,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: F
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3706,11 +3710,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_2:
           id: field_hs_event_date_2
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Day'
@@ -3755,12 +3759,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: j
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: j
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3771,7 +3774,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_series:
           id: field_hs_event_series
           table: node__field_hs_event_series
@@ -3903,7 +3906,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Event Date'
@@ -3948,12 +3951,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3964,7 +3966,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_3:
           id: field_hs_event_date_3
           table: node__field_hs_event_date
@@ -4014,11 +4016,18 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: daterange_custom
+          type: smartdate_custom
           settings:
-            timezone_override: ''
             date_format: 'g:i a'
+            custom_date_format: ''
+            timezone: ''
             separator: to
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -4317,6 +4326,8 @@ display:
             description: ''
             use_operator: false
             operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: ''
             required: false
             remember: false
@@ -4326,8 +4337,6 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -4717,7 +4726,7 @@ display:
         field_hs_event_date_1:
           id: field_hs_event_date_1
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Month'
@@ -4762,12 +4771,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: F
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: F
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -4778,11 +4786,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_2:
           id: field_hs_event_date_2
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Date Stacked Day'
@@ -4827,12 +4835,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: j
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: j
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -4843,7 +4850,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         title:
           id: title
           table: node_field_data
@@ -4975,7 +4982,7 @@ display:
         field_hs_event_date:
           id: field_hs_event_date
           table: node__field_hs_event_date
-          field: field_hs_event_date
+          field: field_hs_event_date_value
           relationship: none
           group_type: group
           admin_label: 'Content: Date - Event Date'
@@ -5020,12 +5027,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: 'l, F j, Y'
+          timezone: ''
           click_sort_column: value
           type: datetime_hs
-          settings:
-            timezone_override: ''
-            date_format: 'l, F j, Y'
-            display: start_date
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -5036,7 +5042,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+          plugin_id: date
         field_hs_event_date_3:
           id: field_hs_event_date_3
           table: node__field_hs_event_date
@@ -5086,11 +5092,18 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: daterange_custom
+          type: smartdate_custom
           settings:
-            timezone_override: ''
             date_format: 'g:i a'
+            custom_date_format: ''
+            timezone: ''
             separator: 'to '
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
           group_column: value
           group_columns: {  }
           group_rows: true

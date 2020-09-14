@@ -25,6 +25,7 @@ dependencies:
     - node.type.hs_event
   module:
     - ds
+    - field_formatter_class
     - hs_field_helpers
     - stanford_media
     - user
@@ -38,6 +39,7 @@ third_party_settings:
       settings:
         pattern:
           field_templates: only_content
+          variant_field: body
     regions:
       title:
         - node_title
@@ -54,11 +56,6 @@ third_party_settings:
       speaker:
         - field_hs_event_speaker
     fields:
-      'dynamic_block_field:node-hs_event_time_range':
-        plugin_id: 'dynamic_block_field:node-hs_event_time_range'
-        weight: 3
-        label: hidden
-        formatter: default
       node_title:
         plugin_id: node_title
         weight: 0
@@ -68,21 +65,38 @@ third_party_settings:
           link: true
           wrapper: span
           class: ''
+      'dynamic_block_field:node-hs_event_time_range':
+        plugin_id: 'dynamic_block_field:node-hs_event_time_range'
+        weight: 3
+        label: hidden
+        formatter: default
 id: node.hs_event.hs_horizontal_card
 targetEntityType: node
 bundle: hs_event
 mode: hs_horizontal_card
 content:
   field_hs_event_date:
-    type: datetime_hs
+    type: smartdatetime_hs
     weight: 2
     region: date
     label: hidden
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     settings:
-      timezone_override: ''
+      display: start
       date_format: 'l, F j, Y'
-      display: start_date
-    third_party_settings: {  }
+      custom_date_format: ''
+      time_format: ''
+      time_hour_format: ''
+      allday_label: 'All day'
+      date_first: '1'
+      ampm_reduce: '1'
+      separator: ' - '
+      join: ', '
+      timezone: ''
   field_hs_event_image:
     type: media_image_formatter
     weight: 1

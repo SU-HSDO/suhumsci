@@ -12,14 +12,23 @@ properties:
     label_display: ''
     formatter:
       label: hidden
-      type: daterange_custom
+      type: smartdate_custom
       settings:
-        timezone_override: ''
         date_format: 'g:i A'
-        separator: '-'
+        custom_date_format: ''
+        timezone: ''
+        separator: ' - '
+        join: ''
+        time_format: ''
+        time_hour_format: ''
+        allday_label: 'All day'
+        date_first: '1'
+        ampm_reduce: 0
       third_party_settings:
         field_formatter_class:
           class: ''
+        hs_field_helpers:
+          inline_contents: 0
     context_mapping:
       entity: '@node.node_route_context:node'
 type: block

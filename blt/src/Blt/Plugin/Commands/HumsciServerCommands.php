@@ -108,15 +108,19 @@ class HumsciServerCommands extends AcHooksCommand {
    *
    * @command humsci:letsencrypt:add-domain
    *
-   * @throws \Acquia\Blt\Robo\Exceptions\BltException
    * @throws \Robo\Exception\TaskException
    */
-  public function humsciLetsEncryptAdd($environment, $options = ['domains' => []]) {
+  public function humsciLetsEncryptAdd($environment, $options = [
+    'domains' => [],
+    'skip-check' => FALSE,
+  ]) {
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
       return;
     }
-    $this->checkDomains([]);
+    if (!$options['skip-check']) {
+      $this->checkDomains([]);
+    }
     $domains = $this->humsciLetsEncryptList($environment);
 
     $this->say('Existing domains on the cert:' . PHP_EOL . implode(PHP_EOL, $domains));
@@ -130,7 +134,9 @@ class HumsciServerCommands extends AcHooksCommand {
     $domains = array_unique($domains);
     $this->removeDomains($domains);
     $domains = array_map('trim', $domains);
-    $this->checkDomains($domains);
+    if (!$options['skip-check']) {
+      $this->checkDomains($domains);
+    }
 
     $primary_domain = array_shift($domains);
     asort($domains);
@@ -460,7 +466,7 @@ class HumsciServerCommands extends AcHooksCommand {
     foreach ($sites as $key => &$db_name) {
       $db_name = $db_name == 'default' ? 'swshumsci' : $db_name;
 
-      if ($db_name == 'economics' || strpos($db_name, 'sandbox') !== FALSE) {
+      if (strpos($db_name, 'sandbox') !== FALSE) {
         unset($sites[$key]);
       }
     }

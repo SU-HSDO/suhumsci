@@ -1,3 +1,20 @@
+@mixin hb-text-reset {
+  background: initial;
+  border: initial;
+  color: initial;
+  font-size: inherit;
+  font-style: initial;
+  font-weight: initial;
+  line-height: inherit;
+  margin: initial;
+  padding: initial;
+  position: initial;
+  quotes: initial;
+  text-decoration: initial;
+  text-transform: initial;
+  transition: none;
+}
+
 @mixin hb-block-heading {
   @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(semibold);
@@ -281,6 +298,7 @@
 }
 
 @mixin hb-caption($italic: false) {
+  @include hb-text-reset;
   @include hb-global-color('color', 'gray-dark');
 
   @if $italic {
@@ -304,21 +322,4 @@
       @include hb-global-color('color', 'gray-light');
     }
   }
-}
-
-@mixin hb-text-reset {
-  background: initial;
-  border: initial;
-  color: initial;
-  font-size: inherit;
-  font-style: initial;
-  font-weight: initial;
-  line-height: inherit;
-  margin: initial;
-  padding: initial;
-  position: initial;
-  quotes: initial;
-  text-decoration: initial;
-  text-transform: initial;
-  transition: none;
 }

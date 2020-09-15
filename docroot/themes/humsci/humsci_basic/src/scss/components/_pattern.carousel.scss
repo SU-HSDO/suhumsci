@@ -11,6 +11,8 @@
   }
 
   .hb-hero-overlay {
+    display: block;
+
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
       padding: hb-spacing-width() 0 hb-spacing-width() 8%;
@@ -172,6 +174,7 @@
         @include hb-pairing-color('background-color', 'primary-hero-overlay');
         bottom: 15%;
         padding: 8% 0;
+        margin: 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         text-align: left;
         left: hb-spacing-width('md');
         transform: translateX(0) translateY(0);

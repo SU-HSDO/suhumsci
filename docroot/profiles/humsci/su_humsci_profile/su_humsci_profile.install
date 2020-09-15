@@ -73,3 +73,10 @@ function su_humsci_profile_update_8203() {
       ->save();
   }
 }
+
+/**
+ * Disable hs_revision_cleanup module.
+ */
+function su_humsci_profile_update_8204() {
+  \Drupal::service('module_installer')->uninstall(['hs_revision_cleanup']);
+}

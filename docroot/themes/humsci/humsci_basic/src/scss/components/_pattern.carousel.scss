@@ -47,6 +47,7 @@
       &::after {
         content: '';
         display: block;
+        height: 100%;
         z-index: $hb-z-index-hero1-overlay;
         @include hb-pairing-color('background-color', 'secondary');
 
@@ -325,6 +326,11 @@
           bottom: hb-spacing-width();
           margin: 0 0 hb-calculate-rems(10px);
           right: calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: 0;
+          }
         }
 
         @include grid-media-min('lg') {
@@ -425,8 +431,20 @@
         @include hb-themes(('airy', 'colorful')) {
           bottom: calc(#{hb-spacing-width()} * 2);
 
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(48px);
+          }
+
           @include grid-media-min('md') {
             bottom: hb-spacing-width();
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              bottom: 0;
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
 

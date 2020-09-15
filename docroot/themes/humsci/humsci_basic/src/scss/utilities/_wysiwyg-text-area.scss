@@ -102,6 +102,10 @@
     @include hb-traditional {
       margin-bottom: hb-spacing-width('xs');
     }
+
+    figcaption {
+      @include hb-caption($italic: true);
+    }
   }
 
   a {
@@ -125,97 +129,100 @@
 }
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
-.hs {
-  &-credits {
-    font-size: hb-calculate-rems(14px);
-    font-style: italic;
-    @include hb-global-color('color', 'gray-dark');
+.hs-caption,
+.views-row .hs-caption,
+.views-row .hs-caption a {
+  @include hb-caption;
+}
 
-    .hb-local-footer--dark & {
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-global-color('color', 'white');
-      }
+.hs-credits,
+.views-row .hs-credits,
+.views-row .hs-credits a {
+  @include hb-caption($italic: true);
+}
 
-      @include hb-traditional {
-        @include hb-global-color('color', 'gray-light');
-      }
-    }
+.hs-font-lead {
+  font-size: hb-calculate-rems(20px);
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 127%;
+  @include hb-global-color('color', 'gray-dark');
+
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(22px);
   }
 
-  &-font-lead {
-    font-size: hb-calculate-rems(20px);
-    font-weight: hb-theme-font-weight(semibold);
-    line-height: 127%;
-    @include hb-global-color('color', 'gray-dark');
+  .hb-local-footer--dark & {
+    @include hb-global-color('color', 'gray-light');
+  }
+
+  li & {
+    margin: hb-calculate-rems(-3px) 0 0;
+  }
+}
+
+.hs-font-splash {
+  @include hb-heading-1;
+
+  @include grid-media-min('md') {
+    margin: hb-spacing-width() 0 hb-spacing-width('xxs');
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-pairing-color('color', 'primary');
 
     .hb-local-footer--dark & {
       @include hb-global-color('color', 'gray-light');
     }
-
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(22px);
-    }
   }
 
-  &-font-splash {
-    @include hb-heading-1;
-
-    @include grid-media-min('md') {
-      margin: hb-spacing-width() 0 hb-spacing-width('xxs');
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'primary');
-
-      .hb-local-footer--dark & {
-        @include hb-global-color('color', 'gray-light');
-      }
-    }
-
-    @include hb-traditional {
-      @include hb-pairing-color('color', 'primary');
-    }
+  @include hb-traditional {
+    @include hb-pairing-color('color', 'primary');
   }
 
-  &-caption {
-    font-size: hb-calculate-rems(14px);
-    @include hb-global-color('color', 'gray-dark');
-
-    .hb-local-footer--dark & {
-      @include hb-global-color('color', 'white');
-    }
-  }
-
-  &-short-line-length {
-    max-width: hb-calculate-rems(700px);
-  }
-
-  &-well {
-    @include hb-well;
-  }
-
-  &-table--borderless {
-    thead {
-      th {
-        border: 0;
-      }
-    }
-
-    td {
-      border-left: 0;
-      border-right: 0;
-    }
+  li & {
+    margin: hb-calculate-rems(-3px) 0 0;
   }
 }
-// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 
-.emphasized-text {
+.hs-short-line-length {
+  max-width: hb-calculate-rems(700px);
+}
+
+.hs-well {
+  @include hb-well;
+}
+
+.hs-table--borderless {
+  thead {
+    th {
+      border: 0;
+    }
+  }
+
+  td {
+    border-left: 0;
+    border-right: 0;
+  }
+}
+
+// Drupal base classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
+.emphasized-text,
+.hs-emphasized-text {
   font-style: italic;
   font-weight: inherit;
   font-size: inherit;
 }
-// media
 
+// Views style application for hs-emphasized-text
+.views-row .hs-emphasized-text,
+.views-row .hs-emphasized-text a {
+  @include hb-text-reset;
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+// media
 .align {
   &-right {
     max-width: 100%;
@@ -271,9 +278,9 @@
     }
   }
 }
+
 // blockquotes
 // The text area blockquote content is placed inside of a paragraph tag.
-
 blockquote:nth-child(n) {
   // remove content set in the base default styles set on the blockquote tag
   &::after,

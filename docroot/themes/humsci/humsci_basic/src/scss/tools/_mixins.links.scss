@@ -254,7 +254,7 @@
 //PDF Icon Link
 @mixin hb-pdf-link {
   @include hb-link--inline;
-  @include hb-pairing-color ('color', 'secondary');
+  @include hb-pairing-color('color', 'secondary');
 
   &::before {
     content: "\f1c1";
@@ -270,6 +270,10 @@
     margin-right: hb-calculate-rems(5px);
   }
 
+  .hb-local-footer--dark &::before {
+    color: var(--palette--secondary-highlight);
+  }
+
   @include hb-themes(('colorful', 'airy')) {
     &:hover,
     &:focus {
@@ -281,7 +285,7 @@
 //File Icon Link
 @mixin hb-file-link {
   @include hb-link--inline;
-  @include hb-pairing-color ('color', 'secondary');
+  @include hb-pairing-color('color', 'secondary');
 
   &::before {
     content: "\f15b";
@@ -295,6 +299,10 @@
     font-variant: normal;
     text-rendering: auto;
     margin-right: hb-calculate-rems(5px);
+  }
+
+  .hb-local-footer--dark &::before {
+    color: var(--palette--secondary-highlight);
   }
 
   @include hb-themes(('colorful', 'airy')) {

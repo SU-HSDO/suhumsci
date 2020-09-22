@@ -53,6 +53,17 @@
     @include hb-global-color('color', 'black');
   }
 
+  // make sure external links within the secondary nav receive the same styles as other links
+  &__link.ext,
+  &__link.ext:hover,
+  &__link.ext:focus {
+    @include hb-global-color('color', 'black');
+
+    @include hb-themes(('airy', 'colorful')) {
+      background-image: none;
+    }
+  }
+
   &__item {
     position: relative;
 

@@ -41,3 +41,15 @@ button.more-link,
 .more-link button:not([class]) {
   @include hb-secondary-button;
 }
+
+// List of buttons on a node detail page
+.hs-button,
+.hs-button--big,
+.hs-secondary-button {
+  div:not([class]) > div:not([class]),
+  &.label-hidden > div:not([class]),
+  li:nth-child(n) {
+    display: inline-block;
+    margin: 0 hb-calculate-rems(5px) hb-calculate-rems(13px) 0;
+  }
+}

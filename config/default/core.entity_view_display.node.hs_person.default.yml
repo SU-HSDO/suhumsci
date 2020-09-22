@@ -30,7 +30,6 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
     - system.menu.main
-    - views.view.hs_default_publications
   module:
     - hs_blocks
     - hs_layouts
@@ -39,7 +38,6 @@ dependencies:
     - menu_block
     - text
     - user
-    - views
 third_party_settings:
   layout_builder:
     sections:
@@ -184,75 +182,6 @@ third_party_settings:
                 view_mode: view_mode
             additional: {  }
             weight: 8
-          8acc1b43-548d-4000-a2ce-d90a46666871:
-            uuid: 8acc1b43-548d-4000-a2ce-d90a46666871
-            region: top
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_student_type'
-              label: 'Student Type'
-              provider: layout_builder
-              label_display: ''
-              formatter:
-                label: hidden
-                type: entity_reference_label
-                settings:
-                  link: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: hb-subtitle
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
-            weight: 6
-          f8fc4845-54bb-4411-8e43-05ba99f7a4fb:
-            uuid: f8fc4845-54bb-4411-8e43-05ba99f7a4fb
-            region: top
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_staff_type'
-              label: 'Staff Type'
-              provider: layout_builder
-              label_display: ''
-              formatter:
-                label: hidden
-                type: entity_reference_label
-                settings:
-                  link: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: hb-subtitle
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
-            weight: 5
-          b697bed6-b63e-43bc-8380-4e6a6964ca51:
-            uuid: b697bed6-b63e-43bc-8380-4e6a6964ca51
-            region: top
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_faculty_status'
-              label: 'Faculty Status'
-              provider: layout_builder
-              label_display: ''
-              formatter:
-                label: hidden
-                type: entity_reference_label
-                settings:
-                  link: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: hb-subtitle
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
-            weight: 3
           8d405c41-3d04-44a4-b60f-eaa8c2fc3167:
             uuid: 8d405c41-3d04-44a4-b60f-eaa8c2fc3167
             region: main_below
@@ -513,19 +442,6 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 2
-          033f362c-fe8e-48c9-8664-939c45f3b1bf:
-            uuid: 033f362c-fe8e-48c9-8664-939c45f3b1bf
-            region: main_below
-            configuration:
-              id: 'views_block:hs_default_publications-author_list'
-              label: ''
-              provider: views
-              label_display: visible
-              views_label: ''
-              items_per_page: none
-              context_mapping: {  }
-            additional: {  }
-            weight: 1
           5133b417-43d2-4b87-b554-2acac0cf09da:
             uuid: 5133b417-43d2-4b87-b554-2acac0cf09da
             region: top
@@ -553,20 +469,27 @@ third_party_settings:
             weight: 7
           a6fecd47-3e2d-47d9-9ee2-89fc6734afd9:
             uuid: a6fecd47-3e2d-47d9-9ee2-89fc6734afd9
-            region: main_above
+            region: top
             configuration:
-              label_display: '0'
+              id: 'field_block:node:hs_person:field_hs_person_department'
+              label: 'Department: '
+              provider: layout_builder
+              label_display: ''
+              formatter:
+                label: inline
+                type: entity_reference_label
+                settings:
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: 'hs-subtitle hb-highlighted-label'
+                  hs_field_helpers:
+                    inline_contents: 0
               context_mapping:
                 entity: layout_builder.entity
-              id: 'field_block:node:hs_person:field_hs_person_department'
-              formatter:
-                label: above
-                settings:
-                  link: true
-                third_party_settings: {  }
-                type: entity_reference_label
+                view_mode: view_mode
             additional: {  }
-            weight: 0
+            weight: 3
         third_party_settings: {  }
     enabled: true
     allow_custom: false

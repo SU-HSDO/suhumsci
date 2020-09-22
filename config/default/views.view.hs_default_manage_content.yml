@@ -41,9 +41,9 @@ dependencies:
     - taxonomy.vocabulary.hs_publication_type
   module:
     - datetime
-    - datetime_range
     - hs_field_helpers
     - node
+    - smart_date
     - stanford_media
     - taxonomy
     - user
@@ -3458,8 +3458,16 @@ display:
           click_sort_column: value
           type: smartdate_custom
           settings:
-            date_format: 'F j Y g:i a'
+            date_format: 'F j Y'
+            custom_date_format: ''
+            timezone: ''
             separator: '-'
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
           group_column: value
           group_columns: {  }
           group_rows: true

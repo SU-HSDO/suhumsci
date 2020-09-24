@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\encrypt\EncryptService;
 
 /**
@@ -52,6 +53,20 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
   protected $configPages;
 
   /**
+   * Drupal state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * Current multisite directory path.
+   *
+   * @var string
+   */
+  protected $sitePath;
+
+  /**
    * ConfigOverrides constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -64,13 +79,19 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Entity Type manager service.
    * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages
    *   Config Pages loader service.
+   * @param \Drupal\Core\State\StateInterface|null $state
+   *   Drupal state service.
+   * @param string|null $site_path
+   *   Current multisite directory path.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages, StateInterface $state = NULL, $site_path = NULL) {
     $this->moduleHandler = $module_handler;
     $this->configFactory = $config_factory;
     $this->encryption = $encrypt_service;
     $this->entityTypeManager = $entity_type_manager;
     $this->configPages = $config_pages;
+    $this->state = $state;
+    $this->sitePath = $site_path;
   }
 
   /**
@@ -78,6 +99,9 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   public function loadOverrides($names) {
     $overrides = [];
+
+    $this->setStageFileProxy($names, $overrides);
+
     // Override the path of the key for real_aes entity on local environments.
     if (in_array('key.key.real_aes', $names) && !isset($_ENV['AH_SITE_ENVIRONMENT'])) {
       $overrides['key.key.real_aes'] = [
@@ -102,6 +126,27 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       }
     }
     return $overrides;
+  }
+
+  /**
+   * Set up the stage file proxy settings based on the urls in state.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
+  protected function setStageFileProxy(array $names, array &$overrides) {
+    if (in_array('stage_file_proxy.settings', $names) && $this->state) {
+      $site_dir = str_replace('sites/', '', $this->sitePath);
+
+      if ($base_url = $this->state->get('xmlsitemap_base_url')) {
+        $overrides['stage_file_proxy.settings'] = [
+          'origin' => $base_url,
+          'origin_dir' => "sites/$site_dir/files",
+        ];
+      }
+    }
   }
 
   /**

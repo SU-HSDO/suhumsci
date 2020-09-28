@@ -102,6 +102,34 @@
       text-align: center;
     }
 
+    @include hb-themes(('colorful', 'airy')) { // colorful hero only. not spotlight. not carousel
+
+      // :not(.paragraph--type--hs-carousel) & {
+      //   .field-hs-page-hero & {
+      //     animation-duration: 3s;
+      //     animation-name: colorfulHeroText;
+      //   }
+      // }
+
+      .field-hs-page-hero & {
+        animation-duration: 3s;
+        animation-name: colorfulHeroText;
+
+        div:not(.paragraph--type--hs-carousel) & {
+          border: 3px solid hotpink;
+        }
+      }
+
+      // .field-hs-page-hero & {
+      //   animation-duration: 3s;
+      //   animation-name: colorfulHeroText;
+      // }
+
+      .field-hs-page-components & {
+        border: 3px solid yellow; // main content heros
+      }
+    }
+
     @include grid-media-min('sm') {
       padding: hb-calculate-rems(60px) 0;
     }
@@ -237,3 +265,28 @@
     }
   }
 }
+
+// Colorful Hero Animations
+@keyframes colorfulHeroText {
+  0% {
+    // opacity: 0%;
+    background-color: lightcyan;
+  }
+
+  100% {
+    // opacity: 100%;
+    background-color: lightseagreen;
+  }
+}
+
+@keyframes colorfulHeroImage {
+  0% {
+    border: 1px solid orange;
+  }
+
+  100% {
+    border: 6px solid hotpink;
+  }
+}
+
+// Traditional Hero Animations

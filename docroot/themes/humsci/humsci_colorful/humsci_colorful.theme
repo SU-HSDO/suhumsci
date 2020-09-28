@@ -25,6 +25,12 @@ function humsci_colorful_preprocess_page(&$vars) {
   // Variant setting for the local footer.
   $lfv = theme_get_setting('local_footer_variant_classname');
   if ($lfv) {
-    $vars['local_footer_variant_classname'] = 'hb-local-footer--' . $lfv;
+    $vars['local_footer_variant_classname'] = 'hb-'. $lfv .'-pattern';
+  }
+
+  // Variant setting for the local masthead.
+  $lfv = theme_get_setting('local_masthead_variant_classname');
+  if ($lfv) {
+    $vars['local_masthead_variant_classname'] = 'hb-'. $lfv .'-pattern';
   }
 }

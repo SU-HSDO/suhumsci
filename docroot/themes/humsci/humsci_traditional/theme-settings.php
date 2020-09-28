@@ -34,6 +34,22 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];
 
+  // Local Masthead
+  $form['options_settings']['humsci_traditional_local_masthead'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Local Masthead Settings'),
+  ];
+
+  $form['options_settings']['humsci_traditional_local_masthead']['local_masthead_variant_classname'] = [
+    '#type' => 'select',
+    '#title' => t('Local Masthead Variant'),
+    '#options' => [
+      'default' => '- Default -',
+      'dark' => t('Dark'),
+    ],
+    '#default_value' => theme_get_setting('local_masthead_variant_classname'),
+  ];
+
   // Local Footer:
   $form['options_settings']['humsci_traditional_local_footer'] = [
     '#type' => 'fieldset',

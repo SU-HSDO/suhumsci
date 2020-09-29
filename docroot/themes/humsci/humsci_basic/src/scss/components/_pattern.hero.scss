@@ -86,6 +86,14 @@
       height: inherit;
       width: 100%;
       object-fit: cover;
+
+      @include hb-themes(('colorful', 'airy')) {
+        .field-hs-page-hero & {
+          animation-duration: 750ms;
+          animation-timing-function: ease-out;
+          animation-name: colorfulHeroImage;
+        }
+      }
     }
   }
 
@@ -102,31 +110,15 @@
       text-align: center;
     }
 
-    @include hb-themes(('colorful', 'airy')) { // colorful hero only. not spotlight. not carousel
-
-      // :not(.paragraph--type--hs-carousel) & {
-      //   .field-hs-page-hero & {
-      //     animation-duration: 3s;
-      //     animation-name: colorfulHeroText;
-      //   }
-      // }
-
+    @include hb-themes(('colorful', 'airy')) {
       .field-hs-page-hero & {
-        animation-duration: 3s;
+        animation-duration: 1200ms;
+        animation-timing-function: ease-in-out;
         animation-name: colorfulHeroText;
-
-        div:not(.paragraph--type--hs-carousel) & {
-          border: 3px solid hotpink;
-        }
       }
 
-      // .field-hs-page-hero & {
-      //   animation-duration: 3s;
-      //   animation-name: colorfulHeroText;
-      // }
-
       .field-hs-page-components & {
-        border: 3px solid yellow; // main content heros
+        // border: 3px solid yellow; // main content heros
       }
     }
 
@@ -268,24 +260,22 @@
 
 // Colorful Hero Animations
 @keyframes colorfulHeroText {
-  0% {
-    // opacity: 0%;
-    background-color: lightcyan;
+  25% {
+    opacity: 0%;
   }
 
   100% {
-    // opacity: 100%;
-    background-color: lightseagreen;
+    opacity: 100%;
   }
 }
 
 @keyframes colorfulHeroImage {
-  0% {
-    border: 1px solid orange;
+  10% {
+    opacity: 0%;
   }
 
   100% {
-    border: 6px solid hotpink;
+    opacity: 100%;
   }
 }
 

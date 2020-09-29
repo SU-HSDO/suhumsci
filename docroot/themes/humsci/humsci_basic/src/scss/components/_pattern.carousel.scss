@@ -114,6 +114,14 @@
             min-height: 55vh;
             object-fit: cover;
           }
+
+          @include hb-themes(('colorful', 'airy')) {
+            /* stylelint-disable max-nesting-depth */
+            .field-hs-page-hero & {
+              animation-name: colorfulCarouselImage;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
         }
       }
     }
@@ -150,6 +158,17 @@
           @include grid-media-min('md') {
             top: hb-calculate-rems(56px);
           }
+        }
+
+        // Animations
+        // We do not want the hero animation to display on the carousels.
+        // A placeholder for the upcoming carousel animations has been created to override the hero animations.
+        .field-hs-page-hero & {
+          animation-name: colorfulCarouselText;
+        }
+
+        .field-hs-page-components & {
+          border: none; // main content heros
         }
 
         h2 {
@@ -597,3 +616,26 @@
     }
   }
 }
+
+// Colorful Carousel Animations
+@keyframes colorfulCarouselText {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes colorfulCarouselImage {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+// Traditional Carousel Animations

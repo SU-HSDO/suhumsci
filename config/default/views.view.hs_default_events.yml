@@ -622,8 +622,7 @@ display:
             field_hs_event_date_2: 0
             field_hs_event_series: 0
             title: 0
-            field_hs_event_date: 0
-            field_hs_event_date_3: 0
+            field_hs_event_date_4: 0
             field_hs_event_location: 0
             body: 0
             view_node: 0
@@ -631,6 +630,7 @@ display:
           hide_empty: 1
           pattern: date_stacked_vertical_card
           variants:
+            spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
@@ -640,16 +640,16 @@ display:
               weight: 0
               plugin: views_row
               source: title
-            'views_row:field_hs_event_speaker':
-              destination: speaker
+            'views_row:field_hs_event_date_4':
+              destination: time
               weight: 1
               plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:field_hs_event_date_3':
-              destination: time
+              source: field_hs_event_date_4
+            'views_row:field_hs_event_speaker':
+              destination: speaker
               weight: 2
               plugin: views_row
-              source: field_hs_event_date_3
+              source: field_hs_event_speaker
             'views_row:body':
               destination: description
               weight: 3
@@ -670,24 +670,19 @@ display:
               weight: 6
               plugin: views_row
               source: field_hs_event_image
-            'views_row:field_hs_event_date':
-              destination: time
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_date
             'views_row:field_hs_event_date_2':
               destination: day
-              weight: 8
+              weight: 7
               plugin: views_row
               source: field_hs_event_date_2
             'views_row:field_hs_event_date_1':
               destination: month
-              weight: 9
+              weight: 8
               plugin: views_row
               source: field_hs_event_date_1
             'views_row:field_hs_event_location':
               destination: location
-              weight: 10
+              weight: 9
               plugin: views_row
               source: field_hs_event_location
       fields:
@@ -1012,78 +1007,14 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: field
-        field_hs_event_date:
-          id: field_hs_event_date
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Date'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          date_format: custom
-          custom_date_format: 'l, F j, Y'
-          timezone: ''
-          click_sort_column: value
-          type: datetime_hs
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: date
-        field_hs_event_date_3:
-          id: field_hs_event_date_3
+        field_hs_event_date_4:
+          id: field_hs_event_date_4
           table: node__field_hs_event_date
           field: field_hs_event_date
           relationship: none
           group_type: group
-          admin_label: 'Content: Date - Event Time'
-          label: ''
+          admin_label: ''
+          label: Date
           exclude: false
           alter:
             alter_text: false
@@ -1127,16 +1058,16 @@ display:
           click_sort_column: value
           type: smartdate_custom
           settings:
-            date_format: 'g:i a'
+            date_format: 'D F jS Y'
             custom_date_format: ''
             timezone: ''
-            separator: to
+            separator: ' - '
             join: ', '
             time_format: 'g:ia'
             time_hour_format: 'g:ia'
             allday_label: 'All day'
             date_first: '1'
-            ampm_reduce: 1
+            ampm_reduce: 0
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1155,7 +1086,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          label: ''
+          label: Location
           exclude: false
           alter:
             alter_text: false
@@ -1521,34 +1452,36 @@ display:
             field_hs_event_date_3: 0
             field_hs_event_location: 0
             view_node: 0
+            field_hs_event_date_4: 0
           separator: ''
           hide_empty: 1
           pattern: date_stacked_horizontal_card
           variants:
+            spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
           pattern_mapping:
+            'views_row:field_hs_event_date_4':
+              destination: time
+              weight: 0
+              plugin: views_row
+              source: field_hs_event_date_4
             'views_row:field_hs_event_type':
               destination: category
-              weight: 0
+              weight: 1
               plugin: views_row
               source: field_hs_event_type
             'views_row:title':
               destination: title
-              weight: 1
+              weight: 2
               plugin: views_row
               source: title
             'views_row:field_hs_event_speaker':
               destination: speaker
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:field_hs_event_date_3':
-              destination: time
               weight: 3
               plugin: views_row
-              source: field_hs_event_date_3
+              source: field_hs_event_speaker
             'views_row:body':
               destination: description
               weight: 4
@@ -1569,24 +1502,19 @@ display:
               weight: 7
               plugin: views_row
               source: field_hs_event_image
-            'views_row:field_hs_event_date':
-              destination: time
-              weight: 8
-              plugin: views_row
-              source: field_hs_event_date
             'views_row:field_hs_event_date_2':
               destination: day
-              weight: 9
+              weight: 8
               plugin: views_row
               source: field_hs_event_date_2
             'views_row:field_hs_event_date_1':
               destination: month
-              weight: 10
+              weight: 9
               plugin: views_row
               source: field_hs_event_date_1
             'views_row:field_hs_event_location':
               destination: location
-              weight: 11
+              weight: 10
               plugin: views_row
               source: field_hs_event_location
       fields:
@@ -2036,142 +1964,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_hs_event_date:
-          id: field_hs_event_date
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Date'
-          label: Date
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          date_format: custom
-          custom_date_format: 'l, F j, Y'
-          timezone: ''
-          click_sort_column: value
-          type: datetime_hs
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: date
-        field_hs_event_date_3:
-          id: field_hs_event_date_3
-          table: node__field_hs_event_date
-          field: field_hs_event_date
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Time'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: smartdate_custom
-          settings:
-            date_format: 'g:i a'
-            custom_date_format: ''
-            timezone: ''
-            separator: to
-            join: ', '
-            time_format: 'g:ia'
-            time_hour_format: 'g:ia'
-            allday_label: 'All day'
-            date_first: '1'
-            ampm_reduce: 1
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         field_hs_event_speaker:
           id: field_hs_event_speaker
           table: node__field_hs_event_speaker
@@ -2350,6 +2142,78 @@ display:
           absolute: false
           entity_type: node
           plugin_id: entity_link
+        field_hs_event_date_4:
+          id: field_hs_event_date_4
+          table: node__field_hs_event_date
+          field: field_hs_event_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Date
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: smartdate_custom
+          settings:
+            date_format: 'D F jS Y'
+            custom_date_format: ''
+            timezone: ''
+            separator: ' - '
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
       filters:
         status:
           value: '1'
@@ -2622,6 +2486,7 @@ display:
             field_hs_event_location: 0
             view_node: 0
             edit_node: 0
+            field_hs_event_date_4: 0
           separator: ''
           hide_empty: 1
           pattern: date_stacked_horizontal_card
@@ -2631,26 +2496,26 @@ display:
             generic_three_column: default
             accordion: closed
           pattern_mapping:
+            'views_row:field_hs_event_date_4':
+              destination: time
+              weight: 0
+              plugin: views_row
+              source: field_hs_event_date_4
             'views_row:field_hs_event_series':
               destination: category
-              weight: 0
+              weight: 1
               plugin: views_row
               source: field_hs_event_series
             'views_row:field_hs_event_date_2':
               destination: month
-              weight: 1
+              weight: 2
               plugin: views_row
               source: field_hs_event_date_2
             'views_row:field_hs_event_date_3':
               destination: day
-              weight: 2
-              plugin: views_row
-              source: field_hs_event_date_3
-            'views_row:field_hs_event_date':
-              destination: time
               weight: 3
               plugin: views_row
-              source: field_hs_event_date
+              source: field_hs_event_date_3
             'views_row:field_hs_event_image':
               destination: image
               weight: 4
@@ -2666,29 +2531,24 @@ display:
               weight: 6
               plugin: views_row
               source: body
-            'views_row:field_hs_event_date_1':
-              destination: time
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_date_1
             'views_row:field_hs_event_speaker':
               destination: speaker
-              weight: 8
+              weight: 7
               plugin: views_row
               source: field_hs_event_speaker
             'views_row:field_hs_event_location':
               destination: location
-              weight: 9
+              weight: 8
               plugin: views_row
               source: field_hs_event_location
             'views_row:view_node':
               destination: button
-              weight: 10
+              weight: 9
               plugin: views_row
               source: view_node
             'views_row:edit_node':
               destination: description
-              weight: 11
+              weight: 10
               plugin: views_row
               source: edit_node
       fields:
@@ -3076,142 +2936,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_hs_event_date:
-          id: field_hs_event_date
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Date'
-          label: Date
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          date_format: custom
-          custom_date_format: 'l, F j, Y'
-          timezone: ''
-          click_sort_column: value
-          type: datetime_hs
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: date
-        field_hs_event_date_1:
-          id: field_hs_event_date_1
-          table: node__field_hs_event_date
-          field: field_hs_event_date
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Time'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: smartdate_custom
-          settings:
-            date_format: 'g:i a'
-            custom_date_format: ''
-            timezone: ''
-            separator: 'to '
-            join: ', '
-            time_format: 'g:ia'
-            time_hour_format: 'g:ia'
-            allday_label: 'All day'
-            date_first: '1'
-            ampm_reduce: 1
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         field_hs_event_speaker:
           id: field_hs_event_speaker
           table: node__field_hs_event_speaker
@@ -3443,6 +3167,78 @@ display:
           absolute: false
           entity_type: node
           plugin_id: entity_link_edit
+        field_hs_event_date_4:
+          id: field_hs_event_date_4
+          table: node__field_hs_event_date
+          field: field_hs_event_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Date
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: smartdate_custom
+          settings:
+            date_format: 'D F jS Y'
+            custom_date_format: ''
+            timezone: ''
+            separator: ' - '
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
       pager:
         type: full
         options:
@@ -3518,10 +3314,12 @@ display:
             field_hs_event_location: 0
             body: 0
             view_node: 0
+            field_hs_event_date_4: 0
           separator: ''
           hide_empty: 1
           pattern: date_stacked_vertical_card
           variants:
+            spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
@@ -3531,16 +3329,16 @@ display:
               weight: 0
               plugin: views_row
               source: title
-            'views_row:field_hs_event_speaker':
-              destination: speaker
+            'views_row:field_hs_event_date_4':
+              destination: time
               weight: 1
               plugin: views_row
-              source: field_hs_event_speaker
-            'views_row:field_hs_event_date_3':
-              destination: time
+              source: field_hs_event_date_4
+            'views_row:field_hs_event_speaker':
+              destination: speaker
               weight: 2
               plugin: views_row
-              source: field_hs_event_date_3
+              source: field_hs_event_speaker
             'views_row:body':
               destination: description
               weight: 3
@@ -3561,24 +3359,19 @@ display:
               weight: 6
               plugin: views_row
               source: field_hs_event_image
-            'views_row:field_hs_event_date':
-              destination: time
-              weight: 7
-              plugin: views_row
-              source: field_hs_event_date
             'views_row:field_hs_event_date_2':
               destination: day
-              weight: 8
+              weight: 7
               plugin: views_row
               source: field_hs_event_date_2
             'views_row:field_hs_event_date_1':
               destination: month
-              weight: 9
+              weight: 8
               plugin: views_row
               source: field_hs_event_date_1
             'views_row:field_hs_event_location':
               destination: location
-              weight: 10
+              weight: 9
               plugin: views_row
               source: field_hs_event_location
       fields:
@@ -3903,142 +3696,6 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: field
-        field_hs_event_date:
-          id: field_hs_event_date
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Date'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          date_format: custom
-          custom_date_format: 'l, F j, Y'
-          timezone: ''
-          click_sort_column: value
-          type: datetime_hs
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: date
-        field_hs_event_date_3:
-          id: field_hs_event_date_3
-          table: node__field_hs_event_date
-          field: field_hs_event_date
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Time'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: smartdate_custom
-          settings:
-            date_format: 'g:i a'
-            custom_date_format: ''
-            timezone: ''
-            separator: to
-            join: ', '
-            time_format: 'g:ia'
-            time_hour_format: 'g:ia'
-            allday_label: 'All day'
-            date_first: '1'
-            ampm_reduce: 1
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         field_hs_event_location:
           id: field_hs_event_location
           table: node__field_hs_event_location
@@ -4279,6 +3936,78 @@ display:
           absolute: false
           entity_type: node
           plugin_id: entity_link
+        field_hs_event_date_4:
+          id: field_hs_event_date_4
+          table: node__field_hs_event_date
+          field: field_hs_event_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Date
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: smartdate_custom
+          settings:
+            date_format: 'D F jS Y'
+            custom_date_format: ''
+            timezone: ''
+            separator: ' - '
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
       filters:
         status:
           value: '1'
@@ -4457,6 +4186,7 @@ display:
             field_hs_event_location: 0
             view_node: 0
             edit_node: 0
+            field_hs_event_date_4: 0
           separator: ''
           hide_empty: 1
           pattern: date_stacked_horizontal_card
@@ -4466,11 +4196,11 @@ display:
             generic_three_column: default
             accordion: closed
           pattern_mapping:
-            'views_row:field_hs_event_date':
+            'views_row:field_hs_event_date_4':
               destination: time
               weight: 0
               plugin: views_row
-              source: field_hs_event_date
+              source: field_hs_event_date_4
             'views_row:field_hs_event_type':
               destination: category
               weight: 1
@@ -4491,44 +4221,39 @@ display:
               weight: 4
               plugin: views_row
               source: field_hs_event_speaker
-            'views_row:field_hs_event_date_3':
-              destination: time
-              weight: 5
-              plugin: views_row
-              source: field_hs_event_date_3
             'views_row:field_hs_event_image':
               destination: image
-              weight: 6
+              weight: 5
               plugin: views_row
               source: field_hs_event_image
             'views_row:title':
               destination: title
-              weight: 7
+              weight: 6
               plugin: views_row
               source: title
             'views_row:field_hs_event_series':
               destination: category
-              weight: 8
+              weight: 7
               plugin: views_row
               source: field_hs_event_series
             'views_row:body':
               destination: description
-              weight: 9
+              weight: 8
               plugin: views_row
               source: body
             'views_row:field_hs_event_location':
               destination: location
-              weight: 10
+              weight: 9
               plugin: views_row
               source: field_hs_event_location
             'views_row:edit_node':
               destination: description
-              weight: 11
+              weight: 10
               plugin: views_row
               source: edit_node
             'views_row:view_node':
               destination: button
-              weight: 12
+              weight: 11
               plugin: views_row
               source: view_node
       fields:
@@ -4979,142 +4704,6 @@ display:
           separator: ', '
           field_api_classes: false
           plugin_id: field
-        field_hs_event_date:
-          id: field_hs_event_date
-          table: node__field_hs_event_date
-          field: field_hs_event_date_value
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Date'
-          label: Date
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          date_format: custom
-          custom_date_format: 'l, F j, Y'
-          timezone: ''
-          click_sort_column: value
-          type: datetime_hs
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: date
-        field_hs_event_date_3:
-          id: field_hs_event_date_3
-          table: node__field_hs_event_date
-          field: field_hs_event_date
-          relationship: none
-          group_type: group
-          admin_label: 'Content: Date - Event Time'
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: smartdate_custom
-          settings:
-            date_format: 'g:i a'
-            custom_date_format: ''
-            timezone: ''
-            separator: 'to '
-            join: ', '
-            time_format: 'g:ia'
-            time_hour_format: 'g:ia'
-            allday_label: 'All day'
-            date_first: '1'
-            ampm_reduce: 1
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         field_hs_event_speaker:
           id: field_hs_event_speaker
           table: node__field_hs_event_speaker
@@ -5346,6 +4935,78 @@ display:
           absolute: false
           entity_type: node
           plugin_id: entity_link_edit
+        field_hs_event_date_4:
+          id: field_hs_event_date_4
+          table: node__field_hs_event_date
+          field: field_hs_event_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Date
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: smartdate_custom
+          settings:
+            date_format: 'D F jS Y'
+            custom_date_format: ''
+            timezone: ''
+            separator: ' - '
+            join: ', '
+            time_format: 'g:ia'
+            time_hour_format: 'g:ia'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
       pager:
         type: full
         options:

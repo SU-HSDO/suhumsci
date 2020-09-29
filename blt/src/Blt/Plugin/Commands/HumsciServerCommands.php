@@ -49,14 +49,16 @@ class HumsciServerCommands extends AcHooksCommand {
    *
    * @param string $environment
    *   Environment: dev, test, or prod.
-   * @param string $domain
-   *   New domain to add.
+   * @param string $domains
+   *   Comma separated new domain to add.
    *
    * @command humsci:add-domain
    */
-  public function humsciAddDomain($environment, $domain) {
+  public function humsciAddDomain($environment, $domains) {
     $api = new AcquiaApi($this->getConfigValue('cloud'), $this->getConfigValue('cloud.key'), $this->getConfigValue('cloud.secret'));
-    $this->say($api->addDomain($environment, $domain));
+    foreach (explode(',', $domains) as $domain) {
+      $this->say($api->addDomain($environment, $domain));
+    }
   }
 
   /**

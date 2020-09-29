@@ -142,8 +142,13 @@ process:
   field_hs_event_admission/value: admission
   field_hs_event_admission/format: constants/minimal_html
   field_hs_event_contact_email:
-    plugin: trim
-    source: contact_email
+    -
+      plugin: skip_on_empty
+      method: process
+      source: contact_email
+    -
+      plugin: callback
+      callable: trim
   field_hs_event_contact_phone: contact_phone
   field_hs_event_sponsor: event_sponsor
   field_hs_event_location: location

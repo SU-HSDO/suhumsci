@@ -114,32 +114,4 @@ class HumsciHooksCommands extends BltTasks {
     $this->taskDrush()->drush('updb')->run();
   }
 
-  /**
-   * Import any missing entity form/display configs since they are ignored.
-   *
-   * @hook post-command drupal:config:import
-   */
-  public function postConfigImport() {
-    $this->yell('Importing new form and display configuration items that don\'t exist in the database because they are ignored in config.ignore');
-    $result = $this->taskDrush()
-      ->drush('config-missing-report')
-      ->args([
-        'type',
-        'system.all',
-      ])
-      ->option('format', 'string')
-      ->printOutput(FALSE)
-      ->run();
-    $configs = array_filter(explode("\n", $result->getMessage()));
-
-    // Since we ignore all the entity form and entity display configs, drush cim
-    // does not import any new ones. So here we are importing any of those
-    // missing configs if they are new.
-    foreach ($configs as $name) {
-      if (strpos($name, 'core.entity_') !== FALSE) {
-        $this->taskDrush()->drush('config:import-missing')->arg($name)->run();
-      }
-    }
-  }
-
 }

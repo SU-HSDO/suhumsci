@@ -250,3 +250,65 @@
     transition: hb-transition(transform);
   }
 }
+
+//PDF Icon Link
+@mixin hb-pdf-link {
+  @include hb-link--inline;
+  @include hb-pairing-color('color', 'secondary');
+
+  &::before {
+    content: "\f1c1";
+    /* stylelint-disable */
+    font-family: "Font Awesome 5 Free";
+    /* stylelint-enable */
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    margin-right: hb-calculate-rems(5px);
+  }
+
+  .hb-local-footer--dark &::before {
+    color: var(--palette--secondary-highlight);
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &:hover,
+    &:focus {
+      @include hb-link-background-image(true, 0.9em, left, $hb-colorful-default, $hc-colorful-pairings);
+    }
+  }
+}
+
+//File Icon Link
+@mixin hb-file-link {
+  @include hb-link--inline;
+  @include hb-pairing-color('color', 'secondary');
+
+  &::before {
+    content: "\f15b";
+    /* stylelint-disable */
+    font-family: "Font Awesome 5 Free";
+    /* stylelint-enable */
+    font-weight: 900;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    margin-right: hb-calculate-rems(5px);
+  }
+
+  .hb-local-footer--dark &::before {
+    color: var(--palette--secondary-highlight);
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &:hover,
+    &:focus {
+      @include hb-link-background-image(true, 0.9em, left, $hb-colorful-default, $hc-colorful-pairings);
+    }
+  }
+}

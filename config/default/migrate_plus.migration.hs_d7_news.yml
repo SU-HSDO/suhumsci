@@ -19,6 +19,9 @@ source:
     status: 1
     type: hs_news
     basic_html: basic_html
+    minimal_html: minimal_html
+    credit_prefix: '<p><em>'
+    credit_suffix: '</em></p>'
     image_destination: 'public://media/image/news/'
     alt: ''
   item_selector: /NewsList/NewsItem
@@ -55,6 +58,14 @@ source:
       name: body
       label: Body
       selector: body
+    -
+      name: image_caption
+      label: 'Image Caption'
+      selector: imageCaption
+    -
+      name: image_credits
+      label: 'Image Credits'
+      selector: imageCredits
   ids:
     guid:
       type: string
@@ -89,6 +100,26 @@ process:
       bundle: hs_news_categories
       entity_type: taxonomy_term
       ignore_case: true
+  image_caption:
+    plugin: default_value
+    source: image_caption
+    default_value: ''
+  image_credits:
+    plugin: default_value
+    source: image_credits
+    default_value: ''
+  image_caption_credits:
+    -
+      plugin: concat
+      source:
+        - '@image_caption'
+        - constants/credit_prefix
+        - '@image_credits'
+        - constants/credit_suffix
+    -
+      plugin: str_replace
+      search: '<p><em></em></p>'
+      replace: ''
   image_file:
     -
       plugin: skip_on_empty
@@ -119,6 +150,8 @@ process:
       values:
         field_media_image/target_id: '@image_file'
         field_media_image/alt: constants/alt
+        field_media_image_caption/value: '@image_caption_credits'
+        field_media_image_caption/format: constants/minimal_html
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true

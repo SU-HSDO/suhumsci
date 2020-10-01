@@ -16,9 +16,8 @@
 
     @include hb-traditional {
       .field-hs-page-hero & {
-        animation-duration: 750ms;
+        animation-duration: 1000ms;
         animation-timing-function: ease-out;
-        animation-fill-mode: forwards; // TODO: remove?
         animation-name: traditionalHeroOverlay;
       }
     }
@@ -64,9 +63,8 @@
 
     @include hb-traditional { // overlay that displays when there is not an image
       .field-hs-page-hero & {
-        animation-duration: 750ms;
+        animation-duration: 1000ms;
         animation-timing-function: ease-out;
-        animation-fill-mode: forwards; // TODO: remove?
         animation-name: traditionalHeroOverlay;
       }
     }
@@ -112,15 +110,6 @@
           animation-name: colorfulHeroImage;
         }
       }
-
-      @include hb-traditional {
-        .field-hs-page-hero & {
-          animation-duration: 750ms;
-          animation-timing-function: ease-out;
-          animation-fill-mode: forwards; // TODO: remove?
-          animation-name: traditionalHeroImage;
-        }
-      }
     }
   }
 
@@ -137,9 +126,8 @@
       text-align: center;
 
       .field-hs-page-hero & {
-        animation-duration: 1200ms;
+        animation-duration: 1500ms;
         animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards; // TODO: remove when complete
         animation-name: traditionalHeroText;
       }
     }
@@ -316,30 +304,22 @@
 // Traditional Hero Animations
 @keyframes traditionalHeroText {
   0% {
-    background-color: hotpink;
+    opacity: 0%;
+    transform: translateY(-15px);
   }
 
   100% {
-    background-color: turquoise;
-  }
-}
-
-@keyframes traditionalHeroImage {
-  0% {
-    border: 1px solid white;
-  }
-
-  100% {
-    border: 20px solid white;
+    opacity: 100%;
+    transform: translateY(0);
   }
 }
 
 @keyframes traditionalHeroOverlay {
   0% {
-    background-color: yellow;
+    opacity: 90%;
   }
 
   100% {
-    background-color: blueviolet;
+    opacity: 100%;
   }
 }

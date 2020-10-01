@@ -62,10 +62,14 @@
       }
     }
 
-    @include hb-traditional { // hb-hero-overly
+    @include hb-traditional { // hb-hero-overlay
       margin-top: 0;
       display: flex;
       min-height: 32rem;
+
+      &::before {
+        animation: traditionalCarouselOverlay;
+      }
 
       @include grid-media-min('md') {
         min-height: 42rem;
@@ -115,13 +119,15 @@
             object-fit: cover;
           }
 
-          @include hb-themes(('colorful', 'airy')) {
-            /* stylelint-disable max-nesting-depth */
-            .field-hs-page-hero & {
-              animation-name: colorfulCarouselImage;
-            }
-            /* stylelint-enable max-nesting-depth */
+          .field-hs-page-hero & {
+            animation-name: colorfulCarouselImage;
           }
+        }
+      }
+
+      @include hb-traditional {
+        img {
+          animation: traditionalCarouselImage;
         }
       }
     }
@@ -168,7 +174,7 @@
         }
 
         .field-hs-page-components & {
-          border: none; // main content heros
+          // TODO: add override here
         }
 
         h2 {
@@ -233,6 +239,14 @@
 
         @include grid-media-min('2xl') {
           width: 650px !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        .field-hs-page-hero & {
+          animation-name: traditionalCarouselText;
+        }
+
+        .field-hs-page-components & {
+          // TODO: add override here
         }
 
         h2 {
@@ -639,3 +653,32 @@
 }
 
 // Traditional Carousel Animations
+@keyframes traditionalCarouselText {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes traditionalCarouselImage {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes traditionalCarouselOverlay {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}

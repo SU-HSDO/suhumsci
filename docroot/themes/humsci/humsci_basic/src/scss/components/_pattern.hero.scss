@@ -13,6 +13,15 @@
     width: 100%;
     height: 100%;
     z-index: $hb-z-index-hero1-overlay;
+
+    @include hb-traditional {
+      .field-hs-page-hero & {
+        animation-duration: 750ms;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards; // TODO: remove?
+        animation-name: traditionalHeroOverlay;
+      }
+    }
   }
 
   // For all themes, if only the hero image is present (no overlay text) or hero wrapper,
@@ -52,6 +61,15 @@
     width: 100%;
     height: 100%;
     z-index: $hb-z-index-hero-fallback;
+
+    @include hb-traditional { // overlay that displays when there is not an image
+      .field-hs-page-hero & {
+        animation-duration: 750ms;
+        animation-timing-function: ease-out;
+        animation-fill-mode: forwards; // TODO: remove?
+        animation-name: traditionalHeroOverlay;
+      }
+    }
   }
 
   &__image-wrapper {
@@ -94,6 +112,15 @@
           animation-name: colorfulHeroImage;
         }
       }
+
+      @include hb-traditional {
+        .field-hs-page-hero & {
+          animation-duration: 750ms;
+          animation-timing-function: ease-out;
+          animation-fill-mode: forwards; // TODO: remove?
+          animation-name: traditionalHeroImage;
+        }
+      }
     }
   }
 
@@ -108,6 +135,13 @@
 
     @include hb-traditional {
       text-align: center;
+
+      .field-hs-page-hero & {
+        animation-duration: 1200ms;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards; // TODO: remove when complete
+        animation-name: traditionalHeroText;
+      }
     }
 
     @include hb-themes(('colorful', 'airy')) {
@@ -280,3 +314,32 @@
 }
 
 // Traditional Hero Animations
+@keyframes traditionalHeroText {
+  0% {
+    background-color: hotpink;
+  }
+
+  100% {
+    background-color: turquoise;
+  }
+}
+
+@keyframes traditionalHeroImage {
+  0% {
+    border: 1px solid white;
+  }
+
+  100% {
+    border: 20px solid white;
+  }
+}
+
+@keyframes traditionalHeroOverlay {
+  0% {
+    background-color: yellow;
+  }
+
+  100% {
+    background-color: blueviolet;
+  }
+}

@@ -15,10 +15,12 @@
     z-index: $hb-z-index-hero1-overlay;
 
     @include hb-traditional {
-      .field-hs-page-hero & {
-        animation-duration: 1000ms;
-        animation-timing-function: ease-out;
-        animation-name: traditionalHeroOverlay;
+      &.animate {
+        .hb-has-animation-enhancements & {
+          animation-duration: 1200ms;
+          animation-timing-function: ease-out;
+          animation-name: traditionalHeroOverlay;
+        }
       }
     }
   }
@@ -62,10 +64,12 @@
     z-index: $hb-z-index-hero-fallback;
 
     @include hb-traditional { // overlay that displays when there is not an image
-      .field-hs-page-hero & {
-        animation-duration: 1000ms;
-        animation-timing-function: ease-out;
-        animation-name: traditionalHeroOverlay;
+      &.animate {
+        .hb-has-animation-enhancements & {
+          animation-duration: 1200ms;
+          animation-timing-function: ease-out;
+          animation-name: traditionalHeroOverlay;
+        }
       }
     }
   }
@@ -104,10 +108,12 @@
       object-fit: cover;
 
       @include hb-themes(('colorful', 'airy')) {
-        .field-hs-page-hero & {
-          animation-duration: 750ms;
-          animation-timing-function: ease-out;
-          animation-name: colorfulHeroImage;
+        &.animate {
+          .hb-has-animation-enhancements & {
+            animation-duration: 950ms;
+            animation-timing-function: ease-out;
+            animation-name: colorfulHeroImage;
+          }
         }
       }
     }
@@ -125,22 +131,25 @@
     @include hb-traditional {
       text-align: center;
 
-      .field-hs-page-hero & {
-        animation-duration: 1500ms;
-        animation-timing-function: ease-in-out;
-        animation-name: traditionalHeroText;
+      &.animate {
+        .hb-has-animation-enhancements & {
+          animation-duration: 1700ms;
+          animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          animation-name: traditionalHeroText;
+        }
       }
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      .field-hs-page-hero & {
-        animation-duration: 1200ms;
-        animation-timing-function: ease-in-out;
-        animation-name: colorfulHeroText;
-      }
-
-      .field-hs-page-components & {
-        // border: 3px solid yellow; // main content heros
+      &.animate {
+        .hb-has-animation-enhancements & {
+          opacity: 0; // testing....
+          animation-duration: 2000ms;
+          animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          animation-name: colorfulHeroText;
+        }
       }
     }
 
@@ -282,7 +291,7 @@
 
 // Colorful Hero Animations
 @keyframes colorfulHeroText {
-  25% {
+  0% {
     opacity: 0%;
   }
 

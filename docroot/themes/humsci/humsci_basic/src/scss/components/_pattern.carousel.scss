@@ -119,8 +119,12 @@
             object-fit: cover;
           }
 
-          .field-hs-page-hero & {
-            animation-name: colorfulCarouselImage;
+          &.animate {
+            /* stylelint-disable max-nesting-depth */
+            .hb-has-animation-enhancements & {
+              animation-name: colorfulCarouselImage;
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
       }
@@ -160,15 +164,10 @@
           }
         }
 
-        // Animations
-        // We do not want the hero animation to display on the carousels.
-        // A placeholder for the upcoming carousel animations has been created to override the hero animations.
-        .field-hs-page-hero & {
-          animation-name: colorfulCarouselText;
-        }
-
-        .field-hs-page-components & {
-          // TODO: add override here
+        &.animate {
+          .hb-has-animation-enhancements & {
+            animation-name: colorfulCarouselText;
+          }
         }
 
         h2 {
@@ -235,12 +234,10 @@
           width: 650px !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
 
-        .field-hs-page-hero & {
-          animation-name: traditionalCarouselText;
-        }
-
-        .field-hs-page-components & {
-          // TODO: add override here
+        &.animate {
+          .hb-has-animation-enhancements & {
+            animation-name: traditionalCarouselText;
+          }
         }
 
         h2 {
@@ -626,7 +623,8 @@
 }
 
 // The placeholder / hero override comments in the keyframes
-// below set the foundation for future carousel animations.
+// below prevent the hero animations from displaying on carousels
+// and set the foundation for future carousel animations.
 
 // Colorful Carousel Animations
 @keyframes colorfulCarouselText {

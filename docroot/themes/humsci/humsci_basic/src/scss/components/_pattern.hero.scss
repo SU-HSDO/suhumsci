@@ -142,8 +142,8 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      .hb-has-animation-enhancements & {
-        opacity: 0; // prevent text from displaying if page loads before the animate class is applied
+      .hb-has-animation-enhancements.js & {
+        opacity: 0; // Prevent text from displaying if page loads before the animate class is applied. If JS is turned off we don't want to hide the text, therefore we are only setting opacity to zero when there is JS.
       }
 
       &.animate {

@@ -142,9 +142,12 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
+      .hb-has-animation-enhancements & {
+        opacity: 0; // prevent text from displaying if page loads before the animate class is applied
+      }
+
       &.animate {
         .hb-has-animation-enhancements & {
-          opacity: 0; // testing....
           animation-duration: 2000ms;
           animation-timing-function: ease-in-out;
           animation-fill-mode: forwards;
@@ -292,43 +295,43 @@
 // Colorful Hero Animations
 @keyframes colorfulHeroText {
   0% {
-    opacity: 0%;
+    opacity: 0;
   }
 
   100% {
-    opacity: 100%;
+    opacity: 1;
   }
 }
 
 @keyframes colorfulHeroImage {
   10% {
-    opacity: 0%;
+    opacity: 0;
   }
 
   100% {
-    opacity: 100%;
+    opacity: 1;
   }
 }
 
 // Traditional Hero Animations
 @keyframes traditionalHeroText {
   0% {
-    opacity: 0%;
+    opacity: 0;
     transform: translateY(-15px);
   }
 
   100% {
-    opacity: 100%;
+    opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes traditionalHeroOverlay {
   0% {
-    opacity: 90%;
+    opacity: 0.9;
   }
 
   100% {
-    opacity: 100%;
+    opacity: 1;
   }
 }

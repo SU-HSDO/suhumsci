@@ -8,6 +8,7 @@ dependencies:
     - media.type.embeddable
   module:
     - media
+    - stanford_media
 id: media.embeddable.default
 targetEntityType: media
 bundle: embeddable
@@ -25,9 +26,11 @@ content:
   field_media_embeddable_code:
     weight: 1
     label: hidden
-    settings: {  }
+    settings:
+      max_width: 0
+      max_height: 0
     third_party_settings: {  }
-    type: basic_string
+    type: embeddable_formatter
     region: content
 hidden:
   created: true

@@ -1,0 +1,27 @@
+uuid: 0453b3be-7ba6-49e2-b8fc-48370e5a510f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_priv_wysiwyg_files
+    - node.type.hs_private_page
+  module:
+    - file
+id: node.hs_private_page.field_priv_wysiwyg_files
+field_name: field_priv_wysiwyg_files
+entity_type: node
+bundle: hs_private_page
+label: 'WYSIWYG Files'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt rtf doc docx ppt pptx xls xlsx pdf'
+  max_filesize: 5MB
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

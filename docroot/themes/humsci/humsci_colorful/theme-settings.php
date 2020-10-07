@@ -47,7 +47,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
     '#type' => 'select',
     '#title' => t('Local Masthead Variant'),
     '#options' => [
-      'default' => '- Default -',
+      'default' => t('- Default -'),
       'dark' => t('Dark'),
     ],
     '#default_value' => theme_get_setting('local_masthead_variant_classname'),
@@ -63,7 +63,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
     '#type' => 'select',
     '#title' => t('Local Footer Variant'),
     '#options' => [
-      'default' => '- Default -',
+      'default' => t('- Default -'),
       'dark' => t('Dark'),
     ],
     '#default_value' => theme_get_setting('local_footer_variant_classname'),

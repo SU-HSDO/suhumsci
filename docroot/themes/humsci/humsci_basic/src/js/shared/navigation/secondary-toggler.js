@@ -1,4 +1,5 @@
 import changeNav from './change-nav';
+import togglerHandler from './toggler-handler';
 
 const togglers = document.querySelectorAll('.hb-secondary-toggler');
 
@@ -20,11 +21,7 @@ if (togglers) {
       changeNav(toggler, togglerContent, false);
     }
 
-    toggler.addEventListener('click', (e) => {
-      e.preventDefault();
 
-      const isExpanded = e.target.getAttribute('aria-expanded') === "true";
-      changeNav(toggler, togglerContent, !isExpanded);
-    });
+    toggler.addEventListener('click', (e) => togglerHandler(e, toggler, togglerContent));
   }
 }

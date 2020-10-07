@@ -1,4 +1,5 @@
 import changeNav from './change-nav';
+import togglerHandler from './toggler-handler';
 
 const togglers = document.querySelectorAll('.hb-nested-toggler');
 const mobileNavBreakpoint = 992;
@@ -17,12 +18,7 @@ if (togglers) {
       continue;
     }
 
-    toggler.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const isExpanded = e.target.getAttribute('aria-expanded') === "true";
-      changeNav(toggler, togglerContent, !isExpanded);
-    });
+    toggler.addEventListener('click', (e) => togglerHandler(e, toggler, togglerContent));
 
     // Some togglers will be anchor tags instead of buttons and they should behave
     // like a button when the spacebar is pressed

@@ -10,7 +10,6 @@ dependencies:
     - field.field.paragraph.hs_hero_image.field_hs_hero_title
     - paragraphs.paragraphs_type.hs_hero_image
   module:
-    - color_field
     - field_group
     - link
     - media_library
@@ -22,9 +21,8 @@ third_party_settings:
         - field_hs_hero_title
         - field_hs_hero_body
         - field_hs_hero_link
-        - field_hs_hero_overlay_color
       parent_name: ''
-      weight: 2
+      weight: 1
       format_type: details
       format_settings:
         description: ''
@@ -62,13 +60,6 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_hs_hero_overlay_color:
-    type: color_field_widget_box
-    weight: 5
-    region: content
-    settings:
-      default_colors: '#00505C,#53284F,#175E54,#4D4F53,#5E3032'
-    third_party_settings: {  }
   field_hs_hero_title:
     type: string_textfield
     weight: 2
@@ -79,4 +70,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_hs_hero_overlay_color: true
   status: true

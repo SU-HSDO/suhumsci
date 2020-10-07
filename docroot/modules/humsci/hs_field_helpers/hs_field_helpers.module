@@ -400,6 +400,25 @@ function hs_field_helpers_preprocess_field(&$variables) {
       ->replace($class, [$object->getEntityTypeId() => $object], ['clear' => TRUE]);
     $variables['attributes']['class'][] = Html::cleanCssIdentifier($class);
   }
+
+  if ($field_name == 'field_media_google_form') {
+    /** @var \Drupal\media\MediaInterface $media_entity */
+    $media_entity = $variables['element']['#object'];
+    $height = NULL;
+    if ($media_entity->hasField('field_media_google_height')) {
+      $height = $media_entity->get('field_media_google_height')->getString();
+    }
+
+    foreach ($variables['items'] as &$item) {
+      $src = &$item['content']['#attributes']['src'];
+      $src .= '?embedded=true';
+      $src = str_replace('?usp=sf_link', '', $src);
+
+      if ($height) {
+        $item['content']['#attributes']['height'] = $height;
+      }
+    }
+  }
 }
 
 /**

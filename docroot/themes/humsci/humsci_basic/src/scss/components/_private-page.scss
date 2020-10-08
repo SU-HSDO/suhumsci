@@ -53,4 +53,29 @@
       background-position: hb-calculate-rems(7px) hb-calculate-rems(10px);
     }
   }
+
+  .hb-dark-pattern & {
+    @include hb-icon-background('lock', 'white');
+
+    &.is-active,
+    &:hover,
+    &:focus {
+      @include hb-icon-background('lock', 'black');
+    }
+
+    @include grid-media-min('lg') {
+      &.is-active,
+      &:hover,
+      &:focus {
+        @include hb-icon-background('lock', 'white');
+      }
+    }
+  }
+
+  @include grid-media-min('lg') {
+    .hb-dark-pattern .hb-main-nav__menu-lv2 & {
+      @include hb-icon-background('lock', 'black');
+    }
+  }
 }
+

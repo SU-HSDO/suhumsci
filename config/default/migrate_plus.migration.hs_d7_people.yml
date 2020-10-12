@@ -185,8 +185,8 @@ process:
       source: infoLink
     -
       plugin: str_replace
-      search: '/ href="(.*)?".*?>(.*)?</a/'
-      replace: '><url>$1</url><title>$2</title></a'
+      search: '/ href="(.*?)".*?>(.*?)</'
+      replace: '><url>$1</url><title>$2</title><'
       regex: true
     -
       plugin: callback

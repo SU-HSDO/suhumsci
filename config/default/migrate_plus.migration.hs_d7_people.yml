@@ -20,6 +20,7 @@ source:
     type: hs_person
     basic_html: basic_html
     image_destination: 'public://media/people/'
+    june_first: '-06-01'
   item_selector: //PeopleItem
   fields:
     -
@@ -66,6 +67,10 @@ source:
       name: infoLinkUrl
       label: 'Link Url'
       selector: infoLinkUrl
+    -
+      name: infoLink
+      label: 'Info Links'
+      selector: infoLink
     -
       name: researchArea
       label: 'Research Area'
@@ -173,8 +178,25 @@ process:
     -
       plugin: explode
       delimiter: '|'
-#  field_hs_person_links/uri: infoLinkUrl
-#  field_hs_person_links/title: infoLinkTitle
+  field_hs_person_links:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: infoLink
+    -
+      plugin: str_replace
+      search: '/ href="(.*?)".*?>(.*?)</'
+      replace: '><url>$1</url><title>$2</title><'
+      regex: true
+    -
+      plugin: callback
+      callable: simplexml_load_string
+    -
+      plugin: sub_process
+      key: "@id"
+      process:
+        uri: url
+        title: title
   field_hs_person_research:
     -
       plugin: skip_on_empty
@@ -195,7 +217,16 @@ process:
   field_hs_person_telephone: phone
   field_hs_person_office: office
   field_hs_person_office_hours: officeHours
-#  field_hs_person_student_cohort: cohort
+  field_hs_person_student_cohort:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: cohort
+    -
+      plugin: concat
+      source:
+        - cohort
+        - constants/june_first
   field_hs_person_student_dissert: dissertationTitle
   field_hs_person_faculty_status:
     -
@@ -209,8 +240,16 @@ process:
       bundle: hs_person_faculty_status
       entity_type: taxonomy_term
       ignore_case: true
-#  field_hs_person_student_grad: graduationYear
-#  field_hs_person_mail: mailingAddress
+  field_hs_person_student_grad:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: graduationYear
+    -
+      plugin: concat
+      source:
+        - graduationYear
+        - constants/june_first
   field_hs_person_staff_type:
     -
       plugin: skip_on_empty

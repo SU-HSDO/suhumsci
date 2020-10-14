@@ -62,10 +62,14 @@
       }
     }
 
-    @include hb-traditional { // hb-hero-overly
+    @include hb-traditional { // hb-hero-overlay
       margin-top: 0;
       display: flex;
       min-height: 32rem;
+
+      &::before {
+        animation: traditionalCarouselOverlay;
+      }
 
       @include grid-media-min('md') {
         min-height: 42rem;
@@ -114,6 +118,14 @@
             min-height: 55vh;
             object-fit: cover;
           }
+
+          &.animate {
+            /* stylelint-disable max-nesting-depth */
+            .hb-has-animation-enhancements & {
+              animation-name: colorfulCarouselImage;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
         }
       }
     }
@@ -149,6 +161,16 @@
 
           @include grid-media-min('md') {
             top: hb-calculate-rems(56px);
+          }
+        }
+
+        .hb-has-animation-enhancements & {
+          opacity: 1;
+        }
+
+        &.animate {
+          .hb-has-animation-enhancements & {
+            animation-name: colorfulCarouselText;
           }
         }
 
@@ -214,6 +236,12 @@
 
         @include grid-media-min('2xl') {
           width: 650px !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        &.animate {
+          .hb-has-animation-enhancements & {
+            animation-name: traditionalCarouselText;
+          }
         }
 
         h2 {
@@ -595,5 +623,51 @@
         }
       }
     }
+  }
+}
+
+// The placeholder / hero override comments in the keyframes
+// below prevent the hero animations from displaying on carousels
+// and set the foundation for future carousel animations.
+
+// Colorful Carousel Animations
+@keyframes colorfulCarouselText {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes colorfulCarouselImage {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+// Traditional Carousel Animations
+@keyframes traditionalCarouselText {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes traditionalCarouselOverlay {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
   }
 }

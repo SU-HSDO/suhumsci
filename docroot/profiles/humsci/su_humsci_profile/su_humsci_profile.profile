@@ -310,3 +310,16 @@ function su_humsci_profile_form_node_type_add_form_alter(&$form, FormStateInterf
   $form['submission']['preview_mode']['#default_value'] = DRUPAL_DISABLED;
   $form['submission']['preview_mode']['#attributes']['disabled'] = TRUE;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_media_library_add_form_embeddable_alter(array &$form, FormStateInterface $form_state) {
+  $user = \Drupal::currentUser();
+  $authorized = $user->hasPermission('create field_media_embeddable_code')
+    || $user->hasPermission('edit field_media_embeddable_code');
+
+  if (isset($form['container']['field_media_embeddable_code'])) {
+    $form['container']['field_media_embeddable_code']['#access'] = $authorized;
+  }
+}

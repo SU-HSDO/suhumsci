@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.hs_private_page.field_hs_priv_page_components
+    - field.field.node.hs_private_page.field_priv_wysiwyg_files
     - node.type.hs_private_page
   module:
+    - insert
     - paragraphs
     - path
 id: node.hs_private_page.default
@@ -15,13 +17,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   field_hs_priv_page_components:
     type: paragraphs
-    weight: 121
+    weight: 8
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -38,9 +40,21 @@ content:
         add_above: '0'
     third_party_settings: {  }
     region: content
+  field_priv_wysiwyg_files:
+    type: insert_file
+    weight: 9
+    region: content
+    settings:
+      progress_indicator: throbber
+      insert_absolute: false
+      insert_styles:
+        - icon_link
+        - link
+      insert_default: link
+    third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -48,26 +62,26 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 3
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 120
+    weight: 7
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 4
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
@@ -75,7 +89,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60
@@ -84,7 +98,7 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 50
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }

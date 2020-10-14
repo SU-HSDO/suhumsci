@@ -5,12 +5,21 @@ dependencies:
   config:
     - core.entity_form_mode.media.media_library
     - field.field.media.google_form.field_media_google_form
+    - field.field.media.google_form.field_media_google_height
     - media.type.google_form
 id: media.google_form.media_library
 targetEntityType: media
 bundle: google_form
 mode: media_library
 content:
+  field_media_google_form:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   name:
     type: string_textfield
     settings:
@@ -21,7 +30,7 @@ content:
     region: content
 hidden:
   created: true
-  field_media_google_form: true
+  field_media_google_height: true
   path: true
   status: true
   uid: true

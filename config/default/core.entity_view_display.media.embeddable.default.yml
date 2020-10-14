@@ -1,0 +1,40 @@
+uuid: df51d70c-b793-45cd-be73-e836a6b11840
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.embeddable.field_media_embeddable
+    - field.field.media.embeddable.field_media_embeddable_code
+    - media.type.embeddable
+  module:
+    - media
+    - stanford_media
+id: media.embeddable.default
+targetEntityType: media
+bundle: embeddable
+mode: default
+content:
+  field_media_embeddable:
+    type: oembed
+    label: visually_hidden
+    weight: 0
+    settings:
+      max_width: 0
+      max_height: 0
+    third_party_settings: {  }
+    region: content
+  field_media_embeddable_code:
+    weight: 1
+    label: hidden
+    settings:
+      max_width: 0
+      max_height: 0
+    third_party_settings: {  }
+    type: embeddable_formatter
+    region: content
+hidden:
+  created: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

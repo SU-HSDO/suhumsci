@@ -1,0 +1,37 @@
+uuid: 7589a729-5fd2-403e-ba5b-5b9e052fc9bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.embeddable.field_media_embeddable
+    - field.field.media.embeddable.field_media_embeddable_code
+    - media.type.embeddable
+  module:
+    - media
+id: media.embeddable.default
+targetEntityType: media
+bundle: embeddable
+mode: default
+content:
+  field_media_embeddable:
+    type: oembed_textfield
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  field_media_embeddable_code:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+hidden:
+  created: true
+  name: true
+  path: true
+  status: true
+  uid: true

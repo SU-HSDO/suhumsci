@@ -5,6 +5,7 @@
  * Functions to support theming in the HumSci Basic theme.
  */
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
 
@@ -155,12 +156,18 @@ function _humsci_basic_check_link_access(array &$link_items) {
       $node = Node::load($nid);
       $type = $node->bundle();
 
-      if ($node && !$node->isPublished()) {
-        $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
+      if (!isset($link_item['attributes'])) {
+        $link_item['attributes'] = new Attribute();
       }
 
-      if ($node && $type == 'hs_private_page') {
-        $link_item['attributes']->addClass('hb-private-page-link');
+      if ($node) {
+        if (!$node->isPublished()) {
+          $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
+        }
+
+        if ($type == 'hs_private_page') {
+          $link_item['attributes']->addClass('hb-private-page-link');
+        }
       }
     }
 

@@ -11,8 +11,9 @@
 
     &::before {
       height: hb-calculate-rems(12px);
-      width: hb-calculate-rems(3px);
       top: hb-calculate-rems(4px);
+      transform: scaleX(0.5);
+      width: hb-calculate-rems(6px);
     }
   }
 
@@ -44,6 +45,7 @@
   border-color: transparent;
   transition: hb-transition(border-color);
   background-image: none;
+  line-height: 134%; // Increase the line height to override the hb-subheading mixin on line 2. This will allow the hover state of links to display as expected.
 
   @include hb-themes(('airy', 'colorful')) {
     @include hb-global-color('color', 'black');

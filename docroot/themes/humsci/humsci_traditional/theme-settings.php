@@ -81,4 +81,17 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
     ],
     '#default_value' => theme_get_setting('humsci_font_family'),
   ];
+
+  // Dark Inversion Variant Setting:
+  $form['options_settings']['humsci_colorful_dark_inversion'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Dark Inversion'),
+  ];
+
+  $form['options_settings']['humsci_colorful_dark_inversion']['dark_inversion_variant_classname'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use Dark Inversion'),
+    '#default_value' => theme_get_setting('dark_inversion_variant_classname'),
+    '#description' => t('This enables/disables the dark inversion variant of the site.'),
+  ];
 }

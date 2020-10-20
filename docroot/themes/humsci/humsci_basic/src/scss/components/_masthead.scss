@@ -52,6 +52,25 @@
       max-width: none;
     }
   }
+
+  // Dark mode masthead lockup
+  &.hb-dark-pattern {
+    .su-lockup {
+      &__wordmark,
+      &__line1,
+      &__line2,
+      &__line3,
+      &__line4,
+      &__line5 {
+        @include hb-global-color('color', 'white');
+      }
+
+      // Dark mode masthead lockup vertical pipe
+      &__cell2 {
+        @include hb-global-color('border-color', 'white');
+      }
+    }
+  }
 }
 
 .su-lockup {
@@ -59,3 +78,4 @@
     margin-bottom: hb-calculate-rems(2px);
   }
 }
+

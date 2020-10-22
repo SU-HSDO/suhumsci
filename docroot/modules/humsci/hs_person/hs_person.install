@@ -5,6 +5,8 @@
  * hs_person.install
  */
 
+use Drupal\field\Entity\FieldStorageConfig;
+
 /**
  * Implements hook_install().
  */
@@ -28,4 +30,44 @@ function hs_person_update_8001() {
   /** @var \Drupal\su_humsci_profile\HumsciCleanup $cleanup */
   $cleanup = \Drupal::service('su_humsci_profile.cleanup');
   $cleanup->deleteField('node', 'field_hs_person_mail_code');
+}
+
+/**
+ * Increase Interest field max length.
+ */
+function hs_person_update_8002(){
+  // Prepare relevant variables.
+  $entity_type = 'node';
+  $field_name = 'field_hs_person_interests';
+  $field_length = 1000;
+
+  // Update database schema.
+  $database = \Drupal::database();
+  // Resize the main field data table.
+  $database->query("ALTER TABLE {$entity_type}__{$field_name} MODIFY {$field_name}_value VARCHAR({$field_length})");
+  // Resize the revision field data table (if revisions are enabled).
+  $database->query("ALTER TABLE {$entity_type}_revision__{$field_name} MODIFY {$field_name}_value VARCHAR({$field_length})");
+
+  // Update storage schema.
+  $storage_key = $entity_type . '.field_schema_data.' . $field_name;
+  $storage_schema = \Drupal::keyValue('entity.storage_schema.sql');
+  $field_schema = $storage_schema->get($storage_key);
+  $field_schema[$entity_type . '__' . $field_name]['fields'][$field_name . '_value']['length'] = $field_length;
+  $field_schema[$entity_type . '_revision__' . $field_name]['fields'][$field_name . '_value']['length'] = $field_length;
+  $storage_schema->set($storage_key, $field_schema);
+
+  // Update field configuration.
+  $config = \Drupal::configFactory()
+    ->getEditable("field.storage.{$entity_type}.{$field_name}");
+  $config->set('settings.max_length', $field_length);
+  $config->save(TRUE);
+
+  // Update field storage configuration.
+  FieldStorageConfig::loadByName($entity_type, $field_name)->save();
+
+  return t('Length of @entity-type.@field-name was updated to @field-length', [
+    '@entity-type' => $entity_type,
+    '@field-name' => $field_name,
+    '@field-length' => $field_length,
+  ]);
 }

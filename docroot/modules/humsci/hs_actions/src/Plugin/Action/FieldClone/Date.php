@@ -10,9 +10,9 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldClone(
  *   id = "date",
- *   label = @Translation("Webforms"),
- *   description = @Translation("Incrementally increase the date on the field
- *   for every cloned item."), fieldTypes = {
+ *   label = @Translation("Date"),
+ *   description = @Translation("Incrementally increase the date on the field for every cloned item."),
+ *   fieldTypes = {
  *     "datetime",
  *     "datetime_range",
  *     "daterange"
@@ -83,6 +83,10 @@ class Date extends FieldCloneBase {
       $item_value = $values->get($delta)->getValue();
 
       foreach ($item_value as $column_name => $column_value) {
+        if (!in_array($column_name, ['value', 'end_value'])) {
+          $new_values[$delta][$column_name] = $column_value;
+          continue;
+        }
         $new_values[$delta][$column_name] = $this->incrementDateValue($column_value, $config);
       }
     }

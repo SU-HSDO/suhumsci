@@ -151,4 +151,17 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#description' => t('This enables/disables animations and can be useful to prevent users from experiencing distraction or nausea from animated content. This also provides a method for meeting <a href="https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions.html">WACG 2.1 Level AAA success criterion</a> if desired or required.'),
   ];
 
+  // Experimental Features
+  $form['options_settings']['humsci_basic_experimental_feature'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Experimental Features'),
+  ];
+
+  $form['options_settings']['humsci_basic_experimental_feature']['experimental_toggle'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use experimental features'),
+    '#default_value' => theme_get_setting('experimental_toggle'),
+    '#description' => t('This enables/disables experimental features, please use with caution. The following features are implemented: 1.) Refined padding for HB Raised Cards (COLORFUL THEME ONLY).'),
+  ];
+
 }

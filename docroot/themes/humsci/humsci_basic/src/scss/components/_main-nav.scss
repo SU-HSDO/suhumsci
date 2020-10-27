@@ -243,6 +243,27 @@
             @include hb-global-color('color', 'white');
           }
         }
+
+        .js & {
+          &.hb-main-nav__link--active-trail {
+            /* stylelint-disable max-nesting-depth */
+            &::before {
+              @include hb-pairing-color('background-color', 'tertiary-reversed');
+            }
+
+            &:hover,
+            &:focus {
+              &::before {
+                @include hb-pairing-color('background-color', 'secondary');
+
+                @include grid-media-min('lg') {
+                  @include hb-pairing-color('background-color', 'tertiary-reversed');
+                }
+              }
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
       }
 
       @include grid-media-min('lg') {
@@ -310,6 +331,16 @@
         }
       }
 
+      .hb-dark-inversion & {
+        @include grid-media-min('lg') {
+          &:hover,
+          &:focus {
+            @include hb-global-color('color', 'white');
+            @include hb-pairing-color('background-color', 'primary-dark');
+          }
+        }
+      }
+
       .hb-dark-pattern & {
         @include hb-global-color('color', 'white');
 
@@ -331,6 +362,14 @@
           &:hover:not(.is-active),
           &.is-active {
             @include hb-global-color('color', 'black');
+          }
+
+          .hb-dark-inversion & {
+            /* stylelint-disable max-nesting-depth */
+            &:hover:not(.is-active) {
+              @include hb-global-color('color', 'white');
+            }
+            /* stylelint-enable max-nesting-depth */
           }
         }
       }

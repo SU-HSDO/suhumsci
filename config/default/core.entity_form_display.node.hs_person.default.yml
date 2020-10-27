@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.node.hs_person.body
     - field.field.node.hs_person.field_hs_person_affiliation
+    - field.field.node.hs_person.field_hs_person_cv_link
     - field.field.node.hs_person.field_hs_person_department
     - field.field.node.hs_person.field_hs_person_education
     - field.field.node.hs_person.field_hs_person_email
@@ -103,6 +104,7 @@ third_party_settings:
         - field_hs_person_interests
         - field_hs_person_links
         - field_hs_person_external_profile
+        - field_hs_person_cv_link
       parent_name: group_tabs
       weight: 2
       format_type: tab
@@ -187,6 +189,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
+  field_hs_person_cv_link:
+    weight: 16
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
     region: content
   field_hs_person_department:
     weight: 10

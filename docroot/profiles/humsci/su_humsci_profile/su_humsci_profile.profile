@@ -18,6 +18,21 @@ use Drupal\user\RoleInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_table(&$variables) {
+  if (!empty($variables['attributes']['id']) && $variables['attributes']['id'] == 'menu-link-weight-reorder') {
+    foreach ($variables['rows'] as $key => &$row) {
+      if (!empty($row['cells'][0]['content']['#title'])) {
+        if ((string) $row['cells'][0]['content']['#title'] == 'Inaccessible') {
+          unset($variables['rows'][$key]);
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_contextual_links_alter().
  */
 function su_humsci_profile_contextual_links_alter(array &$links, $group, array $route_parameters) {

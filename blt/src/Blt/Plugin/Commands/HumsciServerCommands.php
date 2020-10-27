@@ -401,6 +401,10 @@ class HumsciServerCommands extends AcHooksCommand {
       ->arg('xmlsitemap_base_url')
       ->arg($new_domain)
       ->drush('xmlsitemap:rebuild')
+      ->drush('cset')
+      ->arg('hs_courses_importer.importer_settings')
+      ->arg('base_url')
+      ->arg($new_domain)
       ->drush('cr')
       ->run();
   }

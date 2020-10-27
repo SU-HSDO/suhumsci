@@ -101,6 +101,14 @@ source:
       name: department
       label: Departement
       selector: academicOffices/0/department
+    -
+      name: cv_document
+      label: 'CV Document'
+      selector: documents/cv/url
+    -
+      name: cv_title
+      label: 'CV Document Label'
+      selector: documents/cv/label/text
   ids:
     sunetid:
       type: string
@@ -182,20 +190,17 @@ process:
     -
       plugin: skip_on_empty
       method: process
-      source: profile_photo
-    -
-      plugin: skip_on_empty
-      method: process
       source: '@image_file'
     -
       plugin: entity_generate
-      source: display_name
-      value_key: name
+      source: '@image_file'
+      value_key: field_media_image
       bundle_key: bundle
       bundle: image
       entity_type: media
       ignore_case: true
       values:
+        name: '@title'
         field_media_image/target_id: '@image_file'
         field_media_image/alt: '@title'
   field_hs_person_links:
@@ -233,6 +238,8 @@ process:
       bundle: hs_person_department
       value_key: name
       ignore_case: true
+  field_hs_person_cv_link/uri: cv_document
+  field_hs_person_cv_link/title: cv_title
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
@@ -255,5 +262,8 @@ destination:
     - field_hs_person_links
     - field_hs_person_education
     - field_hs_person_department
+    - field_hs_person_image/target_id
+    - field_hs_person_cv_link
+    - field_hs_person_cv_link
 migration_dependencies:
   required: {  }

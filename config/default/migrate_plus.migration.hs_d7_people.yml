@@ -14,7 +14,7 @@ source:
   plugin: url
   data_fetcher_plugin: file
   data_parser_plugin: simple_xml
-  urls: { }
+  urls: {  }
   constants:
     status: 1
     type: hs_person
@@ -56,9 +56,9 @@ source:
       label: Biography
       selector: biography
     -
-      name: personTitleDeparment
+      name: personTitleDepartment
       label: 'Department Title'
-      selector: personTitleDeparment
+      selector: personTitleDepartment
     -
       name: infoLinkTitle
       label: 'Link Title'
@@ -174,7 +174,7 @@ process:
     -
       plugin: skip_on_empty
       method: process
-      source: personTitleDeparment
+      source: personTitleDepartment
     -
       plugin: explode
       delimiter: '|'
@@ -193,7 +193,7 @@ process:
       callable: simplexml_load_string
     -
       plugin: sub_process
-      key: "@id"
+      key: '@id'
       process:
         uri: url
         title: title

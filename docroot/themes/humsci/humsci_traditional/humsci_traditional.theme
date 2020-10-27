@@ -23,6 +23,13 @@ function humsci_traditional_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element
     $vars['html_attributes']->addClass('hb-font-' . $font_family);
   }
+
+  // Dark Inversion Variants.
+  $div = theme_get_setting('dark_inversion_variant_classname');
+  if ($div) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('hb-dark-inversion');
+  }
 }
 
 /**

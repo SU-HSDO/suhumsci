@@ -6,17 +6,16 @@ dependencies:
     - field.field.paragraph.hs_accordion.field_hs_accordion_description
     - field.field.paragraph.hs_accordion.field_hs_accordion_image
     - field.field.paragraph.hs_accordion.field_hs_accordion_summary
+    - field.field.paragraph.hs_accordion.field_hs_accordion_views
     - paragraphs.paragraphs_type.hs_accordion
   module:
     - ds
     - field_formatter_class
     - hs_field_helpers
-    - layout_builder
     - stanford_media
     - text
+    - viewfield
 third_party_settings:
-  layout_builder:
-    sections: {  }
   ds:
     layout:
       id: pattern_accordion
@@ -27,12 +26,17 @@ third_party_settings:
         pattern:
           field_templates: default
           variant: closed
+          variant_field: field_hs_accordion_description
+          variant_field_values:
+            closed: ''
+            open: ''
     regions:
       title:
         - field_hs_accordion_summary
       description:
         - field_hs_accordion_image
         - field_hs_accordion_description
+        - field_hs_accordion_views
 id: paragraph.hs_accordion.default
 targetEntityType: paragraph
 bundle: hs_accordion
@@ -67,5 +71,19 @@ content:
     third_party_settings: {  }
     type: string
     region: title
+  field_hs_accordion_views:
+    weight: 3
+    label: hidden
+    settings:
+      view_title: hidden
+      always_build_output: true
+      empty_view_title: hidden
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    type: viewfield_default
+    region: description
 hidden:
   search_api_excerpt: true

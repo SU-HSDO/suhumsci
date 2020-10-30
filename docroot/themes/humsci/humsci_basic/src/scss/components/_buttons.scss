@@ -42,6 +42,17 @@ button.more-link,
   @include hb-secondary-button;
 }
 
+// This adds margin to the top of more link which is needed for hb-grid views
+.more-link {
+  .views-element-container & {
+    margin-top: hb-calculate-rems(24px);
+
+    @include grid-media-min('md') {
+      margin-top: hb-calculate-rems(48px);
+    }
+  }
+}
+
 // List of buttons on a node detail page
 .hs-button,
 .hs-button--big,

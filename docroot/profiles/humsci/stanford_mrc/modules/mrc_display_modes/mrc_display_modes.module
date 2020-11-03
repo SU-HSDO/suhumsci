@@ -14,7 +14,7 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 function mrc_display_modes_form_entity_view_mode_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   /** @var \Drupal\Core\Entity\Entity\EntityViewMode $view_mode */
   $view_mode = $form_state->getFormObject()->getEntity();
-  $bundles = \Drupal::entityManager()
+  $bundles = \Drupal::service('entity_type.bundle.info')
     ->getBundleInfo($view_mode->getTargetType());
 
   foreach ($bundles as &$bundle) {

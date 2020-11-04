@@ -6,18 +6,20 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.anonymous permissions"
-    Then the role "anonymous" should have 14 permissions
+    Then the role "anonymous" should have 16 permissions
     And drush output should contain "access content"
     And drush output should contain "search content"
     And drush output should contain "view any course_collections entities"
     And drush output should contain "view any event_collections entities"
     And drush output should contain "view any publications_collections entities"
+    And drush output should contain "view field_hs_accordion_views"
     And drush output should contain "view field_hs_hero_overlay_color"
     And drush output should contain "view field_hs_text_area_bg_color"
     And drush output should contain "view field_media_embeddable_code"
     And drush output should contain "view field_paragraph_style"
     And drush output should contain "view media"
     And drush output should contain "view own course_collections entities"
+    And drush output should contain "view own field_hs_accordion_views"
     And drush output should contain "view own field_hs_hero_overlay_color"
     And drush output should contain "view own field_media_embeddable_code"
     And drush output should contain "view the administration theme"

@@ -35,6 +35,10 @@
     background-color: transparent;
     list-style-type: none;
     padding-left: hb-calculate-rems(16px);
+
+    .hb-dark-inversion & {
+      @include hb-pairing-color('background-color', 'primary-dark');
+    }
   }
 
   &__menu-lv1 {
@@ -51,16 +55,35 @@
   &__link {
     font-size: hb-calculate-rems(16px);
     @include hb-global-color('color', 'black');
+
+    .hb-dark-inversion & {
+      @include hb-global-color('color', 'white');
+
+      &:hover,
+      &:focus,
+      &.is-active {
+        @include hb-global-color('color', 'black');
+      }
+    }
   }
 
   // make sure external links within the secondary nav receive the same styles as other links
-  &__link.ext,
-  &__link.ext:hover,
-  &__link.ext:focus {
+  &__link.ext {
     @include hb-global-color('color', 'black');
 
-    @include hb-themes(('airy', 'colorful')) {
-      background-image: none;
+    .hb-dark-inversion & {
+      @include hb-global-color('color', 'white');
+    }
+
+    &:hover,
+    &:focus {
+      @include hb-themes(('airy', 'colorful')) {
+        background-image: none;
+      }
+
+      .hb-dark-inversion & {
+        @include hb-global-color('color', 'black');
+      }
     }
   }
 
@@ -102,6 +125,54 @@
     border-bottom: $hb-thin-border;
     @include hb-global-color('border-color', 'gray-medium');
 
+    &:hover,
+    &:focus {
+      text-decoration: none;
+
+      &:not(.is-active) {
+        .hb-dark-inversion & {
+          + .hb-secondary-nav__button {
+            @include hb-icon-background('plus', 'black');
+
+            /* stylelint-disable max-nesting-depth */
+            &[aria-expanded="true"] {
+              @include hb-icon-background('minus', 'black');
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        @include hb-themes(('airy', 'colorful')) {
+          @include hb-global-color('background-color', 'gray-light');
+        }
+
+        @include hb-traditional {
+          @include hb-pairing-color('background-color', 'tertiary-highlight');
+        }
+      }
+    }
+
+    .hb-dark-inversion & {
+      + .hb-secondary-nav__button {
+        @include hb-icon-background('plus', 'white');
+
+        &[aria-expanded="true"] {
+          @include hb-icon-background('minus', 'white');
+        }
+      }
+
+      &::before {
+        @include hb-pairing-color('background-color', 'tertiary-reversed');
+      }
+
+      &:hover,
+      &:focus {
+        &::before {
+          @include hb-pairing-color('background-color', 'secondary');
+        }
+      }
+    }
+
     &.is-active {
       font-weight: hb-theme-font-weight(semibold);
       @include hb-pairing-color('background-color', 'secondary-highlight');
@@ -109,19 +180,14 @@
       &::before {
         @include hb-pairing-color('background-color', 'secondary');
       }
-    }
 
-    &:hover,
-    &:focus {
-      text-decoration: none;
+      .hb-dark-inversion & {
+        + .hb-secondary-nav__button {
+          @include hb-icon-background('plus', 'black');
 
-      &:not(.is-active) {
-        @include hb-themes(('airy', 'colorful')) {
-          @include hb-global-color('background-color', 'gray-light');
-        }
-
-        @include hb-traditional {
-          @include hb-pairing-color('background-color', 'tertiary-highlight');
+          &[aria-expanded="true"] {
+            @include hb-icon-background('minus', 'black');
+          }
         }
       }
     }

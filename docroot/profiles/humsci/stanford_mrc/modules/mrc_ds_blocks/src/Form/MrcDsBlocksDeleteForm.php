@@ -2,9 +2,11 @@
 
 namespace Drupal\mrc_ds_blocks\Form;
 
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\mrc_ds_blocks\MrcDsBlocks;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for removing a block from a bundle.
@@ -17,6 +19,23 @@ class MrcDsBlocksDeleteForm extends ConfirmFormBase {
    * @var \stdClass
    */
   protected $block;
+
+  /**
+   * Entity Type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $bundleInfo;
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.bundle.info')
+    );
+  }
+
+  public function __construct(EntityTypeBundleInfoInterface $entity_bundle_info) {
+    $this->bundleInfo = $entity_bundle_info;
+  }
 
   /**
    * {@inheritdoc}
@@ -47,15 +66,17 @@ class MrcDsBlocksDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $bundles = entity_get_bundles();
+    $bundles = $this->bundleInfo->getAllBundleInfo();
+
     $bundle_label = $bundles[$this->block->entity_type][$this->block->bundle]['label'];
 
     mrc_ds_blocks_delete_block($this->block);
 
-    drupal_set_message(t('The block %block_id has been deleted from the %type content type.', [
-      '%block_id' => t($this->block->blockId),
-      '%type' => $bundle_label,
-    ]));
+    $this->messenger()
+      ->addStatus($this->t('The block %block_id has been deleted from the %type content type.', [
+        '%block_id' => t($this->block->blockId),
+        '%type' => $bundle_label,
+      ]));
 
     // Redirect.
     $form_state->setRedirectUrl($this->getCancelUrl());

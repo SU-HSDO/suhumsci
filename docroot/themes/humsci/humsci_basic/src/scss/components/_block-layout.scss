@@ -54,12 +54,19 @@
 }
 
 .email {
+  word-break: break-all;
+
   a {
     @include hb-link--inline($icon: false);
   }
 
   [class^="fa-"] {
     display: none;
+  }
+
+  //Removing break-all from the email label only, to avoid contact column titles from wrapping unintentionally.
+  & .field-label {
+    word-break: normal;
   }
 }
 

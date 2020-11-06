@@ -6,6 +6,7 @@ dependencies:
     - core.base_field_override.node.hs_person.title
     - field.field.node.hs_person.body
     - field.field.node.hs_person.field_hs_person_affiliation
+    - field.field.node.hs_person.field_hs_person_cv_link
     - field.field.node.hs_person.field_hs_person_department
     - field.field.node.hs_person.field_hs_person_education
     - field.field.node.hs_person.field_hs_person_email
@@ -21,6 +22,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_office
     - field.field.node.hs_person.field_hs_person_office_hours
     - field.field.node.hs_person.field_hs_person_research
+    - field.field.node.hs_person.field_hs_person_square_img
     - field.field.node.hs_person.field_hs_person_staff_type
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
@@ -66,24 +68,6 @@ third_party_settings:
               suggestion: menu_block__main
               label_type: root
               context_mapping: {  }
-            additional: {  }
-            weight: 1
-          d4286c93-0a3d-48e2-a8f3-f649afba29c5:
-            uuid: d4286c93-0a3d-48e2-a8f3-f649afba29c5
-            region: top
-            configuration:
-              id: 'field_block:node:hs_person:title'
-              label: 'Full Name'
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: entity_title_heading
-                settings:
-                  tag: h1
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
             additional: {  }
             weight: 1
           cf81b2bb-83c1-4179-aaa0-747938d91a94:
@@ -133,7 +117,7 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 10
+            weight: 11
           4459bd69-99ad-43cd-8142-aff24dd62cc8:
             uuid: 4459bd69-99ad-43cd-8142-aff24dd62cc8
             region: top
@@ -157,7 +141,7 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 9
+            weight: 10
           e1c16ca1-8949-41f4-b1ad-b8c6c421af04:
             uuid: e1c16ca1-8949-41f4-b1ad-b8c6c421af04
             region: top
@@ -181,7 +165,7 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 8
+            weight: 9
           8d405c41-3d04-44a4-b60f-eaa8c2fc3167:
             uuid: 8d405c41-3d04-44a4-b60f-eaa8c2fc3167
             region: main_below
@@ -197,26 +181,6 @@ third_party_settings:
                 third_party_settings:
                   field_formatter_class:
                     class: ''
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 0
-          5b7321c8-dbe9-400f-8d37-08a58d82537b:
-            uuid: 5b7321c8-dbe9-400f-8d37-08a58d82537b
-            region: image
-            configuration:
-              id: 'field_block:node:hs_person:field_hs_person_image'
-              label: 'Profile Image'
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: media_image_formatter
-                settings:
-                  view_mode: default
-                  image_style: hs_medium_square_360x360
-                  link: false
-                third_party_settings: {  }
               context_mapping:
                 entity: layout_builder.entity
             additional: {  }
@@ -466,7 +430,7 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 7
+            weight: 8
           a6fecd47-3e2d-47d9-9ee2-89fc6734afd9:
             uuid: a6fecd47-3e2d-47d9-9ee2-89fc6734afd9
             region: top
@@ -490,6 +454,76 @@ third_party_settings:
                 view_mode: view_mode
             additional: {  }
             weight: 3
+          a4395c30-a930-4528-9d05-1ce96df470b9:
+            uuid: a4395c30-a930-4528-9d05-1ce96df470b9
+            region: top
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_cv_link'
+              label: CV
+              provider: layout_builder
+              label_display: ''
+              formatter:
+                label: above
+                type: link
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: '0'
+                  target: '0'
+                third_party_settings:
+                  field_formatter_class:
+                    class: hb-highlighted-label
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 7
+          004f3d61-45e6-4252-839b-2bf1da912ac0:
+            uuid: 004f3d61-45e6-4252-839b-2bf1da912ac0
+            region: image
+            configuration:
+              id: 'field_block:node:hs_person:field_hs_person_square_img'
+              label: 'Square Profile Image'
+              provider: layout_builder
+              label_display: ''
+              formatter:
+                label: hidden
+                type: media_image_formatter
+                settings:
+                  view_mode: default
+                  image_style: hs_medium_square_360x360
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 2
+          d4286c93-0a3d-48e2-a8f3-f649afba29c5:
+            uuid: d4286c93-0a3d-48e2-a8f3-f649afba29c5
+            region: title
+            configuration:
+              id: 'field_block:node:hs_person:title'
+              label: 'Full Name'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: entity_title_heading
+                settings:
+                  tag: h1
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 0
         third_party_settings: {  }
     enabled: true
     allow_custom: false

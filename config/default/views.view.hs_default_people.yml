@@ -13,6 +13,7 @@ dependencies:
     - field.storage.node.field_hs_person_office
     - field.storage.node.field_hs_person_office_hours
     - field.storage.node.field_hs_person_research
+    - field.storage.node.field_hs_person_square_img
     - field.storage.node.field_hs_person_telephone
     - field.storage.node.field_hs_person_title
     - node.type.hs_person
@@ -618,6 +619,7 @@ display:
           default_field_elements: 1
           inline:
             field_hs_person_image: 0
+            field_hs_person_square_img: 0
             title: 0
             field_hs_person_title: 0
             field_hs_person_email: 0
@@ -636,24 +638,29 @@ display:
               weight: 0
               plugin: views_row
               source: field_hs_person_image
+            'views_row:field_hs_person_square_img':
+              destination: image
+              weight: 1
+              plugin: views_row
+              source: field_hs_person_square_img
             'views_row:field_hs_person_department':
               destination: description
-              weight: 1
+              weight: 2
               plugin: views_row
               source: field_hs_person_department
             'views_row:field_hs_person_title':
               destination: description
-              weight: 2
+              weight: 3
               plugin: views_row
               source: field_hs_person_title
             'views_row:field_hs_person_email':
               destination: description
-              weight: 3
+              weight: 4
               plugin: views_row
               source: field_hs_person_email
             'views_row:title':
               destination: title
-              weight: 4
+              weight: 5
               plugin: views_row
               source: title
       sorts:
@@ -729,10 +736,10 @@ display:
             offset_label: Offset
           quantity: 9
       fields:
-        field_hs_person_image:
-          id: field_hs_person_image
-          table: node__field_hs_person_image
-          field: field_hs_person_image
+        field_hs_person_square_img:
+          id: field_hs_person_square_img
+          table: node__field_hs_person_square_img
+          field: field_hs_person_square_img
           relationship: none
           group_type: group
           admin_label: ''
@@ -1060,7 +1067,7 @@ display:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
         - 'config:field.storage.node.field_hs_person_email'
-        - 'config:field.storage.node.field_hs_person_image'
+        - 'config:field.storage.node.field_hs_person_square_img'
         - 'config:field.storage.node.field_hs_person_title'
         - entity_field_info
         - views_data
@@ -1075,10 +1082,10 @@ display:
       display_description: ''
       exposed_block: false
       fields:
-        field_hs_person_image:
-          id: field_hs_person_image
-          table: node__field_hs_person_image
-          field: field_hs_person_image
+        field_hs_person_square_img:
+          id: field_hs_person_square_img
+          table: node__field_hs_person_square_img
+          field: field_hs_person_square_img
           relationship: none
           group_type: group
           admin_label: ''
@@ -1966,6 +1973,7 @@ display:
           default_field_elements: 1
           inline:
             field_hs_person_image: 0
+            field_hs_person_square_img: 0
             title: 0
             field_hs_person_title: 0
             field_hs_person_email: 0
@@ -1991,59 +1999,64 @@ display:
               weight: 0
               plugin: views_row
               source: field_hs_person_image
+            'views_row:field_hs_person_square_img':
+              destination: image
+              weight: 1
+              plugin: views_row
+              source: field_hs_person_square_img
             'views_row:field_hs_person_department':
               destination: description
-              weight: 1
+              weight: 2
               plugin: views_row
               source: field_hs_person_department
             'views_row:title':
               destination: title
-              weight: 2
+              weight: 3
               plugin: views_row
               source: title
             'views_row:field_hs_person_title':
               destination: subtitle
-              weight: 3
+              weight: 4
               plugin: views_row
               source: field_hs_person_title
             'views_row:field_hs_person_office':
               destination: columns
-              weight: 4
+              weight: 5
               plugin: views_row
               source: field_hs_person_office
             'views_row:field_hs_person_office_hours':
               destination: columns
-              weight: 5
+              weight: 6
               plugin: views_row
               source: field_hs_person_office_hours
             'views_row:field_hs_person_telephone':
               destination: columns
-              weight: 6
+              weight: 7
               plugin: views_row
               source: field_hs_person_telephone
             'views_row:field_hs_person_email':
               destination: columns
-              weight: 7
+              weight: 8
               plugin: views_row
               source: field_hs_person_email
             'views_row:field_hs_person_links':
               destination: columns
-              weight: 8
+              weight: 9
               plugin: views_row
               source: field_hs_person_links
             'views_row:edit_node':
               destination: bottom
-              weight: 9
+              weight: 10
               plugin: views_row
               source: edit_node
             'views_row:field_hs_person_research':
               destination: category
-              weight: 10
+              weight: 11
               plugin: views_row
               source: field_hs_person_research
             'views_row:field_hs_person_interests':
               destination: category
-              weight: 11
+              weight: 12
               plugin: views_row
               source: field_hs_person_interests
       pager:
@@ -2113,12 +2126,12 @@ display:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
         - 'config:field.storage.node.field_hs_person_email'
-        - 'config:field.storage.node.field_hs_person_image'
         - 'config:field.storage.node.field_hs_person_interests'
         - 'config:field.storage.node.field_hs_person_links'
         - 'config:field.storage.node.field_hs_person_office'
         - 'config:field.storage.node.field_hs_person_office_hours'
         - 'config:field.storage.node.field_hs_person_research'
+        - 'config:field.storage.node.field_hs_person_square_img'
         - 'config:field.storage.node.field_hs_person_telephone'
         - 'config:field.storage.node.field_hs_person_title'
         - entity_field_info
@@ -2134,10 +2147,10 @@ display:
       display_description: ''
       exposed_block: false
       fields:
-        field_hs_person_image:
-          id: field_hs_person_image
-          table: node__field_hs_person_image
-          field: field_hs_person_image
+        field_hs_person_square_img:
+          id: field_hs_person_square_img
+          table: node__field_hs_person_square_img
+          field: field_hs_person_square_img
           relationship: none
           group_type: group
           admin_label: ''
@@ -2875,7 +2888,7 @@ display:
           click_sort_column: target_id
           type: entity_reference_label
           settings:
-            link: true
+            link: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -3092,6 +3105,7 @@ display:
           default_field_elements: 1
           inline:
             field_hs_person_image: 0
+            field_hs_person_square_img: 0
             title: 0
             field_hs_person_title: 0
             field_hs_person_email: 0
@@ -3118,59 +3132,64 @@ display:
               weight: 0
               plugin: views_row
               source: field_hs_person_image
+            'views_row:field_hs_person_square_img':
+              destination: image
+              weight: 1
+              plugin: views_row
+              source: field_hs_person_square_img
             'views_row:field_hs_person_department':
               destination: description
-              weight: 1
+              weight: 2
               plugin: views_row
               source: field_hs_person_department
             'views_row:title':
               destination: title
-              weight: 2
+              weight: 3
               plugin: views_row
               source: title
             'views_row:field_hs_person_title':
               destination: subtitle
-              weight: 3
+              weight: 4
               plugin: views_row
               source: field_hs_person_title
             'views_row:field_hs_person_office':
               destination: columns
-              weight: 4
+              weight: 5
               plugin: views_row
               source: field_hs_person_office
             'views_row:field_hs_person_office_hours':
               destination: columns
-              weight: 5
+              weight: 6
               plugin: views_row
               source: field_hs_person_office_hours
             'views_row:field_hs_person_telephone':
               destination: columns
-              weight: 6
+              weight: 7
               plugin: views_row
               source: field_hs_person_telephone
             'views_row:field_hs_person_email':
               destination: columns
-              weight: 7
+              weight: 8
               plugin: views_row
               source: field_hs_person_email
             'views_row:field_hs_person_links':
               destination: columns
-              weight: 8
+              weight: 9
               plugin: views_row
               source: field_hs_person_links
             'views_row:edit_node':
               destination: bottom
-              weight: 9
+              weight: 10
               plugin: views_row
               source: edit_node
             'views_row:field_hs_person_research':
               destination: category
-              weight: 10
+              weight: 11
               plugin: views_row
               source: field_hs_person_research
             'views_row:field_hs_person_interests':
               destination: category
-              weight: 11
+              weight: 12
               plugin: views_row
               source: field_hs_person_interests
       pager:
@@ -3241,12 +3260,12 @@ display:
         - 'config:field.storage.node.field_hs_person_department'
         - 'config:field.storage.node.field_hs_person_email'
         - 'config:field.storage.node.field_hs_person_faculty_status'
-        - 'config:field.storage.node.field_hs_person_image'
         - 'config:field.storage.node.field_hs_person_interests'
         - 'config:field.storage.node.field_hs_person_links'
         - 'config:field.storage.node.field_hs_person_office'
         - 'config:field.storage.node.field_hs_person_office_hours'
         - 'config:field.storage.node.field_hs_person_research'
+        - 'config:field.storage.node.field_hs_person_square_img'
         - 'config:field.storage.node.field_hs_person_telephone'
         - 'config:field.storage.node.field_hs_person_title'
         - entity_field_info
@@ -3320,6 +3339,7 @@ display:
           default_field_elements: 1
           inline:
             field_hs_person_image: 0
+            field_hs_person_square_img: 0
             title: 0
             field_hs_person_title: 0
             field_hs_person_telephone: 0
@@ -3341,21 +3361,26 @@ display:
               weight: 0
               plugin: views_row
               source: field_hs_person_image
+            'views_row:field_hs_person_square_img':
+              destination: image
+              weight: 1
+              plugin: views_row
+              source: field_hs_person_square_img
             'views_row:field_hs_person_department':
               destination: description
-              weight: 1
+              weight: 2
               plugin: views_row
               source: field_hs_person_department
             'views_row:title':
               destination: title
-              weight: 2
+              weight: 3
               plugin: views_row
               source: title
       fields:
-        field_hs_person_image:
-          id: field_hs_person_image
-          table: node__field_hs_person_image
-          field: field_hs_person_image
+        field_hs_person_square_img:
+          id: field_hs_person_square_img
+          table: node__field_hs_person_square_img
+          field: field_hs_person_square_img
           relationship: none
           group_type: group
           admin_label: ''
@@ -3918,9 +3943,9 @@ display:
         - 'config:entityqueue.entity_queue.hs_person'
         - 'config:field.storage.node.field_hs_person_department'
         - 'config:field.storage.node.field_hs_person_email'
-        - 'config:field.storage.node.field_hs_person_image'
         - 'config:field.storage.node.field_hs_person_office'
         - 'config:field.storage.node.field_hs_person_office_hours'
+        - 'config:field.storage.node.field_hs_person_square_img'
         - 'config:field.storage.node.field_hs_person_telephone'
         - 'config:field.storage.node.field_hs_person_title'
         - entity_field_info

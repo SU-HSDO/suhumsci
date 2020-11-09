@@ -456,6 +456,7 @@
       button {
         @include hb-unbuttonize;
         font-size: 0;
+        padding-top: hb-calculate-rems(5px);
 
         &::before {
           @include hb-global-color('color', 'white');
@@ -465,8 +466,34 @@
           width: hb-calculate-rems(11px);
           display: block;
           margin: 0 hb-calculate-rems(10px);
-          box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
           border-radius: 50%;
+
+          // Use box shadow property to improve visual accessibiity of slick dots.
+          @include hb-themes(('airy', 'colorful')) {
+            $light-shadow: hb-get-global-color('gray-light', $hc-colorful-globals);
+            $dark-shadow: hb-get-global-color('black', $hc-colorful-globals);
+
+            // Fallback colors
+            $accent-shadow: hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
+
+            // For modern browsers
+            $accent-shadow: var(--palette--secondary);
+
+            box-shadow: inset hb-calculate-rems(-2px) 0 $light-shadow, 0 hb-calculate-rems(-2px) 0 $accent-shadow, 0 0 0 hb-calculate-rems(2px) $dark-shadow;
+          }
+
+          @include hb-traditional {
+            $light-shadow: hb-get-global-color('gray-light', $ht-traditional-globals);
+            $dark-shadow: hb-get-global-color('black', $ht-traditional-globals);
+
+            // Fallback accent color
+            $accent-shadow: hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
+
+            // For modern browsers
+            $accent-shadow: var(--palette--secondary);
+
+            box-shadow: inset hb-calculate-rems(-2px) 0 $light-shadow, 0 hb-calculate-rems(-2px) 0 $accent-shadow, 0 0 0 hb-calculate-rems(2px) $dark-shadow;
+          }
         }
 
         &:hover::before,
@@ -532,9 +559,10 @@
 
       .slick-prev {
         transform: rotate(180deg);
+        transform: scaleX(-1);
 
         @include hb-themes(('airy', 'colorful')) {
-          margin-bottom: hb-calculate-rems(25px);
+          margin-bottom: hb-calculate-rems(15px);
           right: calc(#{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)});// move it past the slick-next arrow
 
           @include grid-media-min('md') {
@@ -547,7 +575,7 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(25px);
+          margin-bottom: hb-calculate-rems(12.5px);
           right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
 
           @include grid-media-min('md') {
@@ -568,7 +596,7 @@
 
           @include grid-media-min('xl') {
             left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
-            margin-bottom: hb-calculate-rems(50px);
+            margin-bottom: hb-calculate-rems(40px);
           }
 
           @include grid-media-min('2xl') {
@@ -580,7 +608,7 @@
       .slick-next {
 
         @include hb-themes(('airy', 'colorful')) {
-          margin-bottom: hb-calculate-rems(15px);
+          margin-bottom: hb-calculate-rems(15.5px);
           right: 25px;
 
           @include grid-media-min('md') {
@@ -593,7 +621,7 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(15px);
+          margin-bottom: hb-calculate-rems(12.5px);
           right: hb-calculate-rems(50px);
 
           @include grid-media-min('md') {

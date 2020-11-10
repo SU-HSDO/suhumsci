@@ -46,6 +46,6 @@ Feature: Install State
   Scenario: Test shortcut menu items for developer role
     Given I am logged in as a user with the "Developer" role
     Then I am on "/"
-    And I should see 37 "#toolbar-item-shortcuts-tray a" elements
+    And I should see 38 "#toolbar-item-shortcuts-tray a" elements
     Then I click the "#toolbar-item-shortcuts-tray a[href='/google-analytics']" element
     And I should be on "https://analytics.google.com/analytics/web/"

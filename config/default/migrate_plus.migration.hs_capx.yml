@@ -18,6 +18,8 @@ source:
     link_text: 'Stanford Profile'
     file_destination: 'public://media/capx/'
     file_extension: .jpg
+    square: square
+    separator: '-'
   urls: {  }
   item_selector: values
   fields:
@@ -65,6 +67,10 @@ source:
       name: profile_photo
       label: 'Profile Photo'
       selector: profilePhotos/bigger/url
+    -
+      name: square_photo
+      label: 'Square Photo'
+      selector: profilePhotos/square/url
     -
       name: appointments
       label: 'Administrative Appointments'
@@ -240,6 +246,47 @@ process:
       ignore_case: true
   field_hs_person_cv_link/uri: cv_document
   field_hs_person_cv_link/title: cv_title
+  square_image_path:
+    plugin: concat
+    source:
+      - constants/file_destination
+      - alias
+      - constants/separator
+      - constants/square
+      - '@image_timestamp'
+      - constants/file_extension
+  square_image_file:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: square_photo
+    -
+      plugin: image_dimension_skip
+      method: process
+      width: 10
+      height: 10
+    -
+      plugin: file_import
+      destination: '@square_image_path'
+      id_only: true
+      reuse: true
+  field_hs_person_square_img/target_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@square_image_file'
+    -
+      plugin: entity_generate
+      source: '@square_image_file'
+      value_key: field_media_image
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        name: '@title'
+        field_media_image/target_id: '@square_image_file'
+        field_media_image/alt: '@title'
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
@@ -264,6 +311,6 @@ destination:
     - field_hs_person_department
     - field_hs_person_image/target_id
     - field_hs_person_cv_link
-    - field_hs_person_cv_link
+    - field_hs_person_square_img/target_id
 migration_dependencies:
   required: {  }

@@ -61,8 +61,8 @@ class DateTimeYearOnly extends WidgetBase {
     if ($date = $items->get($delta)->date) {
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.
-      $date->setTimezone(new \DateTimeZone(drupal_get_user_timezone()));
-      $element['value']['#default_value'] = $this->createDefaultValue($date, drupal_get_user_timezone())
+      $date->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+      $element['value']['#default_value'] = $this->createDefaultValue($date, date_default_timezone_get())
         ->format('Y');
     }
 

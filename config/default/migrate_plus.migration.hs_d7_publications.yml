@@ -19,6 +19,7 @@ source:
     status: 1
     type: hs_publications
     basic_html: basic_html
+    minimal_html: minimal_html
     image_destination: 'public://media/image/publications/'
     document_destination: 'public://media/file/publications/'
   item_selector: /PublicationList/PublicationItem
@@ -90,7 +91,8 @@ process:
   field_hs_publication_link/uri: publication_link_url
   field_hs_publication_link/title: publication_link_title
   field_hs_publication_publisher: publisher
-  field_hs_publication_citation: citation
+  field_hs_publication_citation/value: citation
+  field_hs_publication_citation/format: constants/minimal_html
   field_hs_publication_type:
     -
       plugin: skip_on_empty

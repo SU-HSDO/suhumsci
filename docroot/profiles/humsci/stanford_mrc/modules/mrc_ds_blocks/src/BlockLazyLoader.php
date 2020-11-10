@@ -4,9 +4,12 @@ namespace Drupal\mrc_ds_blocks;
 
 use Drupal\block\BlockInterface;
 use Drupal\block\BlockViewBuilder;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Theme\Registry;
 
 /**
  * Class BlockLazyLoader.
@@ -18,9 +21,9 @@ class BlockLazyLoader extends BlockViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityManager $entity_manager, LanguageManager $language_manager, ModuleHandler $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entity_manager, EntityRepositoryInterface $entityRepository, LanguageManager $language_manager, Registry $theme_registry, EntityDisplayRepositoryInterface $entity_display_repository) {
     $entity_type = $entity_manager->getStorage('node')->getEntityType();
-    parent::__construct($entity_type, $entity_manager, $language_manager);
+    parent::__construct($entity_type, $entityRepository, $language_manager, $theme_registry, $entity_display_repository);
   }
 
   /**

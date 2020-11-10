@@ -20,3 +20,38 @@ function hs_publications_install() {
   }
 
 }
+
+/**
+ * Convert the citation field to a formatted text field.
+ */
+function hs_publications_update_8001() {
+  $schema = \Drupal::database()->schema();
+
+  $tables = [
+    'node__field_hs_publication_citation',
+    'node_revision__field_hs_publication_citation',
+  ];
+  foreach ($tables as $tableName) {
+    $format = 'field_hs_publication_citation_format';
+    $field_schema[$tableName]['fields'][$format] = [
+      'type' => 'varchar_ascii',
+      'length' => 255,
+    ];
+    $field_schema[$tableName]['indexes'][$format] = [$format];
+    $schema->addField($tableName, $format, $field_schema[$tableName]['fields'][$format]);
+    $schema->addIndex($tableName, $format, $field_schema[$tableName]['indexes'][$format], $field_schema[$tableName]);
+
+    \Drupal::database()->update($tableName)
+      ->fields([$format => 'minimal_html'])
+      ->execute();
+  }
+
+  \Drupal::configFactory()
+    ->getEditable('field.storage.node.field_hs_publication_citation')
+    ->set('type', 'text_long')
+    ->save();
+  \Drupal::configFactory()
+    ->getEditable('field.field.node.hs_publications.field_hs_publication_citation')
+    ->set('field_type', 'text_long')
+    ->save();
+}

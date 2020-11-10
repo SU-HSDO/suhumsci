@@ -4,7 +4,6 @@
  * mrc_events_importer.module
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -99,7 +98,7 @@ function mrc_events_importer_migration_list($migration_ids = '') {
             $configured_values = (array) $migration->get($property);
             $configured_id = (in_array($search_value, $configured_values)) ? $search_value : 'default';
             if (empty($search_value) || $search_value == $configured_id) {
-              if (empty($migration_ids) || in_array(Unicode::strtolower($id), $migration_ids)) {
+              if (empty($migration_ids) || in_array(mb_strtolower($id), $migration_ids)) {
                 $filtered_migrations[$id] = $migration;
               }
             }

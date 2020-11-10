@@ -16,6 +16,13 @@ function humsci_colorful_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element
     $vars['html_attributes']->addClass('hc-pairing-' . $color_pairing);
   }
+
+  // Dark Inversion Variants.
+  $div = theme_get_setting('dark_inversion_variant_classname');
+  if ($div) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('hb-dark-inversion');
+  }
 }
 
 /**

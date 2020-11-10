@@ -6,10 +6,12 @@ dependencies:
     - field.field.paragraph.hs_accordion.field_hs_accordion_description
     - field.field.paragraph.hs_accordion.field_hs_accordion_image
     - field.field.paragraph.hs_accordion.field_hs_accordion_summary
+    - field.field.paragraph.hs_accordion.field_hs_accordion_views
     - paragraphs.paragraphs_type.hs_accordion
   module:
     - media_library
     - text
+    - viewfield
 id: paragraph.hs_accordion.default
 targetEntityType: paragraph
 bundle: hs_accordion
@@ -37,6 +39,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
+    region: content
+  field_hs_accordion_views:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: viewfield_select
     region: content
 hidden:
   created: true

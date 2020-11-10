@@ -77,6 +77,13 @@ function humsci_basic_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element
     $vars['html_attributes']->addClass('hb-has-animation-enhancements');
   }
+
+  // Experimental Features setting.
+  $experimental_feature = theme_get_setting('experimental_toggle');
+  if ($experimental_feature) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('hb-experimental');
+  }
 }
 
 /**
@@ -174,5 +181,17 @@ function _humsci_basic_check_link_access(array &$link_items) {
     if (!empty($link_item['below'])) {
       _humsci_basic_check_link_access($link_item['below']);
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
+  if (!empty($variables['button'])) {
+    $variables['button'] = htmlspecialchars_decode(trim(strip_tags(render($variables['button']))));
+  }
+  if (!empty($variables['title'])) {
+    $variables['title'] = trim(strip_tags(render($variables['title'])));
   }
 }

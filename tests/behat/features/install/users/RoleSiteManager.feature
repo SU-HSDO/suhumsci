@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.site_manager permissions"
-    Then the role "site_manager" should have 177 permissions
+    Then the role "site_manager" should have 180 permissions
     And drush output should contain "access administration pages"
     And drush output should contain "access content overview"
     And drush output should contain "access contextual links"
@@ -48,6 +48,7 @@ Feature: Install State
     And drush output should contain "create terms in hs_event_type"
     And drush output should contain "create terms in hs_news_categories"
     And drush output should contain "create terms in hs_person_affiliation"
+    And drush output should contain "create terms in hs_person_department"
     And drush output should contain "create terms in hs_person_faculty_status"
     And drush output should contain "create terms in hs_person_staff_type"
     And drush output should contain "create terms in hs_person_student_type"
@@ -92,6 +93,7 @@ Feature: Install State
     And drush output should contain "delete terms in hs_event_type"
     And drush output should contain "delete terms in hs_news_categories"
     And drush output should contain "delete terms in hs_person_affiliation"
+    And drush output should contain "delete terms in hs_person_department"
     And drush output should contain "delete terms in hs_person_faculty_status"
     And drush output should contain "delete terms in hs_person_staff_type"
     And drush output should contain "delete terms in hs_person_student_type"
@@ -137,6 +139,7 @@ Feature: Install State
     And drush output should contain "edit terms in hs_event_type"
     And drush output should contain "edit terms in hs_news_categories"
     And drush output should contain "edit terms in hs_person_affiliation"
+    And drush output should contain "edit terms in hs_person_department"
     And drush output should contain "edit terms in hs_person_faculty_status"
     And drush output should contain "edit terms in hs_person_staff_type"
     And drush output should contain "edit terms in hs_person_student_type"

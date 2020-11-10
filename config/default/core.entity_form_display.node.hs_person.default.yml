@@ -21,6 +21,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_office
     - field.field.node.hs_person.field_hs_person_office_hours
     - field.field.node.hs_person.field_hs_person_research
+    - field.field.node.hs_person.field_hs_person_square_img
     - field.field.node.hs_person.field_hs_person_staff_type
     - field.field.node.hs_person.field_hs_person_student_cohort
     - field.field.node.hs_person.field_hs_person_student_dissert
@@ -46,7 +47,7 @@ third_party_settings:
         - field_hs_person_first_name
         - field_hs_person_middle_name
         - field_hs_person_last_name
-        - field_hs_person_image
+        - field_hs_person_square_img
         - field_hs_person_affiliation
       parent_name: group_tabs
       weight: 1
@@ -103,8 +104,8 @@ third_party_settings:
         - field_hs_person_research
         - field_hs_person_interests
         - field_hs_person_links
-        - field_hs_person_external_profile
         - field_hs_person_cv_link
+        - field_hs_person_external_profile
       parent_name: group_tabs
       weight: 2
       format_type: tab
@@ -180,18 +181,18 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 3
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   field_hs_person_affiliation:
-    weight: 6
+    weight: 7
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_hs_person_cv_link:
-    weight: 16
+    weight: 15
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -225,7 +226,7 @@ content:
     type: email_default
     region: content
   field_hs_person_external_profile:
-    weight: 15
+    weight: 16
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -245,13 +246,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_hs_person_image:
-    type: media_library_widget
-    weight: 5
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
     region: content
   field_hs_person_interests:
     weight: 13
@@ -313,6 +307,13 @@ content:
     third_party_settings: {  }
     type: options_select
     region: content
+  field_hs_person_square_img:
+    type: media_library_widget
+    weight: 6
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
   field_hs_person_staff_type:
     weight: 58
     settings: {  }
@@ -366,7 +367,7 @@ content:
     region: content
   path:
     type: path
-    weight: 6
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -374,21 +375,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 3
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 6
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 5
+    weight: 4
     region: content
     third_party_settings: {  }
   title:
@@ -401,7 +402,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60
@@ -410,8 +411,9 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 50
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_hs_person_image: true

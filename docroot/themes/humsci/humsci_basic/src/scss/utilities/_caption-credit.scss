@@ -1,0 +1,17 @@
+.field-media-image {
+  + .field-media-image-caption {
+    @include hb-caption-credit;
+  }
+}
+
+// Refine caption/credit styles for vertical linked postcards
+.field-hs-postcard-image {
+  .hb-vertical-linked-card & {
+    .field-media-image {
+      + .field-media-image-caption {
+        padding-bottom: 2rem;
+        z-index: 0;
+      }
+    }
+  }
+}

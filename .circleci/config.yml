@@ -172,6 +172,7 @@ update_dependencies: &update_dependencies
     - run: composer install --optimize-autoloader
     - run:
         name: Update dependencies
+        no_output_timeout: 30m
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"

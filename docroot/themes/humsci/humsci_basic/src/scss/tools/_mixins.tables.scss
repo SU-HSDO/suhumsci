@@ -26,17 +26,16 @@
   top: 0;
   @include hb-global-color('border-color', 'white');
 
-  a {
+  a,
+  a:not([class]) {
+    @include hb-global-color('color', 'white');
+    background-image: none;
+
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'white');
+      @include hb-pairing-color('color', 'secondary-highlight');
       box-shadow: none;
     }
-  }
-
-  a:not([class]) {
-    @include hb-pairing-color('color', 'secondary-highlight');
-    background-image: none;
   }
 }
 

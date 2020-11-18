@@ -296,6 +296,7 @@
   }
 }
 
+// Styles for WYSIWYG / text captions
 @mixin hb-caption($italic: false) {
   @include hb-text-reset;
   @include hb-global-color('color', 'gray-dark');
@@ -319,6 +320,43 @@
 
     @include hb-traditional {
       @include hb-global-color('color', 'gray-light');
+    }
+  }
+}
+
+// Styles for captions and credits added via a view mode
+@mixin hb-caption-credit {
+  @include hb-global-color('color', 'white');
+  font-style: italic;
+  font-size: hb-calculate-rems(12px);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: $hb-z-index-small-5;
+
+  @include hb-themes(('colorful', 'airy')) {
+    background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
+  }
+
+  @include hb-traditional {
+    background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
+  }
+
+  p {
+    @include clearfix;
+    line-height: 120%;
+    margin: hb-calculate-rems(16px) hb-calculate-rems(8px) hb-calculate-rems(8px);
+    text-align: right;
+    float: right;
+    width: 90%;
+
+    @include grid-media-min('sm') {
+      margin: hb-calculate-rems(24px) hb-calculate-rems(16px) hb-calculate-rems(12px);
+      width: 50%;
+    }
+
+    @include grid-media-min('md') {
+      width: 30%;
     }
   }
 }

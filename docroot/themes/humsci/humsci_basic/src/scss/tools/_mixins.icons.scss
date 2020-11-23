@@ -151,12 +151,12 @@
 
   @include hb-themes(('airy', 'colorful')) {
     @include hb-icon-background('arrow-right-box-shadow', $color);
-    filter: url('#offsetColorful');
+    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 hb-get-global-color('black', $hc-colorful-globals));
   }
 
   @include hb-traditional {
     @include hb-icon-background('arrow-right-long-box-shadow', $color);
-    filter: url('#offsetTraditional');
+    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 hb-get-global-color('black', $ht-traditional-globals));
   }
 }
 

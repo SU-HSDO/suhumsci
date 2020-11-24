@@ -7,6 +7,7 @@ const mainToggle = document.querySelector('.hb-main-nav__toggle');
 const mainNavContent = document.querySelector('.hb-main-nav__menu-lv1');
 const nestedTogglers = document.querySelectorAll('.hb-nested-toggler');
 const isBelowMobileNavBreakpoint = (window.innerWidth < 992);
+const navLoading = document.querySelector('.hb-main-nav--is-still-loading');
 
 // Collapse the main hamburger nav on mobile.
 if (isBelowMobileNavBreakpoint) {
@@ -33,4 +34,6 @@ if (nestedTogglers) {
 
 // Now that we've manually collapsed the main nav and subnavs,
 // we can remove the "still loading" class and disable the CSS-powered menu suppression.
-document.querySelector('.hb-main-nav--is-still-loading').classList.remove('hb-main-nav--is-still-loading');
+if (navLoading) {
+  navLoading.classList.remove('hb-main-nav--is-still-loading');
+}

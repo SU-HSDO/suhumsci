@@ -37,7 +37,6 @@ class HsMigrateImportForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 
-
   /**
    * Check if the current user has permission to any migration objects.
    *

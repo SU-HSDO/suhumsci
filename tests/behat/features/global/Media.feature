@@ -90,7 +90,7 @@ Feature: Media
     Then I press "Save"
     And I should see the error message "1 error has been found: Video URL"
     And I should see "The given URL does not match any known oEmbed providers"
-    Then I fill in "Video URL" with "https://youtu.be/-DYSucV1_9w"
+    Then I fill in "Video URL" with "https://www.youtube.com/watch?v=-DYSucV1_9w"
     And I press "Save"
     Then I should be on "/admin/content/media"
     And I should see the message "Video Aenean commodo ligula eget dolor has been created."

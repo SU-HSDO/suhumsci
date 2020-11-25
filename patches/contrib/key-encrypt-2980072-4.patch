@@ -7,17 +7,17 @@ index 0000000..3b01968
 +name: Key Encrypt
 +type: module
 +description: Provides a plugin for Key to encrypt the key value using Encrypt profiles.
-+core: 8.x
++core_version_requirement: ^8.8 || ^9
 +package: Security
 +dependencies:
 +  - key
 +  - encrypt
 diff --git a/modules/key_encrypt/src/Plugin/KeyProvider/EncryptedConfigKeyProvider.php b/modules/key_encrypt/src/Plugin/KeyProvider/EncryptedConfigKeyProvider.php
 new file mode 100644
-index 0000000..63f66ea
+index 0000000..9294916
 --- /dev/null
 +++ b/modules/key_encrypt/src/Plugin/KeyProvider/EncryptedConfigKeyProvider.php
-@@ -0,0 +1,123 @@
+@@ -0,0 +1,122 @@
 +<?php
 +
 +namespace Drupal\key_encrypt\Plugin\KeyProvider;
@@ -107,9 +107,8 @@ index 0000000..63f66ea
 +   */
 +  public function getKeyValue(KeyInterface $key) {
 +    $key_value = parent::getKeyValue($key);
-+    if ($encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile'])) {
-+      $key_value = $this->encryption->decrypt($key_value, $encryption_profile);
-+    }
++    $encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile']);
++    $key_value = $this->encryption->decrypt($key_value, $encryption_profile);
 +    return $key_value;
 +  }
 +

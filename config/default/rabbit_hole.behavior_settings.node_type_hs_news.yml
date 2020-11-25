@@ -1,11 +1,16 @@
 uuid: 9c57d4b2-787f-4264-8394-88e8f11e8316
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.hs_news
 _core:
   default_config_hash: jE8PNP4yNbX9DF5XLyZpfAwD-gU_rF31lJ6XCoS_YUg
 id: node_type_hs_news
+entity_type_id: node_type
+entity_id: hs_news
 action: page_redirect
 allow_override: 1
 redirect: '[node:field_hs_news_link:uri]'
 redirect_code: 301
+redirect_fallback_action: access_denied

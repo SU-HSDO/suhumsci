@@ -18,3 +18,10 @@ function hs_migrate_update_8001() {
 function hs_migrate_update_8002() {
   \Drupal::service('module_installer')->install(['config_pages']);
 }
+
+/**
+ * Delete settings file no longer needed.
+ */
+function hs_migrate_update_8003() {
+  \Drupal::configFactory()->getEditable('hs_migrate.settings')->delete();
+}

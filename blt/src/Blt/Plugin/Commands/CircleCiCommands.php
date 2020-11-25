@@ -40,7 +40,7 @@ class CircleCiCommands extends BltTasks {
     $collection->addTask($this->taskDrush()
       ->drush('config-import')
       ->option('yes'));
-    $collection->addTask($this->taskComposerUpdate());
+    $collection->addTask($this->taskComposerUpdate()->option('no-interaction'));
 
     $collection->addTask($this->taskDrush()->drush('updb')->option('yes'));
     $collection->addTask($this->taskDrush()

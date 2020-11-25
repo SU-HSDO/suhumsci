@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d79dbd82d09b5c26110fe14681056206",
+    "content-hash": "7892edc48ee2e5a1202c7135f946c61b",
     "packages": [
         {
             "name": "acquia/blt",
@@ -15683,6 +15683,51 @@
             "description": "Stanford Media module for Drupal 8 Media management",
             "homepage": "https://github.com/SU-SWS/stanford_media",
             "time": "2020-11-10T17:03:31+00:00"
+        },
+        {
+            "name": "su-sws/stanford_migrate",
+            "version": "8.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SU-SWS/stanford_migrate.git",
+                "reference": "13984cf4254ab16da8002b8a9aeb8e43099a4d68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/13984cf4254ab16da8002b8a9aeb8e43099a4d68",
+                "reference": "13984cf4254ab16da8002b8a9aeb8e43099a4d68",
+                "shasum": ""
+            },
+            "require": {
+                "drupal/migrate_file": "^1.1",
+                "drupal/migrate_plus": "^5.0",
+                "drupal/migrate_tools": "^5.0",
+                "drupal/ultimate_cron": "^2.0@alpha"
+            },
+            "type": "drupal-custom-module",
+            "extra": {
+                "patches": {
+                    "drupal/migrate_plus": {
+                        "https://www.drupal.org/project/migrate_plus/issues/2837684": "https://www.drupal.org/files/issues/2837684-8-migrate-plus-xml-return-as-xml.patch",
+                        "https://www.drupal.org/project/migrate_plus/issues/3050058": "https://www.drupal.org/files/issues/2019-05-17/migrate_plus-no_selector-3050058-3.patch"
+                    },
+                    "drupal/migrate_tools": {
+                        "https://www.drupal.org/project/migrate_tools/issues/2894708": "https://www.drupal.org/files/issues/2019-02-28/disabled-migrations-list-2894708-17.patch"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\stanford_migrate\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Stanford Migrate Helper functions",
+            "homepage": "https://github.com/SU-SWS/stanford_migrate",
+            "time": "2020-11-09T16:57:44+00:00"
         },
         {
             "name": "su-sws/stanford_ssp",

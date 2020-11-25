@@ -20,8 +20,12 @@ function hs_migrate_update_8002() {
 }
 
 /**
- * Delete settings file no longer needed.
+ * Delete settings & configs no longer needed.
  */
 function hs_migrate_update_8003() {
   \Drupal::configFactory()->getEditable('hs_migrate.settings')->delete();
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('ultimate_cron.job.hs_migrate') as $config_name) {
+    $config_factory->getEditable($config_name)->delete();
+  }
 }

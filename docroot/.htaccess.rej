@@ -1,0 +1,35 @@
+--- docroot/.htaccess
++++ docroot/.htaccess
+@@ -69,6 +69,23 @@ AddEncoding gzip svgz
+ <IfModule mod_rewrite.c>
+   RewriteEngine on
+ 
++  # Redirect HTTP to HTTPS on cloud
++  RewriteCond %{HTTPS} off
++  RewriteCond %{HTTP:X-Forwarded-Proto} !https
++  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} prod [NC,OR]
++  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} test [NC,OR]
++  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} dev [NC]
++  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [NE,L,R=301]
++
++  RewriteCond %{HTTP_HOST} ^symsys\.stanford\.edu [NC]
++  RewriteCond %{REQUEST_URI} ^/viewing/ [OR]
++  RewriteCond %{QUERY_STRING} ^.*viewing
++  RewriteRule ^(.*)$ http://%{HTTP_HOST}? [NE,L,R=301]
++
++  RewriteCond %{REQUEST_URI} ^/wp-content/ [NC]
++  RewriteCond %{REQUEST_URI} (.js|.css|.jpg|.jpeg|.png|.pdf)$
++  RewriteRule .* - [F]
++
+   # Set "protossl" to "s" if we were accessed via https://.  This is used later
+   # if you enable "www." stripping or enforcement, in order to ensure that
+   # you don't bounce between http and https.
+@@ -146,6 +163,8 @@ AddEncoding gzip svgz
+   RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
+   # Allow access to test-specific PHP files:
+   RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?.php
++  # Allow access to simplesaml paths.
++  RewriteCond %{REQUEST_URI} !^/simplesaml
+   # Allow access to Statistics module's custom front controller.
+   # Copy and adapt this rule to directly execute PHP files in contributed or
+   # custom modules or to run another PHP application in the same directory.

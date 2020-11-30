@@ -1,0 +1,278 @@
+<?php
+
+namespace Humsci\Blt\Plugin\Commands;
+
+use Symfony\Component\Console\Question\Question;
+
+class HsCommands extends HsAcquiaApiCommands {
+
+  /**
+   * Get encryption keys from acquia.
+   *
+   * @command humsci:keys
+   * @description stuff
+   */
+  public function humsciKeys() {
+    $this->taskDrush()
+      ->drush("rsync --mode=rltDkz @default.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
+      ->run();
+  }
+
+  /**
+   * Get encryption keys from acquia.
+   *
+   * @param string $env
+   *   Acquia environment to send the keys.
+   *
+   * @command humsci:keys:send
+   */
+  public function humsciKeysSend($env = 'prod') {
+    $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
+    $key_dir = $this->getConfigValue("key-dir.$env");
+    if (strtolower($send[0]) == 'y') {
+      $this->taskDrush()
+        ->drush("rsync @self:../keys/ @default.$env:$key_dir")
+        ->run();
+    }
+  }
+
+  /**
+   * Create a new database on Acquia environment.
+   *
+   * @command humsci:create-database
+   */
+  public function createDatabase() {
+    $database = $this->getMachineName('What is the name of the database? This ideally will match the site directory name. No special characters please.');
+    $this->setupCloudApi();
+    $this->say('<info>' . $this->acquiaDatabases->create($this->appId, $database)->message . '</info>');
+  }
+
+  /**
+   * Add a domain to Acquia environment.
+   *
+   * @param string $environment
+   *   Environment: dev, test, or prod.
+   * @param string $domains
+   *   Comma separated new domain to add.
+   *
+   * @command humsci:add-domain
+   */
+  public function humsciAddDomain($environment, $domains) {
+    $this->setupCloudApi();
+    foreach (explode(',', $domains) as $domain) {
+      $this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain);
+    }
+  }
+
+  /**
+   * Run the install steps for a site.
+   *
+   * @param string $site
+   *   Site machine name.
+   *
+   * @param false[] $options
+   *
+   * @throws \Robo\Exception\TaskException
+   *
+   * @command humsci:install-site
+   */
+  public function installSite($site, $options = [
+    'prod' => FALSE,
+    'stage' => FALSE,
+  ]) {
+    $alias = "$site.dev";
+    if ($options['prod']) {
+      $alias = "$site.prod";
+    }
+    elseif ($options['stage']) {
+      $alias = "$site.stage";
+    }
+
+    $status = $this->taskDrush()
+      ->alias($alias)
+      ->drush('core-status')
+      ->option('format', 'json', '=')
+      ->printOutput(FALSE)
+      ->run()
+      ->getMessage();
+    $status = json_decode($status, TRUE);
+    $confirm = $this->confirm(sprintf('Are you sure you wish to delete all data on database %s for site %s', $status['db-name'], $site));
+    if (!$confirm) {
+      return;
+    }
+
+    $this->taskDrush()
+      ->alias($alias)
+      ->drush('site-install')
+      ->arg('su_humsci_profile')
+      ->drush('pm-uninstall')
+      ->arg('config_ignore')
+      ->drush('config-import')
+      ->arg('sync')
+      ->run();
+  }
+
+  /**
+   * Changes necessary configuration and adds the domain to the LE Cert.
+   *
+   * @param string $site
+   *   The machine name of the site.
+   *
+   * @command humsci:launch-site
+   *
+   * @throws \Robo\Exception\TaskException
+   */
+  public function launchSite($site) {
+    $new_domain = preg_replace('/[^a-z]/', '-', $site);
+    $new_domain = $this->askQuestion('New domain?', "https://$new_domain.stanford.edu", TRUE);
+    $this->switchSiteContext($site);
+    $this->taskDrush()
+      ->alias($this->getConfigValue('drush.aliases.prod'))
+      ->drush('cset')
+      ->arg('config_split.config_split.not_live')
+      ->arg('status')
+      ->arg(0)
+      ->drush('cset')
+      ->arg('domain_301_redirect.settings')
+      ->arg('domain')
+      ->arg($new_domain)
+      ->drush('cset')
+      ->arg('domain_301_redirect.settings')
+      ->arg('enabled')
+      ->arg(1)
+      ->drush('pmu')
+      ->arg('nobots')
+      ->drush('state:set')
+      ->arg('xmlsitemap_base_url')
+      ->arg($new_domain)
+      ->drush('xmlsitemap:rebuild')
+      ->drush('cset')
+      ->arg('hs_courses_importer.importer_settings')
+      ->arg('base_url')
+      ->arg($new_domain)
+      ->drush('cr')
+      ->run();
+  }
+
+  /**
+   * Sync the staging sites databases with that from production.
+   *
+   * @command humsci:sync-stage
+   *
+   * @options exclude Comma separated list of database names to skip.
+   */
+  public function syncStaging(array $options = ['exclude' => NULL]) {
+    $task_started = time() - (60 * 60 * 24);
+    $this->setupCloudApi();
+
+    $sites = $this->getSitesToSync($task_started, $options);
+    if (!$this->confirm(sprintf('Are you sure you wish to stage the following sites: <comment>%s</comment>', implode(', ', $sites)))) {
+      return;
+    }
+    $count = count($sites);
+    $copy_sites = array_splice($sites, 0, 4);
+
+    foreach ($copy_sites as $site) {
+      $this->say("Copying $site database to staging.");
+      $this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $site, $this->getEnvironmentUuid('test'));
+    }
+
+    while (!empty($sites)) {
+      echo '.';
+      sleep(10);
+      $finished_databases = $this->getCompletedDatabaseCopies($task_started);
+
+      if ($finished = array_intersect($copy_sites, $finished_databases)) {
+        echo PHP_EOL;
+        foreach ($finished as $copied_db) {
+          $db_position = array_search($copied_db, $copy_sites);
+          $new_site = array_splice($sites, 0, 1);
+          $new_site = reset($new_site);
+          $copy_sites[$db_position] = $new_site;
+          $this->say("Copying $new_site database to staging.");
+          $this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid('test'));
+        }
+      }
+    }
+    $this->yell("$count database have been copied to staging.");
+  }
+
+  /**
+   * Get an overall list of database names to sync.
+   *
+   * @param int $task_started
+   *   Time to compare the completed task.
+   * @param array $options
+   *   Array of keyed command options.
+   *
+   * @return array
+   *   Array of database names to sync.
+   */
+  protected function getSitesToSync($task_started, array $options) {
+    $finished_databases = $this->getCompletedDatabaseCopies($task_started);
+
+    $sites = $this->getConfigValue('multisites');
+    foreach ($sites as $key => &$db_name) {
+      $db_name = $db_name == 'default' ? 'swshumsci' : $db_name;
+
+      if (strpos($db_name, 'sandbox') !== FALSE) {
+        unset($sites[$key]);
+      }
+    }
+    if (!empty($options['exclude'])) {
+      $exclude = explode(',', $options['exclude']);
+      $sites = array_diff($sites, $exclude);
+    }
+    return array_diff($sites, $finished_databases);
+  }
+
+  /**
+   * Get a list of all databases that have finished copying after a time.
+   *
+   * @param int $time_comparison
+   *   Time to compare the completed task.
+   *
+   * @return array
+   *   Array of database names.
+   */
+  protected function getCompletedDatabaseCopies($time_comparison) {
+    $databases = [];
+    $this->setupCloudApi();
+    /** @var \AcquiaCloudApi\Response\NotificationResponse $notification */
+    foreach ($this->acquiaApplications->getAll() as $notification) {
+      if (
+        $notification->event== 'DatabaseCopied' &&
+        $notification->status == 'completed' &&
+        strtotime($notification->created_at) >= $time_comparison
+      ) {
+        $databases = array_merge($databases, $notification->context['database']['names']);
+      }
+    }
+    return array_values(array_unique($databases));
+  }
+
+  /**
+   * Ask the user for a new stanford url and validate the entry.
+   *
+   * @param string $message
+   *   Prompt for the user.
+   *
+   * @return string
+   *   User entered value.
+   */
+  protected function getMachineName($message) {
+    $question = new Question($this->formatQuestion($message));
+    $question->setValidator(function ($answer) {
+      $modified_answer = strtolower($answer);
+      $modified_answer = preg_replace("/[^a-z0-9_]/", '_', $modified_answer);
+      if ($modified_answer != $answer) {
+        throw new \RuntimeException(
+          'Only lower case alphanumeric characters with underscores are allowed.'
+        );
+      }
+      return $answer;
+    });
+    return $this->doAsk($question);
+  }
+
+}

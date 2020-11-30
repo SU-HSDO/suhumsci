@@ -5,7 +5,7 @@ namespace Humsci\Blt\Plugin\Commands;
 use Acquia\Blt\Robo\Commands\Drupal\ConfigCommand;
 
 /**
- * Defines commands in the "custom" namespace.
+ * Modifies the blt commands for config syncing.
  */
 class HsConfigCommands extends ConfigCommand {
 
@@ -21,6 +21,7 @@ class HsConfigCommands extends ConfigCommand {
    * @throws \Exception
    */
   public function import($options = ['partial' => FALSE]) {
+    $this->invokeCommand('drupal:toggle:modules');
     parent::import();
   }
 

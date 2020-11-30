@@ -4,6 +4,9 @@ namespace Humsci\Blt\Plugin\Commands;
 
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Various BLT commands for H&S stack.
+ */
 class HsCommands extends HsAcquiaApiCommands {
 
   /**
@@ -62,6 +65,93 @@ class HsCommands extends HsAcquiaApiCommands {
     foreach (explode(',', $domains) as $domain) {
       $this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain);
     }
+  }
+
+
+  /**
+   * Disables a list of modules for all sites in an environment.
+   *
+   * @param string $modules
+   *   Comma delimited list of modules to disable.
+   * @param string $environment
+   *   Environment to disable modules.
+   * @param string $excluded_sites
+   *   Comma delimited list of sites to skip.
+   *
+   * @command drupal:module:uninstall
+   */
+  public function disableModules($modules, $environment, $excluded_sites = '') {
+    if (is_string($modules)) {
+      $modules = explode(',', $modules);
+      array_walk($modules, 'trim');
+    }
+    if (is_string($excluded_sites)) {
+      $excluded_sites = explode(',', $excluded_sites);
+      array_walk($excluded_sites, 'trim');
+    }
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      if (in_array($multisite, $excluded_sites)) {
+        continue;
+      }
+      $this->taskDrush()
+        ->alias("$multisite.$environment")
+        ->drush('pmu')
+        ->args(implode(',', $modules))
+        ->drush('cr')
+        ->run();
+    }
+  }
+
+  /**
+   * Run cron on all sites.
+   *
+   * @command drupal:cron
+   */
+  public function cron() {
+    // Disable alias since we are targeting specific uri.
+    $this->config->set('drush.alias', '');
+
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      try {
+        $this->say("Running Cron on <comment>$multisite</comment>...");
+        $this->switchSiteContext($multisite);
+
+        $this->taskDrush()
+          ->drush("cron")
+          ->drush('cr')
+          ->run();
+      }
+      catch (\Exception $e) {
+        $this->say("Unable to run cron on <comment>$multisite</comment>");
+      }
+    }
+  }
+
+  /**
+   * Synchronize local env from remote (remote --> local).
+   *
+   * Copies remote db to local db, re-imports config, and executes db updates
+   * for each multisite.
+   *
+   * @param array $options
+   *   Array of CLI options.
+   *
+   * @command drupal:sync:default:site
+   * @aliases ds drupal:sync drupal:sync:default sync sync:refresh
+   */
+  public function sync(array $options = [
+    'partial' => FALSE,
+    'sync-public-files' => FALSE,
+    'sync-private-files' => FALSE,
+  ]) {
+    $commands = $this->getConfigValue('sync.commands');
+    if ($options['sync-public-files'] || $this->getConfigValue('sync.public-files')) {
+      $commands[] = 'drupal:sync:public-files';
+    }
+    if ($options['sync-private-files'] || $this->getConfigValue('sync.private-files')) {
+      $commands[] = 'drupal:sync:private-files';
+    }
+    $this->invokeCommands($commands);
   }
 
   /**

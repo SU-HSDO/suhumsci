@@ -4,6 +4,9 @@ namespace Humsci\Blt\Plugin\Commands;
 
 use GuzzleHttp\Client;
 
+/**
+ * Blt commands for LetsEncrypt things.
+ */
 class HsCertCommands extends HsAcquiaApiCommands {
 
   /**
@@ -139,51 +142,6 @@ class HsCertCommands extends HsAcquiaApiCommands {
   }
 
   /**
-   * Get LetsEncrypt certificate file contents.
-   *
-   * @param string $environment
-   *   Which environment to add to cert.
-   *
-   * @command humsci:letsencrypt:get-cert
-   *
-   * @throws \Robo\Exception\TaskException
-   */
-  public function humsciLetsEncryptGet($environment) {
-    if (!in_array($environment, ['dev', 'test', 'prod'])) {
-      $this->say('invalid environment');
-      return;
-    }
-
-    $domains = $this->humsciLetsEncryptList($environment);
-    $primary_domain = array_shift($domains);
-
-    $files = $this->getWhichCertFiles($primary_domain);
-
-    foreach ($files as $file) {
-      $shell_command = "cd ~ && cat .acme.sh/$primary_domain/$file";
-      $php_command = "return shell_exec('$shell_command');";
-
-      $message = 'Certificate';
-      if (strpos($file, '.key') !== FALSE) {
-        $message = 'Private Key';
-      }
-      elseif ($file == 'ca.cer') {
-        $message = 'Intermediate Certificates';
-      }
-
-      $this->say(str_repeat('-', strlen($message) + 4));
-      $this->say("  $message  ");
-      $this->say(str_repeat('-', strlen($message) + 4));
-
-      $this->taskDrush()
-        ->alias($this->getConfigValue('drush.aliases.remote'))
-        ->drush('eval')
-        ->arg($php_command)
-        ->run();
-    }
-  }
-
-  /**
    * Get new domains to add to Cert.
    *
    * @return array
@@ -226,7 +184,6 @@ class HsCertCommands extends HsAcquiaApiCommands {
     }
     return $domains;
   }
-
 
   /**
    * Loop through and verify each domain is available.

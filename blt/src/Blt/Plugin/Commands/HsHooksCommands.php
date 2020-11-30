@@ -5,6 +5,9 @@ namespace Humsci\Blt\Plugin\Commands;
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
 
+/**
+ * BLT command hooks.
+ */
 class HsHooksCommands extends BltTasks {
 
   /**

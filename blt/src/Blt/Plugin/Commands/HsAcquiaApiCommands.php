@@ -89,6 +89,11 @@ class HsAcquiaApiCommands extends BltTasks {
     $this->setCloudApiClient($cloudApiConfig['key'], $cloudApiConfig['secret']);
   }
 
+  protected function resetCloudApi() {
+    $this->acquiaApplications = NULL;
+    $this->setupCloudApi();
+  }
+
   /**
    * Sets the Acquia application ID from config and prompt.
    */

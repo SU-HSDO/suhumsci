@@ -63,7 +63,7 @@ class HsCommands extends HsAcquiaApiCommands {
   public function humsciAddDomain($environment, $domains) {
     $this->setupCloudApi();
     foreach (explode(',', $domains) as $domain) {
-      $this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain);
+      $this->say($this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain)->message);
     }
   }
 
@@ -217,29 +217,34 @@ class HsCommands extends HsAcquiaApiCommands {
     $new_domain = $this->askQuestion('New domain?', "https://$new_domain.stanford.edu", TRUE);
     $this->switchSiteContext($site);
     $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.prod'))
+      ->alias("$site.prod")
       ->drush('cset')
       ->arg('config_split.config_split.not_live')
       ->arg('status')
       ->arg(0)
+      ->option('yes')
       ->drush('cset')
       ->arg('domain_301_redirect.settings')
       ->arg('domain')
       ->arg($new_domain)
+      ->option('yes')
       ->drush('cset')
       ->arg('domain_301_redirect.settings')
       ->arg('enabled')
       ->arg(1)
+      ->option('yes')
       ->drush('pmu')
       ->arg('nobots')
       ->drush('state:set')
       ->arg('xmlsitemap_base_url')
       ->arg($new_domain)
+      ->option('yes')
       ->drush('xmlsitemap:rebuild')
       ->drush('cset')
       ->arg('hs_courses_importer.importer_settings')
       ->arg('base_url')
       ->arg($new_domain)
+      ->option('yes')
       ->drush('cr')
       ->run();
   }
@@ -280,7 +285,8 @@ class HsCommands extends HsAcquiaApiCommands {
           $new_site = reset($new_site);
           $copy_sites[$db_position] = $new_site;
           $this->say("Copying $new_site database to staging.");
-          $this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid('test'));
+          $this->resetCloudApi();
+          $this->say($this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid('test'))->message);
         }
       }
     }

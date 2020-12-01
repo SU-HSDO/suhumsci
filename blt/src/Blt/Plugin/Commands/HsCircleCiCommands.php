@@ -20,9 +20,9 @@ class HsCircleCiCommands extends BltTasks {
   const SITES_TO_TEST = 3;
 
   /**
-   * @command circleci:acceptance
+   * @command circleci:codeception
    */
-  public function acceptanceTests($batch = 'install') {
+  public function codeceptionAcceptanceTests($batch = 'install') {
     $sites = $this->getSites();
 
     if ($batch == 'install') {

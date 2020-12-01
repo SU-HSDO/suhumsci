@@ -4,12 +4,56 @@ namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
+use Robo\Result;
 use Symfony\Component\Finder\Finder;
 
 /**
  * BLT commands that are intended for CircleCI.
  */
 class HsCircleCiCommands extends BltTasks {
+
+  /**
+   * Number of random sites to test behat.
+   *
+   * @var integer
+   */
+  const SITES_TO_TEST = 3;
+
+  /**
+   * @command circleci:acceptance
+   */
+  public function acceptanceTests($batch = 'install') {
+    $sites = $this->getSites();
+
+    if ($batch == 'install') {
+      $collection = $this->collectionBuilder();
+      $collection->addTaskList($this->setupSite());
+      $collection->addTask($this->blt()->arg('drupal:install'));
+      $collection->addTask($this->blt()->arg('codeception'));
+      return $collection->run();
+    }
+
+    $sites = array_chunk($sites, ceil(count($sites) / 2));
+    if (!isset($sites[$batch])) {
+      throw new \Exception('Batch does not exist');
+    }
+    $sites = array_combine($sites[$batch], $sites[$batch]);
+
+    $failure = FALSE;
+    foreach (array_rand($sites, self::SITES_TO_TEST) as $site) {
+      $collection = $this->collectionBuilder();
+      $collection->addTaskList($this->syncAcquia($site));
+      $collection->addTask($this->blt()->arg('codeception'));
+
+      if (!$collection->run()->wasSuccessful()) {
+        $failure = TRUE;
+      }
+    }
+
+    if ($failure) {
+      return new Result($collection, 1, 'Some tests failed');
+    }
+  }
 
   /**
    * Update all dependencies and re-export the configuration.
@@ -131,7 +175,7 @@ class HsCircleCiCommands extends BltTasks {
    */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
-    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal8"');
+    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal"');
 
     $docroot = $this->getConfigValue('docroot');
 
@@ -230,4 +274,19 @@ class HsCircleCiCommands extends BltTasks {
     }
     return $version;
   }
+
+  /**
+   * Get all available sites in multisite setup.
+   *
+   * @return array
+   *   Array of machine names for sites.
+   */
+  protected function getSites() {
+    $sites = $this->getConfigValue('multisites');
+    asort($sites);
+    return array_filter($sites, function ($site) {
+      return strpos($site, 'sandbox') === FALSE;
+    });
+  }
+
 }

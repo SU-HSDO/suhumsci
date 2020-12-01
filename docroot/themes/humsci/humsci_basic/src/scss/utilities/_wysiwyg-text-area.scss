@@ -310,6 +310,7 @@ a[href*="//"].hs-external-link,
 a.hs-private-link,
 .hs-private-link a {
   @include hb-link--inline;
+  @include hb-pairing-color('color', 'secondary');
 
   @include hb-themes(('colorful', 'airy')) {
     @include hb-link-background-image(true, 18px, left, $hb-colorful-default, $hc-colorful-pairings);
@@ -323,9 +324,13 @@ a.hs-private-link,
     margin-bottom: hb-calculate-rems(-2px);
     margin-right: hb-calculate-rems(2px);
 
-    @include hb-icon-background('lock', 'black');
+    @include hb-icon-background('lock', 'secondary');
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  &:hover::before {
+    @include hb-icon-background('lock', 'tertiary-darken-20');
   }
 }
 

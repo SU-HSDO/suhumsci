@@ -48,6 +48,10 @@ save_cache: &save_cache
     - ./docroot/modules/custom
   key: v10-dependencies-{{ checksum "composer.lock" }}
 
+disable_telemetry: &disable_telemetry
+  run:
+    name: Disable Telemetry
+    command: vendor/bin/blt blt:telemetry:disable --no-interaction
 #Jobs
 
 directory_setup: &directory_setup
@@ -73,6 +77,7 @@ acceptance_first: &acceptance_first
     - *add_known_hosts
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
         name: Run Acceptance tests
         command: vendor/bin/blt circleci:codeception 0
@@ -89,6 +94,7 @@ acceptance_second: &acceptance_second
     - *add_known_hosts
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
         name: Run Behat tests
         command: vendor/bin/blt circleci:codeception 1
@@ -103,6 +109,7 @@ acceptance: &acceptance
   steps:
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
         name: Generate code coverage report
         command: vendor/bin/blt circleci:codeception
@@ -119,6 +126,7 @@ deploy_branch: &deploy_branch
     - *add_known_hosts
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
         name: Deploying branch to Acquia
         command: |
@@ -135,6 +143,7 @@ deploy_tag: &deploy_tag
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
+    - *disable_telemetry
     - run:
         name: Deploying Tag to Acquia
         command: |
@@ -152,6 +161,7 @@ update_dependencies: &update_dependencies
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
+    - *disable_telemetry
     - run:
         name: Update dependencies
         no_output_timeout: 30m
@@ -169,6 +179,7 @@ update_certs: &update_certs
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
+    - *disable_telemetry
     - run:
         name: Update Prod SSL Certs
         command: |

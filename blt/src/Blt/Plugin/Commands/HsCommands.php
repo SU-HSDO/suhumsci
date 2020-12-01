@@ -329,9 +329,10 @@ class HsCommands extends HsAcquiaApiCommands {
     $databases = [];
     $this->setupCloudApi();
     /** @var \AcquiaCloudApi\Response\NotificationResponse $notification */
-    foreach ($this->acquiaApplications->getAll() as $notification) {
+    foreach ($this->acquiaNotifications->getAll($this->appId) as $notification) {
       if (
-        $notification->event== 'DatabaseCopied' &&
+        isset($notification->event) &&
+        $notification->event == 'DatabaseCopied' &&
         $notification->status == 'completed' &&
         strtotime($notification->created_at) >= $time_comparison
       ) {

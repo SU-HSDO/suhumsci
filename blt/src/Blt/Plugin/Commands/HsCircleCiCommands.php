@@ -213,6 +213,8 @@ class HsCircleCiCommands extends BltTasks {
     $tasks[] = $this->taskExecStack()
       ->exec("mkdir $docroot/sites/default/files");
     $tasks[] = $this->taskExecStack()->exec("chmod 777 -R $docroot/sites/");
+    $tasks[] = $this->blt()->arg('drupal:update');
+    $tasks[] = $this->taskDrush()->drush('pmu')->arg('simplesamlphp_auth')->option('yes');
     return $tasks;
   }
 

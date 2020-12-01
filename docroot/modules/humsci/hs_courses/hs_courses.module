@@ -33,7 +33,7 @@ function hs_courses_course_collections_view_alter(array &$build, EntityInterface
 function hs_courses_preprocess_field__field_instructor_person(&$variables) {
   /** @var \Drupal\Core\Field\FieldItemList $instructor_role_list */
   $instructor_role_list = $variables['element']['#object']->get('field_instructor_role');
-  if ($instructor_role_list->count()) {
+  if ($instructor_role_list->count() && !empty($variables['items'][0]['content']['#title'])) {
     $variables['items'][0]['content']['#title'] .= ' (' . $instructor_role_list->getString() . ')';
   }
 }

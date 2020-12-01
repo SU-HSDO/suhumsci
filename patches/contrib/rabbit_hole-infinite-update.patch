@@ -1,0 +1,14 @@
+diff --git a/rabbit_hole.post_update.php b/rabbit_hole.post_update.php
+index c6f331d..79ec174 100644
+--- a/rabbit_hole.post_update.php
++++ b/rabbit_hole.post_update.php
+@@ -30,6 +30,9 @@ function rabbit_hole_post_update_entity_type_id_and_entity_id_for_existing_behav
+     $entity_type_id = NULL;
+     $id_parts = explode('_', $behavior_setting->id());
+     while (!$entity_type_manager->hasHandler($entity_type_id, 'storage')) {
++      if (empty($id_parts)) {
++        continue 2;
++      }
+       array_pop($id_parts);
+       $entity_type_id = implode('_', $id_parts);
+     }

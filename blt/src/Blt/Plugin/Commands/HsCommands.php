@@ -336,7 +336,7 @@ class HsCommands extends HsAcquiaApiCommands {
         $notification->status == 'completed' &&
         strtotime($notification->created_at) >= $time_comparison
       ) {
-        $databases = array_merge($databases, $notification->context['database']['names']);
+        $databases = array_merge($databases, $notification->context->database->names);
       }
     }
     return array_values(array_unique($databases));

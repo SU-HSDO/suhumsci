@@ -622,3 +622,38 @@ function hs_field_helpers_field_storage_config_presave(FieldStorageConfigInterfa
 function hs_field_helpers_audio_embed_field_provider_info_alter(&$definitions) {
   $definitions['soundcloud']['class'] = '\Drupal\hs_field_helpers\Plugin\audio_embed_field\Provider\StanfordSoundCloud';
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_field_helpers_preprocess_ds_entity_view(&$variables) {
+  $variables['content']['#pre_render'][] = 'su_humsci_theme_pattern_process_contextual';
+  $variables['content']['#pre_render'][] = [
+    'Drupal\hs_field_helpers\PreRenderer',
+    'preRenderDsEntity',
+  ];
+}
+
+/**
+ * PreRender process to render out the contextual links for ui patterns.
+ *
+ * @param array $element
+ *   Pre-rendered element.
+ *
+ * @return array
+ *   Modified element.
+ *
+ * @see su_humsci_theme_preprocess_ds_entity_view()
+ * @see https://github.com/nuvoleweb/ui_patterns/pull/117/files
+ */
+function su_humsci_theme_pattern_process_contextual(array $element) {
+  $module_handler = \Drupal::moduleHandler();
+  if (isset($element['#contextual_links']) && $module_handler->moduleExists('contextual')) {
+    $placeholder = [
+      '#type' => 'contextual_links_placeholder',
+      '#id' => _contextual_links_to_id($element['#contextual_links']),
+    ];
+    $element['#prefix'] = render($placeholder);
+  }
+  return $element;
+}

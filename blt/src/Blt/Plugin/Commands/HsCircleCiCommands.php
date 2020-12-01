@@ -42,6 +42,7 @@ class HsCircleCiCommands extends BltTasks {
     $failure = FALSE;
     foreach (array_rand($sites, self::SITES_TO_TEST) as $site) {
       $collection = $this->collectionBuilder();
+      $collection->addTaskList($this->setupSite());
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTask($this->blt()->arg('codeception'));
 

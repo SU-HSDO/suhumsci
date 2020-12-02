@@ -1,4 +1,4 @@
-uuid: 42a558f9-b3d8-45af-ba54-2b02a2d3a6aa
+uuid: fe06a78f-eda0-4197-b8de-2767380d2d48
 langcode: en
 status: true
 dependencies:
@@ -7,8 +7,6 @@ dependencies:
     - field.field.node.hs_private_page.field_priv_wysiwyg_files
     - node.type.hs_private_page
   module:
-    - insert
-    - paragraphs
     - path
 id: node.hs_private_page.default
 targetEntityType: node
@@ -17,44 +15,13 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 2
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_hs_priv_page_components:
-    type: paragraphs
-    weight: 8
-    settings:
-      title: Paragraph
-      title_plural: Paragraphs
-      edit_mode: open
-      closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
-      form_display_mode: default
-      default_paragraph_type: _none
-      features:
-        collapse_edit_all: collapse_edit_all
-        duplicate: '0'
-        add_above: '0'
-    third_party_settings: {  }
-    region: content
-  field_priv_wysiwyg_files:
-    type: insert_file
-    weight: 9
-    region: content
-    settings:
-      progress_indicator: throbber
-      insert_absolute: false
-      insert_styles:
-        - icon_link
-        - link
-      insert_default: link
-    third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -62,26 +29,26 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 3
+    weight: 15
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 120
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 16
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: 0
+    weight: -5
     region: content
     settings:
       size: 60
@@ -89,7 +56,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 1
+    weight: 5
     settings:
       match_operator: CONTAINS
       size: 60
@@ -98,8 +65,10 @@ content:
     region: content
     third_party_settings: {  }
   url_redirects:
-    weight: 6
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_hs_priv_page_components: true
+  field_priv_wysiwyg_files: true

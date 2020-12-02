@@ -4,3 +4,8 @@ services:
     arguments: ['@menu.active_trail', '@plugin.manager.menu.link']
     tags:
       - { name: 'event_subscriber' }
+  hs_field_helpers.twig:
+    class: Drupal\hs_field_helpers\Plugin\TwigPlugin\HsJumpstartUITwig
+    arguments: ['@renderer']
+    tags:
+      - { name: twig.extension }

@@ -79,18 +79,18 @@ Feature: Media
     Then I should be on "/admin/content/media"
     And I should see the message "Audio Donec vitae sapien ut has been created."
 
-  @api @safe @mrc @javascript @MediaCleanup
-  Scenario: Test for Video creation.
-    Given I am logged in as a user with the "Developer" role
-    Then I set window dimensions 1400 x 700
-    Then I am on "/media/add"
-    And I click "Video" in the "content" region
-    Then I fill in "Name" with "Aenean commodo ligula eget dolor"
-    And I fill in "Video URL" with "http://google.com"
-    Then I press "Save"
-    And I should see the error message "1 error has been found: Video URL"
-    And I should see "The given URL does not match any known oEmbed providers"
-    Then I fill in "Video URL" with "https://www.youtube.com/watch?v=-DYSucV1_9w"
-    And I press "Save"
-    Then I should be on "/admin/content/media"
-    And I should see the message "Video Aenean commodo ligula eget dolor has been created."
+#  @api @safe @mrc @javascript @MediaCleanup
+#  Scenario: Test for Video creation.
+#    Given I am logged in as a user with the "Developer" role
+#    Then I set window dimensions 1400 x 700
+#    Then I am on "/media/add"
+#    And I click "Video" in the "content" region
+#    Then I fill in "Name" with "Aenean commodo ligula eget dolor"
+#    And I fill in "Video URL" with "http://google.com"
+#    Then I press "Save"
+#    And I should see the error message "1 error has been found: Video URL"
+#    And I should see "The given URL does not match any known oEmbed providers"
+#    Then I fill in "Video URL" with "https://www.youtube.com/watch?v=-DYSucV1_9w"
+#    And I press "Save"
+#    Then I should be on "/admin/content/media"
+#    And I should see the message "Video Aenean commodo ligula eget dolor has been created."

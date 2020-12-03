@@ -1,8 +1,8 @@
 diff --git a/docroot/.htaccess b/docroot/.htaccess
-index 9a73a3d3..b630230a 100644
+index b1ee36bf..5827d243 100644
 --- a/docroot/.htaccess
 +++ b/docroot/.htaccess
-@@ -69,6 +69,23 @@ AddEncoding gzip svgz
+@@ -62,6 +62,23 @@ AddEncoding gzip svgz
  <IfModule mod_rewrite.c>
    RewriteEngine on
  
@@ -26,10 +26,10 @@ index 9a73a3d3..b630230a 100644
    # Set "protossl" to "s" if we were accessed via https://.  This is used later
    # if you enable "www." stripping or enforcement, in order to ensure that
    # you don't bounce between http and https.
-@@ -146,6 +163,8 @@ AddEncoding gzip svgz
+@@ -139,6 +156,8 @@ AddEncoding gzip svgz
    RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
    # Allow access to test-specific PHP files:
-   RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?.php
+   RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php
 +  # Allow access to simplesaml paths.
 +  RewriteCond %{REQUEST_URI} !^/simplesaml
    # Allow access to Statistics module's custom front controller.

@@ -189,7 +189,19 @@ function _humsci_basic_check_link_access(array &$link_items) {
  */
 function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
   if (!empty($variables['button'])) {
-    $variables['button'] = htmlspecialchars_decode(trim(strip_tags(render($variables['button']))));
+
+    $dom = new DOMDocument();
+    $dom->loadHTML(render($variables['button']));
+    $xpath = new DOMXPath($dom);
+    $links = $xpath->query('//a/@href');
+    // If the markup is a link, grab the href attribute.
+    if ($links->length) {
+      $variables['button'] = $links->item(0)->nodeValue;
+    }
+    else {
+      // The markup is just a string with the url, we can use that.
+      $variables['button'] = htmlspecialchars_decode(trim(strip_tags(render($variables['button']))));
+    }
   }
   if (!empty($variables['title'])) {
     $variables['title'] = trim(strip_tags(render($variables['title'])));

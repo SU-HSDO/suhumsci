@@ -79,6 +79,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
             'client_secret' => $password,
             'plugin' => $password ? 'oauth2' : '',
           ],
+          'orphan_action' => $config->get('orphan_action'),
           'urls' => $this->getCapxUrls(),
         ],
       ];

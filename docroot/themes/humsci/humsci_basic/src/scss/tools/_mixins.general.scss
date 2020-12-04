@@ -60,6 +60,65 @@
   background-image: linear-gradient(to bottom, $white, $white hb-calculate-rems(20px), $background hb-calculate-rems(20px));
 }
 
+// Support nested list styles within both the ordered and unordered lists
+@mixin hb-nested-list-styles {
+  // Unordered nested lists
+  // second level
+  li ul > li { // hollow circle
+    &:first-of-type {
+      margin-top: 1rem;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    &::before {
+      background-color: transparent;
+      @include hb-pairing-color('border-color', 'secondary');
+      border-width: 1px;
+      border-style: solid;
+      content: '';
+      counter-increment: inherit;
+    }
+  }
+
+  // third level
+  li li ul > li { // solid square
+    &::before {
+      border-radius: 0;
+      border: 0;
+      @include hb-pairing-color('background-color', 'secondary');
+    }
+  }
+
+  // Ordered nested lists
+  // second level
+  li ol > li { // lower alpha
+    &:first-of-type {
+      margin-top: 1rem;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    &::before {
+      content: counter(li, lower-alpha) '.';
+      height: 0;
+      width: auto;
+      top: 0;
+    }
+  }
+
+  // third level
+  li li ol > li { // lower roman
+    &::before {
+      content: counter(li, lower-roman) '.';
+    }
+  }
+}
+
 @mixin hb-unordered-list {
   list-style-type: none;
   margin: 0 0 hb-spacing-width('md');
@@ -96,20 +155,7 @@
     }
   }
 
-  // prevent ordered lists nested within unordered lists from receiving ordered list styles
-  li > ol {
-    li {
-      &:first-of-type {
-        margin-top: 1rem;
-      }
-
-      &::before {
-        height: 0;
-        width: auto;
-        top: 0;
-      }
-    }
-  }
+  @include hb-nested-list-styles;
 }
 
 @mixin hb-ordered-list {
@@ -147,16 +193,33 @@
     }
   }
 
-  // prevent unordered lists nested within ordered lists from receiving unordered list styles
-  li > ul {
+  @include hb-nested-list-styles;
+}
+
+// Remove or reset list styles to browser defaults
+@mixin hb-list-reset {
+  ul:not([class]) {
+    list-style-type: disc;
+
     li {
-      &:first-of-type {
-        margin-top: 1rem;
-      }
+      overflow: visible;
+      padding-left: initial;
 
       &::before {
-        content: '';
-        counter-increment: inherit;
+        content: unset;
+      }
+    }
+  }
+
+  ol:not([class]) {
+    list-style-type: decimal;
+
+    li {
+      overflow: visible;
+      padding-left: initial;
+
+      &::before {
+        content: unset;
       }
     }
   }

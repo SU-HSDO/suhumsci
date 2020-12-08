@@ -94,6 +94,9 @@ class FeatureContext extends RawDrupalContext {
         continue;
       }
       $href = $element->getParent()->getAttribute('href');
+      if (strpos($href, 'saml_login') !== FALSE || strpos($href, '/user/') !== FALSE) {
+        continue;
+      }
       // Skip if empty
       if (!$this->checkLink($href)) {
         continue;

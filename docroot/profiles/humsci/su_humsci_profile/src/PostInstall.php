@@ -2,6 +2,7 @@
 
 namespace Drupal\su_humsci_profile;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
 
@@ -27,6 +28,13 @@ class PostInstall implements PostInstallInterface {
   protected $routeBuilder;
 
   /**
+   * Config Factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * PostInstall constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -34,9 +42,10 @@ class PostInstall implements PostInstallInterface {
    * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
    *   Route builder service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteBuilderInterface $route_builder) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteBuilderInterface $route_builder, ConfigFactoryInterface $config_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeBuilder = $route_builder;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -57,6 +66,13 @@ class PostInstall implements PostInstallInterface {
     // We install some menu links, so we have to rebuild the router, to ensure
     // the menu links are valid.
     $this->routeBuilder->rebuildIfNeeded();
+
+    $nodes = $this->entityTypeManager->getStorage('node')
+      ->loadByProperties(['uuid' => '287db095-35b1-4050-8d26-5d8332eeb6a6']);
+    $this->configFactory->getEditable('system.site')
+      ->set('page.front', '/node/' . key($nodes))
+      ->save();
+
   }
 
   /**

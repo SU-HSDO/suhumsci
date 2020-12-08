@@ -172,8 +172,11 @@ process:
       timezone: Etc/GMT
   field_hs_event_category:
     -
-      plugin: explode
+      plugin: skip_on_empty
       source: categories
+      method: process
+    -
+      plugin: explode
       delimiter: ','
     -
       plugin: entity_generate
@@ -186,8 +189,11 @@ process:
       default_value: null
   field_hs_event_audience:
     -
-      plugin: explode
+      plugin: skip_on_empty
       source: audience
+      method: process
+    -
+      plugin: explode
       delimiter: ','
     -
       plugin: entity_generate
@@ -267,7 +273,6 @@ process:
       source: drupal_type
     -
       plugin: explode
-      source: drupal_type
       delimiter: ','
     -
       plugin: callback

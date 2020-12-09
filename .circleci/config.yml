@@ -53,12 +53,12 @@ directory_setup: &directory_setup
 #    - *add_ssh
 #    - *add_known_hosts
     - checkout
-    - restore_cache: *restore_cache
+#    - restore_cache: *restore_cache
     - run:
         name: Composer setup
         command: |
           composer install --optimize-autoloader --no-interaction
-    - save_cache: *save_cache
+#    - save_cache: *save_cache
     - persist_to_workspace:
         root: .
         paths:

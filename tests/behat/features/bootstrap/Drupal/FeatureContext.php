@@ -155,8 +155,7 @@ class FeatureContext extends RawDrupalContext {
     if (strpos($href, 'http') === 0) {
       return FALSE;
     }
-    // Skip mailto links
-    if (strpos($href, 'mailto') === 0) {
+    if (preg_grep('/(\/saml_login|\/user|mailto)/', [$href])) {
       return FALSE;
     }
 

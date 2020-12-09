@@ -13,7 +13,7 @@ dependencies:
     - ds
     - field_formatter_class
     - hs_field_helpers
-    - link
+    - linkit
     - stanford_media
     - text
 third_party_settings:
@@ -26,6 +26,7 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
+          variant_field: field_hs_postcard_body
     regions:
       title:
         - field_hs_postcard_title
@@ -68,6 +69,7 @@ content:
     label: hidden
     settings:
       trim_length: 80
+      linkit_profile: default
       url_only: false
       url_plain: false
       rel: '0'
@@ -75,7 +77,9 @@ content:
     third_party_settings:
       field_formatter_class:
         class: decanter-button
-    type: link
+      hs_field_helpers:
+        inline_contents: 0
+    type: linkit
     region: button
   field_hs_postcard_title:
     weight: 0

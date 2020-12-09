@@ -30,7 +30,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *   id = "group_block",
  *   admin_label = @Translation("Group block"),
  *   category = @Translation("Inline blocks"),
- *   deriver = "\Drupal\hs_blocks\Plugin\Derivative\GroupBlockDeriver"
+ *   deriver = "\Drupal\hs_blocks\Plugin\Derivative\GroupBlockDeriver",
+ *   context_definitions = {
+ *     "entity" = @ContextDefinition("entity")
+ *   }
  * )
  *
  * @internal

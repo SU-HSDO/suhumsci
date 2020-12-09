@@ -59,11 +59,8 @@ Feature: Install State Basic Page
     Then I fill in the following:
       | Card Title | Nam at tortor in tellus          |
       | Card Body  | Maecenas vestibulum mollis diam. |
-      | URL        | Nam at tortor                    |
+      | URL        | http://google.com                    |
       | Link text  | Praesent egestas tristique nibh  |
-    And I press "Save"
-    Then I should see the error message "1 error has been found: URL"
-    Then I fill in "URL" with "http://google.com"
     And I press "Save"
     Then I should be on "/demo-basic-page"
     And the response status code should be 200

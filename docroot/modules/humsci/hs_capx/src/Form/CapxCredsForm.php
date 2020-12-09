@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\hs_capx\Capx;
 use Drupal\key\Entity\Key;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\stanford_migrate\EventSubscriber\EventsSubscriber;
 
 /**
  * Form class to set the CAPx user credentials.
@@ -90,6 +91,17 @@ class CapxCredsForm extends ConfigFormBase {
       '#options' => $keys,
       '#default_value' => $config->get('password'),
     ];
+
+    $form['orphan_action'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Orphan Action'),
+      '#empty_option' => $this->t('Do nothing'),
+      '#default_value' => $config->get('orphan_action'),
+      '#options' => [
+        EventsSubscriber::ORPHAN_DELETE => $this->t('Delete'),
+        EventsSubscriber::ORPHAN_UNPUBLISH => $this->t('Unpublish'),
+      ]
+    ];
     return $form;
   }
 
@@ -120,6 +132,7 @@ class CapxCredsForm extends ConfigFormBase {
     $this->configFactory->getEditable('hs_capx.settings')
       ->set('username', $form_state->getValue('username'))
       ->set('password', $form_state->getValue('password'))
+      ->set('orphan_action', $form_state->getValue('orphan_action'))
       ->save();
 
     $this->capx->setUsername($form_state->getValue('username'));

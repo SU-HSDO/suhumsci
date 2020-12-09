@@ -255,7 +255,11 @@ function _su_humci_profile_clean_shortcut_links(array &$links, AccountInterface 
   foreach ($links as $link_id => $link_item) {
 
     // This user doesn't have permission for this url. Remove the link.
-    if (!$link_item['url']->access($current_user)) {
+    if (
+      !empty($link_item['url']) &&
+      $link_item['url'] instanceof Url &&
+      !$link_item['url']->access($current_user)
+    ) {
       unset($links[$link_id]);
       continue;
     }

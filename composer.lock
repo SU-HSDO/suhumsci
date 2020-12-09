@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ff55755f52d60445afd366e80980738",
+    "content-hash": "1a0a76faf23807349cdcd198804ec0c0",
     "packages": [
         {
             "name": "acquia/blt",
@@ -4857,6 +4857,7 @@
                     "https://www.drupal.org/project/drupal/issues/2981837": "https://www.drupal.org/files/issues/2019-05-22/findMigrationDependencies-null-process-value-2981837-5.patch",
                     "https://www.drupal.org/project/drupal/issues/2925297": "https://www.drupal.org/files/issues/2019-09-26/core-typed_config_handle_missing_config-2925297-18.patch",
                     "https://www.drupal.org/project/drupal/issues/3020876": "https://www.drupal.org/files/issues/2020-09-25/contextual_links_with_LB-3020876-38.patch",
+                    "https://www.drupal.org/project/drupal/issues/1349080": "https://www.drupal.org/files/issues/2020-08-21/1349080-459.patch",
                     "https://www.drupal.org/project/drupal/issues/3064751": "https://www.drupal.org/files/issues/2019-07-02/3064751-5.patch",
                     "https://www.drupal.org/project/drupal/issues/3059955": "https://www.drupal.org/files/issues/2019-12-28/3082690-80.patch"
                 }
@@ -6975,6 +6976,52 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/key",
                 "issues": "http://drupal.org/project/key"
+            }
+        },
+        {
+            "name": "drupal/layout_builder_component_attributes",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/layout_builder_component_attributes.git",
+                "reference": "1.1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/layout_builder_component_attributes-1.1.1.zip",
+                "reference": "1.1.1",
+                "shasum": "36650d031e649f4fccf5cec38b385ef8354d0176"
+            },
+            "require": {
+                "drupal/core": "^8.8|^9.0",
+                "neilime/php-css-lint": "^2.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.1.1",
+                    "datestamp": "1605801492",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Burge",
+                    "homepage": "https://www.drupal.org/user/1826152"
+                }
+            ],
+            "description": "Allows editors to add HTML attributes to Layout Builder components (blocks)",
+            "homepage": "https://drupal.org/project/layout_builder_component_attributes",
+            "support": {
+                "source": "https://cgit.drupalcode.org/layout_builder_component_attributes",
+                "issues": "https://drupal.org/project/issues/layout_builder_component_attributes"
             }
         },
         {
@@ -12064,6 +12111,75 @@
             "time": "2020-11-13T09:40:50+00:00"
         },
         {
+            "name": "neilime/php-css-lint",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/neilime/php-css-lint.git",
+                "reference": "11b2961a1b522d790f64c0a28af5715cae6ebb39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/neilime/php-css-lint/zipball/11b2961a1b522d790f64c0a28af5715cae6ebb39",
+                "reference": "11b2961a1b522d790f64c0a28af5715cae6ebb39",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "pcov/clobber": "^2.0",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpunit/phpunit": "^9.2.5",
+                "slam/phpstan-laminas-framework": "^0.12",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "bin": [
+                "scripts/php-css-lint"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CssLint\\": "src/CssLint"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Neilime",
+                    "homepage": "https://github.com/neilime",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Powerful & memory efficient CSS linter for PHP",
+            "homepage": "https://neilime.github.io/php-css-lint/",
+            "keywords": [
+                "css",
+                "lint",
+                "linter",
+                "syntax",
+                "validation"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/neilime",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-07-09T09:27:31+00:00"
+        },
+        {
             "name": "nikic/php-parser",
             "version": "v4.10.3",
             "source": {
@@ -16551,16 +16667,16 @@
         },
         {
             "name": "su-sws/stanford_media",
-            "version": "dev-8.x-2.x",
+            "version": "8.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_media.git",
-                "reference": "b8fe965f5b1a99fd282e493168794ad8faa79b6f"
+                "reference": "4c1c4973e8554c0fe7528c3f1d7d52ea9e4e15a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_media/zipball/b8fe965f5b1a99fd282e493168794ad8faa79b6f",
-                "reference": "b8fe965f5b1a99fd282e493168794ad8faa79b6f",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_media/zipball/4c1c4973e8554c0fe7528c3f1d7d52ea9e4e15a7",
+                "reference": "4c1c4973e8554c0fe7528c3f1d7d52ea9e4e15a7",
                 "shasum": ""
             },
             "require": {
@@ -16609,20 +16725,20 @@
             ],
             "description": "Stanford Media module for Drupal 8 Media management",
             "homepage": "https://github.com/SU-SWS/stanford_media",
-            "time": "2020-12-07T17:48:29+00:00"
+            "time": "2020-12-07T17:32:52+00:00"
         },
         {
             "name": "su-sws/stanford_migrate",
-            "version": "dev-8.x-1.x",
+            "version": "8.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_migrate.git",
-                "reference": "7368f64e7e378e0568670ef56f365ca4ff951d35"
+                "reference": "0c079380c94c2812911840a568a9263d848a1523"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/7368f64e7e378e0568670ef56f365ca4ff951d35",
-                "reference": "7368f64e7e378e0568670ef56f365ca4ff951d35",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/0c079380c94c2812911840a568a9263d848a1523",
+                "reference": "0c079380c94c2812911840a568a9263d848a1523",
                 "shasum": ""
             },
             "require": {
@@ -16654,20 +16770,20 @@
             ],
             "description": "Stanford Migrate Helper functions",
             "homepage": "https://github.com/SU-SWS/stanford_migrate",
-            "time": "2020-12-07T17:44:57+00:00"
+            "time": "2020-12-07T17:32:03+00:00"
         },
         {
             "name": "su-sws/stanford_ssp",
-            "version": "dev-8.x-1.x",
+            "version": "8.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_ssp.git",
-                "reference": "330d0ca6fe13138fd9e7d29bb5e561470c565f83"
+                "reference": "4dabc6fc6d375976e156aff54eeef105a8c8cd42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_ssp/zipball/330d0ca6fe13138fd9e7d29bb5e561470c565f83",
-                "reference": "330d0ca6fe13138fd9e7d29bb5e561470c565f83",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_ssp/zipball/4dabc6fc6d375976e156aff54eeef105a8c8cd42",
+                "reference": "4dabc6fc6d375976e156aff54eeef105a8c8cd42",
                 "shasum": ""
             },
             "require": {
@@ -16688,20 +16804,20 @@
                 "GPL-2.0-or-later"
             ],
             "description": "A Drupal Authentication Module.",
-            "time": "2020-12-07T17:47:13+00:00"
+            "time": "2020-12-07T17:32:36+00:00"
         },
         {
             "name": "su-sws/stanford_text_editor",
-            "version": "dev-8.x-1.x",
+            "version": "8.1.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_text_editor.git",
-                "reference": "985797648a70f43b47c8fc2206d2888f76ed2d7a"
+                "reference": "f6a7b9f37da8d026cd00832e65fcd9e42642259f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_text_editor/zipball/985797648a70f43b47c8fc2206d2888f76ed2d7a",
-                "reference": "985797648a70f43b47c8fc2206d2888f76ed2d7a",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_text_editor/zipball/f6a7b9f37da8d026cd00832e65fcd9e42642259f",
+                "reference": "f6a7b9f37da8d026cd00832e65fcd9e42642259f",
                 "shasum": ""
             },
             "require": {
@@ -16716,7 +16832,7 @@
                 "drupal/editor_advanced_link": "^1.4",
                 "drupal/embed": "~1.0",
                 "drupal/linkit": "~5.0@beta",
-                "su-sws/stanford_media": "dev-8.x-2.x"
+                "su-sws/stanford_media": "^8.2.0"
             },
             "type": "drupal-custom-module",
             "extra": {
@@ -16731,7 +16847,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Input format and WYSIWYG settings for Drupal.",
-            "time": "2020-12-07T17:32:08+00:00"
+            "time": "2020-12-07T17:29:53+00:00"
         },
         {
             "name": "symfony-cmf/routing",
@@ -22549,10 +22665,6 @@
         "drupal/viewfield": 10,
         "drupal/views_ical": 15,
         "su-sws/stanford_basic": 20,
-        "su-sws/stanford_media": 20,
-        "su-sws/stanford_migrate": 20,
-        "su-sws/stanford_ssp": 20,
-        "su-sws/stanford_text_editor": 20,
         "su-sws/blt-sws": 20
     },
     "prefer-stable": true,

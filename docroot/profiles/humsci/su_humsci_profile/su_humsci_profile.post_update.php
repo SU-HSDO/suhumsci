@@ -63,3 +63,10 @@ function su_humsci_profile_post_update_8222() {
   user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, $permissions);
   user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, $permissions);
 }
+
+/**
+ * Enable the classy theme.
+ */
+function su_humsci_profile_post_update_8300(){
+  \Drupal::service('theme_installer')->install(['classy']);
+}

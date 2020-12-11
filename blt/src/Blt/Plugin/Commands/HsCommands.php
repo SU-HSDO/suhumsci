@@ -67,7 +67,6 @@ class HsCommands extends HsAcquiaApiCommands {
     }
   }
 
-
   /**
    * Disables a list of modules for all sites in an environment.
    *
@@ -159,8 +158,8 @@ class HsCommands extends HsAcquiaApiCommands {
    *
    * @param string $site
    *   Site machine name.
-   *
    * @param array $options
+   *   Keyed array of command options.
    *
    * @throws \Robo\Exception\TaskException
    *

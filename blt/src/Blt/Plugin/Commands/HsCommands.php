@@ -160,13 +160,13 @@ class HsCommands extends HsAcquiaApiCommands {
    * @param string $site
    *   Site machine name.
    *
-   * @param false[] $options
+   * @param array $options
    *
    * @throws \Robo\Exception\TaskException
    *
    * @command humsci:install-site
    */
-  public function installSite($site, $options = [
+  public function installSite(string $site, array $options = [
     'prod' => FALSE,
     'stage' => FALSE,
   ]) {

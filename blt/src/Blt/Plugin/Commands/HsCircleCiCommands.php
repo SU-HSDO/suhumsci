@@ -20,6 +20,8 @@ class HsCircleCiCommands extends BltTasks {
   const SITES_TO_TEST = 3;
 
   /**
+   * Run codeception tests on a patch of sites.
+   *
    * @command circleci:codeception
    */
   public function codeceptionAcceptanceTests($batch = 'install') {
@@ -92,12 +94,12 @@ class HsCircleCiCommands extends BltTasks {
   /**
    * Create a new branch for the next release.
    *
-   * @command circleci:new-release-branch
-   *
    * @param string $last_version
    *   Semver version.
+   *
+   * @command circleci:new-release-branch
    */
-  public function jobNewReleaseBranch($last_version) {
+  public function jobNewReleaseBranch(string $last_version) {
     // Increment the last version by 1.
     $new_version = $this->incrementVersion($last_version);
     $this->yell("Creating new release: $new_version");
@@ -128,10 +130,9 @@ class HsCircleCiCommands extends BltTasks {
    * @param string $version
    *   New version.
    */
-  protected function setVersions($version) {
-    // Update only modules in humsci and the appropriate profiles.
+  protected function setVersions(string $version) {
+    // Update only profiles.
     $dirs = [
-      // '*/modules/humsci/*',
       '*/profiles/humsci/su_*',
     ];
 
@@ -236,7 +237,6 @@ class HsCircleCiCommands extends BltTasks {
       ->option('verbose')
       ->option('no-interaction');
   }
-
 
   /**
    * Advance to the next SemVer version.

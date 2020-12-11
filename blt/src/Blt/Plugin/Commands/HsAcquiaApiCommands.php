@@ -18,10 +18,11 @@ class HsAcquiaApiCommands extends BltTasks {
    * Get the environment UUID for the application from the machine name.
    *
    * @param string $name
-   *
+   *  Environment machine name.
    *
    * @return string
    *   Environment UUID.
+   *
    * @throws \Exception
    */
   protected function getEnvironmentUuid(string $name) {

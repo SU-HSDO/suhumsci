@@ -116,7 +116,6 @@ class HsCertCommands extends HsAcquiaApiCommands {
       ->drush("rsync --mode=rltDkz @default.prod:/home/swshumsci/.acme.sh/$cert_name/ @self:../certs")
       ->run();
 
-
     $cert = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.cer");
     $key = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.key");
     $intermediate = file_get_contents($this->getConfigValue('repo.root') . "/certs/ca.cer");

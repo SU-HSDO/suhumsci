@@ -16,8 +16,7 @@ class MenuItemsCest {
     $I->amOnPage('/');
     $I->canSeeResponseCodeIs(200);
     foreach ($this->getLinksToCheck($I, '#header a') as $path) {
-      $I->amOnPage($path);
-      $I->canSeeResponseCodeIs(200);
+      $I->canSeeResponseCodeIsBetween(200, 403);
     }
   }
 

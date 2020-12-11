@@ -1,7 +1,15 @@
 <?php
 
+/**
+ * Class FlexiblePageCest.
+ *
+ * @group install
+ */
 class FlexiblePageCest {
 
+  /**
+   * I can create a page with a hero banner.
+   */
   public function testHeroParagraph(FunctionalTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
@@ -15,7 +23,7 @@ class FlexiblePageCest {
     $I->cantSee('Overlay Color');
     $I->click('Add media', '.paragraph-type--hs-hero-image');
     $I->waitForText('Add or select media');
-    $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
     $I->waitForText('Alternative text');
     $I->click('Save and insert', '.ui-dialog-buttonset');

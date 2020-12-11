@@ -29,7 +29,7 @@ class HsCircleCiCommands extends BltTasks {
       $collection = $this->collectionBuilder();
       $collection->addTaskList($this->setupSite());
       $collection->addTask($this->blt()->arg('drupal:install'));
-      $collection->addTask($this->blt()->arg('codeception'));
+      $collection->addTask($this->blt()->arg('codeception')->option('install'));
       return $collection->run();
     }
 
@@ -44,7 +44,7 @@ class HsCircleCiCommands extends BltTasks {
       $collection = $this->collectionBuilder();
       $collection->addTaskList($this->setupSite());
       $collection->addTaskList($this->syncAcquia($site));
-      $collection->addTask($this->blt()->arg('codeception'));
+      $collection->addTask($this->blt()->arg('codeception')->option('existingSite'));
 
       if (!$collection->run()->wasSuccessful()) {
         $failure = TRUE;

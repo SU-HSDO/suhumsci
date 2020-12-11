@@ -1,8 +1,16 @@
 <?php
 
+/**
+ * Class PrivatePageCest.
+ *
+ * @group install
+ */
 class PrivatePageCest{
 
-  public function testHero(AcceptanceTester $I){
+  /**
+   * A private page should not be accessible to anonymous.
+   */
+  public function testPrivatePage(AcceptanceTester $I){
     $I->logInWithRole('site_manager');
     $I->amOnPage('/node/add/hs_private_page');
     $I->fillField('Title', 'Test Private Page');

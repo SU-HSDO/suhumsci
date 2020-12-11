@@ -1,7 +1,15 @@
 <?php
 
+/**
+ * Class FlexiblePageCest.
+ *
+ * @group install
+ */
 class FlexiblePageCest {
 
+  /**
+   * I can create a postcard on the page.
+   */
   public function testPostCard(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
@@ -24,6 +32,9 @@ class FlexiblePageCest {
     $I->canSeeLink('Praesent egestas tristique nibh', 'http://google.com');
   }
 
+  /**
+   * I can create an accordion on the page.
+   */
   public function testAccordion(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
@@ -37,7 +48,9 @@ class FlexiblePageCest {
     $I->canSee('Sed augue ipsum egestas nec');
     $I->canSee('Vivamus in erat ut urna cursus vestibulum');
   }
-
+  /**
+   * I can create a text area on the page.
+   */
   public function testTextArea(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
@@ -49,7 +62,9 @@ class FlexiblePageCest {
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Vivamus in erat ut urna cursus vestibulum');
   }
-
+  /**
+   * I can create a row with a text area on the page.
+   */
   public function testRow(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');

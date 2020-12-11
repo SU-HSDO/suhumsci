@@ -1,7 +1,15 @@
 <?php
 
+/**
+ * Class CourseCest.
+ *
+ * @group install
+ */
 class CourseCest {
 
+  /**
+   * I can create course content.
+   */
   public function testCourses(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_course');

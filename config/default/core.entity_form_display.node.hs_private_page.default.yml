@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.hs_private_page.field_priv_wysiwyg_files
     - node.type.hs_private_page
   module:
+    - file
     - insert
     - paragraphs
     - path
@@ -40,6 +41,21 @@ content:
         duplicate: '0'
     third_party_settings: {  }
     region: content
+  field_priv_wysiwyg_files:
+    type: file_generic
+    weight: 9
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings:
+      insert:
+        styles:
+          link: link
+          insert__auto: 0
+          icon_link: 0
+          audio: 0
+          video: 0
+        default: link
   path:
     type: path
     weight: 5
@@ -90,5 +106,4 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_priv_wysiwyg_files: true
+hidden: {  }

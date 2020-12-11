@@ -6,6 +6,7 @@
  */
 
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
 
 $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/config/default';
@@ -45,7 +46,7 @@ if (!getenv('REAL_AES_ENCRYPTION')) {
 $settings['config_readonly_whitelist_patterns'] = ['*'];
 
 // Set the config_ignore settings so that config imports will function on local.
-if (EnvironmentDetector::isLocalEnv()) {
+if (EnvironmentDetector::isLocalEnv() && !InstallerKernel::installationAttempted()) {
   $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
   $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
 }

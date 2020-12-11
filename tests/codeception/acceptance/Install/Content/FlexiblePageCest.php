@@ -14,11 +14,8 @@ class FlexiblePageCest {
     $I->canSee('Read More Link');
     $I->fillField('Card Title', 'Nam at tortor in tellus');
     $I->fillField('Card Body', 'Maecenas vestibulum mollis diam.');
-    $I->fillField('URL', 'Nam at tortor');
-    $I->fillField('Link text', 'Praesent egestas tristique nibh');
-    $I->click('Save');
-    $I->canSee('1 error has been found');
     $I->fillField('URL', 'http://google.com');
+    $I->fillField('Link text', 'Praesent egestas tristique nibh');
     $I->click('Save');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->canSeeResponseCodeIs(200);

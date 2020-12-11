@@ -29,7 +29,9 @@ class HsCircleCiCommands extends BltTasks {
       $collection = $this->collectionBuilder();
       $collection->addTaskList($this->setupSite());
       $collection->addTask($this->blt()->arg('drupal:install'));
-      $collection->addTask($this->blt()->arg('codeception')->option('install'));
+      $collection->addTask($this->blt()
+        ->arg('codeception')
+        ->option('group', 'install', '='));
       return $collection->run();
     }
 
@@ -44,7 +46,9 @@ class HsCircleCiCommands extends BltTasks {
       $collection = $this->collectionBuilder();
       $collection->addTaskList($this->setupSite());
       $collection->addTaskList($this->syncAcquia($site));
-      $collection->addTask($this->blt()->arg('codeception')->option('existingSite'));
+      $collection->addTask($this->blt()
+        ->arg('codeception')
+        ->option('group', 'existingSite', '='));
 
       if (!$collection->run()->wasSuccessful()) {
         $failure = TRUE;
@@ -214,7 +218,10 @@ class HsCircleCiCommands extends BltTasks {
       ->exec("mkdir $docroot/sites/default/files");
     $tasks[] = $this->taskExecStack()->exec("chmod 777 -R $docroot/sites/");
     $tasks[] = $this->blt()->arg('drupal:update');
-    $tasks[] = $this->taskDrush()->drush('pmu')->arg('simplesamlphp_auth')->option('yes');
+    $tasks[] = $this->taskDrush()
+      ->drush('pmu')
+      ->arg('simplesamlphp_auth')
+      ->option('yes');
     return $tasks;
   }
 

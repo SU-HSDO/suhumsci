@@ -193,25 +193,19 @@ class HsCircleCiCommands extends BltTasks {
         ->copy("$docroot/sites/$site/settings.php", "$docroot/sites/default/settings.php", TRUE);
     }
 
-    // This line is just to test connection and to prevent unwanted line at
-    // the beginning of the db dump. Without this, we would get the text
-    // "Warning: Permanently added the RSA host key for IP address" at the top
-    // of the db dump.
-    $tasks[] = $this->taskDrush()->alias("$site.prod")->drush('sql-connect');
     $tasks[] = $this->taskDrush()
       ->alias("$site.prod")
       ->drush('sql-dump')
-      ->rawArg('> dump.sql');
-
-    // At the end of the drush command, we need to remove the ssh connection
-    // closed message.
-    $tasks[] = $this->taskExecStack()
-      ->exec("grep -v '^Connection to' $docroot/dump.sql > $docroot/clean_dump.sql");
+      ->option('result-file', "/mnt/tmp/swshumsci/$site.sql", '=');
+    $tasks[] = $this->taskDrush()
+      ->drush('rsync')
+      ->rawArg("@$site.prod:/mnt/tmp/swshumsci/$site.sql /tmp/$site.sql")
+      ->option('mode','rultz', '=');
 
     $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
     $tasks[] = $this->taskDrush()
       ->drush('sql-cli ')
-      ->rawArg('< clean_dump.sql');
+      ->rawArg("< /tmp/$site.sql");
 
     $tasks[] = $this->taskExecStack()
       ->exec("rm -rf $docroot/sites/default/files");
@@ -234,7 +228,6 @@ class HsCircleCiCommands extends BltTasks {
    */
   protected function blt() {
     return $this->taskExec('vendor/bin/blt')
-      ->option('verbose')
       ->option('no-interaction');
   }
 

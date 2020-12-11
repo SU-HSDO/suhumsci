@@ -17,7 +17,7 @@ class HsCircleCiCommands extends BltTasks {
    *
    * @var integer
    */
-  const SITES_TO_TEST = 3;
+  const SITES_TO_TEST = 5;
 
   /**
    * Run codeception tests on a patch of sites.

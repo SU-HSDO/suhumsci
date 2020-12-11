@@ -122,7 +122,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
     $intermediate = file_get_contents($this->getConfigValue('repo.root') . "/certs/ca.cer");
     $label = 'LE ' . date('Y-m-d G:i');
 
-    $this->setupCloudApi();
+    $this->connectAcquiaApi();
     $environmentUuid = $this->getEnvironmentUuid($environment);
     $response = $this->acquiaCertificates->create($environmentUuid, $label, $cert, $key, $intermediate);
     $this->say($response->message);

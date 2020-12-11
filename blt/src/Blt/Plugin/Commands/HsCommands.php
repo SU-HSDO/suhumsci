@@ -46,7 +46,7 @@ class HsCommands extends HsAcquiaApiCommands {
    */
   public function createDatabase() {
     $database = $this->getMachineName('What is the name of the database? This ideally will match the site directory name. No special characters please.');
-    $this->setupCloudApi();
+    $this->connectAcquiaApi();
     $this->say('<info>' . $this->acquiaDatabases->create($this->appId, $database)->message . '</info>');
   }
 
@@ -61,7 +61,7 @@ class HsCommands extends HsAcquiaApiCommands {
    * @command humsci:add-domain
    */
   public function humsciAddDomain($environment, $domains) {
-    $this->setupCloudApi();
+    $this->connectAcquiaApi();
     foreach (explode(',', $domains) as $domain) {
       $this->say($this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain)->message);
     }
@@ -258,7 +258,7 @@ class HsCommands extends HsAcquiaApiCommands {
    */
   public function syncStaging(array $options = ['exclude' => NULL]) {
     $task_started = time() - (60 * 60 * 24);
-    $this->setupCloudApi();
+    $this->connectAcquiaApi();
 
     $sites = $this->getSitesToSync($task_started, $options);
     if (!$this->confirm(sprintf('Are you sure you wish to stage the following sites: <comment>%s</comment>', implode(', ', $sites)))) {
@@ -333,7 +333,7 @@ class HsCommands extends HsAcquiaApiCommands {
    */
   protected function getCompletedDatabaseCopies($time_comparison) {
     $databases = [];
-    $this->setupCloudApi();
+    $this->connectAcquiaApi();
     /** @var \AcquiaCloudApi\Response\NotificationResponse $notification */
     foreach ($this->acquiaNotifications->getAll($this->appId) as $notification) {
       if (

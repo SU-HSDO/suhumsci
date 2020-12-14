@@ -82,6 +82,11 @@
           .hb-grid--cols-9 & {
             display: none;
           }
+
+          .hb-dark-pattern &,
+          .hb-dark-inversion .views-element-container & {
+            @include hb-global-color('border-color', 'white');
+          }
         }
       }
 
@@ -155,6 +160,11 @@
       // only apply calendar icon when the label exists
       [class*="views-label-field-hs-event-date"] + .field-content {
         @include hb-icon-calendar($color: 'secondary');
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          @include hb-icon-calendar($color: 'white');
+        }
       }
     }
 
@@ -166,6 +176,11 @@
         @include grid-media-min('sm') {
           padding-left: hb-calculate-rems(24px); // width of icon + 10px
         }
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          @include hb-icon-location($color: 'white');
+        }
       }
     }
 
@@ -176,6 +191,11 @@
 
         @include grid-media-min('sm') {
           padding-left: hb-calculate-rems(30px); // width of icon + 10px
+        }
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          @include hb-icon-speaker($color: 'white');
         }
       }
     }
@@ -370,6 +390,13 @@
       @include hb-pairing-color('color', 'primary');
       font-size: hb-calculate-rems(36px);
       padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px);
+
+      .views-element-container .hb-dark-pattern & .field-content,
+      .hb-dark-inversion .views-element-container & .field-content {
+        @include hb-traditional {
+          @include hb-pairing-color('color', 'primary');
+        }
+      }
     }
   }
 
@@ -494,7 +521,7 @@
       width: 100%;
     }
 
-    a {
+    a { // added to keep hb-dark-pattern from using the :not(class) on these links
       @include hb-themes(('colorful', 'airy')) {
         @include hb-card-arrow-link;
       }

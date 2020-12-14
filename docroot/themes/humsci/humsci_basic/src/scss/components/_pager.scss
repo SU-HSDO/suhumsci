@@ -25,6 +25,17 @@
         text-decoration: underline;
         background-image: none;
         background-color: transparent;
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          @include hb-pairing-color('color', 'tertiary-highlight');
+        }
+      }
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border: none;
+        @include hb-pairing-color('color', 'tertiary-reversed');
       }
     }
   }
@@ -63,9 +74,21 @@
         padding: hb-calculate-rems(6px) hb-calculate-rems(12px);
       }
 
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border: $hb-thin-border;
+        border-color: transparent;
+      }
+
       &:hover,
       &:focus {
         @include hb-global-color('background-color', 'gray-medium');
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          background-color: transparent;
+          @include hb-pairing-color('border-color', 'tertiary-highlight');
+        }
       }
     }
 
@@ -81,6 +104,11 @@
         &:focus {
           cursor: default;
           background-color: transparent;
+        }
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          @include hb-pairing-color('color', 'tertiary-highlight');
         }
       }
     }

@@ -200,23 +200,57 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-body--medium;
+  @include hb-heading-2; // new!
+  @include hb-pairing-color('color', 'secondary');
   font-style: italic;
   line-height: 140%;
   position: relative;
-  quotes: '"' '"';
-  @include hb-global-color('color', 'gray-dark');
+  // @include hb-global-color('color', 'gray-dark'); // TODO: make this the utility class color
+
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: hb-calculate-rems(1px);
+  @include hb-pairing-color('border-color', 'secondary');
+  padding: 3rem; // TODO: check Figma
+
+  background-color: lavender;
 
   &::before {
+    content: '\201C';
     position: absolute;
-    content: open-quote;
-    margin-left: -10px;
+    top: hb-calculate-rems(12px);
+    right: 50%;
+    background-color: violet; // change to white? or can i mask the border?
+    width: 11rem;
+    height: fit-content;
+    @include hb-pairing-color('color', 'secondary');
+    font-family: $su-font-sans;
+    font-size: hb-calculate-rems(175px);
+    font-style: normal;
+    text-align: center;
+    text-shadow: 1rem 1rem 3rem #0ecbd8; // testing
   }
 
-  &::after {
-    position: absolute;
-    content: close-quote;
-    margin-right: 10px;
+  > p,
+  > div {
+    &::before {
+      position: absolute;
+      content: open-quote;
+      margin-left: hb-calculate-rems(-20px);
+    }
+
+    &::after {
+      position: absolute;
+      content: close-quote;
+      margin-right: hb-calculate-rems(10px);
+    }
+  }
+
+  .hb-dark-pattern & { // TODO: add dark inversion toggle
+    @include hb-global-color('color', 'gray-light');
+    @include hb-global-color('border-color', 'white');
+
+    background-color: darkolivegreen;
   }
 }
 

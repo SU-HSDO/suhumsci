@@ -200,7 +200,7 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-heading-2; // new!
+  @include hb-heading-2; // new! // TODO: check font-size!
   @include hb-pairing-color('color', 'secondary');
   font-style: italic;
   line-height: 140%;
@@ -210,25 +210,20 @@
   border-top-style: solid;
   border-bottom-style: solid;
   border-width: hb-calculate-rems(1px);
-  @include hb-pairing-color('border-color', 'secondary');
+  @include hb-global-color('border-color', 'gray');
   padding: 3rem; // TODO: check Figma
 
-  background-color: lavender;
-
   &::before {
-    content: '\201C';
-    position: absolute;
-    top: hb-calculate-rems(12px);
-    right: 50%;
+    content: '';
+    @include hb-icon-background('quote-mark', 'secondary'); // TODO: testing use of icon
     background-color: violet; // change to white? or can i mask the border?
-    width: 11rem;
-    height: fit-content;
-    @include hb-pairing-color('color', 'secondary');
-    font-family: $su-font-sans;
-    font-size: hb-calculate-rems(175px);
-    font-style: normal;
-    text-align: center;
-    text-shadow: 1rem 1rem 3rem #0ecbd8; // testing
+    background-repeat: no-repeat;
+    width: 88px; // set width of background behind icon
+    height: 48px;
+
+    position: absolute;
+    top: -24px; // needs to be half the size of the icon // TODO: use hb-calculate-rems
+    right: calc(50% - 44px); // subtract 1/2 of the width of icon
   }
 
   > p,
@@ -247,10 +242,8 @@
   }
 
   .hb-dark-pattern & { // TODO: add dark inversion toggle
-    @include hb-global-color('color', 'gray-light');
+    @include hb-global-color('color', 'white');
     @include hb-global-color('border-color', 'white');
-
-    background-color: darkolivegreen;
   }
 }
 

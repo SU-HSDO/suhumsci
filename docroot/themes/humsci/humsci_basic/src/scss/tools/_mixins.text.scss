@@ -200,38 +200,61 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-heading-2; // new! // TODO: check font-size!
   @include hb-pairing-color('color', 'secondary');
+  font-weight: hb-theme-font-weight(regular);
   font-style: italic;
-  line-height: 140%;
   position: relative;
-  // @include hb-global-color('color', 'gray-dark'); // TODO: make this the utility class color
-
+  text-align: center;
   border-top-style: solid;
   border-bottom-style: solid;
   border-width: hb-calculate-rems(1px);
   @include hb-global-color('border-color', 'gray');
-  padding: 3rem; // TODO: check Figma
+  padding: hb-calculate-rems(44px) hb-calculate-rems(28px);
+  margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px) 0;
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-size: hb-calculate-rems(32px);
+    line-height: 140%;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-size: hb-calculate-rems(28px);
+    line-height: 136%;
+  }
+
+  // A utility class that can be applied via layout builder to override the text color to black
+  .hb-blockquote-black-text & {
+    @include hb-global-color('color', 'black');
+  }
 
   &::before {
     content: '';
-    @include hb-icon-background('quote-mark', 'secondary'); // TODO: testing use of icon
-    background-color: violet; // change to white? or can i mask the border?
+    @include hb-global-color('background-color', 'white');
     background-repeat: no-repeat;
-    width: 88px; // set width of background behind icon
-    height: 48px;
-
+    width: hb-calculate-rems(88px);
+    height: hb-calculate-rems(48px);
     position: absolute;
-    top: -24px; // needs to be half the size of the icon // TODO: use hb-calculate-rems
+    top: hb-calculate-rems(-24px); // center on top border using 1/2 of the size of the quote-mark
     right: calc(50% - 44px); // subtract 1/2 of the width of icon
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-icon-background('quote-mark', 'secondary');
+    }
+
+    @include hb-traditional {
+      @include hb-icon-background('quote-mark', 'gray-dark');
+    }
   }
 
   > p,
   > div {
+    margin: 0;
+
     &::before {
       position: absolute;
       content: open-quote;
-      margin-left: hb-calculate-rems(-20px);
+      margin-left: hb-calculate-rems(-16px);
     }
 
     &::after {
@@ -241,9 +264,17 @@
     }
   }
 
-  .hb-dark-pattern & { // TODO: add dark inversion toggle
+  .hb-dark-pattern & {
     @include hb-global-color('color', 'white');
     @include hb-global-color('border-color', 'white');
+
+    &::before {
+      @include hb-pairing-color('background-color', 'primary-dark');
+
+      @include hb-traditional {
+        @include hb-icon-background('quote-mark', 'white');
+      }
+    }
   }
 }
 

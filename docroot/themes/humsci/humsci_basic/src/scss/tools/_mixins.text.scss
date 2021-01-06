@@ -201,6 +201,7 @@
 
 @mixin hb-blockquote {
   @include hb-pairing-color('color', 'secondary');
+  font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
   font-style: italic;
   position: relative;
@@ -209,17 +210,20 @@
   border-bottom-style: solid;
   border-width: hb-calculate-rems(1px);
   @include hb-global-color('border-color', 'gray');
-  padding: hb-calculate-rems(44px) hb-calculate-rems(28px);
   margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px) 0;
+  padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
+
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(28px);
+    padding: hb-calculate-rems(44px) hb-calculate-rems(28px);
+  }
 
   @include hb-themes(('colorful', 'airy')) {
-    font-size: hb-calculate-rems(32px);
     line-height: 140%;
   }
 
   @include hb-traditional {
     font-family: $hb-traditional-font--serif;
-    font-size: hb-calculate-rems(28px);
     line-height: 136%;
   }
 
@@ -232,11 +236,11 @@
     content: '';
     @include hb-global-color('background-color', 'white');
     background-repeat: no-repeat;
-    width: hb-calculate-rems(88px);
-    height: hb-calculate-rems(48px);
+    width: hb-calculate-rems(68px);
+    height: hb-calculate-rems(40px);
     position: absolute;
-    top: hb-calculate-rems(-24px); // center on top border using 1/2 of the size of the quote-mark
-    right: calc(50% - 44px); // subtract 1/2 of the width of icon
+    top: hb-calculate-rems(-20px); // center on top border using 1/2 of the size of the quote-mark
+    right: calc(50% - 34px); // subtract 1/2 of the width of icon
 
     @include hb-themes(('colorful', 'airy')) {
       @include hb-icon-background('quote-mark', 'secondary');

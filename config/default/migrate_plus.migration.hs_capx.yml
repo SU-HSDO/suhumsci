@@ -133,7 +133,20 @@ process:
   field_hs_person_first_name: first_name
   field_hs_person_last_name: last_name
   field_hs_person_middle_name: middle_name
-  field_hs_person_title: long_title
+  field_hs_person_title:
+    -
+      plugin: skip_on_empty
+      source: long_title
+      method: process
+    -
+      plugin: str_replace
+      search: '\n'
+      replace: ', '
+    -
+      plugin: str_replace
+      search: '/, $/'
+      replace: ''
+      regex: true
   body/value: bio_html
   body/format: constants/basic_html
   field_hs_person_email: email

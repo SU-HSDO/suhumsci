@@ -155,12 +155,11 @@ function su_humsci_theme_preprocess_block(&$vars) {
   // Change the block label to the block description so that users can change
   // the block label without needing the permission to administer blocks. The
   // role would only need the "Edit any block content" permission.
-  if ($vars['base_plugin_id'] == 'block_content') {
+  if ($vars['base_plugin_id'] == 'block_content' && !empty($vars['content']['#block_content'])) {
     /** @var \Drupal\block_content\Entity\BlockContent $block */
-    if ($block = $vars['content']['#block_content']) {
-      $info = $block->get('info')->get(0)->getValue();
-      $vars['label'] = reset($info) ?: $vars['label'];
-    }
+    $block = $vars['content']['#block_content'];
+    $info = $block->get('info')->get(0)->getValue();
+    $vars['label'] = reset($info) ?: $vars['label'];
   }
 }
 

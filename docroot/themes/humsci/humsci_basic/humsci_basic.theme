@@ -28,12 +28,11 @@ function humsci_basic_preprocess_block(&$vars) {
   // Change the block label to the block description so that users (such as site owners)
   // can change the block label without needing the permission to administer blocks.
   // The role would only need the "Edit any block content" permission.
-  if ($vars['base_plugin_id'] == 'block_content') {
+  if ($vars['base_plugin_id'] == 'block_content' && !empty($vars['content']['#block_content'])) {
     /** @var \Drupal\block_content\Entity\BlockContent $block */
-    if ($block = $vars['content']['#block_content']) {
-      $description = $block->get('info')->get(0)->getValue();
-      $vars['label'] = reset($description) ?: $vars['label'];
-    }
+    $block = $vars['content']['#block_content'];
+    $description = $block->get('info')->get(0)->getValue();
+    $vars['label'] = reset($description) ?: $vars['label'];
   }
 }
 

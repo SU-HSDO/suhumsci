@@ -134,7 +134,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @param array $overrides
    *   Keyed array of config overrides.
    */
-  protected function setPeopleOverrides(array $names,array &$overrides){
+  protected function setPeopleOverrides(array $names, array &$overrides) {
     if (in_array('field.field.node.hs_person.field_hs_person_image', $names)) {
       $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_image', 'field_people_image');
     }

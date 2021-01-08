@@ -128,3 +128,5 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-stretch-vertical-linked-cards | Stretches all vertical linked cards on a page to be the same height and adjusts the height of all card titles to be the same height |
 | hb-display-more-link-text | Displays helper link text with more link styling |
 | hb-list-reset | Resets lists to display default browser styles |
+| hb-blockquote-black-text | Changes the text color in a blockquote from secondary to black. This is specific to when a block quote is used in the text area / WYSIWYG.|
+

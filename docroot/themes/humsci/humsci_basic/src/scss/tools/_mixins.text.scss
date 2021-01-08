@@ -200,23 +200,85 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-body--medium;
+  @include hb-pairing-color('color', 'secondary');
+  font-size: hb-calculate-rems(24px);
+  font-weight: hb-theme-font-weight(regular);
   font-style: italic;
-  line-height: 140%;
   position: relative;
-  quotes: '"' '"';
-  @include hb-global-color('color', 'gray-dark');
+  text-align: center;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: hb-calculate-rems(1px);
+  @include hb-global-color('border-color', 'gray');
+  margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px) 0;
+  padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
 
-  &::before {
-    position: absolute;
-    content: open-quote;
-    margin-left: -10px;
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(28px);
+    padding: hb-calculate-rems(44px) hb-calculate-rems(28px);
   }
 
-  &::after {
+  @include hb-themes(('colorful', 'airy')) {
+    line-height: 140%;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    line-height: 136%;
+  }
+
+  // A utility class that can be applied via layout builder to override the text color to black
+  .hb-blockquote-black-text & {
+    @include hb-global-color('color', 'black');
+  }
+
+  &::before {
+    content: '';
+    @include hb-global-color('background-color', 'white');
+    background-repeat: no-repeat;
+    width: hb-calculate-rems(68px);
+    height: hb-calculate-rems(40px);
     position: absolute;
-    content: close-quote;
-    margin-right: 10px;
+    top: hb-calculate-rems(-20px); // center on top border using 1/2 of the size of the quote-mark
+    right: calc(50% - 34px); // subtract 1/2 of the width of icon
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-icon-background('quote-mark', 'secondary');
+    }
+
+    @include hb-traditional {
+      @include hb-icon-background('quote-mark', 'gray-dark');
+    }
+  }
+
+  > p,
+  > div {
+    margin: 0;
+
+    &::before {
+      position: absolute;
+      content: open-quote;
+      margin-left: hb-calculate-rems(-16px);
+    }
+
+    &::after {
+      position: absolute;
+      content: close-quote;
+      margin-right: hb-calculate-rems(10px);
+    }
+  }
+
+  .hb-dark-pattern & {
+    @include hb-global-color('color', 'white');
+    @include hb-global-color('border-color', 'white');
+
+    &::before {
+      @include hb-pairing-color('background-color', 'primary-dark');
+
+      @include hb-traditional {
+        @include hb-icon-background('quote-mark', 'white');
+      }
+    }
   }
 }
 

@@ -149,8 +149,14 @@
       left: 0;
       top: hb-calculate-rems(8px);
 
-      .hb-dark-pattern & {
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
         @include hb-pairing-color('background-color', 'secondary-highlight');
+      }
+
+      .hb-raised-cards .hb-dark-pattern &,
+      .hb-dark-inversion .hb-raised-cards .views-element-container & {
+        @include hb-pairing-color('background-color', 'secondary');
       }
     }
   }
@@ -261,6 +267,11 @@
 
   @include hb-traditional {
     @include hb-pairing-color('background-color', 'tertiary-highlight');
+  }
+
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    @include hb-global-color('color', 'black');
   }
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);

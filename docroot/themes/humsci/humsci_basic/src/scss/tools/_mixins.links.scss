@@ -44,6 +44,13 @@
     &:hover,
     &:focus {
       @include hb-global-color('color', 'black');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
+        box-shadow: none;
+        background-position-y: bottom;
+      }
     }
   }
 
@@ -81,6 +88,13 @@
     &:hover,
     &:focus {
       background-position-y: -50%;
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
+        box-shadow: none;
+        background-position-y: bottom;
+      }
     }
   }
 
@@ -98,9 +112,11 @@
     }
   }
 
-  .hb-dark-pattern & {
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
       @include hb-pairing-color('color', 'tertiary-reversed');
+      @include hb-pairing-color('border-bottom-color', 'tertiary-reversed');
     }
 
     @include hb-traditional {
@@ -117,6 +133,7 @@
       @include hb-traditional {
         @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
         @include hb-ext-icon-color('tertiary-highlight-darken-10');
+        @include hb-pairing-color('text-decoration-color', 'tertiary-highlight-darken-10');
       }
     }
   }
@@ -183,7 +200,8 @@
     }
   }
 
-  .hb-dark-pattern & {
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
       @include hb-pairing-color('color', 'tertiary-reversed');
 
@@ -207,7 +225,7 @@
       @include hb-pairing-color('color', 'tertiary-highlight');
 
       &::after {
-        @include hb-icon-link-arrow('secondary-highlight');
+        @include hb-icon-link-arrow('tertiary-highlight');
         background-size: 85%;
       }
 
@@ -234,6 +252,16 @@
   background-image: none;
   width: 100%;
 
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    color: transparent;
+
+    &:hover,
+    &:focus {
+      color: transparent;
+    }
+  }
+
   &:hover,
   &:focus {
     color: transparent;
@@ -242,6 +270,16 @@
     &::before {
       transform: translateX(0.625rem);
       @include hb-icon-link-arrow('secondary-darken-12');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-link-arrow('gray-medium');
+      }
+
+      .hb-raised-cards .hb-dark-pattern &,
+      .hb-dark-inversion .hb-raised-cards .views-element-container & {
+        @include hb-icon-link-arrow('secondary-darken-12');
+      }
     }
   }
 
@@ -254,6 +292,16 @@
     @include hb-icon-link-arrow('secondary');
     transform: translateX(0);
     transition: hb-transition(transform);
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      @include hb-icon-link-arrow('white');
+    }
+
+    .hb-raised-cards .hb-dark-pattern &,
+    .hb-dark-inversion .hb-raised-cards .views-element-container & {
+      @include hb-icon-link-arrow('secondary');
+    }
   }
 }
 

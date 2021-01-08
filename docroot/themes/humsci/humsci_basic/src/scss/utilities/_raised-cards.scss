@@ -84,3 +84,90 @@
     }
   }
 }
+
+// Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied
+.hb-raised-cards .hb-dark-pattern .hb-card,
+.hb-dark-inversion .hb-raised-cards .views-element-container .hb-card {
+  @include hb-global-color('color', 'black');
+
+  .field-content,
+  .views-label {
+    @include hb-global-color('color', 'black');
+  }
+
+  a {
+    @include hb-pairing-color('color', 'tertiary');
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-darken-20');
+    }
+  }
+
+  &__date-tile {
+    .field-content {
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-global-color('color', 'white');
+      }
+    }
+
+    &-month .field-content {
+      @include hb-traditional {
+        @include hb-global-color('color', 'white');
+      }
+    }
+
+    &-day .field-content {
+      @include hb-traditional {
+        @include hb-pairing-color('color', 'primary');
+      }
+    }
+  }
+
+  &__title a {
+    @include hb-themes(('airy', 'colorful')) {
+      @include hb-pairing-color('border-bottom-color', 'tertiary');
+
+      &:hover,
+      &:focus {
+        @include hb-pairing-color('border-bottom-color', 'tertiary-darken-20', 'important');
+      }
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('color', 'black');
+      @include hb-global-color('text-decoration-color', 'black');
+
+      &:hover,
+      &:focus {
+        @include hb-pairing-color('text-decoration-color', 'tertiary-darken-20');
+      }
+    }
+  }
+
+  &__decorative-link a {
+    @include hb-themes(('airy', 'colorful')) {
+      color: transparent;
+
+      &:hover,
+      &:focus {
+        color: transparent;
+      }
+    }
+
+    @include hb-traditional {
+      &::after {
+        @include hb-icon-link-arrow('tertiary');
+        background-size: 85%;
+      }
+
+      &:hover,
+      &:focus {
+        &::after {
+          @include hb-icon-link-arrow('tertiary-darken-20');
+          background-size: 85%;
+        }
+      }
+    }
+  }
+}

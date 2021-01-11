@@ -33,14 +33,14 @@ function loop() {
 // Confirm when an item is in the viewport
 function isElementInViewport(e) {
   let rect = e.getBoundingClientRect();
+
+  // Set the point at which the hero animation begins
+  // to be when the bottom of the browser window intersects
+  // slightly above the bottom of the hero.
+  let bottom = (rect.bottom - (rect.bottom*0.18));
+
   return (
-    (rect.top <= 0
-      && rect.bottom >= 0)
-    ||
-    (rect.bottom >= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.top <= (window.innerHeight || document.documentElement.clientHeight))
-    ||
     (rect.top >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight))
+      bottom <= ((window.innerHeight) || document.documentElement.clientHeight)) 
   );
 }

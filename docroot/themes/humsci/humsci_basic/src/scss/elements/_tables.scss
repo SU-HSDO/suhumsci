@@ -9,6 +9,27 @@
   details {
     display: none;
   }
+
+  .hb-dark-pattern &,
+  .views-element-container .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    @include hb-global-color('background-color', 'white');
+
+    .views-label,
+    .field-content,
+    td {
+      @include hb-global-color('color', 'black');
+    }
+
+    a {
+      @include hb-pairing-color('color', 'tertiary');
+
+      &:hover,
+      &:focus {
+        @include hb-pairing-color('color', 'tertiary-darken-20');
+      }
+    }
+  }
 }
 
 table {

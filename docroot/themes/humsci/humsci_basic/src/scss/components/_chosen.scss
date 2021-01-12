@@ -92,6 +92,11 @@
     padding: hb-calculate-rems(8px) $hb-input-icon-spacing hb-calculate-rems(8px) hb-calculate-rems(8px);
     @include hb-input-border;
 
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      @include hb-global-color('background', 'white', '!important');
+    }
+
     &:focus {
       @include hb-input-focus;
     }
@@ -179,6 +184,11 @@
     margin: -1px 0;
     padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
     border: 0 none;
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      @include hb-global-color('background', 'white', '!important');
+    }
   }
 
   .chosen-choices li {

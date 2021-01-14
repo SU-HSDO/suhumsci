@@ -1,0 +1,49 @@
+{%- set attributes = attributes.addClass('hb-testimonial') -%}
+
+{% if variant %}
+  {% set variant_class = "hb-testimonial--#{variant}" %}
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
+
+<div{{ attributes }}>
+  <div class="hb-testimonial__wrapper">
+
+  <h2>{{ variant }}</h2>
+
+  {% if variant == "top" %}
+    <h3>Yo! I'm the top variant!</h3>
+  {% endif %}
+
+
+    {% if quote %}
+      <div class="hb-testimonial__quote">
+        <p>{{ quote }}</p>
+      </div>
+    {% endif %}
+
+    {% if name %}
+      <div class="hb-testimonial__name">
+        {{ name }}
+      </div>
+    {% endif %}
+
+    {% if position %}
+      <div class="hb-testimonial__position">
+        {{ position }}
+      </div>
+    {% endif %}
+
+    {% if image %}
+      <div class="hb-testimonial__image">
+        {{ image }}
+      </div>
+    {% endif %}
+
+  {% if link %}
+    <div class="hb-testimonial__link">
+      {{ link }}
+    </div>
+  {% endif %}
+
+  </div>
+</div>

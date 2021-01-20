@@ -282,22 +282,10 @@
 // blockquotes
 // The text area blockquote content is placed inside of a paragraph tag.
 blockquote:nth-child(n) {
-  // remove content set in the base default styles set on the blockquote tag
-  &::after,
-  &::before {
-    content: '';
-  }
+  @include hb-blockquote;
 
   .hb-local-footer & {
     margin: 0 0 hb-calculate-rems(20px); // adjust blockquote browser spacing defaults when placed in the local footer
-  }
-
-  p {
-    @include hb-blockquote;
-
-    .hb-dark-pattern & {
-      @include hb-global-color('color', 'gray-light');
-    }
   }
 }
 

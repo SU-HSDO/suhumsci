@@ -6,7 +6,7 @@ Feature: Install State
   @api @safe
   Scenario: Test default permissions.
     Given I run drush "cget user.role.authenticated permissions"
-    Then the role "authenticated" should have 18 permissions
+    Then the role "authenticated" should have 20 permissions
     And drush output should contain "access content"
     And drush output should contain "access shortcuts"
     And drush output should contain "search content"

@@ -2,5 +2,27 @@
 .hb-dark-pattern {
   @include hb-global-color('color', 'white');
   @include hb-pairing-color('background-color', 'primary-dark');
+
+  .views-element-container & {
+    padding: hb-spacing-width('xs');
+
+    .field-content,
+    .views-label {
+      @include hb-global-color('color', 'white');
+    }
+  }
 }
 
+//Dark mode inversion for full site toggle
+.hb-dark-inversion {
+  .views-element-container {
+    @include hb-global-color('color', 'white');
+    @include hb-pairing-color('background-color', 'primary-dark');
+    padding: hb-spacing-width('xs');
+
+    .field-content,
+    .views-label {
+      @include hb-global-color('color', 'white');
+    }
+  }
+}

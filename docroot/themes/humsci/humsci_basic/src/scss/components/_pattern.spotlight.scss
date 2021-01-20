@@ -2,6 +2,13 @@
   padding: hb-spacing-width('md') 0;
   @include hb-pairing-color('background-color', 'spotlight');
 
+  // Add a unique background-color for Lake on Colorful.
+  // Note this is an extraordinary use case.
+  // Targeting styles per color pairing should not become standard practice.
+  .hc-pairing-lake & {
+    @include hb-pairing-color('background-color', 'secondary-highlight');
+  }
+
   @include grid-media-min('md') {
     padding: hb-spacing-width() 0;
     margin: hb-spacing-width() 0;

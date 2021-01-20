@@ -63,3 +63,34 @@ function su_humsci_profile_post_update_8222() {
   user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, $permissions);
   user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, $permissions);
 }
+
+/**
+ * Set the default image for profile content that doesn't have any images.
+ */
+function su_humsci_profile_post_update_8230() {
+  /** @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages */
+  $config_pages = \Drupal::service('config_pages.loader');
+  $default_mid = $config_pages->getValue('field_default_values', 'field_people_image', 0, 'target_id');
+  if (!$default_mid) {
+    return;
+  }
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $logger = \Drupal::logger('humsci_profile');
+
+  $fields = ['field_hs_person_image', 'field_hs_person_square_img'];
+  foreach ($fields as $image_field) {
+    $nids = $node_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_person')
+      ->condition($image_field, NULL, 'IS NULL')
+      ->execute();
+
+    foreach ($node_storage->loadMultiple($nids) as $node) {
+      $node->set($image_field, $default_mid)->save();
+      $logger->info('Added default image to %field field on the profile %name', [
+        '%field' => $image_field,
+        '%name' => $node->label(),
+      ]);
+    }
+  }
+}

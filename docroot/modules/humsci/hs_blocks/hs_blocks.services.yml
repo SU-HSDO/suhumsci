@@ -1,0 +1,6 @@
+services:
+  hs_blocks.event_subscriber:
+    class: Drupal\hs_blocks\EventSubscriber\EventSubscriber
+    arguments: ['@current_user', '@database']
+    tags:
+      - { name: event_subscriber }

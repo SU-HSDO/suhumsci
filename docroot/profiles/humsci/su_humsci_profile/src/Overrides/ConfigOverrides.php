@@ -112,9 +112,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       ];
     }
 
-    if (in_array('field.field.node.hs_person.field_hs_person_image', $names)) {
-      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_image', 'field_people_image');
-    }
+    $this->setPeopleOverrides($names, $overrides);
     $this->setNewsOverrides($names, $overrides);
     $this->setCoursesOverrides($names, $overrides);
     $this->setEventOverrides($names, $overrides);
@@ -127,6 +125,24 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       }
     }
     return $overrides;
+  }
+
+  /**
+   * Set the config overrides for the people content type.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
+  protected function setPeopleOverrides(array $names, array &$overrides) {
+    if (in_array('field.field.node.hs_person.field_hs_person_image', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_image', 'field_people_image');
+    }
+
+    if (in_array('field.field.node.hs_person.field_hs_person_square_img', $names)) {
+      $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_person.field_hs_person_square_img', 'field_people_image');
+    }
   }
 
   /**

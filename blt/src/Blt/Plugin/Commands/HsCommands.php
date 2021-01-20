@@ -119,8 +119,7 @@ class HsCommands extends HsAcquiaApiCommands {
           ->drush("cron")
           ->drush('cr')
           ->run();
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         $this->say("Unable to run cron on <comment>$multisite</comment>");
       }
     }
@@ -273,7 +272,7 @@ class HsCommands extends HsAcquiaApiCommands {
 
     while (!empty($sites)) {
       echo '.';
-      sleep(10);
+      sleep(30);
       $finished_databases = $this->getCompletedDatabaseCopies($task_started);
 
       if ($finished = array_intersect($copy_sites, $finished_databases)) {
@@ -284,7 +283,7 @@ class HsCommands extends HsAcquiaApiCommands {
           $new_site = reset($new_site);
           $copy_sites[$db_position] = $new_site;
           $this->say("Copying $new_site database to staging.");
-          $this->resetCloudApi();
+          $this->connectAcquiaApi();
           $this->say($this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid('test'))->message);
         }
       }

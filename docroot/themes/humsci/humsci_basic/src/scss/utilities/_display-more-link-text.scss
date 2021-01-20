@@ -13,4 +13,26 @@
       display: none; // hide large arrow icon when helper link text is displayed
     }
   }
+
+  .hb-dark-pattern .hb-card__decorative-link a, // cards in dark mode views
+  .hb-dark-pattern .field-hs-postcard-link a,
+  .hb-dark-inversion & .views-element-container .hb-card__decorative-link a,
+  .hb-dark-inversion & .views-element-container.field-hs-postcard-link a {
+    @include hb-global-color('color', 'white');
+
+    &::after {
+      @include hb-icon-link-arrow('white');
+      background-size: 85%;
+    }
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('color', 'gray-medium');
+
+      &::after {
+        @include hb-icon-link-arrow('gray-medium');
+        background-size: 85%;
+      }
+    }
+  }
 }

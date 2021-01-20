@@ -1,0 +1,70 @@
+uuid: a4bc3c12-8a15-45e1-9007-4fb0b2704f8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph_row.field_hs_flexible_components
+    - paragraphs.paragraphs_type.hs_carousel
+    - paragraphs.paragraphs_type.hs_priv_text_area
+    - paragraphs.paragraphs_type.hs_private_files
+    - paragraphs.paragraphs_type.hs_row
+    - react_paragraphs.paragraphs_row_type.hs_flexible_page
+  module:
+    - entity_reference_revisions
+id: paragraph_row.hs_flexible_page.field_hs_flexible_components
+field_name: field_hs_flexible_components
+entity_type: paragraph_row
+bundle: hs_flexible_page
+label: Components
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 1
+    target_bundles:
+      hs_carousel: hs_carousel
+      hs_private_files: hs_private_files
+      hs_priv_text_area: hs_priv_text_area
+      hs_row: hs_row
+    target_bundles_drag_drop:
+      hs_accordion:
+        weight: 13
+        enabled: false
+      hs_banner:
+        weight: 14
+        enabled: false
+      hs_carousel:
+        enabled: true
+        weight: 15
+      hs_hero_image:
+        weight: 16
+        enabled: false
+      hs_postcard:
+        weight: 17
+        enabled: false
+      hs_priv_text_area:
+        enabled: true
+        weight: 19
+      hs_private_files:
+        enabled: true
+        weight: 18
+      hs_row:
+        enabled: true
+        weight: 20
+      hs_spotlight:
+        weight: 21
+        enabled: false
+      hs_text_area:
+        weight: 22
+        enabled: false
+      hs_view:
+        weight: 23
+        enabled: false
+      hs_webform:
+        weight: 24
+        enabled: false
+field_type: entity_reference_revisions

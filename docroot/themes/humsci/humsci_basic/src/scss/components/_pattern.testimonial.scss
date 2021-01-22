@@ -1,9 +1,59 @@
 .hb-testimonial {
+  @include hb-quote-wrapper;
+
   &--top {
-    background-color: #CCCCFF;
+    // background-color: #CCCCFF;
   }
 
   &--bottom {
-    background-color: #CCFFCC;
+    // background-color: #CCFFCC;
+  }
+
+  &__quote {
+    @include hb-pairing-color('color', 'secondary');
+    font-size: hb-calculate-rems(24px);
+    font-weight: hb-theme-font-weight(regular);
+    font-style: italic;
+    text-align: center;
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(28px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      line-height: 140%;
+    }
+
+    @include hb-traditional {
+      font-family: $hb-traditional-font--serif;
+      line-height: 136%;
+    }
+
+    .field-hs-testimonial-quote {
+      &::before {
+        position: absolute;
+        content: open-quote;
+        margin-left: hb-calculate-rems(-16px);
+      }
+
+      &::after {
+        position: absolute;
+        content: close-quote;
+        margin-right: hb-calculate-rems(10px);
+      }
+    }
+
+    // A utility class that can be applied via layout builder to override the text color to black
+    .hb-blockquote-black-text & {
+      @include hb-global-color('color', 'black');
+    }
+  }
+
+  &__image {
+    width: hb-calculate-rems(100px);
+  }
+
+  .hb-dark-pattern & {
+    @include hb-global-color('color', 'white');
   }
 }

@@ -1,6 +1,64 @@
 .field-media-image {
   + .field-media-image-caption {
     @include hb-caption-credit;
+    padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) hb-calculate-rems(8px);
+    text-align: right;
+    line-height: 120%;
+
+    @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(15px);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    blockquote,
+    cite,
+    code,
+    li,
+    dd,
+    dt,
+    span,
+    strong,
+    em,
+    p,
+    .hs-button,
+    .hs-button--big,
+    .hs-secondary-button,
+    .hs-more-link,
+    .hs-external-link,
+    .hs-file-link,
+    .hs-pdf-link,
+    .hs-private-link {
+      display: inline;
+      margin-right: hb-calculate-rems(1.5px); // Adds spacing to elements for readability with spacing between inline text elements.
+    }
+
+    code,
+    h1,
+    h2,
+    h3,
+    .hs-font-splash {
+      font-family: $hb-colorful-font--sans;
+    }
+
+    blockquote {
+      font-family: $hb-colorful-font--sans;
+
+      &:nth-child(n)::before,
+      &:nth-child(n)::after,
+      &:nth-child(n) > *::before,
+      &:nth-child(n) > *::after {
+        display: none;
+      }
+    }
+
+    hr {
+      display: none !important;
+    }
   }
 }
 

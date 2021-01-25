@@ -22,18 +22,40 @@
     top: hb-calculate-rems(-20px); // center on top border using 1/2 of the size of the quote-mark
     right: calc(50% - 34px); // subtract 1/2 of the width of icon
 
+    .hb-spotlight & {
+      @include hb-pairing-color('background-color', 'spotlight');
+
+      .hc-pairing-lake & {
+        @include hb-pairing-color('background-color', 'secondary-highlight');
+      }
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       @include hb-icon-background('quote-mark', 'secondary');
+
+      .hs-paragraph-style--well & {
+        @include hb-global-color('background-color', 'gray-light');
+      }
     }
 
     @include hb-traditional {
       @include hb-icon-background('quote-mark', 'gray-dark');
+
+      .hs-paragraph-style--well & {
+        @include hb-pairing-color('background-color', 'tertiary-highlight');
+      }
     }
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('border-color', 'white');
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('border-color', 'secondary');
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('border-color', 'white');
+    }
 
     &::before {
       @include hb-pairing-color('background-color', 'primary-dark');

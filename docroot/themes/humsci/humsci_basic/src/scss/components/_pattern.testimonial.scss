@@ -1,12 +1,22 @@
 .hb-testimonial {
   @include hb-quote-wrapper;
+  margin: hb-calculate-rems(80px) 0 hb-calculate-rems(64px) 0; // match spacing on blockquote paragraph type container
 
-  &--top {
-    // background-color: #CCCCFF;
+  .counted-items-2 &,
+  .counted-items-3 & {
+    @include grid-media-min('sm') {
+      margin: hb-calculate-rems(40px) 0 hb-calculate-rems(32px) 0;
+    }
   }
 
-  &--bottom {
-    // background-color: #CCFFCC;
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .hb-testimonial--bottom & {
+      padding-top: hb-calculate-rems(6px);
+    }
   }
 
   &__quote {
@@ -43,17 +53,93 @@
       }
     }
 
+    .hb-testimonial--bottom & {
+      padding-bottom: hb-calculate-rems(16px);
+    }
+
     // A utility class that can be applied via layout builder to override the text color to black
     .hb-blockquote-black-text & {
       @include hb-global-color('color', 'black');
     }
   }
 
-  &__image {
-    width: hb-calculate-rems(100px);
+  &__author-block {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-width: 100%;
+
+    @include grid-media-min('sm') {
+      max-width: 80%;
+      flex-direction: row;
+    }
+
+    // allow more breathing room for content when 2 testimonials
+    // are placed beside each other in a well
+    .counted-items-2 & {
+      max-width: 100%;
+      flex-direction: column;
+
+      @include grid-media-min('xl') {
+        flex-direction: row;
+      }
+    }
+
+    .counted-items-3 & {
+      max-width: 100%;
+      flex-direction: column;
+    }
+
+    .hb-testimonial--top & {
+      padding-top: hb-calculate-rems(36px);
+    }
   }
 
-  .hb-dark-pattern & {
-    @include hb-global-color('color', 'white');
+  &__image {
+    width: hb-calculate-rems(100px);
+    margin: 0 hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+
+    @include hb-themes(('colorful', 'airy')) {
+      img {
+        border-radius: 50%;
+        max-width: inherit;
+        width: hb-calculate-rems(100px);
+        height: hb-calculate-rems(100px);
+        object-fit: cover;
+      }
+    }
+  }
+
+  &__name {
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
+  &__position {
+    font-size: hb-calculate-rems(16px);
+    padding-bottom: hb-calculate-rems(16px);
+  }
+
+  &__link {
+    position: relative;
+
+    a {
+      @include hb-more-link;
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        // make arrow and text color white for all themes
+        @include hb-global-color('color', 'white');
+
+        &::after {
+          @include hb-icon-link-arrow('white');
+          background-size: 85%;
+        }
+
+        &:hover,
+        &:focus {
+          @include hb-global-color('color', 'white');
+        }
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@
 * [Views](#views)
 * [Table Column Widths](#table-column-widths)
 * [Layout Building "Components" Region](#layout-builder-components-region)
+* [Misc](#misc)
 
 ### Field Utility Classes
 Field Utility Classes are used to apply styles to a field in a view (Drupal Home / Administration / Structure / Views) or to a field within a block in layout builder.
@@ -34,8 +35,11 @@ Field Utility Classes are used to apply styles to a field in a view (Drupal Home
 | hb-highlighted-label | Applies the highlighted style to any label |
 | hb-pill              | Applies the pill style |
 | hb-categories        | Applies the categories style to any field with multiple items (can be linked) |
+| hb-single-category   | category style for one custom field that is a linked element |
 | hb-pill-list         | Applies the pill style to any field with multiple items |
 | hb-pill-link-list    | Applies the pill link style to any field with multiple items that are links |
+| hb-text-reset        | Removes all text styles from an element |
+| hb-list-reset        | Removes all custom list styles from an element |
 <br>
 
 ### Group Block Utility Classes
@@ -67,6 +71,8 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 | hs-mailto-link |
 | hs-emphasized-text |
 | hs-more-link |
+| hs-pdf-link |
+| hs-file-link |
 | hs-table--borderless |
 | hs-well |
 <br>
@@ -136,3 +142,9 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-display-more-link-text | Displays helper link text with more link styling |
 | hb-list-reset | Resets lists to display default browser styles |
 | hb-blockquote-black-text | Changes the text color in a blockquote from secondary to black. This is specific to when a block quote is used in the text area / WYSIWYG.|
+| hb-main-body-detail-image | Used specifically on node detail pages to float an image. |
+
+### Misc
+| Class                | Description         |
+|----------------------|---------------------|
+| hb-position-relative | Sets a container to position reative |

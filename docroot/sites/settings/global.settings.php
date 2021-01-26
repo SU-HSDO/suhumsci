@@ -20,6 +20,7 @@ $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/conf
 $additionalSettingsFiles = [
   __DIR__ . '/simplesaml.php',
   __DIR__ . '/environment_indicator.php',
+  __DIR__ . '/local.settings.php',
 ];
 
 foreach ($additionalSettingsFiles as $settingsFile) {

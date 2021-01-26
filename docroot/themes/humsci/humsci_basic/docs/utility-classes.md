@@ -1,5 +1,12 @@
 ## Utility Classes
 
+* [Field Utility Classes](#field-utility-classes)
+* [Group Block Utility Classes](#group-block-utility-classes)
+* [WYSIWYG Platform Wide Text Area Classes](#wysiwyg-platform-wide-text-area-classes)
+* [Views](#views)
+* [Table Column Widths](#table-column-widths)
+* [Layout Building "Components" Region](#layout-builder-components-region)
+
 ### Field Utility Classes
 Field Utility Classes are used to apply styles to a field in a view (Drupal Home / Administration / Structure / Views) or to a field within a block in layout builder.
 
@@ -121,7 +128,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 * This does not work for table patterns (neither table, nor table row)
 <br>
 
-### Layout Builder "Components" region
+### Layout Builder "Components" Region
 | Class                            | Description                                                                           |
 |----------------------------------|---------------------------------------------------------------------------------------|
 | hb-raised-cards                  | Adds a drop shadow behind any Card UI pattern used in the view |
@@ -129,4 +136,3 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-display-more-link-text | Displays helper link text with more link styling |
 | hb-list-reset | Resets lists to display default browser styles |
 | hb-blockquote-black-text | Changes the text color in a blockquote from secondary to black. This is specific to when a block quote is used in the text area / WYSIWYG.|
-

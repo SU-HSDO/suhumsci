@@ -1,12 +1,13 @@
 .field-media-image {
   + .field-media-image-caption {
     @include hb-caption-credit;
-    padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) hb-calculate-rems(8px);
+    padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) 50%; // Using a percentage to the right to control the width of the captions
     text-align: right;
     line-height: 120%;
+    height: auto; // This automatically adjust its height to allow without flexing to the height of the container
 
     @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
-      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(15px);
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 50%;
     }
 
     h1,
@@ -34,7 +35,7 @@
     .hs-pdf-link,
     .hs-private-link {
       display: inline;
-      margin-right: hb-calculate-rems(1.5px); // Adds spacing to elements for readability with spacing between inline text elements.
+      margin-right: hb-calculate-rems(1.5px); // Adds spacing to elements for readability with spacing between inline text elements
     }
 
     code,

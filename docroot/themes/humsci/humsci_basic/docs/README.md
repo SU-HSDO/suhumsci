@@ -10,4 +10,5 @@ How we build themes:
 
 These classes can be used in Drupal to further customize themes:
 * [Color Pairings](/docroot/themes/humsci/humsci_basic/docs/color-pairings.md)
+* [Dark Inversion](/docroot/themes/humsci/humsci_basic/docs/dark-inversion.md)
 * [Utility Classes](/docroot/themes/humsci/humsci_basic/docs/utility-classes.md)

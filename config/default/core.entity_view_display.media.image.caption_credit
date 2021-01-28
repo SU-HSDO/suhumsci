@@ -13,7 +13,7 @@ dependencies:
     - hs_field_helpers
     - layout_builder
     - responsive_image
-    - text
+    - smart_trim
 third_party_settings:
   layout_builder:
     allow_custom: false
@@ -35,12 +35,21 @@ content:
     weight: 0
     region: content
   field_media_image_caption:
-    type: text_trimmed
+    type: smart_trim
     weight: 1
     region: content
     label: hidden
     settings:
-      trim_length: 120
+      trim_length: 160
+      trim_type: chars
+      trim_suffix: ''
+      wrap_output: false
+      wrap_class: trimmed
+      more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
+      trim_options: {  }
     third_party_settings:
       field_formatter_class:
         class: ''
@@ -52,4 +61,3 @@ hidden:
   search_api_excerpt: true
   thumbnail: true
   uid: true
-  

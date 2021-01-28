@@ -374,3 +374,30 @@ function su_humsci_profile_entity_access(EntityInterface $entity, $operation, Ac
 
   return AccessResult::neutral();
 }
+
+/**
+ * Implements hook_preprocess_pattern_NAME().
+ */
+function su_humsci_profile_preprocess_pattern_alert(&$variables) {
+  $entity_type = $variables['context']->getProperty('entity_type');
+  $bundle = $variables['context']->getProperty('bundle');
+  $entity = $variables['context']->getProperty('entity');
+
+  // Global Messages!
+  if ($entity_type == "config_pages" && $bundle == "stanford_global_message") {
+
+    // Validate that the entity has the field we need so we don't 500 the site.
+    if (!$entity->hasField('su_global_msg_type')) {
+      \Drupal::logger('stanford_profile_helper')->error(t("Global Messages Config Block is missing the field su_global_msg_type"));
+      return;
+    }
+
+    $color = $entity->get('su_global_msg_type')->getString();
+    $variables['attributes']->addClass("su-alert--" . $color);
+    $dark_bgs = ['error', 'info', 'success'];
+    if (in_array($color, $dark_bgs)) {
+      $variables['attributes']->addClass("su-alert--text-light");
+    }
+  }
+
+}

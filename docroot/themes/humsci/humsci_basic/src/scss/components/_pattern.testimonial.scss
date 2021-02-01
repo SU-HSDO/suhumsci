@@ -96,18 +96,26 @@
   }
 
   &__image {
+    min-width: hb-calculate-rems(100px);
     width: hb-calculate-rems(100px);
     margin: 0 hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+
+    img {
+      max-width: inherit;
+      width: hb-calculate-rems(100px);
+      height: hb-calculate-rems(100px);
+      object-fit: cover;
+    }
 
     @include hb-themes(('colorful', 'airy')) {
       img {
         border-radius: 50%;
-        max-width: inherit;
-        width: hb-calculate-rems(100px);
-        height: hb-calculate-rems(100px);
-        object-fit: cover;
       }
     }
+  }
+
+  &__author-credits {
+    margin-bottom: hb-calculate-rems(20px);
   }
 
   &__name {
@@ -116,8 +124,12 @@
 
   &__position {
     font-size: hb-calculate-rems(16px);
-    padding-bottom: hb-calculate-rems(16px);
+
+    + .hb-testimonial__link {
+      padding-top: hb-calculate-rems(16px);
+    }
   }
+
 
   &__link {
     position: relative;

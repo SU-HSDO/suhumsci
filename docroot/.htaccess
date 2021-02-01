@@ -1,3 +1,21 @@
+# Block bad bots.
+# See https://docs.acquia.com/cloud-platform/arch/security/restrict/#cloud-blocking-by-ip.
+<ifmodule mod_setenvif.c>
+  # Match specific IP addresses.
+  SetEnvIf AH_CLIENT_IP ^67\.225\.152\.21$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^52\.143\.102\.216$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^52\.237\.223\.18$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^107\.161\.51\.47$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^47\.241\.20\.234$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.182\.32$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.88\.143$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^47\.241\.104\.252$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.235\.27$ Deny_Host
+  Order allow,deny
+  Allow from all
+  Deny from env=Deny_Host
+</ifmodule>
+
 #
 # Apache/PHP/Drupal settings:
 #

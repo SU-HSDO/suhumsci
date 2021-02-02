@@ -338,3 +338,66 @@ function su_humsci_profile_form_media_library_add_form_embeddable_alter(array &$
     $form['container']['field_media_embeddable_code']['#access'] = $authorized;
   }
 }
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Restrict access to media entities that are used as field default values.
+ */
+function su_humsci_profile_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+
+  // Only lock down the media entities since they are the default field values
+  // that we care about.
+  if (
+    $entity->getEntityTypeId() != 'media' ||
+    !in_array($operation, ['update', 'delete'])
+  ) {
+    return AccessResult::neutral();
+  }
+
+  $configs = \Drupal::configFactory()->listAll('field.field.');
+  foreach ($configs as $config_name) {
+    $config = \Drupal::config($config_name);
+    // Check for the fields we are interested in.
+    if (
+      $config->get('field_type') == 'entity_reference' &&
+      $config->get('settings.handler') == 'default:media' &&
+      !empty($config->get('default_value'))
+    ) {
+      $default_value = $config->get('default_value');
+      // The field default value matches the current media entity.
+      if (!empty($default_value[0]['target_uuid']) && $entity->uuid() == $default_value[0]['target_uuid']) {
+        return AccessResult::forbiddenIf(!$account->hasPermission('edit field default images'), 'The entity is set as a default field value.');
+      }
+    }
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_preprocess_pattern_NAME().
+ */
+function su_humsci_profile_preprocess_pattern_alert(&$variables) {
+  $entity_type = $variables['context']->getProperty('entity_type');
+  $bundle = $variables['context']->getProperty('bundle');
+  $entity = $variables['context']->getProperty('entity');
+
+  // Global Messages!
+  if ($entity_type == "config_pages" && $bundle == "stanford_global_message") {
+
+    // Validate that the entity has the field we need so we don't 500 the site.
+    if (!$entity->hasField('su_global_msg_type')) {
+      \Drupal::logger('stanford_profile_helper')->error(t("Global Messages Config Block is missing the field su_global_msg_type"));
+      return;
+    }
+
+    $color = $entity->get('su_global_msg_type')->getString();
+    $variables['attributes']->addClass("su-alert--" . $color);
+    $dark_bgs = ['error', 'info', 'success'];
+    if (in_array($color, $dark_bgs)) {
+      $variables['attributes']->addClass("su-alert--text-light");
+    }
+  }
+
+}

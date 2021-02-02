@@ -1,8 +1,33 @@
 diff --git a/docroot/.htaccess b/docroot/.htaccess
-index b1ee36bf..5827d243 100644
+index b1ee36bf..17021126 100644
 --- a/docroot/.htaccess
 +++ b/docroot/.htaccess
-@@ -62,6 +62,23 @@ AddEncoding gzip svgz
+@@ -1,3 +1,24 @@
++
++# Block bad bots.
++# See https://docs.acquia.com/cloud-platform/arch/security/restrict/#cloud-blocking-by-ip.
++<ifmodule mod_setenvif.c>
++  # Match specific IP addresses.
++  SetEnvIf AH_CLIENT_IP ^67\.225\.152\.21$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^52\.143\.102\.216$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^52\.237\.223\.18$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^107\.161\.51\.47$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^47\.241\.20\.234$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^161\.117\.182\.32$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^161\.117\.88\.143$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^47\.241\.104\.252$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^161\.117\.235\.27$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^206\.189\.77\.91$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^161\.117\.176\.134$ Deny_Host
++  Order allow,deny
++  Allow from all
++  Deny from env=Deny_Host
++</ifmodule>
++
+ #
+ # Apache/PHP/Drupal settings:
+ #
+@@ -62,6 +83,23 @@ AddEncoding gzip svgz
  <IfModule mod_rewrite.c>
    RewriteEngine on
  
@@ -26,7 +51,7 @@ index b1ee36bf..5827d243 100644
    # Set "protossl" to "s" if we were accessed via https://.  This is used later
    # if you enable "www." stripping or enforcement, in order to ensure that
    # you don't bounce between http and https.
-@@ -139,6 +156,8 @@ AddEncoding gzip svgz
+@@ -139,6 +177,8 @@ AddEncoding gzip svgz
    RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
    # Allow access to test-specific PHP files:
    RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php

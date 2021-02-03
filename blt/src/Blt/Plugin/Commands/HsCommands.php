@@ -119,7 +119,8 @@ class HsCommands extends HsAcquiaApiCommands {
           ->drush("cron")
           ->drush('cr')
           ->run();
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         $this->say("Unable to run cron on <comment>$multisite</comment>");
       }
     }

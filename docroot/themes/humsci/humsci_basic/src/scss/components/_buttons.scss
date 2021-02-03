@@ -9,19 +9,30 @@ a.button {
   }
 }
 
-a.hs-button,
-button.hs-button,
-.hs-button a,
-.hs-button button,
-.hs-button a:not([class]),
-.hs-button button:not([class]) {
-  @include hb-button;
+// hs-button, decanter and D7 import class map and loop
+$buttons: (
+  hs-button,
+  decanter-button,
+  btn,
+);
 
-  .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('color', 'white');
+@each $button in $buttons {
+  a.#{$button},
+  button.#{$button},
+  .#{$button} a,
+  .#{$button} button,
+  .#{$button} a:not([class]),
+  .#{$button} button:not([class]) {
+    @include hb-button;
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      @include hb-global-color('color', 'white');
+    }
   }
 }
+
+
 
 a.hs-button--big,
 button.hs-button--big,

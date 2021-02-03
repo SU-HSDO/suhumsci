@@ -1,15 +1,23 @@
 .hb-testimonial {
-  @include hb-quote-wrapper;
-  margin: hb-calculate-rems(80px) 0 hb-calculate-rems(64px) 0; // match spacing on blockquote paragraph type container
+  &__wrapper {
+    // Place hb-testimonial styles inside a wrapper so that the hb-testimonial div can be used for raised cards styles.
+    @include hb-quote-wrapper;
+    margin: hb-calculate-rems(80px) 0 hb-calculate-rems(64px) 0; // Match spacing on blockquote paragraph type container.
+    padding-bottom: hb-calculate-rems(34px);
 
-  .counted-items-2 &,
-  .counted-items-3 & {
-    @include grid-media-min('sm') {
-      margin: hb-calculate-rems(40px) 0 hb-calculate-rems(32px) 0;
+    @include grid-media-min('lg') { // override hb-quote-wrapper mixin
+      padding-bottom: hb-calculate-rems(34px);
+    }
+
+    .counted-items-2 &,
+    .counted-items-3 & {
+      @include grid-media-min('sm') {
+        margin: hb-calculate-rems(40px) 0 hb-calculate-rems(32px) 0;
+      }
     }
   }
 
-  &__wrapper {
+  &__content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,6 +33,7 @@
     font-weight: hb-theme-font-weight(regular);
     font-style: italic;
     text-align: center;
+    width: 100%;
 
     @include grid-media-min('lg') {
       font-size: hb-calculate-rems(28px);
@@ -39,7 +48,8 @@
       line-height: 136%;
     }
 
-    .field-hs-testimonial-quote {
+    .field-hs-testimonial-quote, // paragraph type
+    .views-field .field-content p:first-of-type { // views
       &::before {
         position: absolute;
         content: open-quote;
@@ -137,7 +147,7 @@
     a {
       @include hb-more-link;
 
-      .hb-dark-pattern &,
+      [class*="-pairing-"] .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         // make arrow and text color white for all themes
         @include hb-global-color('color', 'white');
@@ -150,6 +160,11 @@
         &:hover,
         &:focus {
           @include hb-global-color('color', 'white');
+
+          &::after {
+            @include hb-icon-link-arrow('white');
+            background-size: 85%;
+          }
         }
       }
     }

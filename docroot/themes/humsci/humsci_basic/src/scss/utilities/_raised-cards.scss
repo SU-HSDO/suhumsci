@@ -83,52 +83,6 @@
       }
     }
   }
-
-  // TESTIMONIAL STYLES
-  .paragraph-item.ptype-hs-testimonial { // TODO: spacing on colorful theme!
-    margin: hb-calculate-rems(64px) 0 hb-calculate-rems(100px) 0;
-
-    + .paragraph-item.ptype-hs-testimonial:not(:last-child) {
-      margin-bottom: hb-calculate-rems(64px);
-    }
-  }
-
-  .hb-testimonial {
-    margin: hb-calculate-rems(24px);
-    margin: hb-calculate-rems(36px) hb-calculate-rems(24px); // TODO: test!
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: hb-calculate-rems(-36px);
-      bottom: hb-calculate-rems(-36px);
-      right: hb-calculate-rems(-24px);
-      left: hb-calculate-rems(-24px);
-
-      @include hb-traditional {
-        box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) hb-get-global-color('gray-medium', $ht-traditional-globals);
-      }
-
-      @include hb-themes(('airy', 'colorful')) {
-        box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
-      }
-    }
-  }
-
-  // When a raised card testimonial is inside a well
-  .hs-paragraph-style--well {
-    .paragraph-item.ptype-hs-testimonial {
-      // @include hb-global-color('background-color', 'white');
-    }
-
-    .hb-testimonial {
-      @include hb-global-color('background-color', 'white');
-
-      &::before {
-        @include hb-global-color('background-color', 'white');
-      }
-    }
-  }
 }
 
 // Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied

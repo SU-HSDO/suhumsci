@@ -115,6 +115,10 @@ source:
       name: cv_title
       label: 'CV Document Label'
       selector: documents/cv/label/text
+    -
+      name: org_title
+      label: 'Organization Title'
+      selector: titles/0/organization/label/text
   ids:
     sunetid:
       type: string
@@ -140,8 +144,9 @@ process:
       method: process
     -
       plugin: str_replace
-      search: \n
+      search: "/\n/"
       replace: ', '
+      regex: true
     -
       plugin: str_replace
       search: '/, $/'
@@ -247,9 +252,13 @@ process:
       plugin: flatten
   field_hs_person_department:
     -
+      plugin: null_coalesce
+      source:
+        - department
+        - org_title
+    -
       plugin: skip_on_empty
       method: process
-      source: department
     -
       plugin: entity_generate
       entity_type: taxonomy_term

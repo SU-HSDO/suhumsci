@@ -16,7 +16,14 @@ settings:
   id: config_pages_block
   label: 'ConfigPages Block'
   provider: config_pages
-  label_display: visible
+  label_display: 0
   config_page_type: stanford_global_message
   config_page_view_mode: full
-visibility: {  }
+visibility:
+  config_pages_values_access:
+    id: config_pages_values_access
+    negate: false
+    config_page_field: stanford_global_message|su_global_msg_enabled|boolean
+    operator: '=='
+    condition_value: '1'
+    context_mapping: {  }

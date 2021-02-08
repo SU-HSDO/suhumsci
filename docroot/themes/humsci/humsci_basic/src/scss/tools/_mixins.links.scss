@@ -68,6 +68,29 @@
   }
 }
 
+@mixin hb-heading-link-color {
+  @include hb-pairing-color('color', 'tertiary');
+
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'tertiary-darken-20');
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    border-bottom-color: inherit;
+  }
+
+  @include hb-traditional {
+    @include hb-pairing-color('text-decoration-color', 'tertiary');
+    transition: hb-transition(all); // set the color and text-decoration-color to transition together on hover
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('text-decoration-color', 'tertiary-darken-20');
+    }
+  }
+}
+
 // Link style for main content that is not a heading
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px, $icon-position: right) {

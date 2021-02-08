@@ -35,6 +35,14 @@
     text-align: center;
     width: 100%;
 
+    .hb-dark-pattern & {
+      @include hb-global-color('color', 'white');
+    }
+
+    .hb-dark-pattern .hs-paragraph-style--well & { // TODO: add full width well too!!
+      @include hb-pairing-color('color', 'secondary');
+    }
+
     @include grid-media-min('lg') {
       font-size: hb-calculate-rems(28px);
     }
@@ -48,6 +56,7 @@
       line-height: 136%;
     }
 
+    // quote marks around quote
     .field-hs-testimonial-quote, // paragraph type
     .views-field .field-content p:first-of-type { // views
       &::before {
@@ -167,12 +176,31 @@
           }
         }
       }
+
+      .hb-dark-pattern .hs-paragraph-style--well & {
+        @include hb-pairing-color('color', 'secondary');
+
+        &::after {
+          @include hb-icon-link-arrow('secondary');
+          background-size: 85%;
+        }
+
+        &:hover,
+        &:focus {
+          @include hb-pairing-color('color', 'secondary-darken-12');
+
+          &::after {
+            @include hb-icon-link-arrow('secondary-darken-12');
+            background-size: 85%;
+          }
+        }
+      }
     }
   }
 }
 
 // When a testimonial is the first paragraph type on a page and the hb-dark-pattern class has been applied via layout builder, add padding to the first testimonial paragraph type to compensate for the quotation mark
-.hb-dark-pattern:first-child { // test dark inversion
+.hb-dark-pattern:first-child {
   .ptype-hs-testimonial:first-of-type {
     padding-top: hb-calculate-rems(20px);
 
@@ -184,6 +212,11 @@
   .ptype-hs-row {
     .ptype-hs-testimonial:first-of-type {
       padding-top: initial;
+
+      .hb-testimonial__wrapper {
+        margin-top: hb-calculate-rems(60px);
+        background-color: turquoise; // TODO: fix!!!
+      }
     }
   }
 }

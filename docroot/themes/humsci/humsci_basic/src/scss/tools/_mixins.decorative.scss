@@ -33,7 +33,8 @@
     @include hb-themes(('colorful', 'airy')) {
       @include hb-icon-background('quote-mark', 'secondary');
 
-      .hs-paragraph-style--well & { // TODO: look at wells. this is only working on limited width. full-width is broke.
+      .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well & { // TODO: look at wells. this is only working on limited width. full-width is broke.
         @include hb-global-color('background-color', 'gray-light');
       }
     }
@@ -50,7 +51,8 @@
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('border-color', 'secondary');
+      @include hb-pairing-color('border-color', 'secondary'); // TODO: look at changing this to tertiary? // as well as the icon
+      // background-color: greenyellow; // for testing....
     }
 
     @include hb-traditional {

@@ -386,7 +386,7 @@
   }
 }
 
-// Styles for captions and credits added via a view mode
+// Styles for captions and credits
 @mixin hb-caption-credit {
   @include hb-global-color('color', 'white');
   font-style: italic;
@@ -395,6 +395,14 @@
   bottom: 0;
   width: 100%;
   z-index: $hb-z-index-small-5;
+  text-align: right;
+  line-height: 120%;
+  height: auto;
+  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) 15%; // Using a percentage to the left to control the width of the captions
+
+  @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
+    padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 15%;
+  }
 
   @include hb-themes(('colorful', 'airy')) {
     background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
@@ -458,7 +466,8 @@
   }
 
   dl,
-  ul {
+  ul,
+  ol {
     margin: 0;
     padding: 0;
     display: inline-block;

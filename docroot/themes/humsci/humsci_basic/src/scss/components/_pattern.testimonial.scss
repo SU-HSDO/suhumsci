@@ -39,7 +39,8 @@
       @include hb-global-color('color', 'white');
     }
 
-    .hb-dark-pattern .hs-paragraph-style--well & { // TODO: add full width well too!!
+    .hb-dark-pattern .hs-paragraph-style--well &,
+    .hb-dark-pattern .hs-paragraph-style--well-full-width & {
       @include hb-pairing-color('color', 'secondary');
     }
 
@@ -177,7 +178,8 @@
         }
       }
 
-      .hb-dark-pattern .hs-paragraph-style--well & {
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         @include hb-pairing-color('color', 'secondary');
 
         &::after {
@@ -209,13 +211,24 @@
     }
   }
 
-  .ptype-hs-row {
-    .ptype-hs-testimonial:first-of-type {
-      padding-top: initial;
+  // Testimonials in a row on with the hb-dark-pattern utility class
+  .ptype-hs-row,
+  .ptype-hs-row .hs-paragraph-style--well {
+    .counted-items-1 {
+      .ptype-hs-testimonial:first-of-type {
+        padding-top: initial;
 
-      .hb-testimonial__wrapper {
-        margin-top: hb-calculate-rems(60px);
-        background-color: turquoise; // TODO: fix!!!
+        // when there is only one, we need more spacing
+        .hb-testimonial__wrapper {
+          margin-top: hb-calculate-rems(60px);
+        }
+      }
+    }
+
+    .counted-items-2,
+    .counted-items-3 {
+      .ptype-hs-testimonial:first-of-type {
+        padding-top: initial;
       }
     }
   }

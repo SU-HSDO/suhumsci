@@ -34,7 +34,9 @@
       @include hb-icon-background('quote-mark', 'secondary');
 
       .hs-paragraph-style--well &,
-      .hb-dark-pattern .hs-paragraph-style--well & { // TODO: look at wells. this is only working on limited width. full-width is broke.
+      .hs-paragraph-style--well-full-width &,
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         @include hb-global-color('background-color', 'gray-light');
       }
     }
@@ -42,7 +44,10 @@
     @include hb-traditional {
       @include hb-icon-background('quote-mark', 'gray-dark');
 
-      .hs-paragraph-style--well & {
+      .hs-paragraph-style--well &,
+      .hs-paragraph-style--well-full-width &,
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         @include hb-pairing-color('background-color', 'tertiary-highlight');
       }
     }
@@ -51,8 +56,7 @@
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('border-color', 'secondary'); // TODO: look at changing this to tertiary? // as well as the icon
-      // background-color: greenyellow; // for testing....
+      @include hb-pairing-color('border-color', 'secondary');
     }
 
     @include hb-traditional {
@@ -64,6 +68,17 @@
 
       @include hb-traditional {
         @include hb-icon-background('quote-mark', 'white');
+      }
+    }
+  }
+
+  .hb-dark-pattern .hs-paragraph-style--well &,
+  .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+    @include hb-traditional {
+      @include hb-pairing-color('border-color', 'secondary');
+
+      &::before {
+        @include hb-icon-background('quote-mark', 'secondary');
       }
     }
   }

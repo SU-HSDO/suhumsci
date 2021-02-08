@@ -172,6 +172,18 @@
 }
 
 // When a testimonial is the first paragraph type on a page and the hb-dark-pattern class has been applied via layout builder, add padding to the first testimonial paragraph type to compensate for the quotation mark
-.hb-dark-pattern .ptype-hs-testimonial { // test dark inversion // only first of type
-  color: chartreuse; // testing.......
+.hb-dark-pattern:first-child { // test dark inversion
+  .ptype-hs-testimonial:first-of-type {
+    padding-top: hb-calculate-rems(20px);
+
+    .hb-testimonial__wrapper {
+      margin-top: hb-calculate-rems(40px);
+    }
+  }
+
+  .ptype-hs-row {
+    .ptype-hs-testimonial:first-of-type {
+      padding-top: initial;
+    }
+  }
 }

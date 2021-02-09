@@ -1,6 +1,6 @@
 .hb-raised-cards {
   // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
-  &--uniform-height .paragraph-item,
+  &--uniform-height .ptype-hs-postcard,
   &--uniform-height .hb-grid__item {
     display: flex;
   }
@@ -11,7 +11,7 @@
   }
 
   // Adding inherited width and 100% is necessary to keep cards width consistent after applying display:flex for uniform height.
-  &--uniform-height .paragraph-item > div:first-child {
+  &--uniform-height .paragraph-item > div:not([class]):first-child {
     width: inherit;
   }
 

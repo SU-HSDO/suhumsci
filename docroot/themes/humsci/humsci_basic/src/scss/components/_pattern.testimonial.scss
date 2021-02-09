@@ -1,0 +1,236 @@
+.hb-testimonial {
+  &__wrapper {
+    // Place hb-testimonial styles inside a wrapper so that the hb-testimonial div can be used for raised cards styles.
+    @include hb-quote-wrapper;
+    margin: hb-calculate-rems(80px) 0 hb-calculate-rems(64px) 0; // Match spacing on blockquote paragraph type container.
+    padding-bottom: hb-calculate-rems(34px);
+
+    @include grid-media-min('lg') { // override hb-quote-wrapper mixin
+      padding-bottom: hb-calculate-rems(34px);
+    }
+
+    .counted-items-2 &,
+    .counted-items-3 & {
+      @include grid-media-min('sm') {
+        margin: hb-calculate-rems(40px) 0 hb-calculate-rems(32px) 0;
+      }
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .hb-testimonial--bottom & {
+      padding-top: hb-calculate-rems(6px);
+    }
+  }
+
+  &__quote {
+    @include hb-pairing-color('color', 'secondary');
+    font-size: hb-calculate-rems(24px);
+    font-weight: hb-theme-font-weight(regular);
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      @include hb-global-color('color', 'white');
+    }
+
+    .hb-dark-pattern .hs-paragraph-style--well &,
+    .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+      @include hb-pairing-color('color', 'secondary');
+    }
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(28px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      line-height: 140%;
+    }
+
+    @include hb-traditional {
+      font-family: $hb-traditional-font--serif;
+      line-height: 136%;
+    }
+
+    // quote marks around quote
+    .field-hs-testimonial-quote, // paragraph type
+    .views-field .field-content p:first-of-type { // views
+      &::before {
+        position: absolute;
+        content: open-quote;
+        margin-left: hb-calculate-rems(-16px);
+      }
+
+      &::after {
+        position: absolute;
+        content: close-quote;
+        margin-right: hb-calculate-rems(10px);
+      }
+    }
+
+    .hb-testimonial--bottom & {
+      padding-bottom: hb-calculate-rems(16px);
+    }
+
+    // A utility class that can be applied via layout builder to override the text color to black
+    .hb-blockquote-black-text & {
+      @include hb-global-color('color', 'black');
+    }
+  }
+
+  &__author-block {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-width: 100%;
+
+    @include grid-media-min('sm') {
+      max-width: 80%;
+      flex-direction: row;
+    }
+
+    // allow more breathing room for content when 2 testimonials
+    // are placed beside each other in a well
+    .counted-items-2 & {
+      max-width: 100%;
+      flex-direction: column;
+
+      @include grid-media-min('xl') {
+        flex-direction: row;
+      }
+    }
+
+    .counted-items-3 & {
+      max-width: 100%;
+      flex-direction: column;
+    }
+
+    .hb-testimonial--top & {
+      padding-top: hb-calculate-rems(36px);
+    }
+  }
+
+  &__image {
+    min-width: hb-calculate-rems(100px);
+    width: hb-calculate-rems(100px);
+    margin: 0 hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+
+    img {
+      max-width: inherit;
+      width: hb-calculate-rems(100px);
+      height: hb-calculate-rems(100px);
+      object-fit: cover;
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      img {
+        border-radius: 50%;
+      }
+    }
+  }
+
+  &__author-credits {
+    margin-bottom: hb-calculate-rems(20px);
+  }
+
+  &__name {
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
+  &__position {
+    font-size: hb-calculate-rems(16px);
+
+    + .hb-testimonial__link {
+      padding-top: hb-calculate-rems(16px);
+    }
+  }
+
+
+  &__link {
+    position: relative;
+
+    a {
+      @include hb-more-link;
+
+      [class*="-pairing-"] .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        // make arrow and text color white for all themes
+        @include hb-global-color('color', 'white');
+
+        &::after {
+          @include hb-icon-link-arrow('white');
+          background-size: 85%;
+        }
+
+        &:hover,
+        &:focus {
+          @include hb-global-color('color', 'white');
+
+          &::after {
+            @include hb-icon-link-arrow('white');
+            background-size: 85%;
+          }
+        }
+      }
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        @include hb-pairing-color('color', 'secondary');
+
+        &::after {
+          @include hb-icon-link-arrow('secondary');
+          background-size: 85%;
+        }
+
+        &:hover,
+        &:focus {
+          @include hb-pairing-color('color', 'secondary-darken-12');
+
+          &::after {
+            @include hb-icon-link-arrow('secondary-darken-12');
+            background-size: 85%;
+          }
+        }
+      }
+    }
+  }
+}
+
+// When a testimonial is the first paragraph type on a page and the hb-dark-pattern class has been applied via layout builder, add padding to the first testimonial paragraph type to compensate for the quotation mark
+.hb-dark-pattern:first-child {
+  .ptype-hs-testimonial:first-of-type {
+    padding-top: hb-calculate-rems(20px);
+
+    .hb-testimonial__wrapper {
+      margin-top: hb-calculate-rems(40px);
+    }
+  }
+
+  // Testimonials in a row on with the hb-dark-pattern utility class
+  .ptype-hs-row,
+  .ptype-hs-row .hs-paragraph-style--well {
+    .counted-items-1 {
+      .ptype-hs-testimonial:first-of-type {
+        padding-top: initial;
+
+        // when there is only one, we need more spacing
+        .hb-testimonial__wrapper {
+          margin-top: hb-calculate-rems(60px);
+        }
+      }
+    }
+
+    .counted-items-2,
+    .counted-items-3 {
+      .ptype-hs-testimonial:first-of-type {
+        padding-top: initial;
+      }
+    }
+  }
+}

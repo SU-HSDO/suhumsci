@@ -1,0 +1,68 @@
+uuid: abaedceb-098d-4c54-a3a0-89e495cdae17
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_image
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_link
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_name
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_position
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_quote
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_quote_align
+    - paragraphs.paragraphs_type.hs_testimonial
+  module:
+    - link
+    - media_library
+id: paragraph.hs_testimonial.default
+targetEntityType: paragraph
+bundle: hs_testimonial
+mode: default
+content:
+  field_hs_testimonial_image:
+    type: media_library_widget
+    weight: 2
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    region: content
+  field_hs_testimonial_link:
+    weight: 5
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_hs_testimonial_name:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_hs_testimonial_position:
+    weight: 4
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_hs_testimonial_quote:
+    weight: 0
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_hs_testimonial_quote_align:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+hidden:
+  created: true
+  status: true

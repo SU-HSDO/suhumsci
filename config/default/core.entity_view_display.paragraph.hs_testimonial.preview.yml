@@ -1,0 +1,72 @@
+uuid: 17af477c-82e6-4d3e-9f4c-157f38384a1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_image
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_link
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_name
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_position
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_quote
+    - field.field.paragraph.hs_testimonial.field_hs_testimonial_quote_align
+    - paragraphs.paragraphs_type.hs_testimonial
+  module:
+    - layout_builder
+    - link
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.hs_testimonial.preview
+targetEntityType: paragraph
+bundle: hs_testimonial
+mode: preview
+content:
+  field_hs_testimonial_image:
+    type: entity_reference_entity_view
+    weight: 4
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_hs_testimonial_link:
+    weight: 3
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_hs_testimonial_name:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_hs_testimonial_position:
+    weight: 2
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_hs_testimonial_quote:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+hidden:
+  field_hs_testimonial_quote_align: true
+  search_api_excerpt: true

@@ -1,0 +1,85 @@
+// decorative styles for blockquotes and testimonial paragraph/ui pattern
+@mixin hb-quote-wrapper {
+  position: relative;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: hb-calculate-rems(1px);
+  @include hb-global-color('border-color', 'gray');
+  margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px) 0;
+  padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
+
+  @include grid-media-min('lg') {
+    padding: hb-calculate-rems(44px) hb-calculate-rems(28px);
+  }
+
+  &::before {
+    content: '';
+    @include hb-global-color('background-color', 'white');
+    background-repeat: no-repeat;
+    width: hb-calculate-rems(68px);
+    height: hb-calculate-rems(40px);
+    position: absolute;
+    top: hb-calculate-rems(-20px); // center on top border using 1/2 of the size of the quote-mark
+    right: calc(50% - 34px); // subtract 1/2 of the width of icon
+
+    .hb-spotlight & {
+      @include hb-pairing-color('background-color', 'spotlight');
+
+      .hc-pairing-lake & {
+        @include hb-pairing-color('background-color', 'secondary-highlight');
+      }
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-icon-background('quote-mark', 'secondary');
+
+      .hs-paragraph-style--well &,
+      .hs-paragraph-style--well-full-width &,
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        @include hb-global-color('background-color', 'gray-light');
+      }
+    }
+
+    @include hb-traditional {
+      @include hb-icon-background('quote-mark', 'gray-dark');
+
+      .hs-paragraph-style--well &,
+      .hs-paragraph-style--well-full-width &,
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        @include hb-pairing-color('background-color', 'tertiary-highlight');
+      }
+    }
+  }
+
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-pairing-color('border-color', 'secondary');
+    }
+
+    @include hb-traditional {
+      @include hb-global-color('border-color', 'white');
+    }
+
+    &::before {
+      @include hb-pairing-color('background-color', 'primary-dark');
+
+      @include hb-traditional {
+        @include hb-icon-background('quote-mark', 'white');
+      }
+    }
+  }
+
+  .hb-dark-pattern .hs-paragraph-style--well &,
+  .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+    @include hb-traditional {
+      @include hb-pairing-color('border-color', 'secondary');
+
+      &::before {
+        @include hb-icon-background('quote-mark', 'secondary');
+      }
+    }
+  }
+}

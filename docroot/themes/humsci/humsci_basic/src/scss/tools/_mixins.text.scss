@@ -200,22 +200,15 @@
 }
 
 @mixin hb-blockquote {
+  @include hb-quote-wrapper;
   @include hb-pairing-color('color', 'secondary');
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
   font-style: italic;
-  position: relative;
   text-align: center;
-  border-top-style: solid;
-  border-bottom-style: solid;
-  border-width: hb-calculate-rems(1px);
-  @include hb-global-color('border-color', 'gray');
-  margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px) 0;
-  padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(28px);
-    padding: hb-calculate-rems(44px) hb-calculate-rems(28px);
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -230,25 +223,6 @@
   // A utility class that can be applied via layout builder to override the text color to black
   .hb-blockquote-black-text & {
     @include hb-global-color('color', 'black');
-  }
-
-  &::before {
-    content: '';
-    @include hb-global-color('background-color', 'white');
-    background-repeat: no-repeat;
-    width: hb-calculate-rems(68px);
-    height: hb-calculate-rems(40px);
-    position: absolute;
-    top: hb-calculate-rems(-20px); // center on top border using 1/2 of the size of the quote-mark
-    right: calc(50% - 34px); // subtract 1/2 of the width of icon
-
-    @include hb-themes(('colorful', 'airy')) {
-      @include hb-icon-background('quote-mark', 'secondary');
-    }
-
-    @include hb-traditional {
-      @include hb-icon-background('quote-mark', 'gray-dark');
-    }
   }
 
   > p,
@@ -268,17 +242,9 @@
     }
   }
 
-  .hb-dark-pattern & {
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
     @include hb-global-color('color', 'white');
-    @include hb-global-color('border-color', 'white');
-
-    &::before {
-      @include hb-pairing-color('background-color', 'primary-dark');
-
-      @include hb-traditional {
-        @include hb-icon-background('quote-mark', 'white');
-      }
-    }
   }
 }
 
@@ -386,7 +352,7 @@
   }
 }
 
-// Styles for captions and credits added via a view mode
+// Styles for captions and credits
 @mixin hb-caption-credit {
   @include hb-global-color('color', 'white');
   font-style: italic;
@@ -395,6 +361,14 @@
   bottom: 0;
   width: 100%;
   z-index: $hb-z-index-small-5;
+  text-align: right;
+  line-height: 120%;
+  height: auto;
+  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) 15%; // Using a percentage to the left to control the width of the captions
+
+  @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
+    padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 15%;
+  }
 
   @include hb-themes(('colorful', 'airy')) {
     background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
@@ -458,7 +432,8 @@
   }
 
   dl,
-  ul {
+  ul,
+  ol {
     margin: 0;
     padding: 0;
     display: inline-block;

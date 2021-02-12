@@ -35,7 +35,7 @@ function hs_person_update_8001() {
 /**
  * Increase Interest field max length.
  */
-function hs_person_update_8002(){
+function hs_person_update_8002() {
   // Prepare relevant variables.
   $entity_type = 'node';
   $field_name = 'field_hs_person_interests';
@@ -70,4 +70,26 @@ function hs_person_update_8002(){
     '@field-name' => $field_name,
     '@field-length' => $field_length,
   ]);
+}
+
+/**
+ * Flag profiles to re-import if they don't have any image.
+ */
+function hs_person_update_8004() {
+  $database = \Drupal::database();
+  if (!$database->schema()->tableExists('migrate_map_hs_capx')) {
+    return;
+  }
+  $nids = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'hs_person')
+    ->notExists('field_hs_person_image')
+    ->execute();
+
+  $database->update('migrate_map_hs_capx')
+    ->fields(['source_row_status' => 1])
+    ->condition('destid1', array_values($nids), 'IN')
+    ->execute();
 }

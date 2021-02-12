@@ -262,6 +262,6 @@ function su_humsci_theme_preprocess_pattern_vertical_link_card(&$variables) {
     }
   }
   if (!empty($variables['title'])) {
-    $variables['title'] = trim(strip_tags(render($variables['title'])));
+    $variables['title'] = ['#markup' => trim(strip_tags(render($variables['title'])))];
   }
 }

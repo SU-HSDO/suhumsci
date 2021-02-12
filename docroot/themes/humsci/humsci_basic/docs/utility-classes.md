@@ -9,6 +9,28 @@
 * [Misc](#misc)
 * [Dark Inversion for Patterns](/docroot/themes/humsci/humsci_basic/docs/dark-inversion.md#dark-variant-utility-class)
 
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Emoji Key</th>
+    </tr>
+  <thead>
+  <tbody>
+    <tr>
+      <td align="center">✅</td>
+      <td>Built to work in views</td>
+    </tr>
+    <tr>
+      <td align="center">❗️</td>
+      <td>Doesn't work with views yet</td>
+    </tr>
+    <tr>
+      <td align="center">-</td>
+      <td>Isn't intended to work with views</td>
+    </tr>
+  </tbody>
+</table>
+
 ### Field Utility Classes
 Field Utility Classes are used to apply styles to a field in a view (Drupal Home / Administration / Structure / Views) or to a field within a block in layout builder.
 

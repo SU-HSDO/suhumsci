@@ -250,11 +250,16 @@ process:
         value: label/text
     -
       plugin: flatten
+  department:
+    -
+      plugin: skip_on_empty
+      source: department
+      method: process
   field_hs_person_department:
     -
       plugin: null_coalesce
       source:
-        - department
+        - '@department'
         - org_title
     -
       plugin: skip_on_empty

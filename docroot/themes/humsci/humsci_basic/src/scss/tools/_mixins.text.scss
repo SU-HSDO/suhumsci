@@ -372,6 +372,12 @@
 
   @include hb-themes(('colorful', 'airy')) {
     background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
+
+    .paragraph--type--hs-carousel & { // the percentage on this left side is larger to prevent the caption from running under carousel overlay
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 58%;
+      }
+    }
   }
 
   @include hb-traditional {

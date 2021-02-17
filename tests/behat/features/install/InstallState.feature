@@ -40,7 +40,7 @@ Feature: Install State
   Scenario: Test shortcut menu items for site manager role
     Given I am logged in as a user with the "Site Manager" role
     Then I am on "/"
-    And I should see 29 "#toolbar-item-shortcuts-tray a" elements
+    And I should see 30 "#toolbar-item-shortcuts-tray a" elements
 
   @api @safe
   Scenario: Test shortcut menu items for developer role

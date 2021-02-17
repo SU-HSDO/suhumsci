@@ -204,6 +204,6 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
     }
   }
   if (!empty($variables['title'])) {
-    $variables['title'] = htmlspecialchars_decode(trim(strip_tags(render($variables['title']))));
+    $variables['title'] = ['#markup' => trim(strip_tags(render($variables['title'])))];
   }
 }

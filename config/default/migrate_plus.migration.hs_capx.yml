@@ -152,6 +152,10 @@ process:
       search: '/, $/'
       replace: ''
       regex: true
+    -
+      plugin: substr
+      start: 0
+      length: 255
   body/value: bio_html
   body/format: constants/basic_html
   field_hs_person_email: email
@@ -210,7 +214,7 @@ process:
       destination: '@image_path'
       id_only: true
       reuse: true
-  field_hs_person_image/target_id:
+  image_media:
     -
       plugin: skip_on_empty
       method: process
@@ -227,6 +231,12 @@ process:
         name: '@title'
         field_media_image/target_id: '@image_file'
         field_media_image/alt: '@title'
+  field_hs_person_image/target_id:
+    plugin: field_default_value
+    source: '@image_media'
+    entity_type: node
+    bundle: hs_person
+    field: field_hs_person_image
   field_hs_person_links:
     -
       plugin: skip_on_empty
@@ -250,11 +260,16 @@ process:
         value: label/text
     -
       plugin: flatten
+  department:
+    -
+      plugin: skip_on_empty
+      source: department
+      method: process
   field_hs_person_department:
     -
       plugin: null_coalesce
       source:
-        - department
+        - '@department'
         - org_title
     -
       plugin: skip_on_empty
@@ -292,7 +307,7 @@ process:
       destination: '@square_image_path'
       id_only: true
       reuse: true
-  field_hs_person_square_img/target_id:
+  square_image_media:
     -
       plugin: skip_on_empty
       method: process
@@ -309,6 +324,12 @@ process:
         name: '@title'
         field_media_image/target_id: '@square_image_file'
         field_media_image/alt: '@title'
+  field_hs_person_square_img/target_id:
+    plugin: field_default_value
+    source: '@square_image_media'
+    entity_type: node
+    bundle: hs_person
+    field: field_hs_person_square_img
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true

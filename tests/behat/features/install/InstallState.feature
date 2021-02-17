@@ -34,18 +34,18 @@ Feature: Install State
   Scenario: Test shortcut menu items for contributor role
     Given I am logged in as a user with the "Contributor" role
     Then I am on "/"
-    And I should see 25 "#toolbar-item-shortcuts-tray a" elements
+    And I should see 27 "#toolbar-item-shortcuts-tray a" elements
 
   @api @safe
   Scenario: Test shortcut menu items for site manager role
     Given I am logged in as a user with the "Site Manager" role
     Then I am on "/"
-    And I should see 29 "#toolbar-item-shortcuts-tray a" elements
+    And I should see 32 "#toolbar-item-shortcuts-tray a" elements
 
   @api @safe
   Scenario: Test shortcut menu items for developer role
     Given I am logged in as a user with the "Developer" role
     Then I am on "/"
-    And I should see 38 "#toolbar-item-shortcuts-tray a" elements
+    And I should see 40 "#toolbar-item-shortcuts-tray a" elements
     Then I click the "#toolbar-item-shortcuts-tray a[href='/google-analytics']" element
     And I should be on "https://analytics.google.com/analytics/web/"

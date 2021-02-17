@@ -87,9 +87,10 @@ function hs_person_update_8004() {
     ->condition('type', 'hs_person')
     ->notExists('field_hs_person_image')
     ->execute();
-
-  $database->update('migrate_map_hs_capx')
-    ->fields(['source_row_status' => 1])
-    ->condition('destid1', array_values($nids), 'IN')
-    ->execute();
+  if ($nids) {
+    $database->update('migrate_map_hs_capx')
+      ->fields(['source_row_status' => 1])
+      ->condition('destid1', array_values($nids), 'IN')
+      ->execute();
+  }
 }

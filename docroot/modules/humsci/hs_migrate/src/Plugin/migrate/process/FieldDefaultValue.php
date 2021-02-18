@@ -65,6 +65,11 @@ class FieldDefaultValue extends ProcessPluginBase implements ContainerFactoryPlu
     try {
       $entity = $this->getEmptyEntity($entity_type, $bundle);
       $value = $field->getDefaultValue($entity);
+
+      if (!empty($this->configuration['key'])) {
+        return $value[0][$this->configuration['key']] ?? NULL;
+      }
+
       return $value[0] ?? $value;
     }
     catch (\Exception $e) {

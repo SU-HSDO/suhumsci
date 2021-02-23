@@ -9,6 +9,28 @@
 * [Misc](#misc)
 * [Dark Inversion for Patterns](/docroot/themes/humsci/humsci_basic/docs/dark-inversion.md#dark-variant-utility-class)
 
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Emoji Key</th>
+    </tr>
+  <thead>
+  <tbody>
+    <tr>
+      <td align="center">✅</td>
+      <td>Built to work in views</td>
+    </tr>
+    <tr>
+      <td align="center">❗️</td>
+      <td>Doesn't work with views yet</td>
+    </tr>
+    <tr>
+      <td align="center">-</td>
+      <td>Isn't intended to work with views</td>
+    </tr>
+  </tbody>
+</table>
+
 ### Field Utility Classes
 Field Utility Classes are used to apply styles to a field in a view (Drupal Home / Administration / Structure / Views) or to a field within a block in layout builder.
 
@@ -21,6 +43,7 @@ Field Utility Classes are used to apply styles to a field in a view (Drupal Home
 | hb-heading-4         | Applies heading 4 styles | ✅|
 | hb-heading-5         | Applies heading 5 styles | ✅|
 | hb-heading-6         | Applies heading 6 styles | ✅|
+| hb-heading-link-color | Applies link color styles to a linked heading. Do not use with dark color inversion toggle or hb-dark-pattern. | ✅|
 | hb-body-small        | Applies the small body style | ✅|
 | hb-body-medium       | Applies the medium body style | ✅|
 | hb-link              | Applies the link style | ✅|
@@ -40,7 +63,7 @@ Field Utility Classes are used to apply styles to a field in a view (Drupal Home
 | hb-pill-list         | Applies the pill style to any field with multiple items | ✅|
 | hb-pill-link-list    | Applies the pill link style to any field with multiple items that are links | ✅|
 | hb-text-reset        | Removes all text styles from an element |❗️|
-| hb-list-reset        | Removes all custom list styles from an element |❗️|
+| hb-list-reset        | Removes all custom list styles from an element | - |
 <br>
 
 ### Group Block Utility Classes
@@ -145,7 +168,8 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-raised-cards | Adds a drop shadow behind any Card UI pattern used in the view | ✅|
 | hb-stretch-vertical-linked-cards | Stretches all vertical linked cards on a page to be the same height and adjusts the height of all card titles to be the same height | ✅|
 | hb-display-more-link-text | Displays helper link text with more link styling | ✅|
-| hb-list-reset | Resets lists to display default browser styles |❗️|
+| hb-heading-link-color | Applies link color styles to a linked heading. Do not use with dark color inversion toggle or hb-dark-pattern. | ✅|
+| hb-list-reset | Resets lists to display default browser styles | - |
 | hb-blockquote-black-text | Two use cases: 1. Changes the text color in a blockquote from secondary to black. This is specific to when a block quote is used in the text area / WYSIWYG. 2. Changes the quote text color in a testimonial paragraph type from secondary to black.| - |
 | hb-main-body-detail-image | Used specifically on node detail pages to float an image. | - |
 

@@ -1,7 +1,15 @@
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel');
+let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
-if (slides) {
+if (slides.length > 0) {
   restrictHeight();
+
+  // Watch for when the browser window resizes, then run the restrictHeight
+  // function to reset the height of the text boxes
+  window.addEventListener('resize', function() {
+    clearTimeout(timeOutFunctionId);
+    timeOutFunctionId = setTimeout(restrictHeight, 250);
+  });
 }
 
 // Set the height of all text boxes within a Carousel to that
@@ -42,15 +50,3 @@ function restrictHeight() {
     }
   }
 }
-
-// Watch for when the browser window resizes, then run the restrictHeight
-// function to reset the height of the text boxes
-let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
-
-// TODO: make sure this isn't running on ALL pages
-window.addEventListener('resize', function() {
-  clearTimeout(timeOutFunctionId);
-  timeOutFunctionId = setTimeout(restrictHeight, 500);
-});
-
-// TODO: fix flash of content when the pages loads. // Moving it up in the index.js file did nothing. Add inline JS to carousel template.

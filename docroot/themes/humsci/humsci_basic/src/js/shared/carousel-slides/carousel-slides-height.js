@@ -47,11 +47,10 @@ function restrictHeight() {
 // function to reset the height of the text boxes
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
+// TODO: make sure this isn't running on ALL pages
 window.addEventListener('resize', function() {
   clearTimeout(timeOutFunctionId);
   timeOutFunctionId = setTimeout(restrictHeight, 500);
 });
 
 // TODO: fix flash of content when the pages loads. // Moving it up in the index.js file did nothing. Add inline JS to carousel template.
-
-// TODO: add hb-carousel-reset-height utility class to docs. While there, update hb-heading-link-color (remove reference to dark inversion toggle)

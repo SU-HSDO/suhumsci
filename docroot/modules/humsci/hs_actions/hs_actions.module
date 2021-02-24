@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_help().
@@ -20,5 +21,30 @@ function hs_actions_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     default:
+  }
+}
+
+
+/**
+ * Implements hook_views_pre_build().
+ *
+ * For users that don't have the permission to ignore content from the importer,
+ * remove the option from VBO views.
+ */
+function hs_actions_views_pre_build(ViewExecutable $view) {
+  $display = $view->getDisplay();
+
+  /** @var \Drupal\views_bulk_operations\Plugin\views\field\ViewsBulkOperationsBulkForm $vbo_handler */
+  if ($vbo_handler = $display->getHandler('field', 'views_bulk_operations_bulk_form')) {
+    $current_user = \Drupal::currentUser();
+    foreach ($vbo_handler->options['selected_actions'] as $key => $action) {
+      if ($current_user->hasPermission('ignore content from importer')) {
+        return;
+      }
+
+      if ($action['action_id'] == 'migration_ignore') {
+        unset($vbo_handler->options['selected_actions'][$key]);
+      }
+    }
   }
 }

@@ -80,6 +80,8 @@
       border-style: solid;
       content: '';
       counter-increment: inherit;
+      top: hb-calculate-rems(8px);
+      min-width: inherit;
     }
   }
 
@@ -89,6 +91,8 @@
       border-radius: 0;
       border: 0;
       @include hb-pairing-color('background-color', 'secondary');
+      top: hb-calculate-rems(8px);
+      min-width: inherit;
     }
   }
 
@@ -107,7 +111,6 @@
       content: counter(li, lower-alpha) '.';
       height: 0;
       width: auto;
-      top: 0;
     }
   }
 
@@ -168,7 +171,7 @@
   counter-reset: li;
   list-style-type: none;
   margin: 0 0 hb-spacing-width('md');
-  padding-left: hb-calculate-rems(22px);
+  padding-left: hb-calculate-rems(8px);
 
   ol {
     margin: hb-calculate-rems(10px) 0 0;
@@ -178,7 +181,7 @@
     position: relative;
     line-height: 122%;
     margin-bottom: hb-calculate-rems(10px);
-    padding-left: hb-calculate-rems(18px);
+    padding-left: hb-calculate-rems(38px); // should only be 18px when on a UL // was 28
 
     // This prevents the list item to float behind images that are floated to the left
     overflow: hidden;
@@ -192,6 +195,13 @@
 
       position: absolute;
       left: 0;
+      top: 0;
+      min-width: hb-calculate-rems(30px);
+      text-align: right;
+
+      @include grid-media-min('lg') {
+        top: hb-calculate-rems(1px); // improves alignment of markers at larger screen sizes
+      }
 
       .hb-dark-pattern & {
         @include hb-pairing-color('color', 'secondary-highlight');
@@ -200,6 +210,15 @@
   }
 
   @include hb-nested-list-styles;
+
+  // ul markers nested in an ol list. These styles must be set after the
+  // hb-nested-list-styles mixin beside they are specific to ul markers
+  // nested inside of ordered lists.
+  ul > li {
+    &::before {
+      margin-left: hb-calculate-rems(16px);
+    }
+  }
 }
 
 // Remove or reset list styles to browser defaults
@@ -227,6 +246,7 @@
 
   ol:not([class]) {
     list-style-type: decimal;
+    padding-left: revert;
 
     li {
       overflow: visible;

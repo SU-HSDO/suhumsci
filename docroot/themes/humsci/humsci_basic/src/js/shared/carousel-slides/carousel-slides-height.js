@@ -1,16 +1,6 @@
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel');
+let mediumScreenBreakpoint = 768;
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
-
-if (slides.length > 0) {
-  restrictHeight();
-
-  // Watch for when the browser window resizes, then run the restrictHeight
-  // function to reset the height of the text boxes
-  window.addEventListener('resize', function() {
-    clearTimeout(timeOutFunctionId);
-    timeOutFunctionId = setTimeout(restrictHeight, 250);
-  });
-}
 
 // Set the height of all text boxes within a Carousel to that
 // of the tallest text box
@@ -33,7 +23,7 @@ function restrictHeight() {
       let boxHeight = textBoxes[j].offsetHeight;
 
       // Parse boxHeight to be a number that can be used to set the min-height value
-      boxHeight = parseInt(boxHeight, 10);
+      boxHeight = parseInt(boxHeight);
 
       // Create an array containing all the heights of textBoxes
       boxHeightArray.push(boxHeight);
@@ -43,10 +33,23 @@ function restrictHeight() {
     let maxBoxHeight = Math.max(...boxHeightArray);
 
     // Give all textBoxes the same height on medium and larger sized screens
-    if (window.innerWidth > 768) {
-      for (let k = 0; k < textBoxes.length; k++) {
-        textBoxes[k].setAttribute('style', `min-height: ${maxBoxHeight}px`);
-      }
+    for (let k = 0; k < textBoxes.length; k++) {
+      textBoxes[k].setAttribute('style', `min-height: ${maxBoxHeight}px`);
     }
   }
+}
+
+if (slides.length > 0) {
+  if (window.innerWidth > mediumScreenBreakpoint) {
+    restrictHeight();
+  }
+
+  // Watch for when the browser window resizes, then run the restrictHeight
+  // function to reset the height of the text boxes
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > mediumScreenBreakpoint) {
+      clearTimeout(timeOutFunctionId);
+      timeOutFunctionId = setTimeout(restrictHeight, 250);
+    }
+  });
 }

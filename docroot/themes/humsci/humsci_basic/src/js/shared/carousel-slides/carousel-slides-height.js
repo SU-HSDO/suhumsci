@@ -5,9 +5,11 @@ let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset th
 // Set the height of all text boxes within a Carousel to that
 // of the tallest text box
 function restrictHeight() {
+  let boxHeightArray = [0], // array must have a default entry of 0 for the banner components 
+    maxBoxHeight;
+
   for (let i = 0; i < slides.length; i++) {
     let textBoxes;
-    let boxHeightArray = [0]; // array must have a default entry of 0 for the banner components
 
     // Find all the textBoxes inside each carousel
     textBoxes = slides[i].getElementsByClassName('hb-hero-overlay__text');
@@ -28,7 +30,8 @@ function restrictHeight() {
     }
 
     // Find largest number in array of textBoxes
-    let maxBoxHeight = Math.max(...boxHeightArray);
+    maxBoxHeight = Math.max(...boxHeightArray);
+    console.log(maxBoxHeight);
 
     // Give all textBoxes the same height on medium and larger sized screens
     if (window.innerWidth > mediumScreenBreakpoint) {

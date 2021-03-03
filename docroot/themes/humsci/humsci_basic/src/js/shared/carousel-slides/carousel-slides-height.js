@@ -7,39 +7,38 @@ let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset th
 function restrictHeight() {
   let boxHeightArray, maxBoxHeight;
 
-  for (let i = 0; i < slides.length; i++) {
+  slides.forEach(slide => {
     let textBoxes;
     boxHeightArray = [0]; // array must have a default entry of 0 for the banner components and must be declare within the loop to set a baseline for each indiviual carousel on a page
 
     // Find all the textBoxes inside each carousel
-    textBoxes = slides[i].getElementsByClassName('hb-hero-overlay__text');
+    textBoxes = slide.querySelectorAll('.hb-hero-overlay__text');
 
     // Loop through all the textBoxes and gather their heights into an array
-    for (let j = 0; j < textBoxes.length; j++) {
+    textBoxes.forEach(textBox => {
       // Clear any inline styles that may have been set previously
       // This is necessary to determine the default height of text boxes
-      textBoxes[j].removeAttribute('style');
+      textBox.removeAttribute('style');
 
-      let boxHeight = textBoxes[j].offsetHeight;
+      let boxHeight = textBox.offsetHeight;
 
       // Parse boxHeight to be a number that can be used to set the min-height value
       boxHeight = parseInt(boxHeight);
 
       // Create an array containing all the heights of textBoxes
       boxHeightArray.push(boxHeight);
-    }
+    });
 
     // Find largest number in array of textBoxes
     maxBoxHeight = Math.max(...boxHeightArray);
-    console.log(maxBoxHeight);
 
     // Give all textBoxes the same height on medium and larger sized screens
     if (window.innerWidth > mediumScreenBreakpoint) {
-      for (let k = 0; k < textBoxes.length; k++) { // TODO: refactor this into the loop above
-        textBoxes[k].setAttribute('style', `min-height: ${maxBoxHeight}px`);
-      }
+      textBoxes.forEach(textBox => {
+        textBox.setAttribute('style', `min-height: ${maxBoxHeight}px`);
+      });
     }
-  }
+  });
 }
 
 if (slides.length > 0) {

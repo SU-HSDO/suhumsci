@@ -94,3 +94,12 @@
     }
   }
 }
+
+.hb-heading-link-color {
+  /* stylelint-disable selector-pseudo-class-no-unknown */
+  &:is(h1, h2, h3, h4, h5, h6, span) a:not([class]), // added via title field in a view
+  /* stylelint-enable selector-pseudo-class-no-unknown */
+  .hb-card__title a { // added via view or in layout builder
+    @include hb-heading-link-color;
+  }
+}

@@ -270,15 +270,15 @@ class EventsImporterForm extends ConfigFormBase {
    */
   protected function getFullUrl(array $choices) {
     // All our extra form fields are stored in _other.
-    $type = $choices['type'] ?? '';
-    $val = $choices[$type] ?? '';
+    $type = $choices['type'] ?? NULL;
+    $val = $choices[$type] ?? null;
     $extra = $choices['org_status'] ?? '';
 
     // Valid Data. Create a url for the uri column.
     if ($type == 'featured' || $type == 'today') {
       return static::STANFORD_EVENTS_IMPORTER_XML . '?' . $type;
     }
-    if ($type && $val) {
+    if (!is_null($type) && !is_null($val)) {
       $url = static::STANFORD_EVENTS_IMPORTER_XML . '?' . $type . '=' . $val;
       // Organizations have extra options.
       if ($type == 'organization' && $extra) {

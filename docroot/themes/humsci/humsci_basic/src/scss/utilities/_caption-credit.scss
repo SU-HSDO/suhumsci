@@ -60,8 +60,12 @@
   .hb-vertical-linked-card & {
     .field-media-image {
       + .field-media-image-caption {
-        padding-bottom: 2rem;
-        z-index: 0;
+        @include hb-themes(('airy', 'colorful')) {
+          @include grid-media-min('sm') {
+            padding-bottom: hb-calculate-rems(36px);
+            z-index: 0;
+          }
+        }
       }
     }
   }

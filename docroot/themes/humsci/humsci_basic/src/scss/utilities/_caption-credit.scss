@@ -61,8 +61,14 @@
     .field-media-image {
       + .field-media-image-caption {
         @include hb-themes(('airy', 'colorful')) {
+          @include grid-media-min('xs') {
+            font-size: hb-calculate-rems(12px);
+          }
+
           @include grid-media-min('sm') {
             padding-bottom: hb-calculate-rems(36px);
+            padding-left: hb-calculate-rems(12px);
+            font-size: hb-calculate-rems(11px);
             z-index: 0;
           }
         }

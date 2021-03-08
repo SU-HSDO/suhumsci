@@ -1,7 +1,7 @@
 // This function takes two parameters:
 // The first parameter should be whatever type of element you'd like to be the same height, and
 // ideally these types of elements are laid out in a grid that you'd like the height to be the same
-// The second parameter is the special class that will make this function execute and turn elements 
+// The second parameter is the special class that will make this function execute and turn elements
 // into the same height. If the special class isn't present, we won't run this function.
 const equalHeightGrid = (element, specialWrapperClass) => {
   const equalGridWrapper = document.getElementsByClassName(specialWrapperClass);
@@ -16,7 +16,7 @@ const equalHeightGrid = (element, specialWrapperClass) => {
       const elementHeights = Array.prototype.map.call(elementList, (el) => {
         return el.scrollHeight;
       });
-    
+
       // Create array with _unique_ height values
       const uniqueHeights = elementHeights.filter((height, index, array) => {
         return array.indexOf(height) == index;
@@ -40,7 +40,7 @@ const equalHeightGrid = (element, specialWrapperClass) => {
       }
     }
   } else {
-    return null;
+    return Promise.resolve();
   }
 }
 

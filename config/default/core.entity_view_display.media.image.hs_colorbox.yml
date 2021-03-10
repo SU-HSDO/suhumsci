@@ -1,0 +1,59 @@
+uuid: 6e8be971-d34b-47bf-842f-91d1cc3bce37
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.hs_colorbox
+    - field.field.media.image.field_media_image
+    - field.field.media.image.field_media_image_caption
+    - image.style.hero_large
+    - image.style.medium
+    - media.type.image
+  module:
+    - colorbox
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - text
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+_core:
+  default_config_hash: UHOBG3TcAwserLclcHcEOGnkPaJlP9n_tSpy7TmELFQ
+id: media.image.hs_colorbox
+targetEntityType: media
+bundle: image
+mode: hs_colorbox
+content:
+  field_media_image:
+    label: hidden
+    settings:
+      colorbox_node_style: medium
+      colorbox_node_style_first: ''
+      colorbox_image_style: hero_large
+      colorbox_gallery: page
+      colorbox_gallery_custom: ''
+      colorbox_caption: custom
+      colorbox_caption_custom: '[media:field_media_image_caption]'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    type: colorbox
+    weight: 0
+    region: content
+  field_media_image_caption:
+    type: text_default
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

@@ -59,7 +59,8 @@
 
 // hb-well is now deprecated and will be refactored out in a future release
 .hs-well,
-.hb-well {
+.hb-well,
+.pullquote {
   @include hb-well;
 }
 
@@ -91,5 +92,23 @@
       float: right;
       margin: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
     }
+  }
+}
+
+.hb-heading-link-color {
+  /* stylelint-disable selector-pseudo-class-no-unknown */
+  &:is(h1, h2, h3, h4, h5, h6, span) a:not([class]), // added via title field in a view
+  /* stylelint-enable selector-pseudo-class-no-unknown */
+  .hb-card__title a { // added via view or in layout builder
+    @include hb-heading-link-color;
+  }
+}
+
+// Reset the height of the text boxes within Carousel paragraph types
+// to scale according to the amount of content (title, copy, button)
+// within the text box.
+.hb-carousel-reset-height {
+  .paragraph--type--hs-carousel .hb-hero-overlay__text {
+    min-height: initial !important;
   }
 }

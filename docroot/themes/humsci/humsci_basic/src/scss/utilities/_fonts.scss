@@ -60,13 +60,16 @@
   @include hb-subtitle;
 }
 
-.hb-descriptor {
+.hb-descriptor,
+.descriptor {
   @include hb-descriptor;
 }
 
 // hb-descriptor styling applied to Views fields with reset
 .views-row .hb-descriptor,
-.views-row .hb-descriptor a {
+.views-row .hb-descriptor a,
+.views-row .descriptor,
+.views-row .descriptor a {
   @include hb-text-reset;
   @include hb-descriptor;
 }
@@ -79,21 +82,29 @@ a.hb-pill {
   @include hb-pill;
 }
 
-.hb-blockquote {
-  @include hb-blockquote;
-}
+// blockquote and D7 import class map and loop
+$blockquotes: (
+  hb-blockquote,
+  highlight-block-left,
+  highlight-block-right,
+);
 
-// hb-blockquote styling applied to Views fields with reset
-.views-row .hb-blockquote,
-.views-row .hb-blockquote a {
-  @include hb-text-reset;
-  @include hb-blockquote;
+@each $blockquote in $blockquotes {
+  .#{$blockquote} {
+    @include hb-blockquote;
 
-  > p::before,
-  > p::after,
-  > div::before,
-  > div::after {
-    content: none;
+    .views-row #{$blockquote},
+    .views-row #{$blockquote} a {
+      @include hb-text-reset;
+      @include hb-blockquote;
+
+      > p::before,
+      > p::after,
+      > div::before,
+      > div::after {
+        content: none;
+      }
+    }
   }
 }
 

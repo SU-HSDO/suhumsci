@@ -104,7 +104,7 @@
     }
 
     figcaption {
-      @include hb-caption($italic: true);
+      @include hb-caption-credit;
     }
   }
 
@@ -123,25 +123,42 @@
   }
 
   // Only in the textarea, does the well get display: table for being floated
-  .hs-well {
+  .hs-well,
+  .pullquote {
     display: table;
   }
 }
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
-.hs-caption,
-.views-row .hs-caption,
-.views-row .hs-caption a {
-  @include hb-caption;
+// hs-caption and D7 import utility class map and loop
+$captions: (
+  hs-caption,
+  caption,
+);
+
+@each $caption in $captions {
+  .#{$caption},
+  .views-row #{$caption},
+  .views-row #{$caption} a {
+    @include hb-caption;
+  }
 }
 
-.hs-credits,
-.views-row .hs-credits,
-.views-row .hs-credits a {
-  @include hb-caption($italic: true);
+$credits: (
+  hs-credits,
+  credits,
+);
+
+@each $credit in $credits {
+  .#{$credit},
+  .views-row #{$credit},
+  .views-row #{$credit} a {
+    @include hb-caption($italic: true);
+  }
 }
 
-.hs-font-lead {
+.hs-font-lead,
+.summary {
   font-size: hb-calculate-rems(20px);
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
@@ -160,7 +177,8 @@
   }
 }
 
-.hs-font-splash {
+.hs-font-splash,
+.infotext {
   @include hb-heading-1;
 
   @include grid-media-min('md') {
@@ -186,10 +204,6 @@
 
 .hs-short-line-length {
   max-width: hb-calculate-rems(700px);
-}
-
-.hs-well {
-  @include hb-well;
 }
 
 .hs-table--borderless {
@@ -296,7 +310,9 @@ a[href*="//"].hs-external-link,
 }
 
 a.hs-private-link,
-.hs-private-link a {
+.hs-private-link a,
+a.private-link,
+.private-link a {
   @include hb-link--inline;
   @include hb-pairing-color('color', 'secondary');
 
@@ -336,12 +352,19 @@ a.hs-mailto-link {
   }
 }
 
-a.hs-more-link,
-button.hs-more-link,
-.hs-more-link a,
-.hs-more-link button {
-  margin-bottom: hb-calculate-rems(20px);
-  @include hb-more-link;
+// hs-more-link and D7 import utility class map and loop
+$more-links: (
+  hs-more-link
+);
+
+@each $more-link in $more-links {
+  a.#{$more-link},
+  button.#{$more-link},
+  .#{$more-link} a,
+  .#{$more-link} button {
+    margin-bottom: hb-calculate-rems(20px);
+    @include hb-more-link;
+  }
 }
 
 a.hs-pdf-link {

@@ -68,7 +68,7 @@ function _hs_migrate_node_is_imported(NodeInterface $node) {
     $count = $database->select($table, 't')
       ->fields('t')
       ->condition('destid1', $node->id())
-      ->condition('source_row_status', 0, '>')
+      ->condition('source_row_status', 0)
       ->countQuery()
       ->execute()
       ->fetchField();

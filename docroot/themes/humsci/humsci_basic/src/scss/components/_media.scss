@@ -17,3 +17,18 @@
   min-height: hb-calculate-rems(300px);
   margin-bottom: hb-spacing-width();
 }
+
+// Hotfix for caption/credit positioning bug with the media image field
+.field-hs-event-image,
+.field-hs-news-image,
+.field-hs-event-series-image,
+.field-hs-person-square-img,
+.field-hs-publication-image,
+.field-hs-accordion-image, //This still goes full width of the accordion, but keeps it contained to the image area.
+.field-hs-spotlight-image,
+.field-hs-hero-image,
+.field-hs-postcard-image {
+  article {
+    position: relative;
+  }
+}

@@ -1,3 +1,4 @@
+import './carousel-slides/carousel-slides-height';
 import './tables/wrap';
 import './tables/scope';
 import './tables/table-pattern';

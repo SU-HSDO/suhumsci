@@ -1,0 +1,132 @@
+uuid: 6b079caa-c176-4117-aca0-b15b67b6fda2
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.hs_gallery_slideshow
+    - field.field.paragraph.stanford_gallery.su_gallery_button
+    - field.field.paragraph.stanford_gallery.su_gallery_description
+    - field.field.paragraph.stanford_gallery.su_gallery_headline
+    - field.field.paragraph.stanford_gallery.su_gallery_images
+    - paragraphs.paragraphs_type.stanford_gallery
+  module:
+    - ds
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - linkit
+    - slick
+    - text
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.stanford_gallery.hs_gallery_slideshow
+targetEntityType: paragraph
+bundle: stanford_gallery
+mode: hs_gallery_slideshow
+content:
+  su_gallery_button:
+    type: linkit
+    weight: 3
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+      linkit_profile: default
+    third_party_settings: {  }
+  su_gallery_description:
+    type: text_default
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  su_gallery_headline:
+    type: entity_title_heading
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      tag: h2
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+  su_gallery_images:
+    type: slick_media
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      style: ''
+      vanilla: true
+      optionset: hs_slideshow
+      optionset_thumbnail: ''
+      skin: ''
+      skin_thumbnail: ''
+      image_style: ''
+      responsive_image_style: ''
+      thumbnail_effect: ''
+      thumbnail_position: ''
+      media_switch: ''
+      box_style: ''
+      thumbnail_style: ''
+      box_media_style: ''
+      ratio: ''
+      box_caption: ''
+      view_mode: hs_slideshow_image
+      box_caption_custom: ''
+      grid: null
+      grid_medium: null
+      grid_small: null
+      visible_items: null
+      image: ''
+      title: ''
+      link: ''
+      layout: ''
+      thumbnail_caption: ''
+      class: ''
+      cache: 0
+      current_view_mode: hs_gallery_slideshow
+      background: false
+      caption:
+        field_media_image_caption: '0'
+        title: '0'
+        alt: '0'
+      preserve_keys: false
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      thumbnail: ''
+      skin_arrows: ''
+      skin_dots: ''
+      fx: ''
+      icon: ''
+      _uri: ''
+      breakpoints: {  }
+      sizes: ''
+      grid_header: ''
+      id: ''
+      overlay: ''
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      ds:
+        ds_limit: ''
+      hs_field_helpers:
+        inline_contents: 0
+hidden:
+  search_api_excerpt: true

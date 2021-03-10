@@ -23,6 +23,15 @@ class AcademicDateFilter extends Date {
   /**
    * {@inheritdoc}
    */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['expose']['contains']['input_type'] = ['default' => 'textfield'];
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasExtraOptions() {
     // Check if value or min is set to prevent the extra options form from
     // displaying before the main filter settings.
@@ -122,6 +131,24 @@ class AcademicDateFilter extends Date {
   /**
    * {@inheritdoc}
    */
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+    parent::buildOptionsForm($form, $form_state);
+    if ($this->options['exposed']) {
+      $form['expose']['input_type'] = [
+        '#type' => 'radios',
+        '#title' => $this->t('Type of input'),
+        '#options' => [
+          'textfield' => $this->t('Text Field'),
+          'select' => $this->t('Select List'),
+        ],
+        '#default_value' => $this->options['expose']['input_type'] ?? 'textfield',
+      ];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function opBetween($field) {
     if (!empty($this->options['exception']) && $this->options['exception']['exception'] && $this->inException()) {
       $this->value['min'] = $this->options['exception']['min'] ?? $this->value['min'];
@@ -216,6 +243,43 @@ class AcademicDateFilter extends Date {
       $summary[] = parent::adminSummary();
     }
     return implode(' ', $summary);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function valueForm(&$form, FormStateInterface $form_state) {
+    parent::valueForm($form, $form_state);
+    $input_type = $this->options['expose']['input_type'] ?? 'textfield';
+    if ($input_type == 'select') {
+
+      dpm($form);
+      dpm($this);
+
+
+
+      switch ($this->options['granularity']) {
+        case 'year':
+          //      $form['value']['#type'] = 'select';
+          //      $form['value']['#options'] = range(0, 100);
+          break;
+
+        case 'month':
+
+          break;
+      }
+    }
+  }
+
+  protected static function getFieldOptions($entity_type, $field_name){
+    $entity_storage = \Drupal::entityTypeManager()
+      ->getStorage($entity_type);
+    $entity_ids = $entity_storage->getQuery()
+      ->exists($field_name)
+      ->execute();
+    foreach($entity_storage->loadMultiple($entity_ids) as $entity){
+      
+    }
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_paragraph_types\Plugin\paragraphs\Behavior;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\paragraphs\Entity\Paragraph;
@@ -48,8 +49,9 @@ class GalleryBehaviors extends ParagraphsBehaviorBase {
    * {@inheritDoc}
    */
   public function view(array &$build, Paragraph $paragraph, EntityViewDisplayInterface $display, $view_mode) {
-    // Nothing to do at this time. View mode is changed using the view mode
-    // alter hook.
+    $build['#attached']['library'][] = 'hs_paragraph_types/stanford_gallery';
+    $build['#attributes']['class'][] = Html::cleanCssIdentifier($paragraph->bundle());
+    $build['#attributes']['class'][] = Html::cleanCssIdentifier($view_mode);
   }
 
 }

@@ -140,7 +140,7 @@ function su_humsci_profile_post_update_8280() {
 /**
  * Disable the stanford gallery until styling is done.
  */
-function su_humsci_profile_post_update_8290(){
+function su_humsci_profile_post_update_8290() {
   /** @var \Drupal\field\FieldConfigInterface $field */
   $field = \Drupal::entityTypeManager()
     ->getStorage('field_config')

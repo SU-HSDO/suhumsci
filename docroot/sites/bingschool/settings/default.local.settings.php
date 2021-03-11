@@ -8,7 +8,7 @@
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Component\Assertion\Handle;
 
-$db_name = '${drupal.db.database}';
+$db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
 
 /**
  * Database configuration.

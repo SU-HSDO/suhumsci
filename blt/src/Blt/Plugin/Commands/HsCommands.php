@@ -2,12 +2,49 @@
 
 namespace Humsci\Blt\Plugin\Commands;
 
+use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\Console\Question\Question;
 
 /**
  * Various BLT commands for H&S stack.
  */
 class HsCommands extends HsAcquiaApiCommands {
+
+  /**
+   * Set up local blt settings and necessary files.
+   *
+   * @command humsci:local:setup
+   */
+  public function localSetup() {
+    $repo_root = $this->getConfigValue('repo.root');
+    if (file_exists("$repo_root/blt/local.blt.yml")) {
+      $continue = $this->confirm('Local settings have already been set. Do you wish to remove them and start over?', TRUE);
+      if (!$continue) {
+        return;
+      }
+    }
+    $dir = basename($repo_root);
+    $db_name = $this->askDefault('Database Name?', 'suhumsci');
+    $db_user = $this->askDefault('Database User Name?', 'root');
+    $db_pass = $this->askDefault('Database Password?', 'password');
+    $domain = $this->askDefault('Local Site Domain?', "docroot.$dir.loc");
+
+    $data = [
+      'project' => ['local' => ['uri' => $domain]],
+      'drupal'=>[
+        'db' => [
+          'database' => $db_name,
+          'username' => $db_user,
+          'password' => $db_pass,
+          'host' => 'localhost',
+          'port' => 3306
+        ],
+      ],
+    ];
+
+    file_put_contents("$repo_root/blt/local.blt.yml", Yaml::encode($data));
+    $this->invokeCommands(['sws:keys', 'sbsc', 'settings']);
+  }
 
   /**
    * Get encryption keys from acquia.

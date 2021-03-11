@@ -59,7 +59,7 @@ class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
    */
   protected function getMigrationUrls() {
     $importer_settings = $this->configFactory->get('hs_courses_importer.importer_settings');
-    $base_url = $importer_settings->getOriginal('base_url', FALSE);
+    $base_url = \Drupal::state()->get('hs_courses_importer.base_url');
     $urls = $importer_settings->getOriginal('urls', FALSE) ?: [];
 
     // Build the local urls with the feed source as a query parameter.

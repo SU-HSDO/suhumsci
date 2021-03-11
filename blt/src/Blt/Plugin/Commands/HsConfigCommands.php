@@ -34,6 +34,7 @@ class HsConfigCommands extends ConfigCommand {
    *   Cm core key.
    */
   protected function importConfigSplit($task, $cm_core_key) {
+    $partial = FALSE;
     if ($this->input()->hasOption('partial')) {
       $partial = $this->input()->getOption('partial');
     }

@@ -154,54 +154,6 @@ class HsCommands extends HsAcquiaApiCommands {
   }
 
   /**
-   * Run the install steps for a site.
-   *
-   * @param string $site
-   *   Site machine name.
-   * @param array $options
-   *   Keyed array of command options.
-   *
-   * @throws \Robo\Exception\TaskException
-   *
-   * @command humsci:install-site
-   */
-  public function installSite(string $site, array $options = [
-    'prod' => FALSE,
-    'stage' => FALSE,
-  ]) {
-    $alias = "$site.dev";
-    if ($options['prod']) {
-      $alias = "$site.prod";
-    }
-    elseif ($options['stage']) {
-      $alias = "$site.stage";
-    }
-
-    $status = $this->taskDrush()
-      ->alias($alias)
-      ->drush('core-status')
-      ->option('format', 'json', '=')
-      ->printOutput(FALSE)
-      ->run()
-      ->getMessage();
-    $status = json_decode($status, TRUE);
-    $confirm = $this->confirm(sprintf('Are you sure you wish to delete all data on database %s for site %s', $status['db-name'], $site));
-    if (!$confirm) {
-      return;
-    }
-
-    $this->taskDrush()
-      ->alias($alias)
-      ->drush('site-install')
-      ->arg('su_humsci_profile')
-      ->drush('pm-uninstall')
-      ->arg('config_ignore')
-      ->drush('config-import')
-      ->arg('sync')
-      ->run();
-  }
-
-  /**
    * Changes necessary configuration and adds the domain to the LE Cert.
    *
    * @param string $site
@@ -239,9 +191,8 @@ class HsCommands extends HsAcquiaApiCommands {
       ->arg($new_domain)
       ->option('yes')
       ->drush('xmlsitemap:rebuild')
-      ->drush('cset')
-      ->arg('hs_courses_importer.importer_settings')
-      ->arg('base_url')
+      ->drush('sset')
+      ->arg('hs_courses_importer.base_url')
       ->arg($new_domain)
       ->option('yes')
       ->drush('cr')

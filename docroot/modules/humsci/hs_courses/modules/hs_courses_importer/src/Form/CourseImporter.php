@@ -165,8 +165,9 @@ class CourseImporter extends ConfigFormBase {
     }
     $this->config('hs_courses_importer.importer_settings')
       ->set('urls', $urls)
-      ->set('base_url', $base_url)
       ->save();
+
+    \Drupal::state()->set('hs_courses_importer.base_url', $base_url);
 
     // Clear migration discovery cache after saving.
     Cache::invalidateTags(['migration_plugins']);

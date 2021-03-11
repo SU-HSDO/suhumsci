@@ -27,11 +27,11 @@ class CourseImporterOverridesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp():void {
     parent::setUp();
+    \Drupal::state()->set('hs_courses_importer.base_url', 'http://myurl.test');
     $this->config('hs_courses_importer.importer_settings')
       ->set('urls', ['http://explorecourses.stanford.edu/search?view=xml&q=abcdefg'])
-      ->set('base_url', 'http://myurl.test')
       ->save();
     $this->config('migrate_plus.migration.hs_courses')
       ->set('source', ['urls' => ['teststring']])

@@ -31,13 +31,13 @@ class HsCommands extends HsAcquiaApiCommands {
 
     $data = [
       'project' => ['local' => ['uri' => $domain]],
-      'drupal'=>[
+      'drupal' => [
         'db' => [
           'database' => $db_name,
           'username' => $db_user,
           'password' => $db_pass,
           'host' => 'localhost',
-          'port' => 3306
+          'port' => 3306,
         ],
       ],
     ];

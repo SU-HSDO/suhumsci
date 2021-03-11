@@ -11,6 +11,15 @@ use Drupal\Core\Serialization\Yaml;
 class HsHooksCommands extends BltTasks {
 
   /**
+   * Disable Saml module.
+   *
+   * @hook pre-command tests:codeception:run
+   */
+  public function preCodecepton() {
+    $this->taskDrush()->drush('pmu')->arg('simplesamlphp_auth')->run();
+  }
+
+  /**
    * After a multisite is created, modify the drush alias with default values.
    *
    * @hook post-command recipes:multisite:init

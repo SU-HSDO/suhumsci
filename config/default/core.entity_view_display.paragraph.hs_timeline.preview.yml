@@ -1,0 +1,44 @@
+uuid: 97f86d54-8df5-4985-b3d6-0514f72e3941
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_timeline.field_hs_field_add_expand_collap
+    - field.field.paragraph.hs_timeline.field_hs_timeline
+    - paragraphs.paragraphs_type.hs_timeline
+  module:
+    - ds
+    - layout_builder
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_timeline
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: _field
+          variant_field: field_add_expand_collapse
+          variant_field_values:
+            expanded: '0'
+            collapsed: '1'
+    regions:
+      add-expand-collapse:
+        - field_add_expand_collapse
+      timeline:
+        - field_timeline
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.hs_timeline.preview
+targetEntityType: paragraph
+bundle: hs_timeline
+mode: preview
+content: {  }
+hidden:
+  field_hs_field_add_expand_collap: true
+  field_hs_timeline: true
+  search_api_excerpt: true

@@ -1,0 +1,139 @@
+// styles for a single item in a timeline
+.ptype-hs-timeline-item {
+  @include clearfix;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: calc(100% - 20px);
+    width: 4px;
+    @include hb-pairing-color('background-color', 'primary');
+    left: 1rem;
+    bottom: hb-calculate-rems(-2px);
+  }
+
+  &:last-of-type::before {
+    height: 0; // remove the vertical pipe that connects timeline items from the last item
+  }
+
+  .field-hs-row-components[class*="counted-items-"] & {
+    margin-bottom: 0 !important;
+  }
+}
+
+.hb-timeline-item {
+  position: relative;
+  margin: 0;
+
+  &__summary {
+    padding-bottom: hb-spacing-width('xs');
+    line-height: 133%;
+    list-style-type: none; // will hide the marker
+    list-style-image: none;
+
+    &::-webkit-details-marker { // hide the marker in Safari
+      display: none;
+    }
+
+    // this will only remove the outline on click
+    // the keyboard focus state remains!
+    &:focus:not(:focus-visible) {
+      outline: 0;
+    }
+
+    // add a custom focus state to improve design aesthetic, particularly
+    // in Safari where :focus-visible is not supported
+    &:focus {
+      outline: solid;
+      @include hb-pairing-color('outline-color', 'secondary-highlight-darken');
+    }
+  }
+
+  &__revealed-details {
+    padding-bottom: hb-spacing-width('sm');
+
+    // only animate collapsed timeline items when they are opened
+    // timelines that are expanded by default should not animate
+    .hb-timeline-item[open] & {
+      .hb-timeline__collapsed & {
+        animation: timelineFadeInDown 350ms ease-in-out forwards;
+      }
+    }
+  }
+
+  &__heading {
+    @include hb-pairing-color('color', 'primary');
+    font-size: hb-calculate-rems(18px);
+    font-weight: hb-theme-font-weight('bold');
+    padding: 0 hb-calculate-rems(32px);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      @include hb-icon-background('timeline-circle', 'primary');
+      background-repeat: no-repeat;
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(24px);
+      top: 0;
+      left: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      @include hb-icon-background('timeline-toggle', 'primary');
+      background-repeat: no-repeat;
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(12px);
+      top: hb-calculate-rems(12px);
+      right: 0;
+      transition: transform 150ms ease-in-out;
+    }
+
+    [aria-expanded="true"] & {
+      &::after {
+        transform: scaleY(-1);
+      }
+    }
+
+    .hb-timeline__expanded & {
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  &__subheading {
+    font-size: hb-calculate-rems(16px);
+    font-style: italic;
+    padding: 0 hb-calculate-rems(32px);
+  }
+
+  &__description {
+    font-size: hb-calculate-rems(16px);
+    padding: 0 hb-calculate-rems(32px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      line-height: 128%;
+    }
+
+    @include hb-traditional {
+      line-height: 124%;
+    }
+  }
+}
+
+
+@keyframes timelineFadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

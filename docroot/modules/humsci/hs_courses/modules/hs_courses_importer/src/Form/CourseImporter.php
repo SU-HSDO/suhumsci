@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\State\StateInterface;
 use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,12 +34,20 @@ class CourseImporter extends ConfigFormBase {
   protected $entityTypeManager;
 
   /**
+   * Core state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $guzzle, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $guzzle, EntityTypeManagerInterface $entity_type_manager, StateInterface $state) {
     parent::__construct($config_factory);
     $this->guzzle = $guzzle;
     $this->entityTypeManager = $entity_type_manager;
+    $this->state = $state;
   }
 
   /**
@@ -48,7 +57,8 @@ class CourseImporter extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('http_client'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('state')
     );
   }
 
@@ -167,7 +177,7 @@ class CourseImporter extends ConfigFormBase {
       ->set('urls', $urls)
       ->save();
 
-    \Drupal::state()->set('hs_courses_importer.base_url', $base_url);
+    $this->state->set('hs_courses_importer.base_url', $base_url);
 
     // Clear migration discovery cache after saving.
     Cache::invalidateTags(['migration_plugins']);

@@ -1,26 +1,34 @@
 {%- set attributes = attributes.addClass('hb-timeline-item') -%}
 
-{% if variant == 'open' %}
-  {% set attributes = attributes.setAttribute('open', 'open') %}
+{% if description %}
+  {% if variant == 'open' %}
+    {% set attributes = attributes.setAttribute('open', 'open') %}
+  {% endif %}
 {% endif %}
 
-<details{{ attributes }}>
-  <summary class="hb-timeline-item__summary">
-    <p class="hb-timeline-item__heading">
-      {{ summary }}
-    </p>
-    {% if subheading %}
-      <p class="hb-timeline-item__subheading">
-        {{ subheading }}
+{# WIP: need if statement for rendering this when there is a description #}
+{% if description %}
+  <details{{ attributes }}>
+    <summary class="hb-timeline-item__summary">
+      <p class="hb-timeline-item__heading">
+        {{ summary }}
       </p>
-    {% endif %}
-  </summary>
+      {% if subheading %}
+        <p class="hb-timeline-item__subheading">
+          {{ subheading }}
+        </p>
+      {% endif %}
+    </summary>
 
-  {% if description %}
     <div class="hb-timeline-item__revealed-details">
       <div class="hb-timeline-item__description">
         {{ description }}
       </div>
     </div>
-  {% endif %}
-</details>
+  </details>
+{% else %}
+  {{ summary }}
+  {{ subheading }}
+{% endif %}
+
+{# Default functionality of the timeline items on page load: All should be open by default - ideally the arrow would not be visible until the Expand/Collapse checkbox is checked (then all collapsed by default). #}

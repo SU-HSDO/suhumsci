@@ -29,7 +29,7 @@ class HsCircleCiCommands extends BltTasks {
 
     if ($batch == 'install') {
       $collection = $this->collectionBuilder();
-      $collection->addTaskList($this->setupSite());
+      $this->prepEnvironment();
       $collection->addTask($this->blt()->arg('drupal:install'));
       $collection->addTask($this->blt()
         ->arg('codeception')
@@ -46,7 +46,7 @@ class HsCircleCiCommands extends BltTasks {
     $failure = FALSE;
     foreach (array_rand($sites, self::SITES_TO_TEST) as $site) {
       $collection = $this->collectionBuilder();
-      $collection->addTaskList($this->setupSite());
+      $this->prepEnvironment();
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTask($this->blt()
         ->arg('codeception')
@@ -69,7 +69,7 @@ class HsCircleCiCommands extends BltTasks {
    */
   public function updateDependencies() {
     $collection = $this->collectionBuilder();
-    $collection->addTaskList($this->setupSite());
+    $this->prepEnvironment();
     $collection->addTask($this->blt()->arg('drupal:install'));
 
     $collection->addTask($this->taskDrush()
@@ -157,14 +157,10 @@ class HsCircleCiCommands extends BltTasks {
 
   /**
    * Perform some tasks to prepare the drupal environment.
-   *
-   * @return \Robo\Contract\TaskInterface[]
-   *   List of tasks to set up site.
    */
-  protected function setupSite() {
-    $tasks[] = $this->taskExec('dockerize -wait tcp://localhost:3306 -timeout 1m');
-    $tasks[] = $this->taskExec('apachectl stop; apachectl start');
-    return $tasks;
+  protected function prepEnvironment() {
+    $this->taskExec('dockerize -wait tcp://localhost:3306 -timeout 1m')->run();
+    $this->taskExec('apachectl stop; apachectl start')->run();
   }
 
   /**

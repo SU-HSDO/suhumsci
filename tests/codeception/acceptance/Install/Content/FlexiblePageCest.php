@@ -14,7 +14,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->canSeeNumberOfElements('#edit-field-hs-page-hero-wrapper', 1);
-    $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input', 9);
+    $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input', 10);
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Postcard');
     $I->canSee('Card Title');

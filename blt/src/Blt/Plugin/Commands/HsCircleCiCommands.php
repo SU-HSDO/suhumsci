@@ -42,10 +42,10 @@ class HsCircleCiCommands extends BltTasks {
       throw new \Exception('Batch does not exist');
     }
     $sites = array_combine($sites[$batch], $sites[$batch]);
+    $this->prepEnvironment();
 
     foreach (array_rand($sites, self::SITES_TO_TEST) as $site) {
       $collection = $this->collectionBuilder();
-      $this->prepEnvironment();
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTask($this->blt()
         ->arg('codeception')

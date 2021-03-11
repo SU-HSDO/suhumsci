@@ -13,7 +13,7 @@ deploy:
   tag_source: false
   exclude_file: '${repo.root}/blt/deploy/rsync-exclude.txt'
   gitignore_file: '${repo.root}/blt/deploy/.gitignore'
-  dir: ${repo.root}/deploy
+  dir: '${repo.root}/deploy'
 drush:
   aliases:
     ci: self
@@ -21,8 +21,8 @@ drush:
   default_alias: '${drush.aliases.local}'
 modules:
   local:
-    enable: []
-    uninstall: [google_analytics, acquia_connector, purge, simplesamlphp_auth, shield, config_readonly]
+    enable: {  }
+    uninstall: [google_analytics, acquia_connector, purge, shield, config_readonly]
   ci:
     enable: [hs_config_readonly]
     uninstall: [google_analytics, purge, acquia_connector, shield, simplesamlphp_auth]
@@ -115,15 +115,12 @@ tests:
     localDir: '${repo.root}/artifacts'
     coveragePass: 90
   codeception:
-    stanford_profile:
-      suites:
-        - acceptance
-        - functional
-      directory: ${docroot}/profiles/humsci/su_humsci_profile/tests/codeception
-key-dir:
-  dev: /mnt/gfs/swshumsci.dev/nobackup/apikeys
-  test: /mnt/gfs/swshumsci.test/nobackup/apikeys
-  prod: /mnt/gfs/swshumsci.prod/nobackup/apikeys
+    stanford_profile: { suites: [acceptance, functional], directory: '${docroot}/profiles/humsci/su_humsci_profile/tests/codeception' }
+keys_rsync:
+  ssh: swshumsci.prod@srv-7503.devcloud.hosting.acquia.com
+  files:
+    - /mnt/gfs/swshumsci.prod/nobackup/apikeys/
+    - /mnt/gfs/swshumsci.prod/secrets.settings.php
 cloud:
   appId: 23a85077-2967-41a4-be22-a84c24e0f81a
   dev: 265866-23a85077-2967-41a4-be22-a84c24e0f81a

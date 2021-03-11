@@ -3,7 +3,7 @@
 namespace Drupal\hs_blocks\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Database\Connection;
@@ -54,11 +54,14 @@ class EventSubscriber implements EventSubscriberInterface {
    * the trail each time. Rendering cache is unaffected by this since those
    * have cache keys and contexts to make them unique based on user's roles.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   Triggered Event.
    */
-  public function onKernelRequest(GetResponseEvent $event) {
-    if ($this->currentUser->isAuthenticated()) {
+  public function onKernelRequest(RequestEvent $event) {
+    if (
+      $this->currentUser->isAuthenticated() &&
+      $this->database->schema()->tableExists('cache_menu')
+    ) {
       // Target only the active trail cache items that are on nodes and are
       // empty.
       $this->database->delete('cache_menu')

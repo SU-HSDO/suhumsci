@@ -191,10 +191,6 @@ class HsCommands extends HsAcquiaApiCommands {
       ->arg($new_domain)
       ->option('yes')
       ->drush('xmlsitemap:rebuild')
-      ->drush('sset')
-      ->arg('hs_courses_importer.base_url')
-      ->arg($new_domain)
-      ->option('yes')
       ->drush('cr')
       ->run();
   }

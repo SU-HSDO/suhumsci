@@ -71,15 +71,7 @@ class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
       return [];
     }
     $importer_settings = $this->configFactory->get('hs_courses_importer.importer_settings');
-    $base_url = $this->state->get('hs_courses_importer.base_url');
-    $urls = $importer_settings->getOriginal('urls', FALSE) ?: [];
-
-    // Build the local urls with the feed source as a query parameter.
-    foreach ($urls as &$url) {
-      $url = urlencode($url);
-      $url = "$base_url/api/hs_courses?feed=$url";
-    }
-    return $urls;
+    return $importer_settings->getOriginal('urls', FALSE) ?: [];
   }
 
   /**

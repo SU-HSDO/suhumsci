@@ -1,104 +1,58 @@
 <?php
 
-namespace Drupal\hs_courses_importer\Controller;
+namespace Drupal\hs_courses_importer\Plugin\migrate_plus\data_fetcher;
 
-use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use GuzzleHttp\ClientInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
+use Drupal\migrate_plus\Plugin\migrate_plus\data_fetcher\Http;
 
 /**
- * Class CoursesController.
+ * Retrieve data over an HTTP connection for migration.
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: course_http
+ *   data_fetcher_plugin: http
+ *   headers:
+ *     Accept: application/json
+ *     User-Agent: Internet Explorer 6
+ *     Authorization-Key: secret
+ *     Arbitrary-Header: foobarbaz
+ * @endcode
+ *
+ * @DataFetcher(
+ *   id = "course_http",
+ *   title = @Translation("Stanford Course HTTP")
+ * )
  */
-class CoursesController extends ControllerBase {
-
-  /**
-   * GuzzleHttp\ClientInterface definition.
-   *
-   * @var \GuzzleHttp\ClientInterface
-   */
-  protected $httpClient;
-
-  /**
-   * Request stack service.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * Courses Dom Document.
-   *
-   * @var \DOMDocument
-   */
-  protected $courseDom;
-
-  /**
-   * Constructs a new CoursesController object.
-   */
-  public function __construct(ClientInterface $http_client, RequestStack $request_stack) {
-    $this->httpClient = $http_client;
-    $this->requestStack = $request_stack;
-    $this->courseDom = new \DOMDocument('1.0', 'UTF-8');
-    $this->setCourseDom();
-  }
+class CourseHttp extends Http {
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('http_client'),
-      $container->get('request_stack')
-    );
-  }
-
-  /**
-   * Get courses xml data.
-   *
-   * @return \Symfony\Component\HttpFoundation\Response
-   *   Xml response.
-   */
-  public function courses() {
-    $response = new Response();
-    // Max age of 2 hours.
-    $response->setMaxAge(2 * 60 * 60);
-    $response->headers->set('Content-Type', 'text/xml');
-    $response->setContent($this->courseDom->saveXML());
-    return $response;
-  }
-
-  /**
-   * Set the Course Dom Property after getting and cleaning the data.
-   *
-   * @throws \GuzzleHttp\Exception\GuzzleException
-   */
-  protected function setCourseDom() {
-    $url = $this->requestStack->getCurrentRequest()->get('feed');
-    if (!$url) {
-      return [];
-    }
-
-    $api_response = $this->httpClient->request('GET', $url);
-    $body = (string) $api_response->getBody();
+  public function getResponseContent($url) {
+    $response = $this->getResponse($url);
+    $body = $response->getBody();
 
     // The data from explorecourses.stanford.edu contains a ton of unwanted
-    // markup that shouldnt be in an xml source. So lets clean it up first.
+    // markup that shouldn't be in an xml source. So lets clean it up first.
     $body = preg_replace("/[\t\n\r]/", ' ', $body);
     $body = preg_replace("/[[:blank:]]+/", " ", $body);
     $body = str_replace('> ', ">", $body);
     $body = str_replace(' <', "<", $body);
 
-    $this->courseDom->loadXML($body);
-    $this->cleanCourses();
-    $this->setSectionGuids();
+    $data = new \DOMDocument('1.0', 'UTF-8');;
+    $data->loadXML($body);
+    $this->cleanCourses($data);
+    $this->setSectionGuids($data);
+
+    return $data->saveXML();
   }
 
   /**
    * Remove unwanted/unnecessary nodes.
    */
-  protected function cleanCourses() {
+  protected function cleanCourses($dom) {
     $remove_nodes = [
       'learningObjectives',
       'currentClassSize',
@@ -106,7 +60,7 @@ class CoursesController extends ControllerBase {
       'numWaitlist',
       'enrollStatus',
     ];
-    $xpath = new \DOMXPath($this->courseDom);
+    $xpath = new \DOMXPath($dom);
     foreach ($remove_nodes as $node) {
       $elements = $xpath->query("//$node");
       foreach ($elements as $element) {
@@ -123,8 +77,8 @@ class CoursesController extends ControllerBase {
    * a guid to identify it. This allows us to keep the migrate selector on the
    * sections/section.
    */
-  protected function setSectionGuids() {
-    $xpath = new \DOMXPath($this->courseDom);
+  protected function setSectionGuids($dom) {
+    $xpath = new \DOMXPath($dom);
     /* @var \SimpleXMLElement $all_sections [] */
     $all_sections = $xpath->query('//sections');
 

@@ -177,8 +177,6 @@ class CourseImporter extends ConfigFormBase {
       ->set('urls', $urls)
       ->save();
 
-    $this->state->set('hs_courses_importer.base_url', $base_url);
-
     // Clear migration discovery cache after saving.
     Cache::invalidateTags(['migration_plugins']);
 

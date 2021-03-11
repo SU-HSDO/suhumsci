@@ -29,7 +29,6 @@ class CourseImporterOverridesTest extends KernelTestBase {
    */
   protected function setUp():void {
     parent::setUp();
-    \Drupal::state()->set('hs_courses_importer.base_url', 'http://myurl.test');
     $this->config('hs_courses_importer.importer_settings')
       ->set('urls', ['http://explorecourses.stanford.edu/search?view=xml&q=abcdefg'])
       ->save();

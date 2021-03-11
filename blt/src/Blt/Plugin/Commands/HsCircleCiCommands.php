@@ -43,7 +43,6 @@ class HsCircleCiCommands extends BltTasks {
     }
     $sites = array_combine($sites[$batch], $sites[$batch]);
 
-    $failure = FALSE;
     foreach (array_rand($sites, self::SITES_TO_TEST) as $site) {
       $collection = $this->collectionBuilder();
       $this->prepEnvironment();
@@ -53,12 +52,8 @@ class HsCircleCiCommands extends BltTasks {
         ->option('group', 'existingSite', '='));
 
       if (!$collection->run()->wasSuccessful()) {
-        $failure = TRUE;
+        return new Result($collection, 1, 'Some tests failed');
       }
-    }
-
-    if ($failure) {
-      return new Result($collection, 1, 'Some tests failed');
     }
   }
 
@@ -210,9 +205,11 @@ class HsCircleCiCommands extends BltTasks {
     $tasks[] = $this->taskExecStack()->exec("chmod 777 -R $docroot/sites/");
     $tasks[] = $this->blt()->arg('drupal:update');
     $tasks[] = $this->taskDrush()
-      ->drush('pmu')
+      ->drush('pm:uninstall')
       ->arg('simplesamlphp_auth')
       ->option('yes');
+    $tasks[] = $this->taskDrush()
+      ->drush('cache:rebuild');
     return $tasks;
   }
 

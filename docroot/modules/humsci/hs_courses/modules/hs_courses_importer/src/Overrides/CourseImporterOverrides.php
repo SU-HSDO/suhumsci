@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\State\StateInterface;
 
 /**
  * Class CourseImporterOverrides.
@@ -22,13 +23,21 @@ class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
   protected $configFactory;
 
   /**
+   * Core state service.
+   *
+   * @var \Drupal\Core\State\StateInterface|null
+   */
+  protected $state;
+
+  /**
    * CourseImporterOverrides constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state = NULL) {
     $this->configFactory = $config_factory;
+    $this->state = $state;
   }
 
   /**
@@ -58,8 +67,11 @@ class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
    *   Local urls array.
    */
   protected function getMigrationUrls() {
+    if (!$this->state) {
+      return [];
+    }
     $importer_settings = $this->configFactory->get('hs_courses_importer.importer_settings');
-    $base_url = \Drupal::state()->get('hs_courses_importer.base_url');
+    $base_url = $this->state->get('hs_courses_importer.base_url');
     $urls = $importer_settings->getOriginal('urls', FALSE) ?: [];
 
     // Build the local urls with the feed source as a query parameter.

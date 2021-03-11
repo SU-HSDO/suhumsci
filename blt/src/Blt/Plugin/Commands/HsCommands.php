@@ -139,7 +139,7 @@ class HsCommands extends HsAcquiaApiCommands {
    * @aliases ds drupal:sync drupal:sync:default sync sync:refresh
    */
   public function sync(array $options = [
-    'partial' => FALSE,
+    'partial' => true,
     'sync-public-files' => FALSE,
     'sync-private-files' => FALSE,
   ]) {

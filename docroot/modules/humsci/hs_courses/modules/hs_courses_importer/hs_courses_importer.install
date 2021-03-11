@@ -31,7 +31,7 @@ function hs_courses_importer_update_8200() {
   $config = \Drupal::configFactory()
     ->getEditable('hs_courses_importer.importer_settings');
 
-  if ($base_url = $config->get('base_url')) {
+  if ($config->get('base_url')) {
     $config->clear('base_url')->save();
   }
 }

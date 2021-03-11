@@ -167,7 +167,6 @@ class CourseImporter extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    global $base_url;
 
     $urls = explode("\n", $form_state->getValue('urls'));
     foreach ($urls as &$url) {

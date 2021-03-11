@@ -34,6 +34,8 @@ class CourseImporterOverrides implements ConfigFactoryOverrideInterface {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory service.
+   * @param \Drupal\Core\State\StateInterface|null $state
+   *   Core state interface.
    */
   public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state = NULL) {
     $this->configFactory = $config_factory;

@@ -1,0 +1,26 @@
+{%- set attributes = attributes.addClass('hb-timeline-item') -%}
+
+{% if variant == 'open' %}
+  {% set attributes = attributes.setAttribute('open', 'open') %}
+{% endif %}
+
+<details{{ attributes }}>
+  <summary class="hb-timeline-item__summary">
+    <p class="hb-timeline-item__heading">
+      {{ summary }}
+    </p>
+    {% if subheading %}
+      <p class="hb-timeline-item__subheading">
+        {{ subheading }}
+      </p>
+    {% endif %}
+  </summary>
+
+  {% if description %}
+    <div class="hb-timeline-item__revealed-details">
+      <div class="hb-timeline-item__description">
+        {{ description }}
+      </div>
+    </div>
+  {% endif %}
+</details>

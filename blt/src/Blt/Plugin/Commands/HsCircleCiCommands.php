@@ -4,7 +4,6 @@ namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
 use Drupal\Core\Serialization\Yaml;
-use Robo\Result;
 use Symfony\Component\Finder\Finder;
 
 /**

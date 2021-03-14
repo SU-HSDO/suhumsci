@@ -1,16 +1,17 @@
-{%- set attributes = attributes.addClass('hb-timeline') -%}
+{% set attributes = attributes.addClass('hb-timeline') %}
 
-{# Figure out how to make this trigger timeline items open. What is the default state? #}
-{% if variant == 'open' %}
-  {% set attributes = attributes.setAttribute('open', 'open') %}
+{% if variant == 'collapsed' %}
+  {% set attributes = attributes.addClass('hb-timeline__collapsed') %}
 {% endif %}
 
-<div{{ attributes }}>
-  <div class="hb-timelime__wrapper">
+{% if variant == 'expanded' %}
+  {% set attributes = attributes.addClass('hb-timeline__expanded') %}
+{% endif %}
 
+<div {{ attributes }}>
+  <div class="hb-timelime__wrapper">
     {% if timeline %}
       {{ timeline }}
     {% endif %}
-
   </div>
 </div>

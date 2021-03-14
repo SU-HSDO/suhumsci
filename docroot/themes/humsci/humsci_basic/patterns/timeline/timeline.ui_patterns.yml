@@ -4,20 +4,17 @@ timeline:
     add-expand-collapse:
       label: "Add Expand/Collapse"
       type: boolean
-      preview: ""
+      description: When checked (true) all timeline items are collapsed on page load.
+      preview: TRUE
     timeline:
       label: "Timeline"
       type: text
       preview: ""
   variants:
-    open:
-       label: Open (Default)
-       description: All timeline items are open on page load.
-    closed:
-       label: Closed
-       description: All timeline items are closed on page load.
-  libraries:
-    - accordion:
-        dependencies:
-          - core/drupal.collapse
+    expanded:
+       label: Expanded (Default)
+       description: All timeline items are expanded (open) on page load.
+    collapsed:
+       label: Collapsed
+       description: All timeline items are collapsed (closed) on page load.
   use: "@humsci_basic/timeline/timeline.html.twig"

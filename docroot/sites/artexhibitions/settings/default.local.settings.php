@@ -5,21 +5,19 @@
  * Local development override configuration feature.
  */
 
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Component\Assertion\Handle;
 
-$db_name = '${drupal.db.database}';
-if (isset($acsf_site_name)) {
-  $db_name .= '_' . $acsf_site_name;
-}
+$db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
 
 /**
  * Database configuration.
  */
-$databases = array(
+$databases = [
   'default' =>
-  array(
+  [
     'default' =>
-    array(
+    [
       'database' => $db_name,
       'username' => '${drupal.db.username}',
       'password' => '${drupal.db.password}',
@@ -28,15 +26,13 @@ $databases = array(
       'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
       'driver' => 'mysql',
       'prefix' => '',
-    ),
-  ),
-);
-
-$dir = dirname(DRUPAL_ROOT);
+    ],
+  ],
+];
 
 // Use development service parameters.
-$settings['container_yamls'][] = $dir . '/docroot/sites/development.services.yml';
-$settings['container_yamls'][] = $dir . '/docroot/sites/blt.development.services.yml';
+$settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
+$settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/blt.development.services.yml';
 
 // Allow access to update.php.
 $settings['update_free_access'] = TRUE;
@@ -108,18 +104,17 @@ $settings['extension_discovery_scan_tests'] = FALSE;
 /**
  * Configure static caches.
  *
- * Note: you should test with the config, bootstrap, and discovery caches enabled to 
- * test that metadata is cached as expected. However, in the early stages of development,
- * you may want to disable them. Overrides to these bins must be explicitly set for each 
- * bin to change the default configuration provided by Drupal core in core.services.yml. 
+ * Note: you should test with the config, bootstrap, and discovery caches
+ * enabled to test that metadata is cached as expected. However, in the early
+ * stages of development, you may want to disable them. Overrides to these bins
+ * must be explicitly set for each bin to change the default configuration
+ * provided by Drupal core in core.services.yml.
  * See https://www.drupal.org/node/2754947
  */
 
- // $settings['cache']['bins']['bootstrap'] = 'cache.backend.null';
- // $settings['cache']['bins']['discovery'] = 'cache.backend.null';
- // $settings['cache']['bins']['config'] = 'cache.backend.null';
-
-
+// $settings['cache']['bins']['bootstrap'] = 'cache.backend.null';
+// $settings['cache']['bins']['discovery'] = 'cache.backend.null';
+// $settings['cache']['bins']['config'] = 'cache.backend.null';
 /**
  * Enable access to rebuild.php.
  *
@@ -131,32 +126,35 @@ $settings['extension_discovery_scan_tests'] = FALSE;
 $settings['rebuild_access'] = FALSE;
 
 /**
- * Temporary file path:
+ * Skip file system permissions hardening.
  *
- * A local file system path where temporary files will be stored. This
- * directory should not be accessible over the web.
- *
- * Note: Caches need to be cleared when this value is changed.
- *
- * See https://www.drupal.org/node/1928898 for more information
- * about global configuration override.
+ * The system module will periodically check the permissions of your site's
+ * site directory to ensure that it is not writable by the website user. For
+ * sites that are managed with a version control system, this can cause problems
+ * when files in that directory such as settings.php are updated, because the
+ * user pulling in the changes won't have permissions to modify files in the
+ * directory.
  */
-$config['system.file']['path']['temporary'] = '/tmp';
+$settings['skip_permissions_hardening'] = TRUE;
 
 /**
- * Private file path.
+ * Files paths.
  */
-$settings['file_private_path'] = $dir . '/files-private';
-if (isset($acsf_site_name)) {
-  $settings['file_public_path'] = "sites/default/files/$acsf_site_name";
-  $settings['file_private_path'] = "$repo_root/files-private/$acsf_site_name";
-}
+$settings['file_private_path'] = EnvironmentDetector::getRepoRoot() . '/files-private/default';
+/**
+ * Site path.
+ *
+ * @var $site_path
+ * This is always set and exposed by the Drupal Kernel.
+ */
+// phpcs:ignore
+$settings['file_public_path'] = 'sites/' . EnvironmentDetector::getSiteName($site_path) . '/files';
 
 /**
  * Trusted host configuration.
  *
  * See full description in default.settings.php.
  */
-$settings['trusted_host_patterns'] = array(
+$settings['trusted_host_patterns'] = [
   '^.+$',
-);
+];

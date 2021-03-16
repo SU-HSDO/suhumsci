@@ -14,11 +14,9 @@ To set up your local environment and begin developing for this project, refer to
 
 1. Clone the repository and check out the develop branch.
 1. Run a `composer install --prefer-source` answer yes to any questions during this step.
-1. Run `blt local:setup` and answer the questions to configure your database settings.
-1. Run `blt humsci:keys` to obtain necessary encryption keys.
-1. If you would like a clean installation run `blt drupal:install --site=[sitename]`.
-1. A full sync from a site should be accomplished with `blt drupal:sync --sync-files --site=[sitename]`
-1. If you plan to use drupal console, and `drupal` produces an error, try the steps found on [this comment](https://github.com/hechoendrupal/drupal-console/issues/3302#issuecomment-306590885)
+1. Run `blt humsci:local:setup` and answer the questions to configure your database settings.
+1. If you would like a clean installation run `blt drupal:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
+1. A full sync from a site should be accomplished with `blt drupal:sync --site=[sitename]`
 
 ## Builds
 

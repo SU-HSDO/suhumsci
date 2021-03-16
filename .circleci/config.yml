@@ -20,20 +20,24 @@ add_known_hosts: &add_known_hosts
 ## Defines images and working directory.
 defaults: &defaults
   docker:
-    - image: pookmish/drupal8ci@sha256:062f825bee8534022e3e0e6922898d8b985ba37ecfbe4086f85c705d82c5697d
+    - image: pookmish/drupal8ci:pcov
     - image: selenium/standalone-chrome:latest
-    - image: mariadb:10.3
+    - image: circleci/mysql:5.7
       environment:
+        MYSQL_DATABASE: drupal
+        MYSQL_USER: drupal
+        MYSQL_PASSWORD: drupal
         MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      command: ['--max-allowed-packet=67108864']
   working_directory: /var/www/html
 
 ## Defines the cache restoring mechanism.
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - v10-dependencies-{{ checksum "composer.lock" }}
+    - v11-dependencies-{{ checksum "composer.lock" }}
     # fallback to using the latest cache if no exact match is found
-    - v10-dependencies-
+    - v11-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -43,90 +47,78 @@ save_cache: &save_cache
     - ./docroot/core
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
-  key: v10-dependencies-{{ checksum "composer.lock" }}
+  key: v11-dependencies-{{ checksum "composer.lock" }}
 
+disable_telemetry: &disable_telemetry
+  run:
+    name: Disable Telemetry
+    command: vendor/bin/blt blt:telemetry:disable --no-interaction
 #Jobs
 
 directory_setup: &directory_setup
   <<: *defaults
   steps:
-#    - *add_ssh
-#    - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
     - run:
         name: Composer setup
         command: |
           composer install --optimize-autoloader --no-interaction
+          vendor/bin/blt blt:telemetry:disable --no-interaction
+          vendor/bin/blt settings --no-interaction
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .
         paths:
           - .
 
-### Job to run the update path and Behat tests.
-behat_tests_first: &behat_tests_first
+### Job to run the update path and Codeception tests.
+acceptance_first: &acceptance_first
   <<: *defaults
   steps:
     - *add_ssh
     - *add_known_hosts
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
-        name: Run Behat tests
-        command: vendor/bin/blt circleci:behat:first
+        name: Run Acceptance tests
+        command: vendor/bin/blt circleci:codeception 0
     - store_test_results:
-        path: /var/www/html/artifacts/behat
+        path: /var/www/html/artifacts
     - store_artifacts:
         path: /var/www/html/artifacts
 
-### Job to run the update path and Behat tests.
-behat_tests_second: &behat_tests_second
+### Job to run the update path and Codeception tests.
+acceptance_second: &acceptance_second
   <<: *defaults
   steps:
     - *add_ssh
     - *add_known_hosts
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
-        name: Run Behat tests
-        command: vendor/bin/blt circleci:behat:second
+        name: Run Acceptance tests
+        command: vendor/bin/blt circleci:codeception 1
     - store_test_results:
-        path: /var/www/html/artifacts/behat
+        path: /var/www/html/artifacts
     - store_artifacts:
         path: /var/www/html/artifacts
 
 ## Job to run Unit and Kernel tests.
-fresh_install_tests: &fresh_install_tests
+acceptance: &acceptance
   <<: *defaults
   steps:
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
-        name: Run PHPUnit tests
-        command: vendor/bin/blt circleci:phpunit
-    - run:
-        name: Generate code coverage report
-        command: vendor/bin/blt circleci:behat:install
+        name: Run installation Acceptance tests
+        command: vendor/bin/blt circleci:codeception
     - store_test_results:
         path: /var/www/html/artifacts/phpunit
     - store_artifacts:
-        path: /var/www/html/artifacts
-
-## Job to check test coverage.
-code_coverage: &code_coverage
-  <<: *defaults
-  steps:
-    - attach_workspace:
-        at: .
-    - run: composer require pcov/clobber --dev
-    - run: vendor/bin/pcov clobber
-    - run:
-        name: Generate code coverage report
-        command: vendor/bin/blt circleci:phpunit:coverage
-    - store_artifacts:
-        path: /var/www/html/artifacts/coverage
-    - store_test_results:
         path: /var/www/html/artifacts
 
 ## Job to deploy the current branch to Acquia hosting using BLT.
@@ -137,6 +129,7 @@ deploy_branch: &deploy_branch
     - *add_known_hosts
     - attach_workspace:
         at: .
+    - *disable_telemetry
     - run:
         name: Deploying branch to Acquia
         command: |
@@ -153,6 +146,7 @@ deploy_tag: &deploy_tag
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
+    - *disable_telemetry
     - run:
         name: Deploying Tag to Acquia
         command: |
@@ -170,6 +164,7 @@ update_dependencies: &update_dependencies
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
+    - *disable_telemetry
     - run:
         name: Update dependencies
         no_output_timeout: 30m
@@ -187,6 +182,7 @@ update_certs: &update_certs
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
+    - *disable_telemetry
     - run:
         name: Update Prod SSL Certs
         command: |
@@ -200,14 +196,12 @@ jobs:
     <<: *update_dependencies
   run-setup:
     <<: *directory_setup
-  run-behat-tests-first:
-    <<: *behat_tests_first
-  run-behat-tests-second:
-    <<: *behat_tests_second
-  run-fresh-install-tests:
-    <<: *fresh_install_tests
-  run-code-coverage:
-    <<: *code_coverage
+  run-acceptance-first:
+    <<: *acceptance_first
+  run-acceptance-second:
+    <<: *acceptance_second
+  run-acceptance:
+    <<: *acceptance
   run-deploy-branch:
     <<: *deploy_branch
   run-deploy-tag:
@@ -233,25 +227,21 @@ workflows:
   test_lint_deploy:
     jobs:
       - run-setup
-      - run-behat-tests-first:
+      - run-acceptance-first:
           requires:
             - run-setup
-      - run-behat-tests-second:
+      - run-acceptance-second:
           requires:
             - run-setup
-      - run-fresh-install-tests:
-          requires:
-            - run-setup
-      - run-code-coverage:
+      - run-acceptance:
           requires:
             - run-setup
       # If the above jobs complete successfully, deploy the branch.
       - run-deploy-branch:
           requires:
-            - run-behat-tests-first
-            - run-behat-tests-second
-            - run-fresh-install-tests
-            - run-code-coverage
+            - run-acceptance-first
+            - run-acceptance-second
+            - run-acceptance
   dependency_updates:
     triggers:
       - schedule:

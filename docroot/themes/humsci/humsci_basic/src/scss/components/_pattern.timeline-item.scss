@@ -1,0 +1,82 @@
+// styles for a single item in a timeline
+// TODO: adjust line-height and spacing for Colorful & Traditional themes
+
+.hb-timeline-item {
+  // border-bottom: $hb-thin-border;
+  // @include hb-global-color('border-color', 'gray-medium');
+  position: relative;
+  margin: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: calc(100% - 20px);
+    width: 4px;
+    @include hb-pairing-color('background-color', 'primary');
+    left: 1rem;
+    bottom: hb-calculate-rems(-4px);
+  }
+
+  .ptype-hs-timeline-item:last-of-type & {
+    &::before {
+      height: 0; // remove the vertical pipe that connects timeline items from the last item
+    }
+  }
+
+  &__summary {
+    padding-bottom: hb-spacing-width('xs');
+    line-height: 150%;
+    list-style-type: none; // will hide the marker
+  }
+
+  &__revealed-details {
+    padding-bottom: hb-spacing-width('sm');
+  }
+
+  &__heading {
+    @include hb-pairing-color('color', 'primary');
+    font-size: hb-calculate-rems(18px);
+    font-weight: hb-theme-font-weight('bold');
+    padding: 0 hb-calculate-rems(32px);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      @include hb-icon-background('timeline-circle', 'primary');
+      background-repeat: no-repeat;
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(24px);
+      top: hb-calculate-rems(2px);
+      left: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      @include hb-icon-background('timeline-toggle', 'primary'); // TODO: flip toggle when collapsed
+      background-repeat: no-repeat;
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(12px);
+      top: hb-calculate-rems(12px);
+      right: 0;
+    }
+
+    .hb-timeline__expanded & {
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  &__subheading {
+    font-style: italic;
+    padding: 0 hb-calculate-rems(32px);
+  }
+
+  &__description {
+    font-size: hb-calculate-rems(16px);
+    line-height: 127%;
+    padding: 0 hb-calculate-rems(32px);
+  }
+}

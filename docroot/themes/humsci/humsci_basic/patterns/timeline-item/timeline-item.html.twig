@@ -9,13 +9,13 @@
 {% if description %}
   <details {{ attributes }} open>
     <summary class="hb-timeline-item__summary" aria-expanded="true" aria-pressed="true">
-      <p class="hb-timeline-item__heading">
+      <div class="hb-timeline-item__heading">
         {{ summary }}
-      </p>
+      </div>
       {% if subheading %}
-        <p class="hb-timeline-item__subheading">
+        <div class="hb-timeline-item__subheading">
           {{ subheading }}
-        </p>
+        </div>
       {% endif %}
     </summary>
 
@@ -26,6 +26,17 @@
     </div>
   </details>
 {% else %}
-  {{ summary }}
-  {{ subheading }}
+  <div {{ attributes }}>
+    <div class="hb-timeline-item__summary">
+      <div class="hb-timeline-item__heading">
+        {{ summary }}
+      </div>
+      {% if subheading %}
+        <div class="hb-timeline-item__subheading">
+          {{ subheading }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
 {% endif %}

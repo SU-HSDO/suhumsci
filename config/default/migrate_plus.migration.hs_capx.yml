@@ -247,11 +247,15 @@ process:
       plugin: sub_process
       process:
         uri:
-          plugin: str_replace
-          source: url
-          search: '/^(?![a-z][a-z0-9]*:\/\/).*?$/i'
-          replace: ''
-          regex: true
+          -
+            plugin: str_replace
+            source: url
+            search: '/^(?![a-z][a-z0-9]*:\/\/).*?$/i'
+            replace: ''
+            regex: true
+          -
+            plugin: url_check
+            method: process
         title: label/text
   field_hs_person_education:
     -
@@ -282,7 +286,14 @@ process:
       bundle: hs_person_department
       value_key: name
       ignore_case: true
-  field_hs_person_cv_link/uri: cv_document
+  field_hs_person_cv_link/uri:
+    -
+      plugin: skip_on_empty
+      source: cv_document
+      method: process
+    -
+      plugin: url_check
+      method: process
   field_hs_person_cv_link/title: cv_title
   square_image_path:
     plugin: concat

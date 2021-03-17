@@ -136,3 +136,34 @@ function su_humsci_profile_post_update_8280() {
   $field->set('settings', $settings);
   $field->save();
 }
+
+/**
+ * Disable the stanford gallery until styling is done.
+ */
+function su_humsci_profile_post_update_8290() {
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->load('node.hs_basic_page.field_hs_page_components');
+  $settings = $field->getSettings();
+  $settings['handler_settings']['target_bundles']['stanford_gallery'] = 'stanford_gallery';
+  $settings['handler_settings']['target_bundles_drag_drop']['stanford_gallery'] = [
+    'enabled' => TRUE,
+    'weight' => 99,
+  ];
+  $field->set('settings', $settings);
+  $field->save();
+
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->load('paragraph.hs_row.field_hs_row_components');
+  $settings = $field->getSettings();
+  $settings['handler_settings']['target_bundles']['stanford_gallery'] = 'stanford_gallery';
+  $settings['handler_settings']['target_bundles_drag_drop']['stanford_gallery'] = [
+    'enabled' => TRUE,
+    'weight' => 99,
+  ];
+  $field->set('settings', $settings);
+  $field->save();
+}

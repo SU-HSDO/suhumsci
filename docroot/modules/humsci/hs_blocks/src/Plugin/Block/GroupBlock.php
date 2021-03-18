@@ -13,7 +13,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
-use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
@@ -114,7 +113,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['machine_name' => NULL, 'children' => [], 'class' => NULL];
+    return ['uuid' => NULL, 'children' => [], 'class' => NULL];
   }
 
   /**
@@ -134,6 +133,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   public function build() {
     $build = [];
+
     $build['components'] = $this->getComponents((bool) $this->getSectionStorage());
     // Set the cache keys so that each block will have its own cache, even if
     // it has the same machine name on different entity displays.
@@ -172,6 +172,13 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     // Build the render array for each component.
     foreach ($this->configuration['children'] as $uuid => $child) {
       $component = new SectionComponent($uuid, 'content', $child);
+
+      if (!empty($child['additional'])) {
+        foreach ($child['additional'] as $key => $value) {
+          $component->set($key, $value);
+        }
+      }
+
       $components[$uuid] = $component->toRenderArray($contexts);
     }
 
@@ -199,7 +206,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
             'section_storage_type' => $section_storage->getStorageType(),
             'section_storage' => $section_storage->getStorageId(),
             'delta' => $section_delta,
-            'group' => $this->configuration['machine_name'],
+            'group' => $this->configuration['uuid'],
             'uuid' => $uuid,
           ],
         ],
@@ -210,7 +217,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       'section_storage_type' => $section_storage->getStorageType(),
       'section_storage' => $section_storage->getStorageId(),
       'delta' => $section_delta,
-      'group' => $this->configuration['machine_name'],
+      'group' => $this->configuration['uuid'],
     ];
 
     // Build a contextual id that won't generate errors from ajax.
@@ -218,7 +225,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
     // Use contextual link data attributes so that layout builder doesn't
     // disable the link from being clicked.
     // @see behaviors.layoutBuilderDisableInteractiveElements() in layout-builder.js
-    $contextual_id = $this->configuration['machine_name'] . ':' . http_build_query($route_params) . ':langcode=en';
+    $contextual_id = $this->configuration['uuid'] . ':' . http_build_query($route_params) . ':langcode=en';
     // Generate a token that matches the contextual id.
     // @see \Drupal\contextual\ContextualController::render()
     $contextual_token = Crypt::hmacBase64($contextual_id, Settings::getHashSalt() . $this->privateKey);
@@ -259,21 +266,10 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Section delta.
    */
   protected function getSectionDelta(SectionStorageInterface $section_storage) {
-    $delta = 0;
-
-    /** @var \Drupal\layout_builder\Section $section */
-    foreach ($section_storage->getSections() as $section) {
-      foreach ($section->getComponents() as $component) {
-        $component_config = $component->get('configuration');
-        [$component_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
-
-        // We found the delta, so send it back.
-        if ($component_id == 'group_block' && isset($component_config['machine_name']) && $component_config['machine_name'] == $this->configuration['machine_name']) {
-          return $delta;
-        }
+    foreach ($section_storage->getSections() as $delta => $section) {
+      if (array_key_exists($this->configuration['uuid'], $section->getComponents())) {
+        return $delta;
       }
-
-      $delta++;
     }
   }
 
@@ -296,21 +292,9 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
-    // Set the machine name to a uuid value only if its a new block.
-    if (!$form_state->getErrors() && empty($this->configuration['machine_name'])) {
-      $this->setUniqueUuid();
-    }
+    $this->configuration['uuid'] = $form_state->get('layout_builder__component')
+      ->getUuid();
     $this->configuration['class'] = $form_state->getValue('class');
-  }
-
-  /**
-   * Set the current block to a unique UUID within the current section storage.
-   */
-  protected function setUniqueUuid() {
-    $this->configuration['machine_name'] = $this->uuidGenerator->generate();
-    while (!is_null($this->getSectionDelta($this->getSectionStorage()))) {
-      $this->configuration['machine_name'] = $this->uuidGenerator->generate();
-    }
   }
 
 }

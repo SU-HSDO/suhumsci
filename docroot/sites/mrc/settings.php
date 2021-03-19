@@ -780,7 +780,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-$settings['config_sync_directory'] =  = '../config/mrc';
+$settings['config_sync_directory'] = '../config/mrc';
 
 /**
  * IMPORTANT.

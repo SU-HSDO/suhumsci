@@ -3,7 +3,7 @@
  * Macro for creating nested menus in the main navigation.
  */
 #}
-{% macro nav_menu(items, menu_level, class_prefix) %}
+{% macro nav_menu(items, menu_level, class_prefix, parents) %}
   {% import _self as menus %}
   <ul class="{{ class_prefix }}__menu {{ class_prefix }}__menu-lv{{ menu_level }}">
   {% for item in items %}
@@ -23,7 +23,6 @@
     {% else %}
       {% set link_attributes = link_attributes.setAttribute('href', item.url|render) %}
     {% endif %}
-
 
     {# Item Attributes #}
     {% set list_attributes = create_attribute() %}
@@ -51,7 +50,7 @@
 
         {% if item.below %}
           <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
-            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix) }}
+            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix, parents|merge([loop.index])) }}
           </div>
         {% endif %}
       {% else %}
@@ -62,11 +61,11 @@
         {{ link(item.title, item.url, link_attributes) }}
 
         {% if item.below %}
-          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true">
+          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}" aria-expanded="true">
             Toggle {{ item.title }}
           </button>
-          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
-            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix) }}
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}">
+            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix, parents|merge([loop.index])) }}
           </div>
         {% endif %}
       {% endif %}

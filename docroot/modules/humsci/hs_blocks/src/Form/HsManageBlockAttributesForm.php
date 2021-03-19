@@ -50,7 +50,7 @@ class HsManageBlockAttributesForm extends ManageComponentAttributesForm {
     $item_config = $parent_config['children'][$uuid];
 
     $component = new SectionComponent($uuid, 'content', $item_config);
-    foreach($item_config['additional'] as $key => $value){
+    foreach ($item_config['additional'] as $key => $value) {
       $component->set($key, $value);
     }
 

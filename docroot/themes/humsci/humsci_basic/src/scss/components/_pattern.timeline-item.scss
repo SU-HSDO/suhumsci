@@ -1,5 +1,6 @@
 // styles for a single item in a timeline
 .ptype-hs-timeline-item {
+  @include clearfix;
   position: relative;
 
   &::before {
@@ -14,6 +15,10 @@
 
   &:last-of-type::before {
     height: 0; // remove the vertical pipe that connects timeline items from the last item
+  }
+
+  .field-hs-row-components[class*="counted-items-"] & {
+    margin-bottom: 0 !important;
   }
 }
 
@@ -108,8 +113,15 @@
 
   &__description {
     font-size: hb-calculate-rems(16px);
-    line-height: 127%;
     padding: 0 hb-calculate-rems(32px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      line-height: 128%;
+    }
+
+    @include hb-traditional {
+      line-height: 124%;
+    }
   }
 }
 

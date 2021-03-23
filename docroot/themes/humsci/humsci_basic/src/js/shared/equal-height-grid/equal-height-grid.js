@@ -12,22 +12,18 @@ const equalHeightGrid = (elements) => {
       return array.indexOf(height) == index;
     });
 
-    // If there is only 1 unique value, then all elements are the same height,
-    // and in that case, we don't need to change the height at all
-    if (uniqueHeights.length > 1) {
-      return new Promise((resolve, reject) => {
-        const maxHeight = Math.max.apply(null, elementHeights);
-        const tallestElementIndex = elementHeights.indexOf(maxHeight);
+    return new Promise((resolve, reject) => {
+      const maxHeight = Math.max.apply(null, elementHeights);
+      const tallestElementIndex = elementHeights.indexOf(maxHeight);
 
-        Array.prototype.forEach.call(elements, (el, index) => {
-          // Ignore the tallest element as it is already set to the right height
-          if (index != tallestElementIndex) {
-            el.style.minHeight =`${maxHeight}px`;
-          }
-        });
-      resolve();
+      Array.prototype.forEach.call(elements, (el, index) => {
+        // Ignore the tallest element as it is already set to the right height
+        if (index != tallestElementIndex) {
+          el.style.minHeight =`${maxHeight}px`;
+        }
       });
-    }
+    resolve();
+    });
   }
 }
 

@@ -34,7 +34,7 @@ class HsCommands extends HsAcquiaApiCommands {
     $domain = $this->askDefault('Local Site Domain?', "docroot.$dir.loc");
 
     $data = [
-      'project' => ['local' => ['uri' => $domain]],
+      'project' => ['local' => ['uri' => $domain, 'hostname' => $domain]],
       'drupal' => [
         'db' => [
           'database' => $db_name,

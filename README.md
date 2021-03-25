@@ -27,6 +27,16 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 
 ## Testing
 
+### Codeception
+Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is
+very good documentation on codeception testing steps and how that is structured. To run those tests locally, `blt` will
+be the wrapper around the codeception commands.
+- To run codeception first uninstall the SimpleSaml module `drush pmu simplesamlphp_auth -y`
+- `blt codeception` will run all acceptance tests.
+- `blt codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most
+  effective method to run a single test.
+
+### SASS
 - `npm test` - Run linting for all Sass in the project (including humsci_basic).
 
 ## Other documentation

@@ -292,8 +292,10 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
-    $this->configuration['uuid'] = $form_state->get('layout_builder__component')
-      ->getUuid();
+    if (empty($this->configuration['uuid']) && $form_state->get('layout_builder__component')) {
+      $this->configuration['uuid'] = $form_state->get('layout_builder__component')
+        ->getUuid();
+    }
     $this->configuration['class'] = $form_state->getValue('class');
   }
 

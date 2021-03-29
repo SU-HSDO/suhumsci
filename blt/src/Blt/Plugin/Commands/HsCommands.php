@@ -15,6 +15,13 @@ if (!trait_exists('Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait')) {
 class HsCommands extends HsAcquiaApiCommands {
 
   /**
+   * List of failed databases from the sync command.
+   *
+   * @var array
+   */
+  protected $failedDatabases = [];
+
+  /**
    * Set up local blt settings and necessary files.
    *
    * @command humsci:local:setup
@@ -261,7 +268,7 @@ class HsCommands extends HsAcquiaApiCommands {
 
     while (!empty($sites)) {
       echo '.';
-      sleep(30);
+      sleep(10);
       $finished_databases = $this->getCompletedDatabaseCopies($task_started);
 
       if ($finished = array_intersect($copy_sites, $finished_databases)) {
@@ -278,6 +285,10 @@ class HsCommands extends HsAcquiaApiCommands {
       }
     }
     $this->yell("$count database have been copied to staging.");
+
+    if (array_unique($this->failedDatabases)) {
+      $this->yell('Databases failed: ' . implode(', ', array_unique($this->failedDatabases)), 40, 'red');
+    }
   }
 
   /**
@@ -326,13 +337,33 @@ class HsCommands extends HsAcquiaApiCommands {
       if (
         isset($notification->event) &&
         $notification->event == 'DatabaseCopied' &&
-        $notification->status == 'completed' &&
         strtotime($notification->created_at) >= $time_comparison
       ) {
-        $databases = array_merge($databases, $notification->context->database->names);
+        if ($notification->status == 'completed') {
+          $databases = array_merge($databases, $notification->context->database->names);
+        }
+        else {
+          $this->failedDatabases = array_merge($this->failedDatabases, $notification->context->database->names);
+        }
       }
     }
     return array_values(array_unique($databases));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected function connectAcquiaApi() {
+    if (!$this->acquiaApplications) {
+      parent::connectAcquiaApi();
+      return;
+    }
+    try {
+      $this->acquiaApplications->getAll();
+    }
+    catch (\Exception $e) {
+      parent::connectAcquiaApi();
+    }
   }
 
   /**

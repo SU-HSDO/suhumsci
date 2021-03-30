@@ -19,7 +19,7 @@ class CourseTagDeleteFormTest extends HsCoursesImporterTestBase {
    */
   public function testForm() {
     /** @var \Drupal\hs_courses_importer\Form\CourseTagDeleteForm $form_object */
-    $form_object = $this->entityManager->getFormObject('hs_course_tag', 'delete');
+    $form_object = $this->entityTypeManager->getFormObject('hs_course_tag', 'delete');
     $form_object->setEntity($this->courseTag);
     $this->assertEquals("Are you sure you want to delete {$this->courseTag->label()}?", strip_tags($form_object->getQuestion()
       ->render()));

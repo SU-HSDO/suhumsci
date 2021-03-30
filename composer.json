@@ -125,7 +125,6 @@
     ],
     "require": {
         "acquia/blt": "^12.0",
-        "acquia/blt-drupal-test": "^1.0",
         "acquia/blt-simplesamlphp": "dev-master",
         "ckeditor-plugin/liststyle": "4.14.0",
         "composer/installers": "^1.9",
@@ -246,6 +245,8 @@
         "su-sws/stanford_text_editor": "^8.1"
     },
     "require-dev": {
+        "acquia/blt-drupal-test": "^1.0",
+        "phpspec/prophecy-phpunit": "^2.0",
         "raveren/kint": "^3.1",
         "su-sws/blt-sws": "dev-main",
         "su-sws/drupal-dev": "^8.2"
@@ -389,6 +390,15 @@
     "autoload": {
         "psr-4": {
             "Humsci\\": "blt/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\Tests\\hs_basic_page\\": "docroot/modules/humsci/hs_basic_page/tests",
+            "Drupal\\Tests\\hs_bugherd\\": "docroot/modules/humsci/hs_bugherd/tests",
+            "Drupal\\Tests\\hs_courses_importer\\": "docroot/modules/humsci/hs_courses/modules/hs_courses_importer/tests",
+            "Drupal\\Tests\\hs_field_helpers\\": "docroot/modules/humsci/hs_field_helpers/tests",
+            "Drupal\\Tests\\hs_table_filter\\": "docroot/modules/humsci/hs_table_filter/tests"
         }
     }
 }

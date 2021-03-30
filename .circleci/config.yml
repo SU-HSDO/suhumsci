@@ -117,9 +117,24 @@ acceptance: &acceptance
         name: Run installation Acceptance tests
         command: vendor/bin/blt circleci:codeception
     - store_test_results:
-        path: /var/www/html/artifacts/phpunit
+        path: /var/www/html/artifacts
     - store_artifacts:
         path: /var/www/html/artifacts
+
+phpunit_coverage: &phpunit_coverage
+  <<: *defaults
+  steps:
+    - attach_workspace:
+        at: .
+    - *disable_telemetry
+    - run:
+        name: Run PHPUnit Coverage Tests
+        command: |
+          vendor/bin/blt tests:phpunit:coverage --no-interaction
+    - store_test_results:
+        path: artifacts/phpunit
+    - store_artifacts:
+        path: artifacts/phpunit
 
 ## Job to deploy the current branch to Acquia hosting using BLT.
 deploy_branch: &deploy_branch
@@ -202,6 +217,8 @@ jobs:
     <<: *acceptance_second
   run-acceptance:
     <<: *acceptance
+  run-code-coverage:
+    <<: *phpunit_coverage
   run-deploy-branch:
     <<: *deploy_branch
   run-deploy-tag:
@@ -234,6 +251,9 @@ workflows:
           requires:
             - run-setup
       - run-acceptance:
+          requires:
+            - run-setup
+      - run-code-coverage:
           requires:
             - run-setup
       # If the above jobs complete successfully, deploy the branch.

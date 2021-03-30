@@ -112,9 +112,15 @@ sync:
   commands:
     - 'blt:init:settings'
 tests:
+  phpunit:
+    - # Run all tests in the H&S modules directory.
+      path: '${docroot}'
+      config: ${docroot}/core/phpunit.xml
+      directory: ${docroot}/modules/humsci
+      bootstrap: ${docroot}/core/tests/bootstrap.php
+      filter: '/(Unit|Kernel)/'
   reports:
     localDir: '${repo.root}/artifacts'
-    coveragePass: 90
   codeception:
     stanford_profile: { suites: [acceptance, functional], directory: '${docroot}/profiles/humsci/su_humsci_profile/tests/codeception' }
 keys_rsync:

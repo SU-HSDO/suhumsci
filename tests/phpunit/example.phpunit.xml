@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
 <!-- PHPUnit expects functional tests to be run with either a privileged user
  or your current system user. See core/tests/README.md and
  https://www.drupal.org/node/2116263 for details.
 -->
-<phpunit bootstrap="tests/bootstrap.php" colors="true"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="true" beStrictAboutTestsThatDoNotTestAnything="true" beStrictAboutOutputDuringTests="true" beStrictAboutChangesToGlobalState="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage includeUncoveredFiles="true">
+    <include>
+      <directory>../modules/custom</directory>
+    </include>
+    <exclude>
+      <directory suffix=".post_update.php">../modules/custom/*</directory>
+      <directory>../modules/custom/*/tests</directory>
+      <directory>../modules/custom/*/modules/*/tests</directory>
+    </exclude>
+  </coverage>
   <!-- set printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter" once
    https://youtrack.jetbrains.com/issue/WI-24808 is resolved. Drupal provides a
    result printer that links to the html output results for functional tests.
@@ -57,14 +63,4 @@
     <!--<listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">-->
     <!--</listener>-->
   </listeners>
-  <filter>
-    <whitelist addUncoveredFilesFromWhitelist="true">
-      <directory>../modules/custom</directory>
-      <exclude>
-        <directory suffix=".post_update.php">../modules/custom/*</directory>
-        <directory>../modules/custom/*/tests</directory>
-        <directory>../modules/custom/*/modules/*/tests</directory>
-      </exclude>
-    </whitelist>
-  </filter>
 </phpunit>

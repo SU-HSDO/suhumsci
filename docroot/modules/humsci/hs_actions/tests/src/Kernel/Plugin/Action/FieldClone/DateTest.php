@@ -61,7 +61,7 @@ class DateTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->currentDate = new \DateTime();
 
@@ -190,12 +190,12 @@ class DateTest extends KernelTestBase {
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $pre_render = $view_builder->view($this->node);
     $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
-    $this->assertContains('June 2, 2019 2:15 AM', (string) $rendered_output);
+    $this->assertStringContainsString('June 2, 2019 2:15 AM', (string) $rendered_output);
 
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $pre_render = $view_builder->view($new_node);
     $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
-    $this->assertContains('December 2, 2019 2:15 AM', (string) $rendered_output);
+    $this->assertStringContainsString('December 2, 2019 2:15 AM', (string) $rendered_output);
   }
 
   /**
@@ -227,12 +227,12 @@ class DateTest extends KernelTestBase {
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $pre_render = $view_builder->view($this->node);
     $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
-    $this->assertContains('December 2, 2019 3:15 AM', (string) $rendered_output);
+    $this->assertStringContainsString('December 2, 2019 3:15 AM', (string) $rendered_output);
 
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $pre_render = $view_builder->view($new_node);
     $rendered_output = \Drupal::service('renderer')->renderPlain($pre_render);
-    $this->assertContains('June 2, 2020 3:15 AM', (string) $rendered_output);
+    $this->assertStringContainsString('June 2, 2020 3:15 AM', (string) $rendered_output);
   }
 
 }

@@ -43,7 +43,7 @@ class CourseImporterTest extends HsCoursesImporterTestBase implements ServiceMod
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->formBuilder = $this->container->get('form_builder');
     $client = $this->prophesize(Client::class);

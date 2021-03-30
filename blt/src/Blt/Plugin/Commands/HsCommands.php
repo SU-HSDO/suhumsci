@@ -165,7 +165,6 @@ class HsCommands extends HsAcquiaApiCommands {
 
         $this->taskDrush()
           ->drush("cron")
-          ->drush('cr')
           ->run();
       }
       catch (\Exception $e) {

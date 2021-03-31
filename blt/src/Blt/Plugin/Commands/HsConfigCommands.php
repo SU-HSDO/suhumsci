@@ -55,4 +55,11 @@ class HsConfigCommands extends ConfigCommand {
     $task->drush("config-import")->arg($cm_core_key)->option('partial');
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  protected function importCoreOnly($task, $cm_core_key) {
+    $this->importConfigSplit($task, $cm_core_key);
+  }
+
 }

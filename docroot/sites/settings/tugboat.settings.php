@@ -1,30 +1,34 @@
 <?php
 
+/**
+ * @file
+ * Local development override configuration feature.
+ */
+
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Component\Assertion\Handle;
 
-if (getenv('TUGBOAT_SERVICE')) {
-  /**
-   * Database configuration.
-   */
-  $databases = [
-    'default' =>
-      [
-        'default' =>
-          [
-            'database' => 'tugboat',
-            'username' => 'tugboat',
-            'password' => 'tugboat',
-            'host' => 'mysql',
-            'port' => '3306',
-            'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-            'driver' => 'mysql',
-            'prefix' => '',
-          ],
-      ],
-  ];
-}
+$db_name = 'tugboat';
 
+/**
+ * Database configuration.
+ */
+$databases = array(
+  'default' =>
+    array(
+      'default' =>
+        array(
+          'database' => $db_name,
+          'username' => 'tugboat',
+          'password' => 'tugboat',
+          'host' => 'mysql',
+          'port' => '3306',
+          'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+          'driver' => 'mysql',
+          'prefix' => '',
+        ),
+    ),
+);
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';

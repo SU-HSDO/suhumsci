@@ -36,6 +36,14 @@ use Drupal\hs_capx\Capx;
  *     "edit-form" = "/admin/structure/migrate/capx/{capx_importer}/edit",
  *     "delete-form" = "/admin/structure/migrate/capx/{capx_importer}/delete",
  *     "collection" = "/admin/structure/migrate/capx"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "organizations",
+ *     "workgroups",
+ *     "childOrganizations",
+ *     "tagging"
  *   }
  * )
  */

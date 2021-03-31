@@ -1,43 +1,22 @@
+
 # Block bad bots.
 # See https://docs.acquia.com/cloud-platform/arch/security/restrict/#cloud-blocking-by-ip.
 <ifmodule mod_setenvif.c>
   # Match specific IP addresses.
-  SetEnvIf AH_CLIENT_IP ^67\.225\.152\.21$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^52\.143\.102\.216$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^52\.237\.223\.18$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^107\.161\.51\.47$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^47\.241\.20\.234$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^161\.117\.182\.32$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^161\.117\.88\.143$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^47\.241\.104\.252$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^161\.117\.235\.27$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^206\.189\.77\.91$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^161\.117\.176\.134$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^192\.64\.80\.151$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^47\.241\.16\.84$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^47\.241\.126\.29$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^47\.241\.109\.253$ DENY=1
-  SetEnvIf AH_CLIENT_IP ^206\.189\.66\.184$ DENY=1
-
-  SetEnvIf X-Forwarded-For 67\.225\.152\.21 DENY=1
-  SetEnvIf X-Forwarded-For 52\.143\.102\.216 DENY=1
-  SetEnvIf X-Forwarded-For 52\.237\.223\.18 DENY=1
-  SetEnvIf X-Forwarded-For 107\.161\.51\.47 DENY=1
-  SetEnvIf X-Forwarded-For 47\.241\.20\.234 DENY=1
-  SetEnvIf X-Forwarded-For 161\.117\.182\.32 DENY=1
-  SetEnvIf X-Forwarded-For 161\.117\.88\.143 DENY=1
-  SetEnvIf X-Forwarded-For 47\.241\.104\.252 DENY=1
-  SetEnvIf X-Forwarded-For 161\.117\.235\.27 DENY=1
-  SetEnvIf X-Forwarded-For 206\.189\.77\.91 DENY=1
-  SetEnvIf X-Forwarded-For 161\.117\.176\.134 DENY=1
-  SetEnvIf X-Forwarded-For 192\.64\.80\.151 DENY=1
-  SetEnvIf X-Forwarded-For 47\.241\.16\.84 DENY=1
-  SetEnvIf X-Forwarded-For 47\.241\.126\.29 DENY=1
-  SetEnvIf X-Forwarded-For 47\.241\.109\.253 DENY=1
-  SetEnvIf X-Forwarded-For 206\.189\.66\.184 DENY=1
+  SetEnvIf AH_CLIENT_IP ^67\.225\.152\.21$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^52\.143\.102\.216$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^52\.237\.223\.18$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^107\.161\.51\.47$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^47\.241\.20\.234$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.182\.32$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.88\.143$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^47\.241\.104\.252$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.235\.27$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^206\.189\.77\.91$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^161\.117\.176\.134$ Deny_Host
   Order allow,deny
   Allow from all
-  Deny from env=DENY
+  Deny from env=Deny_Host
 </ifmodule>
 
 #
@@ -175,13 +154,13 @@ AddEncoding gzip svgz
   # RewriteBase /
 
   # Redirect common PHP files to their new locations.
-  RewriteCond %{REQUEST_URI} ^(.*)?/(install.php) [OR]
-  RewriteCond %{REQUEST_URI} ^(.*)?/(rebuild.php)
+  RewriteCond %{REQUEST_URI} ^(.*)?/(install\.php) [OR]
+  RewriteCond %{REQUEST_URI} ^(.*)?/(rebuild\.php)
   RewriteCond %{REQUEST_URI} !core
   RewriteRule ^ %1/core/%2 [L,QSA,R=301]
 
   # Rewrite install.php during installation to see if mod_rewrite is working
-  RewriteRule ^core/install.php core/install.php?rewrite=ok [QSA,L]
+  RewriteRule ^core/install\.php core/install.php?rewrite=ok [QSA,L]
 
   # Pass all requests not referring directly to files in the filesystem to
   # index.php.
@@ -197,13 +176,13 @@ AddEncoding gzip svgz
   # Allow access to PHP files in /core (like authorize.php or install.php):
   RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
   # Allow access to test-specific PHP files:
-  RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?.php
+  RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php
   # Allow access to simplesaml paths.
   RewriteCond %{REQUEST_URI} !^/simplesaml
   # Allow access to Statistics module's custom front controller.
   # Copy and adapt this rule to directly execute PHP files in contributed or
   # custom modules or to run another PHP application in the same directory.
-  RewriteCond %{REQUEST_URI} !/core/modules/statistics/statistics.php$
+  RewriteCond %{REQUEST_URI} !/core/modules/statistics/statistics\.php$
   # Deny access to any other PHP files that do not match the rules above.
   # Specifically, disallow autoload.php from being served directly.
   RewriteRule "^(.+/.*|autoload)\.php($|/)" - [F]

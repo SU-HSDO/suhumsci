@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\State\StateInterface;
 use Drupal\encrypt\EncryptService;
 
@@ -185,6 +186,12 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         $ignored[] = "$theme.settings";
       }
       $overrides['config_ignore.settings']['ignored_config_entities'] = $ignored;
+
+      if (InstallerKernel::installationAttempted()) {
+        foreach ($overrides['config_ignore.settings']['ignored_config_entities'] as &$item) {
+          $item = 'foo';
+        }
+      }
     }
   }
 

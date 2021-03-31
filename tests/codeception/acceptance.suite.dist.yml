@@ -1,0 +1,22 @@
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
+
+actor: AcceptanceTester
+modules:
+  enabled:
+    - \Helper\Acceptance
+    - Codeception\Module\Asserts
+    - StanfordCaravan\Codeception\Drupal\DrupalBootstrap
+    - StanfordCaravan\Codeception\Drupal\DrupalDrush
+    - PhpBrowser
+    - StanfordCaravan\Codeception\Drupal\DrupalEntity
+    - StanfordCaravan\Codeception\Drupal\DrupalUser
+  config:
+    StanfordCaravan\Codeception\Drupal\DrupalUser:
+      driver: 'PhpBrowser'
+  disabled:
+    - WebDriver
+  step_decorators: ~

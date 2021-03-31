@@ -29,7 +29,7 @@ class SqlTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $container = new Container();
     $container->set('string_translation', $this->createMock(TranslationManager::class));

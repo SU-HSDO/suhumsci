@@ -14,11 +14,9 @@ To set up your local environment and begin developing for this project, refer to
 
 1. Clone the repository and check out the develop branch.
 1. Run a `composer install --prefer-source` answer yes to any questions during this step.
-1. Run `blt local:setup` and answer the questions to configure your database settings.
-1. Run `blt humsci:keys` to obtain necessary encryption keys.
-1. If you would like a clean installation run `blt drupal:install --site=[sitename]`.
-1. A full sync from a site should be accomplished with `blt drupal:sync --sync-files --site=[sitename]`
-1. If you plan to use drupal console, and `drupal` produces an error, try the steps found on [this comment](https://github.com/hechoendrupal/drupal-console/issues/3302#issuecomment-306590885)
+1. Run `blt humsci:local:setup` and answer the questions to configure your database settings.
+1. If you would like a clean installation run `blt drupal:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
+1. A full sync from a site should be accomplished with `blt drupal:sync --site=[sitename]`
 
 ## Builds
 
@@ -29,6 +27,16 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 
 ## Testing
 
+### Codeception
+Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is
+very good documentation on codeception testing steps and how that is structured. To run those tests locally, `blt` will
+be the wrapper around the codeception commands.
+- To run codeception first uninstall the SimpleSaml module `drush pmu simplesamlphp_auth -y`
+- `blt codeception` will run all acceptance tests.
+- `blt codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most
+  effective method to run a single test.
+
+### SASS
 - `npm test` - Run linting for all Sass in the project (including humsci_basic).
 
 ## Other documentation

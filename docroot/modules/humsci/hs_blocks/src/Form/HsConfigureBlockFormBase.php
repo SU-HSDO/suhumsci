@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_blocks\Form;
 
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -56,23 +55,14 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
       ->getRegion();
 
     $section = $this->sectionStorage->getSection($this->delta);
+    $component = $section->getComponent($group_block_name);
+    $component_config = $component->get('configuration');
 
-    foreach ($section->getComponents() as $component) {
+    $configuration['context_mapping'] = $this->block->getContextMapping();
+    $component_config['children'][$this->uuid] = $configuration;
 
-      $component_config = $component->get('configuration');
-      list($component_id) = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['id']);
-
-      // We need to find the block we intend to add the child into. We check
-      // for just the first part of the component ID since each derivative
-      // has different ids.
-      if ($component_id == 'group_block' && $component_config['machine_name'] == $group_block_name) {
-        $configuration['context_mapping'] = $this->block->getContextMapping();
-        $component_config['children'][$this->uuid] = $configuration;
-
-        // Save the new child into the group component.
-        $component->setConfiguration($component_config);
-      }
-    }
+    // Save the new child into the group component.
+    $component->setConfiguration($component_config);
 
     $this->layoutTempstoreRepository->set($this->sectionStorage);
     $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl());

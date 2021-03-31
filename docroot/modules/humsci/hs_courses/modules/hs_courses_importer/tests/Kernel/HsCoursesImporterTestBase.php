@@ -31,10 +31,10 @@ abstract class HsCoursesImporterTestBase extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $name = $this->randomMachineName();
-    $this->courseTag = $this->entityManager->createInstance('hs_course_tag', [
+    $this->courseTag = $this->entityTypeManager->createInstance('hs_course_tag', [
       'id' => strtolower($name),
       'label' => $name,
       'tag' => $this->randomString(),

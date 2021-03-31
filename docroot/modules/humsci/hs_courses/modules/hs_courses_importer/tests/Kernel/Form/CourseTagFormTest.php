@@ -21,10 +21,10 @@ class CourseTagFormTest extends HsCoursesImporterTestBase {
   public function testForm() {
     $name = strtolower($this->randomMachineName());
     $tag_value = $this->randomString();
-    $tag = $this->entityManager->createInstance('hs_course_tag', ['enforceIsNew' => TRUE]);
+    $tag = $this->entityTypeManager->createInstance('hs_course_tag', ['enforceIsNew' => TRUE]);
 
     /** @var \Drupal\hs_courses_importer\Form\CourseTagForm $form_object */
-    $form_object = $this->entityManager->getFormObject('hs_course_tag', 'add');
+    $form_object = $this->entityTypeManager->getFormObject('hs_course_tag', 'add');
     $form = [];
     $form_state = new FormState();
     $form_object->setEntity($tag);
@@ -47,7 +47,7 @@ class CourseTagFormTest extends HsCoursesImporterTestBase {
       ->get('tag'));
     $messages = \Drupal::messenger()
       ->messagesByType(MessengerInterface::TYPE_STATUS);
-    $this->assertContains('Created the', (string) $messages[0]);
+    $this->assertStringContainsString('Created the', (string) $messages[0]);
     \Drupal::messenger()->deleteAll();
 
     $form_object->setEntity($this->courseTag);
@@ -55,7 +55,7 @@ class CourseTagFormTest extends HsCoursesImporterTestBase {
 
     $messages = \Drupal::messenger()
       ->messagesByType(MessengerInterface::TYPE_STATUS);
-    $this->assertContains('Saved the', (string) $messages[0]);
+    $this->assertStringContainsString('Saved the', (string) $messages[0]);
   }
 
 }

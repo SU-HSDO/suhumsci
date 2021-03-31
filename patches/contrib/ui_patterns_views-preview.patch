@@ -1,6 +1,6 @@
 diff --git a/modules/ui_patterns_views/templates/pattern-view-field.html.twig b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
 new file mode 100644
-index 0000000..64295e5
+index 0000000..7f1e292
 --- /dev/null
 +++ b/modules/ui_patterns_views/templates/pattern-view-field.html.twig
 @@ -0,0 +1,53 @@
@@ -57,19 +57,18 @@ index 0000000..64295e5
 +{%- if field.wrapper_element -%}
 +  </{{ field.wrapper_element }}>
 +{%- endif %}
-\ No newline at end of file
 diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
-index 388b287..6f835d4 100644
+index 0b2ad4c..69863d8 100644
 --- a/modules/ui_patterns_views/ui_patterns_views.module
 +++ b/modules/ui_patterns_views/ui_patterns_views.module
 @@ -6,6 +6,9 @@
   */
-
+ 
  use Drupal\ui_patterns\Element\PatternContext;
 +use Drupal\Component\Utility\Html;
 +use Drupal\Component\Utility\Xss;
 +use Drupal\Core\Template\Attribute;
-
+ 
  /**
   * Implements hook_theme().
 @@ -15,6 +18,9 @@ function ui_patterns_views_theme() {
@@ -81,11 +80,11 @@ index 388b287..6f835d4 100644
 +    ],
    ];
  }
-
+ 
 @@ -35,37 +41,122 @@ function template_preprocess_pattern_views_row(array &$variables) {
    $options = $variables['options'];
    $row = $variables['row'];
-
+ 
 -  foreach ($options['pattern_mapping'] as $mapping) {
 -    $field_name = $mapping['source'];
 -    $field = $view->field[$field_name];
@@ -194,10 +193,10 @@ index 388b287..6f835d4 100644
 +      ];
      }
    }
-
+ 
 -  $variables['pattern'] = [];
 -  if ($view->preview && !isset($view->element['#embed'])) {
--    drupal_set_message(t("Pattern Views row plugin does not support preview."), 'warning');
+-    \Drupal::messenger()->addWarning(t("Pattern Views row plugin does not support preview."));
 -    $variables['pattern'] = ['#type' => 'status_messages'];
 -  }
 -  elseif (!empty($fields)) {
@@ -231,5 +230,5 @@ index 388b287..6f835d4 100644
 +  $variables['pattern']['#context']['view'] = $view;
 +  $variables['pattern']['#context']['row'] = $row;
  }
-
+ 
  /**

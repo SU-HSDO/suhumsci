@@ -70,9 +70,8 @@ class PostInstall implements PostInstallInterface {
     $nodes = $this->entityTypeManager->getStorage('node')
       ->loadByProperties(['uuid' => '287db095-35b1-4050-8d26-5d8332eeb6a6']);
     $this->configFactory->getEditable('system.site')
-      ->set('page.front', '/node/' . key($nodes))
+      ->set('page.front', '/node/' . reset($nodes)->id())
       ->save();
-
   }
 
   /**

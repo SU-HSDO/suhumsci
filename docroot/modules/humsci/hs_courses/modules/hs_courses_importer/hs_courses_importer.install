@@ -23,3 +23,15 @@ function hs_courses_importer_update_8101() {
       ->execute();
   }
 }
+
+/**
+ * Move the course importer url to state.
+ */
+function hs_courses_importer_update_8200() {
+  $config = \Drupal::configFactory()
+    ->getEditable('hs_courses_importer.importer_settings');
+
+  if ($config->get('base_url')) {
+    $config->clear('base_url')->save();
+  }
+}

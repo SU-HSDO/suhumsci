@@ -35,6 +35,11 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "edit-form" = "/admin/structure/migrate/hs_course_tag/{hs_course_tag}/edit",
  *     "delete-form" = "/admin/structure/migrate/hs_course_tag/{hs_course_tag}/delete",
  *     "collection" = "/admin/structure/migrate/hs_course_tag"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "tag"
  *   }
  * )
  */

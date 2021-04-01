@@ -11,7 +11,10 @@ dependencies:
     - paragraphs.paragraphs_type.hs_gradient_hero
   module:
     - ds
+    - field_formatter_class
+    - hs_field_helpers
     - link
+    - stanford_media
     - text
 third_party_settings:
   ds:
@@ -48,13 +51,18 @@ content:
     type: text_default
     region: overlay_text
   field_hs_gradient_hero_image:
-    type: entity_reference_entity_view
+    type: media_responsive_image_formatter
     weight: 0
     label: hidden
     settings:
-      view_mode: default
+      view_mode: caption_credit
+      image_style: hero_image
       link: false
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     region: image
   field_hs_gradient_hero_link:
     weight: 3

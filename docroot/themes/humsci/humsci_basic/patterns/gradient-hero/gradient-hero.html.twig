@@ -7,17 +7,15 @@
 
 {% spaceless %}
   <div{{ attributes }}>
-    <div class="hb-gradient-hero__wrapper">
-      {% if image %}
-        <div class="hb-gradient-hero__image-wrapper">
-          {{ image }}
-        </div>
-      {% endif %}
-      {% if overlay_text %}
-        <div class="hb-gradient-hero__text">
-          {{ overlay_text }}
-        </div>
-      {% endif %}
-    </div>
+    {% if image %}
+      <div class="hb-gradient-hero__image-wrapper">
+        {{ image }}
+      </div>
+    {% endif %}
+    {% if overlay_text %}
+      <div class="hb-gradient-hero__text">
+        {{ overlay_text }}
+      </div>
+    {% endif %}
   </div>
 {% endspaceless %}

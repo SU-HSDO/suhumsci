@@ -1,0 +1,75 @@
+.field-hs-gradient-hero-image {
+  @include hb-hero-image-field;
+
+  &::before {
+    @include hb-themes(('colorful', 'airy')) {
+      background: linear-gradient(to right, hb-get-global-color('black', $hc-colorful-globals) 0%, $hb-color--transparent 100%);
+    }
+
+    @include hb-traditional {
+      background: linear-gradient(to right, hb-get-global-color('black', $ht-traditional-globals) 0%, $hb-color--transparent 100%);
+    }
+
+    .hb-gradient-hero--content-right & {
+      @include hb-themes(('colorful', 'airy')) {
+        background: linear-gradient(to left, hb-get-global-color('black', $hc-colorful-globals) 0%, $hb-color--transparent 100%);
+      }
+
+      @include hb-traditional {
+        background: linear-gradient(to left, hb-get-global-color('black', $ht-traditional-globals) 0%, $hb-color--transparent 100%);
+      }
+    }
+  }
+}
+
+.hb-gradient-hero {
+  @include hb-hero-component;
+
+  &__image-wrapper {
+    @include hb-hero-image-wrapper;
+  }
+
+  &__text {
+    @include hb-hero-text;
+    max-width: hb-calculate-rems($hb-layout-XXL-width) !important; // override max page width set in hb-page-width mixin
+
+    @include grid-media-min('sm') {
+      padding: hb-calculate-rems(60px) hb-calculate-rems(24px);
+    }
+
+    @include grid-media-min('lg') {
+      padding: hb-calculate-rems(66px) hb-calculate-rems(30px);
+    }
+
+    h2,
+    .field-hs-gradient-hero-body p {
+      @include hb-traditional {
+        margin-bottom: 0;
+      }
+    }
+
+    .hb-gradient-hero--content-right & {
+      .field-hs-gradient-hero-title,
+      .field-hs-gradient-hero-body,
+      .field-hs-gradient-hero-link {
+        display: flex;
+        justify-content: flex-end;
+        text-align: right;
+      }
+    }
+
+    .field-hs-gradient-hero-body p {
+      @include hb-hero-body-field;
+    }
+
+    a {
+      @include hb-hero-anchor-link;
+    }
+
+    .field-hs-gradient-hero-link {
+      @include hb-hero-link-field;
+    }
+  }
+}
+
+@include hb-hero-animation-keyframes;

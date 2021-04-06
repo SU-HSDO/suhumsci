@@ -167,3 +167,45 @@ function su_humsci_profile_post_update_8290() {
   $field->set('settings', $settings);
   $field->save();
 }
+
+/**
+ * Disable the new timeline paragraph type on older themes.
+ */
+function su_humsci_profile_post_update_9001() {
+  $theme = \Drupal::config('system.theme')->get('default');
+  $newer_themes = [
+    'humsci_airy',
+    'humsci_basic',
+    'humsci_colorful',
+    'humsci_traditional',
+  ];
+  if (in_array($theme, $newer_themes)) {
+    return;
+  }
+
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->load('node.hs_basic_page.field_hs_page_components');
+  $settings = $field->getSettings();
+  $settings['handler_settings']['target_bundles']['hs_timeline_item'] = 'hs_timeline_item';
+  $settings['handler_settings']['target_bundles_drag_drop']['hs_timeline'] = [
+    'enabled' => TRUE,
+    'weight' => 99,
+  ];
+  $field->set('settings', $settings);
+  $field->save();
+
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->load('paragraph.hs_row.field_hs_row_components');
+  $settings = $field->getSettings();
+  $settings['handler_settings']['target_bundles']['hs_timeline_item'] = 'hs_timeline_item';
+  $settings['handler_settings']['target_bundles_drag_drop']['hs_timeline'] = [
+    'enabled' => TRUE,
+    'weight' => 99,
+  ];
+  $field->set('settings', $settings);
+  $field->save();
+}

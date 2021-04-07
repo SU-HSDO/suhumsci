@@ -48,6 +48,11 @@
       outline: solid;
       @include hb-pairing-color('outline-color', 'secondary-highlight-darken');
     }
+
+    // :only-child prevents timeline items without a description (revealed details) from having a pointer cursor
+    &:hover:not(:only-child) {
+      cursor: pointer;
+    }
   }
 
   &__revealed-details {

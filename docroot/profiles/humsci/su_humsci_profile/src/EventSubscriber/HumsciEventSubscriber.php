@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class HumsciEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * Config factory service.
+   * Core Config factory service.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */

@@ -66,12 +66,6 @@ class PostInstall implements PostInstallInterface {
     // We install some menu links, so we have to rebuild the router, to ensure
     // the menu links are valid.
     $this->routeBuilder->rebuildIfNeeded();
-
-    $nodes = $this->entityTypeManager->getStorage('node')
-      ->loadByProperties(['uuid' => '287db095-35b1-4050-8d26-5d8332eeb6a6']);
-    $this->configFactory->getEditable('system.site')
-      ->set('page.front', '/node/' . reset($nodes)->id())
-      ->save();
   }
 
   /**

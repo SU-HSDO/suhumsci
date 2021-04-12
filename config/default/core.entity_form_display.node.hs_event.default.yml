@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.hs_event.body
+    - field.field.node.hs_event.field_conference_session
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
     - field.field.node.hs_event.field_hs_event_audio
@@ -23,12 +24,12 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
   module:
-    - datetime_range
     - field_group
     - inline_entity_form
     - link
     - media_library
     - path
+    - smart_date
     - telephone
     - text
 third_party_settings:
@@ -80,7 +81,6 @@ third_party_settings:
       weight: 4
       format_type: tab
       format_settings:
-        label: 'Supplemental Info'
         formatter: closed
         description: ''
         required_fields: true
@@ -96,7 +96,6 @@ third_party_settings:
       weight: 6
       format_type: tab
       format_settings:
-        label: 'Post Event Details'
         formatter: closed
         description: ''
         required_fields: true
@@ -119,6 +118,20 @@ third_party_settings:
         required_fields: true
       label: 'Event Tags'
       region: content
+    group_conference:
+      children:
+        - field_conference_session
+      parent_name: ''
+      weight: 10
+      format_type: tab
+      region: hidden
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Conference
 _core:
   default_config_hash: e1Kpgyy7ewspR0Ahrghe--ElWw9lvDkBcUdMMNsWDyg
 id: node.hs_event.default
@@ -194,9 +207,13 @@ content:
     region: content
   field_hs_event_date:
     weight: 18
-    settings: {  }
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: "30\n60|1 hour\n90\n120|2 hours\ncustom"
+      show_extra: true
     third_party_settings: {  }
-    type: daterange_default
+    type: smartdate_default
     region: content
   field_hs_event_image:
     type: media_library_widget
@@ -250,6 +267,7 @@ content:
       collapsible: false
       collapsed: false
       allow_duplicate: false
+      revision: false
     third_party_settings: {  }
   field_hs_event_sponsor:
     weight: 25
@@ -323,4 +341,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_conference_session: true
   field_hs_event_status: true

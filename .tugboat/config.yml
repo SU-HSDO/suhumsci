@@ -29,25 +29,25 @@ services:
         - ln -snf ${TUGBOAT_ROOT} /var/www/localhost
         - ln -s docroot htdocs
 
-        # Copy the tugboat blt settings.
-        - cp "${TUGBOAT_ROOT}/.tugboat/tugboat.blt.yml" "${TUGBOAT_ROOT}/blt/local.blt.yml"
-
         # Install/update packages managed by composer, including drush
         - composer install --no-ansi
+        - vendor/bin/blt blt:telemetry:disable --no-interaction
 
         # Init the settings files.
         - vendor/bin/blt blt:init:settings
-        - rm "${TUGBOAT_ROOT}/docroot/sites/default/local.drush.yml"
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - vendor/bin/blt source:build:simplesamlphp-config
-        - drush si su_humsci_profile -y
+        - vendor/bin/blt drupal:install -n
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:
         - composer install --no-ansi
-        - drush pm-uninstall config_ignore
         - vendor/bin/blt drupal:update
+        - drush pmu simplesamlphp_auth -y
+      online:
+        # Restart the Apache service when it's all ready.
+        - httpd -k restart
 
     # Collection of urls to compare visual results.
     visualdiffs:

@@ -2,6 +2,13 @@
 
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
 
+// SimpleSAMLphp configuration
+// Set the workgroup api cert paths.
+$config['stanford_ssp.settings'] = [
+  'workgroup_api_cert' => DRUPAL_ROOT . "/../keys/saml/workgroup_api.cert",
+  'workgroup_api_key' => DRUPAL_ROOT . "/../keys/saml/workgroup_api.key",
+];
+
 if (EnvironmentDetector::isAhEnv()) {
   $group = EnvironmentDetector::getAhGroup();
   $environment = EnvironmentDetector::getAhEnv();

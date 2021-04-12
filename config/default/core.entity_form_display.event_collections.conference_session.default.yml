@@ -1,0 +1,82 @@
+uuid: ecd887d7-5551-463e-837c-41b455c26bdd
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.event_collections.conference_session
+    - field.field.event_collections.conference_session.field_session_date_and_time
+    - field.field.event_collections.conference_session.field_session_information
+    - field.field.event_collections.conference_session.field_session_location
+    - field.field.event_collections.conference_session.field_session_speakers
+  module:
+    - field_group
+    - smart_date
+    - text
+third_party_settings:
+  field_group:
+    group_session_details:
+      children:
+        - field_session_location
+        - field_session_information
+        - field_session_speakers
+      parent_name: ''
+      weight: 2
+      format_type: tab
+      region: content
+      format_settings:
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: 'Session Details'
+id: event_collections.conference_session.default
+targetEntityType: event_collections
+bundle: conference_session
+mode: default
+content:
+  field_session_date_and_time:
+    weight: 1
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: "30\n60|1 hour\n90\n120|2 hours\ncustom"
+      show_extra: true
+    third_party_settings: {  }
+    type: smartdate_default
+    region: content
+  field_session_information:
+    weight: 6
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+    type: text_textarea_with_summary
+    region: content
+  field_session_location:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_session_speakers:
+    weight: 7
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

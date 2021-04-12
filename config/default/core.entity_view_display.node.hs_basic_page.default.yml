@@ -3,14 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.hs_basic_page.field_hs_flexible_components
     - field.field.node.hs_basic_page.field_hs_page_components
     - field.field.node.hs_basic_page.field_hs_page_hero
     - field.field.node.hs_basic_page.layout_builder__layout
     - node.type.hs_basic_page
     - system.menu.main
   module:
-    - entity_reference_revisions
     - hs_layouts
     - layout_builder
     - menu_block
@@ -101,36 +99,14 @@ third_party_settings:
               follow_parent: active
               level: 2
               depth: 0
-              expand: true
+              expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
               label_type: root
+              label_link: true
               context_mapping: {  }
             additional: {  }
             weight: 0
-          49e3f9a9-7190-4d22-a29b-a41d34499da8:
-            uuid: 49e3f9a9-7190-4d22-a29b-a41d34499da8
-            region: main
-            configuration:
-              id: 'field_block:node:hs_basic_page:field_hs_flexible_components'
-              label: Components
-              provider: layout_builder
-              label_display: ''
-              formatter:
-                label: hidden
-                type: entity_reference_revisions_entity_view
-                settings:
-                  view_mode: default
-                third_party_settings:
-                  field_formatter_class:
-                    class: ''
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
-            weight: 2
         third_party_settings: {  }
     allow_custom: true
     enabled: true
@@ -140,16 +116,7 @@ id: node.hs_basic_page.default
 targetEntityType: node
 bundle: hs_basic_page
 mode: default
-content:
-  field_hs_flexible_components:
-    weight: 1
-    label: above
-    settings:
-      view_mode: default
-      link: ''
-    third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
-    region: main
+content: {  }
 hidden:
   field_hs_page_components: true
   field_hs_page_hero: true

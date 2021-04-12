@@ -65,3 +65,16 @@ function su_humsci_profile_post_update_9001() {
   $field->set('settings', $settings);
   $field->save();
 }
+
+/**
+ * Set the source plugin value on migration configs.
+ */
+function su_humsci_profile_post_update_9002() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('migrate_plus.migration.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    if (!$config->get('source.plugin')) {
+      $config->set('source.plugin', 'url')->save();
+    }
+  }
+}

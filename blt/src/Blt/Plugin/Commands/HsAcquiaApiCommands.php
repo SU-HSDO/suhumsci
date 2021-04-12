@@ -28,7 +28,6 @@ class HsAcquiaApiCommands extends BltTasks {
    */
   protected $failedDatabases = [];
 
-
   /**
    * Get the environment UUID for the application from the machine name.
    *

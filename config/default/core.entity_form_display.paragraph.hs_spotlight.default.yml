@@ -13,6 +13,7 @@ dependencies:
   module:
     - allowed_formats
     - linkit
+    - maxlength
     - media_library
     - text
 id: paragraph.hs_spotlight.default
@@ -26,6 +27,11 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings:
+      maxlength:
+        maxlength_js: 125
+        maxlength_js_label: 'Content limited to 60 characters for short spotlight and 125 for tall spotlight. Characters: <strong>@count</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
       allowed_formats:
         hide_help: '0'
         hide_guidelines: '0'

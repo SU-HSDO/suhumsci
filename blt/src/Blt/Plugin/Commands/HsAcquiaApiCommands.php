@@ -184,16 +184,41 @@ class HsAcquiaApiCommands extends BltTasks {
    * {@inheritDoc}
    */
   protected function connectAcquiaApi() {
-    if (!$this->acquiaApplications) {
-      $this->traitConnectAcquiaApi();
-      return;
-    }
     try {
       $this->acquiaApplications->getAll();
     }
     catch (\Exception $e) {
       $this->traitConnectAcquiaApi();
     }
+  }
+
+  /**
+   * Get an overall list of database names to sync.
+   *
+   * @param int $task_started
+   *   Time to compare the completed task.
+   * @param array $options
+   *   Array of keyed command options.
+   *
+   * @return array
+   *   Array of database names to sync.
+   */
+  protected function getSitesToSync($task_started, array $options) {
+    $finished_databases = $this->getCompletedDatabaseCopies($task_started);
+
+    $sites = $this->getConfigValue('multisites');
+    foreach ($sites as $key => &$db_name) {
+      $db_name = $db_name == 'default' ? 'swshumsci' : $db_name;
+
+      if (strpos($db_name, 'sandbox') !== FALSE) {
+        unset($sites[$key]);
+      }
+    }
+    if (!empty($options['exclude'])) {
+      $exclude = explode(',', $options['exclude']);
+      $sites = array_diff($sites, $exclude);
+    }
+    return array_diff($sites, $finished_databases);
   }
 
 }

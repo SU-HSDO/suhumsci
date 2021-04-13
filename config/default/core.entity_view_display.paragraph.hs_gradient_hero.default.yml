@@ -14,8 +14,8 @@ dependencies:
     - field_formatter_class
     - hs_field_helpers
     - link
+    - smart_trim
     - stanford_media
-    - text
 third_party_settings:
   ds:
     layout:
@@ -46,9 +46,25 @@ content:
   field_hs_gradient_hero_body:
     weight: 2
     label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
+    settings:
+      trim_length: 200
+      trim_type: chars
+      trim_suffix: ''
+      wrap_class: trimmed
+      more_text: More
+      more_class: more-link
+      wrap_output: false
+      more_link: false
+      trim_options:
+        text: false
+        trim_zero: false
+      summary_handler: full
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    type: smart_trim
     region: overlay_text
   field_hs_gradient_hero_image:
     type: media_responsive_image_formatter
@@ -56,7 +72,7 @@ content:
     label: hidden
     settings:
       view_mode: caption_credit
-      image_style: hero_image
+      image_style: hero_with_text
       link: false
     third_party_settings:
       field_formatter_class:

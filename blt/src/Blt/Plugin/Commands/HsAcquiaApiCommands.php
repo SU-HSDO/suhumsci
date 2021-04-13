@@ -183,6 +183,9 @@ class HsAcquiaApiCommands extends BltTasks {
    * {@inheritDoc}
    */
   protected function connectAcquiaApi() {
+    if (!$this->acquiaApplications) {
+      $this->traitConnectAcquiaApi();
+    }
     try {
       $this->acquiaApplications->getAll();
     }

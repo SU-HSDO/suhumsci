@@ -81,6 +81,7 @@ class HsAcquiaApiCommands extends BltTasks {
    * Sync the staging sites databases with that from production.
    *
    * @command humsci:sync-stage
+   * @aliases stage
    *
    * @options exclude Comma separated list of database names to skip.
    */
@@ -147,7 +148,7 @@ class HsAcquiaApiCommands extends BltTasks {
         if ($notification->status == 'completed') {
           $databases = array_merge($databases, $notification->context->database->names);
         }
-        else {
+        elseif ($notification->status != 'in-progress') {
           $this->failedDatabases = array_merge($this->failedDatabases, $notification->context->database->names);
         }
       }

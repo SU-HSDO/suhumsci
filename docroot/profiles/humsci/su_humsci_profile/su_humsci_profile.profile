@@ -235,7 +235,7 @@ function su_humsci_profile_eck_entity_type_insert(EntityInterface $entity) {
  * Implements hook_preprocess_HOOK().
  */
 function su_humsci_profile_preprocess_menu(&$variables) {
-  if ($variables['menu_name'] != 'shortcut_menu') {
+  if (empty($variables['menu_name']) || $variables['menu_name'] != 'shortcut_menu') {
     return;
   }
 

@@ -21,15 +21,22 @@ content:
     type: boolean_checkbox
     region: content
   field_hs_timeline:
-    type: entity_reference_paragraphs
+    type: paragraphs
     weight: 2
     settings:
-      title: Paragraph
-      title_plural: Paragraphs
+      title: 'Timeline Item'
+      title_plural: 'Timeline Items'
       edit_mode: open
-      add_mode: dropdown
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: button
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: hs_timeline_item
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
     third_party_settings: {  }
     region: content
 hidden:

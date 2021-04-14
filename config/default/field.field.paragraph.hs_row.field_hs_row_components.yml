@@ -5,8 +5,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_hs_row_components
     - paragraphs.paragraphs_type.hs_priv_text_area
-    - paragraphs.paragraphs_type.hs_private_files
     - paragraphs.paragraphs_type.hs_row
+    - paragraphs.paragraphs_type.hs_timeline
     - paragraphs.paragraphs_type.stanford_gallery
   module:
     - entity_reference_revisions
@@ -27,9 +27,9 @@ settings:
   handler_settings:
     negate: 1
     target_bundles:
-      hs_private_files: hs_private_files
       hs_priv_text_area: hs_priv_text_area
       hs_row: hs_row
+      hs_timeline: hs_timeline
       stanford_gallery: stanford_gallery
     target_bundles_drag_drop:
       hs_accordion:
@@ -50,9 +50,6 @@ settings:
       hs_priv_text_area:
         enabled: true
         weight: 16
-      hs_private_files:
-        enabled: true
-        weight: 15
       hs_row:
         enabled: true
         weight: 17
@@ -64,6 +61,12 @@ settings:
         enabled: false
       hs_text_area:
         weight: 18
+        enabled: false
+      hs_timeline:
+        enabled: true
+        weight: 26
+      hs_timeline_item:
+        weight: 27
         enabled: false
       hs_view:
         weight: 19

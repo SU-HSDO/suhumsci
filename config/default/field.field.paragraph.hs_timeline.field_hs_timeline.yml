@@ -1,0 +1,73 @@
+uuid: e824b84d-a5c9-4f61-89c2-a062ec813b30
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_timeline
+    - paragraphs.paragraphs_type.hs_timeline
+    - paragraphs.paragraphs_type.hs_timeline_item
+  module:
+    - entity_reference_revisions
+id: paragraph.hs_timeline.field_hs_timeline
+field_name: field_hs_timeline
+entity_type: paragraph
+bundle: hs_timeline
+label: Timeline
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      hs_timeline_item: hs_timeline_item
+    target_bundles_drag_drop:
+      hs_accordion:
+        weight: 16
+        enabled: false
+      hs_banner:
+        weight: 17
+        enabled: false
+      hs_carousel:
+        weight: 18
+        enabled: false
+      hs_hero_image:
+        weight: 19
+        enabled: false
+      hs_postcard:
+        weight: 20
+        enabled: false
+      hs_priv_text_area:
+        weight: 22
+        enabled: false
+      hs_private_files:
+        weight: 21
+        enabled: false
+      hs_row:
+        weight: 23
+        enabled: false
+      hs_spotlight:
+        weight: 24
+        enabled: false
+      hs_testimonial:
+        weight: 25
+        enabled: false
+      hs_text_area:
+        weight: 26
+        enabled: false
+      hs_timeline:
+        weight: 27
+        enabled: false
+      hs_timeline_item:
+        enabled: true
+        weight: 28
+      hs_view:
+        weight: 29
+        enabled: false
+      hs_webform:
+        weight: 30
+        enabled: false
+field_type: entity_reference_revisions

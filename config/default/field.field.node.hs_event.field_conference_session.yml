@@ -1,0 +1,29 @@
+uuid: cd60d214-6c62-4fdd-b651-11f163d0c4ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.event_collections.conference_session
+    - field.storage.node.field_conference_session
+    - node.type.hs_event
+id: node.hs_event.field_conference_session
+field_name: field_conference_session
+entity_type: node
+bundle: hs_event
+label: 'Conference Session'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:event_collections'
+  handler_settings:
+    target_bundles:
+      conference_session: conference_session
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

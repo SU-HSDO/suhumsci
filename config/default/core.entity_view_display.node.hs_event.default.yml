@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.hs_event.body
+    - field.field.node.hs_event.field_conference_session
     - field.field.node.hs_event.field_hs_event_admission
     - field.field.node.hs_event.field_hs_event_audience
     - field.field.node.hs_event.field_hs_event_audio
@@ -23,12 +24,14 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
     - system.menu.main
+    - views.view.conference_agenda
   module:
     - hs_blocks
     - hs_layouts
     - layout_builder
     - menu_block
     - user
+    - views
 third_party_settings:
   layout_builder:
     enabled: true
@@ -54,10 +57,11 @@ third_party_settings:
               follow_parent: active
               level: 2
               depth: 0
-              expand: true
+              expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
               label_type: root
+              label_link: true
               context_mapping: {  }
             additional: {  }
             weight: 0
@@ -443,6 +447,19 @@ third_party_settings:
                 view_mode: view_mode
             additional: {  }
             weight: 1
+          329f2fad-4606-46bb-81a2-410b672c1c75:
+            uuid: 329f2fad-4606-46bb-81a2-410b672c1c75
+            region: main_below
+            configuration:
+              id: 'views_block:conference_agenda-block_1'
+              label: ''
+              provider: views
+              label_display: visible
+              views_label: ''
+              items_per_page: none
+              context_mapping: {  }
+            additional: {  }
+            weight: 9
         third_party_settings: {  }
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
@@ -451,6 +468,14 @@ targetEntityType: node
 bundle: hs_event
 mode: default
 content:
+  field_conference_session:
+    weight: 102
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: main_above
   field_hs_event_audio:
     type: entity_reference_entity_view
     weight: 101

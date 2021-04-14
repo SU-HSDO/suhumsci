@@ -1,0 +1,44 @@
+uuid: a6c30a2d-0d25-4e8e-9f98-7b7bca43ad7d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_timeline.field_hs_field_add_expand_collap
+    - field.field.paragraph.hs_timeline.field_hs_timeline
+    - paragraphs.paragraphs_type.hs_timeline
+  module:
+    - paragraphs
+id: paragraph.hs_timeline.default
+targetEntityType: paragraph
+bundle: hs_timeline
+mode: default
+content:
+  field_hs_field_add_expand_collap:
+    weight: 3
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
+    region: content
+  field_hs_timeline:
+    type: paragraphs
+    weight: 2
+    settings:
+      title: 'Timeline Item'
+      title_plural: 'Timeline Items'
+      edit_mode: open
+      closed_mode: summary
+      autocollapse: none
+      closed_mode_threshold: 0
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: hs_timeline_item
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        duplicate: duplicate
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true

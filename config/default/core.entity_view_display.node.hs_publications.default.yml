@@ -30,31 +30,6 @@ third_party_settings:
           region_widths: ''
           image_float: align-left
         components:
-          2ee63ce7-4930-468f-a038-d26d7227b0e9:
-            uuid: 2ee63ce7-4930-468f-a038-d26d7227b0e9
-            region: image
-            configuration:
-              id: 'field_block:node:hs_publications:field_hs_publication_image'
-              label: 'Publication Image'
-              provider: layout_builder
-              label_display: ''
-              formatter:
-                label: hidden
-                type: media_image_formatter
-                settings:
-                  view_mode: caption_credit
-                  image_style: hs_medium_scaled_360px
-                  link: false
-                third_party_settings:
-                  field_formatter_class:
-                    class: ''
-                  hs_field_helpers:
-                    inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
-            weight: 1
           9f2ea3b6-1b3f-4bba-b196-1c0fc24df01e:
             uuid: 9f2ea3b6-1b3f-4bba-b196-1c0fc24df01e
             region: left_sidebar
@@ -67,30 +42,14 @@ third_party_settings:
               follow_parent: active
               level: 2
               depth: 0
-              expand: true
+              expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
               label_type: root
+              label_link: true
               context_mapping: {  }
             additional: {  }
             weight: 0
-          9e34500f-1fcd-4b1e-b3eb-b3f5a2bc2182:
-            uuid: 9e34500f-1fcd-4b1e-b3eb-b3f5a2bc2182
-            region: main_below
-            configuration:
-              id: 'field_block:node:hs_publications:body'
-              label: Body
-              provider: layout_builder
-              label_display: '0'
-              formatter:
-                label: hidden
-                type: text_default
-                settings: {  }
-                third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
-            weight: 3
           5c724759-2354-4d97-a7b5-bf4c17e5420c:
             uuid: 5c724759-2354-4d97-a7b5-bf4c17e5420c
             region: main_above
@@ -115,7 +74,7 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 6
+            weight: 8
           175f27f1-1a75-4457-90af-8722fa5816b5:
             uuid: 175f27f1-1a75-4457-90af-8722fa5816b5
             region: main_above
@@ -144,7 +103,7 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
             additional: {  }
-            weight: 7
+            weight: 9
           e85d35ab-2351-4cd0-af5c-67c394e15446:
             uuid: e85d35ab-2351-4cd0-af5c-67c394e15446
             region: top
@@ -235,6 +194,48 @@ third_party_settings:
                 entity: layout_builder.entity
             additional: {  }
             weight: 0
+          2ee63ce7-4930-468f-a038-d26d7227b0e9:
+            uuid: 2ee63ce7-4930-468f-a038-d26d7227b0e9
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_publications:field_hs_publication_image'
+              label: 'Publication Image'
+              provider: layout_builder
+              label_display: ''
+              formatter:
+                label: hidden
+                type: media_image_formatter
+                settings:
+                  view_mode: caption_credit
+                  image_style: hs_medium_scaled_360px
+                  link: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: hb-main-body-detail-image
+                  hs_field_helpers:
+                    inline_contents: 0
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 7
+          9e34500f-1fcd-4b1e-b3eb-b3f5a2bc2182:
+            uuid: 9e34500f-1fcd-4b1e-b3eb-b3f5a2bc2182
+            region: main_above
+            configuration:
+              id: 'field_block:node:hs_publications:body'
+              label: Body
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: text_default
+                settings: {  }
+                third_party_settings: {  }
+              context_mapping:
+                entity: layout_builder.entity
+            additional: {  }
+            weight: 10
         third_party_settings: {  }
     enabled: true
     allow_custom: false

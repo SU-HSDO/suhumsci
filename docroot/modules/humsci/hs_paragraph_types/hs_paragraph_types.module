@@ -21,7 +21,7 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
  * Implements hook_preprocess_HOOK().
  */
 function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variables) {
-  /** @var ParagraphInterface $paragraph */
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
   $paragraph = $variables['element']['#object'];
   $items_per_row = (int) $paragraph->get('field_hs_collection_per_row')
     ->getString();

@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * hs_paragraph_types.install
+ */
+
+use Drupal\paragraphs\Entity\ParagraphsType;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
+
+/**
+ * Enable paragraph type permissions and set the permissions for the roles.
+ */
+function hs_paragraph_types_update_8001() {
+  \Drupal::service('module_installer')
+    ->install(['paragraphs_type_permissions']);
+  $paragraph_types = array_keys(ParagraphsType::loadMultiple());
+
+  /** @var \Drupal\user\RoleInterface $role */
+  foreach (Role::loadMultiple() as $role) {
+    foreach ($paragraph_types as $type) {
+      switch ($role->id()) {
+        case 'stanford_faculty':
+        case 'stanford_student':
+        case 'stanford_staff':
+        case 'author':
+          // Do Nothing.
+          break;
+
+        case RoleInterface::ANONYMOUS_ID:
+          if (!in_array($type, ['hs_priv_text_area', 'hs_private_files'])) {
+            $role->grantPermission("view paragraph content $type");
+          }
+          break;
+
+        case RoleInterface::AUTHENTICATED_ID:
+          $role->grantPermission("view paragraph content $type");
+          break;
+
+        default:
+          $role->grantPermission("create paragraph content $type")
+            ->grantPermission("delete paragraph content $type")
+            ->grantPermission("update paragraph content $type")
+            ->grantPermission("delete paragraph content $type");
+          break;
+      }
+
+    }
+    $role->save();
+  }
+}

@@ -105,5 +105,5 @@ function su_humsci_profile_post_update_9002() {
  * Disable the new collection paragraph type on rows.
  */
 function su_humsci_profile_post_update_9004() {
-  _humsci_profile_disable_paragraph_type('hs_collection', TRUE, TRUE);
+  _humsci_profile_disable_paragraph_type('hs_collection', TRUE);
 }

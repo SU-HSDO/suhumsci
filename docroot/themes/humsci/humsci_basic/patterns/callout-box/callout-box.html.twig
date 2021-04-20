@@ -1,0 +1,12 @@
+{%- set attributes = attributes.addClass('hb-callout-box') -%}
+
+{% if variant %}
+  {% set variant_class = "hb-callout-box--align-#{variant}" %} 
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
+
+<div{{ attributes }}>
+  <div class="hb-callout-box__wrapper">
+    {{ callout }}
+  </div>
+</div>

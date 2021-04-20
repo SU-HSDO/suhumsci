@@ -1,0 +1,23 @@
+{%- set attributes = attributes.addClass('hb-gradient-hero') -%}
+
+{% if variant == 'right' %}
+  {% set variant_class = "hb-gradient-hero--content-#{variant}" %} 
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
+
+{% spaceless %}
+  <div{{ attributes }}>
+    <div class="hb-gradient-hero__wrapper">
+      {% if image %}
+        <div class="hb-gradient-hero__image-wrapper">
+          {{ image }}
+        </div>
+      {% endif %}
+      {% if overlay_text %}
+        <div class="hb-gradient-hero__text">
+          {{ overlay_text }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endspaceless %}

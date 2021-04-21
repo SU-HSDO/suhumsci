@@ -27,6 +27,16 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
 
 /**
+ * Implements hook_library_info_alter().
+ */
+function hs_field_helpers_library_info_alter(&$libraries, $extension) {
+  if ($extension == 'addtocal' && isset($libraries['addtocal/addtocal'])) {
+    unset($libraries['addtocal/addtocal']['css']);
+    $libraries['addtocal/addtocal']['dependencies'][] = 'hs_field_helpers/addtocal';
+  }
+}
+
+/**
  * Implements hook_field_widget_info_alter().
  */
 function hs_field_helpers_field_widget_info_alter(array &$info) {
@@ -45,6 +55,9 @@ function hs_field_helpers_field_formatter_info_alter(array &$info) {
 
   if (isset($info['viewfield_default'])) {
     $info['viewfield_default']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault';
+  }
+  if (isset($info['addtocal_view'])) {
+    $info['addtocal_view']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\AddToCalFormatter';
   }
 }
 

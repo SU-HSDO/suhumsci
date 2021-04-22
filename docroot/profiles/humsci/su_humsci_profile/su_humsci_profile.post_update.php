@@ -107,3 +107,18 @@ function su_humsci_profile_post_update_9002() {
 function su_humsci_profile_post_update_9004() {
   _humsci_profile_disable_paragraph_type('hs_collection');
 }
+
+/**
+ * Disable the callout box paragraph type on older themes and rows.
+ */
+function su_humsci_profile_post_update_9005() {
+  _humsci_profile_disable_paragraph_type('hs_callout_box', FALSE);
+  _humsci_profile_disable_paragraph_type('hs_callout_box', TRUE, TRUE);
+}
+
+/**
+ * Disable the gradient hero paragraph type on all themes and rows.
+ */
+function su_humsci_profile_post_update_9006() {
+  _humsci_profile_disable_paragraph_type('hs_gradient_hero', TRUE, TRUE);
+}

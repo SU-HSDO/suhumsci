@@ -22,19 +22,45 @@ drush:
 modules:
   local:
     enable: {  }
-    uninstall: [google_analytics, acquia_connector, purge, shield, config_readonly]
+    uninstall:
+      - google_analytics
+      - acquia_connector
+      - purge
+      - shield
+      - config_readonly
   ci:
-    enable: [hs_config_readonly]
-    uninstall: [google_analytics, purge, acquia_connector, shield, simplesamlphp_auth]
+    enable:
+      - hs_config_readonly
+    uninstall:
+      - google_analytics
+      - purge
+      - acquia_connector
+      - shield
+      - simplesamlphp_auth
   dev:
-    enable: [acquia_connector, shield, stage_file_proxy]
-    uninstall: [google_analytics, config_readonly]
+    enable:
+      - acquia_connector
+      - shield
+      - stage_file_proxy
+    uninstall:
+      - google_analytics
+      - config_readonly
   test:
-    enable: [acquia_connector, shield, stage_file_proxy]
-    uninstall: [google_analytics, config_readonly]
+    enable:
+      - acquia_connector
+      - shield
+      - stage_file_proxy
+    uninstall:
+      - google_analytics
+      - config_readonly
   prod:
-    enable: [google_analytics, acquia_connector, hs_config_readonly]
-    uninstall: [shield, stage_file_proxy]
+    enable:
+      - google_analytics
+      - acquia_connector
+      - hs_config_readonly
+    uninstall:
+      - shield
+      - stage_file_proxy
 multisites:
   - africanstudies
   - amstudies
@@ -52,6 +78,7 @@ multisites:
   - dfetter__humsci
   - dsresearch
   - duboislab
+  - ealc
   - economics
   - english
   - facultyaffairs_humsci
@@ -89,9 +116,11 @@ multisites:
   - popstudies
   - psychology
   - publicpolicy
+  - religiousstudies
   - researchadmin_humsci
   - shenlab
   - siw
+  - southasia
   - sparkbox_sandbox
   - stanfordsciencefellows
   - statistics
@@ -113,16 +142,20 @@ sync:
     - 'blt:init:settings'
 tests:
   phpunit:
-    - # Run all tests in the H&S modules directory.
+    -
       path: '${docroot}'
-      config: ${docroot}/core/phpunit.xml
-      directory: ${docroot}/modules/humsci
-      bootstrap: ${docroot}/core/tests/bootstrap.php
-      filter: '/(Unit|Kernel)/'
+      config: '${docroot}/core/phpunit.xml'
+      directory: '${docroot}/modules/humsci'
+      bootstrap: '${docroot}/core/tests/bootstrap.php'
+      filter: /(Unit|Kernel)/
   reports:
     localDir: '${repo.root}/artifacts'
   codeception:
-    stanford_profile: { suites: [acceptance, functional], directory: '${docroot}/profiles/humsci/su_humsci_profile/tests/codeception' }
+    stanford_profile:
+      suites:
+        - acceptance
+        - functional
+      directory: '${docroot}/profiles/humsci/su_humsci_profile/tests/codeception'
 keys_rsync:
   ssh: swshumsci.prod@srv-7503.devcloud.hosting.acquia.com
   files:

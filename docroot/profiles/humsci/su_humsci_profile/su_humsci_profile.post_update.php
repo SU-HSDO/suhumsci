@@ -124,8 +124,9 @@ function su_humsci_profile_post_update_9006() {
 }
 
 /**
- * Uninstall printfriendly module
+ * Uninstall printfriendly module.
  */
 function su_humsci_profile_post_update_9007() {
   \Drupal::service('module_installer')->uninstall(['printfriendly']);
+  \Drupal::configFactory()->getEditable('views.view.conference_agenda')->delete();
 }

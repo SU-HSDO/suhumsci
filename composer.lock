@@ -14568,25 +14568,25 @@
         },
         {
             "name": "spatie/calendar-links",
-            "version": "1.4.4",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/calendar-links.git",
-                "reference": "bfe49e7dfbe56237ca4a640d8547bd5147596d35"
+                "reference": "aa984fb84d218cc8962b8f89ef46437298534c24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/calendar-links/zipball/bfe49e7dfbe56237ca4a640d8547bd5147596d35",
-                "reference": "bfe49e7dfbe56237ca4a640d8547bd5147596d35",
+                "url": "https://api.github.com/repos/spatie/calendar-links/zipball/aa984fb84d218cc8962b8f89ef46437298534c24",
+                "reference": "aa984fb84d218cc8962b8f89ef46437298534c24",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.5 || ^9.0",
-                "spatie/phpunit-snapshot-assertions": "^3.0|^4.0",
-                "vimeo/psalm": "^4.1"
+                "phpunit/phpunit": "^9.0",
+                "spatie/phpunit-snapshot-assertions": "^4.0",
+                "vimeo/psalm": "^4.7"
             },
             "type": "library",
             "autoload": {
@@ -14618,7 +14618,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-04-13T14:46:22+00:00"
+            "time": "2021-04-22T15:16:31+00:00"
         },
         {
             "name": "stack/builder",
@@ -14824,16 +14824,16 @@
         },
         {
             "name": "su-sws/stanford_migrate",
-            "version": "8.1.12",
+            "version": "8.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_migrate.git",
-                "reference": "1248cc4de64ca80ba4eae3b643a359b68dabeb27"
+                "reference": "e12237dc49425ee2a5ea836575b626152bdc536d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/1248cc4de64ca80ba4eae3b643a359b68dabeb27",
-                "reference": "1248cc4de64ca80ba4eae3b643a359b68dabeb27",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/e12237dc49425ee2a5ea836575b626152bdc536d",
+                "reference": "e12237dc49425ee2a5ea836575b626152bdc536d",
                 "shasum": ""
             },
             "require": {
@@ -14841,6 +14841,9 @@
                 "drupal/migrate_plus": "^5.0",
                 "drupal/migrate_tools": "^5.0",
                 "drupal/ultimate_cron": "^2.0@alpha"
+            },
+            "require-dev": {
+                "drupal/migrate_source_csv": "^3.4"
             },
             "type": "drupal-custom-module",
             "extra": {
@@ -14865,7 +14868,7 @@
             ],
             "description": "Stanford Migrate Helper functions",
             "homepage": "https://github.com/SU-SWS/stanford_migrate",
-            "time": "2021-04-13T18:28:42+00:00"
+            "time": "2021-04-22T21:27:28+00:00"
         },
         {
             "name": "su-sws/stanford_ssp",
@@ -19227,40 +19230,39 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "1.10.2",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "13e3381b25847283a91948d04640543941309727"
+                "reference": "a9c1b59eba5a08ca2770a76eddb88922f504e8e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/13e3381b25847283a91948d04640543941309727",
-                "reference": "13e3381b25847283a91948d04640543941309727",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/a9c1b59eba5a08ca2770a76eddb88922f504e8e0",
+                "reference": "a9c1b59eba5a08ca2770a76eddb88922f504e8e0",
                 "shasum": ""
             },
             "require": {
                 "php": "~7.1 || ^8.0"
             },
             "conflict": {
-                "doctrine/common": ">2.2,<2.4"
+                "doctrine/common": ">2.2,<2.4",
+                "psr/cache": ">=3"
             },
             "require-dev": {
                 "alcaeus/mongo-php-adapter": "^1.1",
-                "doctrine/coding-standard": "^6.0",
+                "cache/integration-tests": "dev-master",
+                "doctrine/coding-standard": "^8.0",
                 "mongodb/mongodb": "^1.1",
-                "phpunit/phpunit": "^7.0",
-                "predis/predis": "~1.0"
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "predis/predis": "~1.0",
+                "psr/cache": "^1.0 || ^2.0",
+                "symfony/cache": "^4.4 || ^5.2"
             },
             "suggest": {
                 "alcaeus/mongo-php-adapter": "Required to use legacy MongoDB driver"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.9.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Doctrine\\Common\\Cache\\": "lib/Doctrine/Common/Cache"
@@ -19319,7 +19321,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-07T18:54:01+00:00"
+            "time": "2021-04-13T14:46:17+00:00"
         },
         {
             "name": "doctrine/common",

@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_hs_row_components
     - paragraphs.paragraphs_type.hs_collection
+    - paragraphs.paragraphs_type.hs_gradient_hero
+    - paragraphs.paragraphs_type.hs_callout_box
     - paragraphs.paragraphs_type.hs_priv_text_area
     - paragraphs.paragraphs_type.hs_row
     - paragraphs.paragraphs_type.hs_timeline
@@ -28,6 +30,8 @@ settings:
   handler_settings:
     negate: 1
     target_bundles:
+      hs_gradient_hero: hs_gradient_hero
+      hs_callout_box: hs_callout_box
       hs_priv_text_area: hs_priv_text_area
       hs_row: hs_row
       hs_collection: hs_collection
@@ -35,51 +39,60 @@ settings:
       stanford_gallery: stanford_gallery
     target_bundles_drag_drop:
       hs_accordion:
-        weight: 11
+        weight: -35
         enabled: false
       hs_banner:
-        weight: 16
+        weight: -29
         enabled: false
+      hs_callout_box:
+        enabled: true
+        weight: -34
       hs_carousel:
-        weight: 12
+        weight: -33
         enabled: false
       hs_collection:
         enabled: true
         weight: 20
+      hs_gradient_hero:
+        enabled: true
+        weight: -32
       hs_hero_image:
-        weight: 13
+        weight: -31
         enabled: false
       hs_postcard:
-        weight: 14
+        weight: -30
         enabled: false
       hs_priv_text_area:
         enabled: true
-        weight: 16
+        weight: -30
+      hs_private_files:
+        weight: -23
+        enabled: false
       hs_row:
         enabled: true
-        weight: 17
+        weight: -28
       hs_spotlight:
-        weight: 23
+        weight: -24
         enabled: false
       hs_testimonial:
-        weight: 24
+        weight: -22
         enabled: false
       hs_text_area:
-        weight: 18
+        weight: -27
         enabled: false
       hs_timeline:
         enabled: true
-        weight: 26
+        weight: -21
       hs_timeline_item:
-        weight: 27
+        weight: -20
         enabled: false
       hs_view:
-        weight: 19
+        weight: -26
         enabled: false
       hs_webform:
-        weight: 20
+        weight: -25
         enabled: false
       stanford_gallery:
         enabled: true
-        weight: 28
+        weight: -19
 field_type: entity_reference_revisions

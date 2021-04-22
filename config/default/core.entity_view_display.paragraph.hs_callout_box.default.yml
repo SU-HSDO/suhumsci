@@ -1,0 +1,44 @@
+uuid: c755d6d4-29a4-4c37-9b69-0dcf34b0bbe8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_callout_box.field_hs_callout_box_align
+    - field.field.paragraph.hs_callout_box.field_hs_callout_box_body
+    - paragraphs.paragraphs_type.hs_callout_box
+  module:
+    - ds
+    - text
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_callout_box
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: _field
+          variant_field: field_hs_callout_box_align
+          variant_field_values:
+            right: right
+            left: left
+    regions:
+      callout:
+        - field_hs_callout_box_body
+id: paragraph.hs_callout_box.default
+targetEntityType: paragraph
+bundle: hs_callout_box
+mode: default
+content:
+  field_hs_callout_box_body:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: callout
+hidden:
+  field_hs_callout_box_align: true
+  search_api_excerpt: true

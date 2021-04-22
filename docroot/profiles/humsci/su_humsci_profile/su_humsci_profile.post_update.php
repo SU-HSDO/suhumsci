@@ -122,3 +122,10 @@ function su_humsci_profile_post_update_9005() {
 function su_humsci_profile_post_update_9006() {
   _humsci_profile_disable_paragraph_type('hs_gradient_hero', TRUE, TRUE);
 }
+
+/**
+ * Uninstall printfriendly module
+ */
+function su_humsci_profile_post_update_9007() {
+  \Drupal::service('module_installer')->uninstall(['printfriendly']);
+}

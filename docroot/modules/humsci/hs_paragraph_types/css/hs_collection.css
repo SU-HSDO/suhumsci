@@ -1,17 +1,33 @@
 .field-hs-collection-items {
-  display: grid;
-  row-gap: 2rem;
-  column-gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.item-per-row--2 {
-  grid-template-columns: repeat(2, 1fr);
+@media(min-width: 540px){
+  .field-hs-collection-items {
+    display: grid;
+    row-gap: 2rem;
+    column-gap: 4rem;
+  }
 }
 
-.item-per-row--3 {
-  grid-template-columns: repeat(3, 1fr);
+@media (min-width: 540px) {
+  .item-per-row--3,
+  .item-per-row--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.item-per-row--4 {
-  grid-template-columns: repeat(4, 1fr);
+@media (min-width: 768px){
+  .item-per-row--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .item-per-row--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .item-per-row--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

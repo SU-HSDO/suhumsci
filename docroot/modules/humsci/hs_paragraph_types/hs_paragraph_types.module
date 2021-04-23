@@ -17,6 +17,9 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
   }
 }
 
+/**
+ * Implements hook_preprocess_HOOK().
+ */
 function hs_paragraph_types_preprocess_paragraph(&$variables) {
   if ($variables['paragraph']->bundle() == 'hs_collection') {
     /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */

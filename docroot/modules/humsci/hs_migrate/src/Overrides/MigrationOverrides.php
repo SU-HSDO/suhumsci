@@ -9,7 +9,7 @@ use Drupal\Core\Config\StorageInterface;
 /**
  * Migration configuration overrides from config pages values.
  *
- * @package Drupal\hs_migrate\Overrides
+ * Remove this after 9.0.3 release.
  */
 class MigrationOverrides implements ConfigFactoryOverrideInterface {
 
@@ -17,41 +17,7 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    $overrides = [];
-
-    if (in_array('migrate_plus.migration.hs_d7_news', $names)) {
-      if ($urls = self::getNewsMigrationUrls()) {
-        // Point the migration to our local url where we process the feed into
-        // usable data.
-        $overrides['migrate_plus.migration.hs_d7_news'] = [
-          'status' => TRUE,
-          'source' => [
-            'urls' => $urls,
-          ],
-        ];
-      }
-    }
-    return $overrides;
-  }
-
-  /**
-   * Get the news urls that are configured in the config pages.
-   *
-   * @return array
-   *   Array of urls.
-   */
-  protected static function getNewsMigrationUrls() {
-    if (!\Drupal::hasService('config_pages.loader')) {
-      return [];
-    }
-
-    $config_pages = \Drupal::service('config_pages.loader');
-    $field_values = $config_pages->getValue('hs_migrate_news', 'field_news_xml_feed');
-    $urls = [];
-    foreach ($field_values as $value) {
-      $urls[] = $value['uri'];
-    }
-    return $urls;
+    return [];
   }
 
   /**

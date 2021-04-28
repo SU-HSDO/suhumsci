@@ -66,7 +66,7 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
       'config_pages.publications.field_xml_url',
     ];
     foreach ($field_storage->loadMultiple($fields) as $field) {
-      $field_storage->delete();
+      $field->delete();
     }
 
     $page_storage = $this->entityTypeManager->getStorage('config_pages_type');

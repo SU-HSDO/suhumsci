@@ -1,0 +1,31 @@
+uuid: 7bcb6667-5a6e-46d9-bcce-1f64da14fb1f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_callout_box.field_hs_callout_box_align
+    - field.field.paragraph.hs_callout_box.field_hs_callout_box_body
+    - paragraphs.paragraphs_type.hs_callout_box
+  module:
+    - layout_builder
+    - text
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.hs_callout_box.preview
+targetEntityType: paragraph
+bundle: hs_callout_box
+mode: preview
+content:
+  field_hs_callout_box_body:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+hidden:
+  field_hs_callout_box_align: true
+  search_api_excerpt: true

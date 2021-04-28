@@ -1,0 +1,83 @@
+uuid: 306e087e-eda8-4f72-ab49-7075223277bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_collection_items
+    - paragraphs.paragraphs_type.hs_collection
+    - paragraphs.paragraphs_type.hs_priv_text_area
+    - paragraphs.paragraphs_type.hs_row
+    - paragraphs.paragraphs_type.hs_timeline_item
+    - paragraphs.paragraphs_type.hs_webform
+  module:
+    - entity_reference_revisions
+id: paragraph.hs_collection.field_hs_collection_items
+field_name: field_hs_collection_items
+entity_type: paragraph
+bundle: hs_collection
+label: Items
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 1
+    target_bundles:
+      hs_collection: hs_collection
+      hs_priv_text_area: hs_priv_text_area
+      hs_row: hs_row
+      hs_timeline_item: hs_timeline_item
+      hs_webform: hs_webform
+    target_bundles_drag_drop:
+      hs_accordion:
+        weight: 17
+        enabled: false
+      hs_banner:
+        weight: 18
+        enabled: false
+      hs_carousel:
+        weight: 19
+        enabled: false
+      hs_collection:
+        enabled: true
+        weight: 20
+      hs_hero_image:
+        weight: 21
+        enabled: false
+      hs_postcard:
+        weight: 22
+        enabled: false
+      hs_priv_text_area:
+        enabled: true
+        weight: 23
+      hs_row:
+        enabled: true
+        weight: 24
+      hs_spotlight:
+        weight: 25
+        enabled: false
+      hs_testimonial:
+        weight: 26
+        enabled: false
+      hs_text_area:
+        weight: 27
+        enabled: false
+      hs_timeline:
+        weight: 28
+        enabled: false
+      hs_timeline_item:
+        enabled: true
+        weight: 29
+      hs_view:
+        weight: 30
+        enabled: false
+      hs_webform:
+        enabled: true
+        weight: 31
+      stanford_gallery:
+        weight: 32
+        enabled: false
+field_type: entity_reference_revisions

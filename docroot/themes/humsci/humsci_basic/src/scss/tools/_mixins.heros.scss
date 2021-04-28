@@ -1,0 +1,431 @@
+// SHARED HERO STYLES
+// hero full width layout
+@mixin hb-hero-full-width($background: false) {
+  // For all themes, if only the hero image is present (no overlay text) or hero wrapper,
+  // make sure vertical margin is present on full width layout
+  .hs-full-width & {
+    // Special negative margin for the Spotlight
+    // to get rid of the vertical padding on all basic pages
+    margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
+  }
+
+  // img element styles should only be applied to the gradient hero
+  // and the hero image overlay field type classes
+  @if $background {
+    img {
+      width: 100%;
+    }
+  }
+}
+
+// hero image field
+@mixin hb-hero-image-field {
+  // Ensure there is a background color added to the image alone
+  position: relative;
+  @include hb-hero-full-width($background: true);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: $hb-z-index-hero1-overlay;
+    @include hb-hero-overlay-animation;
+  }
+}
+
+// hero component base
+@mixin hb-hero-component {
+  position: relative;
+  min-height: 39rem;
+  display: flex;
+
+  @include grid-media-min('md') {
+    min-height: 49rem;
+  }
+
+  @include hb-hero-full-width();
+
+  &::before {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: $hb-z-index-hero-fallback;
+    @include hb-hero-overlay-animation;
+  }
+}
+
+// hero image wrapper
+@mixin hb-hero-image-wrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+
+  @include hb-themes(('colorful', 'airy')) {
+    z-index: $hb-z-index-hero1-overlay;
+  }
+
+  // For all themes, if inside an img wrapper,
+  // no margin should be added
+  .field-hs-hero-image,
+  .field-hs-gradient-hero-image {
+    height: inherit;
+
+    .hs-full-width & {
+      margin: 0;
+    }
+  }
+
+  // In order to have the hero image cover the entire size of the hero overlay,
+  // the height of the hero must be inherited by all elements which follow down to the image.
+  article,
+  picture,
+  .field-media-image {
+    height: inherit;
+  }
+
+  img {
+    height: inherit;
+    width: 100%;
+    object-fit: cover;
+    @include hb-hero-image-animation;
+  }
+}
+
+// hero text
+@mixin hb-hero-text {
+  display: block;
+  position: relative;
+  align-self: center;
+  padding: hb-calculate-rems(54px) 0;
+  z-index: $hb-z-index-hero1-overlay;
+  @include hb-global-color('color', 'white');
+  @include hb-page-width;
+  @include hb-hero-text-animation;
+
+  h2 {
+    @include hb-hero-title;
+  }
+
+  ul {
+    li {
+      &::before {
+        @include hb-pairing-color('background-color', 'secondary');
+      }
+    }
+  }
+
+  ol {
+    li {
+      &::before {
+        @include hb-pairing-color('color', 'secondary-active');
+      }
+    }
+  }
+
+  h2,
+  .field-hs-hero-body,
+  .field-hs-gradient-hero-body p {
+    @include grid-media-min('sm') {
+      width: 80%;
+    }
+
+    @include grid-media-min('md') {
+      width: 70%;
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      width: 90%;
+
+      @include grid-media-min('lg') {
+        width: 50%;
+      }
+    }
+
+    @include hb-traditional {
+      width: 100%;
+
+      @include grid-media-min('lg') {
+        width: 60%;
+      }
+    }
+  }
+}
+
+// hero body
+@mixin hb-hero-body-field {
+  @include hb-description;
+  @include hb-traditional {
+    margin-top: hb-spacing-width('xxs');
+
+    @include grid-media-min('md') {
+      margin-top: hb-spacing-width('sm');
+      width: 60%;
+    }
+
+    @include grid-media-min('lg') {
+      width: 50%;
+    }
+  }
+}
+
+// hero link
+@mixin hb-hero-anchor-link {
+  @include hb-description;
+  @include hb-pairing-color('color', 'tertiary-reversed');
+  background-image: none;
+
+  &:hover,
+  &:focus {
+    @include hb-pairing-color('color', 'tertiary-highlight');
+  }
+}
+
+// hero title
+@mixin hb-hero-title {
+  font-size: hb-calculate-rems(27px);
+  line-height: 117%;
+  margin: 0 0 hb-spacing-width('md');
+
+  @include grid-media-min('md') {
+    @include hb-heading-2;
+    margin: 0 0 hb-spacing-width();
+  }
+
+  @include grid-media-min('lg') {
+    @include hb-heading-1;
+  }
+
+  @include hb-themes(('airy', 'colorful')) {
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(regular);
+    line-height: 112%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(33px);
+      line-height: 112%;
+    }
+
+    @include grid-media-min('lg') {
+      font-size: hb-calculate-rems(38px);
+      line-height: 112%;
+    }
+
+    @include grid-media-min('xl') {
+      font-size: hb-calculate-rems(48px);
+    }
+  }
+}
+
+// hero button
+@mixin hb-hero-button($button-color, $button-color-hover) {
+  display: inline-block;
+  font-weight: hb-theme-font-weight(semibold);
+  padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
+  text-decoration: none;
+  text-align: center;
+  transition: hb-transition(all);
+
+  &:hover,
+  &:focus {
+    box-shadow: none;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    background-color: transparent;
+    border-radius: hb-calculate-rems(42px);
+    @include hb-pairing-color('color', $button-color);
+    @include hb-pairing-color('border-color', $button-color);
+    border-width: 3px;
+    border-style: solid;
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('border-color', $button-color-hover);
+      @include hb-pairing-color('color', $button-color-hover);
+    }
+  }
+
+  @include hb-traditional {
+    @include hb-pairing-color('background-color', $button-color);
+    @include hb-global-color('color', 'white');
+    border-color: transparent;
+    border-width: 3px;
+    border-style: solid;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      @include hb-pairing-color('border-color', $button-color);
+    }
+
+    &:focus {
+      outline: hb-calculate-rems(2px) solid;
+      @include hb-global-color('outline-color', 'white');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--primary);
+    }
+  }
+}
+
+// hero link field
+@mixin hb-hero-link-field {
+  a,
+  button {
+    word-break: break-word;
+
+    @include hb-themes(('colorful', 'airy')) {
+      max-width: 80%;
+      @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
+      margin-top: hb-spacing-width('md');
+
+      @include grid-media-min('lg') {
+        max-width: 75%;
+      }
+    }
+
+    @include hb-traditional {
+      @include hb-hero-button('secondary', 'secondary-darken-12');
+      margin-top: hb-spacing-width('xs');
+
+      @include grid-media-min('sm') {
+        max-width: 80%;
+      }
+
+      @include grid-media-min('md') {
+        margin-top: hb-calculate-rems(24px);
+        max-width: 60%;
+      }
+
+      @include grid-media-min('lg') {
+        max-width: 50%;
+      }
+
+      @include grid-media-min('xl') {
+        margin-top: hb-spacing-width();
+      }
+    }
+
+    // Override the padding from the hb-hero-button mixin used above
+    padding: hb-calculate-rems(12px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('md') {
+        margin-top: hb-spacing-width();
+      }
+    }
+  }
+}
+
+// hero animations
+@mixin hb-hero-overlay-animation {
+  @include hb-traditional {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation-duration: 1200ms;
+        animation-timing-function: ease-out;
+        animation-name: traditionalHeroOverlay;
+      }
+    }
+  }
+}
+
+@mixin hb-hero-image-animation {
+  @include hb-themes(('colorful', 'airy')) {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation-duration: 950ms;
+        animation-timing-function: ease-out;
+        animation-name: colorfulHeroImage;
+      }
+    }
+  }
+}
+
+@mixin hb-hero-text-animation {
+  .hb-has-animation-enhancements & {
+    opacity: 0;
+  }
+
+  @include hb-traditional {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation-duration: 1700ms;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+        animation-name: traditionalHeroText;
+      }
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    .hb-has-animation-enhancements.js & {
+      opacity: 0; // Prevent text from displaying if page loads before the animate class is applied. If JS is turned off we don't want to hide the text, therefore we are only setting opacity to zero when there is JS.
+    }
+
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation-duration: 2000ms;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+        animation-name: colorfulHeroText;
+      }
+    }
+  }
+}
+
+// hero animation keyframes
+@mixin hb-hero-animation-keyframes {
+  @keyframes colorfulHeroText {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes colorfulHeroImage {
+    10% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  // Traditional Hero Animations
+  @keyframes traditionalHeroText {
+    0% {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes traditionalHeroOverlay {
+    0% {
+      opacity: 0.9;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+}

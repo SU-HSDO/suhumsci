@@ -1,0 +1,28 @@
+.hb-callout-box {
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  margin-bottom: hb-spacing-width('xs');
+
+  // Width changes on larger screens and floats apply with the align classes
+  @include grid-media-min('md') {
+    width: 40%;
+
+    &--align-right {
+      float: right;
+      margin-left: hb-spacing-width('xs');
+    }
+
+    &--align-left {
+      float: left;
+      margin-right: hb-spacing-width('xs');
+    }
+  }
+}
+
+// Float should only apply if text areas other siblings should clear the float element
+.ptype-hs-callout-box {
+  & + div:not(.ptype-hs-text-area) {
+    clear: both;
+  }
+}

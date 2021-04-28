@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph_row.field_hs_flexible_components
+    - paragraphs.paragraphs_type.hs_callout_box
     - paragraphs.paragraphs_type.hs_carousel
     - paragraphs.paragraphs_type.hs_priv_text_area
     - paragraphs.paragraphs_type.hs_row
@@ -25,44 +26,54 @@ settings:
   handler_settings:
     negate: 1
     target_bundles:
+      hs_callout_box: hs_callout_box
       hs_carousel: hs_carousel
       hs_priv_text_area: hs_priv_text_area
       hs_row: hs_row
     target_bundles_drag_drop:
       hs_accordion:
-        weight: 13
+        weight: -35
         enabled: false
       hs_banner:
-        weight: 14
+        weight: -34
         enabled: false
+      hs_callout_box:
+        enabled: true
+        weight: -33
       hs_carousel:
         enabled: true
         weight: 15
+      hs_gradient_hero:
+        weight: 21
+        enabled: false
       hs_hero_image:
-        weight: 16
+        weight: -31
         enabled: false
       hs_postcard:
-        weight: 17
+        weight: -30
         enabled: false
       hs_priv_text_area:
         enabled: true
-        weight: 19
+        weight: -29
       hs_private_files:
         enabled: true
-        weight: 18
+        weight: -28
       hs_row:
         enabled: true
-        weight: 20
+        weight: -27
       hs_spotlight:
-        weight: 21
+        weight: -26
         enabled: false
       hs_text_area:
-        weight: 22
+        weight: -25
         enabled: false
       hs_view:
-        weight: 23
+        weight: -24
         enabled: false
       hs_webform:
-        weight: 24
+        weight: -23
+        enabled: false
+      stanford_gallery:
+        weight: -22
         enabled: false
 field_type: entity_reference_revisions

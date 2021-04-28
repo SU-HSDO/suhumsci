@@ -10,6 +10,8 @@ use Drupal\Core\Serialization\Yaml;
  */
 class HsCommands extends BltTasks {
 
+  use HsCommandTrait;
+
   /**
    * Set up local blt settings and necessary files.
    *
@@ -67,9 +69,9 @@ class HsCommands extends BltTasks {
    * @command humsci:keys:send
    */
   public function humsciKeysSend($env = 'prod') {
-    $send = $this->askQuestion('Are you sure you want to copy over existing keys with keys in the "keys" directory? (Y/N)', 'N', TRUE);
+    $send = $this->confirm('Are you sure you want to copy over existing keys with keys in the "keys" directory?');
     $key_dir = $this->getConfigValue("key-dir.$env");
-    if (strtolower($send[0]) == 'y') {
+    if ($send) {
       $this->taskDrush()
         ->drush("rsync @self:../keys/ @default.$env:$key_dir")
         ->run();
@@ -173,7 +175,7 @@ class HsCommands extends BltTasks {
    */
   public function launchSite($site) {
     $new_domain = preg_replace('/[^a-z]/', '-', $site);
-    $new_domain = $this->askQuestion('New domain?', "https://$new_domain.stanford.edu", TRUE);
+    $new_domain = $this->askRequired('New domain?', "https://$new_domain.stanford.edu", TRUE);
     $this->switchSiteContext($site);
     $this->taskDrush()
       ->alias("$site.prod")

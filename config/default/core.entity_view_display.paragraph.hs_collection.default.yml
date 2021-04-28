@@ -1,0 +1,29 @@
+uuid: cbe0e625-8f8d-4b79-8dab-ae34eea9482a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_collection.field_hs_collection_items
+    - field.field.paragraph.hs_collection.field_hs_collection_per_row
+    - field.field.paragraph.hs_collection.field_paragraph_style
+    - paragraphs.paragraphs_type.hs_collection
+  module:
+    - entity_reference_revisions
+id: paragraph.hs_collection.default
+targetEntityType: paragraph
+bundle: hs_collection
+mode: default
+content:
+  field_hs_collection_items:
+    type: entity_reference_revisions_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_hs_collection_per_row: true
+  field_paragraph_style: true
+  search_api_excerpt: true

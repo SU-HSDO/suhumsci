@@ -16,3 +16,30 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
     $view_mode = $entity->getBehaviorSetting('image_gallery', 'display_mode', 'default');
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_paragraph_types_preprocess_paragraph(&$variables) {
+  if ($variables['paragraph']->bundle() == 'hs_collection') {
+    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+    $paragraph = $variables['paragraph'];
+    $row_style = $paragraph->get('field_paragraph_style')->getString();
+    if (!empty($row_style)) {
+      $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $row_style;
+    }
+    $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variables) {
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['element']['#object'];
+  $items_per_row = (int) $paragraph->get('field_hs_collection_per_row')
+    ->getString();
+  $variables['attributes']['class'][] = "item-per-row--$items_per_row";
+  $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+}

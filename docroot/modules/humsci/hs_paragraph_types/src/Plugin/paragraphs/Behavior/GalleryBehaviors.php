@@ -37,7 +37,7 @@ class GalleryBehaviors extends ParagraphsBehaviorBase {
       '#type' => 'select',
       '#title' => $this->t('Display Mode'),
       '#options' => [
-        'default' => $this->t('Modal Grid'),
+        'default' => $this->t('Grid'),
         'hs_gallery_slideshow' => $this->t('Slideshow'),
       ],
       '#default_value' => $paragraph->getBehaviorSetting('image_gallery', 'display_mode', 'default'),

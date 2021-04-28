@@ -19,7 +19,19 @@ function su_humsci_profile_removed_post_updates() {
   ];
 }
 
-function _humsci_profile_disable_page_paragraph($paragraph_type, $all_themes = TRUE){
+/**
+ * Disable a paragraph type from the component field on flexible pages.
+ *
+ * @param string $paragraph_type
+ *   Paragraph machine name.
+ * @param bool $all_themes
+ *   If the paragraph should be disabled on EVERY theme.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _humsci_profile_disable_page_paragraph($paragraph_type, $all_themes = TRUE) {
   $theme = \Drupal::config('system.theme')->get('default');
   $newer_themes = [
     'humsci_airy',
@@ -38,7 +50,19 @@ function _humsci_profile_disable_page_paragraph($paragraph_type, $all_themes = T
   }
 }
 
-function _humsci_profile_disable_row_paragraph($paragraph_type, $all_themes = TRUE){
+/**
+ * Disable a paragraph type from the component field on row paragraphs.
+ *
+ * @param string $paragraph_type
+ *   Paragraph machine name.
+ * @param bool $all_themes
+ *   If the paragraph should be disabled on EVERY theme.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function _humsci_profile_disable_row_paragraph($paragraph_type, $all_themes = TRUE) {
   $theme = \Drupal::config('system.theme')->get('default');
   $newer_themes = [
     'humsci_airy',
@@ -130,5 +154,7 @@ function su_humsci_profile_post_update_9006() {
  */
 function su_humsci_profile_post_update_9007() {
   \Drupal::service('module_installer')->uninstall(['printfriendly']);
-  \Drupal::configFactory()->getEditable('views.view.conference_agenda')->delete();
+  \Drupal::configFactory()
+    ->getEditable('views.view.conference_agenda')
+    ->delete();
 }

@@ -303,6 +303,12 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
     case 'link_default':
       $element['uri']['#element_validate'][] = 'hs_field_helpers_validate_link_uri';
       break;
+
+    case 'paragraphs':
+      if (!empty($element['behavior_plugins'])) {
+        $element['#attached']['library'][] = 'hs_field_helpers/paragraph_behaviors';
+      }
+      break;
   }
   $element['#attached']['library'][] = 'hs_field_helpers/admin';
 }

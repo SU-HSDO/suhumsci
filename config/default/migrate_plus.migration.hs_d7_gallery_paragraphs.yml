@@ -73,6 +73,10 @@ process:
             - constants/credit_prefix
             - credits
             - constants/credit_suffix
+        image_alt:
+          plugin: default_value
+          source: alt
+          default_value: constants/alt
         target_id:
           -
             plugin: entity_generate
@@ -84,6 +88,7 @@ process:
             ignore_case: true
             values:
               field_media_image/target_id: '@image_file'
+              field_media_image/alt: '@image_alt'
               field_media_image_caption/value: '@image_credits'
               field_media_image_caption/format: constants/minimal_html
   su_gallery_description/value: body

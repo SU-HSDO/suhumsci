@@ -103,7 +103,13 @@
       }
     }
 
-    .hb-timeline__expanded & {
+    // When a timeline item does not have a description, it no longer
+    // acts as an accordion and therefore is served a different
+    // template in the timeline item pattern. See
+    // humsci_basic/patterns/timeline-item/timeline-item.html.twig
+    // Target timeline items that are not wrapped in a summary tag
+    // to remove the arrow which toggles an accordion open / closed.
+    :is(div.hb-timeline-item__summary) & {
       &::after {
         display: none;
       }

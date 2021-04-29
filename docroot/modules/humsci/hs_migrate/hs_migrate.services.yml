@@ -1,5 +1,6 @@
 services:
-  hs_migrate.overrider:
-    class: \Drupal\hs_migrate\Overrides\MigrationOverrides
+  my_config_events_subscriber:
+    class: '\Drupal\hs_migrate\EventSubscriber\ConfigEventsSubscriber'
+    arguments: ['@entity_type.manager']
     tags:
-      - {name: config.factory.override, priority: 5}
+      - { name: 'event_subscriber' }

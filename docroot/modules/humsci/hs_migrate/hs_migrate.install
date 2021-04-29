@@ -29,3 +29,10 @@ function hs_migrate_update_8003() {
     $config_factory->getEditable($config_name)->delete();
   }
 }
+
+/**
+ * Trigger all cache flush.
+ */
+function hs_migrate_update_8004() {
+  drupal_flush_all_caches();
+}

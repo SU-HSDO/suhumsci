@@ -7,9 +7,16 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class ConfigPageLink.
+ *
+ * @package Drupal\hs_migrate\Plugin\Derivative
+ */
 class ConfigPageLink extends DeriverBase implements ContainerDeriverInterface {
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
@@ -24,6 +31,14 @@ class ConfigPageLink extends DeriverBase implements ContainerDeriverInterface {
     );
   }
 
+  /**
+   * ConfigPageLink constructor.
+   *
+   * @param string $base_plugin_id
+   *   Base derivative id.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity type manager service.
+   */
   public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -48,11 +63,12 @@ class ConfigPageLink extends DeriverBase implements ContainerDeriverInterface {
           ])->toUrl('edit');
 
         $links[$config_page->id()] = [
-            'title' => $config_page->label(),
-            'route_name' => $config_page_url->getRouteName(),
-            'route_parameters' => $config_page_url->getRouteParameters(),
-            'parent' => 'migrate_tools.menu',
-          ] + $base_plugin_definition;
+          'title' => $config_page->label(),
+          'route_name' => $config_page_url->getRouteName(),
+          'route_parameters' => $config_page_url->getRouteParameters(),
+          'parent' => 'migrate_tools.menu',
+        ];
+        $links[$config_page->id()] += $base_plugin_definition;
       }
     }
 

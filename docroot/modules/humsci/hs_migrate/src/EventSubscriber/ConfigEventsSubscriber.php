@@ -15,6 +15,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigEventsSubscriber implements EventSubscriberInterface {
 
   /**
+   * Entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
@@ -23,6 +25,7 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
    * ConfigEventsSubscriber constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Entity type manager service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
@@ -84,7 +87,8 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
    * @param string $field_name
    *   Field machine name.
    *
-   * @return string|null
+   * @return mixed
+   *   Field values from the old config page.
    */
   protected function getConfigPageValue($page_id, $field_name) {
     $config_page_storage = $this->entityTypeManager->getStorage('config_pages');

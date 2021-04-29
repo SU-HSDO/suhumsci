@@ -8,14 +8,28 @@
 
   Drupal.behaviors.humsciParagraphBehaviors = {
     attach: function (context, settings) {
-      const tabs = $('ul.paragraphs-tabs', context);
-      tabs.removeClass('paragraphs-tabs')
-        .removeClass('primary')
-        .addClass('hs-paragraphs-tabs');
-      const dragColumn = tabs.parent().find('.paragraphs-subform').closest('tr').find('td.field-multiple-drag');
-      if (dragColumn.length > 0) {
-        dragColumn.append(tabs.detach());
-      }
+      $('ul.paragraphs-tabs', context).remove();
+      $('.paragraphs-subform', context).once('hs-heaviors').each(function () {
+        const subform = $(this);
+        const behaviors = $(this).siblings('.paragraphs-behavior')
+        const tabs = $('<ul class="hs-paragraphs-tabs tabs">');
+        const contentLink = $('<a href="#">').text('Content').click(function(e){
+          e.preventDefault();
+          subform.show();
+          behaviors.hide();
+        });
+        const behaviorsLink = $('<a href="#">').text('Style').click(function(e){
+          e.preventDefault();
+          subform.hide();
+          behaviors.show();
+        });
+        tabs.append($('<li>').append(contentLink));
+        tabs.append($('<li>').append(behaviorsLink));
+
+        if (behaviors.length > 0) {
+          $(this).closest('tr').find('td.field-multiple-drag').append(tabs);
+        }
+      });
     }
   };
 })(jQuery, Drupal);

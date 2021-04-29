@@ -305,7 +305,7 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
       break;
 
     case 'paragraphs':
-      if (!empty($element['behavior_plugins'])) {
+      if (!empty($element['behavior_plugins']) && !empty(Element::children($element['behavior_plugins']))) {
         $element['#attached']['library'][] = 'hs_field_helpers/paragraph_behaviors';
       }
       break;

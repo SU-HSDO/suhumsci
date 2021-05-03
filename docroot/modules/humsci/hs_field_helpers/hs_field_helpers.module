@@ -651,3 +651,15 @@ function hs_field_helpers_preprocess_ds_entity_view(&$variables) {
     'preRenderDsEntity',
   ];
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function hs_field_helpers_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (strpos($form_id, 'views_form_') === 0) {
+    // Remove the select all since it selects every node, not just the ones
+    // from the active filters.
+    // @link https://www.drupal.org/project/views_bulk_operations/issues/3055770#comment-13116724
+    unset($form['header']['views_bulk_operations_bulk_form']['select_all']);
+  }
+}

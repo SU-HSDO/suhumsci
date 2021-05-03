@@ -1,0 +1,30 @@
+accordion:
+  label: "Accordion"
+  fields:
+    title:
+      label: "Title"
+      type: text
+      preview: "Summary Text"
+    description:
+      label: "Description"
+      type: text
+      preview: "Cras ultricies mi eu turpis hendrerit fringilla. <a href=\"http://google.com\">Curabitur at lacus ac velit ornare lobortis</a>. Duis lobortis massa imperdiet quam. Etiam sit amet orci eget eros faucibus tincidunt. Vivamus in erat ut urna cursus vestibulum."
+    children:
+      label: "Children"
+      type: text
+      preview: "Cras ultricies mi eu turpis hendrerit fringilla. <a href=\"http://google.com\">Curabitur at lacus ac velit ornare lobortis</a>. Duis lobortis massa imperdiet quam. Etiam sit amet orci eget eros faucibus tincidunt. Vivamus in erat ut urna cursus vestibulum."
+  variants:
+     closed:
+       label: Normally Closed
+       description: Closed accordion on page load.
+     open:
+       label: Normally Open
+       description: Open accordion on page load.
+  libraries:
+    - accordion:
+        css:
+          component:
+            css/accordion.css: {}
+        dependencies:
+          - core/drupal.collapse
+  use: "@hs_layouts/accordion/accordion.html.twig"

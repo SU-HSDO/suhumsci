@@ -8,77 +8,77 @@
 <div{{ attributes }}>
   <div class="hb-testimonial__wrapper">
     <div class="hb-testimonial__content">
-    {% if variant == "top" %}
-      {% if quote %}
-        <div class="hb-testimonial__quote hb-testimonial__quote--top">
-          {{ quote }}
-        </div>
-      {% endif %}
-
-      <div class="hb-testimonial__author-block">
-        {% if image %}
-          <div class="hb-testimonial__image">
-            {{ image }}
+      {% if variant == "top" %}
+        {% if quote %}
+          <div class="hb-testimonial__quote hb-testimonial__quote--top">
+            {{ quote }}
           </div>
         {% endif %}
 
-        <div class="hb-testimonial__author-credits">
-          {% if name %}
-            <div class="hb-testimonial__name">
-              {{ name }}
+        <div class="hb-testimonial__author-block">
+          {% if image %}
+            <div class="hb-testimonial__image">
+              {{ image }}
             </div>
           {% endif %}
 
-          {% if position %}
-            <div class="hb-testimonial__position">
-              {{ position }}
-            </div>
-          {% endif %}
+          <div class="hb-testimonial__author-credits">
+            {% if name %}
+              <div class="hb-testimonial__name">
+                {{ name }}
+              </div>
+            {% endif %}
 
-          {% if link %}
-            <div class="hb-testimonial__link">
-              {{ link }}
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    {% endif %}
+            {% if position %}
+              <div class="hb-testimonial__position">
+                {{ position }}
+              </div>
+            {% endif %}
 
-    {% if variant == "bottom" %}
-    <div class="hb-testimonial__author-block">
-      {% if image %}
-        <div class="hb-testimonial__image">
-          {{ image }}
-        </div>
-      {% endif %}
-
-        <div class="hb-testimonial__author-credits">
-          {% if name %}
-            <div class="hb-testimonial__name">
-              {{ name }}
-            </div>
-          {% endif %}
-
-          {% if position %}
-            <div class="hb-testimonial__position">
-              {{ position }}
-            </div>
-          {% endif %}
-        </div>
-      </div>
-
-      {% if quote %}
-        <div class="hb-testimonial__quote hb-testimonial__quote--bottom">
-          {{ quote }}
+            {% if link %}
+              <div class="hb-testimonial__link">
+                {{ link }}
+              </div>
+            {% endif %}
+          </div>
         </div>
       {% endif %}
 
-      {% if link %}
-        <div class="hb-testimonial__link">
-          {{ link }}
+      {% if variant == "bottom" %}
+        <div class="hb-testimonial__author-block">
+          {% if image %}
+            <div class="hb-testimonial__image">
+              {{ image }}
+            </div>
+          {% endif %}
+
+          <div class="hb-testimonial__author-credits">
+            {% if name %}
+              <div class="hb-testimonial__name">
+                {{ name }}
+              </div>
+            {% endif %}
+
+            {% if position %}
+              <div class="hb-testimonial__position">
+                {{ position }}
+              </div>
+            {% endif %}
+          </div>
         </div>
+
+        {% if quote %}
+          <div class="hb-testimonial__quote hb-testimonial__quote--bottom">
+            {{ quote }}
+          </div>
+        {% endif %}
+
+        {% if link %}
+          <div class="hb-testimonial__link">
+            {{ link }}
+          </div>
+        {% endif %}
       {% endif %}
-    {% endif %}
     </div>
   </div>
 </div>

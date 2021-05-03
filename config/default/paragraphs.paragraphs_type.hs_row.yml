@@ -1,7 +1,9 @@
 uuid: 32fcb389-7dcd-42a5-a0b7-fb0759ac193f
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - layout_paragraphs
 _core:
   default_config_hash: mIGr5RpAFt4-ZXFDQzpwuie6BlMCF_w6BvI1vbIy_7I
 id: hs_row
@@ -9,4 +11,12 @@ label: Row
 icon_uuid: null
 icon_default: null
 description: 'Add multiple paragraphs in the same row.'
-behavior_plugins: {  }
+behavior_plugins:
+  layout_paragraphs:
+    enabled: true
+    available_layouts:
+      ds_4col: 'Four column - equal width'
+      ds_1col: 'One column layout'
+      ds_3col: 'Three column - 25/50/25'
+      ds_3col_equal_width: 'Three column - equal width'
+      ds_2col: 'Two column layout'

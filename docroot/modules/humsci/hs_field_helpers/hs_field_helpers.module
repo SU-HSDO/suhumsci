@@ -117,6 +117,9 @@ function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $e
  * Implements hook_preprocess().
  */
 function hs_field_helpers_preprocess(&$variables, $hook) {
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
   // UI Patterns cleanup to remove regions that don't have anything to render.
   if (isset($variables['context']) && $variables['context'] instanceof PatternContext) {
     $pattern_id = str_replace('pattern_', '', $hook);

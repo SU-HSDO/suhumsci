@@ -158,3 +158,11 @@ function su_humsci_profile_post_update_9007() {
     ->getEditable('views.view.conference_agenda')
     ->delete();
 }
+
+/**
+ * Disable the gradient hero slider paragraph type on all themes and rows.
+ */
+function su_humsci_profile_post_update_9008() {
+  _humsci_profile_disable_page_paragraph('hs_gradient_hero_slider');
+  _humsci_profile_disable_row_paragraph('hs_gradient_hero_slider');
+}

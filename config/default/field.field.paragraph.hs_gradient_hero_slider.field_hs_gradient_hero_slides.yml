@@ -1,23 +1,18 @@
-uuid: 89d0560a-eb7f-4782-ae67-b48508c5b073
+uuid: ce3ce9a1-5c59-48bb-8c55-afd949c1f989
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_hs_page_hero
-    - node.type.hs_basic_page
-    - paragraphs.paragraphs_type.hs_banner
-    - paragraphs.paragraphs_type.hs_carousel
-    - paragraphs.paragraphs_type.hs_hero_image
-    - paragraphs.paragraphs_type.hs_spotlight
+    - field.storage.paragraph.field_hs_gradient_hero_slides
+    - paragraphs.paragraphs_type.hs_gradient_hero
+    - paragraphs.paragraphs_type.hs_gradient_hero_slider
   module:
     - entity_reference_revisions
-_core:
-  default_config_hash: CtjSYgQDCAfFJwXf-qNIHaI9AlmddmaBT13rtC0QYAI
-id: node.hs_basic_page.field_hs_page_hero
-field_name: field_hs_page_hero
-entity_type: node
-bundle: hs_basic_page
-label: 'Hero Image'
+id: paragraph.hs_gradient_hero_slider.field_hs_gradient_hero_slides
+field_name: field_hs_gradient_hero_slides
+entity_type: paragraph
+bundle: hs_gradient_hero_slider
+label: 'Gradient Hero Slides'
 description: ''
 required: false
 translatable: false
@@ -28,55 +23,52 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      hs_hero_image: hs_hero_image
-      hs_carousel: hs_carousel
-      hs_banner: hs_banner
-      hs_spotlight: hs_spotlight
+      hs_gradient_hero: hs_gradient_hero
     target_bundles_drag_drop:
       hs_accordion:
-        weight: 12
+        weight: 21
         enabled: false
       hs_banner:
-        enabled: true
-        weight: 14
+        weight: 22
+        enabled: false
       hs_callout_box:
         weight: 23
         enabled: false
       hs_carousel:
-        enabled: true
-        weight: 10
+        weight: 24
+        enabled: false
       hs_collection:
         weight: 25
         enabled: false
       hs_gradient_hero:
-        weight: 21
-        enabled: false
+        enabled: true
+        weight: 26
       hs_gradient_hero_slider:
         weight: 27
         enabled: false
       hs_hero_image:
-        enabled: true
-        weight: 3
+        weight: 28
+        enabled: false
       hs_postcard:
-        weight: 15
+        weight: 29
         enabled: false
       hs_priv_text_area:
-        weight: 17
+        weight: 31
         enabled: false
       hs_private_files:
-        weight: 16
+        weight: 30
         enabled: false
       hs_row:
-        weight: 18
+        weight: 32
         enabled: false
       hs_spotlight:
-        enabled: true
-        weight: 19
+        weight: 33
+        enabled: false
       hs_testimonial:
         weight: 34
         enabled: false
       hs_text_area:
-        weight: 20
+        weight: 35
         enabled: false
       hs_timeline:
         weight: 36
@@ -85,10 +77,10 @@ settings:
         weight: 37
         enabled: false
       hs_view:
-        weight: 21
+        weight: 38
         enabled: false
       hs_webform:
-        weight: 22
+        weight: 39
         enabled: false
       stanford_gallery:
         weight: 40

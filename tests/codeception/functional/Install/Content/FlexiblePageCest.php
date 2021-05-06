@@ -32,12 +32,11 @@ class FlexiblePageCest {
     $I->canSee('Optionally add some overlay text on top of the image');
     $I->canSee('Body');
     $I->canSee('Link text');
-    $I->canSee('Overlay Color');
+    $I->cantSee('Overlay Color');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_hero_title][0][value]', 'Overlay Title');
 
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
-    $I->click('button[value="#4D4F53"]');
     $I->click('Save');
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');

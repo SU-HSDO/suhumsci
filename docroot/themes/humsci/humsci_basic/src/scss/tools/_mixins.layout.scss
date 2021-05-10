@@ -92,3 +92,16 @@
     }
   }
 }
+
+// This mixin adds background color and z-index for sidebar areas of the layout.
+@mixin hb-sidebar {
+  width: 100%;
+  @include hb-global-color('background-color', 'white');
+  z-index: $hb-z-index-small-1;
+
+  // The override below changes the sidebar styling to default within the layout builder admin area.
+  .layout-builder & {
+    z-index: auto;
+    background-color: initial;
+  }
+}

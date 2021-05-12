@@ -18,6 +18,30 @@ use Drupal\user\RoleInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 
 /**
+ * Implements hook_ui_patterns_info_alter().
+ */
+function su_humsci_profile_ui_patterns_info_alter(array &$definitions) {
+  $theme = \Drupal::config('system.theme')->get('default');
+  $profile_settings = \Drupal::config('su_humsci_profile.settings');
+  $newer_themes = $profile_settings->get('new_themes') ?: [];
+  $keep_libraries = [
+    'masonry_item',
+    'masonry',
+  ];
+
+  if (in_array($theme, $newer_themes)) {
+    /** @var \Drupal\ui_patterns\Definition\PatternDefinition $definition */
+    foreach ($definitions as $definition) {
+      // On newer themes, unset the libraries for all patterns except a few
+      // specific ones.
+      if (!in_array($definition->id(), $keep_libraries)) {
+        $definition->setLibraries([]);
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function su_humsci_profile_preprocess_table(&$variables) {
@@ -388,7 +412,8 @@ function su_humsci_profile_preprocess_pattern_alert(&$variables) {
 
     // Validate that the entity has the field we need so we don't 500 the site.
     if (!$entity->hasField('su_global_msg_type')) {
-      \Drupal::logger('stanford_profile_helper')->error(t("Global Messages Config Block is missing the field su_global_msg_type"));
+      \Drupal::logger('stanford_profile_helper')
+        ->error(t("Global Messages Config Block is missing the field su_global_msg_type"));
       return;
     }
 

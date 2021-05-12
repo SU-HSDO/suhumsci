@@ -5,26 +5,49 @@
  * hs_field_helpers.module
  */
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\hs_field_helpers\Plugin\Field\FieldType\DisplayModeField;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\Core\Field\FormatterInterface;
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\ui_patterns\UiPatterns;
-use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\eck\Entity\EckEntity;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Html;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
+use Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\AddToCalFormatter;
+use Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\EntityTitleHeading;
+use Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault;
+use Drupal\hs_field_helpers\Plugin\Field\FieldType\DisplayModeField;
+use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\DateTimeYearOnly;
+use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\ui_patterns\Element\PatternContext;
+use Drupal\ui_patterns\UiPatterns;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_field_helpers_preprocess_media_oembed_iframe(&$variables) {
+  try {
+    if (
+      !empty($variables['resource']) &&
+      $variables['resource']->getProvider()->getName() == 'YouTube'
+    ) {
+      $iframe = (string) $variables['media'];
+      $variables['media'] = preg_replace('/src="(.[^"]+)"/', 'src="$1&modestbranding=1&rel=0"', $iframe);
+    }
+  }
+  catch (\Exception $e) {
+    // Nothing to do.
+  }
+}
 
 /**
  * Implements hook_library_info_alter().
@@ -43,7 +66,11 @@ function hs_field_helpers_field_widget_info_alter(array &$info) {
   $info['options_select']['field_types'][] = 'display_mode_field';
 
   if (isset($info['viewfield_select'])) {
-    $info['viewfield_select']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect';
+    $info['viewfield_select']['class'] = HsViewfieldWidgetSelect::class;
+  }
+
+  if (isset($info['datetime_year_only'])) {
+    $info['datetime_year_only']['class'] = DateTimeYearOnly::class;
   }
 }
 
@@ -54,10 +81,13 @@ function hs_field_helpers_field_formatter_info_alter(array &$info) {
   $info['list_default']['field_types'][] = 'display_mode_field';
 
   if (isset($info['viewfield_default'])) {
-    $info['viewfield_default']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault';
+    $info['viewfield_default']['class'] = HsViewfieldFormatterDefault::class;
   }
   if (isset($info['addtocal_view'])) {
-    $info['addtocal_view']['class'] = 'Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\AddToCalFormatter';
+    $info['addtocal_view']['class'] = AddToCalFormatter::class;
+  }
+  if (isset($info['entity_title_heading'])) {
+    $info['entity_title_heading']['class'] = EntityTitleHeading::class;
   }
 }
 
@@ -117,6 +147,9 @@ function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $e
  * Implements hook_preprocess().
  */
 function hs_field_helpers_preprocess(&$variables, $hook) {
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
   // UI Patterns cleanup to remove regions that don't have anything to render.
   if (isset($variables['context']) && $variables['context'] instanceof PatternContext) {
     $pattern_id = str_replace('pattern_', '', $hook);
@@ -302,6 +335,12 @@ function hs_field_helpers_field_widget_form_alter(&$element, FormStateInterface 
 
     case 'link_default':
       $element['uri']['#element_validate'][] = 'hs_field_helpers_validate_link_uri';
+      break;
+
+    case 'paragraphs':
+      if (!empty($element['behavior_plugins']) && !empty(Element::children($element['behavior_plugins']))) {
+        $element['#attached']['library'][] = 'hs_field_helpers/paragraph_behaviors';
+      }
       break;
   }
   $element['#attached']['library'][] = 'hs_field_helpers/admin';
@@ -644,4 +683,16 @@ function hs_field_helpers_preprocess_ds_entity_view(&$variables) {
     'Drupal\hs_field_helpers\PreRenderer',
     'preRenderDsEntity',
   ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function hs_field_helpers_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (strpos($form_id, 'views_form_') === 0) {
+    // Remove the select all since it selects every node, not just the ones
+    // from the active filters.
+    // @link https://www.drupal.org/project/views_bulk_operations/issues/3055770#comment-13116724
+    unset($form['header']['views_bulk_operations_bulk_form']['select_all']);
+  }
 }

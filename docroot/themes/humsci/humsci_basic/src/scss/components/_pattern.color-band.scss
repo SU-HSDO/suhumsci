@@ -1,0 +1,49 @@
+.hb-color-band {
+  text-align: center;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    width: 50vw;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    .layout-builder & {
+      display: none;
+    }
+  }
+
+  &::before {
+    left: -50vw;
+  }
+
+  &::after {
+    right: -50vw;
+  }
+
+  &--default,
+  &--default::before,
+  &--default::after {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+  }
+
+  &--cardinal,
+  &--cardinal::before,
+  &--cardinal::after {
+    @include hb-global-color('background-color', 'cardinal');
+  }
+
+  &--gray,
+  &--gray::before,
+  &--gray::after {
+    @include hb-global-color('background-color', 'gray-dark');
+  }
+
+  &--text {
+    @include hb-global-color('color', 'white');
+    padding: hb-calculate-rems(12px);
+  }
+}

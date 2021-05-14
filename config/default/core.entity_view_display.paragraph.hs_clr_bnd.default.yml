@@ -1,0 +1,44 @@
+uuid: 9ab38e7b-1a4b-4493-bf96-e393673e5b89
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
+    - paragraphs.paragraphs_type.hs_clr_bnd
+  module:
+    - ds
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_color_band
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: only_content
+          variant: _field
+          variant_field: field_hs_clr_bnd_bgc
+          variant_field_values:
+            default: default
+            cardinal: cardinal
+            gray: gray
+    regions:
+      color_band_text:
+        - field_hs_clr_bnd_txt
+id: paragraph.hs_clr_bnd.default
+targetEntityType: paragraph
+bundle: hs_clr_bnd
+mode: default
+content:
+  field_hs_clr_bnd_txt:
+    type: basic_string
+    weight: 0
+    region: color_band_text
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_hs_clr_bnd_bgc: true
+  search_api_excerpt: true

@@ -1,0 +1,214 @@
+// Slick JS Carousel / Slider controls
+
+// slick
+@mixin slick-container {
+  .slick {
+    position: relative;
+  }
+}
+
+// arrows
+@mixin slick-arrows {
+  .slick__arrow button {
+    @include hb-unbuttonize;
+    @include hb-global-color('background-color', 'white');
+    position: absolute;
+    opacity: 50%;
+
+    width: hb-calculate-rems(44px);
+    height: hb-calculate-rems(88px);
+    padding: 0;
+    font-size: 0;
+    border: none;
+    cursor: pointer;
+    transition: hb-transition(opacity);
+
+    &:hover {
+      opacity: 60%;
+    }
+
+    &:focus {
+      opacity: 100%;
+    }
+
+    // additional focus styles for keyboard users only
+    // that compliments browser default styles
+    &:focus-visible {
+      opacity: 100%;
+      outline: 5px auto -webkit-focus-ring-color; // Chrome only
+    }
+
+    // shared arrow properties
+    &::before {
+      @include hb-traditional {
+        @include hb-icon-background('slider-caret', 'black');
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-icon-background('slider-caret', 'primary');
+      }
+
+      content: '';
+      height: hb-calculate-rems(30px);
+      width: hb-calculate-rems(17px);
+      position: absolute;
+      top: hb-calculate-rems(29px);
+      transition: hb-transition(transform);
+    }
+
+    &.slick-prev {
+      right: 0;
+      border-radius: hb-calculate-rems(88px) 0 0 hb-calculate-rems(88px);
+
+      @include hb-traditional {
+        bottom: hb-calculate-rems(188px);
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: hb-calculate-rems(204px);
+      }
+
+      &::before {
+        transform: scaleX(-1);
+        right: hb-calculate-rems(8px);
+      }
+
+      @include grid-media-min('md') {
+        left: 0;
+        border-radius: 0 hb-calculate-rems(88px) hb-calculate-rems(88px) 0;
+
+        &::before {
+          left: hb-calculate-rems(8px);
+        }
+      }
+
+      &:hover {
+        &::before {
+          transform: scaleX(-1) translateX(2px);
+        }
+      }
+    }
+
+    &.slick-next {
+      right: 0;
+      border-radius: hb-calculate-rems(88px) 0 0 hb-calculate-rems(88px);
+
+      @include hb-traditional {
+        bottom: hb-calculate-rems(84px);
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: hb-calculate-rems(100px);
+      }
+
+      &::before {
+        right: hb-calculate-rems(8px);
+      }
+
+      &:hover {
+        &::before {
+          transform: translateX(2px);
+        }
+      }
+    }
+
+    &.slick-prev,
+    &.slick-next {
+      @include grid-media-min('md') {
+        @include hb-traditional {
+          bottom: calc(50% - #{hb-calculate-rems(30px)});
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          bottom: calc(50% - #{hb-calculate-rems(21px)});
+        }
+
+        // styles specific to the main content area are applied by targeting
+        // the sidebar classes. We can use these classes to move the slick dots.
+        :not(.hs-full-width).hb-three-column--no-sidebar &,
+        .hb-three-column--one-sidebar &,
+        .hb-three-column--two-sidebar & {
+          bottom: calc(50% - #{hb-calculate-rems(46px)});
+        }
+      }
+    }
+  }
+}
+
+// dots aka bars
+@mixin slick-dots {
+  .slick-dots {
+    @include visually-hidden;
+
+    @include grid-media-min('md') {
+      display: inline-block;
+      clip: inherit;
+      height: auto;
+      width: auto;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: hb-calculate-rems(16px);
+      }
+
+      // styles specific to the main content area are applied by targeting
+      // the sidebar classes. We can use these classes to move the slick dots.
+      :not(.hs-full-width).hb-three-column--no-sidebar &,
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        bottom: hb-calculate-rems(-32px);
+      }
+
+      li {
+        display: inline-block;
+        line-height: 25%;
+
+        button {
+          @include hb-unbuttonize;
+          @include hb-global-color('background-color', 'gray');
+          padding: 0 hb-calculate-rems(22px);
+          margin: 0 hb-calculate-rems(8px);
+          font-size: 0; // hide text
+          transition: hb-transition(transform);
+
+          @include hb-themes(('colorful', 'airy')) {
+            border-radius: hb-calculate-rems(5px);
+          }
+
+          &:hover {
+            transform: scale(0.9);
+
+            @include hb-traditional {
+              @include hb-global-color('background-color', 'black');
+            }
+
+            @include hb-themes(('colorful', 'airy')) {
+              @include hb-pairing-color('background-color', 'secondary');
+            }
+          }
+        }
+
+        // active button representing the slide currently on display
+        &.slick-active button {
+          @include hb-traditional {
+            @include hb-global-color('background-color', 'black');
+          }
+
+          @include hb-themes(('colorful', 'airy')) {
+            @include hb-pairing-color('background-color', 'secondary');
+          }
+
+          &:hover {
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+}

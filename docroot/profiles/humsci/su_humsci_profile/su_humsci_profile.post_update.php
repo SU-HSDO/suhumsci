@@ -160,7 +160,7 @@ function su_humsci_profile_post_update_9007() {
 }
 
 /**
- * Disable the gradient hero slider paragraph type on all themes and rows.
+ * Disable the gradient hero slider paragraph type on all themes, updated by 9010.
  */
 function su_humsci_profile_post_update_9008() {
   _humsci_profile_disable_page_paragraph('hs_gradient_hero_slider');
@@ -173,4 +173,12 @@ function su_humsci_profile_post_update_9008() {
 function su_humsci_profile_post_update_9009() {
   _humsci_profile_disable_page_paragraph('hs_clr_bnd', FALSE);
   _humsci_profile_disable_row_paragraph('hs_clr_bnd');
+}
+
+/**
+ * Disable the gradient hero slider paragraph type on older themes and older theme rows.
+ */
+function su_humsci_profile_post_update_9010() {
+  _humsci_profile_disable_page_paragraph('hs_gradient_hero_slider', FALSE);
+  _humsci_profile_disable_row_paragraph('hs_gradient_hero_slider', FALSE);
 }

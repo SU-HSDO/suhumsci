@@ -5,10 +5,12 @@ dependencies:
   config:
     - config_pages.type.drupal_7_importers
     - field.field.config_pages.drupal_7_importers.field_gallery_xml
+    - field.field.config_pages.drupal_7_importers.field_news_rss
     - field.field.config_pages.drupal_7_importers.field_news_xml
     - field.field.config_pages.drupal_7_importers.field_people_xml
     - field.field.config_pages.drupal_7_importers.field_publications_xml
   module:
+    - hs_field_helpers
     - link
 id: config_pages.drupal_7_importers.default
 targetEntityType: config_pages
@@ -16,12 +18,21 @@ bundle: drupal_7_importers
 mode: default
 content:
   field_gallery_xml:
-    weight: 3
+    weight: 4
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
     type: link_default
+    region: content
+  field_news_rss:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+      title_vid: hs_news_categories
+    third_party_settings: {  }
+    type: link_term_title
     region: content
   field_news_xml:
     weight: 1
@@ -32,7 +43,7 @@ content:
     type: link_default
     region: content
   field_people_xml:
-    weight: 2
+    weight: 3
     settings:
       placeholder_url: ''
       placeholder_title: ''

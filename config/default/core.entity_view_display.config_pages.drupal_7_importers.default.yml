@@ -5,6 +5,7 @@ dependencies:
   config:
     - config_pages.type.drupal_7_importers
     - field.field.config_pages.drupal_7_importers.field_gallery_xml
+    - field.field.config_pages.drupal_7_importers.field_news_rss
     - field.field.config_pages.drupal_7_importers.field_news_xml
     - field.field.config_pages.drupal_7_importers.field_people_xml
     - field.field.config_pages.drupal_7_importers.field_publications_xml
@@ -17,6 +18,18 @@ mode: default
 content:
   field_gallery_xml:
     weight: 3
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_news_rss:
+    weight: 4
     label: above
     settings:
       trim_length: 80

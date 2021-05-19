@@ -1,0 +1,29 @@
+uuid: ba12f029-a814-4b5f-9291-6bf88a634682
+langcode: en
+status: true
+dependencies:
+  config:
+    - config_pages.type.drupal_7_importers
+    - eck.eck_type.importers.news_rss
+    - field.storage.config_pages.field_news_rss
+id: config_pages.drupal_7_importers.field_news_rss
+field_name: field_news_rss
+entity_type: config_pages
+bundle: drupal_7_importers
+label: 'News RSS'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:importers'
+  handler_settings:
+    target_bundles:
+      news_rss: news_rss
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

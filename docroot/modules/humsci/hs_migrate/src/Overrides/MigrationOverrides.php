@@ -14,11 +14,15 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class MigrationOverrides implements ConfigFactoryOverrideInterface {
 
   /**
+   * Config pages loader service.
+   *
    * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
    */
   protected $configPagesLoader;
 
   /**
+   * Core entity type manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
@@ -27,7 +31,9 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
    * MigrationOverrides constructor.
    *
    * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
+   *   Config pages loader service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   Core entity type manager service.
    */
   public function __construct(ConfigPagesLoaderServiceInterface $config_pages_loader, EntityTypeManagerInterface $entity_type_manager) {
     $this->configPagesLoader = $config_pages_loader;

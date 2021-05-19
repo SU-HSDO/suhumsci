@@ -84,19 +84,7 @@ function _hs_migrate_node_is_imported(NodeInterface $node) {
  * Implements hook_ENTITY_TYPE_presave().
  */
 function hs_migrate_config_pages_presave(ConfigPagesInterface $config_page) {
-  if ($config_page->id() == 'hs_d7_content') {
+  if ($config_page->id() == 'drupal_7_importers') {
     Cache::invalidateTags(['migration_plugins']);
-  }
-}
-
-/**
- * Implements hook_migration_plugins_alter().
- */
-function hs_migrate_migration_plugins_alter(array &$migrations) {
-  if(isset($migrations['migration_config_deriver:hs_news_rss'])){
-    $migration = &$migrations['migration_config_deriver:hs_news_rss'];
-    /** @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface $loader */
-    $loader = \Drupal::service('config_pages.loader');
-    $loader->getFieldView('hs_d7_content', 'field_news_rss');
   }
 }

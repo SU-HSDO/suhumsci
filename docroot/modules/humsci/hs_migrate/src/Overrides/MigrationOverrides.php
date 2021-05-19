@@ -2,22 +2,57 @@
 
 namespace Drupal\hs_migrate\Overrides;
 
+use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Migration configuration overrides from config pages values.
- *
- * Remove this after 9.0.3 release.
  */
 class MigrationOverrides implements ConfigFactoryOverrideInterface {
+
+  /**
+   * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
+   */
+  protected $configPagesLoader;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * MigrationOverrides constructor.
+   *
+   * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   */
+  public function __construct(ConfigPagesLoaderServiceInterface $config_pages_loader, EntityTypeManagerInterface $entity_type_manager) {
+    $this->configPagesLoader = $config_pages_loader;
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function loadOverrides($names) {
-    return [];
+    $overrides = [];
+    if (in_array('migrate_plus.migration.hs_news_rss', $names) && $this->entityTypeManager->hasDefinition('importers')) {
+
+      $urls = [];
+      $eck_ids = $this->configPagesLoader->getValue('drupal_7_importers', 'field_news_rss', [], 'target_id');
+      if ($eck_ids) {
+        $ecks = $this->entityTypeManager->getStorage('importers')
+          ->loadMultiple($eck_ids);
+        foreach ($ecks as $eck) {
+          $urls[] = $eck->get('field_url')->getString();
+        }
+      }
+      $overrides['migrate_plus.migration.hs_news_rss']['source']['urls'] = $urls;
+    }
+    return $overrides;
   }
 
   /**

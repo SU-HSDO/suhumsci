@@ -38,6 +38,7 @@ class UrlToTerm extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    var_dump($value);
     return NULL;
   }
 

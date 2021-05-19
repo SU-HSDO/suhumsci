@@ -7728,6 +7728,7 @@ display:
         title: false
         fields: false
         relationships: false
+        query: false
       filter_groups:
         operator: AND
         groups:
@@ -8500,6 +8501,14 @@ display:
           admin_label: 'field_hs_publication_author: Publications Collections'
           required: false
           plugin_id: standard
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: true
+          replica: false
+          query_comment: ''
+          query_tags: null
     cache_metadata:
       max-age: 0
       contexts:

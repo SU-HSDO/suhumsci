@@ -166,3 +166,11 @@ function su_humsci_profile_post_update_9008() {
   _humsci_profile_disable_page_paragraph('hs_gradient_hero_slider');
   _humsci_profile_disable_row_paragraph('hs_gradient_hero_slider');
 }
+
+/**
+ * Disable the color band paragraph type on older themes and older theme rows only.
+ */
+function su_humsci_profile_post_update_9009() {
+  _humsci_profile_disable_page_paragraph('hs_clr_bnd', FALSE);
+  _humsci_profile_disable_row_paragraph('hs_clr_bnd');
+}

@@ -58,6 +58,10 @@ source:
       name: enclosure
       label: Enclosure
       selector: enclosure/@url
+    -
+      name: url
+      label: URL
+      selector: '../*[name()="atom:link"]/@href'
   ids:
     guid:
       type: string
@@ -84,8 +88,8 @@ process:
       source: pubdate
     -
       plugin: format_date
-      from_format: 'U'
-      to_format: 'Y-m-d'
+      from_format: U
+      to_format: Y-m-d
   image_file:
     -
       plugin: null_coalesce
@@ -116,6 +120,9 @@ process:
       values:
         field_media_image/target_id: '@image_file'
         field_media_image/alt: constants/alt
+  field_hs_news_categories:
+    plugin: url_to_term
+    source: url
 destination:
   plugin: 'entity:node'
 migration_dependencies:

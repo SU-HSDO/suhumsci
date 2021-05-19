@@ -190,7 +190,7 @@ class HsAcquiaApiCommands extends BltTasks {
     try {
       $this->acquiaApplications->getAll();
     }
-    catch (\Exception $e) {
+    catch (\Throwable $e) {
       $this->traitConnectAcquiaApi();
     }
   }

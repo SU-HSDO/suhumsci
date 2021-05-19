@@ -1,12 +1,11 @@
-uuid: a78bca76-2243-445c-8c64-0b66bf87bee4
+uuid: ba12f029-a814-4b5f-9291-6bf88a634682
 langcode: en
 status: true
 dependencies:
   config:
     - config_pages.type.drupal_7_importers
+    - eck.eck_type.importer_collections.news_rss
     - field.storage.config_pages.field_news_rss
-  module:
-    - link
 id: config_pages.drupal_7_importers.field_news_rss
 field_name: field_news_rss
 entity_type: config_pages
@@ -18,6 +17,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  link_type: 16
-  title: 1
-field_type: link
+  handler: 'default:importer_collections'
+  handler_settings:
+    target_bundles:
+      news_rss: news_rss
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

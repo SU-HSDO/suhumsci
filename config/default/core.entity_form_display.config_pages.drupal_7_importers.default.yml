@@ -10,7 +10,7 @@ dependencies:
     - field.field.config_pages.drupal_7_importers.field_people_xml
     - field.field.config_pages.drupal_7_importers.field_publications_xml
   module:
-    - hs_field_helpers
+    - inline_entity_form
     - link
 id: config_pages.drupal_7_importers.default
 targetEntityType: config_pages
@@ -28,11 +28,15 @@ content:
   field_news_rss:
     weight: 2
     settings:
-      placeholder_url: ''
-      placeholder_title: ''
-      title_vid: hs_news_categories
+      form_mode: default
+      override_labels: true
+      label_singular: 'News RSS Importer'
+      label_plural: 'News RSS Importers'
+      collapsed: true
+      revision: false
+      collapsible: false
     third_party_settings: {  }
-    type: link_term_title
+    type: inline_entity_form_simple
     region: content
   field_news_xml:
     weight: 1

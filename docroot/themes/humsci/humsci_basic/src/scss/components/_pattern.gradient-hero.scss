@@ -32,6 +32,7 @@
   &__text {
     @include hb-hero-text;
     max-width: hb-calculate-rems($hb-layout-XXL-width) !important; // override max page width set in hb-page-width mixin
+    padding-right: hb-calculate-rems(24px);
 
     @include grid-media-min('sm') {
       padding: hb-calculate-rems(60px) hb-calculate-rems(24px);
@@ -56,6 +57,11 @@
         justify-content: flex-end;
         text-align: right;
       }
+
+      .field-hs-gradient-hero-body {
+        flex-direction: column;
+        align-items: flex-end;
+      }
     }
 
     .field-hs-gradient-hero-body p {
@@ -73,3 +79,13 @@
 }
 
 @include hb-hero-animation-keyframes;
+
+// Slick JS carousel / slider controls
+.paragraph--type--hs-gradient-hero-slider {
+  @include hb-hero-full-width();
+
+  @include slick-container;
+  @include slick-dots;
+  @include slick-arrows;
+  position: relative;
+}

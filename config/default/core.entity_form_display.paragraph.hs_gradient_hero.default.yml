@@ -11,7 +11,7 @@ dependencies:
     - paragraphs.paragraphs_type.hs_gradient_hero
   module:
     - allowed_formats
-    - link
+    - linkit
     - maxlength
     - media_library
     - text
@@ -54,8 +54,12 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
+      linkit_profile: default
+    third_party_settings:
+      maxlength:
+        maxlength_js: 80
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+    type: linkit
     region: content
   field_hs_gradient_hero_title:
     weight: 1

@@ -46,7 +46,6 @@ class HsCertCommands extends HsAcquiaApiCommands {
     }
   }
 
-
   /**
    * Add domain to LetsEncrypt certificate.
    *

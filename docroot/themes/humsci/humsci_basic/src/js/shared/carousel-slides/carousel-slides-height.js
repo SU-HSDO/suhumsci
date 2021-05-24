@@ -1,18 +1,20 @@
-const slides = document.querySelectorAll('.paragraph--type--hs-carousel');
+// This work below applies uniform height to both the Hero Layered Slider (formerly Carousel) and 
+// the Hero Gradient Slider paragraph component slides.
+const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider');
 let mediumScreenBreakpoint = 768;
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
-// Set the height of all text boxes within a Carousel to that
+// Set the height of all text boxes within a slider to that
 // of the tallest text box
 function restrictHeight() {
   let boxHeightArray, maxBoxHeight;
 
   slides.forEach(slide => {
     let textBoxes;
-    boxHeightArray = [0]; // array must have a default entry of 0 for the banner components and must be declare within the loop to set a baseline for each indiviual carousel on a page
+    boxHeightArray = [0]; // array must have a default entry of 0 for the banner components and must be declare within the loop to set a baseline for each indiviual slider on a page
 
-    // Find all the textBoxes inside each carousel
-    textBoxes = slide.querySelectorAll('.hb-hero-overlay__text');
+    // Find all the textBoxes inside each slider
+    textBoxes = slide.querySelectorAll('.hb-hero-overlay__text, .hb-gradient-hero__text');
 
     // Loop through all the textBoxes and gather their heights into an array
     textBoxes.forEach(textBox => {

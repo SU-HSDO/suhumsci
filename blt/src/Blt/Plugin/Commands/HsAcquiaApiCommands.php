@@ -78,6 +78,21 @@ class HsAcquiaApiCommands extends BltTasks {
   }
 
   /**
+   * Create backups of all databases on the production environment.
+   *
+   * @command humsci:backup-db
+   * @aliases backup
+   */
+  public function backupDatabases() {
+    $this->connectAcquiaApi();
+    foreach ($this->acquiaDatabases->getAll($this->appId) as $database) {
+      $message = $this->acquiaDatabaseBackups->create($this->getEnvironmentUuid('prod'), $database->name)->message;
+      $this->say(sprintf('%s: %s', $database->name, $message));
+      sleep(5);
+    }
+  }
+
+  /**
    * Sync the staging sites databases with that from production.
    *
    * @command humsci:sync-stage

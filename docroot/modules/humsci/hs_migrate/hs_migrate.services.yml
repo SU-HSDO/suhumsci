@@ -1,6 +1,11 @@
 services:
-  my_config_events_subscriber:
+  hs_migrate.config_event_subscriber:
     class: '\Drupal\hs_migrate\EventSubscriber\ConfigEventsSubscriber'
     arguments: ['@entity_type.manager']
     tags:
       - { name: 'event_subscriber' }
+  hs_migrate.migration_overrider:
+    class: Drupal\hs_migrate\Overrides\MigrationOverrides
+    arguments: ['@config_pages.loader', '@entity_type.manager']
+    tags:
+      - {name: config.factory.override, priority: 5}

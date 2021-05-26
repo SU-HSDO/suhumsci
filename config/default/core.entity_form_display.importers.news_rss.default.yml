@@ -1,0 +1,34 @@
+uuid: f76b06a6-9815-430c-a475-e9b1e08af6c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - eck.eck_type.importers.news_rss
+    - field.field.importers.news_rss.field_terms
+    - field.field.importers.news_rss.field_url
+  module:
+    - link
+id: importers.news_rss.default
+targetEntityType: importers
+bundle: news_rss
+mode: default
+content:
+  field_terms:
+    weight: 4
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete_tags
+    region: content
+  field_url:
+    weight: 3
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+hidden: {  }

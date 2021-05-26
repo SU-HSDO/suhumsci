@@ -1,0 +1,48 @@
+uuid: fd10fc0a-e1de-49f3-b3f0-ab1e78779c7b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
+    - paragraphs.paragraphs_type.hs_clr_bnd
+  module:
+    - ds
+    - layout_builder
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_color_band
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: _field
+          variant_field: field_hs_clr_bnd_bgc
+          variant_field_values:
+            gray: gray
+            cardinal: cardinal
+    regions:
+      color_band:
+        - field_hs_clr_bnd_txt
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.hs_clr_bnd.preview
+targetEntityType: paragraph
+bundle: hs_clr_bnd
+mode: preview
+content:
+  field_hs_clr_bnd_txt:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: color_band
+hidden:
+  field_hs_clr_bnd_bgc: true
+  search_api_excerpt: true

@@ -175,7 +175,7 @@ class HsCommands extends BltTasks {
    */
   public function launchSite($site) {
     $new_domain = preg_replace('/[^a-z]/', '-', $site);
-    $new_domain = $this->askRequired('New domain?', "https://$new_domain.stanford.edu", TRUE);
+    $new_domain = $this->askQuestion('New domain?', "https://$new_domain.stanford.edu", TRUE);
     $this->switchSiteContext($site);
     $this->taskDrush()
       ->alias("$site.prod")

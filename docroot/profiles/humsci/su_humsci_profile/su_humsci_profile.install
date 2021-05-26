@@ -108,3 +108,21 @@ function su_humsci_profile_update_9000() {
   $ignored[] = 'hs_courses_importer.importer_settings';
   $config->set('ignored_config_entities', $ignored)->save();
 }
+
+/**
+ * Update profile settings for the condition plugins settings.
+ */
+function su_humsci_profile_update_9001() {
+  $good_plugins = [
+    'node_type',
+    'request_path',
+    'user_role',
+    'entity_bundle:node',
+    'current_theme',
+    'term',
+  ];
+  \Drupal::configFactory()
+    ->getEditable('su_humsci_profile.settings')
+    ->set('allowed.condition_plugins', $good_plugins)
+    ->save();
+}

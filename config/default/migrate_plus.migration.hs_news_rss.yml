@@ -1,0 +1,129 @@
+uuid: 335d4888-5fc0-4976-9e9b-29f167de8cce
+langcode: en
+status: false
+dependencies: {  }
+id: hs_news_rss
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: hs_d7_content
+label: 'News RSS'
+source:
+  track_changes: true
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: simple_xml
+  urls: {  }
+  constants:
+    status: 1
+    type: hs_news
+    basic_html: basic_html
+    minimal_html: minimal_html
+    credit_prefix: '<p><em>'
+    credit_suffix: '</em></p>'
+    image_destination: 'public://media/image/news/'
+    alt: ''
+  item_selector: //item
+  fields:
+    -
+      name: guid
+      label: GUID
+      selector: guid
+    -
+      name: title
+      label: Title
+      selector: title
+    -
+      name: link
+      label: link
+      selector: link
+    -
+      name: pubdate
+      label: PubDate
+      selector: pubDate
+    -
+      name: description
+      label: Description
+      selector: description
+    -
+      name: content
+      label: Content
+      selector: '*[name()="content:encoded"]'
+    -
+      name: thumbnail
+      label: Thumbnail
+      selector: thumbnail
+    -
+      name: enclosure
+      label: Enclosure
+      selector: enclosure/@url
+    -
+      name: url
+      label: URL
+      selector: '../*[name()="atom:link"]/@href'
+  ids:
+    guid:
+      type: string
+process:
+  title: title
+  status: constants/status
+  type: constants/type
+  body/value:
+    plugin: null_coalesce
+    source:
+      - content
+      - description
+  body/format: constants/basic_html
+  field_hs_news_link/uri: link
+  field_hs_news_link/title: title
+  field_hs_news_date:
+    -
+      plugin: skip_on_empty
+      source: pubdate
+      method: process
+    -
+      plugin: callback
+      callable: strtotime
+      source: pubdate
+    -
+      plugin: format_date
+      from_format: U
+      to_format: Y-m-d
+  image_file:
+    -
+      plugin: null_coalesce
+      source:
+        - thumbnail
+        - enclosure
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: file_import
+      destination: constants/image_destination
+      id_only: true
+      reuse: true
+  field_hs_news_image/target_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_file'
+    -
+      plugin: entity_generate
+      source: title
+      value_key: name
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_image/target_id: '@image_file'
+        field_media_image/alt: constants/alt
+  field_hs_news_categories:
+    plugin: url_to_term
+    source: url
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required: {  }

@@ -210,13 +210,7 @@ function su_humsci_profile_simplify_condition_forms(array &$condition_elements, 
     return;
   }
 
-  $good_plugins = [
-    'node_type',
-    'request_path',
-    'user_role',
-    'entity_bundle:node',
-    'current_theme',
-  ];
+  $good_plugins = \Drupal::config('su_humsci_profile.settings')->get('allowed.condition_plugins');
   /** @var \Drupal\Core\Condition\ConditionManager $condition_manager */
   $condition_manager = \Drupal::service('plugin.manager.condition');
 

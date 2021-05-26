@@ -44,7 +44,7 @@ function hs_field_helpers_preprocess_media_oembed_iframe(&$variables) {
       $variables['media'] = preg_replace('/src="(.[^"]+)"/', 'src="$1&modestbranding=1&rel=0"', $iframe);
     }
   }
-  catch (\Exception $e) {
+  catch (\Throwable $e) {
     // Nothing to do.
   }
 }

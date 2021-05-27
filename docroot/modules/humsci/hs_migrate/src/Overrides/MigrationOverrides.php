@@ -56,6 +56,7 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
           $urls[] = $eck->get('field_url')->getString();
         }
       }
+      $overrides['migrate_plus.migration.hs_news_rss']['status'] = !empty($urls);
       $overrides['migrate_plus.migration.hs_news_rss']['source']['urls'] = $urls;
     }
     return $overrides;

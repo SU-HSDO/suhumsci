@@ -16,6 +16,6 @@ RUN echo '. $GITPOD_REPO_ROOT/.gitpod/.bash_aliases' >> ~/.bashrc
 RUN composer global config minimum-stability dev
 RUN composer global require drush/drush acquia/blt-launcher --no-update
 RUN composer global update
-RUN echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bashrc
+RUN echo 'export PATH="$HOME/.config/composer/vendor/bin:$PATH"' >> ~/.bashrc
 
 RUN git config --global core.fileMode false

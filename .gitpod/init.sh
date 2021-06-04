@@ -3,6 +3,7 @@
 set -e
 
 composer install -n
+composer install -n
 rm -rf docroot/*/custom/*
 git checkout docroot/
 composer install --prefer-source -n

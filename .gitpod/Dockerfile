@@ -2,12 +2,11 @@ FROM gitpod/workspace-mysql
 
 USER root
 
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN apt-get update
-RUN apt-get install rsync vault php-bz2 php-imagick -y
+RUN apt-get install rsync php-bz2 php-imagick -y
+RUN apt-get remove composer
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 ENV APACHE_DOCROOT_IN_REPO=docroot
-RUN install-packages composer
 
 USER gitpod
 

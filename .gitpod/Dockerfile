@@ -12,7 +12,7 @@ USER gitpod
 
 RUN echo '. $GITPOD_REPO_ROOT/.gitpod/.bash_aliases' >> ~/.bashrc
 
-RUN composer global self-update
+RUN composer self-update
 RUN composer global config minimum-stability dev
 RUN composer global require drush/drush acquia/blt-launcher --no-update
 RUN composer global update

@@ -7,12 +7,12 @@ RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(ls
 RUN apt-get update
 RUN apt-get install rsync vault php-bz2 php-imagick -y
 ENV APACHE_DOCROOT_IN_REPO=docroot
+RUN composer self-update
 
 USER gitpod
 
 RUN echo '. $GITPOD_REPO_ROOT/.gitpod/.bash_aliases' >> ~/.bashrc
 
-RUN composer self-update
 RUN composer global config minimum-stability dev
 RUN composer global require drush/drush acquia/blt-launcher --no-update
 RUN composer global update

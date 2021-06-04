@@ -1,0 +1,17 @@
+ports:
+  - port: 3306
+    onOpen: ignore
+    visibility: private
+  - port: 33060
+    onOpen: ignore
+    visibility: private
+  - port: 8001
+    onOpen: open-preview
+image:
+  file: .gitpod/Dockerfile
+tasks:
+  - before: .gitpod/before.sh
+    init: .gitpod/init.sh
+    command: |
+      vendor/bin/blt blt:telemetry:disable -n
+      apache2ctl restart

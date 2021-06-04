@@ -3,10 +3,6 @@
 set -e
 
 composer install -n
-composer install -n
-rm -rf docroot/*/custom/*
-git checkout docroot/
-composer install --prefer-source -n
 
 cp .gitpod/blt.yml blt/local.blt.yml
 vendor/bin/blt blt:telemetry:disable -n

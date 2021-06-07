@@ -30,6 +30,7 @@ services:
         - ln -s docroot htdocs
 
         # Install/update packages managed by composer, including drush
+        - composer self-update --2
         - composer install --no-ansi
         - vendor/bin/blt blt:telemetry:disable --no-interaction
 

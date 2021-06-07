@@ -63,6 +63,7 @@ directory_setup: &directory_setup
     - run:
         name: Composer setup
         command: |
+          composer self-update
           composer install --optimize-autoloader --no-interaction
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction

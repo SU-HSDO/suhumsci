@@ -30,8 +30,8 @@ $config = [
     // The URL to the discovery service.
     // Can be NULL/unset, in which case a builtin discovery service will be used.
     'discoURL' => NULL,
-    'privatekey' => EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/saml.pem',
-    'certificate' => EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/saml.crt'
+    'privatekey' => EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/cert/saml.pem',
+    'certificate' => EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/cert/saml.crt'
 
     /*
      * The attributes parameter must contain an array of desired attributes by the SP.

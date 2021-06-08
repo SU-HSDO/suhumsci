@@ -120,3 +120,13 @@ function su_humsci_profile_post_update_9011() {
   _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_gradient_hero_slider');
   _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_gradient_hero_slider');
 }
+
+/**
+ * Delete accordion paragraph field.
+ */
+function su_humsci_profile_post_update_9012() {
+  $field = FieldConfig::loadByName('paragraph', 'hs_accordion', 'field_hs_accordion_image');
+  if ($field) {
+    $field->delete();
+  }
+}

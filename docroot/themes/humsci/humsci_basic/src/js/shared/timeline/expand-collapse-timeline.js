@@ -24,3 +24,29 @@ timelineCollapsed.forEach(timeline => {
     summary.setAttribute('aria-pressed', 'false');
   });
 });
+
+// When a user clicks on a timeline, update the aria properties accordingly
+const timelineItems = document.querySelectorAll('.hb-timeline-item');
+
+if (timelineItems) {
+  timelineItems.forEach(timelineItem => {
+    const summary = timelineItem.querySelector('.hb-timeline-item__summary');
+
+    // Find the value of aria-expanded for a timeline item summary
+    let ariaExpanded = summary.getAttribute('aria-expanded');
+
+    // Update aria values!
+    timelineItem.addEventListener(('keypress', 'click'), () => {
+      if (ariaExpanded == "true") {
+        summary.setAttribute('aria-expanded', 'false');
+        summary.setAttribute('aria-pressed', 'false');
+      } else {
+        summary.setAttribute('aria-expanded', 'true');
+        summary.setAttribute('aria-pressed', 'true');
+      }
+
+      // Retain updated value for the aria-expanded attribute
+      ariaExpanded = summary.getAttribute('aria-expanded');
+    })
+  });
+}

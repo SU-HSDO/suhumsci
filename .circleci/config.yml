@@ -151,6 +151,7 @@ deploy_branch: &deploy_branch
     - run:
         name: Deploying branch to Acquia
         command: |
+          composer self-update --2
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           vendor/bin/blt deploy --no-interaction

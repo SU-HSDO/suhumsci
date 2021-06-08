@@ -73,7 +73,12 @@ function _su_humsci_profile_enable_paragraph($entity_type, $bundle, $field_name,
   /** @var \Drupal\field\FieldConfigInterface $field */
   $field = FieldConfig::load("$entity_type.$bundle.$field_name");
   $settings = $field->getSettings();
+
   $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
+  if ($settings['handler_settings']['negate']) {
+    unset($settings['handler_settings']['target_bundles'][$paragraph_type]);
+  }
+
   $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
     'enabled' => $settings['handler_settings']['negate'] ? FALSE : TRUE,
     'weight' => $weight,

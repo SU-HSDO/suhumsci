@@ -103,15 +103,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
     $this->setStageFileProxy($names, $overrides);
 
-    // Override the path of the key for real_aes entity on local environments.
-    if (in_array('key.key.real_aes', $names) && !isset($_ENV['AH_SITE_ENVIRONMENT'])) {
-      $overrides['key.key.real_aes'] = [
-        'key_provider_settings' => [
-          'file_location' => "../keys/REAL_AES",
-        ],
-      ];
-    }
-
     $this->setPeopleOverrides($names, $overrides);
     $this->setNewsOverrides($names, $overrides);
     $this->setCoursesOverrides($names, $overrides);

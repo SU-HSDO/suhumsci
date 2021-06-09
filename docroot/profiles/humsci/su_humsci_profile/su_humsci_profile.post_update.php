@@ -5,7 +5,7 @@
  * su_humsci_profile.post_update.php
  */
 
-use Drupal\field\FieldConfigInterface;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_removed_post_updates().
@@ -16,169 +16,122 @@ function su_humsci_profile_removed_post_updates() {
     'su_humsci_profile_post_update_8230' => '9.x-1.1',
     'su_humsci_profile_post_update_8280' => '9.x-1.1',
     'su_humsci_profile_post_update_8290' => '9.x-1.1',
+    'su_humsci_profile_post_update_9001' => '9.x-1.5',
+    'su_humsci_profile_post_update_9002' => '9.x-1.5',
+    'su_humsci_profile_post_update_9004' => '9.x-1.5',
+    'su_humsci_profile_post_update_9005' => '9.x-1.5',
+    'su_humsci_profile_post_update_9006' => '9.x-1.5',
+    'su_humsci_profile_post_update_9007' => '9.x-1.5',
+    'su_humsci_profile_post_update_9008' => '9.x-1.5',
+    'su_humsci_profile_post_update_9009' => '9.x-1.5',
+    'su_humsci_profile_post_update_9010' => '9.x-1.5',
   ];
 }
 
 /**
- * Disable a paragraph type from the component field on flexible pages.
+ * Disable a paragraph type on a field for an entity type.
  *
+ * @param string $entity_type
+ *   Entity type id.
+ * @param string $bundle
+ *   Entity bundle id.
+ * @param string $field_name
+ *   Field machine name.
  * @param string $paragraph_type
- *   Paragraph machine name.
- * @param bool $all_themes
- *   If the paragraph should be disabled on EVERY theme.
+ *   Paragraph type id.
  *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function _humsci_profile_disable_page_paragraph($paragraph_type, $all_themes = TRUE) {
-  $theme = \Drupal::config('system.theme')->get('default');
-  $newer_themes = [
-    'humsci_airy',
-    'humsci_basic',
-    'humsci_colorful',
-    'humsci_traditional',
-  ];
-
+function _su_humsci_profile_disable_paragraph($entity_type, $bundle, $field_name, $paragraph_type) {
   /** @var \Drupal\field\FieldConfigInterface $field */
-  $field = \Drupal::entityTypeManager()
-    ->getStorage('field_config')
-    ->load('node.hs_basic_page.field_hs_page_components');
-
-  if ($all_themes || !in_array($theme, $newer_themes)) {
-    _humsci_profile_disable_paragraph_on_field($field, $paragraph_type);
-  }
-}
-
-/**
- * Disable a paragraph type from the component field on row paragraphs.
- *
- * @param string $paragraph_type
- *   Paragraph machine name.
- * @param bool $all_themes
- *   If the paragraph should be disabled on EVERY theme.
- *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
- * @throws \Drupal\Core\Entity\EntityStorageException
- */
-function _humsci_profile_disable_row_paragraph($paragraph_type, $all_themes = TRUE) {
-  $theme = \Drupal::config('system.theme')->get('default');
-  $newer_themes = [
-    'humsci_airy',
-    'humsci_basic',
-    'humsci_colorful',
-    'humsci_traditional',
-  ];
-
-  /** @var \Drupal\field\FieldConfigInterface $field */
-  $field = \Drupal::entityTypeManager()
-    ->getStorage('field_config')
-    ->load('paragraph.hs_row.field_hs_row_components');
-
-  if ($all_themes || !in_array($theme, $newer_themes)) {
-    _humsci_profile_disable_paragraph_on_field($field, $paragraph_type);
-  }
-}
-
-/**
- * Disable the paragraph type on the give field config entity.
- *
- * @param \Drupal\field\FieldConfigInterface $field_config
- *   Field entity.
- * @param string $paragraph_type
- *   Paragraph machine name.
- *
- * @throws \Drupal\Core\Entity\EntityStorageException
- */
-function _humsci_profile_disable_paragraph_on_field(FieldConfigInterface $field_config, $paragraph_type) {
-  $settings = $field_config->getSettings();
+  $field = FieldConfig::load("$entity_type.$bundle.$field_name");
+  $settings = $field->getSettings();
   $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
   $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
-    'enabled' => TRUE,
+    'enabled' => $settings['handler_settings']['negate'] ? TRUE : FALSE,
     'weight' => 99,
   ];
-  $field_config->set('settings', $settings);
-  $field_config->save();
+  $field->set('settings', $settings);
+  $field->save();
 }
 
 /**
- * Disable the new timeline paragraph type on older themes.
+ * Enables a paragraph type on a field for an entity type.
+ *
+ * @param string $entity_type
+ *   Entity type id.
+ * @param string $bundle
+ *   Entity bundle id.
+ * @param string $field_name
+ *   Field machine name.
+ * @param string $paragraph_type
+ *   Paragraph type id.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
  */
-function su_humsci_profile_post_update_9001() {
-  _humsci_profile_disable_page_paragraph('hs_timeline_item');
-  _humsci_profile_disable_row_paragraph('hs_timeline_item');
-  _humsci_profile_disable_page_paragraph('hs_timeline', FALSE);
-  _humsci_profile_disable_row_paragraph('hs_timeline');
-}
+function _su_humsci_profile_enable_paragraph($entity_type, $bundle, $field_name, $paragraph_type, $weight = 0) {
+  /** @var \Drupal\field\FieldConfigInterface $field */
+  $field = FieldConfig::load("$entity_type.$bundle.$field_name");
+  $settings = $field->getSettings();
 
-/**
- * Set the source plugin value on migration configs.
- */
-function su_humsci_profile_post_update_9002() {
-  $config_factory = \Drupal::configFactory();
-  foreach ($config_factory->listAll('migrate_plus.migration.') as $config_name) {
-    $config = $config_factory->getEditable($config_name);
-    if (!$config->get('source.plugin')) {
-      $config->set('source.plugin', 'url')->save();
-    }
+  $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
+  if ($settings['handler_settings']['negate']) {
+    unset($settings['handler_settings']['target_bundles'][$paragraph_type]);
   }
+
+  $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
+    'enabled' => $settings['handler_settings']['negate'] ? FALSE : TRUE,
+    'weight' => $weight,
+  ];
+  $field->set('settings', $settings);
+  $field->save();
 }
 
 /**
- * Disable the new collection paragraph type on rows.
+ * Is the current theme one of the legacy themes.
+ *
+ * @return bool
+ *   True if the active theme is one of the older ones.
  */
-function su_humsci_profile_post_update_9004() {
-  _humsci_profile_disable_page_paragraph('hs_collection');
-  _humsci_profile_disable_row_paragraph('hs_collection');
+function _su_humsci_profile_is_legacy_theme() {
+  $current_theme = \Drupal::config('system.theme')->get('default');
+  $new_themes = \Drupal::config('su_humsci_profile.settings')
+    ->get('new_themes');
+  return !in_array($current_theme, $new_themes);
 }
 
 /**
- * Disable the callout box paragraph type on older themes and rows.
+ * Disable/enable paragraph types.
  */
-function su_humsci_profile_post_update_9005() {
-  _humsci_profile_disable_page_paragraph('hs_callout_box', FALSE);
-  _humsci_profile_disable_row_paragraph('hs_callout_box');
+function su_humsci_profile_post_update_9011() {
+  if (_su_humsci_profile_is_legacy_theme()) {
+    _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_timeline');
+    _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_timeline');
+    _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_timeline');
+
+    _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_timeline_item');
+    _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_timeline_item');
+    _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_timeline_item');
+
+    _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_gradient_hero_slider');
+    _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_gradient_hero_slider');
+    _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_gradient_hero_slider');
+    return;
+  }
+
+  _su_humsci_profile_enable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_timeline');
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_timeline_item');
+
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_gradient_hero_slider');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_gradient_hero_slider');
 }
 
 /**
- * Disable the gradient hero paragraph type on all themes and rows.
+ * Delete accordion paragraph field.
  */
-function su_humsci_profile_post_update_9006() {
-  _humsci_profile_disable_page_paragraph('hs_gradient_hero');
-  _humsci_profile_disable_row_paragraph('hs_gradient_hero');
-}
-
-/**
- * Uninstall printfriendly module.
- */
-function su_humsci_profile_post_update_9007() {
-  \Drupal::service('module_installer')->uninstall(['printfriendly']);
-  \Drupal::configFactory()
-    ->getEditable('views.view.conference_agenda')
-    ->delete();
-}
-
-/**
- * Disable the gradient hero slider paragraph type on all themes, updated by 9010.
- */
-function su_humsci_profile_post_update_9008() {
-  _humsci_profile_disable_page_paragraph('hs_gradient_hero_slider');
-  _humsci_profile_disable_row_paragraph('hs_gradient_hero_slider');
-}
-
-/**
- * Disable the color band paragraph type on older themes and older theme rows only.
- */
-function su_humsci_profile_post_update_9009() {
-  _humsci_profile_disable_page_paragraph('hs_clr_bnd', FALSE);
-  _humsci_profile_disable_row_paragraph('hs_clr_bnd');
-}
-
-/**
- * Disable the gradient hero slider paragraph type on older themes and older theme rows.
- */
-function su_humsci_profile_post_update_9010() {
-  _humsci_profile_disable_page_paragraph('hs_gradient_hero_slider', FALSE);
-  _humsci_profile_disable_row_paragraph('hs_gradient_hero_slider', FALSE);
+function su_humsci_profile_post_update_9012() {
+  $field = FieldConfig::loadByName('paragraph', 'hs_accordion', 'field_hs_accordion_image');
+  if ($field) {
+    $field->delete();
+  }
 }

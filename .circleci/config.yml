@@ -20,7 +20,7 @@ add_known_hosts: &add_known_hosts
 ## Defines images and working directory.
 defaults: &defaults
   docker:
-    - image: pookmish/drupal8ci:pcov
+    - image: pookmish/drupal8ci:latest
     - image: selenium/standalone-chrome:latest
     - image: circleci/mysql:5.7
       environment:
@@ -63,7 +63,6 @@ directory_setup: &directory_setup
     - run:
         name: Composer setup
         command: |
-          composer self-update --2
           composer install --optimize-autoloader --no-interaction
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction
@@ -151,7 +150,6 @@ deploy_branch: &deploy_branch
     - run:
         name: Deploying branch to Acquia
         command: |
-          composer self-update --2
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
           vendor/bin/blt deploy --no-interaction
@@ -164,7 +162,7 @@ deploy_tag: &deploy_tag
     - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
-    - run: composer self-update --2 && composer install --optimize-autoloader
+    - run: composer install --optimize-autoloader
     - *disable_telemetry
     - run:
         name: Deploying Tag to Acquia
@@ -182,7 +180,7 @@ update_dependencies: &update_dependencies
     - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
-    - run: composer self-update --2 && composer install --optimize-autoloader
+    - run: composer install --optimize-autoloader
     - *disable_telemetry
     - run:
         name: Update dependencies
@@ -200,7 +198,7 @@ update_certs: &update_certs
     - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
-    - run: composer self-update --2 && composer install --optimize-autoloader
+    - run: composer install --optimize-autoloader
     - *disable_telemetry
     - run:
         name: Update Prod SSL Certs

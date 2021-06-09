@@ -6,12 +6,12 @@
   }
 
   .su-gallery-description {
-    margin-bottom: hb-calculate-rems(32px);
+    margin-bottom: hb-spacing-width('md');
   }
 
   .su-gallery-button a {
     @include hb-button;
-    margin-top: hb-calculate-rems(32px);
+    margin-top: hb-spacing-width('md');
   }
 
   // Photo Gallery Slideshow
@@ -19,10 +19,22 @@
     @include slick-container;
     @include slick-arrows;
 
-    .su-gallery-headline {
+    .slick__arrow button {
+      &.slick-prev {
+        bottom: hb-calculate-rems(98px);
 
+        @include grid-media-min('sm') {
+          bottom: hb-calculate-rems(198px);
+        }
+      }
+
+      &.slick-next {
+        bottom: hb-calculate-rems(5px);
+
+        @include grid-media-min('sm') {
+          bottom: hb-calculate-rems(105px);
+        }
+      }
     }
   }
-
-
 }

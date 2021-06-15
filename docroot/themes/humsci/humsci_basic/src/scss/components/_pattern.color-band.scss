@@ -44,6 +44,13 @@
 
   &--text {
     @include hb-global-color('color', 'white');
-    padding: hb-calculate-rems(12px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(12px);
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(20px);
+    }
   }
 }

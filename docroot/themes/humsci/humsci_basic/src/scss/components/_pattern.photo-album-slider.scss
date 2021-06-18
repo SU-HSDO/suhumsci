@@ -38,3 +38,66 @@
     }
   }
 }
+
+// TODO: crazy idea in the works!
+// This relies upon using the slideshow gallery dots!
+// Update this config file in order for the following CSS to work!
+// http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
+
+.slick-dots { // be sure to wrap within photo album slideshow
+  // find active slide
+  position: relative;
+
+  li {
+    display: block !important;
+  }
+  
+  // li.slick-active button { // BOOM!!!!
+  //   color: turquoise;
+  //   position: absolute;
+  //   bottom: 12px;
+  //   left: 12px;
+  // }
+
+  // find last slide
+  li:last-of-type button { // BOOM!!!!
+    color: orange;
+    position: absolute;
+    bottom: 12px;
+    left: 48px;
+
+    // &:before {
+    //   content: '/'; // update with html entity
+    //   padding-right: 1rem;
+    // }
+  }
+
+  ul {
+    counter-reset: listCounter;
+  }
+
+  li {
+    counter-increment: listCounter;
+  }
+
+  li.slick-active button {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    color: transparent;
+
+    &:before {
+      content: counter(listCounter);
+      color: red;
+    }
+  }
+
+  li.slick-active:last-of-type button {
+    color: turquoise;
+  }
+
+  li:not(:last-of-type):not(.slick-active) button {
+    display: none;
+  }
+}
+

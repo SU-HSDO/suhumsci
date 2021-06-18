@@ -7,7 +7,7 @@ if (photoAlbumSlider.length > 0) {
 
   // find each slider
   photoAlbumSlider.forEach(slider => {
-    console.log(slider);
+    // console.log(slider);
   });
 }
 
@@ -27,4 +27,4 @@ slickSlides.forEach(slide => {
   // console.log(slide.classList.contains('slide-active')); // false!
 
   console.log(slide.getAttributeNames()); // only returns "class"
-})
+});

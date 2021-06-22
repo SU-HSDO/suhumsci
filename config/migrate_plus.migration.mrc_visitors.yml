@@ -1,0 +1,176 @@
+uuid: 6eb6ffd1-fc32-41fb-8bd3-c30d65aef6fb
+langcode: en
+status: true
+dependencies: {  }
+id: custm_mrc_visitors
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: hs_d7_content
+label: 'MRC Visitors'
+source:
+  track_changes: true
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  urls:
+    - https://mrc.stanford.edu/api/visitor
+  constants:
+    status: 1
+    type: custm_mrc_visitor
+    basic_html: basic_html
+    image_destination: 'public://media/visitors/'
+    june_first: '-06-01'
+  item_selector: /
+  fields:
+    -
+      name: uuid
+      label: uuid
+      selector: uuid
+    -
+      name: title
+      label: title
+      selector: title
+    -
+      name: year
+      label: year
+      selector: year
+    -
+      name: body
+      label: body
+      selector: body
+    -
+      name: institution
+      label: institution
+      selector: institution
+    -
+      name: donor
+      label: donor
+      selector: donor
+    -
+      name: linkTitle
+      label: linkTitle
+      selector: linkTitle
+    -
+      name: linkUrl
+      label: linkUrl
+      selector: linkUrl
+    -
+      name: firstName
+      label: firstName
+      selector: firstName
+    -
+      name: lastName
+      label: lastName
+      selector: lastName
+    -
+      name: eventSeries
+      label: eventSeries
+      selector: eventSeries
+    -
+      name: researchArea
+      label: researchArea
+      selector: researchArea
+    -
+      name: imageUri
+      label: imageUri
+      selector: imageUri
+    -
+      name: imageAlt
+      label: imageAlt
+      selector: imageAlt
+    -
+      name: positionTitle
+      label: positionTitle
+      selector: positionTitle
+    -
+      name: mediaName
+      label: mediaName
+      selector: mediaName
+  ids:
+    uuid:
+      type: string
+process:
+  title: displayName
+  status: constants/status
+  type: constants/type
+  body/value: body
+  body/format: constants/basic_html
+  custm_visitor_year:
+    plugin: explode
+    delimiter: '|'
+    source: year
+  custm_visitor_institution: institution
+  custm_visitor_donor: donor
+  custm_visitor_position: positionTitle
+  custm_visitor_link/uri: linkUrl
+  custm_visitor_link/title:
+    plugin: null_coalesce
+    source:
+      - linkTitle
+      - title
+  custm_visitor_first_name: firstName
+  custm_visitor_last_name: lastName
+  custm_visitor_research:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: researchArea
+    -
+      plugin: explode
+      delimiter: '|'
+    -
+      plugin: entity_lookup
+      value_key: name
+      bundle_key: vid
+      bundle: custm_mrc_research_area
+      entity_type: taxonomy_term
+      ignore_case: true
+  custm_visitor_event:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: eventSeries
+    -
+      plugin: entity_lookup
+      value_key: name
+      bundle_key: vid
+      bundle: custm_mrc_event_series
+      entity_type: taxonomy_term
+      ignore_case: true
+  image_file:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: imageUri
+    -
+      plugin: file_import
+      destination: constants/image_destination
+      id_only: true
+      reuse: true
+  custm_visitor_image/target_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: imageUri
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_file'
+    -
+      plugin: entity_generate
+      source: mediaName
+      value_key: name
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_image/target_id: '@image_file'
+        field_media_image/alt: imageAlt
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required:
+    - mrc_terms

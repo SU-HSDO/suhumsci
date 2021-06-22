@@ -1,0 +1,248 @@
+uuid: a58fddee-8273-4fae-a854-41a9e8c04c62
+langcode: en
+status: true
+dependencies: {  }
+id: mrc_events
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: hs_d7_content
+label: 'MRC Events'
+source:
+  track_changes: true
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: json
+  urls:
+    - https://mrc.stanford.edu/api/event
+  constants:
+    status: 1
+    type: hs_event
+    basic_html: basic_html
+    image_destination: 'public://media/event/'
+    june_first: '-06-01'
+  item_selector: /
+  fields:
+    -
+      name: uuid
+      label: uuid
+      selector: uuid
+    -
+      name: title
+      label: title
+      selector: title
+    -
+      name: body
+      label: body
+      selector: body
+    -
+      name: admission
+      label: admission
+      selector: admission
+    -
+      name: email
+      label: email
+      selector: email
+    -
+      name: phone
+      label: phone
+      selector: phone
+    -
+      name: startDate
+      label: startDate
+      selector: startDate
+    -
+      name: endDate
+      label: endDate
+      selector: endDate
+    -
+      name: linkUrl
+      label: linkUrl
+      selector: linkUrl
+    -
+      name: linkTitle
+      label: linkTitle
+      selector: linkTitle
+    -
+      name: sponsor
+      label: sponsor
+      selector: sponsor
+    -
+      name: type
+      label: type
+      selector: type
+    -
+      name: featured
+      label: featured
+      selector: featured
+    -
+      name: location
+      label: location
+      selector: location
+    -
+      name: eventSeries
+      label: eventSeries
+      selector: eventSeries
+    -
+      name: mapUrl
+      label: mapUrl
+      selector: mapUrl
+    -
+      name: mapTitle
+      label: mapTitle
+      selector: mapTitle
+    -
+      name: speaker
+      label: speaker
+      selector: speaker
+    -
+      name: imageName
+      label: imageName
+      selector: imageName
+    -
+      name: imageAlt
+      label: imageAlt
+      selector: imageAlt
+    -
+      name: linkTitle
+      label: linkTitle
+      selector: linkTitle
+    -
+      name: imageUri
+      label: imageUri
+      selector: imageUri
+    -
+      name: videoName
+      label: videoName
+      selector: videoName
+    -
+      name: videoUrl
+      label: videoUrl
+      selector: videoUrl
+  ids:
+    uuid:
+      type: string
+process:
+  title:
+    plugin: callback
+    callable: trim
+    source: title
+  status: constants/status
+  type: constants/type
+  body/value: body
+  body/format: constants/basic_html
+  promote: featured
+  field_hs_event_admission: admission
+  field_hs_event_contact_email: email
+  field_hs_event_contact_phone: phone
+  field_hs_event_date/value: startDate
+  field_hs_event_date/end_value: endDate
+  field_hs_event_link/uri: linkUrl
+  field_hs_event_link/title: linkTitle
+  custm_mrc_event_series:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: eventSeries
+    -
+      plugin: entity_lookup
+      value_key: name
+      bundle_key: vid
+      bundle: custm_mrc_event_series
+      entity_type: taxonomy_term
+      ignore_case: true
+      access_check: false
+  field_hs_event_sponsor: sponsor
+  field_hs_event_type:
+    -
+      plugin: skip_on_empty
+      source: type
+      method: process
+    -
+      plugin: explode
+      delimiter: '|'
+    -
+      plugin: callback
+      callable: rtrim
+    -
+      plugin: callback
+      callable: htmlspecialchars_decode
+    -
+      plugin: entity_generate
+      value_key: name
+      bundle_key: vid
+      bundle: hs_event_type
+      entity_type: taxonomy_term
+      ignore_case: true
+  field_hs_event_video:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: videoUrl
+    -
+      plugin: entity_generate
+      source: videoName
+      value_key: name
+      bundle_key: bundle
+      bundle: video
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_oembed_video: videoUrl
+  field_hs_event_location: location
+  field_hs_event_map_link/uri: mapUrl
+  field_hs_event_map_link/title: mapTitle
+  field_hs_event_speaker:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: speaker
+    -
+      plugin: explode
+      delimiter: '|'
+    -
+      plugin: callback
+      callable: rtrim
+    -
+      plugin: entity_generate_no_lookup
+      value_key: title
+      bundle_key: type
+      bundle: speaker
+      entity_type: event_collections
+      ignore_case: true
+  image_file:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: imageUri
+    -
+      plugin: file_import
+      destination: constants/image_destination
+      id_only: true
+      reuse: true
+  field_hs_event_image/target_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: imageUri
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_file'
+    -
+      plugin: entity_generate
+      source: imageName
+      value_key: name
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_image/target_id: '@image_file'
+        field_media_image/alt: imageAlt
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required:
+    - mrc_terms

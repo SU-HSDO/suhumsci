@@ -19,7 +19,11 @@
   }
 
   &__sidebar-1 {
-    @include hb-sidebar;
+    .block,
+    .block-hs-blocks,
+    .hb-sidebar-block {
+      @include hb-sidebar;
+    }
 
     @include grid-media-min('lg') {
       width: hb-sidebar-width();
@@ -132,9 +136,13 @@
   }
 
   &__sidebar-2 {
-    @include hb-sidebar;
     margin-left: 0;
 
+    .block,
+    .block-hs-blocks,
+    .hb-sidebar-block {
+      @include hb-sidebar;
+    }
 
     @include hb-traditional {
       font-size: hb-calculate-rems(16px);

@@ -83,9 +83,16 @@ class HsAcquiaApiCommands extends BltTasks {
    * @command humsci:backup-db
    * @aliases backup
    */
-  public function backupDatabases() {
+  public function backupDatabases($options = ['start-at' => NULL]) {
     $this->connectAcquiaApi();
+    $skip = TRUE;
     foreach ($this->acquiaDatabases->getAll($this->appId) as $database) {
+      if (!empty($options['start-at']) && $skip) {
+        if ($options['start-at'] == $database->name) {
+          $skip = FALSE;
+        }
+        continue;
+      }
       $message = $this->acquiaDatabaseBackups->create($this->getEnvironmentUuid('prod'), $database->name)->message;
       $this->say(sprintf('%s: %s', $database->name, $message));
       sleep(5);
@@ -204,8 +211,7 @@ class HsAcquiaApiCommands extends BltTasks {
     }
     try {
       $this->acquiaApplications->getAll();
-    }
-    catch (\Throwable $e) {
+    } catch (\Throwable $e) {
       $this->traitConnectAcquiaApi();
     }
   }

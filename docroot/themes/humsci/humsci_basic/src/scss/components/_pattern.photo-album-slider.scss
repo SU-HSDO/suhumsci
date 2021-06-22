@@ -1,0 +1,40 @@
+// This styling is for the Photo Gallery Grid and Photo Gallery Slideshow
+.ptype-stanford-gallery {
+  .su-gallery-images article,
+  .slick__slide article {
+    position: relative;
+  }
+
+  .su-gallery-description {
+    margin-bottom: hb-spacing-width('md');
+  }
+
+  .su-gallery-button a {
+    @include hb-button;
+    margin-top: hb-spacing-width('md');
+  }
+
+  // Photo Gallery Slideshow
+  .hs-gallery-slideshow {
+    @include slick-container;
+    @include slick-arrows;
+
+    .slick__arrow button {
+      &.slick-prev {
+        bottom: hb-calculate-rems(98px);
+
+        @include grid-media-min('sm') {
+          bottom: hb-calculate-rems(198px);
+        }
+      }
+
+      &.slick-next {
+        bottom: hb-calculate-rems(5px);
+
+        @include grid-media-min('sm') {
+          bottom: hb-calculate-rems(105px);
+        }
+      }
+    }
+  }
+}

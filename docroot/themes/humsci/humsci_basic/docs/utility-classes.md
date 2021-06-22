@@ -77,6 +77,7 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 | hb-inline                 | Puts fields inside the block inline | - |
 | hb-inline-pipe            | Puts fields inside the block inline with pipes as spacers | - |
 | hb-main-body-detail-image | Used when images on detail pages are moved into the main body section. | - |
+| hb-sidebar-block          | Used for sidebar blocks to add padding and an outline around the block | - |
 <br>
 
 ### WYSIWYG Platform Wide Text Area Classes

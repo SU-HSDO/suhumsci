@@ -7,4 +7,3 @@ import './equal-height-grid/index';
 import './media/video-with-caption';
 import './animation/page-scroll';
 import './timeline/expand-collapse-timeline';
-import './photo-album-slides/photo-album-slides';

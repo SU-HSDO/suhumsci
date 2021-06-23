@@ -37,55 +37,76 @@
       }
     }
 
-    // This relies upon using the slideshow gallery dots!
+    // The photo album counter relies upon using the slideshow gallery slick-dots.
+    // Only the active slide and the last slide are displayed for all slides
+    // expect the last slide.
+    // Example: "1/4" is the active slide of 1 and the last slide.
+    // The last slide uses counter properties to display the total number of slides.
+    // Example: "4/4" is the active slide of 4 and the value of listCounter, which is also 4.
+
     // TODO: Update this config file in order for the following CSS to work!
     // http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
 
-    // TODO: need background gradient, white text, font-size, font-weight compared to design comp
+    .field-media-image {
+      position: relative;
+  
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        top: calc(100% - 78px); // match height of caption / credit background
+        left: 0;
+        right: 0;
+        border: 3px solid hotpink; // TODO:
+  
+        @include hb-themes(('colorful', 'airy')) {
+          background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
+        }
+  
+        @include hb-traditional {
+          background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
+        }
+      }
+    }
 
-    .slick-dots { // turn this into a mixin??????
-      position: relative; // this property may not be needed // test removal!
+    // prevent double overlay of background when there is a caption / credit
+    .field-media-image-caption {
+      border: 4px solid yellow; // TODO:
+      background: transparent;
+    }
+
+    .slick-dots {
+      counter-reset: listCounter;
 
       li {
         display: block !important;
+        counter-increment: listCounter;
       }
 
       li button {
         @include hb-unbuttonize;
-        font-weight: hb-theme-font-weight(bold); // TODO: look at heading styles
-      }
-
-      // find last slide
-      li:last-of-type button {
-        color: lavender;
+        @include hb-global-color('color', 'white');
+        font-weight: hb-theme-font-weight(bold);
         position: absolute;
-        bottom: 12px;
-        left: 34px;
+        bottom: hb-calculate-rems(16px);
+        cursor: default;
       }
 
-      ul {
-        counter-reset: listCounter;
-      }
-
-      li {
-        counter-increment: listCounter;
+      // counter for the last slide
+      li:last-of-type button {
+        left: hb-calculate-rems(39px);
       }
 
       li.slick-active button {
-        position: absolute;
-        bottom: 12px;
-        left: 12px;
-        color: lightgreen;
+        left: hb-calculate-rems(16px);
 
         &::after {
           content: " / ";
-          color: lightpink;
         }
       }
 
       li.slick-active:last-of-type button {
         &::after {
-          color: lightcyan;
           content: " / " counter(listCounter);
         }
       }
@@ -96,61 +117,3 @@
     }
   }
 }
-
-// This relies upon using the slideshow gallery dots!
-// TODO: Update this config file in order for the following CSS to work!
-// http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
-
-// .slick-dots {
-//   position: relative;
-
-//   li {
-//     display: block !important;
-//   }
-
-//   li button {
-//     @include hb-unbuttonize;
-//     font-weight: hb-theme-font-weight(bold); // TODO: look at heading styles
-//   }
-
-//   // find last slide
-//   li:last-of-type button {
-//     color: lavender;
-//     position: absolute;
-//     bottom: 12px;
-//     left: 34px;
-//   }
-
-//   ul {
-//     counter-reset: listCounter;
-//   }
-
-//   li {
-//     counter-increment: listCounter;
-//   }
-
-//   li.slick-active button {
-//     position: absolute;
-//     bottom: 12px;
-//     left: 12px;
-//     color: lightgreen;
-
-//     &::after {
-//       content: " / ";
-//       color: lightpink;
-//     }
-//   }
-
-//   li.slick-active:last-of-type button {
-//     // color: turquoise;
-
-//     &::after {
-//       color: lightcyan;
-//       content: " / " counter(listCounter); // TODO: testing!
-//     }
-//   }
-
-//   li:not(:last-of-type):not(.slick-active) button {
-//     display: none;
-//   }
-// }

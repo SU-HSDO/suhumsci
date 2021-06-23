@@ -36,68 +36,121 @@
         }
       }
     }
-  }
-}
 
-// TODO: crazy idea in the works!
-// This relies upon using the slideshow gallery dots!
-// Update this config file in order for the following CSS to work!
-// http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
+    // This relies upon using the slideshow gallery dots!
+    // TODO: Update this config file in order for the following CSS to work!
+    // http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
 
-.slick-dots { // be sure to wrap within photo album slideshow
-  // find active slide
-  position: relative;
+    // TODO: need background gradient, white text, font-size, font-weight compared to design comp
 
-  li {
-    display: block !important;
-  }
-  
-  // li.slick-active button { // BOOM!!!!
-  //   color: turquoise;
-  //   position: absolute;
-  //   bottom: 12px;
-  //   left: 12px;
-  // }
+    .slick-dots { // turn this into a mixin??????
+      position: relative; // this property may not be needed // test removal!
 
-  // find last slide
-  li:last-of-type button { // BOOM!!!!
-    color: orange;
-    position: absolute;
-    bottom: 12px;
-    left: 48px;
+      li {
+        display: block !important;
+      }
 
-    // &:before {
-    //   content: '/'; // update with html entity
-    //   padding-right: 1rem;
-    // }
-  }
+      li button {
+        @include hb-unbuttonize;
+        font-weight: hb-theme-font-weight(bold); // TODO: look at heading styles
+      }
 
-  ul {
-    counter-reset: listCounter;
-  }
+      // find last slide
+      li:last-of-type button {
+        color: lavender;
+        position: absolute;
+        bottom: 12px;
+        left: 34px;
+      }
 
-  li {
-    counter-increment: listCounter;
-  }
+      ul {
+        counter-reset: listCounter;
+      }
 
-  li.slick-active button {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    color: transparent;
+      li {
+        counter-increment: listCounter;
+      }
 
-    &:before {
-      content: counter(listCounter);
-      color: red;
+      li.slick-active button {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        color: lightgreen;
+
+        &::after {
+          content: " / ";
+          color: lightpink;
+        }
+      }
+
+      li.slick-active:last-of-type button {
+        &::after {
+          color: lightcyan;
+          content: " / " counter(listCounter);
+        }
+      }
+
+      li:not(:last-of-type):not(.slick-active) button {
+        display: none;
+      }
     }
   }
-
-  li.slick-active:last-of-type button {
-    color: turquoise;
-  }
-
-  li:not(:last-of-type):not(.slick-active) button {
-    display: none;
-  }
 }
 
+// This relies upon using the slideshow gallery dots!
+// TODO: Update this config file in order for the following CSS to work!
+// http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
+
+// .slick-dots {
+//   position: relative;
+
+//   li {
+//     display: block !important;
+//   }
+
+//   li button {
+//     @include hb-unbuttonize;
+//     font-weight: hb-theme-font-weight(bold); // TODO: look at heading styles
+//   }
+
+//   // find last slide
+//   li:last-of-type button {
+//     color: lavender;
+//     position: absolute;
+//     bottom: 12px;
+//     left: 34px;
+//   }
+
+//   ul {
+//     counter-reset: listCounter;
+//   }
+
+//   li {
+//     counter-increment: listCounter;
+//   }
+
+//   li.slick-active button {
+//     position: absolute;
+//     bottom: 12px;
+//     left: 12px;
+//     color: lightgreen;
+
+//     &::after {
+//       content: " / ";
+//       color: lightpink;
+//     }
+//   }
+
+//   li.slick-active:last-of-type button {
+//     // color: turquoise;
+
+//     &::after {
+//       color: lightcyan;
+//       content: " / " counter(listCounter); // TODO: testing!
+//     }
+//   }
+
+//   li:not(:last-of-type):not(.slick-active) button {
+//     display: none;
+//   }
+// }

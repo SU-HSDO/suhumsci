@@ -183,10 +183,10 @@ class HsCircleCiCommands extends BltTasks {
     $tasks[] = $this->taskDrush()
       ->alias("$site.prod")
       ->drush('sql-dump')
-      ->option('result-file', "/mnt/tmp/swshumsci/$site.sql", '=');
+      ->option('result-file', "/mnt/tmp/humscigryphon/$site.sql", '=');
     $tasks[] = $this->taskDrush()
       ->drush('rsync')
-      ->rawArg("@$site.prod:/mnt/tmp/swshumsci/$site.sql /tmp/$site.sql")
+      ->rawArg("@$site.prod:/mnt/tmp/humscigryphon/$site.sql /tmp/$site.sql")
       ->option('mode', 'rultz', '=');
 
     $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');

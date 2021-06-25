@@ -88,13 +88,34 @@ class HsCertCommands extends HsAcquiaApiCommands {
 
     $primary_domain = array_shift($domains);
     asort($domains);
-    $domains = "-d $primary_domain -d " . implode(' -d ', $domains);
+    if ($domains) {
+      $domains = "-d $primary_domain -d " . implode(' -d ', $domains);
+    }
+    else {
+      $domains = "-d $primary_domain";
+    }
 
-    $directory = "/mnt/gfs/swshumsci.$environment/files/";
+    $directory = "/mnt/gfs/humscigryphon.$environment/tmp";
 
-    $ssh_url = sprintf('swshumsci.%s@srv-7503.devcloud.hosting.acquia.com', $environment);
+    $ssh_url = $this->getSshUrl($environment);
     $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s --force --debug"', $ssh_url, $domains, $directory);
     return $this->taskExec($command)->run();
+  }
+
+  /**
+   * Get the ssh url based on the environment name.
+   *
+   * @param string $environment
+   *   Environment name: prod, test, dev.
+   *
+   * @return string
+   *   Ssh location.
+   */
+  protected function getSshUrl($environment) {
+    if ($environment == 'prod') {
+      return 'humscigryphon.prod@web-42199.prod.hosting.acquia.com';
+    }
+    return 'humscigryphon.test@staging-25390.prod.hosting.acquia.com';
   }
 
   /**
@@ -150,7 +171,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
     $cert_name = $environment == 'test' ? 'swshumsci-stage.stanford.edu' : "swshumsci-$environment.stanford.edu";
     $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
     $this->taskDrush()
-      ->drush("rsync --mode=rltDkz @default.prod:/home/swshumsci/.acme.sh/$cert_name/ @self:../certs")
+      ->drush("rsync --mode=rltDkz @default.prod:/home/humscigryphon/.acme.sh/$cert_name/ @self:../certs")
       ->run();
 
     $cert = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.cer");

@@ -13,8 +13,9 @@ add_known_hosts: &add_known_hosts
   run:
     name: Add SSH Known Hosts
     command: |
-      ssh-keyscan srv-7503.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
-      ssh-keyscan svn-4786.devcloud.hosting.acquia.com >> ~/.ssh/known_hosts
+      ssh-keyscan svn-23450.prod.hosting.acquia.com >> ~/.ssh/known_hosts
+      ssh-keyscan web-42199.prod.hosting.acquia.com >> ~/.ssh/known_hosts
+      ssh-keyscan staging-25390.prod.hosting.acquia.com >> ~/.ssh/known_hosts
       ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
 
 ## Defines images and working directory.

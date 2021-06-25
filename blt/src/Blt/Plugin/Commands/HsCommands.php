@@ -49,36 +49,6 @@ class HsCommands extends BltTasks {
   }
 
   /**
-   * Get encryption keys from acquia.
-   *
-   * @command humsci:keys
-   * @description stuff
-   */
-  public function humsciKeys() {
-    $this->taskDrush()
-      ->drush("rsync --mode=rltDkz @default.prod:/mnt/gfs/swshumsci.prod/nobackup/apikeys/ @self:../keys")
-      ->run();
-  }
-
-  /**
-   * Send encryption keys to acquia.
-   *
-   * @param string $env
-   *   Acquia environment to send the keys.
-   *
-   * @command humsci:keys:send
-   */
-  public function humsciKeysSend($env = 'prod') {
-    $send = $this->confirm('Are you sure you want to copy over existing keys with keys in the "keys" directory?');
-    $key_dir = $this->getConfigValue("key-dir.$env");
-    if ($send) {
-      $this->taskDrush()
-        ->drush("rsync @self:../keys/ @default.$env:$key_dir")
-        ->run();
-    }
-  }
-
-  /**
    * Disables a list of modules for all sites in an environment.
    *
    * @param string $modules

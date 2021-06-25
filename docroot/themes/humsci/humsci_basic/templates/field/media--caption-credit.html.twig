@@ -1,0 +1,17 @@
+{#
+/**
+ * This Caption Credit template overrides the standard media.html.twig file in Stable theme.
+ */
+#}
+{%
+  set classes = [
+    'hb-caption-credit-image',
+  ]
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  {{ title_suffix.contextual_links }}
+  {% if content %}
+    {{ content }}
+  {% endif %}
+</article>

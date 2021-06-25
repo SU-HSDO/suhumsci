@@ -88,9 +88,14 @@ class HsCertCommands extends HsAcquiaApiCommands {
 
     $primary_domain = array_shift($domains);
     asort($domains);
-    $domains = "-d $primary_domain -d " . implode(' -d ', $domains);
+    if ($domains) {
+      $domains = "-d $primary_domain -d " . implode(' -d ', $domains);
+    }
+    else {
+      $domains = "-d $primary_domain";
+    }
 
-    $directory = "/mnt/gfs/humscigryphon.$environment/files/";
+    $directory = "/mnt/gfs/humscigryphon.$environment/tmp";
 
     $ssh_url = $this->getSshUrl($environment);
     $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s --force --debug"', $ssh_url, $domains, $directory);

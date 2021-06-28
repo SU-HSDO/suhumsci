@@ -83,19 +83,31 @@
         @include hb-global-color('color', 'white');
         font-weight: hb-theme-font-weight(bold);
         position: absolute;
-        bottom: hb-calculate-rems(16px);
+        bottom: hb-calculate-rems(8px);
         cursor: default;
+
+        @include grid-media-min('sm') {
+          bottom: hb-calculate-rems(16px);
+        }
       }
 
       // counter for the last slide
       li:last-of-type button {
-        left: hb-calculate-rems(48px);
+        left: hb-calculate-rems(36px);
+
+        @include grid-media-min('sm') {
+          left: hb-calculate-rems(48px);
+        }
       }
 
       li.slick-active button {
-        left: hb-calculate-rems(12px);
+        left: 0;
         width: hb-calculate-rems(32px);
         text-align: right;
+
+        @include grid-media-min('sm') {
+          left: hb-calculate-rems(12px);
+        }
 
         &::after {
           content: " / ";

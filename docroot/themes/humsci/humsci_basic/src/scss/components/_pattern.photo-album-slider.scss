@@ -44,12 +44,9 @@
     // The last slide uses counter properties to display the total number of slides.
     // Example: "4/4" is the active slide of 4 and the value of listCounter, which is also 4.
 
-    // TODO: Update this config file in order for the following CSS to work!
-    // http://sparkbox-sandbox.suhumsci.loc/admin/structure/paragraphs_type/stanford_gallery/display/hs_gallery_slideshow
-
     .field-media-image {
       position: relative;
-  
+
       &::after {
         content: '';
         position: absolute;
@@ -57,12 +54,11 @@
         top: calc(100% - 78px); // match height of caption / credit background
         left: 0;
         right: 0;
-        border: 3px solid hotpink; // TODO:
-  
+
         @include hb-themes(('colorful', 'airy')) {
           background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
         }
-  
+
         @include hb-traditional {
           background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
         }
@@ -71,7 +67,6 @@
 
     // prevent double overlay of background when there is a caption / credit
     .field-media-image-caption {
-      border: 4px solid yellow; // TODO:
       background: transparent;
     }
 
@@ -94,11 +89,13 @@
 
       // counter for the last slide
       li:last-of-type button {
-        left: hb-calculate-rems(39px);
+        left: hb-calculate-rems(48px);
       }
 
       li.slick-active button {
-        left: hb-calculate-rems(16px);
+        left: hb-calculate-rems(12px);
+        width: hb-calculate-rems(32px);
+        text-align: right;
 
         &::after {
           content: " / ";
@@ -106,6 +103,8 @@
       }
 
       li.slick-active:last-of-type button {
+        width: hb-calculate-rems(55px);
+
         &::after {
           content: " / " counter(listCounter);
         }

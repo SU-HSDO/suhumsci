@@ -187,14 +187,18 @@ class HsCertCommands extends HsAcquiaApiCommands {
     /** @var \AcquiaCloudApi\Response\SslCertificateResponse $cert */
     foreach ($this->acquiaCertificates->getAll($environmentUuid) as $cert) {
       if ($cert->label == $label) {
-        $this->say($this->acquiaCertificates->enable($environmentUuid, $cert->id)->message);
+        $enable_cert = $cert->id;
+      }
+
+      if ($cert->flags->active) {
+        $this->say($this->acquiaCertificates->disable($environmentUuid, $cert->id)->message);
       }
 
       if (strtotime($cert->expires_at) < time()) {
         $this->say($this->acquiaCertificates->delete($environmentUuid, $cert->id)->message);
       }
     }
-
+    $this->say($this->acquiaCertificates->enable($environmentUuid, $enable_cert)->message);
     $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
   }
 

@@ -93,15 +93,16 @@
 
       // counter for the last slide
       li:last-of-type button {
-        left: hb-calculate-rems(36px);
+        left: hb-calculate-rems(44px);
 
         @include grid-media-min('sm') {
           left: hb-calculate-rems(48px);
+          text-align: left;
         }
       }
 
-      li.slick-active button {
-        left: 0;
+      li.slick-active:not(:last-of-type) button {
+        left: hb-calculate-rems(8px);
         width: hb-calculate-rems(32px);
         text-align: right;
 
@@ -115,10 +116,15 @@
       }
 
       li.slick-active:last-of-type button {
-        width: hb-calculate-rems(55px);
+        left: hb-calculate-rems(16px);
+        min-width: hb-calculate-rems(42px);
 
-        &::after {
-          content: " / " counter(listCounter);
+        @include grid-media-min('sm') {
+          text-align: right;
+        }
+
+        &::before {
+          content: counter(listCounter) " / ";
         }
       }
 

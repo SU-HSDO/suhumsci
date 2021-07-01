@@ -1,0 +1,32 @@
+diff --git a/src/Commands/core/RsyncCommands.php b/src/Commands/core/RsyncCommands.php
+index 515afeb13..23bd65122 100644
+--- a/src/Commands/core/RsyncCommands.php
++++ b/src/Commands/core/RsyncCommands.php
+@@ -47,6 +47,7 @@ class RsyncCommands extends DrushCommands implements SiteAliasManagerAwareInterf
+      * @option exclude-paths List of paths to exclude, seperated by : (Unix-based systems) or ; (Windows).
+      * @option include-paths List of paths to include, seperated by : (Unix-based systems) or ; (Windows).
+      * @option mode The unary flags to pass to rsync; --mode=rultz implies rsync -rultz.  Default is -akz.
++     * @option update Use the --update flag during rysnc.
+      * @usage drush rsync @dev @stage
+      *   Rsync Drupal root from Drush alias dev to the alias stage.
+      * @usage drush rsync ./ @stage:%files/img
+@@ -58,7 +59,7 @@ class RsyncCommands extends DrushCommands implements SiteAliasManagerAwareInterf
+      * @aliases rsync,core-rsync
+      * @topics docs:aliases
+      */
+-    public function rsync($source, $target, array $extra, $options = ['exclude-paths' => self::REQ, 'include-paths' => self::REQ, 'mode' => 'akz'])
++    public function rsync($source, $target, array $extra, $options = ['exclude-paths' => self::REQ, 'include-paths' => self::REQ, 'mode' => 'akz', 'update' => FALSE])
+     {
+         // Prompt for confirmation. This is destructive.
+         if (!$this->getConfig()->simulate()) {
+@@ -103,8 +104,9 @@ class RsyncCommands extends DrushCommands implements SiteAliasManagerAwareInterf
+             $mode .= 'v';
+             $verbose = ' --stats --progress';
+         }
++        $update = $options['update'] ? '--update' : null;
+ 
+-        return implode(' ', array_filter([$mode, $verbose, $paths]));
++        return implode(' ', array_filter([$mode, $verbose, $paths, $update]));
+     }
+ 
+     /**

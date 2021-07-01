@@ -14,7 +14,7 @@ class HsAceMigrationCommands extends BltTasks {
    *
    * @command move-sites:acp
    */
-  public function moveAllAcpSites() {
+  public function moveAllAcpSites($options = ['with-files' => FALSE]) {
     $still_on_acp = [];
     foreach ($this->getConfigValue('multisites') as $site) {
       $site_url = str_replace('_', '-', str_replace('__', '.', $site));
@@ -32,7 +32,9 @@ class HsAceMigrationCommands extends BltTasks {
     $confirm = $this->confirm('Do you want to drop all data on the ACE Prod and replace it with ACP prod for the given sites: ' . implode(', ', $still_on_acp));
     if ($confirm) {
       $this->invokeCommand('move-sites:db', ['sites' => implode(',', $still_on_acp)]);
-      $this->invokeCommand('move-sites:files', ['sites' => implode(',', $still_on_acp)]);
+      if ($options['with-files']) {
+        $this->invokeCommand('move-sites:files', ['sites' => implode(',', $still_on_acp)]);
+      }
     }
   }
 

@@ -82,18 +82,18 @@
         @include hb-unbuttonize;
         @include hb-global-color('color', 'white');
         font-weight: hb-theme-font-weight(bold);
-        position: absolute;
-        bottom: hb-calculate-rems(8px);
-        cursor: default;
+        display: none;
 
         @include grid-media-min('sm') {
+          display: block;
+          position: absolute;
           bottom: hb-calculate-rems(16px);
+          cursor: default;
         }
       }
 
       // counter for the last slide
       li:last-of-type button {
-        left: hb-calculate-rems(44px);
 
         @include grid-media-min('sm') {
           left: hb-calculate-rems(48px);
@@ -102,12 +102,11 @@
       }
 
       li.slick-active:not(:last-of-type) button {
-        left: hb-calculate-rems(8px);
-        width: hb-calculate-rems(32px);
-        text-align: right;
 
         @include grid-media-min('sm') {
           left: hb-calculate-rems(12px);
+          width: hb-calculate-rems(32px);
+          text-align: right;
         }
 
         &::after {
@@ -116,11 +115,18 @@
       }
 
       li.slick-active:last-of-type button {
-        left: hb-calculate-rems(16px);
-        min-width: hb-calculate-rems(42px);
 
-        @include grid-media-min('sm') {
+        color: hotpink;
+
+        @include grid-media-min('sm') { // needs minor adjustment!!!
+          left: hb-calculate-rems(16px);
+          min-width: hb-calculate-rems(42px);
           text-align: right;
+          color: mediumspringgreen;
+        }
+
+        @include grid-media-min('md') {  // looks good on large screens
+          color: yellow;
         }
 
         &::before {

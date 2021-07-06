@@ -97,7 +97,6 @@
 
         @include grid-media-min('sm') {
           left: hb-calculate-rems(48px);
-          text-align: left;
         }
       }
 
@@ -105,7 +104,7 @@
 
         @include grid-media-min('sm') {
           left: hb-calculate-rems(12px);
-          width: hb-calculate-rems(32px);
+          min-width: hb-calculate-rems(32px);
           text-align: right;
         }
 
@@ -116,21 +115,18 @@
 
       li.slick-active:last-of-type button {
 
-        color: hotpink;
+        @include grid-media-min('sm') {
+          left: hb-calculate-rems(19px);
+          min-width: hb-calculate-rems(45px);
+        }
 
-        @include grid-media-min('sm') { // needs minor adjustment!!!
+        @include grid-media-min('md') {
           left: hb-calculate-rems(16px);
-          min-width: hb-calculate-rems(42px);
-          text-align: right;
-          color: mediumspringgreen;
+          min-width: hb-calculate-rems(50px);
         }
 
-        @include grid-media-min('md') {  // looks good on large screens
-          color: yellow;
-        }
-
-        &::before {
-          content: counter(listCounter) " / ";
+        &::after {
+          content: " / " counter(listCounter);
         }
       }
 

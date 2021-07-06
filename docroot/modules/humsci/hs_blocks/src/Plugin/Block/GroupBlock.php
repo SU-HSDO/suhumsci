@@ -179,7 +179,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         }
       }
 
-      $components[$uuid] = $component->toRenderArray($contexts);
+      $components[$uuid] = $component->toRenderArray($contexts, $in_preview);
     }
 
     // Add administrative links.

@@ -107,7 +107,11 @@ class HsAcquiaApiCommands extends BltTasks {
    *
    * @options exclude Comma separated list of database names to skip.
    */
-  public function syncStaging(array $options = ['exclude' => NULL]) {
+  public function syncStaging(array $options = [
+    'exclude' => NULL,
+    'resume' => FALSE,
+    'env' => 'test'
+  ]) {
     $task_started = time() - (60 * 60 * 24);
     $this->connectAcquiaApi();
 
@@ -120,7 +124,7 @@ class HsAcquiaApiCommands extends BltTasks {
 
     foreach ($copy_sites as $site) {
       $this->say("Copying $site database to staging.");
-      $this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $site, $this->getEnvironmentUuid('test'));
+      $this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $site, $this->getEnvironmentUuid($options['env']));
     }
 
     while (!empty($sites)) {
@@ -137,7 +141,7 @@ class HsAcquiaApiCommands extends BltTasks {
           $copy_sites[$db_position] = $new_site;
           $this->say("Copying $new_site database to staging.");
           $this->connectAcquiaApi();
-          $this->say($this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid('test'))->message);
+          $this->say($this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid($options['env']))->message);
         }
       }
     }
@@ -232,15 +236,23 @@ class HsAcquiaApiCommands extends BltTasks {
 
     $sites = $this->getConfigValue('multisites');
     foreach ($sites as $key => &$db_name) {
-      $db_name = $db_name == 'default' ? 'swshumsci' : $db_name;
+      $db_name = $db_name == 'default' ? 'humscigryphon' : $db_name;
 
       if (strpos($db_name, 'sandbox') !== FALSE) {
         unset($sites[$key]);
       }
     }
+    $sites = array_values($sites);
     if (!empty($options['exclude'])) {
       $exclude = explode(',', $options['exclude']);
       $sites = array_diff($sites, $exclude);
+    }
+
+    if ($options['resume']) {
+      asort($finished_databases);
+      $last_database = end($finished_databases);
+      $last_db_position = array_search($last_database, $sites);
+      $sites = array_slice($sites, $last_db_position);
     }
     return array_diff($sites, $finished_databases);
   }

@@ -36,5 +36,103 @@
         }
       }
     }
+
+    // The photo album counter relies upon using the slideshow gallery slick-dots.
+    // Only the active slide and the last slide are displayed for all slides
+    // expect the last slide.
+    // Example: "1/4" is the active slide of 1 and the last slide.
+    // The last slide uses counter properties to display the total number of slides.
+    // Example: "4/4" is the active slide of 4 and the value of listCounter, which is also 4.
+
+    .field-media-image {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        top: calc(100% - 78px); // match height of caption / credit background
+        left: 0;
+        right: 0;
+
+        @include hb-themes(('colorful', 'airy')) {
+          background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
+        }
+
+        @include hb-traditional {
+          background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
+        }
+      }
+    }
+
+    // prevent double overlay of background when there is a caption / credit
+    .field-media-image-caption {
+      background: transparent;
+    }
+
+    .slick-dots {
+      counter-reset: listCounter;
+
+      li {
+        display: block !important;
+        counter-increment: listCounter;
+      }
+
+      li button {
+        @include hb-unbuttonize;
+        @include hb-global-color('color', 'white');
+        font-weight: hb-theme-font-weight(bold);
+        display: none;
+
+        @include grid-media-min('sm') {
+          display: block;
+          position: absolute;
+          bottom: hb-calculate-rems(16px);
+          cursor: default;
+        }
+      }
+
+      // counter for the last slide
+      li:last-of-type button {
+
+        @include grid-media-min('sm') {
+          left: hb-calculate-rems(48px);
+        }
+      }
+
+      li.slick-active:not(:last-of-type) button {
+
+        @include grid-media-min('sm') {
+          left: hb-calculate-rems(12px);
+          min-width: hb-calculate-rems(32px);
+          text-align: right;
+        }
+
+        &::after {
+          content: " / ";
+        }
+      }
+
+      li.slick-active:last-of-type button {
+
+        @include grid-media-min('sm') {
+          left: hb-calculate-rems(19px);
+          min-width: hb-calculate-rems(45px);
+        }
+
+        @include grid-media-min('md') {
+          left: hb-calculate-rems(16px);
+          min-width: hb-calculate-rems(50px);
+        }
+
+        &::after {
+          content: " / " counter(listCounter);
+        }
+      }
+
+      li:not(:last-of-type):not(.slick-active) button {
+        display: none;
+      }
+    }
   }
 }

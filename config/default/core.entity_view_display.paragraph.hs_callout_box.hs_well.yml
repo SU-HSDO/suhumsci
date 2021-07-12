@@ -1,13 +1,16 @@
-uuid: c755d6d4-29a4-4c37-9b69-0dcf34b0bbe8
+uuid: 5e0c3847-b8e8-4e7e-86a7-60e2ff287fa6
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.hs_well
     - field.field.paragraph.hs_callout_box.field_hs_callout_box_align
     - field.field.paragraph.hs_callout_box.field_hs_callout_box_body
+    - field.field.paragraph.hs_callout_box.field_hs_callout_style
     - paragraphs.paragraphs_type.hs_callout_box
   module:
     - ds
+    - layout_builder
     - text
 third_party_settings:
   ds:
@@ -27,10 +30,13 @@ third_party_settings:
     regions:
       callout:
         - field_hs_callout_box_body
-id: paragraph.hs_callout_box.default
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: paragraph.hs_callout_box.hs_well
 targetEntityType: paragraph
 bundle: hs_callout_box
-mode: default
+mode: hs_well
 content:
   field_hs_callout_box_body:
     weight: 0

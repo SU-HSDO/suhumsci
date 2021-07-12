@@ -76,3 +76,27 @@
     }
   }
 }
+
+// Caption/credit styles for images placed within the body section text area on node detail pages and for WYSIWYG (text area) images
+.node {
+  figure {
+    position: relative;
+    z-index: $hb-z-index-figure;
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('sm');
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xs');
+    }
+
+    article {
+      position: relative;
+    }
+
+    figcaption {
+      @include hb-caption-credit;
+    }
+  }
+}

@@ -6,9 +6,12 @@ dependencies:
     - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_wdth
     - paragraphs.paragraphs_type.hs_clr_bnd
   module:
     - ds
+    - field_formatter_class
+    - hs_field_helpers
     - layout_builder
 third_party_settings:
   ds:
@@ -23,10 +26,11 @@ third_party_settings:
           variant: _field
           variant_field: field_hs_clr_bnd_bgc
           variant_field_values:
-            gray: gray
+            default: default
             cardinal: cardinal
+            gray: gray
     regions:
-      color_band:
+      color_band_text:
         - field_hs_clr_bnd_txt
   layout_builder:
     allow_custom: false
@@ -40,9 +44,14 @@ content:
     weight: 0
     label: hidden
     settings: {  }
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     type: basic_string
-    region: color_band
+    region: color_band_text
 hidden:
   field_hs_clr_bnd_bgc: true
+  field_hs_clr_bnd_wdth: true
   search_api_excerpt: true

@@ -1,0 +1,17 @@
+{%
+  set classes = [
+    'hb-color-band',
+    'hb-color-band--limited-width',
+  ]
+%}
+
+{%- set attributes = attributes.addClass(classes) -%}
+
+{% if variant %}
+  {% set variant_class = "hb-color-band--#{variant}" %} 
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
+
+<div{{ attributes }}>
+  <h2 class="hb-color-band--text">{{ color_band_text }}</h2>
+</div>

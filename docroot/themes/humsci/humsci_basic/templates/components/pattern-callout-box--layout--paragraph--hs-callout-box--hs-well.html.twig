@@ -1,0 +1,24 @@
+{%
+  set classes = [
+    'hb-callout-box',
+    'hb-callout-box--well',
+  ]
+%}
+
+{%- set attributes = attributes.addClass(classes) -%}
+
+{% if field_hs_callout_style %}
+  {% set colorbox_style = "hb-callout-box--#{content.field_hs_callout_style.value}" %}
+  {% set attributes = attributes.addClass(colorbox_style) %}
+{% endif %}
+
+{% if variant %}
+  {% set variant_class = "hb-callout-box--align-#{variant}" %} 
+  {% set attributes = attributes.addClass(variant_class) %}
+{% endif %}
+
+<div{{ attributes }}>
+  <div class="hb-callout-box__wrapper">
+    {{ callout }}
+  </div>
+</div>

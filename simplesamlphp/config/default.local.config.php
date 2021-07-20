@@ -12,3 +12,4 @@ $config['store.sql.username'] = '${drupal.db.username}';
 $config['store.sql.password'] = '${drupal.db.password}';
 $config['certdir'] = '${repo.root}/keys/saml/cert';
 $config['metadatadir'] = '${repo.root}/keys/saml/metadata';
+

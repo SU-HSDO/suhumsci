@@ -15,7 +15,7 @@ tasks:
     command: |
       vendor/bin/blt blt:telemetry:disable -n
       apache2ctl restart
-      .gitpod/ssh_key.ssh
+      .gitpod/ssh_key.sh
       eval `ssh-agent -s`
       ssh-add /workspace/.ssh/id_rsa
       blt sws:keys

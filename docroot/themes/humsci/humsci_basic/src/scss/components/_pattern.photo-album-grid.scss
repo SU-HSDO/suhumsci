@@ -86,20 +86,39 @@
   top: 0;
   height: hb-calculate-rems(44px);
 
-  &::before { // TODO: test with caret icon - replace with X
+  &::before {
     @include hb-traditional {
-      @include hb-icon-background('slider-caret', 'black');
+      @include hb-icon-background('plus', 'black');
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-icon-background('slider-caret', 'primary');
+      @include hb-icon-background('plus', 'primary');
     }
 
     content: '';
-    height: hb-calculate-rems(15px);
-    width: hb-calculate-rems(8.5px);
+    height: hb-calculate-rems(20px);
+    width: hb-calculate-rems(20px);
     position: absolute;
-    transition: hb-transition(transform); // necessary????
+    top: hb-calculate-rems(12px);
+    right: hb-calculate-rems(12px);
+    transform: rotate(-45deg);
+    transition: hb-transition(transform);
+  }
+
+  &:hover {
+    &::before {
+      @include hb-traditional {
+        @include hb-icon-background('minus', 'black');
+      }
+  
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-icon-background('minus', 'primary');
+      }
+
+      height: hb-calculate-rems(2px);
+      top: hb-calculate-rems(21px);
+      transform: rotate(0deg);
+    }
   }
 }
 

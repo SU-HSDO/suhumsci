@@ -5,7 +5,8 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
 _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that it's saved in your `~/.ssh folder._
 
 1. [Install Lando](https://lando.dev/download/).
-2. Copy `/lando/default.lando.yml` to `/.lando.yml`.
+2. Copy `lando/default.lando.yml` to `.lando.yml`.
+   a. If running acceptance tests, copy `lando/default.codeception.yml` to `tests/codeception.yml`.
 3. Take the `.loc` domains in the `.lando.yml` file and add them to your `/etc/hosts` file, as shown below:
     ```
     127.0.0.1           swshumsci.suhumsci.loc
@@ -39,6 +40,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
 8. Run `lando blt drupal:sync --site=default --sync-files --partial` to pull down a copy of the database, files for the default multisite, and the custom views and blocks that have been built out. If you **DO NOT** want to get the custom views built out on on the database you are pulling from, you can just use: `lando blt drupal:sync --site=default --sync-files`.
 9. Run `lando info`, and browse to the url for your multisite. For the default site, you should be able to pull up http://swshumsci.suhumsci.loc/ in your browser.
 10. Depending on the local domains you've set up, you may need to add a `docroot/sites/local.sites.php` file, and use it to add your local domains to the `$sites` array. Otherwise, requests to your local multisite domains may get sent to the default site.
+11. To run codeception tests run `lando blt codeception --group=install`. Or if you wish to run a single class/method add the annotation in the docblock `@group testme` and then run `lando blt codeception --group=testme`.
 
 # Switching between local sites
 1. In your `.lando.yml` file, uncomment the service for the site you want to run locally.

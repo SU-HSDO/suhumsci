@@ -33,6 +33,18 @@ services:
       user: drupal
       password: drupal
       database: swshumsci
+  chromedriver:
+    type: compose
+    services:
+      image: robcherry/docker-chromedriver:latest
+      expose:
+        - "4444"
+      environment:
+        CHROMEDRIVER_WHITELISTED_IPS: ""
+        CHROMEDRIVER_URL_BASE: "/wd/hub"
+      security_opt:
+        - seccomp:unconfined
+      command: ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
   # archaeology:
   #   type: mysql:5.7
   #   creds:
@@ -139,8 +151,5 @@ tooling:
   blt:
     service: appserver
     cmd: /app/vendor/bin/blt
-  behat:
-    service: appserver
-    cmd: "/app/vendor/bin/behat -c /app/tests/behat/local.yml"
   git:
     service: appserver

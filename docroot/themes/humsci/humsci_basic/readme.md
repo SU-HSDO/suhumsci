@@ -50,7 +50,8 @@ Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbo
 
 The visual regression tests are run locally and used to compare what is on Production versus what is on your local machine.
 
-1. Add new scenarios in the `backstop/backstop.json`. The format should look like the following:
+#### Adding new scenarios in the `backstop/backstop.json`.
+The format should look like the following:
 ```
 "scenarios": [
   {
@@ -62,7 +63,14 @@ The visual regression tests are run locally and used to compare what is on Produ
   }
 ]
 ```
-1. Run `npm run backstop:init` to generate reference images, in our case reference is production:
+Before running Backstop for the first time you will need to create an `.env` file. Copy the contents in `docroot/themes/humsci/humsci_basic/.env-sample` and place them in your `.env` file. Add the basic auth credentials. They can be found in 1Password under `Stanford Basic Auth`.
+
+Visual regression testing should be completed bi-weekly at the end of each sprint. To get the best results, sync your local environment against staging before running Backstop.
+
+1. Go to the [staging environment](https://sparkbox-sandbox-stage.stanford.edu/). Take note of which theme (Colorful or Traditional) and color pairing is on staging and update your local environment to match.
+1. Cd the `humsci_basic` directory.
+1. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
+1. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
 1. Run `npm run backstop:test` to run the tests.
 1. Backstop will open an HTML page that contains the report which highlights errors.
 _Note: Differences in content will also be reported as failures._

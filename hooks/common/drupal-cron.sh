@@ -11,6 +11,6 @@ repo_root="/var/www/html/humscigryphon.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-blt drupal:cron &>> /var/log/sites/humscigryphon.$target_env/logs/srv-7503/drush-cron.log
+blt drupal:cron &>> /var/log/sites/humscigryphon.$target_env/logs/web-42199/drush-cron.log
 
 set +v

@@ -1,8 +1,19 @@
 .stanford-gallery.default .su-gallery-images {
   display: grid;
-  grid-template-columns: repeat(auto-fill, calc(33% - 2rem));
   justify-content: space-between;
   row-gap: 4rem;
+}
+
+@media (min-width: 768px) {
+  .stanford-gallery.default .su-gallery-images {
+    grid-template-columns: repeat(auto-fill, calc(50% - 2rem));
+  }
+}
+
+@media (min-width: 975px) {
+  .stanford-gallery.default .su-gallery-images {
+    grid-template-columns: repeat(auto-fill, calc(33% - 2rem));
+  }
 }
 
 .stanford-gallery.hs-gallery-slideshow .slick-dots {

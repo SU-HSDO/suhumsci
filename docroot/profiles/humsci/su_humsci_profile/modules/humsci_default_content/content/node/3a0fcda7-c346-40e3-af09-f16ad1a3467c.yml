@@ -5,14 +5,14 @@ _meta:
   bundle: hs_basic_page
   default_langcode: en
   depends:
-    ab2442c0-df76-41ed-af0b-292944ff3ec4: user
+    9fdb27e1-6ff0-4ec4-a921-16b01e3fd418: user
     941470f3-b916-4e5f-b53d-e2386277d01c: media
     287db095-35b1-4050-8d26-5d8332eeb6a6: node
     38bb3d0a-b9db-4f26-9cb2-567bfabf8222: media
 default:
   revision_uid:
     -
-      entity: ab2442c0-df76-41ed-af0b-292944ff3ec4
+      entity: 9fdb27e1-6ff0-4ec4-a921-16b01e3fd418
   status:
     -
       value: true
@@ -39,6 +39,15 @@ default:
       alias: /training-page
       langcode: en
       pathauto: 1
+  rh_action:
+    -
+      value: bundle_default
+  rh_redirect_response:
+    -
+      value: 301
+  rh_redirect_fallback_action:
+    -
+      value: bundle_default
   field_hs_page_components:
     -
       entity:
@@ -166,7 +175,7 @@ default:
                       value: {  }
                   field_hs_hero_body:
                     -
-                      value: "<p>carousel body text</p>\r\n"
+                      value: "<p>Hero (Layered) - Slider&nbsp;body text</p>\r\n"
                       format: minimal_html
                   field_hs_hero_image:
                     -
@@ -182,7 +191,7 @@ default:
                       opacity: !!float 0
                   field_hs_hero_title:
                     -
-                      value: 'Carousel title text'
+                      value: 'Hero (Layered) - Slider title text'
             -
               entity:
                 _meta:
@@ -201,6 +210,10 @@ default:
                   behavior_settings:
                     -
                       value: {  }
+                  field_hs_hero_body:
+                    -
+                      value: "<p>Hero (Layered) - Slider body text 2</p>\r\n"
+                      format: minimal_html
                   field_hs_hero_image:
                     -
                       entity: 941470f3-b916-4e5f-b53d-e2386277d01c
@@ -208,6 +221,9 @@ default:
                     -
                       color: 00505c
                       opacity: !!float 0
+                  field_hs_hero_title:
+                    -
+                      value: 'Hero (Layered) - Slider title text 2'
     -
       entity:
         _meta:
@@ -228,7 +244,7 @@ default:
               value: {  }
           field_hs_hero_body:
             -
-              value: "<p>Hero Component body text</p>\r\n"
+              value: "<p>Hero (Overlay) component body text</p>\r\n"
               format: minimal_html
           field_hs_hero_image:
             -
@@ -244,7 +260,7 @@ default:
               opacity: !!float 0
           field_hs_hero_title:
             -
-              value: 'Hero on component section'
+              value: 'Hero (Overlay) component section'
     -
       entity:
         _meta:
@@ -591,6 +607,144 @@ default:
         _meta:
           version: '1.0'
           entity_type: paragraph
+          uuid: 0b29035f-e42d-4008-a70a-aa86b96a32c5
+          bundle: hs_row
+          default_langcode: en
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1617665027
+          behavior_settings:
+            -
+              value: {  }
+          field_hs_row_components:
+            -
+              entity:
+                _meta:
+                  version: '1.0'
+                  entity_type: paragraph
+                  uuid: f111e7ea-167a-4981-85b2-3cbf254e595b
+                  bundle: hs_text_area
+                  default_langcode: en
+                default:
+                  status:
+                    -
+                      value: true
+                  created:
+                    -
+                      value: 1617665030
+                  behavior_settings:
+                    -
+                      value: {  }
+                  field_hs_text_area:
+                    -
+                      value: "<h2 class=\"text-align-center\">Callout Text</h2>\r\n"
+                      format: basic_html
+          field_paragraph_style:
+            -
+              value: well-full-width
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: ccb3b3cb-c6d5-40db-a002-8bb9822c61d6
+          bundle: hs_callout_box
+          default_langcode: en
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1621462639
+          behavior_settings:
+            -
+              value: {  }
+          field_hs_callout_box_align:
+            -
+              value: left
+          field_hs_callout_box_body:
+            -
+              value: "<blockquote>\r\n<p>This is a callout box. It floats to the left or right and needs to be placed above a text area component.</p>\r\n</blockquote>\r\n"
+              format: basic_html
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: 867c7a79-0571-4487-a157-fba78664483b
+          bundle: hs_text_area
+          default_langcode: en
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1621462515
+          behavior_settings:
+            -
+              value: {  }
+          field_hs_text_area:
+            -
+              value: "<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>\r\n\r\n<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Pellentesque ut neque. Nullam cursus lacinia erat. Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod ligula urna in dolor. Cras dapibus.</p>\r\n\r\n<p>Fusce risus nisl, viverra et, tempor et, pretium in, sapien. Fusce risus nisl, viverra et, tempor et, pretium in, sapien. Nullam vel sem. Donec interdum, metus et hendrerit aliquet, dolor diam sagittis ligula, eget egestas libero turpis vel mi. Fusce ac felis sit amet ligula pharetra condimentum.</p>\r\n\r\n<p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Duis leo. Ut leo. Fusce ac felis sit amet ligula pharetra condimentum. Etiam ut purus mattis mauris sodales aliquam.</p>\r\n\r\n<p>Morbi vestibulum volutpat enim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Fusce a quam. In turpis. Etiam iaculis nunc ac metus.</p>\r\n\r\n<p>Cras ultricies mi eu turpis hendrerit fringilla. Morbi mollis tellus ac sapien. Aenean massa. Fusce a quam. Etiam sollicitudin, ipsum eu pulvinar rutrum, tellus ipsum laoreet sapien, quis venenatis ante odio sit amet eros.</p>\r\n"
+              format: basic_html
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: da6bf2c7-16d3-4e1f-9558-e53cfe9496b7
+          bundle: hs_callout_box
+          default_langcode: en
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1621462639
+          behavior_settings:
+            -
+              value: {  }
+          field_hs_callout_box_align:
+            -
+              value: right
+          field_hs_callout_box_body:
+            -
+              value: "<drupal-media data-align=\"center\" data-entity-type=\"media\" data-entity-uuid=\"38bb3d0a-b9db-4f26-9cb2-567bfabf8222\"></drupal-media>\r\n\r\n<p class=\"hs-font-lead\">A callout box can also have images</p>\r\n"
+              format: basic_html
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: c8dab8d1-0a49-47cc-a10d-686a579133ca
+          bundle: hs_text_area
+          default_langcode: en
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1621462515
+          behavior_settings:
+            -
+              value: {  }
+          field_hs_text_area:
+            -
+              value: "<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>\r\n\r\n<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Pellentesque ut neque. Nullam cursus lacinia erat. Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod ligula urna in dolor. Cras dapibus.</p>\r\n\r\n<p>Fusce risus nisl, viverra et, tempor et, pretium in, sapien. Fusce risus nisl, viverra et, tempor et, pretium in, sapien. Nullam vel sem. Donec interdum, metus et hendrerit aliquet, dolor diam sagittis ligula, eget egestas libero turpis vel mi. Fusce ac felis sit amet ligula pharetra condimentum.</p>\r\n\r\n<p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Duis leo. Ut leo. Fusce ac felis sit amet ligula pharetra condimentum. Etiam ut purus mattis mauris sodales aliquam.</p>\r\n\r\n<p>Morbi vestibulum volutpat enim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Fusce a quam. In turpis. Etiam iaculis nunc ac metus.</p>\r\n\r\n<p>Cras ultricies mi eu turpis hendrerit fringilla. Morbi mollis tellus ac sapien. Aenean massa. Fusce a quam. Etiam sollicitudin, ipsum eu pulvinar rutrum, tellus ipsum laoreet sapien, quis venenatis ante odio sit amet eros.</p>\r\n"
+              format: basic_html
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
           uuid: 029ca77d-3603-42d9-9c51-6e4fb5131a54
           bundle: hs_row
           default_langcode: en
@@ -673,9 +827,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_hs_testimonial_image:
             -
               entity: 38bb3d0a-b9db-4f26-9cb2-567bfabf8222
@@ -696,6 +847,81 @@ default:
           field_hs_testimonial_quote_align:
             -
               value: quote-top
+    -
+      entity:
+        _meta:
+          version: '1.0'
+          entity_type: paragraph
+          uuid: 2f133e80-f4b1-43af-9303-ba8c1871c0b5
+          bundle: hs_timeline
+          default_langcode: en
+        default:
+          status:
+            -
+              value: true
+          created:
+            -
+              value: 1621463222
+          behavior_settings:
+            -
+              value: {  }
+          field_hs_field_add_expand_collap:
+            -
+              value: true
+          field_hs_timeline:
+            -
+              entity:
+                _meta:
+                  version: '1.0'
+                  entity_type: paragraph
+                  uuid: 005cc886-1129-42eb-8e2b-3d64f1dfb3eb
+                  bundle: hs_timeline_item
+                  default_langcode: en
+                default:
+                  status:
+                    -
+                      value: true
+                  created:
+                    -
+                      value: 1621463222
+                  behavior_settings:
+                    -
+                      value: {  }
+                  field_hs_timeline_item_descripti:
+                    -
+                      value: "<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>\r\n"
+                      format: basic_html
+                  field_hs_timeline_item_subheadin:
+                    -
+                      value: 'Vertical Timeline Subheading'
+                  field_hs_timeline_item_summary:
+                    -
+                      value: 'Vertical Timeline Component Item 1'
+            -
+              entity:
+                _meta:
+                  version: '1.0'
+                  entity_type: paragraph
+                  uuid: 3fee0e30-859e-480b-83ac-9f655be1119b
+                  bundle: hs_timeline_item
+                  default_langcode: en
+                default:
+                  status:
+                    -
+                      value: true
+                  created:
+                    -
+                      value: 1621463242
+                  behavior_settings:
+                    -
+                      value: {  }
+                  field_hs_timeline_item_descripti:
+                    -
+                      value: "<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>\r\n"
+                      format: basic_html
+                  field_hs_timeline_item_summary:
+                    -
+                      value: 'Vertical Timeline Component Item 2'
     -
       entity:
         _meta:
@@ -737,9 +963,12 @@ default:
           behavior_settings:
             -
               value: {  }
+          revision_translation_affected:
+            -
+              value: true
           field_hs_hero_body:
             -
-              value: "<p>Overlay body text</p>\r\n"
+              value: "<p>Hero (Overlay) body</p>\r\n"
               format: minimal_html
           field_hs_hero_image:
             -
@@ -755,4 +984,4 @@ default:
               opacity: !!float 0
           field_hs_hero_title:
             -
-              value: 'Hero with overlay'
+              value: 'Hero (Overlay) Title'

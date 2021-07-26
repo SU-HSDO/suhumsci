@@ -139,8 +139,9 @@ class HsCertCommands extends HsAcquiaApiCommands {
 
     $shell_command = "cd ~ && .acme.sh/acme.sh --list --listraw";
     $php_command = "return shell_exec('$shell_command');";
+    $domain_environment = str_replace('test', 'stage', $environment);
     $results = $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
+      ->alias("default.$domain_environment")
       ->drush('eval')
       ->arg($php_command)
       ->printOutput(FALSE)
@@ -148,7 +149,6 @@ class HsCertCommands extends HsAcquiaApiCommands {
 
     $results = $results->getMessage();
 
-    $domain_environment = str_replace('test', 'stage', $environment);
     $matches = preg_grep("/^.*-$domain_environment.*/", explode("\n", $results));
     $cert = reset($matches);
     preg_match_all("/[a-z].*?\.edu/", $cert, $domains);

@@ -170,8 +170,9 @@ class HsCertCommands extends HsAcquiaApiCommands {
   public function updateCert($environment) {
     $cert_name = $environment == 'test' ? 'swshumsci-stage.stanford.edu' : "swshumsci-$environment.stanford.edu";
     $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
+    $domain_environment = str_replace('test', 'stage', $environment);
     $this->taskDrush()
-      ->drush("rsync --mode=rltDkz @default.prod:/home/humscigryphon/.acme.sh/$cert_name/ @self:../certs")
+      ->drush("rsync --mode=rltDkz @default.$domain_environment:/home/humscigryphon/.acme.sh/$cert_name/ @self:../certs")
       ->run();
 
     $cert = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.cer");

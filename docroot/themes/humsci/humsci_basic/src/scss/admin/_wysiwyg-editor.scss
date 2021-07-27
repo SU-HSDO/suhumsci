@@ -5,7 +5,6 @@ li.cke_panel_listItem a:focus {
   box-shadow: initial;
 }
 
-
 body.cke_editable {
   margin: hb-calculate-rems(8px);
 }
@@ -22,7 +21,40 @@ drupal-media {
     display: block;
     width: 100%;
   }
+
+  .hb-media-image.align,
+  .caption.align {
+    &-right,
+    &-center {
+      max-width: 100%;
+      margin: initial;
+    }
+
+    &-right {
+      @include hb-themes(('colorful', 'airy')) {
+        padding: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
+      }
+  
+      @include hb-traditional {
+        padding: 0 0 hb-spacing-width('xs') hb-spacing-width('xs');
+      }
+    }
+
+    &-left {
+      width: auto;
+      margin: initial;
+
+      @include hb-themes(('colorful', 'airy')) {
+        padding: 0 hb-spacing-width('sm') hb-spacing-width('sm') 0;
+      }
+  
+      @include hb-traditional {
+        padding: 0 hb-spacing-width('xs') hb-spacing-width('xs') 0;
+      }
+    }
+  }
 }
+
 /* stylelint-enable */
 
 // The media edit button should always lay on top of the drupal-media content

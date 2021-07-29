@@ -1,9 +1,17 @@
 .hb-testimonial {
+  margin: hb-calculate-rems(80px) 0 hb-calculate-rems(64px) 0; // Match spacing on blockquote paragraph type container.
+
+  .counted-items-2 &,
+  .counted-items-3 & {
+    @include grid-media-min('sm') {
+      margin: hb-calculate-rems(40px) 0 hb-calculate-rems(32px) 0;
+    }
+  }
+
   &__wrapper {
-    // Place hb-testimonial styles inside a wrapper so that the hb-testimonial div can be used for raised cards styles.
     @include hb-quote-wrapper;
-    margin: hb-calculate-rems(80px) 0 hb-calculate-rems(64px) 0; // Match spacing on blockquote paragraph type container.
     padding-bottom: hb-calculate-rems(34px);
+    margin: 0; // TODO: test
 
     @include grid-media-min('lg') { // override hb-quote-wrapper mixin
       padding-bottom: hb-calculate-rems(34px);
@@ -12,7 +20,7 @@
     .counted-items-2 &,
     .counted-items-3 & {
       @include grid-media-min('sm') {
-        margin: hb-calculate-rems(40px) 0 hb-calculate-rems(32px) 0;
+        margin: 0; // TODO: test
       }
     }
   }

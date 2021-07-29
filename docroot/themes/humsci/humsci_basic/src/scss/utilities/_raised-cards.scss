@@ -75,6 +75,24 @@
       }
     }
   }
+
+  // Testimonial styles // TODO: WIP!!!!!!!!
+  // must work in views and when applied to the layout builder
+  // must also work when hb-dark-inversion theme setting is applied
+  .hb-testimonial {
+    @include hb-global-color('background-color', 'white'); // TODO: will need to consider dark inversion
+    padding: hb-spacing-width('md') hb-spacing-width('xs');
+
+    // TRADITIONAL
+    @include hb-traditional {
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) hb-get-global-color('gray-medium', $ht-traditional-globals);
+    }
+
+    // COLORFUL
+    @include hb-themes(('airy', 'colorful')) {
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
+    }
+  }
 }
 
 // Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied

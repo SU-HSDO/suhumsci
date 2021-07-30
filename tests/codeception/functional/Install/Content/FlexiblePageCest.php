@@ -43,4 +43,52 @@ class FlexiblePageCest {
     $I->canSee('Google CTA', 'a');
   }
 
+  /**
+   * Create a photo album page.
+   */
+  public function testPhotoAlbum(FunctionalTester $I) {
+    $I->logInWithRole('administrator');
+    $I->amOnPage('/admin/structure/types/manage/hs_basic_page/fields/node.hs_basic_page.field_hs_page_components');
+    $this->disableCollection = (bool) $I->grabAttributeFrom('[name="settings[handler_settings][target_bundles_drag_drop][stanford_gallery][enabled]"]', 'checked');
+    if ($this->disableCollection) {
+      $I->uncheckOption('Photo Album');
+      $I->click('Save settings');
+    }
+
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
+    $I->click('List additional actions');
+    $I->scrollTo('#field-hs-page-components-stanford-gallery-add-more');
+    $I->click('#field-hs-page-components-stanford-gallery-add-more');
+    $I->waitForText('Headline');
+    $I->fillField('Headline', 'Photo Album Headline');
+    $I->click('Add media', '.field--name-su-gallery-images');
+    $I->waitForText('Add or select media');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+    $I->click('Upload and Continue');
+    $I->waitForText('Alternative text');
+    $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementVisible('.media-library-item__preview img');
+    $I->click('Save');
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee('Photo Album Headline', 'h2');
+    $I->canSeeNumberOfElements('.su-gallery-images img', 1);
+    $I->canSeeNumberOfElements('#cboxContent img', 0);
+
+    $I->click('.su-gallery-images img');
+    $I->waitForElementVisible('#cboxContent img');
+    $I->canSeeNumberOfElements('#cboxContent img', 1);
+    $I->click('Close', '#cboxContent');
+    $I->wait(1);
+
+    $I->click('Edit', '.tabs');
+    $I->click('Edit', '.paragraph-type--stanford-gallery');
+    $I->waitForText('Description');
+    $I->click('Style');
+    $I->selectOption('Display Mode', 'Slideshow');
+    $I->click('Save');
+    $I->canSeeNumberOfElements('.slick img', 1);
+  }
+
 }

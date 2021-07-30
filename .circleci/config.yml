@@ -247,24 +247,24 @@ workflows:
   test_lint_deploy:
     jobs:
       - run-setup
-      - run-acceptance-first:
-          requires:
-            - run-setup
-      - run-acceptance-second:
-          requires:
-            - run-setup
+#      - run-acceptance-first:
+#          requires:
+#            - run-setup
+#      - run-acceptance-second:
+#          requires:
+#            - run-setup
       - run-acceptance:
           requires:
             - run-setup
-      - run-code-coverage:
-          requires:
-            - run-setup
-      # If the above jobs complete successfully, deploy the branch.
-      - run-deploy-branch:
-          requires:
-            - run-acceptance-first
-            - run-acceptance-second
-            - run-acceptance
+#      - run-code-coverage:
+#          requires:
+#            - run-setup
+#      # If the above jobs complete successfully, deploy the branch.
+#      - run-deploy-branch:
+#          requires:
+#            - run-acceptance-first
+#            - run-acceptance-second
+#            - run-acceptance
   dependency_updates:
     triggers:
       - schedule:

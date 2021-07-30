@@ -59,9 +59,12 @@ class HsCertCommands extends HsAcquiaApiCommands {
    * @throws \Robo\Exception\TaskException
    */
   public function humsciLetsEncryptAdd($environment, $options = [
-    'domains' => [],
+    'domains' => '',
     'skip-check' => FALSE,
+    'force' => FALSE,
   ]) {
+    $options['domains'] = explode(',', $options['domains']);
+
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
       return;
@@ -98,7 +101,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
     $directory = "/mnt/gfs/humscigryphon.$environment/tmp";
 
     $ssh_url = $this->getSshUrl($environment);
-    $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s --force --debug"', $ssh_url, $domains, $directory);
+    $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s %s --debug"', $ssh_url, $domains, $directory, $options['force'] ? '--force' : '');
     return $this->taskExec($command)->run();
   }
 

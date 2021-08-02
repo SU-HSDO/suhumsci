@@ -18,6 +18,30 @@ use Drupal\user\RoleInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_image_formatter(&$variables) {
+  if (isset($variables['url'])) {
+    // Disable screen readers from seeing the link on the image since there
+    // should be another link with text nearby.
+    $variables['image']['#alt'] = '';
+    $variables['url']->mergeOptions(['attributes' => ['tabindex' => -1]]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_responsive_image_formatter(&$variables) {
+  if (isset($variables['url'])) {
+    // Disable screen readers from seeing the link on the image since there
+    // should be another link with text nearby.
+    $variables['responsive_image']['#attributes']['alt'] = '';
+    $variables['url']->mergeOptions(['attributes' => ['tabindex' => -1]]);
+  }
+}
+
+/**
  * Implements hook_ui_patterns_info_alter().
  */
 function su_humsci_profile_ui_patterns_info_alter(array &$definitions) {

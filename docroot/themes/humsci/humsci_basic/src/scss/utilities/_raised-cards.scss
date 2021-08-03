@@ -93,6 +93,13 @@
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
     }
   }
+
+  .hs-paragraph-style--well,
+  .hs-paragraph-style--well-full-width { // TODO: test full width & look through QA pages / example pages / backstop pages
+    .hb-testimonial__wrapper::before {
+      @include hb-global-color('background-color', 'white');
+    }
+  }
 }
 
 // Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied

@@ -1,7 +1,7 @@
 .hb-raised-cards {
   // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
   &--uniform-height .hs-paragraph-style .ptype-hs-postcard,
-  &--uniform-height .field-hs-row-components .ptype-hs-postcard,
+  &--uniform-height .field-hs-row-components .ptype-hs-postcard, // TODO: duplicate this? // TODO: check collection!
   &--uniform-height .hs-paragraph-style .hb-grid__item,
   &--uniform-height .field-hs-row-components .hb-grid__item,
   &--uniform-height .hb-grid .hb-grid__item {
@@ -9,6 +9,7 @@
 
     & div:only-child:not(.hb-card__date-tile, .hb-pill) {
       width: 100%;
+      border: 3px solid tomato;
     }
   }
 
@@ -17,6 +18,17 @@
   &--uniform-height .hs-paragraph-style .paragraph-item .hb-vertical-linked-card,
   &--uniform-height .field-hs-row-components .paragraph-item .hb-vertical-linked-card {
     height: 100%;
+    border: 3px solid greenyellow;
+  }
+
+  &--uniform-height .field-hs-row-components .ptype-hs-testimonial,
+  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial { // TODO: testing for testimonial
+    border: 3px solid turquoise;
+  }
+
+  &--uniform-height .field-hs-row-components .paragraph-item .hb-testimonial,
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-testimonial { // TODO: testing for testimonial
+    border: 3px solid hotpink;
   }
 
   .hb-card {
@@ -79,6 +91,7 @@
   // Testimonial styles // TODO: WIP!!!!!!!!
   // must work in views and when applied to the layout builder
   // must also work when hb-dark-inversion theme setting is applied
+  // TODO: look for an opportunity to create a mixin that can be used for multiple components. Only apply to testimonial at this time. Mixin should be ::before, box shadows.
   .hb-testimonial {
     @include hb-global-color('background-color', 'white'); // TODO: will need to consider dark inversion
     padding: hb-spacing-width('md') hb-spacing-width('xs');
@@ -95,7 +108,7 @@
   }
 
   .hs-paragraph-style--well,
-  .hs-paragraph-style--well-full-width { // TODO: test full width & look through QA pages / example pages / backstop pages
+  .hs-paragraph-style--well-full-width {
     .hb-testimonial__wrapper::before {
       @include hb-global-color('background-color', 'white');
     }

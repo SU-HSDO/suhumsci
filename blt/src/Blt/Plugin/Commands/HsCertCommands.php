@@ -63,7 +63,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
     'skip-check' => FALSE,
     'force' => FALSE,
   ]) {
-    $options['domains'] = explode(',', $options['domains']);
+    $options['domains'] = array_filter(explode(',', $options['domains']));
 
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');

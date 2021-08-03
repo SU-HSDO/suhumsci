@@ -115,7 +115,10 @@ class DateTimeYearOnly extends WidgetBase {
    *   The year of the datetime.
    */
   protected function getYear($dateTime) {
+    // rewrite YYYY as YYYY-06-01 for year before 1969
+    if((int)$dateTime > 0 && (int)$dateTime < 1970) $dateTime = $dateTime . '-06-01';
     $dateTime = new \DateTime($dateTime);
+    
     $timestamp = $dateTime->getTimestamp();
     return date('Y', $timestamp);
   }

@@ -59,9 +59,12 @@ class HsCertCommands extends HsAcquiaApiCommands {
    * @throws \Robo\Exception\TaskException
    */
   public function humsciLetsEncryptAdd($environment, $options = [
-    'domains' => [],
+    'domains' => '',
     'skip-check' => FALSE,
+    'force' => FALSE,
   ]) {
+    $options['domains'] = array_filter(explode(',', $options['domains']));
+
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
       return;
@@ -98,7 +101,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
     $directory = "/mnt/gfs/humscigryphon.$environment/tmp";
 
     $ssh_url = $this->getSshUrl($environment);
-    $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s --force --debug"', $ssh_url, $domains, $directory);
+    $command = sprintf('ssh %s "~/.acme.sh/acme.sh --issue %s -w %s %s --debug"', $ssh_url, $domains, $directory, $options['force'] ? '--force' : '');
     return $this->taskExec($command)->run();
   }
 
@@ -139,8 +142,9 @@ class HsCertCommands extends HsAcquiaApiCommands {
 
     $shell_command = "cd ~ && .acme.sh/acme.sh --list --listraw";
     $php_command = "return shell_exec('$shell_command');";
+    $domain_environment = str_replace('test', 'stage', $environment);
     $results = $this->taskDrush()
-      ->alias($this->getConfigValue('drush.aliases.remote'))
+      ->alias("default.$domain_environment")
       ->drush('eval')
       ->arg($php_command)
       ->printOutput(FALSE)
@@ -148,7 +152,6 @@ class HsCertCommands extends HsAcquiaApiCommands {
 
     $results = $results->getMessage();
 
-    $domain_environment = str_replace('test', 'stage', $environment);
     $matches = preg_grep("/^.*-$domain_environment.*/", explode("\n", $results));
     $cert = reset($matches);
     preg_match_all("/[a-z].*?\.edu/", $cert, $domains);
@@ -170,8 +173,9 @@ class HsCertCommands extends HsAcquiaApiCommands {
   public function updateCert($environment) {
     $cert_name = $environment == 'test' ? 'swshumsci-stage.stanford.edu' : "swshumsci-$environment.stanford.edu";
     $this->taskDeleteDir($this->getConfigValue('repo.root') . '/certs')->run();
+    $domain_environment = str_replace('test', 'stage', $environment);
     $this->taskDrush()
-      ->drush("rsync --mode=rltDkz @default.prod:/home/humscigryphon/.acme.sh/$cert_name/ @self:../certs")
+      ->drush("rsync --mode=rltDkz @default.$domain_environment:/home/humscigryphon/.acme.sh/$cert_name/ @self:../certs")
       ->run();
 
     $cert = file_get_contents($this->getConfigValue('repo.root') . "/certs/$cert_name.cer");

@@ -8,10 +8,15 @@ $sel: '';
   $sel: if($i == 0, '.contextual-region.paragraph', selector-nest($sel, '.contextual-region')) !global;
 
   #{$sel} {
-    .contextual {
+    .contextual:not(.hb-card__img .contextual-region .contextual) {
       right: 32px * $i;
     }
   }
+}
+
+// resets height of contextual links on raised cards
+.hb-raised-cards .hb-card__img .contextual-region .contextual {
+  height: unset;
 }
 
 // Prevent humsci_basic link styles from applying to contextual link items.

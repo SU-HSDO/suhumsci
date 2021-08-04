@@ -268,7 +268,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
         'timeout' => 0,
         'verify' => FALSE,
       ]);
-      $response = $client->get('/');
+      $response = $client->get('/.well-known/acme-challenge');
       if (!empty($response->getHeader('X-AH-Environment')) || $response->getHeader('via') != '1.1 login.stanford.edu') {
         continue;
       }

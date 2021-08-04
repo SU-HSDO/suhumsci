@@ -1,0 +1,134 @@
+// This is a stylesheet for the Global Message banner
+.su-alert {
+  background-color: #f4f4f4;
+  color: $su-color-black;
+  padding: 0;
+
+  & .fa,
+  & .fas,
+  .hb-dark-pattern & .fa,
+  .hb-dark-pattern & .fas,
+  .hb-dark-pattern & ol:not([class]) li::before {
+    color: $su-color-black;
+  }
+
+  .hb-dark-pattern & ul:not([class]) li::before {
+    background-color: $su-color-black;
+  }
+
+  .hb-dark-pattern & a,
+  a {
+    color: $su-color-black;
+    border-bottom: 0;
+    background-image: none;
+    font-weight: hb-theme-font-weight(semibold);
+
+    &:hover {
+      color: $su-color-black;
+      text-decoration: none;
+    }
+  }
+
+  &--text-light,
+  &--text-light a,
+  &--text-light .fa,
+  &--text-light .fas,
+  .hb-dark-pattern &.su-alert--text-light a,
+  .hb-dark-pattern &.su-alert--text-light .fa,
+  .hb-dark-pattern &.su-alert--text-light .fas,
+  .hb-dark-pattern &.su-alert--text-light ol:not([class]) li::before {
+    @include hb-global-color('color','white');
+
+    &:hover {
+      @include hb-global-color('color','white');
+    }
+  }
+
+  .hb-dark-pattern &--text-light ul:not([class]) li::before {
+    @include hb-global-color('background-color','white');
+  }
+
+  &--plain {
+    background-color: #f4f4f4;
+  }
+
+  &--error {
+    background-color: $su-color-bright-red;
+  }
+
+  &--success {
+    background-color: #008566;
+  }
+
+  &--warning {
+    background-color: #eaab00;
+  }
+
+  &--info {
+    background-color: $su-color-bright-blue;
+  }
+
+  &__header {
+    margin-bottom: 1em;
+    width: 100%;
+    margin-right: hb-calculate-rems(20px);
+
+    @include grid-media-min('lg') {
+      margin-right: hb-calculate-rems(26px);
+      order: 1;
+      flex-shrink: 1;
+      width: auto;
+      margin-bottom: 0;
+    }
+  }
+
+  &__label {
+    height: 100%;
+    line-height: 100%;
+    display: inline-block;
+    font-size: hb-calculate-rems(17px);
+    text-transform: uppercase;
+    font-weight: hb-theme-font-weight(semibold);
+
+    &::after {
+      content: ":";
+    }
+  }
+
+  &__body {
+    order: 2;
+    flex-grow: 1;
+    flex-basis: hb-calculate-rems(100px);
+    padding-left: 0 !important;
+
+    .su-alert & .su-alert__heading {
+      margin-bottom: hb-calculate-rems(10px);
+      font-weight: hb-theme-font-weight(bold);
+      margin-top: 0;
+      font-size: hb-calculate-rems(29px);
+      letter-spacing: -0.012em;
+    }
+  }
+
+  &__text {
+    margin-bottom: 0;
+  }
+
+  &__icon {
+    margin-right: hb-calculate-rems(5px);
+    display: inline-block;
+    max-width: hb-calculate-rems(20px);
+  }
+
+  .centered-container {
+    @include hb-page-width;
+    padding: hb-calculate-rems(16px) 0;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+
+    @include grid-media-min('md') {
+      padding: hb-calculate-rems(19px) 0;
+    }
+  }
+}

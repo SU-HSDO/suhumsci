@@ -63,7 +63,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
     'skip-check' => FALSE,
     'force' => FALSE,
   ]) {
-    $options['domains'] = explode(',', $options['domains']);
+    $options['domains'] = array_filter(explode(',', $options['domains']));
 
     if (!in_array($environment, ['dev', 'test', 'prod'])) {
       $this->say('invalid environment');
@@ -268,7 +268,7 @@ class HsCertCommands extends HsAcquiaApiCommands {
         'timeout' => 0,
         'verify' => FALSE,
       ]);
-      $response = $client->get('/');
+      $response = $client->get('/.well-known/acme-challenge');
       if (!empty($response->getHeader('X-AH-Environment')) || $response->getHeader('via') != '1.1 login.stanford.edu') {
         continue;
       }

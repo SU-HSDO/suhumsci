@@ -1,7 +1,7 @@
 .hb-raised-cards {
   // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
   &--uniform-height .hs-paragraph-style .ptype-hs-postcard,
-  &--uniform-height .field-hs-row-components .ptype-hs-postcard, // TODO: duplicate this? // TODO: check collection!
+  &--uniform-height .field-hs-row-components .ptype-hs-postcard,
   &--uniform-height .hs-paragraph-style .hb-grid__item,
   &--uniform-height .field-hs-row-components .hb-grid__item,
   &--uniform-height .hb-grid .hb-grid__item {
@@ -9,7 +9,6 @@
 
     & div:only-child:not(.hb-card__date-tile, .hb-pill) {
       width: 100%;
-      border: 3px solid tomato;
     }
   }
 
@@ -18,17 +17,25 @@
   &--uniform-height .hs-paragraph-style .paragraph-item .hb-vertical-linked-card,
   &--uniform-height .field-hs-row-components .paragraph-item .hb-vertical-linked-card {
     height: 100%;
-    border: 3px solid greenyellow;
   }
 
+  // Raised cards uniform height styles for Testimonial
   &--uniform-height .field-hs-row-components .ptype-hs-testimonial,
-  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial { // TODO: testing for testimonial
-    border: 3px solid turquoise;
+  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial {
+    & div:not([class]):only-child:not(.hb-card__date-tile, .hb-pill), // necessary for logged out state
+    & div.contextual-region { // necessary for logged in state
+      height: 100%;
+    }
   }
 
   &--uniform-height .field-hs-row-components .paragraph-item .hb-testimonial,
-  &--uniform-height .field-hs-collection-items .paragraph-item .hb-testimonial { // TODO: testing for testimonial
-    border: 3px solid hotpink;
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-testimonial {
+    display: flex;
+    height: inherit;
+
+    &__wrapper {
+      width: 100%;
+    }
   }
 
   .hb-card {

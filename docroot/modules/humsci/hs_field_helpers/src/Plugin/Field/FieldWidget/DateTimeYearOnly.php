@@ -115,7 +115,7 @@ class DateTimeYearOnly extends WidgetBase {
    *   The year of the datetime.
    */
   protected function getYear($dateTime) {
-    // Rewrite YYYY as YYYY-06-01 for absolute years
+    // Rewrite YYYY as YYYY-06-01 for absolute years.
     if ((int) $dateTime > 0) $dateTime = $dateTime . '-06-01';
     $dateTime = new \DateTime($dateTime);
     $timestamp = $dateTime->getTimestamp();

@@ -95,24 +95,11 @@
     }
   }
 
-  // Testimonial styles
-  // must work in views and when applied to the layout builder
-  // must also work when hb-dark-inversion theme setting is applied
-  // TODO: look for an opportunity to create a mixin that can be used for multiple components. Only apply to testimonial at this time. Mixin should be ::before, box shadows.
   .hb-testimonial {
     @include hb-global-color('background-color', 'white');
+    @include hb-raised-cards-shadow;
     padding: hb-spacing-width('md') hb-spacing-width('xs');
-    margin-top: 0; // TODO: test override of testimonial pattern
-
-    // TRADITIONAL
-    @include hb-traditional {
-      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) hb-get-global-color('gray-medium', $ht-traditional-globals);
-    }
-
-    // COLORFUL
-    @include hb-themes(('airy', 'colorful')) {
-      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
-    }
+    margin-top: 0;
   }
 
   .hs-paragraph-style--well,

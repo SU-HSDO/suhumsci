@@ -85,3 +85,13 @@
     }
   }
 }
+
+@mixin hb-raised-cards-shadow {
+  @include hb-traditional {
+    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) hb-get-global-color('gray-medium', $ht-traditional-globals);
+  }
+
+  @include hb-themes(('airy', 'colorful')) {
+    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
+  }
+}

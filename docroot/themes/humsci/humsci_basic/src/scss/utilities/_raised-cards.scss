@@ -19,6 +19,25 @@
     height: 100%;
   }
 
+  // Raised cards uniform height styles for Testimonial
+  &--uniform-height .field-hs-row-components .ptype-hs-testimonial,
+  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial {
+    & div:not([class]):only-child:not(.hb-card__date-tile, .hb-pill), // necessary for logged out state
+    & div.contextual-region { // necessary for logged in state
+      height: 100%;
+    }
+  }
+
+  &--uniform-height .field-hs-row-components .paragraph-item .hb-testimonial,
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-testimonial {
+    display: flex;
+    height: inherit;
+
+    &__wrapper {
+      width: 100%;
+    }
+  }
+
   .hb-card {
     @include hb-global-color('background-color', 'white');
 
@@ -73,6 +92,20 @@
       &__title:only-child {
         margin: 0;
       }
+    }
+  }
+
+  .hb-testimonial {
+    @include hb-global-color('background-color', 'white');
+    @include hb-raised-cards-shadow;
+    padding: hb-spacing-width('md') hb-spacing-width('xs');
+    margin-top: 0;
+  }
+
+  .hs-paragraph-style--well,
+  .hs-paragraph-style--well-full-width {
+    .hb-testimonial__wrapper::before {
+      @include hb-global-color('background-color', 'white');
     }
   }
 }

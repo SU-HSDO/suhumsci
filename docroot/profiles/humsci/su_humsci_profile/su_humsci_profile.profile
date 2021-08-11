@@ -25,7 +25,12 @@ function su_humsci_profile_preprocess_image_formatter(&$variables) {
     // Disable screen readers from seeing the link on the image since there
     // should be another link with text nearby.
     $variables['image']['#alt'] = '';
-    $variables['url']->mergeOptions(['attributes' => ['tabindex' => -1]]);
+    $variables['url']->mergeOptions([
+      'attributes' => [
+        'tabindex' => -1,
+        'aria-hidden' => TRUE,
+      ],
+    ]);
   }
 }
 

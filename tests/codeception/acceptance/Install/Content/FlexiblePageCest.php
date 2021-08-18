@@ -83,8 +83,10 @@ class FlexiblePageCest {
 
   /**
    * I can create a row with a text area on the page.
+   *
+   * Protected function to prevent it from running.
    */
-  public function testRow(AcceptanceTester $I) {
+  protected function testRow(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');

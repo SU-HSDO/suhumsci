@@ -13,6 +13,7 @@ dependencies:
     - field_formatter_class
     - hs_field_helpers
     - linkit
+    - stanford_media
     - text
 id: paragraph.stanford_gallery.default
 targetEntityType: paragraph
@@ -46,18 +47,20 @@ content:
     label: hidden
     settings:
       tag: h2
+      linked: false
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
   su_gallery_images:
-    type: entity_reference_entity_view
+    type: media_image_formatter
     weight: 2
     region: content
     label: hidden
     settings:
-      view_mode: hs_colorbox
+      view_mode: caption_credit
+      image_style: hs_medium_rectangle_360x250
       link: false
     third_party_settings:
       field_formatter_class:

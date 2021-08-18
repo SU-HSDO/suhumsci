@@ -4,7 +4,6 @@
  * Class FlexiblePageCest.
  *
  * @group install
- * @group testme
  */
 class FlexiblePageCest {
 
@@ -31,7 +30,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->canSeeNumberOfElements('#edit-field-hs-page-hero-wrapper', 1);
-    $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input', 14);
+    $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input', 15);
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Postcard');
     $I->canSee('Card Title');
@@ -83,8 +82,10 @@ class FlexiblePageCest {
 
   /**
    * I can create a row with a text area on the page.
+   *
+   * Protected function to prevent it from running.
    */
-  public function testRow(AcceptanceTester $I) {
+  protected function testRow(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
@@ -116,7 +117,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Collection');
     $I->selectOption('Items Per Row', 2);
-    $I->canSeeOptionIsSelected('Paragraph Style', '- None -');
+    $I->canSeeOptionIsSelected('Style', '- None -');
     $I->click('Add Text Area', '.field--name-field-hs-collection-items');
     $I->fillField('Text Area', 'Foo Bar Baz');
     $I->click('Add Postcard', '.field--name-field-hs-collection-items');

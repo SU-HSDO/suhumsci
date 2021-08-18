@@ -14,6 +14,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
+    $I->click('List additional actions', '#edit-field-hs-page-hero-add-more');
     $I->click('field_hs_page_hero_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');
     $I->canSee('Overlay Details');

@@ -59,7 +59,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
-    $I->click('List additional actions');
+    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
     $I->scrollTo('#field-hs-page-components-stanford-gallery-add-more');
     $I->click('#field-hs-page-components-stanford-gallery-add-more');
     $I->waitForText('Headline');
@@ -76,12 +76,6 @@ class FlexiblePageCest {
     $I->canSee('Photo Album Headline', 'h2');
     $I->canSeeNumberOfElements('.su-gallery-images img', 1);
     $I->canSeeNumberOfElements('#cboxContent img', 0);
-
-    $I->click('.su-gallery-images img');
-    $I->waitForElementVisible('#cboxContent img');
-    $I->canSeeNumberOfElements('#cboxContent img', 1);
-    $I->click('Close', '#cboxContent');
-    $I->wait(1);
 
     $I->click('Edit', '.tabs');
     $I->click('Edit', '.paragraph-type--stanford-gallery');

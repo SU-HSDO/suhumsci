@@ -117,7 +117,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Collection');
     $I->selectOption('Items Per Row', 2);
-    $I->canSeeOptionIsSelected('Paragraph Style', '- None -');
+    $I->canSeeOptionIsSelected('Style', '- None -');
     $I->click('Add Text Area', '.field--name-field-hs-collection-items');
     $I->fillField('Text Area', 'Foo Bar Baz');
     $I->click('Add Postcard', '.field--name-field-hs-collection-items');

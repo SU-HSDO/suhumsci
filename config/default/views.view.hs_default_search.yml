@@ -30,6 +30,7 @@ dependencies:
     - entity_reference_revisions
     - link
     - search_api
+    - smart_date
     - stanford_media
     - telephone
     - text
@@ -275,7 +276,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<ul><li>{{ type }}</li></ul>'
+            text: "{% if type__target_id == \"hs_basic_page\" %}  \r\npage\r\n{% else %}\r\n{{ type }}\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -301,7 +302,7 @@ display:
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: hb-categories
+          element_class: hb-single-category
           element_label_type: ''
           element_label_class: ''
           element_label_colon: false
@@ -1148,8 +1149,8 @@ display:
           label: ''
           exclude: true
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{% if type__target_id == \"hs_basic_page\" %}  \r\npage\r\n{% else %}\r\n{{ type }}\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -1208,17 +1209,10 @@ display:
             multi_type: separator
             multi_separator: ', '
             display_methods:
-              academic_year:
-                display_method: label
-              country:
-                display_method: label
-                view_mode: default
               hs_course_component:
                 display_method: label
-                view_mode: default
               hs_course_tags:
                 display_method: label
-                view_mode: default
               hs_event_audience:
                 display_method: label
               hs_event_category:
@@ -1229,8 +1223,9 @@ display:
                 display_method: label
               hs_news_categories:
                 display_method: label
-                view_mode: default
               hs_person_affiliation:
+                display_method: label
+              hs_person_department:
                 display_method: label
               hs_person_faculty_status:
                 display_method: label
@@ -1240,7 +1235,6 @@ display:
                 display_method: label
               hs_publication_type:
                 display_method: label
-                view_mode: default
           entity_type: node
           plugin_id: search_api_field
         field_hs_event_location:

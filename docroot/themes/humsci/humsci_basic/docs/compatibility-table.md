@@ -34,7 +34,7 @@ This compatibility table documents whether or not patterns can be used with util
 | Spotlight | ❌ | ❌ |
 | Structured Card | ✅ | ✅ |
 | Table Pattern | ✅ | ❌ |
-| Testimonial | ❌ | ❌ |
+| Testimonial | ❌ | ✅ |
 | Timeline | ❌ | ❌ |
 | Vertical Card | ✅ | ✅ |
 | Vertical Linked Card | ❌ | ❌ |

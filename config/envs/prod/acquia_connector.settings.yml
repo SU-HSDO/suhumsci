@@ -1,48 +1,15 @@
-subscription_data:
-  active: true
-  href: 'https://insight.acquia.com/node/uuid/23a85077-2967-41a4-be22-a84c24e0f81a/dashboard'
-  uuid: 23a85077-2967-41a4-be22-a84c24e0f81a
-  subscription_name: 'SWS HumSci'
-  expiration_date:
-    value: '2018-06-29T00:00:00'
-  product:
-    view: 'Acquia Network'
-  derived_key_salt: f497124f198f58fe01e61b7abfbb2d97
-  update_service: '1'
-  search_service_enabled: 1
-  rpc_version: '3.1'
-  update: {  }
-  heartbeat_data:
-    acquia_lift:
-      status: false
-      decision:
-        public_key: ''
-        private_key: ''
-      profile:
-        account_name: ''
-        hostname: ''
-        public_key: ''
-        secret_key: ''
-        js_path: ''
-    search_service_enabled: 1
 subscription_name: ''
 debug: false
 cron_interval: 30
 cron_interval_override: 0
-banner_service: 'https://insight.acquia.com/system/acquia-banner'
 hide_signup_messages: 0
 spi:
   server: 'https://nspi.acquia.com'
   ssl_override: false
   ssl_verify: true
-  def_vars: {  }
-  def_waived_vars: {  }
-  def_timestamp: 0
-  new_optional_data: 1
   admin_priv: 1
   send_node_user: 1
   send_watchdog: 1
-  module_diff_data: 1
   use_cron: 1
   dynamic_banner: 0
   set_variables_override: 0
@@ -58,7 +25,6 @@ spi:
     - googleanalytics_cache
     - acquia_spi_send_node_user
     - acquia_spi_admin_priv
-    - acquia_spi_module_diff_data
     - acquia_spi_send_watchdog
     - acquia_spi_use_cron
   ignored_set_variables: {  }
@@ -75,10 +41,6 @@ mapping:
     - acquia_connector.settings
     - spi
     - admin_priv
-  acquia_spi_module_diff_data:
-    - acquia_connector.settings
-    - spi
-    - module_diff_data
   acquia_spi_send_watchdog:
     - acquia_connector.settings
     - spi
@@ -198,4 +160,4 @@ mapping:
     - container_parameter
     - http.response.debug_cacheability_headers
 _core:
-  default_config_hash: wxTqZpydlDKlPxO8i3OqgtM9BwmL6dLY_8T0x_HLxns
+  default_config_hash: 6phbBhcYjncqxncwDHAImFHb0MAKamGB_HQy53AfN9s

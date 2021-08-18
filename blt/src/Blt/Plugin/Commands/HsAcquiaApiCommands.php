@@ -100,6 +100,39 @@ class HsAcquiaApiCommands extends BltTasks {
   }
 
   /**
+   * Delete all old database backups.
+   *
+   * @command humsci:clean-backups
+   */
+  public function deleteOldBackups() {
+    $this->connectAcquiaApi();
+    $environments = $this->acquiaEnvironments->getAll($this->appId);
+    $environment_uuids = [];
+
+    foreach ($environments as $environment) {
+      if ($environment->name != 'ra') {
+        $environment_uuids[$environment->uuid] = $environment->name;
+      }
+    }
+
+    foreach ($this->acquiaDatabases->getAll($this->appId) as $database) {
+      $this->say(sprintf('Gather database backup info for %s', $database->name));
+
+      foreach ($environment_uuids as $environment_uuid => $name) {
+        $backups = $this->acquiaDatabaseBackups->getAll($environment_uuid, $database->name);
+        foreach ($backups as $backup) {
+
+          $start_at = strtotime($backup->startedAt);
+          if ($backup->type == 'ondemand' && time() - $start_at > 60 * 60 * 24 * 7) {
+            $this->say(sprintf('Deleting %s backup #%s on %s environment.', $database->name, $backup->id, $name));
+            $this->acquiaDatabaseBackups->delete($environment_uuid, $database->name, $backup->id);
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Sync the staging sites databases with that from production.
    *
    * @command humsci:sync-stage

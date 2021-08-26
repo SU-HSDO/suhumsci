@@ -135,3 +135,11 @@ function su_humsci_profile_post_update_9012() {
     $field->delete();
   }
 }
+
+/**
+ * Disable private collections.
+ */
+function su_humsci_profile_post_update_9013() {
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_priv_collection');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_priv_collection');
+}

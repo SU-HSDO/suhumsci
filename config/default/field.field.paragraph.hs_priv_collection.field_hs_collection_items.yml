@@ -1,27 +1,25 @@
-uuid: 9a4e2daa-d674-4079-b624-da8e9e231de6
+uuid: fb614a3f-ab7f-4c3d-b15a-bf761edf7846
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_hs_priv_page_components
-    - node.type.hs_private_page
+    - field.storage.paragraph.field_hs_collection_items
     - paragraphs.paragraphs_type.hs_accordion
     - paragraphs.paragraphs_type.hs_clr_bnd
     - paragraphs.paragraphs_type.hs_postcard
     - paragraphs.paragraphs_type.hs_priv_collection
     - paragraphs.paragraphs_type.hs_priv_text_area
-    - paragraphs.paragraphs_type.hs_row
     - paragraphs.paragraphs_type.hs_timeline
   module:
     - entity_reference_revisions
-id: node.hs_private_page.field_hs_priv_page_components
-field_name: field_hs_priv_page_components
-entity_type: node
-bundle: hs_private_page
-label: Components
+id: paragraph.hs_priv_collection.field_hs_collection_items
+field_name: field_hs_collection_items
+entity_type: paragraph
+bundle: hs_priv_collection
+label: Items
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -30,74 +28,72 @@ settings:
     negate: 0
     target_bundles:
       hs_accordion: hs_accordion
-      hs_postcard: hs_postcard
-      hs_row: hs_row
-      hs_priv_text_area: hs_priv_text_area
       hs_clr_bnd: hs_clr_bnd
-      hs_priv_collection: hs_priv_collection
+      hs_postcard: hs_postcard
+      hs_priv_text_area: hs_priv_text_area
       hs_timeline: hs_timeline
     target_bundles_drag_drop:
       hs_accordion:
         enabled: true
-        weight: 9
+        weight: 22
       hs_banner:
-        weight: 14
-        enabled: false
-      hs_callout_box:
         weight: 23
         enabled: false
+      hs_callout_box:
+        weight: 24
+        enabled: false
       hs_carousel:
-        weight: 10
+        weight: 25
         enabled: false
       hs_clr_bnd:
         enabled: true
-        weight: 25
-      hs_collection:
         weight: 26
-        enabled: false
-      hs_gradient_hero:
+      hs_collection:
         weight: 27
         enabled: false
-      hs_gradient_hero_slider:
+      hs_gradient_hero:
         weight: 28
         enabled: false
+      hs_gradient_hero_slider:
+        weight: 29
+        enabled: false
       hs_hero_image:
-        weight: 11
+        weight: 30
         enabled: false
       hs_postcard:
         enabled: true
-        weight: 12
+        weight: 31
       hs_priv_collection:
-        enabled: true
         weight: 32
+        enabled: false
       hs_priv_text_area:
         enabled: true
-        weight: 16
+        weight: 33
       hs_row:
-        enabled: true
-        weight: 13
-      hs_spotlight:
-        weight: 21
-        enabled: false
-      hs_testimonial:
         weight: 34
         enabled: false
+      hs_spotlight:
+        weight: 35
+        enabled: false
+      hs_testimonial:
+        weight: 36
+        enabled: false
       hs_text_area:
-        weight: 14
+        weight: 37
         enabled: false
       hs_timeline:
         enabled: true
-        weight: 36
+        weight: 38
       hs_timeline_item:
-        weight: 37
+        weight: 39
         enabled: false
       hs_view:
-        weight: 15
+        weight: 40
         enabled: false
       hs_webform:
-        weight: 16
+        weight: 41
         enabled: false
       stanford_gallery:
-        weight: 40
+        weight: 42
         enabled: false
 field_type: entity_reference_revisions

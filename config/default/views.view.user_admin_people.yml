@@ -5,12 +5,10 @@ dependencies:
   module:
     - role_delegation
     - user
-_core:
-  default_config_hash: wTJRNzsLVTenCALONNlVfgm_pBOlqucSPuVFLOD56ck
 id: user_admin_people
-label: Users
+label: People
 module: user
-description: 'Find and manage users interacting with your site.'
+description: 'Find and manage people interacting with your site.'
 tag: default
 base_table: users_field_data
 base_field: uid
@@ -18,7 +16,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Default
     position: 0
     display_options:
       access:
@@ -74,18 +72,16 @@ display:
           default_row_class: true
           override: true
           sticky: false
-          caption: ''
           summary: ''
-          description: ''
           columns:
             user_bulk_form: user_bulk_form
             name: name
             status: status
-            roles_target_id: roles_target_id
+            rid: rid
             created: created
             access: access
-            operations: operations
-            mail: mail
+            edit_node: edit_node
+            dropbutton: dropbutton
           info:
             user_bulk_form:
               align: ''
@@ -106,13 +102,13 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            roles_target_id:
+            rid:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
-              responsive: ''
+              responsive: priority-low
             created:
               sortable: true
               default_sort_order: desc
@@ -127,19 +123,19 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            operations:
+            edit_node:
               align: ''
               separator: ''
               empty_column: false
-              responsive: ''
-            mail:
+              responsive: priority-low
+            dropbutton:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-          default: access
+          default: created
           empty_table: true
       row:
         type: fields
@@ -581,24 +577,26 @@ display:
           entity_type: user
           entity_field: mail
       filters:
-        combine:
-          id: combine
-          table: views
-          field: combine
+        uid:
+          id: uid
+          table: users_field_data
+          field: uid
           relationship: none
           group_type: group
           admin_label: ''
-          operator: contains
-          value: ''
+          operator: in
+          value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: combine_op
-            label: 'Name or email contains'
+            operator_id: uid_op
+            label: Name
             description: ''
             use_operator: false
-            operator: combine_op
-            identifier: user
+            operator: uid_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: name
             required: false
             remember: false
             multiple: false
@@ -606,8 +604,13 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-            operator_limit_selection: false
-            operator_list: {  }
+              contributor: '0'
+              site_manager: '0'
+              stanford_faculty: '0'
+              stanford_staff: '0'
+              stanford_student: '0'
+              author: '0'
+            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -620,10 +623,58 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          fields:
-            name: name
-            mail: mail
-          plugin_id: combine
+          entity_type: user
+          entity_field: uid
+          plugin_id: user_name
+        mail:
+          id: mail
+          table: users_field_data
+          field: mail
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: mail_op
+            label: Email
+            description: ''
+            use_operator: false
+            operator: mail_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: mail
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              stanford_faculty: '0'
+              stanford_staff: '0'
+              stanford_student: '0'
+              author: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: user
+          entity_field: mail
+          plugin_id: string
         status:
           id: status
           table: users_field_data
@@ -856,7 +907,7 @@ display:
           plugin_id: date
           entity_type: user
           entity_field: created
-      title: Users
+      title: People
       empty:
         area_text_custom:
           id: area_text_custom
@@ -867,7 +918,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'No users available.'
+          content: 'No people available.'
           plugin_id: text_custom
       use_more: false
       use_more_always: false
@@ -900,18 +951,18 @@ display:
     display_title: Page
     position: 1
     display_options:
-      path: admin/users/list
+      path: admin/people/list
       show_admin_links: false
       menu:
         type: 'default tab'
         title: List
-        description: 'Find and manage users interacting with your site.'
+        description: 'Find and manage people interacting with your site.'
         menu_name: admin
         weight: -10
         context: ''
       tab_options:
         type: normal
-        title: Users
+        title: People
         description: 'Manage user accounts, roles, and permissions.'
         menu_name: admin
         weight: 0

@@ -102,6 +102,9 @@ class CourseImporter extends ConfigFormBase {
 
     foreach ($urls as &$url) {
       $url = trim($url);
+      if (empty($url)) {
+        continue;
+      }
       if (strpos($url, 'view=xml') === FALSE) {
         $url .= '&view=xml-20140630';
       }

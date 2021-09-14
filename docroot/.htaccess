@@ -83,6 +83,10 @@ AddEncoding gzip svgz
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
+  RewriteCond %{HTTP_HOST} ^statistics [NC]
+  RewriteCond %{REQUEST_URI} ^\/~ [NC]
+  RewriteRule (.*)$ https://statweb.stanford.edu/$1 [L,R=301]
+
   # Redirect HTTP to HTTPS on cloud
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https

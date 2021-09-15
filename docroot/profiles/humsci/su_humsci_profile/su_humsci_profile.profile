@@ -95,6 +95,22 @@ function su_humsci_profile_contextual_links_alter(array &$links, $group, array $
     unset($links['paragraphs_edit.delete_form']);
     unset($links['paragraphs_edit.clone_form']);
   }
+  $entity_types = [
+    'node' => 'Content',
+    'media' => 'Media Item',
+    'paragraph' => 'Paragraph',
+  ];
+  if (isset($entity_types[$group])) {
+    foreach ($links as &$link) {
+      $link['title'] .= " {$entity_types[$group]}";
+    }
+  }
+  if (
+    !in_array($group, ['media']) &&
+    !\Drupal::currentUser()->hasPermission('view all contextual links')
+  ) {
+      $links = [];
+  }
 }
 
 /**
@@ -239,7 +255,8 @@ function su_humsci_profile_simplify_condition_forms(array &$condition_elements, 
     return;
   }
 
-  $good_plugins = \Drupal::config('su_humsci_profile.settings')->get('allowed.condition_plugins');
+  $good_plugins = \Drupal::config('su_humsci_profile.settings')
+    ->get('allowed.condition_plugins');
   /** @var \Drupal\Core\Condition\ConditionManager $condition_manager */
   $condition_manager = \Drupal::service('plugin.manager.condition');
 

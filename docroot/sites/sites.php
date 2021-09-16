@@ -85,6 +85,7 @@ foreach ($settings as $settings_file) {
 }
 
 $sites['iranian-studies.stanford.edu'] = 'iranianstudies';
+$sites['mrc.stanford.edu'] = 'mrc2021';
 
 if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';

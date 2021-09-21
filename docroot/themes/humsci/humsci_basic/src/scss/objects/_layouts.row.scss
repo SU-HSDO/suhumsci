@@ -9,6 +9,9 @@
     .counted-items-2.field-hs-row-components > .paragraph-item,
     .counted-items-3.field-hs-row-components > .paragraph-item,
     .counted-items-4.field-hs-row-components > .paragraph-item,
+    .item-per-row--2.field-hs-row-components > .paragraph-item,
+    .item-per-row--3.field-hs-row-components > .paragraph-item,
+    .item-per-row--4.field-hs-row-components > .paragraph-item,
     .paragraph-item {
       .field__item__label {
         margin-top: 0;
@@ -50,7 +53,7 @@
       width: 100%;
     }
 
-    .field-hs-row-components {
+    .field-hs-row-components, .field-hs-collection-items {
       @include hb-page-width;
     }
   }
@@ -73,7 +76,7 @@
     }
 
     @for $i from 1 through $hb-counted-items-count {
-      &.counted-items-#{$i} {
+      &.counted-items-#{$i}, &.item-per-row--#{$i} {
         @include grid-media-min('sm') {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -93,7 +96,7 @@
     }
 
     @for $i from 1 through $hb-counted-items-count {
-      &.counted-items-#{$i} {
+      &.counted-items-#{$i}, &.item-per-row--#{$i} {
         .paragraph-item {
           @include hb-column($i);
         }

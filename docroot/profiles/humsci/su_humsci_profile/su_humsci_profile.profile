@@ -28,7 +28,7 @@ function su_humsci_profile_preprocess_image_formatter(&$variables) {
     $variables['url']->mergeOptions([
       'attributes' => [
         'tabindex' => -1,
-        'aria-hidden' => TRUE,
+        'aria-hidden' => 'true',
       ],
     ]);
   }

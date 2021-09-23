@@ -106,7 +106,7 @@ function su_humsci_profile_contextual_links_alter(array &$links, $group, array $
     }
   }
   if (
-    !in_array($group, ['media']) &&
+    !in_array($group, ['media', 'block_content']) &&
     !\Drupal::currentUser()->hasPermission('view all contextual links')
   ) {
       $links = [];

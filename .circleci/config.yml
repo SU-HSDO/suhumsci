@@ -194,7 +194,9 @@ update_dependencies: &update_dependencies
     - save_cache: *save_cache
 
 run-content-stage: &run-content-stage
-  <<: *defaults
+  working_directory: /var/www/html
+  docker:
+    - image: circleci/php:latest
   steps:
     - checkout
     - slack/notify:

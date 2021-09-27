@@ -203,13 +203,11 @@ run-content-stage: &run-content-stage
     - run: vendor/bin/blt stage --no-interaction
     - slack/notify:
         event: fail
-#        channel: C750VBZCZ
-        channel: CV7MB7H8C
+        channel: C750VBZCZ
         template: basic_fail_1
     - slack/notify:
         event: pass
-#        channel: C750VBZCZ
-        channel: CV7MB7H8C
+        channel: C750VBZCZ
         template: basic_success_1
 
 # Declare all the jobs we should run.
@@ -286,10 +284,10 @@ workflows:
     jobs:
       - run-content-stage:
           context: slack-secrets
-#    triggers:
-#      - schedule:
-#          cron: "0 23 * * 3"
-#          filters:
-#            branches:
-#              only:
-#                - /develop/
+    triggers:
+      - schedule:
+          cron: "0 23 * * 3"
+          filters:
+            branches:
+              only:
+                - /develop/

@@ -197,30 +197,10 @@ run-content-stage: &run-content-stage
   docker:
     - image: cimg/php:7.4
   steps:
-    - slack/notify:
-        event: always
-#        channel: C750VBZCZ
-        channel: CV7MB7H8C
-        custom: |
-          {
-            "blocks": [
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "plain_text",
-                    "text": "*TESTING H&S Content Staging Has Started*",
-                    "emoji": true
-                  }
-                ]
-              }
-            ]
-          }
     - checkout
     - run: composer install --optimize-autoloader
     - *disable_telemetry
-#    - run: vendor/bin/blt stage
-    - run: drush status
+    - run: vendor/bin/blt stage
     - slack/notify:
         event: fail
 #        channel: C750VBZCZ

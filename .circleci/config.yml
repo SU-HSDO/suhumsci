@@ -194,11 +194,9 @@ update_dependencies: &update_dependencies
     - save_cache: *save_cache
 
 run-content-stage: &run-content-stage
-  working_directory: /var/www/html
   docker:
     - image: cimg/php:7.4
   steps:
-    - checkout
     - slack/notify:
         event: always
 #        channel: C750VBZCZ
@@ -218,6 +216,7 @@ run-content-stage: &run-content-stage
               }
             ]
           }
+    - checkout
     - run: composer install --optimize-autoloader
     - *disable_telemetry
 #    - run: vendor/bin/blt stage

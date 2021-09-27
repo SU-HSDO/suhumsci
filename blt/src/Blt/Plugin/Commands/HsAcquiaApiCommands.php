@@ -149,7 +149,7 @@ class HsAcquiaApiCommands extends BltTasks {
     $this->connectAcquiaApi();
 
     $sites = $this->getSitesToSync($task_started, $options);
-    if (!$this->confirm(sprintf('Are you sure you wish to stage the following sites: <comment>%s</comment>', implode(', ', $sites)))) {
+    if (empty($options['no-interaction']) && !$this->confirm(sprintf('Are you sure you wish to stage the following sites: <comment>%s</comment>', implode(', ', $sites)))) {
       return;
     }
     $count = count($sites);
@@ -247,6 +247,7 @@ class HsAcquiaApiCommands extends BltTasks {
     $key = getenv('ACQUIA_KEY');
     $secret = getenv('ACQUIA_SECRET');
     if ($key && $secret && !file_exists($acquia_conf)) {
+      mkdir(dirname($acquia_conf), 0777, TRUE);
       $conf = ['key' => $key, 'secret' => $secret];
       file_put_contents($acquia_conf, json_encode($conf, JSON_PRETTY_PRINT));
     }

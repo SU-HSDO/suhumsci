@@ -200,7 +200,7 @@ run-content-stage: &run-content-stage
     - checkout
     - run: composer install --optimize-autoloader
     - *disable_telemetry
-    - run: vendor/bin/blt stage
+    - run: vendor/bin/blt stage --no-interaction
     - slack/notify:
         event: fail
 #        channel: C750VBZCZ

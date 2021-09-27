@@ -218,7 +218,8 @@ run-content-stage: &run-content-stage
           }
     - run: composer install --optimize-autoloader
     - *disable_telemetry
-    - run: vendor/bin/blt stage
+#    - run: vendor/bin/blt stage
+    - run: drush status
     - slack/notify:
         event: fail
 #        channel: C750VBZCZ

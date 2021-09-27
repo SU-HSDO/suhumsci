@@ -193,8 +193,24 @@ update_dependencies: &update_dependencies
           vendor/bin/blt circleci:update
     - save_cache: *save_cache
 
-# Declare all of the jobs we should run.
+run-content-stage: &run-content-stage
+  docker:
+    - image: cimg/php:7.4
+  steps:
+    - checkout
+    - run: composer install --optimize-autoloader
+    - *disable_telemetry
+    - run: vendor/bin/blt stage --no-interaction
+    - slack/notify:
+        event: fail
+        channel: C750VBZCZ
+        template: basic_fail_1
+    - slack/notify:
+        event: pass
+        channel: C750VBZCZ
+        template: basic_success_1
 
+# Declare all the jobs we should run.
 jobs:
   run-updates:
     <<: *update_dependencies
@@ -212,8 +228,12 @@ jobs:
     <<: *deploy_branch
   run-deploy-tag:
     <<: *deploy_tag
+  run-content-stage:
+    <<: *run-content-stage
 
 version: 2.1
+orbs:
+  slack: circleci/slack@4.4.2
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
   version: 2.1
@@ -260,3 +280,14 @@ workflows:
                 - /9\..*-release/
     jobs:
       - run-updates
+  'Stage Content from Production':
+    jobs:
+      - run-content-stage:
+          context: slack-secrets
+    triggers:
+      - schedule:
+          cron: "0 23 * * 3"
+          filters:
+            branches:
+              only:
+                - /develop/

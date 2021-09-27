@@ -243,6 +243,14 @@ class HsAcquiaApiCommands extends BltTasks {
    * {@inheritDoc}
    */
   protected function connectAcquiaApi() {
+    $acquia_conf = $_SERVER['HOME'] . '/.acquia/cloud_api.conf';
+    $key = getenv('ACQUIA_KEY');
+    $secret = getenv('ACQUIA_SECRET');
+    if ($key && $secret && !file_exists($acquia_conf)) {
+      $conf = ['key' => $key, 'secret' => $secret];
+      file_put_contents($acquia_conf, json_encode($conf, JSON_PRETTY_PRINT));
+    }
+
     if (!$this->acquiaApplications) {
       $this->traitConnectAcquiaApi();
     }

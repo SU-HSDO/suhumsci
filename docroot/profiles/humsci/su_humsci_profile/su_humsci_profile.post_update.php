@@ -178,7 +178,7 @@ function su_humsci_profile_post_update_9200() {
     $parent_type = $spotlight->get('parent_type')->getString();
     $parent_id = $spotlight->get('parent_id')->getString();
 
-    if (!\Drupal::entityTypeManager()->hasDefinition($parent_type)) {
+    if (!$parent_type || !\Drupal::entityTypeManager()->hasDefinition($parent_type)) {
       continue;
     }
     $parent = \Drupal::entityTypeManager()

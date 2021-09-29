@@ -88,4 +88,17 @@
   @include slick-dots;
   @include slick-arrows;
   position: relative;
+
+  // styles specific to the main content area are applied by targeting
+  // the sidebar classes. We can use these classes to move the slick dots.
+  .slick-dots {
+
+    @include grid-media-min('md') {
+      :not(.hs-full-width).hb-three-column--no-sidebar &,
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        bottom: hb-calculate-rems(-32px);
+      }
+    }
+  }
 }

@@ -46,11 +46,17 @@ function _su_humsci_profile_disable_paragraph($entity_type, $bundle, $field_name
   /** @var \Drupal\field\FieldConfigInterface $field */
   $field = FieldConfig::load("$entity_type.$bundle.$field_name");
   $settings = $field->getSettings();
-  $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
-  $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
-    'enabled' => $settings['handler_settings']['negate'] ? TRUE : FALSE,
-    'weight' => 99,
-  ];
+  if ($settings['handler_settings']['negate']) {
+    $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
+    $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
+      'enabled' => FALSE,
+      'weight' => 99,
+    ];
+  }
+  else {
+    unset($settings['handler_settings']['target_bundles'][$paragraph_type]);
+    unset($settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type]);
+  }
   $field->set('settings', $settings);
   $field->save();
 }
@@ -77,12 +83,14 @@ function _su_humsci_profile_enable_paragraph($entity_type, $bundle, $field_name,
   $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
   if ($settings['handler_settings']['negate']) {
     unset($settings['handler_settings']['target_bundles'][$paragraph_type]);
+    unset($settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type]);
   }
-
-  $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
-    'enabled' => $settings['handler_settings']['negate'] ? FALSE : TRUE,
-    'weight' => $weight,
-  ];
+  else {
+    $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
+      'enabled' => TRUE,
+      'weight' => $weight,
+    ];
+  }
   $field->set('settings', $settings);
   $field->save();
 }
@@ -143,4 +151,15 @@ function su_humsci_profile_post_update_9013() {
   _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_priv_collection');
   _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_priv_collection');
   _su_humsci_profile_enable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_priv_collection');
+}
+
+/**
+ * Disable Spotlight slider.
+ */
+function su_humsci_profile_post_update_9014() {
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_sptlght_slder');
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_collection', 'field_hs_collection_items', 'hs_sptlght_slder');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_sptlght_slder');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_sptlght_slder');
+  _su_humsci_profile_disable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_sptlght_slder');
 }

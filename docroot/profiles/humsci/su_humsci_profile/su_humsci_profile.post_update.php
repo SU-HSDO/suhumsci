@@ -177,10 +177,17 @@ function su_humsci_profile_post_update_9200() {
     $parent_field = $spotlight->get('parent_field_name')->getString();
     $parent_type = $spotlight->get('parent_type')->getString();
     $parent_id = $spotlight->get('parent_id')->getString();
+
+    if (!\Drupal::entityTypeManager()->hasDefinition($parent_type)) {
+      continue;
+    }
     $parent = \Drupal::entityTypeManager()
       ->getStorage($parent_type)
       ->load($parent_id);
 
+    if (!$parent) {
+      continue;
+    }
     $parent_values = $parent->get($parent_field)->getValue();
 
     $new_spotlight = \Drupal::entityTypeManager()

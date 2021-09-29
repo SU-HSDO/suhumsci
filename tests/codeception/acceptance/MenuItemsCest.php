@@ -14,7 +14,7 @@ class MenuItemsCest {
    */
   public function testMenuItems(AcceptanceTester $I) {
     $I->amOnPage('/');
-    $I->canSeeResponseCodeIs(200);
+    $I->canSeeResponseCodeIsBetween(200, 403);
     foreach ($this->getLinksToCheck($I, '#header a') as $path) {
       $I->amOnPage($path);
       $I->canSeeResponseCodeIsBetween(200, 404);

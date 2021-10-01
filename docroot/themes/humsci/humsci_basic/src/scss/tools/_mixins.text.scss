@@ -417,3 +417,37 @@
     font-weight: 600;
   }
 }
+
+// Splash Font Animation
+@mixin hb-font-splash-animation {
+  @include hb-traditional {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation-timing-function: ease-in-out;
+        animation-duration: 1700ms;
+        animation-fill-mode: forwards;
+        animation-name: traditionalSplashFont;
+      }
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation-timing-function: ease-in-out;
+        animation-duration: 2000ms;
+        animation-fill-mode: forwards;
+        animation-name: colorfulSplashFont;
+      }
+    }
+  }
+
+  // Removes animation styles when Reduced Motion is enabled 
+  @media screen and (prefers-reduced-motion: reduce) {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation: none;
+      }
+    }
+  }
+}

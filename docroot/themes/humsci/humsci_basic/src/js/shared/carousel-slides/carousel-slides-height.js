@@ -1,12 +1,18 @@
-// This work below applies uniform height to both the Hero Layered Slider (formerly Carousel) and 
+// This work below applies uniform height to both the Hero Layered Slider (formerly Carousel),
 // the Hero Gradient Slider paragraph component slides.
-const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider');
+// and the Spotlight Slider.
+const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
+const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
 let mediumScreenBreakpoint = 768;
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
+// @boolean to determine if the textBox is a spotlight textBox
+const isSpotlightTextBox = (textBox) => textBox.classList.contains('hb-spotlight__text');
+const setMinHeight = (textBox, maxBoxHeight) => textBox.setAttribute('style', `min-height: ${maxBoxHeight}px`);
+
 // Set the height of all text boxes within a slider to that
 // of the tallest text box
-function restrictHeight() {
+const restrictHeight = () => {
   let boxHeightArray, maxBoxHeight;
 
   slides.forEach(slide => {
@@ -14,7 +20,7 @@ function restrictHeight() {
     boxHeightArray = [0]; // array must have a default entry of 0 for the banner components and must be declare within the loop to set a baseline for each indiviual slider on a page
 
     // Find all the textBoxes inside each slider
-    textBoxes = slide.querySelectorAll('.hb-hero-overlay__text, .hb-gradient-hero__text');
+    textBoxes = slide.querySelectorAll(slidesTextboxClasses);
 
     // Loop through all the textBoxes and gather their heights into an array
     textBoxes.forEach(textBox => {
@@ -36,24 +42,24 @@ function restrictHeight() {
 
     // Give all textBoxes the same height on medium and larger sized screens
     if (window.innerWidth > mediumScreenBreakpoint) {
-      textBoxes.forEach(textBox => {
-        textBox.setAttribute('style', `min-height: ${maxBoxHeight}px`);
-      });
+      textBoxes.forEach(textBox => setMinHeight(textBox, maxBoxHeight));
     }
+
+    // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes
+    textBoxes.forEach(textBox => isSpotlightTextBox(textBox) && setMinHeight(textBox, maxBoxHeight));
   });
-}
+};
 
-if (slides.length > 0) {
-  if (window.innerWidth > mediumScreenBreakpoint) {
-    restrictHeight();
-  }
-
+const clearTimeoutOnResize = () => {
   // Watch for when the browser window resizes, then run the restrictHeight
   // function to reset the height of the text boxes
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > mediumScreenBreakpoint) {
-      clearTimeout(timeOutFunctionId);
-      timeOutFunctionId = setTimeout(restrictHeight, 250);
-    }
+  window.addEventListener('resize', () => {
+    clearTimeout(timeOutFunctionId);
+    timeOutFunctionId = setTimeout(restrictHeight, 250);
   });
+};
+
+if (slides.length > 0) {
+  restrictHeight();
+  clearTimeoutOnResize();
 }

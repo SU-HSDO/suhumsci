@@ -17,13 +17,16 @@
   &--uniform-height .hs-paragraph-style .paragraph-item .hb-vertical-linked-card,
   &--uniform-height .field-hs-row-components .paragraph-item .hb-vertical-linked-card,
   &--uniform-height .field-hs-collection-items .paragraph-item .hb-vertical-linked-card,
-  &--uniform-height .field-hs-collection-items .paragraph-item .hb-card {
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-card,
+  &--uniform-height .hb-timeline,
+  &--uniform-height .hb-timeline .hb-timelime__wrapper {
     height: 100%;
   }
 
-  // Raised cards uniform height styles for Testimonial
+  // Raised cards uniform height styles for Testimonial & Timeline
   &--uniform-height .field-hs-row-components .ptype-hs-testimonial,
-  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial {
+  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial,
+  &--uniform-height .field-hs-collection-items .ptype-hs-timeline {
     & div:not([class]):only-child:not(.hb-card__date-tile, .hb-pill), // necessary for logged out state
     & div.contextual-region { // necessary for logged in state
       height: 100%;
@@ -99,7 +102,7 @@
     }
   }
 
-  .hb-testimonial {
+  .hb-testimonial, .hb-timelime__wrapper {
     @include hb-global-color('background-color', 'white');
     @include hb-raised-cards-shadow;
     padding: hb-spacing-width('md') hb-spacing-width('xs');

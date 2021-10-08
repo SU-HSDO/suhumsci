@@ -53,7 +53,8 @@
       width: 100%;
     }
 
-    .field-hs-row-components, .field-hs-collection-items {
+    .field-hs-row-components,
+    .field-hs-collection-items {
       @include hb-page-width;
     }
   }
@@ -76,7 +77,8 @@
     }
 
     @for $i from 1 through $hb-counted-items-count {
-      &.counted-items-#{$i}, &.item-per-row--#{$i} {
+      &.counted-items-#{$i},
+      &.item-per-row--#{$i} {
         @include grid-media-min('sm') {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -96,7 +98,8 @@
     }
 
     @for $i from 1 through $hb-counted-items-count {
-      &.counted-items-#{$i}, &.item-per-row--#{$i} {
+      &.counted-items-#{$i},
+      &.item-per-row--#{$i} {
         .paragraph-item {
           @include hb-column($i);
         }

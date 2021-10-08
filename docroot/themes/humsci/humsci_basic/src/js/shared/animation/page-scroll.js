@@ -12,7 +12,8 @@ const classesToAnimate = [
   '.hb-gradient-hero',
   '.hb-gradient-hero__text',
   '.hb-gradient-hero__image-wrapper',
-  '.field-hs-gradient-hero-image'
+  '.field-hs-gradient-hero-image',
+  '.hs-font-splash'
 ];
 
 let showAnimation = document.querySelectorAll(classesToAnimate);

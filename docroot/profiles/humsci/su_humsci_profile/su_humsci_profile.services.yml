@@ -4,7 +4,7 @@ services:
     arguments: ['@entity_type.manager', '@router.builder', '@config.factory']
   su_humsci_profile.route_subscriber:
     class: Drupal\su_humsci_profile\Routing\RouteSubscriber
-    arguments: ['@module_handler']
+    arguments: ['@module_handler', '@config.factory']
     tags:
       - { name: event_subscriber }
   su_humsci_profile.event_subscriber:

@@ -32,7 +32,7 @@ class HumsciCommands extends DrushCommands {
   /**
    * Convert row paragraphs to collections.
    *
-   * @command humsci:private-rows-to-collection
+   * @command humsci:convert-row-to-collection
    *
    * @param string $node_type
    *   Node bundle id.
@@ -41,7 +41,7 @@ class HumsciCommands extends DrushCommands {
    * @param string $collection_type
    *   New collection paragraph type id.
    */
-  public function rowsToCollections($node_type, $field_name, $collection_type){
+  public function rowsToCollections($node_type, $field_name, $collection_type) {
     module_load_include('post_update.php', 'su_humsci_profile');
     _su_humsci_profile_enable_paragraph('node', $node_type, $field_name, $collection_type);
 
@@ -100,6 +100,8 @@ class HumsciCommands extends DrushCommands {
           ->save();
       }
     }
+
+    _su_humsci_profile_disable_paragraph('node', $node_type, $field_name, 'hs_row');
   }
 
   /**

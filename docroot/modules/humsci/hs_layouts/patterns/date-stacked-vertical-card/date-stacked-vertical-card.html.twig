@@ -53,14 +53,14 @@
         {% if time['#sources'] %}
           {% for field in time['#sources'] %}
             {% if field %}
-              <div class="hb-card__subcontent-item {{ experimental_class }} {{ experimental_class ~ '--date' }}">
+              <div class="hb-card__subcontent-item hb-card__icon hb-card__icon--date">
                 {{ field }}
               </div>
             {% endif %}
           {% endfor %}
         {% else %}
           {% if time %}
-            <div class="hb-card__subcontent-item {{ experimental_class }} {{ experimental_class ~ '--date' }}">
+            <div class="hb-card__subcontent-item hb-card__icon hb-card__icon--date">
               {{ time }}
             </div>
           {% endif %}
@@ -70,13 +70,13 @@
     {% endif %}
 
     {% if location %}
-      <div class="hb-card__location {{ experimental_class }} {{ experimental_class ~ '--location' }}">
+      <div class="hb-card__location hb-card__icon hb-card__icon--location">
         {{ location }}
       </div>
     {% endif %}
 
     {% if speaker %}
-      <div class="hb-card__highlighted {{ experimental_class }} {{ experimental_class ~ '--speaker' }}">
+      <div class="hb-card__highlighted hb-card__icon hb-card__icon--speaker">
         {{ speaker }}
       </div>
     {% endif %}

@@ -165,7 +165,7 @@ function su_humsci_profile_post_update_9014() {
 }
 
 /**
- * Implements hook_post_update_NAME().
+ * Convert spotlights to spotlight slideshows.
  */
 function su_humsci_profile_post_update_9200() {
   $spotlights = \Drupal::entityTypeManager()
@@ -213,4 +213,15 @@ function su_humsci_profile_post_update_9200() {
     }
     $parent->set($parent_field, $parent_values)->save();
   }
+  
+  _su_humsci_profile_enable_paragraph('paragraph', 'hs_collection', 'field_hs_collection_items', 'hs_sptlght_slder');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_sptlght_slder');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_sptlght_slder');
+  _su_humsci_profile_enable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_sptlght_slder');
+  
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_collection', 'field_hs_collection_items', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_spotlight');
 }

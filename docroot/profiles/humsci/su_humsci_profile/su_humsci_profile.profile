@@ -5,17 +5,20 @@
  * su_humsci_profile.profile
  */
 
-use Drupal\menu_link_content\MenuLinkContentInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\block\Entity\Block;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\user\Entity\User;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
+use Drupal\block\Entity\Block;
+use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -465,4 +468,49 @@ function su_humsci_profile_preprocess_pattern_alert(&$variables) {
     }
   }
 
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function su_humsci_profile_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($op == 'delete') {
+    $site_config = \Drupal::config('system.site');
+    $node_urls = [$node->toUrl()->toString(), "/node/{$node->id()}"];
+
+    // If the node is configured to be the home page, 404, or 403, prevent the
+    // user from deleting. Unfortunately this only works for roles without the
+    // "Bypass content access control" permission.
+    if (array_intersect($node_urls, $site_config->get('page'))) {
+      return AccessResult::forbidden();
+    }
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if (
+    $field_definition->getName() == 'status' &&
+    $field_definition->getTargetEntityTypeId() == 'node' &&
+    $items &&
+    $items->getEntity()->id()
+  ) {
+    // Prevent unpublishing the home, 404 and 403 pages.
+    return su_humsci_profile_node_access($items->getEntity(), 'delete', $account);
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (preg_match('/^node.*edit_form$/', $form_id)) {
+    $node = $form_state->getBuildInfo()['callback_object']->getEntity();
+    $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
+    $form['status']['#access'] = !$access->isForbidden();
+  }
 }

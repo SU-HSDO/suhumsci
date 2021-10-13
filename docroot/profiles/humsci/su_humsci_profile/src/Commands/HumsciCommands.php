@@ -32,21 +32,30 @@ class HumsciCommands extends DrushCommands {
   /**
    * Convert row paragraphs to collections.
    *
-   * @command humsci:rows-to-collection
+   * @command humsci:convert-row-to-collection
+   *
+   * @param string $node_type
+   *   Node bundle id.
+   * @param string $field_name
+   *   Paragraph field name.
+   * @param string $collection_type
+   *   New collection paragraph type id.
    */
-  public function convertRowsToCollection() {
+  public function rowsToCollections($node_type, $field_name, $collection_type) {
     module_load_include('post_update.php', 'su_humsci_profile');
-    _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_collection');
+    _su_humsci_profile_enable_paragraph('node', $node_type, $field_name, $collection_type);
+
     $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');
     $nodes = $this->entityTypeManager->getStorage('node')
-      ->loadByProperties(['type' => 'hs_basic_page']);
+      ->loadByProperties(['type' => $node_type]);
+
     /** @var \Drupal\node\NodeInterface $node */
     foreach ($nodes as $node) {
 
       $changed = FALSE;
       $new_component_values = [];
-      foreach ($node->get('field_hs_page_components')
-                 ->getValue() as $component) {
+      $field_values = $node->get($field_name)->getValue();
+      foreach ($field_values as $component) {
         /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
         $paragraph = $paragraph_storage->load($component['target_id']);
 
@@ -59,7 +68,7 @@ class HumsciCommands extends DrushCommands {
         $row_components = $paragraph->get('field_hs_row_components')
           ->getValue();
         $collection = $paragraph_storage->create([
-          'type' => 'hs_collection',
+          'type' => $collection_type,
           'field_hs_collection_per_row' => count($row_components),
           'field_paragraph_style' => $style,
         ]);
@@ -87,9 +96,21 @@ class HumsciCommands extends DrushCommands {
       }
       if ($changed) {
         $node->setNewRevision();
-        $node->set('field_hs_page_components', $new_component_values)->save();
+        $node->set($field_name, $new_component_values)
+          ->save();
       }
     }
+
+    _su_humsci_profile_disable_paragraph('node', $node_type, $field_name, 'hs_row');
+  }
+
+  /**
+   * Convert row paragraphs to collections.
+   *
+   * @command humsci:rows-to-collection
+   */
+  public function convertRowsToCollection() {
+    $this->rowsToCollections('hs_basic_page', 'field_hs_page_components', 'hs_collection');
   }
 
 }

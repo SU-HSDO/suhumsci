@@ -13,10 +13,12 @@ dependencies:
     - core.entity_view_mode.media.stanford_image_xl
     - core.entity_view_mode.media.stanford_image_xl_square
   module:
+    - blazy
     - editor
     - hs_table_filter
     - linkit
     - media
+    - slick
     - stanford_media
 _core:
   default_config_hash: ka_t78yCnMTKJck4SNHsdY_bUbC-ZNBXReeiq90TaNc
@@ -54,7 +56,7 @@ filters:
     status: true
     weight: -50
     settings:
-      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id class> <h3 id class> <h4 id class> <h5 id class> <h6 id class> <img src alt data-entity-type data-entity-uuid data-align data-caption class> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button class alt title> <table class> <caption class> <tbody class> <thead> <tfoot> <th scope class> <td class> <tr> <a id href name target hreflang data-entity-substitution data-entity-type data-entity-uuid title class> <p class> <div class role id aria-*> <br> <span class> <i class> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-* alt> <hr>'
+      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id class=""> <h3 id class=""> <h4 id class=""> <h5 id class=""> <h6 id class=""> <img src alt data-entity-type data-entity-uuid data-align data-caption class=""> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button alt title class=""> <caption class=""> <tbody class=""> <thead> <tfoot> <th scope class=""> <td class=""> <tr> <div role id aria-* class=""> <br> <i class=""> <hr> <table class=" hs-table--borderless"> <a id href name target hreflang data-entity-substitution data-entity-type data-entity-uuid title class=" hs-button hs-button--big hs-secondary-button hs-more-link hs-external-link hs-file-link hs-pdf-link hs-private-link"> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-* alt data-view-mode title> <p class=" hs-font-lead hs-font-splash hs-short-line-length hs-well hs-caption hs-credits"> <span class=" hs-emphasized-text">'
       filter_html_help: true
       filter_html_nofollow: false
   filter_htmlcorrector:
@@ -119,3 +121,49 @@ filters:
     status: true
     weight: 0
     settings: {  }
+  slick_filter:
+    id: slick_filter
+    provider: slick
+    status: false
+    weight: 4
+    settings:
+      optionset: default
+      skin: ''
+      background: false
+      layout: ''
+      optionset_thumbnail: ''
+      skin_thumbnail: ''
+      thumbnail_position: ''
+      thumbnail_caption: ''
+      image_style: ''
+      thumbnail_style: ''
+      responsive_image_style: ''
+      thumbnail_effect: ''
+      media_switch: ''
+      ratio: ''
+      box_style: ''
+      box_media_style: ''
+      override: false
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+  blazy_filter:
+    id: blazy_filter
+    provider: blazy
+    status: false
+    weight: 3
+    settings:
+      filter_tags:
+        img: img
+        iframe: iframe
+      media_switch: ''
+      hybrid_style: ''
+      box_style: ''
+      box_caption: ''
+      use_data_uri: '0'

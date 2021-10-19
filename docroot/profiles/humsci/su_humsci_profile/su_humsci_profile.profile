@@ -5,6 +5,7 @@
  * su_humsci_profile.profile
  */
 
+use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -12,10 +13,8 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\block\Entity\Block;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
-use Drupal\node\NodeInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -169,7 +168,7 @@ function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $en
 /**
  * Implements hook_block_access().
  */
-function su_humsci_profile_block_access(Block $block, $operation, AccountInterface $account) {
+function su_humsci_profile_block_access(BlockInterface $block, $operation, AccountInterface $account) {
   $current_request = \Drupal::requestStack()->getCurrentRequest();
   // Disable the page title block on 404 page IF the page is a node. Nodes
   // should have the page title displayed in the node display configuration so
@@ -473,7 +472,7 @@ function su_humsci_profile_preprocess_pattern_alert(&$variables) {
 /**
  * Implements hook_node_access().
  */
-function su_humsci_profile_node_access(NodeInterface $node, $op, AccountInterface $account) {
+function su_humsci_profile_node_access(EntityInterface $node, $op, AccountInterface $account) {
   if ($op == 'delete') {
     $site_config = \Drupal::config('system.site');
     $node_urls = [$node->toUrl()->toString(), "/node/{$node->id()}"];

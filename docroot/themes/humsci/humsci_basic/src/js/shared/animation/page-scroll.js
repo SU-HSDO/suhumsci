@@ -34,8 +34,18 @@ const showAnimation = document.querySelectorAll(classesToAnimate);
 //  displays in the viewport.
 const animationEnhancements = document.querySelectorAll('.hb-has-animation-enhancements');
 
-const cancelLoop = () => {
-  document.removeEventListener('scroll', loop);
+const cancelLoop = () => document.removeEventListener('scroll', loop);
+const containsAnimateClass = (e) => e.classList.contains('animate');
+
+const checkIfAllElementsAreAnimated = () => {
+  for (let i = 0; i < showAnimation.length; i++) {
+    if (containsAnimateClass(showAnimation[i])) {
+      allAnimated = true
+    } else {
+      allAnimated = false;
+      break;
+    }
+  }
 }
 
 const loop = () => {
@@ -44,14 +54,7 @@ const loop = () => {
       i.classList.add('animate');
     }
 
-    for (let j = 0; j < showAnimation.length; j++) {
-      if (showAnimation[j].classList.contains('animate')) {
-        allAnimated = true;
-      } else {
-        allAnimated = false;
-        break;
-      }
-    }
+    checkIfAllElementsAreAnimated();
 
     if (allAnimated) {
       cancelLoop();

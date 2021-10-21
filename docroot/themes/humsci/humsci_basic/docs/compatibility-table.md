@@ -35,6 +35,6 @@ This compatibility table documents whether or not patterns can be used with util
 | Structured Card | ✅ | ✅ |
 | Table Pattern | ✅ | ❌ |
 | Testimonial | ❌ | ✅ |
-| Timeline | ❌ | ❌ |
+| Timeline | ❌ | ✅ |
 | Vertical Card | ✅ | ✅ |
 | Vertical Linked Card | ❌ | ❌ |

@@ -161,7 +161,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#type' => 'checkbox',
     '#title' => t('Use experimental features'),
     '#default_value' => theme_get_setting('experimental_toggle'),
-    '#description' => t('This enables/disables experimental features, please use with caution. The following features are implemented: Add icon labels to Vertical Date Stacked Cards on both themes.'),
+    '#description' => t('This enables/disables experimental features, please use with caution. The following features are implemented: There are no experimental features implemented at the moment.'),
   ];
 
 }

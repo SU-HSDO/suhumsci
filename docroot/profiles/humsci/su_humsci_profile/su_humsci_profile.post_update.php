@@ -168,6 +168,9 @@ function su_humsci_profile_post_update_9014() {
  * Convert spotlights to spotlight slideshows.
  */
 function su_humsci_profile_post_update_9200() {
+  if (_su_humsci_profile_is_legacy_theme()) {
+    return;
+  }
   $spotlights = \Drupal::entityTypeManager()
     ->getStorage('paragraph')
     ->loadByProperties(['type' => 'hs_spotlight']);
@@ -227,4 +230,16 @@ function su_humsci_profile_post_update_9200() {
   _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_spotlight');
   _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_spotlight');
   _su_humsci_profile_disable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_spotlight');
+}
+
+/**
+ * Disable row and enable photo album.
+ */
+function su_humsci_profile_post_update_9201() {
+  if (_su_humsci_profile_is_legacy_theme()) {
+    return;
+  }
+
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_row');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'stanford_gallery');
 }

@@ -3,7 +3,9 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use Acquia\Blt\Robo\Exceptions\BltException;
 use Drupal\Core\Serialization\Yaml;
+use Robo\Exception\TaskException;
 
 /**
  * Various BLT commands for H&S stack.
@@ -131,6 +133,47 @@ class HsCommands extends BltTasks {
       $commands[] = 'drupal:sync:private-files';
     }
     $this->invokeCommands($commands);
+  }
+
+  /**
+   * Copies remote db to local db for default site.
+   *
+   * @command drupal:sync:default:db
+   *
+   * @aliases dsb drupal:sync:db sync:db
+   * @validateDrushConfig
+   *
+   * @throws \Acquia\Blt\Robo\Exceptions\BltException
+   */
+  public function syncDb() {
+    $local_alias = '@' . $this->getConfigValue('drush.aliases.local');
+    $remote_alias = '@' . $this->getConfigValue('drush.aliases.remote');
+
+    $task = $this->taskDrush()
+      ->alias('')
+      ->drush('cache-clear drush')
+      ->drush('sql-sync')
+      ->arg($remote_alias)
+      ->arg($local_alias)
+      ->option('extra-dump', '--no-tablespaces --insert-ignore', '=')
+      ->option('--target-dump', sys_get_temp_dir() . '/tmp.target.sql.gz')
+      ->option('structure-tables-key', 'lightweight')
+      ->option('create-db');
+    $task->drush('cr');
+
+    if ($this->getConfigValue('drush.sanitize')) {
+      $task->drush('sql-sanitize');
+    }
+
+    try {
+      $result = $task->run();
+    }
+    catch (TaskException $e) {
+      $this->say('Sync failed. Often this is due to Drush version mismatches: https://support.acquia.com/hc/en-us/articles/360035203713-Permission-denied-during-BLT-sync-or-drush-sql-sync');
+      throw new BltException($e->getMessage());
+    }
+
+    return $result;
   }
 
   /**

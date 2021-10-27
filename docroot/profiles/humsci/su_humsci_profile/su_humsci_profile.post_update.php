@@ -163,3 +163,83 @@ function su_humsci_profile_post_update_9014() {
   _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_sptlght_slder');
   _su_humsci_profile_disable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_sptlght_slder');
 }
+
+/**
+ * Convert spotlights to spotlight slideshows.
+ */
+function su_humsci_profile_post_update_9200() {
+  if (_su_humsci_profile_is_legacy_theme()) {
+    return;
+  }
+  $spotlights = \Drupal::entityTypeManager()
+    ->getStorage('paragraph')
+    ->loadByProperties(['type' => 'hs_spotlight']);
+
+  /** @var \Drupal\paragraphs\ParagraphInterface $spotlight */
+  foreach ($spotlights as $spotlight) {
+    $parent_field = $spotlight->get('parent_field_name')->getString();
+    $parent_type = $spotlight->get('parent_type')->getString();
+    $parent_id = $spotlight->get('parent_id')->getString();
+
+    if (!$parent_type || !\Drupal::entityTypeManager()->hasDefinition($parent_type)) {
+      continue;
+    }
+    $parent = \Drupal::entityTypeManager()
+      ->getStorage($parent_type)
+      ->load($parent_id);
+
+    if (!$parent) {
+      continue;
+    }
+    _su_humsci_profile_enable_paragraph($parent_type, $parent->bundle(), $parent_field, 'hs_sptlght_slder');
+    _su_humsci_profile_disable_paragraph($parent_type, $parent->bundle(), $parent_field, 'hs_spotlight');
+
+    $parent_values = $parent->get($parent_field)->getValue();
+
+    $new_spotlight = \Drupal::entityTypeManager()
+      ->getStorage('paragraph')
+      ->create([
+        'type' => 'hs_sptlght_slder',
+        'field_hs_sptlght_sldes' => [
+          [
+            'target_id' => $spotlight->id(),
+            'target_revision_id' => $spotlight->getRevisionId(),
+          ],
+        ],
+      ]);
+    $new_spotlight->save();
+
+    foreach ($parent_values as &$value) {
+      if ($value['target_id'] == $spotlight->id()) {
+        $value = [
+          'target_id' => $new_spotlight->id(),
+          'target_revision_id' => $new_spotlight->getRevisionId(),
+        ];
+      }
+    }
+    $parent->set($parent_field, $parent_values)->save();
+  }
+
+  _su_humsci_profile_enable_paragraph('paragraph', 'hs_collection', 'field_hs_collection_items', 'hs_sptlght_slder');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_sptlght_slder');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_sptlght_slder');
+  _su_humsci_profile_enable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_sptlght_slder');
+
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_row', 'field_hs_row_components', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('paragraph', 'hs_collection', 'field_hs_collection_items', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_hero', 'hs_spotlight');
+  _su_humsci_profile_disable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', 'hs_spotlight');
+}
+
+/**
+ * Disable row and enable photo album.
+ */
+function su_humsci_profile_post_update_9201() {
+  if (_su_humsci_profile_is_legacy_theme()) {
+    return;
+  }
+
+  _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_row');
+  _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'stanford_gallery');
+}

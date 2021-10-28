@@ -121,8 +121,7 @@ acceptance: &acceptance
     - approve_visual_diff:
         type: approval
         when: on_fail
-    -
-      run:
+    - run:
         name: 'Update Visual Regression Reference'
         command: cp artifacts/functional/debug/visual/* tests/codeception/_data/VisualCeption
         requires:

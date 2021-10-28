@@ -120,7 +120,7 @@ acceptance: &acceptance
         command: vendor/bin/blt circleci:codeception
     - approve_visual_diff:
         type: approval
-        when: on_fail
+#        when: on_fail
     - run:
         name: 'Update Visual Regression Reference'
         command: cp artifacts/functional/debug/visual/* tests/codeception/_data/VisualCeption

@@ -8,6 +8,14 @@
 class FlexiblePageCest {
 
   /**
+   * Test visual difference on the home page.
+   */
+  public function testVisualHomepage(FunctionalTester $I){
+    $I->amOnPage('/');
+    $I->dontSeeVisualChanges('home-page', 'body');
+  }
+
+  /**
    * I can create a page with a hero banner.
    */
   public function testHeroParagraph(FunctionalTester $I) {

@@ -3,7 +3,7 @@
 // and the Spotlight Slider.
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
 const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
-let mediumScreenBreakpoint = 768;
+const mediumScreenBreakpoint = 768;
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
 // @boolean to determine if the textBox is a spotlight textBox
@@ -13,17 +13,19 @@ const setMinHeight = (textBox, maxBoxHeight) => textBox.setAttribute('style', `m
 // Set the height of all text boxes within a slider to that
 // of the tallest text box
 const restrictHeight = () => {
-  let boxHeightArray, maxBoxHeight;
+  let boxHeightArray; let
+    maxBoxHeight;
 
-  slides.forEach(slide => {
-    let textBoxes;
-    boxHeightArray = [0]; // array must have a default entry of 0 for the banner components and must be declare within the loop to set a baseline for each indiviual slider on a page
+  slides.forEach((slide) => {
+    // array must have a default entry of 0 for the banner components
+    // and must be declare within the loop to set a baseline for each indiviual slider on a page
+    boxHeightArray = [0];
 
     // Find all the textBoxes inside each slider
-    textBoxes = slide.querySelectorAll(slidesTextboxClasses);
+    const textBoxes = slide.querySelectorAll(slidesTextboxClasses);
 
     // Loop through all the textBoxes and gather their heights into an array
-    textBoxes.forEach(textBox => {
+    textBoxes.forEach((textBox) => {
       // Clear any inline styles that may have been set previously
       // This is necessary to determine the default height of text boxes
       textBox.removeAttribute('style');
@@ -31,7 +33,7 @@ const restrictHeight = () => {
       let boxHeight = textBox.offsetHeight;
 
       // Parse boxHeight to be a number that can be used to set the min-height value
-      boxHeight = parseInt(boxHeight);
+      boxHeight = parseInt(boxHeight, 10);
 
       // Create an array containing all the heights of textBoxes
       boxHeightArray.push(boxHeight);
@@ -42,11 +44,13 @@ const restrictHeight = () => {
 
     // Give all textBoxes the same height on medium and larger sized screens
     if (window.innerWidth > mediumScreenBreakpoint) {
-      textBoxes.forEach(textBox => setMinHeight(textBox, maxBoxHeight));
+      textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
     }
 
     // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes
-    textBoxes.forEach(textBox => isSpotlightTextBox(textBox) && setMinHeight(textBox, maxBoxHeight));
+    textBoxes.forEach(
+      (textBox) => isSpotlightTextBox(textBox) && setMinHeight(textBox, maxBoxHeight),
+    );
   });
 };
 

@@ -9,10 +9,10 @@ const isElementInViewport = (e) => {
   // Set the point at which the hero animation begins
   // to be when the bottom of the browser window intersects
   // slightly above the bottom of the hero.
-  const bottom = (rect.bottom - (rect.bottom*0.18));
+  const bottom = (rect.bottom - (rect.bottom * 0.18));
 
   return (rect.top >= 0) && (bottom <= (windowHeight()));
-}
+};
 
 // The classes of items we want to add animations to
 const classesToAnimate = [
@@ -24,7 +24,7 @@ const classesToAnimate = [
   '.hb-gradient-hero__text',
   '.hb-gradient-hero__image-wrapper',
   '.field-hs-gradient-hero-image',
-  '.hs-font-splash'
+  '.hs-font-splash',
 ];
 
 const showAnimation = document.querySelectorAll(classesToAnimate);
@@ -34,35 +34,39 @@ const showAnimation = document.querySelectorAll(classesToAnimate);
 //  displays in the viewport.
 const animationEnhancements = document.querySelectorAll('.hb-has-animation-enhancements');
 
-const cancelLoop = () => document.removeEventListener('scroll', loop);
 const containsAnimateClass = (e) => e.classList.contains('animate');
 
 const checkIfAllElementsAreAnimated = () => {
   for (let i = 0; i < showAnimation.length; i++) {
     if (containsAnimateClass(showAnimation[i])) {
-      allAnimated = true
+      allAnimated = true;
     } else {
       allAnimated = false;
       break;
     }
   }
-}
+};
 
 const loop = () => {
-  for (let i of showAnimation) {
-    if (isElementInViewport(i)) {
-      i.classList.add('animate');
+  // for each item in the array of items we want to animate
+  for (let i = 0; i < showAnimation.length; i++) {
+    // if the item is in the viewport
+    if (isElementInViewport(showAnimation[i])) {
+      // add the `animate` class to the item
+      showAnimation[i].classList.add('animate');
     }
 
     checkIfAllElementsAreAnimated();
 
+    // if all items have been animated
     if (allAnimated) {
-      cancelLoop();
+      // remove the event listener
+      document.removeEventListener('scroll', loop);
     }
   }
 
   scroll(loop);
-}
+};
 
 if (animationEnhancements) {
   // This ensures that elements animate if they are in the viewport on pageload

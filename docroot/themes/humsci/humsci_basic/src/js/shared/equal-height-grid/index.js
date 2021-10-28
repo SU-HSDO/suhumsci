@@ -32,15 +32,15 @@ const applyStretchClass = () => {
       // The title height has to be set first because it influences the final
       // height of the card.
       equalHeightGrid(verticalLinkedCardTitles)
-      .then(() => equalHeightGrid(verticalLinkedCards))
-      .catch((result) => console.error('issue loading equal height cards', result));
+        .then(() => equalHeightGrid(verticalLinkedCards))
+        .catch((result) => console.error('issue loading equal height cards', result));
     } else if (verticalLinkedCards.length > 0) {
       // Since card titles are not required we still want to run the equal height
       // function on remaining cards
       equalHeightGrid(verticalLinkedCards);
     }
   }
-}
+};
 
 // Wait a 1 sec for page to load in before setting heights
 setTimeout(() => {

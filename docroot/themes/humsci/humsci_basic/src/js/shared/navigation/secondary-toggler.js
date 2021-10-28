@@ -7,7 +7,7 @@ if (togglers) {
   for (let i = 0; i < togglers.length; i += 1) {
     const toggler = togglers[i];
     const togglerID = toggler.getAttribute('id');
-    const togglerContent = document.querySelector("[aria-labelledby=\"".concat(togglerID, "\"]"));
+    const togglerContent = document.querySelector('[aria-labelledby="'.concat(togglerID, '"]'));
     const togglerParent = toggler.parentNode;
     const activeTrail = togglerParent.classList.contains('hb-secondary-nav__item--active-trail');
 
@@ -20,7 +20,6 @@ if (togglers) {
     if (!activeTrail) {
       changeNav(toggler, togglerContent, false);
     }
-
 
     toggler.addEventListener('click', (e) => togglerHandler(e, toggler, togglerContent));
   }

@@ -118,7 +118,7 @@ acceptance: &acceptance
     - run:
         name: Run installation Acceptance tests
         command: vendor/bin/blt circleci:codeception
-    - approve_visual_diff:
+    - hold:
         type: approval
         when: on_fail
     - run:

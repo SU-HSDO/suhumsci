@@ -1,19 +1,18 @@
- // Requires / Dependencies
- const path = require('path');
- const webpack = require('webpack');
+// Requires / Dependencies
+const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
-const srcDir = path.resolve( __dirname, 'src/' );
+const srcDir = path.resolve(__dirname, 'src/');
 
- module.exports = {
+module.exports = {
   mode: 'production',
   entry: {
-    humsci_colorful: srcDir + '/js/colorful/colorful.js',
-    humsci_traditional: srcDir + '/js/traditional/traditional.js'
+    humsci_colorful: `${srcDir}/js/colorful/colorful.js`,
+    humsci_traditional: `${srcDir}/js/traditional/traditional.js`,
   },
+  plugins: [new ESLintPlugin()],
   output: {
-    filename: pathData => {
-      return `${pathData.chunk.name}/js/index.js`;
-    },
+    filename: (pathData) => `${pathData.chunk.name}/js/index.js`,
     path: path.resolve(__dirname, '../'),
   },
   module: {
@@ -25,10 +24,10 @@ const srcDir = path.resolve( __dirname, 'src/' );
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [ '@babel/preset-env' ]
-          }
-        }
-      }
-    ]
-  }
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
+    ],
+  },
 };

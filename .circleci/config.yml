@@ -123,7 +123,9 @@ acceptance: &acceptance
         when: on_fail
     - run:
         name: 'Update Visual Regression Reference'
-        command: cp artifacts/functional/debug/visual/* tests/codeception/_data/VisualCeption
+        command: 'cp artifacts/functional/debug/visual/* tests/codeception/_data/VisualCeption'
+#        requires:
+#          - approve_visual_diff
     - store_test_results:
         path: /var/www/html/artifacts
     - store_artifacts:

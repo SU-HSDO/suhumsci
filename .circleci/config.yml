@@ -122,8 +122,8 @@ acceptance: &acceptance
         paths:
           - artifacts/functional/debug/visual
         key: visual-regression
-        when: on_fail
-        name: 'Save Failed Visual Regression Images'
+        when: always
+        name: 'Save Visual Regression Images'
     - store_test_results:
         path: /var/www/html/artifacts
     - store_artifacts:

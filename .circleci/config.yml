@@ -118,18 +118,27 @@ acceptance: &acceptance
     - run:
         name: Run installation Acceptance tests
         command: vendor/bin/blt circleci:codeception
-    - approve_visual_diff:
-        type: approval
+    - save_cache:
+        paths:
+          - artifacts/functional/debug/visual
+        key: visual-regression
         when: on_fail
-    - run:
-        name: 'Update Visual Regression Reference'
-        command: 'cp artifacts/functional/debug/visual/* tests/codeception/_data/VisualCeption'
-#        requires:
-#          - approve_visual_diff
+        name: 'Save Failed Visual Regression Images'
     - store_test_results:
         path: /var/www/html/artifacts
     - store_artifacts:
         path: /var/www/html/artifacts
+
+update_visual_references: &update_visual_references
+  <<: *defaults
+  steps:
+    - attach_workspace:
+        at: .
+    - restore_cache:
+        key: visual-regression
+    - run:
+        command: cp artifacts/functional/debug/visual/* ./tests/codeception/_data/VisualCeption
+    - save_cache: *save_cache
 
 phpunit_coverage: &phpunit_coverage
   <<: *defaults
@@ -239,6 +248,8 @@ jobs:
     <<: *deploy_tag
   run-content-stage:
     <<: *run-content-stage
+  update-visual-regession:
+    <<: *update_visual_references
 
 version: 2.1
 orbs:
@@ -270,6 +281,17 @@ workflows:
       - run-acceptance:
           requires:
             - run-setup
+      - update-visual-regession:
+          requires:
+            - run-acceptance
+      - approve_visual_diff:
+          type: approval
+          when: on_fail
+          requires:
+            - run-acceptance
+      - update-visual-regession:
+          requires:
+            - approve_visual_diff
       - run-code-coverage:
           requires:
             - run-setup

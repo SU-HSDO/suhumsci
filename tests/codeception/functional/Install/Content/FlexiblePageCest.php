@@ -9,6 +9,8 @@ class FlexiblePageCest {
 
   /**
    * Test visual difference on the home page.
+   *
+   * @group testme
    */
   public function testVisualHomepage(FunctionalTester $I){
     $I->amOnPage('/');

@@ -124,6 +124,15 @@ acceptance: &acceptance
         key: visual-regression
         when: always
         name: 'Save Visual Regression Images'
+    - run:
+        name: Trigger Visual Test Acceptance
+        when: on_fail
+        command: |
+          curl --request POST \
+            --url https://circleci.com/api/v2/project/gh/SU-HSDO/suhumsci/pipeline/pipeline \
+            --header "authorization: Basic ${CIRCLECI_TOKEN}" \
+            --header 'content-type: application/json' \
+            --data  "{\"branch\":\"${CIRCLE_BRANCH}\",\"parameters\":{\"failed_visual_regession_tests\":true}}"
     - store_test_results:
         path: /var/www/html/artifacts
     - store_artifacts:
@@ -251,6 +260,11 @@ jobs:
   update-visual-regession:
     <<: *update_visual_references
 
+parameters:
+  failed_visual_regession_tests:
+    type: boolean
+    default: false
+
 version: 2.1
 orbs:
   slack: circleci/slack@4.4.2
@@ -284,23 +298,24 @@ workflows:
       - update-visual-regession:
           requires:
             - run-acceptance
-      - approve_visual_diff:
-          type: approval
-          when: on_fail
-          requires:
-            - run-acceptance
-      - update-visual-regession:
-          requires:
-            - approve_visual_diff
       - run-code-coverage:
           requires:
             - run-setup
       # If the above jobs complete successfully, deploy the branch.
       - run-deploy-branch:
           requires:
+            - run-code-coverage
             - run-acceptance-first
             - run-acceptance-second
             - run-acceptance
+  update_visual_regression:
+    when: << pipeline.parameters.failed_visual_regession_tests >>
+    jobs:
+      - approve_visual_diff:
+          type: approval
+      - update-visual-regession:
+          requires:
+            - approve_visual_diff
   dependency_updates:
     triggers:
       - schedule:

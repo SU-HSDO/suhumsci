@@ -36,7 +36,7 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - v12-dependencies-{{ checksum "composer.lock" }}
+    - v12-dependencies--{{ checksum "composer.lock" }}
     # fallback to using the latest cache if no exact match is found
     - v12-dependencies-
 
@@ -49,7 +49,7 @@ save_cache: &save_cache
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
     - ./tests/codeception/_data/VisualCeption
-  key: v12-dependencies-{{ checksum "composer.lock" }}
+  key: v12-dependencies--{{ checksum "composer.lock" }}--{{ epoch }}
 
 disable_telemetry: &disable_telemetry
   run:

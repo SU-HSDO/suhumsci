@@ -61,7 +61,7 @@ directory_setup: &directory_setup
   <<: *defaults
   steps:
     - checkout
-#    - restore_cache: *restore_cache
+    - restore_cache: *restore_cache
     - run:
         name: Composer setup
         command: |
@@ -146,7 +146,9 @@ update_visual_references: &update_visual_references
     - restore_cache:
         key: visual-regression
     - run:
-        command: cp artifacts/functional/debug/visual/* ./tests/codeception/_data/VisualCeption/
+        command: |
+          mkdir -p ./tests/codeception/_data/VisualCeption/
+          cp artifacts/functional/debug/visual/* ./tests/codeception/_data/VisualCeption/
     - save_cache: *save_cache
 
 phpunit_coverage: &phpunit_coverage

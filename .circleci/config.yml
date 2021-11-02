@@ -121,18 +121,20 @@ acceptance: &acceptance
     - save_cache:
         paths:
           - artifacts/functional/debug/visual
-        key: visual-regression--{{ epoch }}
+        key: visual-regression--{{ .Branch }}--{{ epoch }}
         when: always
         name: 'Save Visual Regression Images'
+    - run:
+        name: Create netrc
+        command: printf "machine circleci.com\nlogin ${CIRCLECI_TOKEN}\npassword" > ~/.netrc
     - run:
         name: Trigger Visual Test Acceptance
         when: on_fail
         command: |
-          curl --request POST \
-            --url https://circleci.com/api/v2/project/gh/SU-HSDO/suhumsci/pipeline/pipeline \
-            --header "authorization: Basic ${CIRCLECI_TOKEN}" \
+          curl -n -X POST \
             --header 'content-type: application/json' \
-            --data  "{\"branch\":\"${CIRCLE_BRANCH}\",\"parameters\":{\"failed_visual_regession_tests\":true}}"
+            --data  "{\"branch\":\"${CIRCLE_BRANCH}\",\"parameters\":{\"failed_visual_regession_tests\":true}}" \
+            https://circleci.com/api/v2/project/gh/SU-HSDO/suhumsci/pipeline
     - store_test_results:
         path: /var/www/html/artifacts
     - store_artifacts:
@@ -141,10 +143,12 @@ acceptance: &acceptance
 update_visual_references: &update_visual_references
   <<: *defaults
   steps:
-    - attach_workspace:
-        at: .
+    - checkout
+    - restore_cache: *restore_cache
     - restore_cache:
-        key: visual-regression
+        key:
+          - visual-regression--{{ .Branch }}--
+          - visual-regression--
     - run:
         command: |
           mkdir -p ./tests/codeception/_data/VisualCeption/
@@ -286,6 +290,8 @@ workflows:
               ignore:
                 - /.*/
   test_lint_deploy:
+    when:
+      not: << pipeline.parameters.failed_visual_regession_tests >>
     jobs:
       - run-setup
       - run-acceptance-first:

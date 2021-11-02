@@ -125,12 +125,10 @@ acceptance: &acceptance
         when: always
         name: 'Save Visual Regression Images'
     - run:
-        name: Create netrc
-        command: printf "machine circleci.com\nlogin ${CIRCLECI_TOKEN}\npassword" > ~/.netrc
-    - run:
         name: Trigger Visual Test Acceptance
         when: on_fail
         command: |
+          printf "machine circleci.com\nlogin ${CIRCLECI_TOKEN}\npassword" > ~/.netrc
           curl -n -X POST \
             --header 'content-type: application/json' \
             --data  "{\"branch\":\"${CIRCLE_BRANCH}\",\"parameters\":{\"failed_visual_regession_tests\":true}}" \

@@ -38,7 +38,7 @@ restore_cache: &restore_cache
   keys:
     - v12-dependencies--{{ checksum "composer.lock" }}
     # fallback to using the latest cache if no exact match is found
-    - v12-dependencies-
+    - v12-dependencies--
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -121,7 +121,7 @@ acceptance: &acceptance
     - save_cache:
         paths:
           - artifacts/functional/debug/visual
-        key: visual-regression
+        key: visual-regression--{{ epoch }}
         when: always
         name: 'Save Visual Regression Images'
     - run:

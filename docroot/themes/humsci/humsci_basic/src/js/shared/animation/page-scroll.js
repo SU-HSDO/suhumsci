@@ -1,7 +1,18 @@
-// Detect animation frame on scroll
-let scroll = window.requestAnimationFrame || function(callback) {
-  window.setTimeout(callback, 1000/60)
-};
+let allAnimated = false;
+
+const windowHeight = () => (window.innerHeight || document.documentElement.clientHeight);
+
+// check if top of element is in viewport
+const isElementInViewport = (e) => {
+  const rect = e.getBoundingClientRect();
+
+  // Set the point at which the hero animation begins
+  // to be when the bottom of the browser window intersects
+  // slightly above the bottom of the hero.
+  const bottom = (rect.bottom - (rect.bottom*0.18));
+
+  return (rect.top >= 0) && (bottom <= (windowHeight()));
+}
 
 // The classes of items we want to add animations to
 const classesToAnimate = [
@@ -16,43 +27,47 @@ const classesToAnimate = [
   '.hs-font-splash'
 ];
 
-let showAnimation = document.querySelectorAll(classesToAnimate);
+const showAnimation = document.querySelectorAll(classesToAnimate);
 
 // Check to see if the animation enhancement theme toggle has been
 // activiated. If so, then add the `animate` class when an item
 //  displays in the viewport.
-let animationEnhancements = document.querySelectorAll('.hb-has-animation-enhancements');
+const animationEnhancements = document.querySelectorAll('.hb-has-animation-enhancements');
 
-if (animationEnhancements) {
-  loop();
-}
+const cancelLoop = () => document.removeEventListener('scroll', loop);
+const containsAnimateClass = (e) => e.classList.contains('animate');
 
-function loop() {
-  for (var i = 0; i < showAnimation.length; i+=1) {
-    if (isElementInViewport(showAnimation[i])) {
-      showAnimation[i].classList.add('animate');
-    }
-
-    // Stop looping through animations once all items have been exposed in the viewport.
-    if ((showAnimation.length == (i + 1)) && (showAnimation[i].classList.contains('animate'))) {
-      scroll = window.cancelAnimationFrame;
+const checkIfAllElementsAreAnimated = () => {
+  for (let i = 0; i < showAnimation.length; i++) {
+    if (containsAnimateClass(showAnimation[i])) {
+      allAnimated = true
+    } else {
+      allAnimated = false;
+      break;
     }
   }
-  
+}
+
+const loop = () => {
+  for (let i of showAnimation) {
+    if (isElementInViewport(i)) {
+      i.classList.add('animate');
+    }
+
+    checkIfAllElementsAreAnimated();
+
+    if (allAnimated) {
+      cancelLoop();
+    }
+  }
+
   scroll(loop);
 }
 
-// Confirm when an item is in the viewport
-function isElementInViewport(e) {
-  let rect = e.getBoundingClientRect();
+if (animationEnhancements) {
+  // This ensures that elements animate if they are in the viewport on pageload
+  loop();
 
-  // Set the point at which the hero animation begins
-  // to be when the bottom of the browser window intersects
-  // slightly above the bottom of the hero.
-  let bottom = (rect.bottom - (rect.bottom*0.18));
-
-  return (
-    (rect.top >= 0 &&
-      bottom <= ((window.innerHeight) || document.documentElement.clientHeight)) 
-  );
+  // run the loop on page scroll
+  document.addEventListener('scroll', loop);
 }

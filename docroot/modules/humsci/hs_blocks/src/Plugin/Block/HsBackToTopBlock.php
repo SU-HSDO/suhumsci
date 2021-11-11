@@ -19,13 +19,18 @@ class HsBackToTopBlock extends BlockBase {
    */
   public function build() {
     return [
-      '#type' => 'html_tag',
-      '#tag' => 'a',
-      '#attributes' => ['href' => ['#main-content'], 'class' => ['hs-back-to-top']],
-      '#value' => $this->t('Back to Top'),
-      '#attached' => [
-        'library' => [
-          'hs_blocks/back_to_top',
+      'back_to_top' => [
+        '#type' => 'html_tag',
+        '#tag' => 'a',
+        '#attributes' => [
+          'href' => ['#main-content'],
+          'class' => ['hs-back-to-top'],
+        ],
+        '#value' => $this->t('Back to Top'),
+        '#attached' => [
+          'library' => [
+            'hs_blocks/back_to_top',
+          ],
         ],
       ],
     ];

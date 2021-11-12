@@ -24,7 +24,8 @@ const classesToAnimate = [
   '.hb-gradient-hero__text',
   '.hb-gradient-hero__image-wrapper',
   '.field-hs-gradient-hero-image',
-  '.hs-font-splash'
+  '.hs-font-splash',
+  '.hs-font-lead'
 ];
 
 const showAnimation = document.querySelectorAll(classesToAnimate);
@@ -64,7 +65,7 @@ const loop = () => {
   scroll(loop);
 }
 
-if (animationEnhancements) {
+if (animationEnhancements.length) {
   // This ensures that elements animate if they are in the viewport on pageload
   loop();
 

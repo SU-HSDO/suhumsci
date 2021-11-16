@@ -421,33 +421,47 @@
 // Splash Font Animation
 @mixin hb-font-splash-animation {
   @include hb-traditional {
-    &.animate {
-      .hb-has-animation-enhancements & {
-        animation-timing-function: ease-in-out;
-        animation-duration: 1700ms;
-        animation-fill-mode: forwards;
-        animation-name: traditionalSplashFont;
-      }
-    }
+    @include hasAnimationEnhancements(ease-in-out, 1700ms, traditionalSplashFont);
   }
 
   @include hb-themes(('colorful', 'airy')) {
-    &.animate {
-      .hb-has-animation-enhancements & {
-        animation-timing-function: ease-in-out;
-        animation-duration: 2000ms;
-        animation-fill-mode: forwards;
-        animation-name: colorfulSplashFont;
-      }
-    }
+    @include hasAnimationEnhancements(ease-in-out, 2000ms, colorfulSplashFont);
   }
 
-  // Removes animation styles when Reduced Motion is enabled
+  @include reducedMotionPrefered;
+}
+
+// Lead Font Animation
+@mixin hb-font-lead-animation {
+  @include hb-traditional {
+    @include hasAnimationEnhancements(ease-in-out, 1700ms, traditionalLeadFont);
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hasAnimationEnhancements(ease-in-out, 2000ms, colorfulLeadFont);
+  }
+
+  @include reducedMotionPrefered;
+}
+
+// Removes animation styles when Reduced Motion is enabled
+@mixin reducedMotionPrefered {
   @media screen and (prefers-reduced-motion: reduce) {
     &.animate {
       .hb-has-animation-enhancements & {
         animation: none;
       }
+    }
+  }
+}
+
+@mixin hasAnimationEnhancements($timingFunction, $duration, $animationName) {
+  &.animate {
+    .hb-has-animation-enhancements & {
+      animation-timing-function: $timingFunction;
+      animation-duration: $duration;
+      animation-fill-mode: forwards;
+      animation-name: $animationName;
     }
   }
 }

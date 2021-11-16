@@ -106,14 +106,21 @@ process:
       entity_type: taxonomy_term
       ignore_case: true
   field_hs_publication_year:
-    plugin: substr
-    source: publication_year
-    start: 0
-    length: 10
+    -
+      plugin: skip_on_empty
+      method: process
+      source: publication_year
+    -
+      plugin: substr
+      start: 0
+      length: 10
   field_hs_publication_author:
     -
-      plugin: entity_generate_no_lookup
+      plugin: skip_on_empty
+      method: process
       source: authors
+    -
+      plugin: entity_generate_no_lookup
       entity_type: publications_collections
       bundle_key: type
       bundle: publication_author

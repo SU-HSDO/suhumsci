@@ -1,5 +1,10 @@
 let allAnimated = false;
 
+// Detect animation frame on scroll
+let scroll = window.requestAnimationFrame || function(callback) {
+  window.setTimeout(callback, 1000/60)
+};
+
 const windowHeight = () => (window.innerHeight || document.documentElement.clientHeight);
 
 // check if top of element is in viewport
@@ -31,10 +36,9 @@ const showAnimation = document.querySelectorAll(classesToAnimate);
 
 // Check to see if the animation enhancement theme toggle has been
 // activiated. If so, then add the `animate` class when an item
-//  displays in the viewport.
+// displays in the viewport.
 const animationEnhancements = document.querySelectorAll('.hb-has-animation-enhancements');
-
-const cancelLoop = () => document.removeEventListener('scroll', loop);
+const cancelLoop = () => window.cancelAnimationFrame;
 const containsAnimateClass = (e) => e.classList.contains('animate');
 
 const checkIfAllElementsAreAnimated = () => {
@@ -64,10 +68,7 @@ const loop = () => {
   scroll(loop);
 }
 
-if (animationEnhancements) {
+if (animationEnhancements.length) {
   // This ensures that elements animate if they are in the viewport on pageload
   loop();
-
-  // run the loop on page scroll
-  document.addEventListener('scroll', loop);
 }

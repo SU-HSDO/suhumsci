@@ -10,6 +10,7 @@ class ParagraphsCest {
    *
    * @group install
    * @group existingSite
+   * @group testme
    */
   public function testPrivateCollectionParagraph(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
@@ -19,7 +20,6 @@ class ParagraphsCest {
     // Enabled on private pages.
     $I->amOnPage('/admin/structure/types/manage/hs_private_page/fields/node.hs_private_page.field_hs_priv_page_components');
     $I->canSeeCheckboxIsChecked('Include the selected below');
-    $I->canSeeCheckboxIsChecked('settings[handler_settings][target_bundles_drag_drop][hs_priv_collection][enabled]');
 
     // Disabled in rows.
     $I->amOnPage('/admin/structure/paragraphs_type/hs_row/fields/paragraph.hs_row.field_hs_row_components');

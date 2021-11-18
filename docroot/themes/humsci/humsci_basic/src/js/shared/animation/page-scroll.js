@@ -1,8 +1,8 @@
 let allAnimated = false;
 
 // Detect animation frame on scroll
-let scroll = window.requestAnimationFrame || function(callback) {
-  window.setTimeout(callback, 1000/60)
+const scroll = window.requestAnimationFrame || function (callback) {
+  window.setTimeout(callback, 1000 / 60);
 };
 
 const windowHeight = () => (window.innerHeight || document.documentElement.clientHeight);
@@ -30,7 +30,7 @@ const classesToAnimate = [
   '.hb-gradient-hero__image-wrapper',
   '.field-hs-gradient-hero-image',
   '.hs-font-splash',
-  '.hs-font-lead'
+  '.hs-font-lead',
 ];
 
 const showAnimation = document.querySelectorAll(classesToAnimate);
@@ -54,20 +54,15 @@ const checkIfAllElementsAreAnimated = () => {
 };
 
 const loop = () => {
-  // for each item in the array of items we want to animate
-  for (let i = 0; i < showAnimation.length; i++) {
-    // if the item is in the viewport
-    if (isElementInViewport(showAnimation[i])) {
-      // add the `animate` class to the item
-      showAnimation[i].classList.add('animate');
+  for (const i of showAnimation) {
+    if (isElementInViewport(i)) {
+      i.classList.add('animate');
     }
 
     checkIfAllElementsAreAnimated();
 
-    // if all items have been animated
     if (allAnimated) {
-      // remove the event listener
-      document.removeEventListener('scroll', loop);
+      cancelLoop();
     }
   }
 

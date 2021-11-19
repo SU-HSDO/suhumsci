@@ -54,9 +54,9 @@ const checkIfAllElementsAreAnimated = () => {
 };
 
 const loop = () => {
-  for (const i of showAnimation) {
-    if (isElementInViewport(i)) {
-      i.classList.add('animate');
+  showAnimation.forEach((el) => {
+    if (isElementInViewport(el)) {
+      el.classList.add('animate');
     }
 
     checkIfAllElementsAreAnimated();
@@ -64,7 +64,7 @@ const loop = () => {
     if (allAnimated) {
       cancelLoop();
     }
-  }
+  });
 
   scroll(loop);
 };

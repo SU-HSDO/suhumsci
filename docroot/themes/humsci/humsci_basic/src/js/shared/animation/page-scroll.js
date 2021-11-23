@@ -6,6 +6,8 @@ const scroll = window.requestAnimationFrame || function (callback) {
 };
 
 const windowHeight = () => (window.innerHeight || document.documentElement.clientHeight);
+const experimentalFeaturesClass = [...document.querySelectorAll('.hb-experimental')];
+const experimentalClassesToAnimate = ['.hs-font-lead'];
 
 // check if top of element is in viewport
 const isElementInViewport = (e) => {
@@ -30,8 +32,11 @@ const classesToAnimate = [
   '.hb-gradient-hero__image-wrapper',
   '.field-hs-gradient-hero-image',
   '.hs-font-splash',
-  '.hs-font-lead',
 ];
+
+if (experimentalFeaturesClass.length) {
+  classesToAnimate.push(experimentalClassesToAnimate);
+}
 
 const showAnimation = document.querySelectorAll(classesToAnimate);
 
@@ -39,6 +44,7 @@ const showAnimation = document.querySelectorAll(classesToAnimate);
 // activiated. If so, then add the `animate` class when an item
 // displays in the viewport.
 const animationEnhancements = document.querySelectorAll('.hb-has-animation-enhancements');
+
 const cancelLoop = () => window.cancelAnimationFrame;
 const containsAnimateClass = (e) => e.classList.contains('animate');
 
@@ -73,3 +79,4 @@ if (animationEnhancements.length) {
   // This ensures that elements animate if they are in the viewport on pageload
   loop();
 }
+

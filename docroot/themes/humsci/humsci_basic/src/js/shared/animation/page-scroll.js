@@ -79,4 +79,3 @@ if (animationEnhancements.length) {
   // This ensures that elements animate if they are in the viewport on pageload
   loop();
 }
-

@@ -159,8 +159,19 @@ $credits: (
   }
 }
 
+.hs-font-lead {
+  @include hb-font-lead-animation;
+}
+
 .hs-font-splash {
   @include hb-font-splash-animation;
+
+  @include hb-traditional {
+    ~ .hs-font-lead {
+      animation-duration: 1450ms !important;
+      animation-delay: 250ms;
+    }
+  }
 
   &,
   .infotext {

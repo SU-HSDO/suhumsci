@@ -7,7 +7,7 @@ const videos = document.querySelectorAll('.field-media-oembed-video');
 if (videos && videos.length > 0) {
   for (let i = 0; i < videos.length; i++) {
     const video = videos[i];
-    if (video.parentNode && video.parentNode.parentNode && video.parentNode.parentNode.nodeName == 'FIGURE') {
+    if (video.parentNode && video.parentNode.parentNode && video.parentNode.parentNode.nodeName === 'FIGURE') {
       const figure = video.parentNode.parentNode;
 
       if (figure.classList.contains('caption')) {

@@ -4,22 +4,22 @@
 const timelineCollapsed = document.querySelectorAll('.hb-timeline__collapsed');
 
 // Find timeline items are are open inside of timelineCollapsed and close them!
-timelineCollapsed.forEach(timeline => {
-  let items;
-  let summaries;
-  
+timelineCollapsed.forEach((timeline) => {
+  // let items;
+  // let summaries;
+
   // Find all the timeline items inside of the collapsed timeline
-  items = timeline.querySelectorAll('.hb-timeline-item');
+  const items = timeline.querySelectorAll('.hb-timeline-item');
 
   // Remove open attribute from these items
-  items.forEach(item => {
+  items.forEach((item) => {
     item.removeAttribute('open');
   });
 
   // Find the summary element and update the aria attribute values
-  summaries = timeline.querySelectorAll('.hb-timeline-item__summary');
+  const summaries = timeline.querySelectorAll('.hb-timeline-item__summary');
 
-  summaries.forEach(summary => {
+  summaries.forEach((summary) => {
     summary.setAttribute('aria-expanded', 'false');
     summary.setAttribute('aria-pressed', 'false');
   });
@@ -29,7 +29,7 @@ timelineCollapsed.forEach(timeline => {
 const timelineItems = document.querySelectorAll('.hb-timeline-item');
 
 if (timelineItems) {
-  timelineItems.forEach(timelineItem => {
+  timelineItems.forEach((timelineItem) => {
     const summary = timelineItem.querySelector('.hb-timeline-item__summary');
 
     // Find the value of aria-expanded for a timeline item summary
@@ -37,7 +37,7 @@ if (timelineItems) {
 
     // Update aria values!
     timelineItem.addEventListener(('keypress', 'click'), () => {
-      if (ariaExpanded == "true") {
+      if (ariaExpanded === 'true') {
         summary.setAttribute('aria-expanded', 'false');
         summary.setAttribute('aria-pressed', 'false');
       } else {
@@ -47,6 +47,6 @@ if (timelineItems) {
 
       // Retain updated value for the aria-expanded attribute
       ariaExpanded = summary.getAttribute('aria-expanded');
-    })
+    });
   });
 }

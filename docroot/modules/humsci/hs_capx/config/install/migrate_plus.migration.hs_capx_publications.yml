@@ -15,29 +15,30 @@ migration_group: hs_capx
 label: 'H&S CAPx Publications Importer'
 source:
   plugin: url
+  data_parser_plugin: jsonpath
   constants:
     status: 1
     type: hs_publications
     basic_html: basic_html
   urls: { }
-  item_selector: values
+  item_selector: $..publications[*]
   fields:
-    -
-      name: display_name
-      label: 'Display Name'
-      selector: displayName
-    -
-      name: sunetid
-      label: sunetid
-      selector: uid
     # -
-    #   name: publication_id
-    #   label: publicationId
-    #   selector: publicationId
+    #   name: display_name
+    #   label: 'Display Name'
+    #   selector: displayName
     # -
-    #   name: title
-    #   label: 'Title'
-    #   selector: title
+    #   name: sunetid
+    #   label: sunetid
+    #   selector: uid
+    -
+      name: publication_id
+      label: 'Publication ID'
+      selector: publicationId
+    -
+      name: title
+      label: 'Title'
+      selector: title
     # -
     #   name: first_published
     #   label: 'First Published'
@@ -67,10 +68,10 @@ source:
     #   label: 'Profile ID'
     #   selector: ../profileId
   ids:
-  #   publication_id:
-  #     type: string
-    sunetid:
+    publication_id:
       type: string
+    # sunetid:
+    #   type: string
 process:
   # dump_publication_id:
   #   plugin: callback
@@ -78,8 +79,8 @@ process:
   #   source: publication_id
   type: constants/type
   status: constants/status
-  # title: title
-  title: display_name
+  title: title
+  # title: display_name
   # field_hs_publication_year: first_published
   # field_hs_publication_type: publication_type
   # field_publication_citation: apa_citation

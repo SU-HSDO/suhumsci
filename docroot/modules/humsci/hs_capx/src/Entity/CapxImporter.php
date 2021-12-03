@@ -43,7 +43,8 @@ use Drupal\hs_capx\Capx;
  *     "organizations",
  *     "workgroups",
  *     "childOrganizations",
- *     "tagging"
+ *     "tagging",
+ *     "importWhat"
  *   }
  * )
  */
@@ -97,6 +98,13 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
   protected $tagging = [];
 
   /**
+   * Import profiles, publications or both.
+   *
+   * @var int
+   */
+  protected $importWhat;
+
+  /**
    * {@inheritdoc}
    */
   public function getOrganizations($as_string = FALSE) {
@@ -144,6 +152,27 @@ class CapxImporter extends ConfigEntityBase implements CapxImporterInterface {
       return $this->tagging[$field_name];
     }
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function importWhat() {
+    return $this->importWhat ?? self::IMPORT_PROFILES;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function importProfiles() {
+    return $this->importWhat() != self::IMPORT_PUBLICATIONS;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function importPublications() {
+    return $this->importWhat() != self::IMPORT_PROFILES;
   }
 
   /**

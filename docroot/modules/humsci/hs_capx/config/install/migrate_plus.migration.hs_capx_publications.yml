@@ -1,0 +1,114 @@
+uuid: eac63676-c6b7-4251-a669-ca6347d8a0a9
+langcode: en
+status: false
+dependencies: {
+  config:
+    - node.type.hs_publications
+    - migrate_plus.migration_group.hs_capx
+}
+id: hs_capx_publications
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: hs_capx
+label: 'H&S CAPx Publications Importer'
+source:
+  plugin: url
+  constants:
+    status: 1
+    type: hs_publications
+    basic_html: basic_html
+  urls: { }
+  item_selector: values
+  fields:
+    -
+      name: display_name
+      label: 'Display Name'
+      selector: displayName
+    -
+      name: sunetid
+      label: sunetid
+      selector: uid
+    # -
+    #   name: publication_id
+    #   label: publicationId
+    #   selector: publicationId
+    # -
+    #   name: title
+    #   label: 'Title'
+    #   selector: title
+    # -
+    #   name: first_published
+    #   label: 'First Published'
+    #   selector: firstPublished/value
+    # -
+    #   name: publication_type
+    #   label: 'Publication Type'
+    #   selector: type
+    # -
+    #   name: apa_citation
+    #   label: 'APA Citation'
+    #   selector: apaCitation
+    # -
+    #   name: doi_url
+    #   label: 'DOI URL'
+    #   selector: doiUrl
+    # -
+    #   name: ws_url
+    #   label: 'Web of Science URL'
+    #   selector: webOfScienceUrl
+    # -
+    #   name: sunetid
+    #   label: sunetid
+    #   selector: ../uid
+    # -
+    #   name: profile_id
+    #   label: 'Profile ID'
+    #   selector: ../profileId
+  ids:
+  #   publication_id:
+  #     type: string
+    sunetid:
+      type: string
+process:
+  # dump_publication_id:
+  #   plugin: callback
+  #   callable: var_dump
+  #   source: publication_id
+  type: constants/type
+  status: constants/status
+  # title: title
+  title: display_name
+  # field_hs_publication_year: first_published
+  # field_hs_publication_type: publication_type
+  # field_publication_citation: apa_citation
+  # field_hs_publication_link: doiUrl
+  # field_hs_publication_author: author
+destination:
+  plugin: 'entity_reference_revisions:node'
+  new_revisions: true
+  force_revision: true
+  overwrite_properties:
+    - title
+    # - revision_timestamp
+    # - revision_translation_affected
+    - type
+    # - field_hs_person_first_name
+    # - field_hs_person_middle_name
+    # - field_hs_person_last_name
+    # - field_hs_person_title
+    # - body/value
+    # - body/format
+    # - field_hs_person_email
+    # - field_hs_person_telephone
+    # - field_hs_person_external_profile/uri
+    # - field_hs_person_external_profile/title
+    # - field_hs_person_links
+    # - field_hs_person_education
+    # - field_hs_person_department
+    # - field_hs_person_image/target_id
+    # - field_hs_person_cv_link
+    # - field_hs_person_square_img/target_id
+migration_dependencies:
+  required: {  }

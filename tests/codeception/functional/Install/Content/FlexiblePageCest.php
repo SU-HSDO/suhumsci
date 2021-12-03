@@ -86,4 +86,47 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('.slick img', 1);
   }
 
+   /**
+   * Verify main menu links at mobile size
+   */
+  public function testMobileMenu(FunctionalTester $I) {
+    // Check standard menu item links
+    $I->amOnPage('/');
+    $I->resizeWindow(800, 1100);
+    $I->seeElement('.hb-main-nav');
+
+    // This try/catch keeps the toggle consistent between environment testing.
+    // It will check for the visible element and continue steps for either scenario.
+    try {
+      $I->waitForElementVisible('.hb-main-nav__link');
+      // Continue to do this if it's present
+      $I->seeElement('.hb-main-nav__link');
+      $I->click('.hb-main-nav__link');
+      echo 'If you see this, the menu was open and the link was clicked.';
+
+    } catch (\Exception $e) {
+      // Do this if it's not present.
+      echo 'If you see this, the menu needs toggled.';
+      $I->click('button.hb-main-nav__toggle');
+      $I->waitForElementVisible('.hb-main-nav__link');
+      $I->seeElement('.hb-main-nav__link');
+      $I->click('.hb-main-nav__link');
+    }
+
+    // Check nested menu item links
+    $I->click('.hb-main-nav__toggle');
+    $I->click('.hb-nested-toggler');
+    $I->waitForElementVisible('.hb-main-nav__menu-lv2');
+    $I->click('.hb-main-nav__menu-lv2 a');
+
+    // Check standard menu item links for logged in users
+    $I->logInWithRole('contributor');
+    $I->amOnPage('node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('Save');
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->click('.hb-main-nav__toggle');
+    $I->seeElement('.hb-main-nav__menu');
+    $I->click('.hb-main-nav__link');
+  }
 }

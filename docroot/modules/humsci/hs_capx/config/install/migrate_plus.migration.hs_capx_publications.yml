@@ -23,14 +23,6 @@ source:
   urls: { }
   item_selector: $..publications[*]
   fields:
-    # -
-    #   name: display_name
-    #   label: 'Display Name'
-    #   selector: displayName
-    # -
-    #   name: sunetid
-    #   label: sunetid
-    #   selector: uid
     -
       name: publication_id
       label: 'Publication ID'
@@ -39,52 +31,45 @@ source:
       name: title
       label: 'Title'
       selector: title
-    # -
-    #   name: first_published
-    #   label: 'First Published'
-    #   selector: firstPublished/value
-    # -
-    #   name: publication_type
-    #   label: 'Publication Type'
-    #   selector: type
-    # -
-    #   name: apa_citation
-    #   label: 'APA Citation'
-    #   selector: apaCitation
-    # -
-    #   name: doi_url
-    #   label: 'DOI URL'
-    #   selector: doiUrl
-    # -
-    #   name: ws_url
-    #   label: 'Web of Science URL'
-    #   selector: webOfScienceUrl
-    # -
-    #   name: sunetid
-    #   label: sunetid
-    #   selector: ../uid
-    # -
-    #   name: profile_id
-    #   label: 'Profile ID'
-    #   selector: ../profileId
+    -
+      name: first_published
+      label: 'First Published'
+      selector: firstPublished/value
+    -
+      name: publication_type
+      label: 'Publication Type'
+      selector: type
+    -
+      name: apa_citation
+      label: 'APA Citation'
+      selector: apaCitation
+    -
+      name: doi_url
+      label: 'DOI URL'
+      selector: doiUrl
+    -
+      name: ws_url
+      label: 'Web of Science URL'
+      selector: webOfScienceUrl
+    -
+      name: sunetid
+      label: sunetid
+      selector: ../uid
+    -
+      name: profile_id
+      label: 'Profile ID'
+      selector: ../profileId
   ids:
     publication_id:
       type: string
-    # sunetid:
-    #   type: string
 process:
-  # dump_publication_id:
-  #   plugin: callback
-  #   callable: var_dump
-  #   source: publication_id
   type: constants/type
   status: constants/status
   title: title
-  # title: display_name
-  # field_hs_publication_year: first_published
-  # field_hs_publication_type: publication_type
-  # field_publication_citation: apa_citation
-  # field_hs_publication_link: doiUrl
+  field_hs_publication_year: first_published
+  field_hs_publication_type: publication_type
+  field_publication_citation: apa_citation
+  field_hs_publication_link: doiUrl
   # field_hs_publication_author: author
 destination:
   plugin: 'entity_reference_revisions:node'
@@ -95,21 +80,10 @@ destination:
     # - revision_timestamp
     # - revision_translation_affected
     - type
-    # - field_hs_person_first_name
-    # - field_hs_person_middle_name
-    # - field_hs_person_last_name
-    # - field_hs_person_title
-    # - body/value
-    # - body/format
-    # - field_hs_person_email
-    # - field_hs_person_telephone
-    # - field_hs_person_external_profile/uri
-    # - field_hs_person_external_profile/title
-    # - field_hs_person_links
-    # - field_hs_person_education
-    # - field_hs_person_department
-    # - field_hs_person_image/target_id
-    # - field_hs_person_cv_link
-    # - field_hs_person_square_img/target_id
+    - field_hs_publication_year
+    - field_hs_publication_type
+    - field_publication_citation
+    - field_hs_publication_link
+    # - field_hs_publication_author
 migration_dependencies:
   required: {  }

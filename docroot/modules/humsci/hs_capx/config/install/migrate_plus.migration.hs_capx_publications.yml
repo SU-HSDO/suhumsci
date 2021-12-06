@@ -19,7 +19,8 @@ source:
   constants:
     status: 1
     type: hs_publications
-    basic_html: basic_html
+    minimal_html: minimal_html
+    publication_link_title: 'Publication Link'
   urls: { }
   item_selector: $..publications[*]
   fields:
@@ -34,7 +35,7 @@ source:
     -
       name: first_published
       label: 'First Published'
-      selector: firstPublished/value
+      selector: firstPublished.value
     -
       name: publication_type
       label: 'Publication Type'
@@ -51,25 +52,61 @@ source:
       name: ws_url
       label: 'Web of Science URL'
       selector: webOfScienceUrl
-    -
-      name: sunetid
-      label: sunetid
-      selector: ../uid
-    -
-      name: profile_id
-      label: 'Profile ID'
-      selector: ../profileId
+    # -
+    #   name: sunetid
+    #   label: sunetid
+    #   selector: ../uid
+    # -
+    #   name: profile_id
+    #   label: 'Profile ID'
+    #   selector: ../profileId
   ids:
     publication_id:
       type: string
 process:
   type: constants/type
   status: constants/status
-  title: title
-  field_hs_publication_year: first_published
-  field_hs_publication_type: publication_type
-  field_publication_citation: apa_citation
-  field_hs_publication_link: doiUrl
+  title:
+    -
+      plugin: substr
+      start: 0
+      length: 255
+      source: title
+  field_hs_publication_year:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: first_published
+    -
+      plugin: substr
+      start: 0
+      length: 10
+  field_hs_publication_type:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: publication_type
+    -
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: hs_publication_type
+      value_key: name
+      ignore_case: true
+  field_hs_publication_citation/value: apa_citation
+  field_hs_publication_citation/format: constants/minimal_html
+  # publication_uri:
+  #   -
+  #     plugin: null_coalesce
+  #     source:
+  #       - doi_url
+  #       - ws_url
+  # field_hs_publication_link/uri:
+  #   -
+  #     plugin: skip_on_empty
+  #     method: process
+  #     source: '@publication_uri'
+  field_hs_publication_link/title: constants/publication_link_title
   # field_hs_publication_author: author
 destination:
   plugin: 'entity_reference_revisions:node'
@@ -82,7 +119,7 @@ destination:
     - type
     - field_hs_publication_year
     - field_hs_publication_type
-    - field_publication_citation
+    - field_hs_publication_citation
     - field_hs_publication_link
     # - field_hs_publication_author
 migration_dependencies:

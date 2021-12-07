@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\hs_capx\Entity\CapxImporterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -107,6 +108,17 @@ class CapxImporterForm extends EntityForm {
       '#description' => $this->t('Enter the name(s) of the workgroup(s) you wish to import. Enter multiple organizations by separating them with a comma ",".<br>
         You can learn more about workgroups at Stanford, and get propernames for import, at the @workgroup.', ['@workgroup' => $workgroup_link->toString()]),
       '#default_value' => $importer->getWorkgroups(TRUE),
+    ];
+
+    $form['importWhat'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('What should be imported?'),
+      '#options' => [
+        CapxImporterInterface::IMPORT_PROFILES => $this->t('Profiles'),
+        CapxImporterInterface::IMPORT_PUBLICATIONS => $this->t('Publications'),
+        CapxImporterInterface::IMPORT_BOTH => $this->t('Profiles and Publications'),
+      ],
+      '#default_value' => $importer->importWhat(),
     ];
 
     $this->buildTaggingForm($form, $form_state);

@@ -166,7 +166,7 @@ class Capx {
     if ($children) {
       $url .= '&includeChildren=true';
     }
-    return $url;
+    return $url . '&filter=publications.featured:equals:true';
   }
 
   /**
@@ -180,7 +180,7 @@ class Capx {
    */
   public static function getWorkgroupUrl($workgroups) {
     $workgroups = preg_replace('/[^A-Z,:\-_]/', '', strtoupper($workgroups));
-    return self::CAP_URL . "?privGroups=$workgroups";
+    return self::CAP_URL . "?privGroups=$workgroups&filter=publications.featured:equals:true";
   }
 
   /**

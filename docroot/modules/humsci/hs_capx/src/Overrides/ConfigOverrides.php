@@ -58,9 +58,12 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   public function loadOverrides($names) {
     $overrides = [];
-    $configs_to_override = $this->overrideTheseConfigs($names);
-    if (empty($configs_to_override)) {
-      return [];
+    $migration_groups = [
+      'migrate_plus.migration_group.hs_capx',
+      'migrate_plus.migration_group.hs_capx_publications',
+    ];
+    if (!array_intersect($names, $migration_groups)) {
+      return $overrides;
     }
 
     $config = $this->configFactory->get('hs_capx.settings');
@@ -69,55 +72,41 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       $password = $key->getKeyValue();
     }
 
-    // Set the migration urls and client credentials from the user entered
-    // data.
-    foreach ($configs_to_override as $config_name => $needs_fields) {
-      $overrides[$config_name] = [
-        'source' => [
-          'authentication' => [
-            'client_id' => $config->get('username'),
-            'client_secret' => $password,
-            'plugin' => $password ? 'oauth2' : '',
+    if (in_array('migrate_plus.migration_group.hs_capx', $names)) {
+      $overrides['migrate_plus.migration_group.hs_capx'] = [
+        'shared_configuration' => [
+          'source' => [
+            'authentication' => [
+              'client_id' => $config->get('username'),
+              'client_secret' => $password,
+              'plugin' => $password ? 'oauth2' : '',
+            ],
+            'orphan_action' => $config->get('orphan_action'),
+            'urls' => $this->getCapxUrls(),
           ],
-          'orphan_action' => $config->get('orphan_action'),
-          'urls' => $this->getCapxUrls(),
+          'process' => $this->getFieldOverrides(),
         ],
       ];
+    }
 
-      if ($needs_fields) {
-        // Add tagging for profiles.
-        $overrides[$config_name] += $this->getFieldOverrides();
-      }
+    if (in_array('migrate_plus.migration_group.hs_capx_publications', $names)) {
+      $overrides['migrate_plus.migration_group.hs_capx_publications'] = [
+        'shared_configuration' => [
+          'source' => [
+            'authentication' => [
+              'client_id' => $config->get('username'),
+              'client_secret' => $password,
+              'plugin' => $password ? 'oauth2' : '',
+            ],
+            'orphan_action' => $config->get('orphan_action'),
+            'urls' => $this->getCapxUrls(TRUE),
+          ],
+          'process' => $this->getFieldOverrides(),
+        ],
+      ];
     }
 
     return $overrides;
-  }
-
-  /**
-   * Get the migration config names that need to be overridden.
-   *
-   * @param array $names
-   *   Array of config names.
-   *
-   * @return array
-   *   Keyed array of configs names with the values if the config is for nodes.
-   */
-  protected function overrideTheseConfigs(array $names = []) {
-    $configs_to_override = [];
-    foreach ($names as $name) {
-      if (strpos($name, 'migrate_plus.migration.') !== FALSE) {
-        $migration_group = $this->configFactory->getEditable($name)
-          ->getOriginal('migration_group', FALSE);
-
-        if ($migration_group == 'hs_capx') {
-          $migrate_destination = $this->configFactory->getEditable($name)
-            ->getOriginal('destination.plugin', FALSE);
-
-          $configs_to_override[$name] = $migrate_destination == 'entity_reference_revisions:node';
-        }
-      }
-    }
-    return $configs_to_override;
   }
 
   /**
@@ -126,12 +115,17 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @return array
    *   List of CAPx Urls.
    */
-  protected function getCapxUrls() {
+  protected function getCapxUrls($publications = FALSE) {
     $urls = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($this->importers as $importer) {
-      $urls = array_merge($urls, $importer->getCapxUrls());
+      if ($publications && $importer->importPublications()) {
+        $urls = array_merge($urls, $importer->getCapxUrls());
+      }
+      if (!$publications && $importer->importProfiles()) {
+        $urls = array_merge($urls, $importer->getCapxUrls());
+      }
     }
     $urls = array_filter(array_unique($urls));
 
@@ -147,19 +141,19 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Keyed array of importer overrides.
    */
   protected function getFieldOverrides() {
-    $overrides = [];
+    $processes = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($this->importers as $importer) {
       foreach (array_keys($importer->getFieldTags()) as $field_name) {
-        $overrides['process'][$field_name] = [
+        $processes[$field_name] = [
           [
             'plugin' => 'capx_tagging',
           ],
         ];
       }
     }
-    return $overrides;
+    return $processes;
   }
 
   /**

@@ -118,6 +118,9 @@ process:
   # pub_author:
   #   -
   #     plugin: migration_lookup
+  #     migration: hs_capx
+  #     no_stub: true
+  #     source: sunetid
   pub_author_node:
     -
       plugin: entity_lookup
@@ -138,6 +141,7 @@ process:
       ignore_case: true
       values:
         field_hs_publication_author/target_id: '@pub_author_node'
+        # field_hs_publication_author/target_id:
           # -
           #   plugin:  null_coalesce
           #   source:

@@ -53,7 +53,7 @@ class HSPubJson extends DataParserPluginBase implements ContainerFactoryPluginIn
     // profile data points into each publication.
     $publications_data = [];
     foreach($source_data['values'] as $capx_profile) {
-      if($capx_profile['publications']) {
+      if(isset($capx_profile['publications'])) {
         foreach($capx_profile['publications'] as $publication) {
           $publication_tmp = $publication;
           if(isset($capx_profile['uid'])) {

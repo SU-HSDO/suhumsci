@@ -35,7 +35,7 @@ source:
     -
       name: first_published
       label: 'First Published'
-      selector: firstPublished.value
+      selector: firstPublished/value
     -
       name: publication_type
       label: 'Publication Type'
@@ -66,6 +66,14 @@ source:
 process:
   type: constants/type
   status: constants/status
+  revision_timestamp:
+    -
+      plugin: callback
+      callable: _stanford_migrate_get_time
+  revision_translation_affected:
+    -
+      plugin: default_value
+      default_value: 1
   title:
     -
       plugin: substr
@@ -95,17 +103,17 @@ process:
       ignore_case: true
   field_hs_publication_citation/value: apa_citation
   field_hs_publication_citation/format: constants/minimal_html
-  # publication_uri:
-  #   -
-  #     plugin: null_coalesce
-  #     source:
-  #       - doi_url
-  #       - ws_url
-  # field_hs_publication_link/uri:
-  #   -
-  #     plugin: skip_on_empty
-  #     method: process
-  #     source: '@publication_uri'
+  publication_uri:
+    -
+      plugin: null_coalesce
+      source:
+        - doi_url
+        - ws_url
+  field_hs_publication_link/uri:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@publication_uri'
   field_hs_publication_link/title: constants/publication_link_title
   # pub_author:
   #   -
@@ -135,33 +143,14 @@ process:
           #   source:
           #     - '@pub_author'
           #     - '@pub_author_node'
-  # field_hs_publication_author/target_id:
-  #   -
-  #     plugin: entity_generate_no_lookup
-  #     source: display_name
-  #     value_key: title
-  #     bundle_key: bundle
-  #     bundle: publication_author
-  #     entity_type: publications_collections
-  #     ignore_case: true
-  #     values:
-  #       field_hs_publication_author/target_id:
-  #         -
-  #           plugin: entity_lookup
-  #           source: display_name
-  #           value_key: title
-  #           bundle_key: bundle
-  #           bundle: hs_person
-  #           entity_type: node
-  #           ignore_case: true
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
   force_revision: true
   overwrite_properties:
     - title
-    # - revision_timestamp
-    # - revision_translation_affected
+    - revision_timestamp
+    - revision_translation_affected
     - type
     - field_hs_publication_year
     - field_hs_publication_type

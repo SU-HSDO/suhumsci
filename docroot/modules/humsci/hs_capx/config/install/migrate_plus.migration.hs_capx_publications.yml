@@ -16,13 +16,13 @@ label: 'H&S CAPx Publications Importer'
 source:
   plugin: url
   data_parser_plugin: hspubjson
+  item_selector: null
   constants:
     status: 1
     type: hs_publications
     minimal_html: minimal_html
     publication_link_title: 'Publication Link'
   urls: { }
-  item_selector: $..publications[*]
   fields:
     -
       name: publication_id
@@ -52,14 +52,14 @@ source:
       name: ws_url
       label: 'Web of Science URL'
       selector: webOfScienceUrl
-    # -
-    #   name: sunetid
-    #   label: sunetid
-    #   selector: ../uid
-    # -
-    #   name: profile_id
-    #   label: 'Profile ID'
-    #   selector: ../profileId
+    -
+      name: sunetid
+      label: sunetid
+      selector: uid
+    -
+      name: display_name
+      label: 'Display Name'
+      selector: displayName
   ids:
     publication_id:
       type: string
@@ -107,7 +107,53 @@ process:
   #     method: process
   #     source: '@publication_uri'
   field_hs_publication_link/title: constants/publication_link_title
-  # field_hs_publication_author: author
+  # pub_author:
+  #   -
+  #     plugin: migration_lookup
+  pub_author_node:
+    -
+      plugin: entity_lookup
+      source: display_name
+      value_key: title
+      bundle_key: type
+      bundle: hs_person
+      entity_type: node
+      ignore_case: true
+  field_hs_publication_author/target_id:
+    -
+      plugin: entity_generate_no_lookup
+      source: display_name
+      value_key: title
+      bundle_key: type
+      bundle: publication_author
+      entity_type: publications_collections
+      ignore_case: true
+      values:
+        field_hs_publication_author/target_id: '@pub_author_node'
+          # -
+          #   plugin:  null_coalesce
+          #   source:
+          #     - '@pub_author'
+          #     - '@pub_author_node'
+  # field_hs_publication_author/target_id:
+  #   -
+  #     plugin: entity_generate_no_lookup
+  #     source: display_name
+  #     value_key: title
+  #     bundle_key: bundle
+  #     bundle: publication_author
+  #     entity_type: publications_collections
+  #     ignore_case: true
+  #     values:
+  #       field_hs_publication_author/target_id:
+  #         -
+  #           plugin: entity_lookup
+  #           source: display_name
+  #           value_key: title
+  #           bundle_key: bundle
+  #           bundle: hs_person
+  #           entity_type: node
+  #           ignore_case: true
 destination:
   plugin: 'entity_reference_revisions:node'
   new_revisions: true
@@ -121,6 +167,6 @@ destination:
     - field_hs_publication_type
     - field_hs_publication_citation
     - field_hs_publication_link
-    # - field_hs_publication_author
+    - field_hs_publication_author
 migration_dependencies:
   required: {  }

@@ -36,6 +36,10 @@ class HsHooksCommands extends BltTasks {
       preg_match('/sites\/(.*)\.site\.yml/', $site_file, $matches);
       $site_name = $matches[1];
 
+      if ($site_name == 'mrc') {
+        continue;
+      }
+
       $multisites[] = $site_name;
       if (count($alias) != count($default_alias)) {
         foreach ($default_alias as $environment => $env_alias) {

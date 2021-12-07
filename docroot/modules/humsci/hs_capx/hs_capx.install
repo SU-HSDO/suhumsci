@@ -144,3 +144,13 @@ function hs_capx_update_8003() {
       ->save();
   }
 }
+
+/**
+ * Disable migrations in config and rely on overrides.
+ */
+function hs_capx_update_8004() {
+  \Drupal::configFactory()
+    ->getEditable('migrate_plus.migration.hs_capx')
+    ->set('status', FALSE)
+    ->save();
+}

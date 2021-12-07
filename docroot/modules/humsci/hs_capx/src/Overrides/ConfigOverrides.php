@@ -62,6 +62,21 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       'migrate_plus.migration_group.hs_capx',
       'migrate_plus.migration_group.hs_capx_publications',
     ];
+
+    foreach ($names as $name) {
+      if (substr($name, 0, 23) == 'migrate_plus.migration.') {
+        $migration_group = 'migrate_plus.migration_group.';
+        $migration_group .= $this->configFactory->getEditable($name)
+          ->getOriginal('migration_group', FALSE);
+
+        if (in_array($migration_group, $migration_groups)) {
+          $urls = $this->configFactory->get($migration_group)
+            ->get('shared_configuration.source.urls');
+          $overrides[$name]['status'] = !empty($urls);
+        }
+      }
+    }
+
     if (!array_intersect($names, $migration_groups)) {
       return $overrides;
     }
@@ -73,16 +88,18 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
 
     if (in_array('migrate_plus.migration_group.hs_capx', $names)) {
+      $urls = $this->getCapxUrls();
       $overrides['migrate_plus.migration_group.hs_capx'] = [
+        'status' => !empty($urls),
         'shared_configuration' => [
           'source' => [
             'authentication' => [
               'client_id' => $config->get('username'),
               'client_secret' => $password,
-              'plugin' => $password ? 'oauth2' : '',
+              'plugin' => !empty($urls) && $password ? 'oauth2' : '',
             ],
             'orphan_action' => $config->get('orphan_action'),
-            'urls' => $this->getCapxUrls(),
+            'urls' => $urls,
           ],
           'process' => $this->getFieldOverrides(),
         ],
@@ -90,29 +107,31 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
 
     if (in_array('migrate_plus.migration_group.hs_capx_publications', $names)) {
+      $urls = $this->getCapxUrls(TRUE);
       $overrides['migrate_plus.migration_group.hs_capx_publications'] = [
+        'status' => !empty($urls),
         'shared_configuration' => [
           'source' => [
             'authentication' => [
               'client_id' => $config->get('username'),
               'client_secret' => $password,
-              'plugin' => $password ? 'oauth2' : '',
+              'plugin' => !empty($urls) && $password  ? 'oauth2' : '',
             ],
             'orphan_action' => $config->get('orphan_action'),
-            'urls' => $this->getCapxUrls(TRUE),
+            'urls' => $urls,
           ],
           'process' => $this->getFieldOverrides(),
         ],
       ];
-    }
 
+    }
     return $overrides;
   }
 
   /**
    * Get the appropriate CAPx urls.
    *
-   * @return array
+   * @return string[]
    *   List of CAPx Urls.
    */
   protected function getCapxUrls($publications = FALSE) {
@@ -127,11 +146,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         $urls = array_merge($urls, $importer->getCapxUrls());
       }
     }
-    $urls = array_filter(array_unique($urls));
-
-    // If no workgroups or organizations are configured, use a dummy url with no
-    // data to prevent unwanted error messages.
-    return $urls ?: ['http://ip.jsontest.com'];
+    return array_filter(array_unique($urls));
   }
 
   /**

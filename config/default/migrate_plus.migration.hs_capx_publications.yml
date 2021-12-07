@@ -7,18 +7,18 @@ class: null
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags: {  }
-migration_group: hs_capx
+migration_group: hs_capx_publications
 label: 'H&S CAPx Publications Importer'
 source:
   plugin: url
   data_parser_plugin: hspubjson
-  item_selector: null
+  item_selector: values
   constants:
     status: 1
     type: hs_publications
     minimal_html: minimal_html
     publication_link_title: 'Publication Link'
-  urls: { }
+  urls: {  }
   fields:
     -
       name: publication_id
@@ -26,7 +26,7 @@ source:
       selector: publicationId
     -
       name: title
-      label: 'Title'
+      label: Title
       selector: title
     -
       name: first_published
@@ -62,14 +62,6 @@ source:
 process:
   type: constants/type
   status: constants/status
-  revision_timestamp:
-    -
-      plugin: callback
-      callable: _stanford_migrate_get_time
-  revision_translation_affected:
-    -
-      plugin: default_value
-      default_value: 1
   title:
     -
       plugin: substr
@@ -99,59 +91,49 @@ process:
       ignore_case: true
   field_hs_publication_citation/value: apa_citation
   field_hs_publication_citation/format: constants/minimal_html
-  publication_uri:
+  field_hs_publication_link/uri:
     -
       plugin: null_coalesce
       source:
         - doi_url
         - ws_url
-  field_hs_publication_link/uri:
+  field_hs_publication_link/title: constants/publication_link_title
+  pub_author:
+    -
+      plugin: migration_lookup
+      migration: hs_capx
+      source: sunetid
     -
       plugin: skip_on_empty
       method: process
-      source: '@publication_uri'
-  field_hs_publication_link/title: constants/publication_link_title
-  # pub_author:
-  #   -
-  #     plugin: migration_lookup
-  #     migration: hs_capx
-  #     no_stub: true
-  #     source: sunetid
-  pub_author_node:
     -
-      plugin: entity_lookup
-      source: display_name
-      value_key: title
-      bundle_key: type
-      bundle: hs_person
-      entity_type: node
-      ignore_case: true
+      plugin: extract
+      index:
+        - nid
+  pub_author_lookup:
+    plugin: entity_lookup
+    source: display_name
+    value_key: title
+    bundle_key: type
+    bundle: hs_person
+    entity_type: node
+    ignore_case: true
+  pub_author_id:
+    plugin: null_coalesce
+    source:
+      - '@pub_author'
+      - '@pub_author_lookup'
   field_hs_publication_author/target_id:
-    -
-      plugin: entity_generate_no_lookup
-      source: display_name
-      value_key: title
-      bundle_key: type
-      bundle: publication_author
-      entity_type: publications_collections
-      ignore_case: true
-      values:
-        field_hs_publication_author/target_id:
-          plugin:  null_coalesce
-          source:
-            - '@pub_author'
-            - '@pub_author_node'
+    plugin: entity_generate_no_lookup
+    source: display_name
+    value_key: title
+    bundle_key: type
+    bundle: publication_author
+    entity_type: publications_collections
+    ignore_case: true
+    values:
+      field_hs_publication_author/target_id: '@pub_author_id'
 destination:
   plugin: 'entity:node'
-  overwrite_properties:
-    - title
-    - revision_timestamp
-    - revision_translation_affected
-    - type
-    - field_hs_publication_year
-    - field_hs_publication_type
-    - field_hs_publication_citation
-    - field_hs_publication_link
-    - field_hs_publication_author
 migration_dependencies:
   required: {  }

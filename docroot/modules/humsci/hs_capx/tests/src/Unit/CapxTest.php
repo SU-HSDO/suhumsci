@@ -92,7 +92,7 @@ class CapxTest extends UnitTestCase {
     $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?privGroups=TEST:GROUP&filter=publications.featured:equals:true', $url);
 
     $url = Capx::getOrganizationUrl('test', TRUE);
-    $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?orgCodes=TEST&includeChildren=true', $url);
+    $this->assertEquals('https://cap.stanford.edu/cap-api/api/profiles/v1?orgCodes=TEST&includeChildren=true&filter=publications.featured:equals:true', $url);
   }
 
   /**

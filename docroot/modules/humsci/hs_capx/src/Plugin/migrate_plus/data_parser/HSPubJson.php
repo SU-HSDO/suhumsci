@@ -15,16 +15,7 @@ use Drupal\migrate_plus\Plugin\migrate_plus\data_parser\Json;
 class HSPubJson extends Json {
 
   /**
-   * Retrieves the JSON data and returns it as an array.
-   *
-   * @param string $url
-   *   URL of a JSON feed.
-   *
-   * @return array
-   *   The selected data to be iterated.
-   *
-   * @throws \GuzzleHttp\Exception\RequestException
-   * @throws \Flow\JSONPath\JSONPathException
+   * {@inheritDoc}
    */
   protected function getSourceData($url) {
     $source_data = parent::getSourceData($url);
@@ -35,7 +26,7 @@ class HSPubJson extends Json {
         unset($main_data['publications']);
 
         foreach ($item['publications'] as $publication) {
-          $modified_data[] = $main_data += $publication;
+          $modified_data[] = $main_data + $publication;
         }
       }
     }

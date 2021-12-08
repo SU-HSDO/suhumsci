@@ -1,3 +1,3 @@
-import '../shared/index.js';
+import '../shared/index';
 
-//Add Traditional specific JS below
+// Add Traditional specific JS below

@@ -58,9 +58,27 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   public function loadOverrides($names) {
     $overrides = [];
-    $configs_to_override = $this->overrideTheseConfigs($names);
-    if (empty($configs_to_override)) {
-      return [];
+    $migration_groups = [
+      'migrate_plus.migration_group.hs_capx',
+      'migrate_plus.migration_group.hs_capx_publications',
+    ];
+
+    foreach ($names as $name) {
+      if (substr($name, 0, 23) == 'migrate_plus.migration.') {
+        $migration_group = 'migrate_plus.migration_group.';
+        $migration_group .= $this->configFactory->getEditable($name)
+          ->getOriginal('migration_group', FALSE);
+
+        if (in_array($migration_group, $migration_groups)) {
+          $urls = $this->configFactory->get($migration_group)
+            ->get('shared_configuration.source.urls');
+          $overrides[$name]['status'] = !empty($urls);
+        }
+      }
+    }
+
+    if (!array_intersect($names, $migration_groups)) {
+      return $overrides;
     }
 
     $config = $this->configFactory->get('hs_capx.settings');
@@ -69,75 +87,66 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       $password = $key->getKeyValue();
     }
 
-    // Set the migration urls and client credentials from the user entered
-    // data.
-    foreach ($configs_to_override as $config_name => $needs_fields) {
-      $overrides[$config_name] = [
-        'source' => [
-          'authentication' => [
-            'client_id' => $config->get('username'),
-            'client_secret' => $password,
-            'plugin' => $password ? 'oauth2' : '',
+    if (in_array('migrate_plus.migration_group.hs_capx', $names)) {
+      $urls = $this->getCapxUrls();
+      $overrides['migrate_plus.migration_group.hs_capx'] = [
+        'status' => !empty($urls),
+        'shared_configuration' => [
+          'source' => [
+            'authentication' => [
+              'client_id' => $config->get('username'),
+              'client_secret' => $password,
+              'plugin' => !empty($urls) && $password ? 'oauth2' : '',
+            ],
+            'orphan_action' => $config->get('orphan_action'),
+            'urls' => $urls,
           ],
-          'orphan_action' => $config->get('orphan_action'),
-          'urls' => $this->getCapxUrls(),
+          'process' => $this->getFieldOverrides(),
+        ],
+      ];
+    }
+
+    if (in_array('migrate_plus.migration_group.hs_capx_publications', $names)) {
+      $urls = $this->getCapxUrls(TRUE);
+      $overrides['migrate_plus.migration_group.hs_capx_publications'] = [
+        'status' => !empty($urls),
+        'shared_configuration' => [
+          'source' => [
+            'authentication' => [
+              'client_id' => $config->get('username'),
+              'client_secret' => $password,
+              'plugin' => !empty($urls) && $password  ? 'oauth2' : '',
+            ],
+            'orphan_action' => $config->get('orphan_action'),
+            'urls' => $urls,
+          ],
+          'process' => $this->getFieldOverrides(),
         ],
       ];
 
-      if ($needs_fields) {
-        // Add tagging for profiles.
-        $overrides[$config_name] += $this->getFieldOverrides();
-      }
     }
-
     return $overrides;
-  }
-
-  /**
-   * Get the migration config names that need to be overridden.
-   *
-   * @param array $names
-   *   Array of config names.
-   *
-   * @return array
-   *   Keyed array of configs names with the values if the config is for nodes.
-   */
-  protected function overrideTheseConfigs(array $names = []) {
-    $configs_to_override = [];
-    foreach ($names as $name) {
-      if (strpos($name, 'migrate_plus.migration.') !== FALSE) {
-        $migration_group = $this->configFactory->getEditable($name)
-          ->getOriginal('migration_group', FALSE);
-
-        if ($migration_group == 'hs_capx') {
-          $migrate_destination = $this->configFactory->getEditable($name)
-            ->getOriginal('destination.plugin', FALSE);
-
-          $configs_to_override[$name] = $migrate_destination == 'entity_reference_revisions:node';
-        }
-      }
-    }
-    return $configs_to_override;
   }
 
   /**
    * Get the appropriate CAPx urls.
    *
-   * @return array
+   * @return string[]
    *   List of CAPx Urls.
    */
-  protected function getCapxUrls() {
+  protected function getCapxUrls($publications = FALSE) {
     $urls = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($this->importers as $importer) {
-      $urls = array_merge($urls, $importer->getCapxUrls());
+      if ($publications && $importer->importPublications()) {
+        $urls = array_merge($urls, $importer->getCapxUrls());
+      }
+      if (!$publications && $importer->importProfiles()) {
+        $urls = array_merge($urls, $importer->getCapxUrls());
+      }
     }
-    $urls = array_filter(array_unique($urls));
-
-    // If no workgroups or organizations are configured, use a dummy url with no
-    // data to prevent unwanted error messages.
-    return $urls ?: ['http://ip.jsontest.com'];
+    return array_filter(array_unique($urls));
   }
 
   /**
@@ -147,19 +156,19 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *   Keyed array of importer overrides.
    */
   protected function getFieldOverrides() {
-    $overrides = [];
+    $processes = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($this->importers as $importer) {
       foreach (array_keys($importer->getFieldTags()) as $field_name) {
-        $overrides['process'][$field_name] = [
+        $processes[$field_name] = [
           [
             'plugin' => 'capx_tagging',
           ],
         ];
       }
     }
-    return $overrides;
+    return $processes;
   }
 
   /**

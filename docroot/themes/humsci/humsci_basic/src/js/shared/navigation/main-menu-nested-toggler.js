@@ -3,13 +3,13 @@ import togglerHandler from './toggler-handler';
 
 const togglers = document.querySelectorAll('.hb-nested-toggler');
 const mobileNavBreakpoint = 992;
-let windowWidth = window.innerWidth;
 
 if (togglers) {
   for (let i = 0; i < togglers.length; i += 1) {
+    let windowWidth = window.innerWidth;
     const toggler = togglers[i];
     const togglerID = toggler.getAttribute('id');
-    const togglerContent = document.querySelector("[aria-labelledby=\"".concat(togglerID, "\"]"));
+    const togglerContent = document.querySelector('[aria-labelledby="'.concat(togglerID, '"]'));
     const togglerParent = toggler.parentNode;
 
     // Togglers should always have content but in the event that they don't we
@@ -30,7 +30,7 @@ if (togglers) {
 
       e.preventDefault();
 
-      const isExpanded = e.target.getAttribute('aria-expanded') === "true";
+      const isExpanded = e.target.getAttribute('aria-expanded') === 'true';
       changeNav(toggler, togglerContent, !isExpanded);
     });
 
@@ -50,7 +50,7 @@ if (togglers) {
     // on the body, outside of the toggler component:
     // 1. (focusin) When tabbing through the navigation the previously opened dropdown closes
     // 2. (click) When clicking outside of the dropdown area it will close
-    ["focusin", "click"].forEach(function(event) {
+    ['focusin', 'click'].forEach((event) => {
       document.body.addEventListener(event, (e) => {
         if (windowWidth >= mobileNavBreakpoint && !togglerParent.contains(e.target)) {
           changeNav(toggler, togglerContent, false);

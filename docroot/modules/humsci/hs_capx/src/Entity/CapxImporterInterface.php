@@ -9,6 +9,12 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface CapxImporterInterface extends ConfigEntityInterface {
 
+  const IMPORT_PROFILES = 0;
+
+  const IMPORT_PUBLICATIONS = 1;
+
+  const IMPORT_BOTH = 2;
+
   /**
    * Get all workgroups as a string or as an array.
    *
@@ -58,5 +64,26 @@ interface CapxImporterInterface extends ConfigEntityInterface {
    *   keyed array of field names and their terms
    */
   public function getFieldTags($field_name = NULL);
+
+  /**
+   * Import profiles, publications, or both.
+   *
+   * @return int
+   */
+  public function importWhat();
+
+  /**
+   * If the importer should import profiles.
+   *
+   * @return bool
+   */
+  public function importProfiles();
+
+  /**
+   * If the importer should import Publications.
+   *
+   * @return bool
+   */
+  public function importPublications();
 
 }

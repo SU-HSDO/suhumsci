@@ -1,14 +1,13 @@
 // account for different ways in which a table heading may be declared
-const div = "div.hb-table-pattern__header > div.hb-table-pattern__row > div";
-const span = "div.hb-table-pattern__header > div.hb-table-pattern__row > span";
-const paragraph = "div.hb-table-pattern__header > div.hb-table-pattern__row > p";
+const div = 'div.hb-table-pattern__header > div.hb-table-pattern__row > div';
+const span = 'div.hb-table-pattern__header > div.hb-table-pattern__row > span';
+const paragraph = 'div.hb-table-pattern__header > div.hb-table-pattern__row > p';
 
 // retrieve table column headings
 const columnHeaders = document.querySelectorAll(`${div}, ${span}, ${paragraph}`);
 
 // retrieve all rows
 const tableRows = document.querySelectorAll('.hb-table-row');
-
 
 if (tableRows) {
   // For each row in the table

@@ -3,28 +3,27 @@
 const equalHeightGrid = (elements) => {
   if (elements.length > 0) {
     // Create array with all of the heights of each element
-    const elementHeights = Array.prototype.map.call(elements, (el) => {
-      return el.scrollHeight;
-    });
+    const elementHeights = Array.prototype.map.call(elements, (el) => el.scrollHeight);
 
     // Create array with _unique_ height values
-    const uniqueHeights = elementHeights.filter((height, index, array) => {
-      return array.indexOf(height) == index;
-    });
+    // const uniqueHeights = elementHeights.filter((height, index, array) => {
+    //   return array.indexOf(height) == index;
+    // });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const maxHeight = Math.max.apply(null, elementHeights);
       const tallestElementIndex = elementHeights.indexOf(maxHeight);
 
       Array.prototype.forEach.call(elements, (el, index) => {
         // Ignore the tallest element as it is already set to the right height
-        if (index != tallestElementIndex) {
-          el.style.minHeight =`${maxHeight}px`;
+        if (index !== tallestElementIndex) {
+          const element = el;
+          element.style.minHeight = `${maxHeight}px`;
         }
       });
-    resolve();
+      resolve();
     });
   }
-}
+};
 
 export default equalHeightGrid;

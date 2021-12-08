@@ -1,3 +1,3 @@
-import '../shared/index.js';
+import '../shared/index';
 
-//Add Colorful and Airy specific JS below
+// Add Colorful and Airy specific JS below

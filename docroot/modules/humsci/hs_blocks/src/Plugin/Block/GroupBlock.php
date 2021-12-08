@@ -120,6 +120,11 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
+    // When in the preview page, allow access to the block.
+    if ((bool) $this->getSectionStorage()) {
+      return parent::blockAccess($account);
+    }
+
     $components = $this->getComponents();
     // This prevents the block label from displaying if there are no contents.
     if (empty(render($components))) {
@@ -271,6 +276,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         return $delta;
       }
     }
+    // If it can't be found for some reason, put it at the bottom.
+    return 999;
   }
 
   /**

@@ -19,17 +19,17 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    enable_defaults: true
+    enabled: true
     allow_custom: false
     sections:
       -
         layout_id: three_column_w_image
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
           image_float: align-right
-          context_mapping: {  }
         components:
           0c07d3f0-676a-4530-b347-41947c253714:
             uuid: 0c07d3f0-676a-4530-b347-41947c253714
@@ -37,11 +37,13 @@ third_party_settings:
             configuration:
               id: 'field_block:node:hs_news:title'
               label: Title
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_title_heading
+                label: hidden
                 settings:
                   tag: h1
                 third_party_settings:
@@ -49,41 +51,42 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 3
+            additional: {  }
           7ec8a376-e2a8-46b7-9f7c-f1096441c99d:
             uuid: 7ec8a376-e2a8-46b7-9f7c-f1096441c99d
             region: left_sidebar
             configuration:
               id: 'menu_block:main'
               label: 'Main navigation'
-              provider: menu_block
               label_display: visible
+              provider: menu_block
+              context_mapping: {  }
               follow: false
               follow_parent: active
+              label_link: true
+              label_type: root
               level: 2
               depth: 0
               expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
-              label_type: root
-              label_link: true
-              context_mapping: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           3151ac86-7777-4bbc-bc4b-00955b258975:
             uuid: 3151ac86-7777-4bbc-bc4b-00955b258975
             region: top
             configuration:
               id: 'field_block:node:hs_news:field_hs_news_categories'
               label: Categories
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: hidden
                 type: entity_reference_label
+                label: hidden
                 settings:
                   link: true
                 third_party_settings:
@@ -93,19 +96,18 @@ third_party_settings:
                     ds_limit: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 2
+            additional: {  }
           2a6d13fe-c5ce-46cb-9dc4-cb631d14387d:
             uuid: 2a6d13fe-c5ce-46cb-9dc4-cb631d14387d
             region: main_above
             configuration:
               id: 'group_block:node'
               label: 'Group Block: Content'
-              provider: hs_blocks
               label_display: '0'
+              provider: hs_blocks
+              context_mapping:
+                entity: layout_builder.entity
               children:
                 0c0ca024-c441-4bfb-a278-a8ff23dc6815:
                   id: 'field_block:node:hs_news:field_hs_news_date'
@@ -149,68 +151,69 @@ third_party_settings:
                     entity: layout_builder.entity
                     view_mode: view_mode
               class: 'hb-inline-pipe hb-borderless'
-              context_mapping:
-                entity: layout_builder.entity
               uuid: 2a6d13fe-c5ce-46cb-9dc4-cb631d14387d
-            additional: {  }
             weight: 4
+            additional: {  }
           0e55d440-653b-4d7a-839a-bf2825744abf:
             uuid: 0e55d440-653b-4d7a-839a-bf2825744abf
             region: main_above
             configuration:
               id: 'field_block:node:hs_news:field_hs_news_image'
               label: 'News Image'
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: hidden
                 type: media_image_formatter
+                label: hidden
                 settings:
                   view_mode: caption_credit
-                  image_style: hs_medium_scaled_360px
                   link: false
+                  image_style: hs_medium_scaled_360px
                 third_party_settings:
                   field_formatter_class:
                     class: hb-main-body-detail-image
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 1
+            additional: {  }
           b07fee82-5c0b-432e-8d5f-81e85a63394d:
             uuid: b07fee82-5c0b-432e-8d5f-81e85a63394d
             region: main_above
             configuration:
               id: 'field_block:node:hs_news:body'
               label: Body
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: text_default
+                label: hidden
                 settings: {  }
                 third_party_settings:
                   field_formatter_class:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 6
+            additional: {  }
           4c9684dc-dad3-478e-b88b-843ded98a738:
             uuid: 4c9684dc-dad3-478e-b88b-843ded98a738
             region: main_above
             configuration:
               id: 'field_block:node:hs_news:field_news_byline'
               label: By
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: inline
                 type: string
+                label: inline
                 settings:
                   link_to_entity: false
                 third_party_settings:
@@ -218,31 +221,28 @@ third_party_settings:
                     class: 'hb-descriptor hb-highlighted-label'
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 5
+            additional: {  }
         third_party_settings: {  }
-    enabled: true
+    enable_defaults: true
 id: node.hs_news.default
 targetEntityType: node
 bundle: hs_news
 mode: default
 content:
   field_news_byline:
-    weight: 101
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 101
     region: main_above
   links:
-    weight: 100
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 100
+    region: content
 hidden:
   body: true
   field_hs_news_categories: true

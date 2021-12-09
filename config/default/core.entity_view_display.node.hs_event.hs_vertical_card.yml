@@ -83,14 +83,7 @@ mode: hs_vertical_card
 content:
   field_hs_event_date:
     type: smartdatetime_hs
-    weight: 1
-    region: month
     label: hidden
-    third_party_settings:
-      field_formatter_class:
-        class: ''
-      hs_field_helpers:
-        inline_contents: 0
     settings:
       display: start
       date_format: M
@@ -103,27 +96,34 @@ content:
       separator: ' - '
       join: ', '
       timezone: ''
-  field_hs_event_image:
-    type: media_responsive_image_formatter
-    weight: 0
-    region: image
-    label: hidden
-    settings:
-      view_mode: default
-      image_style: landscape_rectangle
-      link: true
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 1
+    region: month
+  field_hs_event_image:
+    type: media_responsive_image_formatter
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+      image_style: landscape_rectangle
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: image
   field_hs_event_location:
     type: basic_string
-    weight: 4
-    region: location
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 4
+    region: location
 hidden:
   body: true
   field_conference_session: true

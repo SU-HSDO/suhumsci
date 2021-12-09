@@ -56,31 +56,29 @@ mode: hs_horizontal_card
 content:
   body:
     type: smart_trim
-    weight: 5
-    region: description
     label: hidden
     settings:
       trim_length: 100
       trim_type: chars
       trim_suffix: ''
+      wrap_output: false
       wrap_class: trimmed
-      more_text: More
+      more_link: false
       more_class: more-link
+      more_text: More
       summary_handler: trim
       trim_options:
         text: true
         trim_zero: false
-      wrap_output: false
-      more_link: false
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 5
+    region: description
   field_hs_news_date:
     type: datetime_default
-    weight: 2
-    region: time
     label: hidden
     settings:
       timezone_override: ''
@@ -90,32 +88,34 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 2
+    region: time
   field_hs_news_image:
     type: media_image_formatter
-    weight: 1
-    region: image
     label: hidden
     settings:
       view_mode: default
-      image_style: hs_small_square_200x200
       link: true
+      image_style: hs_small_square_200x200
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 1
+    region: image
   field_hs_news_link:
     type: link
-    weight: 3
-    region: location
     label: hidden
     settings:
       trim_length: 80
-      rel: ''
-      target: ''
       url_only: false
       url_plain: false
+      rel: ''
+      target: ''
     third_party_settings: {  }
+    weight: 3
+    region: location
 hidden:
   field_hs_news_categories: true
   field_news_byline: true

@@ -1,7 +1,38 @@
 uuid: caa42067-aba2-4d13-84e5-5fb3e7e78d54
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_html
+    - filter.format.minimal_html
+    - media.type.file
+    - media.type.image
+    - media.type.video
+    - node.type.hs_basic_page
+    - node.type.hs_course
+    - node.type.hs_event
+    - node.type.hs_event_series
+    - node.type.hs_news
+    - node.type.hs_person
+    - node.type.hs_publications
+    - node.type.hs_research
+  module:
+    - block_content_permissions
+    - contextual
+    - dropzonejs
+    - eck
+    - entity_usage
+    - field_permissions
+    - filter
+    - media
+    - menu_admin_per_menu
+    - node
+    - paragraphs
+    - pathauto
+    - publishcontent
+    - rabbit_hole
+    - system
+    - toolbar
 id: contributor
 label: Contributor
 weight: 3
@@ -11,14 +42,8 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access entity usage statistics'
-  - 'access file_browser entity browser pages'
-  - 'access image_browser entity browser pages'
   - 'access media overview'
-  - 'access media_browser entity browser pages'
   - 'access toolbar'
-  - 'access video_browser entity browser pages'
-  - 'administer block settings for theme su_humsci_theme'
-  - 'administer blocks provided by block_content'
   - 'administer main menu items'
   - 'create event_collections entities'
   - 'create field_hs_flexible_row_style'
@@ -89,7 +114,6 @@ permissions:
   - 'view any course_collections entities'
   - 'view any event_collections entities'
   - 'view any publications_collections entities'
-  - 'view editoria11y checker'
   - 'view field_hs_flexible_row_style'
   - 'view field_paragraph_style'
   - 'view hs_basic_page revisions'

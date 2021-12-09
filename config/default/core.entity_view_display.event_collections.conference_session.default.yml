@@ -39,23 +39,23 @@ bundle: conference_session
 mode: default
 content:
   field_session_date_and_time:
-    weight: 1
+    type: smartdate_default
     label: hidden
     settings:
       timezone_override: ''
+      format_type: medium
       format: october_1_2021
       force_chronological: false
       add_classes: false
-      format_type: medium
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: smartdate_default
+    weight: 1
     region: description
   field_session_information:
-    weight: 2
+    type: text_summary_or_trimmed
     label: above
     settings:
       trim_length: 450
@@ -64,30 +64,30 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: text_summary_or_trimmed
+    weight: 2
     region: description
   field_session_location:
-    weight: 4
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 4
     region: content
   field_session_speakers:
-    weight: 3
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 3
     region: description
   title:
-    label: hidden
     type: string
-    weight: 0
-    region: title
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: title
 hidden:
   search_api_excerpt: true

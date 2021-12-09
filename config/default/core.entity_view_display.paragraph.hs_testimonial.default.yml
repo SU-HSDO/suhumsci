@@ -49,20 +49,20 @@ mode: default
 content:
   field_hs_testimonial_image:
     type: media_responsive_image_formatter
-    weight: 3
     label: hidden
     settings:
       view_mode: default
-      image_style: square
       link: false
+      image_style: square
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 3
     region: image
   field_hs_testimonial_link:
-    weight: 2
+    type: link
     label: hidden
     settings:
       trim_length: 80
@@ -75,30 +75,30 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: link
+    weight: 2
     region: link
   field_hs_testimonial_name:
-    weight: 0
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 0
     region: name
   field_hs_testimonial_position:
-    weight: 1
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: position
   field_hs_testimonial_quote:
-    weight: 4
+    type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 4
     region: quote
 hidden:
   field_hs_testimonial_quote_align: true

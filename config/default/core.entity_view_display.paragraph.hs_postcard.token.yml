@@ -45,7 +45,7 @@ bundle: hs_postcard
 mode: token
 content:
   field_hs_postcard_body:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings:
@@ -53,24 +53,24 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: text_default
+    weight: 2
     region: description
   field_hs_postcard_image:
     type: media_responsive_image_formatter
-    weight: 1
     label: hidden
     settings:
       view_mode: caption_credit
-      image_style: landscape_rectangle
       link: false
+      image_style: landscape_rectangle
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 1
     region: image
   field_hs_postcard_link:
-    weight: 3
+    type: linkit
     label: hidden
     settings:
       trim_length: null
@@ -82,15 +82,15 @@ content:
     third_party_settings:
       field_formatter_class:
         class: ''
-    type: linkit
+    weight: 3
     region: button
   field_hs_postcard_title:
-    weight: 0
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 0
     region: title
 hidden:
   field_hs_postcard_display: true

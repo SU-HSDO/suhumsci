@@ -84,15 +84,13 @@ mode: search_result
 content:
   field_hs_event_category:
     type: entity_reference_rss_category
-    weight: 5
-    region: category
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 5
+    region: category
   field_hs_event_date:
     type: daterange_default
-    weight: 2
-    region: date
     label: hidden
     settings:
       timezone_override: ''
@@ -103,12 +101,14 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 2
+    region: date
   field_hs_event_image:
     type: media_multimedia_formatter
-    weight: 1
-    region: image
     label: hidden
     settings:
+      view_mode: default
+      link: false
       image:
         image_formatter: image_style
         image_formatter_image_style: large
@@ -119,20 +119,18 @@ content:
         video_formatter_view_mode: default
       other:
         view_mode: default
-      view_mode: default
-      link: false
     third_party_settings: {  }
+    weight: 1
+    region: image
   field_hs_event_location:
     type: basic_string
-    weight: 4
-    region: location
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 4
+    region: location
   field_hs_event_speaker:
     type: entity_reference_label
-    weight: 6
-    region: speaker
     label: inline
     settings:
       link: false
@@ -143,11 +141,13 @@ content:
         ds_limit: ''
       hs_field_helpers:
         inline_contents: '1'
+    weight: 6
+    region: speaker
   search_api_excerpt:
-    weight: 7
-    region: description
     settings: {  }
     third_party_settings: {  }
+    weight: 7
+    region: description
 hidden:
   body: true
   field_conference_session: true

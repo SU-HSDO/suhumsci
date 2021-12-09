@@ -44,44 +44,44 @@ bundle: hs_gradient_hero
 mode: default
 content:
   field_hs_gradient_hero_body:
-    weight: 2
+    type: smart_trim
     label: hidden
     settings:
       trim_length: 200
       trim_type: chars
       trim_suffix: ''
-      wrap_class: trimmed
-      more_text: More
-      more_class: more-link
       wrap_output: false
+      wrap_class: trimmed
       more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
       trim_options:
         text: false
         trim_zero: false
-      summary_handler: full
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: smart_trim
+    weight: 2
     region: overlay_text
   field_hs_gradient_hero_image:
     type: media_responsive_image_formatter
-    weight: 0
     label: hidden
     settings:
       view_mode: caption_credit
-      image_style: hero_with_text
       link: false
+      image_style: hero_with_text
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 0
     region: image
   field_hs_gradient_hero_link:
-    weight: 3
+    type: link
     label: hidden
     settings:
       trim_length: 80
@@ -90,10 +90,10 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 3
     region: overlay_text
   field_hs_gradient_hero_title:
-    weight: 1
+    type: entity_title_heading
     label: hidden
     settings:
       tag: h2
@@ -102,7 +102,7 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: entity_title_heading
+    weight: 1
     region: overlay_text
 hidden:
   field_hs_gradient_hero_align: true

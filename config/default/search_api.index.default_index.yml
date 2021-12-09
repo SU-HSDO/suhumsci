@@ -2,12 +2,12 @@ uuid: 7bf9ca79-227b-4edb-91a4-725e33cf8640
 langcode: en
 status: true
 dependencies:
-  module:
-    - node
-    - search_api
   config:
     - search_api.server.default_server
     - core.entity_view_mode.node.search_index
+  module:
+    - node
+    - search_api
 id: default_index
 name: 'Default content index'
 description: 'Default content index created by the Database Search Defaults module'
@@ -90,17 +90,20 @@ processor_settings:
     weights:
       preprocess_index: -10
   highlight:
-    highlight: always
-    highlight_partial: false
+    weights:
+      postprocess_query: 0
+    prefix: '<strong>'
+    suffix: '</strong>'
     excerpt: true
     excerpt_length: 256
     exclude_fields:
       - title
-    prefix: '<strong>'
-    suffix: '</strong>'
-    weights:
-      postprocess_query: 0
+    highlight: always
+    highlight_partial: false
   html_filter:
+    weights:
+      preprocess_index: -3
+      preprocess_query: -46
     all_fields: false
     fields: {  }
     title: true
@@ -111,21 +114,21 @@ processor_settings:
       h2: 3
       h3: 2
       string: 2
-    weights:
-      preprocess_index: -3
-      preprocess_query: -46
   ignorecase:
-    all_fields: false
-    fields: {  }
     weights:
       preprocess_index: -5
       preprocess_query: -48
+    all_fields: false
+    fields: {  }
   language_with_fallback: {  }
   rendered_item:
     weights:
       add_properties: 0
       pre_index_save: -10
   stemmer:
+    weights:
+      preprocess_index: 0
+      preprocess_query: -43
     all_fields: true
     fields:
       - rendered
@@ -133,10 +136,10 @@ processor_settings:
     exceptions:
       mexican: mexic
       texan: texa
-    weights:
-      preprocess_index: 0
-      preprocess_query: -43
   stopwords:
+    weights:
+      preprocess_index: -5
+      preprocess_query: -49
     all_fields: false
     fields: {  }
     stopwords:
@@ -175,29 +178,26 @@ processor_settings:
       - was
       - will
       - with
-    weights:
-      preprocess_index: -5
-      preprocess_query: -49
   tokenizer:
+    weights:
+      preprocess_index: -2
+      preprocess_query: -45
     all_fields: false
     fields: {  }
     spaces: ''
     overlap_cjk: 1
     minimum_word_size: '3'
-    weights:
-      preprocess_index: -2
-      preprocess_query: -45
   transliteration:
-    all_fields: false
-    fields: {  }
     weights:
       preprocess_index: -4
       preprocess_query: -47
+    all_fields: false
+    fields: {  }
 tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
   track_changes_in_references: true
 server: default_server

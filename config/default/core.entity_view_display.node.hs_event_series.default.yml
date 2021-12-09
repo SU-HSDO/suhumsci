@@ -17,15 +17,17 @@ dependencies:
     - views
 third_party_settings:
   layout_builder:
+    enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: three_column_w_image
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
           image_float: align-right
-          context_mapping: {  }
         components:
           fbe5858f-5475-462e-bef2-091725548e82:
             uuid: fbe5858f-5475-462e-bef2-091725548e82
@@ -33,109 +35,107 @@ third_party_settings:
             configuration:
               id: 'menu_block:main'
               label: 'Main navigation'
-              provider: menu_block
               label_display: visible
+              provider: menu_block
+              context_mapping: {  }
               follow: false
               follow_parent: active
+              label_link: true
+              label_type: root
               level: 2
               depth: 0
               expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
-              label_type: root
-              label_link: true
-              context_mapping: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           98f453bb-df3a-4616-b9f4-0aa1e1510a55:
             uuid: 98f453bb-df3a-4616-b9f4-0aa1e1510a55
             region: main_above
             configuration:
               id: 'views_block:hs_default_event_series-upcoming_event'
               label: ''
-              provider: views
               label_display: visible
+              provider: views
+              context_mapping: {  }
               views_label: ''
               items_per_page: none
-              context_mapping: {  }
-            additional: {  }
             weight: 4
+            additional: {  }
           23c04a73-8e99-4bae-b60f-2cb0ed9d4a27:
             uuid: 23c04a73-8e99-4bae-b60f-2cb0ed9d4a27
             region: main_above
             configuration:
               id: 'views_block:hs_default_event_series-past_event'
               label: ''
-              provider: views
               label_display: visible
+              provider: views
+              context_mapping: {  }
               views_label: ''
               items_per_page: none
-              context_mapping: {  }
-            additional: {  }
             weight: 5
+            additional: {  }
           ac071a08-6029-47fa-b730-cd243245b7f5:
             uuid: ac071a08-6029-47fa-b730-cd243245b7f5
             region: title
             configuration:
               id: 'field_block:node:hs_event_series:title'
               label: Title
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_title_heading
+                label: hidden
                 settings:
                   tag: h1
                 third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 0
+            additional: {  }
           742501f5-37d3-439b-96ef-dfc89065c037:
             uuid: 742501f5-37d3-439b-96ef-dfc89065c037
             region: main_above
             configuration:
               id: 'field_block:node:hs_event_series:body'
               label: Body
-              provider: layout_builder
               label_display: '0'
-              formatter:
-                label: hidden
-                type: text_default
-                settings: {  }
-                third_party_settings: {  }
+              provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
-            additional: {  }
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
             weight: 3
+            additional: {  }
           5c34a580-713a-4908-bc21-8992dc2a3a3a:
             uuid: 5c34a580-713a-4908-bc21-8992dc2a3a3a
             region: main_above
             configuration:
               id: 'field_block:node:hs_event_series:field_hs_event_series_image'
               label: 'Series Image'
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: hidden
                 type: media_image_formatter
+                label: hidden
                 settings:
                   view_mode: caption_credit
-                  image_style: hs_medium_scaled_360px
                   link: false
+                  image_style: hs_medium_scaled_360px
                 third_party_settings:
                   field_formatter_class:
                     class: hb-main-body-detail-image
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 2
+            additional: {  }
         third_party_settings: {  }
-    enabled: true
-    allow_custom: false
 _core:
   default_config_hash: Cq5jtQP3T99l8oJ3Df7Yh-QGR0ES3MqIE9RUM-MgtQ8
 id: node.hs_event_series.default
@@ -144,25 +144,25 @@ bundle: hs_event_series
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 101
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: content
   field_hs_event_series_image:
     type: entity_reference_entity_view
-    weight: 102
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 102
     region: content
   links:
-    weight: 100
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 100
+    region: content
 hidden:
   search_api_excerpt: true

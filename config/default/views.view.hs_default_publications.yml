@@ -35,46 +35,343 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'access content'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: true
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: true
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
+      title: Publications
+      fields:
+        field_hs_publication_image:
+          id: field_hs_publication_image
+          table: node__field_hs_publication_image
+          field: field_hs_publication_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_image_formatter
+          settings:
+            view_mode: default
+            link: true
+            image_style: responsive_small
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_hs_publication_type:
+          id: field_hs_publication_type
+          table: node__field_hs_publication_type
+          field: field_hs_publication_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: 'accent-dash masonry-item--type'
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: h3
+          element_class: 'no-dash masonry-item--title'
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_hs_publication_year:
+          id: field_hs_publication_year
+          table: node__field_hs_publication_year
+          field: field_hs_publication_year
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: datetime_custom
+          settings:
+            timezone_override: ''
+            date_format: 'Y'
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_hs_publication_author:
+          id: field_hs_publication_author
+          table: node__field_hs_publication_author
+          field: field_hs_publication_author
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{% if field_hs_publication_author|render|striptags|trim %}{{ field_hs_publication_author|render|striptags|trim }}, {% endif %}{{ field_hs_publication_year|trim }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: true
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: masonry-item--author-year
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: '{{ field_hs_publication_year }}'
+          hide_empty: false
+          empty_zero: true
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_entity_view
+          settings:
+            view_mode: default
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       pager:
         type: full
         options:
-          items_per_page: 20
           offset: 0
-          id: 2
+          items_per_page: 20
           total_pages: null
+          id: 2
           tags:
-            previous: '‹ Previous'
             next: 'Next ›'
+            previous: '‹ Previous'
             first: '« First'
             last: 'Last »'
           expose:
@@ -86,6 +383,233 @@ display:
             offset: false
             offset_label: Offset
           quantity: 5
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p>No publications are available at this time. Please check back again soon.</p>'
+            format: basic_html
+          tokenize: false
+      sorts:
+        field_hs_publication_year_value:
+          id: field_hs_publication_year_value
+          table: node__field_hs_publication_year
+          field: field_hs_publication_year_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: field_hs_publication_year_value
+          exposed: false
+          granularity: year
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: created
+          exposed: false
+          granularity: second
+      arguments: {  }
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            hs_publications: hs_publications
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: 'Search by Name'
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        title_1:
+          id: title_1
+          table: publications_collections_field_data
+          field: title
+          relationship: field_hs_publication_author
+          group_type: group
+          admin_label: ''
+          entity_type: publications_collections
+          entity_field: title
+          plugin_id: string
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_1_op
+            label: 'Search by Author'
+            description: ''
+            use_operator: false
+            operator: title_1_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: pub_author
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_hs_publication_type_target_id:
+          id: field_hs_publication_type_target_id
+          table: node__field_hs_publication_type
+          field: field_hs_publication_type_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_hs_publication_type_target_id_op
+            label: 'Filter by Type'
+            description: ''
+            use_operator: false
+            operator: field_hs_publication_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: true
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: hs_publication_type
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: pattern
         options:
@@ -142,533 +666,14 @@ display:
               weight: 5
               plugin: views_row
               source: field_hs_publication_year
-      fields:
-        field_hs_publication_image:
-          id: field_hs_publication_image
-          table: node__field_hs_publication_image
-          field: field_hs_publication_image
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: media_image_formatter
-          settings:
-            view_mode: default
-            image_style: responsive_small
-            link: true
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        field_hs_publication_type:
-          id: field_hs_publication_type
-          table: node__field_hs_publication_type
-          field: field_hs_publication_type
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: 'accent-dash masonry-item--type'
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: false
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        title:
-          id: title
-          table: node_field_data
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: false
-            ellipsis: false
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: h3
-          element_class: 'no-dash masonry-item--title'
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
-        field_hs_publication_year:
-          id: field_hs_publication_year
-          table: node__field_hs_publication_year
-          field: field_hs_publication_year
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: datetime_custom
-          settings:
-            timezone_override: ''
-            date_format: 'Y'
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-        field_hs_publication_author:
-          id: field_hs_publication_author
-          table: node__field_hs_publication_author
-          field: field_hs_publication_author
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: true
-            text: '{% if field_hs_publication_author|render|striptags|trim %}{{ field_hs_publication_author|render|striptags|trim }}, {% endif %}{{ field_hs_publication_year|trim }}'
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: true
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: masonry-item--author-year
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: '{{ field_hs_publication_year }}'
-          hide_empty: false
-          empty_zero: true
-          hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_entity_view
-          settings:
-            view_mode: default
-          group_column: target_id
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_publications: hs_publications
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          group: 1
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-        title:
-          id: title
-          table: node_field_data
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: word
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: title_op
-            label: 'Search by Name'
-            description: ''
-            use_operator: false
-            operator: title_op
-            identifier: name
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: title
-          plugin_id: string
-        title_1:
-          id: title_1
-          table: publications_collections_field_data
-          field: title
-          relationship: field_hs_publication_author
-          group_type: group
-          admin_label: ''
-          operator: word
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: title_1_op
-            label: 'Search by Author'
-            description: ''
-            use_operator: false
-            operator: title_1_op
-            identifier: pub_author
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            placeholder: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: publications_collections
-          entity_field: title
-          plugin_id: string
-        field_hs_publication_type_target_id:
-          id: field_hs_publication_type_target_id
-          table: node__field_hs_publication_type
-          field: field_hs_publication_type_target_id
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: or
-          value: {  }
-          group: 1
-          exposed: true
-          expose:
-            operator_id: field_hs_publication_type_target_id_op
-            label: 'Filter by Type'
-            description: ''
-            use_operator: false
-            operator: field_hs_publication_type_target_id_op
-            identifier: type
-            required: false
-            remember: false
-            multiple: true
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-            reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          reduce_duplicates: false
-          type: select
-          limit: true
-          vid: hs_publication_type
-          hierarchy: false
-          error_message: true
-          plugin_id: taxonomy_index_tid
-      sorts:
-        field_hs_publication_year_value:
-          id: field_hs_publication_year_value
-          table: node__field_hs_publication_year
-          field: field_hs_publication_year_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: ''
-          granularity: year
-          plugin_id: datetime
-        created:
-          id: created
-          table: node_field_data
-          field: created
-          order: DESC
-          entity_type: node
-          entity_field: created
-          plugin_id: date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
-      title: Publications
-      header: {  }
-      footer: {  }
-      empty:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          tokenize: false
-          content:
-            value: '<p>No publications are available at this time. Please check back again soon.</p>'
-            format: basic_html
-          plugin_id: text
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: true
+          replica: false
+          query_tags: {  }
       relationships:
         field_hs_publication_author:
           id: field_hs_publication_author
@@ -677,21 +682,18 @@ display:
           relationship: none
           group_type: group
           admin_label: 'field_hs_publication_author: Publications Collections'
-          required: false
           plugin_id: standard
-      arguments: {  }
-      display_extenders: {  }
+          required: false
       use_ajax: true
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
       group_by: false
       use_more: false
       use_more_always: false
       use_more_text: 'See More Publications'
-      link_url: /research/publications
       link_display: '0'
+      link_url: /research/publications
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -708,134 +710,12 @@ display:
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
   author_list:
-    display_plugin: block
     id: author_list
     display_title: 'Author''s List'
+    display_plugin: block
     position: 4
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      style:
-        type: grid
-        options:
-          grouping: {  }
-          columns: 3
-          automatic_width: true
-          alignment: horizontal
-          col_class_default: true
-          col_class_custom: ''
-          row_class_default: true
-          row_class_custom: ''
-      defaults:
-        style: false
-        row: false
-        arguments: false
-        group_by: false
-        filters: false
-        filter_groups: false
-        fields: false
-        empty: false
-        title: false
-        pager: false
-      row:
-        type: ui_patterns
-        options:
-          default_field_elements: 1
-          inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
-          separator: ''
-          hide_empty: 1
-          pattern: vertical_card
-          variants:
-            hero_text_overlay: default
-            generic_three_column: default
-            accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:title':
-              destination: title
-              weight: 1
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_hs_publication_year
-      arguments:
-        field_hs_publication_author_target_id:
-          id: field_hs_publication_author_target_id
-          table: publications_collections__field_hs_publication_author
-          field: field_hs_publication_author_target_id
-          relationship: field_hs_publication_author
-          group_type: group
-          admin_label: ''
-          default_action: default
-          exception:
-            value: all
-            title_enable: false
-            title: All
-          title_enable: false
-          title: ''
-          default_argument_type: node
-          default_argument_options: {  }
-          default_argument_skip_url: false
-          summary_options:
-            base_path: ''
-            count: true
-            items_per_page: 25
-            override: false
-          summary:
-            sort_order: asc
-            number_of_records: 0
-            format: default_summary
-          specify_validation: false
-          validate:
-            type: none
-            fail: 'not found'
-          validate_options: {  }
-          break_phrase: false
-          not: false
-          plugin_id: numeric
-      group_by: false
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_publications: hs_publications
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          group: 1
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
+      title: 'Latest Publications'
       fields:
         field_hs_publication_image:
           id: field_hs_publication_image
@@ -844,6 +724,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -889,8 +770,8 @@ display:
           type: media_image_formatter
           settings:
             view_mode: caption_credit
-            image_style: hs_large_scaled_480px
             link: true
+            image_style: hs_large_scaled_480px
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -901,7 +782,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_type:
           id: field_hs_publication_type
           table: node__field_hs_publication_type
@@ -909,6 +789,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -964,7 +845,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -972,6 +852,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1027,9 +910,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
         field_hs_publication_year:
           id: field_hs_publication_year
           table: node__field_hs_publication_year
@@ -1037,6 +917,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1093,14 +974,135 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
-      empty: {  }
-      title: 'Latest Publications'
       pager:
         type: some
         options:
-          items_per_page: 3
           offset: 0
+          items_per_page: 3
+      empty: {  }
+      arguments:
+        field_hs_publication_author_target_id:
+          id: field_hs_publication_author_target_id
+          table: publications_collections__field_hs_publication_author
+          field: field_hs_publication_author_target_id
+          relationship: field_hs_publication_author
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric
+          default_action: default
+          exception:
+            value: all
+            title_enable: false
+            title: All
+          title_enable: false
+          title: ''
+          default_argument_type: node
+          default_argument_options: {  }
+          default_argument_skip_url: false
+          summary_options:
+            base_path: ''
+            count: true
+            override: false
+            items_per_page: 25
+          summary:
+            sort_order: asc
+            number_of_records: 0
+            format: default_summary
+          specify_validation: false
+          validate:
+            type: none
+            fail: 'not found'
+          validate_options: {  }
+          break_phrase: false
+          not: false
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            hs_publications: hs_publications
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: grid
+        options:
+          grouping: {  }
+          columns: 3
+          automatic_width: true
+          alignment: horizontal
+          row_class_custom: ''
+          row_class_default: true
+          col_class_custom: ''
+          col_class_default: true
+      row:
+        type: ui_patterns
+        options:
+          default_field_elements: 1
+          inline:
+            field_hs_publication_image: 0
+            field_hs_publication_type: 0
+            title: 0
+            field_hs_publication_year: 0
+          separator: ''
+          hide_empty: 1
+          pattern: vertical_card
+          variants:
+            hero_text_overlay: default
+            generic_three_column: default
+            accordion: closed
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              destination: image
+              weight: 0
+              plugin: views_row
+              source: field_hs_publication_image
+            'views_row:title':
+              destination: title
+              weight: 1
+              plugin: views_row
+              source: title
+            'views_row:field_hs_publication_year':
+              destination: description
+              weight: 2
+              plugin: views_row
+              source: field_hs_publication_year
+      defaults:
+        empty: false
+        title: false
+        pager: false
+        group_by: false
+        style: false
+        row: false
+        fields: false
+        arguments: false
+        filters: false
+        filter_groups: false
+      group_by: false
+      display_description: ''
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -1114,121 +1116,12 @@ display:
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
   block_1:
-    display_plugin: block
     id: block_1
     display_title: 'Link URL or Doc publication List'
+    display_plugin: block
     position: 4
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      style:
-        type: default
-        options:
-          grouping:
-            -
-              field: field_hs_publication_year
-              rendered: true
-              rendered_strip: false
-          row_class: ''
-          default_row_class: true
-      defaults:
-        style: false
-        row: false
-        arguments: false
-        group_by: false
-        filters: false
-        filter_groups: false
-        fields: false
-        empty: false
-        title: false
-        pager: false
-        relationships: false
-      row:
-        type: ui_patterns
-        options:
-          default_field_elements: 1
-          inline:
-            field_media_file: 0
-            field_hs_publication_link: 0
-            title: 0
-            field_hs_publication_author: 0
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            field_hs_publication_year: 0
-            nothing: 0
-            field_hs_publication_citation: 0
-          separator: ''
-          hide_empty: 1
-          pattern: horizontal_card
-          variants:
-            spotlight: default
-            hero_text_overlay: default
-            generic_three_column: default
-            accordion: closed
-          pattern_mapping:
-            'views_row:field_media_file':
-              destination: description
-              weight: 0
-              plugin: views_row
-              source: field_media_file
-            'views_row:field_hs_publication_author':
-              destination: description
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_author
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 2
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_citation':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_citation
-            'views_row:title':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 5
-              plugin: views_row
-              source: field_hs_publication_year
-      arguments: {  }
-      group_by: false
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_publications: hs_publications
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          group: 1
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
+      title: 'Latest Publications'
       fields:
         field_media_file:
           id: field_media_file
@@ -1237,6 +1130,7 @@ display:
           relationship: field_hs_publication_documents
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -1291,7 +1185,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_link:
           id: field_hs_publication_link
           table: node__field_hs_publication_link
@@ -1299,6 +1192,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1358,7 +1252,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -1366,6 +1259,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -1421,9 +1317,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
         field_hs_publication_author:
           id: field_hs_publication_author
           table: node__field_hs_publication_author
@@ -1431,6 +1324,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -1486,7 +1380,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_image:
           id: field_hs_publication_image
           table: node__field_hs_publication_image
@@ -1494,6 +1387,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1539,8 +1433,8 @@ display:
           type: media_image_formatter
           settings:
             view_mode: caption_credit
-            image_style: responsive_small
             link: true
+            image_style: responsive_small
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -1551,7 +1445,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_type:
           id: field_hs_publication_type
           table: node__field_hs_publication_type
@@ -1559,6 +1452,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1614,7 +1508,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_year:
           id: field_hs_publication_year
           table: node__field_hs_publication_year
@@ -1622,6 +1515,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -1678,7 +1572,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         nothing:
           id: nothing
           table: views
@@ -1686,6 +1579,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: custom
           label: ''
           exclude: true
           alter:
@@ -1727,7 +1621,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: false
-          plugin_id: custom
         field_hs_publication_citation:
           id: field_hs_publication_citation
           table: node__field_hs_publication_citation
@@ -1735,6 +1628,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1789,14 +1683,119 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
-      empty: {  }
-      title: 'Latest Publications'
       pager:
         type: some
         options:
-          items_per_page: 3
           offset: 0
+          items_per_page: 3
+      empty: {  }
+      arguments: {  }
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            hs_publications: hs_publications
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: default
+        options:
+          grouping:
+            -
+              field: field_hs_publication_year
+              rendered: true
+              rendered_strip: false
+          row_class: ''
+          default_row_class: true
+      row:
+        type: ui_patterns
+        options:
+          default_field_elements: 1
+          inline:
+            field_media_file: 0
+            field_hs_publication_link: 0
+            title: 0
+            field_hs_publication_author: 0
+            field_hs_publication_image: 0
+            field_hs_publication_type: 0
+            field_hs_publication_year: 0
+            nothing: 0
+            field_hs_publication_citation: 0
+          separator: ''
+          hide_empty: 1
+          pattern: horizontal_card
+          variants:
+            spotlight: default
+            hero_text_overlay: default
+            generic_three_column: default
+            accordion: closed
+          pattern_mapping:
+            'views_row:field_media_file':
+              destination: description
+              weight: 0
+              plugin: views_row
+              source: field_media_file
+            'views_row:field_hs_publication_author':
+              destination: description
+              weight: 1
+              plugin: views_row
+              source: field_hs_publication_author
+            'views_row:field_hs_publication_image':
+              destination: image
+              weight: 2
+              plugin: views_row
+              source: field_hs_publication_image
+            'views_row:field_hs_publication_citation':
+              destination: description
+              weight: 3
+              plugin: views_row
+              source: field_hs_publication_citation
+            'views_row:title':
+              destination: description
+              weight: 4
+              plugin: views_row
+              source: title
+            'views_row:field_hs_publication_year':
+              destination: description
+              weight: 5
+              plugin: views_row
+              source: field_hs_publication_year
+      defaults:
+        empty: false
+        title: false
+        pager: false
+        group_by: false
+        style: false
+        row: false
+        relationships: false
+        fields: false
+        arguments: false
+        filters: false
+        filter_groups: false
       relationships:
         field_hs_publication_author:
           id: field_hs_publication_author
@@ -1805,8 +1804,8 @@ display:
           relationship: none
           group_type: group
           admin_label: 'field_hs_publication_author: Publications Collections'
-          required: false
           plugin_id: standard
+          required: false
         field_hs_publication_documents:
           id: field_hs_publication_documents
           table: node__field_hs_publication_documents
@@ -1814,8 +1813,11 @@ display:
           relationship: none
           group_type: group
           admin_label: 'field_hs_publication_documents: Media'
-          required: false
           plugin_id: standard
+          required: false
+      group_by: false
+      display_description: ''
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -1832,14 +1834,11 @@ display:
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
   grid:
-    display_plugin: block
     id: grid
     display_title: 'Grid List'
+    display_plugin: block
     position: 2
     display_options:
-      display_extenders: {  }
-      exposed_block: false
-      display_description: ''
       fields:
         field_hs_publication_image:
           id: field_hs_publication_image
@@ -1848,6 +1847,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1893,8 +1893,8 @@ display:
           type: media_image_formatter
           settings:
             view_mode: caption_credit
-            image_style: responsive_small
             link: true
+            image_style: responsive_small
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -1905,7 +1905,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_type:
           id: field_hs_publication_type
           table: node__field_hs_publication_type
@@ -1913,6 +1912,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -1968,7 +1968,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -1976,6 +1975,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2031,9 +2033,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
         field_hs_publication_year:
           id: field_hs_publication_year
           table: node__field_hs_publication_year
@@ -2041,6 +2040,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2097,7 +2097,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_author:
           id: field_hs_publication_author
           table: node__field_hs_publication_author
@@ -2105,6 +2104,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2160,7 +2160,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         title_1:
           id: title_1
           table: publications_collections_field_data
@@ -2168,6 +2167,9 @@ display:
           relationship: field_hs_publication_author
           group_type: group
           admin_label: ''
+          entity_type: publications_collections
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -2223,89 +2225,29 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: publications_collections
-          entity_field: title
-          plugin_id: field
-      defaults:
-        fields: false
-        style: false
-        row: false
-        filters: false
-        filter_groups: false
-        group_by: true
-        pager: true
-      style:
-        type: grid
-        options:
-          grouping: {  }
-          columns: 4
-          automatic_width: false
-          alignment: horizontal
-          col_class_default: false
-          col_class_custom: ''
-          row_class_default: false
-          row_class_custom: ''
-      row:
-        type: ui_patterns
-        options:
-          default_field_elements: 1
-          inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
-            field_hs_publication_author: 0
-          separator: ''
-          hide_empty: 1
-          pattern: vertical_card
-          variants:
-            hero_text_overlay: default
-            generic_three_column: default
-            accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_year
-            'views_row:title':
-              destination: title
-              weight: 2
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_author':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_author
       filters:
         status:
-          value: '1'
+          id: status
           table: node_field_data
           field: status
-          plugin_id: boolean
           entity_type: node
           entity_field: status
-          id: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
           expose:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         type:
           id: type
           table: node_field_data
           field: type
-          value:
-            hs_publications: hs_publications
           entity_type: node
           entity_field: type
           plugin_id: bundle
+          value:
+            hs_publications: hs_publications
           group: 1
           expose:
             operator_limit_selection: false
@@ -2317,6 +2259,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: combine
           operator: contains
           value: ''
           group: 1
@@ -2359,7 +2302,6 @@ display:
           fields:
             title: title
             title_1: title_1
-          plugin_id: combine
         field_hs_publication_type_target_id:
           id: field_hs_publication_type_target_id
           table: node__field_hs_publication_type
@@ -2367,6 +2309,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: taxonomy_index_tid
           operator: or
           value: {  }
           group: 1
@@ -2377,6 +2320,8 @@ display:
             description: ''
             use_operator: false
             operator: field_hs_publication_type_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
             identifier: type
             required: false
             remember: false
@@ -2386,8 +2331,6 @@ display:
               anonymous: '0'
               administrator: '0'
             reduce: false
-            operator_limit_selection: false
-            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -2401,16 +2344,75 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          type: select
-          limit: true
           vid: hs_publication_type
+          type: select
           hierarchy: false
+          limit: true
           error_message: true
-          plugin_id: taxonomy_index_tid
       filter_groups:
         operator: AND
         groups:
           1: AND
+      style:
+        type: grid
+        options:
+          grouping: {  }
+          columns: 4
+          automatic_width: false
+          alignment: horizontal
+          row_class_custom: ''
+          row_class_default: false
+          col_class_custom: ''
+          col_class_default: false
+      row:
+        type: ui_patterns
+        options:
+          default_field_elements: 1
+          inline:
+            field_hs_publication_image: 0
+            field_hs_publication_type: 0
+            title: 0
+            field_hs_publication_year: 0
+            field_hs_publication_author: 0
+          separator: ''
+          hide_empty: 1
+          pattern: vertical_card
+          variants:
+            hero_text_overlay: default
+            generic_three_column: default
+            accordion: closed
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              destination: image
+              weight: 0
+              plugin: views_row
+              source: field_hs_publication_image
+            'views_row:field_hs_publication_year':
+              destination: description
+              weight: 1
+              plugin: views_row
+              source: field_hs_publication_year
+            'views_row:title':
+              destination: title
+              weight: 2
+              plugin: views_row
+              source: title
+            'views_row:field_hs_publication_author':
+              destination: description
+              weight: 3
+              plugin: views_row
+              source: field_hs_publication_author
+      defaults:
+        pager: true
+        group_by: true
+        style: false
+        row: false
+        fields: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      exposed_block: false
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -2427,106 +2429,11 @@ display:
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
   single_featured:
-    display_plugin: block
     id: single_featured
     display_title: 'Single Featured'
+    display_plugin: block
     position: 3
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      pager:
-        type: some
-        options:
-          items_per_page: 1
-          offset: 0
-      defaults:
-        pager: false
-        relationships: false
-        group_by: false
-        filters: false
-        filter_groups: false
-        fields: false
-        sorts: false
-        style: false
-        row: false
-        use_more: true
-        use_more_always: true
-        use_more_text: true
-        link_display: true
-        link_url: true
-      relationships: {  }
-      group_by: false
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_publications: hs_publications
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          group: 1
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-        promote:
-          id: promote
-          table: node_field_data
-          field: promote
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '='
-          value: '1'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            operator_limit_selection: false
-            operator_list: {  }
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: promote
-          plugin_id: boolean
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
       fields:
         field_hs_publication_image:
           id: field_hs_publication_image
@@ -2535,6 +2442,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2580,8 +2488,8 @@ display:
           type: media_image_formatter
           settings:
             view_mode: caption_credit
-            image_style: hs_large_scaled_480px
             link: true
+            image_style: hs_large_scaled_480px
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -2592,7 +2500,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_type:
           id: field_hs_publication_type
           table: node__field_hs_publication_type
@@ -2600,6 +2507,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2655,7 +2563,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -2663,6 +2570,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2718,9 +2628,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
         field_hs_publication_year:
           id: field_hs_publication_year
           table: node__field_hs_publication_year
@@ -2728,6 +2635,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2784,7 +2692,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_author:
           id: field_hs_publication_author
           table: node__field_hs_publication_author
@@ -2792,6 +2699,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -2847,7 +2755,11 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+      pager:
+        type: some
+        options:
+          offset: 0
+          items_per_page: 1
       sorts:
         field_hs_publication_year_value:
           id: field_hs_publication_year_value
@@ -2856,27 +2768,100 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: datetime
           order: DESC
-          exposed: false
           expose:
             label: ''
+            field_identifier: field_hs_publication_year_value
+          exposed: false
           granularity: year
-          plugin_id: datetime
         created:
           id: created
           table: node_field_data
           field: created
-          order: DESC
-          entity_type: node
-          entity_field: created
-          plugin_id: date
           relationship: none
           group_type: group
           admin_label: ''
-          exposed: false
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
           expose:
             label: ''
+            field_identifier: created
+          exposed: false
           granularity: second
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            hs_publications: hs_publications
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        promote:
+          id: promote
+          table: node_field_data
+          field: promote
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: promote
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: default
         options:
@@ -2926,6 +2911,25 @@ display:
               weight: 4
               plugin: views_row
               source: field_hs_publication_author
+      defaults:
+        pager: false
+        use_more: true
+        use_more_always: true
+        use_more_text: true
+        link_display: true
+        link_url: true
+        group_by: false
+        style: false
+        row: false
+        relationships: false
+        fields: false
+        sorts: false
+        filters: false
+        filter_groups: false
+      relationships: {  }
+      group_by: false
+      display_description: ''
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -2939,14 +2943,11 @@ display:
         - 'config:field.storage.node.field_hs_publication_type'
         - 'config:field.storage.node.field_hs_publication_year'
   table:
-    display_plugin: block
     id: table
     display_title: Table
+    display_plugin: block
     position: 1
     display_options:
-      display_extenders: {  }
-      exposed_block: false
-      display_description: ''
       fields:
         field_hs_publication_year:
           id: field_hs_publication_year
@@ -2955,6 +2956,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: 'Publication Year'
           exclude: false
           alter:
@@ -3011,7 +3013,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         title:
           id: title
           table: node_field_data
@@ -3019,6 +3020,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: Title
           exclude: false
           alter:
@@ -3074,9 +3078,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
         field_hs_publication_author:
           id: field_hs_publication_author
           table: node__field_hs_publication_author
@@ -3084,6 +3085,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Authors
           exclude: false
           alter:
@@ -3139,7 +3141,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_hs_publication_publisher:
           id: field_hs_publication_publisher
           table: node__field_hs_publication_publisher
@@ -3147,6 +3148,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Publisher
           exclude: false
           alter:
@@ -3202,7 +3204,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         edit_node:
           id: edit_node
           table: node
@@ -3210,6 +3211,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: entity_link_edit
           label: ''
           exclude: false
           alter:
@@ -3254,35 +3257,193 @@ display:
           text: edit
           output_url_as_text: false
           absolute: false
+      sorts:
+        field_hs_publication_year_value:
+          id: field_hs_publication_year_value
+          table: node__field_hs_publication_year
+          field: field_hs_publication_year_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: datetime
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: field_hs_publication_year_value
+          exposed: false
+          granularity: year
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
           entity_type: node
-          plugin_id: entity_link_edit
-      defaults:
-        fields: false
-        style: false
-        row: false
-        filters: false
-        filter_groups: false
-        group_by: true
-        sorts: false
-        query: true
-        pager: true
+          entity_field: title
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: title
+          exposed: false
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: created
+          exposed: false
+          granularity: second
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            hs_publications: hs_publications
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: 'Search by title'
+            description: ''
+            use_operator: false
+            operator: title_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              stanford_faculty: '0'
+              stanford_staff: '0'
+              stanford_student: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        title_1:
+          id: title_1
+          table: publications_collections_field_data
+          field: title
+          relationship: field_hs_publication_author
+          group_type: group
+          admin_label: ''
+          entity_type: publications_collections
+          entity_field: title
+          plugin_id: string
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_1_op
+            label: 'Search by author'
+            description: ''
+            use_operator: false
+            operator: title_1_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: pub_author
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+              contributor: '0'
+              site_manager: '0'
+              stanford_faculty: '0'
+              stanford_staff: '0'
+              stanford_student: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+          2: OR
       style:
         type: table
         options:
           grouping: {  }
           row_class: ''
           default_row_class: true
-          override: true
-          sticky: true
-          caption: ''
-          summary: ''
-          description: ''
           columns:
             field_hs_publication_year: field_hs_publication_year
             title: title
             field_hs_publication_author: field_hs_publication_author
             field_hs_publication_publisher: field_hs_publication_publisher
             edit_node: field_hs_publication_publisher
+          default: '-1'
           info:
             field_hs_publication_year:
               sortable: false
@@ -3317,8 +3478,12 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-          default: '-1'
+          override: true
+          sticky: true
+          summary: ''
           empty_table: false
+          caption: ''
+          description: ''
       row:
         type: ui_patterns
         options:
@@ -3362,177 +3527,19 @@ display:
               weight: 4
               plugin: views_row
               source: field_hs_publication_year
-      filters:
-        status:
-          value: '1'
-          table: node_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: node
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        type:
-          id: type
-          table: node_field_data
-          field: type
-          value:
-            hs_publications: hs_publications
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
-          group: 1
-          expose:
-            operator_limit_selection: false
-            operator_list: {  }
-        title:
-          id: title
-          table: node_field_data
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: word
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: title_op
-            label: 'Search by title'
-            description: ''
-            use_operator: false
-            operator: title_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: name
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: node
-          entity_field: title
-          plugin_id: string
-        title_1:
-          id: title_1
-          table: publications_collections_field_data
-          field: title
-          relationship: field_hs_publication_author
-          group_type: group
-          admin_label: ''
-          operator: word
-          value: ''
-          group: 1
-          exposed: true
-          expose:
-            operator_id: title_1_op
-            label: 'Search by author'
-            description: ''
-            use_operator: false
-            operator: title_1_op
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: pub_author
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-              anonymous: '0'
-              administrator: '0'
-              contributor: '0'
-              site_manager: '0'
-              stanford_faculty: '0'
-              stanford_staff: '0'
-              stanford_student: '0'
-            placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: publications_collections
-          entity_field: title
-          plugin_id: string
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
-          2: OR
-      sorts:
-        field_hs_publication_year_value:
-          id: field_hs_publication_year_value
-          table: node__field_hs_publication_year
-          field: field_hs_publication_year_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: ''
-          granularity: year
-          plugin_id: datetime
-        title:
-          id: title
-          table: node_field_data
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          entity_type: node
-          entity_field: title
-          plugin_id: standard
-        created:
-          id: created
-          table: node_field_data
-          field: created
-          order: DESC
-          entity_type: node
-          entity_field: created
-          plugin_id: date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          exposed: false
-          expose:
-            label: ''
-          granularity: second
+      defaults:
+        query: true
+        pager: true
+        group_by: true
+        style: false
+        row: false
+        fields: false
+        sorts: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      exposed_block: false
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:

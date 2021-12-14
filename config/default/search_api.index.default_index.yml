@@ -35,6 +35,7 @@ field_settings:
           hs_event_series: search_index
           hs_news: search_index
           hs_person: search_index
+          hs_private_page: search_index
           hs_publications: search_index
           hs_research: search_index
   status:
@@ -70,8 +71,7 @@ datasource_settings:
   'entity:node':
     bundles:
       default: true
-      selected:
-        - hs_private_page
+      selected: {  }
     languages:
       default: true
       selected: {  }
@@ -85,7 +85,7 @@ processor_settings:
   content_access:
     weights:
       preprocess_index: -6
-      preprocess_query: -44
+      preprocess_query: -50
   entity_status:
     weights:
       preprocess_index: -10
@@ -102,12 +102,14 @@ processor_settings:
     highlight_partial: false
   html_filter:
     weights:
-      preprocess_index: -3
-      preprocess_query: -46
-    all_fields: false
-    fields: {  }
-    title: true
-    alt: true
+      preprocess_index: -43
+      preprocess_query: -49
+    all_fields: true
+    fields:
+      - rendered
+      - title
+    title: false
+    alt: false
     tags:
       b: 2
       h1: 5
@@ -116,10 +118,12 @@ processor_settings:
       string: 2
   ignorecase:
     weights:
-      preprocess_index: -5
-      preprocess_query: -48
-    all_fields: false
-    fields: {  }
+      preprocess_index: -49
+      preprocess_query: -46
+    all_fields: true
+    fields:
+      - rendered
+      - title
   language_with_fallback: {  }
   rendered_item:
     weights:
@@ -127,8 +131,8 @@ processor_settings:
       pre_index_save: -10
   stemmer:
     weights:
-      preprocess_index: 0
-      preprocess_query: -43
+      preprocess_index: -45
+      preprocess_query: -47
     all_fields: true
     fields:
       - rendered
@@ -138,10 +142,12 @@ processor_settings:
       texan: texa
   stopwords:
     weights:
-      preprocess_index: -5
-      preprocess_query: -49
-    all_fields: false
-    fields: {  }
+      preprocess_index: -44
+      preprocess_query: -45
+    all_fields: true
+    fields:
+      - rendered
+      - title
     stopwords:
       - a
       - an
@@ -180,19 +186,24 @@ processor_settings:
       - with
   tokenizer:
     weights:
-      preprocess_index: -2
-      preprocess_query: -45
-    all_fields: false
-    fields: {  }
+      preprocess_index: -47
+      preprocess_query: -48
+    all_fields: true
+    fields:
+      - rendered
+      - title
     spaces: ''
+    ignored: ._-
     overlap_cjk: 1
     minimum_word_size: '3'
   transliteration:
     weights:
-      preprocess_index: -4
-      preprocess_query: -47
-    all_fields: false
-    fields: {  }
+      preprocess_index: -48
+      preprocess_query: -44
+    all_fields: true
+    fields:
+      - rendered
+      - title
 tracker_settings:
   default:
     indexing_order: fifo

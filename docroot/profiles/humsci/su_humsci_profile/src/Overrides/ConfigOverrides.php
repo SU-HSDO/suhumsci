@@ -109,6 +109,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->setEventOverrides($names, $overrides);
     $this->setPublicationOverrides($names, $overrides);
     $this->setThemeSettingsOverrides($names, $overrides);
+    $this->setSearcHApiOverrides($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
@@ -300,6 +301,25 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
       'target_uuid' => $media_entity->uuid(),
     ];
 
+  }
+
+  /**
+   * Add all nodes to the search api indexing.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
+  protected function setSearcHApiOverrides(array $names, array &$overrides) {
+    if (!in_array('search_api.index.default_index', $names)) {
+      return;
+    }
+    $node_types = $this->entityTypeManager->getStorage('node_type')
+      ->loadMultiple();
+    foreach (array_keys($node_types) as $node_type) {
+      $overrides['search_api.index.default_index']['field_settings']['rendered']['configuration']['view_mode']['entity:node'][$node_type] = 'search_index';
+    }
   }
 
   /**

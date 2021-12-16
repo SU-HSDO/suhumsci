@@ -14,7 +14,7 @@ source:
   plugin: url
   data_fetcher_plugin: http
   urls: {  }
-  data_parser_plugin: json
+  data_parser_plugin: hs_localist_json
   item_selector: events
   constants:
     status: 1
@@ -44,17 +44,9 @@ source:
       label: location
       selector: event/location
     -
-      name: instance_id
-      label: instance_id
-      selector: event/event_instances/0/event_instance/id
-    -
-      name: instance_start
-      label: instance_start
-      selector: event/event_instances/0/event_instance/start
-    -
-      name: instance_end
-      label: instance_end
-      selector: event/event_instances/0/event_instance/end
+      name: event_instances
+      label: event_instances
+      selector: event/event_instances
     -
       name: address
       label: address
@@ -92,7 +84,7 @@ source:
       label: status
       selector: event/status
   ids:
-    instance_id:
+    id:
       type: string
 process:
   status: constants/status
@@ -105,14 +97,41 @@ process:
   field_hs_event_link/title: constants/external_link_text
   field_hs_event_date/value:
     -
+      plugin: array_shift
+      source: event_instances
+    -
+      plugin: extract
+      index:
+        - event_instance
+        - start
+    -
       plugin: callback
-      source: instance_start
       callable: strtotime
   field_hs_event_date/end_value:
     -
+      plugin: array_pop
+      source: event_instances
+    -
+      plugin: extract
+      index:
+        - event_instance
+        - end
+    -
       plugin: callback
-      source: instance_end
       callable: strtotime
+  field_hs_event_instances:
+    -
+      plugin: sub_process
+      source: event_instances
+      process:
+        value:
+          plugin: callback
+          callable: strtotime
+          source: event_instance/start
+        end_value:
+          plugin: callback
+          callable: strtotime
+          source: event_instance/end
   field_hs_event_category:
     -
       plugin: skip_on_empty
@@ -191,5 +210,4 @@ process:
       value_key: name
 destination:
   plugin: 'entity:node'
-migration_dependencies:
-  required: hs_localist_schedules
+migration_dependencies: {  }

@@ -1,0 +1,37 @@
+uuid: d2a00572-5480-4e97-b904-04bf48854340
+langcode: en
+status: true
+dependencies:
+  config:
+    - config_pages.type.localist_events
+    - field.field.config_pages.localist_events.field_url_individ
+    - field.field.config_pages.localist_events.field_url_separate
+  module:
+    - stanford_fields
+id: config_pages.localist_events.default
+targetEntityType: config_pages
+bundle: localist_events
+mode: default
+content:
+  field_url_individ:
+    type: localist_url
+    weight: 0
+    region: content
+    settings:
+      base_url: 'http://stanford.enterprise.localist.com/'
+      placeholder_url: ''
+      placeholder_title: ''
+      select_distinct: false
+    third_party_settings: {  }
+  field_url_separate:
+    type: localist_url
+    weight: 1
+    region: content
+    settings:
+      base_url: 'http://stanford.enterprise.localist.com/'
+      placeholder_url: ''
+      placeholder_title: ''
+      select_distinct: true
+    third_party_settings: {  }
+hidden:
+  label: true

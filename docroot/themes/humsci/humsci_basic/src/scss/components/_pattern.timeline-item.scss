@@ -1,5 +1,6 @@
 // styles for a single item in a timeline
-.ptype-hs-timeline-item {
+.ptype-hs-timeline-item,
+.views-view-pattern .hb-timeline-item {
   @include clearfix;
   position: relative;
 
@@ -20,33 +21,6 @@
   .field-hs-row-components[class*="counted-items-"] &,
   .field-hs-collection-items[class*="item-per-row--"] & {
     margin-bottom: 0 !important;
-  }
-}
-
-// This adds the connected lines and dots to the Timeline Item within the Views pattern usage.
-.views-view-pattern {
-  .hb-timeline-item {
-    @include clearfix;
-    position: relative;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      height: calc(100% - 20px);
-      width: 4px;
-      @include hb-pairing-color('background-color', 'primary');
-      left: 1rem;
-      bottom: hb-calculate-rems(-2px);
-    }
-
-    &:last-of-type::before {
-      height: 0; // remove the vertical pipe that connects timeline items from the last item
-    }
-  
-    .field-hs-row-components[class*="counted-items-"] &,
-    .field-hs-collection-items[class*="item-per-row--"] & {
-      margin-bottom: 0 !important;
-    }
   }
 }
 

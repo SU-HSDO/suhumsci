@@ -107,7 +107,16 @@ process:
     -
       plugin: callback
       callable: strtotime
-  field_hs_event_date/end_value:
+  last_start_date:
+    -
+      plugin: array_pop
+      source: event_instances
+    -
+      plugin: extract
+      index:
+        - event_instance
+        - start
+  last_end_date:
     -
       plugin: array_pop
       source: event_instances
@@ -116,6 +125,12 @@ process:
       index:
         - event_instance
         - end
+  field_hs_event_date/end_value:
+    -
+      plugin: null_coalesce
+      source:
+        - '@last_end_date'
+        - '@last_start_date'
     -
       plugin: callback
       callable: strtotime
@@ -129,9 +144,14 @@ process:
           callable: strtotime
           source: event_instance/start
         end_value:
-          plugin: callback
-          callable: strtotime
-          source: event_instance/end
+          -
+            plugin: null_coalesce
+            source:
+              - event_instance/end
+              - event_instance/start
+          -
+            plugin: callback
+            callable: strtotime
   field_hs_event_category:
     -
       plugin: skip_on_empty

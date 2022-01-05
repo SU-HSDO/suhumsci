@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\block\BlockInterface;
+use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 use Drupal\node\NodeInterface;
@@ -28,6 +29,9 @@ function su_humsci_profile_entity_presave(EntityInterface $entity) {
   if ($entity instanceof NodeInterface) {
     // Invalidate search index caches to refresh search results.
     Cache::invalidateTags(['config:search_api.index.default_index']);
+  }
+  if ($entity instanceof ConfigPagesInterface) {
+    Cache::invalidateTags(['migration_plugins']);
   }
 }
 

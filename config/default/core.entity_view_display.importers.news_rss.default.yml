@@ -14,15 +14,15 @@ bundle: news_rss
 mode: default
 content:
   field_terms:
-    weight: 1
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 1
     region: content
   field_url:
-    weight: 0
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -31,7 +31,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 0
     region: content
 hidden:
   search_api_excerpt: true

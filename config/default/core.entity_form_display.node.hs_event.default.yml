@@ -40,15 +40,15 @@ third_party_settings:
         - group_event_tags
         - group_supplement_info
         - group_post_event_details
+      label: 'Event Tabs'
+      region: content
       parent_name: ''
       weight: 1
       format_type: tabs
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         direction: horizontal
-      label: 'Event Tabs'
-      region: content
     group_event_details:
       children:
         - field_hs_event_date
@@ -56,17 +56,17 @@ third_party_settings:
         - body
         - field_hs_event_location
         - field_hs_event_map_link
+      label: 'Event Details'
+      region: content
       parent_name: group_event_tabs
       weight: 2
       format_type: tab
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         formatter: open
         description: ''
         required_fields: true
-      label: 'Event Details'
-      region: content
     group_supplement_info:
       children:
         - field_hs_event_speaker
@@ -77,61 +77,61 @@ third_party_settings:
         - field_hs_event_admission
         - field_hs_event_audience
         - field_hs_event_category
+      label: 'Supplemental Info'
+      region: content
       parent_name: group_event_tabs
       weight: 4
       format_type: tab
       format_settings:
+        classes: ''
+        id: ''
         formatter: closed
         description: ''
         required_fields: true
-        id: ''
-        classes: ''
-      label: 'Supplemental Info'
-      region: content
     group_post_event_details:
       children:
         - field_hs_event_video
         - field_hs_event_audio
+      label: 'Post Event Details'
+      region: content
       parent_name: group_event_tabs
       weight: 6
       format_type: tab
       format_settings:
+        classes: ''
+        id: ''
         formatter: closed
         description: ''
         required_fields: true
-        id: ''
-        classes: ''
-      label: 'Post Event Details'
-      region: content
     group_event_tags:
       children:
         - field_hs_event_series
         - field_hs_event_type
+      label: 'Event Tags'
+      region: content
       parent_name: group_event_tabs
       weight: 3
       format_type: tab
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         formatter: closed
         description: ''
         required_fields: true
-      label: 'Event Tags'
-      region: content
     group_conference:
       children:
         - field_conference_session
+      label: Conference
+      region: hidden
       parent_name: ''
       weight: 10
       format_type: tab
-      region: hidden
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: Conference
 _core:
   default_config_hash: e1Kpgyy7ewspR0Ahrghe--ElWw9lvDkBcUdMMNsWDyg
 id: node.hs_event.default
@@ -156,57 +156,59 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_hs_event_admission:
+    type: text_textarea
     weight: 26
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_hs_event_audience:
     type: entity_reference_autocomplete
     weight: 27
     region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
   field_hs_event_audio:
     type: media_library_widget
     weight: 25
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_hs_event_category:
     type: entity_reference_autocomplete
     weight: 28
     region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
     third_party_settings: {  }
   field_hs_event_contact_email:
-    weight: 22
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
     type: email_default
+    weight: 22
     region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
   field_hs_event_contact_phone:
+    type: telephone_default
     weight: 23
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: telephone_default
-    region: content
   field_hs_event_date:
+    type: smartdate_default
     weight: 18
+    region: content
     settings:
       modal: false
       default_duration: 60
@@ -219,15 +221,13 @@ content:
       show_extra: true
       hide_date: false
     third_party_settings: {  }
-    type: smartdate_default
-    region: content
   field_hs_event_image:
     type: media_library_widget
     weight: 19
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_hs_event_link:
     type: link_default
     weight: 24
@@ -237,24 +237,24 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
   field_hs_event_location:
+    type: string_textarea
     weight: 21
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_hs_event_map_link:
+    type: link_default
     weight: 22
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_hs_event_series:
-    weight: 23
     type: options_select
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -270,32 +270,32 @@ content:
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
+      allow_duplicate: false
       collapsible: false
       collapsed: false
-      allow_duplicate: false
       revision: false
     third_party_settings: {  }
   field_hs_event_sponsor:
+    type: string_textarea
     weight: 25
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_hs_event_type:
+    type: options_select
     weight: 24
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   field_hs_event_video:
     type: media_library_widget
     weight: 24
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   path:
     type: path
     weight: 5
@@ -304,24 +304,24 @@ content:
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 2
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 4
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 3
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -334,12 +334,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 7
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
   url_redirects:
     weight: 8

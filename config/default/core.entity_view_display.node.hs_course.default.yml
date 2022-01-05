@@ -46,9 +46,9 @@ third_party_settings:
         layout_id: three_column
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
-          context_mapping: {  }
         components:
           83cd1eee-8726-4940-9d8e-cf73c4af0b8a:
             uuid: 83cd1eee-8726-4940-9d8e-cf73c4af0b8a
@@ -56,30 +56,32 @@ third_party_settings:
             configuration:
               id: 'menu_block:main'
               label: 'Main navigation'
-              provider: menu_block
               label_display: visible
+              provider: menu_block
+              context_mapping: {  }
               follow: false
               follow_parent: active
+              label_type: root
               level: 2
               depth: 0
-              expand: true
               parent: 'main:'
               suggestion: menu_block__main
-              label_type: root
-              context_mapping: {  }
-            additional: {  }
+              expand: true
             weight: 0
+            additional: {  }
           12fe5317-34cd-40f0-aa6a-1a7890ff624a:
             uuid: 12fe5317-34cd-40f0-aa6a-1a7890ff624a
             region: main
             configuration:
               id: 'field_block:node:hs_course:title'
               label: Title
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_title_heading
+                label: hidden
                 settings:
                   tag: h1
                 third_party_settings:
@@ -87,21 +89,22 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 2
+            additional: {  }
           027ebe6d-d697-48c5-a62c-df46b4e78968:
             uuid: 027ebe6d-d697-48c5-a62c-df46b4e78968
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_section_instruc'
               label: Instructors
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: inline
                 type: entity_reference_entity_view
+                label: inline
                 settings:
                   view_mode: default
                 third_party_settings:
@@ -111,22 +114,22 @@ third_party_settings:
                     ds_limit: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 6
+            additional: {  }
           2c83390a-76c2-4da6-ab0e-1bfe7f742fbf:
             uuid: 2c83390a-76c2-4da6-ab0e-1bfe7f742fbf
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_section_number'
               label: 'Section Number'
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: inline
                 type: number_integer
+                label: inline
                 settings:
                   thousand_separator: ''
                   prefix_suffix: true
@@ -135,43 +138,42 @@ third_party_settings:
                     class: hb-highlighted-label
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 7
+            additional: {  }
           3e7b5b4a-be7a-4f2f-bc98-50996e4a2830:
             uuid: 3e7b5b4a-be7a-4f2f-bc98-50996e4a2830
             region: main
             configuration:
               id: 'field_block:node:hs_course:body'
               label: Body
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: text_default
+                label: hidden
                 settings: {  }
                 third_party_settings:
                   field_formatter_class:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 8
+            additional: {  }
           83cf3e63-a119-4e19-8c99-80693cb511cc:
             uuid: 83cf3e63-a119-4e19-8c99-80693cb511cc
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_link'
               label: 'Course Link'
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: above
                 type: link
+                label: above
                 settings:
                   trim_length: 80
                   url_only: false
@@ -183,21 +185,22 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 9
+            additional: {  }
           6d970133-88fc-48c6-90b2-cf191d04f463:
             uuid: 6d970133-88fc-48c6-90b2-cf191d04f463
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_grading'
               label: Grading
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: above
                 type: string
+                label: above
                 settings:
                   link_to_entity: false
                 third_party_settings:
@@ -205,22 +208,21 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 10
+            additional: {  }
           b8975e21-5e0b-41d4-8638-097ee92d6007:
             uuid: b8975e21-5e0b-41d4-8638-097ee92d6007
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_requirements'
               label: Requirements
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: above
                 type: string
+                label: above
                 settings:
                   link_to_entity: false
                 third_party_settings:
@@ -228,21 +230,21 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 11
+            additional: {  }
           ce68835c-10e2-44d3-a6ce-7830a9c07cd2:
             uuid: ce68835c-10e2-44d3-a6ce-7830a9c07cd2
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_section_syllabus'
               label: Syllabus
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: above
                 type: entity_reference_entity_view
+                label: above
                 settings:
                   view_mode: default
                 third_party_settings:
@@ -250,21 +252,21 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 12
+            additional: {  }
           5ca0a647-9edc-4632-9909-9be755fb29eb:
             uuid: 5ca0a647-9edc-4632-9909-9be755fb29eb
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_section_units'
               label: Units
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: above
                 type: string
+                label: above
                 settings:
                   link_to_entity: false
                 third_party_settings:
@@ -272,37 +274,38 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 13
+            additional: {  }
           86117c13-3143-41b7-918e-6c985af42602:
             uuid: 86117c13-3143-41b7-918e-6c985af42602
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_academic_career'
               label_display: ''
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
+                type: list_default
                 label: above
                 settings: {  }
                 third_party_settings: {  }
-                type: list_default
-              context_mapping:
-                entity: layout_builder.entity
+            weight: 14
             additional:
               field_name: field_hs_course_academic_career
-            weight: 14
           52c17832-c3df-4263-84a9-b912d8c227be:
             uuid: 52c17832-c3df-4263-84a9-b912d8c227be
             region: main
             configuration:
               id: 'field_block:node:hs_course:field_hs_course_tags'
               label: 'Course Tags'
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: above
                 type: entity_reference_label
+                label: above
                 settings:
                   link: false
                 third_party_settings:
@@ -312,19 +315,18 @@ third_party_settings:
                     ds_limit: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 16
+            additional: {  }
           9788a148-5579-4d83-8b24-36afb49ebbae:
             uuid: 9788a148-5579-4d83-8b24-36afb49ebbae
             region: main
             configuration:
               id: 'group_block:node'
               label: 'Group Block: Subject / Course Code'
-              provider: hs_blocks
               label_display: '0'
+              provider: hs_blocks
+              context_mapping:
+                entity: layout_builder.entity
               children:
                 dbc6450d-8455-42f7-aa22-6e25a1a409b7:
                   id: 'field_block:node:hs_course:field_hs_course_subject'
@@ -363,19 +365,19 @@ third_party_settings:
                     entity: layout_builder.entity
                     view_mode: view_mode
               class: 'hb-inline hb-borderless hb-subtitle'
-              context_mapping:
-                entity: layout_builder.entity
               uuid: 9788a148-5579-4d83-8b24-36afb49ebbae
-            additional: {  }
             weight: 3
+            additional: {  }
           68c0bda7-f42c-4c32-845a-90f47f550e22:
             uuid: 68c0bda7-f42c-4c32-845a-90f47f550e22
             region: right_sidebar
             configuration:
               id: 'group_block:node'
               label: 'Date Time Location'
-              provider: hs_blocks
               label_display: '0'
+              provider: hs_blocks
+              context_mapping:
+                entity: layout_builder.entity
               children:
                 b90d8e6c-2bc7-4699-bbff-f7873594a86a:
                   id: 'field_block:node:hs_course:field_hs_course_academic_year'
@@ -486,11 +488,9 @@ third_party_settings:
                     entity: layout_builder.entity
                     view_mode: view_mode
               class: ''
-              context_mapping:
-                entity: layout_builder.entity
               uuid: 68c0bda7-f42c-4c32-845a-90f47f550e22
-            additional: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
 id: node.hs_course.default
 targetEntityType: node
@@ -498,25 +498,25 @@ bundle: hs_course
 mode: default
 content:
   field_hs_course_academic_career:
-    weight: 101
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 101
     region: main
   field_hs_course_explore_tags:
-    weight: 102
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 102
     region: main
   links:
-    weight: 100
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 100
+    region: content
 hidden:
   body: true
   field_hs_course_academic_year: true

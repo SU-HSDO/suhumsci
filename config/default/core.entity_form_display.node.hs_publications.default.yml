@@ -30,13 +30,13 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 3
+    region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
     weight: 5
@@ -44,22 +44,22 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_hs_publication_author:
+    type: inline_entity_form_complex
     weight: 12
+    region: content
     settings:
       form_mode: default
       override_labels: true
       label_singular: Author
       label_plural: Authors
       allow_new: true
-      match_operator: CONTAINS
       allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
       collapsible: false
       collapsed: false
-      allow_duplicate: false
       revision: false
     third_party_settings: {  }
-    type: inline_entity_form_complex
-    region: content
   field_hs_publication_citation:
     type: string_textarea
     weight: 1
@@ -71,47 +71,47 @@ content:
   field_hs_publication_documents:
     type: media_library_widget
     weight: 16
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_hs_publication_image:
     type: media_library_widget
     weight: 2
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_hs_publication_link:
+    type: link_default
     weight: 13
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_hs_publication_publisher:
+    type: string_textfield
     weight: 15
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_hs_publication_type:
+    type: options_select
     weight: 14
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   field_hs_publication_year:
+    type: datetime_year_only
     weight: 11
+    region: content
     settings:
       min: '1970'
       max: 'now + 10 years'
     third_party_settings: {  }
-    type: datetime_year_only
-    region: content
   path:
     type: path
     weight: 8
@@ -120,24 +120,24 @@ content:
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 6
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 10
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 7
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -150,12 +150,12 @@ content:
   uid:
     type: entity_reference_autocomplete
     weight: 4
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
   url_redirects:
     weight: 9

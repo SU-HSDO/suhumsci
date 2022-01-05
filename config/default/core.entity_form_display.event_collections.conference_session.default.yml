@@ -19,26 +19,27 @@ third_party_settings:
         - field_session_location
         - field_session_information
         - field_session_speakers
+      label: 'Session Details'
+      region: content
       parent_name: ''
       weight: 2
       format_type: tab
-      region: content
       format_settings:
-        id: ''
         classes: ''
-        description: ''
+        id: ''
         formatter: closed
+        description: ''
         required_fields: true
-      label: 'Session Details'
 id: event_collections.conference_session.default
 targetEntityType: event_collections
 bundle: conference_session
 mode: default
 content:
   field_session_date_and_time:
+    type: smartdate_default
     weight: 1
+    region: content
     settings:
-      hide_date: false
       modal: false
       default_duration: 60
       default_duration_increments: |-
@@ -48,35 +49,34 @@ content:
         120|2 hours
         custom
       show_extra: true
+      hide_date: false
     third_party_settings: {  }
-    type: smartdate_default
-    region: content
   field_session_information:
+    type: text_textarea_with_summary
     weight: 6
+    region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-    type: text_textarea_with_summary
-    region: content
   field_session_location:
+    type: string_textfield
     weight: 5
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_session_speakers:
+    type: text_textarea
     weight: 7
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   title:
     type: string_textfield
     weight: 0

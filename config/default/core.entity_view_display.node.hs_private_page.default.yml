@@ -15,16 +15,16 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: three_column
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
-          context_mapping: {  }
         components:
           1b14db7f-b78e-4ba8-8981-7139580bf510:
             uuid: 1b14db7f-b78e-4ba8-8981-7139580bf510
@@ -32,11 +32,14 @@ third_party_settings:
             configuration:
               id: 'field_block:node:hs_private_page:field_hs_priv_page_components'
               label: Components
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: hidden
                 type: entity_reference_revisions_entity_view
+                label: hidden
                 settings:
                   view_mode: default
                 third_party_settings:
@@ -46,22 +49,22 @@ third_party_settings:
                     ds_limit: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 1
+            additional: {  }
           76457f51-f35e-4cfe-9274-a2a6e7b41b05:
             uuid: 76457f51-f35e-4cfe-9274-a2a6e7b41b05
             region: main
             configuration:
               id: 'field_block:node:hs_private_page:title'
               label: Title
-              provider: layout_builder
               label_display: ''
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                label: hidden
                 type: entity_title_heading
+                label: hidden
                 settings:
                   tag: h1
                 third_party_settings:
@@ -69,31 +72,28 @@ third_party_settings:
                     class: ''
                   hs_field_helpers:
                     inline_contents: 0
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-            additional: {  }
             weight: 0
+            additional: {  }
           0d18792c-8d7c-454f-b721-53bbcf167b7b:
             uuid: 0d18792c-8d7c-454f-b721-53bbcf167b7b
             region: left_sidebar
             configuration:
               id: 'menu_block:main'
               label: 'Main navigation'
-              provider: menu_block
               label_display: visible
+              provider: menu_block
+              context_mapping: {  }
               follow: false
               follow_parent: child
+              label_link: true
+              label_type: root
               level: 2
               depth: 0
               expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
-              label_type: root
-              label_link: true
-              context_mapping: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
 id: node.hs_private_page.default
 targetEntityType: node
@@ -102,17 +102,17 @@ mode: default
 content:
   field_hs_priv_page_components:
     type: entity_reference_revisions_entity_view
-    weight: 101
     label: above
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 101
     region: content
   links:
-    weight: 100
     settings: {  }
     third_party_settings: {  }
+    weight: 100
     region: content
 hidden:
   field_priv_wysiwyg_files: true

@@ -16,14 +16,16 @@ dependencies:
     - views
 third_party_settings:
   layout_builder:
+    enabled: true
+    allow_custom: false
     sections:
       -
         layout_id: three_column
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
-          context_mapping: {  }
         components:
           069b3c3e-3523-44be-8c93-9389ac6c6897:
             uuid: 069b3c3e-3523-44be-8c93-9389ac6c6897
@@ -31,91 +33,89 @@ third_party_settings:
             configuration:
               id: 'menu_block:main'
               label: 'Main navigation'
-              provider: menu_block
               label_display: visible
+              provider: menu_block
+              context_mapping: {  }
               follow: false
               follow_parent: active
+              label_link: true
+              label_type: root
               level: 2
               depth: 0
               expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
-              label_type: root
-              label_link: true
-              context_mapping: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
           2135652e-df1a-494d-8f0f-c2862622b119:
             uuid: 2135652e-df1a-494d-8f0f-c2862622b119
             region: main
             configuration:
               id: 'field_block:node:hs_research:title'
               label: Title
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_title_heading
+                label: hidden
                 settings:
                   tag: h1
                 third_party_settings:
                   field_formatter_class:
                     class: ''
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 1
+            additional: {  }
           c848e365-ea42-45b5-b6fd-7f9990071586:
             uuid: c848e365-ea42-45b5-b6fd-7f9990071586
             region: main
             configuration:
               id: 'field_block:node:hs_research:body'
               label: Body
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: text_default
+                label: hidden
                 settings: {  }
                 third_party_settings:
                   field_formatter_class:
                     class: ''
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 3
+            additional: {  }
           a7f24cca-3ffa-400e-82ea-a49ee29cf92b:
             uuid: a7f24cca-3ffa-400e-82ea-a49ee29cf92b
             region: main
             configuration:
               id: 'views_block:hs_default_people-research_area_grid'
               label: ''
-              provider: views
               label_display: visible
+              provider: views
+              context_mapping: {  }
               views_label: ''
               items_per_page: none
-              context_mapping: {  }
-            additional: {  }
             weight: 4
+            additional: {  }
         third_party_settings: {  }
-    enabled: true
-    allow_custom: false
 id: node.hs_research.default
 targetEntityType: node
 bundle: hs_research
 mode: default
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 101
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: content
   links:
-    weight: 100
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 100
+    region: content
 hidden:
   search_api_excerpt: true

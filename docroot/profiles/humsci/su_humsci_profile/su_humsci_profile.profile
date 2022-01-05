@@ -5,19 +5,38 @@
  * su_humsci_profile.profile
  */
 
-use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\block\BlockInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
+use Drupal\node\NodeInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_entity_presave().
+ */
+function su_humsci_profile_entity_presave(EntityInterface $entity) {
+  if ($entity instanceof NodeInterface) {
+    // Invalidate search index caches to refresh search results.
+    Cache::invalidateTags(['config:search_api.index.default_index']);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function su_humsci_profile_entity_delete(EntityInterface $entity) {
+  su_humsci_profile_entity_presave($entity);
+}
 
 /**
  * Implements hook_preprocess_HOOK().

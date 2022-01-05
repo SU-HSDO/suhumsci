@@ -6,16 +6,16 @@ dependencies:
     - ctools
 id: courses_by_content_type
 label: 'Courses by Content Type'
-enabled: true
-conditions:
-  'entity_bundle:node':
-    id: 'entity_bundle:node'
-    bundles:
-      hs_course: hs_course
-    negate: false
-    context_mapping:
-      node: '@node.node_route_context:node'
 menu_name: main
 parent: 'menu_link_content:5bf79e72-e80f-4534-a23b-0957e928fea7'
 menu_link: 'menu_position_link:courses_by_content_type'
+enabled: true
 weight: -3
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      hs_course: hs_course

@@ -15,14 +15,16 @@ dependencies:
     - user
 third_party_settings:
   layout_builder:
+    enabled: true
+    allow_custom: true
     sections:
       -
         layout_id: three_column
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: hs-full-width
           region_widths: center
-          context_mapping: {  }
         components:
           13b1ba92-73e2-42fc-8cd2-e4743faf8899:
             uuid: 13b1ba92-73e2-42fc-8cd2-e4743faf8899
@@ -30,26 +32,26 @@ third_party_settings:
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_hero'
               label: 'Hero Image'
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_reference_revisions_entity_view
+                label: hidden
                 settings:
                   view_mode: default
                 third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
       -
         layout_id: three_column
         layout_settings:
           label: ''
+          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
-          context_mapping: {  }
         components:
           24d81da8-5fb2-4032-ab8a-4029d47d06ac:
             uuid: 24d81da8-5fb2-4032-ab8a-4029d47d06ac
@@ -57,61 +59,59 @@ third_party_settings:
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_components'
               label: Components
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_reference_revisions_entity_view
+                label: hidden
                 settings:
                   view_mode: default
                 third_party_settings:
                   ds:
                     ds_limit: ''
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 1
+            additional: {  }
           3b1a10ed-5309-47bf-acff-654a1d64f7f0:
             uuid: 3b1a10ed-5309-47bf-acff-654a1d64f7f0
             region: main
             configuration:
               id: 'field_block:node:hs_basic_page:title'
               label: Title
-              provider: layout_builder
               label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
-                label: hidden
                 type: entity_title_heading
+                label: hidden
                 settings:
                   tag: h1
                 third_party_settings: {  }
-              context_mapping:
-                entity: layout_builder.entity
-            additional: {  }
             weight: 0
+            additional: {  }
           16405d26-e8b4-4c8a-896b-c7a45873dd4d:
             uuid: 16405d26-e8b4-4c8a-896b-c7a45873dd4d
             region: left_sidebar
             configuration:
               id: 'menu_block:main'
               label: 'Main navigation'
-              provider: menu_block
               label_display: visible
+              provider: menu_block
+              context_mapping: {  }
               follow: false
               follow_parent: active
+              label_link: true
+              label_type: root
               level: 2
               depth: 0
               expand_all_items: true
               parent: 'main:'
               suggestion: menu_block__main
-              label_type: root
-              label_link: true
-              context_mapping: {  }
-            additional: {  }
             weight: 0
+            additional: {  }
         third_party_settings: {  }
-    allow_custom: true
-    enabled: true
 _core:
   default_config_hash: uC1KAjQU7_UN3WcFmpXZ4VWYZm1HoMqsKmmZneOeolM
 id: node.hs_basic_page.default

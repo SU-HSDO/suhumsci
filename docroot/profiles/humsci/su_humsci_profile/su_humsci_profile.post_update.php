@@ -49,7 +49,7 @@ function _su_humsci_profile_disable_paragraph($entity_type, $bundle, $field_name
   if ($settings['handler_settings']['negate']) {
     $settings['handler_settings']['target_bundles'][$paragraph_type] = $paragraph_type;
     $settings['handler_settings']['target_bundles_drag_drop'][$paragraph_type] = [
-      'enabled' => FALSE,
+      'enabled' => TRUE,
       'weight' => 99,
     ];
   }

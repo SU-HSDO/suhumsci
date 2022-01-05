@@ -6,16 +6,16 @@ dependencies:
     - ctools
 id: publications_by_content_type
 label: 'Publications by content type'
-enabled: true
-conditions:
-  'entity_bundle:node':
-    id: 'entity_bundle:node'
-    bundles:
-      hs_publications: hs_publications
-    negate: false
-    context_mapping:
-      node: '@node.node_route_context:node'
 menu_name: main
 parent: 'menu_link_content:9494c2a8-3985-472c-9eab-283e22c781e8'
 menu_link: 'menu_position_link:publications_by_content_type'
+enabled: true
 weight: 2
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      hs_publications: hs_publications

@@ -19,15 +19,15 @@ bundle: image
 mode: media_library
 content:
   field_media_image:
-    weight: 1
-    settings:
-      preview_image_style: thumbnail
-      offsets: '50,50'
-      progress_indicator: throbber
-      preview_link: false
-    third_party_settings: {  }
     type: image_focal_point
+    weight: 1
     region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+      preview_link: false
+      offsets: '50,50'
+    third_party_settings: {  }
   field_media_image_caption:
     type: text_textarea
     weight: 2
@@ -46,12 +46,12 @@ content:
         hide_guidelines: '0'
   name:
     type: string_textfield
+    weight: 0
+    region: content
     settings:
       size: 60
       placeholder: ''
-    weight: 0
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   path: true

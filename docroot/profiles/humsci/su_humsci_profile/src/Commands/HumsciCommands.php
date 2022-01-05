@@ -67,6 +67,7 @@ class HumsciCommands extends DrushCommands {
         $style = $paragraph->get('field_paragraph_style')->getString();
         $row_components = $paragraph->get('field_hs_row_components')
           ->getValue();
+        /** @var \Drupal\paragraphs\ParagraphInterface $collection */
         $collection = $paragraph_storage->create([
           'type' => $collection_type,
           'field_hs_collection_per_row' => count($row_components),

@@ -6,16 +6,16 @@ dependencies:
     - ctools
 id: events_by_content_type
 label: 'Events by content type'
-enabled: true
-conditions:
-  'entity_bundle:node':
-    id: 'entity_bundle:node'
-    bundles:
-      hs_event: hs_event
-    negate: false
-    context_mapping:
-      node: '@node.node_route_context:node'
 menu_name: main
 parent: 'menu_link_content:85077122-2465-40b9-8226-d8d521c00b1c'
 menu_link: 'menu_position_link:events_by_content_type'
+enabled: true
 weight: -2
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      hs_event: hs_event

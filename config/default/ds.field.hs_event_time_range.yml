@@ -1,6 +1,10 @@
 id: hs_event_time_range
 label: 'Event Time Range'
 ui_limit: 'hs_event|*'
+type: block
+type_label: 'Block field'
+entities:
+  node: node
 properties:
   block: 'field_block:node:hs_event:field_hs_event_date'
   use_block_title: false
@@ -8,16 +12,18 @@ properties:
   config:
     id: 'field_block:node:hs_event:field_hs_event_date'
     label: ''
-    provider: layout_builder
     label_display: ''
+    provider: layout_builder
+    context_mapping:
+      entity: '@node.node_route_context:node'
     formatter:
-      label: hidden
       type: smartdate_custom
+      label: hidden
       settings:
+        separator: ' - '
         date_format: 'g:i A'
         custom_date_format: ''
         timezone: ''
-        separator: ' - '
         join: ''
         time_format: ''
         time_hour_format: ''
@@ -29,9 +35,3 @@ properties:
           class: ''
         hs_field_helpers:
           inline_contents: 0
-    context_mapping:
-      entity: '@node.node_route_context:node'
-type: block
-type_label: 'Block field'
-entities:
-  node: node

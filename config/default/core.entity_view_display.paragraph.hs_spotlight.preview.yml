@@ -42,52 +42,52 @@ third_party_settings:
       image:
         - field_hs_spotlight_image
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 id: paragraph.hs_spotlight.preview
 targetEntityType: paragraph
 bundle: hs_spotlight
 mode: preview
 content:
   field_hs_spotlight_body:
-    weight: 1
+    type: smart_trim
     label: hidden
     settings:
       trim_length: 60
       trim_type: words
       trim_suffix: …
-      wrap_class: trimmed
-      more_text: More
-      more_class: more-link
       wrap_output: false
+      wrap_class: trimmed
       more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
       trim_options:
         text: false
         trim_zero: false
-      summary_handler: full
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: smart_trim
+    weight: 1
     region: overlay_text
   field_hs_spotlight_image:
     type: media_responsive_image_formatter
-    weight: 1
     label: hidden
     settings:
       view_mode: caption_credit
-      image_style: landscape_rectangle
       link: false
+      image_style: landscape_rectangle
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 1
     region: image
   field_hs_spotlight_link:
-    weight: 2
+    type: link
     label: hidden
     settings:
       trim_length: 80
@@ -100,10 +100,10 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: link
+    weight: 2
     region: overlay_text
   field_hs_spotlight_title:
-    weight: 0
+    type: entity_title_heading
     label: hidden
     settings:
       tag: h2
@@ -112,7 +112,7 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    type: entity_title_heading
+    weight: 0
     region: overlay_text
 hidden:
   field_hs_spotlight_height: true

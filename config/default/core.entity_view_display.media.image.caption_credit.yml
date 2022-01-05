@@ -16,8 +16,8 @@ dependencies:
     - smart_trim
 third_party_settings:
   layout_builder:
-    allow_custom: false
     enabled: false
+    allow_custom: false
 _core:
   default_config_hash: UHOBG3TcAwserLclcHcEOGnkPaJlP9n_tSpy7TmELFQ
 id: media.image.caption_credit
@@ -26,37 +26,37 @@ bundle: image
 mode: caption_credit
 content:
   field_media_image:
+    type: responsive_image
     label: hidden
     settings:
       responsive_image_style: full_responsive
       image_link: ''
     third_party_settings: {  }
-    type: responsive_image
     weight: 0
     region: content
   field_media_image_caption:
     type: smart_trim
-    weight: 1
-    region: content
     label: hidden
     settings:
       trim_length: 160
       trim_type: chars
       trim_suffix: ...
-      wrap_class: trimmed
-      more_text: More
-      more_class: more-link
       wrap_output: false
+      wrap_class: trimmed
       more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
       trim_options:
         text: false
         trim_zero: false
-      summary_handler: full
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
+    weight: 1
+    region: content
 hidden:
   created: true
   name: true

@@ -109,7 +109,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->setEventOverrides($names, $overrides);
     $this->setPublicationOverrides($names, $overrides);
     $this->setThemeSettingsOverrides($names, $overrides);
-    $this->setSearcHApiOverrides($names, $overrides);
+    $this->setSearchApiOverrides($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
@@ -311,7 +311,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @param array $overrides
    *   Keyed array of config overrides.
    */
-  protected function setSearcHApiOverrides(array $names, array &$overrides) {
+  protected function setSearchApiOverrides(array $names, array &$overrides) {
     if (!in_array('search_api.index.default_index', $names)) {
       return;
     }

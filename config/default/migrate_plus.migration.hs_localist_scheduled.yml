@@ -134,6 +134,15 @@ process:
     -
       plugin: callback
       callable: strtotime
+    -
+      plugin: datetime_adjust
+      start_time: '@field_hs_event_date/value'
+  field_hs_event_date/duration:
+    -
+      plugin: date_diff
+      source:
+        - '@field_hs_event_date/end_value'
+        - '@field_hs_event_date/value'
   field_hs_event_instances:
     -
       plugin: sub_process
@@ -152,6 +161,14 @@ process:
           -
             plugin: callback
             callable: strtotime
+          -
+            plugin: datetime_adjust
+            start_time: '@value'
+        duration:
+          plugin: date_diff
+          source:
+            - '@value'
+            - '@end_value'
   field_hs_event_category:
     -
       plugin: skip_on_empty

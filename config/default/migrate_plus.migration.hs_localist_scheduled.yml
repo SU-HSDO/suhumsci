@@ -1,0 +1,250 @@
+uuid: 6bf5f2eb-8e86-4a28-a72f-7d22e33a8237
+langcode: en
+status: false
+dependencies: {  }
+id: hs_localist_scheduled
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: hs_events
+label: 'Localist Scheduled Events importer'
+source:
+  track_changes: true
+  plugin: url
+  data_fetcher_plugin: http
+  urls: {  }
+  data_parser_plugin: hs_localist_json
+  item_selector: events
+  constants:
+    status: 1
+    type: hs_event
+    timezone: 25200
+    basic_html: basic_html
+    minimal_html: minimal_html
+    map_link_text: 'View on a map'
+    external_link_text: 'See more about the event'
+    image_path: 'public://events/localist/'
+    alt: ''
+  fields:
+    -
+      name: id
+      label: id
+      selector: event/id
+    -
+      name: title
+      label: 'Event Title'
+      selector: event/title
+    -
+      name: url
+      label: url
+      selector: event/url
+    -
+      name: location
+      label: location
+      selector: event/location
+    -
+      name: event_instances
+      label: event_instances
+      selector: event/event_instances
+    -
+      name: address
+      label: address
+      selector: event/address
+    -
+      name: description
+      label: description
+      selector: event/description
+    -
+      name: audience
+      label: audience
+      selector: event/filters/event_audience
+    -
+      name: subject
+      label: subject
+      selector: event/filters/event_subject
+    -
+      name: type
+      label: type
+      selector: event/filters/event_types
+    -
+      name: localist_url
+      label: localist_url
+      selector: event/localist_url
+    -
+      name: photo_url
+      label: photo_url
+      selector: event/photo_url
+    -
+      name: departments
+      label: departments
+      selector: event/departments
+    -
+      name: status
+      label: status
+      selector: event/status
+  ids:
+    id:
+      type: string
+process:
+  status: constants/status
+  type: constants/type
+  title: title
+  body/value: description
+  body/format: constants/basic_html
+  field_hs_event_location: location
+  field_hs_event_link/uri: localist_url
+  field_hs_event_link/title: constants/external_link_text
+  field_hs_event_date/value:
+    -
+      plugin: array_shift
+      source: event_instances
+    -
+      plugin: extract
+      index:
+        - event_instance
+        - start
+    -
+      plugin: callback
+      callable: strtotime
+  last_start_date:
+    -
+      plugin: array_pop
+      source: event_instances
+    -
+      plugin: extract
+      index:
+        - event_instance
+        - start
+  last_end_date:
+    -
+      plugin: array_pop
+      source: event_instances
+    -
+      plugin: extract
+      index:
+        - event_instance
+        - end
+  field_hs_event_date/end_value:
+    -
+      plugin: null_coalesce
+      source:
+        - '@last_end_date'
+        - '@last_start_date'
+    -
+      plugin: callback
+      callable: strtotime
+    -
+      plugin: datetime_adjust
+      start_time: '@field_hs_event_date/value'
+  field_hs_event_date/duration:
+    -
+      plugin: date_diff
+      source:
+        - '@field_hs_event_date/end_value'
+        - '@field_hs_event_date/value'
+  field_hs_event_instances:
+    -
+      plugin: sub_process
+      source: event_instances
+      process:
+        value:
+          plugin: callback
+          callable: strtotime
+          source: event_instance/start
+        end_value:
+          -
+            plugin: null_coalesce
+            source:
+              - event_instance/end
+              - event_instance/start
+          -
+            plugin: callback
+            callable: strtotime
+          -
+            plugin: datetime_adjust
+            start_time: '@value'
+        duration:
+          plugin: date_diff
+          source:
+            - '@value'
+            - '@end_value'
+  field_hs_event_category:
+    -
+      plugin: skip_on_empty
+      source: type
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          plugin: entity_generate
+          entity_type: taxonomy_term
+          bundle_key: vid
+          bundle: hs_event_category
+          value_key: name
+          source: name
+  field_hs_event_audience:
+    -
+      plugin: skip_on_empty
+      source: audience
+      method: process
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          plugin: entity_generate
+          entity_type: taxonomy_term
+          bundle_key: vid
+          bundle: hs_event_audience
+          value_key: name
+          source: name
+  image_file:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: photo_url
+    -
+      plugin: file_import
+      destination: constants/image_path
+      id_only: true
+      reuse: true
+  image_name:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: photo_url
+    -
+      plugin: callback
+      callable: basename
+  field_hs_event_image/target_id:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: photo_url
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_file'
+    -
+      plugin: entity_generate
+      source: '@image_name'
+      value_key: name
+      bundle_key: bundle
+      bundle: image
+      entity_type: media
+      ignore_case: true
+      values:
+        field_media_image/target_id: '@image_file'
+        field_media_image/alt: constants/alt
+  field_hs_event_status:
+    -
+      source: status
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: hs_event_status
+      value_key: name
+destination:
+  plugin: 'entity:node'
+migration_dependencies: {  }

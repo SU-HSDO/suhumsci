@@ -137,6 +137,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Collection');
+    $I->canSeeNumberOfElements('.form-item-field-hs-page-components-1-subform-field-hs-collection-per-row option', 4);
     $I->selectOption('Items Per Row', 2);
     $I->canSeeOptionIsSelected('Style', '- None -');
     $I->click('Add Text Area', '.field--name-field-hs-collection-items');

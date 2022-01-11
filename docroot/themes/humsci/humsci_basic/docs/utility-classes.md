@@ -107,6 +107,7 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 | Class                | Description         | Works in Views?     |
 |----------------------|---------------------|        :---:        |
 | hb-views-divider | Adds a line beneath the view (except the last row), goes 100% width | ✅|
+| hb-timeline__collapsed | Makes the Vertical Timeline in the View use the Collapsed Vertical Timeline Variant | ✅|
 
 #### Card Image Widths in Views
 All images in card patterns have default widths defined:

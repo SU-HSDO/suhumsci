@@ -1,0 +1,6 @@
+services:
+  hs_degrees_offered_importer.overrider:
+    class: Drupal\hs_degrees_offered_importer\Overrides\ConfigOverrides
+    arguments: ['@config.factory']
+    tags:
+      - {name: config.factory.override, priority: 5}

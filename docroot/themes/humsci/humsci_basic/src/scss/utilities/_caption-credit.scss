@@ -92,12 +92,12 @@
       margin-bottom: hb-spacing-width('xs');
     }
 
-    article {
+    article:not(.hb-media-video):not(.hb-media-embed) {
       position: relative;
-    }
 
-    figcaption {
-      @include hb-caption-credit;
+      + figcaption {
+        @include hb-caption-credit;
+      }
     }
   }
 }

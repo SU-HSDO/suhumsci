@@ -238,6 +238,7 @@
 
         &.is-active {
           @include hb-global-color('color', 'black');
+          @include hb-pairing-color('background-color', 'secondary-highlight');
 
           @include grid-media-min('lg') {
             @include hb-global-color('color', 'white');
@@ -375,7 +376,8 @@
       }
     }
 
-    &--active-trail {
+    &--active-trail,
+    &[data-drupal-link-system-path="<front>"].is-active {
       &::before {
         content: '';
         display: block;

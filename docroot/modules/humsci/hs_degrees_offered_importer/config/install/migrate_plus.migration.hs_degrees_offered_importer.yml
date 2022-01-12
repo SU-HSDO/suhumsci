@@ -1,6 +1,9 @@
+uuid: cbf736c2-fd7a-4827-ba14-71617c572884
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: 1sKMNhi_5-3P233OsgpHyhvFBUc8QWF3TTKrRH8lzeM
 id: hs_degrees_offered_importer
 class: null
 field_plugin_method: null
@@ -18,12 +21,12 @@ source:
   item_selector: /nodes/node
   fields:
     -
-      name: guid
-      label: GUID
-      selector: guid
+      name: uuid
+      label: uuid
+      selector: uuid
     -
       name: title
-      label: 'Title'
+      label: Title
       selector: title
     -
       name: externalLinkUrl
@@ -35,30 +38,26 @@ source:
       selector: externalLinkTitle
     -
       name: certificate
-      label: 'Certificate'
+      label: Certificate
       selector: certificate
     -
       name: undergraduate
-      label: 'Undergraduate'
+      label: Undergraduate
       selector: undergraduate
     -
       name: minor
-      label: 'Minor'
+      label: Minor
       selector: minor
     -
       name: graduate
-      label: 'Graduate'
+      label: Graduate
       selector: graduate
     -
       name: joint
-      label: 'Joint'
+      label: Joint
       selector: joint
-    -
-      name: uuid
-      label: uuid
-      selector: uuid
   ids:
-    guid:
+    uuid:
       type: string
   constants:
     status: 1
@@ -75,3 +74,4 @@ process:
   custm_deg_website_link: externalLinkUrl
 destination:
   plugin: 'entity:node'
+migration_dependencies: null

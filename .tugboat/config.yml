@@ -20,35 +20,27 @@ services:
 
       # Commands that set up the basic preview infrastructure
       init:
-        # Install drush-launcher
-        - wget -O /usr/local/bin/drush https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
-        - chmod +x /usr/local/bin/drush
-
         # Symlink the tugboat directory to the docker image expected path.
         - rm -rf /var/www/localhost
         - ln -snf ${TUGBOAT_ROOT} /var/www/localhost
         - ln -s docroot htdocs
 
         # Install/update packages managed by composer, including drush
-        - composer self-update --2
         - composer install --no-ansi
-        - vendor/bin/blt blt:telemetry:disable --no-interaction
+        - blt blt:telemetry:disable --no-interaction
 
         # Init the settings files.
-        - vendor/bin/blt blt:init:settings
+        - blt blt:init:settings
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
-        - vendor/bin/blt source:build:simplesamlphp-config
-        - vendor/bin/blt drupal:install -n
+        - blt source:build:simplesamlphp-config
+        - blt drupal:install -n
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:
         - composer install --no-ansi
-        - vendor/bin/blt drupal:update
+        - blt drupal:update
         - drush pmu simplesamlphp_auth -y
-      online:
-        # Restart the Apache service when it's all ready.
-        - httpd -k restart
 
     # Collection of urls to compare visual results.
     visualdiffs:

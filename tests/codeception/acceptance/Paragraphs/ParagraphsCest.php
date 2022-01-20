@@ -10,12 +10,10 @@ class ParagraphsCest {
    *
    * @group install
    * @group existingSite
-   * @group testme
    */
   public function testPrivateCollectionParagraph(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/node/add/hs_basic_page');
-    $I->cantSeeElement('[name*="hs_priv_collection"]');
 
     // Enabled on private pages.
     $I->amOnPage('/admin/structure/types/manage/hs_private_page/fields/node.hs_private_page.field_hs_priv_page_components');

@@ -42,6 +42,43 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
 10. Depending on the local domains you've set up, you may need to add a `docroot/sites/local.sites.php` file, and use it to add your local domains to the `$sites` array. Otherwise, requests to your local multisite domains may get sent to the default site.
 11. To run codeception tests run `lando blt codeception --group=install`. Or if you wish to run a single class/method add the annotation in the docblock `@group testme` and then run `lando blt codeception --group=testme`.
 
+# Configure local instance to recognize `sparkbox_sandbox` as the default site
+- Edit `docroot/sites/default/settings/local.settings.php` database connection to be the connection located in `docroot/sites/sparkbox_sandbox/settings/local.settings.php`.
+
+- Create `drush/local.drush.yml`
+
+```
+# # This file defines drush configuration that applies to drush commands
+# # for the entire application. For site-specific settings, like URI, use
+# # ../docroot/sites/[site]/drush.yml
+drush:
+  paths:
+    # Load a drush.yml configuration file from the current working directory.
+    config:
+      - ../docroot/sites/sparkbox_sandbox/local.drush.yml
+      - docroot/sites/sparkbox_sandbox/local.drush.yml
+      # Allow local global config overrides.
+      - local.drush.yml
+      - drush/local.drush.yml
+    include:
+      - '${env.home}/.drush'
+      - /usr/share/drush/commands
+
+```
+- Edit `.lando.yml` `services > database > creds` to connect to `sparkbox_sandbox` database.
+
+```
+Example:
+services:
+  appserver:
+    ssl: true
+  database: # Override the database that comes in the drupal8
+    creds:  # recipe and use it for the /sites/default site.
+      user: drupal
+      password: drupal
+      database: sparkbox_sandbox
+```
+
 # Switching between local sites
 1. In your `.lando.yml` file, uncomment the service for the site you want to run locally.
 2. Run `lando rebuild` (this needs to be run anytime you make changes to `.lando.yml`).

@@ -46,7 +46,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $config = $this->configFactory->get('hs_events_importer.settings');
     if ($urls = $config->get('urls')) {
       $urls = array_filter($urls, function ($url) {
-        return $url != 'https://events.stanford.edu/xml/drupal/v2.php?=';
+        return $url != 'https://events-legacy.stanford.edu/xml/drupal/v2.php?=';
       });
 
       $overrides['migrate_plus.migration.hs_events_importer'] = [

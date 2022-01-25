@@ -154,7 +154,11 @@ process:
   field_hs_event_location: location
   field_hs_event_map_link/uri: map_link
   field_hs_event_map_link/title: constants/map_link_text
-  field_hs_event_link/uri: link
+  field_hs_event_link/uri:
+    plugin: str_replace
+    source: link
+    search: events.stanford.edu
+    replace: events-legacy.stanford.edu
   field_hs_event_link/title: constants/external_link_text
   field_hs_event_date/value:
     -

@@ -33,7 +33,7 @@ function hs_events_importer_update_8002() {
   $urls = $config->get('urls');
   if (is_array($urls) && !empty($urls)) {
     foreach ($urls as &$url) {
-      $urls = str_replace('events.stanford.edu', 'events-legacy.stanford.edu', $url);
+      $url = str_replace('events.stanford.edu', 'events-legacy.stanford.edu', $url);
     }
     $config->set('urls', $urls)->save();
   }

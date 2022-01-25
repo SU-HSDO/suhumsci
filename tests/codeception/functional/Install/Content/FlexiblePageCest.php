@@ -88,6 +88,7 @@ class FlexiblePageCest {
 
    /**
    * Verify main menu links at mobile size
+   * @group z
    */
   public function testMobileMenu(FunctionalTester $I) {
     // Check standard menu item links
@@ -114,8 +115,10 @@ class FlexiblePageCest {
     }
 
     // Check nested menu item links
+    $I->makeScreenshot('before_toggle');
     $I->click('.hb-main-nav__toggle');
     $I->click('.hb-nested-toggler');
+    $I->makeScreenshot('after_toggle');
     $I->waitForElementVisible('.hb-main-nav__menu-lv2');
     $I->click('.hb-main-nav__menu-lv2 a');
 

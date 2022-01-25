@@ -20,7 +20,7 @@ class EventsImporterForm extends ConfigFormBase {
   /**
    * URL Endpoint for getting categories.
    */
-  const STANFORD_EVENTS_IMPORTER_XML = "https://events.stanford.edu/xml/drupal/v2.php";
+  const STANFORD_EVENTS_IMPORTER_XML = "https://events-legacy.stanford.edu/xml/drupal/v2.php";
 
   /**
    * Entity type manager service.
@@ -260,13 +260,13 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Get the full url for events.stanford.edu based on the user's selections.
+   * Get the full url for events-legacy.stanford.edu based on the user's selections.
    *
    * @param array $choices
    *   Keyed array of form values.
    *
    * @return string
-   *   Events.stanford.edu URL.
+   *   events-legacy.stanford.edu URL.
    */
   protected function getFullUrl(array $choices) {
     // All our extra form fields are stored in _other.
@@ -292,7 +292,7 @@ class EventsImporterForm extends ConfigFormBase {
    * Validate that the user entered values are xml feeds from stanford events.
    *
    * @param string $url
-   *   Url to events.stanford.edu.
+   *   Url to events-legacy.stanford.edu.
    * @param array $form
    *   Complete form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -344,7 +344,7 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Get the organization options available form the events.stanford.edu.
+   * Get the organization options available form the events-legacy.stanford.edu.
    *
    * @return array
    *   Keyed array of org id => name.
@@ -369,7 +369,7 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Get the Category options available form the events.stanford.edu.
+   * Get the Category options available form the events-legacy.stanford.edu.
    *
    * @return array
    *   Keyed array of category id => name.
@@ -418,7 +418,7 @@ class EventsImporterForm extends ConfigFormBase {
    * Parse the url and build an array with the query parts.
    *
    * @param string $url
-   *   Events.stanford.edu url.
+   *   events-legacy.stanford.edu url.
    *
    * @return array
    *   Keyed array of the query parameters for the url.
@@ -439,7 +439,7 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Separate out the urls that arent targeting events.stanford.edu.
+   * Separate out the urls that arent targeting events-legacy.stanford.edu.
    *
    * @param array $urls
    *   Array of urls.
@@ -457,7 +457,7 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Separate out the urls that do target events.stanford.edu.
+   * Separate out the urls that do target events-legacy.stanford.edu.
    *
    * @param array $urls
    *   Array of urls.

@@ -260,13 +260,13 @@ class EventsImporterForm extends ConfigFormBase {
   }
 
   /**
-   * Get the full url for events-legacy.stanford.edu based on the user's selections.
+   * Get the full url for events-legacy.stanford.edu based on the selections.
    *
    * @param array $choices
    *   Keyed array of form values.
    *
    * @return string
-   *   events-legacy.stanford.edu URL.
+   *   Events-legacy.stanford.edu URL.
    */
   protected function getFullUrl(array $choices) {
     // All our extra form fields are stored in _other.
@@ -418,7 +418,7 @@ class EventsImporterForm extends ConfigFormBase {
    * Parse the url and build an array with the query parts.
    *
    * @param string $url
-   *   events-legacy.stanford.edu url.
+   *   Events-legacy.stanford.edu url.
    *
    * @return array
    *   Keyed array of the query parameters for the url.

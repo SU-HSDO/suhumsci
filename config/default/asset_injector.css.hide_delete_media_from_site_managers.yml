@@ -1,0 +1,23 @@
+uuid: 582d045c-c851-4567-a97e-370cd9804562
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: hide_delete_media_from_site_managers
+label: 'Hide Delete Media from Site Managers'
+code: 'li.entitymediadelete-form { display: none;}'
+media: all
+preprocess: true
+conditions:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      contributor: contributor
+      site_manager: site_manager
+      author: author
+contexts: {  }
+conditions_require_all: true

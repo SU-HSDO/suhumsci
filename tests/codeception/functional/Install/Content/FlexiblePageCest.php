@@ -115,7 +115,7 @@ class FlexiblePageCest {
     }
 
     // Check nested menu item links
-    // $I->makeScreenshot('before_toggle');
+    $I->makeScreenshot('before_toggler');
     // $I->click('.hb-main-nav__toggle');
     // $I->waitForElementVisible('.hb-nested-toggler');
     // $I->click('.hb-nested-toggler');

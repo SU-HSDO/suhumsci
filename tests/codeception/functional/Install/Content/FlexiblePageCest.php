@@ -100,14 +100,14 @@ class FlexiblePageCest {
     // It will check for the visible element and continue steps for either scenario.
     try {
       $I->waitForElementVisible('.hb-main-nav__link');
-      // Continue to do this if it's present
+      // Continue to do this if it's present.
       $I->seeElement('.hb-main-nav__link');
       $I->click('.hb-main-nav__link');
-      echo 'If you see this, the menu was open and the link was clicked.';
+      echo ('If you see this, the menu was open and the link was clicked.');
 
     } catch (\Exception $e) {
       // Do this if it's not present.
-      echo 'If you see this, the menu needs toggled.';
+      echo ('If you see this, the menu needs toggled.');
       $I->click('button.hb-main-nav__toggle');
       $I->waitForElementVisible('.hb-main-nav__link');
       $I->seeElement('.hb-main-nav__link');
@@ -115,13 +115,32 @@ class FlexiblePageCest {
     }
 
     // Check nested menu item links
-    $I->makeScreenshot('before_toggler');
+    try {
+      echo ('If you see this, the nested menu link was already available to click.');
+      $I->waitForElementVisible('.hb-main-nav__menu-lv2');
+      // Click nested menu link if it's already visible.
+      $I->click('.hb-main-nav__menu-lv2 a');
+
+    } catch (\Exception $e) {
+      // Do this if the nested menu link is not already visible.
+      echo ('If you see this, the nested menu link needs to be opened to click.');
+      $I->click('.hb-main-nav__toggle');
+      $I->waitForElementVisible('.hb-nested-toggler');
+      $I->click('.hb-nested-toggler');
+      $I->makeScreenshot('after_toggle');
+      $I->waitForElementVisible('.hb-main-nav__menu-lv2');
+      $I->click('.hb-main-nav__menu-lv2 a');
+    }
+
+
+    // Check nested menu item links
+    // $I->makeScreenshot('before_toggler');
     // $I->click('.hb-main-nav__toggle');
-    $I->waitForElementVisible('.hb-nested-toggler');
+    // $I->waitForElementVisible('.hb-nested-toggler');
     // $I->click('.hb-nested-toggler');
     // $I->makeScreenshot('after_toggle');
-    $I->waitForElementVisible('.hb-main-nav__menu-lv2');
-    $I->click('.hb-main-nav__menu-lv2 a');
+    // $I->waitForElementVisible('.hb-main-nav__menu-lv2');
+    // $I->click('.hb-main-nav__menu-lv2 a');
 
 
     // Check standard menu item links for logged in users

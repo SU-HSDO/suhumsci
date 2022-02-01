@@ -3,6 +3,7 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use Drupal\Core\Serialization\Yaml;
 use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 use Symfony\Component\Console\Question\Question;
 
@@ -143,7 +144,7 @@ class HsAcquiaApiCommands extends BltTasks {
   public function syncStaging(array $options = [
     'exclude' => NULL,
     'resume' => FALSE,
-    'env' => 'test'
+    'env' => 'test',
   ]) {
     $task_started = time() - (60 * 60 * 24);
     $this->connectAcquiaApi();
@@ -297,6 +298,53 @@ class HsAcquiaApiCommands extends BltTasks {
       $sites = array_slice($sites, $last_db_position);
     }
     return array_diff($sites, $finished_databases);
+  }
+
+  /**
+   * Copy hs_colorful site database and files to hs_traditional stage and prod.
+   *
+   * @command humsci:copy-colorful
+   */
+  public function copyHsColorful() {
+    $database_path = sys_get_temp_dir() . '/temp.hs_colorful.sql';
+    $docroot = $this->getConfigValue('docroot');
+    $tasks[] = $this->taskDrush()
+      ->alias('hs_colorful.prod')
+      ->drush('sql-dump')
+      ->rawArg("> $database_path")
+      ->rawArg('-Dssh.tty=0');
+    $tasks[] = $this->taskDrush()
+      ->drush('rsync')
+      ->rawArg('@hs_colorful.prod:%files/')
+      ->rawArg("$docroot/sites/hs_colorful/files")
+      ->option('exclude-paths', 'css:js')
+      ->option('no-interaction')
+      ->option(' --delete')
+      ->interactive(TRUE)
+      ->ansi(FALSE);
+    $destinations = [
+      'hs_colorful.stage',
+      'hs_traditional.stage',
+      'hs_traditional.prod',
+    ];
+    foreach ($destinations as $destination) {
+      $tasks[] = $this->taskDrush()
+        ->alias($destination)
+        ->drush('sql-drop')
+        ->drush('sql-cli')
+        ->rawArg("< $database_path")
+        ->drush('cr');
+
+      $tasks[] = $this->taskDrush()
+        ->drush('rsync')
+        ->rawArg("$docroot/sites/hs_colorful/files/")
+        ->rawArg("@$destination:%files/")
+        ->option('no-interaction')
+        ->option(' --delete')
+        ->interactive(TRUE)
+        ->ansi(FALSE);
+    }
+    return $this->collectionBuilder()->addTaskList($tasks)->run();
   }
 
 }

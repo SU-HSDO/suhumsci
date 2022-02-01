@@ -19,7 +19,7 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 use Drupal\node\NodeInterface;
 use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
 
 /**
@@ -207,7 +207,7 @@ function su_humsci_profile_block_access(BlockInterface $block, $operation, Accou
  */
 function su_humsci_profile_entity_operation_alter(array &$operations, EntityInterface $entity) {
   $role_delegation = \Drupal::moduleHandler()->moduleExists('role_delegation');
-  if ($entity instanceof User && $role_delegation) {
+  if ($entity instanceof UserInterface && $role_delegation) {
     $operations['roles'] = [
       'title' => t('Manage Roles'),
       'weight' => 11,
@@ -511,9 +511,26 @@ function su_humsci_profile_node_access(EntityInterface $node, $op, AccountInterf
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function su_humsci_profile_user_access(UserInterface $entity, $operation, AccountInterface $account) {
+  return _su_humsci_profile_allowed_to_grant_role($account);
+}
+
+/**
  * Implements hook_entity_field_access().
  */
 function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($operation == 'view' && $field_definition->getTargetEntityTypeId() == 'user') {
+    return AccessResult::allowedIfHasPermission($account, 'view user list');
+  }
+  if (
+    $operation == 'edit' &&
+    $field_definition->getName() =='roles' &&
+    $items->getEntity() instanceof UserInterface
+  ) {
+    return _su_humsci_profile_allowed_to_grant_role($account);
+  }
   if (
     $field_definition->getName() == 'status' &&
     $field_definition->getTargetEntityTypeId() == 'node' &&
@@ -522,6 +539,25 @@ function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterf
   ) {
     // Prevent unpublishing the home, 404 and 403 pages.
     return su_humsci_profile_node_access($items->getEntity(), 'delete', $account);
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Check if the current user has permission to grant the role being triggered.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   Current account.
+ *
+ * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultNeutral|\Drupal\Core\Access\AccessResultReasonInterface
+ *   Result of the access check.
+ */
+function _su_humsci_profile_allowed_to_grant_role(AccountInterface $account){
+  $action = \Drupal::requestStack()
+    ->getCurrentRequest()->request->get('action');
+  if (preg_match('/user_.*_action\.(.*)/', $action, $matches)) {
+    $role_name = $matches[1];
+    return AccessResult::allowedIfHasPermission($account, "assign $role_name role");
   }
   return AccessResult::neutral();
 }

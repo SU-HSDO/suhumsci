@@ -3,7 +3,6 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
-use Drupal\Core\Serialization\Yaml;
 use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 use Symfony\Component\Console\Question\Question;
 
@@ -308,6 +307,7 @@ class HsAcquiaApiCommands extends BltTasks {
   public function copyHsColorful() {
     $database_path = sys_get_temp_dir() . '/temp.hs_colorful.sql';
     $docroot = $this->getConfigValue('docroot');
+    $tasks = [];
     $tasks[] = $this->taskDrush()
       ->alias('hs_colorful.prod')
       ->drush('sql-dump')

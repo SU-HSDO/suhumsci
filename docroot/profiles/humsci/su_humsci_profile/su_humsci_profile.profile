@@ -134,7 +134,7 @@ function su_humsci_profile_contextual_links_alter(array &$links, $group, array $
     !in_array($group, ['media', 'block_content']) &&
     !\Drupal::currentUser()->hasPermission('view all contextual links')
   ) {
-      $links = [];
+    $links = [];
   }
 }
 
@@ -526,7 +526,7 @@ function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterf
   }
   if (
     $operation == 'edit' &&
-    $field_definition->getName() =='roles' &&
+    $field_definition->getName() == 'roles' &&
     $items->getEntity() instanceof UserInterface
   ) {
     return _su_humsci_profile_allowed_to_grant_role($account);
@@ -552,7 +552,7 @@ function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterf
  * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultNeutral|\Drupal\Core\Access\AccessResultReasonInterface
  *   Result of the access check.
  */
-function _su_humsci_profile_allowed_to_grant_role(AccountInterface $account){
+function _su_humsci_profile_allowed_to_grant_role(AccountInterface $account) {
   $action = \Drupal::requestStack()
     ->getCurrentRequest()->request->get('action');
   if (preg_match('/user_.*_action\.(.*)/', $action, $matches)) {

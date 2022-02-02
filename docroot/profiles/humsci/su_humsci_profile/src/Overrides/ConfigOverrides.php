@@ -113,7 +113,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
-        $overrides['google_analytics.settings']['account'] = $value[0]['value'];
+        $overrides['google_analytics.settings']['account'] = $value[0]['value'] ?? '';
       }
     }
     return $overrides;

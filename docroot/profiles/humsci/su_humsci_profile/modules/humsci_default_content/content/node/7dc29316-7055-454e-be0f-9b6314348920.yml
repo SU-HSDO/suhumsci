@@ -4,10 +4,12 @@ _meta:
   uuid: 7dc29316-7055-454e-be0f-9b6314348920
   bundle: hs_basic_page
   default_langcode: en
+  depends:
+    8c765ff7-e8f3-42cc-9650-16bb7896167a: user
 default:
   revision_uid:
     -
-      target_id: 1
+      entity: 8c765ff7-e8f3-42cc-9650-16bb7896167a
   status:
     -
       value: true
@@ -34,14 +36,23 @@ default:
       alias: /accessibility-reference-page
       langcode: en
       pathauto: 1
+  rh_action:
+    -
+      value: bundle_default
+  rh_redirect_response:
+    -
+      value: 301
+  rh_redirect_fallback_action:
+    -
+      value: bundle_default
   field_hs_page_components:
     -
       entity:
         _meta:
           version: '1.0'
           entity_type: paragraph
-          uuid: 55813e0d-d688-4e8e-acba-a68c17d660a3
-          bundle: hs_row
+          uuid: 9e254255-350d-43ef-988f-0d097511220c
+          bundle: hs_collection
           default_langcode: en
         default:
           status:
@@ -49,20 +60,17 @@ default:
               value: true
           created:
             -
-              value: 1607052445
+              value: 1642185317
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
-          field_hs_row_components:
+          field_hs_collection_items:
             -
               entity:
                 _meta:
                   version: '1.0'
                   entity_type: paragraph
-                  uuid: 882de3b8-979d-4e6b-9cc4-b7455b22e65c
+                  uuid: fe374051-63de-415d-8976-f834c0678f8f
                   bundle: hs_text_area
                   default_langcode: en
                 default:
@@ -71,17 +79,17 @@ default:
                       value: true
                   created:
                     -
-                      value: 1607052448
+                      value: 1642185161
                   behavior_settings:
                     -
                       value: {  }
-                  revision_translation_affected:
-                    -
-                      value: true
                   field_hs_text_area:
                     -
                       value: "<p>Most important things to keep in mind:&nbsp;</p>\r\n\r\n<ol>\r\n\t<li>Proper heading structure</li>\r\n\t<li>Meaningful hyperlinks and file names</li>\r\n\t<li>Images with alt text</li>\r\n\t<li>Captions and transcripts for audio and video</li>\r\n\t<li>Caution with tables</li>\r\n</ol>\r\n"
                       format: basic_html
+          field_hs_collection_per_row:
+            -
+              value: 1
           field_paragraph_style:
             -
               value: well
@@ -103,9 +111,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_hs_text_area:
             -
               value: "<p class=\"hs-font-splash text-align-center\">Headings</p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>Headings provide a meaningful structure overview</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>“Fake” headings created with style changes (like bold font) are not recognized by screen readers</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Headings are in hierarchical order, no skipping</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Heading &lt;h1&gt; is the page title; start with h2</span></span></span></span></span></span></li>\r\n</ul>\r\n\r\n<h2>Major Topic - Heading 2</h2>\r\n\r\n<h3>sub topic - Heading 3</h3>\r\n\r\n<h3>another sub topic - Heading 3</h3>\r\n\r\n<h2>Another Major Topic - Heading 2</h2>\r\n\r\n<h3>lower level than a major topic - Heading 3</h3>\r\n\r\n<h4>an even lower level - Heading 4</h4>\r\n\r\n<hr />\r\n<p>&nbsp;</p>\r\n"
@@ -128,9 +133,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_hs_text_area:
             -
               value: "<p class=\"hs-font-splash text-align-center\">Hyperlinks and Files</p>\r\n\r\n<ul>\r\n\t<li>Meaningful links names are better</li>\r\n\t<li>The links are read aloud by a screen reader</li>\r\n</ul>\r\n"
@@ -140,8 +142,8 @@ default:
         _meta:
           version: '1.0'
           entity_type: paragraph
-          uuid: 2f34626f-393a-4282-8cd1-594fc044ad12
-          bundle: hs_row
+          uuid: c057f1de-e222-41a4-a220-55a48e7402c7
+          bundle: hs_collection
           default_langcode: en
         default:
           status:
@@ -149,20 +151,17 @@ default:
               value: true
           created:
             -
-              value: 1607052532
+              value: 1642185267
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
-          field_hs_row_components:
+          field_hs_collection_items:
             -
               entity:
                 _meta:
                   version: '1.0'
                   entity_type: paragraph
-                  uuid: ef64b65e-7b55-4e2f-b603-5fd4e80ecece
+                  uuid: 616a32b0-026e-4c1b-ad40-5bdda6c487c9
                   bundle: hs_text_area
                   default_langcode: en
                 default:
@@ -171,13 +170,10 @@ default:
                       value: true
                   created:
                     -
-                      value: 1607052539
+                      value: 1642185196
                   behavior_settings:
                     -
                       value: {  }
-                  revision_translation_affected:
-                    -
-                      value: true
                   field_hs_text_area:
                     -
                       value: "<p><a class=\"hs-more-link\" href=\"https://google.com\">Learn&nbsp;more about the major</a></p>\r\n\r\n<p>vs</p>\r\n\r\n<p><a class=\"hs-more-link\" href=\"https://google.com\">click here</a></p>\r\n"
@@ -187,7 +183,7 @@ default:
                 _meta:
                   version: '1.0'
                   entity_type: paragraph
-                  uuid: 6cb0b6d7-2156-4812-950b-02ee33514479
+                  uuid: 2f6d388f-fc4b-4968-bd30-b43bd5c6de44
                   bundle: hs_text_area
                   default_langcode: en
                 default:
@@ -196,17 +192,17 @@ default:
                       value: true
                   created:
                     -
-                      value: 1607052536
+                      value: 1642185196
                   behavior_settings:
                     -
                       value: {  }
-                  revision_translation_affected:
-                    -
-                      value: true
                   field_hs_text_area:
                     -
                       value: "<p><a class=\"hs-pdf-link\" href=\"https://google.com\">Classics Major Declaration Form</a></p>\r\n\r\n<p>vs</p>\r\n\r\n<p><a class=\"hs-pdf-link\" href=\"https://google.com\">majdec_form_vkiszka_v2.pdf</a></p>\r\n"
                       format: basic_html
+          field_hs_collection_per_row:
+            -
+              value: 2
     -
       entity:
         _meta:
@@ -225,9 +221,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_hs_text_area:
             -
               value: "<hr />\r\n<p class=\"hs-font-splash text-align-center\">Images</p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>“Alternative text” provides a textual alternative to non-text content in web pages</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Helpful for people who rely on a screen reader to provide equivalence</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Some gray area</span></span></span></span></span></span></li>\r\n</ul>\r\n\r\n<drupal-media data-align=\"left\" data-entity-type=\"media\" data-entity-uuid=\"38bb3d0a-b9db-4f26-9cb2-567bfabf8222\" data-view-mode=\"stanford_image_large\"></drupal-media>\r\n\r\n<p>Not helpful: image</p>\r\n\r\n<p>Helpful: Glasses on an open book</p>\r\n"
@@ -255,7 +248,7 @@ default:
               value: true
           field_hs_text_area:
             -
-              value: "<hr />\r\n<p class=\"hs-font-splash text-align-center\"><span><span><span><span><span>Captions and Transcripts</span></span></span></span></span></p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>If you include media on your website, include captions and transcripts</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Course related media, Office of Accessible Education (OAE) will assist</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Other media, H&amp;S will pay 50% of captioning fees</span></span></span></span></span></span></li>\r\n</ul>\r\n\r\n<p>&nbsp;</p>\r\n"
+              value: "<hr />\r\n<p class=\"hs-font-splash text-align-center\"><span><span><span><span><span>Captions and Transcripts</span></span></span></span></span></p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>If you include media on your website, include captions and transcripts</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>Course related media, Office of Accessible Education (OAE) will assist</span></span></span></span></span></span></li>\r\n</ul>\r\n\r\n<p>&nbsp;</p>\r\n"
               format: basic_html
     -
       entity:
@@ -275,9 +268,6 @@ default:
           behavior_settings:
             -
               value: {  }
-          revision_translation_affected:
-            -
-              value: true
           field_hs_text_area:
             -
               value: "<hr />\r\n<p class=\"hs-font-splash text-align-center\">Tables</p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>Fewer tables:&nbsp;</span></span></span></span></span></span>\r\n\r\n\t<ul>\r\n\t\t<li><span><span><span><span><span><span>Only when necessary and truly tabular data</span></span></span></span></span></span></li>\r\n\t\t<li><span><span><span><span><span><span>When a table is used for text formatting purposes, find an alternative</span></span></span></span></span></span></li>\r\n\t\t<li><span><span><span><span><span><span>A</span></span></span></span></span></span><span><span><span><span><span><span>lso hard on phones and small screens</span></span></span></span></span></span></li>\r\n\t</ul>\r\n\t</li>\r\n</ul>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>If a table is required:&nbsp;</span></span></span></span></span></span>\r\n\r\n\t<ul>\r\n\t\t<li><span><span><span><span><span><span>Column headings required</span></span></span></span></span></span></li>\r\n\t\t<li><span><span><span><span><span><span>Data cells must be associated with header cells</span></span></span></span></span></span></li>\r\n\t</ul>\r\n\t</li>\r\n</ul>\r\n\r\n<h2>Bad Table Example</h2>\r\n\r\n<table>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td>\r\n\t\t\t<p>Typical Program timetable</p>\r\n\t\t\t</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td>\r\n\t\t\t<p>1st Year</p>\r\n\t\t\t</td>\r\n\t\t\t<td>Math 51</td>\r\n\t\t\t<td>Math 52</td>\r\n\t\t\t<td>Math 53</td>\r\n\t\t\t<td>CS 103</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td>\r\n\t\t\t<p>2nd Year</p>\r\n\t\t\t</td>\r\n\t\t\t<td>Math 113 or 104</td>\r\n\t\t\t<td>Stats 116</td>\r\n\t\t\t<td>WIM Course</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td>\r\n\t\t\t<p>3rd Year</p>\r\n\t\t\t</td>\r\n\t\t\t<td>CS 107</td>\r\n\t\t\t<td>MS&amp;E 211</td>\r\n\t\t\t<td>CME108</td>\r\n\t\t\t<td>Elective #1</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td>\r\n\t\t\t<p>4th Year</p>\r\n\t\t\t</td>\r\n\t\t\t<td>Stats 101 or 203</td>\r\n\t\t\t<td>MS&amp;E 221</td>\r\n\t\t\t<td>Elective #2</td>\r\n\t\t\t<td>Elective #3</td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<h3>A more accessible alternative to the table above</h3>\r\n\r\n<p><span><span><span><strong><span><span>Typical Program Timetable:</span></span></strong></span></span></span></p>\r\n\r\n<ul>\r\n\t<li><span><span><span><span><span><span>1st Year: Math 51; Math 52; Math 53; CS 103</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>2nd Year: Math 104 or 113; Stats 116; WIM course</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>3rd Year: CS 107; MS&amp;E 211; CME 108;&nbsp;Stats 200;&nbsp;Elective (#1)</span></span></span></span></span></span></li>\r\n\t<li><span><span><span><span><span><span>4th Year: Stats 191 or 203; MS&amp;E 221; Elective (#2); Elective (#3)</span></span></span></span></span></span></li>\r\n</ul>\r\n\r\n<p>&nbsp;</p>\r\n"

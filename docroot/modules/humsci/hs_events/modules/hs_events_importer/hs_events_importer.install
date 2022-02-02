@@ -23,3 +23,57 @@ function hs_events_importer_update_8001() {
     ->set('urls', $urls)
     ->save();
 }
+
+/**
+ * Update importer for events-legacy domain.
+ */
+function hs_events_importer_update_8002() {
+  $config = \Drupal::configFactory()
+    ->getEditable('hs_events_importer.settings');
+  $urls = $config->get('urls');
+  if (is_array($urls) && !empty($urls)) {
+    foreach ($urls as &$url) {
+      $url = str_replace('events.stanford.edu', 'events-legacy.stanford.edu', $url);
+    }
+    $config->set('urls', $urls)->save();
+  }
+
+  $migration_config = \Drupal::configFactory()
+    ->getEditable('migrate_plus.migration.hs_events_importer');
+  $source = $migration_config->get('process.field_hs_event_link/uri');
+  $source = [
+    'plugin' => 'str_replace',
+    'source' => $source,
+    'search' => 'events.stanford.edu',
+    'replace' => 'events-legacy.stanford.edu',
+  ];
+  $migration_config->set('process.field_hs_event_link/uri', $source)->save();
+}
+
+/**
+ * Update event node urls to point at the events-legacy domain.
+ */
+function hs_events_importer_update_8003(&$sandbox) {
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $node_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_event')
+      ->condition('field_hs_event_link', '%events.stanford.edu%', 'LIKE')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $node_ids = array_splice($sandbox['ids'], 0, 10);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($node_storage->loadMultiple($node_ids) as $node) {
+    /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+    foreach ($node->get('field_hs_event_link') as $field_item) {
+      $uri = $field_item->get('uri');
+      $uri->setValue(str_replace('events.stanford.edu', 'events-legacy.stanford.edu', $uri->getString()));
+    }
+    $node->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

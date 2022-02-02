@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_contact_phone
     - field.field.node.hs_event.field_hs_event_date
     - field.field.node.hs_event.field_hs_event_image
+    - field.field.node.hs_event.field_hs_event_instances
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
@@ -24,12 +25,14 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
     - system.menu.main
+    - views.view.hs_default_events
   module:
     - hs_blocks
     - hs_layouts
     - layout_builder
     - menu_block
     - user
+    - views
 third_party_settings:
   layout_builder:
     enabled: true
@@ -356,28 +359,6 @@ third_party_settings:
                     inline_contents: 0
             weight: 5
             additional: {  }
-          539302b3-6711-4835-bc42-e6e5e34ba696:
-            uuid: 539302b3-6711-4835-bc42-e6e5e34ba696
-            region: top
-            configuration:
-              id: 'field_block:node:hs_event:field_hs_event_admission'
-              label: 'Admission Information'
-              label_display: ''
-              provider: layout_builder
-              context_mapping:
-                entity: layout_builder.entity
-                view_mode: view_mode
-              formatter:
-                type: text_default
-                label: hidden
-                settings: {  }
-                third_party_settings:
-                  field_formatter_class:
-                    class: hs-secondary-button
-                  hs_field_helpers:
-                    inline_contents: 0
-            weight: 12
-            additional: {  }
           e94bc142-2ac9-4b6c-98a3-4827eaa5d618:
             uuid: e94bc142-2ac9-4b6c-98a3-4827eaa5d618
             region: title
@@ -445,6 +426,19 @@ third_party_settings:
                   hs_field_helpers:
                     inline_contents: 1
             weight: 1
+            additional: {  }
+          638c4721-b448-491e-ad57-41fd1ca4aa1c:
+            uuid: 638c4721-b448-491e-ad57-41fd1ca4aa1c
+            region: top
+            configuration:
+              id: 'views_block:hs_default_events-block_1'
+              label: ''
+              label_display: '0'
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 13
             additional: {  }
         third_party_settings: {  }
 _core:

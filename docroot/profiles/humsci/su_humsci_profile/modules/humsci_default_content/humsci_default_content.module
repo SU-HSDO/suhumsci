@@ -15,11 +15,14 @@ function _humsci_default_content_update_info() {
   foreach (glob(__DIR__ . '/content/*') as $directory) {
     $entity_type = basename($directory);
     $info['default_content'][$entity_type] = [];
-
-    foreach (glob("$directory/*.json") as $file) {
-      $info['default_content'][$entity_type][] = basename($file, '.json');
+    $entities = \Drupal::entityTypeManager()
+      ->getStorage($entity_type)
+      ->loadMultiple();
+    foreach ($entities as $entity) {
+      $info['default_content'][$entity_type][] = $entity->uuid();
     }
     asort($info['default_content'][$entity_type]);
+    $info['default_content'][$entity_type] = array_values($info['default_content'][$entity_type]);
   }
   file_put_contents(__DIR__ . '/humsci_default_content.info.yml', Yaml::encode($info));
 }

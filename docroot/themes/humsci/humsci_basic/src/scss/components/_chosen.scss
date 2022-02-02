@@ -6,6 +6,16 @@
 // Base
 .chosen-container {
   width: 100% !important; // This overrides an inline width
+  @include hb-global-color('background', 'white');
+  
+  @include hb-themes(('colorful', 'airy')) {
+    border-radius: $hb-border-radius;
+  }
+
+  @include hb-traditional {
+    // Need this to override Chosen JS
+    border-radius: 0;
+  }
 
   .chosen-drop {
     @include hb-input-border;
@@ -184,11 +194,6 @@
     margin: -1px 0;
     padding: 0 $hb-input-icon-spacing 0 hb-calculate-rems(8px);
     border: 0 none;
-
-    .hb-dark-pattern &,
-    .hb-dark-inversion .views-element-container & {
-      @include hb-global-color('background', 'white', '!important');
-    }
   }
 
   .chosen-choices li {

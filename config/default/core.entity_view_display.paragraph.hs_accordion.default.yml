@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_accordion.field_hs_accord_expcol
     - field.field.paragraph.hs_accordion.field_hs_accordion_description
     - field.field.paragraph.hs_accordion.field_hs_accordion_summary
     - field.field.paragraph.hs_accordion.field_hs_accordion_views
@@ -30,9 +31,9 @@ third_party_settings:
             open: ''
     regions:
       title:
+        - field_hs_accord_expcol
         - field_hs_accordion_summary
       description:
-        - field_hs_accordion_image
         - field_hs_accordion_description
         - field_hs_accordion_views
 id: paragraph.hs_accordion.default
@@ -40,6 +41,16 @@ targetEntityType: paragraph
 bundle: hs_accordion
 mode: default
 content:
+  field_hs_accord_expcol:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 0
+    region: title
   field_hs_accordion_description:
     type: text_default
     label: hidden
@@ -53,7 +64,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: title
   field_hs_accordion_views:
     type: viewfield_default

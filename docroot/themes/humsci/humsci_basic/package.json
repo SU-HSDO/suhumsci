@@ -5,7 +5,7 @@
   "main": "Gruntfile.js",
   "scripts": {
     "start": "npm run build && npm run watch",
-    "backstop:init": "node ./backstop/backstop.js",
+    "backstop:init": "node ./backstop/generate-backstop.js",
     "backstop:reference": "backstop reference --config='./backstop/backstop.json'",
     "backstop:test": "backstop test --config='./backstop/backstop.json'",
     "build:sass": "grunt compile",
@@ -23,7 +23,8 @@
   "license": "MIT",
   "dependencies": {
     "bourbon": "^5.1.0",
-    "decanter": "^6.0.0"
+    "decanter": "^6.0.0",
+    "dotenv": "^8.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -31,7 +32,6 @@
     "autoprefixer": "^9.7.3",
     "babel-loader": "^8.0.6",
     "backstopjs": "^5.3.2",
-    "dotenv": "^8.5.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.25.2",

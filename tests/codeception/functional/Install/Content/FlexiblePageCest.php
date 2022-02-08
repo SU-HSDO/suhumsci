@@ -88,7 +88,6 @@ class FlexiblePageCest {
 
    /**
    * Verify main menu links at mobile size
-   * @group z
    */
   public function testMobileMenu(FunctionalTester $I) {
     // Check standard menu item links

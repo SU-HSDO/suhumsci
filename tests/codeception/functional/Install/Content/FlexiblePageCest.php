@@ -104,7 +104,8 @@ class FlexiblePageCest {
       $I->click('.hb-main-nav__link');
       echo ('If you see this, the menu was open and the link was clicked.');
 
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Do this if it's not present.
       echo ('If you see this, the menu needs toggled.');
       $I->click('button.hb-main-nav__toggle');
@@ -121,7 +122,8 @@ class FlexiblePageCest {
       // Click nested menu link if it's already visible.
       $I->click('.hb-main-nav__menu-lv2 a');
 
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Do this if the nested menu link is not already visible.
       echo ('If you see this, the nested menu link needs to be opened to click.');
       $I->click('.hb-main-nav__toggle');
@@ -141,4 +143,5 @@ class FlexiblePageCest {
     $I->seeElement('.hb-main-nav__menu');
     $I->click('.hb-main-nav__link');
   }
+  
 }

@@ -143,5 +143,5 @@ class FlexiblePageCest {
     $I->seeElement('.hb-main-nav__menu');
     $I->click('.hb-main-nav__link');
   }
-  
+
 }

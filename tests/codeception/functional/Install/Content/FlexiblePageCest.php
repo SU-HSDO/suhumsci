@@ -46,8 +46,6 @@ class FlexiblePageCest {
 
   /**
    * Create a photo album page.
-   *
-   * @group testme
    */
   public function testPhotoAlbum(FunctionalTester $I) {
     $I->logInWithRole('administrator');

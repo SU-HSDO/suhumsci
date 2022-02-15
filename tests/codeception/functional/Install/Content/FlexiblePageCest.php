@@ -8,6 +8,13 @@
 class FlexiblePageCest {
 
   /**
+   * Resize the window at the start.
+   */
+  public function _before(FunctionalTester $I){
+    $I->resizeWindow(2000, 1400);
+  }
+
+  /**
    * I can create a page with a hero banner.
    */
   public function testHeroParagraph(FunctionalTester $I) {

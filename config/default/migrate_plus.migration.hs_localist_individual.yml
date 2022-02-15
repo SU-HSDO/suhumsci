@@ -24,6 +24,7 @@ source:
     minimal_html: minimal_html
     map_link_text: 'View on a map'
     external_link_text: 'See more about the event'
+    register_text: Register
     image_path: 'public://events/localist/'
     alt: ''
   fields:
@@ -91,6 +92,10 @@ source:
       name: status
       label: status
       selector: event/status
+    -
+      name: ticket_url
+      label: ticket_url
+      selector: event/ticket_url
   ids:
     instance_id:
       type: string
@@ -103,6 +108,22 @@ process:
   field_hs_event_location: location
   field_hs_event_link/uri: localist_url
   field_hs_event_link/title: constants/external_link_text
+  field_hs_event_registration/uri: ticket_url
+  field_hs_event_registration/title: constants/register_text
+  field_hs_event_sponsor:
+    -
+      plugin: skip_on_empty
+      source: departments
+      method: process
+    -
+      plugin: sub_process
+      process:
+        name: name
+    -
+      plugin: flatten
+    -
+      plugin: concat
+      delimiter: "\n"
   field_hs_event_date/value:
     -
       plugin: callback
@@ -110,9 +131,16 @@ process:
       callable: strtotime
   field_hs_event_date/end_value:
     -
+      plugin: null_coalesce
+      source:
+        - instance_end
+        - instance_start
+    -
       plugin: callback
-      source: instance_end
       callable: strtotime
+    -
+      plugin: datetime_adjust
+      start_time: '@field_hs_event_date/value'
   field_hs_event_category:
     -
       plugin: skip_on_empty

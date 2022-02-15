@@ -554,7 +554,7 @@ function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterf
  */
 function _su_humsci_profile_allowed_to_grant_role(AccountInterface $account) {
   $action = \Drupal::requestStack()
-    ->getCurrentRequest()->request->get('action');
+    ->getCurrentRequest()->request->get('action', '');
   if (preg_match('/user_.*_action\.(.*)/', $action, $matches)) {
     $role_name = $matches[1];
     return AccessResult::allowedIfHasPermission($account, "assign $role_name role");

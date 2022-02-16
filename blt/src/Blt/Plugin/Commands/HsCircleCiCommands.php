@@ -18,6 +18,8 @@ class HsCircleCiCommands extends BltTasks {
    */
   const SITES_TO_TEST = 5;
 
+  const DB_URL = 'mysql://drupal:drupal@localhost/drupal';
+
   /**
    * Run codeception tests on a patch of sites.
    *
@@ -168,7 +170,11 @@ class HsCircleCiCommands extends BltTasks {
    */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
-    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal"');
+    // Create the database and things.
+    $tasks[] = $this->taskDrush()
+      ->drush('si')
+      ->arg('minimal')
+      ->option('db-url', self::DB_URL);
 
     $docroot = $this->getConfigValue('docroot');
 

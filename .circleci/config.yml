@@ -131,6 +131,7 @@ phpunit_coverage: &phpunit_coverage
     - run:
         name: Run PHPUnit Coverage Tests
         command: |
+          dockerize -wait tcp://localhost:3306 -timeout 1m
           apachectl stop; apachectl start
           vendor/bin/blt tests:phpunit:coverage --no-interaction
     - store_test_results:

@@ -5,6 +5,7 @@
 How we build themes:
 * [Mixins](/docroot/themes/humsci/humsci_basic/docs/mixins.md)
 * [CSS Prefixing](/docroot/themes/humsci/humsci_basic/docs/css-prefixing.md)
+* [Adding a New Theme](/docroot/themes/humsci/humsci_basic/docs/new-theme.md)
 
 ## Classes
 

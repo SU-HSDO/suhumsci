@@ -178,7 +178,7 @@ class HsCircleCiCommands extends BltTasks {
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
 
-    // Drop the database to start fresh
+    // Drop the database to start fresh.
     $tasks[] = $this->taskDrush()->drush('sql-drop');
 
     $docroot = $this->getConfigValue('docroot');

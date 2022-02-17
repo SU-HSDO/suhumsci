@@ -6,6 +6,7 @@ How we build themes:
 * [Mixins](/docroot/themes/humsci/humsci_basic/docs/mixins.md)
 * [CSS Prefixing](/docroot/themes/humsci/humsci_basic/docs/css-prefixing.md)
 * [Adding a New Theme](/docroot/themes/humsci/humsci_basic/docs/new-theme.md)
+* [Adding a New Color Pairing](/docroot/themes/humsci/humsci_basic/docs/new-color-pairing.md)
 
 ## Classes
 

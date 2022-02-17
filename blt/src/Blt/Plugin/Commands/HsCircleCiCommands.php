@@ -185,20 +185,16 @@ class HsCircleCiCommands extends BltTasks {
       $tasks[] = $this->taskFilesystemStack()
         ->copy("$docroot/sites/$site/settings.php", "$docroot/sites/default/settings.php", TRUE);
     }
-
     $tasks[] = $this->taskDrush()
       ->alias("$site.prod")
       ->drush('sql-dump')
-      ->option('result-file', "/mnt/tmp/humscigryphon/$site.sql", '=');
-    $tasks[] = $this->taskDrush()
-      ->drush('rsync')
-      ->rawArg("@$site.prod:/mnt/tmp/humscigryphon/$site.sql /tmp/$site.sql")
-      ->option('mode', 'rultz', '=');
+      ->rawArg('> /tmp/db.sql')
+      ->rawArg('-Dssh.tty=0');
 
     $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
     $tasks[] = $this->taskDrush()
-      ->drush('sql-cli ')
-      ->rawArg("< /tmp/$site.sql");
+      ->drush('sql-cli')
+      ->rawArg('< /tmp/db.sql');
 
     $tasks[] = $this->taskExecStack()
       ->exec("rm -rf $docroot/sites/default/files");

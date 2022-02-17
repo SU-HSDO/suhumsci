@@ -72,9 +72,12 @@ class HsEntityGenerateTest extends UnitTestCase {
    */
   public function testTranform() {
 
+    $destination_plugin = $this->createMock(MigrateDestinationInterface::class);
+    $destination_plugin->method('getPluginId')->willReturn('entity_generate');
+
     $migration = $this->createMock(MigrationInterface::class);
     $migration->method('getDestinationPlugin')
-      ->willReturn($this->createMock(MigrateDestinationInterface::class));
+      ->willReturn($destination_plugin);
     $configuration = [
       'entity_type' => 'type',
       'value_key' => 'key',

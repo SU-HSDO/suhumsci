@@ -46,6 +46,13 @@ class HsCircleCiCommands extends BltTasks {
     $this->prepEnvironment();
 
     $collection = $this->collectionBuilder();
+
+    // Create the database and things.
+    $collection->addTask($this->taskDrush()
+      ->drush('si')
+      ->arg('minimal')
+      ->option('db-url', self::DB_URL));
+
     foreach (array_rand($sites, self::SITES_TO_TEST) as $site) {
       $collection->addTaskList($this->syncAcquia($site));
       $collection->addTask($this->blt()
@@ -170,11 +177,9 @@ class HsCircleCiCommands extends BltTasks {
    */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
-    // Create the database and things.
-    $tasks[] = $this->taskDrush()
-      ->drush('si')
-      ->arg('minimal')
-      ->option('db-url', self::DB_URL);
+
+    // Drop the database to start fresh
+    $tasks[] = $this->taskDrush()->drush('sql-drop');
 
     $docroot = $this->getConfigValue('docroot');
 

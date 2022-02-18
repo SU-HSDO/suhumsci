@@ -24,6 +24,8 @@ function togglaAllAccordions(accordionList, command) {
 function createToggle() {
   const toggleButton = document.createElement('Button');
   toggleButton.innerText = 'Expand All';
+  toggleButton.classList.add('hb-link');
+  toggleButton.classList.add('hb-accordion-toggle-all');
 
   return toggleButton;
 }

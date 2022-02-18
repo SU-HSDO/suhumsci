@@ -7,11 +7,11 @@
 function togglaAllAccordions(accordionList, command) {
   if (command === 'closeAll') {
     accordionList.forEach((accordion) => {
-      accordion.open = false;
+      accordion.removeAttribute('open');
     });
   } else {
     accordionList.forEach((accordion) => {
-      accordion.open = true;
+      accordion.setAttribute('open', '');
     });
   }
 }
@@ -38,7 +38,7 @@ function updateToggle(toggleButton, command) {
   if (command === 'closeAll') {
     toggleButton.innerText = 'Expand All';
   } else {
-    toggleButton.innerText = 'Close All';
+    toggleButton.innerText = 'Collapse All';
   }
 }
 
@@ -53,7 +53,7 @@ function willToggleAll(className) {
   const findToggleClass = document.querySelector(`.${className}`);
 
   // If the findToggleClass exists then return true, else return false
-  return findToggleClass ? true : false;
+  return !!findToggleClass;
 }
 
 // Create a list of all accordions on the page

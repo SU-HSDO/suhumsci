@@ -1,4 +1,5 @@
 ## Color Pairings
+
 A single theme can have multiple color pairings. The default pairing for the Colorful Theme is Ocean, and for the Traditional Theme is Cardinal.
 
 Color palettes for each theme are set in `/humsci_basic/src/scss/settings/_variables.colorful-pairings.scss` and `/humsci_basic/src/scss/settings/_variables.traditional-pairings.scss`.

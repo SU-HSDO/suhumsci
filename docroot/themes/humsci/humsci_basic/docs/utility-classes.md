@@ -32,6 +32,7 @@
 </table>
 
 ### Field Utility Classes
+
 Field Utility Classes are used to apply styles to a field in a view (Drupal Home / Administration / Structure / Views) or to a field within a block in layout builder.
 
 | Class                | Description         | Works in Views?     |
@@ -67,6 +68,7 @@ Field Utility Classes are used to apply styles to a field in a view (Drupal Home
 <br>
 
 ### Group Block Utility Classes
+
 Group Block Utility Classes are used to apply styles to node group blocks within the layout builder.
 
 | Class                | Description         | Works in Views?     |
@@ -81,6 +83,7 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 <br>
 
 ### WYSIWYG Platform Wide Text Area Classes
+
 | Class                | Works in Views?     |
 |----------------------|        :---:        |
 | hs-font-splash | ✅|
@@ -104,13 +107,16 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 
 
 ### Views
+
 | Class                | Description         | Works in Views?     |
 |----------------------|---------------------|        :---:        |
 | hb-views-divider | Adds a line beneath the view (except the last row), goes 100% width | ✅|
 | hb-timeline__collapsed | Makes the Vertical Timeline in the View use the Collapsed Vertical Timeline Variant | ✅|
 
 #### Card Image Widths in Views
+
 All images in card patterns have default widths defined:
+
 * 100% (12 columns) for vertical cards
 * 30% ( 5 columns) for horizontal and structured cards (starting at the md breakpoint)
 These styles can be overridden by adding utility classes to the entire view. `hb-card-image-*` classes follow a similar naming convention to the [Decanter Grid System](https://decanter.stanford.edu/page/layouts-grid-system/), including the responsive names.
@@ -138,6 +144,7 @@ For best practice, you might just want to use one responsive class if you'd like
 <br>
 
 ### Table Column Widths
+
 A set of utility classes that can added to a field in the table view.
 
 | Class                | Works in Views?     |
@@ -165,6 +172,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 <br>
 
 ### Layout Builder "Components" Region
+
 | Class                | Description         | Works in Views?     |
 |----------------------|---------------------|        :---:        |
 | hb-raised-cards | Adds a drop shadow behind any Card UI pattern used in the view | ✅|
@@ -177,6 +185,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-carousel-reset-height | Override inline styles to reset the default height of the text box within a carousel. | - |
 
 ### Misc
+
 | Class                | Description         | Works in Views?     |
 |----------------------|---------------------|        :---:        |
 | hb-position-relative | Sets a container to position reative | - |

@@ -1,6 +1,7 @@
 # Adding a New Theme
 
 ## Basic Setup
+
 1. Duplicate an existing `humsci_` theme directory (excluding the `humsci_basic` parent theme).
 1. Update the duplicated directory name and the following files (using Colorful as an example).
     - `humsci_colorful.info.yaml` -> `humsci_new.info.yaml`
@@ -16,6 +17,7 @@
 1. Confirm that the new theme is available locally and commit your changes.
 
 ## Javascript Setup
+
 1. In the parent theme (`humsci_basic`) duplicate an existing theme directory in `src/js/`.
 1. Rename the javascript file name as well as any comments within the file.
 1. Any theme specific Javascript will go in this file. Shared javascript that is used in all themes is imported at the top of the file.
@@ -24,6 +26,7 @@
 1. Commit the changes to the `humsci_basic` directory as well the compiled Javascript in the theme directory.
 
 ## SCSS Setup
+
 1. In the parent theme (`humsci_basic`) duplicate an existing theme scss file in `src/scss/`.
 1. In the new scss file edit line one to set `$hb-current-theme` to the new theme name. This will be the value we use throughout the scss to target our theme.
 1. In `src/scss/settings/_variables.general.scss`:
@@ -36,6 +39,7 @@
 _Note: New themes will only receive shared styles. No package.json updates necessary compiled CSS will auto compile to the new directory assuming correct naming conventions were followed._
 
 ## Backstop Updates
+
 1. In the parent theme (`humsci_basic`) open `backstop/generate-backstop.js`.
 1. Add the new theme as an item in the `sites` array. The site name must match the domain name of the test site (excluding the environment postfix).
 1. Commit the changes. The new site will automatically be tested every time visual regression testing is ran.

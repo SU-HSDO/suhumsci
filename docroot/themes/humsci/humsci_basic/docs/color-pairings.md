@@ -5,8 +5,6 @@ Color palettes for each theme are set in `/humsci_basic/src/scss/settings/_varia
 
 A user can update the color pairing in the Drupal admin by going to Appearance / Settings / Humsci Colorful (or Humsci Traditional). Under **Theme Specific Settings** you will find **Color Pairing** options. The theme setting affixes a color pairing class to the `<html>` element which is used to determine the values rendered in the CSS custom properties (variables).
 
-Details on how to implement a new color pairing can be found in the [scss README](/docroot/themes/humsci/humsci_basic/src/scss/README.md).
-
 ### Colorful Theme
 
 | Name     | Class                |

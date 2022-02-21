@@ -16,7 +16,6 @@ dependencies:
     - field_formatter_class
     - hs_field_helpers
     - link
-    - options
     - smart_trim
     - stanford_media
 third_party_settings:
@@ -41,20 +40,11 @@ third_party_settings:
         - field_hs_spotlight_title
         - field_hs_spotlight_body
         - field_hs_spotlight_link
-      background:
-        - field_hs_spotlight_bg
 id: paragraph.hs_spotlight.default
 targetEntityType: paragraph
 bundle: hs_spotlight
 mode: default
 content:
-  field_hs_spotlight_bg:
-    type: list_key
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 4
-    region: background
   field_hs_spotlight_body:
     type: smart_trim
     label: hidden
@@ -122,6 +112,7 @@ content:
     weight: 1
     region: overlay_text
 hidden:
+  field_hs_spotlight_bg: true
   field_hs_spotlight_height: true
   field_hs_spotlight_image_align: true
   search_api_excerpt: true

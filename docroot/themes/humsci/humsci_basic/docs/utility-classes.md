@@ -93,7 +93,7 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 | hs-credits | ✅|
 | hs-button | ✅|
 | hs-button--big | ✅|
-| hs-seocondary-button | ✅|
+| hs-secondary-button | ✅|
 | hs-external-link | ✅|
 | hs-private-link | ✅|
 | hs-mailto-link | ✅|
@@ -176,6 +176,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | Class                | Description         | Works in Views?     |
 |----------------------|---------------------|        :---:        |
 | hb-raised-cards | Adds a drop shadow behind any Card UI pattern used in the view | ✅|
+| hb-raised-cards--uniform-height | Makes all raised cards on the page a uniform height with the tallest card | ✅ |
 | hb-stretch-vertical-linked-cards | Stretches all vertical linked cards on a page to be the same height and adjusts the height of all card titles to be the same height | ✅|
 | hb-display-more-link-text | Displays helper link text with more link styling | ✅|
 | hb-heading-link-color | Applies link color styles to a linked heading. Do not use with hb-dark-pattern. | ✅|
@@ -188,4 +189,5 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 
 | Class                | Description         | Works in Views?     |
 |----------------------|---------------------|        :---:        |
-| hb-position-relative | Sets a container to position reative | - |
+| hb-position-relative | Sets a container to position relative | - |
+| hb-relative | Sets a container to position relative | - |

@@ -3,6 +3,7 @@
 ## SCSS
 
 How we build themes:
+
 * [Mixins](/docroot/themes/humsci/humsci_basic/docs/mixins.md)
 * [CSS Prefixing](/docroot/themes/humsci/humsci_basic/docs/css-prefixing.md)
 * [Adding a New Theme](/docroot/themes/humsci/humsci_basic/docs/new-theme.md)
@@ -11,6 +12,7 @@ How we build themes:
 ## Classes
 
 These classes can be used in Drupal to further customize themes:
+
 * [Color Pairings Classes](/docroot/themes/humsci/humsci_basic/docs/color-pairings.md)
 * [Dark Inversion Classes](/docroot/themes/humsci/humsci_basic/docs/dark-inversion.md)
 * [Utility Classes](/docroot/themes/humsci/humsci_basic/docs/utility-classes.md)
@@ -19,6 +21,10 @@ These classes can be used in Drupal to further customize themes:
 ## Theme Options
 
 * [Lockup Styles](/docroot/themes/humsci/humsci_basic/docs/lockup-styles.md)
+
+## Drupal Component Configuration Defaults and Settings Best Practices
+
+* [Drupal Configuration Defaults and Settings](/docroot/themes/humsci/humsci_basic/docs/drupal-configuration-defaults.md)
 
 ## New Component / Paragraph Type Deployment
 

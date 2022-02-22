@@ -56,7 +56,7 @@ if (accordionList.length >= 1) {
   // If the toggle all class is present create a toggle button and place it above
   // the accordion instance.
   accordionList.forEach((accordion) => {
-    if (accordion.querySelector('.hb-accordion_toggle-all')) {
+    if (accordion.classList.contains('hb-accordion_toggle-all')) {
       const toggleButton = createToggle();
       accordion.parentNode.insertBefore(toggleButton, accordion);
     }

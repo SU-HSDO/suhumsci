@@ -13,11 +13,13 @@
 ---
 
 ## Anatomy of a Lockup
+
 <img src="./images/lockup-styles/lockup-anatomy.png" alt="Lockup Anatomy" width="400" />
 
 ## Lockup Modifications
 
 ### Humsci Theme Differences
+
 The Humsci Basic Lockup styles inherit the [Decanter Lockup](https://decanter.stanford.edu/component/identity-lockup/) styles with some modifications added for Humsci Basic themes. Site specific modifications can be added via the asset injector.
 
 ### Theme Options

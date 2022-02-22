@@ -31,55 +31,53 @@ function createToggle() {
 }
 
 /**
- * Updates the toggle button element depending on whether or
- * not all accordions are being opened or closed.
- * @param {element} expects the toggle button which toggles all accordions
+ * Updates the all toggle buttons when one has been clicked depending on whether
+ * or not all accordions are being opened or closed.
+ * @param {array} expects the list of all accordion toggle buttons on the page
  * @param {string} expects a string that specifies if all accordions should be opened or closed
  */
-function updateToggle(toggleButton, command) {
-  if (command === 'closeAll') {
-    toggleButton.innerText = 'Expand All';
-  } else {
-    toggleButton.innerText = 'Collapse All';
-  }
-}
-
-// /**
-//  * Loops through the list of all accordions on a page. .
-//  * If any accordion contains a specific class this function will return true.
-//  * @param {array} expects a list of accordion elements
-//  * @param {string} expects a classname
-//  * @return {boolean}
-//  */
-function willToggleAll(className) {
-  const findToggleClass = document.querySelector(`.${className}`);
-
-  // If the findToggleClass exists then return true, else return false
-  return !!findToggleClass;
+function updateToggle(toggleList, command) {
+  toggleList.forEach((toggleButton) => {
+    if (command === 'closeAll') {
+      toggleButton.innerText = 'Expand All';
+    } else {
+      toggleButton.innerText = 'Collapse All';
+    }
+  });
 }
 
 // Create a list of all accordions on the page
 const accordionList = [...document.querySelectorAll('details')];
 
-if (accordionList.length > 1) {
-  const toggleButton = createToggle();
-  const toggleAll = willToggleAll('hb-accordion_toggle-all');
+if (accordionList.length >= 1) {
   let allExpanded = false;
 
-  // If toggleAll is set to true, add a toggle button before the first instance of an accordion
-  if (toggleAll) {
-    accordionList[0].parentNode.insertBefore(toggleButton, accordionList[0]);
-  }
-
-  toggleButton.addEventListener('click', () => {
-    if (allExpanded) {
-      togglaAllAccordions(accordionList, 'closeAll');
-      updateToggle(toggleButton, 'closeAll');
-      allExpanded = false;
-    } else {
-      togglaAllAccordions(accordionList, 'openAll');
-      updateToggle(toggleButton, 'openAll');
-      allExpanded = true;
+  // Loop through each accordion item
+  // If the toggle all class is present create a toggle button and place it above
+  // the accordion instance.
+  accordionList.forEach((accordion) => {
+    if (accordion.querySelector('.hb-accordion_toggle-all')) {
+      const toggleButton = createToggle();
+      accordion.parentNode.insertBefore(toggleButton, accordion);
     }
+  });
+
+  // Create a list of all toggle buttons generated on the page. This has to run
+  // after the block of code that loops through the accordion lists and creates
+  // the buttons.
+  const allToggleButtons = [...document.querySelectorAll('.hb-accordion-toggle-all')];
+
+  allToggleButtons.forEach((toggleButton) => {
+    toggleButton.addEventListener('click', () => {
+      if (allExpanded) {
+        togglaAllAccordions(accordionList, 'closeAll');
+        updateToggle(allToggleButtons, 'closeAll');
+        allExpanded = false;
+      } else {
+        togglaAllAccordions(accordionList, 'openAll');
+        updateToggle(allToggleButtons, 'openAll');
+        allExpanded = true;
+      }
+    });
   });
 }

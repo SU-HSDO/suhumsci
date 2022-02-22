@@ -4,7 +4,7 @@
  * @param {array} expects a list of accordion elements
  * @param {string} expects a string that specifies if all accordions should be opened or closed
  */
-function togglaAllAccordions(accordionList, command) {
+function toggleAllAccordions(accordionList, command) {
   if (command === 'closeAll') {
     accordionList.forEach((accordion) => {
       accordion.removeAttribute('open');
@@ -70,11 +70,11 @@ if (accordionList.length >= 1) {
   allToggleButtons.forEach((toggleButton) => {
     toggleButton.addEventListener('click', () => {
       if (allExpanded) {
-        togglaAllAccordions(accordionList, 'closeAll');
+        toggleAllAccordions(accordionList, 'closeAll');
         updateToggle(allToggleButtons, 'closeAll');
         allExpanded = false;
       } else {
-        togglaAllAccordions(accordionList, 'openAll');
+        toggleAllAccordions(accordionList, 'openAll');
         updateToggle(allToggleButtons, 'openAll');
         allExpanded = true;
       }

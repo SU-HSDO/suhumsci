@@ -43,9 +43,8 @@ third_party_settings:
         - field_hs_spotlight_title
         - field_hs_spotlight_body
         - field_hs_spotlight_link
-      background_color:
+      background:
         - field_hs_spotlight_bg
-        - field_hs_spotlight_image_align
   layout_builder:
     enabled: false
     allow_custom: false
@@ -54,6 +53,13 @@ targetEntityType: paragraph
 bundle: hs_spotlight
 mode: preview
 content:
+  field_hs_spotlight_bg:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: background
   field_hs_spotlight_body:
     type: smart_trim
     label: hidden
@@ -91,13 +97,6 @@ content:
         inline_contents: 0
     weight: 0
     region: image
-  field_hs_spotlight_image_align:
-    type: list_key
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 5
-    region: background_color
   field_hs_spotlight_link:
     type: link
     label: hidden
@@ -128,6 +127,6 @@ content:
     weight: 1
     region: overlay_text
 hidden:
-  field_hs_spotlight_bg: true
   field_hs_spotlight_height: true
+  field_hs_spotlight_image_align: true
   search_api_excerpt: true

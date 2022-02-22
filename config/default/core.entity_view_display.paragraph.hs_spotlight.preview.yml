@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_spotlight.field_hs_spotlight_bg
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_body
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_height
     - field.field.paragraph.hs_spotlight.field_hs_spotlight_image
@@ -17,6 +18,7 @@ dependencies:
     - hs_field_helpers
     - layout_builder
     - link
+    - options
     - smart_trim
     - stanford_media
 third_party_settings:
@@ -35,12 +37,14 @@ third_party_settings:
             default: image-right
             left: image-left
     regions:
+      image:
+        - field_hs_spotlight_image
       overlay_text:
         - field_hs_spotlight_title
         - field_hs_spotlight_body
         - field_hs_spotlight_link
-      image:
-        - field_hs_spotlight_image
+      background:
+        - field_hs_spotlight_bg
   layout_builder:
     enabled: false
     allow_custom: false
@@ -49,6 +53,13 @@ targetEntityType: paragraph
 bundle: hs_spotlight
 mode: preview
 content:
+  field_hs_spotlight_bg:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: background
   field_hs_spotlight_body:
     type: smart_trim
     label: hidden
@@ -70,7 +81,7 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 1
+    weight: 2
     region: overlay_text
   field_hs_spotlight_image:
     type: media_responsive_image_formatter
@@ -84,7 +95,7 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 1
+    weight: 0
     region: image
   field_hs_spotlight_link:
     type: link
@@ -100,19 +111,20 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 2
+    weight: 3
     region: overlay_text
   field_hs_spotlight_title:
     type: entity_title_heading
     label: hidden
     settings:
       tag: h2
+      linked: false
     third_party_settings:
       field_formatter_class:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 0
+    weight: 1
     region: overlay_text
 hidden:
   field_hs_spotlight_height: true

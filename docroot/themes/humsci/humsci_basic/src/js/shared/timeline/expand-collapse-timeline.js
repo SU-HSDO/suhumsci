@@ -36,7 +36,7 @@ if (timelineItems) {
     let ariaExpanded = summary.getAttribute('aria-expanded');
 
     // Update aria values!
-    timelineItem.addEventListener(('keypress', 'click'), () => {
+    summary.addEventListener(('keypress', 'click'), () => {
       if (ariaExpanded === 'true') {
         summary.setAttribute('aria-expanded', 'false');
         summary.setAttribute('aria-pressed', 'false');

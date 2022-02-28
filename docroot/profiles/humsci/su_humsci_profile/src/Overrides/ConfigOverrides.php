@@ -2,6 +2,7 @@
 
 namespace Drupal\su_humsci_profile\Overrides;
 
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -114,6 +115,14 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
         $overrides['google_analytics.settings']['account'] = $value[0]['value'] ?? '';
+      }
+    }
+    if (in_array('role_watchdog.settings', $names)) {
+      $roles = $this->entityTypeManager->getStorage('user_role')
+        ->loadMultiple();
+      $overrides['role_watchdog.settings']['role_watchdog_monitor_roles'] = array_combine(array_keys($roles), array_keys($roles));
+      if (!EnvironmentDetector::isProdEnv()) {
+        $overrides['role_watchdog.settings']['role_watchdog_notify_email'] = 'email@email.com';
       }
     }
     return $overrides;

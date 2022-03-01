@@ -37,50 +37,6 @@ function hs_migrate_migrate_process_info_alter(array &$definitions) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
- */
-function hs_migrate_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  /** @var \Drupal\node\NodeInterface $node */
-  $node = $form_state->getFormObject()->getEntity();
-  if (!$node->id() || !_hs_migrate_node_is_imported($node)) {
-    return;
-  }
-  \Drupal::messenger()
-    ->addWarning(t('This content has been imported from an external source. Some fields changes may be overridden on the next content sync.'));
-}
-
-/**
- * Check if the current node is one of the migrated items.
- *
- * @param \Drupal\node\NodeInterface $node
- *   Node entity object.
- *
- * @return bool
- *   If the node was imported.
- */
-function _hs_migrate_node_is_imported(NodeInterface $node) {
-  $database = \Drupal::database();
-  foreach ($database->schema()->findTables('migrate_map%') as $table) {
-    if (
-      strpos($table, '_d7_') !== FALSE ||
-      !$database->schema()->fieldExists($table, 'destid1')
-    ) {
-      continue;
-    }
-    $count = $database->select($table, 't')
-      ->fields('t')
-      ->condition('destid1', $node->id())
-      ->condition('source_row_status', 0)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-
-    return (bool) $count;
-  }
-  return FALSE;
-}
-
-/**
  * Implements hook_ENTITY_TYPE_presave().
  */
 function hs_migrate_config_pages_presave(ConfigPagesInterface $config_page) {

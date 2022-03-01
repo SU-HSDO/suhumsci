@@ -5,6 +5,8 @@
  * hs_layouts.module
  */
 
+use Drupal\Component\Utility\Html;
+
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
@@ -39,5 +41,17 @@ function hs_layouts_preprocess_container(&$variables) {
   if (!empty($variables['element']['layout-section'])) {
     // Add styles to the layout builder admin configuration.
     $variables['#attached']['library'][] = 'hs_layouts/layout_builder_admin';
+  }
+}
+
+/**
+ * Implements hook_preprocess_preprocess_pattern_spotlight().
+ */
+function hs_layouts_preprocess_pattern_spotlight(&$variables) {
+  $paragraph = $variables['context']->getProperty('entity');
+  if ($paragraph->hasField('field_hs_spotlight_bg') && !$paragraph->field_hs_spotlight_bg->isEmpty()) {
+    $bgValue = $paragraph->field_hs_spotlight_bg->first()->getValue()['value'];
+
+    $variables['spotlight_bg_class'] = Html::cleanCssIdentifier($bgValue);
   }
 }

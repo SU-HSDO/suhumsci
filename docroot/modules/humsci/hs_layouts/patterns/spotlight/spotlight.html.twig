@@ -1,15 +1,12 @@
-{%- set attributes = attributes.addClass('hb-spotlight', bg_class) -%}
+{%- set attributes = attributes.addClass('hb-spotlight', spotlight_bg_class) -%}
 
 {% if variant %}
   {% set variant_class = "hb-spotlight--image-#{variant}" %}
   {% set attributes = attributes.addClass(variant_class) %}
 {% endif %}
 
-{% set bg_class = background.field_hs_spotlight_bg['0']['#markup']|clean_class %}
-
-
 {% spaceless %}
-  <div{{ attributes.addClass(bg_class) }}>
+  <div{{ attributes}}>
     <div class="hb-spotlight__wrapper">
       {% if image %}
         <div class="hb-spotlight__image-wrapper">

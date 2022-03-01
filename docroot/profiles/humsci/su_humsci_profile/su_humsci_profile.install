@@ -126,3 +126,10 @@ function su_humsci_profile_update_9001() {
     ->set('allowed.condition_plugins', $good_plugins)
     ->save();
 }
+
+/**
+ * Uninstall Layout Paragraphs.
+ */
+function su_humsci_profile_update_9002() {
+  \Drupal::service('module_installer')->uninstall(['layout_paragraphs']);
+}

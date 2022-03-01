@@ -49,9 +49,8 @@ function hs_layouts_preprocess_container(&$variables) {
  */
 function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   $paragraph = $variables['context']->getProperty('entity');
-  if ($paragraph->hasField('field_hs_spotlight_bg') && !$paragraph->field_hs_spotlight_bg->isEmpty()) {
-    $bgValue = $paragraph->field_hs_spotlight_bg->first()->getValue()['value'];
-
-    $variables['spotlight_bg_class'] = Html::cleanCssIdentifier($bgValue);
+  if ($paragraph->hasField('field_hs_spotlight_bg') && $paragraph->get('field_hs_spotlight_bg')->count()) {
+    $bgValue = $paragraph->get('field_hs_spotlight_bg')->getString();
+    $variables['attributes']->addClass(Html::cleanCssIdentifier($bgValue));
   }
 }

@@ -1,4 +1,5 @@
 ## Sass Mixins
+
 Sass Mixins allow us to write clean, consistent code by defining styles that can be re-used throughout the project. Mixins are found under the `/src/scss/tools` directory.
 
 | Mixins |
@@ -24,6 +25,7 @@ Sass Mixins allow us to write clean, consistent code by defining styles that can
 | @mixin hb-pairing-custom-properties($theme-list, $color-pairing) { } | Generates a list of custom properties for a specific color pairing. | <code>.example { @include hb-pairing-custom-properties($hc-colorful-pairings, $palette); }</code> |
 
 ### General
+
 There are several general mixins within the project for tasks such as visually hiding content, clearing floats, etc. Only unique mixins that are specific to the Humsci Basic themes are listed below.
 
 | Mixin | Description | Example |

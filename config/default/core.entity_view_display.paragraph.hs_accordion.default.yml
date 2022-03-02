@@ -32,7 +32,6 @@ third_party_settings:
     regions:
       title:
         - field_hs_accordion_summary
-        - field_hs_accord_expcol
       description:
         - field_hs_accordion_description
         - field_hs_accordion_views
@@ -41,22 +40,12 @@ targetEntityType: paragraph
 bundle: hs_accordion
 mode: default
 content:
-  field_hs_accord_expcol:
-    type: boolean
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 1
-    region: title
   field_hs_accordion_description:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: description
   field_hs_accordion_summary:
     type: string
@@ -78,7 +67,8 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 3
+    weight: 2
     region: description
 hidden:
+  field_hs_accord_expcol: true
   search_api_excerpt: true

@@ -2,13 +2,9 @@
   {% set attributes = attributes.setAttribute('open', 'open') %}
 {% endif %}
 
-{% if title.field_hs_accord_expcol['0']['#markup'] == 'On' %}
-  {% set accordion_toggle = 'hb-accordion_toggle-all' %}
-{% endif %}
-
 <details{{ attributes.addClass(accordion_toggle) }}>
   {%- if title -%}
-    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title|without('field_hs_accord_expcol') }}</summary>
+    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
   {%- endif -%}
   <div class="revealed-details">
     <div class="description">

@@ -116,6 +116,11 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         $overrides['google_analytics.settings']['account'] = $value[0]['value'] ?? '';
       }
     }
+    if (in_array('role_watchdog.settings', $names)) {
+      $roles = $this->entityTypeManager->getStorage('user_role')
+        ->loadMultiple();
+      $overrides['role_watchdog.settings']['role_watchdog_monitor_roles'] = array_combine(array_keys($roles), array_keys($roles));
+    }
     return $overrides;
   }
 

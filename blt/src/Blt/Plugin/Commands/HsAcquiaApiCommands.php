@@ -303,8 +303,12 @@ class HsAcquiaApiCommands extends BltTasks {
    * Copy hs_colorful site database and files to hs_traditional stage and prod.
    *
    * @command humsci:copy-colorful
+   *
+   * @param string $destinations
+   *   Drush alias destinations to copy the database and files to.
    */
-  public function copyHsColorful() {
+  public function copyHsColorful($destinations = 'hs_colorful.stage,hs_traditional.stage,hs_traditional.prod') {
+    $destinations = explode(',', $destinations);
     $database_path = sys_get_temp_dir() . '/temp.hs_colorful.sql';
     $docroot = $this->getConfigValue('docroot');
     $tasks = [];
@@ -322,11 +326,6 @@ class HsAcquiaApiCommands extends BltTasks {
       ->option(' --delete')
       ->interactive(TRUE)
       ->ansi(FALSE);
-    $destinations = [
-      'hs_colorful.stage',
-      'hs_traditional.stage',
-      'hs_traditional.prod',
-    ];
     foreach ($destinations as $destination) {
       $tasks[] = $this->taskDrush()
         ->alias($destination)

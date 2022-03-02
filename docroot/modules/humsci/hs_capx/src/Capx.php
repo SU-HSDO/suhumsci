@@ -98,7 +98,7 @@ class Capx {
         $password = $key->getKeyValue();
         $this->setPassword($password);
       }
-      catch (\Exception $e) {
+      catch (\Throwable $e) {
         $this->logger->error('Unable to load key entity: @id', ['@id' => $capx_settings->get('password')]);
       }
     }

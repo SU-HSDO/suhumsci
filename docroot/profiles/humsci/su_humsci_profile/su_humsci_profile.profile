@@ -36,6 +36,69 @@ function su_humsci_profile_entity_presave(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_metatags_alter().
+ */
+function su_humsci_profile_metatags_alter(array &$metatags, array &$context) {
+  if ($context['entity'] instanceof NodeInterface && $context['entity']->bundle() == 'hs_basic_page') {
+    if ($context['entity']->hasField('field_hs_page_hero') && $context['entity']->get('field_hs_page_hero')->count()) {
+
+      /** @var \Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem $field_item */
+      $field_item = $context['entity']->get('field_hs_page_hero')->get(0);
+      $paragraph_id = $field_item->get('target_id')->getString();
+
+      $paragraph = \Drupal::entityTypeManager()
+        ->getStorage('paragraph')
+        ->load($paragraph_id);
+
+      if (!$paragraph) {
+        return;
+      }
+
+      switch ($paragraph->bundle()) {
+        case 'hs_gradient_hero_slider':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_gradient_hero_slides:entity:field_hs_gradient_hero_image$2', $metatags);
+          break;
+
+        case 'hs_carousel':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_carousel_slides:entity:field_hs_hero_image$2', $metatags);
+          break;
+
+        case 'hs_hero_image':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_hero_image$2', $metatags);
+          break;
+
+        case 'hs_sptlght_slder':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_sptlght_sldes:entity:field_hs_spotlight_image$2', $metatags);
+          break;
+
+      }
+    }
+  }
+}
+
+/**
+ * Similar to `preg_replace`, but only on string values.
+ *
+ * @param mixed $search
+ *   Search string or array.
+ * @param mixed $replace
+ *   Replace string or array.
+ * @param mixed $subject
+ *   Subject string or array.
+ *
+ * @return mixed
+ *   Modified string or array.
+ */
+function su_humsci_profile_preg_replace($search, $replace, $subject) {
+  foreach ($subject as &$item) {
+    if (is_string($item)) {
+      $item = preg_replace($search, $replace, $item);
+    }
+  }
+  return $subject;
+}
+
+/**
  * Implements hook_entity_delete().
  */
 function su_humsci_profile_entity_delete(EntityInterface $entity) {

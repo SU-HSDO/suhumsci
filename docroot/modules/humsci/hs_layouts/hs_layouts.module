@@ -68,6 +68,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
   if (
     $paragraph instanceof ParagraphInterface &&
     $paragraph->hasField('field_hs_accord_expcol') &&
+    !$paragraph->field_hs_accord_expcol->isEmpty() &&
     $paragraph->get('field_hs_accord_expcol')->first()->getValue()['value'] === '1'
   ) {
     $variables['attributes']->addClass('hb-accordion_toggle-all');

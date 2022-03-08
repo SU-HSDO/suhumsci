@@ -10,6 +10,11 @@ use Acquia\Blt\Robo\Commands\Drupal\ConfigCommand;
 class HsConfigCommands extends ConfigCommand {
 
   /**
+   * @var bool
+   */
+  protected $configImportPartial;
+
+  /**
    * Imports configuration from the config directory according to cm.strategy.
    *
    * @command drupal:config:import
@@ -20,8 +25,9 @@ class HsConfigCommands extends ConfigCommand {
    * @throws \Robo\Exception\TaskException
    * @throws \Exception
    */
-  public function import($options = ['partial' => FALSE]) {
+  public function import($options = ['partial' => TRUE]) {
     $this->invokeCommand('drupal:toggle:modules');
+    $this->configImportPartial = (bool) $options['partial'];
     parent::import();
   }
 
@@ -34,14 +40,10 @@ class HsConfigCommands extends ConfigCommand {
    *   Cm core key.
    */
   protected function importConfigSplit($task, $cm_core_key) {
-    $partial = FALSE;
-    if ($this->input()->hasOption('partial')) {
-      $partial = $this->input()->getOption('partial');
-    }
     $task->drush("pm-enable")->arg('config_split');
 
     // Local environments we don't want all the custom site created configs.
-    if (($this->getConfigValue('environment') == 'local') && !$partial) {
+    if (($this->getConfigValue('environment') == 'local') && !$this->configImportPartial) {
       $task->drush("config-import")->arg($cm_core_key);
       // Runs a second import to ensure splits are
       // both defined and imported.

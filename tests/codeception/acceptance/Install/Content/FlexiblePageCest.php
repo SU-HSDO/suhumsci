@@ -30,7 +30,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->canSeeNumberOfElements('#edit-field-hs-page-hero-wrapper', 1);
-    $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input', 15);
+    $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input[type="submit"]', 15);
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Postcard');
     $I->canSee('Card Title');
@@ -73,7 +73,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Back To Top');
     $I->click('Add Text Area');
-    $I->fillField('Text Area', 
+    $I->fillField('Text Area',
 'Sit aliquid minus autem iste labore Quos repellendus voluptas laborum atque incidunt quis. Facilis voluptates nemo ducimus facilis inventore. Fugit quod maiores et placeat modi error Voluptates recusandae facilis minus soluta minima illo Eligendi velit minus animi mollitia quisquam fuga? Ducimus eligendi in praesentium placeat unde Iure totam id inventore doloremque optio Accusamus nesciunt adipisci praesentium provident repellendus Pariatur quam quos dolorem porro rem provident. Natus fuga dolor sunt tenetur debitis? Alias exercitationem fuga impedit nihil facilis ab nam rerum, nam! Minus optio repellendus nesciunt repudiandae maxime. Iure vel sapiente dignissimos accusantium eius Expedita veniam error distinctio deserunt iusto Eius omnis impedit odio delectus recusandae Voluptatum id a repellendus ab illum Labore dignissimos nihil corporis nemo fuga Sit natus odit facilis vitae numquam! Voluptatum doloremque quis voluptate dolorem possimus minus. Iure fuga expedita facilis magni temporibus Delectus odio aliquid at enim fuga? Consequuntur quaerat quia fuga eum earum Accusamus distinctio provident non debitis vero Quos ad a mollitia veritatis natus eius eius. Quisquam ad fugiat rem libero saepe Ipsam nam laboriosam ullam accusamus aspernatur Quasi est fugiat veritatis distinctio facilis Voluptatem enim velit qui maxime culpa mollitia magni Ipsa cupiditate in dolores velit dignissimos nemo. Commodi repellendus officia dolor accusamus');
     $I->click('Save');
     $I->click('Layout', '.tabs');

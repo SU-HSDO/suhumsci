@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -18,9 +19,10 @@ use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 use Drupal\node\NodeInterface;
+use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
-use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_entity_presave().
@@ -249,6 +251,7 @@ function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $en
         ->execute();
     }
   }
+  Cache::invalidateTags(['su_humsci_profile:menu_links']);
 }
 
 /**
@@ -540,7 +543,7 @@ function su_humsci_profile_preprocess_pattern_alert(&$variables) {
 
     // Validate that the entity has the field we need so we don't 500 the site.
     if (!$entity->hasField('su_global_msg_type')) {
-      \Drupal::logger('stanford_profile_helper')
+      \Drupal::logger('su_humsci_profile')
         ->error(t("Global Messages Config Block is missing the field su_global_msg_type"));
       return;
     }
@@ -633,5 +636,50 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
     $node = $form_state->getBuildInfo()['callback_object']->getEntity();
     $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
     $form['status']['#access'] = !$access->isForbidden();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function su_humsci_profile_menu_link_content_delete(MenuLinkContentInterface $entity) {
+  Cache::invalidateTags(['su_humsci_profile:menu_links']);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $entity) {
+  $original = [
+    $entity->original->get('title')->getValue(),
+    $entity->original->get('description')->getValue(),
+    $entity->original->get('link')->getValue(),
+    $entity->original->get('parent')->getValue(),
+    $entity->original->get('weight')->getValue(),
+    $entity->original->get('expanded')->getValue(),
+  ];
+  $updated = [
+    $entity->get('title')->getValue(),
+    $entity->get('description')->getValue(),
+    $entity->get('link')->getValue(),
+    $entity->get('parent')->getValue(),
+    $entity->get('weight')->getValue(),
+    $entity->get('expanded')->getValue(),
+  ];
+  if (md5(json_encode($original)) != md5(json_encode($updated))) {
+    Cache::invalidateTags(['su_humsci_profile:menu_links']);
+  }
+}
+
+/**
+ * Implements hook_block_build_alter().
+ */
+function su_humsci_profile_block_build_alter(array &$build, BlockPluginInterface $block) {
+  if ($block->getBaseId() == 'system_menu_block') {
+    $build['#cache']['tags'][] = 'su_humsci_profile:menu_links';
+    HumsciCleanup::removeCacheTags($build, [
+      '^node:*',
+      '^config:system.menu.*',
+    ]);
   }
 }

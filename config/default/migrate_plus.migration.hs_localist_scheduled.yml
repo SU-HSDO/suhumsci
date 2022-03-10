@@ -96,7 +96,16 @@ process:
   status: constants/status
   type: constants/type
   title: title
-  body/value: description
+  body/value:
+    -
+      plugin: skip_on_empty
+      source: description
+      method: process
+    -
+      plugin: str_replace
+      regex: true
+      search: '/style=.*height:(.*)px.*width:(.*)px.*?"/'
+      replace: 'height="$1" width="$2"'
   body/format: constants/basic_html
   field_hs_event_location: location
   field_hs_event_link/uri: localist_url

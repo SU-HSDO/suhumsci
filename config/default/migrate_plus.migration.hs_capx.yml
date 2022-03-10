@@ -120,6 +120,22 @@ source:
       name: org_title
       label: 'Organization Title'
       selector: titles/0/organization/label/text
+    -
+      name: alt_contact_label
+      label: alt_contact_label
+      selector: alternateContact/label
+    -
+      name: alt_contact_email
+      label: alt_contact_email
+      selector: alternateContact/email
+    -
+      name: alt_contact_name
+      label: alt_contact_name
+      selector: alternateContact/name
+    -
+      name: alt_contact_phone
+      label: alt_contact_phone
+      selector: alternateContact/phone
   ids:
     sunetid:
       type: string
@@ -139,6 +155,10 @@ process:
   field_hs_person_first_name: first_name
   field_hs_person_last_name: last_name
   field_hs_person_middle_name: middle_name
+  field_hs_person_alt_email: alt_contact_email
+  field_hs_person_alt_label: alt_contact_label
+  field_hs_person_alt_name: alt_contact_name
+  field_hs_person_alt_phone: alt_contact_phone
   field_hs_person_title:
     -
       plugin: skip_on_empty

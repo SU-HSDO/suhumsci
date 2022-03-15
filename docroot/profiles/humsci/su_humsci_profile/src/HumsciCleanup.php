@@ -30,6 +30,29 @@ class HumsciCleanup {
   protected $bundleInfo;
 
   /**
+   * Remove some cache tags from a render array.
+   *
+   * @param array|mixed $item
+   *   Render array.
+   * @param array $tags
+   *   Cache tags to be removed from the render array using regex.
+   */
+  public static function removeCacheTags(&$item, array $tags = []) {
+    if (!is_array($item) || empty($item['#cache']['tags'])) {
+      return;
+    }
+    $item['#cache']['tags'] = array_filter($item['#cache']['tags'], function ($tag) use ($tags) {
+      foreach ($tags as $search_tag) {
+        if (preg_match("/$search_tag/", $tag)) {
+          return FALSE;
+        }
+      }
+      return TRUE;
+    });
+    $item['#cache']['tags'] = array_values($item['#cache']['tags']);
+  }
+
+  /**
    * HumsciCleanup constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager

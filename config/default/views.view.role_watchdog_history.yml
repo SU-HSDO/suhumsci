@@ -18,58 +18,12 @@ base_table: role_watchdog_field_data
 base_field: id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'administer role_watchdog'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: mini
-        options:
-          items_per_page: 100
-          offset: 0
-          id: 0
-          total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          tags:
-            previous: ‹‹
-            next: ››
-      style:
-        type: table
-      row:
-        type: fields
+      title: 'Role Watchdog History'
       fields:
         id:
           id: id
@@ -78,6 +32,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          entity_field: id
+          plugin_id: field
           label: ID
           exclude: false
           alter:
@@ -134,19 +91,16 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: role_watchdog
-          entity_field: id
-          plugin_id: field
         name:
+          id: name
           table: role_watchdog_field_data
           field: name
-          id: name
-          entity_type: null
-          entity_field: name
-          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: null
+          entity_field: name
+          plugin_id: field
           label: Name
           exclude: false
           alter:
@@ -208,6 +162,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          entity_field: changed
+          plugin_id: field
           label: Changed
           exclude: false
           alter:
@@ -265,9 +222,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: role_watchdog
-          entity_field: changed
-          plugin_id: field
         created:
           id: created
           table: role_watchdog_field_data
@@ -275,6 +229,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          entity_field: created
+          plugin_id: field
           label: Created
           exclude: false
           alter:
@@ -332,9 +289,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: role_watchdog
-          entity_field: created
-          plugin_id: field
         field_role_id_target_id:
           id: field_role_id_target_id
           table: role_watchdog__field_role_id
@@ -342,6 +296,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          entity_field: field_role_id
+          plugin_id: field
           label: 'Role ID'
           exclude: false
           alter:
@@ -397,9 +354,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: role_watchdog
-          entity_field: field_role_id
-          plugin_id: field
         field_user_performed_on:
           id: field_user_performed_on
           table: role_watchdog_field_data
@@ -407,6 +361,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          entity_field: field_user_performed_on
+          plugin_id: field
           label: 'User(performed on)'
           exclude: false
           alter:
@@ -462,9 +419,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: role_watchdog
-          entity_field: field_user_performed_on
-          plugin_id: field
         uid:
           id: uid
           table: role_watchdog_field_data
@@ -472,6 +426,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          entity_field: uid
+          plugin_id: field
           label: 'Authored by'
           exclude: false
           alter:
@@ -527,9 +484,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: role_watchdog
-          entity_field: uid
-          plugin_id: field
         delete_role_watchdog:
           id: delete_role_watchdog
           table: role_watchdog
@@ -537,6 +491,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: role_watchdog
+          plugin_id: entity_link_delete
           label: 'Link to delete Role Watchdog'
           exclude: false
           alter:
@@ -581,8 +537,6 @@ display:
           text: 'Delete History'
           output_url_as_text: false
           absolute: false
-          entity_type: role_watchdog
-          plugin_id: entity_link_delete
         roles_target_id:
           id: roles_target_id
           table: user__roles
@@ -590,6 +544,9 @@ display:
           relationship: uid
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: roles
+          plugin_id: user_roles
           label: Roles
           exclude: false
           alter:
@@ -633,9 +590,57 @@ display:
           hide_alter_empty: true
           type: separator
           separator: ', '
-          entity_type: user
-          entity_field: roles
-          plugin_id: user_roles
+      pager:
+        type: mini
+        options:
+          offset: 0
+          items_per_page: 100
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'administer role_watchdog'
+      cache:
+        type: tag
+        options: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'There is no role change history saved in the system.'
+            format: basic_html
+          tokenize: false
+      sorts: {  }
+      arguments: {  }
       filters:
         uid:
           id: uid
@@ -644,6 +649,9 @@ display:
           relationship: uid
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: uid
+          plugin_id: user_name
           operator: in
           value: {  }
           group: 1
@@ -678,9 +686,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          entity_field: uid
-          plugin_id: user_name
         uid_1:
           id: uid_1
           table: users_field_data
@@ -688,6 +693,9 @@ display:
           relationship: field_user_performed_on
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: uid
+          plugin_id: user_name
           operator: in
           value: {  }
           group: 1
@@ -722,27 +730,18 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          entity_field: uid
-          plugin_id: user_name
-      sorts: {  }
-      title: 'Role Watchdog History'
-      header: {  }
-      footer: {  }
-      empty:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          tokenize: false
-          content:
-            value: 'There is no role change history saved in the system.'
-            format: basic_html
-          plugin_id: text
+      style:
+        type: table
+      row:
+        type: fields
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
       relationships:
         uid:
           id: uid
@@ -751,10 +750,10 @@ display:
           relationship: none
           group_type: group
           admin_label: User
-          required: false
           entity_type: role_watchdog
           entity_field: uid
           plugin_id: standard
+          required: false
         field_user_performed_on:
           id: field_user_performed_on
           table: role_watchdog_field_data
@@ -762,11 +761,12 @@ display:
           relationship: none
           group_type: group
           admin_label: User
-          required: false
           entity_type: role_watchdog
           entity_field: field_user_performed_on
           plugin_id: standard
-      arguments: {  }
+          required: false
+      header: {  }
+      footer: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -778,9 +778,9 @@ display:
         - user.permissions
       tags: {  }
   page_1:
-    display_plugin: page
     id: page_1
     display_title: Page
+    display_plugin: page
     position: 1
     display_options:
       display_extenders: {  }
@@ -789,11 +789,11 @@ display:
         type: normal
         title: 'Role Watchdog History'
         description: ''
-        expanded: false
-        parent: entity.user.collection
         weight: 0
-        context: '0'
+        expanded: false
         menu_name: admin
+        parent: entity.user.collection
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:

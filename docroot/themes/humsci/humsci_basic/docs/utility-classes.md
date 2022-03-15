@@ -191,3 +191,4 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 |----------------------|---------------------|        :---:        |
 | hb-position-relative | Sets a container to position relative | - |
 | hb-relative | Sets a container to position relative | - |
+| hb-accordion-toggle-all | Adds a togggle all button for accordions on the page. Usually added as an accordion setting | - |

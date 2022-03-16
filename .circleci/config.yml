@@ -189,8 +189,8 @@ update_dependencies: &update_dependencies
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
-          vendor/bin/blt humsci:clean-backups
           vendor/bin/blt circleci:update
+          vendor/bin/blt humsci:clean-backups
     - save_cache: *save_cache
 
 run-content-stage: &run-content-stage

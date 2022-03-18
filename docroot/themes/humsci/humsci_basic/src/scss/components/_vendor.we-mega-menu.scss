@@ -46,6 +46,10 @@
         position: relative;
         display: block;
         border: 0;
+
+        .hb-dark-pattern & {
+          @include hb-global-color('color','white');
+        }
       }
 
       // remove default mega menu caret
@@ -91,6 +95,10 @@
           background-size: 100% 0.55rem;
           background-repeat: no-repeat;
           background-position: bottom;
+
+          .hb-dark-pattern & {
+            @include hb-global-color('color','white');
+          }
         }
       }
 
@@ -111,6 +119,10 @@
           > .we-megamenu-nolink {
             @include hb-global-color('color', 'black');
             background-color: transparent;
+
+            .hb-dark-pattern & {
+              @include hb-global-color('color','white');
+            }
           }
         }
 
@@ -121,23 +133,23 @@
 
           // dropdown caret indicator
           &::after {
+            @include hb-menu-icon-wrapper(20px, 15px);
+            @include hb-menu-down-arrow-icon;
+            bottom: hb-calculate-rems(20px);
+            top: auto;
             display: block;
             position: absolute;
-            height: 2rem;
-            width: 1.5rem;
-            overflow: hidden;
-            text-indent: -9999px;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns%3D'http%3A//www.w3.org/2000/svg' viewBox%3D'0 0 10 7'%3E%3Cpath d%3D'M1 1L5.14815 5L9 1' fill%3D'transparent' stroke%3D'%23000000' stroke-width%3D'2' /%3E%3C/svg%3E");
-            background-size: 1rem 0.7rem;
-            transition: transform 150ms ease-in-out;
-            bottom: 1.8rem;
-            top: auto;
-            opacity: 1;
             filter: brightness(300%);
+            opacity: 1;
             right: 0;
-            cursor: pointer;
+          }
+
+          .hb-dark-pattern & {
+
+            // dropdown caret indicator
+            &::after {
+              @include hb-icon-background('chevron', 'white');
+            }
           }
 
           // dropdown caret animate on hover

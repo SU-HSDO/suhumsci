@@ -203,24 +203,30 @@
       .we-mega-menu-li {
         padding: 0;
 
-        // level 2 links not subtitles
+        // level 2 links not subtitles - incase different style is preferred
         > .we-mega-menu-li,
         > .we-megamenu-nolink {
           font-size: hb-calculate-rems(16px);
-          @include hb-global-color('color', 'black');
-          text-transform: none;
+          color: #8c1515;
+          text-transform: uppercase;
+          font-weight: hb-theme-font-weight(semibold);
           padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
         }
 
         > .we-mega-menu-li {
+          text-decoration: underline;
+
           &:hover,
           &:focus {
             @include hb-global-color('background-color', 'gray-light');
+            color: #8c1515;
             border: 0;
+            text-decoration: underline;
           }
         }
 
-        // level 2 links serving as subtitles
+        // level 2 links serving as subtitles - incase different style is preferred
+        // bottom margin incase of two submenus in one column
         &.dropdown-menu {
           margin-bottom: 1rem;
 
@@ -238,7 +244,7 @@
             cursor: default;
           }
 
-          // subtitle links underlined as fallback
+          // subtitle links underlined as fallback if not nolink
           > .we-mega-menu-li {
             text-decoration: underline;
 

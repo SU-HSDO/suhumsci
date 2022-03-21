@@ -257,7 +257,8 @@ class HsAcquiaApiCommands extends BltTasks {
     }
     try {
       $this->acquiaApplications->getAll();
-    } catch (\Throwable $e) {
+    }
+    catch (\Throwable $e) {
       $this->traitConnectAcquiaApi();
     }
   }
@@ -344,6 +345,71 @@ class HsAcquiaApiCommands extends BltTasks {
         ->ansi(FALSE);
     }
     return $this->collectionBuilder()->addTaskList($tasks)->run();
+  }
+
+  /**
+   * @command humsci:clean-branches
+   */
+  public function cleanBranches() {
+    $this->connectAcquiaApi();
+    $active_branches = ['master'];
+    $active_tags = [];
+    $git_url = $this->getConfigValue('git.remotes.0');
+
+    /** @var \AcquiaCloudApi\Response\EnvironmentResponse $environment */
+    foreach ($this->acquiaEnvironments->getAll($this->appId) as $environment) {
+      $git_url = $environment->vcs->url;
+      $vcs = $environment->vcs->path;
+      if (strpos($vcs, 'tags/') !== FALSE) {
+        $active_tags[] = str_replace('tags/', '', $vcs);
+      }
+      else {
+        $active_branches[] = $vcs;
+      }
+    }
+    $root = $this->getConfigValue('repo.root');
+    if (file_exists("$root/deploy")) {
+      $this->taskExec("rm -rf $root/deploy")->run();
+    }
+    $this->taskGit()
+      ->cloneRepo($git_url, "$root/deploy")
+      ->run();
+
+    $branches = $this->taskGit()
+      ->dir("$root/deploy")
+      ->exec('branch -r')
+      ->printOutput(FALSE)
+      ->run()
+      ->getMessage();
+    $branches = explode("\n", $branches);
+    foreach ($branches as $branch) {
+      $branch = trim(str_replace('origin/', '', $branch));
+
+      if (!empty($active_branches) && !in_array($branch, $active_branches) && preg_match('/^[a-zA-Z0-9-_]+$/', $branch) ) {
+        $this->taskGit()
+          ->dir("$root/deploy")
+          ->exec('push -d origin ' . $branch)
+          ->run();
+        $this->say($branch);
+      }
+    }
+
+    $tags = $this->taskGit()
+      ->dir("$root/deploy")
+      ->exec('tag -l')
+      ->printOutput(FALSE)
+      ->run()
+      ->getMessage();
+    $tags = explode("\n", $tags);
+    foreach ($tags as $tag) {
+      $tag = trim($tag);
+      if (!empty($active_tags) && !in_array($tag, $active_tags)) {
+        $this->taskGit()
+          ->dir("$root/deploy")
+          ->exec('push origin :refs/tags/' . $tag)
+          ->run();
+      }
+    }
   }
 
 }

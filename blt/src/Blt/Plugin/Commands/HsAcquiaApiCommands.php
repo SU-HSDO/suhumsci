@@ -348,6 +348,8 @@ class HsAcquiaApiCommands extends BltTasks {
   }
 
   /**
+   * Delete unused branches and tags from acquia repo.
+   *
    * @command humsci:clean-branches
    */
   public function cleanBranches() {
@@ -385,7 +387,11 @@ class HsAcquiaApiCommands extends BltTasks {
     foreach ($branches as $branch) {
       $branch = trim(str_replace('origin/', '', $branch));
 
-      if (!empty($active_branches) && !in_array($branch, $active_branches) && preg_match('/^[a-zA-Z0-9-_]+$/', $branch) ) {
+      if (
+        !empty($active_branches) &&
+        !in_array($branch, $active_branches) &&
+        preg_match('/^[a-zA-Z0-9-_]+$/', $branch)
+      ) {
         $this->taskGit()
           ->dir("$root/deploy")
           ->exec('push -d origin ' . $branch)

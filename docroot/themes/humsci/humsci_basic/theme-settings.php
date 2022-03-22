@@ -164,4 +164,17 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#description' => t('This enables/disables experimental features, please use with caution. The following features are implemented: There are no experimental features implemented at the moment.'),
   ];
 
+  // Mega Menu Hides Standard Menu on Desktop
+  $form['options_settings']['use_megamenu'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Megamenu Settings'),
+  ];
+
+  $form['options_settings']['use_megamenu']['megamenu_toggle'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Use megamenu on desktop'),
+    '#default_value' => theme_get_setting('megamenu_toggle'),
+    '#description' => t('This hides the standard menu on desktop to allow mega menu to display. The standard menu will still be enabled on mobile.'),
+  ];
+
 }

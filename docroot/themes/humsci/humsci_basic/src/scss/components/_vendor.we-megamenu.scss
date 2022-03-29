@@ -1,15 +1,7 @@
 // WE MEGA MENU
 // mega menu containing block
 .block-we-megamenu {
-  display: none;
   width: 100%;
-
-  // show mega menu only on desktop
-  @include grid-media-min('lg') {
-    & {
-      display: block;
-    }
-  }
 }
 
 // mega menu nav element
@@ -46,6 +38,7 @@
         position: relative;
         display: block;
         border: 0;
+        transition: transform 150ms ease-in-out;
 
         .hb-dark-pattern & {
           @include hb-global-color('color','white');
@@ -139,7 +132,7 @@
           &::after {
             @include hb-menu-icon-wrapper(20px, 15px);
             @include hb-menu-down-arrow-icon;
-            bottom: hb-calculate-rems(20px);
+            bottom: hb-calculate-rems(18px);
             top: auto;
             display: block;
             position: absolute;

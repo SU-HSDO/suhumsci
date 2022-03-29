@@ -154,7 +154,7 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
   if (isset($variables['context']) && $variables['context'] instanceof PatternContext) {
     $pattern_id = str_replace('pattern_', '', $hook);
     // Table patterns need to keep empty regions.
-    if (strpos($pattern_id, 'table') === FALSE) {
+    if (strpos($pattern_id, 'table') === FALSE && !$variables['context']->isOfType('views_row')) {
       _hs_field_helpers_cleanup_pattern_regions($variables, $pattern_id);
     }
   }

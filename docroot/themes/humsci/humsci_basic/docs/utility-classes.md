@@ -184,6 +184,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-blockquote-black-text | Two use cases: 1. Changes the text color in a blockquote from secondary to black. This is specific to when a block quote is used in the text area / WYSIWYG. 2. Changes the quote text color in a testimonial paragraph type from secondary to black.| - |
 | hb-main-body-detail-image | Used specifically on node detail pages to float an image. | - |
 | hb-carousel-reset-height | Override inline styles to reset the default height of the text box within a carousel. | - |
+| hb-timeline-checklist | Change vertical timeline circle icons to squares. | - |
 
 ### Misc
 

@@ -39,10 +39,6 @@
         display: block;
         border: 0;
         transition: transform 150ms ease-in-out;
-
-        .hb-dark-pattern & {
-          @include hb-global-color('color','white');
-        }
       }
 
       // remove default mega menu caret
@@ -66,6 +62,10 @@
       > .we-mega-menu-li,
       > .we-megamenu-nolink {
 
+        .hb-dark-pattern & {
+          @include hb-global-color('color','white');
+        }
+
         // bottom border on hover via background
         &:hover,
         &:focus {
@@ -74,6 +74,10 @@
           background-size: 100% 0.55rem;
           background-repeat: no-repeat;
           background-position: bottom;
+
+          .hb-dark-pattern & {
+            @include hb-global-color('color','white');
+          }
         }
       }
 
@@ -190,6 +194,19 @@
     border-left: 0;
     border-right: 0;
     overflow: hidden;
+    @include hb-global-color('color', 'black');
+
+    .hb-dark-pattern & {
+      @include hb-global-color('color','black');
+    }
+
+    a:not([class]) {
+      @include hb-pairing-color('color', 'tertiary');
+
+      .hb-dark-pattern & {
+        @include hb-pairing-color('color', 'tertiary');
+      }
+    }
 
     // remove default mega menu height
     > .we-mega-menu-submenu-inner {

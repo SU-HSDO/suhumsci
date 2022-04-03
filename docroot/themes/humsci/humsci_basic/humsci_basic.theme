@@ -8,6 +8,9 @@
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\we_megamenu\WeMegaMenuBuilder;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess_block().
@@ -213,4 +216,33 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
   if (!empty($variables['title'])) {
     $variables['title'] = ['#markup' => trim(strip_tags(render($variables['title'])))];
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK()
+ */
+function humsci_basic_preprocess_we_megamenu_li(&$vars) {
+  /*echo '<pre>';
+  kpr($vars['item']);
+  echo '</pre>';*/
+
+  if ($vars['item']['route_name'] == 'entity.node.canonical') {
+    $url = Url::fromUri('base:/sites'.$vars['item']['url'], array('absolute' => TRUE));
+    //echo getType($vars['item']['url']);
+    //print_r($vars['item']['url']);
+    //_humsci_basic_check_link_access($vars['item']);
+    //$url = $vars['item']['url'];
+      $parameters = $url->getRouteParameters();
+      $nid = $parameters['node'];
+      $node = Node::load($nid);
+      $type = $node->bundle();
+    //print_r($parameters);
+    //_humsci_basic_check_link_access($vars['item']['url']);
+  }
+
+  //$vars['attributes']['class'][] = 'private-item';
+
+  /*if (!empty($vars['item']['subtree'])) {
+    _humsci_basic_check_link_access($vars['item']['subtree']);
+  }*/
 }

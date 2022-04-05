@@ -1,0 +1,118 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - migrate_source_csv
+    - stanford_migrate
+id: custm_cesta_publications
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: default
+label: 'CESTA Publications CSV Importer'
+source:
+  plugin: csv
+  csv_help:
+    - ''
+  path: /tmp/foo.csv
+  ids:
+    - id
+  constants:
+    status: 1
+    file_destination: 'public://media/publications/'
+  fields:
+    -
+      name: id
+      label: ID
+      selector: id
+    -
+      name: author
+      label: Author
+      selector: author
+    -
+      name: coAuthors
+      label: 'Co-Authors'
+      selector: coAuthors
+    -
+      name: title
+      label: Title
+      selector: title
+    -
+      name: publisher
+      label: 'Publication/Publisher'
+      selector: publisher
+    -
+      name: year
+      label: Year
+      selector: year
+    -
+      name: publicationType
+      label: 'Publication Type'
+      selector: publicationType
+    -
+      name: url
+      label: 'External Source URL'
+      selector: url
+    -
+      name: dhMethodApproach
+      label: 'DH Method or Approach'
+      selector: dhMethodApproach
+process:
+  skip:
+    plugin: skip_on_empty
+    method: row
+    source: id
+  title: title
+  field_hs_publication_publisher: publisher
+  field_hs_publication_year: year
+  field_hs_publication_author:
+    -
+      plugin: concat
+      source:
+        - author
+        - coAuthors
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: explode
+      delimiter: ','
+  field_hs_publication_type:
+    -
+      plugin: skip_on_empty
+      source: publicationType
+      method: process
+    -
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: hs_publication_type
+      value_key: name
+      ignore_case: true
+  field_hs_publication_link/uri: url
+  field_hs_publication_link/title: url
+  custm_methods_and_app:
+    -
+      plugin: skip_on_empty
+      source: dhMethodApproach
+      method: process
+    -
+      plugin: explode
+      delimiter: ','
+    -
+      plugin: entity_generate
+      entity_type: taxonomy_term
+      bundle_key: vid
+      bundle: custm_publication_categories
+      value_key: name
+      ignore_case: true
+  status:
+    plugin: default_value
+    source: published
+    default_value: 1
+destination:
+  plugin: 'entity:node'
+  default_bundle: hs_publications
+migration_dependencies:
+  required: {  }

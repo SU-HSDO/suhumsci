@@ -84,6 +84,13 @@ function humsci_basic_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element
     $vars['html_attributes']->addClass('hb-experimental');
   }
+
+  // Mega Menu hides standard menu on desktop setting.
+  $use_megamenu = theme_get_setting('megamenu_toggle');
+  if ($use_megamenu) {
+    // Set html_attributes for html DOM element
+    $vars['html_attributes']->addClass('hb-use-megamenu');
+  }
 }
 
 /**

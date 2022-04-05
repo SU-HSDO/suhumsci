@@ -1,18 +1,22 @@
-.hb-use-megamenu {
-  .hb-main-nav {
-
-    // hide standard menu on desktop
-    @include grid-media-min('lg') {
-      display: none;
-    }
-  }
-}
-
+// By default we want to hide the megamenu at all screen sizes until the
+// theme setting to use the megamenu is enabled.
 .block-we-megamenu {
   display: none;
+}
 
-  // show mega menu only on desktop
+// .hb-use-megamenu is added to the html when the use megamenu theme setting is
+// enabled.
+.hb-use-megamenu {
   @include grid-media-min('lg') {
-    display: block;
+    // standard menu is visible for small screens and hidden at the large
+    // breakpoint.
+    .hb-main-nav {
+      display: none;
+    }
+
+    // megamenu is hidden for small screens and visible at the large breakpoint.
+    .block-we-megamenu {
+      display: block;
+    }
   }
 }

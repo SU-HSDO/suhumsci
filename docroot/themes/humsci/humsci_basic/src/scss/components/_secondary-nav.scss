@@ -189,6 +189,32 @@
         }
       }
     }
+
+    // when a nolink item behaves as a toggle button, add button toggle icon
+    &.hb-secondary-toggler {
+      position: relative;
+      cursor: pointer;
+
+      &::after {
+        @include hb-menu-icon-wrapper(48px, 48px);
+        @include hb-menu-plus-icon;
+        position: absolute;
+        top: hb-calculate-rems(3px);
+        right: 0;
+
+        // If there is no JS then the navigation is automatically expanded and
+        // toggle buttons are unnecessary.
+        .no-js & {
+          display: none;
+        }
+      }
+
+      &[aria-expanded="true"] {
+        &::after {
+          @include hb-menu-minus-icon;
+        }
+      }
+    }
   }
 
   &__button {

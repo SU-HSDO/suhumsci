@@ -5,6 +5,7 @@ namespace Drupal\humsci_events_listeners\EventSubscriber;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\core_event_dispatcher\EntityHookEvents;
+use Drupal\core_event_dispatcher\Event\Entity\EntityDeleteEvent;
 use Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent;
 use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -25,23 +26,31 @@ class NodeEvents implements EventSubscriberInterface {
   }
 
   /**
-   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent $event
+   * On node save, perform some actions.
    *
-   * @return void
+   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent $event
+   *   Triggered Event.
    */
   public function entityPresave(EntityPresaveEvent $event) {
     self::flushEntityCaches($event->getEntity());
   }
 
   /**
-   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent $event
+   * On node delete, perform some actions.
    *
-   * @return void
+   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityDeleteEvent $event
+   *   Triggered Event.
    */
-  public function entityDelete(EntityPresaveEvent $event) {
+  public function entityDelete(EntityDeleteEvent $event) {
     self::flushEntityCaches($event->getEntity());
   }
 
+  /**
+   * Flush extra caches for a node action.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   Entity object.
+   */
   protected static function flushEntityCaches(EntityInterface $entity) {
     if ($entity instanceof NodeInterface) {
       Cache::invalidateTags(['config:search_api.index.default_index']);

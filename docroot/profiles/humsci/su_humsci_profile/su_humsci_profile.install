@@ -133,3 +133,22 @@ function su_humsci_profile_update_9001() {
 function su_humsci_profile_update_9002() {
   \Drupal::service('module_installer')->uninstall(['layout_paragraphs']);
 }
+
+/**
+ * Enable various modules.
+ */
+function su_humsci_profile_update_9003() {
+  \Drupal::service('module_installer')->uninstall([
+    'core_event_dispatcher',
+    'field_event_dispatcher',
+    'hook_event_dispatcher',
+    'jsonapi_event_dispatcher',
+    'media_event_dispatcher',
+    'path_event_dispatcher',
+    'preprocess_event_dispatcher',
+    'toolbar_event_dispatcher',
+    'user_event_dispatcher',
+    'views_event_dispatcher',
+    'humsci_events_listeners',
+  ]);
+}

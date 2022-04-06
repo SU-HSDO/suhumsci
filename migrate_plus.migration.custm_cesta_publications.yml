@@ -21,6 +21,7 @@ source:
     - id
   constants:
     status: 1
+    pub_md: '06-01'
   fields:
     -
       name: id
@@ -72,15 +73,25 @@ process:
       plugin: callback
       callable: trim
   field_hs_publication_publisher: publisher
-  field_hs_publication_year:
+  pub_year:
     -
       plugin: skip_on_empty
       method: process
       source: year
     -
+      plugin: callback
+      callable: trim
+    -
       plugin: substr
       start: 0
-      length: 10
+      length: 4
+  field_hs_publication_year:
+    -
+      plugin: concat
+      delimiter: '-'
+      source:
+        - '@pub_year'
+        - constants/pub_md
   field_hs_publication_author:
     -
       plugin: concat

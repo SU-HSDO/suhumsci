@@ -1,3 +1,4 @@
+uuid: 72a62de4-80d4-4b26-9efb-e8baaf05d48d
 langcode: en
 status: true
 dependencies:
@@ -20,7 +21,6 @@ source:
     - id
   constants:
     status: 1
-    file_destination: 'public://media/publications/'
   fields:
     -
       name: id
@@ -63,12 +63,25 @@ process:
     plugin: skip_on_empty
     method: row
     source: id
-  title: title
+  title:
+    -
+      plugin: skip_on_empty
+      source: title
+      method: process
   field_hs_publication_publisher: publisher
-  field_hs_publication_year: year
+  field_hs_publication_year:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: year
+    -
+      plugin: substr
+      start: 0
+      length: 10
   field_hs_publication_author:
     -
       plugin: concat
+      delimiter: ','
       source:
         - author
         - coAuthors
@@ -78,6 +91,12 @@ process:
     -
       plugin: explode
       delimiter: ','
+    -
+      plugin: entity_generate_no_lookup
+      entity_type: publications_collections
+      bundle_key: type
+      bundle: publication_author
+      value_key: title
   field_hs_publication_type:
     -
       plugin: skip_on_empty

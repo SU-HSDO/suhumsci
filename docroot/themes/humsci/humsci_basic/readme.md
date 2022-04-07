@@ -75,19 +75,6 @@ Visual regression testing should be completed bi-weekly at the end of each sprin
 1. Backstop will open an HTML page that contains the report which highlights errors.
 _Note: Differences in content will also be reported as failures._
 
-### Behavioral tests
-
-This codebase uses Behat to provide behavioral testing for all themes used in production, including `humsci_basic` themes.
-
-Once you have set up your config, you run these tests locally with Lando, like so:
-
-```bash
-# Runs all @global tests, excluding @javascript tests
-lando behat --tags='@global&&~@javascript'
-```
-
-For more info, (including Lando setup details) see [these Behat testing notes](https://docs.google.com/document/d/11lEDdzDk5CYMKoXAON05LIlfmzbdk00tex6DNdo-U74/edit?ts=5eb32acf).
-
 ## Contributing
 ### Github
 To make it easier to find work being done we should use the following naming conventions:

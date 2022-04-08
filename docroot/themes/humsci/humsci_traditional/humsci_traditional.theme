@@ -47,5 +47,12 @@ function humsci_traditional_preprocess_page(&$vars) {
   if ($lmv) {
     $vars['local_masthead_variant_classname'] = 'hb-' . $lmv . '-pattern';
   }
+
+  // Mega Menu base theme CSS loads when megamenu is activated in theme settings.
+  $use_megamenu = theme_get_setting('megamenu_toggle');
+  if ($use_megamenu) {
+    // Load base megamenu CSS when megamenu is enabled
+    $vars['#attached']['library'][] =  'humsci_traditional/megamenu';
+  }
 }
 

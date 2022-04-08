@@ -99,6 +99,14 @@ process:
         - constants/pub_md
   field_hs_publication_author:
     -
+      plugin: skip_on_empty
+      method: process
+      source: author
+    -
+      plugin: skip_on_empty
+      method: process
+      source: coAuthors
+    -
       plugin: concat
       delimiter: ','
       source:

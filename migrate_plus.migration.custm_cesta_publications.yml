@@ -22,6 +22,7 @@ source:
   constants:
     status: 1
     pub_md: '06-01'
+    pub_link_text: 'View Publication'
   fields:
     -
       name: id
@@ -87,6 +88,10 @@ process:
       length: 4
   field_hs_publication_year:
     -
+      plugin: skip_on_empty
+      method: process
+      source: '@pub_year'
+    -
       plugin: concat
       delimiter: '-'
       source:
@@ -130,7 +135,7 @@ process:
       value_key: name
       ignore_case: true
   field_hs_publication_link/uri: url
-  field_hs_publication_link/title: url
+  field_hs_publication_link/title: constants/pub_link_text
   custm_methods_and_app:
     -
       plugin: skip_on_empty

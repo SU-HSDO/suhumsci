@@ -152,3 +152,28 @@ function su_humsci_profile_update_9003() {
     'humsci_events_listeners',
   ]);
 }
+
+/**
+ * Configure migration settings to overwrite fields except node status.
+ */
+function su_humsci_profile_update_9004() {
+  $config_factory = \Drupal::configFactory();
+  $migrations = [];
+  foreach ($config_factory->listAll('migrate_plus.migration.') as $config_name) {
+    preg_match('/migration.(.*)/', $config_name, $matches);
+    $migrations[$matches[1]] = $config_factory->getEditable($config_name);
+  }
+
+  foreach ($migrations as $migration_config) {
+    $process = array_keys($migration_config->get('process'));
+    $destination = $migration_config->get('destination.overwrite_properties');
+    $overwrite_properties = $destination['overwrite_properties'] ?? $process;
+    $status_key = array_search('status', $overwrite_properties);
+    if ($status_key !== FALSE) {
+      unset($overwrite_properties[$status_key]);
+    }
+    asort($overwrite_properties);
+    $migration_config->set('destination.overwrite_properties', array_values($overwrite_properties))
+      ->save();
+  }
+}

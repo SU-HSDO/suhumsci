@@ -72,9 +72,17 @@
     }
   }
 
+  @include grid-media-min('lg') {
+    .hb-dark-pattern .hb-main-nav__menu-lv2 & {
+      @include hb-icon-background('lock', 'black');
+    }
+  }
+
   .we-mega-menu-submenu & {
     @include hb-icon-background('lock', 'black');
     background-position: 0.7rem center;
+    background-size: 1.75rem 1.75rem;
+    padding-left: 3rem !important;
 
     @include grid-media-min('lg') {
       &.is-active,
@@ -82,12 +90,6 @@
       &:focus {
         @include hb-icon-background('lock', 'black');
       }
-    }
-  }
-
-  @include grid-media-min('lg') {
-    .hb-dark-pattern .hb-main-nav__menu-lv2 & {
-      @include hb-icon-background('lock', 'black');
     }
   }
 }

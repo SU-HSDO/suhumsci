@@ -23,6 +23,13 @@ function humsci_colorful_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element
     $vars['html_attributes']->addClass('hb-dark-inversion');
   }
+
+  // Mega Menu hides standard menu on desktop setting.
+  $use_megamenu = theme_get_setting('megamenu_toggle');
+  if ($use_megamenu) {
+    // Load base megamenu CSS when megamenu is enabled
+    $vars['#attached']['library'][] =  'humsci_colorful/megamenu';
+  }
 }
 
 /**
@@ -39,12 +46,5 @@ function humsci_colorful_preprocess_page(&$vars) {
   $lmv = theme_get_setting('local_masthead_variant_classname');
   if ($lmv) {
     $vars['local_masthead_variant_classname'] = 'hb-' . $lmv . '-pattern';
-  }
-
-  // Mega Menu base theme CSS loads when megamenu is activated in theme settings.
-  $use_megamenu = theme_get_setting('megamenu_toggle');
-  if ($use_megamenu) {
-    // Load base megamenu CSS when megamenu is enabled
-    $vars['#attached']['library'][] =  'humsci_colorful/megamenu';
   }
 }

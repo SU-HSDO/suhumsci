@@ -241,3 +241,12 @@ function humsci_basic_preprocess_we_megamenu_li(&$vars) {
     } 
   }
 }
+
+function humsci_basic_preprocess_we_megamenu_backend(array &$vars) {
+  $vars['attributes']['data-action'] = 'clicked';
+}
+
+function humsci_basic_preprocess_we_megamenu_frontend(&$vars) {
+  $vars['attributes']['data-action'] = 'clicked';
+  $vars['attributes']['class'][] = 'click-action';
+}

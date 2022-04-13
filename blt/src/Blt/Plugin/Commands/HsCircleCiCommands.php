@@ -63,6 +63,12 @@ class HsCircleCiCommands extends BltTasks {
     $this->prepEnvironment();
     $collection->addTask($this->blt()->arg('drupal:install'));
 
+    $settings_file = $this->getConfigValue('docroot') . '/sites/settings/ci.settings.php';
+    $collection->addTask($this->taskWriteToFile($settings_file)
+      ->line('$config["config_ignore.settings"]["ignored_config_entities"] = range(1, 100);')
+      ->line(PHP_EOL)
+      ->append());
+
     $collection->addTask($this->taskDrush()
       ->drush('config-import')
       ->option('yes'));

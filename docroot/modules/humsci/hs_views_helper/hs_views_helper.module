@@ -64,6 +64,7 @@ function hs_views_helper_config_schema_info_alter(&$definitions) {
  * @see hs_views_helper_node_presave()
  */
 function hs_views_helper_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  $output['#cache']['tags'][] = 'node_list';
   if (
     isset($view->filter['type']) &&
     $view->filter['type'] instanceof Bundle &&
@@ -233,6 +234,8 @@ function hs_views_helper_views_pre_view(ViewExecutable $view, $display_id, array
     foreach ($filters['type']['value'] as $node_type) {
       $tags[] = 'node_list:' . $node_type;
     }
+    // If no node type tags are available, fall back to the general `node_list`.
+    $tags = empty($tags) ? ['node_list'] : $tags;
     $cache = [
       'type' => 'custom_tag',
       'options' => ['custom_tag' => implode(' ', $tags)],

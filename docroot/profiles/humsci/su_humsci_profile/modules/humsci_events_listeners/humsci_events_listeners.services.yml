@@ -1,0 +1,10 @@
+services:
+  humsci_events_listeners.block_events:
+    class: Drupal\humsci_events_listeners\EventSubscriber\BlockEvents
+    arguments: ['@request_stack']
+    tags:
+      - { name: event_subscriber }
+  humsci_events_listeners.node_events:
+    class: Drupal\humsci_events_listeners\EventSubscriber\NodeEvents
+    tags:
+      - { name: event_subscriber }

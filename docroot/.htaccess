@@ -83,6 +83,33 @@ AddEncoding gzip svgz
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
+  # Block access to php & html files. Node_modules and the vendor
+  # directory should never be available. Also block any WordPress urls.
+  RewriteCond %{REQUEST_URI} node_modules [OR,NC]
+  RewriteCond %{REQUEST_URI} ^/vendor [OR,NC]
+  RewriteCond %{REQUEST_URI} "/wp-(admin|content/plugins/|includes|cron\.php|config\.php|login\.php|signup\.php)|xmlrpc.php" [OR,NC]
+  RewriteCond %{THE_REQUEST} \.php[/\s?] [OR,NC]
+  RewriteCond %{THE_REQUEST} \.html[/\s?] [NC]
+  RewriteCond %{REQUEST_URI} !^/simplesaml/module.php
+  RewriteRule .* - [F]
+
+  # Block access to specific files/paths to all users except stanford IP's.
+  # Each condition blocks unwanted access to all users at the apache level.
+  # This prevents drupal from bootstrapping. Most of these conditions are
+  # requested by bots or by user's cached requests.
+  RewriteCond %{REQUEST_URI} ^/simplesaml [OR]
+  RewriteCond %{REQUEST_URI} ^/update.php$ [OR]
+  RewriteCond %{REQUEST_URI} \.map$ [OR,NC]
+  RewriteCond %{REQUEST_URI} ^/core/install.php
+  # Only need to block on Acquia's environment. Local isn't a concern.
+  RewriteCond %{ENV:AH_SITE_ENVIRONMENT} (dev|test|prod|live)$
+  # The following path is always required to log into the site.
+  RewriteCond %{REQUEST_URI} !^/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp
+  RewriteCond %{ENV:AH_Client_IP} !^127.0.0.1$
+  # Block the above conditions on acquia infrastructure.
+  # See https://httpd.apache.org/docs/2.4/rewrite/flags.html#flag_f.
+  RewriteRule .* - [F]
+
   RewriteCond %{HTTP_HOST} ^statistics [NC]
   RewriteCond %{REQUEST_URI} ^\/~ [NC]
   RewriteRule (.*)$ https://statweb.stanford.edu/$1 [L,R=301]

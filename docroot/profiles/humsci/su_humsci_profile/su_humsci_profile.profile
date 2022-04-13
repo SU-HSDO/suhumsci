@@ -14,7 +14,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\block\BlockInterface;
 use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
@@ -28,10 +27,6 @@ use Drupal\user\UserInterface;
  * Implements hook_entity_presave().
  */
 function su_humsci_profile_entity_presave(EntityInterface $entity) {
-  if ($entity instanceof NodeInterface) {
-    // Invalidate search index caches to refresh search results.
-    Cache::invalidateTags(['config:search_api.index.default_index']);
-  }
   if ($entity instanceof ConfigPagesInterface) {
     Cache::invalidateTags(['migration_plugins']);
   }
@@ -252,20 +247,6 @@ function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $en
     }
   }
   Cache::invalidateTags(['su_humsci_profile:menu_links']);
-}
-
-/**
- * Implements hook_block_access().
- */
-function su_humsci_profile_block_access(BlockInterface $block, $operation, AccountInterface $account) {
-  $current_request = \Drupal::requestStack()->getCurrentRequest();
-  // Disable the page title block on 404 page IF the page is a node. Nodes
-  // should have the page title displayed in the node display configuration so
-  // we can rely on that.
-  if ($block->getPluginId() == 'page_title_block' && $current_request->query->get('_exception_statuscode') == 404) {
-    return AccessResult::forbiddenIf($current_request->attributes->get('node'))
-      ->addCacheableDependency($block);
-  }
 }
 
 /**

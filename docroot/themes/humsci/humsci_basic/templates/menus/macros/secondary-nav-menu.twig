@@ -7,7 +7,7 @@
   {% import _self as menus %}
   <ul class="hb-secondary-nav__menu {{ class_prefix }}__menu hb-secondary-nav__menu-lv{{ menu_level }} {{ class_prefix }}__menu-lv{{ menu_level }}">
   {% for item in items %}
-    {# Link Attribtues #}
+    {# Link Attributes #}
     {% set link_attributes = item.attributes %}
     {% set link_attributes = link_attributes.addClass(class_prefix ~ "__link") %}
     {% set link_attributes = link_attributes.addClass("hb-secondary-nav__link") %}
@@ -27,16 +27,39 @@
     {% endif %}
 
     <li{{ list_attributes }}>
-      {{ link(item.title, item.url, link_attributes) }}
-
-      {% if item.below %}
+      {# This check whether or not there is a URL #}
+      {% if item.url.toString() is empty %}
+        {#
+          If there is no URL (<nolink>) then we need the toggler classes to be
+          on the anchor tag. We also don't need the button because the anchor tag
+          acts as the button to toggle the nested navigation.
+        #}
+        {% set link_attributes = link_attributes.addClass('hb-secondary-toggler') %}
         {% set randomInt = random(0, 100) %}
-        <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true">
-          Toggle {{ item.title }}
-        </button>
-        <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}">
-          {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
-        </div>
+        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true" role="button">{{ item.title }}</a>
+
+        {% if item.below %}
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}">
+            {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
+          </div>
+        {% endif %}
+
+      {% else %}
+        {#
+          If there is a URL then we use a separate button element to toggle the
+          nested navigation and the anchor tag will just act as a link.
+        #}
+        {{ link(item.title, item.url, link_attributes) }}
+
+        {% if item.below %}
+          {% set randomInt = random(0, 100) %}
+          <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true">
+            Toggle {{ item.title }}
+          </button>
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}">
+            {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
+          </div>
+        {% endif %}
       {% endif %}
     </li>
   {% endfor %}

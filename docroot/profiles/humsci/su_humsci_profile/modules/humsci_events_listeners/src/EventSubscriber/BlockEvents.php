@@ -47,7 +47,7 @@ class BlockEvents implements EventSubscriberInterface {
    */
   public function blockAccess(BlockAccessEvent $event) {
     if ($event->getBlock()->getPluginId() == 'we_megamenu_block:main') {
-      $event->addAccessResult(AccessResult::allowedIf(theme_get_setting('megamenu_toggle')));
+      $event->addAccessResult(AccessResult::forbiddenIf(!theme_get_setting('megamenu_toggle')));
     }
 
     // Disable the page title block on 404 page IF the page is a node. Nodes

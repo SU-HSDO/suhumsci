@@ -31,6 +31,9 @@ Frontend assets are built using the Grunt task runner, but are run using npm scr
 - `npm run build` - Compile Sass  and JS for production
 - `npm run watch` - Compile a CSS and JS build and watch for changes in the existing `.scss` or `.js` files
 
+### Browserslist
+In our `.browserlistrc` file we specify support for `"last 1 major version"` of each modern browser. As browsers update we need to refresh our it's a good idea to update the browserslist in the `package-lock.json` file. This is done by running `npx browserslist@latest --update-db` and committing the lock file. [More information](https://github.com/browserslist/browserslist#browsers-data-updating).
+
 ## Testing
 
 - `npm test` - Run linting and sass true tests

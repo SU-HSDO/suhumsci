@@ -15,4 +15,4 @@ _['low', 'medium', 'high', etc.]_
 
 ## PR Checklist
 - [PR Checklist](https://gist.github.com/sherakama/0ba17601381e3adbe0cad566ad4d80a5)
-- [Sparkbox PR Checklist](../docs/SparkboxPRChecklist.md)
+- [Humsci Basic PR Checklist](https://github.com/SU-HSDO/suhumsci/blob/develop/docs/HumsciBasicPRChecklist.md)

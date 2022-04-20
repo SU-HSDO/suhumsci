@@ -31,6 +31,9 @@ Frontend assets are built using the Grunt task runner, but are run using npm scr
 - `npm run build` - Compile Sass  and JS for production
 - `npm run watch` - Compile a CSS and JS build and watch for changes in the existing `.scss` or `.js` files
 
+### Browserslist
+In our `.browserlistrc` file we specify support for `"last 1 major version"` of each modern browser. As browsers update we need to refresh our it's a good idea to update the browserslist in the `package-lock.json` file. This is done by running `npx browserslist@latest --update-db` and committing the lock file. [More information](https://github.com/browserslist/browserslist#browsers-data-updating).
+
 ## Testing
 
 - `npm test` - Run linting and sass true tests
@@ -48,45 +51,33 @@ Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbo
 ### Visual Regression Testing
 [Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
 
-The visual regression tests are run locally and used to compare what is on Production versus what is on your local machine.
+The visual regression tests are run locally and used to compare what is on Staging versus what is on the Dev environment. Backstop is setup to test two identical sites (pages and content) with the only difference being the theme they use.
+- [HS Colorful](https://hs-colorful.stanford.edu/)
+- [HS Traditional](https://hs-traditional.stanford.edu/)
 
-#### Adding new scenarios in the `backstop/backstop.json`.
-The format should look like the following:
-```
-"scenarios": [
-  {
-    "label": "Customize site",
-    "url": "http://swshumsci.suhumsci.loc/site-building/customize-site",
-    "referenceUrl": "https://swshumsci-prod.stanford.edu/site-building/customize-site",
-    "delay": 0,
-    "requireSameDimensions": true
-  }
-]
-```
-Before running Backstop for the first time you will need to create an `.env` file. Copy the contents in `docroot/themes/humsci/humsci_basic/.env-sample` and place them in your `.env` file. Add the basic auth credentials. They can be found in 1Password under `Stanford Basic Auth`.
+#### Initial Setup
+Before running Backstop for the first time you will need to create an `.env` file in this theme directory. Copy the contents in `docroot/themes/humsci/humsci_basic/.env-sample` and place them in your `.env` file. Add the basic auth credentials.
 
-Visual regression testing should be completed bi-weekly at the end of each sprint. To get the best results, sync your local environment against staging before running Backstop.
+#### Testing Prep
+Visual regression testing should be completed bi-weekly at the end of each sprint. To get the best results, sync your local environment against staging before running Backstop:
 
-1. Go to the [staging environment](https://sparkbox-sandbox-stage.stanford.edu/). Take note of which theme (Colorful or Traditional) and color pairing is on staging and update your local environment to match.
+1. Sync the dev environment with a copy of the staging database and files: `lando blt humsci:copy-colorful hs_colorful.dev,hs_traditional.dev`
+2. Update the [hs-traditional dev](https://hs-traditional-dev.stanford.edu/) site to use the Traditional theme
+3. Set the dev environment to use the sprint build branch in Acquia
+
+#### Running Visual Regression Tests
+Running the backstop tests:
 1. Cd the `humsci_basic` directory.
 1. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
 1. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
 1. Run `npm run backstop:test` to run the tests.
 1. Backstop will open an HTML page that contains the report which highlights errors.
-_Note: Differences in content will also be reported as failures._
+_Note: Differences in content will also be reported as failures. Some failures can result in images not loading fully before the snapshot is taken._
 
-### Behavioral tests
-
-This codebase uses Behat to provide behavioral testing for all themes used in production, including `humsci_basic` themes.
-
-Once you have set up your config, you run these tests locally with Lando, like so:
-
-```bash
-# Runs all @global tests, excluding @javascript tests
-lando behat --tags='@global&&~@javascript'
-```
-
-For more info, (including Lando setup details) see [these Behat testing notes](https://docs.google.com/document/d/11lEDdzDk5CYMKoXAON05LIlfmzbdk00tex6DNdo-U74/edit?ts=5eb32acf).
+#### Adding new scenarios in the `backstop/backstop.json`.
+- Any new page and its content need to be present in both the [HS Colorful](https://hs-colorful-stage.stanford.edu/) and [HS Traditional](https://hs-traditional-stage.stanford.edu/) sites on the staging environment.
+- Add the resource path of the new page to the `testPages` array in `backstop/generate-backstop.js`
+- If adding a new theme add the theme name to the `sites` array in `backstop/generate-backstop.js`
 
 ## Contributing
 ### Github

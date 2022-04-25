@@ -72,11 +72,13 @@
         > .we-megamenu-nolink {
           text-decoration: none;
           background: transparent;
+
           &.hb-private-page-link {
             padding-left: 2.4rem !important;
+
             &::before {
               display: inline-block;
-              content:  "";
+              content: "";
               @include hb-icon-background('lock', 'black');
               background-repeat: no-repeat;
               background-size: hb-calculate-rems(20px) hb-calculate-rems(20px);
@@ -86,12 +88,14 @@
               position: absolute;
               left: 0;
               top: 0;
-              bottom: .5rem;
+              bottom: 0.5rem;
               margin: auto;
             }
           }
+
           .hb-dark-pattern & {
             @include hb-global-color('color','white');
+
             &.hb-private-page-link {
               &::before {
                 @include hb-icon-background('lock', 'white');
@@ -110,11 +114,6 @@
 
             .hb-dark-pattern & {
               @include hb-global-color('color','white');
-              &.hb-private-page-link {
-                &::before {
-                  @include hb-icon-background('lock', 'white');
-                }
-              }
             }
           }
         }

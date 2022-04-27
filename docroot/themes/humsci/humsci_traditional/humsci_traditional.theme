@@ -30,8 +30,13 @@ function humsci_traditional_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element
     $vars['html_attributes']->addClass('hb-dark-inversion');
   }
+}
 
-  // Mega Menu hides standard menu on desktop setting.
+/**
+ * Implements hook_preprocess_block().
+ * for Mega Menu module
+ */
+function we_megamenu_preprocess_block(array &$vars) {
   $use_megamenu = theme_get_setting('megamenu_toggle');
   if ($use_megamenu) {
     // Load base megamenu CSS when megamenu is enabled

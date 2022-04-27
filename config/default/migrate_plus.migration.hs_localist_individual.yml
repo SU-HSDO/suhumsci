@@ -146,7 +146,8 @@ process:
   body/format: constants/basic_html
   location:
     plugin: concat
-    delimiter: "\n"
+    delimiter: |
+
     source:
       - location
       - address
@@ -277,7 +278,7 @@ process:
   field_hs_event_ticket/title:
     plugin: default_value
     source: ticket_cost
-    default_value: 'Tickets'
+    default_value: Tickets
 destination:
   plugin: 'entity:node'
   overwrite_properties:

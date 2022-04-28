@@ -36,12 +36,9 @@ function humsci_traditional_preprocess_html(&$vars) {
  * Implements hook_preprocess_block().
  * for Mega Menu module
  */
-function we_megamenu_preprocess_block(array &$vars) {
-  $use_megamenu = theme_get_setting('megamenu_toggle');
-  if ($use_megamenu) {
-    // Load base megamenu CSS when megamenu is enabled
-    $vars['#attached']['library'][] =  'humsci_traditional/megamenu';
-  }
+function humsci_traditional_preprocess_block__we_megamenu(array &$vars) {
+  // Load base megamenu CSS when megamenu is enabled
+  $vars['#attached']['library'][] =  'humsci_traditional/megamenu';
 }
 
 /**

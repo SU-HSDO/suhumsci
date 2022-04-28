@@ -168,7 +168,6 @@ function _humsci_basic_check_link_access(array &$link_items) {
       $parameters = $url->getRouteParameters();
       $nid = $parameters['node'];
       $node = Node::load($nid);
-      $type = $node->bundle();
 
       if (!isset($link_item['attributes'])) {
         $link_item['attributes'] = new Attribute();
@@ -179,6 +178,7 @@ function _humsci_basic_check_link_access(array &$link_items) {
           $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
         }
 
+        $type = $node->bundle();
         if ($type == 'hs_private_page') {
           $link_item['attributes']->addClass('hb-private-page-link');
         }

@@ -8,6 +8,7 @@
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess_block().
@@ -213,4 +214,39 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
   if (!empty($variables['title'])) {
     $variables['title'] = ['#markup' => trim(strip_tags(render($variables['title'])))];
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for we_megamenu li
+ */
+function humsci_basic_preprocess_we_megamenu_li(&$vars) {
+  $url = $vars['item']['url'];
+
+  if (isset($vars['item']['route_name'])) {
+    $url = Url::fromUri('internal:'.$url);
+  } else {
+    $url = Url::fromUri($url);
+  }
+
+  if ($url->isRouted() && $url->getRouteName() == 'entity.node.canonical') {
+    $parameters = $url->getRouteParameters();
+    $nid = $parameters['node'];
+    $node = Node::load($nid);
+    $type = $node->bundle();
+
+    if ($node) {
+      if ($type == 'hs_private_page') {
+        $vars['attributes']['class'][] = 'hb-private-page-link';
+      }
+    } 
+  }
+}
+
+function humsci_basic_preprocess_we_megamenu_backend(array &$vars) {
+  $vars['attributes']['data-action'] = 'clicked';
+}
+
+function humsci_basic_preprocess_we_megamenu_frontend(&$vars) {
+  $vars['attributes']['data-action'] = 'clicked';
+  $vars['attributes']['class'][] = 'click-action';
 }

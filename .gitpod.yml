@@ -39,6 +39,7 @@ tasks:
       rm -rf docroot/*/custom/* &&
       composer install --prefer-source --no-interaction &&
       blt blt:telemetry:disable --no-interaction &&
+      cp .gitpod/gitpod.settings.php docroot/sites/settings/local.settings.php &&
       blt settings &&
       blt drupal:install -n &&
       blt sws:keys &&

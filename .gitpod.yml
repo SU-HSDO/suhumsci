@@ -41,6 +41,7 @@ tasks:
       blt blt:telemetry:disable --no-interaction &&
       cp .gitpod/gitpod.settings.php docroot/sites/settings/local.settings.php &&
       blt settings &&
+      mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal' &&
       blt drupal:install -n &&
       blt sws:keys &&
       blt sbsc

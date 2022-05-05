@@ -2,10 +2,10 @@ name: Content Staging
 on: [push]
 jobs:
   Copy-Prod-Database-Down:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - run: composer install --optimize-autoloader
+      - run: composer update --optimize-autoloader
       - run: vendor/bin/blt blt:telemetry:disable --no-interaction
       - run: vendor/bin/blt stage --no-interaction

@@ -11,4 +11,6 @@ jobs:
       - name: Copy databases
         env:
           SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
+          ACQUIA_KEY: ${{ secrets.ACQUIA_KEY }}
+          ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: vendor/bin/blt stage --no-interaction

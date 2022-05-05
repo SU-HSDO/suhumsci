@@ -1,5 +1,7 @@
 name: Content Staging
-on: [push]
+on:
+  schedule:
+    - cron: '*/5 * * * *'
 jobs:
   Copy-Prod-Database-Down:
     runs-on: ubuntu-latest

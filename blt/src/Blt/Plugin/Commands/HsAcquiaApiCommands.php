@@ -3,6 +3,7 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use GuzzleHttp\Client;
 use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 use Symfony\Component\Console\Question\Question;
 
@@ -144,6 +145,7 @@ class HsAcquiaApiCommands extends BltTasks {
     'exclude' => NULL,
     'resume' => FALSE,
     'env' => 'test',
+    'no-notify' => false,
   ]) {
     $task_started = time() - (60 * 60 * 24);
     $this->connectAcquiaApi();
@@ -182,6 +184,21 @@ class HsAcquiaApiCommands extends BltTasks {
 
     if (array_unique($this->failedDatabases)) {
       $this->yell('Databases failed: ' . implode(', ', array_unique($this->failedDatabases)), 40, 'red');
+    }
+
+    $root = $this->getConfigValue('repo.root');
+    if (!$options['no-notify'] && file_exists("$root/keys/secrets.settings.php")) {
+      include "$root/keys/secrets.settings.php";
+      $client = new Client();
+      $client->post(getenv('SLACK_NOTIFICATION_URL'), [
+        'form_params' => [
+          'payload' => json_encode([
+            'username' => 'Acquia Cloud',
+            'text' => sprintf('All Databases have been copied to %s environment.', $options['env']),
+            'icon_emoji' => 'information_source',
+          ]),
+        ],
+      ]);
     }
   }
 

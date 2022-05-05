@@ -148,6 +148,9 @@ class HsAcquiaApiCommands extends BltTasks {
     'no-notify' => false,
   ]) {
 
+    if(getenv('SLACK_NOTIFICATION_URL')){
+      $this->say('SLACK_NOTIFICATION_URL exists');
+    }
     $this->say('This command was called');
     return;
     $task_started = time() - (60 * 60 * 24);

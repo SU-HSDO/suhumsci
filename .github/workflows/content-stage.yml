@@ -4,11 +4,11 @@ jobs:
   Copy-Prod-Database-Down:
     runs-on: ubuntu-latest
     steps:
-      - name: Get Variables
-        env:
-          SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: composer update --optimize-autoloader
       - run: vendor/bin/blt blt:telemetry:disable --no-interaction
-      - run: vendor/bin/blt stage --no-interaction
+      - name: Copy databases
+        env:
+          SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
+        run: vendor/bin/blt stage --no-interaction

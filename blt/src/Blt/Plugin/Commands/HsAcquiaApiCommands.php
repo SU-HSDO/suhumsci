@@ -145,7 +145,7 @@ class HsAcquiaApiCommands extends BltTasks {
     'exclude' => NULL,
     'resume' => FALSE,
     'env' => 'test',
-    'no-notify' => false,
+    'no-notify' => FALSE,
   ]) {
     $task_started = time() - (60 * 60 * 24);
     $this->connectAcquiaApi();

@@ -1,0 +1,11 @@
+name: Content Staging
+on: [push]
+jobs:
+  Copy-Prod-Database-Down:
+    runs-on: cimg/php:7.4
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: composer install --optimize-autoloader
+      - run: vendor/bin/blt blt:telemetry:disable --no-interaction
+      - run: vendor/bin/blt stage --no-interaction

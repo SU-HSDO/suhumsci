@@ -187,8 +187,10 @@ class HsAcquiaApiCommands extends BltTasks {
     }
 
     $root = $this->getConfigValue('repo.root');
-    if (!$options['no-notify'] && file_exists("$root/keys/secrets.settings.php")) {
+    if (file_exists("$root/keys/secrets.settings.php")) {
       include "$root/keys/secrets.settings.php";
+    }
+    if (!$options['no-notify'] && getenv('SLACK_NOTIFICATION_URL')) {
       $client = new Client();
       $client->post(getenv('SLACK_NOTIFICATION_URL'), [
         'form_params' => [

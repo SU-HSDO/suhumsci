@@ -5,6 +5,10 @@ dependencies:
   config:
     - field.field.node.hs_person.body
     - field.field.node.hs_person.field_hs_person_affiliation
+    - field.field.node.hs_person.field_hs_person_alt_email
+    - field.field.node.hs_person.field_hs_person_alt_label
+    - field.field.node.hs_person.field_hs_person_alt_name
+    - field.field.node.hs_person.field_hs_person_alt_phone
     - field.field.node.hs_person.field_hs_person_cv_link
     - field.field.node.hs_person.field_hs_person_department
     - field.field.node.hs_person.field_hs_person_education
@@ -67,6 +71,10 @@ third_party_settings:
         - field_hs_person_office
         - field_hs_person_office_hours
         - field_hs_person_mail
+        - field_hs_person_alt_label
+        - field_hs_person_alt_name
+        - field_hs_person_alt_phone
+        - field_hs_person_alt_email
       label: 'Contact Information'
       region: content
       parent_name: group_tabs
@@ -191,6 +199,38 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_hs_person_alt_email:
+    type: string_textfield
+    weight: 20
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_person_alt_label:
+    type: string_textfield
+    weight: 17
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_person_alt_name:
+    type: string_textfield
+    weight: 18
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_person_alt_phone:
+    type: string_textfield
+    weight: 19
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_hs_person_cv_link:
     type: link_default
     weight: 15
@@ -273,7 +313,7 @@ content:
     third_party_settings: {  }
   field_hs_person_mail:
     type: address_default
-    weight: 18
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -287,7 +327,7 @@ content:
     third_party_settings: {  }
   field_hs_person_office:
     type: string_textfield
-    weight: 15
+    weight: 14
     region: content
     settings:
       size: 60
@@ -295,7 +335,7 @@ content:
     third_party_settings: {  }
   field_hs_person_office_hours:
     type: string_textfield
-    weight: 16
+    weight: 15
     region: content
     settings:
       size: 60
@@ -416,8 +456,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_hs_person_alt_email: true
-  field_hs_person_alt_label: true
-  field_hs_person_alt_name: true
-  field_hs_person_alt_phone: true
   field_hs_person_image: true

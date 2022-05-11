@@ -1,4 +1,4 @@
-// WE MEGA MENU
+// WE MEGA MENU - Stanford Humsci Overrides
 // mega menu containing block
 .block-we-megamenu {
   width: 100%;
@@ -11,114 +11,106 @@
 }
 
 // mega menu typography
-.we-mega-menu {
-  &-ul {
-    width: 100%;
+.navbar-we-mega-menu.click-action {
+  .we-mega-menu {
+    &-ul {
+      width: 100%;
 
-    .we-mega-menu-li {
-      display: inline-block;
-      border: 0;
-      position: initial;
-
-      & .we-mega-menu-li,
-      .we-megamenu-nolink {
-        @include hb-themes(('colorful', 'airy')) {
-          font-family: $hb-colorful-font--sans;
-        }
-        @include hb-traditional {
-          font-family: $hb-traditional-font--sans;
-        }
-        @include hb-global-color('color', 'black');
-        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(15px);
-        font-size: hb-calculate-rems(18px);
-        font-weight: hb-theme-font-weight(semibold);
-        text-transform: none;
-        background: transparent;
-        width: 100%;
-        position: relative;
-        display: block;
+      .we-mega-menu-li {
+        display: inline-block;
         border: 0;
-        transition: transform 150ms ease-in-out;
-      }
+        position: initial;
 
-      // remove default mega menu caret
-      &.dropdown-menu {
-        > .we-mega-menu-li,
-        > .we-megamenu-nolink {
-          &::before {
-            display: none;
+        & .we-mega-menu-li,
+        .we-megamenu-nolink {
+          @include hb-themes(('colorful', 'airy')) {
+            font-family: $hb-colorful-font--sans;
+          }
+          @include hb-traditional {
+            font-family: $hb-traditional-font--sans;
+          }
+          @include hb-global-color('color', 'black');
+          padding: hb-calculate-rems(10px) 0 hb-calculate-rems(15px);
+          font-size: hb-calculate-rems(18px);
+          font-weight: hb-theme-font-weight(semibold);
+          text-transform: none;
+          background-color: transparent;
+          width: 100%;
+          position: relative;
+          display: block;
+          border: 0;
+          transition: transform 150ms ease-in-out;
+          text-decoration: none;
+        }
+
+        // remove default mega menu caret
+        &.dropdown-menu,
+        &.dropdown-menu.clicked {
+          > .we-mega-menu-li,
+          > .we-megamenu-nolink {
+            &::before {
+              display: none;
+            }
           }
         }
-      }
-    } // end li
 
-    // level 1 only
-    & > .we-mega-menu-li {
-      margin-right: 2.4rem;
-      display: flex;
-      align-items: flex-end;
-
-      // level 1 links
-      > .we-mega-menu-li,
-      > .we-megamenu-nolink {
-        .hb-dark-pattern & {
-          @include hb-global-color('color','white');
+        &.dropdown-menu.clicked {
+          > .we-mega-menu-li::after {
+            transform: rotate(180deg);
+          }
         }
+      } // end li
 
-        // bottom border on hover via background
-        &:hover,
-        &:focus {
-          @include hb-global-color('color', 'black');
-          background: linear-gradient(transparent 1%, #b3b5b9 1%);
-          background-size: 100% 0.55rem;
-          background-repeat: no-repeat;
-          background-position: bottom;
+      // level 1 only
+      & > .we-mega-menu-li {
+        margin-right: 2.4rem;
+        display: flex;
+        align-items: flex-end;
+
+        // level 1 links
+        > .we-mega-menu-li,
+        > .we-megamenu-nolink {
+          text-decoration: none;
+          background: transparent;
+
+          &.hb-private-page-link {
+            padding-left: 2.4rem !important;
+
+            &::before {
+              display: inline-block;
+              content: "";
+              @include hb-icon-background('lock', 'black');
+              background-repeat: no-repeat;
+              background-size: hb-calculate-rems(20px) hb-calculate-rems(20px);
+              background-position: center;
+              height: hb-calculate-rems(30px);
+              width: hb-calculate-rems(20px);
+              position: absolute;
+              left: 0;
+              top: 0;
+              bottom: 0.5rem;
+              margin: auto;
+            }
+          }
 
           .hb-dark-pattern & {
             @include hb-global-color('color','white');
+
+            &.hb-private-page-link {
+              &::before {
+                @include hb-icon-background('lock', 'white');
+              }
+            }
           }
-        }
-      }
 
-      // level 1 active list item
-      &.active {
-
-        // level 1 active links bottom bar
-        > .we-mega-menu-li,
-        > .we-megamenu-nolink {
-          @include hb-global-color('color', 'black');
-          background: linear-gradient(transparent 1%, var(--palette--secondary) 1%);
-          background-size: 100% 0.55rem;
-          background-repeat: no-repeat;
-          background-position: bottom;
-
-          .hb-dark-pattern & {
-            @include hb-global-color('color','white');
-            background: linear-gradient(transparent 1%, var(--palette--tertiary-reversed) 1%);
+          // bottom border on hover via background
+          &:hover,
+          &:focus {
+            @include hb-global-color('color', 'black');
+            background: linear-gradient(transparent 1%, #b3b5b9 1%);
             background-size: 100% 0.55rem;
             background-repeat: no-repeat;
             background-position: bottom;
-          }
-        }
-      }
-
-      // level 1 list items with dropdown
-      &.dropdown-menu {
-        position: initial;
-
-        // replace default mega menu hover
-        &:hover,
-        &:focus {
-          background: linear-gradient(transparent 1%, #b3b5b9 1%);
-          background-size: 100% 0.55rem;
-          background-repeat: no-repeat;
-          background-position: bottom;
-
-          // remove default mega menu hover
-          > .we-mega-menu-li,
-          > .we-megamenu-nolink {
-            @include hb-global-color('color', 'black');
-            background-color: transparent;
 
             .hb-dark-pattern & {
               @include hb-global-color('color','white');
@@ -126,137 +118,144 @@
           }
         }
 
-        // dropdown list item links
-        > .we-mega-menu-li,
-        > .we-megamenu-nolink {
-          padding: hb-calculate-rems(10px) hb-calculate-rems(20px) hb-calculate-rems(15px) 0;
+        // level 1 active list item
+        &.active {
 
-          // dropdown caret indicator
-          &::after {
-            @include hb-menu-icon-wrapper(20px, 15px);
-            @include hb-menu-down-arrow-icon;
-            bottom: hb-calculate-rems(18px);
-            top: auto;
-            display: block;
-            position: absolute;
-            filter: brightness(300%);
-            opacity: 1;
-            right: 0;
-          }
+          // level 1 active links bottom bar
+          > .we-mega-menu-li,
+          > .we-megamenu-nolink {
+            @include hb-global-color('color', 'black');
+            background: linear-gradient(transparent 1%, var(--palette--secondary) 1%);
+            background-size: 100% 0.55rem;
+            background-repeat: no-repeat;
+            background-position: bottom;
 
-          .hb-dark-pattern & {
-
-            // dropdown caret indicator
-            &::after {
-              @include hb-icon-background('chevron', 'white');
-            }
-          }
-
-          // dropdown caret animate on hover
-          &:hover,
-          &:focus {
-            &::after {
-              transform: rotate(180deg);
+            .hb-dark-pattern & {
+              @include hb-global-color('color','white');
+              background: linear-gradient(transparent 1%, var(--palette--tertiary-reversed) 1%);
+              background-size: 100% 0.55rem;
+              background-repeat: no-repeat;
+              background-position: bottom;
             }
           }
         }
-      }
-    } // end li level 1
+
+        // level 1 list items with dropdown
+        &.dropdown-menu {
+          position: initial;
+
+          // replace default mega menu hover
+          &:focus {
+            background: linear-gradient(transparent 1%, #b3b5b9 1%);
+            background-size: 100% 0.55rem;
+            background-repeat: no-repeat;
+            background-position: bottom;
+
+            // remove default mega menu hover
+            > .we-mega-menu-li,
+            > .we-megamenu-nolink {
+              @include hb-global-color('color', 'black');
+              background-color: transparent;
+
+              .hb-dark-pattern & {
+                @include hb-global-color('color','white');
+              }
+            }
+          }
+
+          // dropdown list item links
+          > .we-mega-menu-li,
+          > .we-megamenu-nolink {
+            padding: hb-calculate-rems(10px) hb-calculate-rems(20px) hb-calculate-rems(15px) 0;
+
+            // dropdown caret indicator
+            &::after {
+              @include hb-menu-icon-wrapper(20px, 15px);
+              @include hb-menu-down-arrow-icon;
+              bottom: hb-calculate-rems(18px);
+              top: auto;
+              display: block;
+              position: absolute;
+              filter: brightness(300%);
+              opacity: 1;
+              right: 0;
+            }
+
+            .hb-dark-pattern & {
+
+              // dropdown caret indicator
+              &::after {
+                @include hb-icon-background('chevron', 'white');
+              }
+            }
+          }
+        }
+      } // end li level 1
 
 
-    // mega menu submenu open state via hover
-    .dropdown-menu {
-      &:hover,
-      &:focus {
+      // mega menu submenu open state via hover
+      .dropdown-menu {
         > .we-mega-menu-submenu {
-          display: block;
-          visibility: visible;
+          display: none;
+          visibility: hidden;
           height: auto;
           width: 100vw;
           overflow: initial;
           max-width: 100%;
         }
       }
-    }
-  } // end UL
+    } // end UL
 
 
-  // submenu
-  &-submenu {
-    height: 0;
-    width: 0;
-    max-width: 120rem;
-    position: absolute;
-    padding: 2rem;
-    -moz-box-shadow: 0 3px 15px rgba(0, 0, 0, 0.11765);
-    -webkit-box-shadow: 0 3px 15px rgb(0 0 0 / 12%);
-    box-shadow: 0 3px 15px rgb(0 0 0 / 12%);
-    border-left: 0;
-    border-right: 0;
-    overflow: hidden;
-    @include hb-global-color('color', 'black');
-
-    .hb-dark-pattern & {
-      @include hb-global-color('color','black');
-    }
-
-    a:not([class]) {
-      @include hb-pairing-color('color', 'tertiary');
+    // submenu
+    &-submenu {
+      height: 0;
+      width: 0;
+      max-width: 120rem;
+      position: absolute;
+      padding: 2rem;
+      -moz-box-shadow: 0 3px 15px rgba(0 0 0 / 0.11765);
+      -webkit-box-shadow: 0 3px 15px rgb(0 0 0 / 12%);
+      box-shadow: 0 3px 15px rgb(0 0 0 / 12%);
+      border-left: 0;
+      border-right: 0;
+      overflow: hidden;
+      @include hb-global-color('color', 'black');
 
       .hb-dark-pattern & {
+        @include hb-global-color('color','black');
+      }
+
+      a:not([class]) {
         @include hb-pairing-color('color', 'tertiary');
+
+        .hb-dark-pattern & {
+          @include hb-pairing-color('color', 'tertiary');
+        }
       }
-    }
 
-    // remove default mega menu height
-    > .we-mega-menu-submenu-inner {
-      min-height: auto;
-    }
+      // remove default mega menu height
+      > .we-mega-menu-submenu-inner {
+        min-height: auto;
+      }
 
-    .we-mega-menu-col {
-
-      // level 3 container column indent
       .we-mega-menu-col {
-        border: 0;
-        padding-left: 0.75rem;
+
+        // level 3 container column indent
+        .we-mega-menu-col {
+          border: 0;
+          padding-left: 0.75rem;
+        }
       }
-    }
 
-    // submenu unordered list
-    .nav {
+      // submenu unordered list
+      .nav {
 
-      // submenu list items
-      .we-mega-menu-li {
-        padding: 0;
+        // submenu list items
+        .we-mega-menu-li {
+          padding: 0;
 
-        // level 2 links not subtitles - incase different style is preferred
-        > .we-mega-menu-li,
-        > .we-megamenu-nolink {
-          font-size: hb-calculate-rems(16px);
-          color: #8c1515;
-          text-transform: uppercase;
-          font-weight: hb-theme-font-weight(semibold);
-          padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
-        }
-
-        > .we-mega-menu-li {
-          text-decoration: underline;
-
-          &:hover,
-          &:focus {
-            @include hb-global-color('background-color', 'gray-light');
-            color: #8c1515;
-            border: 0;
-            text-decoration: underline;
-          }
-        }
-
-        // level 2 links serving as subtitles - incase different style is preferred
-        // bottom margin incase of two submenus in one column
-        &.dropdown-menu {
-          margin-bottom: 1rem;
-
-          // submenu links red subtitle style
+          // level 2 links not subtitles - incase different style is preferred
           > .we-mega-menu-li,
           > .we-megamenu-nolink {
             font-size: hb-calculate-rems(16px);
@@ -266,109 +265,142 @@
             padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
           }
 
-          > .we-megamenu-nolink {
-            cursor: default;
-          }
-
-          // subtitle links underlined as fallback if not nolink
           > .we-mega-menu-li {
             text-decoration: underline;
 
-            // subtitle links hover background
             &:hover,
             &:focus {
               @include hb-global-color('background-color', 'gray-light');
               color: #8c1515;
               border: 0;
+              text-decoration: underline;
             }
           }
 
-          // remove default mega menu active borders on links
-          &.active {
+          // level 2 links serving as subtitles - incase different style is preferred
+          // bottom margin incase of two submenus in one column
+          &.dropdown-menu {
+            margin-bottom: 1rem;
+
+            // submenu links red subtitle style
             > .we-mega-menu-li,
             > .we-megamenu-nolink {
-              border: 0;
+              font-size: hb-calculate-rems(16px);
+              color: #8c1515;
+              text-transform: uppercase;
+              font-weight: hb-theme-font-weight(semibold);
+              padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
             }
+
+            > .we-megamenu-nolink {
+              cursor: default;
+            }
+
+            // subtitle links underlined as fallback if not nolink
+            > .we-mega-menu-li {
+              text-decoration: underline;
+
+              // subtitle links hover background
+              &:hover,
+              &:focus {
+                @include hb-global-color('background-color', 'gray-light');
+                color: #8c1515;
+                border: 0;
+              }
+            }
+
+            // remove default mega menu active borders on links
+            &.active {
+              > .we-mega-menu-li,
+              > .we-megamenu-nolink {
+                border: 0;
+              }
+            }
+          }
+        }
+
+        // general level 3 + link styling
+        .we-mega-menu-submenu {
+
+          // level 3 + list items
+          .we-mega-menu-li {
+            padding: 0;
+
+            & .we-mega-menu-li,
+            .we-megamenu-nolink {
+              @include hb-global-color('color', 'black');
+              text-decoration: none;
+              text-transform: none;
+              padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
+              font-weight: hb-theme-font-weight(semibold);
+
+              // hover background same as level 2 link hover
+              &:hover,
+              &:focus {
+                @include hb-global-color('background-color', 'gray-light');
+                @include hb-global-color('color', 'black');
+              }
+            }
+          }
+
+          // level 3 items with dropdowns same margin as without dropdowns
+          &.dropdown-menu {
+            margin-bottom: 0;
+          }
+
+          // level 4 hidden
+          .we-mega-menu-submenu {
+            display: none;
           }
         }
       }
 
-      // general level 3 + link styling
+      // submenu faux fullwidth elements
+      &::before,
+      &::after {
+        display: block;
+        content: "";
+        background-color: #fff;
+        border: 1px solid rgba(0 0 0 / 0.1);
+        border-left: 0;
+        border-right: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        z-index: -1;
+        line-height: inherit;
+        box-sizing: content-box;
+      }
+
+      &::before {
+        left: -100%;
+        -moz-box-shadow: -15px 3px 15px rgba(0 0 0 / 0.11765) !important;
+        -webkit-box-shadow: -15px 3px 15px rgb(0 0 0 / 12%) !important;
+        box-shadow: -15px 3px 15px rgb(0 0 0 / 12%) !important;
+      }
+
+      &::after {
+        right: -100%;
+        -moz-box-shadow: 15px 3px 15px rgba(0 0 0 / 0.11765) !important;
+        -webkit-box-shadow: 15px 3px 15px rgb(0 0 0 / 12%) !important;
+        box-shadow: 15px 3px 15px rgb(0 0 0 / 12%) !important;
+      }
+
+      // nested submenu
       .we-mega-menu-submenu {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
 
-        // level 3 + list items
-        .we-mega-menu-li {
-          padding: 0;
-
-          & .we-mega-menu-li,
-          .we-megamenu-nolink {
-            @include hb-global-color('color', 'black');
-            text-decoration: none;
-            text-transform: none;
-            padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
-            font-weight: hb-theme-font-weight(semibold);
-
-            // hover background same as level 2 link hover
-            &:hover,
-            &:focus {
-              @include hb-global-color('background-color', 'gray-light');
-              @include hb-global-color('color', 'black');
-            }
-          }
-        }
-
-        // level 4 hidden
-        .we-mega-menu-submenu {
+        // remove faux full width from inner submenu
+        &::before,
+        &::after {
           display: none;
         }
       }
-    }
-
-    // submenu faux fullwidth elements
-    &::before,
-    &::after {
-      display: block;
-      content: "";
-      background-color: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-left: 0;
-      border-right: 0;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      z-index: -1;
-      line-height: inherit;
-      box-sizing: content-box;
-    }
-
-    &::before {
-      left: -100%;
-      -moz-box-shadow: -15px 3px 15px rgba(0, 0, 0, 0.11765) !important;
-      -webkit-box-shadow: -15px 3px 15px rgb(0 0 0 / 12%) !important;
-      box-shadow: -15px 3px 15px rgb(0 0 0 / 12%) !important;
-    }
-
-    &::after {
-      right: -100%;
-      -moz-box-shadow: 15px 3px 15px rgba(0, 0, 0, 0.11765) !important;
-      -webkit-box-shadow: 15px 3px 15px rgb(0 0 0 / 12%) !important;
-      box-shadow: 15px 3px 15px rgb(0 0 0 / 12%) !important;
-    }
-
-    // nested submenu
-    .we-mega-menu-submenu {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-
-      // remove faux full width from inner submenu
-      &::before,
-      &::after {
-        display: none;
-      }
-    }
-  } // end submenu
-} // end we-mega-menu
+    } // end submenu
+  } // end we-mega-menu
+}

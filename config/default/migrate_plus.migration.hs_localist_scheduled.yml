@@ -27,6 +27,7 @@ source:
     register_text: Register
     image_path: 'public://events/localist/'
     alt: ''
+    trim: " \n\r"
   fields:
     -
       name: id
@@ -43,7 +44,7 @@ source:
     -
       name: location
       label: location
-      selector: event/location
+      selector: event/location_name
     -
       name: event_instances
       label: event_instances
@@ -88,6 +89,34 @@ source:
       name: ticket_url
       label: ticket_url
       selector: event/ticket_url
+    -
+      name: experience
+      label: experience
+      selector: event/experience
+    -
+      name: room_number
+      label: room_number
+      selector: event/room_number
+    -
+      name: address
+      label: address
+      selector: event/address
+    -
+      name: stream_url
+      label: stream_url
+      selector: event/stream_url
+    -
+      name: stream_info
+      label: stream_info
+      selector: event/stream_info
+    -
+      name: ticket_url
+      label: ticket_url
+      selector: event/ticket_url
+    -
+      name: ticket_cost
+      label: ticket_cost
+      selector: event/ticket_cost
   ids:
     id:
       type: string
@@ -107,7 +136,20 @@ process:
       search: '/style=.*height:(.*)px.*width:(.*)px.*?"/'
       replace: 'height="$1" width="$2"'
   body/format: constants/basic_html
-  field_hs_event_location: location
+  location:
+    plugin: concat
+    delimiter: "\n"
+    source:
+      - location
+      - address
+      - room_number
+  field_hs_event_location:
+    plugin: callback
+    callable: trim
+    unpack_source: true
+    source:
+      - '@location'
+      - constants/trim
   field_hs_event_link/uri: localist_url
   field_hs_event_link/title: constants/external_link_text
   field_hs_event_registration/uri: ticket_url
@@ -276,9 +318,24 @@ process:
       bundle_key: vid
       bundle: hs_event_status
       value_key: name
+  field_hs_event_experience: experience
+  field_hs_event_stream/uri: stream_url
+  field_hs_event_stream_info/value: stream_info
+  field_hs_event_stream_info/format: constants/basic_html
+  field_hs_event_ticket/uri: ticket_url
+  field_hs_event_ticket/title:
+    plugin: default_value
+    source: ticket_cost
+    default_value: 'Tickets'
 destination:
   plugin: 'entity:node'
   overwrite_properties:
+    - field_hs_event_experience
+    - field_hs_event_stream/uri
+    - field_hs_event_stream_info/value
+    - field_hs_event_stream_info/format
+    - field_hs_event_ticket/uri
+    - field_hs_event_ticket/title
     - body/format
     - body/value
     - field_hs_event_audience

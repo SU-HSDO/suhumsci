@@ -1,0 +1,18 @@
+name: Content Staging
+on:
+  schedule:
+    - cron: '0 0 * * 3'
+jobs:
+  Copy-Prod-Database-Down:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: composer update --optimize-autoloader
+      - run: vendor/bin/blt blt:telemetry:disable --no-interaction
+      - name: Copy databases
+        env:
+          SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
+          ACQUIA_KEY: ${{ secrets.ACQUIA_KEY }}
+          ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
+        run: vendor/bin/blt stage --no-interaction

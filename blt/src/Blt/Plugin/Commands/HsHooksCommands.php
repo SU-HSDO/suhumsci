@@ -20,6 +20,30 @@ class HsHooksCommands extends BltTasks {
   }
 
   /**
+   * Pre site update command.
+   *
+   * When deploying code to Acquia, before updating every site with configs,
+   * run database updates first to avoid any breaking issues.
+   *
+   * @hook pre-command artifact:update:drupal:all-sites
+   */
+  public function preUpdateAllSites(){
+    // Disable alias since we are targeting specific uri.
+    $this->config->set('drush.alias', '');
+
+    foreach ($this->getConfigValue('multisites') as $multisite) {
+      $this->switchSiteContext($multisite);
+
+      if ($this->getInspector()->isDrupalInstalled()) {
+        $this->say("Running database updates on <comment>$multisite</comment>...");
+        $this->taskDrush()
+          ->drush("updb")
+          ->run();
+      }
+    }
+  }
+
+  /**
    * After a multisite is created, modify the drush alias with default values.
    *
    * @hook post-command recipes:multisite:init

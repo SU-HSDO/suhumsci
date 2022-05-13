@@ -30,7 +30,7 @@ class CourseHttp extends Http {
   /**
    * {@inheritdoc}
    */
-  public function getResponseContent($url) {
+  public function getResponseContent(string $url): string {
     $response = $this->getResponse($url);
     $body = $response->getBody();
 

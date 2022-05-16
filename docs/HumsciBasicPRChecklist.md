@@ -1,4 +1,4 @@
-# Sparkbox Pull Request Checklist
+# Humsci Basic Pull Request Checklist
 
 **When reviewing a pull request, please check for the following:**
 
@@ -45,7 +45,7 @@ For this reason, we will divide the work we do as part of our accessibility chec
 In order to get a high level sense of any issues that might exist, such as missing alt text, missing link text, and color contrast issues, we can use an automated tool during and after development.
 
 - [ ] Employ the use of [Axe](https://www.deque.com/axe/), [Wave](https://wave.webaim.org/), or [AMP](https://wave.webaim.org/) based on which automated tool we prefer to analyze a page, or component.
-  - Use these tools to investigate for errors. As automated tools, they may find a violation with something that is not completely correct based on context. Use your subjective judgement to decide if it’s really a violation or not. Please record notes on this. 
+  - Use these tools to investigate for errors. As automated tools, they may find a violation with something that is not completely correct based on context. Use your subjective judgement to decide if it’s really a violation or not. Please record notes on this.
 
 ### Manual Testing (75%)
 
@@ -53,7 +53,7 @@ In order to get a high level sense of any issues that might exist, such as missi
 While keyboard testing, check for the following:
 
 1. Are you able you tab to elements as they appear in the visual order? (Forms, buttons, links?)
-1. Can you operate any clickable or JS functionality using the keyboard? (Using Spacebar/Enter keys) 
+1. Can you operate any clickable or JS functionality using the keyboard? (Using Spacebar/Enter keys)
 
 - [ ] Keyboard-only navigate on Chrome
 - [ ] Keyboard-only navigate on Safari

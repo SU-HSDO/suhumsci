@@ -68,7 +68,8 @@ if (accordionList.length >= 1) {
   const allToggleButtons = [...document.querySelectorAll('.hb-accordion-toggle-all')];
 
   allToggleButtons.forEach((toggleButton) => {
-    toggleButton.addEventListener('click', () => {
+    toggleButton.addEventListener('click', (e) => {
+      e.preventDefault();
       if (allExpanded) {
         toggleAllAccordions(accordionList, 'closeAll');
         updateToggle(allToggleButtons, 'closeAll');
@@ -78,6 +79,7 @@ if (accordionList.length >= 1) {
         updateToggle(allToggleButtons, 'openAll');
         allExpanded = true;
       }
+      toggleButton.scrollIntoView(true);
     });
   });
 }

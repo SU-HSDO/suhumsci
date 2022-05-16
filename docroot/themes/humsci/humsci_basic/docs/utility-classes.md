@@ -185,6 +185,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-main-body-detail-image | Used specifically on node detail pages to float an image. | - |
 | hb-carousel-reset-height | Override inline styles to reset the default height of the text box within a carousel. | - |
 | hb-timeline-checklist | Change vertical timeline circle icons to squares. | - |
+| hb-timeline-border | Add a bottom border to each vertical timeline. | - |
 
 ### Misc
 

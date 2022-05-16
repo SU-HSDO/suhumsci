@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\hs_migrate\Plugin\migrate\process\HsEntityGenerate;
@@ -52,12 +53,17 @@ class HsEntityGenerateTest extends UnitTestCase {
 
     $query->method('accessCheck')->will($this->returnValue($query));
 
+    $entity_definition = $this->createMock(EntityTypeInterface::class);
+    $entity_definition->method('getKey')->willReturn('foo');
+
     $entity_storage->method('getQuery')
       ->willReturn($query);
 
     $entity_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_manager->method('getStorage')
       ->willReturn($entity_storage);
+    $entity_manager->method('getDefinition')
+      ->willReturn($entity_definition);
 
     $field_manager = $this->createMock(EntityFieldManagerInterface::class);
 
@@ -71,10 +77,12 @@ class HsEntityGenerateTest extends UnitTestCase {
    * Test tranform method.
    */
   public function testTranform() {
-
+    $destination_plugin = $this->createMock(MigrateDestinationInterface::class);
+    $destination_plugin->method('getPluginId')->willReturn('foo:bar');
+    
     $migration = $this->createMock(MigrationInterface::class);
     $migration->method('getDestinationPlugin')
-      ->willReturn($this->createMock(MigrateDestinationInterface::class));
+      ->willReturn($destination_plugin);
     $configuration = [
       'entity_type' => 'type',
       'value_key' => 'key',

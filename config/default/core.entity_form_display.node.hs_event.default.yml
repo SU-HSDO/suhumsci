@@ -12,14 +12,20 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
     - field.field.node.hs_event.field_hs_event_date
+    - field.field.node.hs_event.field_hs_event_experience
     - field.field.node.hs_event.field_hs_event_image
+    - field.field.node.hs_event.field_hs_event_instances
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_registration
     - field.field.node.hs_event.field_hs_event_series
     - field.field.node.hs_event.field_hs_event_speaker
     - field.field.node.hs_event.field_hs_event_sponsor
     - field.field.node.hs_event.field_hs_event_status
+    - field.field.node.hs_event.field_hs_event_stream
+    - field.field.node.hs_event.field_hs_event_stream_info
+    - field.field.node.hs_event.field_hs_event_ticket
     - field.field.node.hs_event.field_hs_event_type
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
@@ -54,8 +60,11 @@ third_party_settings:
         - field_hs_event_date
         - field_hs_event_image
         - body
+        - field_hs_event_experience
         - field_hs_event_location
         - field_hs_event_map_link
+        - field_hs_event_stream_info
+        - field_hs_event_stream
       label: 'Event Details'
       region: content
       parent_name: group_event_tabs
@@ -74,6 +83,7 @@ third_party_settings:
         - field_hs_event_contact_phone
         - field_hs_event_link
         - field_hs_event_sponsor
+        - field_hs_event_ticket
         - field_hs_event_admission
         - field_hs_event_audience
         - field_hs_event_category
@@ -157,7 +167,7 @@ content:
     third_party_settings: {  }
   field_hs_event_admission:
     type: text_textarea
-    weight: 26
+    weight: 27
     region: content
     settings:
       rows: 5
@@ -165,7 +175,7 @@ content:
     third_party_settings: {  }
   field_hs_event_audience:
     type: entity_reference_autocomplete
-    weight: 27
+    weight: 28
     region: content
     settings:
       match_operator: CONTAINS
@@ -182,7 +192,7 @@ content:
     third_party_settings: {  }
   field_hs_event_category:
     type: entity_reference_autocomplete
-    weight: 28
+    weight: 29
     region: content
     settings:
       match_operator: CONTAINS
@@ -221,6 +231,12 @@ content:
       show_extra: true
       hide_date: false
     third_party_settings: {  }
+  field_hs_event_experience:
+    type: options_select
+    weight: 21
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_hs_event_image:
     type: media_library_widget
     weight: 19
@@ -238,7 +254,7 @@ content:
     third_party_settings: {  }
   field_hs_event_location:
     type: string_textarea
-    weight: 21
+    weight: 22
     region: content
     settings:
       rows: 5
@@ -246,7 +262,7 @@ content:
     third_party_settings: {  }
   field_hs_event_map_link:
     type: link_default
-    weight: 22
+    weight: 23
     region: content
     settings:
       placeholder_url: ''
@@ -282,6 +298,30 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_hs_event_stream:
+    type: link_default
+    weight: 25
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_hs_event_stream_info:
+    type: text_textarea
+    weight: 24
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_event_ticket:
+    type: link_default
+    weight: 26
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_hs_event_type:
     type: options_select
@@ -348,10 +388,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_conference_session: true
-  field_hs_event_experience: true
   field_hs_event_instances: true
   field_hs_event_registration: true
   field_hs_event_status: true
-  field_hs_event_stream: true
-  field_hs_event_stream_info: true
-  field_hs_event_ticket: true

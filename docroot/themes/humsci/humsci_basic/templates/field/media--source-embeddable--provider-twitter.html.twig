@@ -1,0 +1,19 @@
+{#
+/**
+ * This template overrides the media--embeddable.html.twig file in this directory.
+ */
+#}
+{%
+  set classes = [
+    'hb-media-embed',
+  ]
+%}
+
+<article{{ attributes.addClass(classes) }}>
+  {{ title_suffix.contextual_links }}
+  {% if content %}
+    <div class='hb-media-embed__twitter'>
+      {{ content }}
+    </div>
+  {% endif %}
+</article>

@@ -677,17 +677,14 @@ display:
           default_row_class: true
           columns:
             views_bulk_operations_bulk_form: views_bulk_operations_bulk_form
-            field_hs_person_square_img: field_hs_person_square_img
-            field_hs_person_image: field_hs_person_image
             title: title
-            field_hs_person_last_name: field_hs_person_last_name
             status: status
             changed: changed
             uid: uid
-            field_hs_person_affiliation: field_hs_person_affiliation
-            field_hs_person_faculty_status: field_hs_person_faculty_status
-            field_hs_person_staff_type: field_hs_person_staff_type
-            field_hs_person_student_type: field_hs_person_student_type
+            field_hs_event_date: field_hs_event_date
+            field_hs_event_series: field_hs_event_series
+            field_hs_event_type: field_hs_event_type
+            field_hs_event_location: field_hs_event_location
             operations: operations
           default: '-1'
           info:
@@ -696,29 +693,8 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            field_hs_person_square_img:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_person_image:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             title:
               sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_person_last_name:
-              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
@@ -745,26 +721,24 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            field_hs_person_affiliation:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_person_faculty_status:
-              sortable: false
+            field_hs_event_date:
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_hs_person_staff_type:
-              sortable: false
-              default_sort_order: asc
+            field_hs_event_series:
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_hs_person_student_type:
+            field_hs_event_type:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_hs_event_location:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -3463,6 +3437,23 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: created
+          exposed: false
+          granularity: second
       filters:
         status:
           id: status
@@ -3744,6 +3735,7 @@ display:
       defaults:
         title: false
         fields: false
+        sorts: false
         filters: false
         filter_groups: false
       display_description: ''

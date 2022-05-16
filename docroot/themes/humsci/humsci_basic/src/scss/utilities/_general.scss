@@ -131,4 +131,24 @@
       }
     }
   }
+
+  // endcap of last item is small square
+  .ptype-hs-timeline-item:last-of-type,
+  .views-view-pattern .hb-timeline-item:last-of-type {
+    .hb-timeline-item[open] {
+      &::after {
+        border-radius: initial;
+      }
+    }
+  }
+}
+
+// Vertical timeline bottom border on last item in each timeline
+// Apply in layout builder block configuration
+.hb-timeline-border {
+  .ptype-hs-timeline-item:last-of-type,
+  .views-view-pattern .hb-timeline-item:last-of-type {
+    padding-bottom: hb-calculate-rems(28px);
+    border-bottom: 1px solid #000;
+  }
 }

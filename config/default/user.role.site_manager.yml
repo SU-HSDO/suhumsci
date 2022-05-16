@@ -5,6 +5,7 @@ dependencies:
   config:
     - filter.format.basic_html
     - filter.format.minimal_html
+    - media.type.embeddable
     - media.type.file
     - media.type.image
     - media.type.video
@@ -56,7 +57,7 @@ dependencies:
     - view_unpublished
 id: site_manager
 label: 'Site Manager'
-weight: 4
+weight: -9
 is_admin: null
 permissions:
   - 'access administration pages'
@@ -70,7 +71,9 @@ permissions:
   - 'administer nodes'
   - 'assign author role'
   - 'assign contributor role'
+  - 'assign intranet_viewer role'
   - 'assign site_manager role'
+  - 'create embeddable media'
   - 'create event_collections entities'
   - 'create field_hs_flexible_row_style'
   - 'create field_paragraph_style'

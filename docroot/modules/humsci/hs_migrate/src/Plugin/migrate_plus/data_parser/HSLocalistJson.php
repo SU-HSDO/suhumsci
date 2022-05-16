@@ -17,7 +17,7 @@ class HSLocalistJson extends Json {
   /**
    * {@inheritDoc}
    */
-  protected function getSourceData($url) {
+  protected function getSourceData(string $url): array {
     $source_data = parent::getSourceData($url);
     $modified_data = [];
     foreach ($source_data as $item) {

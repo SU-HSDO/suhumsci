@@ -1,0 +1,55 @@
+github:
+  prebuilds:
+    master: true
+    branches: false
+    pullRequests: true
+    pullRequestsFromForks: false
+    addCheck: false
+    addComment: false
+    addBadge: false
+ports:
+  - port: 3306
+    onOpen: ignore
+    visibility: private
+  - port: 33060
+    onOpen: ignore
+    visibility: private
+  - port: 8001
+    onOpen: ignore
+    visibility: public
+image: pookmish/drupal8ci:gitpod
+tasks:
+  - before: >
+      eval $(command gp env -e) &&
+      mkdir -p ~/.ssh &&
+      [[ ! -z $SSH_PUBLIC_KEY  ]] &&
+      echo $SSH_PUBLIC_KEY | base64 -d > ~/.ssh/id_rsa.pub &&
+      chmod 644 ~/.ssh/id_rsa.pub &&
+      [[ ! -z $SSH_PRIVATE_KEY  ]] &&
+      echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_rsa &&
+      chmod 600 ~/.ssh/id_rsa &&
+      [[ ! -z $GITCONFIG  ]] &&
+      echo $GITCONFIG | base64 -d > ~/.gitconfig &&
+      chmod 644 ~/.gitconfig
+    init: >
+      export PREVIEW_FULL_URL=`gp url 8001` &&
+      export PREVIEW_URL=${PREVIEW_FULL_URL#"https://"} &&
+      cp .gitpod/blt.yml blt/local.blt.yml &&
+      composer update --no-interaction &&
+      rm -rf docroot/*/custom/* &&
+      composer install --prefer-source --no-interaction &&
+      blt blt:telemetry:disable --no-interaction &&
+      cp .gitpod/gitpod.settings.php docroot/sites/settings/local.settings.php &&
+      blt settings &&
+      mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal' &&
+      blt drupal:install -n &&
+      blt sws:keys &&
+      blt sbsc
+    command: |
+      apache2ctl restart
+      gp await-port 8001
+      drush uli
+      drush uli | xargs gp preview --external
+      git config core.fileMode false
+      blt blt:telemetry:disable --no-interaction
+      git remote set-url origin git@github.com:SU-HSDO/suhumsci.git

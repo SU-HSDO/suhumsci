@@ -18,6 +18,33 @@
     height: 0; // remove the vertical pipe that connects timeline items from the last item
   }
 
+  &:last-of-type {
+    // when last item is open, show vertical pipe that connects timeline items
+    .hb-timeline-item[open] {
+      &::before {
+        content: '';
+        position: absolute;
+        height: calc(100% - 20px);
+        width: 4px;
+        @include hb-pairing-color('background-color', 'primary');
+        left: 1rem;
+        bottom: hb-calculate-rems(-2px);
+      }
+
+      // last item has small filled circle or square endcap when open
+      &::after {
+        @include hb-pairing-color('background-color', 'primary');
+        content: '';
+        position: absolute;
+        height: 12px;
+        width: 12px;
+        left: 6px;
+        bottom: -6px;
+        border-radius: 50%;
+      }
+    }
+  }
+
   .field-hs-row-components[class*="counted-items-"] &,
   .field-hs-collection-items[class*="item-per-row--"] & {
     margin-bottom: 0 !important;
@@ -85,6 +112,7 @@
       left: hb-calculate-rems(1.2px);
       border: 4px solid var(--palette--primary);
       border-radius: 50%;
+      box-sizing: content-box;
     }
 
     &::after {

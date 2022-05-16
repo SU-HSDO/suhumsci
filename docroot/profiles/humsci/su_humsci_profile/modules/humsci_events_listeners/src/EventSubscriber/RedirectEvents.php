@@ -40,6 +40,12 @@ class RedirectEvents implements EventSubscriberInterface {
     $this->aliasManager = $path_alias_manager;
   }
 
+  /**
+   * Before a redirect is saved, perform some work.
+   *
+   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent $event
+   *   Triggered event.
+   */
   public function entityPresave(EntityPresaveEvent $event) {
     if ($event->getEntity()->getEntityTypeId() != 'redirect') {
       return;
@@ -55,7 +61,7 @@ class RedirectEvents implements EventSubscriberInterface {
       // Find the internal path from the alias.
       $path = $this->aliasManager->getPathByAlias($matches[1]);
 
-      // Grab the node id from the internal path and use that as the destination.
+      // Grab the node id from the internal path and use as the destination.
       if (preg_match('/node\/(\d+)/', $path, $matches)) {
         $redirect->set('redirect_redirect', 'entity:node/' . $matches[1]);
       }

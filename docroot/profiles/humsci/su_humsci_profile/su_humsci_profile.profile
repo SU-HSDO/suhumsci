@@ -41,7 +41,7 @@ function su_humsci_profile_pathauto_pattern_alter(PathautoPatternInterface $patt
   $parent = explode(':', $node->menu['menu_parent']);
 
   // Make sure the parent menu item is a link content entity. The common form
-  // of the parent is `[menu_name]:[type]:[uuid]`
+  // of the parent is `[menu_name]:[type]:[uuid]`.
   if (
     count($parent) >= 3 &&
     $parent[0] == 'main' &&

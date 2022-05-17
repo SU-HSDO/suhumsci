@@ -62,7 +62,7 @@ class MenuItemsCest {
     $url = parse_url($this->faker->url);
     $manual_url = $url['path'];
 
-    $I->logInWithRole('site_manager');
+    $I->logInWithRole('administrator');
     $auto_alias = $I->createEntity([
       'title' => $this->faker->words(3, TRUE),
       'type' => 'hs_basic_page',

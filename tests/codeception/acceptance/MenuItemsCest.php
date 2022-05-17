@@ -56,6 +56,7 @@ class MenuItemsCest {
    * Path auto settings should work correctly.
    *
    * @group pathauto
+   * @group install
    */
   public function testPathAuto(AcceptanceTester $I) {
     $url = parse_url($this->faker->url);

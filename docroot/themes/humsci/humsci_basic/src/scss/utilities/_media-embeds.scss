@@ -1,7 +1,24 @@
 // Styles to support embeddable media
 .field-media-embeddable {
   // Soundcloud
-  div iframe[src*="soundcloud"] {
+  div iframe[src*="soundcloud"],
+  div iframe[src*="issuu"] {
     width: 100%;
+  }
+}
+
+.hb-media-embed__twitter {
+  .field-media-embeddable div {
+    position: relative;
+    padding-bottom: 66.6vh;
+    height: 0;
+  }
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }

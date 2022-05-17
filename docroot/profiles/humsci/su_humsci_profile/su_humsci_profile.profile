@@ -18,10 +18,52 @@ use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 use Drupal\node\NodeInterface;
+use Drupal\pathauto\PathautoPatternInterface;
 use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_pathauto_pattern_alter().
+ */
+function su_humsci_profile_pathauto_pattern_alter(PathautoPatternInterface $pattern, array $context) {
+  // Only adjust node path aliases.
+  if ($context['module'] != 'node' || !isset($context['data']['node'])) {
+    return;
+  }
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $context['data']['node'];
+  // If a node doesn't allow menu settings, we exit.
+  if (!isset($node->menu)) {
+    return;
+  }
+  $parent = explode(':', $node->menu['menu_parent']);
+
+  // Make sure the parent menu item is a link content entity. The common form
+  // of the parent is `[menu_name]:[type]:[uuid]`
+  if (
+    count($parent) >= 3 &&
+    $parent[0] == 'main' &&
+    $parent[1] == 'menu_link_content'
+  ) {
+    $parent_menu_item = \Drupal::entityTypeManager()
+      ->getStorage('menu_link_content')
+      ->loadByProperties(['uuid' => $parent[2]]);
+    $parent_menu_item = reset($parent_menu_item);
+    $link_uri = $parent_menu_item->get('link')
+      ->get(0)
+      ->get('uri')
+      ->getString();
+
+    // If the parent menu item is a no-link, change the path alias pattern.
+    if ($link_uri == 'route:<nolink>') {
+      $search = '[node:menu-link:parent:url:relative]';
+      $replacement = '[node:menu-link:parents:join-path]';
+      $pattern->setPattern(str_replace($search, $replacement, $pattern->getPattern()));
+    }
+  }
+}
 
 /**
  * Implements hook_entity_presave().

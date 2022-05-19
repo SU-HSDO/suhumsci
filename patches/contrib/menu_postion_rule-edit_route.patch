@@ -1,0 +1,29 @@
+diff --git a/src/Plugin/Menu/MenuPositionLink.php b/src/Plugin/Menu/MenuPositionLink.php
+index 0724d3a..cd22a83 100644
+--- a/src/Plugin/Menu/MenuPositionLink.php
++++ b/src/Plugin/Menu/MenuPositionLink.php
+@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
+ use Drupal\Core\Controller\TitleResolverInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\Menu\MenuLinkBase;
++use Drupal\Core\Menu\MenuTreeStorage;
+ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+ use Drupal\Core\Render\RendererInterface;
+ use Drupal\Core\Routing\AdminContext;
+@@ -214,8 +215,14 @@ class MenuPositionLink extends MenuLinkBase implements ContainerFactoryPluginInt
+   public function getEditRoute() {
+     $storage = $this->entityTypeManager->getStorage('menu_position_rule');
+     $entity_id = $this->pluginDefinition['metadata']['entity_id'];
+-    $entity = $storage->load($entity_id);
+-    return $entity->toUrl();
++    if ($entity = $storage->load($entity_id)) {
++      return $entity->toUrl();
++    }
++    \Drupal::service('menu.tree_storage')
++      ->delete($this->pluginDefinition['id']);
++    $this->messenger()
++      ->addError($this->t('Unable to load menu position rule %entity_id. It has been deleted from the menu tree.', ['%entity_id' => $entity_id]));
++    return NULL;
+   }
+ 
+ }

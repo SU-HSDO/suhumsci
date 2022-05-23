@@ -256,6 +256,48 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if (in_array('field.field.node.hs_event.field_hs_event_image', $names)) {
       $this->setMediaFieldOverrides($overrides, 'field.field.node.hs_event.field_hs_event_image', 'field_events_image');
     }
+    if (in_array('migrate_plus.migration.hs_localist_individual', $names)) {
+      $api_urls = $this->getUrlsFromLinkField('localist_events', 'field_url_individ');
+      $bookmark_urls = $this->getUrlsFromLinkField('localist_events', 'field_url_book_i');
+      $source_urls = array_merge($api_urls, $bookmark_urls);
+      $overrides['migrate_plus.migration.hs_localist_individual']['source']['urls'] = $source_urls;
+      $overrides['migrate_plus.migration.hs_localist_individual']['status'] = !empty($source_urls);
+    }
+    if (in_array('migrate_plus.migration.hs_localist_scheduled', $names)) {
+      $api_urls = $this->getUrlsFromLinkField('localist_events', 'field_url_separate');
+      $bookmark_urls = $this->getUrlsFromLinkField('localist_events', 'field_url_book_s');
+      $source_urls = array_merge($api_urls, $bookmark_urls);
+      $overrides['migrate_plus.migration.hs_localist_scheduled']['source']['urls'] = $source_urls;
+      $overrides['migrate_plus.migration.hs_localist_scheduled']['status'] = !empty($source_urls);
+    }
+  }
+
+  /**
+   * Get an array of urls from the config page link field.
+   *
+   * @param string $config_page
+   *   Config page ID.
+   * @param string $field_name
+   *   Field ID.
+   *
+   * @return string[]
+   *   List of values form the uri column.
+   */
+  protected function getUrlsFromLinkField(string $config_page, string $field_name): array {
+    /** @var \Drupal\config_pages\ConfigPagesInterface $config_page */
+    $config_page = $this->entityTypeManager->getStorage('config_pages')
+      ->load($config_page);
+    $urls = [];
+    if (
+      $config_page &&
+      $config_page->hasField($field_name) &&
+      $config_page->get($field_name)->count()
+    ) {
+      foreach ($config_page->get($field_name)->getValue() as $value) {
+        $urls[] = $value['uri'];
+      }
+    }
+    return $urls;
   }
 
   /**

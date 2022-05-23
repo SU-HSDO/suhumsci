@@ -8,3 +8,8 @@ services:
     class: Drupal\humsci_events_listeners\EventSubscriber\NodeEvents
     tags:
       - { name: event_subscriber }
+  humsci_events_listeners.redirect_events:
+    class: Drupal\humsci_events_listeners\EventSubscriber\RedirectEvents
+    arguments: ['@path_alias.manager']
+    tags:
+      - { name: event_subscriber }

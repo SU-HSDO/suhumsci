@@ -13,3 +13,14 @@ hs_page_reports.access_denied:
     _title: 'Top "page not found" errors'
   requirements:
     _permission: 'view 403 reports'
+
+hs_page_reports.rebuild_cache:
+  path: '/rebuild-cache'
+  defaults:
+    _controller: '\Drupal\hs_page_reports\Controller\RebuildCacheController::rebuildCache'
+    _title: 'Rebuild cache'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _permission: 'rebuild cache access'
+    _csrf_token: 'TRUE'

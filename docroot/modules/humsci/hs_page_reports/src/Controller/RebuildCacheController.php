@@ -7,7 +7,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-
+/**
+ * Cache rebuild controller.
+ */
 class RebuildCacheController extends ControllerBase {
 
   /**
@@ -54,6 +56,5 @@ class RebuildCacheController extends ControllerBase {
     $this->messenger()->addMessage($this->t('All caches cleared.'));
     return new RedirectResponse($this->reloadPage());
   }
-
 
 }

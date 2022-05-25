@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - config_pages.type.localist_events
+    - field.field.config_pages.localist_events.field_url_book_i
+    - field.field.config_pages.localist_events.field_url_book_s
     - field.field.config_pages.localist_events.field_url_individ
     - field.field.config_pages.localist_events.field_url_separate
   module:
@@ -13,6 +15,30 @@ targetEntityType: config_pages
 bundle: localist_events
 mode: default
 content:
+  field_url_book_i:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_url_book_s:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
   field_url_individ:
     type: link
     label: above

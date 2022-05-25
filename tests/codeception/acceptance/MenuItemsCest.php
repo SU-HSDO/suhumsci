@@ -64,7 +64,7 @@ class MenuItemsCest {
 
     $I->logInWithRole('administrator');
     $auto_alias = $I->createEntity([
-      'title' => $this->faker->words(3, TRUE),
+      'title' => $this->faker->words(1, TRUE),
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($auto_alias->toUrl('edit-form')->toString());
@@ -74,7 +74,7 @@ class MenuItemsCest {
     $I->canSee($auto_alias->label(), 'h1');
 
     $manual_alias = $I->createEntity([
-      'title' => $this->faker->words(3, TRUE),
+      'title' => $this->faker->words(1, TRUE),
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($manual_alias->toUrl('edit-form')->toString());
@@ -93,7 +93,7 @@ class MenuItemsCest {
     $this->menuLinks[] = $nolink;
 
     $node = $I->createEntity([
-      'title' => $this->faker->words(3, TRUE),
+      'title' => $this->faker->words(2, TRUE),
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());

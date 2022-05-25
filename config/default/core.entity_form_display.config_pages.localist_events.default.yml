@@ -4,18 +4,72 @@ status: true
 dependencies:
   config:
     - config_pages.type.localist_events
+    - field.field.config_pages.localist_events.field_url_book_i
+    - field.field.config_pages.localist_events.field_url_book_s
     - field.field.config_pages.localist_events.field_url_individ
     - field.field.config_pages.localist_events.field_url_separate
   module:
+    - field_group
+    - link
     - stanford_fields
+third_party_settings:
+  field_group:
+    group_individ:
+      children:
+        - field_url_individ
+        - field_url_book_i
+      label: 'One Event Per Schedule'
+      region: content
+      parent_name: ''
+      weight: 0
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: ''
+        required_fields: false
+    group_separate:
+      children:
+        - field_url_separate
+        - field_url_book_s
+      label: 'One Event Multiple Schedules'
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: ''
+        required_fields: false
 id: config_pages.localist_events.default
 targetEntityType: config_pages
 bundle: localist_events
 mode: default
 content:
+  field_url_book_i:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_url_book_s:
+    type: link_default
+    weight: 4
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   field_url_individ:
     type: localist_url
-    weight: 0
+    weight: 2
     region: content
     settings:
       base_url: 'http://stanford.enterprise.localist.com/'
@@ -25,7 +79,7 @@ content:
     third_party_settings: {  }
   field_url_separate:
     type: localist_url
-    weight: 1
+    weight: 3
     region: content
     settings:
       base_url: 'http://stanford.enterprise.localist.com/'

@@ -111,7 +111,22 @@
         $test: hb-get-pairing-color('secondary-highlight', 'warbler', $ht-traditional-pairings);
         $expect: #ece8e1;
 
-        @include assert-equal($test, $expect, 'The Blue Jay color pairing primary color value either does not match or does not exist.');
+        @include assert-equal($test, $expect, 'The Warbler color pairing primary color value either does not match or does not exist.');
+      }
+    }
+  }
+
+  // FireFinch
+  @include describe('When given a valid key value,') {
+
+    @include describe('the hb-get-pairing-color() function') {
+      @include it('returns the Traditional FireFinch palette.') {
+        // Many of the colors on the Cardinal and Blue Jay palettes are the same.
+        // Test a color that is not the same between the two palettes.
+        $test: hb-get-pairing-color('secondary-highlight', 'firefinch', $ht-traditional-pairings);
+        $expect: #F4F4F4,;
+
+        @include assert-equal($test, $expect, 'The FireFinch color pairing primary color value either does not match or does not exist.');
       }
     }
   }

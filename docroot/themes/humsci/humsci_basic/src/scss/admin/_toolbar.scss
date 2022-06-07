@@ -1,6 +1,32 @@
 // Drupal Administration Toolbar
 // Override anchor link styles written for the Humsci Colorful theme.
-.toolbar {
+// Adjust FE facing side to match admin theme.
+#toolbar-item-shortcuts-tray nav > ul {
+  margin-left: hb-calculate-rems(-43px);
+}
+
+.toolbar #toolbar-item-shortcuts-tray {
+  .menu {
+    font-size: hb-calculate-rems(13px);
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
+
+    a,
+    span {
+      padding: hb-calculate-rems(13px) hb-calculate-rems(18px);
+    }
+
+    .menu {
+      margin-left: hb-calculate-rems(14px);
+      padding-left: 0;
+
+      li a {
+        padding-left: hb-calculate-rems(12px);
+        padding-top: hb-calculate-rems(12px);
+        padding-bottom: hb-calculate-rems(12px);
+      }
+    }
+  }
+
   &-tab {
     a.ext {
       background-image: none;

@@ -1,22 +1,430 @@
-// By default we want to hide the megamenu at all screen sizes until the
-// theme setting to use the megamenu is enabled.
-.block-we-megamenu {
-  display: none;
+// Megamenu V2
+// See comments throughout code, but we need to do a few things here:
+// 1. Recreate mobile styles from old standard menu
+// 2. Apply new styles to the desktop megamenu
+// 3. Avoid style clashes with other two menus (standard and deprecated megamenu)
+// 4. Display fully expanded mobile menu for users with JavaScript turned off
+// 6. Allow for different masthead colors, which is a theme config option
+// 7. Allow for multiple themes that have different styles
+
+// Variables/mixins
+$nested-padding: hb-calculate-rems(20px);
+// See _private-page.scss. To avoid clashes with the
+// V1 menu and deprecated megamenu, we recreate styles here.
+// We also need to repeat styles due to the shared class name.
+@mixin hb-lock-position {
+  padding-left: hb-calculate-rems(40px);
+  background-repeat: no-repeat;
+  background-size: hb-calculate-rems(20px);
+  background-position: hb-calculate-rems(14px) hb-calculate-rems(20px);
 }
 
-// .hb-use-megamenu is added to the html when the use megamenu theme setting is
-// enabled.
-.hb-use-megamenu {
+@mixin hb-lock-props {
+  @include hb-icon-background('lock', 'white');
+  @include hb-lock-position();
+
+  &:hover {
+    @include hb-icon-background('lock', 'black');
+
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-icon-background('lock', 'black');
+        @include hb-lock-position();
+
+        background-position: hb-calculate-rems(14px);
+      }
+    }
+  }
+
   @include grid-media-min('lg') {
-    // standard menu is visible for small screens and hidden at the large
-    // breakpoint.
-    .hb-main-nav {
+    .js & {
+      @include hb-icon-background('lock', 'black');
+
+      background-position: hb-calculate-rems(14px);
+    }
+  }
+}
+
+// We nest everything within the main parent class to avoid
+// name clashes with the other two possible menu options.
+.megamenu {
+  position: relative;
+  width: 100%;
+  font-size: hb-calculate-rems(18px);
+
+  .megamenu__mobile-btn {
+    @include hb-unbuttonize;
+
+    display: flex;
+    align-items: center;
+    flex-direction: initial;
+    position: absolute;
+    padding: hb-calculate-rems(10px) 0;
+    top: hb-calculate-rems(-46.75px);
+    right: 0;
+    width: hb-calculate-rems(70px);
+    font-weight: hb-theme-font-weight(bold);
+    cursor: pointer;
+
+    // If there is no JS then the navigation is automatically expanded and
+    // toggle buttons are unnecessary.
+    .no-js & {
       display: none;
     }
 
-    // megamenu is hidden for small screens and visible at the large breakpoint.
-    .block-we-megamenu {
+    // For almost all 'lg' breakpoints, we include the .js body class
+    // so that mobile menu is fully expanded for users that have
+    // JavaScript disabled.
+    @include grid-media-min('lg') {
+      .js & {
+        display: none;
+      }
+    }
+
+    &[aria-expanded="true"] .megamenu__mobile-icon {
+      @include hb-menu-close-icon;
+    }
+  }
+
+  .megamenu__mobile-icon {
+    @include hb-menu-hamburger-icon;
+
+    margin-left: hb-calculate-rems(10px);
+
+    .hb-dark-pattern &,
+    .hb-dark-pattern &::after,
+    .hb-dark-pattern &::before {
+      @include hb-global-color('background-color', 'white');
+    }
+  }
+
+  .megamenu__list {
+    @include hb-list-empty-styles;
+
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+    transform: translate(0);
+
+    @include grid-media-min('sm') {
+      max-width: none;
+    }
+  }
+
+  .megamenu__list--main {
+    // You must include the mixin after the variable if
+    // you want the color to apply.
+    border-bottom: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
+
+    display: none;
+    margin-bottom: hb-calculate-rems(28px);
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(20px);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(24px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+        font-size: hb-calculate-rems(18px);
+        border: 0;
+      }
+    }
+
+    &.is-active,
+    .no-js & {
       display: block;
+    }
+  }
+
+  .megamenu__item {
+    border-top: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
+
+    @include grid-media-min('lg') {
+      .js & {
+        display: inline-block;
+        border: 0;
+        break-inside: avoid-column;
+      }
+    }
+
+    .hb-private-page-link {
+      @include hb-lock-props();
+    }
+  }
+
+  .megamenu__toggle,
+  .megamenu__link {
+    @include hb-unbuttonize;
+
+    display: inherit;
+    padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
+    line-height: 120.3%;
+
+    @include grid-media-min('md') {
+      line-height: 128%;
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        margin-right: hb-calculate-rems(28px);
+        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
+        line-height: 110%;
+      }
+    }
+
+    &:focus-visible {
+      // TODO: there is no native focus color defined for the site.
+      outline: 5px auto Highlight;
+      outline: 5px auto -webkit-focus-ring-color;
+
+      &::after {
+        outline: none;
+      }
+    }
+
+    &:hover {
+      @include hb-global-color('color', 'black');
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-global-color('background-color', 'gray-light');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'tertiary-highlight');
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          background: none;
+          text-decoration: underline;
+        }
+
+        .hb-dark-pattern & {
+          .js & {
+            @include hb-global-color('color', 'white');
+          }
+        }
+      }
+    }
+  }
+
+  .megamenu__toggle {
+    display: flex;
+    position: relative;
+    width: 100%;
+
+    @include grid-media-min('lg') {
+      .js & {
+        width: auto;
+      }
+    }
+
+    &::after {
+      @include hb-menu-icon-wrapper(48px, 48px);
+      @include hb-menu-plus-icon;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      content: '';
+      cursor: pointer;
+      transform-origin: center;
+
+      @include grid-media-min('lg') {
+        .js & {
+          @include hb-menu-icon-wrapper(10px, 10px);
+
+          top: calc(50% - #{hb-calculate-rems(5px)});
+          right: hb-calculate-rems(-16px);
+          transform: translateY(-50%);
+        }
+      }
+
+      .no-js & {
+        @include hb-icon-background('minus', 'black');
+      }
+
+      .hb-dark-pattern & {
+        @include hb-icon-background('plus', 'white');
+
+        .no-js & {
+          @include hb-icon-background('minus', 'white');
+        }
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      &::after {
+        .hb-dark-pattern & {
+          @include hb-icon-background('plus', 'black');
+
+          .no-js & {
+            @include hb-icon-background('minus', 'black');
+          }
+
+          @include grid-media-min('lg') {
+            .js & {
+              @include hb-icon-background('plus', 'white');
+            }
+          }
+        }
+      }
+    }
+
+    &.is-expanded {
+      &::after {
+        @include hb-menu-minus-icon;
+
+        .hb-dark-pattern & {
+          @include hb-icon-background('minus', 'white');
+        }
+
+        @include grid-media-min('lg') {
+          .js & {
+            top: calc(50% - 9px);
+          }
+        }
+      }
+
+      &:hover {
+        &::after {
+          .hb-dark-pattern & {
+            @include hb-icon-background('minus', 'black');
+
+            @include grid-media-min('lg') {
+              .js & {
+                @include hb-icon-background('minus', 'white');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .list-sub,
+  .list-sub__nested {
+    padding-left: $nested-padding;
+    font-size: hb-calculate-rems(18px);
+    font-weight: hb-theme-font-weight(regular);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+  }
+
+  .list-sub {
+    display: none;
+
+    // TODO: Temporary colors/styles until desktop design
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-global-color('background-color','white');
+
+        position: absolute;
+        padding-left: 0;
+        left: 0;
+        width: 100%;
+        border: 1px solid black;
+        color: #000;
+      }
+
+      .megamenu__toggle,
+      .megamenu__link {
+        @include grid-media-min('lg') {
+          &:hover {
+            .js & {
+              color: #8c1515;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+
+    .megamenu__item {
+      outline: none;
+
+      &:first-child {
+        margin-left: -#{$nested-padding};
+        padding-left: $nested-padding;
+      }
+
+      @include grid-media-min('lg') {
+        width: 100%;
+      }
+    }
+
+    .megamenu__link {
+      &:focus-visible {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
+          font-size: hb-calculate-rems(16px);
+          color: #8c1515;
+          text-transform: uppercase;
+          font-weight: hb-theme-font-weight(semibold);
+        }
+      }
+    }
+
+    .no-js & {
+      display: block;
+    }
+  }
+
+  .list-sub__nested {
+    display: block;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        font-weight: hb-theme-font-weight(semibold);
+        font-size: inherit;
+      }
+    }
+
+    .megamenu__item {
+      padding-left: $nested-padding;
+    }
+  }
+
+  .is-expanded {
+    display: block;
+
+    &.list-sub {
+      @include grid-media-min('lg') {
+        .js & {
+          columns: 4;
+        }
+      }
+    }
+  }
+}
+
+// Manually adjust button location if search
+// is present. This is from previous menu.
+// TODO: Refactor instead of pulling button up.
+.su-site-search {
+  + .megamenu {
+    .megamenu__mobile-btn {
+      top: hb-calculate-rems(-120px);
     }
   }
 }

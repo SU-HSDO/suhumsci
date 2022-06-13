@@ -8,3 +8,6 @@ import './media/video-with-caption';
 import './animation/page-scroll';
 import './timeline/expand-collapse-timeline';
 import './accordion/accordion-toggle-all';
+
+// PoC for new megamenu.
+import './megamenu/index';

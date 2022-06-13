@@ -1,0 +1,20 @@
+{# Defines the list for the main nav and all nested menu levels #}
+
+{% set list_attributes = create_attribute() %}
+{% set list_attributes = list_attributes.addClass(menu_base_class ~ "__list", menu_modifiers) %}
+{% if menu_level == 0 %}
+  {% set list_attributes = list_attributes.addClass([menu_base_class ~ "__list--main", 'js-' ~ menu_base_class ~ "__list--main"]) %}
+{% endif %}
+
+{# List #}
+<ul{{ list_attributes }}>
+{% block list_content %}
+	{% for item in items %}
+    {% set list_item_attributes = create_attribute() %}
+    {% set list_item_attributes = list_item_attributes.addClass(menu_base_class ~ "__item") %}
+		<li{{list_item_attributes}}>
+      {% include "@humsci_basic/menus-twig/menu-item.twig" %}
+    </li>
+	{% endfor %}
+{% endblock %}
+</ul>

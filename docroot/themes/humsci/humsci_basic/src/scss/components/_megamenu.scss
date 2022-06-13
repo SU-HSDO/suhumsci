@@ -1,22 +1,363 @@
-// By default we want to hide the megamenu at all screen sizes until the
-// theme setting to use the megamenu is enabled.
-.block-we-megamenu {
-  display: none;
-}
+$nested-padding: hb-calculate-rems(20px);
 
-// .hb-use-megamenu is added to the html when the use megamenu theme setting is
-// enabled.
-.hb-use-megamenu {
-  @include grid-media-min('lg') {
-    // standard menu is visible for small screens and hidden at the large
-    // breakpoint.
-    .hb-main-nav {
+// We nest everything within the main parent class to avoid
+// name clashes with the other two possible menu options.
+.megamenu {
+  position: relative;
+  width: 100%;
+  font-size: hb-calculate-rems(18px);
+
+  .megamenu__mobile-btn {
+    @include hb-unbuttonize;
+
+    display: flex;
+    align-items: center;
+    flex-direction: initial;
+    position: absolute;
+    padding: hb-calculate-rems(10px) 0;
+    top: hb-calculate-rems(-46.75px);
+    right: 0;
+    width: hb-calculate-rems(70px);
+    font-weight: hb-theme-font-weight(bold);
+    cursor: pointer;
+
+    // If there is no JS then the navigation is automatically expanded and
+    // toggle buttons are unnecessary.
+    // TODO: Figure out what to do with a menu that only has buttons.
+    .no-js & {
       display: none;
     }
 
-    // megamenu is hidden for small screens and visible at the large breakpoint.
-    .block-we-megamenu {
+    @include grid-media-min('lg') {
+      .js & {
+        display: none;
+      }
+    }
+
+    &[aria-expanded="true"] .megamenu__mobile-icon {
+      @include hb-menu-close-icon;
+    }
+  }
+
+  .megamenu__mobile-icon {
+    @include hb-menu-hamburger-icon;
+    margin-left: hb-calculate-rems(10px);
+
+    .hb-dark-pattern &,
+    .hb-dark-pattern &::after,
+    .hb-dark-pattern &::before {
+      @include hb-global-color('background-color', 'white');
+    }
+  }
+
+  .megamenu__list {
+    @include hb-list-empty-styles;
+
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+    transform: translate(0);
+
+    @include grid-media-min('sm') {
+      max-width: none;
+    }
+  }
+
+  .megamenu__list--main {
+    border-bottom: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
+
+    display: none;
+    margin-bottom: hb-calculate-rems(28px);
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(20px);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(24px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0;
+        font-size: hb-calculate-rems(18px);
+        border: 0;
+      }
+    }
+
+    &.is-active,
+    .no-js & {
       display: block;
+    }
+  }
+
+  .megamenu__item {
+    // You must include the mixin after the variable if
+    // you want the color to apply.
+    border-top: $hb-thin-border;
+    @include hb-global-color('border-color', 'gray');
+
+    @include grid-media-min('lg') {
+      .js & {
+        border: 0;
+        break-inside: avoid-column;
+      }
+    }
+    
+    .megamenu__toggle {
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .megamenu__toggle,
+  .megamenu__link {
+    @include hb-unbuttonize;
+
+    display: inherit;
+    padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
+    line-height: 120.3%;
+
+    @include grid-media-min('md') {
+      line-height: 128%;
+    }
+    
+    @include grid-media-min('lg') {
+      .js & {
+        margin-right: hb-calculate-rems(28px);
+        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
+        line-height: 110%;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &:focus-visible {
+      // TODO: there is no native focus color defined for entire site.
+      outline: 5px auto Highlight;
+      outline: 5px auto -webkit-focus-ring-color;
+
+      .toggle__icon {
+        outline: none;
+      }
+    }
+
+    &:hover {
+      @include hb-global-color('color', 'black');
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-global-color('background-color', 'gray-light');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'tertiary-highlight');
+      }
+
+      @include grid-media-min('lg') {
+        .hb-dark-pattern & {
+          @include hb-global-color('color', 'white');
+        }
+
+        .js & {
+          background: none;
+        }
+      }
+    }
+  }
+
+  .megamenu__toggle {
+    display: flex;
+    position: relative;
+    width: 100%;
+
+    @include grid-media-min('lg') {
+      .js & {
+        width: auto;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      .toggle__icon {
+        @include hb-menu-plus-icon;
+
+        .hb-dark-pattern & {
+          @include hb-icon-background('plus', 'black');
+
+          .no-js & {
+            @include hb-icon-background('minus', 'black');
+          }
+
+          @include grid-media-min('lg') {
+            .js & {
+              @include hb-icon-background('plus', 'white');
+            }
+          }
+        }
+      }
+    }
+
+    &.is-expanded {
+      &:hover .toggle__icon {
+        .hb-dark-pattern & {
+          @include hb-icon-background('minus', 'black');
+
+          @include grid-media-min('lg') {
+            .js & {
+              @include hb-icon-background('minus', 'white');
+
+              top: calc(50% - #{hb-calculate-rems(10px)});
+            }
+          }
+        }
+      }
+      
+      .toggle__icon {
+        @include hb-menu-minus-icon;
+
+        .hb-dark-pattern & {
+          @include hb-icon-background('minus', 'white');
+        }
+
+        @include grid-media-min('lg') {
+          .js & {
+            top: calc(50% - #{hb-calculate-rems(10px)});
+          }
+        }
+      }
+    }
+  }
+
+  .toggle__icon {
+    @include hb-menu-icon-wrapper(48px, 48px);
+    @include hb-menu-plus-icon;
+    
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    content: '';
+    cursor: pointer;
+
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-menu-icon-wrapper(10px, 10px);
+
+        top: calc(50% - #{hb-calculate-rems(5px)});
+        right: hb-calculate-rems(-16px);
+        transform: translateY(-50%);
+      }
+    }
+
+    .no-js & {
+      @include hb-icon-background('minus', 'black');
+    }
+
+    .hb-dark-pattern & {
+      @include hb-icon-background('plus', 'white');
+
+      .no-js & {
+        @include hb-icon-background('minus', 'white');
+      }
+    }
+  }
+
+  .list-sub,
+  .list-sub__nested {
+    padding-left: $nested-padding;
+    font-size: hb-calculate-rems(18px);
+    font-weight: hb-theme-font-weight(regular);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+  }
+
+  .list-sub {
+    display: none;
+
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-global-color('background-color','white');
+        
+        position: absolute;
+        padding-left: 0;
+        left: 0;
+        width: 100%;
+        border: 1px solid black;
+        color: #000;
+      }
+    }
+
+    .megamenu__item {
+      outline: none;
+
+      &:first-child {
+        margin-left: -#{$nested-padding};
+        padding-left: $nested-padding;
+      }
+    }
+
+    .megamenu__link {
+      &:focus-visible {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
+          font-size: hb-calculate-rems(16px);
+          color: #8c1515;
+          text-transform: uppercase;
+          font-weight: hb-theme-font-weight(semibold);
+        }
+      }
+    }
+
+    .no-js & {
+      display: block;
+    }
+  }
+
+  .list-sub__nested {
+    display: block;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        font-weight: hb-theme-font-weight(semibold);
+        font-size: inherit;
+      }
+    }
+
+    .megamenu__item {
+      padding-left: $nested-padding;
+    }
+  }
+
+  .is-expanded {
+    display: block;
+
+    @include grid-media-min('lg') {
+      .js & {
+        text-decoration: underline;
+      }
+    }
+
+    &.list-sub {
+      @include grid-media-min('lg') {
+        .js & {
+          columns: 4;
+        }
+      }
     }
   }
 }

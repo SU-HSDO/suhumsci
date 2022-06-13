@@ -1,0 +1,21 @@
+{% import "@humsci_basic/menus-twig/secondary-menu.twig" as menus %}
+{% set link_url = item.url.toString %}
+{% set link_attributes = create_attribute() %}
+{% set link_attributes = link_attributes.addClass(menu_base_class ~ "__link") %}
+{% set button_attributes = create_attribute() %}
+{% set button_attributes = button_attributes.addClass([menu_base_class ~ "__toggle", "js-" ~ menu_base_class ~ "__toggle"]) %}
+{% set button_attributes = button_attributes.setAttribute('aria-expanded', 'false') %}
+
+{# If the menu item is first level and has children, make
+   it a button. Otherwise, make it a link #}
+{% if menu_level == 0 and item.below == true %}
+  <button{{button_attributes}}>{{ item.title }}</button>
+  <span class="toggle__icon" aria-hidden="true" tabIndex="-1"></span>
+  {% else %}
+  <a href={{link_url}} {{link_attributes}}>{{ item.title }}</a>
+{% endif %}
+
+{# Only show menu items three levels deep #}
+{% if item.below and menu_level < 2 %}
+  {{ menus.menu_links(item.below, attributes, menu_level + 1, menu_class, menu_modifiers, menu_blockname, item_base_class, original_item_modifiers, item_blockname) }}
+{% endif %}

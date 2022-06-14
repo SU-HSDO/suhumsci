@@ -100,6 +100,7 @@ $nested-padding: hb-calculate-rems(20px);
 
     @include grid-media-min('lg') {
       .js & {
+        display: inline-block;
         border: 0;
         break-inside: avoid-column;
       }
@@ -141,7 +142,7 @@ $nested-padding: hb-calculate-rems(20px);
       outline: 5px auto Highlight;
       outline: 5px auto -webkit-focus-ring-color;
 
-      .toggle__icon {
+      &::after {
         outline: none;
       }
     }
@@ -157,12 +158,12 @@ $nested-padding: hb-calculate-rems(20px);
       }
 
       @include grid-media-min('lg') {
-        .hb-dark-pattern & {
-          @include hb-global-color('color', 'white');
-        }
-
         .js & {
           background: none;
+
+          .hb-dark-pattern & {
+            @include hb-global-color('color', 'white');
+          }
         }
       }
     }
@@ -182,7 +183,7 @@ $nested-padding: hb-calculate-rems(20px);
     &:hover {
       cursor: pointer;
 
-      .toggle__icon {
+      &::after {
         @include hb-menu-plus-icon;
 
         .hb-dark-pattern & {
@@ -201,67 +202,61 @@ $nested-padding: hb-calculate-rems(20px);
       }
     }
 
-    &.is-expanded {
-      &:hover .toggle__icon {
-        .hb-dark-pattern & {
-          @include hb-icon-background('minus', 'black');
-
-          @include grid-media-min('lg') {
-            .js & {
-              @include hb-icon-background('minus', 'white');
-
-              top: calc(50% - #{hb-calculate-rems(10px)});
-            }
-          }
-        }
-      }
-      
-      .toggle__icon {
+    &.is-expanded { 
+      &::after {
         @include hb-menu-minus-icon;
 
         .hb-dark-pattern & {
           @include hb-icon-background('minus', 'white');
         }
+      }
 
-        @include grid-media-min('lg') {
-          .js & {
-            top: calc(50% - #{hb-calculate-rems(10px)});
+      &:hover {
+        &::after {
+          .hb-dark-pattern & {
+            @include hb-icon-background('minus', 'black');
+  
+            @include grid-media-min('lg') {
+              .js & {
+                @include hb-icon-background('minus', 'white');
+              }
+            }
           }
         }
       }
     }
-  }
 
-  .toggle__icon {
-    @include hb-menu-icon-wrapper(48px, 48px);
-    @include hb-menu-plus-icon;
-    
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    content: '';
-    cursor: pointer;
-
-    @include grid-media-min('lg') {
-      .js & {
-        @include hb-menu-icon-wrapper(10px, 10px);
-
-        top: calc(50% - #{hb-calculate-rems(5px)});
-        right: hb-calculate-rems(-16px);
-        transform: translateY(-50%);
+    &::after {
+      @include hb-menu-icon-wrapper(48px, 48px);
+      @include hb-menu-plus-icon;
+      
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      content: '';
+      cursor: pointer;
+  
+      @include grid-media-min('lg') {
+        .js & {
+          @include hb-menu-icon-wrapper(10px, 10px);
+  
+          top: calc(50% - #{hb-calculate-rems(5px)});
+          right: hb-calculate-rems(-16px);
+          transform: translateY(-50%);
+        }
       }
-    }
-
-    .no-js & {
-      @include hb-icon-background('minus', 'black');
-    }
-
-    .hb-dark-pattern & {
-      @include hb-icon-background('plus', 'white');
-
+  
       .no-js & {
-        @include hb-icon-background('minus', 'white');
+        @include hb-icon-background('minus', 'black');
+      }
+  
+      .hb-dark-pattern & {
+        @include hb-icon-background('plus', 'white');
+  
+        .no-js & {
+          @include hb-icon-background('minus', 'white');
+        }
       }
     }
   }
@@ -345,12 +340,6 @@ $nested-padding: hb-calculate-rems(20px);
 
   .is-expanded {
     display: block;
-
-    @include grid-media-min('lg') {
-      .js & {
-        text-decoration: underline;
-      }
-    }
 
     &.list-sub {
       @include grid-media-min('lg') {

@@ -3,7 +3,9 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use CssLint\Cli;
 use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 use Symfony\Component\Console\Question\Question;
 
@@ -30,6 +32,20 @@ class HsAcquiaApiCommands extends BltTasks {
   protected $failedDatabases = [];
 
   /**
+   * Keyed array of environment UUIDs.
+   *
+   * @var array
+   */
+  protected $enivronments = [];
+
+  /**
+   * Keyed array with access token data and expiration.
+   *
+   * @var array
+   */
+  protected $accessToken = [];
+
+  /**
    * Get the environment UUID for the application from the machine name.
    *
    * @param string $name
@@ -41,9 +57,13 @@ class HsAcquiaApiCommands extends BltTasks {
    * @throws \Exception
    */
   protected function getEnvironmentUuid(string $name) {
+    if (isset($this->enivronments[$name])) {
+      return $this->enivronments[$name];
+    }
     /** @var \AcquiaCloudApi\Response\EnvironmentResponse $env */
     foreach ($this->acquiaEnvironments->getAll($this->appId) as $env) {
       if ($env->name == $name) {
+        $this->enivronments[$name] = $env->uuid;
         return $env->uuid;
       }
     }
@@ -147,38 +167,44 @@ class HsAcquiaApiCommands extends BltTasks {
     'env' => 'test',
     'no-notify' => FALSE,
   ]) {
-    $task_started = time() - (60 * 60 * 24);
     $this->connectAcquiaApi();
+    $from_uuid = $this->getEnvironmentUuid('prod');
+    $to_uuid = $this->getEnvironmentUuid($options['env']);
 
-    $sites = $this->getSitesToSync($task_started, $options);
+    $this->taskStartedTime = time() - (60 * 60 * 24);
+
+    $sites = $this->getSitesToSync($options);
     if (empty($options['no-interaction']) && !$this->confirm(sprintf('Are you sure you wish to stage the following sites: <comment>%s</comment>', implode(', ', $sites)))) {
       return;
     }
     $count = count($sites);
-    $copy_sites = array_splice($sites, 0, 4);
-
-    foreach ($copy_sites as $site) {
-      $this->say("Copying $site database to staging.");
-      $this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $site, $this->getEnvironmentUuid($options['env']));
-    }
-
+    $concurrent_copies = 5;
+    $in_progress = [];
     while (!empty($sites)) {
-      echo '.';
-      sleep(10);
-      $finished_databases = $this->getCompletedDatabaseCopies($task_started);
-
-      if ($finished = array_intersect($copy_sites, $finished_databases)) {
-        echo PHP_EOL;
-        foreach ($finished as $copied_db) {
-          $db_position = array_search($copied_db, $copy_sites);
-          $new_site = array_splice($sites, 0, 1);
-          $new_site = reset($new_site);
-          $copy_sites[$db_position] = $new_site;
-          $this->say("Copying $new_site database to staging.");
-          $this->connectAcquiaApi();
-          $this->say($this->acquiaDatabases->copy($this->getEnvironmentUuid('prod'), $new_site, $this->getEnvironmentUuid($options['env']))->message);
+      if (count($in_progress) >= $concurrent_copies) {
+        // Check for completion, if completed/failed, remove from the in_progress.
+        foreach ($in_progress as $key => $database_name) {
+          if ($this->databaseCopyFinished($database_name)) {
+            unset($in_progress[$key]);
+          }
         }
       }
+
+      $copy_these = array_splice($sites, 0, $concurrent_copies - count($in_progress));
+      foreach ($copy_these as $database_name) {
+        $in_progress[] = $database_name;
+        $this->say(sprintf('Copying database %s', $database_name));
+        $access_token = $this->getAccessToken();
+        $client = new Client();
+        $response = $client->post("https://cloud.acquia.com/api/environments/$to_uuid/databases", [
+          'headers' => ['Authorization' => "Bearer $access_token"],
+          'json' => ['name' => $database_name, 'source' => $from_uuid],
+        ]);
+        $message = json_decode((string) $response->getBody(), TRUE, 512, JSON_THROW_ON_ERROR);
+        $this->say($message['message']);
+      }
+      echo '.';
+      sleep(30);
     }
     $this->yell("$count database have been copied to staging.");
 
@@ -204,34 +230,39 @@ class HsAcquiaApiCommands extends BltTasks {
     }
   }
 
-  /**
-   * Get a list of all databases that have finished copying after a time.
-   *
-   * @param int $time_comparison
-   *   Time to compare the completed task.
-   *
-   * @return array
-   *   Array of database names.
-   */
-  protected function getCompletedDatabaseCopies($time_comparison) {
-    $databases = [];
-    $this->connectAcquiaApi();
-    /** @var \AcquiaCloudApi\Response\NotificationResponse $notification */
-    foreach ($this->acquiaNotifications->getAll($this->appId) as $notification) {
-      if (
-        isset($notification->event) &&
-        $notification->event == 'DatabaseCopied' &&
-        strtotime($notification->created_at) >= $time_comparison
-      ) {
-        if ($notification->status == 'completed') {
-          $databases = array_merge($databases, $notification->context->database->names);
-        }
-        elseif ($notification->status != 'in-progress') {
-          $this->failedDatabases = array_merge($this->failedDatabases, $notification->context->database->names);
-        }
-      }
+  protected function databaseCopyFinished($database_name): bool {
+    $access_token = $this->getAccessToken();
+    $client = new Client();
+    $created_since = date('c', time() - (60 * 60 * 12));
+    $response = $client->get("https://cloud.acquia.com/api/applications/{$this->appId}/notifications", [
+      'headers' => ['Authorization' => "Bearer $access_token"],
+      'query' => [
+        'filter' => "event=DatabaseCopied;description=@*$database_name*;status!=in-progress;created_at>=$created_since",
+      ],
+    ]);
+    $message = json_decode((string) $response->getBody(), TRUE, 512, JSON_THROW_ON_ERROR);
+    return $message['total'] > 0;
+  }
+
+  protected function getAccessToken() {
+    if (isset($this->accessToken['expires']) && time() <= $this->accessToken['expires']) {
+      return $this->accessToken['token'];
     }
-    return array_values(array_unique($databases));
+
+    $client = new Client();
+    $response = $client->post('https://accounts.acquia.com/api/auth/oauth/token', [
+      'form_params' => [
+        'client_id' => getenv('ACQUIA_KEY'),
+        'client_secret' => getenv('ACQUIA_SECRET'),
+        'grant_type' => 'client_credentials',
+      ],
+    ]);
+    $response_body = json_decode((string) $response->getBody(), TRUE, 512, JSON_THROW_ON_ERROR);
+    $this->accessToken = [
+      'token' => $response_body['access_token'],
+      'expires' => time() + $response_body['expires_in'] - 60,
+    ];
+    return $this->accessToken['token'];
   }
 
   /**
@@ -285,38 +316,34 @@ class HsAcquiaApiCommands extends BltTasks {
   /**
    * Get an overall list of database names to sync.
    *
-   * @param int $task_started
-   *   Time to compare the completed task.
    * @param array $options
    *   Array of keyed command options.
    *
    * @return array
    *   Array of database names to sync.
    */
-  protected function getSitesToSync($task_started, array $options) {
-    $finished_databases = $this->getCompletedDatabaseCopies($task_started);
-
+  protected function getSitesToSync(array $options) {
     $sites = $this->getConfigValue('multisites');
     foreach ($sites as $key => &$db_name) {
       $db_name = $db_name == 'default' ? 'humscigryphon' : $db_name;
 
       if (strpos($db_name, 'sandbox') !== FALSE) {
         unset($sites[$key]);
+        continue;
+      }
+
+      $this->say(sprintf('Checking if %s has recently been copied', $db_name));
+      if ($this->databaseCopyFinished($db_name)) {
+        unset($sites[$key]);
       }
     }
+    asort($sites);
     $sites = array_values($sites);
     if (!empty($options['exclude'])) {
       $exclude = explode(',', $options['exclude']);
       $sites = array_diff($sites, $exclude);
     }
-
-    if ($options['resume']) {
-      asort($finished_databases);
-      $last_database = end($finished_databases);
-      $last_db_position = array_search($last_database, $sites);
-      $sites = array_slice($sites, $last_db_position);
-    }
-    return array_diff($sites, $finished_databases);
+    return array_values($sites);
   }
 
   /**

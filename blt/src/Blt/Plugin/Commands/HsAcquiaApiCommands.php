@@ -3,9 +3,7 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
-use CssLint\Cli;
 use GuzzleHttp\Client;
-use GuzzleHttp\TransferStats;
 use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 use Symfony\Component\Console\Question\Question;
 
@@ -182,7 +180,7 @@ class HsAcquiaApiCommands extends BltTasks {
     $in_progress = [];
     while (!empty($sites)) {
       if (count($in_progress) >= $concurrent_copies) {
-        // Check for completion, if completed/failed, remove from the in_progress.
+        // Check for completion.
         foreach ($in_progress as $key => $database_name) {
           if ($this->databaseCopyFinished($database_name)) {
             unset($in_progress[$key]);
@@ -208,10 +206,6 @@ class HsAcquiaApiCommands extends BltTasks {
     }
     $this->yell("$count database have been copied to staging.");
 
-    if (array_unique($this->failedDatabases)) {
-      $this->yell('Databases failed: ' . implode(', ', array_unique($this->failedDatabases)), 40, 'red');
-    }
-
     $root = $this->getConfigValue('repo.root');
     if (file_exists("$root/keys/secrets.settings.php")) {
       include "$root/keys/secrets.settings.php";
@@ -222,7 +216,7 @@ class HsAcquiaApiCommands extends BltTasks {
         'form_params' => [
           'payload' => json_encode([
             'username' => 'Acquia Cloud',
-            'text' => sprintf('All Databases have been copied to %s environment.', $options['env']),
+            'text' => sprintf('%s Databases have been copied to %s environment.',$count, $options['env']),
             'icon_emoji' => 'information_source',
           ]),
         ],
@@ -230,7 +224,16 @@ class HsAcquiaApiCommands extends BltTasks {
     }
   }
 
-  protected function databaseCopyFinished($database_name): bool {
+  /**
+   * Call the API and usig the notifications, find out if it's done copying.
+   *
+   * @param string $database_name
+   *   Acquia database name.
+   *
+   * @return bool
+   *   If the database has been copied in the past 12 hours.
+   */
+  protected function databaseCopyFinished(string $database_name): bool {
     $access_token = $this->getAccessToken();
     $client = new Client();
     $created_since = date('c', time() - (60 * 60 * 12));
@@ -244,7 +247,13 @@ class HsAcquiaApiCommands extends BltTasks {
     return $message['total'] > 0;
   }
 
-  protected function getAccessToken() {
+  /**
+   * Call the API and fetch the OAuth token.
+   *
+   * @return string
+   *   Access bearer token.
+   */
+  protected function getAccessToken(): string {
     if (isset($this->accessToken['expires']) && time() <= $this->accessToken['expires']) {
       return $this->accessToken['token'];
     }

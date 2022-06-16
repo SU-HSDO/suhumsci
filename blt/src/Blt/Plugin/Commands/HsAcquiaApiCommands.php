@@ -216,7 +216,7 @@ class HsAcquiaApiCommands extends BltTasks {
         'form_params' => [
           'payload' => json_encode([
             'username' => 'Acquia Cloud',
-            'text' => sprintf('%s Databases have been copied to %s environment.',$count, $options['env']),
+            'text' => sprintf('%s Databases have been copied to %s environment.', $count, $options['env']),
             'icon_emoji' => 'information_source',
           ]),
         ],

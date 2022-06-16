@@ -283,3 +283,27 @@ function su_humsci_profile_post_update_9202() {
   }
   \Drupal::service('module_installer')->uninstall(['react_paragraphs']);
 }
+
+/**
+ * Fix reference to private files component that doesn't exist.
+ */
+function su_humsci_profile_post_update_9203() {
+  $paragraph_types = \Drupal::entityTypeManager()
+    ->getStorage('paragraphs_type')
+    ->loadMultiple();
+  foreach (FieldConfig::loadMultiple() as $field) {
+    if (
+      $field->getType() == 'entity_reference_revisions' &&
+      $field->getSetting('handler') == 'default:paragraph'
+    ) {
+      $handler_settings = $field->getSetting('handler_settings');
+      if ($missing_paragraph_types = array_diff($handler_settings['target_bundles'], array_keys($paragraph_types))) {
+        foreach ($missing_paragraph_types as $unknown_paragraph_type) {
+          unset($handler_settings['target_bundles'][$unknown_paragraph_type]);
+          unset($handler_settings['target_bundles_drag_drop'][$unknown_paragraph_type]);
+        }
+        $field->setSetting('handler_settings', $handler_settings)->save();
+      }
+    }
+  }
+}

@@ -33,7 +33,7 @@ class FlexiblePageCest {
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
-    $I->waitForText('Alternative text');
+    $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForText('The maximum number of media items have been selected');
     $I->click('.paragraph-type--hs-hero-image summary');
@@ -75,7 +75,7 @@ class FlexiblePageCest {
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
-    $I->waitForText('Alternative text');
+    $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementVisible('.media-library-item__preview img');
     $I->click('Save');

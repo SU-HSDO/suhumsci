@@ -45,6 +45,7 @@ class MediaCest {
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
     $I->click('Upload');
     $I->fillField('Name', 'Logo File');
+    $I->uncheckOption('Decorative Image');
     $I->fillField('Alternative text', 'Stanford Logo');
     $I->click('Save');
     $I->canSee('Saved 1 Media Items');

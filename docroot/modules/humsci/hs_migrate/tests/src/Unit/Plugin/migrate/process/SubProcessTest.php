@@ -3,6 +3,7 @@
 namespace Drupal\Tests\hs_migrate\Unit\Plulgin\migrate\process;
 
 use Drupal\hs_migrate\Plugin\migrate\process\SubProcess as HsSubProcess;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\migrate\process\SubProcess as OrigSubProcess;
 use Drupal\migrate\Row;
@@ -30,8 +31,8 @@ class SubProcessTest extends UnitTestCase {
 
     $value = simplexml_load_string('<data><item1><newkey>akey</newkey></item1></data>');
     $new_value = $hs_plugin->transform($value, $migrate_executable, $row, 'field_foo');
-    $this->assertArrayEquals(['' => []], $new_value);
-    $this->expectException(\Error::class);
+    $this->assertEquals(['' => []], $new_value);
+    $this->expectException(MigrateException::class);
     $original_plugin->transform($value, $migrate_executable, $row, 'field_foo');
   }
 

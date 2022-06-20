@@ -181,7 +181,8 @@ function su_humsci_profile_post_update_9200() {
     $parent_type = $spotlight->get('parent_type')->getString();
     $parent_id = $spotlight->get('parent_id')->getString();
 
-    if (!$parent_type || !\Drupal::entityTypeManager()->hasDefinition($parent_type)) {
+    if (!$parent_type || !\Drupal::entityTypeManager()
+        ->hasDefinition($parent_type)) {
       continue;
     }
     $parent = \Drupal::entityTypeManager()
@@ -242,4 +243,67 @@ function su_humsci_profile_post_update_9201() {
 
   _su_humsci_profile_disable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'hs_row');
   _su_humsci_profile_enable_paragraph('node', 'hs_basic_page', 'field_hs_page_components', 'stanford_gallery');
+}
+
+/**
+ * Delete any react pararaphs fields.
+ */
+function su_humsci_profile_post_update_9202() {
+  $react_paragraphs_fields = [];
+  foreach (FieldConfig::loadMultiple() as $field) {
+    if (
+      $field->getType() == 'entity_reference_revisions' &&
+      $field->getSetting('handler') == 'default:paragraph_row'
+    ) {
+      $react_paragraphs_fields[$field->getName()] = $field;
+    }
+  }
+  if ($react_paragraphs_fields) {
+    $paragraphs = \Drupal::entityTypeManager()
+      ->getStorage('paragraph')
+      ->loadByProperties(['parent_field_name' => array_keys($react_paragraphs_fields)]);
+    foreach ($paragraphs as $paragraph) {
+      $paragraph->delete();
+    }
+  }
+  $rows = \Drupal::entityTypeManager()
+    ->getStorage('paragraph_row')
+    ->loadMultiple();
+  foreach ($rows as $row) {
+    $row->delete();
+  }
+  foreach ($react_paragraphs_fields as $field) {
+    $field->delete();
+  }
+  $row_types = \Drupal::entityTypeManager()
+    ->getStorage('paragraphs_row_type')
+    ->loadMultiple();
+  foreach ($row_types as $row_type) {
+    $row_type->delete();
+  }
+  \Drupal::service('module_installer')->uninstall(['react_paragraphs']);
+}
+
+/**
+ * Fix reference to private files component that doesn't exist.
+ */
+function su_humsci_profile_post_update_9203() {
+  $paragraph_types = \Drupal::entityTypeManager()
+    ->getStorage('paragraphs_type')
+    ->loadMultiple();
+  foreach (FieldConfig::loadMultiple() as $field) {
+    if (
+      $field->getType() == 'entity_reference_revisions' &&
+      $field->getSetting('handler') == 'default:paragraph'
+    ) {
+      $handler_settings = $field->getSetting('handler_settings');
+      if ($missing_paragraph_types = array_diff($handler_settings['target_bundles'], array_keys($paragraph_types))) {
+        foreach ($missing_paragraph_types as $unknown_paragraph_type) {
+          unset($handler_settings['target_bundles'][$unknown_paragraph_type]);
+          unset($handler_settings['target_bundles_drag_drop'][$unknown_paragraph_type]);
+        }
+        $field->setSetting('handler_settings', $handler_settings)->save();
+      }
+    }
+  }
 }

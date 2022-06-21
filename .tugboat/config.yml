@@ -34,7 +34,7 @@ services:
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - blt source:build:simplesamlphp-config
-        - blt drupal:install -n
+        - blt drupal:sync --site=hs_colorful
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:

@@ -13,7 +13,7 @@ services:
     default: true
 
     # Wait until the mysql service is done building
-    depends: mysql
+#    depends: mysql
     aliases:
       - hs-colorful
       - hs-traditional
@@ -82,7 +82,7 @@ services:
 
         # Import each database dump into the associated table.
         - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
-        - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
+        - zcat /tmp/hs_traditional.sql.gz | mysql hs_traditional
 
         # Clean up after ourselves to keep the Preview size small.
         - rm /tmp/*.sql.gz

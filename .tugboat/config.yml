@@ -61,3 +61,11 @@ services:
 
     # Use the latest available 5.x version of MySQL
     image: tugboatqa/mysql:5
+    commands:
+      update:
+        # Delete and recreate the database for each site.
+        - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
+        - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"
+
+        # Give the tugboat user access to the new databases.
+        - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'tugboat'; FLUSH PRIVILEGES;"

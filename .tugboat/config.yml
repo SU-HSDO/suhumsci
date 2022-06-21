@@ -38,7 +38,7 @@ services:
         # Sync to hs_colorful and symlink the files directory.
         - blt drupal:sync --site=hs_colorful
         - blt drupal:sync:files --site=hs_colorful
-        - rm -rf /var/www/localhost/docroot/sites/default/files && ln -snf ${TUGBOAT_ROOT}/docroto/sites/hs_colorful/files/ /var/www/localhost/docroot/sites/default/files
+        - rsync -r ${TUGBOAT_ROOT}/docroot/sites/hs_colorful/files/ ${TUGBOAT_ROOT}/docroot/sites/default/files
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:

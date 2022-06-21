@@ -13,6 +13,6 @@ if ($tugboat_token = getenv('TUGBOAT_SERVICE_TOKEN')) {
     }
 
     $sitename = str_replace('_', '-', str_replace('__', '.', $site_dir));
-    $sites["$sitename.$tugboat_token.tugboatqa.com"] = $site_dir;
+    $sites["$sitename-$tugboat_token.tugboatqa.com"] = $site_dir;
   }
 }

@@ -39,6 +39,7 @@ services:
         - blt drupal:sync --site=hs_colorful
         - blt drupal:sync:files --site=hs_colorful
         - rsync -r ${TUGBOAT_ROOT}/docroot/sites/hs_colorful/files/ ${TUGBOAT_ROOT}/docroot/sites/default/files
+        - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/default/files
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
       build:

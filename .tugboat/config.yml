@@ -14,6 +14,9 @@ services:
 
     # Wait until the mysql service is done building
     depends: mysql
+    aliases:
+      - hs-colorful
+      - hs-traditional
 
     # A set of commands to run while building this service
     commands:
@@ -48,7 +51,7 @@ services:
         - drush pmu simplesamlphp_auth -y
 
     # Collection of urls to compare visual results.
-    visualdiffs:
+    urls:
       - /
 
   # What to call the service hosting MySQL. This name also acts as the

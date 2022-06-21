@@ -38,18 +38,32 @@ services:
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - blt source:build:simplesamlphp-config
 
-        # Sync to hs_colorful and symlink the files directory.
-        - blt drupal:sync --site=hs_colorful
-        - blt drupal:sync:files --site=hs_colorful
-        - blt drupal:sync --site=hs_traditional
-        - blt drupal:sync:files --site=hs_traditional
-        - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
+        - blt drupal:install -n
         - drush user:create tugboat --password=tugboat
         - drush user:role:add administrator tugboat
+
+        # Sync to hs_colorful and hs_colorful database & files.
+        - blt drupal:sync --site=hs_colorful
+        - blt drupal:sync:files --site=hs_colorful
+        - drush @hs_colorful.local user:create tugboat --password=tugboat
+        - drush @hs_colorful.local user:role:add administrator tugboat
+
+        - blt drupal:sync --site=hs_traditional
+        - blt drupal:sync:files --site=hs_traditional
+        - drush @hs_traditional.local user:create tugboat --password=tugboat
+        - drush @hs_traditional.local user:role:add administrator tugboat
+        - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
         - composer install --no-ansi
+
         - blt drupal:update
         - drush pmu simplesamlphp_auth -y
+
+        - blt drupal:update --site=hs_colorful
+        - drush @hs_traditional.local pmu simplesamlphp_auth -y
+
+        - blt drupal:update --site=hs_traditional
+        - drush @hs_colorful.local pmu simplesamlphp_auth -y
 
     # Collection of urls to compare visual results.
     urls:
@@ -62,7 +76,7 @@ services:
     # Use the latest available 5.x version of MySQL
     image: tugboatqa/mysql:5
     commands:
-      update:
+      init:
         # Delete and recreate the database for each site.
         - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
         - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"

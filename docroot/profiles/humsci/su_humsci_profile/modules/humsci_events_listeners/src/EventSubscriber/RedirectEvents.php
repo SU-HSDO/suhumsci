@@ -3,6 +3,7 @@
 namespace Drupal\humsci_events_listeners\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Url;
 use Drupal\core_event_dispatcher\EntityHookEvents;
 use Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent;
@@ -47,7 +48,10 @@ class RedirectEvents implements EventSubscriberInterface {
    *   Triggered event.
    */
   public function entityPresave(EntityPresaveEvent $event) {
-    if ($event->getEntity()->getEntityTypeId() != 'redirect') {
+    if (
+      $event->getEntity()->getEntityTypeId() != 'redirect' ||
+      InstallerKernel::installationAttempted()
+    ) {
       return;
     }
     /** @var \Drupal\Core\Entity\ContentEntityInterface $redirect */

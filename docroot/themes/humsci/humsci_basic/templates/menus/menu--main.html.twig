@@ -14,16 +14,13 @@
  */
 #}
 
-{# Temp. variable until config option is created. #}
-{% set twig_menu = true %}
-
-{% if twig_menu %}
+{% if use_megamenu %}
   {# Twig megamenu attributes #}
   {% set attributes = attributes.addClass(['megamenu', 'js-megamenu']) %}
   {% set attributes = attributes.setAttribute('aria-label', 'main menu') %}
   {% include "@humsci_basic/menus-twig/secondary-menu.twig" %}
 
-  {% else %}
+{% else %}
   {# Legacy Drupal menu #}
   {% set attributes = attributes.addClass(['hb-main-nav', 'su-main-nav', 'hb-main-nav--is-still-loading']) %}
   {% set attributes = attributes.setAttribute('aria-label', 'main menu') %}

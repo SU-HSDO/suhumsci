@@ -113,6 +113,9 @@ function humsci_basic_preprocess_page(&$vars) {
   // Variant setting for the local footer to be used in children themes
   $vars['local_footer_variant_classname'] = '';
 
+  // Variant setting to use the Mega Menu
+  $vars['use_megamenu'] = theme_get_setting('megamenu_toggle') ?? FALSE;
+
   // Node pages are configured with layout builder so we dont need to set these
   // classes.
   $route = \Drupal::routeMatch()->getRouteName();
@@ -124,6 +127,7 @@ function humsci_basic_preprocess_page(&$vars) {
   if (!isset($vars['node']) && !in_array($route, $layout_routes)) {
     $vars['main_class'] = 'hb-page-width hb-not-layout-builder-main-content';
   }
+
 }
 
 /**

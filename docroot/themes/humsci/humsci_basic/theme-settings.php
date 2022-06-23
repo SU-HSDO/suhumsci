@@ -174,7 +174,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
   $form['options_settings']['use_megamenu']['megamenu_toggle'] = [
     '#type' => 'checkbox',
     '#title' => t('Use megamenu on desktop'),
-    '#default_value' => theme_get_setting('megamenu_toggle'),
+    '#default_value' => theme_get_setting('megamenu_toggle') ?? 'FALSE',
     '#description' => t('This hides the standard menu on desktop to allow mega menu to display. The standard menu will still be enabled on mobile.'),
     '#access' => \Drupal::currentUser()->hasPermission('administrator')
   ];

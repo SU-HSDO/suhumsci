@@ -1,4 +1,4 @@
-// We Megamenu CSS Imported from module
+/* We Megamenu CSS Imported from module */
 .ico-arrow,
 .we-mega-menu-toolbar .we-mega-menu-btn-break-col::before,
 .we-mega-menu-toolbar .chosen-container-single .chosen-single div b {
@@ -1039,14 +1039,15 @@
 .we-mega-menu-backend .we-mega-menu-ul > .we-mega-menu-li > .we-megamenu-nolink {
   text-align: left;
   color: #000;
+  cursor: default;
   font-size: 0.875rem;
   margin: 0;
-  border: 1px solid #c4c4c4;
+  border: none;
   padding: 0.5625rem 2.8125rem 0.5625rem 0.9375rem;
   background: transparent;
   font-weight: bold;
   border-radius: 1.25rem;
-  transition: all 0.1s ease;
+  transition: none;
   display: flex;
   align-items: center;
 }
@@ -1128,6 +1129,13 @@
   box-shadow: 1px 2px 5px rgba(0 0 0 / 0.5) !important;
 }
 
+.we-mega-menu-backend .we-mega-menu-submenu.hover .we-megamenu-nolink {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  cursor: default;
+}
+
 .we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li {
   margin-bottom: 0.3125rem;
   top: auto;
@@ -1149,6 +1157,13 @@
   display: block;
 }
 
+.we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li .we-megamenu-nolink {
+  border: none;
+  transition: none;
+  outline: none;
+  cursor: default;
+}
+
 .we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li:first-child > a,
 .we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li:first-child > .we-megamenu-nolink {
   padding-top: 0.3125rem;
@@ -1166,6 +1181,12 @@
   color: #000;
   background: #fffbf0 !important;
   border: 1px solid #666666 !important;
+  cursor: default;
+}
+
+.we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li.open>.we-megamenu-nolink {
+  background: transparent !important;
+  border: none !important;
 }
 
 .we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li.selected {
@@ -1175,10 +1196,18 @@
 
 .we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li.hover > a,
 .we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li.hover > .we-megamenu-nolink {
-  color: #666 !important;
-  background: #fffbf0 !important;
+  color: #000 !important;
+  background: transparent !important;
   border: 1px solid #666666 !important;
   box-shadow: 1px 2px 5px rgba(0 0 0 / 0.5) !important;
+}
+
+.we-mega-menu-backend .we-mega-menu-submenu li.we-mega-menu-li.hover>.we-megamenu-nolink {
+  color: #000 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  cursor: default;
 }
 
 .we-mega-menu-backend .we-mega-menu-submenu .we-mega-menu-submenu {
@@ -1642,6 +1671,12 @@ body:not(.we-mega-menu-backend) .navbar-we-mega-menu[data-alwayshowsubmenu="0"] 
     border-left: 0 none;
     border-right: 0 none;
   }
+
+.we-mega-menu-submenu li.we-mega-menu-li.active>.we-megamenu-nolink {
+  background-color: transparent;
+  border-bottom-color: none;
+  cursor: default;
+}
 
   .we-mega-menu-submenu li.we-mega-menu-li span {
     border-radius: 0;

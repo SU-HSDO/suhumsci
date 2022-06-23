@@ -118,12 +118,24 @@
           }
         }
 
+
+        > .we-megamenu-nolink {
+            cursor: default;
+            pointer-events: none;
+
+            &:hover,
+            &:focus {
+              background: none;
+              cursor: default;
+              pointer-events: none;
+            }
+        }
+
         // level 1 active list item
         &.active {
 
           // level 1 active links bottom bar
-          > .we-mega-menu-li,
-          > .we-megamenu-nolink {
+          > .we-mega-menu-li {
             @include hb-global-color('color', 'black');
             background: linear-gradient(transparent 1%, var(--palette--secondary) 1%);
             background-size: 100% 0.55rem;
@@ -277,6 +289,13 @@
             }
           }
 
+          > .we-megamenu-nolink {
+            text-decoration: none;
+            pointer-events: none;
+            color: #000;
+            cursor: default;
+          }
+
           // level 2 links serving as subtitles - incase different style is preferred
           // bottom margin incase of two submenus in one column
           &.dropdown-menu {
@@ -293,7 +312,9 @@
             }
 
             > .we-megamenu-nolink {
+              color: #000;
               cursor: default;
+              pointer-events: none;
             }
 
             // subtitle links underlined as fallback if not nolink

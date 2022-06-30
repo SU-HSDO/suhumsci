@@ -9,72 +9,129 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
 2. Copy `lando/default.lando.yml` to `.lando.yml`.
 3. Take the `.loc` domains in the `.lando.yml` file and add them to your `/etc/hosts` file, as shown below:
 
-    ```yaml
-    127.0.0.1           swshumsci.suhumsci.loc
-    127.0.0.1           archaeology.suhumsci.loc
-    127.0.0.1           dsresearch.suhumsci.loc
-    127.0.0.1           duboislab.suhumsci.loc
-    127.0.0.1           economics.suhumsci.loc
-    127.0.0.1           francestanford.suhumsci.loc
-    127.0.0.1           insidehs.sushumsci.loc
-    127.0.0.1           it-humsci.suhumsci.loc
-    127.0.0.1           lowe.suhumsci.loc
-    127.0.0.1           mathematics.suhumsci.loc
-    127.0.0.1           mrc.suhumsci.loc
-    127.0.0.1           philit.suhumsci.loc
-    127.0.0.1           popstudies.suhumsci.loc
-    127.0.0.1           shenlab.suhumsci.loc
-    127.0.0.1           sparkbox-sandbox.suhumsci.loc
-    127.0.0.1           swshumsci-sandbox.suhumsci.loc
-    127.0.0.1           symsys.suhumsci.loc
+    ```
+      127.0.0.1 africanstudies.suhumsci.loc
+      127.0.0.1 amstudies.suhumsci.loc
+      127.0.0.1 anthro_net.suhumsci.loc
+      127.0.0.1 anthropology.suhumsci.loc
+      127.0.0.1 antiracismlab.suhumsci.loc
+      127.0.0.1 archaeology.suhumsci.loc
+      127.0.0.1 art.suhumsci.loc
+      127.0.0.1 artexhibitions.suhumsci.loc
+      127.0.0.1 bingschool.suhumsci.loc
+      127.0.0.1 biology.suhumsci.loc
+      127.0.0.1 biologyvirtualshowcase.suhumsci.loc
+      127.0.0.1 bsurp.suhumsci.loc
+      127.0.0.1 buddhiststudies.suhumsci.loc
+      127.0.0.1 ccsre.suhumsci.loc
+      127.0.0.1 ceas.suhumsci.loc
+      127.0.0.1 cesta.suhumsci.loc
+      127.0.0.1 chemistry.suhumsci.loc
+      127.0.0.1 clas.suhumsci.loc
+      127.0.0.1 classics.suhumsci.loc
+      127.0.0.1 cmbprogram.suhumsci.loc
+      127.0.0.1 cmems.suhumsci.loc
+      127.0.0.1 cqmd.suhumsci.loc
+      127.0.0.1 creativewriting.suhumsci.loc
+      127.0.0.1 creees.suhumsci.loc
+      127.0.0.1 culture_emotion_lab.suhumsci.loc
+      127.0.0.1 datasciencemajor.suhumsci.loc
+      127.0.0.1 dennylab.suhumsci.loc
+      127.0.0.1 dfetter__humsci.suhumsci.loc
+      127.0.0.1 dlcl.suhumsci.loc
+      127.0.0.1 dsresearch.suhumsci.loc
+      127.0.0.1 duboislab.suhumsci.loc
+      127.0.0.1 ealc.suhumsci.loc
+      127.0.0.1 economics.suhumsci.loc
+      127.0.0.1 em1060.suhumsci.loc
+      127.0.0.1 english.suhumsci.loc
+      127.0.0.1 ethicsinsociety.suhumsci.loc
+      127.0.0.1 facultyaffairs_humsci.suhumsci.loc
+      127.0.0.1 facultyaffairs_humsci2021.suhumsci.loc
+      127.0.0.1 feldman.suhumsci.loc
+      127.0.0.1 feminist.suhumsci.loc
+      127.0.0.1 finance_humsci.suhumsci.loc
+      127.0.0.1 francestanford.suhumsci.loc
+      127.0.0.1 gavin_wright__humsci.suhumsci.loc
+      127.0.0.1 gender.suhumsci.loc
+      127.0.0.1 globalcurrents.suhumsci.loc
+      127.0.0.1 grandtour.suhumsci.loc
+      127.0.0.1 gus_humsci.suhumsci.loc
+      127.0.0.1 gus_humsci2021.suhumsci.loc
+      127.0.0.1 heidi_williams__humsci.suhumsci.loc
+      127.0.0.1 history.suhumsci.loc
+      127.0.0.1 hopkinsmarinestation.suhumsci.loc
+      127.0.0.1 hs_colorful.suhumsci.loc
+      127.0.0.1 hs_design.suhumsci.loc
+      127.0.0.1 hs_fcp.suhumsci.loc
+      127.0.0.1 hs_sandbox.suhumsci.loc
+      127.0.0.1 hs_testing_sandbox.suhumsci.loc
+      127.0.0.1 hs_traditional.suhumsci.loc
+      127.0.0.1 hsbi.suhumsci.loc
+      127.0.0.1 hshr.suhumsci.loc
+      127.0.0.1 hsweb_userguide.suhumsci.loc
+      127.0.0.1 humanbiology.suhumsci.loc
+      127.0.0.1 humanexperience.suhumsci.loc
+      127.0.0.1 humanitiescore.suhumsci.loc
+      127.0.0.1 humanrights.suhumsci.loc
+      127.0.0.1 impact.suhumsci.loc
+      127.0.0.1 insidehs.suhumsci.loc
+      127.0.0.1 internationalrelations.suhumsci.loc
+      127.0.0.1 iranianstudies.suhumsci.loc
+      127.0.0.1 iriss.suhumsci.loc
+      127.0.0.1 islamicstudies.suhumsci.loc
+      127.0.0.1 it_humsci.suhumsci.loc
+      127.0.0.1 jewishstudies.suhumsci.loc
+      127.0.0.1 language.suhumsci.loc
+      127.0.0.1 linguistics.suhumsci.loc
+      127.0.0.1 lowe.suhumsci.loc
+      127.0.0.1 mathematics.suhumsci.loc
+      127.0.0.1 mcs.suhumsci.loc
+      127.0.0.1 mediterraneanstudies.suhumsci.loc
+      127.0.0.1 memorylab.suhumsci.loc
+      127.0.0.1 morrisoninstitute.suhumsci.loc
+      127.0.0.1 mrc.suhumsci.loc
+      127.0.0.1 mrc2021.suhumsci.loc
+      127.0.0.1 mtl.suhumsci.loc
+      127.0.0.1 music.suhumsci.loc
+      127.0.0.1 oconnell.suhumsci.loc
+      127.0.0.1 philit.suhumsci.loc
+      127.0.0.1 philosophy.suhumsci.loc
+      127.0.0.1 physics.suhumsci.loc
+      127.0.0.1 planning_humsci.suhumsci.loc
+      127.0.0.1 politicalscience.suhumsci.loc
+      127.0.0.1 popstudies.suhumsci.loc
+      127.0.0.1 psychology.suhumsci.loc
+      127.0.0.1 publicpolicy.suhumsci.loc
+      127.0.0.1 religiousstudies.suhumsci.loc
+      127.0.0.1 researchadmin_humsci.suhumsci.loc
+      127.0.0.1 scl.suhumsci.loc
+      127.0.0.1 sgs.suhumsci.loc
+      127.0.0.1 shenlab.suhumsci.loc
+      127.0.0.1 sitp.suhumsci.loc
+      127.0.0.1 siw.suhumsci.loc
+      127.0.0.1 sociology.suhumsci.loc
+      127.0.0.1 southasia.suhumsci.loc
+      127.0.0.1 stanfordsciencefellows.suhumsci.loc
+      127.0.0.1 starlab.suhumsci.loc
+      127.0.0.1 statistics.suhumsci.loc
+      127.0.0.1 sts.suhumsci.loc
+      127.0.0.1 suac.suhumsci.loc
+      127.0.0.1 swshumsci.suhumsci.loc
+      127.0.0.1 swshumsci_sandbox.suhumsci.loc
+      127.0.0.1 symsys.suhumsci.loc
+      127.0.0.1 tessier_lavigne_lab.suhumsci.loc
+      127.0.0.1 texttechnologies.suhumsci.loc
+      127.0.0.1 urbanstudies.suhumsci.loc
+      127.0.0.1 west.suhumsci.loc
+      127.0.0.1 womensleadership.suhumsci.loc
     ```
 
 4. Build your containers: `lando rebuild`
     * Note: After running `lando rebuild` you should see a list a APPSERVER URLS. A `green` URL signifies the `.loc` domain has been added to your `/ect/hosts` file. If you see a `red` URL, go back to step 3 and add the `.loc` domain to your `/ect/hosts` file.
-5. Install your PHP dependencies: `lando composer install`
-6. Run `lando blt blt:init:settings` and confirm that it added a `local.settings.php` file to each of your `[my-multisite]/settings` folders (ex. `/docroot/sites/default/settings/local.settings.php`).
-7. Make sure the db settings in each of these `local.settings.php` files matches the settings in the `.lando.yml`. Note: the `database` service corresponds to the `default` multisite. The rest of the services have names that match their multisite. For example, for the default site, make sure that these values, and key-value pairs match:
-
-    * (line 10): `$db_name = 'sparkbox_sandbox';`
-    * 'database' => $db_name,
-    * 'username' => 'drupal',
-    * 'password' => 'drupal',
-    * 'host' => 'database',
-
-8. Create a new file in `/docroot/sites` called `local.sites.php`. This adds new routing based on our local environments and local `sites/` folders. Add the following code there:
-
-    ```php
-        <?php
-        // This is required if you have localdev domains that are different from the
-        // url structure that's already added to $sites in sites.php
-        $settings = glob(__DIR__ . '/*/settings.php');
-        foreach ($settings as $settings_file) {
-        $site_dir = str_replace(__DIR__ . '/', '', $settings_file);
-        $site_dir = str_replace('/settings.php', '', $site_dir);
-        if ($site_dir == 'default') {
-            $site_dir = 'swshumsci';
-        }
-        $sitename = str_replace('_', '-', str_replace('__', '.', $site_dir));
-        $sites["$sitename.suhumsci.loc"] = $site_dir; // Do we need to add more things to our sites array, to get requests to reach our multisites?
-        }
-    ```
-
-    * **Troubleshooting note:** This file is very picky of typos and spacing, if you have issues syncing, ensure this file does not have extra spaces or mistyped information.
-
-9. Run `lando blt drupal:sync --site=sparkbox_sandbox` to pull down a copy of the database, files for the default multisite, and the custom views and blocks that have been built out.
-10. Run `lando info`, and browse to the url for your multisite. For the default site, you should be able to pull up http://sparkbox-sandbox.suhumsci.loc// in your browser.
-11. Depending on the local domains you've set up, you may need to add a `docroot/sites/local.sites.php` file, and use it to add your local domains to the `$sites` array. Otherwise, requests to your local multisite domains may get sent to the default site.
-
-## Switching between local sites
-
-1. In your `.lando.yml` file, uncomment the service for the site you want to run locally.
-2. Run `lando rebuild` (this needs to be run anytime you make changes to `.lando.yml`).
-3. Confirm that the password, database, and hostname values in `sites/[my-multisite]/settings/local.settings.php` correctly match the values in your `.lando.yml` file.
-4. Ensure you have created your `local.sites.php` file in the `/docroot/sites` folder as indicated in the Lando steps above.
-5. Sync the database and files with a copy from production: `lando blt drupal:sync --site=[my-multisite]`.
-6. From now on, when you run a cache clear or try to get an admin link, you'll need to specify which Drupal site you are performing the action, for instance, for the default site: `lando drush @default.local cr` and for the economics site: `lando drush @economics.local uli`.
-
-Troubleshooting Note for local sites: If multisite setup is causing you issues, try setting up the default setup first and then attempt a multisite configuration.
+5. Run `lando blt drupal:sync --site=SITENAME` to pull down a copy of the database and files for the site you wish to work on.
+6. Run `lando info`, and browse to the url for your multisite.
+7. Depending on the local domains you've set up, you may need to add to `docroot/sites/local.sites.php` file, and use it to add your local domains to the `$sites` array. Otherwise, requests to your local multisite domains may get sent to the default site. Keep in mind that this is removed every `lando rebuild`.
 
 ## Setup for local Codeception testing
 

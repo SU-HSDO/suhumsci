@@ -12,7 +12,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
     ```
       127.0.0.1 africanstudies.suhumsci.loc
       127.0.0.1 amstudies.suhumsci.loc
-      127.0.0.1 anthro_net.suhumsci.loc
+      127.0.0.1 anthro-net.suhumsci.loc
       127.0.0.1 anthropology.suhumsci.loc
       127.0.0.1 antiracismlab.suhumsci.loc
       127.0.0.1 archaeology.suhumsci.loc
@@ -34,10 +34,10 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 cqmd.suhumsci.loc
       127.0.0.1 creativewriting.suhumsci.loc
       127.0.0.1 creees.suhumsci.loc
-      127.0.0.1 culture_emotion_lab.suhumsci.loc
+      127.0.0.1 culture-emotion-lab.suhumsci.loc
       127.0.0.1 datasciencemajor.suhumsci.loc
       127.0.0.1 dennylab.suhumsci.loc
-      127.0.0.1 dfetter__humsci.suhumsci.loc
+      127.0.0.1 dfetter.humsci.suhumsci.loc
       127.0.0.1 dlcl.suhumsci.loc
       127.0.0.1 dsresearch.suhumsci.loc
       127.0.0.1 duboislab.suhumsci.loc
@@ -46,30 +46,30 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 em1060.suhumsci.loc
       127.0.0.1 english.suhumsci.loc
       127.0.0.1 ethicsinsociety.suhumsci.loc
-      127.0.0.1 facultyaffairs_humsci.suhumsci.loc
-      127.0.0.1 facultyaffairs_humsci2021.suhumsci.loc
+      127.0.0.1 facultyaffairs-humsci.suhumsci.loc
+      127.0.0.1 facultyaffairs-humsci2021.suhumsci.loc
       127.0.0.1 feldman.suhumsci.loc
       127.0.0.1 feminist.suhumsci.loc
-      127.0.0.1 finance_humsci.suhumsci.loc
+      127.0.0.1 finance-humsci.suhumsci.loc
       127.0.0.1 francestanford.suhumsci.loc
-      127.0.0.1 gavin_wright__humsci.suhumsci.loc
+      127.0.0.1 gavin-wright.humsci.suhumsci.loc
       127.0.0.1 gender.suhumsci.loc
       127.0.0.1 globalcurrents.suhumsci.loc
       127.0.0.1 grandtour.suhumsci.loc
-      127.0.0.1 gus_humsci.suhumsci.loc
-      127.0.0.1 gus_humsci2021.suhumsci.loc
-      127.0.0.1 heidi_williams__humsci.suhumsci.loc
+      127.0.0.1 gus-humsci.suhumsci.loc
+      127.0.0.1 gus-humsci2021.suhumsci.loc
+      127.0.0.1 heidi-williams.humsci.suhumsci.loc
       127.0.0.1 history.suhumsci.loc
       127.0.0.1 hopkinsmarinestation.suhumsci.loc
-      127.0.0.1 hs_colorful.suhumsci.loc
-      127.0.0.1 hs_design.suhumsci.loc
-      127.0.0.1 hs_fcp.suhumsci.loc
-      127.0.0.1 hs_sandbox.suhumsci.loc
-      127.0.0.1 hs_testing_sandbox.suhumsci.loc
-      127.0.0.1 hs_traditional.suhumsci.loc
+      127.0.0.1 hs-colorful.suhumsci.loc
+      127.0.0.1 hs-design.suhumsci.loc
+      127.0.0.1 hs-fcp.suhumsci.loc
+      127.0.0.1 hs-sandbox.suhumsci.loc
+      127.0.0.1 hs-testing-sandbox.suhumsci.loc
+      127.0.0.1 hs-traditional.suhumsci.loc
       127.0.0.1 hsbi.suhumsci.loc
       127.0.0.1 hshr.suhumsci.loc
-      127.0.0.1 hsweb_userguide.suhumsci.loc
+      127.0.0.1 hsweb-userguide.suhumsci.loc
       127.0.0.1 humanbiology.suhumsci.loc
       127.0.0.1 humanexperience.suhumsci.loc
       127.0.0.1 humanitiescore.suhumsci.loc
@@ -80,7 +80,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 iranianstudies.suhumsci.loc
       127.0.0.1 iriss.suhumsci.loc
       127.0.0.1 islamicstudies.suhumsci.loc
-      127.0.0.1 it_humsci.suhumsci.loc
+      127.0.0.1 it-humsci.suhumsci.loc
       127.0.0.1 jewishstudies.suhumsci.loc
       127.0.0.1 language.suhumsci.loc
       127.0.0.1 linguistics.suhumsci.loc
@@ -98,13 +98,13 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 philit.suhumsci.loc
       127.0.0.1 philosophy.suhumsci.loc
       127.0.0.1 physics.suhumsci.loc
-      127.0.0.1 planning_humsci.suhumsci.loc
+      127.0.0.1 planning-humsci.suhumsci.loc
       127.0.0.1 politicalscience.suhumsci.loc
       127.0.0.1 popstudies.suhumsci.loc
       127.0.0.1 psychology.suhumsci.loc
       127.0.0.1 publicpolicy.suhumsci.loc
       127.0.0.1 religiousstudies.suhumsci.loc
-      127.0.0.1 researchadmin_humsci.suhumsci.loc
+      127.0.0.1 researchadmin-humsci.suhumsci.loc
       127.0.0.1 scl.suhumsci.loc
       127.0.0.1 sgs.suhumsci.loc
       127.0.0.1 shenlab.suhumsci.loc
@@ -118,9 +118,9 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 sts.suhumsci.loc
       127.0.0.1 suac.suhumsci.loc
       127.0.0.1 swshumsci.suhumsci.loc
-      127.0.0.1 swshumsci_sandbox.suhumsci.loc
+      127.0.0.1 swshumsci-sandbox.suhumsci.loc
       127.0.0.1 symsys.suhumsci.loc
-      127.0.0.1 tessier_lavigne_lab.suhumsci.loc
+      127.0.0.1 tessier-lavigne-lab.suhumsci.loc
       127.0.0.1 texttechnologies.suhumsci.loc
       127.0.0.1 urbanstudies.suhumsci.loc
       127.0.0.1 west.suhumsci.loc

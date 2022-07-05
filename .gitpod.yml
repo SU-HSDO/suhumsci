@@ -43,9 +43,8 @@ tasks:
       blt settings &&
       mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default' &&
       blt sws:keys &&
-      blt source:build:simplesamlphp-config
-      [[ -z "$HUMSCI_DEFAULT"  ]] && blt drupal:install -n
-      [[ ! -z "$HUMSCI_DEFAULT"  ]] && drush sql-sync @hs_colorful.prod @self -y && drush updb -y && drush cim --partial -y && drush cim --partial -y
+      blt source:build:simplesamlphp-config &&
+      [[ -z "$HUMSCI_DEFAULT"  ]] && blt drupal:install -n ||  drush sql-sync @hs_colorful.prod @self -y && drush updb -y && drush cim --partial -y && drush cim --partial -y
 
     command: |
       apache2ctl restart

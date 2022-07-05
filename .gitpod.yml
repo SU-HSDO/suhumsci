@@ -42,9 +42,18 @@ tasks:
       cp .gitpod/gitpod.settings.php docroot/sites/settings/local.settings.php &&
       blt settings &&
       mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal' &&
-      blt drupal:install -n &&
       blt sws:keys &&
       blt sbsc
+      if [[ ! -z $HUMSCI_DEFAULT  ]]
+      then
+        blt drupal:install -n
+      else
+        drush sql-sync @hs_colorful.prod @self
+        drush updb -y
+        drush cim --partial -y
+        drush cim --partial -y
+      fi
+
     command: |
       apache2ctl restart
       gp await-port 8001

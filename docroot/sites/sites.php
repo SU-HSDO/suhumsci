@@ -1,5 +1,7 @@
 <?php
 
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
+
 // @codingStandardsIgnoreFile
 
 /**
@@ -90,4 +92,8 @@ $sites['gus-humsci.stanford.edu'] = 'gus_humsci2021';
 
 if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';
+}
+
+if(EnvironmentDetector::isCiEnv()){
+  require __DIR__ . '/ci.sites.php';
 }

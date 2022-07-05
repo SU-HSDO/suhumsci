@@ -44,7 +44,7 @@ tasks:
       mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default' &&
       blt sws:keys &&
       blt source:build:simplesamlphp-config &&
-      drush sql-sync @hs_colorful.prod @self -extra-dump='--no-tablespaces --insert-ignore' -y &&
+      drush sql-sync @hs_colorful.prod @self --extra-dump='--no-tablespaces --insert-ignore' -y &&
       drush updb -y &&
       drush cim --partial -y &&
       drush cim --partial -y

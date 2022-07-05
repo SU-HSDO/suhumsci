@@ -46,6 +46,7 @@ tasks:
       blt source:build:simplesamlphp-config &&
       drush sql-sync @hs_colorful.prod @self --extra-dump='--no-tablespaces --insert-ignore' -y &&
       drush updb -y &&
+      blt drupal:toggle:modules &&
       drush cim --partial -y &&
       drush cim --partial -y
 

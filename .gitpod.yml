@@ -41,7 +41,7 @@ tasks:
       blt blt:telemetry:disable --no-interaction &&
       cp .gitpod/gitpod.settings.php docroot/sites/settings/local.settings.php &&
       blt settings &&
-      mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default' &&
+      mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default; CREATE DATABASE IF NOT EXISTS drupal' &&
       blt sws:keys &&
       blt source:build:simplesamlphp-config &&
       drush sql-sync @hs_colorful.prod @self --extra-dump='--no-tablespaces --insert-ignore' -y &&
@@ -50,11 +50,11 @@ tasks:
       drush cim --partial -y &&
       drush cim --partial -y
 
-    command: |
-      apache2ctl restart
-      gp await-port 8001
-      drush uli
+    command: >
+      git config core.fileMode false &&
+      blt blt:telemetry:disable --no-interaction &&
+      git remote set-url origin git@github.com:SU-HSDO/suhumsci.git &&
+      apache2ctl restart &&
+      gp await-port 8001 &&
+      drush uli &&
       drush uli | xargs gp preview --external
-      git config core.fileMode false
-      blt blt:telemetry:disable --no-interaction
-      git remote set-url origin git@github.com:SU-HSDO/suhumsci.git

@@ -9,6 +9,7 @@
 
 // Variables/mixins
 $nested-padding: hb-calculate-rems(20px);
+
 // See _private-page.scss. To avoid clashes with the
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
@@ -43,6 +44,19 @@ $nested-padding: hb-calculate-rems(20px);
       background-position: hb-calculate-rems(14px);
     }
   }
+}
+
+@mixin hb-link-bar {
+  @include hb-pairing-color('background-color', 'secondary');
+
+  content: '';
+  display: block;
+  position: absolute;
+  width: calc(100% + #{hb-calculate-rems(16px)});
+  height: hb-calculate-rems(6.4px);
+  top: auto;
+  bottom: hb-calculate-rems(3px);
+  left: 0;
 }
 
 // We nest everything within the main parent class to avoid
@@ -191,6 +205,7 @@ $nested-padding: hb-calculate-rems(20px);
 
     &:hover {
       @include hb-global-color('color', 'black');
+
       @include hb-themes(('airy', 'colorful')) {
         @include hb-global-color('background-color', 'gray-light');
       }
@@ -202,7 +217,10 @@ $nested-padding: hb-calculate-rems(20px);
       @include grid-media-min('lg') {
         .js & {
           background: none;
-          text-decoration: underline;
+
+          &::before {
+            @include hb-link-bar;
+          }
         }
 
         .hb-dark-pattern & {
@@ -239,10 +257,12 @@ $nested-padding: hb-calculate-rems(20px);
 
       @include grid-media-min('lg') {
         .js & {
-          @include hb-menu-icon-wrapper(10px, 10px);
+          @include hb-icon-background('chevron', 'black');
+          @include hb-menu-icon-wrapper(16px, 12px);
 
           top: calc(50% - #{hb-calculate-rems(5px)});
           right: hb-calculate-rems(-16px);
+          background-size: auto;
           transform: translateY(-50%);
         }
       }
@@ -253,6 +273,10 @@ $nested-padding: hb-calculate-rems(20px);
 
       .hb-dark-pattern & {
         @include hb-icon-background('plus', 'white');
+
+        @include grid-media-min('lg') {
+          @include hb-icon-background('chevron', 'white');
+        }
 
         .no-js & {
           @include hb-icon-background('minus', 'white');
@@ -271,26 +295,41 @@ $nested-padding: hb-calculate-rems(20px);
             @include hb-icon-background('minus', 'black');
           }
 
-          @include grid-media-min('lg') {
+          /*@include grid-media-min('lg') {
             .js & {
               @include hb-icon-background('plus', 'white');
             }
-          }
+          }*/
         }
       }
     }
 
     &.is-expanded {
+      &::before {
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-link-bar;
+          }
+        }
+      }
+
       &::after {
         @include hb-menu-minus-icon;
 
         .hb-dark-pattern & {
           @include hb-icon-background('minus', 'white');
+
+          @include grid-media-min('lg') {
+            @include hb-icon-background('chevron', 'white');
+          }
         }
 
         @include grid-media-min('lg') {
           .js & {
-            top: calc(50% - 9px);
+            @include hb-icon-background('chevron', 'black');
+
+            top: calc(50% - 13px);
+            background-size: auto;
           }
         }
       }
@@ -328,14 +367,14 @@ $nested-padding: hb-calculate-rems(20px);
     // TODO: Temporary colors/styles until desktop design
     @include grid-media-min('lg') {
       .js & {
-        @include hb-global-color('background-color','white');
+        @include hb-global-color('background-color', 'white');
 
         position: absolute;
         padding-left: 0;
         left: 0;
         width: 100%;
-        border: 1px solid black;
-        color: #000;
+        border: 1px solid hb-get-global-color('gray', $hc-colorful-globals);
+        color: hb-get-global-color('black', $hc-colorful-globals);
       }
 
       .megamenu__toggle,
@@ -422,7 +461,7 @@ $nested-padding: hb-calculate-rems(20px);
 // is present. This is from previous menu.
 // TODO: Refactor instead of pulling button up.
 .su-site-search {
-  + .megamenu {
+  +.megamenu {
     .megamenu__mobile-btn {
       top: hb-calculate-rems(-120px);
     }

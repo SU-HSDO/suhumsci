@@ -1,0 +1,11 @@
+<?php
+
+function hs_megamenu_preprocess_menu(&$variables) {
+  
+  if($variables['menu_name'] == 'main') {
+    $moduleConfig = \Drupal::config('hs_megamenu.settings');
+    $useMegaMenu = $moduleConfig->get('hs_megamenu.use_hs_megamenu');
+
+    $variables['use_hs_megamenu'] = $useMegaMenu;
+  }
+}

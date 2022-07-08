@@ -82,7 +82,7 @@ class HsChooseBlockController extends ChooseBlockController {
    *   reload the page.
    */
   public function moveBlockUp(SectionStorageInterface $section_storage, $delta, $group, $uuid) {
-    $this->moveBlock($section_storage, $delta, $group, $uuid);
+    return $this->moveBlock($section_storage, $delta, $group, $uuid);
   }
 
   /**
@@ -102,10 +102,12 @@ class HsChooseBlockController extends ChooseBlockController {
    *   reload the page.
    */
   public function moveBlockDown(SectionStorageInterface $section_storage, $delta, $group, $uuid) {
-    $this->moveBlock($section_storage, $delta, $group, $uuid, 'down');
+    return $this->moveBlock($section_storage, $delta, $group, $uuid, 'down');
   }
 
   /**
+   * Move the block up or down in the section.
+   *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage being configured.
    * @param int $delta
@@ -172,7 +174,7 @@ class HsChooseBlockController extends ChooseBlockController {
           // Value of next, moves pointer.
           $next_value = next($array);
 
-          // Key of next
+          // Key of next.
           $next_key = key($array);
 
           // Check if $next_key is null,

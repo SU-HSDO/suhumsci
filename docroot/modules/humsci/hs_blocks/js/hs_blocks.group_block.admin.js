@@ -6,7 +6,7 @@
         $('[data-layout-content-preview-placeholder-label] > [data-layout-content-preview-placeholder-label]').show();
       }
 
-      previewChanges.on('change', function () {
+      previewChanges.once('group-blocks').on('change', function () {
         if (!previewChanges.is(':checked')) {
           $('[data-layout-content-preview-placeholder-label] > [data-layout-content-preview-placeholder-label]').show();
         }

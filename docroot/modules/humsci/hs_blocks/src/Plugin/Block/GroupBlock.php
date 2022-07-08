@@ -248,6 +248,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       '#type' => 'link',
       '#title' => $this->t('Add Block to Group'),
       '#url' => Url::fromRoute('hs_blocks.choose_block', $route_params, ['attributes' => $route_attributes]),
+      '#attached' => ['library' => ['hs_blocks/group_block.admin']],
     ];
   }
 

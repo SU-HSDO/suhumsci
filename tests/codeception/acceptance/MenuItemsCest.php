@@ -67,7 +67,7 @@ class MenuItemsCest {
 
     $I->logInWithRole('administrator');
     $auto_alias = $I->createEntity([
-      'title' => $this->faker->words(1, TRUE),
+      'title' => $this->faker->words(2, TRUE),
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($auto_alias->toUrl('edit-form')->toString());

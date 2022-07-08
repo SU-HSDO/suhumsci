@@ -76,17 +76,13 @@ class HsChooseBlockController extends ChooseBlockController {
    *   UUID of the group block.
    * @param string $uuid
    *   UUID of the component to move.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response to either rebuild the layout and close the dialog, or
+   *   reload the page.
    */
-  public function moveBlockUp(SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
-    $parent_component = $section_storage->getSection($delta)
-      ->getComponent($group);
-
-    $parent_config = $parent_component->get('configuration');
-    $parent_config['children'] = $this->arrayShove($parent_config['children'], $uuid, 'up');
-    $parent_component->set('configuration', $parent_config);
-
-    self::getLayoutTempstore()->set($section_storage);
-    return $this->rebuildAndClose($section_storage);
+  public function moveBlockUp(SectionStorageInterface $section_storage, $delta, $group, $uuid) {
+    $this->moveBlock($section_storage, $delta, $group, $uuid);
   }
 
   /**
@@ -100,13 +96,37 @@ class HsChooseBlockController extends ChooseBlockController {
    *   UUID of the group block.
    * @param string $uuid
    *   UUID of the component to move.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response to either rebuild the layout and close the dialog, or
+   *   reload the page.
    */
-  public function moveBlockDown(SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
+  public function moveBlockDown(SectionStorageInterface $section_storage, $delta, $group, $uuid) {
+    $this->moveBlock($section_storage, $delta, $group, $uuid, 'down');
+  }
+
+  /**
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage being configured.
+   * @param int $delta
+   *   The delta of the section.
+   * @param string $group
+   *   UUID of the group block.
+   * @param string $uuid
+   *   UUID of the component to move.
+   * @param string $direction
+   *   Which direction to move the block.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response to either rebuild the layout and close the dialog, or
+   *   reload the page.
+   */
+  protected function moveBlock(SectionStorageInterface $section_storage, $delta, $group, $uuid, $direction = 'up') {
     $parent_component = $section_storage->getSection($delta)
       ->getComponent($group);
 
     $parent_config = $parent_component->get('configuration');
-    $parent_config['children'] = $this->arrayShove($parent_config['children'], $uuid, 'down');
+    $parent_config['children'] = $this->arrayShove($parent_config['children'], $uuid, $direction);
     $parent_component->set('configuration', $parent_config);
 
     self::getLayoutTempstore()->set($section_storage);
@@ -116,7 +136,8 @@ class HsChooseBlockController extends ChooseBlockController {
   /**
    * Grab the layout builder service.
    *
-   * @return LayoutTempstoreRepositoryInterface
+   * @return \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
+   *   Temporary storage for layout builder.
    */
   protected static function getLayoutTempstore(): LayoutTempstoreRepositoryInterface {
     return \Drupal::service('layout_builder.tempstore_repository');
@@ -148,16 +169,16 @@ class HsChooseBlockController extends ChooseBlockController {
       }
       else {
         if ($direction !== 'up') {
-          // Value of next, moves pointer
+          // Value of next, moves pointer.
           $next_value = next($array);
 
           // Key of next
           $next_key = key($array);
 
           // Check if $next_key is null,
-          // indicating there is no more elements in the array
+          // indicating there is no more elements in the array.
           if ($next_key !== NULL) {
-            // Add -next- to $new_array, keeping -current- in $array
+            // Add -next- to $new_array, keeping -current- in $array.
             $new_array["$next_key"] = $next_value;
             unset($array["$next_key"]);
           }
@@ -166,12 +187,12 @@ class HsChooseBlockController extends ChooseBlockController {
           if (isset($last['key'])) {
             unset($new_array["{$last['key']}"]);
           }
-          // Add current $array element to $new_array
+          // Add current $array element to $new_array.
           $new_array["$key"] = $value;
-          // Re-add $last to $new_array
+          // Re-add $last to $new_array.
           $new_array["{$last['key']}"] = $last['value'];
         }
-        // Merge new and old array
+        // Merge new and old array.
         return $new_array + $array;
       }
     }

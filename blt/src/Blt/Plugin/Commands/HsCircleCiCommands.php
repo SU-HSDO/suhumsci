@@ -190,8 +190,8 @@ class HsCircleCiCommands extends BltTasks {
       ->alias('')
       ->drush('cache-clear')->arg('drush')
       ->drush('sql-sync')
-      ->arg("$site.prod")
-      ->arg('self')
+      ->arg("@$site.prod")
+      ->arg('@self')
       ->option('extra-dump', '--no-tablespaces --insert-ignore', '=')
       ->option('structure-tables-key', 'lightweight')
       ->option('create-db');

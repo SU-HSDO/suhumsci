@@ -24,6 +24,10 @@ $nested-padding: hb-calculate-rems(22px);
   @include hb-icon-background('lock', 'black');
   @include hb-lock-position();
 
+  .hb-dark-pattern & {
+    @include hb-icon-background('lock', 'white');
+  }
+
   &:hover {
     @include hb-icon-background('lock', 'black');
 
@@ -31,6 +35,10 @@ $nested-padding: hb-calculate-rems(22px);
       .js & {
         @include hb-icon-background('lock', 'black');
         @include hb-lock-position();
+
+        .hb-dark-pattern & {
+          @include hb-icon-background('lock', 'white');
+        }
 
         background-position: hb-calculate-rems(14px);
       }
@@ -40,6 +48,10 @@ $nested-padding: hb-calculate-rems(22px);
   @include grid-media-min('lg') {
     .js & {
       @include hb-icon-background('lock', 'black');
+
+      .hb-dark-pattern & {
+        @include hb-icon-background('lock', 'white');
+      }
 
       background-position: hb-calculate-rems(14px);
     }
@@ -300,6 +312,10 @@ $hb-link-bar-link: 100%;
         .hb-dark-pattern & {
           @include hb-icon-background('plus', 'black');
 
+          @include grid-media-min('lg') {
+            @include hb-icon-background('chevron', 'white');
+          }
+
           .no-js & {
             @include hb-icon-background('minus', 'black');
           }
@@ -321,10 +337,6 @@ $hb-link-bar-link: 100%;
 
         .hb-dark-pattern & {
           @include hb-icon-background('minus', 'white');
-
-          @include grid-media-min('lg') {
-            @include hb-icon-background('chevron', 'white');
-          }
         }
 
         @include grid-media-min('lg') {
@@ -333,6 +345,14 @@ $hb-link-bar-link: 100%;
 
             top: calc(50% - 13px);
             background-size: auto;
+          }
+        }
+
+        .hb-dark-pattern & {
+          @include grid-media-min('lg') {
+            .js & {
+              @include hb-icon-background('chevron', 'white');
+            }
           }
         }
       }
@@ -344,7 +364,7 @@ $hb-link-bar-link: 100%;
 
             @include grid-media-min('lg') {
               .js & {
-                @include hb-icon-background('minus', 'white');
+                @include hb-icon-background('chevron', 'white');
               }
             }
           }
@@ -362,6 +382,15 @@ $hb-link-bar-link: 100%;
             @include hb-link-bar;
           }
         }
+
+        &.megamenu__no-link {
+          .js & {
+
+            &::before {
+              display: none;
+            }
+          }
+        }
       }
     }
   }
@@ -374,7 +403,8 @@ $hb-link-bar-link: 100%;
   .megamenu__expanded-container {
     display: none;
 
-    &.is-expanded {
+    &.is-expanded,
+    .no-js & {
       display: block;
     }
 
@@ -462,7 +492,7 @@ $hb-link-bar-link: 100%;
       }
     }
 
-    .megamenu__link {
+    .megamenu__item .megamenu__link {
       &:focus-visible {
         outline: 5px auto Highlight;
         outline: 5px auto -webkit-focus-ring-color;
@@ -492,11 +522,15 @@ $hb-link-bar-link: 100%;
       }
     }
 
-    .megamenu__no-link {
+    .megamenu__item .megamenu__no-link {
       font-weight: hb-theme-font-weight(regular);
 
       &:hover {
         background: none;
+
+        .hb-dark-pattern & {
+          @include hb-global-color('color', 'white');
+        }
 
         &::after {
           display: none;
@@ -513,6 +547,16 @@ $hb-link-bar-link: 100%;
 
             &::after {
               display: none;
+            }
+          }
+        }
+      }
+
+      .hb-dark-pattern & {
+        @include grid-media-min('lg') {
+          .js & {
+            &:hover {
+              @include hb-global-color('color', 'black');
             }
           }
         }
@@ -540,7 +584,7 @@ $hb-link-bar-link: 100%;
       }
     }
 
-    .megamenu__link {
+    .megamenu__item .megamenu__link {
       @include grid-media-min('lg') {
         .js & {
           font-weight: hb-theme-font-weight(semibold);
@@ -548,10 +592,6 @@ $hb-link-bar-link: 100%;
         }
       }
     }
-  }
-
-  .megamenu__column-addon {
-    //margin-top: hb-calculate-rems(32px)
   }
 
   .is-expanded {

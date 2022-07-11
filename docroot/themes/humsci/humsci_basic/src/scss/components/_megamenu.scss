@@ -46,13 +46,16 @@ $nested-padding: hb-calculate-rems(20px);
   }
 }
 
-@mixin hb-link-bar {
+$hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
+$hb-link-bar-link: 100%;
+
+@mixin hb-link-bar($width: $hb-link-bar-link) {
   @include hb-pairing-color('background-color', 'secondary');
 
   content: '';
   display: block;
   position: absolute;
-  width: calc(100% + #{hb-calculate-rems(16px)});
+  width: $width;
   height: hb-calculate-rems(6.4px);
   top: auto;
   bottom: hb-calculate-rems(3px);
@@ -187,7 +190,7 @@ $nested-padding: hb-calculate-rems(20px);
 
     @include grid-media-min('lg') {
       .js & {
-        margin-right: hb-calculate-rems(28px);
+        position: relative;
         padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
         line-height: 110%;
       }
@@ -217,10 +220,6 @@ $nested-padding: hb-calculate-rems(20px);
       @include grid-media-min('lg') {
         .js & {
           background: none;
-
-          &::before {
-            @include hb-link-bar;
-          }
         }
 
         .hb-dark-pattern & {
@@ -240,6 +239,16 @@ $nested-padding: hb-calculate-rems(20px);
     @include grid-media-min('lg') {
       .js & {
         width: auto;
+      }
+    }
+
+    &:hover {
+      @include grid-media-min('lg') {
+        .js & {
+          &::before {
+            @include hb-link-bar($hb-link-bar-button);
+          }
+        }
       }
     }
 
@@ -294,12 +303,6 @@ $nested-padding: hb-calculate-rems(20px);
           .no-js & {
             @include hb-icon-background('minus', 'black');
           }
-
-          /*@include grid-media-min('lg') {
-            .js & {
-              @include hb-icon-background('plus', 'white');
-            }
-          }*/
         }
       }
     }
@@ -308,7 +311,7 @@ $nested-padding: hb-calculate-rems(20px);
       &::before {
         @include grid-media-min('lg') {
           .js & {
-            @include hb-link-bar;
+            @include hb-link-bar($hb-link-bar-button);
           }
         }
       }
@@ -350,6 +353,19 @@ $nested-padding: hb-calculate-rems(20px);
     }
   }
 
+  .megamenu__link {
+    &:hover {
+      @include grid-media-min('lg') {
+        .js & {
+
+          &::before {
+            @include hb-link-bar;
+          }
+        }
+      }
+    }
+  }
+
   .list-sub,
   .list-sub__nested {
     padding-left: $nested-padding;
@@ -361,20 +377,40 @@ $nested-padding: hb-calculate-rems(20px);
     }
   }
 
-  .list-sub {
-    display: none;
+  .megamenu__expanded-container {
+    @include grid-media-min('lg') {
+      .js & {
+        display: none;
+      }
+    }
 
-    // TODO: Temporary colors/styles until desktop design
+    &.is-expanded {
+      display: block;
+    }
+
     @include grid-media-min('lg') {
       .js & {
         @include hb-global-color('background-color', 'white');
 
         position: absolute;
-        padding-left: 0;
-        left: 0;
-        width: 100%;
-        border: 1px solid hb-get-global-color('gray', $hc-colorful-globals);
+        padding: hb-calculate-rems(44px) 0;
+        left: 50%;
+        width: 200%;
         color: hb-get-global-color('black', $hc-colorful-globals);
+        box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px) rgba(0, 0, 0, 0.63);
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  .list-sub {
+    @include grid-media-min('lg') {
+
+      .js & {
+        margin: 0 auto;
+        padding: 0;
+        max-width: hb-calculate-rems($hb-three-column-main-width);
+        width: 50%;
       }
 
       .megamenu__toggle,
@@ -382,8 +418,7 @@ $nested-padding: hb-calculate-rems(20px);
         @include grid-media-min('lg') {
           &:hover {
             .js & {
-              color: #8c1515;
-              text-decoration: underline;
+              @include hb-pairing-color('color', 'secondary');
             }
           }
         }
@@ -409,12 +444,24 @@ $nested-padding: hb-calculate-rems(20px);
         outline: 5px auto -webkit-focus-ring-color;
       }
 
+      &:hover {
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-global-color('background-color', 'gray-light');
+
+            &::before {
+              display: none;
+            }
+          }
+        }
+      }
+
       @include grid-media-min('lg') {
         .js & {
           padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
           font-size: hb-calculate-rems(16px);
-          color: #8c1515;
-          text-transform: uppercase;
+          color: hb-get-global-color('black', $hc-colorful-globals);
+          text-transform: capitalize;
           font-weight: hb-theme-font-weight(semibold);
         }
       }

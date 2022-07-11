@@ -65,7 +65,7 @@ if (menu) {
     btn.addEventListener('click', (e) => {
       const currentBtn = e.currentTarget;
       const menuItem = e.currentTarget.parentElement;
-      const subMenu = menuItem.querySelector('.js-list-sub');
+      const subMenu = menuItem.querySelector('.js-megamenu__expanded-container');
       closeAllSubmenus(currentBtn);
       toggleAria(currentBtn, 'expanded');
 

@@ -7,17 +7,20 @@
 {% endif %}
 
 {# List #}
-{# TODO: MONDAY - FIX DIV SO THAT IT CAN EXPAND #}
-<div>
-  <ul{{ list_attributes }}>
-  {% block list_content %}
-    {% for item in items %}
-      {% set list_item_attributes = create_attribute() %}
-      {% set list_item_attributes = list_item_attributes.addClass(menu_base_class ~ "__item") %}
-      <li{{list_item_attributes}}>
-        {% include "@humsci_basic/menus-twig/menu-item.twig" %}
-      </li>
-    {% endfor %}
-  {% endblock %}
-  </ul>
-</div>
+{% if menu_level == 1 %}
+<span class="megamenu__expanded-container js-megamenu__expanded-container">
+{% endif %}
+<ul{{ list_attributes }}>
+{% block list_content %}
+  {% for item in items %}
+    {% set list_item_attributes = create_attribute() %}
+    {% set list_item_attributes = list_item_attributes.addClass(menu_base_class ~ "__item") %}
+    <li{{list_item_attributes}}>
+      {% include "@humsci_basic/menus-twig/menu-item.twig" %}
+    </li>
+  {% endfor %}
+{% endblock %}
+</ul>
+{% if menu_level == 1 %}
+</span>
+{% endif %}

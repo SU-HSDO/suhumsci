@@ -15,7 +15,12 @@
 {% if menu_level == 0 and item.below == true %}
   <button{{button_attributes}}>{{ item.title }}</button>
   {% else %}
+  {% if link_url %}
   <a href={{link_url}} {{link_attributes}}>{{ item.title }}</a>
+    {% else %}
+      {% set link_attributes = link_attributes.addClass(menu_base_class ~ "__no-link") %}
+      <span {{link_attributes}}>{{ item.title }}</span>
+  {% endif %}
 {% endif %}
 
 {# Only show menu items three levels deep #}

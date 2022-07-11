@@ -8,7 +8,7 @@
 // 7. Allow for multiple themes that have different styles
 
 // Variables/mixins
-$nested-padding: hb-calculate-rems(20px);
+$nested-padding: hb-calculate-rems(22px);
 
 // See _private-page.scss. To avoid clashes with the
 // V1 menu and deprecated megamenu, we recreate styles here.
@@ -21,7 +21,7 @@ $nested-padding: hb-calculate-rems(20px);
 }
 
 @mixin hb-lock-props {
-  @include hb-icon-background('lock', 'white');
+  @include hb-icon-background('lock', 'black');
   @include hb-lock-position();
 
   &:hover {
@@ -137,10 +137,10 @@ $hb-link-bar-link: 100%;
     display: none;
     margin-bottom: hb-calculate-rems(28px);
     font-weight: hb-theme-font-weight(semibold);
-    font-size: hb-calculate-rems(20px);
+    font-size: hb-calculate-rems(18px);
 
     @include grid-media-min('md') {
-      font-size: hb-calculate-rems(24px);
+      font-size: hb-calculate-rems(22px);
     }
 
     @include grid-media-min('lg') {
@@ -163,16 +163,16 @@ $hb-link-bar-link: 100%;
     border-top: $hb-thin-border;
     @include hb-global-color('border-color', 'gray');
 
+    .hb-private-page-link {
+      @include hb-lock-props();
+    }
+
     @include grid-media-min('lg') {
       .js & {
         display: inline-block;
         border: 0;
         break-inside: avoid-column;
       }
-    }
-
-    .hb-private-page-link {
-      @include hb-lock-props();
     }
   }
 
@@ -181,7 +181,7 @@ $hb-link-bar-link: 100%;
     @include hb-unbuttonize;
 
     display: inherit;
-    padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
+    padding: hb-calculate-rems(21px) hb-calculate-rems(8px);
     line-height: 120.3%;
 
     @include grid-media-min('md') {
@@ -369,20 +369,10 @@ $hb-link-bar-link: 100%;
   .list-sub,
   .list-sub__nested {
     padding-left: $nested-padding;
-    font-size: hb-calculate-rems(18px);
-    font-weight: hb-theme-font-weight(regular);
-
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(22px);
-    }
   }
 
   .megamenu__expanded-container {
-    @include grid-media-min('lg') {
-      .js & {
-        display: none;
-      }
-    }
+    display: none;
 
     &.is-expanded {
       display: block;
@@ -404,9 +394,20 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub {
-    @include grid-media-min('lg') {
+    padding-left: hb-calculate-rems(16px);
+    font-size: hb-calculate-rems(16px);
+    font-weight: hb-theme-font-weight(semibold);
 
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(20px);
+    }
+
+    @include grid-media-min('lg') {
       .js & {
+        display: grid;
+        grid-template-columns: [first-column] 1fr [second-column] 1fr [third-column] 1fr [fourth-column] 1fr;
+        grid-template-rows: hb-calculate-rems(32px);
+        grid-gap: 0 hb-calculate-rems(52px);
         margin: 0 auto;
         padding: 0;
         max-width: hb-calculate-rems($hb-three-column-main-width);
@@ -416,9 +417,21 @@ $hb-link-bar-link: 100%;
       .megamenu__toggle,
       .megamenu__link {
         @include grid-media-min('lg') {
+          width: 100%;
+
           &:hover {
             .js & {
-              @include hb-pairing-color('color', 'secondary');
+              &::after {
+                @include hb-global-color('background-color', 'gray-light');
+
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: -1;
+              }
             }
           }
         }
@@ -426,15 +439,26 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item {
+      display: block;
+      width: 100%;
       outline: none;
 
       &:first-child {
-        margin-left: -#{$nested-padding};
-        padding-left: $nested-padding;
+        grid-column: first-column;
+        padding-left: 0;
+        width: 100%;
       }
 
-      @include grid-media-min('lg') {
-        width: 100%;
+      &:nth-child(2) {
+        grid-column: second-column;
+      }
+
+      &:nth-child(3) {
+        grid-column: third-column;
+      }
+
+      &:nth-child(n+4) {
+        grid-column: fourth-column;
       }
     }
 
@@ -462,7 +486,35 @@ $hb-link-bar-link: 100%;
           font-size: hb-calculate-rems(16px);
           color: hb-get-global-color('black', $hc-colorful-globals);
           text-transform: capitalize;
-          font-weight: hb-theme-font-weight(semibold);
+          font-weight: hb-theme-font-weight(bold);
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .megamenu__no-link {
+      font-weight: hb-theme-font-weight(regular);
+
+      &:hover {
+        background: none;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          font-weight: hb-theme-font-weight(regular);
+          cursor: auto;
+
+          &:hover {
+            background: none;
+
+            &::after {
+              display: none;
+            }
+          }
         }
       }
     }
@@ -474,6 +526,8 @@ $hb-link-bar-link: 100%;
 
   .list-sub__nested {
     display: block;
+    padding-left: hb-calculate-rems(30px);
+    font-weight: hb-theme-font-weight(regular);
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(22px);
@@ -481,26 +535,27 @@ $hb-link-bar-link: 100%;
 
     @include grid-media-min('lg') {
       .js & {
-        font-weight: hb-theme-font-weight(semibold);
+        padding-left: 0;
         font-size: inherit;
       }
     }
 
-    .megamenu__item {
-      padding-left: $nested-padding;
+    .megamenu__link {
+      @include grid-media-min('lg') {
+        .js & {
+          font-weight: hb-theme-font-weight(semibold);
+          text-indent: hb-calculate-rems(22px);
+        }
+      }
     }
+  }
+
+  .megamenu__column-addon {
+    //margin-top: hb-calculate-rems(32px)
   }
 
   .is-expanded {
     display: block;
-
-    &.list-sub {
-      @include grid-media-min('lg') {
-        .js & {
-          columns: 4;
-        }
-      }
-    }
   }
 }
 

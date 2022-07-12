@@ -10,14 +10,12 @@
  * - modifier_class: Additional css classes to change look and behaviour of the component.
  * - toggle_modifier_class: Additional css classes to change look and behaviour of the toggle.
  * - aria_label: Aria label for the <nav> element. Default is "main menu". If there are multiple instances of the component on the same page, use a different aria_label for each instance.
+ * - use_hs_megamenu: Determines whether to use the megamenu V2 or standard menu.
  *
  */
 #}
 
-{# Temp. variable until config option is created. #}
-{% set twig_menu = true %}
-
-{% if twig_menu %}
+{% if use_hs_megamenu %}
   {# Twig megamenu attributes #}
   {% set attributes = attributes.addClass(['megamenu', 'js-megamenu']) %}
   {% set attributes = attributes.setAttribute('aria-label', 'main menu') %}

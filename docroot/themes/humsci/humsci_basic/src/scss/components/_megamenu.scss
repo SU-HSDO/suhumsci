@@ -117,6 +117,7 @@ $hb-link-bar-link: 100%;
 
   .megamenu__mobile-icon {
     @include hb-menu-hamburger-icon;
+
     margin-left: hb-calculate-rems(10px);
 
     .hb-dark-pattern &,
@@ -142,7 +143,7 @@ $hb-link-bar-link: 100%;
   .megamenu__list--main {
     // You must include the mixin after the variable if
     // you want the color to apply.
-    border-bottom: $hb-thin-border;
+    border-bottom: $hb-medium-border;
     @include hb-global-color('border-color', 'gray');
 
     display: none;
@@ -157,7 +158,7 @@ $hb-link-bar-link: 100%;
     @include grid-media-min('lg') {
       .js & {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         margin-bottom: 0;
         font-size: hb-calculate-rems(18px);
         border: 0;
@@ -171,7 +172,7 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__item {
-    border-top: $hb-thin-border;
+    border-top: $hb-medium-border;
     @include hb-global-color('border-color', 'gray');
 
     .hb-private-page-link {
@@ -181,8 +182,13 @@ $hb-link-bar-link: 100%;
     @include grid-media-min('lg') {
       .js & {
         display: inline-block;
+        margin-right: hb-calculate-rems(48px);
         border: 0;
         break-inside: avoid-column;
+
+        &:last-child {
+          margin-right: 0;
+        }
       }
     }
   }
@@ -253,16 +259,6 @@ $hb-link-bar-link: 100%;
       }
     }
 
-    &:hover {
-      @include grid-media-min('lg') {
-        .js & {
-          &::before {
-            @include hb-link-bar($hb-link-bar-button);
-          }
-        }
-      }
-    }
-
     &::after {
       @include hb-menu-icon-wrapper(48px, 48px);
       @include hb-menu-plus-icon;
@@ -277,18 +273,18 @@ $hb-link-bar-link: 100%;
 
       @include grid-media-min('lg') {
         .js & {
-          @include hb-icon-background('chevron', 'black');
+          @include hb-icon-background('chevron', 'primary-dark');
           @include hb-menu-icon-wrapper(16px, 12px);
 
           top: calc(50% - #{hb-calculate-rems(5px)});
-          right: hb-calculate-rems(-16px);
+          right: hb-calculate-rems(-17px);
           background-size: auto;
           transform: translateY(-50%);
         }
       }
 
       .no-js & {
-        @include hb-icon-background('minus', 'black');
+        @include hb-icon-background('minus', 'gray-dark');
       }
 
       .hb-dark-pattern & {
@@ -307,16 +303,24 @@ $hb-link-bar-link: 100%;
     &:hover {
       cursor: pointer;
 
+      @include grid-media-min('lg') {
+        .js & {
+          &::before {
+            @include hb-link-bar($hb-link-bar-button);
+          }
+        }
+      }
+
       &::after {
         .hb-dark-pattern & {
-          @include hb-icon-background('plus', 'black');
+          @include hb-icon-background('plus', 'gray-dark');
 
           @include grid-media-min('lg') {
             @include hb-icon-background('chevron', 'white');
           }
 
           .no-js & {
-            @include hb-icon-background('minus', 'black');
+            @include hb-icon-background('minus', 'gray-dark');
           }
         }
       }
@@ -336,22 +340,20 @@ $hb-link-bar-link: 100%;
 
         .hb-dark-pattern & {
           @include hb-icon-background('minus', 'white');
-        }
 
-        @include grid-media-min('lg') {
-          .js & {
-            @include hb-icon-background('chevron', 'black');
-
-            top: calc(50% - 13px);
-            background-size: auto;
-          }
-        }
-
-        .hb-dark-pattern & {
           @include grid-media-min('lg') {
             .js & {
               @include hb-icon-background('chevron', 'white');
             }
+          }
+        }
+
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-icon-background('chevron', 'primary-dark');
+
+            top: calc(50% - 13px);
+            background-size: auto;
           }
         }
       }
@@ -359,7 +361,7 @@ $hb-link-bar-link: 100%;
       &:hover {
         &::after {
           .hb-dark-pattern & {
-            @include hb-icon-background('minus', 'black');
+            @include hb-icon-background('minus', 'gray-dark');
 
             @include grid-media-min('lg') {
               .js & {
@@ -376,7 +378,6 @@ $hb-link-bar-link: 100%;
     &:hover {
       @include grid-media-min('lg') {
         .js & {
-
           &::before {
             @include hb-link-bar;
           }
@@ -384,7 +385,6 @@ $hb-link-bar-link: 100%;
 
         &.megamenu__no-link {
           .js & {
-
             &::before {
               display: none;
             }
@@ -412,7 +412,7 @@ $hb-link-bar-link: 100%;
         @include hb-global-color('background-color', 'white');
 
         position: absolute;
-        padding: hb-calculate-rems(44px) 0;
+        padding: hb-calculate-rems(44px) 0 hb-calculate-rems(89px);
         left: 50%;
         width: 200%;
         color: hb-get-global-color('black', $hc-colorful-globals);
@@ -423,6 +423,8 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub {
+    @include hb-global-color('color', 'gray-dark');
+
     padding-left: hb-calculate-rems(16px);
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight(semibold);
@@ -433,9 +435,11 @@ $hb-link-bar-link: 100%;
 
     @include grid-media-min('lg') {
       .js & {
+        @include hb-global-color('color', 'black');
+
         display: grid;
         grid-template-columns: [first-column] 1fr [second-column] 1fr [third-column] 1fr [fourth-column] 1fr;
-        grid-template-rows: hb-calculate-rems(32px);
+        grid-template-rows: hb-calculate-rems(36px);
         grid-gap: 0 hb-calculate-rems(52px);
         margin: 0 auto;
         padding: 0;
@@ -468,6 +472,9 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item {
+      border-top: $hb-thin-border;
+      @include hb-global-color('border-color', 'gray');
+
       display: block;
       width: 100%;
       outline: none;
@@ -476,6 +483,10 @@ $hb-link-bar-link: 100%;
         grid-column: first-column;
         padding-left: 0;
         width: 100%;
+      }
+
+      @include grid-media-min('lg') {
+        border-top: none;
       }
 
       &:nth-child(2) {
@@ -511,6 +522,7 @@ $hb-link-bar-link: 100%;
 
       @include grid-media-min('lg') {
         .js & {
+          margin-bottom: hb-calculate-rems(4px);
           padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
           font-size: hb-calculate-rems(16px);
           color: hb-get-global-color('black', $hc-colorful-globals);
@@ -570,7 +582,6 @@ $hb-link-bar-link: 100%;
   .list-sub__nested {
     display: block;
     padding-left: hb-calculate-rems(30px);
-    font-weight: hb-theme-font-weight(regular);
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(22px);
@@ -596,271 +607,14 @@ $hb-link-bar-link: 100%;
   .is-expanded {
     display: block;
   }
-
-  .megamenu__item {
-    // You must include the mixin after the variable if
-    // you want the color to apply.
-    border-top: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray');
-
-    @include grid-media-min('lg') {
-      .js & {
-        display: inline-block;
-        border: 0;
-        break-inside: avoid-column;
-      }
-    }
-
-    .megamenu__toggle {
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-
-  .megamenu__toggle,
-  .megamenu__link {
-    @include hb-unbuttonize;
-
-    display: inherit;
-    padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
-    line-height: 120.3%;
-
-    @include grid-media-min('md') {
-      line-height: 128%;
-    }
-
-    @include grid-media-min('lg') {
-      .js & {
-        margin-right: hb-calculate-rems(28px);
-        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
-        line-height: 110%;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
-    &:focus-visible {
-      // TODO: there is no native focus color defined for entire site.
-      outline: 5px auto Highlight;
-      outline: 5px auto -webkit-focus-ring-color;
-
-      &::after {
-        outline: none;
-      }
-    }
-
-    &:hover {
-      @include hb-global-color('color', 'black');
-
-      @include hb-themes(('airy', 'colorful')) {
-        @include hb-global-color('background-color', 'gray-light');
-      }
-
-      @include hb-traditional {
-        @include hb-pairing-color('background-color', 'tertiary-highlight');
-      }
-
-      @include grid-media-min('lg') {
-        .js & {
-          background: none;
-
-          .hb-dark-pattern & {
-            @include hb-global-color('color', 'white');
-          }
-        }
-      }
-    }
-  }
-
-  .megamenu__toggle {
-    display: flex;
-    position: relative;
-    width: 100%;
-
-    @include grid-media-min('lg') {
-      .js & {
-        width: auto;
-      }
-    }
-
-    &:hover {
-      cursor: pointer;
-
-      &::after {
-        @include hb-menu-plus-icon;
-
-        .hb-dark-pattern & {
-          @include hb-icon-background('plus', 'black');
-
-          .no-js & {
-            @include hb-icon-background('minus', 'black');
-          }
-
-          @include grid-media-min('lg') {
-            .js & {
-              @include hb-icon-background('plus', 'white');
-            }
-          }
-        }
-      }
-    }
-
-    &.is-expanded {
-      &::after {
-        @include hb-menu-minus-icon;
-
-        .hb-dark-pattern & {
-          @include hb-icon-background('minus', 'white');
-        }
-      }
-
-      &:hover {
-        &::after {
-          .hb-dark-pattern & {
-            @include hb-icon-background('minus', 'black');
-
-            @include grid-media-min('lg') {
-              .js & {
-                @include hb-icon-background('minus', 'white');
-              }
-            }
-          }
-        }
-      }
-    }
-
-    &::after {
-      @include hb-menu-icon-wrapper(48px, 48px);
-      @include hb-menu-plus-icon;
-
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-      content: '';
-      cursor: pointer;
-
-      @include grid-media-min('lg') {
-        .js & {
-          @include hb-menu-icon-wrapper(10px, 10px);
-
-          top: calc(50% - #{hb-calculate-rems(5px)});
-          right: hb-calculate-rems(-16px);
-          transform: translateY(-50%);
-        }
-      }
-
-      .no-js & {
-        @include hb-icon-background('minus', 'black');
-      }
-
-      .hb-dark-pattern & {
-        @include hb-icon-background('plus', 'white');
-
-        .no-js & {
-          @include hb-icon-background('minus', 'white');
-        }
-      }
-    }
-  }
-
-  .list-sub,
-  .list-sub__nested {
-    padding-left: $nested-padding;
-    font-size: hb-calculate-rems(18px);
-    font-weight: hb-theme-font-weight(regular);
-
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(22px);
-    }
-  }
-
-  .list-sub {
-    display: none;
-
-    @include grid-media-min('lg') {
-      .js & {
-        @include hb-global-color('background-color', 'white');
-
-        position: absolute;
-        padding-left: 0;
-        left: 0;
-        width: 100%;
-        border: 1px solid black;
-        color: #000;
-      }
-    }
-
-    .megamenu__item {
-      outline: none;
-
-      &:first-child {
-        margin-left: -#{$nested-padding};
-        padding-left: $nested-padding;
-      }
-    }
-
-    .megamenu__link {
-      &:focus-visible {
-        outline: 5px auto Highlight;
-        outline: 5px auto -webkit-focus-ring-color;
-      }
-
-      @include grid-media-min('lg') {
-        .js & {
-          padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
-          font-size: hb-calculate-rems(16px);
-          color: #8c1515;
-          text-transform: uppercase;
-          font-weight: hb-theme-font-weight(semibold);
-        }
-      }
-    }
-
-    .no-js & {
-      display: block;
-    }
-  }
-
-  .list-sub__nested {
-    display: block;
-
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(22px);
-    }
-
-    @include grid-media-min('lg') {
-      .js & {
-        font-weight: hb-theme-font-weight(semibold);
-        font-size: inherit;
-      }
-    }
-
-    .megamenu__item {
-      padding-left: $nested-padding;
-    }
-  }
-
-  .is-expanded {
-    display: block;
-
-    &.list-sub {
-      @include grid-media-min('lg') {
-        .js & {
-          columns: 4;
-        }
-      }
-    }
-  }
 }
 
 // Manually adjust button location if search
 // is present. This is from previous menu.
 // TODO: Refactor instead of pulling button up.
 .su-site-search {
+
+  // stylelint-disable-next-line selector-combinator-space-after
   +.megamenu {
     .megamenu__mobile-btn {
       top: hb-calculate-rems(-120px);

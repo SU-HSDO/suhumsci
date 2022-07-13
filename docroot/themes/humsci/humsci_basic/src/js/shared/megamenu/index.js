@@ -6,6 +6,15 @@ if (menu) {
   const menuBtnMobile = document.querySelector('.js-megamenu__mobile-btn');
   const menuList = menu.querySelector('.js-megamenu__list--main');
   const menuBtns = menu.querySelectorAll('.js-megamenu__toggle');
+  const mobileNavBreakpoint = 992;
+  let windowWidth = window.innerWidth;
+  let isMobile = windowWidth < mobileNavBreakpoint;
+
+  window.addEventListener('resize', () => {
+    windowWidth = window.innerWidth;
+
+    isMobile = windowWidth <= mobileNavBreakpoint;
+  });
 
   // Toggle util function for expanded menus
   const toggleMenu = (btn) => {
@@ -47,6 +56,13 @@ if (menu) {
     el.setAttribute(`aria-${aria}`, x);
   };
 
+  // Brings the menu item into view on mobile.
+  const viewBtnOnMobileClick = (target) => {
+    if (isMobile) {
+      target.scrollIntoView();
+    }
+  };
+
   if (menuBtnMobile) {
     // Toggle nav immediately for JS visitors
     toggleAria(menuBtnMobile, 'expanded');
@@ -68,6 +84,7 @@ if (menu) {
       const subMenu = menuItem.querySelector('.js-megamenu__expanded-container');
       closeAllSubmenus(currentBtn);
       toggleAria(currentBtn, 'expanded');
+      viewBtnOnMobileClick(currentBtn);
 
       btn.classList.toggle('is-expanded');
       subMenu.classList.toggle('is-expanded');

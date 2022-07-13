@@ -9,6 +9,10 @@
 {% set button_attributes = create_attribute() %}
 {% set button_attributes = button_attributes.addClass([menu_base_class ~ "__toggle", "js-" ~ menu_base_class ~ "__toggle"]) %}
 {% set button_attributes = button_attributes.setAttribute('aria-expanded', 'false') %}
+{% if menu_level == 0 and item.in_active_trail == true %}
+  {% set link_attributes = link_attributes.addClass(menu_base_class ~ "__active-trail") %}
+  {% set button_attributes = button_attributes.addClass(menu_base_class ~ "__active-trail") %}
+{% endif %}
 
 {# If the menu item is first level and has children, make
    it a button. Otherwise, make it a link #}

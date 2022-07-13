@@ -74,6 +74,20 @@ $hb-link-bar-link: 100%;
   left: 0;
 }
 
+@mixin hb-active-border {
+  @include hb-pairing-color('border-color', 'secondary');
+
+  border-width: hb-calculate-rems(6px);
+  border-style: solid;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+
+  @include grid-media-min('lg') {
+    border: none;
+  }
+}
+
 // We nest everything within the main parent class to avoid
 // name clashes with the other two possible menu options.
 .megamenu {
@@ -152,7 +166,7 @@ $hb-link-bar-link: 100%;
     font-size: hb-calculate-rems(18px);
 
     @include grid-media-min('md') {
-      font-size: hb-calculate-rems(22px);
+      font-size: hb-calculate-rems(24px);
     }
 
     @include grid-media-min('lg') {
@@ -371,10 +385,23 @@ $hb-link-bar-link: 100%;
         }
       }
     }
+
+    &.megamenu__active-trail {
+      @include hb-active-border;
+
+      &::before {
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-link-bar($hb-link-bar-button);
+          }
+        }
+      }
+    }
   }
 
   .megamenu__link {
-    &:hover {
+    &:hover,
+    &.megamenu__active-trail {
       @include grid-media-min('lg') {
         .js & {
           &::before {
@@ -390,6 +417,10 @@ $hb-link-bar-link: 100%;
           }
         }
       }
+    }
+
+    &.megamenu__active-trail {
+      @include hb-active-border;
     }
   }
 
@@ -433,7 +464,7 @@ $hb-link-bar-link: 100%;
     }
 
     @include grid-media-min('md') {
-      font-size: hb-calculate-rems(20px);
+      font-size: hb-calculate-rems(22px);
     }
 
     @include grid-media-min('lg') {

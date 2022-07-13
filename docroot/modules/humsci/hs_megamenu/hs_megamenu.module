@@ -1,8 +1,18 @@
 <?php
 
+/**
+ * @file
+ * Contains hs_megamenu.module.
+ */
+
+/**
+ * Implements hook_preprocess_menu().
+ *
+ * Target main menu and add a twig variable to show/hide the new mega menu.
+ */
 function hs_megamenu_preprocess_menu(&$variables) {
-  
-  if($variables['menu_name'] == 'main') {
+
+  if ($variables['menu_name'] == 'main') {
     $moduleConfig = \Drupal::config('hs_megamenu.settings');
     $useMegaMenu = $moduleConfig->get('hs_megamenu.use_hs_megamenu');
 

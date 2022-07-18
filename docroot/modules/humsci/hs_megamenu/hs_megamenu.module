@@ -15,6 +15,6 @@ function hs_megamenu_preprocess_menu(&$variables) {
   if ($variables['menu_name'] == 'main') {
     $config_pages = \Drupal::service('config_pages.loader');
     $useMegaMenu = $config_pages->getValue('hs_site_options', 'field_en_mega_menu');
-    $variables['use_hs_megamenu'] = $useMegaMenu[0];
+    $variables['use_hs_megamenu'] = $useMegaMenu[0]['value'];
   }
 }

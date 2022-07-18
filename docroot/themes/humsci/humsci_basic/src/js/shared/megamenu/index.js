@@ -56,13 +56,6 @@ if (menu) {
     el.setAttribute(`aria-${aria}`, x);
   };
 
-  // Brings the menu item into view on mobile.
-  const viewBtnOnMobileClick = (target) => {
-    if (isMobile) {
-      target.scrollIntoView();
-    }
-  };
-
   if (menuBtnMobile) {
     // Toggle nav immediately for JS visitors
     toggleAria(menuBtnMobile, 'expanded');
@@ -82,9 +75,12 @@ if (menu) {
       const currentBtn = e.currentTarget;
       const menuItem = e.currentTarget.parentElement;
       const subMenu = menuItem.querySelector('.js-megamenu__expanded-container');
-      closeAllSubmenus(currentBtn);
+      // We want to only close expanded menus on desktop to mimic current
+      // menu functionality.
+      if (!isMobile) {
+        closeAllSubmenus(currentBtn);
+      }
       toggleAria(currentBtn, 'expanded');
-      viewBtnOnMobileClick(currentBtn);
 
       btn.classList.toggle('is-expanded');
       subMenu.classList.toggle('is-expanded');

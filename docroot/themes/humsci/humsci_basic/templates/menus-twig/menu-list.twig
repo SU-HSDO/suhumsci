@@ -20,16 +20,10 @@
         {% include "@humsci_basic/menus-twig/menu-item.twig" %}
       </li>
     {% endif %}
-    {% if loop.index < 5 and menu_level > 0  %}
+    {% if menu_level > 0  %}
       <li{{list_item_attributes}}>
         {% include "@humsci_basic/menus-twig/menu-item.twig" %}
       </li>
-    {% endif %}
-    {% if loop.index >= 5 and menu_level > 0  %}
-      {% set list_item_attributes = list_item_attributes.addClass(menu_base_class ~ "__column-addon") %}
-      <span{{list_item_attributes}}>
-        {% include "@humsci_basic/menus-twig/menu-item.twig" %}
-      </span>
     {% endif %}
   {% endfor %}
 {% endblock %}

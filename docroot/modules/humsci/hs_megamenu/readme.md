@@ -1,7 +1,6 @@
 # HS Mega Menu Usage
 1) Install the module as usual under ```/admin/modules```
-2) Set permission for accessing the settings page under ```/admin/users/permissions```
-3) Access the HumSci Mega Menu Settings page user the Appearance menu or via ```admin/appearance/hs_megamenu```
+3) Access the HumSci Mega Menu Settings page user the Configuration -> Site Options menu.
 4) Check the box to enable the new mega menu
 
 # HS Mega Menu Twig Usage

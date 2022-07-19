@@ -183,6 +183,16 @@ $hb-link-bar-link: 100%;
     .no-js & {
       display: block;
     }
+
+    .megamenu__link {
+      font-weight: hb-theme-font-weight(bold);
+
+      @include grid-media-min('lg') {
+        .js & {
+          font-weight: hb-theme-font-weight(semibold);
+        }
+      }
+    }
   }
 
   .megamenu__item {
@@ -539,6 +549,8 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__link {
+      font-weight: hb-theme-font-weight(semibold);
+      
       &:focus-visible {
         outline: 5px auto Highlight;
         outline: 5px auto -webkit-focus-ring-color;

@@ -154,3 +154,5 @@ $settings['file_public_path'] = 'sites/' . EnvironmentDetector::getSiteName($sit
 $settings['trusted_host_patterns'] = [
   '^.+$',
 ];
+
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);

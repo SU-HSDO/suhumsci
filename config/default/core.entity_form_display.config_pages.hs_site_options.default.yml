@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - config_pages.type.hs_site_options
+    - field.field.config_pages.hs_site_options.field_en_mega_menu
     - field.field.config_pages.hs_site_options.field_site_courses_rabbit
     - field.field.config_pages.hs_site_options.field_site_ga_account
     - field.field.config_pages.hs_site_options.field_site_news_rabbit
@@ -12,6 +13,13 @@ targetEntityType: config_pages
 bundle: hs_site_options
 mode: default
 content:
+  field_en_mega_menu:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_site_courses_rabbit:
     type: boolean_checkbox
     weight: 2

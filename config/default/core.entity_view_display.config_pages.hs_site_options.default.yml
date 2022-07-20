@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - config_pages.type.hs_site_options
+    - field.field.config_pages.hs_site_options.field_en_mega_menu
     - field.field.config_pages.hs_site_options.field_site_courses_rabbit
     - field.field.config_pages.hs_site_options.field_site_ga_account
     - field.field.config_pages.hs_site_options.field_site_news_rabbit
@@ -12,6 +13,20 @@ targetEntityType: config_pages
 bundle: hs_site_options
 mode: default
 content:
+  field_en_mega_menu:
+    type: boolean
+    label: hidden
+    settings:
+      format: true-false
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 3
+    region: content
   field_site_courses_rabbit:
     type: boolean
     label: above

@@ -10,26 +10,37 @@
  * - modifier_class: Additional css classes to change look and behaviour of the component.
  * - toggle_modifier_class: Additional css classes to change look and behaviour of the toggle.
  * - aria_label: Aria label for the <nav> element. Default is "main menu". If there are multiple instances of the component on the same page, use a different aria_label for each instance.
+ * - use_hs_megamenu: Determines whether to use the megamenu V2 or standard menu.
  *
  */
 #}
-{% set attributes = attributes.addClass(['hb-main-nav', 'su-main-nav', 'hb-main-nav--is-still-loading']) %}
-{% set attributes = attributes.setAttribute('aria-label', 'main menu') %}
-{# Macros #}
-{%- import "@humsci_basic/menus/macros/nav-menu.twig" as menus -%}
-<nav{{ attributes }}>
-  {% block multimenubutton %}
-  <button class="hb-main-nav__toggle hb-main-nav__toggle--right {{ toggle_modifier_class }}" aria-expanded="true">
-    {{ "Menu"|t }}
-    <span class="hb-main-nav__toggle-icon"></span>
-  </button>
-  {% endblock %}
-  {% spaceless %}
-  {% if items is iterable %}
-    {{ menus.nav_menu(items, 1, 'hb-main-nav', []) }}
+
+{% if use_hs_megamenu %}
+  {# Twig megamenu attributes #}
+  {% set attributes = attributes.addClass(['megamenu', 'js-megamenu']) %}
+  {% set attributes = attributes.setAttribute('aria-label', 'main menu') %}
+  {% include "@humsci_basic/menus-twig/secondary-menu.twig" %}
+
   {% else %}
-    {# If custom markup is provided, emit it as-is #}
-    {{ items }}
-  {% endif %}
-  {% endspaceless %}
-</nav>
+  {# Legacy Drupal menu #}
+  {% set attributes = attributes.addClass(['hb-main-nav', 'su-main-nav', 'hb-main-nav--is-still-loading']) %}
+  {% set attributes = attributes.setAttribute('aria-label', 'main menu') %}
+  {# Macros #}
+  {%- import "@humsci_basic/menus/macros/nav-menu.twig" as menus -%}
+  <nav{{ attributes }}>
+    {% block multimenubutton %}
+    <button class="hb-main-nav__toggle hb-main-nav__toggle--right {{ toggle_modifier_class }}" aria-expanded="true">
+      {{ "Menu"|t }}
+      <span class="hb-main-nav__toggle-icon"></span>
+    </button>
+    {% endblock %}
+    {% spaceless %}
+    {% if items is iterable %}
+      {{ menus.nav_menu(items, 1, 'hb-main-nav', []) }}
+    {% else %}
+      {# If custom markup is provided, emit it as-is #}
+      {{ items }}
+    {% endif %}
+    {% endspaceless %}
+  </nav>
+{% endif %}

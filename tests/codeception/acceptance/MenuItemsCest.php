@@ -59,12 +59,15 @@ class MenuItemsCest {
    * @group install
    */
   public function testPathAuto(AcceptanceTester $I) {
-    $url = parse_url($this->faker->url);
-    $manual_url = $url['path'];
+    $manual_url = '';
+    while (strlen($manual_url) < 5) {
+      $url = parse_url($this->faker->url);
+      $manual_url = substr($url['path'], 0, strpos($url['path'], '.'));
+    }
 
     $I->logInWithRole('administrator');
     $auto_alias = $I->createEntity([
-      'title' => $this->faker->words(1, TRUE),
+      'title' => $this->faker->words(2, TRUE),
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($auto_alias->toUrl('edit-form')->toString());

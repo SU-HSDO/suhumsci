@@ -3,8 +3,8 @@ services:
   # What to call the service hosting the site.
   suhumsci:
 
-    # Use PHP 7.2 with Apache
-    image: pookmish/tugboat:latest
+    # Use PHP 8 with Apache
+    image: pookmish/drupal8ci:tugboat
 
     # Set this as the default service. This does a few things
     #   1. Clones the git repository into the service container
@@ -13,7 +13,7 @@ services:
     default: true
 
     # Wait until the mysql service is done building
-#    depends: mysql
+    depends: mysql
     aliases:
       - hs-colorful
       - hs-traditional
@@ -38,14 +38,15 @@ services:
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - blt source:build:simplesamlphp-config
       update:
+        - composer install --no-ansi
         # Sync to hs_colorful and hs_colorful database & files.
         - blt drupal:sync:files --site=hs_colorful
-        - drush @hs_colorful.local user:create tugboat --password=tugboat
-        - drush @hs_colorful.local user:role:add administrator tugboat
+        - drush @hs_colorful.local user:create tugboat --password=tugboat || true
+        - drush @hs_colorful.local user:role:add administrator tugboat || true
 
         - blt drupal:sync:files --site=hs_traditional
-        - drush @hs_traditional.local user:create tugboat --password=tugboat
-        - drush @hs_traditional.local user:role:add administrator tugboat
+        - drush @hs_traditional.local user:create tugboat --password=tugboat || true
+        - drush @hs_traditional.local user:role:add administrator tugboat || true
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:

@@ -32,36 +32,31 @@ class HsConfigCommands extends ConfigCommand {
   }
 
   /**
-   * Import configuration using config_split module.
-   *
-   * @param mixed $task
-   *   Drush task.
-   * @param string $cm_core_key
-   *   Cm core key.
+   * {@inheritDoc}
    */
-  protected function importConfigSplit($task, $cm_core_key) {
-    $task->drush("pm-enable")->arg('config_split');
+  protected function importConfigSplit($task): void {
+    $task->drush('pm-enable')->arg('config_split');
 
     // Local environments we don't want all the custom site created configs.
     if (($this->getConfigValue('environment') == 'local') && !$this->configImportPartial) {
-      $task->drush("config-import")->arg($cm_core_key);
+      $task->drush('config-import');
       // Runs a second import to ensure splits are
       // both defined and imported.
-      $task->drush("config-import")->arg($cm_core_key);
+      $task->drush('config-import');
       return;
     }
 
-    $task->drush("config-import")->arg($cm_core_key)->option('partial');
+    $task->drush('config-import')->option('partial');
     // Runs a second import to ensure splits are
     // both defined and imported.
-    $task->drush("config-import")->arg($cm_core_key)->option('partial');
+    $task->drush('config-import')->option('partial');
   }
 
   /**
    * {@inheritDoc}
    */
-  protected function importCoreOnly($task, $cm_core_key) {
-    $this->importConfigSplit($task, $cm_core_key);
+  protected function importCoreOnly($task): void {
+    $task->drush('config-import');
   }
 
 }

@@ -94,6 +94,12 @@ if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';
 }
 
-if(EnvironmentDetector::isCiEnv()){
+// Include sites file for CI environments.
+if (EnvironmentDetector::isCiEnv()) {
   require __DIR__ . '/ci.sites.php';
+}
+
+// Include sites file from the Acquia environment.
+if (EnvironmentDetector::isAhEnv() && file_exists(EnvironmentDetector::getAhFilesRoot() . '/sites.php')) {
+  require EnvironmentDetector::getAhFilesRoot() . '/sites.php';
 }

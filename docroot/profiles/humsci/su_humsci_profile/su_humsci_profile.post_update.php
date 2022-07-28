@@ -307,3 +307,14 @@ function su_humsci_profile_post_update_9203() {
     }
   }
 }
+
+/**
+ * Grant site managers access to the embed code field on media.
+ */
+function su_humsci_profile_post_update_9204() {
+  user_role_grant_permissions('site_manager', [
+    'create field_media_embeddable_code',
+    'edit field_media_embeddable_code',
+    'edit own field_media_embeddable_code',
+  ]);
+}

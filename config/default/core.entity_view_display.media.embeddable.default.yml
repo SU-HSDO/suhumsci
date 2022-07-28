@@ -7,6 +7,8 @@ dependencies:
     - field.field.media.embeddable.field_media_embeddable_code
     - media.type.embeddable
   module:
+    - field_formatter_class
+    - hs_field_helpers
     - media
     - stanford_media
 id: media.embeddable.default
@@ -29,7 +31,12 @@ content:
     settings:
       max_width: 0
       max_height: 0
-    third_party_settings: {  }
+      allowed_tags: 'a aside audio b blockquote br button caption cite code dd dl div drupalmedia dt em embed form h h h h h hr i iframe img in'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     weight: 1
     region: content
 hidden:

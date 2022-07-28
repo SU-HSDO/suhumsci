@@ -318,3 +318,10 @@ function su_humsci_profile_post_update_9204() {
     'edit own field_media_embeddable_code',
   ]);
 }
+
+/**
+ * Uninstall we_megamenu.
+ */
+function su_humsci_profile_post_update_9205() {
+  \Drupal::service('module_installer')->uninstall(['we_megamenu']);
+}

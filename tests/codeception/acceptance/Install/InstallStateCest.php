@@ -40,6 +40,8 @@ class InstallStateCest {
 
   /**
    * Contributor can see a certain number of shortcuts.
+   *
+   * @group shotcuts
    */
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
@@ -49,6 +51,8 @@ class InstallStateCest {
 
   /**
    * Site Managers can see a certain number of shortcuts.
+   *
+   * @group shotcuts
    */
   public function testSiteManagerShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('site_manager');
@@ -58,6 +62,8 @@ class InstallStateCest {
 
   /**
    * Developers/Admins can see a certain number of shortcuts.
+   *
+   * @group shotcuts
    */
   public function testDeveloperShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('administrator');

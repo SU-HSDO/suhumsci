@@ -58,7 +58,7 @@ class HsCircleCiCommands extends BltTasks {
    *
    * @command circleci:update
    */
-  public function updateDependencies() {
+  public function updateDependencies($branch) {
     $collection = $this->collectionBuilder();
     $this->prepEnvironment();
     $collection->addTask($this->blt()->arg('drupal:install'));
@@ -80,10 +80,10 @@ class HsCircleCiCommands extends BltTasks {
       ->option('yes'));
 
     $collection->addTask($this->taskGitStack()
-      ->checkout($_ENV['CIRCLE_BRANCH'])
+      ->checkout($branch)
       ->add('composer.lock config')
       ->commit('Updated dependencies ' . date('M j Y'))
-      ->push('origin', $_ENV['CIRCLE_BRANCH']));
+      ->push('origin', $branch));
 
     return $collection->run();
   }
@@ -117,7 +117,7 @@ class HsCircleCiCommands extends BltTasks {
       ->run();
 
     $message = "$new_version Release" . PHP_EOL . PHP_EOL . '# DO NOT DELETE';
-    $this->taskExec("hub pull-request -b develop -m '$message'")
+    $this->taskExec("g pr create -B develop -b '$message'")
       ->run();
   }
 

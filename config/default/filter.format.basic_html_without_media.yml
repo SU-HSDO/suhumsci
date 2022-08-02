@@ -6,6 +6,7 @@ dependencies:
     - blazy
     - linkit
     - slick
+    - spamspan
 name: 'Basic HTML Without Media'
 format: basic_html_without_media
 weight: 0
@@ -80,3 +81,17 @@ filters:
         img: img
         iframe: iframe
       use_data_uri: '0'
+  filter_spamspan:
+    id: filter_spamspan
+    provider: spamspan
+    status: true
+    weight: 0
+    settings:
+      spamspan_at: ' [at] '
+      spamspan_use_graphic: '0'
+      spamspan_dot_enable: '0'
+      spamspan_dot: ' [dot] '
+      spamspan_use_form: '0'
+      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
+      spamspan_form_default_url: contact
+      spamspan_form_default_displaytext: 'contact form'

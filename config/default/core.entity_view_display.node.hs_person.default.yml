@@ -433,12 +433,21 @@ third_party_settings:
                 23150d9a-5300-4439-8ca2-2b1f9907263a:
                   id: 'field_block:node:hs_person:field_hs_person_email'
                   label: Email
-                  provider: layout_builder
                   label_display: ''
+                  provider: layout_builder
                   formatter:
                     label: above
-                    type: email_mailto
-                    settings: {  }
+                    type: email_spamspan
+                    settings:
+                      spamspan_at: ' [at] '
+                      spamspan_use_graphic: 0
+                      spamspan_dot_enable: 0
+                      spamspan_dot: ' [dot] '
+                      use_form:
+                        spamspan_use_form: 0
+                        spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
+                        spamspan_form_default_url: contact
+                        spamspan_form_default_displaytext: 'contact form'
                     third_party_settings:
                       field_formatter_class:
                         class: ''

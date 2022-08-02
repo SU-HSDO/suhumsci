@@ -1,22 +1,691 @@
-// By default we want to hide the megamenu at all screen sizes until the
-// theme setting to use the megamenu is enabled.
-.block-we-megamenu {
-  display: none;
+// Megamenu V2
+// See comments throughout code, but we need to do a few things here:
+// 1. Recreate mobile styles from old standard menu
+// 2. Apply new styles to the desktop megamenu
+// 3. Avoid style clashes with other two menus (standard and deprecated megamenu)
+// 4. Display fully expanded mobile menu for users with JavaScript turned off
+// 6. Allow for different masthead colors, which is a theme config option
+// 7. Allow for multiple themes that have different styles
+
+// Variables/mixins
+$nested-padding: hb-calculate-rems(22px);
+
+// See _private-page.scss. To avoid clashes with the
+// V1 menu and deprecated megamenu, we recreate styles here.
+// We also need to repeat styles due to the shared class name.
+@mixin hb-lock-position {
+  padding-left: hb-calculate-rems(40px);
+  background-repeat: no-repeat;
+  background-size: hb-calculate-rems(20px);
+  background-position: hb-calculate-rems(14px) hb-calculate-rems(20px);
 }
 
-// .hb-use-megamenu is added to the html when the use megamenu theme setting is
-// enabled.
-.hb-use-megamenu {
+@mixin hb-lock-props {
+  @include hb-icon-background('lock', 'black');
+  @include hb-lock-position();
+
+  .hb-dark-pattern & {
+    @include hb-icon-background('lock', 'white');
+  }
+
+  &:hover {
+    @include hb-icon-background('lock', 'black');
+
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-icon-background('lock', 'black');
+        @include hb-lock-position();
+
+        .hb-dark-pattern & {
+          @include hb-icon-background('lock', 'white');
+        }
+
+        background-position: hb-calculate-rems(14px);
+      }
+    }
+  }
+
   @include grid-media-min('lg') {
-    // standard menu is visible for small screens and hidden at the large
-    // breakpoint.
-    .hb-main-nav {
+    .js & {
+      @include hb-icon-background('lock', 'black');
+
+      .hb-dark-pattern & {
+        @include hb-icon-background('lock', 'white');
+      }
+
+      background-position: hb-calculate-rems(14px);
+    }
+  }
+}
+
+$hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
+$hb-link-bar-link: 100%;
+
+@mixin hb-link-bar($width: $hb-link-bar-link) {
+  @include hb-pairing-color('background-color', 'secondary');
+
+  content: '';
+  display: block;
+  position: absolute;
+  width: $width;
+  height: hb-calculate-rems(6.4px);
+  top: auto;
+  bottom: hb-calculate-rems(3px);
+  left: 0;
+}
+
+@mixin hb-active-border {
+  @include hb-pairing-color('border-color', 'secondary');
+
+  border-width: hb-calculate-rems(6px);
+  border-style: solid;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+
+  @include grid-media-min('lg') {
+    border: none;
+  }
+}
+
+// We nest everything within the main parent class to avoid
+// name clashes with the other two possible menu options.
+.megamenu {
+  position: relative;
+  width: 100%;
+  font-size: hb-calculate-rems(18px);
+
+  .megamenu__mobile-btn {
+    @include hb-unbuttonize;
+
+    display: flex;
+    align-items: center;
+    flex-direction: initial;
+    position: absolute;
+    padding: hb-calculate-rems(10px) 0;
+    top: hb-calculate-rems(-46.75px);
+    right: 0;
+    width: hb-calculate-rems(70px);
+    font-weight: hb-theme-font-weight(bold);
+    cursor: pointer;
+
+    // If there is no JS then the navigation is automatically expanded and
+    // toggle buttons are unnecessary.
+    .no-js & {
       display: none;
     }
 
-    // megamenu is hidden for small screens and visible at the large breakpoint.
-    .block-we-megamenu {
+    // For almost all 'lg' breakpoints, we include the .js body class
+    // so that mobile menu is fully expanded for users that have
+    // JavaScript disabled.
+    @include grid-media-min('lg') {
+      .js & {
+        display: none;
+      }
+    }
+
+    &[aria-expanded="true"] .megamenu__mobile-icon {
+      @include hb-menu-close-icon;
+    }
+  }
+
+  .megamenu__mobile-icon {
+    @include hb-menu-hamburger-icon;
+
+    margin-left: hb-calculate-rems(10px);
+
+    .hb-dark-pattern &,
+    .hb-dark-pattern &::after,
+    .hb-dark-pattern &::before {
+      @include hb-global-color('background-color', 'white');
+    }
+  }
+
+  .megamenu__list {
+    @include hb-list-empty-styles;
+
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+    transform: translate(0);
+
+    @include grid-media-min('sm') {
+      max-width: none;
+    }
+  }
+
+  .megamenu__list--main {
+    // You must include the mixin after the variable if
+    // you want the color to apply.
+    border-bottom: $hb-medium-border;
+    @include hb-global-color('border-color', 'gray');
+
+    display: none;
+    margin-bottom: hb-calculate-rems(28px);
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(18px);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(24px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 0;
+        font-size: hb-calculate-rems(18px);
+        border: 0;
+      }
+    }
+
+    &.is-active,
+    .no-js & {
       display: block;
+    }
+
+    .megamenu__link {
+      font-weight: hb-theme-font-weight(bold);
+
+      @include grid-media-min('lg') {
+        .js & {
+          font-weight: hb-theme-font-weight(semibold);
+        }
+      }
+    }
+  }
+
+  .megamenu__item {
+    border-top: $hb-medium-border;
+    @include hb-global-color('border-color', 'gray');
+
+    .hb-private-page-link {
+      @include hb-lock-props();
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        display: inline-block;
+        margin-right: hb-calculate-rems(48px);
+        border: 0;
+        break-inside: avoid-column;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .megamenu__toggle,
+  .megamenu__link {
+    @include hb-unbuttonize;
+
+    display: inherit;
+    padding: hb-calculate-rems(21px) hb-calculate-rems(8px);
+    line-height: 120.3%;
+
+    @include grid-media-min('md') {
+      line-height: 128%;
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        position: relative;
+        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
+        line-height: 110%;
+      }
+    }
+
+    &:focus-visible {
+      outline: 5px auto Highlight;
+      outline: 5px auto -webkit-focus-ring-color;
+
+      &::after {
+        outline: none;
+      }
+    }
+
+    &:hover {
+      @include hb-global-color('color', 'black');
+
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-global-color('background-color', 'gray-light');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('background-color', 'tertiary-highlight');
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          background: none;
+        }
+
+        .hb-dark-pattern & {
+          .js & {
+            @include hb-global-color('color', 'white');
+          }
+        }
+      }
+    }
+  }
+
+  .megamenu__toggle {
+    display: flex;
+    position: relative;
+    width: 100%;
+
+    @include grid-media-min('lg') {
+      .js & {
+        width: auto;
+      }
+    }
+
+    &::after {
+      @include hb-menu-icon-wrapper(48px, 48px);
+      @include hb-menu-plus-icon;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      content: '';
+      cursor: pointer;
+      transform-origin: center;
+
+      @include grid-media-min('lg') {
+        .js & {
+          @include hb-icon-background('chevron', 'primary-dark');
+          @include hb-menu-icon-wrapper(16px, 12px);
+
+          top: calc(50% - #{hb-calculate-rems(5px)});
+          right: hb-calculate-rems(-17px);
+          background-size: auto;
+          transform: translateY(-50%);
+        }
+      }
+
+      .no-js & {
+        @include hb-icon-background('minus', 'gray-dark');
+      }
+
+      .hb-dark-pattern & {
+        @include hb-icon-background('plus', 'white');
+
+        @include grid-media-min('lg') {
+          @include hb-icon-background('chevron', 'white');
+        }
+
+        .no-js & {
+          @include hb-icon-background('minus', 'white');
+        }
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+
+      @include grid-media-min('lg') {
+        .js & {
+          &::before {
+            @include hb-link-bar($hb-link-bar-button);
+          }
+        }
+      }
+
+      &::after {
+        .hb-dark-pattern & {
+          @include hb-icon-background('plus', 'gray-dark');
+
+          @include grid-media-min('lg') {
+            @include hb-icon-background('chevron', 'white');
+          }
+
+          .no-js & {
+            @include hb-icon-background('minus', 'gray-dark');
+          }
+        }
+      }
+    }
+
+    &.is-expanded {
+      &::before {
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-link-bar($hb-link-bar-button);
+          }
+        }
+      }
+
+      &::after {
+        @include hb-menu-minus-icon;
+
+        .hb-dark-pattern & {
+          @include hb-icon-background('minus', 'white');
+
+          @include grid-media-min('lg') {
+            .js & {
+              @include hb-icon-background('chevron', 'white');
+            }
+          }
+        }
+
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-icon-background('chevron', 'primary-dark');
+
+            top: calc(50% - 13px);
+            background-size: auto;
+          }
+        }
+      }
+
+      &:hover {
+        &::after {
+          .hb-dark-pattern & {
+            @include hb-icon-background('minus', 'gray-dark');
+
+            @include grid-media-min('lg') {
+              .js & {
+                @include hb-icon-background('chevron', 'white');
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.megamenu__active-trail {
+      @include hb-active-border;
+
+      &::before {
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-link-bar($hb-link-bar-button);
+          }
+        }
+      }
+    }
+  }
+
+  .megamenu__link {
+    &:hover,
+    &.megamenu__active-trail {
+      @include grid-media-min('lg') {
+        .js & {
+          &::before {
+            @include hb-link-bar;
+          }
+        }
+
+        &.megamenu__no-link {
+          .js & {
+            &::before {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    &.megamenu__active-trail {
+      @include hb-active-border;
+    }
+  }
+
+  .list-sub,
+  .list-sub__nested {
+    padding-left: $nested-padding;
+  }
+
+  .megamenu__expanded-container {
+    display: none;
+
+    &.is-expanded,
+    .no-js & {
+      display: block;
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-global-color('background-color', 'white');
+
+        position: absolute;
+        padding: hb-calculate-rems(44px) 0 hb-calculate-rems(89px);
+        left: 50%;
+        width: 200%;
+        color: hb-get-global-color('black', $hc-colorful-globals);
+        box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px) rgba(0, 0, 0, 0.63);
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+    }
+  }
+
+  .list-sub {
+    @include hb-global-color('color', 'gray-dark');
+
+    padding-left: hb-calculate-rems(16px);
+    font-size: hb-calculate-rems(16px);
+    font-weight: hb-theme-font-weight(semibold);
+
+    .hb-dark-pattern & {
+      @include hb-global-color('color', 'white');
+    }
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        @include hb-global-color('color', 'black');
+
+        display: flex;
+        grid-gap: 0 hb-calculate-rems(52px);
+        margin: 0 auto;
+        padding: 0;
+        max-width: hb-calculate-rems($hb-three-column-main-width);
+        width: 50%;
+      }
+
+      .megamenu__toggle,
+      .megamenu__link {
+        @include grid-media-min('lg') {
+          width: 100%;
+
+          &:hover {
+            .js & {
+              &::after {
+                @include hb-global-color('background-color', 'gray-light');
+
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: -1;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .megamenu__item {
+      border-top: $hb-thin-border;
+      @include hb-global-color('border-color', 'gray');
+
+      display: block;
+      width: 100%;
+      outline: none;
+
+      &:first-child {
+        padding-left: 0;
+        width: 100%;
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          flex: 0 1 calc(25% - #{hb-calculate-rems(39px)});
+          margin-right: 0;
+          border-top: none; 
+        }
+      }
+
+      &:nth-child(n+5) {
+        @include grid-media-min('lg') {
+          .js & {
+            border-top: $hb-medium-border;
+            @include hb-global-color('border-color', 'gray-medium');
+
+            margin-top: hb-calculate-rems(12px);
+            padding-top: hb-calculate-rems(16px);
+          }
+        }
+      }
+    }
+
+    .megamenu__item .megamenu__link {
+      font-weight: hb-theme-font-weight(semibold);
+      
+      &:focus-visible {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+      }
+
+      &:hover {
+        @include grid-media-min('lg') {
+          .js & {
+            @include hb-global-color('background-color', 'gray-light');
+
+            &::before {
+              display: none;
+            }
+          }
+        }
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          margin-bottom: hb-calculate-rems(4px);
+          padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
+          font-size: hb-calculate-rems(16px);
+          color: hb-get-global-color('black', $hc-colorful-globals);
+          text-transform: capitalize;
+          font-weight: hb-theme-font-weight(bold);
+        }
+      }
+    }
+
+    .megamenu__item .megamenu__no-link {
+      font-weight: hb-theme-font-weight(regular);
+
+      &:hover {
+        background: none;
+        @include hb-global-color('color', 'gray-dark');
+
+        .hb-dark-pattern & {
+          @include hb-global-color('color', 'white');
+        }
+
+        &::after {
+          display: none;
+        }
+      }
+
+      @include grid-media-min('lg') {
+        .js & {
+          font-weight: hb-theme-font-weight(regular);
+          cursor: auto;
+
+          &:hover {
+            background: none;
+
+            &::after {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .hb-dark-pattern & {
+        @include grid-media-min('lg') {
+          .js & {
+            &:hover {
+              @include hb-global-color('color', 'black');
+            }
+          }
+        }
+      }
+    }
+
+    .no-js & {
+      display: block;
+    }
+  }
+
+  .list-sub__nested {
+    display: block;
+    padding-left: hb-calculate-rems(30px);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+
+    @include grid-media-min('lg') {
+      .js & {
+        padding-left: 0;
+        font-size: inherit;
+      }
+    }
+
+    .megamenu__item {
+      @include grid-media-min('lg') {
+        .js & {
+          &:nth-child(n+5) {
+            margin-top: 0;
+            padding-top: 0;
+            border: none;
+          }
+        }
+      }
+    }
+
+    .megamenu__item .megamenu__link {
+      @include grid-media-min('lg') {
+        .js & {
+          font-weight: hb-theme-font-weight(semibold);
+          padding-left: hb-calculate-rems(22px);
+        }
+      }
+    }
+  }
+
+  .list-sub--3 {
+    @include grid-media-min('lg') {
+      .js & {
+        // Only display past level two on mobile.
+        display: none;
+      }
+    }
+  }
+
+  .is-expanded {
+    display: block;
+  }
+}
+
+// Manually adjust button location if search
+// is present. This is from previous menu.
+.su-site-search {
+
+  // stylelint-disable-next-line selector-combinator-space-after
+  +.megamenu {
+    .megamenu__mobile-btn {
+      top: hb-calculate-rems(-120px);
     }
   }
 }

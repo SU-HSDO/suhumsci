@@ -117,7 +117,7 @@ class HsCircleCiCommands extends BltTasks {
       ->run();
 
     $message = "$new_version Release" . PHP_EOL . PHP_EOL . '# DO NOT DELETE';
-    $this->taskExec("g pr create -B develop -b '$message'")
+    $this->taskExec("gh pr create -B develop -b '$message' -f")
       ->run();
   }
 

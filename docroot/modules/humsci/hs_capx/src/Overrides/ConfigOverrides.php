@@ -88,42 +88,51 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
 
     if (in_array('migrate_plus.migration_group.hs_capx', $names)) {
-      $urls = $this->getCapxUrls();
-      $overrides['migrate_plus.migration_group.hs_capx'] = [
-        'status' => !empty($urls),
-        'shared_configuration' => [
-          'source' => [
-            'authentication' => [
-              'client_id' => $config->get('username'),
-              'client_secret' => $password,
-              'plugin' => !empty($urls) && $password ? 'oauth2' : '',
+      try {
+        $urls = $this->getCapxUrls();
+        $overrides['migrate_plus.migration_group.hs_capx'] = [
+          'status' => !empty($urls),
+          'shared_configuration' => [
+            'source' => [
+              'authentication' => [
+                'client_id' => $config->get('username'),
+                'client_secret' => $password,
+                'plugin' => !empty($urls) && $password ? 'oauth2' : '',
+              ],
+              'orphan_action' => $config->get('orphan_action'),
+              'urls' => $urls,
             ],
-            'orphan_action' => $config->get('orphan_action'),
-            'urls' => $urls,
+            'process' => $this->getFieldOverrides(),
           ],
-          'process' => $this->getFieldOverrides(),
-        ],
-      ];
+        ];
+      }
+      catch (\Exception $e) {
+        // Do nothing
+      }
     }
 
     if (in_array('migrate_plus.migration_group.hs_capx_publications', $names)) {
-      $urls = $this->getCapxUrls(TRUE);
-      $overrides['migrate_plus.migration_group.hs_capx_publications'] = [
-        'status' => !empty($urls),
-        'shared_configuration' => [
-          'source' => [
-            'authentication' => [
-              'client_id' => $config->get('username'),
-              'client_secret' => $password,
-              'plugin' => !empty($urls) && $password  ? 'oauth2' : '',
+      try {
+        $urls = $this->getCapxUrls(TRUE);
+        $overrides['migrate_plus.migration_group.hs_capx_publications'] = [
+          'status' => !empty($urls),
+          'shared_configuration' => [
+            'source' => [
+              'authentication' => [
+                'client_id' => $config->get('username'),
+                'client_secret' => $password,
+                'plugin' => !empty($urls) && $password ? 'oauth2' : '',
+              ],
+              'orphan_action' => $config->get('orphan_action'),
+              'urls' => $urls,
             ],
-            'orphan_action' => $config->get('orphan_action'),
-            'urls' => $urls,
+            'process' => $this->getFieldOverrides(),
           ],
-          'process' => $this->getFieldOverrides(),
-        ],
-      ];
-
+        ];
+      }
+      catch (\Exception $e) {
+        // Do nothing
+      }
     }
     return $overrides;
   }

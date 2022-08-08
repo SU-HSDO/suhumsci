@@ -103,8 +103,7 @@ class CapxTest extends UnitTestCase {
       ->withAnyParameters()
       ->willThrowException(new ClientException('Failed!', $this->getMockForAbstractClass(RequestInterface::class)));
 
-    $this->capx->setUsername($this->getRandomGenerator()->string());
-    $this->capx->setPassword($this->getRandomGenerator()->string());
+    $this->expectException(ClientException::class);
     $this->assertFalse($this->capx->testConnection());
   }
 

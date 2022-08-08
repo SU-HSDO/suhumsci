@@ -8,20 +8,10 @@ add_ssh: &add_ssh
     fingerprints:
       - "88:4a:09:8a:0f:d7:ee:ed:74:4e:f3:33:5e:98:ce:85"
 
-## Add Known Hosts
-add_known_hosts: &add_known_hosts
-  run:
-    name: Add SSH Known Hosts
-    command: |
-      ssh-keyscan svn-23450.prod.hosting.acquia.com >> ~/.ssh/known_hosts
-      ssh-keyscan web-42199.prod.hosting.acquia.com >> ~/.ssh/known_hosts
-      ssh-keyscan staging-25390.prod.hosting.acquia.com >> ~/.ssh/known_hosts
-      ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
-
 ## Defines images and working directory.
 defaults: &defaults
   docker:
-    - image: pookmish/drupal8ci:latest
+    - image: pookmish/drupal8ci:php8
     - image: selenium/standalone-chrome:latest
     - image: circleci/mysql:5.7
       environment:
@@ -78,7 +68,6 @@ acceptance_first: &acceptance_first
   <<: *defaults
   steps:
     - *add_ssh
-    - *add_known_hosts
     - attach_workspace:
         at: .
     - *disable_telemetry
@@ -95,7 +84,6 @@ acceptance_second: &acceptance_second
   <<: *defaults
   steps:
     - *add_ssh
-    - *add_known_hosts
     - attach_workspace:
         at: .
     - *disable_telemetry
@@ -144,7 +132,6 @@ deploy_branch: &deploy_branch
   <<: *defaults
   steps:
     - *add_ssh
-    - *add_known_hosts
     - attach_workspace:
         at: .
     - *disable_telemetry
@@ -160,7 +147,6 @@ deploy_tag: &deploy_tag
   <<: *defaults
   steps:
     - *add_ssh
-    - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
@@ -178,7 +164,6 @@ update_dependencies: &update_dependencies
   <<: *defaults
   steps:
     - *add_ssh
-    - *add_known_hosts
     - checkout
     - restore_cache: *restore_cache
     - run: composer install --optimize-autoloader
@@ -189,7 +174,7 @@ update_dependencies: &update_dependencies
         command: |
           git config --global user.email "sws-developers@lists.stanford.edu"
           git config --global user.name "CircleCI"
-          vendor/bin/blt circleci:update
+          vendor/bin/blt circleci:update $CIRCLE_BRANCH
           vendor/bin/blt humsci:clean-backups
     - save_cache: *save_cache
 

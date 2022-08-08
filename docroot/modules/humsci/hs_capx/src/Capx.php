@@ -7,7 +7,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Service to test CAPx connection and import organization data.
@@ -138,14 +137,7 @@ class Capx {
   protected static function getApiResponse($url, array $options = []) {
     /** @var \GuzzleHttp\ClientInterface $guzzle */
     $guzzle = \Drupal::service('http_client');
-    try {
-      $response = $guzzle->request('GET', $url, $options);
-    }
-    catch (GuzzleException $e) {
-      // Most errors originate from the API itself.
-      \Drupal::logger('capx')->error($e->getMessage());
-      return FALSE;
-    }
+    $response = $guzzle->request('GET', $url, $options);
     return $response->getStatusCode() == 200 ? (string) $response->getBody() : FALSE;
   }
 
@@ -295,7 +287,7 @@ class Capx {
     ];
     if ($result = self::getApiResponse(self::AUTH_URL, $options)) {
       $result = json_decode($result, TRUE);
-      $this->cache->set('capx:access_token', $result, time() + $result['expires_in'], [
+      $this->cache->set('capx:access_token', $result, time() + $result['expires_in'] - 60, [
         'capx',
         'capx:token',
       ]);

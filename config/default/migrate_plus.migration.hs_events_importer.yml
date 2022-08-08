@@ -315,13 +315,15 @@ process:
       method: process
       source: event_series_title
     -
+      plugin: explode
+      delimiter: '|'
+    -
       plugin: entity_generate
       entity_type: node
       bundle_key: type
       bundle: hs_event_series
       value_key: title
       values:
-        title: event_series_title
         body: event_series_body
     -
       plugin: default_value

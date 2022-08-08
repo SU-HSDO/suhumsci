@@ -3,8 +3,8 @@ services:
   # What to call the service hosting the site.
   suhumsci:
 
-    # Use PHP 7.2 with Apache
-    image: pookmish/tugboat:latest
+    # Use PHP 8 with Apache
+    image: pookmish/drupal8ci:tugboat
 
     # Set this as the default service. This does a few things
     #   1. Clones the git repository into the service container
@@ -14,6 +14,9 @@ services:
 
     # Wait until the mysql service is done building
     depends: mysql
+    aliases:
+      - hs-colorful
+      - hs-traditional
 
     # A set of commands to run while building this service
     commands:
@@ -34,16 +37,29 @@ services:
 
         # Copy SimpleSAMLphp configuration to prevent annoying errors.
         - blt source:build:simplesamlphp-config
-        - blt drupal:install -n
-        - drush user:create tugboat --password=tugboat
-        - drush user:role:add administrator tugboat
+      update:
+        - composer install --no-ansi
+        # Sync to hs_colorful and hs_colorful database & files.
+        - blt drupal:sync:files --site=hs_colorful
+        - drush @hs_colorful.local user:create tugboat --password=tugboat || true
+        - drush @hs_colorful.local user:role:add administrator tugboat || true
+
+        - blt drupal:sync:files --site=hs_traditional
+        - drush @hs_traditional.local user:create tugboat --password=tugboat || true
+        - drush @hs_traditional.local user:role:add administrator tugboat || true
+
+        - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
         - composer install --no-ansi
-        - blt drupal:update
-        - drush pmu simplesamlphp_auth -y
+
+        - blt drupal:update --site=hs_colorful
+        - drush @hs_traditional.local pmu simplesamlphp_auth -y
+
+        - blt drupal:update --site=hs_traditional
+        - drush @hs_colorful.local pmu simplesamlphp_auth -y
 
     # Collection of urls to compare visual results.
-    visualdiffs:
+    urls:
       - /
 
   # What to call the service hosting MySQL. This name also acts as the
@@ -52,3 +68,22 @@ services:
 
     # Use the latest available 5.x version of MySQL
     image: tugboatqa/mysql:5
+    commands:
+      update:
+        # Delete and recreate the database for each site.
+        - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
+        - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"
+
+        # Give the tugboat user access to the new databases.
+        - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'tugboat'; FLUSH PRIVILEGES;"
+
+        # Download each database dump.
+        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_colorful-humscigrydb423120-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_colorful.sql.gz
+        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_traditional-humscigrydb423132-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_traditional.sql.gz
+
+        # Import each database dump into the associated table.
+        - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
+        - zcat /tmp/hs_traditional.sql.gz | mysql hs_traditional
+
+        # Clean up after ourselves to keep the Preview size small.
+        - rm /tmp/*.sql.gz

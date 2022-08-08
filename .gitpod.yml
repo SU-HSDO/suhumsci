@@ -35,21 +35,26 @@ tasks:
       export PREVIEW_FULL_URL=`gp url 8001` &&
       export PREVIEW_URL=${PREVIEW_FULL_URL#"https://"} &&
       cp .gitpod/blt.yml blt/local.blt.yml &&
-      composer update --no-interaction &&
+      composer install --no-interaction &&
       rm -rf docroot/*/custom/* &&
       composer install --prefer-source --no-interaction &&
       blt blt:telemetry:disable --no-interaction &&
       cp .gitpod/gitpod.settings.php docroot/sites/settings/local.settings.php &&
       blt settings &&
-      mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal' &&
-      blt drupal:install -n &&
+      mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default; CREATE DATABASE IF NOT EXISTS drupal' &&
       blt sws:keys &&
-      blt sbsc
-    command: |
-      apache2ctl restart
-      gp await-port 8001
-      drush uli
+      blt source:build:simplesamlphp-config &&
+      drush sql-sync @hs_colorful.prod @self --extra-dump='--no-tablespaces --insert-ignore' -y &&
+      drush updb -y &&
+      blt drupal:toggle:modules &&
+      drush cim --partial -y &&
+      drush cim --partial -y
+
+    command: >
+      git config core.fileMode false &&
+      blt blt:telemetry:disable --no-interaction &&
+      git remote set-url origin git@github.com:SU-HSDO/suhumsci.git &&
+      apache2ctl restart &&
+      gp await-port 8001 &&
+      drush uli &&
       drush uli | xargs gp preview --external
-      git config core.fileMode false
-      blt blt:telemetry:disable --no-interaction
-      git remote set-url origin git@github.com:SU-HSDO/suhumsci.git

@@ -37,6 +37,32 @@ hs_blocks.update_block:
       section_storage:
         layout_builder_tempstore: TRUE
 
+hs_blocks.move_block_up:
+  path: '/hs_blocks/move-up/block/{section_storage_type}/{section_storage}/{delta}/{group}/{uuid}'
+  defaults:
+    _controller: '\Drupal\hs_blocks\Controller\HsChooseBlockController::moveBlockUp'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
+hs_blocks.move_block_down:
+  path: '/hs_blocks/move-down/block/{section_storage_type}/{section_storage}/{delta}/{group}/{uuid}'
+  defaults:
+    _controller: '\Drupal\hs_blocks\Controller\HsChooseBlockController::moveBlockDown'
+  requirements:
+    _permission: 'configure any layout'
+    _layout_builder_access: 'view'
+  options:
+    _admin_route: TRUE
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE
+
 hs_blocks.manage_attributes:
   path: '/hs_blocks/attributes/block/{section_storage_type}/{section_storage}/{delta}/{group}/{uuid}'
   defaults:

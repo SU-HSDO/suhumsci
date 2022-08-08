@@ -186,16 +186,16 @@ class HsCommands extends BltTasks {
    *
    * @throws \Robo\Exception\TaskException
    */
-  public function launchSite($site) {
-    $new_domain = preg_replace('/[^a-z]/', '-', $site);
-    $new_domain = $this->askQuestion('New domain?', "https://$new_domain.stanford.edu", TRUE);
+  public function launchSite($site, $options = ['not-live' => FALSE]) {
+    $new_domain = $this->getNewDomain($site, $options['not-live']);
+    $new_domain = $this->askQuestion('New domain?', "https://$new_domain", TRUE);
     $this->switchSiteContext($site);
     $this->taskDrush()
       ->alias("$site.prod")
       ->drush('cset')
       ->arg('config_split.config_split.not_live')
       ->arg('status')
-      ->arg(0)
+      ->arg($options['not-live'] ? 1 : 0)
       ->option('yes')
       ->drush('cset')
       ->arg('domain_301_redirect.settings')
@@ -205,7 +205,7 @@ class HsCommands extends BltTasks {
       ->drush('cset')
       ->arg('domain_301_redirect.settings')
       ->arg('enabled')
-      ->arg(1)
+      ->arg($options['not-live'] ? 0 : 1)
       ->option('yes')
       ->drush('pmu')
       ->arg('nobots')
@@ -216,6 +216,30 @@ class HsCommands extends BltTasks {
       ->drush('xmlsitemap:rebuild')
       ->drush('cr')
       ->run();
+  }
+
+  /**
+   * Get the suggested new domain.
+   *
+   * @param string $site_name
+   *   Drush machine name.
+   * @param bool $not_live
+   *   If the url should be the -prod url.
+   *
+   * @return string
+   *   Newly constructed domain.
+   */
+  protected function getNewDomain(string $site_name, bool $not_live = FALSE): string {
+    $site_name = str_replace('_', '-', str_replace('__', '.', $site_name));
+    $site_url = explode('.', $site_name, 2);
+    if ($not_live) {
+      if (count($site_url) >= 2) {
+        [$site, $subdomain] = $site_url;
+        return "$site-prod.$subdomain.stanford.edu";
+      }
+      return "$site_name-prod.stanford.edu";
+    }
+    return "$site_name.stanford.edu";
   }
 
 }

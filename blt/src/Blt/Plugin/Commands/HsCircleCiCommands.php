@@ -58,7 +58,7 @@ class HsCircleCiCommands extends BltTasks {
    *
    * @command circleci:update
    */
-  public function updateDependencies() {
+  public function updateDependencies($branch) {
     $collection = $this->collectionBuilder();
     $this->prepEnvironment();
     $collection->addTask($this->blt()->arg('drupal:install'));
@@ -80,10 +80,10 @@ class HsCircleCiCommands extends BltTasks {
       ->option('yes'));
 
     $collection->addTask($this->taskGitStack()
-      ->checkout($_ENV['CIRCLE_BRANCH'])
+      ->checkout($branch)
       ->add('composer.lock config')
       ->commit('Updated dependencies ' . date('M j Y'))
-      ->push('origin', $_ENV['CIRCLE_BRANCH']));
+      ->push('origin', $branch));
 
     return $collection->run();
   }
@@ -117,7 +117,7 @@ class HsCircleCiCommands extends BltTasks {
       ->run();
 
     $message = "$new_version Release" . PHP_EOL . PHP_EOL . '# DO NOT DELETE';
-    $this->taskExec("hub pull-request -b develop -m '$message'")
+    $this->taskExec("g pr create -B develop -b '$message'")
       ->run();
   }
 
@@ -174,7 +174,7 @@ class HsCircleCiCommands extends BltTasks {
    */
   protected function syncAcquia($site = 'swshumsci') {
     $tasks = [];
-    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "create database IF NOT EXISTS drupal"');
+    $tasks[] = $this->taskExec('mysql -u root -h 127.0.0.1 -e "CREATE DATABASE IF NOT EXISTS drupal"');
 
     $docroot = $this->getConfigValue('docroot');
 
@@ -187,18 +187,14 @@ class HsCircleCiCommands extends BltTasks {
     }
 
     $tasks[] = $this->taskDrush()
-      ->alias("$site.prod")
-      ->drush('sql-dump')
-      ->option('result-file', "/mnt/tmp/humscigryphon/$site.sql", '=');
-    $tasks[] = $this->taskDrush()
-      ->drush('rsync')
-      ->rawArg("@$site.prod:/mnt/tmp/humscigryphon/$site.sql /tmp/$site.sql")
-      ->option('mode', 'rultz', '=');
-
-    $tasks[] = $this->taskDrush()->drush('sql-drop')->option('yes');
-    $tasks[] = $this->taskDrush()
-      ->drush('sql-cli ')
-      ->rawArg("< /tmp/$site.sql");
+      ->alias('')
+      ->drush('cache-clear')->arg('drush')
+      ->drush('sql-sync')
+      ->arg("@$site.prod")
+      ->arg('@self')
+      ->option('extra-dump', '--no-tablespaces --insert-ignore', '=')
+      ->option('structure-tables-key', 'lightweight')
+      ->option('create-db');
 
     $tasks[] = $this->taskExecStack()
       ->exec("rm -rf $docroot/sites/default/files");

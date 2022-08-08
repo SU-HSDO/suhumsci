@@ -1,8 +1,8 @@
 name: suhumsci
-recipe: drupal8
+recipe: drupal9
 config:
   webroot: docroot
-  php: '7.4'
+  php: '8.1'
 proxy:
   appserver:
     - africanstudies.suhumsci.loc
@@ -124,20 +124,16 @@ services:
   appserver:
     build:
       - composer install && /app/vendor/bin/blt blt:init:settings
-      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal'/g" {}
-      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'drupal'/g" {}
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal9'/g" {}
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'drupal9'/g" {}
       - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'host' => 'localhost'/'host' => 'database'/g" {}
       - cp /app/lando/lando.sites.php /app/docroot/sites/local.sites.php
-
     ssl: true
-  database: # Override the database that comes in the drupal8
-    build_as_root:
+  database:
+    type: mysql
+    run_as_root:
       # Create extra databases.
       - mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'drupal'@'%' IDENTIFIED by 'drupal';"
-    creds:  # recipe and use it for the /sites/default site.
-      user: drupal
-      password: drupal
-      database: drupal
   chromedriver:
     type: compose
     services:
@@ -156,4 +152,3 @@ tooling:
     cmd: /app/vendor/bin/blt
   git:
     service: appserver
-

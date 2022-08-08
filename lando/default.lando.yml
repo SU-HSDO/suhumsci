@@ -124,8 +124,8 @@ services:
   appserver:
     build:
       - composer install && /app/vendor/bin/blt blt:init:settings
-      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal9'/g" {}
-      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'drupal9'/g" {}
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal'/g" {}
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'drupal'/g" {}
       - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'host' => 'localhost'/'host' => 'database'/g" {}
       - cp /app/lando/lando.sites.php /app/docroot/sites/local.sites.php
     ssl: true

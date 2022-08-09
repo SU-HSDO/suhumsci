@@ -3,7 +3,7 @@
 // and the Spotlight Slider.
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
 const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
-const mediumScreenBreakpoint = 768;
+// const mediumScreenBreakpoint = 768;
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
 // @boolean to determine if the textBox is a spotlight textBox
@@ -42,10 +42,8 @@ const restrictHeight = () => {
     // Find largest number in array of textBoxes
     maxBoxHeight = Math.max(...boxHeightArray);
 
-    // Give all textBoxes the same height on medium and larger sized screens
-    if (window.innerWidth > mediumScreenBreakpoint) {
-      textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
-    }
+    // Give all textBoxes the same height
+    textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
 
     // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes
     textBoxes.forEach(

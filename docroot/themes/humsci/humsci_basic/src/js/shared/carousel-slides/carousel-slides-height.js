@@ -3,7 +3,6 @@
 // and the Spotlight Slider.
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
 const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
-// const mediumScreenBreakpoint = 768;
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
 // @boolean to determine if the textBox is a spotlight textBox

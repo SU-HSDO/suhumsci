@@ -67,12 +67,13 @@ button.more-link,
   }
 }
 
-// This adds margin to the top of more link which is needed for hb-grid views
+// More spacing for hb-grid views and right align the link/button
 .more-link {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+
   .views-element-container & {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-end;
     margin-top: hb-calculate-rems(24px);
 
     @include grid-media-min('md') {

@@ -38,6 +38,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 datasciencemajor.suhumsci.loc
       127.0.0.1 dennylab.suhumsci.loc
       127.0.0.1 dfetter.humsci.suhumsci.loc
+      127.0.0.1 dfetter2022.humsci.suhumsci.loc
       127.0.0.1 dlcl.suhumsci.loc
       127.0.0.1 dsresearch.suhumsci.loc
       127.0.0.1 duboislab.suhumsci.loc
@@ -53,12 +54,14 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 finance-humsci.suhumsci.loc
       127.0.0.1 francestanford.suhumsci.loc
       127.0.0.1 gavin-wright.humsci.suhumsci.loc
+      127.0.0.1 gavin_wright2022.humsci.suhumsci.loc
       127.0.0.1 gender.suhumsci.loc
       127.0.0.1 globalcurrents.suhumsci.loc
       127.0.0.1 grandtour.suhumsci.loc
       127.0.0.1 gus-humsci.suhumsci.loc
       127.0.0.1 gus-humsci2021.suhumsci.loc
       127.0.0.1 heidi-williams.humsci.suhumsci.loc
+      127.0.0.1 heidi_williams2022.humsci.suhumsci.loc
       127.0.0.1 history.suhumsci.loc
       127.0.0.1 hopkinsmarinestation.suhumsci.loc
       127.0.0.1 hs-colorful.suhumsci.loc
@@ -73,6 +76,7 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 humanbiology.suhumsci.loc
       127.0.0.1 humanexperience.suhumsci.loc
       127.0.0.1 humanitiescore.suhumsci.loc
+      127.0.0.1 humanitiescore2022.suhumsci.loc
       127.0.0.1 humanrights.suhumsci.loc
       127.0.0.1 impact.suhumsci.loc
       127.0.0.1 insidehs.suhumsci.loc
@@ -125,13 +129,18 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
       127.0.0.1 urbanstudies.suhumsci.loc
       127.0.0.1 west.suhumsci.loc
       127.0.0.1 womensleadership.suhumsci.loc
+      127.0.0.1 womensleadershipcp.suhumsci.loc
     ```
 
 4. Build your containers: `lando rebuild`
     * Note: After running `lando rebuild` you should see a list a APPSERVER URLS. A `green` URL signifies the `.loc` domain has been added to your `/ect/hosts` file. If you see a `red` URL, go back to step 3 and add the `.loc` domain to your `/ect/hosts` file.
 5. Run `lando blt drupal:sync --site=SITENAME` to pull down a copy of the database and files for the site you wish to work on.
 6. Run `lando info`, and browse to the url for your multisite.
-7. Depending on the local domains you've set up, you may need to add to `docroot/sites/local.sites.php` file, and use it to add your local domains to the `$sites` array. Otherwise, requests to your local multisite domains may get sent to the default site. Keep in mind that this is removed every `lando rebuild`.
+
+## Adding a new site to lando
+1. Copy and existing site's folder in `docroot/sites/` and rename the folder to the new site.
+2. Edit the `blt.yml` file within your new sites folder with the corresponding site names.
+3. All other files within this folder are variable. All you need to do is run `lando rebuild -y`
 
 ## Setup for local Codeception testing
 
@@ -182,7 +191,7 @@ To run codeception tests run `lando blt codeception --group=install`. Or if you 
 
 In order to sync from a staging or dev site, you will have to do the following:
 
-1. In `suhumsci/docroot/sites/sparkbox_sandbox/blt.yml` or whichever relevant site you are working with, change line 10 for remote to: `remote: sparkbox_sandbox.stage` or `remote: sparkbox_sandbox.dev`.
+1. In `suhumsci/docroot/sites/hs_colorful/blt.yml` (or whichever relevant site you are working with), change line 10 for remote to: `remote: hs_colorful.stage` or `remote: hs_colorful.dev`.
 2. Sync the database as you normally would: `lando blt drupal:sync --site=[my-multisite]`.
 
 ## Configuration for local SimpleSAML authentication
@@ -207,7 +216,6 @@ To configure the SimpleSAML module so you stop seeing the configuration errors i
 * `lando drush uli` - Get a link for logging in as an admin user
 * `docker ps` - Check that your docker containers are running
 * `lando info` - Check your lando config
-* `lando mysql -h sparkbox_sandbox` - Jump into a mysql CLI for a given multisite
 * `lando drush cr` - clear cache
 * `lando drush config-export` - export your local database settings
 * `lando drush config-import` - import new database settings to your local.

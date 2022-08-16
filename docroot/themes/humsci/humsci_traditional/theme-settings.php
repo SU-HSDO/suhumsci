@@ -30,6 +30,7 @@ function humsci_traditional_form_system_theme_settings_alter(array &$form, FormS
       'cardinal' => t('Cardinal'),
       'bluejay' => t('Blue Jay'),
       'warbler' => t('Warbler'),
+      'firefinch' => t('Firefinch'),
     ],
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];

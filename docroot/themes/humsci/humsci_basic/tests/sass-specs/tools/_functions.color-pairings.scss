@@ -115,6 +115,21 @@
       }
     }
   }
+
+  // FIREFINCH
+  @include describe('When given a valid key value,') {
+
+    @include describe('the hb-get-pairing-color() function') {
+      @include it('returns the Traditional Firefinch palette.') {
+        // Many of the colors on the Cardinal and Blue Jay palettes are the same.
+        // Test a color that is not the same between the two palettes.
+        $test: hb-get-pairing-color('spotlight', 'firefinch', $ht-traditional-pairings);
+        $expect: #E0E0D1;
+
+        @include assert-equal($test, $expect, 'The Firefinch color pairing primary color value either does not match or does not exist.');
+      }
+    }
+  }
 }
 
 @include describe('HB Traditional Global Color Function') {

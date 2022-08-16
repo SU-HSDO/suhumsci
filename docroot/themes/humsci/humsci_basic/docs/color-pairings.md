@@ -24,3 +24,4 @@ A user can update the color pairing in the Drupal admin by going to Appearance /
 | Cardinal | ht-pairing-cardinal  |
 | Blue Jay | ht-pairing-bluejay   |
 | Warbler  | ht-pairing-warbler   |
+| Firefinch| ht-pairing-firefinch |

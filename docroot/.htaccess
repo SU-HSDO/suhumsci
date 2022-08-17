@@ -93,8 +93,9 @@ AddEncoding gzip svgz
   RewriteCond %{REQUEST_URI} node_modules [OR,NC]
   RewriteCond %{REQUEST_URI} ^/vendor [OR,NC]
   RewriteCond %{REQUEST_URI} "/wp-(admin|content/plugins/|includes|cron\.php|config\.php|login\.php|signup\.php)|xmlrpc.php" [OR,NC]
-  RewriteCond %{THE_REQUEST} \.php[/\s?] [OR,NC]
-  RewriteCond %{THE_REQUEST} \.html[/\s?] [NC]
+  # RewriteCond %{THE_REQUEST} \.php[/\s?] [OR,NC]
+  # RewriteCond %{THE_REQUEST} \.html[/\s?] [NC]
+  RewriteCond %{THE_REQUEST} \.php[/\s?] [NC]
   RewriteCond %{REQUEST_URI} !^/simplesaml/module.php
   RewriteRule .* - [F]
 

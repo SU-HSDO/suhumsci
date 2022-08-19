@@ -4,6 +4,8 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
 
 _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that it's saved in your `~/.ssh folder._
 
+Using and M1/M2 Mac? See amended instructions below prior to setup.
+
 1. [Install Lando](https://lando.dev/download/).
     * Apple M1/Silicon Users will need to pay special attention to the version of Lando and Docker they install for proper functionality. "If you have a new Apple Silicon based Mac then choose the arm64 DMG from Lando."
 2. Copy `lando/default.lando.yml` to `.lando.yml`.
@@ -136,11 +138,18 @@ _Prerequisite: Make sure you have added your SSH key in Acquia cloud, and that i
     * Note: After running `lando rebuild` you should see a list a APPSERVER URLS. A `green` URL signifies the `.loc` domain has been added to your `/ect/hosts` file. If you see a `red` URL, go back to step 3 and add the `.loc` domain to your `/ect/hosts` file.
 5. Run `lando blt drupal:sync --site=SITENAME` to pull down a copy of the database and files for the site you wish to work on.
 6. Run `lando info`, and browse to the url for your multisite.
+7. Run `lando drush @[site_alias].local uli` to log in as user:1 (Example: `lando drush @music.local uli`)
 
 ## Adding a new site to lando
 1. Copy and existing site's folder in `docroot/sites/` and rename the folder to the new site.
 2. Edit the `blt.yml` file within your new sites folder with the corresponding site names.
 3. All other files within this folder are variable. All you need to do is run `lando rebuild -y`
+
+## Adjustments for M1/M2 Macs
+Lando/docker have had known compatibility issues with the latest ARM-based Macs. The lando setup above should work with only 1 or 2 sites at a time.
+1. Edit your `.lando.yml` file and remove all but one or two sites from the `proxy` configuration.
+2. Perform the same setup tasks as above.
+3. If you need to test more than 1-2 sites at a time you will need to repeat step 1 and run through the full setup process again.
 
 ## Setup for local Codeception testing
 

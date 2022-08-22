@@ -5,6 +5,12 @@
  * hs_courses_importer.install
  */
 
+use Drupal\config_pages\Entity\ConfigPages;
+use Drupal\config_pages\Entity\ConfigPagesType;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\Entity\Role;
+
 /**
  * Invalidate courses with links that contain an ampersand.
  */
@@ -34,4 +40,55 @@ function hs_courses_importer_update_8200() {
   if ($config->get('base_url')) {
     $config->clear('base_url')->save();
   }
+}
+
+/**
+ * Move course importer settings to config pages.
+ */
+function hs_courses_importer_update_8201() {
+  $config = \Drupal::configFactory()
+    ->getEditable('hs_courses_importer.importer_settings');
+  $urls = $config->get('urls');
+  if (empty($urls)) {
+    $config->delete();
+    return;
+  }
+  ConfigPagesType::create([
+    'uuid' => '64f1179b-df20-42fc-b6c5-6ce0c69ac62f',
+    'id' => 'course_importer',
+    'label' => 'Course Importer',
+    'menu' => ['path' => '/admin/structure/migrate/course-importer'],
+    'context' => [],
+  ])->save();
+  $field_storage = FieldStorageConfig::create([
+    'uuid' => 'c40d331e-5a90-46df-acfa-30df5d15dd88',
+    'field_name' => 'field_course_url',
+    'type' => 'link',
+    'entity_type' => 'config_pages',
+    'cardinality' => -1,
+  ]);
+  $field_storage->save();
+  FieldConfig::create([
+    'uuid' => 'f2973c36-d3b4-43b5-a3b0-a28e0380a7b5',
+    'field_storage' => $field_storage,
+    'bundle' => 'course_importer',
+  ])->save();
+
+  $config_page = ['type' => 'course_importer', 'context' => 'a:0:{}'];
+  foreach ($urls as $url) {
+    $config_page['field_course_url'][] = [
+      'uri' => str_replace('xml-20140630', 'xml-20200810', $url),
+      'title' => '',
+    ];
+  }
+  ConfigPages::create($config_page)->save();
+  /** @var \Drupal\user\RoleInterface $role */
+  foreach (Role::loadMultiple() as $role) {
+    if ($role->hasPermission('administer course importer settings') && !$role->isAdmin()) {
+      $role->grantPermission('edit course_importer config page entity');
+      $role->revokePermission('administer course importer settings');
+      $role->save();
+    }
+  }
+  $config->delete();
 }

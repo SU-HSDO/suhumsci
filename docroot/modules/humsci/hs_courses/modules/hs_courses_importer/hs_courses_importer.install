@@ -50,6 +50,7 @@ function hs_courses_importer_update_8201() {
     ->getEditable('hs_courses_importer.importer_settings');
   $urls = $config->get('urls');
   if (empty($urls)) {
+    $config->delete();
     return;
   }
   ConfigPagesType::create([
@@ -75,12 +76,19 @@ function hs_courses_importer_update_8201() {
 
   $config_page = ['type' => 'course_importer', 'context' => 'a:0:{}'];
   foreach ($urls as $url) {
-    $config_page['field_course_url'][] = ['uri' => str_replace('xml-20140630', 'xml-20200810', $url), 'title' => ''];
+    $config_page['field_course_url'][] = [
+      'uri' => str_replace('xml-20140630', 'xml-20200810', $url),
+      'title' => '',
+    ];
   }
   ConfigPages::create($config_page)->save();
-//Role::loadMultiple()
-  //  $premission = 'administer course importer settings';
-  //$config->delete();
-
-
+  /** @var \Drupal\user\RoleInterface $role */
+  foreach (Role::loadMultiple() as $role) {
+    if ($role->hasPermission('administer course importer settings') && !$role->isAdmin()) {
+      $role->grantPermission('edit course_importer config page entity');
+      $role->revokePermission('administer course importer settings');
+      $role->save();
+    }
+  }
+  $config->delete();
 }

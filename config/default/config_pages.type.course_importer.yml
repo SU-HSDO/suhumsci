@@ -1,0 +1,37 @@
+uuid: 64f1179b-df20-42fc-b6c5-6ce0c69ac62f
+langcode: en
+status: true
+dependencies:
+  module:
+    - config_pages_overrides
+third_party_settings:
+  config_pages_overrides:
+    860ea26c-d745-4cf3-a9ba-dc050cb2e814:
+      field: field_course_url
+      delta: -1
+      column: uri
+      config_name: migrate_plus.migration.hs_courses
+      config_item: source.urls
+      prefix: ''
+      suffix: ''
+    4ccb0959-abb3-4a06-9cf0-c9b00d9002c4:
+      field: field_course_url
+      delta: 0
+      column: uri
+      config_name: migrate_plus.migration.hs_courses
+      config_item: status
+      prefix: ''
+      suffix: ''
+id: course_importer
+label: 'Course Importer'
+token: false
+context:
+  show_warning: true
+  group:
+    language: false
+  fallback:
+    language: ''
+menu:
+  path: /admin/structure/migrate/course-importer
+  weight: 0
+  description: ''

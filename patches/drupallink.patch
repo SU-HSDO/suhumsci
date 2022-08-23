@@ -1,0 +1,24 @@
+diff --git a/modules/ckeditor/js/plugins/drupallink/plugin.js b/modules/ckeditor/js/plugins/drupallink/plugin.js
+index b06b276757..6995fdffdd 100644
+--- a/modules/ckeditor/js/plugins/drupallink/plugin.js
++++ b/modules/ckeditor/js/plugins/drupallink/plugin.js
+@@ -208,8 +208,10 @@
+ 
+         if (!element.isReadOnly()) {
+           if (element.is('a')) {
+-            editor.getSelection().selectElement(element);
+-            editor.getCommand('drupallink').exec();
++            if (typeof editor.commands.anchor === 'undefined') {
++              editor.getSelection().selectElement(element);
++              editor.getCommand('drupallink').exec();
++            }
+           }
+         }
+       });
+@@ -262,4 +264,4 @@
+     getLinkAttributes: getAttributes,
+     registerLinkableWidget: registerLinkableWidget
+   };
+-})(jQuery, Drupal, drupalSettings, CKEDITOR);
+\ No newline at end of file
++})(jQuery, Drupal, drupalSettings, CKEDITOR);

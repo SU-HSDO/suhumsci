@@ -5,8 +5,10 @@
  * hs_courses_importer.module
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\search_api\IndexInterface;
 use Drupal\node\NodeInterface;
+use Drupal\config_pages\ConfigPagesInterface;
 
 /**
  * Implements hook_search_api_index_items_alter().
@@ -67,4 +69,22 @@ function hs_courses_importer_index_item($nid) {
     ->fetchField();
 
   return $first_course_id == $nid;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function hs_courses_importer_config_pages_presave(ConfigPagesInterface $config_page) {
+  if ($config_page->bundle() == 'course_importer') {
+    // Clear migration discovery cache after saving.
+    Cache::invalidateTags(['migration_plugins']);
+
+    // Add permission to execute importer.
+    $role = \Drupal::entityTypeManager()->getStorage('user_role')
+      ->load('site_manager');
+    if ($role) {
+      $role->grantPermission('import hs_courses migration');
+      $role->save();
+    }
+  }
 }

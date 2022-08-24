@@ -88,6 +88,10 @@ AddEncoding gzip svgz
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
+  # Block access via specific user-agents.
+  RewriteCond %{HTTP_USER_AGENT} CQ-API-Spyder [NC]
+  RewriteRule .* - [F,L]
+
   # Block access to php & html files. Node_modules and the vendor
   # directory should never be available. Also block any WordPress urls.
   RewriteCond %{REQUEST_URI} node_modules [OR,NC]

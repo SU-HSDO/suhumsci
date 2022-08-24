@@ -103,16 +103,13 @@
         }
 
         img {
-          object-fit: initial;
-          min-height: auto;
-
-          @include grid-media-min('sm') {
-            min-height: auto;
-          }
+          min-height: 35vh;
+          max-height: 35vh;
+          object-fit: cover;
 
           @include grid-media-min('md') {
+            max-height: 55vh;
             min-height: 55vh;
-            object-fit: cover;
           }
 
           &.animate {
@@ -597,6 +594,10 @@
 
           @include grid-media-min('2xl') {
             left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}); // move it past the slick arrows
+
+            .field-hs-collection-items.item-per-row--2 & {
+              left: calc(100% - #{hb-calculate-rems(88px)});
+            }
           }
         }
       }
@@ -643,6 +644,10 @@
 
           @include grid-media-min('2xl') {
             left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}); // move it past the slick arrows
+
+            .field-hs-collection-items.item-per-row--2 & {
+              left: calc(100% - #{hb-calculate-rems(43px)});
+            }
           }
         }
       }

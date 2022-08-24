@@ -245,6 +245,10 @@ process:
         - '@link_query'
   field_hs_course_section_days:
     -
+      plugin: skip_on_empty
+      source: section_days
+      method: process
+    -
       plugin: str_replace
       source: section_days
       regex: true

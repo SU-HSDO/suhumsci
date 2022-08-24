@@ -26,17 +26,15 @@ class SmartDateTime extends SmartDateCustomFormatter {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    $settings = [
-      'display' => 'start',
-    ];
+    $settings = ['display' => 'start'];
     return $settings + parent::defaultSettings();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = parent::viewElements($items, $langcode);
+  public function viewElements(FieldItemListInterface $items, $langcode, $format = '') {
+    $elements = parent::viewElements($items, $langcode, $format);
     $display = $this->getSetting('display');
     foreach ($elements as &$element) {
       if ($display == 'start') {

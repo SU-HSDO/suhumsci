@@ -23,7 +23,6 @@ defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
     - image: selenium/standalone-chrome:latest
-    - image: circleci/node:16
     - image: circleci/mysql:5.7
       environment:
         MYSQL_DATABASE: drupal
@@ -59,9 +58,14 @@ disable_telemetry: &disable_telemetry
 
 directory_setup: &directory_setup
   <<: *defaults
+  docker:
+    - image: circleci/node:16
   steps:
     - checkout
     - restore_cache: *restore_cache
+    - node/install:
+        node-version: '16.16'
+    - run: node --version
     - run:
         name: Composer setup
         command: |

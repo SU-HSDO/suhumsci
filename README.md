@@ -24,8 +24,8 @@ To set up your local environment and begin developing for this project, refer to
 
 CSS assets are built using the Grunt task runner, but are run using npm scripts as shortcuts.
 
-- `npm run build` - Compile Sass for production for all themes, **except Humsci_basic** which requires additional Grunt tasks to compile sub-theme specific CSS.
-- `npm run watch` - Compile a CSS build and watch for changes in the existing `.scss` files (other than humsci_basic)
+- `npm run build-theme` - Compile Sass for production for all themes, **except Humsci_basic** which requires additional Grunt tasks to compile sub-theme specific CSS.
+- `npm run watch-theme` - Compile a CSS build and watch for changes in the existing `.scss` files (other than humsci_basic)
 
 ## Testing
 

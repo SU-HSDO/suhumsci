@@ -152,9 +152,13 @@ services:
       security_opt:
         - seccomp:unconfined
       command: ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
+  node:
+    type: node:16
 tooling:
   blt:
     service: appserver
     cmd: /app/vendor/bin/blt
   git:
     service: appserver
+  npm:
+    service: node

@@ -68,6 +68,9 @@ directory_setup: &directory_setup
           composer install --optimize-autoloader --no-interaction
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction
+    - run:
+          name: run Build Theme script
+          command: composer run build-theme
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .

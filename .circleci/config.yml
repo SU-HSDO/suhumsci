@@ -68,16 +68,6 @@ directory_setup: &directory_setup
           composer install --optimize-autoloader --no-interaction
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction
-    - save_cache: *save_cache
-    - persist_to_workspace:
-        root: .
-        paths:
-          - .
-
-build_assets: &build-assets
-  <<: *defaults
-  steps:
-    - restore_cache: *restore_cache
     - run:
           name: Build theme assets
           command: composer run build-theme
@@ -230,8 +220,6 @@ jobs:
     <<: *update_dependencies
   run-setup:
     <<: *directory_setup
-  run-build-assets:
-    <<: *build-assets
   run-acceptance-first:
     <<: *acceptance_first
   run-acceptance-second:
@@ -268,9 +256,6 @@ workflows:
   test_lint_deploy:
     jobs:
       - run-setup
-      - run-build-assets:
-          requires:
-            - run-setup
       - run-acceptance-first:
           requires:
             - run-setup

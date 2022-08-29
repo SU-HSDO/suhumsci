@@ -23,7 +23,7 @@ defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
     - image: selenium/standalone-chrome:latest
-    - image: circleci/node:16
+    - image: circleci/node:16.16
     - image: circleci/mysql:5.7
       environment:
         MYSQL_DATABASE: drupal
@@ -62,9 +62,6 @@ directory_setup: &directory_setup
   steps:
     - checkout
     - restore_cache: *restore_cache
-    - node/install:
-        node-version: '16.16'
-    - run: node --version
     - run:
         name: Composer setup
         command: |

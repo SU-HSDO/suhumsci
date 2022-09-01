@@ -1,25 +1,30 @@
 <?php
 
 /**
- * Class PrivatePageCest.
+ * Class PrivatePageContentCest.
  *
- * @group install
+ * @group content
  */
-class PrivatePageCest{
+class PrivatePageContentCest{
+
+  private $fieldsToCheck = [
+    'input[value="Add Private Text Area"]',
+    'input[value="Add Private Collection"]',
+    'input[value="Add Spotlight - Slider"]',
+    'input[value="Add Accordion"]',
+    'input[value="Add Postcard"]',
+  ];
 
   /**
-   * A private page should not be accessible to anonymous.
+   * A private page has certain fields that should be available.
    */
-  public function testPrivatePage(AcceptanceTester $I){
+  public function testPrivatePageContent(AcceptanceTester $I){
     $I->logInWithRole('site_manager');
     $I->amOnPage('/node/add/hs_private_page');
     $I->fillField('Title', 'Test Private Page');
-    $I->click('Save');
-    $I->canSee('Test Private Page','h1');
-    $url = $I->grabFromCurrentUrl();
-    $I->amOnPage('/user/logout');
-    $I->amOnPage($url);
-    $I->canSeeResponseCodeIs(403);
+    foreach ($this->fieldsToCheck as $field) {
+      $I->click($field);
+    }
+    $I->see('PRIVATE FILE INSERT');
   }
-
 }

@@ -25,6 +25,15 @@ use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_entity_type_alter().
+ */
+function su_humsci_profile_entity_type_alter(array &$entity_types) {
+  if (isset($entity_types['menu_link_content'])) {
+    $entity_types['menu_link_content']->addConstraint('menu_link_item_url_constraint');
+  }
+}
+
+/**
  * Implements hook_pathauto_pattern_alter().
  */
 function su_humsci_profile_pathauto_pattern_alter(PathautoPatternInterface $pattern, array $context) {

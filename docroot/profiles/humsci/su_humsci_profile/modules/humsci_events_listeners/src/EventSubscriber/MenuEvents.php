@@ -28,7 +28,7 @@ class MenuEvents implements EventSubscriberInterface {
   /**
    * Adjust the menu link content entity on save.
    *
-   * @param EntityPresaveEvent $event
+   * @param \Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent $event
    *   Triggered Event.
    */
   public function entityPresave(EntityPresaveEvent $event): void {
@@ -36,7 +36,6 @@ class MenuEvents implements EventSubscriberInterface {
       self::preSaveMenuLinkContent($event->getEntity());
     }
   }
-
 
   /**
    * Before saving a menu item, adjust the path if an internal path exists.

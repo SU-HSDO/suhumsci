@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\humsci_events_listeners\EventSubscriber;
+
 /**
  * Event listeners trait.
  */

@@ -29,4 +29,16 @@ class Acceptance extends Module {
     $this->assertArrayNotHasKey($header, $headers, sprintf('Header "%s" exists in the current response', $header));
   }
 
+  function seePageHasElement($element) {
+    try {
+      $this->getModule('PhpBrowser')->_findElements($element);
+      //echo "in try block..." . $this->getModule('PhpBrowser')->_findElements($element);
+      //print_r($this->getModule('PhpBrowser')->_findElements($element));
+      return true;
+    } catch (\PHPUnit_Framework_AssertionFailedError $f) {
+      echo "in catch block...";
+      return false;
+    }
+    //return true;
+  }
 }

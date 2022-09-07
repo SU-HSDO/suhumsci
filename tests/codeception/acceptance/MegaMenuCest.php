@@ -16,35 +16,19 @@ class MegaMenuCest {
   public function testMegaMenu(AcceptanceTester $I) {
     $I->amOnPage('/');
     $I->canSeeResponseCodeIsBetween(200, 403);
+    $megaMenuExists = false;
 
-
-    $I->haveVisible('.megamenu__expanded-container');
-
-   //try {
-    //$I->seeElement('.megamenu__list--main');
-   // $I->click('.megamenu__toggle');
-    // if($test) {
-    //     echo 'Megamenu exists v2';
-    //   } else {
-    //     echo 'Megamenu DOES NOT exist v2';
-    //   }
-      //$I->click('.megamenu__toggle');
-       //$I->haveVisible('dfg');
-      // Continue to do this if it's present
-      // ...
-      //echo 'Megamenu exists';
-    //} catch (Exception $e) {
-      // Do this if it's not present.
-      // ...
-
-    //}
-
-    //$I->seeElement('.megamenu__list--main');
-
-    // foreach ($this->getLinksToCheck($I, '#header a') as $path) {
-    //   $I->amOnPage($path);
-    //   $I->canSeeResponseCodeIsBetween(200, 404);
-    // }
+    try {
+       $I->click('Training'); // WORKS?
+       //$I->click("//button[@class='megamenu__toggle']");
+       $megaMenuExists = true;
+    } catch (Exception $e) {
+    }
+    if ($megaMenuExists) {
+      echo "Megamenu was found!";
+      $I->seeElement(".is-expanded");
+    } else {
+      echo "Element NOT found!";
+    }
   }
-
 }

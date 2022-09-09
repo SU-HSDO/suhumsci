@@ -177,3 +177,16 @@ function su_humsci_profile_update_9004() {
       ->save();
   }
 }
+
+/**
+ * Enable new admin theme and helper module.
+ * Uninstall old admin theme.
+ */
+function su_humsci_profile_update_9005() {
+  \Drupal::service('theme_installer')->install(['gin']);
+  \Drupal::service('theme_installer')->install(['su_humsci_gin_admin']);
+  \Drupal::service('theme_installer')->uninstall(['su_humsci_admin']);
+  \Drupal::service('theme_installer')->uninstall(['seven']);
+  // Install gin toolbar helper module.
+  \Drupal::service('module_installer')->install(['gin_toolbar']);
+}

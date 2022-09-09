@@ -13,7 +13,7 @@ class MediaCest {
    */
   public function testDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
-    $I->amOnPage('/media/add');
+    $I->amOnPage('/media/add/file');
     $I->click('Upload File(s)');
     $I->dropFileInDropzone(__DIR__ . '/test.txt');
     $I->click('Upload');
@@ -29,10 +29,10 @@ class MediaCest {
    */
   public function testBadDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
-    $I->amOnPage('/media/add');
+    $I->amOnPage('/media/add/file');
     $I->click('Upload File(s)');
     $I->dropFileInDropzone(__FILE__);
-    $I->canSeeElement('.dz-error.dz-complete');
+    $I->canSeeElement('.messages--error.file-upload-js-error');
   }
 
   /**
@@ -58,7 +58,7 @@ class MediaCest {
    */
   public function testVideo(FunctionalTester $I){
     $I->logInWithRole('administrator');
-    $I->amOnPage('/media/add/video');
+    $I->amOnPage('/media/add');
     $I->click('Video', '.region-content');
     $I->fillField('Name', 'Test Video');
     $I->fillField('Video URL', 'http://google.com');

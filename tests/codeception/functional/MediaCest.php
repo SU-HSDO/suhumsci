@@ -40,7 +40,7 @@ class MediaCest {
    */
   public function testImages(FunctionalTester $I) {
     $I->logInWithRole('administrator');
-    $I->amOnPage('/media/add');
+    $I->amOnPage('/media/add/image');
     $I->click('Upload File(s)');
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
     $I->click('Upload');
@@ -58,7 +58,7 @@ class MediaCest {
    */
   public function testVideo(FunctionalTester $I){
     $I->logInWithRole('administrator');
-    $I->amOnPage('/media/add');
+    $I->amOnPage('/media/add/video');
     $I->click('Video', '.region-content');
     $I->fillField('Name', 'Test Video');
     $I->fillField('Video URL', 'http://google.com');

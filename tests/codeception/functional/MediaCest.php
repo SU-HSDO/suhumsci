@@ -14,7 +14,7 @@ class MediaCest {
   public function testDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add/file');
-    $I->click('[data-drupal-selector="edit-field-media-file-0-upload"]');
+    $I->click('#edit-field-media-file-0-upload');
     $I->dropFileInDropzone(__DIR__ . '/test.txt');
     $I->click('Upload');
     $I->fillField('Name', 'Demo Text File');
@@ -30,7 +30,7 @@ class MediaCest {
   public function testBadDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add/file');
-    $I->click('[data-drupal-selector="edit-field-media-file-0-upload"]');
+    $I->click('#edit-field-media-file-0-upload');
     $I->dropFileInDropzone(__FILE__);
     $I->canSeeElement('.messages--error.file-upload-js-error');
   }
@@ -41,7 +41,7 @@ class MediaCest {
   public function testImages(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add/image');
-    $I->click('[data-drupal-selector="edit-field-media-file-0-upload"]');
+    $I->click('#edit-field-media-image-0-upload');
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
     $I->click('Upload');
     $I->fillField('Name', 'Logo File');

@@ -14,9 +14,9 @@ class MediaCest {
   public function testDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add/file');
-    $I->click('input[type="file"]');
+    $I->click('.form-element--type-file');
     $I->dropFileInDropzone(__DIR__ . '/test.txt');
-    $I->click('input[value="Upload"]');
+    $I->click('.form-submit');
     $I->fillField('Name', 'Demo Text File');
     $I->click('Save');
     $I->canSee('File Demo Text File has been created.');
@@ -30,7 +30,7 @@ class MediaCest {
   public function testBadDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add/file');
-    $I->click('input[type="file"]');
+    $I->click('.form-element--type-file');
     $I->dropFileInDropzone(__FILE__);
     $I->canSeeElement('.messages--error.file-upload-js-error');
   }
@@ -41,9 +41,9 @@ class MediaCest {
   public function testImages(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add/image');
-    $I->click('input[type="file"]');
+    $I->click('.form-element--type-file');
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
-    $I->click('input[value="Upload"]');
+    $I->click('.form-submit');
     $I->fillField('Name', 'Logo File');
     $I->uncheckOption('Decorative Image');
     $I->fillField('Alternative text', 'Stanford Logo');

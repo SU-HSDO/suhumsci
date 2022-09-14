@@ -74,8 +74,10 @@ class HsCircleCiCommands extends BltTasks {
       ->option('yes'));
     $collection->addTask($this->taskComposerUpdate()->option('no-interaction'));
 
-    $collection->addTask($this->taskDrush()->drush('updb')->option('yes'));
     $collection->addTask($this->taskDrush()
+      ->drush('updb')
+      ->option('yes')
+      ->drush('cache:rebuild')
       ->drush('config:export')
       ->option('yes'));
 

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_timeline.field_hs_field_add_expand_collap
+    - field.field.paragraph.hs_timeline.field_hs_time_title
     - field.field.paragraph.hs_timeline.field_hs_timeline
     - paragraphs.paragraphs_type.hs_timeline
   module:
@@ -15,14 +16,22 @@ mode: default
 content:
   field_hs_field_add_expand_collap:
     type: boolean_checkbox
-    weight: 3
+    weight: 2
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
+  field_hs_time_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_hs_timeline:
     type: paragraphs
-    weight: 2
+    weight: 1
     region: content
     settings:
       title: 'Timeline Item'

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_timeline.field_hs_field_add_expand_collap
+    - field.field.paragraph.hs_timeline.field_hs_time_title
     - field.field.paragraph.hs_timeline.field_hs_timeline
     - paragraphs.paragraphs_type.hs_timeline
   module:
@@ -27,10 +28,11 @@ third_party_settings:
             expanded: '0'
             collapsed: '1'
     regions:
-      timeline:
-        - field_hs_timeline
       add-expand-collapse:
         - field_hs_field_add_expand_collap
+      timeline:
+        - field_hs_time_title
+        - field_hs_timeline
 id: paragraph.hs_timeline.default
 targetEntityType: paragraph
 bundle: hs_timeline
@@ -48,8 +50,17 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 2
+    weight: 0
     region: add-expand-collapse
+  field_hs_time_title:
+    type: entity_title_heading
+    label: hidden
+    settings:
+      tag: h2
+      linked: false
+    third_party_settings: {  }
+    weight: 1
+    region: timeline
   field_hs_timeline:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -57,7 +68,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: timeline
 hidden:
   search_api_excerpt: true

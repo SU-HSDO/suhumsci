@@ -1,38 +1,145 @@
 name: suhumsci
-recipe: drupal8
+recipe: drupal9
 config:
   webroot: docroot
-  php: '7.4'
+  php: '8.1'
+  composer_version: '2.4.0'
+  # M1 MacOS specific settings
+  xdebug: false
+  index: false
+  edge: false
+  cache: false
 proxy:
   appserver:
-    - swshumsci.suhumsci.loc
+    - africanstudies.suhumsci.loc
+    - amstudies.suhumsci.loc
+    - anthro-net.suhumsci.loc
+    - anthropology.suhumsci.loc
+    - antiracismlab.suhumsci.loc
     - archaeology.suhumsci.loc
+    - art.suhumsci.loc
     - artexhibitions.suhumsci.loc
+    - bingschool.suhumsci.loc
+    - biology.suhumsci.loc
+    - biologyvirtualshowcase.suhumsci.loc
+    - bsurp.suhumsci.loc
     - buddhiststudies.suhumsci.loc
+    - ccsre.suhumsci.loc
+    - ceas.suhumsci.loc
+    - cesta.suhumsci.loc
+    - chemistry.suhumsci.loc
+    - clas.suhumsci.loc
+    - classics.suhumsci.loc
+    - cmbprogram.suhumsci.loc
+    - cmems.suhumsci.loc
+    - cqmd.suhumsci.loc
+    - creativewriting.suhumsci.loc
+    - creees.suhumsci.loc
+    - culture-emotion-lab.suhumsci.loc
+    - datasciencemajor.suhumsci.loc
+    - dennylab.suhumsci.loc
+    - dfetter.humsci.suhumsci.loc
+    - dlcl.suhumsci.loc
     - dsresearch.suhumsci.loc
     - duboislab.suhumsci.loc
+    - ealc.suhumsci.loc
     - economics.suhumsci.loc
+    - em1060.suhumsci.loc
+    - english.suhumsci.loc
+    - ethicsinsociety.suhumsci.loc
+    - facultyaffairs-humsci.suhumsci.loc
+    - facultyaffairs-humsci2021.suhumsci.loc
+    - feldman.suhumsci.loc
+    - feminist.suhumsci.loc
+    - finance-humsci.suhumsci.loc
     - francestanford.suhumsci.loc
-    - insidehs.sushumsci.loc
+    - gavin-wright.humsci.suhumsci.loc
+    - gender.suhumsci.loc
+    - globalcurrents.suhumsci.loc
+    - grandtour.suhumsci.loc
+    - gus-humsci.suhumsci.loc
+    - gus-humsci2021.suhumsci.loc
+    - heidi-williams.humsci.suhumsci.loc
+    - history.suhumsci.loc
+    - hopkinsmarinestation.suhumsci.loc
+    - hs-colorful.suhumsci.loc
+    - hs-design.suhumsci.loc
+    - hs-fcp.suhumsci.loc
+    - hs-sandbox.suhumsci.loc
+    - hs-testing-sandbox.suhumsci.loc
+    - hs-traditional.suhumsci.loc
+    - hsbi.suhumsci.loc
+    - hshr.suhumsci.loc
+    - hsweb-userguide.suhumsci.loc
+    - humanbiology.suhumsci.loc
+    - humanexperience.suhumsci.loc
+    - humanitiescore.suhumsci.loc
+    - humanrights.suhumsci.loc
+    - impact.suhumsci.loc
+    - insidehs.suhumsci.loc
+    - internationalrelations.suhumsci.loc
+    - iranianstudies.suhumsci.loc
+    - iriss.suhumsci.loc
+    - islamicstudies.suhumsci.loc
     - it-humsci.suhumsci.loc
+    - jewishstudies.suhumsci.loc
+    - language.suhumsci.loc
+    - linguistics.suhumsci.loc
     - lowe.suhumsci.loc
     - mathematics.suhumsci.loc
     - mcs.suhumsci.loc
+    - mediterraneanstudies.suhumsci.loc
+    - memorylab.suhumsci.loc
+    - morrisoninstitute.suhumsci.loc
     - mrc.suhumsci.loc
+    - mrc2021.suhumsci.loc
+    - mtl.suhumsci.loc
+    - music.suhumsci.loc
+    - oconnell.suhumsci.loc
     - philit.suhumsci.loc
+    - philosophy.suhumsci.loc
+    - physics.suhumsci.loc
+    - planning-humsci.suhumsci.loc
+    - politicalscience.suhumsci.loc
     - popstudies.suhumsci.loc
+    - psychology.suhumsci.loc
+    - publicpolicy.suhumsci.loc
+    - religiousstudies.suhumsci.loc
+    - researchadmin-humsci.suhumsci.loc
+    - scl.suhumsci.loc
+    - sgs.suhumsci.loc
     - shenlab.suhumsci.loc
-    - sparkbox-sandbox.suhumsci.loc
+    - sitp.suhumsci.loc
+    - siw.suhumsci.loc
+    - sociology.suhumsci.loc
+    - southasia.suhumsci.loc
+    - stanfordsciencefellows.suhumsci.loc
+    - starlab.suhumsci.loc
+    - statistics.suhumsci.loc
+    - sts.suhumsci.loc
+    - suac.suhumsci.loc
+    - swshumsci.suhumsci.loc
     - swshumsci-sandbox.suhumsci.loc
     - symsys.suhumsci.loc
+    - tessier-lavigne-lab.suhumsci.loc
+    - texttechnologies.suhumsci.loc
+    - urbanstudies.suhumsci.loc
+    - west.suhumsci.loc
+    - womensleadership.suhumsci.loc
 services:
   appserver:
+    build:
+      - composer install && /app/vendor/bin/blt blt:init:settings
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal'/g" {}
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'drupal'/g" {}
+      - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'host' => 'localhost'/'host' => 'database'/g" {}
+      - cp /app/lando/lando.sites.php /app/docroot/sites/local.sites.php
     ssl: true
-  database: # Override the database that comes in the drupal8
-    creds:  # recipe and use it for the /sites/default site.
-      user: drupal
-      password: drupal
-      database: sparkbox_sandbox
+  database:
+    type: mysql
+    run_as_root:
+      # Create extra databases.
+      - mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'drupal'@'%' IDENTIFIED by 'drupal';"
   chromedriver:
     type: compose
     services:
@@ -45,108 +152,6 @@ services:
       security_opt:
         - seccomp:unconfined
       command: ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
-  # archaeology:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: archaeology
-  # artexhibitions:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: artexhibitions
-  # buddhiststudies:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: buddhiststudies
-  # dsresearch:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: dsresearch
-  # duboislab:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: duboislab
-  # economics:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: economics
-  # francestanford:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: francestanford
-  # ithumsci:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: it_humsci
-  # lowe:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: lowe
-  # mathematics:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: mathematics
-  # mcs:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: mcs
-  # mrc:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: mrc
-  # philit:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: philit
-  # shenlab:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: shenlab
-  # sparkbox_sandbox:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: sparkbox_sandbox
-  # swshumsci_sandbox:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: swshumsci_sandbox
-  # symsys:
-  #   type: mysql:5.7
-  #   creds:
-  #     user: drupal
-  #     password: drupal
-  #     database: symsys
 tooling:
   blt:
     service: appserver

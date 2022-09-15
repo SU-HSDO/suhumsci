@@ -4,6 +4,10 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: event_subscriber }
+  humsci_events_listeners.menu_events:
+    class: Drupal\humsci_events_listeners\EventSubscriber\MenuEvents
+    tags:
+      - { name: event_subscriber }
   humsci_events_listeners.node_events:
     class: Drupal\humsci_events_listeners\EventSubscriber\NodeEvents
     tags:

@@ -3,7 +3,7 @@
 /**
  * Class PrivatePagePermissionCest.
  *
- * @group permissions
+ * @group install
  */
 class PrivatePagePermissionCest{
 

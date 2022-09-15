@@ -3,7 +3,7 @@
 /**
  * Class PrivatePageContentCest.
  *
- * @group content
+ * @group install
  */
 class PrivatePageContentCest{
 

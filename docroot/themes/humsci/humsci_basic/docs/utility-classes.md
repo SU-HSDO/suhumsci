@@ -186,6 +186,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 | hb-carousel-reset-height | Override inline styles to reset the default height of the text box within a carousel. | - |
 | hb-timeline-checklist | Change vertical timeline circle icons to squares. | - |
 | hb-timeline-border | Add a bottom border to each vertical timeline. | - |
+| hb-accordion-secondary | Alters appearance of accordion components to its secondary variation  | - |
 
 ### Misc
 

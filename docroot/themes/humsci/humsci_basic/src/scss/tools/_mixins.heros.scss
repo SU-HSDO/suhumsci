@@ -359,13 +359,18 @@
 }
 
 @mixin hb-hero-text-animation {
-  .hb-has-animation-enhancements & {
+  .hb-has-animation-enhancements.js & {
     opacity: 0;
   }
 
   @include hb-traditional {
     &.animate {
-      .hb-has-animation-enhancements & {
+      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
+      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
+      .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
+      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
+      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
+      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
         animation-duration: 1700ms;
         animation-timing-function: ease-in-out;
         animation-fill-mode: forwards;
@@ -378,14 +383,18 @@
     .hb-has-animation-enhancements.js & {
       opacity: 0; // Prevent text from displaying if page loads before the animate class is applied. If JS is turned off we don't want to hide the text, therefore we are only setting opacity to zero when there is JS.
     }
-
+    
     &.animate {
-      .hb-has-animation-enhancements .slick-active &,
-      .hb-has-animation-enhancements .unslick & {
-        animation-duration: 2000ms;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-        animation-name: colorfulHeroText;
+      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
+      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
+      .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
+      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
+      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
+      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
+          animation-duration: 2000ms;
+          animation-timing-function: ease-in-out;
+          animation-fill-mode: forwards;
+          animation-name: colorfulHeroText; 
       }
     }
   }

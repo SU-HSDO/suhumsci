@@ -30,7 +30,7 @@ index 4d19147c..48638114 100644
 @@ -67,6 +88,61 @@ AddEncoding gzip svgz
  <IfModule mod_rewrite.c>
    RewriteEngine on
- 
+
 +  # Block access via specific user-agents.
 +  RewriteCond %{HTTP_USER_AGENT} CQ-API-Spyder [NC]
 +  RewriteRule .* - [F,L]

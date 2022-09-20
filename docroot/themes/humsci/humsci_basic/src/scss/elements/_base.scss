@@ -157,3 +157,17 @@ button:not([class]) {
     cursor: pointer;
   }
 }
+
+*:focus:not(:focus-visible) {
+  /* Remove focus indication when a mouse is used */
+  outline: none;
+}
+
+*:focus-visible {
+  @include hb-pairing-color('outline-color', 'primary');
+
+  outline-width: hb-calculate-rems(3px);
+  outline-style: solid;
+  outline-offset: hb-calculate-rems(1px);
+  border: 1px solid white;
+}

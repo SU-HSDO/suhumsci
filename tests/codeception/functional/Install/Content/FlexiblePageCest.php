@@ -47,6 +47,7 @@ class FlexiblePageCest {
     $I->fillField('Link text', 'Google CTA');
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->click('Save');
+    $I->click('Save');
     $I->waitForJS('return document.readyState == "complete"', 60);
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');
@@ -80,6 +81,7 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementVisible('.media-library-item__preview img');
+    $I->click('Save');
     $I->click('Save');
     $I->waitForJS('return document.readyState == "complete"', 60);
     $I->canSee('Demo Basic Page', 'h1');

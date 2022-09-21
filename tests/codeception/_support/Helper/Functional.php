@@ -14,4 +14,11 @@ use Codeception\Module;
  */
 class Functional extends Module {
 
+  /**
+ * @param int $timeout : timeout period
+ * @throws ModuleException
+ */
+  public function waitPageLoad($timeout = 10) {
+    $this->webDriverModule->waitForJs('return document.readyState == "complete"', $timeout);
+  }
 }

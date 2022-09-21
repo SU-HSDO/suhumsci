@@ -47,6 +47,7 @@ class FlexiblePageCest {
     $I->fillField('Link text', 'Google CTA');
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->click('Save');
+    $I->waitPageLoad();
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');
     $I->canSee('Google CTA', 'a');

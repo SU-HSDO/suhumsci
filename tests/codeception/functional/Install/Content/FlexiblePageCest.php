@@ -78,6 +78,7 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementVisible('.media-library-item__preview img');
+    $I->executeJS('window.onbeforeunload = undefined;');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');

@@ -46,7 +46,7 @@ class FlexiblePageCest {
     $I->fillField('field_hs_page_hero[0][subform][field_hs_hero_title][0][value]', 'Overlay Title');
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
-    $I->executeJS('window.scrollTo(0,Y);');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');
@@ -94,7 +94,7 @@ class FlexiblePageCest {
     $I->waitForText('Description');
     $I->click('Style');
     $I->selectOption('Display Mode', 'Slideshow');
-    $I->executeJS('window.scrollTo(0,Y);');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('.slick img', 1);
   }
@@ -150,7 +150,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->executeJS('window.scrollTo(0,Y);');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->click('.hb-main-nav__toggle');

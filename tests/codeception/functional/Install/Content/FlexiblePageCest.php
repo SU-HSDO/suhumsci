@@ -82,7 +82,7 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementVisible('.media-library-item__preview img');
-    $I->executeJS('window.scrollTo(0,Y);');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');
@@ -150,7 +150,6 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->click('.hb-main-nav__toggle');

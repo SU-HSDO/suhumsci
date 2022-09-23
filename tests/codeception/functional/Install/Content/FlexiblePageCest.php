@@ -47,9 +47,9 @@ class FlexiblePageCest {
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
     $I->click('Save');
-    // $I->canSeeNumberOfElements('#main-content img', 1);
-    // $I->canSee('Overlay Title');
-    // $I->canSee('Google CTA', 'a');
+    $I->canSeeNumberOfElements('#main-content img', 1);
+    $I->canSee('Overlay Title');
+    $I->canSee('Google CTA', 'a');
   }
 
   /**
@@ -93,7 +93,7 @@ class FlexiblePageCest {
     $I->click('Style');
     $I->selectOption('Display Mode', 'Slideshow');
     $I->click('Save');
-    // $I->canSeeNumberOfElements('.slick img', 1);
+    $I->canSeeNumberOfElements('.slick img', 1);
   }
 
    /**
@@ -148,10 +148,10 @@ class FlexiblePageCest {
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Save');
-    // $I->canSeeInCurrentUrl('/demo-basic-page');
-    // $I->click('.hb-main-nav__toggle');
-    // $I->seeElement('.hb-main-nav__menu');
-    // $I->click('.hb-main-nav__link');
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->click('.hb-main-nav__toggle');
+    $I->seeElement('.hb-main-nav__menu');
+    $I->click('.hb-main-nav__link');
   }
 
 }

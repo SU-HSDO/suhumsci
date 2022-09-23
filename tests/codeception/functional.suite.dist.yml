@@ -9,16 +9,14 @@ actor: FunctionalTester
 modules:
   enabled:
     - WebDriver
+        capabilities:
+          unexpectedAlertBehaviour: 'accept'
     - \Helper\Functional
     - Codeception\Module\Asserts
     - StanfordCaravan\Codeception\Drupal\DrupalBootstrap
     - StanfordCaravan\Codeception\Drupal\DrupalDrush
     - StanfordCaravan\Codeception\Drupal\DrupalEntity
     - StanfordCaravan\Codeception\Drupal\DrupalUser
-  config:
-    WebDriver:
-      capabilities:
-        unexpectedAlertBehaviour: 'accept'
   disabled:
     - PhpBrowser
   step_decorators: ~

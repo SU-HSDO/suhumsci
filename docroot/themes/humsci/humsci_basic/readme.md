@@ -38,6 +38,25 @@ In our `.browserlistrc` file we specify support for `"last 1 major version"` of 
 
 - `npm test` - Run linting and sass true tests
 
+## Visual Regression Testing
+
+- `npm run visreg` - Runs percy script to test the visual regression of both the
+Colorful and Traditional sites.
+
+To run this, you will be required to be a member of the organization on Percy.io
+and have a local Percy token. To use the Percy token, acquire it from Percy.io
+under 'Project Settings'. Copy and paste the entire line under 'Project Token'
+and include that in an `.env` file in this directory (`humsci_basic`).
+
+The pages tested are located in the `.snapshots-colorful.js` and `.snapshots-traditional.js` respectively. To test the sites individually, you can run
+`npm run visreg:colorful` and `npm run visreg:traditional`.
+
+In order to have consistent testing, we need to ensure certain features are
+enabled/disabled before testing. These include:
+* The Colorful site should use the new V2 Megamenu
+* The Traditional site should use the old V1 Megamenu
+* Both Colorful and Traditional sites should have the 'Use Animation Enhancements' feature turned off on their respective theme settings.
+
 ### Sass True
 
 We use the [Sass True](https://github.com/oddbird/true) testing framework to test our Sass function and mixins.

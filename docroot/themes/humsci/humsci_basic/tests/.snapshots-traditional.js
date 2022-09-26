@@ -1,4 +1,3 @@
-// TODO: approve test on colorful make sure doesn't conflict
 // Note: Traditional requires the original menu to complete screenshots.
 module.exports = [
   {

@@ -18,10 +18,10 @@ class MegaMenuCest {
     $config_page = config_pages_config('hs_site_options', NULL);
     $config_page->set('field_en_mega_menu', 1);
     $config_page->save();
-    echo "MegaMenuCest: Mega menu enabled.";
+    echo "MegaMenuCest: Mega menu enabled";
 
     drupal_flush_all_caches();
-    echo "MegaMenuCest: All caches flushed.";
+    echo "MegaMenuCest: All caches flushed";
 
     $I->amOnPage('/');
     $I->canSeeResponseCodeIsBetween(200, 403);

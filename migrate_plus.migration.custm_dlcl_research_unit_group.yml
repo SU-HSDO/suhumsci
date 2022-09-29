@@ -1,0 +1,83 @@
+uuid: 354dc525-cfb9-4f25-a990-3d170c0175fe
+langcode: en
+status: false
+dependencies: {  }
+id: custm_dlcl_research_unit_group
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: {  }
+migration_group: default
+label: 'Research Unit Group Importer'
+source:
+  track_changes: true
+  plugin: url
+  data_fetcher_plugin: file
+  data_parser_plugin: simple_xml
+  urls:
+    - https://dlcl.stanford.edu/research-areas-research-xml
+    - https://dlcl.stanford.edu/research-areas-focal-xml
+  constants:
+    status: 1
+    type: custm_research_unit_group
+    basic_html: basic_html
+  item_selector: /ResearchAreas/ResearchArea
+  fields:
+    -
+      name: nid
+      label: NID
+      selector: nid
+    -
+      name: title
+      label: Title
+      selector: title
+    -
+      name: body
+      label: Body
+      selector: body
+    -
+      name: groupType
+      label: 'Group Type'
+      selector: groupType
+  ids:
+    nid:
+      type: string
+  orphan_action: forget
+process:
+  title: title
+  revision_timestamp:
+    -
+      plugin: callback
+      callable: _stanford_migrate_get_time
+  revision_translation_affected:
+    -
+      plugin: default_value
+      default_value: 1
+  status: constants/status
+  type: constants/type
+  body/value: body
+  body/format: constants/basic_html
+  custm_rug_group_type:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: groupType
+    -
+      plugin: entity_generate
+      value_key: name
+      bundle_key: vid
+      bundle: custm_research_unit_group_type
+      entity_type: taxonomy_term
+      ignore_case: true
+destination:
+  plugin: 'entity_reference_revisions:node'
+  new_revisions: true
+  force_revision: true
+  overwrite_properties:
+    - body/format
+    - body/value
+    - custm_research_unit_group_type
+    - title
+    - type
+migration_dependencies:
+  required: {  }

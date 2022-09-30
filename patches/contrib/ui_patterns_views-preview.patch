@@ -58,7 +58,7 @@ index 0000000..7f1e292
 +  </{{ field.wrapper_element }}>
 +{%- endif %}
 diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
-index 0b2ad4c..69863d8 100644
+index 58f0b04..b7020a2 100644
 --- a/modules/ui_patterns_views/ui_patterns_views.module
 +++ b/modules/ui_patterns_views/ui_patterns_views.module
 @@ -6,6 +6,9 @@
@@ -205,7 +205,7 @@ index 0b2ad4c..69863d8 100644
 -      '#id' => $options['pattern'],
 -      '#fields' => $fields,
 -      '#multiple_sources' => TRUE,
--      '#variant' => isset($options['pattern_variant']) ? $options['pattern_variant'] : '',
+-      '#variant' => $options['pattern_variant'] ?? '',
 -    ];
 -
 -    // Allow default context values to not override those exposed elsewhere.

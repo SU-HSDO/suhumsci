@@ -376,6 +376,25 @@
       }
     }
 
+    .hb-main-nav__menu-lv2 > li > & {
+      .su-masthead:not(.hb-dark-pattern) & {
+        @include hb-pairing-color('color', 'tertiary');
+
+        &:hover:not(.is-active),
+        &:focus {
+          @include hb-pairing-color('color', 'tertiary-darken-20');
+        }
+
+        & + .hb-nested-toggler {
+          @include hb-icon-background('plus', 'tertiary');
+
+          &[aria-expanded="true"] {
+            @include hb-icon-background('minus', 'tertiary-darken-20');
+          }
+        }
+      }
+    }
+
     &--active-trail,
     &[data-drupal-link-system-path="<front>"].is-active {
       &::before {

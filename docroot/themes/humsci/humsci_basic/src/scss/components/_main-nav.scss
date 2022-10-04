@@ -3,30 +3,22 @@
 // styles require two things: 1) larger screen widths and 2) JS to be enabled.
 // Thus we require media queries AND the .js class to show these larger screen styles.
 .hb-main-nav {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
   position: relative;
-  bottom: hb-calculate-rems(4px);
   font-size: hb-calculate-rems(18px);
-
-  @include grid-media-min('lg') {
-    .js & {
-      display: block;
-      top: 0;
-    }
-  }
 
   &__toggle {
     @include hb-unbuttonize;
 
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: hb-calculate-rems(-46.75px);
+    font-weight: hb-theme-font-weight(bold);
     display: flex;
     align-items: center;
     width: hb-calculate-rems(70px);
     flex-direction: initial;
     padding: hb-calculate-rems(10px) 0;
-    font-weight: hb-theme-font-weight(bold);
-    cursor: pointer;
 
     // If there is no JS then the navigation is automatically expanded and
     // toggle buttons are unnecessary.
@@ -590,5 +582,13 @@
 
   .hb-main-nav__menu-container {
     display: none;
+  }
+}
+
+.su-site-search {
+  + nav {
+    .hb-main-nav__toggle {
+      top: hb-calculate-rems(-120px);
+    }
   }
 }

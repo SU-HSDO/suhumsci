@@ -10,20 +10,18 @@
   {% endif %}
 
   <section class="hb-page-width hb-position-relative">
-    <div class="su-site-header-nav-container">
-      {% if page.header %}
-        {{ page.header }}
-      {% endif %}
-
-      {% if page.menu %}
-        {{ page.menu }}
-      {% endif %}
-    </div>
+    {% if page.header %}
+      {{ page.header }}
+    {% endif %}
 
     {% if page.search %}
     <div class="su-site-search" role="search">
       {{ page.search }}
     </div>
+    {% endif %}
+
+    {% if page.menu %}
+      {{ page.menu }}
     {% endif %}
   </section>
 </header>

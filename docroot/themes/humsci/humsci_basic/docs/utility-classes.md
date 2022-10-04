@@ -102,7 +102,7 @@ Group Block Utility Classes are used to apply styles to node group blocks within
 | hs-pdf-link |❗️|
 | hs-file-link |❗️|
 | hs-table--borderless | - |
-| hs-well | ✅|
+| hs-breakout-box | ✅|
 <br>
 
 

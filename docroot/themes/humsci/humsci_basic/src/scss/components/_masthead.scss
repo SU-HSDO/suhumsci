@@ -4,21 +4,10 @@
   border-bottom: $hb-thin-border;
   @include hb-global-color('border-color', 'gray');
 
-  .su-site-header-nav-container {
-    display: grid;
-    grid-template-columns: calc(75% - #{hb-calculate-rems(8px)}) calc(25% - #{hb-calculate-rems(8px)});
-    gap: hb-calculate-rems(16px);
-    width: 100%;
-
-    @include grid-media-min('lg') {
-      display: block;
-      gap: unset;
-    }
-  }
-
   .su-lockup {
-    width: 100%;
-    max-width: 100%;
+    // Match and override inherited 'decanter' styles
+    flex: calc(83.33% - #{hb-calculate-rems(16px)});
+    max-width: calc(83.33% - #{hb-calculate-rems(16px)});
     z-index: $hb-z-index-lockup;
 
     @include grid-media-min('lg') {

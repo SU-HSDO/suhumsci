@@ -11,10 +11,6 @@
  * Target main menu and add a twig variable to show/hide the new mega menu.
  */
 function hs_megamenu_preprocess_menu(&$variables) {
-
-    // $config_page = \Drupal::service('config_pages.loader');
-    // $config_page->load('hs_site_options')->set('field_en_mega_menu', 0)->save();
-
     if ($variables['menu_name'] == 'main') {
     $config_pages = \Drupal::service('config_pages.loader');
     $variables['use_hs_megamenu'] = (bool) $config_pages->getValue('hs_site_options', 'field_en_mega_menu', 0, 'value');

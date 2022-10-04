@@ -6,7 +6,7 @@ use Faker\Factory;
 /**
  * Class MegaMenuCest.
  *
- * @group install
+ * @group megamenu
  */
 class MegaMenuCest {
 
@@ -16,16 +16,14 @@ class MegaMenuCest {
   public function testMegaMenu(FunctionalTester $I) {
 
     $config_page = \Drupal::service('config_pages.loader');
-    $config_page->load('hs_site_options');
-    //$config_page->load('hs_site_options')->set('field_en_mega_menu', 1)->save();
-
-    echo "MegaMenuCest: Mega menu enabled";
-
+    $config_page->load('hs_site_options')->set('field_en_mega_menu', 1)->save();
     drupal_flush_all_caches();
-    echo "MegaMenuCest: All caches flushed";
-
     $I->amOnPage('/');
-    $I->canSeeResponseCodeIsBetween(200, 403);
-
+    $I->click('.megamenu__toggle');
+    $I->seeElement('.megamenu__expanded-container.is-expanded');
+    $I->click('.megamenu__toggle');
+    $I->dontSeeElement('.megamenu__expanded-container.is-expanded');
+    $I->click('.megamenu__toggle');
+    $I->click('.megamenu__link');
   }
 }

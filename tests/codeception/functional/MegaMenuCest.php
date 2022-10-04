@@ -16,8 +16,9 @@ class MegaMenuCest {
   public function testMegaMenu(FunctionalTester $I) {
 
     $config_page = config_pages_config('hs_site_options', NULL);
-    $config_page->set('field_en_mega_menu', 1);
-    $config_page->save();
+    print_r($config_page);
+    //$config_page->set('field_en_mega_menu', 1);
+    //$config_page->save();
     echo "MegaMenuCest: Mega menu enabled";
 
     drupal_flush_all_caches();

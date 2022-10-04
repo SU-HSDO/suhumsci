@@ -12,7 +12,12 @@
  */
 function hs_megamenu_preprocess_menu(&$variables) {
 
-  if ($variables['menu_name'] == 'main') {
+    // $config_page = config_pages_config('hs_site_options', NULL);
+    // $config_page->set('field_en_mega_menu', 1);
+    // $config_page->save();
+    // echo "MegaMenuCest: Mega menu enabled";
+
+    if ($variables['menu_name'] == 'main') {
     $config_pages = \Drupal::service('config_pages.loader');
     $variables['use_hs_megamenu'] = (bool) $config_pages->getValue('hs_site_options', 'field_en_mega_menu', 0, 'value');
   }

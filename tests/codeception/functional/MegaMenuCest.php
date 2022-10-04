@@ -16,7 +16,8 @@ class MegaMenuCest {
   public function testMegaMenu(FunctionalTester $I) {
 
     $config_page = \Drupal::service('config_pages.loader');
-    $config_page->load('hs_site_options')->set('field_en_mega_menu', 1)->save();
+    $config_page->load('hs_site_options');
+    //$config_page->load('hs_site_options')->set('field_en_mega_menu', 1)->save();
 
     echo "MegaMenuCest: Mega menu enabled";
 

@@ -12,10 +12,8 @@
  */
 function hs_megamenu_preprocess_menu(&$variables) {
 
-    // $config_page = config_pages_config('hs_site_options', NULL);
-    // $config_page->set('field_en_mega_menu', 1);
-    // $config_page->save();
-    // echo "MegaMenuCest: Mega menu enabled";
+    // $config_page = \Drupal::service('config_pages.loader');
+    // $config_page->load('hs_site_options')->set('field_en_mega_menu', 0)->save();
 
     if ($variables['menu_name'] == 'main') {
     $config_pages = \Drupal::service('config_pages.loader');

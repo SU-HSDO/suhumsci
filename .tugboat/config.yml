@@ -55,9 +55,11 @@ services:
       build:
         - composer install --no-ansi
 
+        - drush @hs_colorful.local cr
         - blt drupal:update --site=hs_colorful
         - drush @hs_traditional.local pmu simplesamlphp_auth -y
 
+        - drush @hs_traditional.local cr
         - blt drupal:update --site=hs_traditional
         - drush @hs_colorful.local pmu simplesamlphp_auth -y
 

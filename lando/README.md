@@ -153,6 +153,8 @@ Lando/docker have had known compatibility issues with the latest ARM-based Macs.
 
 ## Setup for local Codeception testing
 
+NOTE: This does not work well on ARM-based Mac's. Linux highly recommended.
+
 1. Copy codeception yml for setup.
 Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
     * Edit this new `tests/codeception.yml` file and change the `HTTP_HOST`, `uri` and `url` (lines 19, 23, 25, and 28) to be the lando host of the site you are working on locally.

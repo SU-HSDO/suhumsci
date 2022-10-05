@@ -140,7 +140,7 @@ Using and M1/M2 Mac? See amended instructions below prior to setup.
 6. Run `lando info`, and browse to the url for your multisite.
 7. Run `lando drush @[site_alias].local uli` to log in as user:1 (Example: `lando drush @music.local uli`)
 
-## Adding a new site to lando
+## Adding a new site to Lando
 1. Copy and existing site's folder in `docroot/sites/` and rename the folder to the new site.
 2. Edit the `blt.yml` file within your new sites folder with the corresponding site names.
 3. All other files within this folder are variable. All you need to do is run `lando rebuild -y`

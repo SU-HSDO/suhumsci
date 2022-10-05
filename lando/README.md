@@ -155,10 +155,10 @@ Lando/docker have had known compatibility issues with the latest ARM-based Macs.
 
 1. Copy codeception yml for setup.
 Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
-2. Add local Drush configuration for testing
-    * Edit `docroot/sites/default/settings/local.settings.php` database connection to be the connection located in `docroot/sites/sparkbox_sandbox/settings/local.settings.php`.
-
-    * Create `drush/local.drush.yml`
+    * Edit this new `tests/codeception.yml` file and change the `HTTP_HOST`, `uri` and `url` (lines 19, 23, 25, and 28) to be the lando host of the site you are working on locally.
+    * For example: hs-colorful would be `hs-colorful.suhumsci.loc` (keep `http://` for the url.)
+2. Edit `docroot/sites/default/settings/local.settings.php` database connection to `suhumsci_[directory name of site]` for example hs-colorful would be `suhumsci_hs_colorful` for the database.
+3. Create `drush/local.drush.yml` and copy this code into that file and change the `sparkbox_sandbox` to the directory name of the site you are working on locally. For example hs-colorful would be `hs_colorful`:
 
     ```yaml
     # # This file defines drush configuration that applies to drush commands
@@ -177,8 +177,9 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
           - '${env.home}/.drush'
           - /usr/share/drush/commands
     ```
+4. Change the uri in `/docroot/sites/[site_name]/local.drush.yml` to the uri of the site you are working on locally. For hs-colorful this would be `hs-colorful.suhumsci.loc`
 
-3. Ensure your `.lando.yml` file default database is setup with `sparkbox_sandbox` as your default db.
+5. Add the `creds` section to `.lando.yml`. The database should match the site you are currently working on. For example for hs-colorful this would be `database: suhumsci_hs_colorful`.
 
     ```yaml
     Example:
@@ -191,6 +192,10 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
           password: drupal
           database: sparkbox_sandbox
     ```
+
+6. Edit `/blt/local.blt.yml` and change the uri, hostname, and database (lines 4, 5 and 8) to the values for the site you are working on. For example, for hs-colorful, these would be `hs-colorful.suhumsci.loc` for the uri and hostname, and `suhumsci_hs_colorful` for the database.
+
+7. Rerun `lando rebuild` to get the new configuration added in step 5.
 
 ### To run Codeception tests locally
 

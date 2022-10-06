@@ -65,3 +65,18 @@ drupal-media {
 .media-library-item__edit {
   z-index: $hb-z-index-ckedit-button;
 }
+
+// Breakout Box
+// Adds a breakout box with background color to CKeditor font styles
+.hs-breakout-box {
+  @include hb-themes(('colorful', 'airy')) {
+    @include hb-pairing-color('background-color', 'spotlight');
+  }
+  @include hb-traditional {
+    @include hb-pairing-color('background-color', 'spotlight');
+  }
+
+  padding: 2rem 1.8rem;
+  border: 0 none;
+  display: table;
+}

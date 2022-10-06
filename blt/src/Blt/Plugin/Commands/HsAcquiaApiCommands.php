@@ -80,6 +80,41 @@ class HsAcquiaApiCommands extends BltTasks {
   }
 
   /**
+   * Add a domains to Acquia environment.
+   *
+   * @param string $sitename
+   *   BLT Sitename from multisite array.
+   *
+   * @option include-production Include the live production url.
+   *
+   * @command humsci:add-site-domains
+   */
+  public function humsciAddDomains(string $sitename, $options = ['include-production' => FALSE]) {
+    $multisites = $this->getConfigValue('multisites');
+    if (!in_array($sitename, $multisites)) {
+      throw new \Exception('Invalidate sitename');
+    }
+
+    $this->connectAcquiaApi();
+    $site_domain = str_replace('_', '-', str_replace('__', '.', $sitename));
+    foreach (['dev', 'stage', 'prod'] as $environment) {
+      $domain = "$site_domain-$environment.stanford.edu";
+      preg_match('/(.*)\.(.*)/', $site_domain, $matches);
+      if ($matches) {
+        [, $first_part, $second_part] = $matches;
+        $domain = "$first_part-$environment.$second_part.stanford.edu";
+      }
+
+      $environment = $environment == 'stage' ? 'test' : $environment;
+      $this->say($this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain)->message);
+      if ($environment == 'prod' && $options['include-production']) {
+        $domain = str_replace('-prod.', '.', $domain);
+        $this->say($this->acquiaDomains->create($this->getEnvironmentUuid($environment), $domain)->message);
+      }
+    }
+  }
+
+  /**
    * Add a domain to Acquia environment.
    *
    * @param string $environment
@@ -316,8 +351,7 @@ class HsAcquiaApiCommands extends BltTasks {
     }
     try {
       $this->acquiaApplications->getAll();
-    }
-    catch (\Throwable $e) {
+    } catch (\Throwable $e) {
       $this->traitConnectAcquiaApi();
     }
   }

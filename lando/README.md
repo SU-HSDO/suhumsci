@@ -181,7 +181,9 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
     ```
 4. Change the uri in `/docroot/sites/[site_name]/local.drush.yml` to the uri of the site you are working on locally. For hs-colorful this would be `hs-colorful.suhumsci.loc`
 
-5. Add the `creds` section to `.lando.yml`. The database should match the site you are currently working on. For example for hs-colorful this would be `database: suhumsci_hs_colorful`.
+5. Edit ```docroot/sites/default/local.drush.yml``` and change the uri to the uri of the site you are working on. For hs-colorful this would be `hs-colorful.suhumsci.loc`
+
+6. Add the `creds` section to `.lando.yml`. The database should match the site you are currently working on. For example for hs-colorful this would be `database: suhumsci_hs_colorful`.
 
     ```yaml
     Example:
@@ -195,9 +197,9 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
           database: sparkbox_sandbox
     ```
 
-6. Edit `/blt/local.blt.yml` and change the uri, hostname, and database (lines 4, 5 and 8) to the values for the site you are working on. For example, for hs-colorful, these would be `hs-colorful.suhumsci.loc` for the uri and hostname, and `suhumsci_hs_colorful` for the database.
+7. Edit `/blt/local.blt.yml` and change the uri, hostname, and database (lines 4, 5 and 8) to the values for the site you are working on. For example, for hs-colorful, these would be `hs-colorful.suhumsci.loc` for the uri and hostname, and `suhumsci_hs_colorful` for the database.
 
-7. Rerun `lando rebuild` to get the new configuration added in step 5.
+8. Rerun `lando rebuild` to get the new configuration added in step 5.
 
 ### To run Codeception tests locally
 

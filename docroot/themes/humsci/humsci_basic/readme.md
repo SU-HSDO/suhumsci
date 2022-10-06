@@ -46,15 +46,17 @@ Colorful and Traditional sites.
 To run this, you will be required to be a member of the organization on Percy.io
 and have a local Percy token. To use the Percy token, acquire it from Percy.io
 under 'Project Settings'. Copy and paste the entire line under 'Project Token'
-and include that in an `.env` file in this directory (`humsci_basic`).
+line into your `.bashrc` or `.zshrc` file located in your `$HOME` directory as `export PERCY_TOKEN=XXX`.
 
-The pages tested are located in the `.snapshots-colorful.js` and `.snapshots-traditional.js` respectively. To test the sites individually, you can run
+( Alternatively, you can include that token in a `.env` file in this directory `humsci_basic/` that is at the same level as package.json. )
+
+The pages tested are located in the `tests/percy/.snapshots-colorful.js` and `tests/percy/.snapshots-traditional.js` respectively. To test the sites individually, you can run
 `npm run visreg:colorful` and `npm run visreg:traditional`.
 
 In order to have consistent testing, we need to ensure certain features are
 enabled/disabled before testing. These include:
 * The Colorful site should use the new V2 Megamenu
-* The Traditional site should use the old V1 Megamenu
+* The Traditional site should use the standard dropdown menu
 * Both Colorful and Traditional sites should have the 'Use Animation Enhancements' feature turned off on their respective theme settings.
 
 ### Sass True

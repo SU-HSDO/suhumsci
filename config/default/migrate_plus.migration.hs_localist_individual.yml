@@ -13,6 +13,8 @@ source:
   track_changes: true
   plugin: url
   data_fetcher_plugin: http
+  request_options:
+    timeout: 60
   urls: {  }
   data_parser_plugin: json
   item_selector: events
@@ -160,7 +162,14 @@ process:
       - constants/trim
   field_hs_event_link/uri: localist_url
   field_hs_event_link/title: constants/external_link_text
-  field_hs_event_registration/uri: ticket_url
+  field_hs_event_registration/uri:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: ticket_url
+    -
+      plugin: url_check
+      method: process
   field_hs_event_registration/title: constants/register_text
   field_hs_event_sponsor:
     -

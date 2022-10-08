@@ -1,8 +1,8 @@
 diff --git a/docroot/.htaccess b/docroot/.htaccess
-index 4d19147c..48638114 100644
+index 4d19147c..c47be29b 100644
 --- a/docroot/.htaccess
 +++ b/docroot/.htaccess
-@@ -1,3 +1,24 @@
+@@ -1,3 +1,29 @@
 +
 +# Block bad bots.
 +# See https://docs.acquia.com/cloud-platform/arch/security/restrict/#cloud-blocking-by-ip.
@@ -19,6 +19,11 @@ index 4d19147c..48638114 100644
 +  SetEnvIf AH_CLIENT_IP ^161\.117\.235\.27$ Deny_Host
 +  SetEnvIf AH_CLIENT_IP ^206\.189\.77\.91$ Deny_Host
 +  SetEnvIf AH_CLIENT_IP ^161\.117\.176\.134$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^213\.226\.123\.19$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^159\.223\.3\.1$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^146\.190\.20\.213$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^146\.190\.24\.114$ Deny_Host
++  SetEnvIf AH_CLIENT_IP ^193\.134\.209\.57$ Deny_Host
 +  Order allow,deny
 +  Allow from all
 +  Deny from env=Deny_Host
@@ -27,10 +32,10 @@ index 4d19147c..48638114 100644
  #
  # Apache/PHP/Drupal settings:
  #
-@@ -67,6 +88,61 @@ AddEncoding gzip svgz
+@@ -67,6 +93,61 @@ AddEncoding gzip svgz
  <IfModule mod_rewrite.c>
    RewriteEngine on
-
+ 
 +  # Block access via specific user-agents.
 +  RewriteCond %{HTTP_USER_AGENT} CQ-API-Spyder [NC]
 +  RewriteRule .* - [F,L]
@@ -89,7 +94,7 @@ index 4d19147c..48638114 100644
    # Set "protossl" to "s" if we were accessed via https://.  This is used later
    # if you enable "www." stripping or enforcement, in order to ensure that
    # you don't bounce between http and https.
-@@ -144,6 +220,8 @@ AddEncoding gzip svgz
+@@ -144,6 +225,8 @@ AddEncoding gzip svgz
    RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
    # Allow access to test-specific PHP files:
    RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php

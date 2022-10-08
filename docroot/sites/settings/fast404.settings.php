@@ -144,6 +144,12 @@ $settings['fast404_path_check'] = TRUE;
 $settings['fast404_HTML_error_page'] = __DIR__ . '/404.html';
 
 /**
+ * Default value for this setting is FALSE. This setting needs to be enabled,
+ * so that fast 404 respects the redirect module.
+ */
+$settings['fast404_respect_redirect'] = TRUE;
+
+/**
  * Load the fast404.inc file.
  *
  * This is needed if you wish to do extension checking in settings.php.

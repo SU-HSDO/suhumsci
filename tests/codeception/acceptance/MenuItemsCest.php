@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Url;
+use Drupal\redirect\Entity\Redirect;
 use Faker\Factory;
 
 /**
@@ -122,6 +123,8 @@ class MenuItemsCest {
 
   /**
    * Test fast 404 page.
+   *
+   * @group fast404
    */
   public function testFast404(AcceptanceTester $I){
     $path = $this->faker->words(2, true);
@@ -129,6 +132,15 @@ class MenuItemsCest {
     $I->amOnPage($path);
     $I->canSeeResponseCodeIs(404);
     $I->canSee('Page not found');
+
+    $redirect = Redirect::create();
+    $redirect->setSource("/$path");
+    $redirect->setRedirect('/');
+    $redirect->setStatusCode(301);
+    $redirect->save();
+
+    $I->amOnPage($path);
+    $I->canSeeResponseCodeIs(200);
   }
 
   /**

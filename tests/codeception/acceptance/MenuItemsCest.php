@@ -121,6 +121,17 @@ class MenuItemsCest {
   }
 
   /**
+   * Test fast 404 page.
+   */
+  public function testFast404(AcceptanceTester $I){
+    $path = $this->faker->words(2, true);
+    $path = preg_replace('/[^a-z]/', '-', strtolower($path));
+    $I->amOnPage($path);
+    $I->canSeeResponseCodeIs(404);
+    $I->canSee('Page not found');
+  }
+
+  /**
    * Get all relative url paths to test.
    *
    * @param \AcceptanceTester $I

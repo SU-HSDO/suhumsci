@@ -121,42 +121,6 @@ class MenuItemsCest {
   }
 
   /**
-   * Test fast 404 page.
-   *
-   * @group fast404
-   */
-  public function testFast404(AcceptanceTester $I) {
-    $path = $this->faker->words(2, TRUE);
-    $path = preg_replace('/[^a-z]/', '-', strtolower($path));
-    $I->amOnPage($path);
-    $I->canSeeResponseCodeIs(404);
-
-    $redirect_source = $this->faker->words(2, TRUE);
-    $redirect_source = preg_replace('/[^a-z]/', '-', strtolower($redirect_source));
-
-    $node = $I->createEntity([
-      'type' => 'hs_basic_page',
-      'title' => $this->faker->words(3, TRUE),
-    ]);
-
-    $I->createEntity([
-      'redirect_source' => [[
-        'path' => $redirect_source,
-        'query' => [],
-      ]],
-      'redirect_redirect' => [[
-        'uri' => 'internal:/node/' . $node->id(),
-        'options' => [],
-      ]],
-      'status_code' => 301,
-    ], 'redirect');
-    $I->amOnPage($redirect_source);
-
-    $I->canSeeResponseCodeIs(200);
-    $I->canSeeInCurrentUrl($node->toUrl()->toString());
-  }
-
-  /**
    * Get all relative url paths to test.
    *
    * @param \AcceptanceTester $I

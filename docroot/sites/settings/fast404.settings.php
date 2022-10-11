@@ -157,7 +157,7 @@ if (EnvironmentDetector::isAhEnv()) {
 }
 $settings['fast404_HTML_error_page'] = file_exists($site_404) ? $site_404 : FALSE;
 $settings['fast404_path_check'] = file_exists($site_404);
-
+$settings['fast404_respect_redirect'] = TRUE;
 /**
  * Load the fast404.inc file.
  *

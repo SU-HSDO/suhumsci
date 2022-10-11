@@ -1,5 +1,7 @@
 <?php
 
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
+
 // @codingStandardsIgnoreFile
 
 /**
@@ -31,7 +33,7 @@
  *
  * Default value for this setting is shown below.
  */
-#$settings['fast404_exts'] = '/^(?!\/robots)^(?!\/system\/files).*\.(txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
+# $settings['fast404_exts'] = '/^(?!\/robots)^(?!\/system\/files).*\.(txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
 
 /**
  * Allow anonymous users to hit URLs containing 'styles' even if the file
@@ -103,7 +105,7 @@
  *
  * Default value for this setting is FALSE.
  */
-$settings['fast404_path_check'] = TRUE;
+# $settings['fast404_path_check'] = TRUE;
 
 /**
  * If you would prefer a stronger version of NO then return a 410 instead of a
@@ -141,13 +143,20 @@ $settings['fast404_path_check'] = TRUE;
  *
  * Default value for this setting is FALSE.
  */
-$settings['fast404_HTML_error_page'] = __DIR__ . '/404.html';
+# $settings['fast404_HTML_error_page'] = './my_page.html';
 
 /**
- * Default value for this setting is FALSE. This setting needs to be enabled,
- * so that fast 404 respects the redirect module.
+ * Site path.
+ *
+ * @var string $site_path
+ * This is always set and exposed by the Drupal Kernel.
  */
-$settings['fast404_respect_redirect'] = TRUE;
+$site_404 = DRUPAL_ROOT . '/' . $site_path . '/files/404.html';
+if (EnvironmentDetector::isAhEnv()) {
+  $site_404 = EnvironmentDetector::getAhFilesRoot() . '/sites/' . EnvironmentDetector::getSiteName($site_path) . '/files/404.html';
+}
+$settings['fast404_HTML_error_page'] = file_exists($site_404) ? $site_404 : FALSE;
+$settings['fast404_path_check'] = file_exists($site_404);
 
 /**
  * Load the fast404.inc file.

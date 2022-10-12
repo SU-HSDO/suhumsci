@@ -19,6 +19,7 @@
   SetEnvIf AH_CLIENT_IP ^146\.190\.20\.213$ Deny_Host
   SetEnvIf AH_CLIENT_IP ^146\.190\.24\.114$ Deny_Host
   SetEnvIf AH_CLIENT_IP ^193\.134\.209\.57$ Deny_Host
+  SetEnvIf AH_CLIENT_IP ^104\.248\.195\.73$ Deny_Host
   Order allow,deny
   Allow from all
   Deny from env=Deny_Host
@@ -43,6 +44,9 @@ Options -Indexes
 
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
+
+# Add webp MIME type so that Apache knows how to handle WebP images
+AddType image/webp .webp
 
 # Add correct encoding for SVGZ.
 AddType image/svg+xml svg svgz

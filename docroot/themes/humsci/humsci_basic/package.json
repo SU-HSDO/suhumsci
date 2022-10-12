@@ -19,6 +19,9 @@
     "watch:js": "webpack --watch",
     "watch": "npm run watch:sass & npm run watch:js",
     "test": "npm run lint:sass && npm run test:sass",
+    "visreg:colorful": "percy snapshot tests/percy/.snapshots-colorful.js",
+    "visreg:traditional": "percy snapshot tests/percy/.snapshots-traditional.js",
+    "visreg": "npm run visreg:colorful && npm run visreg:traditional",
     "copy": "node ./tasks/copy.js"
   },
   "license": "MIT",
@@ -30,6 +33,7 @@
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
+    "@percy/cli": "^1.10.1",
     "autoprefixer": "^9.7.3",
     "babel-loader": "^8.0.6",
     "backstopjs": "^6.0.4",

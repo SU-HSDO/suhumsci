@@ -65,6 +65,7 @@ directory_setup: &directory_setup
         name: Composer setup
         command: |
           composer install --optimize-autoloader --no-interaction
+          composer dump-autoload
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction
     - save_cache: *save_cache

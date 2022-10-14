@@ -3,16 +3,16 @@
 use Drupal\Core\Url;
 
 /**
- * Class MegaMenuCest.
+ * Class MegaMenuMobileCest.
  *
  * @group install
  */
-class MegaMenuCest {
+class MegaMenuMobileCest {
 
   /**
    * Every main menu item should not error.
    */
-  public function testMegaMenu(FunctionalTester $I) {
+  public function testMegaMenuMobile(FunctionalTester $I) {
 
     $config_page = \Drupal::service('config_pages.loader');
     if ($config_page->load('hs_site_options')) {
@@ -44,11 +44,20 @@ class MegaMenuCest {
 
       $config_page->load('hs_site_options')->set('field_en_mega_menu', 1)->save();
       drupal_flush_all_caches();
+
       $I->amOnPage('/user/logout');
       $I->amOnPage('/');
+
+      $I->resizeWindow(800, 600);
+
+      $I->click('.js-megamenu__mobile-btn');
+
+      $I->wait(1);
       $I->see('Top Level Page', '.js-megamenu__toggle');
+      $I->scrollTo(['css' => '.js-megamenu']);
       $I->click('Top Level Page');
       $I->wait(1);
+      $I->scrollTo(['css' => '.js-megamenu']);
       $I->see('Second Level Page', '.megamenu__link');
       $I->click('Top Level Page');
       $I->wait(1);
@@ -59,4 +68,3 @@ class MegaMenuCest {
     }
   }
 }
-

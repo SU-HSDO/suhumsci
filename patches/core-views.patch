@@ -1,0 +1,13 @@
+diff --git a/modules/views/src/Plugin/views/query/Sql.php b/modules/views/src/Plugin/views/query/Sql.php
+index 40de9246..5cfadb49 100644
+--- a/modules/views/src/Plugin/views/query/Sql.php
++++ b/modules/views/src/Plugin/views/query/Sql.php
+@@ -316,7 +316,7 @@ class Sql extends QueryPluginBase {
+       '#type' => 'textfield',
+       '#title' => $this->t('Query Tags'),
+       '#description' => $this->t('If set, these tags will be appended to the query and can be used to identify the query in a module. This can be helpful for altering queries.'),
+-      '#default_value' => implode(', ', $this->options['query_tags']),
++      '#default_value' => implode(', ', $this->options['query_tags'] ?? []),
+       '#element_validate' => ['views_element_validate_tags'],
+     ];
+   }

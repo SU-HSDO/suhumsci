@@ -177,9 +177,9 @@ class FlexiblePageCest {
     $I->switchToIFrame('.cke_wysiwyg_frame');
     $I->executeJS('document.getElementsByTagName("body")[0].innerHTML = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"');
     $I->switchToIFrame();
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
+    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]'], 'http://google.com');
+    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]'], 'Google Link');
+    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]'], 'Spotlight #1 Title');
     $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
     $I->click('Add Spotlight');
     $I->wait(1);

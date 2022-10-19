@@ -186,7 +186,7 @@ class FlexiblePageCest {
     // Populating spotlight #2.
     $I->click('//input[@class="js-media-library-open-button media-library-open-button button js-form-submit form-submit"][1]');
     $I->waitForText('Add or select media');
-    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/second_logo.jpg');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
     $I->waitForText('Decorative Image');
     $I->click(['class' => "form-radio"]);

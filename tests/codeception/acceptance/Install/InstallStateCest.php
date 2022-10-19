@@ -62,7 +62,7 @@ class InstallStateCest {
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 21);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 28);
   }
 
   /**
@@ -73,7 +73,7 @@ class InstallStateCest {
   public function testSiteManagerShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('site_manager');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 26);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 33);
   }
 
   /**

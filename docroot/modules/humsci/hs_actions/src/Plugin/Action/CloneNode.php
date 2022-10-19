@@ -166,7 +166,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
     foreach ($this->getFieldClonePlugins() as $plugin) {
       $plugin->validateConfigurationForm($form, $form_state);
     }
@@ -175,7 +175,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     foreach ($this->getFieldClonePlugins() as $plugin) {
       $plugin->submitConfigurationForm($form, $form_state);
     }

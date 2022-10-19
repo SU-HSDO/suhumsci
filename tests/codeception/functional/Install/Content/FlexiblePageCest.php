@@ -151,4 +151,65 @@ class FlexiblePageCest {
     $I->click('.hb-main-nav__link');
   }
 
+    /**
+   * I can create a page with a spotlight slider.
+   */
+  public function testSpotlightSlider(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('List additional actions','#edit-field-hs-page-hero-add-more');
+    $I->click('field_hs_page_hero_hs_sptlght_slder_add_more');
+    $I->waitForText('No media items are selected');
+    $I->canSee('Title');
+    $I->canSee('Height');
+    $I->canSee('Background Color');
+    $I->canSee('Image Alignment');
+    $I->canSee('Body');
+    // Populating spotlight #1.
+    $I->click('Add media', '.paragraph-type--hs-sptlght-slder');
+    $I->waitForText('Add or select media');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+    $I->click('Upload and Continue');
+    $I->waitForText('Decorative Image');
+    $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForText('The maximum number of media items have been selected');
+    $I->switchToIFrame('.cke_wysiwyg_frame');
+    $I->executeJS('document.getElementsByTagName("body")[0].innerHTML = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"');
+    $I->switchToIFrame();
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
+    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
+    $I->click('Add Spotlight');
+    $I->wait(1);
+    // Populating spotlight #2.
+    $I->click('//input[@class="js-media-library-open-button media-library-open-button button js-form-submit form-submit"][1]');
+    $I->waitForText('Add or select media');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/second_logo.jpg');
+    $I->click('Upload and Continue');
+    $I->waitForText('Decorative Image');
+    $I->click(['class' => "form-radio"]);
+    $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForText('The maximum number of media items have been selected');
+    // Use javascript to select and populate correct iframe. 
+    $I->executeJS("var iframe = document.getElementsByClassName('cke_wysiwyg_frame')[1];
+      iframe.contentWindow.document.getElementsByTagName('body')[0].innerHTML = '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>';");
+    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]'], 'http://yahoo.com');
+    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]'], 'Yahoo Link');
+    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]'], 'Spotlight #2 Title');
+    $I->click('Save');
+    // Check spotlight 1.
+    $I->waitForText('Spotlight #1 Title');
+    $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+    $I->canSee('Google Link', 'a');
+    $I->canSeeNumberOfElements('picture img', 1);
+    // Check spotlight 2.
+    $I->click('.slick-next');
+    $I->waitForText('Spotlight #2 Title');
+    $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
+    $I->canSee('Yahoo Link', 'a');
+    $I->canSeeNumberOfElements('picture img', 1);
+  }
+
 }

@@ -21,7 +21,7 @@ class VideoEmbedCest {
     $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
     $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
     $I->click('#field-hs-page-components-hs-text-area-add-more');
-    $I->waitForText('Text format');
+    $I->wait(2);
 
     // Add media
     $I->click('.cke_button__drupalmedialibrary');

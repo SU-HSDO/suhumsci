@@ -25,9 +25,23 @@ class VideoEmbedCest {
     $I->waitForText('Add Video via URL');
     $I->fillField('Add Video via URL', 'https://www.youtube.com/watch?v=95N_spFNEkY');
     $I->click('.js-form-submit[value="Add"]');
-    $I->wait(5);
-    $I->see('Save and insert');
-    $I->click('Save and insert');
+    $I->executeJS('document.querySelector("body").removeChild(document.querySelector(".ui-widget-overlay"))', []);
+    $I->waitForText('Save and select');
+    $I->executeJS('document.querySelector(".ui-dialog-buttonpane .button--primary").click()', []);
+    $I->waitForText('Insert selected');
+    $I->executeJS('document.querySelector("button.media-library-select").click()', []);
+    $I->wait(2);
+
+    $I->switchToIFrame(".cke_wysiwyg_frame");
+    $I->executeJS('document.querySelector(".media-library-item__edit").style.display = "inline"', []);
+    $I->executeJS('document.querySelector(".media-library-item__edit").click()', []);
+    $I->switchToIFrame();
+    $I->waitForText('Caption');
+    $I->executeJS('document.querySelector("input[name=\"hasCaption\"]").click()', []);
+
+
+    $I->makeScreenshot('edit_page');
+
     // $I->click('field_hs_page_hero_hs_hero_image_add_more');
     // $I->waitForText('No media items are selected');
     // $I->canSee('Overlay Details');

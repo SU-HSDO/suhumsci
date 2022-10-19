@@ -3,7 +3,7 @@
 /**
  * Class VideoEmbedCest.
  *
- * @group videoembed
+ * @group install
  */
 class VideoEmbedCest {
 

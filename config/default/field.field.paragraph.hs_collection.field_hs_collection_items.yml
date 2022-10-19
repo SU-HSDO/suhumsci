@@ -5,13 +5,15 @@ dependencies:
   config:
     - field.storage.paragraph.field_hs_collection_items
     - paragraphs.paragraphs_type.hs_callout_box
+    - paragraphs.paragraphs_type.hs_carousel
     - paragraphs.paragraphs_type.hs_clr_bnd
     - paragraphs.paragraphs_type.hs_collection
     - paragraphs.paragraphs_type.hs_gradient_hero
+    - paragraphs.paragraphs_type.hs_gradient_hero_slider
     - paragraphs.paragraphs_type.hs_priv_collection
     - paragraphs.paragraphs_type.hs_priv_text_area
     - paragraphs.paragraphs_type.hs_row
-    - paragraphs.paragraphs_type.hs_spotlight
+    - paragraphs.paragraphs_type.hs_sptlght_slder
     - paragraphs.paragraphs_type.hs_timeline_item
     - paragraphs.paragraphs_type.hs_webform
     - paragraphs.paragraphs_type.stanford_gallery
@@ -31,6 +33,8 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
+      hs_gradient_hero_slider: hs_gradient_hero_slider
+      hs_carousel: hs_carousel
       hs_collection: hs_collection
       hs_priv_text_area: hs_priv_text_area
       hs_row: hs_row
@@ -41,7 +45,7 @@ settings:
       hs_webform: hs_webform
       stanford_gallery: stanford_gallery
       hs_priv_collection: hs_priv_collection
-      hs_spotlight: hs_spotlight
+      hs_sptlght_slder: hs_sptlght_slder
     negate: 1
     target_bundles_drag_drop:
       hs_accordion:
@@ -55,7 +59,7 @@ settings:
         enabled: true
       hs_carousel:
         weight: -39
-        enabled: false
+        enabled: true
       hs_clr_bnd:
         weight: -26
         enabled: true
@@ -67,7 +71,7 @@ settings:
         enabled: true
       hs_gradient_hero_slider:
         weight: -40
-        enabled: false
+        enabled: true
       hs_hero_image:
         weight: -37
         enabled: false
@@ -86,6 +90,9 @@ settings:
       hs_spotlight:
         weight: 99
         enabled: false
+      hs_sptlght_slder:
+        weight: 37
+        enabled: true
       hs_testimonial:
         weight: -34
         enabled: false

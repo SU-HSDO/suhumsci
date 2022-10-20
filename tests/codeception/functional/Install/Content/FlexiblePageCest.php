@@ -200,6 +200,7 @@ class FlexiblePageCest {
     $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]'], 'Spotlight #2 Title');
     $I->click('Save');
     // Check spotlight 1.
+    $I->click('Edit');
     $I->waitForText('Spotlight #1 Title', 60);
     $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->canSee('Google Link', 'a');

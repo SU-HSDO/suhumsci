@@ -17,7 +17,9 @@ if (tableRows) {
 
     // we need h to step through columnHeaders and get the correct heading text
     for (let h = 0; h < tableRowHeaders.length; h += 1) {
-      tableRowHeaders[h].innerHTML = columnHeaders[h].innerHTML;
+      if (tableRowHeaders[h].innerHTML !== '') {
+        tableRowHeaders[h].innerHTML = columnHeaders[h].innerHTML;
+      }
     }
   }
 }

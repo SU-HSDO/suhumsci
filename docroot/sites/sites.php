@@ -86,9 +86,15 @@ foreach ($settings as $settings_file) {
   }
 }
 
+// Manually point URL's that don't match their site paths.
 $sites['iranian-studies.stanford.edu'] = 'iranianstudies';
 $sites['mrc.stanford.edu'] = 'mrc2021';
 $sites['gus-humsci.stanford.edu'] = 'gus_humsci2021';
+$sites['dfetter.humsci.stanford.edu'] = 'dfetter2022__humsci';
+$sites['heidi-williams.humsci.stanford.edu'] = 'heidi_williams2022__humsci';
+$sites['gavin-wright.humsci.stanford.edu'] = 'gavin_wright2022__humsci';
+$sites['humanitiescore.stanford.edu'] = 'humanitiescore2022';
+
 
 if (file_exists(__DIR__ . '/local.sites.php')) {
   require __DIR__ . '/local.sites.php';

@@ -198,6 +198,7 @@ class FlexiblePageCest {
     $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]'], 'http://yahoo.com');
     $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]'], 'Yahoo Link');
     $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]'], 'Spotlight #2 Title');
+    $I->waitForText('SEE WHAT IS HERE BEFORE SAVING');
     $I->click('Save');
     // Check spotlight 1.
     $I->waitForText('Spotlight #1 Title');

@@ -191,7 +191,7 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->click(['class' => "form-radio"]);
     $I->click('Save and insert', '.ui-dialog-buttonset');
-    $I->waitForText('The maximum number of media items have been selected');
+    $I->wait(30);
     // Use javascript to select and populate correct iframe. 
     $I->executeJS("var iframe = document.getElementsByClassName('cke_wysiwyg_frame')[1];
       iframe.contentWindow.document.getElementsByTagName('body')[0].innerHTML = '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>';");
@@ -201,7 +201,6 @@ class FlexiblePageCest {
     $I->scrollTo('#edit-submit');
     $I->click('#edit-submit');
     // Check spotlight 1.
-    $I->click('Edit');
     $I->waitForText('Spotlight #1 Title');
     $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->canSee('Google Link', 'a');

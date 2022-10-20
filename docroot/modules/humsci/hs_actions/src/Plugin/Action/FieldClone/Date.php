@@ -46,6 +46,7 @@ class Date extends FieldCloneBase {
         'year' => $this->t('Year'),
         'month' => $this->t('Month'),
         'week' => $this->t('Week'),
+        'day' => $this->t('Day'),
         'hour' => $this->t('Hour'),
         'minute' => $this->t('Minute'),
         'second' => $this->t('Second'),

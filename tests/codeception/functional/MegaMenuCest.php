@@ -68,6 +68,28 @@ class MegaMenuCest {
     $I->wait(1);
     $I->click('Second Level Page');
 
+    // Mobile Testing
+    $I->resizeWindow(800, 600);
+
+    $I->click('.js-megamenu__mobile-btn');
+
+    $I->wait(1);
+    $I->scrollTo(['css' => '.js-megamenu__toggle']);
+
+    $I->see('Top Level Page', '.js-megamenu__toggle');
+    $I->scrollTo(['css' => '.js-megamenu']);
+    $I->click('Top Level Page');
+    $I->wait(1);
+
+    $I->scrollTo(['css' => '.js-megamenu']);
+    $I->see('Second Level Page', '.megamenu__link');
+    $I->click('Top Level Page');
+    $I->wait(1);
+    $I->dontSeeElement('Second Level Page');
+    $I->click('Top Level Page');
+    $I->wait(1);
+    $I->click('Second Level Page');
+
   }
 }
 

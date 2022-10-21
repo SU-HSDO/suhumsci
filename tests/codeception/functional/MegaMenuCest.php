@@ -42,6 +42,10 @@ class MegaMenuCest {
       $I->click('Show row weights');
       $I->click('Save');
 
+      $I->amOnPage('/admin/content');
+      $I->see('Top Level Page');
+      $I->see('Second Level Page');
+
       $I->amOnPage('/admin/config/site-options');
       $I->see('Enable New Mega Menu');
 

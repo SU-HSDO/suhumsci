@@ -14,8 +14,8 @@ class MegaMenuCest {
    */
   public function testMegaMenu(FunctionalTester $I) {
 
-    $config_page = \Drupal::service('config_pages.loader');
-    if ($config_page->load('hs_site_options')) {
+    //$config_page = \Drupal::service('config_pages.loader');
+    //if ($config_page->load('hs_site_options')) {
 
       $I->logInWithRole('administrator');
       $top_level = $I->createEntity([
@@ -42,8 +42,16 @@ class MegaMenuCest {
       $I->click('Show row weights');
       $I->click('Save');
 
-      $config_page->load('hs_site_options')->set('field_en_mega_menu', 1)->save();
-      drupal_flush_all_caches();
+      $I->amOnPage('/admin/config/site-options');
+      $I->see('Enable New Mega Menu');
+
+      $this->megaMenuEnabled = (bool) $I->grabAttributeFrom('[name="field_en_mega_menu[value]"]', 'checked');
+      if (!$this->megaMenuEnabled) {
+        $I->checkOption('#edit-field-en-mega-menu-value');
+        $I->click('Save');
+        drupal_flush_all_caches();
+      }
+
       $I->amOnPage('/user/logout');
       $I->amOnPage('/');
       $I->see('Top Level Page', '.js-megamenu__toggle');
@@ -56,7 +64,7 @@ class MegaMenuCest {
       $I->click('Top Level Page');
       $I->wait(1);
       $I->click('Second Level Page');
-    }
+
   }
 }
 

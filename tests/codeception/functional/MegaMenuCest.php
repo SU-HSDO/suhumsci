@@ -37,7 +37,9 @@ class MegaMenuCest {
     $I->fillField('Menu link title', 'Second Level Page');
     $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
     $I->selectOption('Parent link', '-- Top Level Page');
+    $I->wait(2);
     $I->click('Show row weights');
+    $I->makeScreenshot('second_page');
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 

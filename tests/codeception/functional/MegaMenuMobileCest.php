@@ -24,6 +24,7 @@ class MegaMenuMobileCest {
       $I->click('.menu-link-form summary');
       $I->checkOption('Provide a menu link');
       $I->fillField('Menu link title', 'Top Level Page');
+      $I->scrollTo(['css' => '.form-submit']);
       $I->click('Save');
 
       $second_level = $I->createEntity([
@@ -37,6 +38,7 @@ class MegaMenuMobileCest {
       $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
       $I->selectOption('Parent link', '-- Top Level Page');
       $I->click('Show row weights');
+      $I->scrollTo(['css' => '.form-submit']);
       $I->click('Save');
 
       $I->amOnPage('/admin/content');

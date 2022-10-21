@@ -39,6 +39,10 @@ class MegaMenuMobileCest {
       $I->click('Show row weights');
       $I->click('Save');
 
+      $I->amOnPage('/admin/content');
+      $I->see('Top Level Page');
+      $I->see('Second Level Page');
+
       $I->amOnPage('/admin/config/site-options');
       $I->see('Enable New Mega Menu');
 
@@ -58,10 +62,12 @@ class MegaMenuMobileCest {
 
       $I->wait(1);
       $I->scrollTo(['css' => '.js-megamenu__toggle']);
+
       $I->see('Top Level Page', '.js-megamenu__toggle');
       $I->scrollTo(['css' => '.js-megamenu']);
       $I->click('Top Level Page');
       $I->wait(1);
+
       $I->scrollTo(['css' => '.js-megamenu']);
       $I->see('Second Level Page', '.megamenu__link');
       $I->click('Top Level Page');

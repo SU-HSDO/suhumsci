@@ -159,7 +159,9 @@ NOTE: This does not work well on ARM-based Mac's. Linux highly recommended.
 Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
     * Edit this new `tests/codeception.yml` file and change the `HTTP_HOST`, `uri` and `url` (lines 19, 23, 25, and 28) to be the lando host of the site you are working on locally.
     * For example: hs-colorful would be `hs-colorful.suhumsci.loc` (keep `http://` for the url.)
-2. Edit `docroot/sites/default/settings/local.settings.php` database connection to `suhumsci_[directory name of site]` for example hs-colorful would be `suhumsci_hs_colorful` for the database.
+    * You can also just edit `$db_name` in `lando/default.codeception.yml` by appending the site name.
+2. Add local Drush configuration for testing
+    * Edit `docroot/sites/default/settings/local.settings.php` database connection to be the connection located in `docroot/sites/sparkbox_sandbox/settings/local.settings.php`.
 3. Create `drush/local.drush.yml` and copy this code into that file and change the `sparkbox_sandbox` to the directory name of the site you are working on locally. For example hs-colorful would be `hs_colorful`:
 
     ```yaml
@@ -179,6 +181,7 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
           - '${env.home}/.drush'
           - /usr/share/drush/commands
     ```
+
 4. Change the uri in `/docroot/sites/[site_name]/local.drush.yml` to the uri of the site you are working on locally. For hs-colorful this would be `hs-colorful.suhumsci.loc`
 
 5. Edit ```docroot/sites/default/local.drush.yml``` and change the uri to the uri of the site you are working on. For hs-colorful this would be `hs-colorful.suhumsci.loc`

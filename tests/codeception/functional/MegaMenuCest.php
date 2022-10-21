@@ -41,9 +41,10 @@ class MegaMenuCest {
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
-    $I->amOnPage('/admin/content');
+    $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see('Top Level Page');
     $I->see('Second Level Page');
+    $I->makeScreenshot('menu_page');
 
     $I->amOnPage('/admin/config/site-options');
     $I->see('Enable New Mega Menu');

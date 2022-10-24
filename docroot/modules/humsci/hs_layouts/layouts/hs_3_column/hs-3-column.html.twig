@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display 3 column layout.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout wrapper.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'layout',
+    'layout--hs-3-column',
+  ]
+%}
+
+{% if content %}
+  <div{{ attributes.addClass(classes) }}>
+
+    {% if content.left %}
+      <div {{ region_attributes.right.addClass('layout__region', 'layout__region--left') }}>
+        {{ content.left }}
+      </div>
+    {% endif %}
+
+    {% if content.main %}
+      <div {{ region_attributes.main.addClass('layout__region', 'layout__region--main') }}>
+        {{ content.main }}
+      </div>
+    {% endif %}
+
+    {% if content.right %}
+      <div {{ region_attributes.right.addClass('layout__region', 'layout__region--right') }}>
+        {{ content.right }}
+      </div>
+    {% endif %}
+
+  </div>
+{% endif %}
+

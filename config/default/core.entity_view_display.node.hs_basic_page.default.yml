@@ -59,18 +59,21 @@ third_party_settings:
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_components'
               label: Components
-              label_display: '0'
+              label_display: ''
               provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
-                type: entity_reference_revisions_entity_view
+                type: layout_paragraphs
                 label: hidden
                 settings:
                   view_mode: default
                 third_party_settings:
-                  ds:
-                    ds_limit: ''
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
             weight: 1
             additional: {  }
           3b1a10ed-5309-47bf-acff-654a1d64f7f0:

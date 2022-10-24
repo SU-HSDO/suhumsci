@@ -1,0 +1,89 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for SUL Helper module.
+ */
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function humsci_layout_paragraphs_library_info_alter(&$libraries, $extension) {
+  if ($extension == 'layout_paragraphs') {
+    $libraries['builder']['dependencies'][] = 'humsci_layout_paragraphs/layout_paragraphs';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function humsci_layout_paragraphs_theme($existing, $type, $theme, $path) {
+  // Duplicate the patterns_use_wrapper theme so we can modify it to work with
+  // layout paragraphs.
+  return ['patterns_use_wrapper_admin' => ['variables' => ['use' => NULL]]];
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function humsci_layout_paragraphs_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  if (
+    strpos($hook, 'pattern_') === 0 &&
+    strpos($hook, 'pattern_view') === FALSE &&
+    _humsci_layout_paragraphs_is_editing_layout_paragraphs()
+  ) {
+    // Add the theme suggestion when we're editing layout builder components.
+    $suggestions[] = 'patterns_use_wrapper_admin';
+  }
+}
+
+/**
+ * Implements hook_preprocess().
+ */
+function humsci_layout_paragraphs_preprocess(&$variables, $hook) {
+  // If not editing LP page, we don't want to do anything.
+  if (!_humsci_layout_paragraphs_is_editing_layout_paragraphs()) {
+    return;
+  }
+
+  // Remove any contextual links on the media/paragraphs/other entities when
+  // editing the layout paragraphs page.
+  if (!empty($variables['elements']['#entity_type'])) {
+    unset($variables['title_suffix']['contextual_links']);
+  }
+
+  // Manipulate the render array for the entity view so that we can pick it up
+  // in the later hook on the pattern.
+  if ($hook == 'ds_entity_view') {
+    // Between this hook and the pattern hook, the id attribute changes somehow,
+    // so store the attributes into the context so that we can grab them later
+    // and apply them to the wrapper.
+    $variables['content']['#context']['lpBuilder'] = $variables['attributes'];
+    unset($variables['attributes']);
+  }
+
+  if (strpos($hook, 'pattern_') === 0 && !empty($variables['context'])) {
+
+    // Grab the layout paragraphs parts from the context that we saved above,
+    // and put them into a variable for use in the patterns_use_wrapper_admin
+    // template. Also remove the normal attributes to a wrapper so that they
+    // don't somehow get passed down into the pattern and cause chaos.
+    $wrapper_attributes = $variables['context']->getProperty('lpBuilder') ?? [];
+    $variables['wrapper_attributes'] = new Attribute($wrapper_attributes);
+    $variables['attributes'] = new Attribute();
+  }
+}
+
+/**
+ * Is the user currently on editing the layout paragraphs?
+ *
+ * @return bool
+ *   True if the route matches known routes for LP.
+ */
+function _humsci_layout_paragraphs_is_editing_layout_paragraphs() {
+  $layout_paragraphs_routes = ['entity.node.edit_form'];
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  return in_array($route_name, $layout_paragraphs_routes) || strpos($route_name, 'layout_paragraphs.') === 0;
+}

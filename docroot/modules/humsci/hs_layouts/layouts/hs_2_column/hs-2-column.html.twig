@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display 2 column layout.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout wrapper.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'layout',
+    'layout--hs-2-column',
+  ]
+%}
+
+{% if content %}
+  <div{{ attributes.addClass(classes) }}>
+
+    {% if content.left %}
+      <div {{ region_attributes.left.addClass('layout__region', 'layout__region--left') }}>
+        {{ content.left }}
+      </div>
+    {% endif %}
+
+    {% if content.right %}
+      <div {{ region_attributes.right.addClass('layout__region', 'layout__region--right') }}>
+        {{ content.right }}
+      </div>
+    {% endif %}
+
+  </div>
+{% endif %}
+

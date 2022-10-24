@@ -161,7 +161,11 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
 
   // Layout Builder cleanup.
   // Each layout has its own preprocess hook. So we have to use generic hook.
-  if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
+  if (
+    isset($variables['layout']) &&
+    $variables['layout'] instanceof LayoutDefinition &&
+    ((string) $variables['layout']->getCategory() != 'Humsci Layout Paragraphs')
+  ) {
     hs_fields_helpers_cleanup_layout_builder($variables);
   }
 }

@@ -119,6 +119,10 @@ source:
       name: ticket_cost
       label: ticket_cost
       selector: event/ticket_cost
+    -
+      name: event_status
+      label: 'Event status'
+      selector: event/status
   ids:
     id:
       type: string
@@ -126,7 +130,28 @@ source:
 process:
   status: constants/status
   type: constants/type
-  title: title
+  canceled:
+    -
+      plugin: str_replace
+      source: event_status
+      regex: true
+      search: '/\b(?!canceled\b)\w+/'
+      replace: ''
+    -
+      plugin: callback
+      callable: 'ucfirst'
+  title:
+    -
+      plugin: concat
+      source:
+        - '@canceled'
+        - title
+      delimiter: ': '
+    -
+      plugin: str_replace
+      regex: true
+      search: '/^: /'
+      replace: ''
   body/value:
     -
       plugin: skip_on_empty

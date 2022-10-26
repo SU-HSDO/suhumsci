@@ -715,3 +715,10 @@ function su_humsci_profile_block_build_alter(array &$build, BlockPluginInterface
     ]);
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['simplesamlphp_auth_user_enable']['#default_value'] = (bool) \Drupal::state()->get('humsci_profile.user_saml_default', TRUE);
+}

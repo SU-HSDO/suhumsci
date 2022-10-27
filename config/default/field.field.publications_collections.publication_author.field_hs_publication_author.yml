@@ -5,7 +5,6 @@ dependencies:
   config:
     - eck.eck_type.publications_collections.publication_author
     - field.storage.publications_collections.field_hs_publication_author
-    - node.type.hs_person
 id: publications_collections.publication_author.field_hs_publication_author
 field_name: field_hs_publication_author
 entity_type: publications_collections
@@ -17,13 +16,10 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: views
   handler_settings:
-    target_bundles:
-      hs_person: hs_person
-    sort:
-      field: title
-      direction: ASC
-    auto_create: false
-    auto_create_bundle: ''
+    view:
+      view_name: entity_reference_field_lists
+      display_name: people
+      arguments: {  }
 field_type: entity_reference

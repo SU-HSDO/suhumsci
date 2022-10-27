@@ -64,6 +64,9 @@ function hs_views_helper_config_schema_info_alter(&$definitions) {
  * @see hs_views_helper_node_presave()
  */
 function hs_views_helper_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    return;
+  }
   $output['#cache']['tags'][] = 'node_list';
   if (
     isset($view->filter['type']) &&
@@ -225,6 +228,13 @@ function hs_views_helper_views_pre_view(ViewExecutable $view, $display_id, array
   $display_options = &$view->getDisplay()->options;
   $default_options = &$view->getDisplay()->default_display->options;
   $filters = !empty($display_options['filters']) ? $display_options['filters'] : $default_options['filters'];
+
+  if (
+    ($default_options['cache']['type'] ?? '') == 'none' ||
+    ($display_options['cache']['type'] ?? '') == 'none'
+  ) {
+    return;
+  }
 
   // Change the default cache mechanism to use custom tags that we generate
   // using the node type filters that exist on the view.

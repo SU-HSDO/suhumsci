@@ -93,6 +93,16 @@ class MegaMenuCest {
     $I->wait(1);
     $I->click('Second Level Page');
 
+    // Turn off MegaMenu
+
+    $I->logInWithRole('administrator');
+    $I->amOnPage('/admin/config/site-options');
+    $I->see('Enable New Mega Menu');
+
+    $I->uncheckOption('#edit-field-en-mega-menu-value');
+    $I->click('Save');
+    drupal_flush_all_caches();
+
   }
 }
 

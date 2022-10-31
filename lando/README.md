@@ -155,6 +155,7 @@ Lando/docker have had known compatibility issues with the latest ARM-based Macs.
 
 1. Copy codeception yml for setup.
 Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
+    * You can also just edit `$db_name` in `lando/default.codeception.yml` by appending the site name.
 2. Add local Drush configuration for testing
     * Edit `docroot/sites/default/settings/local.settings.php` database connection to be the connection located in `docroot/sites/sparkbox_sandbox/settings/local.settings.php`.
 
@@ -177,6 +178,7 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
           - '${env.home}/.drush'
           - /usr/share/drush/commands
     ```
+    * Update the uri in `docroot/sites/sparkbox_sandbox/local.drush.yml` to `sparkbox_sandbox.suhumsci.loc`
 
 3. Ensure your `.lando.yml` file default database is setup with `sparkbox_sandbox` as your default db.
 

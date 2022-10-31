@@ -39,14 +39,12 @@ class MegaMenuCest {
     $I->selectOption('Parent link', '-- Top Level Page');
     $I->wait(2);
     $I->click('Show row weights');
-    $I->makeScreenshot('second_page');
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
     $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see('Top Level Page');
     $I->see('Second Level Page');
-    $I->makeScreenshot('menu_page');
 
     $I->amOnPage('/admin/config/site-options');
     $I->see('Enable New Mega Menu');
@@ -102,6 +100,8 @@ class MegaMenuCest {
     $I->uncheckOption('#edit-field-en-mega-menu-value');
     $I->click('Save');
     drupal_flush_all_caches();
+
+    $I->resizeWindow(2000, 1400);
 
   }
 }

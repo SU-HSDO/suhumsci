@@ -174,7 +174,6 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
-    $I->makeScreenshot('faker_title');
     $I->click('List additional actions','#edit-field-hs-page-hero-add-more');
     $I->click('field_hs_page_hero_hs_sptlght_slder_add_more');
     $I->waitForText('No media items are selected');
@@ -194,10 +193,11 @@ class FlexiblePageCest {
     $I->switchToIFrame('.cke_wysiwyg_frame');
     $I->executeJS('document.getElementsByTagName("body")[0].innerHTML = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"');
     $I->switchToIFrame();
-    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]'], 'http://google.com');
-    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]'], 'Google Link');
-    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]'], 'Spotlight #1 Title');
-    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
+    //$I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
+    $I->scrollTo('.paragraphs-add-wrapper');
     $I->click('Add Spotlight');
     $I->wait(1);
     // Populating spotlight #2.
@@ -212,9 +212,9 @@ class FlexiblePageCest {
     // Use javascript to select and populate correct iframe.
     $I->executeJS("var iframe = document.getElementsByClassName('cke_wysiwyg_frame')[1];
       iframe.contentWindow.document.getElementsByTagName('body')[0].innerHTML = '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>';");
-    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]'], 'http://yahoo.com');
-    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]'], 'Yahoo Link');
-    $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]'], 'Spotlight #2 Title');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
+    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
     $I->scrollTo('#edit-submit');
     $I->click('#edit-submit');
     // Check spotlight 1.

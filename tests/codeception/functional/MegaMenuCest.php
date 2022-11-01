@@ -51,7 +51,7 @@ class MegaMenuCest {
 
     $this->megaMenuEnabled = (bool) $I->grabAttributeFrom('[name="field_en_mega_menu[value]"]', 'checked');
     if (!$this->megaMenuEnabled) {
-      $I->checkOption('#edit-field-en-mega-menu-value');
+      $I->checkOption('Enable New Mega Menu');
       $I->click('Save');
       drupal_flush_all_caches();
     }
@@ -97,7 +97,7 @@ class MegaMenuCest {
     $I->amOnPage('/admin/config/site-options');
     $I->see('Enable New Mega Menu');
 
-    $I->uncheckOption('#edit-field-en-mega-menu-value');
+    $I->uncheckOption('Enable New Mega Menu');
     $I->click('Save');
     drupal_flush_all_caches();
 

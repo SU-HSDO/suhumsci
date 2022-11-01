@@ -1,11 +1,27 @@
 <?php
 
+use Faker\Factory;
+
 /**
  * Class FlexiblePageCest.
  *
  * @group install
  */
 class FlexiblePageCest {
+
+  /**
+   * Faker service.
+   *
+   * @var \Faker\Generator
+   */
+  protected $faker;
+
+  /**
+   * Test constructor.
+   */
+  public function __construct() {
+    $this->faker = Factory::create();
+  }
 
   /**
    * Resize the window at the start.
@@ -157,7 +173,8 @@ class FlexiblePageCest {
   public function testSpotlightSlider(FunctionalTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
-    $I->fillField('Title', 'Demo Basic Page');
+    $I->fillField('Title', $this->faker->words(3, TRUE));
+    $I->makeScreenshot('faker_title');
     $I->click('List additional actions','#edit-field-hs-page-hero-add-more');
     $I->click('field_hs_page_hero_hs_sptlght_slder_add_more');
     $I->waitForText('No media items are selected');
@@ -192,7 +209,7 @@ class FlexiblePageCest {
     $I->click(['class' => "form-radio"]);
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->wait(30);
-    // Use javascript to select and populate correct iframe. 
+    // Use javascript to select and populate correct iframe.
     $I->executeJS("var iframe = document.getElementsByClassName('cke_wysiwyg_frame')[1];
       iframe.contentWindow.document.getElementsByTagName('body')[0].innerHTML = '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>';");
     $I->fillField(['name' => 'field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]'], 'http://yahoo.com');

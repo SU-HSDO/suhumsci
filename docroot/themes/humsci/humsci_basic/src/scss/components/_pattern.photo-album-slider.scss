@@ -140,9 +140,12 @@
   .hb-raised-cards & {
     .paragraph--view-mode--default {
       .hb-caption-credit-image {
-        @include hb-raised-cards-shadow;
-
+        @include hb-themes(('airy', 'colorful')) {
+          @include hb-raised-cards-shadow--alt;
+        }
+        
         @include hb-traditional {
+          @include hb-raised-cards-shadow;
           padding: hb-spacing-width('xs');
         }
       }

@@ -1,5 +1,7 @@
 <?php
 
+use Faker\Factory;
+
 /**
  * Class VideoEmbedCest.
  *
@@ -8,13 +10,27 @@
 class VideoEmbedCest {
 
   /**
+   * Faker service.
+   *
+   * @var \Faker\Generator
+   */
+  protected $faker;
+
+  /**
+   * Test constructor.
+   */
+  public function __construct() {
+    $this->faker = Factory::create();
+  }
+
+  /**
    * I can create a page with a video embed and verify caption.
    */
   public function testVideoEmbed(FunctionalTester $I) {
     // Login and add flexible page
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
-    $I->fillField('Title', 'Demo Basic Page');
+    $I->fillField('Title', $this->faker->words(3, TRUE));
 
     // Add text field
     $I->scrollTo('#edit-field-hs-page-components-add-more');

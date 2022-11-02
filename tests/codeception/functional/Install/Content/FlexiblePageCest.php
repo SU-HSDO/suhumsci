@@ -182,6 +182,7 @@ class FlexiblePageCest {
     $I->canSee('Background Color');
     $I->canSee('Image Alignment');
     $I->canSee('Body');
+
     // Populating spotlight #1.
     $I->click('Add media', '.paragraph-type--hs-sptlght-slder');
     $I->waitForText('Add or select media');
@@ -190,17 +191,17 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForText('The maximum number of media items have been selected');
-    $I->switchToIFrame('.cke_wysiwyg_frame');
-    $I->executeJS('document.getElementsByTagName("body")[0].innerHTML = "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"');
-    $I->switchToIFrame();
+    $I->waitForText('Source');
+    $I->click('.cke_button__source.cke_button_off');
+    $I->fillField('.cke_source', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
-    //$I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
+
+    // Populating spotlight #2.
     $I->scrollTo('.paragraphs-add-wrapper');
     $I->click('Add Spotlight');
     $I->wait(1);
-    // Populating spotlight #2.
     $I->click('//input[@class="js-media-library-open-button media-library-open-button button js-form-submit form-submit"][1]');
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
@@ -208,20 +209,23 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->click(['class' => "form-radio"]);
     $I->click('Save and insert', '.ui-dialog-buttonset');
-    $I->wait(30);
-    // Use javascript to select and populate correct iframe.
-    $I->executeJS("var iframe = document.getElementsByClassName('cke_wysiwyg_frame')[1];
-      iframe.contentWindow.document.getElementsByTagName('body')[0].innerHTML = '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>';");
+    $I->waitForText('The maximum number of media items have been selected');
+    $I->waitForText('Source');
+    $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
+    $I->click('.paragraph-type--hs-spotlight.even .cke_button__source.cke_button_off');
+    $I->fillField('.cke_source', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
     $I->scrollTo('#edit-submit');
     $I->click('#edit-submit');
+
     // Check spotlight 1.
     $I->waitForText('Spotlight #1 Title');
     $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->canSee('Google Link', 'a');
     $I->canSeeNumberOfElements('picture img', 1);
+
     // Check spotlight 2.
     $I->click('.slick-next');
     $I->waitForText('Spotlight #2 Title');

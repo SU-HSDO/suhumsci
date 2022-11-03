@@ -117,9 +117,8 @@ class MegaMenuCest {
 
     $I->uncheckOption('Enable New Mega Menu');
     $I->click('Save');
-    drupal_flush_all_caches();
-
     $I->resizeWindow(2000, 1400);
+    drupal_flush_all_caches();
   }
 }
 

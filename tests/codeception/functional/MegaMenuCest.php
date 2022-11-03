@@ -74,6 +74,11 @@ class MegaMenuCest {
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
+    $I->amOnPage('/admin/structure/menu/manage/main');
+    $I->see('Top Level Page');
+    $I->see('Second Level Page');
+    $I->makeScreenshot('menu_structure');
+
     // Desktop Testing
     $I->amOnPage('/user/logout');
     $I->amOnPage('/');

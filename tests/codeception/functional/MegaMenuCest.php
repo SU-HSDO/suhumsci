@@ -75,8 +75,8 @@ class MegaMenuCest {
     $I->click('Save');
 
     $I->amOnPage('/admin/structure/menu/manage/main');
-    $I->see('Top Level Page');
-    $I->see('Second Level Page');
+    $I->see($topLevelTitle);
+    $I->see($secondLevelTitle);
     $I->makeScreenshot('menu_structure');
 
     // Desktop Testing

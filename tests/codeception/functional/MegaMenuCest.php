@@ -68,6 +68,7 @@ class MegaMenuCest {
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $secondLevelTitle);
     $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
+    $I->wait(2);
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->waitForText('Show row weights');
     $I->click('Show row weights');

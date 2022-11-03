@@ -82,6 +82,7 @@ class MegaMenuCest {
     // Desktop Testing
     $I->amOnPage('/user/logout');
     $I->amOnPage('/');
+    $I->waitForText($topLevelTitle);
     $I->see($topLevelTitle, '.js-megamenu__toggle');
     $I->click($topLevelTitle);
     $I->see($secondLevelTitle, '.megamenu__link');

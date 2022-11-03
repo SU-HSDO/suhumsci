@@ -46,11 +46,10 @@ class VideoEmbedCest {
     $I->waitForText('Add Video via URL');
     $I->fillField('Add Video via URL', 'https://www.youtube.com/watch?v=95N_spFNEkY');
     $I->click('.js-form-submit[value="Add"]');
-    $I->executeJS('document.querySelector("body").removeChild(document.querySelector(".ui-widget-overlay"))', []);
     $I->waitForText('Save and select');
-    $I->executeJS('document.querySelector(".ui-dialog-buttonpane .button--primary").click()', []);
+    $I->click('Save and select', '.ui-dialog-buttonpane');
     $I->waitForText('Insert selected');
-    $I->executeJS('document.querySelector("button.media-library-select").click()', []);
+    $I->click('Insert selected', '.ui-dialog-buttonpane');
     $I->wait(2);
 
     // Enable caption
@@ -75,6 +74,5 @@ class VideoEmbedCest {
     $I->seeElement('figure');
     $I->seeElement('figcaption');
     $I->see("Caption for video goes here");
-    $I->makeScreenshot('edit_page');
   }
 }

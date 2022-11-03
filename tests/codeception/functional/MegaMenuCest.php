@@ -70,7 +70,6 @@ class MegaMenuCest {
     $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
     $I->wait(2);
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
-    $I->makeScreenShot('after-select-parent');
     $I->waitForText('Show row weights');
     $I->click('Show row weights');
     $I->scrollTo(['css' => '.form-submit']);
@@ -79,12 +78,10 @@ class MegaMenuCest {
     $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see($topLevelTitle);
     $I->see($secondLevelTitle);
-    $I->makeScreenshot('menu_structure');
 
     // Desktop Testing
     $I->amOnPage('/user/logout');
     $I->amOnPage('/');
-    $I->makeScreenShot('initial_desktop');
     $I->see($topLevelTitle, '.js-megamenu__toggle');
     $I->click($topLevelTitle);
     $I->see($secondLevelTitle, '.megamenu__link');

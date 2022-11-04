@@ -197,6 +197,7 @@ class FlexiblePageCest {
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
+    $I->makeScreenShot('spotlight-1');
 
     // Populating spotlight #2.
     $I->scrollTo('.paragraphs-add-wrapper');
@@ -217,10 +218,13 @@ class FlexiblePageCest {
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
+    $I->makeScreenShot('spotlight-2');
     $I->click('Save');
 
     // Check spotlight 1.
+    $I->wait(2);
     $I->waitForText('Spotlight #1 Title');
+    $I->makeScreenShot('spotlight-1-verify');
     $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->canSee('Google Link', 'a');
     $I->canSeeNumberOfElements('picture img', 1);
@@ -228,6 +232,7 @@ class FlexiblePageCest {
     // Check spotlight 2.
     $I->click('.slick-next');
     $I->waitForText('Spotlight #2 Title');
+    $I->makeScreenShot('spotlight-2-verify');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     $I->canSee('Yahoo Link', 'a');
     $I->canSeeNumberOfElements('picture img', 1);

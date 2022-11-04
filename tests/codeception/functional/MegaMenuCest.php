@@ -73,7 +73,6 @@ class MegaMenuCest {
     $I->waitForText('Show row weights');
     $I->click('Show row weights');
     $I->wait(2);
-    $I->makeScreenShot('before-save-second-page');
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 

@@ -78,6 +78,7 @@ class MegaMenuCest {
     $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see($topLevelTitle);
     $I->see($secondLevelTitle);
+    $I->wait(1);
 
     // Desktop Testing
     $I->amOnPage('/user/logout');

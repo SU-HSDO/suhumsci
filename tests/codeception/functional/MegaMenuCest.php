@@ -6,7 +6,7 @@ use Faker\Factory;
 /**
  * Class MegaMenuCest.
  *
- * @group install
+ * @group mega
  */
 class MegaMenuCest {
 
@@ -72,14 +72,14 @@ class MegaMenuCest {
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->waitForText('Show row weights');
     $I->click('Show row weights');
+    $I->wait(2);
+    $I->makeScreenShot('before-save-second-page');
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
     $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see($topLevelTitle);
     $I->see($secondLevelTitle);
-    $I->makeScreenShot('verify_menu_structure');
-
 
     // Desktop Testing
     $I->amOnPage('/user/logout');

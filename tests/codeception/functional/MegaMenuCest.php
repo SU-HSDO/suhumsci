@@ -6,7 +6,7 @@ use Faker\Factory;
 /**
  * Class MegaMenuCest.
  *
- * @group install
+ * @group mega
  */
 class MegaMenuCest {
 
@@ -78,7 +78,8 @@ class MegaMenuCest {
     $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see($topLevelTitle);
     $I->see($secondLevelTitle);
-    $I->wait(1);
+    $I->makeScreenShot('verify_menu_structure');
+
 
     // Desktop Testing
     $I->amOnPage('/user/logout');

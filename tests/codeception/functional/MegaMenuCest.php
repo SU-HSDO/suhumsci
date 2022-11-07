@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Url;
+use Faker\Factory;
 
 /**
  * Class MegaMenuCest.
@@ -10,99 +11,127 @@ use Drupal\Core\Url;
 class MegaMenuCest {
 
   /**
+   * Faker service.
+   *
+   * @var \Faker\Generator
+   */
+  protected $faker;
+
+  /**
+   * Test constructor.
+   */
+  public function __construct() {
+    $this->faker = Factory::create();
+  }
+
+  public function _before(FunctionalTester $I) {
+    $I->resizeWindow(2000, 1400);
+  }
+
+  /**
    * Every main menu item should not error.
    */
   public function testMegaMenu(FunctionalTester $I) {
 
     $I->logInWithRole('administrator');
+    $I->amOnPage('/admin/config/site-options');
+    $I->see('Enable New Mega Menu');
+
+    $this->megaMenuEnabled = (bool) $I->grabAttributeFrom('[name="field_en_mega_menu[value]"]', 'checked');
+    if (!$this->megaMenuEnabled) {
+      $I->checkOption('Enable New Mega Menu');
+      $I->click('Save');
+      drupal_flush_all_caches();
+    }
+
+    $topLevelTitle = $this->faker->words(3, TRUE);
+    $secondLevelTitle = $this->faker->words(3, TRUE);
+
+    $I->logInWithRole('administrator');
     $top_level = $I->createEntity([
-      'title' => 'Top Level Page',
+      'title' => $topLevelTitle,
       'type' => 'hs_basic_page',
     ]);
 
     $I->amOnPage($top_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
     $I->checkOption('Provide a menu link');
-    $I->fillField('Menu link title', 'Top Level Page');
+    $I->fillField('Menu link title', $topLevelTitle);
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
     $second_level = $I->createEntity([
-      'title' => 'Second Level Page',
+      'title' => $secondLevelTitle,
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($second_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
     $I->checkOption('Provide a menu link');
-    $I->fillField('Menu link title', 'Second Level Page');
+    $I->fillField('Menu link title', $secondLevelTitle);
     $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
-    $I->selectOption('Parent link', '-- Top Level Page');
     $I->wait(2);
+    $I->selectOption('Parent link', "-- {$topLevelTitle}");
+    $I->waitForText('Show row weights');
     $I->click('Show row weights');
+    //$I->wait(2); - Testing removing this one and trying on CI. Removing this works locally.
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
     $I->amOnPage('/admin/structure/menu/manage/main');
-    $I->see('Top Level Page');
-    $I->see('Second Level Page');
+    $I->see($topLevelTitle);
+    $I->see($secondLevelTitle);
 
-    $I->amOnPage('/admin/config/site-options');
-    $I->see('Enable New Mega Menu');
-
-    $this->megaMenuEnabled = (bool) $I->grabAttributeFrom('[name="field_en_mega_menu[value]"]', 'checked');
-    if (!$this->megaMenuEnabled) {
-      $I->checkOption('#edit-field-en-mega-menu-value');
-      $I->click('Save');
-      drupal_flush_all_caches();
-    }
-
+    // Desktop Testing
     $I->amOnPage('/user/logout');
     $I->amOnPage('/');
-    $I->see('Top Level Page', '.js-megamenu__toggle');
-    $I->click('Top Level Page');
-    $I->wait(1);
-    $I->see('Second Level Page', '.megamenu__link');
-    $I->click('Top Level Page');
-    $I->wait(1);
-    $I->dontSeeElement('Second Level Page');
-    $I->click('Top Level Page');
-    $I->wait(1);
-    $I->click('Second Level Page');
+    $I->waitForText($topLevelTitle);
+    $I->see($topLevelTitle, '.js-megamenu__toggle');
+
+    // Open first level nav and verify second level title exists
+    $I->click($topLevelTitle);
+    $I->see($secondLevelTitle, '.megamenu__link');
+
+    // Close first level nav and verify second level title does not exist
+    $I->click($topLevelTitle);
+    $I->dontSeeElement($secondLevelTitle);
+
+    // Open first level nav and then click on second level link
+    $I->click($topLevelTitle);
+    $I->see($secondLevelTitle, '.megamenu__link');
+    $I->click($secondLevelTitle);
 
     // Mobile Testing
     $I->resizeWindow(800, 600);
+    $I->click('Menu', '.js-megamenu');
+    $I->waitForText($topLevelTitle);
 
-    $I->click('.js-megamenu__mobile-btn');
-
-    $I->wait(1);
-    $I->scrollTo(['css' => '.js-megamenu__toggle']);
-
-    $I->see('Top Level Page', '.js-megamenu__toggle');
+    // Open first level nav and verify second level title exists
+    $I->see($topLevelTitle, '.js-megamenu__toggle');
     $I->scrollTo(['css' => '.js-megamenu']);
-    $I->click('Top Level Page');
-    $I->wait(1);
+    $I->click($topLevelTitle);
+    $I->see($secondLevelTitle, '.megamenu__link');
 
-    $I->scrollTo(['css' => '.js-megamenu']);
-    $I->see('Second Level Page', '.megamenu__link');
-    $I->click('Top Level Page');
-    $I->wait(1);
-    $I->dontSeeElement('Second Level Page');
-    $I->click('Top Level Page');
-    $I->wait(1);
-    $I->click('Second Level Page');
+    // Close first level nav and verify second level title does not exist
+    $I->click($topLevelTitle);
+    $I->dontSeeElement($secondLevelTitle);
+
+    // Open first level nav and then click on second level link
+    $I->click($topLevelTitle);
+    $I->see($secondLevelTitle, '.megamenu__link');
+    $I->click($secondLevelTitle);
 
     // Turn off MegaMenu
-
     $I->logInWithRole('administrator');
     $I->amOnPage('/admin/config/site-options');
     $I->see('Enable New Mega Menu');
 
-    $I->uncheckOption('#edit-field-en-mega-menu-value');
+    $I->uncheckOption('Enable New Mega Menu');
     $I->click('Save');
     drupal_flush_all_caches();
+  }
 
+  public function _after(FunctionalTester $I) {
     $I->resizeWindow(2000, 1400);
-
   }
 }
 

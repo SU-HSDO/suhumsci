@@ -202,12 +202,12 @@ class FlexiblePageCest {
     $I->scrollTo('.paragraphs-add-wrapper');
     $I->click('Add Spotlight');
     $I->wait(1);
-    $I->click('//input[@class="js-media-library-open-button media-library-open-button button js-form-submit form-submit"][1]');
+    $I->click('Add media', 'div[data-drupal-selector="edit-field-hs-page-hero-0-subform-field-hs-sptlght-sldes-1"]');
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
     $I->waitForText('Decorative Image');
-    $I->click(['class' => "form-radio"]);
+    $I->selectOption("input", 'Add new');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForText('The maximum number of media items have been selected');
     $I->waitForText('Source');

@@ -26,6 +26,13 @@ class MegaMenuCest {
 
   public function _before(FunctionalTester $I) {
     $I->resizeWindow(2000, 1400);
+  }
+
+  /**
+   * Every main menu item should not error.
+   */
+  public function testMegaMenu(FunctionalTester $I) {
+
     $I->logInWithRole('administrator');
     $I->amOnPage('/admin/config/site-options');
     $I->see('Enable New Mega Menu');
@@ -36,12 +43,6 @@ class MegaMenuCest {
       $I->click('Save');
       drupal_flush_all_caches();
     }
-  }
-
-  /**
-   * Every main menu item should not error.
-   */
-  public function testMegaMenu(FunctionalTester $I) {
 
     $topLevelTitle = $this->faker->words(3, TRUE);
     $secondLevelTitle = $this->faker->words(3, TRUE);
@@ -72,7 +73,7 @@ class MegaMenuCest {
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->waitForText('Show row weights');
     $I->click('Show row weights');
-    $I->wait(2);
+    //$I->wait(2); - Testing removing this one and trying on CI. Removing this works locally.
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
@@ -85,10 +86,16 @@ class MegaMenuCest {
     $I->amOnPage('/');
     $I->waitForText($topLevelTitle);
     $I->see($topLevelTitle, '.js-megamenu__toggle');
+
+    // Open first level nav and verify second level title exists
     $I->click($topLevelTitle);
     $I->see($secondLevelTitle, '.megamenu__link');
+
+    // Close first level nav and verify second level title does not exist
     $I->click($topLevelTitle);
     $I->dontSeeElement($secondLevelTitle);
+
+    // Open first level nav and then click on second level link
     $I->click($topLevelTitle);
     $I->see($secondLevelTitle, '.megamenu__link');
     $I->click($secondLevelTitle);
@@ -98,19 +105,21 @@ class MegaMenuCest {
     $I->click('Menu', '.js-megamenu');
     $I->waitForText($topLevelTitle);
 
+    // Open first level nav and verify second level title exists
     $I->see($topLevelTitle, '.js-megamenu__toggle');
     $I->scrollTo(['css' => '.js-megamenu']);
     $I->click($topLevelTitle);
-
     $I->see($secondLevelTitle, '.megamenu__link');
-    $I->click($topLevelTitle);
 
+    // Close first level nav and verify second level title does not exist
+    $I->click($topLevelTitle);
     $I->dontSeeElement($secondLevelTitle);
-    $I->click($topLevelTitle);
-    $I->click($secondLevelTitle);
-  }
 
-  public function _after(FunctionalTester $I) {
+    // Open first level nav and then click on second level link
+    $I->click($topLevelTitle);
+    $I->see($secondLevelTitle, '.megamenu__link');
+    $I->click($secondLevelTitle);
+
     // Turn off MegaMenu
     $I->logInWithRole('administrator');
     $I->amOnPage('/admin/config/site-options');
@@ -118,8 +127,11 @@ class MegaMenuCest {
 
     $I->uncheckOption('Enable New Mega Menu');
     $I->click('Save');
-    $I->resizeWindow(2000, 1400);
     drupal_flush_all_caches();
+  }
+
+  public function _after(FunctionalTester $I) {
+    $I->resizeWindow(2000, 1400);
   }
 }
 

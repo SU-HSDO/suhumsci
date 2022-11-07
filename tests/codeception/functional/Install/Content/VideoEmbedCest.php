@@ -45,7 +45,7 @@ class VideoEmbedCest {
     $I->click('.media-library-menu__link[data-title="Video"]');
     $I->waitForText('Add Video via URL');
     $I->fillField('Add Video via URL', 'https://www.youtube.com/watch?v=95N_spFNEkY');
-    $I->click('.js-form-submit[value="Add"]');
+    $I->click('Add', '.media-library-add-form__input-wrapper');
     $I->waitForText('Save and select');
     $I->click('Save and select', '.ui-dialog-buttonpane');
     $I->waitForText('Insert selected');

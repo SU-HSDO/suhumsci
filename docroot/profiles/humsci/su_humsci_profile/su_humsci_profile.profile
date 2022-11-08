@@ -34,6 +34,19 @@ function su_humsci_profile_entity_type_alter(array &$entity_types) {
 }
 
 /**
+ * Implements hook_form_alter().
+ */
+function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
+  if (isset($form['manual']['#open'])) {
+    $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
+    if ($manual_label) {
+      $form['manual']['#open'] = TRUE;
+      $form['manual']['#title'] = $manual_label;
+    }
+  }
+}
+
+/**
  * Implements hook_pathauto_pattern_alter().
  */
 function su_humsci_profile_pathauto_pattern_alter(PathautoPatternInterface $pattern, array $context) {

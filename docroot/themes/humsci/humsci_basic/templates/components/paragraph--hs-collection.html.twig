@@ -38,18 +38,20 @@
  * @ingroup themeable
  */
 #}
-{% set raised_cards = content.field_raised_cards[0]['#markup'] %}
+{% set raised_cards = false %}
+{% if paragraph.field_raised_cards.value == true %}
+   {% set raised_cards = true %}
+{% endif %}
 {%
   set classes = [
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
-    not paragraph.isPublished() ? 'paragraph--unpublished'
+    not paragraph.isPublished() ? 'paragraph--unpublished',
+    raised_cards ? 'hb-raised-cards hb-raised-cards--uniform-height'
   ]
 %}
-here where you should see on
-{{ raised_cards }}
-{{ dpm(content) }}
+
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
     {% block content %}

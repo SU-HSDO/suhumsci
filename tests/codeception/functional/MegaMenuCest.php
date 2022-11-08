@@ -28,6 +28,10 @@ class MegaMenuCest {
     $I->resizeWindow(2000, 1400);
   }
 
+  public function _after(FunctionalTester $I) {
+    $I->resizeWindow(2000, 1400);
+  }
+
   /**
    * Every main menu item should not error.
    */
@@ -128,10 +132,6 @@ class MegaMenuCest {
     $I->uncheckOption('Enable New Mega Menu');
     $I->click('Save');
     drupal_flush_all_caches();
-  }
-
-  public function _after(FunctionalTester $I) {
-    $I->resizeWindow(2000, 1400);
   }
 }
 

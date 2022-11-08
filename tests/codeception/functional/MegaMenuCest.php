@@ -73,7 +73,7 @@ class MegaMenuCest {
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->waitForText('Show row weights');
     $I->click('Show row weights');
-    //$I->wait(2); - Testing removing this one and trying on CI. Removing this works locally.
+    $I->wait(2);
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 

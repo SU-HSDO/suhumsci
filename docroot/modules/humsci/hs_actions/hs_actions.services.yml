@@ -2,3 +2,8 @@ services:
   plugin.manager.hs_actions_field_clone:
     class: Drupal\hs_actions\Plugin\FieldCloneManager
     parent: default_plugin_manager
+
+  hs_actions.event_subscriber:
+    class: Drupal\hs_actions\EventSubscriber\HsActionsSubscriber
+    tags:
+      - { name: event_subscriber }

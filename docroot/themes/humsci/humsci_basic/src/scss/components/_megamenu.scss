@@ -13,15 +13,6 @@ $nested-padding: hb-calculate-rems(22px);
 // See _private-page.scss. To avoid clashes with the
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
-@mixin hb-menu-color-pairing-l2 {
-  @include hb-pairing-color('color', 'tertiary');
-  
-  &:hover:not(.is-active),
-  &:focus {
-    @include hb-pairing-color('color', 'tertiary-darken-20');
-  }
-}
-
 @mixin hb-lock-position {
   padding-left: hb-calculate-rems(40px);
   background-repeat: no-repeat;
@@ -582,6 +573,7 @@ $hb-link-bar-link: 100%;
           margin-bottom: hb-calculate-rems(4px);
           padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
           font-size: hb-calculate-rems(16px);
+          color: hb-get-global-color('black', $hc-colorful-globals);
           text-transform: capitalize;
           font-weight: hb-theme-font-weight(bold);
         }
@@ -635,18 +627,6 @@ $hb-link-bar-link: 100%;
     }
   }
 
-  .list-sub--1 {
-    .megamenu__link {
-      .su-masthead:not(.hb-dark-pattern) & {
-        @include hb-menu-color-pairing-l2;
-      }
-
-      @include grid-media-min('lg') {
-        @include hb-menu-color-pairing-l2;
-      }
-    }
-  }
-
   .list-sub__nested {
     display: block;
     padding-left: hb-calculate-rems(30px);
@@ -679,16 +659,6 @@ $hb-link-bar-link: 100%;
         .js & {
           font-weight: hb-theme-font-weight(semibold);
           padding-left: hb-calculate-rems(22px);
-          color: initial;
-        }
-      }
-
-      .su-masthead:not(.hb-dark-pattern) & {
-        color: initial;
-  
-        &:hover:not(.is-active),
-        &:focus {
-          color: initial;
         }
       }
     }

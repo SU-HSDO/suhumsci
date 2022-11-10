@@ -370,6 +370,14 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     }
   }
 
+  /**
+   * Set the config overrides for the page_cache_query_ignore settings.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
   protected function setPageCacheQueryIgnore(array $names, array &$overrides) {
     if (!in_array('page_cache_query_ignore.settings', $names)) {
       return;
@@ -382,7 +390,13 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     ];
   }
 
-  public function getViewQueryParams() {
+  /**
+   * Get all the query parameters for exposed filters in all views.
+   *
+   * @return array
+   *   Associative array of query keys.
+   */
+  public function getViewQueryParams(): array {
     $queries = [];
     /** @var \Drupal\views\Entity\View[] $views */
     $views = $this->entityTypeManager->getStorage('view')

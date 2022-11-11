@@ -110,6 +110,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->setPublicationOverrides($names, $overrides);
     $this->setThemeSettingsOverrides($names, $overrides);
     $this->setSearchApiOverrides($names, $overrides);
+    $this->setPageCacheQueryIgnore($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
@@ -367,6 +368,50 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     foreach (array_keys($node_types) as $node_type) {
       $overrides['search_api.index.default_index']['field_settings']['rendered']['configuration']['view_mode']['entity:node'][$node_type] = 'search_index';
     }
+  }
+
+  /**
+   * Set the config overrides for the page_cache_query_ignore settings.
+   *
+   * @param array $names
+   *   Array of config names.
+   * @param array $overrides
+   *   Keyed array of config overrides.
+   */
+  protected function setPageCacheQueryIgnore(array $names, array &$overrides) {
+    if (!in_array('page_cache_query_ignore.settings', $names)) {
+      return;
+    }
+    $allowed_parameters = ['search', 'page', 'offset'];
+    $view_params = $this->getViewQueryParams();
+    $overrides['page_cache_query_ignore.settings']['query_parameters'] = [
+      ...$allowed_parameters,
+      ...$view_params,
+    ];
+  }
+
+  /**
+   * Get all the query parameters for exposed filters in all views.
+   *
+   * @return array
+   *   Associative array of query keys.
+   */
+  public function getViewQueryParams(): array {
+    $queries = [];
+    /** @var \Drupal\views\Entity\View[] $views */
+    $views = $this->entityTypeManager->getStorage('view')
+      ->loadByProperties(['status' => TRUE]);
+    foreach ($views as $view) {
+      foreach ($view->get('display') as $display) {
+        $filters = $display['display_options']['filters'] ?? [];
+        foreach ($filters as $filter) {
+          $queries[] = $filter['expose']['identifier'] ?? NULL;
+        }
+      }
+    }
+    $queries = array_unique(array_filter($queries));
+    asort($queries);
+    return array_values($queries);
   }
 
   /**

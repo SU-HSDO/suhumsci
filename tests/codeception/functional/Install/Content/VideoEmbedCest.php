@@ -1,5 +1,10 @@
 <?php
 
+<<<<<<< HEAD
+=======
+use Faker\Factory;
+
+>>>>>>> aefd02c372ed6eddcc5005fbad8623c6bd03224a
 /**
  * Class VideoEmbedCest.
  *
@@ -8,13 +13,34 @@
 class VideoEmbedCest {
 
   /**
+<<<<<<< HEAD
+=======
+   * Faker service.
+   *
+   * @var \Faker\Generator
+   */
+  protected $faker;
+
+  /**
+   * Test constructor.
+   */
+  public function __construct() {
+    $this->faker = Factory::create();
+  }
+
+  /**
+>>>>>>> aefd02c372ed6eddcc5005fbad8623c6bd03224a
    * I can create a page with a video embed and verify caption.
    */
   public function testVideoEmbed(FunctionalTester $I) {
     // Login and add flexible page
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
+<<<<<<< HEAD
     $I->fillField('Title', 'Demo Basic Page');
+=======
+    $I->fillField('Title', $this->faker->words(3, TRUE));
+>>>>>>> aefd02c372ed6eddcc5005fbad8623c6bd03224a
 
     // Add text field
     $I->scrollTo('#edit-field-hs-page-components-add-more');
@@ -29,12 +55,20 @@ class VideoEmbedCest {
     $I->click('.media-library-menu__link[data-title="Video"]');
     $I->waitForText('Add Video via URL');
     $I->fillField('Add Video via URL', 'https://www.youtube.com/watch?v=95N_spFNEkY');
+<<<<<<< HEAD
     $I->click('.js-form-submit[value="Add"]');
     $I->executeJS('document.querySelector("body").removeChild(document.querySelector(".ui-widget-overlay"))', []);
     $I->waitForText('Save and select');
     $I->executeJS('document.querySelector(".ui-dialog-buttonpane .button--primary").click()', []);
     $I->waitForText('Insert selected');
     $I->executeJS('document.querySelector("button.media-library-select").click()', []);
+=======
+    $I->click('Add', '.media-library-add-form__input-wrapper');
+    $I->waitForText('Save and select');
+    $I->click('Save and select', '.ui-dialog-buttonpane');
+    $I->waitForText('Insert selected');
+    $I->click('Insert selected', '.ui-dialog-buttonpane');
+>>>>>>> aefd02c372ed6eddcc5005fbad8623c6bd03224a
     $I->wait(2);
 
     // Enable caption
@@ -59,6 +93,9 @@ class VideoEmbedCest {
     $I->seeElement('figure');
     $I->seeElement('figcaption');
     $I->see("Caption for video goes here");
+<<<<<<< HEAD
     $I->makeScreenshot('edit_page');
+=======
+>>>>>>> aefd02c372ed6eddcc5005fbad8623c6bd03224a
   }
 }

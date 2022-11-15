@@ -140,7 +140,7 @@ Using and M1/M2 Mac? See amended instructions below prior to setup.
 6. Run `lando info`, and browse to the url for your multisite.
 7. Run `lando drush @[site_alias].local uli` to log in as user:1 (Example: `lando drush @music.local uli`)
 
-## Adding a new site to lando
+## Adding a new site to Lando
 1. Copy and existing site's folder in `docroot/sites/` and rename the folder to the new site.
 2. Edit the `blt.yml` file within your new sites folder with the corresponding site names.
 3. All other files within this folder are variable. All you need to do is run `lando rebuild -y`
@@ -153,13 +153,19 @@ Lando/docker have had known compatibility issues with the latest ARM-based Macs.
 
 ## Setup for local Codeception testing
 
+NOTE: This does not work well on ARM-based Mac's. Linux highly recommended.
+
 1. Copy codeception yml for setup.
 Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
+<<<<<<< HEAD
+=======
+    * Edit this new `tests/codeception.yml` file and change the `HTTP_HOST`, `uri` and `url` (lines 19, 23, 25, and 28) to be the lando host of the site you are working on locally.
+    * For example: hs-colorful would be `hs-colorful.suhumsci.loc` (keep `http://` for the url.)
+>>>>>>> aefd02c372ed6eddcc5005fbad8623c6bd03224a
     * You can also just edit `$db_name` in `lando/default.codeception.yml` by appending the site name.
 2. Add local Drush configuration for testing
     * Edit `docroot/sites/default/settings/local.settings.php` database connection to be the connection located in `docroot/sites/sparkbox_sandbox/settings/local.settings.php`.
-
-    * Create `drush/local.drush.yml`
+3. Create `drush/local.drush.yml` and copy this code into that file and change the `sparkbox_sandbox` to the directory name of the site you are working on locally. For example hs-colorful would be `hs_colorful`:
 
     ```yaml
     # # This file defines drush configuration that applies to drush commands
@@ -180,7 +186,11 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
     ```
     * Update the uri in `docroot/sites/sparkbox_sandbox/local.drush.yml` to `sparkbox_sandbox.suhumsci.loc`
 
-3. Ensure your `.lando.yml` file default database is setup with `sparkbox_sandbox` as your default db.
+4. Change the uri in `/docroot/sites/[site_name]/local.drush.yml` to the uri of the site you are working on locally. For hs-colorful this would be `hs-colorful.suhumsci.loc`
+
+5. Edit ```docroot/sites/default/local.drush.yml``` and change the uri to the uri of the site you are working on. For hs-colorful this would be `hs-colorful.suhumsci.loc`
+
+6. Add the `creds` section to `.lando.yml`. The database should match the site you are currently working on. For example for hs-colorful this would be `database: suhumsci_hs_colorful`.
 
     ```yaml
     Example:
@@ -193,6 +203,10 @@ Copy `lando/default.codeception.yml` to `tests/codeception.yml`.
           password: drupal
           database: sparkbox_sandbox
     ```
+
+7. Edit `/blt/local.blt.yml` and change the uri, hostname, and database (lines 4, 5 and 8) to the values for the site you are working on. For example, for hs-colorful, these would be `hs-colorful.suhumsci.loc` for the uri and hostname, and `suhumsci_hs_colorful` for the database.
+
+8. Rerun `lando rebuild` to get the new configuration added in step 5.
 
 ### To run Codeception tests locally
 

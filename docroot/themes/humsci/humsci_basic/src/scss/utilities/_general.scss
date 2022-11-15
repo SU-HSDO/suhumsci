@@ -158,7 +158,7 @@
   // Overriding _details.scss
   .ptype-hs-accordion {
     summary:not(.hb-timeline-item__summary) {
-      @include hb-pairing-color('border-color', 'secondary');
+      @include hb-pairing-color('border-color', 'primary');
       @include hb-global-color('color', 'black');
 
       border-width: hb-calculate-rems(2px);
@@ -169,36 +169,33 @@
       }
 
       &:hover {
-        @include hb-pairing-color('background-color', 'primary');
-        @include hb-pairing-color('border-color', 'primary');
-        @include hb-global-color('color', 'white');
+        @include hb-pairing-color('color', 'secondary');
 
         &::after {
-          @include hb-menu-plus-icon('white');
+          @include hb-menu-minus-icon('secondary');
         }
       }
     }
 
     details[open] {
+      @include hb-pairing-color('border-color', 'primary');
+
+      border-width: hb-calculate-rems(2px);
+      border-bottom: none;
+
       summary:not(.hb-timeline-item__summary) {
-        @include hb-pairing-color('background-color', 'primary');
-        @include hb-global-color('color', 'white');
+        background: transparent;
+        border-bottom: none;
 
         &::after {
-          @include hb-menu-minus-icon('white');
-        }
-
-        &:hover {
-          @include hb-pairing-color('border-color', 'secondary');
-
-          &::after {
-            @include hb-menu-minus-icon('white');
-          }
+          @include hb-menu-minus-icon('black');
         }
       }
 
       .revealed-details {
         @include hb-pairing-color('border-color', 'primary');
+        
+        border-width: hb-calculate-rems(2px);
         border-top: none;
       }
     }

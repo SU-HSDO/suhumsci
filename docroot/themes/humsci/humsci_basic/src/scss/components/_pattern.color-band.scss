@@ -49,6 +49,18 @@
     @include hb-global-color('background-color', 'gray-dark');
   }
 
+  &--light,
+  &--light::before,
+  &--light::after {
+    @include hb-pairing-color('background-color', 'spotlight-lighten-8');
+  }
+
+  &--light {
+    .hb-color-band--text {
+      @include hb-global-color('color', 'black');
+    }
+  }
+
   &--text {
     @include hb-global-color('color', 'white');
 

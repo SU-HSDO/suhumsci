@@ -158,14 +158,10 @@
   // Overriding _details.scss
   .ptype-hs-accordion {
     summary:not(.hb-timeline-item__summary) {
-      @include hb-themes(('colorful', 'airy')) {
-        border: $hb-medium-border hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
-      }
-      @include hb-traditional {
-        border: $hb-medium-border hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
-      }
+      @include hb-pairing-color('border-color', 'primary');
       @include hb-global-color('color', 'black');
 
+      border-width: hb-calculate-rems(2px);
       background-color: transparent;
 
       &::after {
@@ -173,60 +169,34 @@
       }
 
       &:hover {
-        @include hb-themes(('colorful', 'airy')) {
-          background-color: hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-        }
-        @include hb-traditional {
-          background-color: hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-        }
-        @include hb-global-color('color', 'white');
+        @include hb-pairing-color('color', 'secondary');
 
         &::after {
-          @include hb-menu-plus-icon('white');
+          @include hb-menu-minus-icon('secondary');
         }
       }
     }
 
     details[open] {
+      @include hb-pairing-color('border-color', 'primary');
+
+      border-width: hb-calculate-rems(2px);
+      border-bottom: none;
+
       summary:not(.hb-timeline-item__summary) {
-        @include hb-themes(('colorful', 'airy')) {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-        }
-        @include hb-traditional {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-        }
+        background: transparent;
+        border-bottom: none;
 
         &::after {
           @include hb-menu-minus-icon('black');
         }
-
-        &:hover {
-          @include hb-themes(('colorful', 'airy')) {
-            border: $hb-medium-border hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
-            background-color: hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
-          }
-          @include hb-traditional {
-            border: $hb-medium-border hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
-            background-color: hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
-          }
-
-          &::after {
-            @include hb-menu-minus-icon('white');
-          }
-        }
       }
 
       .revealed-details {
-        @include hb-themes(('colorful', 'airy')) {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-          border-top: none;
-        }
-        @include hb-traditional {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-          border-top: none;
-        }
+        @include hb-pairing-color('border-color', 'primary');
+        
+        border-width: hb-calculate-rems(2px);
+        border-top: none;
       }
     }
   }

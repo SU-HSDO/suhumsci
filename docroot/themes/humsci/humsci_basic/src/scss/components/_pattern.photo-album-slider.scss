@@ -1,12 +1,12 @@
 // This styling is for the Photo Gallery Grid and Photo Gallery Slideshow
 .ptype-stanford-gallery {
   .su-gallery-description {
-    margin-bottom: hb-spacing-width('md');
+    margin-bottom: hb-spacing-width("md");
   }
 
   .su-gallery-button a {
     @include hb-button;
-    margin-top: hb-spacing-width('md');
+    margin-top: hb-spacing-width("md");
   }
 
   // Photo Gallery Slideshow
@@ -18,7 +18,7 @@
       &.slick-prev {
         bottom: hb-calculate-rems(98px);
 
-        @include grid-media-min('sm') {
+        @include grid-media-min("sm") {
           bottom: hb-calculate-rems(198px);
         }
       }
@@ -26,7 +26,7 @@
       &.slick-next {
         bottom: hb-calculate-rems(5px);
 
-        @include grid-media-min('sm') {
+        @include grid-media-min("sm") {
           bottom: hb-calculate-rems(105px);
         }
       }
@@ -43,19 +43,27 @@
       position: relative;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0;
         top: calc(100% - 78px); // match height of caption / credit background
         left: 0;
         right: 0;
 
-        @include hb-themes(('colorful', 'airy')) {
-          background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
+        @include hb-themes(("colorful", "airy")) {
+          background: linear-gradient(
+            to top,
+            hb-get-global-color("black", $hc-colorful-globals),
+            transparent
+          );
         }
 
         @include hb-traditional {
-          background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
+          background: linear-gradient(
+            to top,
+            hb-get-global-color("black", $ht-traditional-globals),
+            transparent
+          );
         }
       }
     }
@@ -75,11 +83,11 @@
 
       li button {
         @include hb-unbuttonize;
-        @include hb-global-color('color', 'white');
+        @include hb-global-color("color", "white");
         font-weight: hb-theme-font-weight(bold);
         display: none;
 
-        @include grid-media-min('sm') {
+        @include grid-media-min("sm") {
           display: block;
           position: absolute;
           bottom: hb-calculate-rems(16px);
@@ -89,15 +97,13 @@
 
       // counter for the last slide
       li:last-of-type button {
-
-        @include grid-media-min('sm') {
+        @include grid-media-min("sm") {
           left: hb-calculate-rems(48px);
         }
       }
 
       li.slick-active:not(:last-of-type) button {
-
-        @include grid-media-min('sm') {
+        @include grid-media-min("sm") {
           left: hb-calculate-rems(12px);
           min-width: hb-calculate-rems(32px);
           text-align: right;
@@ -109,13 +115,12 @@
       }
 
       li.slick-active:last-of-type button {
-
-        @include grid-media-min('sm') {
+        @include grid-media-min("sm") {
           left: hb-calculate-rems(19px);
           min-width: hb-calculate-rems(45px);
         }
 
-        @include grid-media-min('md') {
+        @include grid-media-min("md") {
           left: hb-calculate-rems(16px);
           min-width: hb-calculate-rems(50px);
         }
@@ -135,21 +140,21 @@
   .hb-raised-cards & {
     .paragraph--view-mode--default {
       .hb-caption-credit-image {
-        @include hb-themes(('airy', 'colorful')) {
+        @include hb-themes(("airy", "colorful")) {
           @include hb-raised-cards-shadow--alt;
         }
-        
+
         @include hb-traditional {
           @include hb-raised-cards-shadow;
-          padding: hb-spacing-width('xs');
+          padding: hb-spacing-width("xs");
         }
       }
 
       .field-media-image-caption {
         @include hb-traditional {
-          left: hb-spacing-width('xs');
-          bottom: hb-spacing-width('xs');
-          width: calc(100% - (#{hb-spacing-width('xs')} * 2));
+          left: hb-spacing-width("xs");
+          bottom: hb-spacing-width("xs");
+          width: calc(100% - (#{hb-spacing-width("xs")} * 2));
         }
       }
     }

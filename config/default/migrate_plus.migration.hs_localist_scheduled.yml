@@ -16,6 +16,8 @@ source:
   urls: {  }
   data_parser_plugin: hs_localist_json
   item_selector: events
+  request_options:
+    timeout: 60
   constants:
     status: 1
     type: hs_event
@@ -117,6 +119,10 @@ source:
       name: ticket_cost
       label: ticket_cost
       selector: event/ticket_cost
+    -
+      name: event_status
+      label: 'Event status'
+      selector: event/status
   ids:
     id:
       type: string
@@ -124,7 +130,28 @@ source:
 process:
   status: constants/status
   type: constants/type
-  title: title
+  canceled:
+    -
+      plugin: str_replace
+      source: event_status
+      regex: true
+      search: '/\b(?!canceled\b)\w+/'
+      replace: ''
+    -
+      plugin: callback
+      callable: ucfirst
+  title:
+    -
+      plugin: concat
+      source:
+        - '@canceled'
+        - title
+      delimiter: ': '
+    -
+      plugin: str_replace
+      regex: true
+      search: '/^: /'
+      replace: ''
   body/value:
     -
       plugin: skip_on_empty
@@ -152,7 +179,14 @@ process:
       - constants/trim
   field_hs_event_link/uri: localist_url
   field_hs_event_link/title: constants/external_link_text
-  field_hs_event_registration/uri: ticket_url
+  field_hs_event_registration/uri:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: ticket_url
+    -
+      plugin: url_check
+      method: process
   field_hs_event_registration/title: constants/register_text
   field_hs_event_sponsor:
     -

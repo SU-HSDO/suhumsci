@@ -5,7 +5,15 @@
   @include hb-global-color('border-color', 'gray');
 
   .su-lockup {
+    // Match and override inherited 'decanter' styles
+    flex: calc(83.33% - #{hb-calculate-rems(16px)});
+    max-width: calc(83.33% - #{hb-calculate-rems(16px)});
     z-index: $hb-z-index-lockup;
+
+    @include grid-media-min('lg') {
+      flex: 0 0 calc(calc(2 / 3 * 100%) - 6.67px);
+      max-width: calc(calc(2 / 3 * 100%) - 6.67px);
+    }
 
     &__line1,
     &__line2,
@@ -84,6 +92,9 @@
     }
 
     @include grid-media-min('lg') {
+      order: -1;
+      position: absolute;
+      right: 0;
       max-width: $hb-input-max-width;
     }
   }

@@ -141,8 +141,7 @@ class MenuItemsCest {
       try {
         Url::fromUserInput($url);
         return TRUE;
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         return FALSE;
       }
     });

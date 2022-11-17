@@ -1,11 +1,27 @@
 <?php
 
+use Faker\Factory;
+
 /**
  * Class InstallStateCest.
  *
  * @group install
  */
 class InstallStateCest {
+
+  /**
+   * Faker service.
+   *
+   * @var \Faker\Generator
+   */
+  protected $faker;
+
+  /**
+   * Test constructor.
+   */
+  public function __construct() {
+    $this->faker = Factory::create();
+  }
 
   /**
    * Default content should be visible.
@@ -68,7 +84,7 @@ class InstallStateCest {
   public function testDeveloperShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 44);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 37);
   }
 
   /**
@@ -101,6 +117,46 @@ class InstallStateCest {
     $I->click('Edit', '.tabs__tab');
     $I->click('Save');
     $I->assertEquals('/unpublished-parent/child-page', $I->grabFromCurrentUrl());
+  }
+
+  /**
+   * Test fast 404 page.
+   *
+   * @group fast404
+   */
+  public function testFast404(AcceptanceTester $I) {
+    $path = $this->faker->words(2, TRUE);
+    $path = preg_replace('/[^a-z]/', '-', strtolower($path));
+    $I->amOnPage($path);
+    $I->canSeeResponseCodeIs(404);
+
+    $redirect_source = $this->faker->words(2, TRUE);
+    $redirect_source = preg_replace('/[^a-z]/', '-', strtolower($redirect_source));
+
+    $node = $I->createEntity([
+      'type' => 'hs_basic_page',
+      'title' => $this->faker->words(3, TRUE),
+    ]);
+
+    $I->createEntity([
+      'redirect_source' => [
+        [
+          'path' => $redirect_source,
+          'query' => [],
+        ],
+      ],
+      'redirect_redirect' => [
+        [
+          'uri' => 'internal:/node/' . $node->id(),
+          'options' => [],
+        ],
+      ],
+      'status_code' => 301,
+    ], 'redirect');
+    $I->amOnPage($redirect_source);
+
+    $I->canSeeResponseCodeIs(200);
+    $I->canSeeInCurrentUrl($node->toUrl()->toString());
   }
 
 }

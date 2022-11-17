@@ -36,9 +36,10 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - v11-dependencies-{{ checksum "composer.lock" }}
+    - v12-dependencies-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+    - v12-dependencies-{{ checksum "composer.json" }}-
     # fallback to using the latest cache if no exact match is found
-    - v11-dependencies-
+    - v12-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -48,7 +49,7 @@ save_cache: &save_cache
     - ./docroot/core
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
-  key: v11-dependencies-{{ checksum "composer.lock" }}
+  key: v12-dependencies-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
 
 disable_telemetry: &disable_telemetry
   run:
@@ -65,6 +66,7 @@ directory_setup: &directory_setup
         name: Composer setup
         command: |
           composer install --optimize-autoloader --no-interaction
+          composer dump-autoload
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction
     - save_cache: *save_cache

@@ -95,6 +95,9 @@ $sites['heidi-williams.humsci.stanford.edu'] = 'heidi_williams2022__humsci';
 $sites['gavin-wright.humsci.stanford.edu'] = 'gavin_wright2022__humsci';
 $sites['humanitiescore.stanford.edu'] = 'humanitiescore2022';
 $sites['facultyaffairs-humsci.stanford.edu'] = 'facultyaffairs_humsci2021';
+$sites['lowe.stanford.edu'] = 'lowe2022';
+$sites['shenlab.stanford.edu'] = 'shenlab2022';
+$sites['duboislab.stanford.edu'] = 'duboislab2022';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

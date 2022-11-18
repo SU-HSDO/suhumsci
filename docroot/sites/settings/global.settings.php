@@ -21,6 +21,7 @@ $additionalSettingsFiles = [
   __DIR__ . '/simplesaml.php',
   __DIR__ . '/environment_indicator.php',
   __DIR__ . '/local.settings.php',
+  __DIR__ . '/fast404.settings.php',
 ];
 
 foreach ($additionalSettingsFiles as $settingsFile) {

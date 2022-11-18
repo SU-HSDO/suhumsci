@@ -177,6 +177,8 @@
         "drupal/environment_indicator": "^4.0",
         "drupal/extlink": "^1.5",
         "drupal/fakeobjects": "^1.1",
+        "drupal/fast_404": "^2.0@alpha",
+        "drupal/fast_404_generator": "^1.0",
         "drupal/field_formatter_class": "^1.4",
         "drupal/field_group": "^3.1",
         "drupal/field_permissions": "^1.1",
@@ -187,6 +189,7 @@
         "drupal/hook_event_dispatcher": "~3.2.0",
         "drupal/imagemagick": "^3.1",
         "drupal/insert": "^2.0",
+        "drupal/jsonapi_extras": "^3.21",
         "drupal/key": "^1.14",
         "drupal/layout_builder_component_attributes": "^2.0",
         "drupal/layout_builder_modal": "^1.1",
@@ -276,7 +279,8 @@
         "drupal/coder": "*"
     },
     "conflict": {
-        "drupal/drupal": "*"
+        "drupal/drupal": "*",
+        "consolidation/site-alias": ">3.1.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -304,9 +308,6 @@
     "extra": {
         "enable-patching": true,
         "patches": {
-            "drupal/acquia_connector": {
-                "https://www.drupal.org/project/acquia_connector/issues/3308236": "https://git.drupalcode.org/project/acquia_connector/-/merge_requests/16.patch"
-            },
             "drupal/addtocal": {
                 "https://www.drupal.org/project/addtocal/issues/3197306": "https://www.drupal.org/files/issues/2021-04-09/field-token-values-not-cleared-when-empty-3197306-2.patch",
                 "https://www.drupal.org/project/addtocal/issues/3200494": "https://www.drupal.org/files/issues/2021-02-26/1551026-smart_date.patch"
@@ -331,13 +332,17 @@
                 "https://www.drupal.org/project/drupal/issues/2925297": "https://www.drupal.org/files/issues/2019-09-26/core-typed_config_handle_missing_config-2925297-18.patch",
                 "https://www.drupal.org/project/drupal/issues/1349080": "https://www.drupal.org/files/issues/2021-04-02/1349080-487.patch",
                 "https://www.drupal.org/project/drupal/issues/3306916": "https://www.drupal.org/files/issues/2022-08-30/file_validate_size.patch",
-                "drupallink conflict with anchorlink": "patches/drupallink.patch"
+                "drupallink conflict with anchorlink": "patches/drupallink.patch",
+                "views form null fix": "patches/core-views.patch"
             },
             "drupal/ds": {
                 "https://www.drupal.org/project/ds/issues/2939322": "https://www.drupal.org/files/issues/2020-01-07/ds-content_entity-2939322-11.patch"
             },
             "drupal/fakeobjects": {
                 "https://www.drupal.org/project/fakeobjects/issues/3002953": "https://www.drupal.org/files/issues/2020-06-22/fakeobjects-missing_plugin-3002953-5.patch"
+            },
+            "drupal/fast_404": {
+                "https://www.drupal.org/project/fast_404/issues/2838359": "https://www.drupal.org/files/issues/2022-06-16/fast_404-honor_redirects-2838359-50.patch"
             },
             "drupal/field_group": {
                 "https://www.drupal.org/project/field_group/issues/2969051": "https://www.drupal.org/files/issues/2022-09-20/2969051-66.patch"
@@ -352,11 +357,15 @@
                 "https://www.drupal.org/project/menu_position/issues/3110502": "https://www.drupal.org/files/issues/2020-07-29/drupal-menu_position-WSOD-when-menu-parent-no-longer-exists-3110502-26.patch",
                 "Clean menu tree": "patches/contrib/menu_postion_rule-edit_route.patch"
             },
+            "drupal/node_revision_delete": {
+                "https://www.drupal.org/project/node_revision_delete/issues/3316389": "https://www.drupal.org/files/issues/2022-10-19/3316389-1.0.0-rc5.patch"
+            },
             "drupal/paragraphs": {
                 "https://www.drupal.org/project/paragraphs/issues/2895561": "https://www.drupal.org/files/issues/2021-05-06/paragraphs-2895561-32.patch"
             },
             "drupal/redirect": {
-                "https://www.drupal.org/project/redirect/issues/3057250": "https://www.drupal.org/files/issues/2020-12-14/validation-issue-3057250-29.patch"
+                "https://www.drupal.org/project/redirect/issues/3057250": "https://www.drupal.org/files/issues/2020-12-14/validation-issue-3057250-29.patch",
+                "https://www.drupal.org/project/redirect/issues/3018897": "https://www.drupal.org/files/issues/2022-10-20/redirect-n3018897-21.patch"
             },
             "drupal/simplesamlphp_auth": {
                 "https://www.drupal.org/project/simplesamlphp_auth/issues/2124117": "https://www.drupal.org/files/issues/2020-02-01/2124117-6-reroll-14.patch",

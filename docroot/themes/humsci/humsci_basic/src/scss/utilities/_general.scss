@@ -16,13 +16,13 @@
 .hb-inline-pipe {
   margin-bottom: 2rem;
 
-  @include grid-media-min('sm') {
+  @include grid-media-min("sm") {
     display: flex;
     flex-wrap: wrap;
   }
 
   > div {
-    margin-bottom: hb-spacing-width('xxs');
+    margin-bottom: hb-spacing-width("xxs");
     padding-right: hb-calculate-rems(20px);
   }
 }
@@ -31,27 +31,27 @@
   > div {
     padding-right: 0;
 
-    @include grid-media-min('sm') {
+    @include grid-media-min("sm") {
       display: flex;
     }
 
     &::after {
-      @include grid-media-min('sm') {
+      @include grid-media-min("sm") {
         margin: 0 hb-calculate-rems(10px);
-        content: '|';
-        @include hb-global-color('color', 'gray-dark');
+        content: "|";
+        @include hb-global-color("color", "gray-dark");
       }
     }
 
     &:last-child {
       margin-bottom: 2rem;
 
-      @include grid-media-min('sm') {
+      @include grid-media-min("sm") {
         margin-bottom: initial;
       }
 
       &::after {
-        content: '';
+        content: "";
       }
     }
   }
@@ -87,10 +87,10 @@
 // in layout builder, this class can be applied.
 .hb-main-body-detail-image {
   .hb-three-column-w-image & {
-    @include grid-media-min('md') {
+    @include grid-media-min("md") {
       @include clearfix;
       float: right;
-      margin: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
+      margin: 0 0 hb-spacing-width("sm") hb-spacing-width("sm");
     }
   }
 }
@@ -99,7 +99,8 @@
   /* stylelint-disable selector-pseudo-class-no-unknown */
   &:is(h1, h2, h3, h4, h5, h6, span) a:not([class]), // added via title field in a view
   /* stylelint-enable selector-pseudo-class-no-unknown */
-  .hb-card__title a { // added via view or in layout builder
+  .hb-card__title a {
+    // added via view or in layout builder
     @include hb-heading-link-color;
   }
 }
@@ -118,7 +119,7 @@
   @include hb-link;
   cursor: pointer;
   float: right;
-  margin-bottom: hb-spacing-width('xxs');
+  margin-bottom: hb-spacing-width("xxs");
 }
 
 // Vertical timeline headings - change circle icons to squares
@@ -158,75 +159,45 @@
   // Overriding _details.scss
   .ptype-hs-accordion {
     summary:not(.hb-timeline-item__summary) {
-      @include hb-themes(('colorful', 'airy')) {
-        border: $hb-medium-border hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
-      }
-      @include hb-traditional {
-        border: $hb-medium-border hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
-      }
-      @include hb-global-color('color', 'black');
+      @include hb-pairing-color("border-color", "primary");
+      @include hb-global-color("color", "black");
 
+      border-width: hb-calculate-rems(2px);
       background-color: transparent;
 
       &::after {
-        @include hb-menu-plus-icon('black');
+        @include hb-menu-plus-icon("black");
       }
 
       &:hover {
-        @include hb-themes(('colorful', 'airy')) {
-          background-color: hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-        }
-        @include hb-traditional {
-          background-color: hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-        }
-        @include hb-global-color('color', 'white');
+        @include hb-pairing-color("color", "secondary");
 
         &::after {
-          @include hb-menu-plus-icon('white');
+          @include hb-menu-minus-icon("secondary");
         }
       }
     }
 
     details[open] {
+      @include hb-pairing-color("border-color", "primary");
+
+      border-width: hb-calculate-rems(2px);
+      border-bottom: none;
+
       summary:not(.hb-timeline-item__summary) {
-        @include hb-themes(('colorful', 'airy')) {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-        }
-        @include hb-traditional {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-        }
+        background: transparent;
+        border-bottom: none;
 
         &::after {
-          @include hb-menu-minus-icon('black');
-        }
-
-        &:hover {
-          @include hb-themes(('colorful', 'airy')) {
-            border: $hb-medium-border hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
-            background-color: hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
-          }
-          @include hb-traditional {
-            border: $hb-medium-border hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
-            background-color: hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
-          }
-
-          &::after {
-            @include hb-menu-minus-icon('white');
-          }
+          @include hb-menu-minus-icon("black");
         }
       }
 
       .revealed-details {
-        @include hb-themes(('colorful', 'airy')) {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-colorful-default, $hc-colorful-pairings);
-          border-top: none;
-        }
-        @include hb-traditional {
-          border: $hb-medium-border hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
-          border-top: none;
-        }
+        @include hb-pairing-color("border-color", "primary");
+
+        border-width: hb-calculate-rems(2px);
+        border-top: none;
       }
     }
   }

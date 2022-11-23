@@ -1,4 +1,9 @@
 services:
+  humsci_events_listeners.user_events:
+    class: Drupal\humsci_events_listeners\EventSubscriber\UserEvents
+    arguments: [ '@current_user' ]
+    tags:
+      - { name: event_subscriber }
   humsci_events_listeners.block_events:
     class: Drupal\humsci_events_listeners\EventSubscriber\BlockEvents
     arguments: ['@request_stack']

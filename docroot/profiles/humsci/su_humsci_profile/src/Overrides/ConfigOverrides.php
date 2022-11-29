@@ -382,12 +382,25 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     if (!in_array('page_cache_query_ignore.settings', $names)) {
       return;
     }
-    $allowed_parameters = ['search', 'page', 'offset'];
+    $original_setting = $this->configFactory->getEditable('page_cache_query_ignore.settings')
+      ->getOriginal('query_parameters', FALSE);
+    $allowed_parameters = [
+      'hash',
+      'offset',
+      'page',
+      'search',
+      'sort_by',
+      'sort_order',
+      'url',
+    ];
     $view_params = $this->getViewQueryParams();
-    $overrides['page_cache_query_ignore.settings']['query_parameters'] = [
+    $params = [
+      ...$original_setting,
       ...$allowed_parameters,
       ...$view_params,
     ];
+    asort($params);
+    $overrides['page_cache_query_ignore.settings']['query_parameters'] = array_values(array_unique($params));
   }
 
   /**

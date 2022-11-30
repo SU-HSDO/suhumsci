@@ -49,6 +49,7 @@ dependencies:
     - node
     - smart_date
     - stanford_media
+    - stanford_migrate
     - taxonomy
     - text
     - user
@@ -677,15 +678,19 @@ display:
           default_row_class: true
           columns:
             views_bulk_operations_bulk_form: views_bulk_operations_bulk_form
+            field_hs_person_square_img: field_hs_person_square_img
+            field_hs_person_image: field_hs_person_image
             title: title
+            field_hs_person_last_name: field_hs_person_last_name
             status: status
             changed: changed
             uid: uid
-            field_hs_event_date: field_hs_event_date
-            field_hs_event_series: field_hs_event_series
-            field_hs_event_type: field_hs_event_type
-            field_hs_event_location: field_hs_event_location
+            field_hs_person_affiliation: field_hs_person_affiliation
+            field_hs_person_faculty_status: field_hs_person_faculty_status
+            field_hs_person_staff_type: field_hs_person_staff_type
+            field_hs_person_student_type: field_hs_person_student_type
             operations: operations
+            entity_migration: entity_migration
           default: '-1'
           info:
             views_bulk_operations_bulk_form:
@@ -693,8 +698,29 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_hs_person_square_img:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_hs_person_image:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             title:
               sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_hs_person_last_name:
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
@@ -721,24 +747,26 @@ display:
               separator: ''
               empty_column: false
               responsive: priority-low
-            field_hs_event_date:
-              sortable: true
+            field_hs_person_affiliation:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_hs_person_faculty_status:
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_hs_event_series:
+            field_hs_person_staff_type:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            field_hs_event_type:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_hs_event_location:
+            field_hs_person_student_type:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -746,6 +774,13 @@ display:
               empty_column: false
               responsive: ''
             operations:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            entity_migration:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -7199,6 +7234,56 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
+        entity_migration:
+          id: entity_migration
+          table: node
+          field: entity_migration
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_migration
+          label: Migration
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
       filters:
         status:
           id: status

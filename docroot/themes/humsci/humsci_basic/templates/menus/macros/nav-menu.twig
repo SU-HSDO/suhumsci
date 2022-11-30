@@ -41,12 +41,9 @@
       {# This check whether or not there is a URL #}
       {% if item.url.toString() is empty %}
         {#
-          If there is no URL (<nolink>) then we need the toggler classes to be
-          on the anchor tag. We also don't need the button because the anchor tag
-          acts as the button to toggle the nested navigation.
+          If there is no URL (<nolink>) then we need the toggler classes. 
         #}
-        {% set link_attributes = link_attributes.addClass('hb-nested-toggler') %}
-        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" aria-expanded="true" role="button">{{ item.title }}</a>
+        <button class="{{ class_prefix }}__link hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" {% if item.below %}aria-haspopup="true" aria-expanded="true"{% endif %}>{{ item.title }}</button>
 
         {% if item.below %}
           <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
@@ -61,7 +58,7 @@
         {{ link(item.title, item.url, link_attributes) }}
 
         {% if item.below %}
-          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}" aria-expanded="true">
+          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}" aria-haspopup="true" aria-expanded="true">
             Toggle {{ item.title }}
           </button>
           <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}">

@@ -234,4 +234,58 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('picture img', 1);
   }
 
+  /**
+   * I can find appropriate aria attributes on a timeline item.
+   */
+  public function testTimelineItemAriaLabel(FunctionalTester $I) {
+    $I->logInWithRole('administrator');
+    $I->amOnPage('node/add/hs_basic_page');
+    $I->fillField('Title', $this->faker->words(3, TRUE));
+    $I->click('List additional actions', '[data-drupal-selector="edit-field-hs-page-components-add-more-operations"]');
+    $I->click('field_hs_page_components_hs_timeline_add_more');
+    $I->waitForText('Vertical Timeline');
+    $I->checkOption('Collapse by default');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');
+    $I->click('.cke_button__source.cke_button_off');
+    $I->fillField('.cke_source', '<p>Timeline item #1 description.</p>');
+    $I->click('Add Timeline Item');
+    $I->wait(1);
+    $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][1][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #2 Title');
+    $I->click('Save');
+    $I->canSee('Timeline Item #1 Title');
+    $I->canSee('Timeline Item #2 Title');
+
+    // Check aria attributes for first item.
+    $this->firstItemAriaPressed = $I->grabAttributeFrom('//*[@class="hb-timeline-item__summary"][1]', 'aria-pressed');
+    if (filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL)) {
+      $I->fail('aria-pressed is true in the first item');
+    }
+    $this->firstItemAriaExpanded = $I->grabAttributeFrom('//*[@class="hb-timeline-item__summary"][1]', 'aria-expanded');
+    if (filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL)) {
+      $I->fail('aria-expanded is true in the first item');
+    }
+
+    // Check aria attributes for second item.
+    $this->secondItemAriaPressed = $I->grabAttributeFrom('//*[@class="hb-timeline-item__summary"][last()]', 'aria-pressed');
+    if (filter_var($this->secondItemAriaPressed, FILTER_VALIDATE_BOOL)) {
+      $I->fail('aria-pressed is true in the second item');
+    }
+    $this->secondItemAriaExpanded = $I->grabAttributeFrom('//*[@class="hb-timeline-item__summary"][last()]', 'aria-expanded');
+    if (filter_var($this->secondItemAriaExpanded, FILTER_VALIDATE_BOOL)) {
+      $I->fail('aria-expanded is true in the second item');
+    }
+
+    // Open first summary.
+    $I->click('//*[@class="hb-timeline-item__summary"][1]');
+    $this->firstItemAriaPressed = $I->grabAttributeFrom('//*[@class="hb-timeline-item__summary"][1]', 'aria-pressed');
+    if (!filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL)) {
+      $I->fail('aria-pressed is false in the first item');
+    }
+    $this->firstItemAriaExpanded = $I->grabAttributeFrom('//*[@class="hb-timeline-item__summary"][1]', 'aria-expanded');
+    if (!filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL)) {
+      $I->fail('aria-expanded is false in the first item');
+    }
+    $I->canSee('Timeline item #1 description.');
+  }
+
 }

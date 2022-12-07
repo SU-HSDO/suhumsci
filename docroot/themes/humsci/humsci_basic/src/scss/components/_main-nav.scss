@@ -2,6 +2,10 @@
 // navigation, with all links being visible, at all screen sizes. The desktop
 // styles require two things: 1) larger screen widths and 2) JS to be enabled.
 // Thus we require media queries AND the .js class to show these larger screen styles.
+$item-line-height-sm: 120.3%;
+$item-line-height-md: 128%;
+$item-line-height-lg: 110%;
+
 .hb-main-nav {
   position: relative;
   font-size: hb-calculate-rems(18px);
@@ -153,7 +157,7 @@
     display: block;
     padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
     text-decoration: none;
-    line-height: 120.3%;
+    line-height: $item-line-height-sm;
 
     @include hb-themes(('airy', 'colorful')) {
       @include hb-global-color('color', 'black');
@@ -164,17 +168,17 @@
     }
 
     @include grid-media-min('md') {
-      line-height: 128%;
+      line-height: $item-line-height-md;
     }
 
     @include grid-media-min('lg') {
       .js & {
         padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
-        line-height: 110%;
+        line-height: $item-line-height-lg;
       }
     }
 
-    .hb-main-nav__item--parent > & {
+    .hb-main-nav__item.hb-main-nav__item--parent > & {
       padding: hb-calculate-rems(21px) hb-calculate-rems(48px) hb-calculate-rems(21px) hb-calculate-rems(17px);
 
       @include grid-media-min('lg') {
@@ -297,7 +301,7 @@
       }
     }
 
-    .hb-main-nav__menu-lv2 & {
+    .hb-main-nav__menu.hb-main-nav__menu-lv2 & {
       @include grid-media-min('lg') {
         .js & {
           font-size: hb-calculate-rems(16px);
@@ -399,10 +403,25 @@
     }
 
     &.hb-nested-toggler {
+      @include hb-unbuttonize;
+      
       position: relative;
+      padding: hb-calculate-rems(21px) hb-calculate-rems(17px);
+      width: 100%;
+      line-height: $item-line-height-sm;
+      cursor: pointer;
+
+      @include grid-media-min('md') {
+        line-height: $item-line-height-md;
+      }
 
       @include grid-media-min('lg') {
-        padding-right: hb-calculate-rems(20px);
+        padding: hb-calculate-rems(10px) hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+        width: auto;
+
+        .js & {
+          line-height: $item-line-height-lg;
+        }
       }
 
       &::after {

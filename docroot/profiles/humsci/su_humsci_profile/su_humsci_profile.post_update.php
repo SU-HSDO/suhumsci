@@ -325,3 +325,10 @@ function su_humsci_profile_post_update_9204() {
 function su_humsci_profile_post_update_9205() {
   \Drupal::service('module_installer')->uninstall(['we_megamenu']);
 }
+
+/**
+ * Grant administer users permission to site managers.
+ */
+function su_humsci_profile_post_update_9206() {
+  user_role_grant_permissions('site_manager', ['administer users']);
+}

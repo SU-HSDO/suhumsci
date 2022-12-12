@@ -19,6 +19,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_image
     - field.field.node.hs_person.field_hs_person_interests
     - field.field.node.hs_person.field_hs_person_last_name
+    - field.field.node.hs_person.field_hs_person_leave
     - field.field.node.hs_person.field_hs_person_links
     - field.field.node.hs_person.field_hs_person_mail
     - field.field.node.hs_person.field_hs_person_middle_name
@@ -36,6 +37,7 @@ dependencies:
     - node.type.hs_person
   module:
     - address
+    - entityqueue
     - field_group
     - hs_field_helpers
     - link
@@ -68,6 +70,7 @@ third_party_settings:
       children:
         - field_hs_person_email
         - field_hs_person_telephone
+        - field_hs_person_leave
         - field_hs_person_office
         - field_hs_person_office_hours
         - field_hs_person_mail
@@ -201,7 +204,7 @@ content:
     third_party_settings: {  }
   field_hs_person_alt_email:
     type: string_textfield
-    weight: 20
+    weight: 21
     region: content
     settings:
       size: 60
@@ -209,7 +212,7 @@ content:
     third_party_settings: {  }
   field_hs_person_alt_label:
     type: string_textfield
-    weight: 17
+    weight: 18
     region: content
     settings:
       size: 60
@@ -217,7 +220,7 @@ content:
     third_party_settings: {  }
   field_hs_person_alt_name:
     type: string_textfield
-    weight: 18
+    weight: 19
     region: content
     settings:
       size: 60
@@ -225,7 +228,7 @@ content:
     third_party_settings: {  }
   field_hs_person_alt_phone:
     type: string_textfield
-    weight: 19
+    weight: 20
     region: content
     settings:
       size: 60
@@ -287,6 +290,18 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_hs_person_image:
+    type: entityqueue_dragtable
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+      link_to_entity: false
+      link_to_edit_form: true
+    third_party_settings: {  }
   field_hs_person_interests:
     type: string_textfield
     weight: 13
@@ -303,6 +318,14 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_hs_person_leave:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_hs_person_links:
     type: link_default
     weight: 14
@@ -313,7 +336,7 @@ content:
     third_party_settings: {  }
   field_hs_person_mail:
     type: address_default
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -327,7 +350,7 @@ content:
     third_party_settings: {  }
   field_hs_person_office:
     type: string_textfield
-    weight: 14
+    weight: 15
     region: content
     settings:
       size: 60
@@ -335,7 +358,7 @@ content:
     third_party_settings: {  }
   field_hs_person_office_hours:
     type: string_textfield
-    weight: 15
+    weight: 16
     region: content
     settings:
       size: 60
@@ -455,5 +478,4 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_hs_person_image: true
+hidden: {  }

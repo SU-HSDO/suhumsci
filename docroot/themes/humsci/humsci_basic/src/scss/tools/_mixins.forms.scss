@@ -12,6 +12,9 @@
   }
 }
 
+/* @TODO: SHS-138
+   This violates accessibility patterns and should be deprecated
+   and removed with the updated focus mixin. */
 @mixin hb-input-focus {
   @include hb-global-color('background-color', 'white');
   box-shadow: none;
@@ -24,4 +27,12 @@
   @include hb-traditional {
     @include hb-global-color('border-color', 'gray-dark');
   }
+}
+
+@mixin hb-focus {
+  @include hb-pairing-color('outline-color', 'primary');
+
+  outline-width: hb-calculate-rems(3px);
+  outline-style: solid;
+  outline-offset: hb-calculate-rems(1px);
 }

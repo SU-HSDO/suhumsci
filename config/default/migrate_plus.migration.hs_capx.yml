@@ -21,6 +21,7 @@ source:
     file_extension: .jpg
     square: square
     separator: '-'
+    photo_params: '?placeHolderImage=false&access_token='
   urls: {  }
   item_selector: values
   fields:
@@ -67,11 +68,11 @@ source:
     -
       name: profile_photo
       label: 'Profile Photo'
-      selector: profilePhotos/bigger/url
+      selector: profilePhotos/350x522/url
     -
       name: square_photo
       label: 'Square Photo'
-      selector: profilePhotos/square/url
+      selector: profilePhotos/350x350/url
     -
       name: appointments
       label: 'Administrative Appointments'
@@ -206,19 +207,10 @@ process:
       method: process
       source: profile_photo
     -
-      plugin: explode
-      delimiter: '&'
-    -
       plugin: str_replace
       regex: true
-      search: '/^(?!ts=).+/'
-      replace: ''
-    -
-      plugin: str_replace
-      search: ts=
-      replace: ''
-    -
-      plugin: concat
+      search: '/^.*\.(\d+).jpg$/'
+      replace: $1
   image_path:
     plugin: concat
     source:
@@ -227,11 +219,19 @@ process:
       - separator
       - '@image_timestamp'
       - constants/file_extension
+  cap_token:
+    plugin: oauth2_access_token
   image_file:
     -
       plugin: skip_on_empty
       method: process
       source: profile_photo
+    -
+      plugin: concat
+      source:
+        - profile_photo
+        - constants/photo_params
+        - '@cap_token'
     -
       plugin: image_dimension_skip
       method: process
@@ -337,6 +337,12 @@ process:
       plugin: skip_on_empty
       method: process
       source: square_photo
+    -
+      plugin: concat
+      source:
+        - square_photo
+        - constants/photo_params
+        - '@cap_token'
     -
       plugin: image_dimension_skip
       method: process

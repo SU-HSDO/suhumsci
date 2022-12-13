@@ -177,6 +177,12 @@ $credits: (
     ~ .hs-font-lead {
       animation-duration: 1450ms !important;
       animation-delay: 250ms;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation-delay: -1s;
+        animation-duration: 1s !important;
+        animation-iteration-count: 1;
+      }
     }
   }
 

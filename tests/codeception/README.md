@@ -87,5 +87,5 @@ The following Codeception tests are currently run during a CI build. Unless othe
   * Toggles menu items
   * Mobile menu button and toggles
 
-### Disabled Acceptance Tests
+## Disabled Acceptance Tests
   * Flexible Page - Row with Text Area

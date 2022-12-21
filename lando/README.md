@@ -221,10 +221,10 @@ To configure the SimpleSAML module so you stop seeing the configuration errors i
 
 1. Run `lando blt sws:keys`
 2. Run `lando blt sbsc`
-3. Go to the the `/simplesamlphp/config` folder and edit the local.config.php file.
+3. Go to the the `/simplesamlphp/config` folder and edit the `local.config.php` file.
 4. Make sure lines 10,11,12 match the information from your `lando.yml` file for the site you are working on.
     * Example: If you are working on `sparkbox_sandbox` you will want to add `sparkbox_sandbox` in for the host and the dbname on line 10 and update the username and password below to drupal.
-5. After you’ve gotten that file up to date, you need to run lando blt sbsc once more and then clear your site cache with `lando drush @[site_name] cr` and the error should be gone upon reloading.
+5. After you’ve gotten that file up to date, you need to `run lando blt sbsc` once more and then clear your site cache with `lando drush @[site_name] cr` and the error should be gone upon reloading.
 
 **Notes:**
 

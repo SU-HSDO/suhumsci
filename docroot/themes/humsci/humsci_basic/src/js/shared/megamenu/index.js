@@ -56,9 +56,23 @@ if (menu) {
     el.setAttribute(`aria-${aria}`, x);
   };
 
+  // Displays nested child menus on mobile
+  const expandMobileSubmenus = () => {
+    const activeParent = document.querySelector('.js-megamenu__active-trail');
+    const childMenu = activeParent.nextElementSibling;
+
+    toggleAria(activeParent, 'expanded');
+    activeParent.classList.add('is-expanded');
+    childMenu.classList.add('is-expanded');
+  };
+
   if (menuBtnMobile) {
     // Toggle nav immediately for JS visitors
     toggleAria(menuBtnMobile, 'expanded');
+
+    if (isMobile) {
+      expandMobileSubmenus();
+    }
 
     // Toggle the nav when the the button is clicked
     menuBtnMobile.addEventListener('click', () => {

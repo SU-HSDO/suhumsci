@@ -15,7 +15,7 @@ $nested-padding: hb-calculate-rems(22px);
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
   @include hb-pairing-color('color', 'tertiary');
-  
+
   &:hover:not(.is-active),
   &:focus {
     @include hb-pairing-color('color', 'tertiary-darken-20');
@@ -585,6 +585,14 @@ $hb-link-bar-link: 100%;
           font-weight: hb-theme-font-weight(bold);
         }
       }
+
+      &.megamenu__active-trail {
+        &::before {
+          @include grid-media-min('lg') {
+            display: none;
+          }
+        }
+      }
     }
 
     .megamenu__item .megamenu__no-link {
@@ -680,7 +688,7 @@ $hb-link-bar-link: 100%;
 
       .su-masthead:not(.hb-dark-pattern) & {
         color: initial;
-  
+
         &:hover:not(.is-active),
         &:focus {
           color: initial;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32ed8815d6f8d3d6fe1e121080cb8ac7",
+    "content-hash": "70a681cdbce29ce93185f42e9d8359fa",
     "packages": [
         {
             "name": "acquia/blt",
@@ -5790,6 +5790,66 @@
             "homepage": "https://www.drupal.org/project/embed",
             "support": {
                 "source": "https://git.drupalcode.org/project/embed"
+            }
+        },
+        {
+            "name": "drupal/empty_fields",
+            "version": "1.0.0-beta2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/empty_fields.git",
+                "reference": "8.x-1.0-beta2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/empty_fields-8.x-1.0-beta2.zip",
+                "reference": "8.x-1.0-beta2",
+                "shasum": "65eaf7d0d12c21b762f0d6c63ca03bea788b8ab4"
+            },
+            "require": {
+                "drupal/core": "^9 || ^10"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-beta2",
+                    "datestamp": "1661363242",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alan D.",
+                    "homepage": "https://www.drupal.org/user/198838"
+                },
+                {
+                    "name": "andypost",
+                    "homepage": "https://www.drupal.org/user/118908"
+                },
+                {
+                    "name": "geek-merlin",
+                    "homepage": "https://www.drupal.org/user/229048"
+                },
+                {
+                    "name": "mstrelan",
+                    "homepage": "https://www.drupal.org/user/314289"
+                },
+                {
+                    "name": "rypit",
+                    "homepage": "https://www.drupal.org/user/868380"
+                }
+            ],
+            "description": "Provides options for displaying empty fields.",
+            "homepage": "https://www.drupal.org/project/empty_fields",
+            "support": {
+                "source": "https://git.drupalcode.org/project/empty_fields"
             }
         },
         {
@@ -17949,15 +18009,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SU-SWS/stanford_migrate.git",
-                "reference": "698b86f2ed616be061979002476aca518a1b35c0"
+                "reference": "9b583e34cf22714c850b47ba4cfa60e3533a413d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/698b86f2ed616be061979002476aca518a1b35c0",
-                "reference": "698b86f2ed616be061979002476aca518a1b35c0",
+                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/9b583e34cf22714c850b47ba4cfa60e3533a413d",
+                "reference": "9b583e34cf22714c850b47ba4cfa60e3533a413d",
                 "shasum": ""
             },
             "require": {
+                "drupal/empty_fields": "^1.0@beta",
                 "drupal/migrate_file": "^2.0",
                 "drupal/migrate_plus": "^6.0",
                 "drupal/migrate_source_csv": "^3.4",
@@ -17973,7 +18034,11 @@
             "default-branch": true,
             "type": "drupal-custom-module",
             "extra": {
-                "patches": []
+                "patches": {
+                    "drupal/readonly_field_widget": {
+                        "https://www.drupal.org/project/readonly_field_widget/issues/3220671": "https://www.drupal.org/files/issues/2022-08-14/third-party-settings-3220671-6.patch"
+                    }
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -17990,7 +18055,7 @@
                 "issues": "https://github.com/SU-SWS/stanford_migrate/issues",
                 "source": "https://github.com/SU-SWS/stanford_migrate/tree/8.x"
             },
-            "time": "2023-01-07T05:11:52+00:00"
+            "time": "2023-01-09T21:24:50+00:00"
         },
         {
             "name": "su-sws/stanford_ssp",
@@ -27527,6 +27592,7 @@
         "drupal/confirm_leave": 10,
         "drupal/content_access": 15,
         "drupal/eck": 10,
+        "drupal/empty_fields": 10,
         "drupal/entity_reference_exposed_filters": 15,
         "drupal/fast_404": 15,
         "drupal/field_validation": 10,

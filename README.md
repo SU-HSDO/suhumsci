@@ -37,7 +37,7 @@ be the wrapper around the codeception commands.
 - `blt codeception` will run all acceptance tests.
 - `blt codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most
   effective method to run a single test.
-- [List of current tests](/tests/codeception/README.md)
+- [List of current tests](/docs/Codeception.md)
 
 ### SASS
 - `npm test` - Run linting for all Sass in the project (including humsci_basic).

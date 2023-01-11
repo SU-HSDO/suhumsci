@@ -81,6 +81,9 @@ $hb-link-bar-link: 100%;
   top: auto;
   bottom: hb-calculate-rems(3px);
   left: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: hb-transition(transform);
 }
 
 @mixin hb-active-border {
@@ -287,6 +290,10 @@ $hb-link-bar-link: 100%;
     @include grid-media-min('lg') {
       .js & {
         width: auto;
+
+        &::before {
+          @include hb-link-bar($hb-link-bar-button);
+        }
       }
     }
 
@@ -337,7 +344,7 @@ $hb-link-bar-link: 100%;
       @include grid-media-min('lg') {
         .js & {
           &::before {
-            @include hb-link-bar($hb-link-bar-button);
+            transform: scaleX(1);
           }
         }
       }
@@ -361,7 +368,7 @@ $hb-link-bar-link: 100%;
       &::before {
         @include grid-media-min('lg') {
           .js & {
-            @include hb-link-bar($hb-link-bar-button);
+            //transform: scaleX(1);
           }
         }
       }
@@ -410,7 +417,7 @@ $hb-link-bar-link: 100%;
       &::before {
         @include grid-media-min('lg') {
           .js & {
-            @include hb-link-bar($hb-link-bar-button);
+            transform: scaleX(1);
           }
         }
       }
@@ -418,12 +425,20 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__link {
+    @include grid-media-min('lg') {
+      .js .megamenu__list--main & {
+        &::before {
+          @include hb-link-bar;
+        }
+      }
+    }
+
     &:hover,
     &.megamenu__active-trail {
       @include grid-media-min('lg') {
         .js & {
           &::before {
-            @include hb-link-bar;
+            transform: scaleX(1);
           }
         }
 
@@ -448,8 +463,6 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__expanded-container {
-    display: none;
-
     &.is-expanded,
     .no-js & {
       display: block;
@@ -465,8 +478,14 @@ $hb-link-bar-link: 100%;
         width: 200%;
         color: hb-get-global-color('black', $hc-colorful-globals);
         box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px) rgba(0, 0, 0, 0.63);
-        transform: translateX(-50%);
-        z-index: 1;
+        transform: translateX(-50%) scaleY(0);
+        transform-origin: top;
+        transition: hb-transition(transform);
+        z-index: $hb-index-negative;
+
+        &.is-expanded {
+          transform: translateX(-50%) scaleY(1);
+        }
       }
     }
   }

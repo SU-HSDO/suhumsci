@@ -16,6 +16,9 @@ if (file_exists(EnvironmentDetector::getAhFilesRoot() . '/secrets.settings.php')
   require EnvironmentDetector::getAhFilesRoot() . '/secrets.settings.php';
 }
 
+$config['certdir'] = EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/cert';
+$config['metadatadir'] = EnvironmentDetector::getAhFilesRoot() . '/nobackup/apikeys/saml/metadata';
+
 /**
  * Defines Acquia account specific options in $config keys.
  *

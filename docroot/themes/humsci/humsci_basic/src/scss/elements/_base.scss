@@ -164,9 +164,21 @@ button:not([class]) {
 }
 
 *:focus-visible {
-  @include hb-pairing-color('outline-color', 'primary');
+  @include hb-focus;
+}
 
-  outline-width: hb-calculate-rems(3px);
-  outline-style: solid;
-  outline-offset: hb-calculate-rems(1px);
+/*
+* 1. Immediately jump any animation to the end point
+* 2. Remove transitions & fixed background attachment
+* See: https://github.com/mozdevs/cssremedy/issues/11
+*/
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-delay: -1s !important;
+    animation-duration: 1s !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+  }
 }

@@ -156,3 +156,5 @@ $settings['trusted_host_patterns'] = [
 ];
 
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+
+$config['simplesamlphp_auth.settings']['activate'] = FALSE;

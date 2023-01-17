@@ -16,7 +16,12 @@ class HsHooksCommands extends BltTasks {
    * @hook pre-command tests:codeception:run
    */
   public function preCodecepton() {
-    $this->taskDrush()->drush('pmu')->arg('simplesamlphp_auth')->run();
+    $this->taskDrush()
+      ->drush('cset')
+      ->arg('simplesamlphp_auth.settings')
+      ->arg('activate')
+      ->arg(0)
+      ->run();
   }
 
   /**

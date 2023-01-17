@@ -368,7 +368,7 @@ $hb-link-bar-link: 100%;
       &::before {
         @include grid-media-min('lg') {
           .js & {
-            //transform: scaleX(1);
+            transform: scaleX(1);
           }
         }
       }
@@ -426,7 +426,7 @@ $hb-link-bar-link: 100%;
 
   .megamenu__link {
     @include grid-media-min('lg') {
-      .js .megamenu__list--main & {
+      .js &:not(.list-sub) & {
         &::before {
           @include hb-link-bar;
         }
@@ -478,12 +478,14 @@ $hb-link-bar-link: 100%;
         width: 200%;
         color: hb-get-global-color('black', $hc-colorful-globals);
         box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px) rgba(0, 0, 0, 0.63);
+        opacity: 0;
         transform: translateX(-50%) scaleY(0);
         transform-origin: top;
         transition: hb-transition(transform);
         z-index: $hb-index-negative;
 
         &.is-expanded {
+          opacity: 1;
           transform: translateX(-50%) scaleY(1);
         }
       }

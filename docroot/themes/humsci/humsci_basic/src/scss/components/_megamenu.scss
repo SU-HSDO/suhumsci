@@ -439,6 +439,22 @@ $hb-link-bar-link: 100%;
 
     &.megamenu__active-trail {
       @include hb-active-border;
+
+      &:not(:has(+ .megamenu__list .megamenu__is-active)) {
+        @include hb-global-color('background-color', 'gray-light');
+
+        @include grid-media-min('lg') {
+          background: none;
+        }
+      }
+    }
+  }
+
+  .megamenu__is-active {
+    @include hb-global-color('background-color', 'gray-light');
+
+    @include grid-media-min('lg') {
+      background: none;
     }
   }
 

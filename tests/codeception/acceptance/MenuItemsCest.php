@@ -42,10 +42,13 @@ class MenuItemsCest {
 
   /**
    * Every main menu item should not error.
+   *
+   * @group testme
    */
   public function testMenuItems(AcceptanceTester $I) {
     $I->amOnPage('/');
     $I->canSeeResponseCodeIsBetween(200, 403);
+    $I->setMaxRedirects(5);
     foreach ($this->getLinksToCheck($I, '#header a') as $path) {
       $I->amOnPage($path);
       $I->canSeeResponseCodeIsBetween(200, 404);

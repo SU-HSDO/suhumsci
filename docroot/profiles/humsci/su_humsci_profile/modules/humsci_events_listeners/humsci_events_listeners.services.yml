@@ -15,6 +15,7 @@ services:
       - { name: event_subscriber }
   humsci_events_listeners.node_events:
     class: Drupal\humsci_events_listeners\EventSubscriber\NodeEvents
+    arguments: ['@rabbit_hole.behavior_invoker', '@plugin.manager.rabbit_hole_behavior_plugin']
     tags:
       - { name: event_subscriber }
   humsci_events_listeners.redirect_events:

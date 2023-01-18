@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -619,36 +618,6 @@ function hs_field_helpers_node_presave(EntityInterface $entity) {
     // can set the rabbit hole action to redirect to that url.
     if (is_string($target) && UrlHelper::isValid($target, TRUE)) {
       $entity->set('rh_action', 'bundle_default');
-    }
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_view().
- */
-function hs_field_helpers_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  $rabbit_hole = \Drupal::config('rabbit_hole.behavior_settings.node_type_' . $entity->bundle());
-
-  // If we are not on the current node page or rabbit hole isn't redirecting.
-  if ($rabbit_hole->get('action') != 'page_redirect' || !node_is_page($entity)) {
-    return;
-  }
-
-  // Check if there are individual node settings or if the given node is set to
-  // redirect.
-  if (
-    !$rabbit_hole->get('allow_override') ||
-    $entity->get('rh_action')->getString() == 'bundle_default'
-  ) {
-    /** @var \Drupal\token\Token $token_service */
-    $token_service = \Drupal::service('token');
-    $target = $token_service->replace($rabbit_hole->get('redirect'), ['node' => $entity]);
-
-    // Display a message to the user that this page would redirect to another
-    // location for other users.
-    if ($target != $rabbit_hole->get('redirect')) {
-      \Drupal::messenger()
-        ->addWarning(t('This page will redirect to @url for other visitors.', ['@url' => $target]));
     }
   }
 }

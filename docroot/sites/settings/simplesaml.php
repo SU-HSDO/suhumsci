@@ -24,7 +24,6 @@ if (EnvironmentDetector::isAhEnv()) {
 $config['simplesamlphp_auth.settings'] = [
   'langcode' => 'en',
   'default_langcode' => 'en',
-  'activate' => TRUE,
   'mail_attr' => 'mail',
   'unique_id' => 'uid',
   'user_name' => 'displayName',

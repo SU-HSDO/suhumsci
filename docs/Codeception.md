@@ -5,7 +5,7 @@ The following Codeception tests are currently run during a CI build. Unless othe
 ## Acceptance
 
 * [Course](../tests/codeception/acceptance/Install/Content/CourseCest.php)
-* [Flexible Page](../tests/codeception/acceptance/Install/Content/CourseCest.php)
+* [Flexible Page](../tests/codeception/acceptance/Install/Content/FlexiblePageCest.php)
   * [Postcard](../tests/codeception/acceptance/Install/Content/FlexiblePageCest.php#L29)
   * [Accordion](../tests/codeception/acceptance/Install/Content/FlexiblePageCest.php#L54)
   * [Back to top block](../tests/codeception/acceptance/Install/Content/FlexiblePageCest.php#L71)

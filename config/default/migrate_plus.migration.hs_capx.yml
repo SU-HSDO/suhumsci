@@ -22,6 +22,7 @@ source:
     square: square
     separator: '-'
     photo_params: '?placeHolderImage=false&access_token='
+    update_message: 'Updated automatically'
   urls: {  }
   item_selector: values
   fields:
@@ -147,13 +148,19 @@ source:
 process:
   title: display_name
   revision_timestamp:
-    -
-      plugin: callback
-      callable: _stanford_migrate_get_time
+    plugin: callback
+    callable: _stanford_migrate_get_time
   revision_translation_affected:
-    -
-      plugin: default_value
-      default_value: 1
+    plugin: default_value
+    default_value: 1
+  date_time:
+    plugin: format_date
+    from_format: 'U'
+    to_format: 'F j Y h:i A'
+    source: '@revision_timestamp'
+  revision_log: constants/update_message
+  revision_uid:
+    plugin: current_user
   status: constants/status
   type: constants/type
   field_hs_person_first_name: first_name
@@ -409,8 +416,10 @@ destination:
     - image_media
     - image_path
     - image_timestamp
+    - revision_log
     - revision_timestamp
     - revision_translation_affected
+    - revision_uid
     - square_image_file
     - square_image_media
     - square_image_path

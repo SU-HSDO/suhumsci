@@ -334,7 +334,7 @@ function su_humsci_profile_post_update_9206() {
 }
 
 /**
- * Set revision limits on all content types
+ * Set revision limits on all content types.
  */
 function su_humsci_profile_post_update_9207() {
   $node_types = \Drupal::entityTypeManager()

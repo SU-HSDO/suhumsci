@@ -12,6 +12,7 @@ dependencies:
     - paragraphs.paragraphs_type.hs_hero_image
   module:
     - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - layout_builder
@@ -65,6 +66,7 @@ content:
       more_link: false
       more_class: more-link
       more_text: More
+      more_aria_label: 'Read more about [node:title]'
       summary_handler: full
       trim_options:
         text: false
@@ -82,8 +84,11 @@ content:
     settings:
       view_mode: caption_credit
       link: false
-      image_style: hero_with_text
+      image_style: hero_layered
+      remove_alt: 0
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       hs_field_helpers:
@@ -107,6 +112,7 @@ content:
     label: hidden
     settings:
       tag: h2
+      linked: false
     third_party_settings:
       field_formatter_class:
         class: ''

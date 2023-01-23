@@ -10,6 +10,7 @@ dependencies:
     - field.field.paragraph.hs_hero_image.field_hs_hero_title
     - paragraphs.paragraphs_type.hs_hero_image
   module:
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - stanford_media
@@ -26,8 +27,11 @@ content:
     settings:
       view_mode: caption_credit
       link: false
-      image_style: hero_image
+      image_style: hero_layered
+      remove_alt: 0
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       hs_field_helpers:

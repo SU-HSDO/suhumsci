@@ -1,20 +1,25 @@
-uuid: 3dd9cd5b-8cd6-4b64-899c-630182f7e84f
+uuid: 88f408eb-dcd5-431a-a63d-2a08c9e2452c
 langcode: en
-status: true
+status: false
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.slideshow_slide
     - field.field.paragraph.hs_carousel.field_hs_carousel_slides
     - paragraphs.paragraphs_type.hs_carousel
   module:
     - ds
-    - empty_fields
     - field_formatter_class
     - hs_field_helpers
+    - layout_builder
     - slick_paragraphs
-id: paragraph.hs_carousel.default
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.hs_carousel.slideshow_slide
 targetEntityType: paragraph
 bundle: hs_carousel
-mode: default
+mode: slideshow_slide
 content:
   field_hs_carousel_slides:
     type: slick_paragraphs_vanilla
@@ -40,8 +45,6 @@ content:
       skin_dots: ''
       use_theme_field: false
     third_party_settings:
-      empty_fields:
-        handler: ''
       field_formatter_class:
         class: ''
       ds:

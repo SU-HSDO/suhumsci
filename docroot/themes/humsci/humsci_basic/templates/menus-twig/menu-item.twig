@@ -14,6 +14,9 @@
   {% set link_attributes = link_attributes.addClass(menu_base_class ~ "__active-trail", "js-" ~ menu_base_class ~ "__active-trail") %}
   {% set button_attributes = button_attributes.addClass(menu_base_class ~ "__active-trail", "js-" ~ menu_base_class ~ "__active-trail") %}
 {% endif %}
+{% if item.in_active_trail and not item.below %}
+  {% set link_attributes = link_attributes.addClass(menu_base_class ~ "__is-active") %}
+{% endif %}
 
 {# If the menu item is first level and has children, make
    it a button. Otherwise, make it a link #}

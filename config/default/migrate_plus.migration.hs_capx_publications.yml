@@ -18,6 +18,7 @@ source:
     type: hs_publications
     minimal_html: minimal_html
     publication_link_title: 'Publication Link'
+    update_message: 'Updated automatically'
   urls: {  }
   fields:
     -
@@ -61,6 +62,15 @@ source:
       type: string
   orphan_action: forget
 process:
+  revision_timestamp:
+    plugin: callback
+    callable: _stanford_migrate_get_time
+  revision_translation_affected:
+    plugin: default_value
+    default_value: 1
+  revision_log: constants/update_message
+  revision_uid:
+    plugin: current_user
   type: constants/type
   status: constants/status
   title:
@@ -135,6 +145,9 @@ process:
     ignore_case: true
     values:
       field_hs_publication_author/target_id: '@pub_author_id'
+  vid:
+    plugin: default_value
+    default_value: null
 destination:
   plugin: 'entity:node'
   overwrite_properties:
@@ -148,7 +161,12 @@ destination:
     - pub_author
     - pub_author_id
     - pub_author_lookup
+    - revision_log
+    - revision_timestamp
+    - revision_translation_affected
+    - revision_uid
     - title
     - type
+    - vid
 migration_dependencies:
   required: {  }

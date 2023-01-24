@@ -26,6 +26,7 @@ source:
     minimal_html: minimal_html
     map_link_text: 'View on a map'
     external_link_text: 'See more about the event'
+    update_message: 'Updated automatically'
     register_text: Register
     image_path: 'public://events/localist/'
     alt: ''
@@ -128,6 +129,18 @@ source:
       type: string
   orphan_action: forget
 process:
+  revision_timestamp:
+    plugin: callback
+    callable: _stanford_migrate_get_time
+  revision_translation_affected:
+    plugin: default_value
+    default_value: 1
+  revision_log: constants/update_message
+  revision_uid:
+    plugin: current_user
+  vid:
+    plugin: default_value
+    default_value: null
   status: constants/status
   type: constants/type
   canceled:
@@ -364,12 +377,6 @@ process:
 destination:
   plugin: 'entity:node'
   overwrite_properties:
-    - field_hs_event_experience
-    - field_hs_event_stream/uri
-    - field_hs_event_stream_info/value
-    - field_hs_event_stream_info/format
-    - field_hs_event_ticket/uri
-    - field_hs_event_ticket/title
     - body/format
     - body/value
     - field_hs_event_audience
@@ -377,6 +384,7 @@ destination:
     - field_hs_event_date/duration
     - field_hs_event_date/end_value
     - field_hs_event_date/value
+    - field_hs_event_experience
     - field_hs_event_image/target_id
     - field_hs_event_instances
     - field_hs_event_link/title
@@ -386,10 +394,20 @@ destination:
     - field_hs_event_registration/uri
     - field_hs_event_sponsor
     - field_hs_event_status
+    - field_hs_event_stream/uri
+    - field_hs_event_stream_info/format
+    - field_hs_event_stream_info/value
+    - field_hs_event_ticket/title
+    - field_hs_event_ticket/uri
     - image_file
     - image_name
     - last_end_date
     - last_start_date
+    - revision_log
+    - revision_timestamp
+    - revision_translation_affected
+    - revision_uid
     - title
     - type
+    - vid
 migration_dependencies: {  }

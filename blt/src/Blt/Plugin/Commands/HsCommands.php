@@ -3,8 +3,10 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Acquia\Blt\Robo\Exceptions\BltException;
 use Drupal\Core\Serialization\Yaml;
+use GuzzleHttp\Client;
 use Robo\Exception\TaskException;
 
 /**
@@ -92,18 +94,38 @@ class HsCommands extends BltTasks {
   public function cron() {
     // Disable alias since we are targeting specific uri.
     $this->config->set('drush.alias', '');
-
+    $failed = [];
     foreach ($this->getConfigValue('multisites') as $multisite) {
       try {
         $this->say("Running Cron on <comment>$multisite</comment>...");
         $this->switchSiteContext($multisite);
 
-        $this->taskDrush()
+        $task = $this->taskDrush()
           ->drush("cron")
           ->run();
+        if (!$task->wasSuccessful()) {
+          $failed[] = $multisite;
+        }
       }
       catch (\Exception $e) {
         $this->say("Unable to run cron on <comment>$multisite</comment>");
+        continue;
+      }
+    }
+
+    if ($failed) {
+      $secrets = EnvironmentDetector::getAhFilesRoot() . '/secrets.settings.php';
+      if (file_exists($secrets)) {
+        include $secrets;
+
+        $client = new Client();
+        $payload = [
+          'username' => 'Acquia Cloud',
+          'icon' => ':information_source:',
+          'text' => 'Cron failed on at least one site: ' . implode(', ', $failed),
+        ];
+        $encoded = json_encode($payload, JSON_UNESCAPED_UNICODE);
+        $client->post(getenv('SLACK_NOTIFICATION_URL'), ['body' => $encoded]);
       }
     }
   }

@@ -98,6 +98,7 @@ $sites['facultyaffairs-humsci.stanford.edu'] = 'facultyaffairs_humsci2021';
 $sites['lowe.stanford.edu'] = 'lowe2022';
 $sites['shenlab.stanford.edu'] = 'shenlab2022';
 $sites['duboislab.stanford.edu'] = 'duboislab2022';
+$sites['francestanford.stanford.edu'] = 'francestanford2022';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

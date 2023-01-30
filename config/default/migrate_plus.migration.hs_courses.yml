@@ -127,7 +127,20 @@ source:
     type: hs_course
     basic_html: basic_html
     link: 'http://explorecourses.stanford.edu/search?q='
+    update_message: 'Updated automatically'
 process:
+  revision_timestamp:
+    plugin: callback
+    callable: _stanford_migrate_get_time
+  revision_translation_affected:
+    plugin: default_value
+    default_value: 1
+  revision_log: constants/update_message
+  revision_uid:
+    plugin: current_user
+  vid:
+    plugin: default_value
+    default_value: null
   status: constants/status
   type: constants/type
   title: title
@@ -344,7 +357,12 @@ destination:
     - field_hs_course_subject
     - field_hs_course_tags
     - link_query
+    - revision_log
+    - revision_timestamp
+    - revision_translation_affected
+    - revision_uid
     - title
     - type
+    - vid
 migration_dependencies:
   required: {  }

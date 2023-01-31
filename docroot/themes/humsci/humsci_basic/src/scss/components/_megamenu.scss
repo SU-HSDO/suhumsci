@@ -15,7 +15,7 @@ $nested-padding: hb-calculate-rems(22px);
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
   @include hb-pairing-color('color', 'tertiary');
-  
+
   &:hover:not(.is-active),
   &:focus {
     @include hb-pairing-color('color', 'tertiary-darken-20');
@@ -247,8 +247,7 @@ $hb-link-bar-link: 100%;
     }
 
     &:focus-visible {
-      outline: 5px auto Highlight;
-      outline: 5px auto -webkit-focus-ring-color;
+      @include hb-focus;
 
       &::after {
         outline: none;
@@ -440,6 +439,22 @@ $hb-link-bar-link: 100%;
 
     &.megamenu__active-trail {
       @include hb-active-border;
+
+      &:not(:has(+ .megamenu__list .megamenu__is-active)) {
+        @include hb-global-color('background-color', 'gray-light');
+
+        @include grid-media-min('lg') {
+          background: none;
+        }
+      }
+    }
+  }
+
+  .megamenu__is-active {
+    @include hb-global-color('background-color', 'gray-light');
+
+    @include grid-media-min('lg') {
+      background: none;
     }
   }
 
@@ -586,18 +601,23 @@ $hb-link-bar-link: 100%;
           font-weight: hb-theme-font-weight(bold);
         }
       }
+
+      &.megamenu__active-trail {
+        &::before {
+          @include grid-media-min('lg') {
+            display: none;
+          }
+        }
+      }
     }
 
     .megamenu__item .megamenu__no-link {
-      font-weight: hb-theme-font-weight(regular);
+      @include hb-pairing-color('color', 'tertiary');
 
       &:hover {
-        background: none;
-        @include hb-global-color('color', 'gray-dark');
+        @include hb-pairing-color('color', 'tertiary');
 
-        .hb-dark-pattern & {
-          @include hb-global-color('color', 'white');
-        }
+        background: none;
 
         &::after {
           display: none;
@@ -606,7 +626,6 @@ $hb-link-bar-link: 100%;
 
       @include grid-media-min('lg') {
         .js & {
-          font-weight: hb-theme-font-weight(regular);
           cursor: auto;
 
           &:hover {
@@ -636,7 +655,7 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub--1 {
-    .megamenu__link {
+    .megamenu__link:not(.megamenu__no-link) {
       .su-masthead:not(.hb-dark-pattern) & {
         @include hb-menu-color-pairing-l2;
       }
@@ -685,7 +704,7 @@ $hb-link-bar-link: 100%;
 
       .su-masthead:not(.hb-dark-pattern) & {
         color: initial;
-  
+
         &:hover:not(.is-active),
         &:focus {
           color: initial;

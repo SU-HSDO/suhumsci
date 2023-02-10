@@ -5,6 +5,7 @@ namespace Drupal\humsci_events_listeners\EventSubscriber;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Url;
 use Drupal\core_event_dispatcher\EntityHookEvents;
 use Drupal\core_event_dispatcher\Event\Entity\EntityDeleteEvent;
 use Drupal\core_event_dispatcher\Event\Entity\EntityPresaveEvent;
@@ -111,13 +112,32 @@ class NodeEvents implements EventSubscriberInterface {
         $content = $event->getVariables()->getByReference('content');
         $message = [
           '#theme' => 'rabbit_hole_message',
-          '#destination' => $redirect_response->getTargetUrl(),
+          '#destination' => $this->getTargetUrl($redirect_response),
           '#attached' => ['library' => ['humsci_events_listeners/rabbit_hole_message']],
         ];
         $event->getVariables()
           ->set('content', ['rh_message' => $message] + $content);
       }
     }
+  }
+
+  /**
+   * Get the absolute target url from the rabbit hole settings.
+   *
+   * @param \Drupal\Core\Routing\TrustedRedirectResponse $redirect_response
+   *   Rabbit hole redirect response.
+   *
+   * @return string
+   *   Absolute url.
+   */
+  protected function getTargetUrl(TrustedRedirectResponse $redirect_response): string {
+    $target_url = $redirect_response->getTargetUrl();
+    try {
+      $url = Url::fromUserInput($target_url, ['absolute' => TRUE]);
+    } catch (\Exception $e) {
+      $url = Url::fromUri($target_url, ['absolute' => TRUE]);
+    }
+    return $url->toString();
   }
 
   /**

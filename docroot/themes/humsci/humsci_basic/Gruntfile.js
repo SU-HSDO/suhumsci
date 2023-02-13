@@ -1,8 +1,8 @@
 const sass = require('sass');
 const glob = require('glob');
+const tilde_importer = require('grunt-sass-tilde-importer');
 
 module.exports = function (grunt) {
-
   function getIncludeFiles() {
     const patterns = [
       'src/**/*.scss',
@@ -12,8 +12,8 @@ module.exports = function (grunt) {
     ];
 
     const libraries = [];
-    patterns.map(function (pattern) {
-      glob.sync(pattern).map(function (file) {
+    patterns.map((pattern) => {
+      glob.sync(pattern).map((file) => {
         libraries.push(file);
       });
     });
@@ -28,38 +28,42 @@ module.exports = function (grunt) {
         files: ['src/**/*.{scss,sass}'],
         tasks: ['dart-sass:dist'],
         options: {
-          interrupt: true
-        }
-      }
+          interrupt: true,
+        },
+      },
     },
     run: {
       stylelint: {
-        exec: 'npm run lint:sass'
-      }
+        exec: 'npm run lint:sass',
+      },
     },
     postcss: {
       options: {
         map: false, // inline sourcemaps
         processors: [
           require('autoprefixer')({
-            grid: true
-          }) // add vendor prefixes
-        ]
+            grid: true,
+          }), // add vendor prefixes
+        ],
       },
       dist: {
         src: [
           '../humsci_colorful/**/*.css',
           '../humsci_airy/**/*.css',
-          '../humsci_traditional/**/*.css'
-        ]
-      }
+          '../humsci_traditional/**/*.css',
+        ],
+      },
     },
     'dart-sass': {
       options: {
         implementation: sass,
         sourceMap: false,
         outputStyle: 'compressed',
-        includePaths: getIncludeFiles()
+        importer: tilde_importer,
+        includePaths: getIncludeFiles(),
+        sassOptions: {
+          quietDeps: true,
+        },
       },
       dist: {
         files: [
@@ -70,14 +74,14 @@ module.exports = function (grunt) {
             dest: '../',
             ext: '.css',
             extDot: 'last',
-            rename: function (dest, src) {
+            rename(dest, src) {
               const filenameRegularExpression = /\w+(?=\.)/;
               const themeName = src.match(filenameRegularExpression)[0];
-              return `${dest}${themeName}/css/${themeName}.css`
-            }
-          }
-        ]
-      }
+              return `${dest}${themeName}/css/${themeName}.css`;
+            },
+          },
+        ],
+      },
     },
   });
 

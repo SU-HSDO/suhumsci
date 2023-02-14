@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @mixin hb-page-width {
   max-width: hb-calculate-rems($hb-layout-max-width) !important;
   margin-left: auto !important;
@@ -31,7 +33,7 @@
 // and then the requested number at lg.
 // Cols over 12 are not supported.
 @mixin hb-column($col-number: 2) {
-  $percentage-width: 100% / $col-number;
+  $percentage-width: math.div(100%, $col-number);
 
   @if ($col-number > 1) {
     $one-less-col: $col-number - 1;

@@ -61,9 +61,7 @@ module.exports = function (grunt) {
         outputStyle: 'compressed',
         importer: tilde_importer,
         includePaths: getIncludeFiles(),
-        sassOptions: {
-          quietDeps: true,
-        },
+        quietDeps: true,
       },
       dist: {
         files: [

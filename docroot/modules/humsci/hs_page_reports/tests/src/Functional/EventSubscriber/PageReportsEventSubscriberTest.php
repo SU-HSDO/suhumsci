@@ -6,6 +6,8 @@ use Drupal\Tests\BrowserTestBase;
 
 class PageReportsEventSubscriberTest extends BrowserTestBase {
 
+  protected $defaultTheme = 'stark';
+
   /**
    * Modules to enable.
    *

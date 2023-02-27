@@ -35,7 +35,9 @@ class HumsciFontAwesome extends PluginBase implements CKEditorPluginContextualIn
    * {@inheritdoc}
    */
   public function getFile() {
-    return drupal_get_path('profile', 'su_humsci_profile') . '/js/plugin/humscifontawesome.js';
+    $profile_path = \Drupal::service('extension.list.profile')
+      ->getPath('su_humsci_profile');
+    return $profile_path . '/js/plugin/humscifontawesome.js';
   }
 
   /**
@@ -50,8 +52,10 @@ class HumsciFontAwesome extends PluginBase implements CKEditorPluginContextualIn
    */
   public function getConfig(Editor $editor) {
     global $base_path;
+    $profile_path = \Drupal::service('extension.list.profile')
+      ->getPath('su_humsci_profile');
     return [
-      'humsciFontAwesome' => $base_path . drupal_get_path('profile', 'su_humsci_profile') . '/img/icons/humscifontawesome.png',
+      'humsciFontAwesome' => $base_path . $profile_path . '/img/icons/humscifontawesome.png',
     ];
   }
 

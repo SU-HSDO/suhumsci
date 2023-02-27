@@ -42,7 +42,7 @@ class HumsciCommands extends DrushCommands {
    *   New collection paragraph type id.
    */
   public function rowsToCollections($node_type, $field_name, $collection_type) {
-    module_load_include('post_update.php', 'su_humsci_profile');
+    \Drupal::moduleHandler()->loadInclude('su_humsci_profile', 'post_update.php');
     _su_humsci_profile_enable_paragraph('node', $node_type, $field_name, $collection_type);
 
     $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');

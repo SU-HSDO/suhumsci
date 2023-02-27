@@ -5,6 +5,7 @@ namespace Drupal\hs_field_helpers\EventSubscriber;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\menu_block\Plugin\Block\MenuBlock;
@@ -33,16 +34,26 @@ class EventSubscriber implements EventSubscriberInterface {
   protected $linkManager;
 
   /**
+   * Renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * EventSubscriber constructor.
    *
    * @param \Drupal\Core\Menu\MenuActiveTrailInterface $active_trail
    *   Active trail service.
    * @param \Drupal\Core\Menu\MenuLinkManagerInterface $link_manager
    *   Menu link manager service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Renderer service.
    */
-  public function __construct(MenuActiveTrailInterface $active_trail, MenuLinkManagerInterface $link_manager) {
+  public function __construct(MenuActiveTrailInterface $active_trail, MenuLinkManagerInterface $link_manager, RendererInterface $renderer = NULL) {
     $this->activeTrail = $active_trail;
     $this->linkManager = $link_manager;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -110,7 +121,10 @@ class EventSubscriber implements EventSubscriberInterface {
    *   Rendered and clean markup.
    */
   protected function getCleanRender(array $render_array) {
-    return trim(strip_tags(render($render_array), '<img><iframe>'));
+    if ($this->renderer) {
+      return trim(strip_tags($this->renderer->render($render_array), '<img><iframe>'));
+    }
+    return '';
   }
 
   /**

@@ -122,7 +122,7 @@ $info = [
       'color' => [
         // Put the logos path into JavaScript for the live preview.
         'logo' => theme_get_setting('logo.url', 'su_humsci_theme'),
-        'globalFooterLogo' => '/' . drupal_get_path('theme', 'stanford_basic') . '/assets/svg/su_sig_stack_linked.svg',
+        'globalFooterLogo' => '/' . \Drupal::service('extension.list.theme')->getPath( 'stanford_basic') . '/assets/svg/su_sig_stack_linked.svg',
         'userId' => \Drupal::currentUser()->id(),
       ],
     ],

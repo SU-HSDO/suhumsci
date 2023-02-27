@@ -2,19 +2,22 @@
 
 namespace Drupal\hs_layouts\TwigExtension;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
 /**
  * Additional twig filters for custom functionality.
  *
  * @package Drupal\su_humsci_theme\TwigExtension
  */
-class TwigFilters extends \Twig_Extension {
+class TwigFilters extends AbstractExtension {
 
   /**
    * Generates a list of all Twig filters that this extension defines.
    */
   public function getFilters() {
     return [
-      new \Twig_SimpleFilter('has_markup', [$this, 'hasMarkup']),
+      new TwigFilter('has_markup', [$this, 'hasMarkup']),
     ];
   }
 
@@ -29,7 +32,7 @@ class TwigFilters extends \Twig_Extension {
    */
   public static function removeHtmlComments($variable) {
     if (!is_string($variable)) {
-      $variable = render($variable);
+      $variable = \Drupal::service('renderer')->render($variable);
     }
     return preg_replace([
       '/<!--(.|\s)*?-->\s*/',

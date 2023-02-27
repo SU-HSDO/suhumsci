@@ -238,7 +238,8 @@ class CapxImporterForm extends EntityForm {
     }
 
     $entity_query = $this->entityTypeManager->getStorage('node')
-      ->getQuery('OR');
+      ->getQuery('OR')
+      ->accessCheck(FALSE);
 
     // Find all node ids that are tagged with the fields. This allows us to only
     // invalidate the hashes that are applicable.
@@ -251,7 +252,7 @@ class CapxImporterForm extends EntityForm {
     $entity_ids = array_keys($entity_query->execute());
     if ($entity_ids) {
       $this->database->update('migrate_map_hs_capx')
-        ->condition('destid1', $entity_query->execute(), 'IN')
+        ->condition('destid1', $entity_ids, 'IN')
         ->fields(['hash' => ''])
         ->execute();
     }

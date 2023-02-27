@@ -5,7 +5,7 @@ namespace Drupal\hs_page_reports\EventSubscriber;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -54,13 +54,13 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
   /**
    * Event listener to record kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   Thrown event.
    *
    * @throws \Exception
    */
-  public function onKernelException(GetResponseForExceptionEvent $event) {
-    if (!method_exists($event->getException(), 'getStatusCode')) {
+  public function onKernelException(ExceptionEvent $event) {
+    if (!method_exists($event->getThrowable(), 'getStatusCode')) {
       return;
     }
 
@@ -76,7 +76,7 @@ class PageReportsEventSubscriber implements EventSubscriberInterface {
       $record = [
         'path' => $path,
         'count' => 0,
-        'code' => $event->getException()->getStatusCode(),
+        'code' => $event->getThrowable()->getStatusCode(),
       ];
     }
 

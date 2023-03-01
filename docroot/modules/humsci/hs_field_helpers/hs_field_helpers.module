@@ -211,10 +211,14 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
-      $rendered = \Drupal::service('renderer')->render($pattern[$region]);
-
-      // Remove all wrapper divs so we can check if the region actually has any
-      // visible output.
+      try {
+        $rendered = \Drupal::service('renderer')->render($pattern[$region]);
+      }
+      catch (\Throwable $e) {
+        continue;
+      }
+      // Remove all wrapper divs to check if the region actually has any visible
+      // output.
       $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
       $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
       if (empty(trim($rendered))) {

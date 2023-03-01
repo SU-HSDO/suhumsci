@@ -59,11 +59,13 @@ if (menu) {
   // Displays nested child menus on mobile
   const expandMobileSubmenus = () => {
     const activeParent = document.querySelector('.js-megamenu__active-trail');
-    const childMenu = activeParent.nextElementSibling;
-
-    toggleAria(activeParent, 'expanded');
-    activeParent.classList.add('is-expanded');
-    childMenu.classList.add('is-expanded');
+    // Only expand menu tree if active-trail exists.
+    if (activeParent) {
+      const childMenu = activeParent.nextElementSibling;
+      toggleAria(activeParent, 'expanded');
+      activeParent.classList.add('is-expanded');
+      childMenu.classList.add('is-expanded');
+    }
   };
 
   if (menuBtnMobile) {
@@ -88,7 +90,9 @@ if (menu) {
     btn.addEventListener('click', (e) => {
       const currentBtn = e.currentTarget;
       const menuItem = e.currentTarget.parentElement;
-      const subMenu = menuItem.querySelector('.js-megamenu__expanded-container');
+      const subMenu = menuItem.querySelector(
+        '.js-megamenu__expanded-container',
+      );
       // We want to only close expanded menus on desktop to mimic current
       // menu functionality.
       if (!isMobile) {

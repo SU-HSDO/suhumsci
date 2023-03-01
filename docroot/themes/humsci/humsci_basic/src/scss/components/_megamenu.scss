@@ -14,11 +14,11 @@ $nested-padding: hb-calculate-rems(22px);
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
-  @include hb-pairing-color('color', 'tertiary');
+  @include hb-pairing-color("color", "tertiary");
 
   &:hover:not(.is-active),
   &:focus {
-    @include hb-pairing-color('color', 'tertiary-darken-20');
+    @include hb-pairing-color("color", "tertiary-darken-20");
   }
 }
 
@@ -30,23 +30,23 @@ $nested-padding: hb-calculate-rems(22px);
 }
 
 @mixin hb-lock-props {
-  @include hb-icon-background('lock', 'black');
+  @include hb-icon-background("lock", "black");
   @include hb-lock-position();
 
   .hb-dark-pattern & {
-    @include hb-icon-background('lock', 'white');
+    @include hb-icon-background("lock", "white");
   }
 
   &:hover {
-    @include hb-icon-background('lock', 'black');
+    @include hb-icon-background("lock", "black");
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
-        @include hb-icon-background('lock', 'black');
+        @include hb-icon-background("lock", "black");
         @include hb-lock-position();
 
         .hb-dark-pattern & {
-          @include hb-icon-background('lock', 'white');
+          @include hb-icon-background("lock", "white");
         }
 
         background-position: hb-calculate-rems(14px);
@@ -54,12 +54,12 @@ $nested-padding: hb-calculate-rems(22px);
     }
   }
 
-  @include grid-media-min('lg') {
+  @include grid-media-min("lg") {
     .js & {
-      @include hb-icon-background('lock', 'black');
+      @include hb-icon-background("lock", "black");
 
       .hb-dark-pattern & {
-        @include hb-icon-background('lock', 'white');
+        @include hb-icon-background("lock", "white");
       }
 
       background-position: hb-calculate-rems(14px);
@@ -71,9 +71,9 @@ $hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
 $hb-link-bar-link: 100%;
 
 @mixin hb-link-bar($width: $hb-link-bar-link) {
-  @include hb-pairing-color('background-color', 'secondary');
+  @include hb-pairing-color("background-color", "secondary");
 
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   width: $width;
@@ -87,7 +87,7 @@ $hb-link-bar-link: 100%;
 }
 
 @mixin hb-active-border {
-  @include hb-pairing-color('border-color', 'secondary');
+  @include hb-pairing-color("border-color", "secondary");
 
   border-width: hb-calculate-rems(6px);
   border-style: solid;
@@ -95,7 +95,7 @@ $hb-link-bar-link: 100%;
   border-right: none;
   border-bottom: none;
 
-  @include grid-media-min('lg') {
+  @include grid-media-min("lg") {
     border: none;
   }
 }
@@ -130,7 +130,7 @@ $hb-link-bar-link: 100%;
     // For almost all 'lg' breakpoints, we include the .js body class
     // so that mobile menu is fully expanded for users that have
     // JavaScript disabled.
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         display: none;
       }
@@ -149,7 +149,7 @@ $hb-link-bar-link: 100%;
     .hb-dark-pattern &,
     .hb-dark-pattern &::after,
     .hb-dark-pattern &::before {
-      @include hb-global-color('background-color', 'white');
+      @include hb-global-color("background-color", "white");
     }
   }
 
@@ -161,7 +161,7 @@ $hb-link-bar-link: 100%;
     width: auto;
     transform: translate(0);
 
-    @include grid-media-min('sm') {
+    @include grid-media-min("sm") {
       max-width: none;
     }
   }
@@ -170,18 +170,18 @@ $hb-link-bar-link: 100%;
     // You must include the mixin after the variable if
     // you want the color to apply.
     border-bottom: $hb-medium-border;
-    @include hb-global-color('border-color', 'gray');
+    @include hb-global-color("border-color", "gray");
 
     display: none;
     margin-bottom: hb-calculate-rems(28px);
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(18px);
 
-    @include grid-media-min('md') {
+    @include grid-media-min("md") {
       font-size: hb-calculate-rems(24px);
     }
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         display: flex;
         justify-content: flex-start;
@@ -199,7 +199,7 @@ $hb-link-bar-link: 100%;
     .megamenu__link {
       font-weight: hb-theme-font-weight(bold);
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           font-weight: hb-theme-font-weight(semibold);
         }
@@ -209,13 +209,13 @@ $hb-link-bar-link: 100%;
 
   .megamenu__item {
     border-top: $hb-medium-border;
-    @include hb-global-color('border-color', 'gray');
+    @include hb-global-color("border-color", "gray");
 
     .hb-private-page-link {
       @include hb-lock-props();
     }
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         display: inline-block;
         margin-right: hb-calculate-rems(48px);
@@ -237,11 +237,11 @@ $hb-link-bar-link: 100%;
     padding: hb-calculate-rems(21px) hb-calculate-rems(8px);
     line-height: 120.3%;
 
-    @include grid-media-min('md') {
+    @include grid-media-min("md") {
       line-height: 128%;
     }
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         position: relative;
         padding: hb-calculate-rems(10px) 0 hb-calculate-rems(20px);
@@ -258,24 +258,24 @@ $hb-link-bar-link: 100%;
     }
 
     &:hover {
-      @include hb-global-color('color', 'black');
+      @include hb-global-color("color", "black");
 
-      @include hb-themes(('airy', 'colorful')) {
-        @include hb-global-color('background-color', 'gray-light');
+      @include hb-themes(("airy", "colorful")) {
+        @include hb-global-color("background-color", "gray-light");
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('background-color', 'tertiary-highlight');
+        @include hb-pairing-color("background-color", "tertiary-highlight");
       }
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           background: none;
         }
 
         .hb-dark-pattern & {
           .js & {
-            @include hb-global-color('color', 'white');
+            @include hb-global-color("color", "white");
           }
         }
       }
@@ -287,7 +287,7 @@ $hb-link-bar-link: 100%;
     position: relative;
     width: 100%;
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         width: auto;
 
@@ -305,13 +305,13 @@ $hb-link-bar-link: 100%;
       top: 0;
       right: 0;
       height: 100%;
-      content: '';
+      content: "";
       cursor: pointer;
       transform-origin: center;
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
-          @include hb-icon-background('chevron', 'primary-dark');
+          @include hb-icon-background("chevron", "primary-dark");
           @include hb-menu-icon-wrapper(16px, 12px);
 
           top: calc(50% - #{hb-calculate-rems(5px)});
@@ -322,18 +322,18 @@ $hb-link-bar-link: 100%;
       }
 
       .no-js & {
-        @include hb-icon-background('minus', 'gray-dark');
+        @include hb-icon-background("minus", "gray-dark");
       }
 
       .hb-dark-pattern & {
-        @include hb-icon-background('plus', 'white');
+        @include hb-icon-background("plus", "white");
 
-        @include grid-media-min('lg') {
-          @include hb-icon-background('chevron', 'white');
+        @include grid-media-min("lg") {
+          @include hb-icon-background("chevron", "white");
         }
 
         .no-js & {
-          @include hb-icon-background('minus', 'white');
+          @include hb-icon-background("minus", "white");
         }
       }
     }
@@ -341,7 +341,7 @@ $hb-link-bar-link: 100%;
     &:hover {
       cursor: pointer;
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           &::before {
             transform: scaleX(1);
@@ -351,14 +351,14 @@ $hb-link-bar-link: 100%;
 
       &::after {
         .hb-dark-pattern & {
-          @include hb-icon-background('plus', 'gray-dark');
+          @include hb-icon-background("plus", "gray-dark");
 
-          @include grid-media-min('lg') {
-            @include hb-icon-background('chevron', 'white');
+          @include grid-media-min("lg") {
+            @include hb-icon-background("chevron", "white");
           }
 
           .no-js & {
-            @include hb-icon-background('minus', 'gray-dark');
+            @include hb-icon-background("minus", "gray-dark");
           }
         }
       }
@@ -366,7 +366,7 @@ $hb-link-bar-link: 100%;
 
     &.is-expanded {
       &::before {
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           .js & {
             transform: scaleX(1);
           }
@@ -377,18 +377,18 @@ $hb-link-bar-link: 100%;
         @include hb-menu-minus-icon;
 
         .hb-dark-pattern & {
-          @include hb-icon-background('minus', 'white');
+          @include hb-icon-background("minus", "white");
 
-          @include grid-media-min('lg') {
+          @include grid-media-min("lg") {
             .js & {
-              @include hb-icon-background('chevron', 'white');
+              @include hb-icon-background("chevron", "white");
             }
           }
         }
 
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           .js & {
-            @include hb-icon-background('chevron', 'primary-dark');
+            @include hb-icon-background("chevron", "primary-dark");
 
             top: calc(50% - 13px);
             background-size: auto;
@@ -399,11 +399,11 @@ $hb-link-bar-link: 100%;
       &:hover {
         &::after {
           .hb-dark-pattern & {
-            @include hb-icon-background('minus', 'gray-dark');
+            @include hb-icon-background("minus", "gray-dark");
 
-            @include grid-media-min('lg') {
+            @include grid-media-min("lg") {
               .js & {
-                @include hb-icon-background('chevron', 'white');
+                @include hb-icon-background("chevron", "white");
               }
             }
           }
@@ -415,7 +415,7 @@ $hb-link-bar-link: 100%;
       @include hb-active-border;
 
       &::before {
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           .js & {
             transform: scaleX(1);
           }
@@ -425,7 +425,7 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__link {
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js &:not(.list-sub) & {
         &::before {
           @include hb-link-bar;
@@ -435,7 +435,7 @@ $hb-link-bar-link: 100%;
 
     &:hover,
     &.megamenu__active-trail {
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           &::before {
             transform: scaleX(1);
@@ -456,9 +456,9 @@ $hb-link-bar-link: 100%;
       @include hb-active-border;
 
       &:not(:has(+ .megamenu__list .megamenu__is-active)) {
-        @include hb-global-color('background-color', 'gray-light');
+        @include hb-global-color("background-color", "gray-light");
 
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           background: none;
         }
       }
@@ -466,9 +466,9 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__is-active {
-    @include hb-global-color('background-color', 'gray-light');
+    @include hb-global-color("background-color", "gray-light");
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       background: none;
     }
   }
@@ -479,21 +479,26 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__expanded-container {
+    display: none;
+
     &.is-expanded,
     .no-js & {
       display: block;
     }
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
+      display: block;
+
       .js & {
-        @include hb-global-color('background-color', 'white');
+        @include hb-global-color("background-color", "white");
 
         position: absolute;
         padding: hb-calculate-rems(44px) 0 hb-calculate-rems(89px);
         left: 50%;
         width: 200%;
-        color: hb-get-global-color('black', $hc-colorful-globals);
-        box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px) rgba(0, 0, 0, 0.63);
+        color: hb-get-global-color("black", $hc-colorful-globals);
+        box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px)
+          rgba(0, 0, 0, 0.63);
         opacity: 0;
         transform: translateX(-50%) scaleY(0);
         transform-origin: top;
@@ -509,23 +514,23 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub {
-    @include hb-global-color('color', 'gray-dark');
+    @include hb-global-color("color", "gray-dark");
 
     padding-left: hb-calculate-rems(16px);
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight(semibold);
 
     .hb-dark-pattern & {
-      @include hb-global-color('color', 'white');
+      @include hb-global-color("color", "white");
     }
 
-    @include grid-media-min('md') {
+    @include grid-media-min("md") {
       font-size: hb-calculate-rems(22px);
     }
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
-        @include hb-global-color('color', 'black');
+        @include hb-global-color("color", "black");
 
         display: flex;
         grid-gap: 0 hb-calculate-rems(52px);
@@ -537,15 +542,15 @@ $hb-link-bar-link: 100%;
 
       .megamenu__toggle,
       .megamenu__link {
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           width: 100%;
 
           &:hover {
             .js & {
               &::after {
-                @include hb-global-color('background-color', 'gray-light');
+                @include hb-global-color("background-color", "gray-light");
 
-                content: '';
+                content: "";
                 position: absolute;
                 width: 100%;
                 height: 100%;
@@ -561,7 +566,7 @@ $hb-link-bar-link: 100%;
 
     .megamenu__item {
       border-top: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray');
+      @include hb-global-color("border-color", "gray");
 
       display: block;
       width: 100%;
@@ -572,7 +577,7 @@ $hb-link-bar-link: 100%;
         width: 100%;
       }
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           flex: 0 1 calc(25% - #{hb-calculate-rems(39px)});
           margin-right: 0;
@@ -580,11 +585,11 @@ $hb-link-bar-link: 100%;
         }
       }
 
-      &:nth-child(n+5) {
-        @include grid-media-min('lg') {
+      &:nth-child(n + 5) {
+        @include grid-media-min("lg") {
           .js & {
             border-top: $hb-medium-border;
-            @include hb-global-color('border-color', 'gray-medium');
+            @include hb-global-color("border-color", "gray-medium");
 
             margin-top: hb-calculate-rems(12px);
             padding-top: hb-calculate-rems(16px);
@@ -602,9 +607,9 @@ $hb-link-bar-link: 100%;
       }
 
       &:hover {
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           .js & {
-            @include hb-global-color('background-color', 'gray-light');
+            @include hb-global-color("background-color", "gray-light");
 
             &::before {
               display: none;
@@ -613,7 +618,7 @@ $hb-link-bar-link: 100%;
         }
       }
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           margin-bottom: hb-calculate-rems(4px);
           padding: hb-calculate-rems(7px) hb-calculate-rems(10px);
@@ -625,7 +630,7 @@ $hb-link-bar-link: 100%;
 
       &.megamenu__active-trail {
         &::before {
-          @include grid-media-min('lg') {
+          @include grid-media-min("lg") {
             display: none;
           }
         }
@@ -633,10 +638,10 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__no-link {
-      @include hb-pairing-color('color', 'tertiary');
+      @include hb-pairing-color("color", "tertiary");
 
       &:hover {
-        @include hb-pairing-color('color', 'tertiary');
+        @include hb-pairing-color("color", "tertiary");
 
         background: none;
 
@@ -645,7 +650,7 @@ $hb-link-bar-link: 100%;
         }
       }
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           cursor: auto;
 
@@ -660,10 +665,10 @@ $hb-link-bar-link: 100%;
       }
 
       .hb-dark-pattern & {
-        @include grid-media-min('lg') {
+        @include grid-media-min("lg") {
           .js & {
             &:hover {
-              @include hb-global-color('color', 'black');
+              @include hb-global-color("color", "black");
             }
           }
         }
@@ -681,7 +686,7 @@ $hb-link-bar-link: 100%;
         @include hb-menu-color-pairing-l2;
       }
 
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         @include hb-menu-color-pairing-l2;
       }
     }
@@ -691,11 +696,11 @@ $hb-link-bar-link: 100%;
     display: block;
     padding-left: hb-calculate-rems(30px);
 
-    @include grid-media-min('md') {
+    @include grid-media-min("md") {
       font-size: hb-calculate-rems(22px);
     }
 
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         padding-left: 0;
         font-size: inherit;
@@ -703,9 +708,9 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item {
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
-          &:nth-child(n+5) {
+          &:nth-child(n + 5) {
             margin-top: 0;
             padding-top: 0;
             border: none;
@@ -715,7 +720,7 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__link {
-      @include grid-media-min('lg') {
+      @include grid-media-min("lg") {
         .js & {
           font-weight: hb-theme-font-weight(semibold);
           padding-left: hb-calculate-rems(22px);
@@ -735,7 +740,7 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub--3 {
-    @include grid-media-min('lg') {
+    @include grid-media-min("lg") {
       .js & {
         // Only display past level two on mobile.
         display: none;
@@ -751,9 +756,8 @@ $hb-link-bar-link: 100%;
 // Manually adjust button location if search
 // is present. This is from previous menu.
 .su-site-search {
-
   // stylelint-disable-next-line selector-combinator-space-after
-  +.megamenu {
+  + .megamenu {
     .megamenu__mobile-btn {
       top: hb-calculate-rems(-120px);
     }

@@ -99,7 +99,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
                 'client_secret' => $password,
                 'plugin' => !empty($urls) && $password ? 'oauth2' : '',
               ],
-              'orphan_action' => $config->get('orphan_action'),
+              'orphan_action' => $config->get('orphan_action') ?: 'forget',
               'urls' => $urls,
             ],
             'process' => $this->getFieldOverrides(),

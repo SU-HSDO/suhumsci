@@ -1,9 +1,11 @@
+@use 'sass:math';
+
 // Calculate rems based upon the root font size
 // of 10px which matches the root font size in
 // Decanter ($su-root-font-size)
 // set in /humsci_basic/src/scss/settings/_variables.general.scss
 @function hb-calculate-rems($size-in-pixels) {
-  $size-in-rems: $size-in-pixels / $hb-root-font-size;
+  $size-in-rems: math.div($size-in-pixels, $hb-root-font-size);
   @return #{$size-in-rems}rem;
 }
 

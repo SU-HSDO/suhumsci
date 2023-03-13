@@ -346,6 +346,12 @@
     background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
   }
 
+  .hb-card__graphics--has-date & {
+    @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(100px);
+    }
+  }
+
   p,
   h1,
   h2,

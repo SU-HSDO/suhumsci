@@ -1,9 +1,11 @@
+@use 'sass:math';
+
 // Loops through the number of available columns (12) in our grid system to determine
 // the number of "columns" a table column should span.
 @mixin hb-table-column-sizes {
   @for $i from 1 through 12 {
     &-#{$i}-of-12 {
-      width: percentage($i / 12);
+      width: math.percentage(math.div($i, 12));
     }
   }
 }

@@ -6,18 +6,27 @@
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
+    background-color: transparent;
     margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
     @include hb-global-color('color', 'white');
-
-    $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
-    $hb-bg--pairing: var(--palette--primary-dark);
-
-    @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
   }
 
   @include hb-traditional {
-    @include hb-pairing-color('background-color', 'tertiary-reversed');
+    background-color: transparent;
+  }
+
+  .hb-stretch-vertical-linked-cards & {
+    @include hb-themes(('colorful', 'airy')) {
+      $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
+      $hb-bg--pairing: var(--palette--primary-dark);
+
+      @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('background-color', 'primary');
+    }
   }
 
   &__img {

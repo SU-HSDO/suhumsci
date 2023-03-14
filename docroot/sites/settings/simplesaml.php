@@ -38,7 +38,7 @@ $config['simplesamlphp_auth.settings'] = [
   'httponly' => FALSE,
   'role' => [
     //    'population' => 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices',
-    'eval_every_time' => 2,
+    //    'eval_every_time' => 2,
   ],
   'allow' => [
     'set_drupal_pwd' => FALSE,

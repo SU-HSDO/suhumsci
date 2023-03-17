@@ -1,18 +1,18 @@
 .hb-vertical-linked-card {
   position: relative;
 
-  @include hb-themes(("colorful", "airy")) {
+  @include hb-themes(('colorful', 'airy')) {
     // The margin-top matches the margin-top on both the title and image to prevent
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
     background-color: transparent;
-    margin: hb-spacing-width("xs") 0 0 hb-calculate-rems(31px);
+    margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
-    @include hb-global-color("color", "white");
+    @include hb-global-color('color', 'white');
 
     $hb-bg--fallback: hb-get-pairing-color(
-      "primary-dark",
+      'primary-dark',
       $hb-colorful-default,
       $hc-colorful-pairings
     );
@@ -30,9 +30,9 @@
   }
 
   .hb-stretch-vertical-linked-cards & {
-    @include hb-themes(("colorful", "airy")) {
+    @include hb-themes(('colorful', 'airy')) {
       $hb-bg--fallback: hb-get-pairing-color(
-        "primary-dark",
+        'primary-dark',
         $hb-colorful-default,
         $hc-colorful-pairings
       );
@@ -46,15 +46,15 @@
     }
 
     @include hb-traditional {
-      @include hb-pairing-color("background-color", "primary");
+      @include hb-pairing-color('background-color', 'primary');
     }
   }
 
   &__img {
     overflow: hidden;
 
-    @include hb-themes(("colorful", "airy")) {
-      @include grid-media-min("sm") {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('sm') {
         .field-hs-row-components & {
           margin-top: hb-calculate-rems(-24px);
         }
@@ -86,21 +86,21 @@
     word-break: break-word;
     transition: hb-transition(background-color);
 
-    @include grid-media-min("sm") {
+    @include grid-media-min('sm') {
       font-size: hb-calculate-rems(24px);
     }
 
-    @include grid-media-min("md") {
+    @include grid-media-min('md') {
       font-size: hb-calculate-rems(27px);
     }
 
-    @include hb-themes(("colorful", "airy")) {
+    @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(54px)
         hb-calculate-rems(20px) hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
-      @include hb-pairing-color("background-color", "secondary");
+      @include hb-pairing-color('background-color', 'secondary');
 
-      @include grid-media-min("sm") {
+      @include grid-media-min('sm') {
         margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0
           hb-calculate-rems(-31px);
       }
@@ -109,19 +109,19 @@
     @include hb-traditional {
       padding: hb-calculate-rems(16px) hb-calculate-rems(54px)
         hb-calculate-rems(16px) hb-calculate-rems(16px);
-      @include hb-global-color("color", "white");
-      @include hb-pairing-color("background-color", "primary");
+      @include hb-global-color('color', 'white');
+      @include hb-pairing-color('background-color', 'primary');
       margin: 0;
     }
 
     .hb-vertical-linked-card:hover &,
     .hb-vertical-linked-card:focus & {
-      @include hb-themes(("colorful", "airy")) {
-        @include hb-pairing-color("background-color", "secondary-darken-12");
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-pairing-color('background-color', 'secondary-darken-12');
       }
 
       @include hb-traditional {
-        @include hb-pairing-color("background-color", "primary-dark");
+        @include hb-pairing-color('background-color', 'primary-dark');
         text-decoration: underline;
       }
     }
@@ -137,30 +137,30 @@
     .ptype-hs-row &,
     .ptype-hs-collection &,
     .ptype-hs-priv-collection & {
-      @include grid-media-min("sm") {
+      @include grid-media-min('sm') {
         font-size: hb-calculate-rems(20px);
         line-height: 118%;
       }
 
-      @include grid-media-min("lg") {
+      @include grid-media-min('lg') {
         font-size: hb-calculate-rems(24px);
         line-height: 121%;
       }
     }
 
     &::after {
-      content: "";
+      content: '';
       display: block;
       height: hb-calculate-rems(48px);
       width: hb-calculate-rems(48px);
-      @include hb-icon-link-arrow("white");
+      @include hb-icon-link-arrow('white');
 
       position: absolute;
       right: 0;
 
       transition: hb-transition(background-position);
 
-      @include hb-themes(("colorful", "airy")) {
+      @include hb-themes(('colorful', 'airy')) {
         bottom: hb-calculate-rems(10px);
       }
 
@@ -177,7 +177,7 @@
     // and use the Pseudo Content Trick to make the entire card a link:
     // https://inclusive-components.design/cards/#thepseudocontenttrick
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 0;
@@ -190,7 +190,7 @@
     @include hb-description;
     word-break: break-word;
 
-    @include hb-themes(("airy", "colorful")) {
+    @include hb-themes(('airy', 'colorful')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
     }
 
@@ -199,7 +199,7 @@
         hb-calculate-rems(28px);
     }
 
-    @include grid-media-min("sm") {
+    @include grid-media-min('sm') {
       font-size: hb-calculate-rems(18px);
     }
 

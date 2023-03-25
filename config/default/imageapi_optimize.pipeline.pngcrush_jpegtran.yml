@@ -1,0 +1,29 @@
+uuid: ffdf4afd-2517-481c-91f1-1d8a7b7289f2
+langcode: en
+status: true
+dependencies:
+  module:
+    - imageapi_optimize_binaries
+    - webp
+name: pngcrush_jpegtran
+label: 'PngCrush + JpegTran'
+processors:
+  e281e8cf-7bdd-4841-a398-a56199617541:
+    id: jpegtran
+    data:
+      manual_executable_path: ''
+      progressive: true
+    weight: -9
+    uuid: e281e8cf-7bdd-4841-a398-a56199617541
+  0a3fb763-aa65-43e3-9185-674f1a460d31:
+    id: pngcrush
+    data:
+      manual_executable_path: ''
+    weight: -10
+    uuid: 0a3fb763-aa65-43e3-9185-674f1a460d31
+  cbfb8f58-6a0c-4959-9afd-dfa66cc792b4:
+    id: webp_webp
+    data:
+      quality: '75'
+    weight: -7
+    uuid: cbfb8f58-6a0c-4959-9afd-dfa66cc792b4

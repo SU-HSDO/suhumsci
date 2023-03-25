@@ -116,3 +116,35 @@ function hs_blocks_preprocess_block__layout_builder(&$variables) {
     $variables['label'] = $variables['configuration']['label'];
   }
 }
+
+/**
+ * Set screen reader text for social media icons in
+ * 'Connect With Us' block content.
+ */
+function hs_blocks_update_9801(&$sandbox) {
+  $block_contents = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+    'info' => 'Connect With Us',
+  ]);
+
+  foreach ($block_contents as $block_content) {
+    $body = $block_content->body->value;
+    // Parse through each potential social media link.
+    $array_content = explode('<a', $body);
+    $updated_content = [];
+    foreach($array_content as $content) {
+      // Append '<a' so we can strip span tag easily to get social media type.
+      $social_media_type = strip_tags('<a' . $content, 'span');
+      if (empty($social_media_type)) {
+        $updated_content[] = $content;
+        continue;
+      }
+      $accessiblity_string = '<span class="hs_connectwithus__icon-text">Connect with us on ' . $social_media_type . '</span>';
+      $insert_span_index = strpos($content, '<span class="visually-hidden">');
+      $updated_content[] = substr_replace($content, $accessiblity_string, $insert_span_index, 0);
+    }
+    // Combine updated content array back into single string.
+    $content = implode('<a', $updated_content);
+    $block_content->set('body', $content);
+    $block_content->save();
+  }
+}

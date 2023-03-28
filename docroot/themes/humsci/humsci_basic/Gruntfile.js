@@ -26,7 +26,7 @@ module.exports = function (grunt) {
     watch: {
       css: {
         files: ['src/**/*.{scss,sass}'],
-        tasks: ['dart-sass:dist'],
+        tasks: ['dart-sass:dist', 'dart-sass:ckeditor'],
         options: {
           interrupt: true,
         },
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'src',
-            src: ['scss/**/[a-z]*.scss'],
+            src: ['scss/**/[a-z]*.scss', '!scss/ckeditor/[a-z]*.scss'],
             dest: '../',
             ext: '.css',
             extDot: 'last',
@@ -80,6 +80,23 @@ module.exports = function (grunt) {
           },
         ],
       },
+      ckeditor: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src',
+            src: ['scss/ckeditor/[a-z]*.scss', '!scss/ckeditor/imports.scss'],
+            dest: '../',
+            ext: '.css',
+            extDot: 'last',
+            rename(dest, src) {
+              const filenameRegularExpression = /\w+(?=\.)/;
+              const themeName = src.match(filenameRegularExpression)[0];
+              return `${dest}${themeName}/css/${themeName}-ckeditor.css`;
+            },
+          }
+        ],
+      },
     },
   });
 
@@ -89,4 +106,5 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-run');
 
   grunt.registerTask('compile', ['dart-sass:dist', 'postcss:dist']);
+  grunt.registerTask('ckeditor', ['dart-sass:ckeditor', 'postcss:dist']);
 };

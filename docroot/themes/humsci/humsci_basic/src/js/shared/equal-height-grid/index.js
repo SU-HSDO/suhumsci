@@ -3,8 +3,7 @@ import resetHeightGrid from './reset-height-grid';
 
 const applyStretchClass = () => {
   const hasStretchClass = document.querySelector('.hb-stretch-vertical-linked-cards');
-  const verticalLinkedCardTitles = [...document.querySelectorAll('.hb-vertical-linked-card__title')];
-  const cardCollections = [...document.querySelectorAll('.ptype-hs-collection')];
+  const cardCollections = document.querySelectorAll('.ptype-hs-collection');
 
   // Matches the $su-breakpoint-sm variable. Screen sizes smaller than this variable
   // stack all grid columns making it unnecessary to set a height on cards.
@@ -13,6 +12,7 @@ const applyStretchClass = () => {
 
   Array.prototype.forEach.call(cardCollections, (collection) => {
     const verticalLinkedCards = [...collection.querySelectorAll('.hb-vertical-linked-card')];
+    const verticalLinkedCardTitles = [...collection.querySelectorAll('.hb-vertical-linked-card__title')];
     // Reset any min-heights that were previously set.
     // We need to do this so cards will not have a height set when resizing to small
     // screen sizes.

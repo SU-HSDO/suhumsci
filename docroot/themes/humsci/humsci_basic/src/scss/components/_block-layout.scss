@@ -96,11 +96,3 @@
 .layout-builder-discard-changes {
   font-size: hb-calculate-rems(16px);
 }
-
-// Fixes float bug related to generated blocks. 
-// See _general.scss with .hb-main-body-detail-image
-.block-layout-builder:has(.hb-main-body-detail-image) + .block-layout-builder {
-  @include grid-media-min("md") {
-    @include clearfix;
-  }
-}

@@ -17,6 +17,47 @@ class HsCommands extends BltTasks {
   use HsCommandTrait;
 
   /**
+   * Generate a list of emails for the given role on all sites.
+   *
+   * @command humsci:role-report
+   */
+  public function roleReport($role) {
+    $information = [];
+    foreach ($this->getConfigValue('multisites') as $site) {
+      $emails = $this->taskDrush()
+        ->alias("$site.prod")
+        ->drush('sqlq')
+        ->arg('SELECT GROUP_CONCAT(d.mail) FROM users_field_data d INNER JOIN user__roles r ON d.uid = r.entity_id WHERE r.roles_target_id = "'. $role . '" and d.mail NOT LIKE "%localhost%"')
+        ->printOutput(FALSE)
+        ->run()
+        ->getMessage();
+
+      $site_url = str_replace('_', '-', str_replace('__', '.', $site));
+
+
+      if (str_contains($site_url, '.')) {
+        [$first, $last] = explode('.', $site_url);
+        $site_url = "$first-prod.$last";
+      }
+      else {
+        $site_url .= "-prod";
+      }
+
+      $information[] = [
+        'site' => $site,
+        'url' => "https://$site_url.stanford.edu",
+        'users' => $emails == 'NULL' ? '' ? $emails,
+      ];
+    }
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['Site', 'Url', 'Emails']);
+    foreach ($information as $info) {
+      fputcsv($out, $info);
+    }
+    fclose($out);
+  }
+
+  /**
    * Set up local blt settings and necessary files.
    *
    * @command humsci:local:setup

@@ -26,7 +26,7 @@ class FlexiblePageCest {
   /**
    * Resize the window at the start.
    */
-  public function _before(FunctionalTester $I){
+  public function _before(FunctionalTester $I) {
     $I->resizeWindow(2000, 1400);
   }
 
@@ -51,6 +51,7 @@ class FlexiblePageCest {
     $I->click('Upload and Continue');
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');
     $I->click('.paragraph-type--hs-hero-image summary');
     $I->canSee('Optionally add some overlay text on top of the image');
@@ -93,6 +94,7 @@ class FlexiblePageCest {
     $I->click('Upload and Continue');
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForElementVisible('.media-library-item__preview img');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
@@ -109,7 +111,7 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('.slick img', 1);
   }
 
-   /**
+  /**
    * Verify main menu links at mobile size
    */
   public function testMobileMenu(FunctionalTester $I) {
@@ -125,12 +127,11 @@ class FlexiblePageCest {
       // Continue to do this if it's present.
       $I->seeElement('.hb-main-nav__link');
       $I->click('.hb-main-nav__link');
-      echo ('If you see this, the menu was open and the link was clicked.');
+      echo('If you see this, the menu was open and the link was clicked.');
 
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       // Do this if it's not present.
-      echo ('If you see this, the menu needs toggled.');
+      echo('If you see this, the menu needs toggled.');
       $I->click('button.hb-main-nav__toggle');
       $I->waitForElementVisible('.hb-main-nav__link');
       $I->seeElement('.hb-main-nav__link');
@@ -140,15 +141,14 @@ class FlexiblePageCest {
     // This try/catch keeps the toggle consistent between environment testing.
     // Check nested menu item links
     try {
-      echo ('If you see this, the nested menu link was already available to click.');
+      echo('If you see this, the nested menu link was already available to click.');
       $I->waitForElementVisible('.hb-main-nav__menu-lv2');
       // Click nested menu link if it's already visible.
       $I->click('.hb-main-nav__menu-lv2 a');
 
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       // Do this if the nested menu link is not already visible.
-      echo ('If you see this, the nested menu link needs to be opened to click.');
+      echo('If you see this, the nested menu link needs to be opened to click.');
       $I->click('.hb-main-nav__toggle');
       $I->waitForElementVisible('.hb-nested-toggler');
       $I->click('.hb-nested-toggler');
@@ -167,14 +167,14 @@ class FlexiblePageCest {
     $I->click('.hb-main-nav__link');
   }
 
-    /**
+  /**
    * I can create a page with a spotlight slider.
    */
   public function testSpotlightSlider(FunctionalTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
-    $I->click('List additional actions','#edit-field-hs-page-hero-add-more');
+    $I->click('List additional actions', '#edit-field-hs-page-hero-add-more');
     $I->click('field_hs_page_hero_hs_sptlght_slder_add_more');
     $I->waitForText('No media items are selected');
     $I->canSee('Title');
@@ -190,6 +190,7 @@ class FlexiblePageCest {
     $I->click('Upload and Continue');
     $I->waitForText('Decorative Image');
     $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');
     $I->waitForText('Source');
     $I->click('.cke_button__source.cke_button_off');
@@ -209,6 +210,7 @@ class FlexiblePageCest {
     $I->waitForText('Decorative Image');
     $I->selectOption("input", 'Add new');
     $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');
     $I->waitForText('Source');
     $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);

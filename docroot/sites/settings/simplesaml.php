@@ -24,7 +24,6 @@ if (EnvironmentDetector::isAhEnv()) {
 $config['simplesamlphp_auth.settings'] = [
   'langcode' => 'en',
   'default_langcode' => 'en',
-  'activate' => TRUE,
   'mail_attr' => 'mail',
   'unique_id' => 'uid',
   'user_name' => 'displayName',
@@ -39,7 +38,7 @@ $config['simplesamlphp_auth.settings'] = [
   'httponly' => FALSE,
   'role' => [
     //    'population' => 'administrator:eduPersonEntitlement,=,hsdo:web|administrator:eduPersonEntitlement,=,itservices:webservices',
-    'eval_every_time' => 2,
+    //    'eval_every_time' => 2,
   ],
   'allow' => [
     'set_drupal_pwd' => FALSE,

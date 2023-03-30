@@ -12,16 +12,10 @@
   }
 }
 
-@mixin hb-input-focus {
-  @include hb-global-color('background-color', 'white');
-  box-shadow: none;
-  outline: none;
+@mixin hb-focus {
+  @include hb-pairing-color('outline-color', 'primary');
 
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-pairing-color('border-color', 'secondary-active');
-  }
-
-  @include hb-traditional {
-    @include hb-global-color('border-color', 'gray-dark');
-  }
+  outline-width: hb-calculate-rems(3px);
+  outline-style: solid;
+  outline-offset: hb-calculate-rems(1px);
 }

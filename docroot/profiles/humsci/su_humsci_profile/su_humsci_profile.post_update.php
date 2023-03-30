@@ -332,3 +332,21 @@ function su_humsci_profile_post_update_9205() {
 function su_humsci_profile_post_update_9206() {
   user_role_grant_permissions('site_manager', ['administer users']);
 }
+
+/**
+ * Set revision limits on all content types.
+ */
+function su_humsci_profile_post_update_9207() {
+  $node_types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  /** @var \Drupal\node\NodeTypeInterface $type */
+  foreach ($node_types as $type) {
+    if ($type->getThirdPartySetting('node_revision_delete', 'minimum_revisions_to_keep', 100) > 10) {
+      $type->setThirdPartySetting('node_revision_delete', 'minimum_revisions_to_keep', 10);
+      $type->setThirdPartySetting('node_revision_delete', 'minimum_age_to_delete', 0);
+      $type->setThirdPartySetting('node_revision_delete', 'when_to_delete', 0);
+      $type->save();
+    }
+  }
+}

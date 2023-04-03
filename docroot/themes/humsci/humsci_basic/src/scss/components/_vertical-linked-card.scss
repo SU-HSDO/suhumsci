@@ -1,12 +1,12 @@
 .hb-vertical-linked-card {
   position: relative;
+  background-color: transparent;
 
   @include hb-themes(('colorful', 'airy')) {
     // The margin-top matches the margin-top on both the title and image to prevent
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
-    background-color: transparent;
     margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
     @include hb-global-color('color', 'white');
@@ -17,8 +17,12 @@
     @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
   }
 
-  @include hb-traditional {
-    background-color: transparent;
+  .hb-stretch-vertical-linked-cards & {
+    // If there are instances of cards with/without descriptions mixed
+    // in the same collection make sure the whole card background is primary.
+    @include hb-traditional {
+      @include hb-pairing-color('background-color', 'primary');
+    }
   }
 
   &__img {
@@ -163,6 +167,7 @@
     }
 
     @include hb-traditional {
+      @include hb-pairing-color('background-color', 'tertiary-reversed');
       padding: hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(28px);
     }
 

@@ -177,6 +177,13 @@ module.exports = [
     widths: [576, 768, 1200]
   },
   {
+    name: 'Colorful - Collections cards uniform and stretch 1',
+    url: 'https://hs-colorful.suhumsci.loc/collections-cards-uniform-and-stretch-1',
+    waitForSelector: '.js',
+    waitForTimeout: 1500,
+    widths: [576, 768, 1200]
+  },
+  {
     name: 'Colorful - Mixed Pages - Mixed Page',
     url: 'http://hs-colorful.suhumsci.loc/mixed-pages/mixed-page',
     waitForSelector: '.js',

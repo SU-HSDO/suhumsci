@@ -29,6 +29,7 @@ use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\ui_patterns\UiPatterns;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -553,6 +554,9 @@ function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $ent
  * Implements hook_cron().
  */
 function hs_field_helpers_cron() {
+  if (!Settings::get('hs_field_helpers_cron', FALSE)) {
+    return;
+  }
   $deleted = _he_field_helpers_clean_eck();
   $logger = \Drupal::logger('hs_field_helpers');
   foreach ($deleted as $entity_type => $ids) {

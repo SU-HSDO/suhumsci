@@ -39,7 +39,7 @@ function su_humsci_theme_preprocess_image_style(&$variables) {
 
   $variables['image']['#attributes']['data-src'] = $variables['image']['#uri'];
   $variables['image']['#attributes']['class'][] = 'lazy';
-  $variables['image']['#uri'] = file_url_transform_relative($lazy_loading_style->buildUrl($variables['uri']));
+  $variables['image']['#uri'] = \Drupal::service('file_url_generator')->transformRelative($lazy_loading_style->buildUrl($variables['uri']));
 }
 
 /**
@@ -247,9 +247,10 @@ function _su_humsci_theme_check_link_access(array &$link_items) {
  * Implements hook_preprocess_HOOK().
  */
 function su_humsci_theme_preprocess_pattern_vertical_link_card(&$variables) {
+  $renderer = \Drupal::service('renderer');
   if (!empty($variables['button'])) {
     $dom = new DOMDocument();
-    $dom->loadHTML(render($variables['button']));
+    $dom->loadHTML($renderer->render($variables['button']));
     $xpath = new DOMXPath($dom);
     $links = $xpath->query('//a/@href');
     // If the markup is a link, grab the href attribute.
@@ -258,10 +259,10 @@ function su_humsci_theme_preprocess_pattern_vertical_link_card(&$variables) {
     }
     else {
       // The markup is just a string with the url, we can use that.
-      $variables['button'] = htmlspecialchars_decode(trim(strip_tags(render($variables['button']))));
+      $variables['button'] = htmlspecialchars_decode(trim(strip_tags($renderer->render($variables['button']))));
     }
   }
   if (!empty($variables['title'])) {
-    $variables['title'] = ['#markup' => trim(strip_tags(render($variables['title'])))];
+    $variables['title'] = ['#markup' => trim(strip_tags($renderer->render($variables['title'])))];
   }
 }

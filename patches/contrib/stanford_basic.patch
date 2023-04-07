@@ -1,17 +1,20 @@
 diff --git a/stanford_basic.info.yml b/stanford_basic.info.yml
-index 609b095..b834e4b 100755
+index 609b095..f6db879 100755
 --- a/stanford_basic.info.yml
 +++ b/stanford_basic.info.yml
-@@ -4,6 +4,8 @@ description: 'Stanford Basic Branding Theme.'
+@@ -2,8 +2,9 @@ name: Stanford Basic
+ type: theme
+ description: 'Stanford Basic Branding Theme.'
  package: Core
- version: 8.x-2.0-dev
- core: 8.x
-+core_version_requirement: ^8 || ^9
-+'base theme': 'stable'
+-version: 8.x-2.0-dev
+-core: 8.x
++version: 8.2.0
++base theme: false
++core_version_requirement: ^9.5 || ^10
  libraries:
    - stanford_basic/basic
    - stanford_basic/fontawesome
-@@ -18,8 +20,7 @@ regions:
+@@ -18,8 +19,7 @@ regions:
    footer: Footer
    page_bottom: 'Page bottom'
  
@@ -24,7 +27,7 @@ index 609b095..b834e4b 100755
 +    decanter: libraries/decanter/templates
  
 diff --git a/stanford_basic.theme b/stanford_basic.theme
-index a2da428..a77a73f 100755
+index a2da428..47112ca 100755
 --- a/stanford_basic.theme
 +++ b/stanford_basic.theme
 @@ -46,7 +46,7 @@ function stanford_basic_preprocess_html(&$variables) {
@@ -36,3 +39,15 @@ index a2da428..a77a73f 100755
      $alias = trim($alias, '/');
      if (!empty($alias)) {
        $name = str_replace('/', '-', $alias);
+@@ -67,9 +67,10 @@ function stanford_basic_preprocess_html(&$variables) {
+   // Union all theme setting variables to the html.html.twig template.
+   $variables += $theme_settings->getOriginal();
+ 
++  $theme_path = \Drupal::service('extension.list.theme')->getPath('stanford_basic');
+   // The base path.
+   $variables['base_path'] = base_path();
+-  $variables['stanford_basic_path'] = drupal_get_path('theme', 'stanford_basic');
++  $variables['stanford_basic_path'] = $theme_path;
+ }
+ 
+ /**

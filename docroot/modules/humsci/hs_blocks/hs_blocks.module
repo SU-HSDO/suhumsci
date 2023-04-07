@@ -122,29 +122,44 @@ function hs_blocks_preprocess_block__layout_builder(&$variables) {
  * 'Connect With Us' block content.
  */
 function hs_blocks_update_9801(&$sandbox) {
-  $block_contents = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
-    'info' => 'Connect With Us',
-  ]);
+  /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+  $block_content = \Drupal::entityTypeManager()->getStorage('block_content')->load(2);
 
-  foreach ($block_contents as $block_content) {
-    $body = $block_content->body->value;
-    // Parse through each potential social media link.
-    $array_content = explode('<a', $body);
-    $updated_content = [];
-    foreach($array_content as $content) {
-      // Append '<a' so we can strip span tag easily to get social media type.
-      $social_media_type = strip_tags('<a' . $content, 'span');
-      if (empty($social_media_type)) {
-        $updated_content[] = $content;
-        continue;
-      }
-      $accessiblity_string = '<span class="hs_connectwithus__icon-text">Connect with us on ' . $social_media_type . '</span>';
-      $insert_span_index = strpos($content, '<span class="visually-hidden">');
-      $updated_content[] = substr_replace($content, $accessiblity_string, $insert_span_index, 0);
+  $body = $block_content->body->value;
+  // Parse through each potential social media link.
+  $array_content = explode('<a', $body);
+  $updated_content = [];
+  $exceptions = [
+    'itunes' => 'ITunes',
+    'youtube' => 'YouTube',
+  ];
+  foreach($array_content as $content) {
+    preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $url);
+    if (!empty($url[0])) {
+      $url_scheme = parse_url($url[0][0]);
+      $host = $url_scheme['host'] ?? '';
+      // Get only domain name.
+      $host_name = str_replace('www.', '', $host);
+      $social_media_type = substr_replace($host_name, '', strpos($host_name, '.'), strlen($host_name));
     }
-    // Combine updated content array back into single string.
-    $content = implode('<a', $updated_content);
-    $block_content->set('body', $content);
-    $block_content->save();
+    elseif (strpos($content, 'href') !== FALSE) {
+      // assume that link is to a subscribe page.
+      $social_media_type = 'email';
+    }
+    if (empty($social_media_type)) {
+      // No social media type found
+      // skip to next line.
+      $updated_content[] = $content;
+      continue;
+    }
+    // Uppercase first letter, unless found in exceptions array.
+    $social_media_type = $exceptions[strtolower($social_media_type)] ?? ucfirst($social_media_type);
+    $accessiblity_string = '<span class="hs_connectwithus__icon-text">Connect with us on ' . $social_media_type . '</span>';
+    $insert_span_index = strpos($content, '>') + 1;
+    $updated_content[] = substr_replace($content, $accessiblity_string, $insert_span_index, 0);
   }
+  // Combine updated content array back into single string.
+  $content = implode('<a', $updated_content);
+  $block_content->set('body', $content);
+  $block_content->save();
 }

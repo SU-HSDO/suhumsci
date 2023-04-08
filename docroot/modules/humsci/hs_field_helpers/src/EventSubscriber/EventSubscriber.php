@@ -5,6 +5,7 @@ namespace Drupal\hs_field_helpers\EventSubscriber;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
 use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\menu_block\Plugin\Block\MenuBlock;
@@ -19,30 +20,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class EventSubscriber implements EventSubscriberInterface {
 
   /**
-   * Active trail service.
-   *
-   * @var \Drupal\Core\Menu\MenuActiveTrailInterface
-   */
-  protected $activeTrail;
-
-  /**
-   * Menu link manager service.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $linkManager;
-
-  /**
    * EventSubscriber constructor.
    *
-   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $active_trail
+   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $activeTrail
    *   Active trail service.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $linkManager
    *   Menu link manager service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Rendering service.
    */
-  public function __construct(MenuActiveTrailInterface $active_trail, MenuLinkManagerInterface $link_manager) {
-    $this->activeTrail = $active_trail;
-    $this->linkManager = $link_manager;
+  public function __construct(protected MenuActiveTrailInterface $activeTrail, protected MenuLinkManagerInterface $linkManager, protected RendererInterface $renderer) {
   }
 
   /**
@@ -110,7 +97,7 @@ class EventSubscriber implements EventSubscriberInterface {
    *   Rendered and clean markup.
    */
   protected function getCleanRender(array $render_array) {
-    return trim(strip_tags(render($render_array), '<img><iframe>'));
+    return trim(strip_tags($this->renderer->renderPlain($render_array), '<img><iframe>'));
   }
 
   /**

@@ -4,7 +4,7 @@
  * @file
  * Lists available colors and color schemes for the su_humsci_theme theme.
  */
-
+$theme_path = \Drupal::service('extension.list.theme')->getPath('stanford_basic');
 $info = [
   // Available colors and color labels used in theme.
   'fields' => [
@@ -122,7 +122,7 @@ $info = [
       'color' => [
         // Put the logos path into JavaScript for the live preview.
         'logo' => theme_get_setting('logo.url', 'su_humsci_theme'),
-        'globalFooterLogo' => '/' . drupal_get_path('theme', 'stanford_basic') . '/assets/svg/su_sig_stack_linked.svg',
+        'globalFooterLogo' => '/' . $theme_path . '/assets/svg/su_sig_stack_linked.svg',
         'userId' => \Drupal::currentUser()->id(),
       ],
     ],

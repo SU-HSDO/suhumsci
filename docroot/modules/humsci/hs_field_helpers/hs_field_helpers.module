@@ -216,7 +216,7 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
 
       try {
         $pattern_region = is_array($pattern[$region]) ? $pattern[$region] : (string) $pattern[$region];
-        $rendered = $renderer->render($pattern[$region]);
+        $rendered = $renderer->renderPlain($pattern_region);
       }
       catch (\Throwable $e) {
         continue;

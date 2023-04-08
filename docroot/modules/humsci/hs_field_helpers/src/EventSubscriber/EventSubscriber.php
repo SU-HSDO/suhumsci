@@ -97,7 +97,7 @@ class EventSubscriber implements EventSubscriberInterface {
    *   Rendered and clean markup.
    */
   protected function getCleanRender(array $render_array) {
-    return trim(strip_tags($this->renderer->render($render_array), '<img><iframe>'));
+    return trim(strip_tags($this->renderer->renderPlain($render_array), '<img><iframe>'));
   }
 
   /**

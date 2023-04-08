@@ -34,7 +34,7 @@ class PreRenderer implements TrustedCallbackInterface {
         '#type' => 'contextual_links_placeholder',
         '#id' => _contextual_links_to_id($element['#contextual_links']),
       ];
-      $element['#prefix'] = \Drupal::service('renderer')->render($placeholder);
+      $element['#prefix'] = \Drupal::service('renderer')->renderPlain($placeholder);
     }
     return $element;
   }

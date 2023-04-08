@@ -34,7 +34,7 @@ class TwigFilters extends AbstractExtension {
     if (!is_string($variable)) {
       try {
         if (is_array($variable)) {
-          $variable = \Drupal::service('renderer')->render($variable);
+          $variable = \Drupal::service('renderer')->renderPlain($variable);
         }
       } catch (\Throwable) {
         return $variable;

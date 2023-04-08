@@ -201,7 +201,7 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
     $dom = new DOMDocument();
     try {
       $button = is_array($variables['button']) ? $variables['button'] : (string) $variables['button'];
-      $dom->loadHTML($renderer->render($button));
+      $dom->loadHTML($renderer->renderPlain($button));
     }
     catch (\Throwable $e) {
       return;
@@ -214,11 +214,11 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
     }
     else {
       // The markup is just a string with the url, we can use that.
-      $variables['button'] = htmlspecialchars_decode(trim(strip_tags($renderer->render($variables['button']))));
+      $variables['button'] = htmlspecialchars_decode(trim(strip_tags($renderer->renderPlain($variables['button']))));
     }
   }
   if (!empty($variables['title'])) {
-    $title = is_array($variables['title']) ? $renderer->render($variables['title']) : $variables['title'];
+    $title = is_array($variables['title']) ? $renderer->renderPlain($variables['title']) : $variables['title'];
     $variables['title'] = ['#markup' => trim(strip_tags($title))];
   }
 }

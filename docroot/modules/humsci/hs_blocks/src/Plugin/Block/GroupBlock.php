@@ -139,7 +139,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
 
     $components = $this->getComponents();
     // This prevents the block label from displaying if there are no contents.
-    if (empty($this->renderer->render($components))) {
+    if (empty($this->renderer->renderPlain($components))) {
       return AccessResult::forbidden();
     }
     return parent::blockAccess($account);

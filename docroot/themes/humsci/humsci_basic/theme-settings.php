@@ -44,7 +44,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
   $theme_path = \Drupal::service('extension.list.theme')->getPath('humsci_basic');
   // Lockup
   $img = '<img src="' . base_path() . $theme_path . '/lockup-example.png" />';
-  $rendered_image = \Drupal::service('renderer')->render($img);
+  $rendered_image = \Drupal::service('renderer')->renderPlain($img);
   $image_markup = Markup::create($rendered_image);
   $decanter = Link::fromTextAndUrl('Decanter Lockup Component', Url::fromUri('https://decanter.stanford.edu/component/identity-lockup/'))->toString();
 

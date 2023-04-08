@@ -86,7 +86,7 @@ class HumsciSerializer extends Serializer {
     // Encoder.
     foreach ($this->view->result as $row_index => $row) {
       $this->view->row_index = $row_index;
-      $rows[] = $this->view->rowPlugin->renderPlain($row);
+      $rows[] = $this->view->rowPlugin->render($row);
     }
     unset($this->view->row_index);
 

@@ -63,4 +63,6 @@ if (EnvironmentDetector::isAhEnv()) {
 }
 else {
   $config['domain_301_redirect.settings']['enabled'] = FALSE;
+  $config['mail_safety.settings']['enabled'] = TRUE;
+  $config['mail_safety.settings']['send_mail_to_dashboard'] = TRUE;
 }

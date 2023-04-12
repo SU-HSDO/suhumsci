@@ -83,3 +83,20 @@ if (accordionList.length >= 1) {
     });
   });
 }
+
+const searchQuery = new URLSearchParams(window.location.search);
+const params = Object.fromEntries(searchQuery.entries());
+
+function toggleAccordionFromSearch() {
+  const searchTerm = params.search.toLowerCase();
+
+  accordionList.forEach((accordion) => {
+    if (accordion.textContent.toLowerCase().includes(searchTerm)) {
+      accordion.setAttribute('open', '');
+    }
+  });
+}
+
+if (Object.keys(params).length) {
+  toggleAccordionFromSearch();
+}

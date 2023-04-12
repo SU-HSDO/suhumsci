@@ -42,8 +42,6 @@ class MenuItemsCest {
 
   /**
    * Every main menu item should not error.
-   *
-   * @group testme
    */
   public function testMenuItems(AcceptanceTester $I) {
     $I->amOnPage('/');

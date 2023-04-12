@@ -41,11 +41,10 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     ],
     '#default_value' => theme_get_setting('brand_bar_variant_classname'),
   ];
-
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('humsci_basic');
   // Lockup
-  $img = '<img src="' . base_path() . drupal_get_path('theme', 'humsci_basic') . '/lockup-example.png" />';
-  $rendered_image = render($img);
-  $image_markup = Markup::create($rendered_image);
+  $img = '<img src="' . base_path() . $theme_path . '/lockup-example.png" />';
+  $image_markup = Markup::create($img);
   $decanter = Link::fromTextAndUrl('Decanter Lockup Component', Url::fromUri('https://decanter.stanford.edu/component/identity-lockup/'))->toString();
 
   $form['options_settings']['humsci_basic_lockup'] = [

@@ -83,7 +83,7 @@ class HsJumpstartUITwig extends AbstractExtension {
     }
 
     // Renderer service only accepts arrays.
-    $rendered = is_array($elements) ? $this->renderer->render($elements) : $elements;
+    $rendered = is_array($elements) ? $this->renderer->renderPlain($elements) : $elements;
 
     if (strpos($tags, '<drupal-render-placeholder>') === FALSE) {
       $tags .= '<drupal-render-placeholder>';

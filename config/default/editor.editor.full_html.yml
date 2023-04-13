@@ -1,64 +1,109 @@
-uuid: 0a9a20e5-3747-430a-a784-7cd545d79e9b
+uuid: a539d1eb-0668-4250-843c-6045f634ed9f
 langcode: en
 status: true
 dependencies:
   config:
     - filter.format.full_html
   module:
-    - ckeditor
+    - ckeditor5
 format: full_html
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formatting
-          items:
-            - Bold
-            - Italic
-            - Outdent
-            - Indent
-            - Table
-            - JustifyLeft
-            - JustifyCenter
-            - JustifyRight
-        -
-          name: Links
-          items:
-            - Link
-            - Unlink
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-            - HorizontalRule
-        -
-          name: Media
-          items:
-            - Blockquote
-            - DrupalMediaLibrary
-        -
-          name: Styles
-          items:
-            - Format
-            - Styles
-            - DrupalFontAwesome
-        -
-          name: Tools
-          items:
-            - RemoveFormat
-            - PasteFromWord
-            - Source
-            - Undo
-            - Redo
-            - Maximize
+    items:
+      - bold
+      - italic
+      - outdent
+      - indent
+      - insertTable
+      - alignment
+      - '|'
+      - bulletedList
+      - numberedList
+      - horizontalLine
+      - '|'
+      - blockQuote
+      - drupalMedia
+      - '|'
+      - heading
+      - codeBlock
+      - style
+      - '|'
+      - removeFormat
+      - sourceEditing
+      - undo
+      - redo
   plugins:
-    stylescombo:
-      styles: "a.hs-button|Primary Button\r\na.hs-button--big|Big Primary Button\r\na.hs-secondary-button|Secondary Button\r\na.hs-more-link|More Link\r\na.hs-external-link|External Link\r\na.hs-file-link|File Link\r\na.hs-pdf-link|PDF Link\r\na.hs-private-link|Private Link\r\np.hs-font-lead|Lead Font\r\np.hs-font-splash|Splash Font\r\np.hs-short-line-length|Short Line Length\r\np.hs-breakout-box|Breakout Box\r\np.hs-caption|Caption\r\np.hs-credits|Credits\r\nspan.hs-emphasized-text|Emphasized Text\r\ntable.hs-table--borderless|Borderless Table"
-    blockimagepaste:
-      block_image_paste_enabled: true
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_style:
+      styles:
+        -
+          label: 'Primary Button'
+          element: '<a class="hs-button">'
+        -
+          label: 'Big Primary Button'
+          element: '<a class="hs-button--big">'
+        -
+          label: 'Secondary Button'
+          element: '<a class="hs-secondary-button">'
+        -
+          label: 'More Link'
+          element: '<a class="hs-more-link">'
+        -
+          label: 'External Link'
+          element: '<a class="hs-external-link">'
+        -
+          label: 'File Link'
+          element: '<a class="hs-file-link">'
+        -
+          label: 'PDF Link'
+          element: '<a class="hs-pdf-link">'
+        -
+          label: 'Private Link'
+          element: '<a class="hs-private-link">'
+        -
+          label: 'Lead Font'
+          element: '<p class="hs-font-lead">'
+        -
+          label: 'Splash Font'
+          element: '<p class="hs-font-splash">'
+        -
+          label: 'Short Line Length'
+          element: '<p class="hs-short-line-length">'
+        -
+          label: 'Breakout Box'
+          element: '<p class="hs-breakout-box">'
+        -
+          label: Caption
+          element: '<p class="hs-caption">'
+        -
+          label: Credits
+          element: '<p class="hs-credits">'
+        -
+          label: 'Emphasized Text'
+          element: '<span class="hs-emphasized-text">'
+        -
+          label: 'Borderless Table'
+          element: '<table class="hs-table--borderless">'
+    ckeditor5_sourceEditing:
+      allowed_tags: {  }
+    ckeditor5_list:
+      reversed: true
+      startIndex: true
+    ckeditor5_alignment:
+      enabled_alignments:
+        - left
+        - center
+        - right
+        - justify
+    media_media:
+      allow_view_mode_override: false
 image_upload:
   status: false
   scheme: public

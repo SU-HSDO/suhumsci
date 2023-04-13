@@ -238,7 +238,8 @@ class CapxImporterForm extends EntityForm {
     }
 
     $entity_query = $this->entityTypeManager->getStorage('node')
-      ->getQuery('OR');
+      ->getQuery('OR')
+      ->accessCheck(FALSE);
 
     // Find all node ids that are tagged with the fields. This allows us to only
     // invalidate the hashes that are applicable.

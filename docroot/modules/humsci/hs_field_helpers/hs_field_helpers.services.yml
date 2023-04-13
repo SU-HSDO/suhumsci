@@ -1,7 +1,7 @@
 services:
   hs_field_helpers.event_subscriber:
     class: '\Drupal\hs_field_helpers\EventSubscriber\EventSubscriber'
-    arguments: ['@menu.active_trail', '@plugin.manager.menu.link']
+    arguments: ['@menu.active_trail', '@plugin.manager.menu.link', '@renderer']
     tags:
       - { name: 'event_subscriber' }
   hs_field_helpers.twig:

@@ -36,6 +36,8 @@ class FlexiblePageCest {
   public function testHeroParagraph(FunctionalTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
+    // Prevent JS alerts from firing before loading a new page.
+    $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('List additional actions', '#edit-field-hs-page-hero-add-more');
     $I->click('field_hs_page_hero_hs_hero_image_add_more');
@@ -59,9 +61,9 @@ class FlexiblePageCest {
     $I->canSee('Link text');
     $I->cantSee('Overlay Color');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_hero_title][0][value]', 'Overlay Title');
-
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');
@@ -81,6 +83,8 @@ class FlexiblePageCest {
     }
 
     $I->amOnPage('/node/add/hs_basic_page');
+    // Prevent JS alerts from firing before loading a new page.
+    $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
     $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
     $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
@@ -96,6 +100,7 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForElementVisible('.media-library-item__preview img');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');
@@ -107,6 +112,7 @@ class FlexiblePageCest {
     $I->waitForText('Description');
     $I->click('Style');
     $I->selectOption('Display Mode', 'Slideshow');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('.slick img', 1);
   }

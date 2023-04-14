@@ -177,3 +177,21 @@ function su_humsci_profile_update_9004() {
       ->save();
   }
 }
+
+/**
+ * Enable new admin theme and helper module.
+ */
+function su_humsci_profile_update_9005() {
+  $theme_handler = \Drupal::service('theme_installer');
+  $theme_handler->install(['claro']);
+  $theme_handler->install(['gin']);
+  $theme_handler->install(['su_humsci_gin_admin']);
+  // Set the su_humsci_gin_admin as the admin theme.
+  $config = \Drupal::service('config.factory')->getEditable('system.theme');
+  $config->set('admin', 'su_humsci_gin_admin')->save();
+  // Uninstall old admin theme and seven base theme.
+  $theme_handler->uninstall(['su_humsci_admin']);
+  $theme_handler->uninstall(['seven']);
+  // Install gin toolbar helper module.
+  \Drupal::service('module_installer')->install(['gin_toolbar']);
+}

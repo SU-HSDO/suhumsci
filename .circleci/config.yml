@@ -36,10 +36,10 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - v12-dependencies-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
-    - v12-dependencies-{{ checksum "composer.json" }}-
+    - v13-dependencies-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+    - v13-dependencies-{{ checksum "composer.json" }}-
     # fallback to using the latest cache if no exact match is found
-    - v12-dependencies-
+    - v13-dependencies-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -49,7 +49,7 @@ save_cache: &save_cache
     - ./docroot/core
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
-  key: v12-dependencies-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+  key: v13-dependencies-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
 
 disable_telemetry: &disable_telemetry
   run:

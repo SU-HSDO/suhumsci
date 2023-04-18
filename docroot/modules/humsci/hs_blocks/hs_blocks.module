@@ -121,57 +121,56 @@ function hs_blocks_preprocess_block__layout_builder(&$variables) {
  * Set screen reader text for social media icons in
  * 'Connect With Us' block content.
  */
-function hs_blocks_update_9802(&$sandbox) {
+function hs_blocks_update_9801() {
   /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-  $block_content = \Drupal::entityTypeManager()->getStorage('block_content')->load(2);
+  $blocks = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties(['uuid' => '985ebfed-df24-487c-8602-51dc3bdcde84']);
+  $block_content = reset($blocks);
+  $body = $block_content->body->value ?? '';
+  // Block does not exist or does not have any social media icons.
+  if (empty($block_content) || !str_contains($body, 'fab')) {
+    return;
+  }
 
-  $body = $block_content->body->value;
   // Parse through each potential social media link.
   $array_content = explode('<a', $body);
   $updated_content = [];
-  $uppercase_exceptions = [
-    'itunes' => 'ITunes',
-    'youtube' => 'YouTube',
-  ];
-  $non_social_media_urls = [
-    'campus-map',
-    'lat',
-    'lng',
-  ];
+
   foreach($array_content as $content) {
     preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $url);
-    // Check for non-social media urls.
     $url = $url[0][0] ?? '';
-    foreach($non_social_media_urls as $non_social_media_url) {
-      if (str_contains($url, $non_social_media_url)) {
-        // No social media type link found
-        // skip to next line.
-        $url = '';
-        break;
-      }
-    }
-    if (!empty($url)) {
+    // Has a fontawesome brands icon, try to extract social media link.
+    $contain_social_media = str_contains($content, 'fab');
+    // Has a link, fontawesome icon, and is not a direct email nor entity link, assume it's for subscription page.
+    $is_subscribe_link = str_contains($content, 'href') && str_contains($content, 'fa') && !str_contains($content, 'mailto') && !str_contains($content, 'data-entity');
+    $social_media_type = '';
+    // If string contains a valid url and it's using an icon.
+    if (!empty($url) && $contain_social_media) {
       $url_components = parse_url($url);
       $host = $url_components['host'] ?? '';
       // Get only domain name.
       $host_name = str_replace('www.', '', $host);
       // if defined then it's a non-social media url.
-      $social_media_type = isset($social_media_type) ? $social_media_type : substr_replace($host_name, '', strpos($host_name, '.'), strlen($host_name));
+      if (str_contains($host_name, 'spotify')) {
+        $social_media_type = 'spotify';
+      }
+      else {
+        $social_media_type = substr_replace($host_name, '', strpos($host_name, '.'), strlen($host_name));
+      }
+      $social_media_type = 'on ' . $social_media_type;
     }
-    elseif (strpos($content, 'href') !== FALSE && strpos($content, 'mailto') === FALSE) {
+    elseif ($is_subscribe_link) {
       // Assume that link is to a subscribe page
       // and not a direct email link.
-      $social_media_type = 'email';
+      $social_media_type = 'by email';
     }
-    if (empty($social_media_type)) {
+    else {
       // No social media type link found
       // skip to next line.
       $updated_content[] = $content;
       continue;
     }
-    // Uppercase first letter, unless found in exceptions array.
-    $social_media_type = $uppercase_exceptions[strtolower($social_media_type)] ?? ucfirst($social_media_type);
-    $accessiblity_string = '<span class="hs_connectwithus__icon-text">Connect with us on ' . $social_media_type . '</span>';
+    // Insert string and store updated value.
+    $accessiblity_string = '<span class="hs_connectwithus__icon-text">Connect with us ' . $social_media_type . '</span>';
     $insert_span_index = strpos($content, '>') + 1;
     $updated_content[] = substr_replace($content, $accessiblity_string, $insert_span_index, 0);
   }

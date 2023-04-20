@@ -5,7 +5,7 @@ namespace Drupal\Tests\hs_capx\Unit;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageBase;
@@ -53,7 +53,7 @@ class CapxTest extends UnitTestCase {
 
 
     $this->cache = $this->createMock(CacheBackendInterface::class);
-    $database = $this->createMock(Connection::class);
+    $database = $this->createMock(DatabaseConnection::class);
     $merge = $this->createMock(Merge::class);
     $merge->method('fields')->will($this->returnValue($merge));
     $merge->method('key')->will($this->returnValue($merge));

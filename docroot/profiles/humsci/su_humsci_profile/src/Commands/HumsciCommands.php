@@ -3,6 +3,7 @@
 namespace Drupal\su_humsci_profile\Commands;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -13,20 +14,14 @@ use Drush\Commands\DrushCommands;
 class HumsciCommands extends DrushCommands {
 
   /**
-   * Core entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * HumsciCommands constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Core entity type manager service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected ModuleHandlerInterface $moduleHandler) {
+
   }
 
   /**
@@ -42,7 +37,7 @@ class HumsciCommands extends DrushCommands {
    *   New collection paragraph type id.
    */
   public function rowsToCollections($node_type, $field_name, $collection_type) {
-    module_load_include('post_update.php', 'su_humsci_profile');
+    $this->moduleHandler->loadInclude('su_humsci_profile', 'post_update.php');
     _su_humsci_profile_enable_paragraph('node', $node_type, $field_name, $collection_type);
 
     $paragraph_storage = $this->entityTypeManager->getStorage('paragraph');

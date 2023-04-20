@@ -177,7 +177,7 @@ _Note:_ Classes must be added to the field only. Any classes added to the field 
 |----------------------|---------------------|        :---:        |
 | hb-raised-cards | Adds a drop shadow behind any Card UI pattern used in the view | ✅|
 | hb-raised-cards--uniform-height | Makes all raised cards on the page a uniform height with the tallest card | ✅ |
-| hb-stretch-vertical-linked-cards | Stretches all vertical linked cards on a page to be the same height and adjusts the height of all card titles to be the same height | ✅|
+| hb-stretch-vertical-linked-cards | Stretches all vertical linked cards within a given collection to be the same height and adjusts the height of all card titles to be the same height | ✅|
 | hb-display-more-link-text | Displays helper link text with more link styling | ✅|
 | hb-heading-link-color | Applies link color styles to a linked heading. Do not use with hb-dark-pattern. | ✅|
 | hb-list-reset | Resets lists to display default browser styles | - |

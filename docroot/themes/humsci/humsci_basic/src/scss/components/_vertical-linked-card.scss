@@ -1,12 +1,12 @@
 .hb-vertical-linked-card {
   position: relative;
+  background-color: transparent;
 
   @include hb-themes(('colorful', 'airy')) {
     // The margin-top matches the margin-top on both the title and image to prevent
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
-    background-color: transparent;
     margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
     @include hb-global-color('color', 'white');
@@ -17,21 +17,9 @@
     @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
   }
 
-  @include hb-traditional {
-    background-color: transparent;
-  }
-
   .hb-stretch-vertical-linked-cards & {
-    @include hb-themes(('colorful', 'airy')) {
-      $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
-      $hb-bg--pairing: var(--palette--primary-dark);
-
-      @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
-    }
-
-    @include hb-traditional {
-      @include hb-pairing-color('background-color', 'primary');
-    }
+    display: flex;
+    flex-flow: column nowrap;
   }
 
   &__img {
@@ -93,6 +81,14 @@
       @include hb-global-color('color', 'white');
       @include hb-pairing-color('background-color', 'primary');
       margin: 0;
+    }
+
+    // Only extend the title if it's not
+    // the last visual element on the card.
+    &:nth-last-child(2) {
+      .hb-stretch-vertical-linked-cards & {
+        flex: 1 1 auto;
+      }
     }
 
     .hb-vertical-linked-card:hover &,
@@ -170,12 +166,14 @@
   &__description {
     @include hb-description;
     word-break: break-word;
+    flex: 1 1 auto;
 
     @include hb-themes(('airy', 'colorful')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
     }
 
     @include hb-traditional {
+      @include hb-pairing-color('background-color', 'tertiary-reversed');
       padding: hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(28px);
     }
 

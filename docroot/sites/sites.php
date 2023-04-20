@@ -101,6 +101,7 @@ $sites['duboislab.stanford.edu'] = 'duboislab2022';
 $sites['francestanford.stanford.edu'] = 'francestanford2022';
 $sites['hsweb-userguide-traditional.stanford.edu'] = 'swshumsci_sandbox';
 $sites['researchadmin-humsci.stanford.edu'] = 'researchadmin_humsci2022';
+$sites['insidehs.stanford.edu'] = 'insidehs2023';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

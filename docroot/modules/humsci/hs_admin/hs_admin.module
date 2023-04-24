@@ -8,6 +8,23 @@
 /**
  * Implements hook_form_alter().
  */
-function hs_admin_preprocess_node_edit_form(&$variables) {
-  $variables['#attached']['library'][] = 'hs_admin/hs_admin';
+function hs_admin_page_attachments(&$variables) {
+  $logged_in = \Drupal::currentUser()->isAuthenticated();
+
+  if ($logged_in) {
+    $variables['#attached']['library'][] = 'hs_admin/hs_admin';
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+ function hs_admin_preprocess_html(&$variables) {
+  // Get currently active user and his roles.
+  $account = \Drupal::currentUser();
+  $roles = $account->getRoles();
+
+  foreach ($roles as $role) {
+    $variables['attributes']['class'][] = 'role-' . $role;
+  }
 }

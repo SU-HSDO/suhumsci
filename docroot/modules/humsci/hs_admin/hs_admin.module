@@ -5,13 +5,9 @@
  * Contains hs_admin.module.
  */
 
-use Drupal\Core\Form\FormStateInterface;
-
 /**
  * Implements hook_form_alter().
  */
-function hs_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if($form_id == 'node_hs_basic_page_form') {
-    $form['#attached']['library'][] = 'hs_admin/hs_admin';
-  }
+function hs_admin_preprocess_node_edit_form(&$variables) {
+  $variables['#attached']['library'][] = 'hs_admin/hs_admin';
 }

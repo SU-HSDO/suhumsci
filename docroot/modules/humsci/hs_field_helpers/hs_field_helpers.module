@@ -214,12 +214,24 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
 
-      try {
-        $pattern_region = is_array($pattern[$region]) ? $pattern[$region] : (string) $pattern[$region];
-        $rendered = $renderer->renderPlain($pattern_region);
+      // Rebuild render() function since it will be removed
+      $element = $pattern[$region];
+      if (is_array($element)) {
+        if (
+          isset($element['#printed']) &&
+          $element['#printed'] == TRUE &&
+          isset($element['#markup']) &&
+          strlen($element['#markup']) > 0
+        ) {
+          $rendered = $element['#markup'];
+        }
+        else {
+          show($element);
+          $rendered = $renderer->render($element);
+        }
       }
-      catch (\Throwable $e) {
-        continue;
+      else {
+        $rendered = $element;
       }
 
       // Remove all wrapper divs so we can check if the region actually has any

@@ -37,7 +37,7 @@
       // Adds aria label to chosen input fields.
       // https://www.drupal.org/project/chosen/issues/2384865#comment-12568848
       $('body').on('chosen:ready', function (evt, params) {
-        $(once('chosenAccessibilityFix', '.js-form-item.js-form-type-select', context).each(function (index, element) {
+        $(once('chosenAccessibilityFix', '.js-form-item.js-form-type-select', context)).each(function (index, element) {
           $(element).find('.chosen-container-multi input.chosen-search-input').attr('aria-label', $.trim($(element).find('label').text()));
         });
       });

@@ -19,7 +19,6 @@ drupal-media {
   figure,
   article {
     display: block;
-    width: 100%;
   }
 
   &[data-align=right] {
@@ -34,11 +33,12 @@ drupal-media {
   .caption.align {
     &-right,
     &-center {
-      max-width: 100%;
       margin: initial;
     }
 
     &-right {
+      width: auto;
+
       @include hb-themes(('colorful', 'airy')) {
         padding: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
       }

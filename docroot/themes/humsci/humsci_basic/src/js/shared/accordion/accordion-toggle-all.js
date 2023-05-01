@@ -97,6 +97,6 @@ function toggleAccordionFromSearch() {
   });
 }
 
-if (Object.keys(params).length) {
+if (Object.keys(params).length && Object.prototype.hasOwnProperty.call(params, 'search')) {
   toggleAccordionFromSearch();
 }

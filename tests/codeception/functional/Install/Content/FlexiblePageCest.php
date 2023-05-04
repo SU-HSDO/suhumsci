@@ -201,7 +201,7 @@ class FlexiblePageCest {
 
     // Populating spotlight #2.
     $I->scrollTo('.paragraphs-add-wrapper');
-    $I->click('input[value=\"Add Spotlight\"]');
+    $I->click('input[value="Add Spotlight"]');
     $I->wait(1);
     $I->click('Add media', 'div[data-drupal-selector="edit-field-hs-page-hero-0-subform-field-hs-sptlght-sldes-1"]');
     $I->waitForText('Add or select media');

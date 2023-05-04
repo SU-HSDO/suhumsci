@@ -50,3 +50,23 @@ if (timelineItems) {
     });
   });
 }
+
+const searchQuery = new URLSearchParams(window.location.search);
+const params = Object.fromEntries(searchQuery.entries());
+
+function toggleTimelineFromSearch() {
+  const searchTerm = params.search.toLowerCase();
+
+  timelineItems.forEach((timeline) => {
+    if (timeline.textContent.toLowerCase().includes(searchTerm)) {
+      const summary = timeline.querySelector('summary');
+      timeline.setAttribute('open', '');
+      summary.setAttribute('aria-expanded', 'true');
+      summary.setAttribute('aria-pressed', 'true');
+    }
+  });
+}
+
+if (Object.keys(params).length && Object.prototype.hasOwnProperty.call(params, 'search')) {
+  toggleTimelineFromSearch();
+}

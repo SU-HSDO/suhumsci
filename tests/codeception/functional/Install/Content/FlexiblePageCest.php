@@ -194,7 +194,7 @@ class FlexiblePageCest {
     $I->waitForText('The maximum number of media items have been selected');
     $I->waitForText('HTML');
     $I->click('.ck-source-editing-button.ck-off');
-    $I->fillField('.cke_source', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
+    $I->fillField('.ck-source-editing-area textarea', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
@@ -215,7 +215,7 @@ class FlexiblePageCest {
     $I->waitForText('HTML');
     $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
     $I->click('.paragraph-type--hs-spotlight.even .ck-source-editing-button.ck-off ');
-    $I->fillField('.cke_source', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
+    $I->fillField('.ck-source-editing-area textarea', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');

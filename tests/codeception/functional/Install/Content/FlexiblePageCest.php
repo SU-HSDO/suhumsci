@@ -192,7 +192,7 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');
-    $I->waitForText('Source');
+    $I->waitForText('HTML');
     $I->click('.cke_button__source.cke_button_off');
     $I->fillField('.cke_source', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
@@ -212,7 +212,7 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');
-    $I->waitForText('Source');
+    $I->waitForText('HTML');
     $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
     $I->click('.paragraph-type--hs-spotlight.even .cke_button__source.cke_button_off');
     $I->fillField('.cke_source', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');

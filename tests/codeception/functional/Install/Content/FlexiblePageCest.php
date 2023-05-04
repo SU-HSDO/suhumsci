@@ -193,7 +193,7 @@ class FlexiblePageCest {
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');
     $I->waitForText('HTML');
-    $I->click('.cke_button__source.cke_button_off');
+    $I->click('.ck-source-editing-button.ck-off');
     $I->fillField('.cke_source', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');

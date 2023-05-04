@@ -214,7 +214,7 @@ class FlexiblePageCest {
     $I->waitForText('The maximum number of media items have been selected');
     $I->waitForText('HTML');
     $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
-    $I->click('.paragraph-type--hs-spotlight.even .cke_button__source.cke_button_off');
+    $I->click('.paragraph-type--hs-spotlight.even .ck-source-editing-button.ck-off ');
     $I->fillField('.cke_source', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
@@ -248,7 +248,7 @@ class FlexiblePageCest {
     $I->waitForText('Vertical Timeline');
     $I->checkOption('Collapse by default');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');
-    $I->click('.cke_button__source.cke_button_off');
+    $I->click('.ck-source-editing-button.ck-off ');
     $I->fillField('.cke_source', '<p>Timeline item #1 description.</p>');
     $I->click('Add Timeline Item');
     $I->wait(1);

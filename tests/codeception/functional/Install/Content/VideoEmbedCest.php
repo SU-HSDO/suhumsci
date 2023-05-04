@@ -40,7 +40,7 @@ class VideoEmbedCest {
     $I->wait(2);
 
     // Add media
-    $I->click('.cke_button__drupalmedialibrary');
+    $I->click('.ck-button[data-cke-tooltip-text=\"Insert Media\"]');
     $I->waitForText('Add or select media');
     $I->click('.media-library-menu__link[data-title="Video"]');
     $I->waitForText('Add Video via URL');

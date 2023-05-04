@@ -249,7 +249,7 @@ class FlexiblePageCest {
     $I->checkOption('Collapse by default');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');
     $I->click('.ck-source-editing-button.ck-off ');
-    $I->fillField('.cke_source', '<p>Timeline item #1 description.</p>');
+    $I->fillField('.ck-source-editing-area textarea', '<p>Timeline item #1 description.</p>');
     $I->click('Add Timeline Item');
     $I->wait(1);
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][1][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #2 Title');

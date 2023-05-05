@@ -54,7 +54,7 @@ class VideoEmbedCest {
 
     // Enable caption
     $I->click('.drupal-media.ck-widget');
-    $I->click('.ck-button[data-cke-tooltip-text="Toggle caption on"]');
+    $I->executeJS('document.evaluate("//.ck-button__label[text()=\"Caption media\"]", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.click();', []);
     $I->wait(1);
 
     // Add caption

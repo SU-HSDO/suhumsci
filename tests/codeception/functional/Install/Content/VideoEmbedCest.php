@@ -53,21 +53,14 @@ class VideoEmbedCest {
     $I->wait(2);
 
     // Enable caption
-    $I->switchToIFrame(".cke_wysiwyg_frame");
-    $I->executeJS('document.querySelector(".media-library-item__edit").style.display = "inline"', []);
-    $I->executeJS('document.querySelector(".media-library-item__edit").click()', []);
-    $I->switchToIFrame();
-    $I->waitForText('Caption');
-    $I->executeJS('document.querySelector("input[name=\"hasCaption\"]").click()', []);
-    $I->executeJS('document.querySelector(".ui-dialog-buttonset .js-form-submit").click()', []);
+    $I->click('.drupal-media.ck-widget');
+    $I->click('.ck-button[data-cke-tooltip-text="Toggle caption on"]');
     $I->wait(1);
 
     // Add caption
-    $I->switchToIFrame(".cke_wysiwyg_frame");
     $I->executeJS('document.querySelector("figcaption").textContent += "Caption for video goes here"', []);
 
     // Save node
-    $I->switchToIFrame();
     $I->click('Save');
 
     // Verify figure and figcaption

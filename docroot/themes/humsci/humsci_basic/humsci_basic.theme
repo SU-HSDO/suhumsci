@@ -256,3 +256,16 @@ function humsci_basic_preprocess_we_megamenu_frontend(&$vars) {
   $vars['attributes']['data-action'] = 'clicked';
   $vars['attributes']['class'][] = 'click-action';
 }
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function humsci_basic_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+
+  switch ($view->id()) {
+    case 'hs_default_search':
+     $variables['#attached']['library'][] =  'humsci_basic/search';
+      break;
+  }
+}

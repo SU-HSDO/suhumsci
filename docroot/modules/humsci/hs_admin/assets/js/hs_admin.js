@@ -41,5 +41,12 @@ Drupal.behaviors.hsAdmin= {
         }
       });
     }
+
+    // Handle Seven theme row weights
+    const rowWeightsBtn = context.querySelector('.tabledrag-toggle-weight-wrapper .tabledrag-toggle-weight');
+
+    if (rowWeightsBtn.innerText == 'Hide row weights') {
+      rowWeightsBtn.setAttribute('style', 'display: inline;');
+    }
   }
 };

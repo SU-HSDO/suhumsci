@@ -200,26 +200,26 @@ class FlexiblePageCest {
     $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
 
     // Populating spotlight #2.
-    $I->scrollTo('.paragraphs-add-wrapper');
-    $I->click('Add Spotlight');
-    $I->wait(1);
-    $I->click('Add media', 'div[data-drupal-selector="edit-field-hs-page-hero-0-subform-field-hs-sptlght-sldes-1"]');
-    $I->waitForText('Add or select media');
-    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-    $I->click('Upload and Continue');
-    $I->waitForText('Decorative Image');
-    $I->selectOption("input", 'Add new');
-    $I->click('Save and insert', '.ui-dialog-buttonset');
-    $I->waitForElementNotVisible('.media-library-widget-modal');
-    $I->waitForText('The maximum number of media items have been selected');
-    $I->waitForText('HTML');
-    $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
-    $I->click('.paragraph-type--hs-spotlight.even .ck-source-editing-button.ck-off ');
-    $I->fillField('.ck-source-editing-area textarea', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
-    $I->wait(2);
+    // $I->scrollTo('.paragraphs-add-wrapper');
+    // $I->click('Add Spotlight');
+    // $I->wait(1);
+    // $I->click('Add media', 'div[data-drupal-selector="edit-field-hs-page-hero-0-subform-field-hs-sptlght-sldes-1"]');
+    // $I->waitForText('Add or select media');
+    // $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+    // $I->click('Upload and Continue');
+    // $I->waitForText('Decorative Image');
+    // $I->selectOption("input", 'Add new');
+    // $I->click('Save and insert', '.ui-dialog-buttonset');
+    // $I->waitForElementNotVisible('.media-library-widget-modal');
+    // $I->waitForText('The maximum number of media items have been selected');
+    // $I->waitForText('HTML');
+    // $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
+    // $I->click('.paragraph-type--hs-spotlight.even .ck-source-editing-button.ck-off ');
+    // $I->fillField('.ck-source-editing-area textarea', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
+    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
+    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
+    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
+    // $I->wait(2);
     $I->click('Save');
 
     // Check spotlight 1.

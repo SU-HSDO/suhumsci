@@ -83,7 +83,7 @@ class HsCircleCiCommands extends BltTasks {
 
     $collection->addTask($this->taskGitStack()
       ->checkout($branch)
-      ->add('composer.lock config')
+      ->add('composer.lock config docroot')
       ->commit('Updated dependencies ' . date('M j Y'))
       ->push('origin', $branch));
 

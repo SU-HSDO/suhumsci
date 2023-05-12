@@ -14,30 +14,12 @@ dependencies:
     - field.field.node.hs_publications.field_hs_publication_year
     - node.type.hs_publications
   module:
-    - field_group
     - hs_field_helpers
     - inline_entity_form
     - link
     - media_library
     - path
     - text
-third_party_settings:
-  field_group:
-    group_user_guide:
-      children: {  }
-      label: 'User Guide'
-      region: content
-      parent_name: ''
-      weight: 17
-      format_type: details_sidebar
-      format_settings:
-        classes: ''
-        show_empty_fields: true
-        id: ''
-        open: true
-        description: '<a href="https://hswebuserguide.stanford.edu/" title="H&S Drupal User Guide" target="_blank">H&S Drupal User Guide</a>'
-        required_fields: false
-        weight: 100
 _core:
   default_config_hash: YhHMDht0zK7u6dzUkYGt05lJdgV84TQV7AKbR4AdXss
 id: node.hs_publications.default
@@ -77,10 +59,9 @@ content:
       collapsible: false
       collapsed: false
       revision: false
-      removed_reference: optional
     third_party_settings: {  }
   field_hs_publication_citation:
-    type: text_textarea
+    type: string_textarea
     weight: 1
     region: content
     settings:

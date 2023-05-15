@@ -28,3 +28,15 @@ function hs_admin_preprocess_html(&$variables) {
     $variables['attributes']['class'][] = 'role-' . $role;
   }
 }
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function hs_admin_toolbar_alter(&$items) {
+  $uid = \Drupal::currentUser()->id();
+  $user = \Drupal\user\Entity\User::load($uid);
+  if ($user->hasPermission('hide manage link') && $uid != 1) {
+     unset($items['admin_toolbar_tools']);
+     unset($items['administration']);
+  }
+}

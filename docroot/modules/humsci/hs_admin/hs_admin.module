@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\user\Entity\User;
+
 /**
  * @file
  * Contains hs_admin.module.
@@ -34,9 +36,9 @@ function hs_admin_preprocess_html(&$variables) {
  */
 function hs_admin_toolbar_alter(&$items) {
   $uid = \Drupal::currentUser()->id();
-  $user = \Drupal\user\Entity\User::load($uid);
+  $user = User::load($uid);
   if ($user->hasPermission('hide manage link') && $uid != 1) {
-     unset($items['admin_toolbar_tools']);
-     unset($items['administration']);
+    unset($items['admin_toolbar_tools']);
+    unset($items['administration']);
   }
 }

@@ -99,6 +99,11 @@ $sites['lowe.stanford.edu'] = 'lowe2022';
 $sites['shenlab.stanford.edu'] = 'shenlab2022';
 $sites['duboislab.stanford.edu'] = 'duboislab2022';
 $sites['francestanford.stanford.edu'] = 'francestanford2022';
+$sites['hsweb-userguide-traditional.stanford.edu'] = 'swshumsci_sandbox';
+$sites['researchadmin-humsci.stanford.edu'] = 'researchadmin_humsci2022';
+$sites['insidehs.stanford.edu'] = 'insidehs2023';
+$sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
+$sites['popstudies.stanford.edu'] = 'popstudies2023';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

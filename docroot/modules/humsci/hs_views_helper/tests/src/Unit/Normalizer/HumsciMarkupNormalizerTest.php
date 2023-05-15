@@ -38,7 +38,7 @@ class HumsciMarkupNormalizerTest extends UnitTestCase {
     $normalized = $normalizer->normalize($object);
 
     $converted_object = ['newTag' => ['one', 'two', 'three']];
-    $this->assertArrayEquals($converted_object, $normalized);
+    $this->assertEquals($converted_object, $normalized);
   }
 
   /**

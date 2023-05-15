@@ -29,6 +29,7 @@ use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\ui_patterns\UiPatterns;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -42,8 +43,7 @@ function hs_field_helpers_preprocess_media_oembed_iframe(&$variables) {
       $iframe = (string) $variables['media'];
       $variables['media'] = preg_replace('/src="(.[^"]+)"/', 'src="$1&modestbranding=1&rel=0"', $iframe);
     }
-  }
-  catch (\Throwable $e) {
+  } catch (\Throwable $e) {
     // Nothing to do.
   }
 }
@@ -204,16 +204,35 @@ function hs_fields_helpers_cleanup_layout_builder(array &$variables) {
  *   Pattern ID being used.
  */
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
+  $renderer = \Drupal::service('renderer');
   try {
     $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
-  }
-  catch (Exception $e) {
+  } catch (Exception $e) {
     // No pattern found.
     return;
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
-      $rendered = render($pattern[$region]);
+
+      // Rebuild render() function since it will be removed
+      $element = $pattern[$region];
+      if (is_array($element)) {
+        if (
+          isset($element['#printed']) &&
+          $element['#printed'] == TRUE &&
+          isset($element['#markup']) &&
+          strlen($element['#markup']) > 0
+        ) {
+          $rendered = $element['#markup'];
+        }
+        else {
+          show($element);
+          $rendered = $renderer->render($element);
+        }
+      }
+      else {
+        $rendered = $element;
+      }
 
       // Remove all wrapper divs so we can check if the region actually has any
       // visible output.
@@ -555,7 +574,18 @@ function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $ent
  * Implements hook_cron().
  */
 function hs_field_helpers_cron() {
-  _he_field_helpers_clean_eck();
+  if (!Settings::get('hs_field_helpers_cron', FALSE)) {
+    return;
+  }
+  $deleted = _he_field_helpers_clean_eck();
+  $logger = \Drupal::logger('hs_field_helpers');
+  foreach ($deleted as $entity_type => $ids) {
+    $logger->info(t('Deleted %count entities due to no usages. %type: %ids'), [
+      '%count' => count($ids),
+      '%type' => $entity_type,
+      '%ids' => implode(', ', $ids),
+    ]);
+  }
 }
 
 /**
@@ -566,39 +596,56 @@ function hs_field_helpers_cron() {
  * usage statitistics of them. Mostly this is from doing a migration rollback.
  * Deleting a node manually seems to clean the ECK entities.
  *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
- * @throws \Drupal\Core\Entity\EntityStorageException
+ * @return array
+ *   Keyed array of entity type to entity ids that were deleted.
  */
 function _he_field_helpers_clean_eck() {
   /** @var \Drupal\entity_usage\EntityUsage $entity_usage */
   $entity_usage = \Drupal::service('entity_usage.usage');
-  $definitions = \Drupal::entityTypeManager()->getDefinitions();
-  $logger = \Drupal::logger('hs_field_helpers');
+  $deleted = [];
+  foreach (_hs_field_helpers_get_cleanup_entity_types() as $entity_type) {
+    $entity_storage = \Drupal::entityTypeManager()
+      ->getStorage($entity_type);
+    $entity_ids = $entity_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->execute();
 
-  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
-  foreach ($definitions as $entity_type_id => $entity_type) {
-    // Find all the entity types ECK has available.
-    if ($entity_type->getOriginalClass() != EckEntity::class) {
-      continue;
-    }
+    // Chunk it up so that we don't try to load every single entity at once.
+    $chuncked_ids = array_chunk($entity_ids, 100);
 
-    $entities = \Drupal::entityTypeManager()
-      ->getStorage($entity_type_id)
-      ->loadMultiple();
+    foreach ($chuncked_ids as $entity_ids) {
+      $entities = $entity_storage->loadMultiple($entity_ids);
 
-    // Delete all ECK entities that aren't being used. Some ECK's don't get
-    // deleted if they were imported by a migration.
-    foreach ($entities as $entity) {
-      if (empty($entity_usage->listUsage($entity))) {
-        $logger->info(t('Deleted ECK due to no usages. %type: %id'), [
-          '%type' => $entity_type_id,
-          '%id' => $entity->id(),
-        ]);
-        $entity->delete();
+      // Delete all ECK entities that aren't being used. Some ECK's don't get
+      // deleted if they were imported by a migration.
+      foreach ($entities as $entity) {
+        if (empty($entity_usage->listSources($entity))) {
+          $deleted[$entity_type][] = $entity->id();
+          $entity->delete();
+        }
       }
     }
   }
+  return $deleted;
+}
+
+/**
+ * Get the entity types to clean if there are no usages.
+ *
+ * @return string[]
+ *   Entity type ids.
+ */
+function _hs_field_helpers_get_cleanup_entity_types(): array {
+  $cleanup_types = ['paragraph'];
+  $definitions = \Drupal::entityTypeManager()->getDefinitions();
+  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
+  foreach ($definitions as $entity_type_id => $entity_type) {
+    // Find all the entity types ECK has available.
+    if ($entity_type->getOriginalClass() == EckEntity::class) {
+      $cleanup_types[] = $entity_type_id;
+    }
+  }
+  return $cleanup_types;
 }
 
 /**

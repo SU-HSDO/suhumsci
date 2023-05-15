@@ -196,10 +196,16 @@ function _humsci_basic_check_link_access(array &$link_items) {
  * Implements hook_preprocess_HOOK().
  */
 function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
+  $renderer = \Drupal::service('renderer');
   if (!empty($variables['button'])) {
-
     $dom = new DOMDocument();
-    $dom->loadHTML(render($variables['button']));
+    try {
+      $button = is_array($variables['button']) ? $variables['button'] : (string) $variables['button'];
+      $dom->loadHTML($renderer->renderPlain($button));
+    }
+    catch (\Throwable $e) {
+      return;
+    }
     $xpath = new DOMXPath($dom);
     $links = $xpath->query('//a/@href');
     // If the markup is a link, grab the href attribute.
@@ -208,11 +214,12 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
     }
     else {
       // The markup is just a string with the url, we can use that.
-      $variables['button'] = htmlspecialchars_decode(trim(strip_tags(render($variables['button']))));
+      $variables['button'] = htmlspecialchars_decode(trim(strip_tags($renderer->renderPlain($variables['button']))));
     }
   }
   if (!empty($variables['title'])) {
-    $variables['title'] = ['#markup' => trim(strip_tags(render($variables['title'])))];
+    $title = is_array($variables['title']) ? $renderer->renderPlain($variables['title']) : $variables['title'];
+    $variables['title'] = ['#markup' => trim(strip_tags($title))];
   }
 }
 
@@ -248,4 +255,17 @@ function humsci_basic_preprocess_we_megamenu_backend(array &$vars) {
 function humsci_basic_preprocess_we_megamenu_frontend(&$vars) {
   $vars['attributes']['data-action'] = 'clicked';
   $vars['attributes']['class'][] = 'click-action';
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function humsci_basic_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+
+  switch ($view->id()) {
+    case 'hs_default_search':
+     $variables['#attached']['library'][] =  'humsci_basic/search';
+      break;
+  }
 }

@@ -23,6 +23,18 @@ use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function su_humsci_profile_help($route_name, RouteMatchInterface $route_match) {
+  $path = $route_match->getRouteObject()->getPath();
+  switch($path){
+    case '/admin/users':
+      return '<p>Need help giving someone permission to edit the site? Consult the <a href="https://hsweb.slite.page/p/Qlk4KqR8GW9qsn/Manage-User-Permissions">Manage User Permission section of the User Guide</a>.</p>';
+  }
+}
 
 /**
  * Implements hook_entity_type_alter().

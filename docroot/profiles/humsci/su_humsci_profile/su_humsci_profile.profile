@@ -30,7 +30,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 function su_humsci_profile_help($route_name, RouteMatchInterface $route_match) {
   $path = $route_match->getRouteObject()->getPath();
-  switch($path){
+  switch ($path) {
     case '/admin/users':
       return '<p>Need help giving someone permission to edit the site? Consult the <a href="https://hsweb.slite.page/p/Qlk4KqR8GW9qsn/Manage-User-Permissions">Manage User Permission section of the User Guide</a>.</p>';
   }

@@ -6,6 +6,7 @@
  */
 
 use Drupal\user\Entity\User;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_preprocess_node_edit_form().
@@ -40,5 +41,42 @@ function hs_admin_toolbar_alter(&$items) {
   if ($user->hasPermission('hide manage link') && $uid != 1) {
     unset($items['admin_toolbar_tools']);
     unset($items['administration']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_menu_local_tasks().
+ */
+function hs_admin_preprocess_menu_local_tasks(&$variables) {
+  // Disable edit/create node tabs for publish and delete.
+  unset($variables['primary']['entity.node.publish']);
+  unset($variables['primary']['entity.node.delete_form']);
+}
+
+/**
+ * Implements hook_preprocess_details().
+ */
+function hs_admin_preprocess_details(&$variables) {
+  $expanded = ['menu settings'];
+  // Close all sidebar elements if not Menu Settings.
+  $title = $variables['title'] ?? '';
+  if (!is_array($title) && in_array(strtolower((string)$title), $expanded, TRUE)) {
+    $variables['attributes']['open'] = 'open';
+  }
+  else {
+    unset($variables['attributes']['open']);
+  }
+}
+
+/**
+ * Impelments hook_preprocess_form_element().
+ */
+function hs_admin_preprocess_form_element(&$variables) {
+  $name = $variables['name'] ?? '';
+  $type = $variables['element']['#type'] ?? '';
+  // Check that it's the published status field
+  // and check it for a label.
+  if ($type === 'item' && strtolower($name) === 'meta[published]' && isset($variables['children'])) {
+    $variables['children'] = Markup::create('Revisions');
   }
 }

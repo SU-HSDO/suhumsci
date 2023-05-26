@@ -59,7 +59,8 @@ class MegaMenuCest {
 
     $I->amOnPage($top_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
-    $I->click('label[for="edit-menu-enabled"]');
+    $I->checkOption('Provide a menu link');
+    $I->executeJS("document.querySelector('[data-drupal-selector='edit-menu']').style.display = 'block'", []);
     $I->fillField('Menu link title', $topLevelTitle);
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
@@ -70,7 +71,8 @@ class MegaMenuCest {
     ]);
     $I->amOnPage($second_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
-    $I->click('label[for="edit-menu-enabled"]');
+    $I->checkOption('Provide a menu link');
+    $I->executeJS("document.querySelector('[data-drupal-selector='edit-menu']').style.display = 'block'", []);
     $I->fillField('Menu link title', $secondLevelTitle);
     $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
     $I->wait(2);

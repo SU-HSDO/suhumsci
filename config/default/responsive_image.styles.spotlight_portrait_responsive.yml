@@ -3,8 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - image.style.hs_spotlight_large_portrait_600x720
-    - image.style.hs_spotlight_small_portrait_300x360
+    - image.style.spotlight_332px_
+    - image.style.spotlight_425px_
+    - image.style.spotlight_432px_
+    - image.style.spotlight_475px_
+    - image.style.spotlight_624px_
   module:
     - stanford_media
 id: spotlight_portrait_responsive
@@ -12,13 +15,28 @@ label: 'Spotlight Portrait Responsive'
 image_style_mappings:
   -
     image_mapping_type: image_style
-    image_mapping: hs_spotlight_large_portrait_600x720
+    image_mapping: spotlight_475px_
+    breakpoint_id: stanford_media.xl
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: spotlight_425px_
     breakpoint_id: stanford_media.lg
     multiplier: 1x
   -
     image_mapping_type: image_style
-    image_mapping: hs_spotlight_small_portrait_300x360
+    image_mapping: spotlight_332px_
+    breakpoint_id: stanford_media.md
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: spotlight_624px_
+    breakpoint_id: stanford_media.sm
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: spotlight_432px_
     breakpoint_id: stanford_media.xs
     multiplier: 1x
 breakpoint_group: stanford_media
-fallback_image_style: hs_spotlight_small_portrait_300x360
+fallback_image_style: spotlight_624px_

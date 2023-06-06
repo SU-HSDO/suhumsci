@@ -23,6 +23,61 @@ use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
+
+/**
+ * Implements hook_help().
+ */
+function su_humsci_profile_help($route_name, RouteMatchInterface $route_match) {
+  $path = $route_match->getRouteObject()->getPath();
+  switch ($path) {
+    case '/admin/users':
+      return '<p>Need help giving someone permission to edit the site? Consult the <a href="https://hsweb.slite.page/p/Qlk4KqR8GW9qsn/Manage-User-Permissions">Manage User Permission section of the User Guide</a>.</p>';
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function su_humsci_profile_library_info_alter(&$libraries, $extension) {
+  // Disable confirm leave library during testing.
+  if ($extension == 'confirm_leave' && getenv('CI')) {
+    unset($libraries['confirm-leave']);
+  }
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function su_humsci_profile_field_widget_complete_paragraphs_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
+  $max_delta = $field_widget_complete_form['widget']['#max_delta'] ?? -1;
+  for ($delta = 0; $delta <= $max_delta; $delta++) {
+    if (isset($field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'])) {
+      $duplicate_button = &$field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'];
+      $duplicate_button['#ajax']['callback'] = 'su_humsci_profile_paragraphs_duplicate_callback';
+    }
+  }
+}
+
+/**
+ * Ajax callback for duplicate button on paragraphs.
+ *
+ * @param array $form
+ *   Complete form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Ajax form state.
+ *
+ * @return array
+ *   Modified ajax element.
+ */
+function su_humsci_profile_paragraphs_duplicate_callback(array $form, FormStateInterface $form_state) {
+  $element = ParagraphsWidget::itemAjax($form, $form_state);
+  $added_delta = $element['#max_delta'];
+  $element[$added_delta]['#attributes']['class'][] = 'hs-duplicated';
+  $element['#attached']['library'][] = 'su_humsci_profile/paragraphs';
+  return $element;
+}
 
 /**
  * Implements hook_entity_type_alter().

@@ -59,6 +59,7 @@ class MegaMenuCest {
 
     $I->amOnPage($top_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
+    // Force the details/summary markup to open
     $I->executeJS("document.querySelector('.menu-link-form').setAttribute('open', 'true')", []);
     $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu\"]").style.display = "block";', []);
     $I->checkOption('Provide a menu link');

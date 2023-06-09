@@ -77,7 +77,7 @@ class MegaMenuCest {
     $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu\"]").style.display = "block";', []);
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $secondLevelTitle);
-    $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
+    $I->scrollTo(['css' => '.form-item--menu-menu-parent'], 0, -100);
     $I->wait(2);
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->scrollTo(['css' => '.form-submit']);

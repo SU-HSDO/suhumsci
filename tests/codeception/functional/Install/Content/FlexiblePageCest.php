@@ -31,6 +31,35 @@ class FlexiblePageCest {
   }
 
   /**
+   * Duplicated paragraphs should have a class available.
+   *
+   * @group paragraphs
+   */
+  public function testDuplicateScroll(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('node/add/hs_basic_page');
+    $node = $I->createEntity([
+      'title' => $this->faker->words(3, TRUE),
+      'type' => 'hs_basic_page',
+    ]);
+    $I->amOnPage($node->toUrl('edit-form')->toString());
+    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
+    $I->click('Add Collection');
+    $I->waitForText('Items Per Row');
+    $I->click('List additional actions', '.paragraphs-subform');
+    $I->click('Add Postcard', '.paragraphs-subform');
+    $I->waitForText('Card Title');
+    $card_title = $this->faker->words(3, TRUE);
+
+    $I->fillField('Card Title', $card_title);
+    $I->cantSeeElement('.hs-duplicated');
+    $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
+    $I->click('Duplicate', '.paragraph-type--hs-postcard');
+    $I->waitForText('Card Title', 10, '.hs-duplicated');
+    $I->canSeeInField('Card Title', $card_title);
+  }
+
+  /**
    * I can create a page with a hero banner.
    */
   public function testHeroParagraph(FunctionalTester $I) {
@@ -134,8 +163,8 @@ class FlexiblePageCest {
       $I->seeElement('.hb-main-nav__link');
       $I->click('.hb-main-nav__link');
       echo('If you see this, the menu was open and the link was clicked.');
-
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Do this if it's not present.
       echo('If you see this, the menu needs toggled.');
       $I->click('button.hb-main-nav__toggle');
@@ -151,8 +180,8 @@ class FlexiblePageCest {
       $I->waitForElementVisible('.hb-main-nav__menu-lv2');
       // Click nested menu link if it's already visible.
       $I->click('.hb-main-nav__menu-lv2 a');
-
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Do this if the nested menu link is not already visible.
       echo('If you see this, the nested menu link needs to be opened to click.');
       $I->click('.hb-main-nav__toggle');

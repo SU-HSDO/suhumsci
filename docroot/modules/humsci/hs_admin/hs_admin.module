@@ -60,7 +60,7 @@ function hs_admin_preprocess_details(&$variables) {
   $expanded = ['menu settings'];
   // Close all sidebar elements if not Menu Settings.
   $title = $variables['title'] ?? '';
-  if (!is_array($title) && in_array(strtolower((string)$title), $expanded, TRUE)) {
+  if (!is_array($title) && in_array(strtolower((string) $title), $expanded, TRUE)) {
     $variables['attributes']['open'] = 'open';
   }
   else {

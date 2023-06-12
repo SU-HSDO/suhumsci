@@ -25,7 +25,7 @@ drupal-media {
   &[data-align=right] {
     float: none;
   }
-  
+
   .media-library-item__edit {
     right: auto;
   }
@@ -34,15 +34,16 @@ drupal-media {
   .caption.align {
     &-right,
     &-center {
-      max-width: 100%;
       margin: initial;
     }
 
     &-right {
+      width: auto;
+
       @include hb-themes(('colorful', 'airy')) {
         padding: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
       }
-  
+
       @include hb-traditional {
         padding: 0 0 hb-spacing-width('xs') hb-spacing-width('xs');
       }
@@ -55,7 +56,7 @@ drupal-media {
       @include hb-themes(('colorful', 'airy')) {
         padding: 0 hb-spacing-width('sm') hb-spacing-width('sm') 0;
       }
-  
+
       @include hb-traditional {
         padding: 0 hb-spacing-width('xs') hb-spacing-width('xs') 0;
       }
@@ -83,4 +84,15 @@ drupal-media {
   padding: 2rem 1.8rem;
   border: 0 none;
   display: table;
+}
+
+// CK5 bugfix. Conflict between paragraphs and tabledrag styles
+.js .field--widget-paragraphs .tabledrag-handle .handle {
+  width: calc(100% + 2px);
+}
+
+// CK5 bugfix. When too many buttons are included in the wysiwyg
+// it causes overflow into the next column
+.ck-editor .ck.ck-toolbar.ck-toolbar_grouping>.ck-toolbar__items {
+  flex-wrap: wrap;
 }

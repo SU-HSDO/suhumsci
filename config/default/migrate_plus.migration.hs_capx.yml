@@ -108,8 +108,8 @@ source:
       selector: education
     -
       name: department
-      label: Departement
-      selector: academicOffices/0/department
+      label: 'Department'
+      selector: academicOffices
     -
       name: cv_document
       label: 'CV Document'
@@ -295,17 +295,14 @@ process:
         value: label/text
     -
       plugin: flatten
-  department:
-    -
-      plugin: skip_on_empty
-      source: department
-      method: process
   field_hs_person_department:
     -
-      plugin: null_coalesce
-      source:
-        - '@department'
-        - org_title
+      plugin: sub_process
+      source: department
+      process:
+        value: department
+    -
+      plugin: flatten
     -
       plugin: skip_on_empty
       method: process

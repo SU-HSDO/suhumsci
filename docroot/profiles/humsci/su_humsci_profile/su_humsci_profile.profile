@@ -38,9 +38,19 @@ function su_humsci_profile_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_library_info_alter().
+ */
+function su_humsci_profile_library_info_alter(&$libraries, $extension) {
+  // Disable confirm leave library during testing.
+  if ($extension == 'confirm_leave' && getenv('CI')) {
+    unset($libraries['confirm-leave']);
+  }
+}
+
+/**
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
-function su_humsci_profile_field_widget_complete_paragraphs_form_alter(&$field_widget_complete_form, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function su_humsci_profile_field_widget_complete_paragraphs_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
   $max_delta = $field_widget_complete_form['widget']['#max_delta'] ?? -1;
   for ($delta = 0; $delta <= $max_delta; $delta++) {
     if (isset($field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'])) {
@@ -67,13 +77,6 @@ function su_humsci_profile_paragraphs_duplicate_callback(array $form, FormStateI
   $element[$added_delta]['#attributes']['class'][] = 'hs-duplicated';
   $element['#attached']['library'][] = 'su_humsci_profile/paragraphs';
   return $element;
-}
-
-/**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().
- */
-function su_humsci_profile_field_widget_paragraphs_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
-
 }
 
 /**

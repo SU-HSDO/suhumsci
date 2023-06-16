@@ -59,8 +59,7 @@ class ToggleModulesCommand extends BltTasks {
       $modules = (array) $this->getConfigValue($config_key);
       $modules_list = implode(' ', $modules);
       $result = $this->taskDrush()
-        ->drush($command)
-        ->arg($modules_list)
+        ->drush("$command $modules_list")
         ->run();
       if (!$result->wasSuccessful()) {
         throw new BltException("Could not toggle modules listed in $config_key.");

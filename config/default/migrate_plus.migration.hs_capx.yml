@@ -295,7 +295,7 @@ process:
         value: label/text
     -
       plugin: flatten
-  field_hs_person_department:
+  department:
     -
       plugin: sub_process
       source: department
@@ -303,6 +303,12 @@ process:
         value: department
     -
       plugin: flatten
+  field_hs_person_department:
+    -
+      plugin: null_coalesce
+      source:
+        - '@department'
+        - org_title
     -
       plugin: skip_on_empty
       method: process

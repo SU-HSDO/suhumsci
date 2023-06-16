@@ -297,8 +297,11 @@ process:
       plugin: flatten
   department:
     -
-      plugin: sub_process
+      plugin: skip_on_empty
+      method: process
       source: department
+    -
+      plugin: sub_process
       process:
         value: department
     -

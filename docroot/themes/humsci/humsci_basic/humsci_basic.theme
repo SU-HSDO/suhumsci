@@ -124,6 +124,11 @@ function humsci_basic_preprocess_page(&$vars) {
   if (!isset($vars['node']) && !in_array($route, $layout_routes)) {
     $vars['main_class'] = 'hb-page-width hb-not-layout-builder-main-content';
   }
+
+  // Load the site name out of configuration.
+  $config = \Drupal::config('system.site');
+  $vars['site_name'] = $config->get('name');
+  $vars['site_slogan'] = $config->get('slogan');
 }
 
 /**

@@ -46,7 +46,6 @@ Drupal.behaviors.hsAdmin= {
     const rowWeightsBtn = context.querySelector('.tabledrag-toggle-weight-wrapper .tabledrag-toggle-weight');
    
     if (rowWeightsBtn && rowWeightsBtn.innerText == 'Hide row weights') {
-      console.log('oh hai')
       rowWeightsBtn.setAttribute('style', 'display: inline;');
     }
   }

@@ -1,0 +1,51 @@
+<header id="header" class="su-masthead {{ local_masthead_variant_classname }}">
+  <a href="#main-content" class="su-skiplinks ">{{ 'Skip to main content'|t }}</a>
+
+  {% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/brandbar.html.twig' with { modifier_class : brand_bar_variant_classname } %}
+
+  {% if page.global_message %}
+    <div class="su-global-message hb-position-relative">
+      {{ page.global_message }}
+    </div>
+  {% endif %}
+
+  <section class="hb-page-width hb-position-relative">
+    {% if page.header %}
+      <h1 class="masthead__site-title">{{ site_name }}</h1>
+      {{ page.header }}
+    {% endif %}
+
+    {% if page.search %}
+    <div class="su-site-search" role="search">
+      {{ page.search }}
+    </div>
+    {% endif %}
+
+    {% if page.menu %}
+      {{ page.menu }}
+    {% endif %}
+  </section>
+</header>
+
+{% if page.help or page.highlighted %}
+  <div id="help-region" class="hb-page-width">
+    {{ page.help }}
+    {{ page.highlighted }}
+  </div>
+{% endif %}
+
+<div id="main-content" class="{{ main_class }}">
+  {{ page.content }}
+</div>
+
+{# Local Footer #}
+{% if page.footer %}
+  <div id="footer" class="hb-local-footer {{ local_footer_variant_classname }}">
+    <div class="hb-page-width flex-container flex-container--row-gap">
+      {{ page.footer }}
+    </div>
+  </div>
+{% endif %}
+
+{# Global Footer #}
+{% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/global-footer.html.twig' with { modifier_class : global_footer_variant_classname } %}

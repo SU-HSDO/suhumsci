@@ -5,8 +5,9 @@
  * Contains hs_admin.module.
  */
 
-use Drupal\user\Entity\User;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess_node_edit_form().
@@ -79,4 +80,41 @@ function hs_admin_preprocess_form_element(&$variables) {
   if ($type === 'item' && strtolower($name) === 'meta[published]' && isset($variables['children'])) {
     $variables['children'] = Markup::create('Revisions');
   }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function hs_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  switch ($form_id) {
+    // Improve menu_item form UI and remove unneed elements.
+    case 'node_hs_basic_page_form':
+    case 'node_hs_basic_page_edit_form':
+      // Force a set order of advanced tabs.
+      $form['menu']['#weight'] = -4;
+      $form['author']['#weight'] = -3;
+      $form['promote']['#weight'] = -2;
+      $form['options']['#weight'] = -2;
+      $form['path']['#weight'] = -1;
+      // Set the following tabs to last in sort order.I
+      $form['url_redirects']['#weight'] = 96;
+      $form['rabbit_hole']['#weight'] = 97;
+      $form['xmlsitemap']['#weight'] = 98;
+      $form['meta']['#weight'] = 99;
+      $form['revision']['#weight'] = 100;
+      $form['revision_information']['#weight'] = 100;
+      // Weight is applied to some tabs after build.
+      $form['#after_build'][] = 'hs_admin_form_after_build';
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_after_build().
+ */
+function hs_admin_form_after_build($form, FormStateInterface $form_state) {
+  $form['path']['#weight'] = -1;
+  $form['url_redirects']['#weight'] = 96;
+  return $form;
 }

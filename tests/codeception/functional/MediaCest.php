@@ -14,7 +14,7 @@ class MediaCest {
   public function testDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add');
-    $I->click('Upload File(s)');
+    $I->click('Bulk Upload');
     $I->dropFileInDropzone(__DIR__ . '/test.txt');
     $I->click('Upload');
     $I->fillField('Name', 'Demo Text File');
@@ -30,7 +30,7 @@ class MediaCest {
   public function testBadDocuments(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add');
-    $I->click('Upload File(s)');
+    $I->click('Bulk Upload');
     $I->dropFileInDropzone(__FILE__);
     $I->canSeeElement('.dz-error.dz-complete');
   }
@@ -41,10 +41,11 @@ class MediaCest {
   public function testImages(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/media/add');
-    $I->click('Upload File(s)');
+    $I->click('Bulk Upload');
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
     $I->click('Upload');
     $I->fillField('Name', 'Logo File');
+    $I->click('.claro-details summary');
     $I->uncheckOption('Decorative Image');
     $I->fillField('Alternative text', 'Stanford Logo');
     $I->click('Save');
@@ -68,5 +69,4 @@ class MediaCest {
     $I->click('Save');
     $I->canSee('Test Video has been created.');
   }
-
 }

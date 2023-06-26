@@ -5,6 +5,7 @@
  * Contains hs_admin.module.
  */
 
+use Drupal\user\Entity\User;
 use Drupal\Core\Render\Markup;
 
 /**
@@ -36,10 +37,10 @@ function hs_admin_preprocess_html(&$variables) {
  */
 function hs_admin_toolbar_alter(&$items) {
   $uid = \Drupal::currentUser()->id();
-  $user = \Drupal\user\Entity\User::load($uid);
-  if ($user->hasPermission('hide manage link') && $uid != 1) {
-     unset($items['admin_toolbar_tools']);
-     unset($items['administration']);
+  $user = User::load($uid);
+  if ($user->hasPermission('show manage link') && $uid != 1) {
+    unset($items['admin_toolbar_tools']);
+    unset($items['administration']);
   }
 }
 
@@ -59,7 +60,7 @@ function hs_admin_preprocess_details(&$variables) {
   $expanded = ['menu settings'];
   // Close all sidebar elements if not Menu Settings.
   $title = $variables['title'] ?? '';
-  if (!is_array($title) && in_array(strtolower((string)$title), $expanded, TRUE)) {
+  if (!is_array($title) && in_array(strtolower((string) $title), $expanded, TRUE)) {
     $variables['attributes']['open'] = 'open';
   }
   else {

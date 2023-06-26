@@ -31,11 +31,42 @@ class FlexiblePageCest {
   }
 
   /**
+   * Duplicated paragraphs should have a class available.
+   *
+   * @group paragraphs
+   */
+  public function testDuplicateScroll(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('node/add/hs_basic_page');
+    $node = $I->createEntity([
+      'title' => $this->faker->words(3, TRUE),
+      'type' => 'hs_basic_page',
+    ]);
+    $I->amOnPage($node->toUrl('edit-form')->toString());
+    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
+    $I->click('Add Collection');
+    $I->waitForText('Items Per Row');
+    $I->click('List additional actions', '.paragraphs-subform');
+    $I->click('Add Postcard', '.paragraphs-subform');
+    $I->waitForText('Card Title');
+    $card_title = $this->faker->words(3, TRUE);
+
+    $I->fillField('Card Title', $card_title);
+    $I->cantSeeElement('.hs-duplicated');
+    $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
+    $I->click('Duplicate', '.paragraph-type--hs-postcard');
+    $I->waitForText('Card Title', 10, '.hs-duplicated');
+    $I->canSeeInField('Card Title', $card_title);
+  }
+
+  /**
    * I can create a page with a hero banner.
    */
   public function testHeroParagraph(FunctionalTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
+    // Prevent JS alerts from firing before loading a new page.
+    $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('List additional actions', '#edit-field-hs-page-hero-add-more');
     $I->click('field_hs_page_hero_hs_hero_image_add_more');
@@ -59,9 +90,9 @@ class FlexiblePageCest {
     $I->canSee('Link text');
     $I->cantSee('Overlay Color');
     $I->fillField('field_hs_page_hero[0][subform][field_hs_hero_title][0][value]', 'Overlay Title');
-
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');
@@ -81,6 +112,8 @@ class FlexiblePageCest {
     }
 
     $I->amOnPage('/node/add/hs_basic_page');
+    // Prevent JS alerts from firing before loading a new page.
+    $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
     $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
     $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
@@ -96,6 +129,7 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForElementVisible('.media-library-item__preview img');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');
@@ -107,6 +141,7 @@ class FlexiblePageCest {
     $I->waitForText('Description');
     $I->click('Style');
     $I->selectOption('Display Mode', 'Slideshow');
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('.slick img', 1);
   }
@@ -128,8 +163,8 @@ class FlexiblePageCest {
       $I->seeElement('.hb-main-nav__link');
       $I->click('.hb-main-nav__link');
       echo('If you see this, the menu was open and the link was clicked.');
-
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Do this if it's not present.
       echo('If you see this, the menu needs toggled.');
       $I->click('button.hb-main-nav__toggle');
@@ -145,8 +180,8 @@ class FlexiblePageCest {
       $I->waitForElementVisible('.hb-main-nav__menu-lv2');
       // Click nested menu link if it's already visible.
       $I->click('.hb-main-nav__menu-lv2 a');
-
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Do this if the nested menu link is not already visible.
       echo('If you see this, the nested menu link needs to be opened to click.');
       $I->click('.hb-main-nav__toggle');

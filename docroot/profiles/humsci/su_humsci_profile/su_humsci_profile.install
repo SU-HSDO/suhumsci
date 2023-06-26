@@ -195,3 +195,14 @@ function su_humsci_profile_update_9005() {
   // Install gin toolbar helper module.
   \Drupal::service('module_installer')->install(['gin_toolbar']);
 }
+
+/**
+ * Set show manage menu in toolbar permissions.
+ */
+function su_humsci_profile_update_9006() {
+  $perms = [
+    'show manage link',
+  ];
+  user_role_grant_permissions('administrator', $perms);
+  user_role_grant_permissions('site_manager', $perms);
+}

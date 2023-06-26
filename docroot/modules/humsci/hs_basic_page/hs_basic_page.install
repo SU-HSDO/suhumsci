@@ -18,5 +18,94 @@ function hs_basic_page_install() {
     \Drupal::messenger()
       ->addError(t('Unable to set initial display settings for Basic Page'));
   }
+}
 
+/**
+ * Update fields configuration with paragraphs_browser widget.
+ */
+function hs_basic_page_update_9001() {
+  $themes_to_update = [
+    'humsci_colorful',
+    'humsci_traditional'
+  ];
+  $modules = [
+    'file',
+    'insert',
+    'paragraphs_browser',
+    'path',
+  ];
+  // In stall only on the specified themes.
+  $site_theme = \Drupal::theme()->getActiveTheme()->getName();
+  if (!in_array($site_theme, $themes_to_update, TRUE)) {
+    return;
+  }
+  // Ensure the following dependency modules are installed.
+  foreach ($modules as $module) {
+    if (!(\Drupal::moduleHandler()->moduleExists($module))) {
+      \Drupal::service('module_installer')->install([$module]);
+    }
+  }
+  // The only unique setting per field is 'default_paragraph_type'.
+  $settings = [
+    'edit_mode' => 'closed',
+    'closed_mode' => 'summary',
+    'autocollapse' => 'all',
+    'closed_mode_threshold' => '0',
+    'add_mode' => 'paragraphs_browser',
+    'form_display_mode' => 'default',
+    'features' => [
+      'duplicate' => 'duplicate',
+      'collapse_edit_all' => 'collapse_edit_all',
+      'add_above' => 0,
+    ],
+    'paragraphs_browser' => 'content',
+    'modal_width' => '80%',
+    'modal_height' => 'auto',
+  ];
+
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $basic_form_display */
+  $basic_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_basic_page.default');
+  if (!empty($basic_form_display)) {
+    // Only update 'field_hs_page_components' if it exists.
+    $field_hs_page_components = $basic_form_display->getComponent('field_hs_page_components');
+    if (!empty($field_hs_page_components)) {
+      $settings['default_paragraph_type'] = 'hs_text_area';
+      $basic_form_display->setComponent('field_hs_page_components', [
+        'weight' => $field_hs_page_components['weight'],
+        'region' => $field_hs_page_components['region'],
+        'type' => 'paragraphs_browser',
+        'settings' => $settings,
+      ]);
+    }
+    // Only update 'field_hs_page_hero' if it exists.
+    $field_hs_page_hero = $basic_form_display->getComponent('field_hs_page_hero');
+    if (!empty($field_hs_page_hero)) {
+      $settings['default_paragraph_type'] = '_none';
+      $basic_form_display->setComponent('field_hs_page_hero', [
+        'weight' => $field_hs_page_hero['weight'],
+        'region' => $field_hs_page_hero['region'],
+        'type' => 'paragraphs_browser',
+        'settings' => $settings,
+      ]);
+    }
+    $basic_form_display->save();
+  }
+
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $flexible_form_display */
+  $flexible_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
+  if (!empty($flexible_form_display)) {
+    // Only update 'field_hs_priv_page_components' if it exists.
+    // Basic page field.
+    $field_hs_priv_page_components = $flexible_form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($field_hs_priv_page_components)) {
+      $settings['default_paragraph_type'] = 'field_hs_priv_page_components';
+      $flexible_form_display->setComponent('field_hs_priv_page_components', [
+        'weight' => $field_hs_page_hero['weight'],
+        'region' => $field_hs_page_hero['region'],
+        'type' => 'paragraphs_browser',
+        'settings' => $settings,
+      ]);
+    }
+    $flexible_form_display->save();
+  }
 }

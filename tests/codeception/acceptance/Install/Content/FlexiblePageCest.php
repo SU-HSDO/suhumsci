@@ -32,8 +32,7 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('#edit-field-hs-page-hero-wrapper', 1);
     $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input[type="submit"]', 15);
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->wait(1);
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
     $I->fillField('Search', 'Post Card');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"');
@@ -59,8 +58,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->wait(1);
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
     $I->fillField('Search', 'Accordion');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-accordion"]');
@@ -80,8 +78,7 @@ class FlexiblePageCest {
     $I->logInWithRole('administrator');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Back To Top');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->wait(1);
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
     $I->fillField('Search', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
@@ -105,8 +102,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->wait(1);
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
     $I->fillField('Search', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
@@ -126,8 +122,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->wait(1);
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
     $I->fillField('Search', 'Row');
     $I->click('Add');
@@ -155,8 +150,7 @@ class FlexiblePageCest {
 
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->wait(1);
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
     $I->fillField('Search', 'Collection');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-collection"]');

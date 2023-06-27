@@ -24,7 +24,7 @@ class PrivatePageContentCest{
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $field) {
       $I->click('Add Paragraph', '#edit-field-hs-page-components-add-more-browse');
-      $I->fillField('pb_modal_text', $field);
+      $I->fillField('Search', $field);
       $I->click('Add');
     }
     $I->see('PRIVATE FILE INSERT');

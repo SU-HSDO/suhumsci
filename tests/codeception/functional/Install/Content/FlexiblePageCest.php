@@ -123,8 +123,8 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component');
     $I->waitForText('Browse');
-    $I->fillField('Search', 'Post Card');
-    $I->click('field_hs_page_components_hs_postcard_add_more');
+    $I->fillField('Search', 'Photo Album');
+    $I->click('field_hs_page_components_stanford_gallery_add_more');
     $I->waitForText('Headline');
     $I->fillField('Headline', 'Photo Album Headline');
     $I->click('Add media', '.field--name-su-gallery-images');

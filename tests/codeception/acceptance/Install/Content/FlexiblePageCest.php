@@ -93,7 +93,9 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Text Area');
+    $I->click('Add Component');
+    $I->fillField('Text Area');
+    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->fillField('Text Area', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');
     $I->canSeeInCurrentUrl('/demo-basic-page');

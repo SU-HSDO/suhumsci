@@ -43,12 +43,12 @@ class FlexiblePageCest {
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
+    $I->scrollTo('[data-drupal-selector="edit-field-hs-page-components-add-more-browse"]');
+    $I->click('Add Component', '[data-drupal-selector="edit-field-hs-page-components-add-more-browse"]');
     $I->fillField('Search', 'Collection');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-collection"]');
     $I->waitForText('Items Per Row');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
+    $I->click('Add Component', '[data-drupal-selector="edit-field-hs-page-components-add-more-browse"]');
     $I->fillField('Search', 'Post card');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"]');
     $I->waitForText('Card Title');
@@ -71,7 +71,7 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
+    $I->click('Add Component', '[data-drupal-selector="edit-field-hs-page-components-add-more-browse"]');
     $I->fillField('Search', 'Hero');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-hero-image"]');
     $I->waitForText('No media items are selected');

@@ -146,8 +146,6 @@ class FlexiblePageCest {
     $I->click('Edit', '.tabs');
     $I->click('Edit', '.paragraph-type--stanford-gallery');
     $I->waitForText('Description');
-    $I->click('Style');
-    $I->selectOption('Display Mode', 'Slideshow');
     $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('.slick img', 1);

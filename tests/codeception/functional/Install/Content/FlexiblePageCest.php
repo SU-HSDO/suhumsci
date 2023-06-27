@@ -43,11 +43,14 @@ class FlexiblePageCest {
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
-    $I->click('Add Collection');
+    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
+    $I->fillField('Search', 'Collection');
+    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-collection"]');
     $I->waitForText('Items Per Row');
-    $I->click('List additional actions', '.paragraphs-subform');
-    $I->click('Add Postcard', '.paragraphs-subform');
+    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
+    $I->fillField('Search', 'Post card');
+    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"]');
     $I->waitForText('Card Title');
     $card_title = $this->faker->words(3, TRUE);
 

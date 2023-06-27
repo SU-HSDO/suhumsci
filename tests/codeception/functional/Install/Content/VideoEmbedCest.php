@@ -34,8 +34,9 @@ class VideoEmbedCest {
 
     // Add text field
     $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->fillField('Search', 'Text Area');
-    $I->click('#edit-add-more-button-hs-text-area');
+    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->wait(2);
 
     // Add media

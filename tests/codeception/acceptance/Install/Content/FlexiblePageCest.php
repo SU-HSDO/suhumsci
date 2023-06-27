@@ -34,7 +34,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
-    $I->fillField('pb_modal_text', 'Post Card');
+    $I->fillField('Search', 'Post Card');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"');
     $I->canSee('Card Title');
     $I->canSee('Card Body');
@@ -60,7 +60,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
-    $I->fillField('pb_modal_text', 'Accordion');
+    $I->fillField('Search', 'Accordion');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-accordion"]');
     $I->fillField('Summary', 'Sed augue ipsum egestas nec');
     $I->fillField('Description', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
@@ -104,7 +104,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
-    $I->fillField('pb_modal_text', 'Text Area');
+    $I->fillField('Search', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->fillField('Text Area', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');
@@ -124,7 +124,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->canSee('Browse');
-    $I->fillField('pb_modal_text', 'Row');
+    $I->fillField('Search', 'Row');
     $I->click('Add');
     $I->canSee('Paragraph Style');
     $I->click('Add Text Area');

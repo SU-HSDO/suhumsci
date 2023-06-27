@@ -47,7 +47,7 @@ class FlexiblePageCest {
     $I->click('Add Component');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Collection');
-    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-collection"]');
+    $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
     $I->click('Add Component');
     $I->waitForText('Browse');
@@ -77,7 +77,7 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Hero');
     $I->scrollTo('.field-add-more-submit');
-    $I->click('Add', '.field-add-more-submit');
+    $I->click('field_hs_page_components_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');
     $I->canSee('Overlay Details');
     $I->cantSee('Optionally add some overlay text on top of the image');
@@ -124,7 +124,7 @@ class FlexiblePageCest {
     $I->click('Add Component');
     $I->waitForText('Browse');
     $I->fillField('Search', 'Post Card');
-    $I->click('Add', '[data-drupal-selector="edit-add-more-button-stanford-gallery"]');
+    $I->click('field_hs_page_components_hs_postcard_add_more');
     $I->waitForText('Headline');
     $I->fillField('Headline', 'Photo Album Headline');
     $I->click('Add media', '.field--name-su-gallery-images');
@@ -287,7 +287,7 @@ class FlexiblePageCest {
     $I->click('Add Component');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Vertical Timeline');
-    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-timeline"]');
+    $I->click('field_hs_page_components_hs_timeline_add_more');
     $I->waitForText('Vertical Timeline');
     $I->checkOption('Collapse by default');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');

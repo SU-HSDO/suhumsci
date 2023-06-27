@@ -280,8 +280,9 @@ class FlexiblePageCest {
     $I->logInWithRole('administrator');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
-    $I->click('List additional actions', '[data-drupal-selector="edit-field-hs-page-components-add-more-operations"]');
-    $I->click('field_hs_page_components_hs_timeline_add_more');
+    $I->click('Add Component');
+    $I->fillField('Search', 'Vertical Timeline');
+    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-timeline"]');
     $I->waitForText('Vertical Timeline');
     $I->checkOption('Collapse by default');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');

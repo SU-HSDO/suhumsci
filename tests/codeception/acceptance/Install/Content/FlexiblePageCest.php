@@ -33,7 +33,7 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input[type="submit"]', 15);
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
+    $I->canSee('Browse');
     $I->fillField('pb_modal_text', 'Post Card');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"');
     $I->canSee('Card Title');
@@ -59,7 +59,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
+    $I->canSee('Browse');
     $I->fillField('pb_modal_text', 'Accordion');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-accordion"]');
     $I->fillField('Summary', 'Sed augue ipsum egestas nec');
@@ -79,7 +79,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Back To Top');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
+    $I->canSee('Browse');
     $I->fillField('Search', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->fillField('Text Area',
@@ -103,7 +103,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
+    $I->canSee('Browse');
     $I->fillField('pb_modal_text', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->fillField('Text Area', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
@@ -123,7 +123,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
+    $I->canSee('Browse');
     $I->fillField('pb_modal_text', 'Row');
     $I->click('Add');
     $I->canSee('Paragraph Style');
@@ -151,7 +151,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
+    $I->canSee('Browse');
     $I->fillField('Search', 'Collection');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-collection"]');
     $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);

@@ -76,7 +76,8 @@ class FlexiblePageCest {
     $I->click('Add Component');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Hero');
-    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-hero-image"]');
+    $I->scrollTo('.field-add-more-submit');
+    $I->click('Add', '.field-add-more-submit');
     $I->waitForText('No media items are selected');
     $I->canSee('Overlay Details');
     $I->cantSee('Optionally add some overlay text on top of the image');

@@ -33,10 +33,9 @@ class VideoEmbedCest {
     $I->fillField('Title', $this->faker->words(3, TRUE));
 
     // Add text field
-    $I->scrollTo('#edit-field-hs-page-components-add-more');
-    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
-    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
-    $I->click('#field-hs-page-components-hs-text-area-add-more');
+    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->fillField('Search', 'Text Area');
+    $I->click('#edit-add-more-button-hs-text-area');
     $I->wait(2);
 
     // Add media

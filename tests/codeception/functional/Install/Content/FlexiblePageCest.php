@@ -71,7 +71,7 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
+    $I->click('Add Component');
     $I->fillField('pb_modal_text', 'Hero');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-hero-image"]');
     $I->waitForText('No media items are selected');

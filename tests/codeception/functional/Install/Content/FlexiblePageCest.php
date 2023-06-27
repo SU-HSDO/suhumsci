@@ -117,10 +117,9 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
-    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
-    $I->scrollTo('#field-hs-page-components-stanford-gallery-add-more');
-    $I->click('#field-hs-page-components-stanford-gallery-add-more');
+    $I->click('Add Component');
+    $I->fillField('pb_modal_text', 'Post Card');
+    $I->click('Add', '[data-drupal-selector="edit-add-more-button-stanford-gallery"]');
     $I->waitForText('Headline');
     $I->fillField('Headline', 'Photo Album Headline');
     $I->click('Add media', '.field--name-su-gallery-images');

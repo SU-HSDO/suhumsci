@@ -5,10 +5,10 @@
  * Update functions for hs_paragraph_types module.
  */
 
-use \Drupal\Core\Site\Settings;
-use \Drupal\Core\Config\FileStorage;
-use \Drupal\field\Entity\FieldConfig;
-use \Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Config\FileStorage;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Store image gallery display mode in paragraph variable.
@@ -27,7 +27,7 @@ function hs_paragraph_types_update_9401() {
     FieldConfig::create($field_config)->save();
   }
 
-  // Copy 'display_mode' behavior value to new field in stanford_gallery paragraphs.
+  // Copy 'display_mode' behavior value to new field in stanford_gallery.
   $paragraphs = \Drupal::entityTypeManager()
     ->getStorage('paragraph')
     ->loadByProperties(['type' => 'stanford_gallery']);

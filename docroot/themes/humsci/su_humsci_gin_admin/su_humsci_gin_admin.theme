@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * su_humsci_gin_admin.theme
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_gin_admin_form_node_type_add_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['display']['display_submitted']['#default_value'] = FALSE;
+  $form['menu']['menu_options']['#default_value'] = NULL;
+  unset($form['workflow']['options']['#default_value']['promote']);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_gin_admin_preprocess_page(&$variables) {
+  $portal_routes = ['user.register','user.login'];
+  $current_route = \Drupal::routeMatch()->getRouteName();
+  if (in_array($current_route, $portal_routes)) {
+    $variables['#attached']['library'][] = 'su_humsci_gin_admin/login_portal';
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function su_humsci_gin_admin_preprocess_html(&$vars) {
+  $site_name = \Drupal::config('system.site')->get('name');
+  $site_name_class = preg_replace('/\W+/','-',strtolower(strip_tags($site_name)));
+  $vars['attributes']['class'][] = $site_name_class;
+}

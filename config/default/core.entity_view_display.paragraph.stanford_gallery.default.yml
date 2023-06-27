@@ -11,6 +11,7 @@ dependencies:
     - paragraphs.paragraphs_type.stanford_gallery
   module:
     - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - linkit
@@ -63,13 +64,16 @@ content:
     weight: 0
     region: content
   su_gallery_images:
-    type: media_image_formatter
+    type: media_responsive_image_formatter
     label: hidden
     settings:
       view_mode: caption_credit
       link: false
-      image_style: hs_medium_rectangle_360x250
+      image_style: photo_album_grid
+      remove_alt: 0
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       ds:

@@ -33,7 +33,7 @@ use Acquia\Blt\Robo\Common\EnvironmentDetector;
  *
  * Default value for this setting is shown below.
  */
-# $settings['fast404_exts'] = '/^(?!\/robots)^(?!\/system\/files).*\.(txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
+$settings['fast404_exts'] = '/^(?!\/robots)^(?!\/system\/files).*\.(txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i';
 
 /**
  * Allow anonymous users to hit URLs containing 'styles' even if the file

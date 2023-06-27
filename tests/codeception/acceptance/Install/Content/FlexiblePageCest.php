@@ -33,7 +33,7 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input[type="submit"]', 15);
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component');
-    $I->fillField('Search', 'Post Card');
+    $I->fillField('pb_modal_text', 'Post Card');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"');
     $I->canSee('Card Title');
     $I->canSee('Card Body');
@@ -58,7 +58,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component');
-    $I->fillField('Search', 'Accordion');
+    $I->fillField('pb_modal_text', 'Accordion');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-accordion"]');
     $I->fillField('Summary', 'Sed augue ipsum egestas nec');
     $I->fillField('Description', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
@@ -77,7 +77,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Back To Top');
     $I->click('Add Component');
-    $I->fillField('Search', 'Text Area');
+    $I->fillField('pb_modal_text', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->fillField('Text Area',
 'Sit aliquid minus autem iste labore Quos repellendus voluptas laborum atque incidunt quis. Facilis voluptates nemo ducimus facilis inventore. Fugit quod maiores et placeat modi error Voluptates recusandae facilis minus soluta minima illo Eligendi velit minus animi mollitia quisquam fuga? Ducimus eligendi in praesentium placeat unde Iure totam id inventore doloremque optio Accusamus nesciunt adipisci praesentium provident repellendus Pariatur quam quos dolorem porro rem provident. Natus fuga dolor sunt tenetur debitis? Alias exercitationem fuga impedit nihil facilis ab nam rerum, nam! Minus optio repellendus nesciunt repudiandae maxime. Iure vel sapiente dignissimos accusantium eius Expedita veniam error distinctio deserunt iusto Eius omnis impedit odio delectus recusandae Voluptatum id a repellendus ab illum Labore dignissimos nihil corporis nemo fuga Sit natus odit facilis vitae numquam! Voluptatum doloremque quis voluptate dolorem possimus minus. Iure fuga expedita facilis magni temporibus Delectus odio aliquid at enim fuga? Consequuntur quaerat quia fuga eum earum Accusamus distinctio provident non debitis vero Quos ad a mollitia veritatis natus eius eius. Quisquam ad fugiat rem libero saepe Ipsam nam laboriosam ullam accusamus aspernatur Quasi est fugiat veritatis distinctio facilis Voluptatem enim velit qui maxime culpa mollitia magni Ipsa cupiditate in dolores velit dignissimos nemo. Commodi repellendus officia dolor accusamus');
@@ -100,7 +100,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component');
-    $I->fillField('Search', 'Text Area');
+    $I->fillField('pb_modal_text', 'Text Area');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
     $I->fillField('Text Area', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');

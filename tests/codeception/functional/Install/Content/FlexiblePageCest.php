@@ -45,11 +45,11 @@ class FlexiblePageCest {
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->scrollTo('[data-drupal-selector="edit-field-hs-page-components-add-more-browse"]');
     $I->click('Add Component');
-    $I->fillField('Search', 'Collection');
+    $I->fillField('pb_modal_text', 'Collection');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-collection"]');
     $I->waitForText('Items Per Row');
     $I->click('Add Component');
-    $I->fillField('Search', 'Post card');
+    $I->fillField('pb_modal_text', 'Post card');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-postcard"]');
     $I->waitForText('Card Title');
     $card_title = $this->faker->words(3, TRUE);
@@ -72,7 +72,7 @@ class FlexiblePageCest {
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Add Component');
-    $I->fillField('Search', 'Hero');
+    $I->fillField('pb_modal_text', 'Hero');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-hero-image"]');
     $I->waitForText('No media items are selected');
     $I->canSee('Overlay Details');
@@ -281,7 +281,7 @@ class FlexiblePageCest {
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
     $I->click('Add Component');
-    $I->fillField('Search', 'Vertical Timeline');
+    $I->fillField('pb_modal_text', 'Vertical Timeline');
     $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-timeline"]');
     $I->waitForText('Vertical Timeline');
     $I->checkOption('Collapse by default');

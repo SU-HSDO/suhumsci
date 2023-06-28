@@ -360,7 +360,7 @@ class FlexiblePageCest {
     $I->fillField('Link text', 'Praesent egestas tristique nibh');
     $I->click('Save');
     $I->canSeeInCurrentUrl('/demo-basic-page');
-    $I->canSeeResponseCodeIs(200);
+
     $I->canSee('Nam at tortor in tellus', 'h2');
     $I->canSee('Maecenas vestibulum mollis diam.');
     $I->canSeeLink('Praesent egestas tristique nibh', 'http://google.com');

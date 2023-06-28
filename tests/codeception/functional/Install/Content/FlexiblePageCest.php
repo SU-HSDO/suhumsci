@@ -406,6 +406,8 @@ class FlexiblePageCest {
     $I->click('Layout', '.tabs');
     $I->canSee('Add Block', 'a');
     $I->click('Add block');
+    $I->waitForText('Choose a block');
+    $I->fillField('.js-layout-builder-filter', 'back to top');
     $I->click('Back To Top Block');
     $I->canSee('Configure block');
     $I->click('Add block');

@@ -61,13 +61,13 @@ class FlexiblePageCest {
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
-    $I->click('Add Component');
+    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
     $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
-    $I->click('Add Component');
+    $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Postcard');
     $I->click('field_hs_page_components_hs_postcard_add_more');
@@ -109,7 +109,7 @@ class FlexiblePageCest {
     $I->click('Save and insert');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('logo.jpg');
-    $I->click('[data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
+    $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
     $I->canSee('Body');
     $I->canSee('Link text');
     $I->cantSee('Overlay Color');

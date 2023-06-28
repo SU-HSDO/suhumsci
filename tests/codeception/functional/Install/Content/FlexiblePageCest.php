@@ -384,6 +384,7 @@ class FlexiblePageCest {
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Sed augue ipsum egestas nec');
+    $I->click('Sed augue ipsum egestas nec');
     $I->canSee('Vivamus in erat ut urna cursus vestibulum');
   }
 

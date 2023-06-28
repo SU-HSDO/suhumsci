@@ -148,6 +148,7 @@ class FlexiblePageCest {
     $I->waitForText('Description');
     $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
+    $I->waitForText('Demo Basic Page');
     $I->canSeeNumberOfElements('.slick img', 1);
   }
 

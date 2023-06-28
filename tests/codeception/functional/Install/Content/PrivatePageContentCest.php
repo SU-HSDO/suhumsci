@@ -31,5 +31,5 @@ class PrivatePageContentCest{
   //     $I->click('Add');
   //   }
   //   $I->see('PRIVATE FILE INSERT');
-  }
+  // }
 }

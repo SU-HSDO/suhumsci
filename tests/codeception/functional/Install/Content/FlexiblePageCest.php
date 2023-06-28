@@ -160,7 +160,7 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('#cboxContent img', 0);
 
     $I->click('Edit', '.tabs');
-    $I->click('Edit', '.paragraphs-icon-button-edit');
+    $I->click('field_hs_page_components_1_edit');
     $I->waitForText('Description');
     $I->click('Behavior', '.tabs');
     $I->waitForText('Display Mode');

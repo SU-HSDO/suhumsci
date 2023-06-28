@@ -377,7 +377,7 @@ class FlexiblePageCest {
     $I->click('field_hs_page_components_hs_accordion_add_more');
     $I->waitForText('Summary');
     $I->fillField('Summary', 'Sed augue ipsum egestas nec');
-    $I->fillField('Description', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
+    $I->fillField('ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->canSee('Demo Basic Page', 'h1');

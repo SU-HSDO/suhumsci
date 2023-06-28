@@ -23,6 +23,7 @@ class PrivatePageContentCest{
     $I->amOnPage('/node/add/hs_private_page');
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $field) {
+      $I->scrollTo('#edit-field-hs-priv-page-components-add-more-browse');
       $I->click('Add Paragraph', '#edit-field-hs-priv-page-components-add-more-browse');
       $I->waitForText('Browse');
       $I->fillField('pb_modal_text', $field);

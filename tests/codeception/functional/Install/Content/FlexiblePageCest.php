@@ -446,7 +446,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->fillField('pb_modal_field', 'Collection');
+    $I->fillField('pb_modal_text', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
     $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);

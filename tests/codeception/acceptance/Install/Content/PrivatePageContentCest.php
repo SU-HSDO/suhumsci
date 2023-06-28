@@ -8,11 +8,11 @@
 class PrivatePageContentCest{
 
   private $fieldsToCheck = [
-    'input[value="Add Private Text Area"]',
-    'input[value="Add Private Collection"]',
-    'input[value="Add Spotlight - Slider"]',
-    'input[value="Add Accordion"]',
-    'input[value="Add Postcard"]',
+    'Private Text Area',
+    'Private Collection',
+    'Spotlight - Slider',
+    'Accordion',
+    'Postcard',
   ];
 
   /**
@@ -24,7 +24,7 @@ class PrivatePageContentCest{
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $field) {
       $I->click('Add Paragraph', '#edit-field-hs-priv-page-components-add-more-browse');
-      $I->fillField('Search', $field);
+      $I->fillField('pb_modal_text', $field);
       $I->click('Add');
     }
     $I->see('PRIVATE FILE INSERT');

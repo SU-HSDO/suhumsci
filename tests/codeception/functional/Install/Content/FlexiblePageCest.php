@@ -110,7 +110,7 @@ class FlexiblePageCest {
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('logo.jpg');
     $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
-    $I->canSee('Body');
+    $I->waitForText('Body');
     $I->canSee('Link text');
     $I->cantSee('Overlay Color');
     $I->fillField('field_hs_page_components[1][subform][field_hs_hero_title][0][value]', 'Overlay Title');
@@ -410,7 +410,7 @@ class FlexiblePageCest {
     $I->fillField('.js-layout-builder-filter', 'back to top');
     $I->waitForText('Back To Top Block');
     $I->click('Back To Top Block');
-    $I->canSee('Configure block');
+    $I->waitForText('Configure block');
     $I->click('Add block');
     $I->click('Save layout');
     $I->seeElement('.hs-back-to-top');

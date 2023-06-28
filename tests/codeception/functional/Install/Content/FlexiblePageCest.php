@@ -394,7 +394,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Back To Top');
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->canSee('pbt_modal_text', 'text area');
+    $I->canSee('pb_modal_text', 'text area');
     $I->click('field_hs_page_components_hs_text_area_add_more');
     $I->waitForText('Text format');
     $I->fillField('Text Area',
@@ -419,7 +419,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->fillField('pbt_modal_text', 'text area');
+    $I->fillField('pb_modal_text', 'text area');
     $I->click('field_hs_page_components_hs_text_area_add_more');
     $I->waitForText('Text format');
     $I->fillField('Text Area', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
@@ -446,7 +446,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->fillField('pbt_modal_field', 'Collection');
+    $I->fillField('pb_modal_field', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
     $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);

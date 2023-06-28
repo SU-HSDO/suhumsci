@@ -37,7 +37,7 @@ class VideoEmbedCest {
     $I->click('Add Component');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Text Area');
-    $I->click('Add', '[data-drupal-selector="edit-add-more-button-hs-text-area"]');
+    $I->click('Add', 'field_hs_page_components_hs_text_area_add_more');
     $I->wait(2);
 
     // Add media

@@ -52,6 +52,7 @@ class FlexiblePageCest {
    *
    * @group paragraphs
    */
+  // Error: Add Component was not found
   // public function testDuplicateScroll(FunctionalTester $I) {
   //   $I->logInWithRole('contributor');
   //   $I->amOnPage('node/add/hs_basic_page');
@@ -370,6 +371,7 @@ class FlexiblePageCest {
   /**
    * I can create an accordion on the page.
    */
+  // Error: expand accordion in view
   // public function testAccordion(FunctionalTester $I) {
   //   $I->logInWithRole('contributor');
   //   $I->amOnPage('/node/add/hs_basic_page');

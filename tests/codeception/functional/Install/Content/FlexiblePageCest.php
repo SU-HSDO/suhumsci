@@ -73,7 +73,6 @@ class FlexiblePageCest {
     $I->click('field_hs_page_components_hs_postcard_add_more');
     $I->waitForText('Card Title');
     $card_title = $this->faker->words(3, TRUE);
-
     $I->fillField('Card Title', $card_title);
     $I->cantSeeElement('.hs-duplicated');
     $I->click('Toggle Actions', '.paragraph-type--hs-postcard');

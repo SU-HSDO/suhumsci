@@ -102,7 +102,7 @@ class FlexiblePageCest {
     $I->cantSee('Body');
     $I->cantSee('Link text');
     $I->cantSee('Overlay Color');
-    $I->click('Add Media', '[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-hero-image-open-button"');
+    $I->click('Add Media', 'field_hs_hero_image-media-library-open-button-field_hs_page_components-1-subform');
     $I->waitForText('Drop files here to upload them');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');

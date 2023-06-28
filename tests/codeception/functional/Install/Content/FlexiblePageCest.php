@@ -394,7 +394,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Back To Top');
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->canSee('pb_modal_text', 'text area');
+    $I->fillField('pb_modal_text', 'text area');
     $I->click('field_hs_page_components_hs_text_area_add_more');
     $I->waitForText('Text format');
     $I->fillField('Text Area',

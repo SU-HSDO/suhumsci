@@ -288,7 +288,7 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Vertical Timeline');
     $I->click('field_hs_page_components_hs_timeline_add_more');
-    $I->waitForText('Vertical Timeline');
+    $I->waitForText('Collapse by default');
     $I->checkOption('Collapse by default');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');
     $I->click('.ck-source-editing-button.ck-off ');

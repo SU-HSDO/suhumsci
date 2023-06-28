@@ -32,11 +32,8 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('#edit-field-hs-page-hero-wrapper', 1);
     $I->canSeeNumberOfElements('#edit-field-hs-page-components-add-more input[type="submit"]', 15);
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('#edit-field-hs-page-components-add-more-browse');
-    $I->canSee('Browse');
-    $I->canSee('Search');
-    $I->canSee('Add');
-    $I->click('Add', 'field_hs_page_components_hs_postcard_add_more');
+    $I->selectOption('field_hs_page_components[add_more][add_more_select]', 'Post Card');
+    $I->click('field_hs_page_components_add_more');
     $I->canSee('Card Title');
     $I->canSee('Card Body');
     $I->canSee('Read More Link');

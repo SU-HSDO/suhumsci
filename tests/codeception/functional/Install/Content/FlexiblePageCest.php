@@ -418,7 +418,7 @@ class FlexiblePageCest {
     $I->click('Add block');
     $I->click('Save layout');
     $I->resizeWindow(600, 400);
-    $I->executeJS('window.scrollTo(0,3000);');
+    $I->executeJS('window.scrollTo(0,300000);');
     $I->seeElement('.hs-back-to-top');
   }
 

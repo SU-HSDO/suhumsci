@@ -353,7 +353,7 @@ class FlexiblePageCest {
     $I->canSee('Card Body');
     $I->canSee('Read More Link');
     $I->fillField('Card Title', 'Nam at tortor in tellus');
-    $I->fillField('Card Body', 'Maecenas vestibulum mollis diam.');
+    $I->fillField('.ck-editor__editable_inline', 'Maecenas vestibulum mollis diam.');
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Praesent egestas tristique nibh');
     $I->click('Save');
@@ -456,7 +456,7 @@ class FlexiblePageCest {
     $I->fillField('Text Area', 'Foo Bar Baz');
     $I->click('Add Postcard', '[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-items"]');
     $I->fillField('Card Title', 'Demo card title');
-    $I->fillField('Card Body', 'Bar Foo Baz');
+    $I->fillField('.ck-editor__editable_inline', 'Bar Foo Baz');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Foo Bar Baz', '.item-per-row--2');

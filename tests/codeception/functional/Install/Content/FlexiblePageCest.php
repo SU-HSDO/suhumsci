@@ -101,7 +101,7 @@ class FlexiblePageCest {
     $I->cantSee('Body');
     $I->cantSee('Link text');
     $I->cantSee('Overlay Color');
-    $I->click('field_hs_hero_image-media-library-open-button-field_hs_page_components_1_subform');
+    $I->click('field_hs_hero_image-media-library-open-button-field_hs_page_components-1-subform');
     $I->waitForText('Drop files here to upload them');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');

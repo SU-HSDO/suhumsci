@@ -458,11 +458,13 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);
     $I->selectOption('Items Per Row', 2);
     $I->canSeeOptionIsSelected('Style', '- None -');
-    $I->click('Add Text Area', '[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-items"]');
-    $I->fillField('.ck-editor__editable_inline', 'Foo Bar Baz');
-    $I->click('Add Postcard', '[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-items"]');
+    $I->click('//ul[data-drupal-selector="edit-field-hs-page-components-3-subform-field-hs-collection-items-add-more-operations"]');
+    $I->click('Add Text Area');
+    $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Foo Bar Baz');
+    $I->click('//ul[data-drupal-selector="edit-field-hs-page-components-3-subform-field-hs-collection-items-add-more-operations"]');
+    $I->click('Add Postcard');
     $I->fillField('Card Title', 'Demo card title');
-    $I->fillField('.ck-editor__editable_inline', 'Bar Foo Baz');
+    $I->fillField('.ck-editor__editable_inline:nth-child(2)', 'Bar Foo Baz');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Foo Bar Baz', '.item-per-row--2');

@@ -408,6 +408,7 @@ class FlexiblePageCest {
     $I->click('Add block');
     $I->waitForText('Choose a block');
     $I->fillField('.js-layout-builder-filter', 'back to top');
+    $I->waitForText('Back To Top Block');
     $I->click('Back To Top Block');
     $I->canSee('Configure block');
     $I->click('Add block');

@@ -85,44 +85,44 @@ class FlexiblePageCest {
   /**
    * I can create a page with a hero banner.
    */
-public function testHeroParagraph(FunctionalTester $I) {
-  $I->logInWithRole('contributor');
-  $I->amOnPage('node/add/hs_basic_page');
-  // Prevent JS alerts from firing before loading a new page.
-  $I->executeJS('window.onbeforeunload = undefined;');
-  $I->fillField('Title', 'Demo Basic Page');
-  $I->click('#edit-field-hs-page-components-add-more-browse');
-  $I->waitForText('Browse');
-  $I->fillField('pb_modal_text', 'Hero');
-  $I->scrollTo('.field-add-more-submit');
-  $I->click('field_hs_page_components_hs_hero_image_add_more');
-  $I->waitForText('No media items are selected');
-  $I->canSee('Overlay Details');
-  $I->cantSee('Optionally add some overlay text on top of the image');
-  $I->cantSee('Body');
-  $I->cantSee('Link text');
-  $I->cantSee('Overlay Color');
-  $I->click('field_hs_hero_image-media-library-open-button-field_hs_page_components-1-subform');
-  $I->waitForText('Drop files here to upload them');
-  $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-  $I->click('Upload and Continue');
-  $I->waitForText('Decorative Image');
-  $I->waitForText('Save and insert');
-  $I->click('Save and insert', '.ui-dialog-buttonset');
-  $I->waitForElementNotVisible('.media-library-widget-modal');
-  $I->waitForText('logo.jpg');
-  $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
-  $I->waitForText('Body');
-  $I->canSee('Link text');
-  $I->cantSee('Overlay Color');
-  $I->fillField('field_hs_page_components[1][subform][field_hs_hero_title][0][value]', 'Overlay Title');
-  $I->fillField('URL', 'http://google.com');
-  $I->fillField('Link text', 'Google CTA');
-  $I->click('Save');
-  $I->canSeeNumberOfElements('#main-content img', 1);
-  $I->canSee('Overlay Title');
-  $I->canSee('Google CTA', 'a');
-}
+  public function testHeroParagraph(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('node/add/hs_basic_page');
+    // Prevent JS alerts from firing before loading a new page.
+    $I->executeJS('window.onbeforeunload = undefined;');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Hero');
+    $I->scrollTo('.field-add-more-submit');
+    $I->click('field_hs_page_components_hs_hero_image_add_more');
+    $I->waitForText('No media items are selected');
+    $I->canSee('Overlay Details');
+    $I->cantSee('Optionally add some overlay text on top of the image');
+    $I->cantSee('Body');
+    $I->cantSee('Link text');
+    $I->cantSee('Overlay Color');
+    $I->click('field_hs_hero_image-media-library-open-button-field_hs_page_components-1-subform');
+    $I->waitForText('Drop files here to upload them');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+    $I->click('Upload and Continue');
+    $I->waitForText('Decorative Image');
+    $I->waitForText('Save and insert');
+    $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementNotVisible('.media-library-widget-modal');
+    $I->waitForText('logo.jpg');
+    $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
+    $I->waitForText('Body');
+    $I->canSee('Link text');
+    $I->cantSee('Overlay Color');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_hero_title][0][value]', 'Overlay Title');
+    $I->fillField('URL', 'http://google.com');
+    $I->fillField('Link text', 'Google CTA');
+    $I->click('Save');
+    $I->canSeeNumberOfElements('#main-content img', 1);
+    $I->canSee('Overlay Title');
+    $I->canSee('Google CTA', 'a');
+  }
 
   /**
    * Create a photo album page.

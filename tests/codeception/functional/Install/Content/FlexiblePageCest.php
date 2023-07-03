@@ -186,19 +186,19 @@ class FlexiblePageCest {
     // This try/catch keeps the toggle consistent between environment testing.
     // It will check for the visible element and continue steps for either scenario.
     try {
-      $I->waitForElementVisible('.hb-main-nav__link');
+      $I->waitForElementVisible('.hb-main-nav__button');
       // Continue to do this if it's present.
-      $I->seeElement('.hb-main-nav__link');
-      $I->click('.hb-main-nav__link');
+      $I->seeElement('.hb-main-nav__button');
+      $I->click('.hb-main-nav__button');
       echo('If you see this, the menu was open and the link was clicked.');
     }
     catch (\Exception $e) {
       // Do this if it's not present.
       echo('If you see this, the menu needs toggled.');
       $I->click('button.hb-main-nav__toggle');
-      $I->waitForElementVisible('.hb-main-nav__link');
-      $I->seeElement('.hb-main-nav__link');
-      $I->click('.hb-main-nav__link');
+      $I->waitForElementVisible('.hb-main-nav__button');
+      $I->seeElement('.hb-main-nav__button');
+      $I->click('.hb-main-nav__button');
     }
 
     // This try/catch keeps the toggle consistent between environment testing.
@@ -306,7 +306,7 @@ class FlexiblePageCest {
     $I->logInWithRole('administrator');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
-    $I->click('Add Component');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Vertical Timeline');
     $I->click('field_hs_page_components_hs_timeline_add_more');
@@ -319,8 +319,8 @@ class FlexiblePageCest {
     $I->wait(1);
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][1][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #2 Title');
     $I->click('Save');
-    $I->canSee('Timeline Item #1 Title');
-    $I->canSee('Timeline Item #2 Title');
+    $I->waitForText('Timeline Item #1 Title');
+    $I->waitForText('Timeline Item #2 Title');
 
     // Check aria attributes for first item.
     $this->firstItemAriaPressed = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-pressed');

@@ -49,38 +49,33 @@ class FlexiblePageCest {
 
   /**
    * Duplicated paragraphs should have a class available.
-   *
-   * @group paragraphs
    */
-  // Error: Add Component was not found
-  // public function testDuplicateScroll(FunctionalTester $I) {
-  //   $I->logInWithRole('contributor');
-  //   $I->amOnPage('node/add/hs_basic_page');
-  //   $node = $I->createEntity([
-  //     'title' => $this->faker->words(3, TRUE),
-  //     'type' => 'hs_basic_page',
-  //   ]);
-  //   $I->amOnPage($node->toUrl('edit-form')->toString());
-  //   $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
-  //   $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-  //   $I->waitForText('Browse');
-  //   $I->fillField('pb_modal_text', 'Collection');
-  //   $I->click('field_hs_page_components_hs_collection_add_more');
-  //   $I->waitForText('Items Per Row');
-  //   $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
-  //   $I->click('Add Component', '#edit-field-hs-page-components-add-more-browse');
-  //   $I->waitForText('Browse');
-  //   $I->fillField('pb_modal_text', 'Postcard');
-  //   $I->click('field_hs_page_components_hs_postcard_add_more');
-  //   $I->waitForText('Card Title');
-  //   $card_title = $this->faker->words(3, TRUE);
-  //   $I->fillField('Card Title', $card_title);
-  //   $I->cantSeeElement('.hs-duplicated');
-  //   $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
-  //   $I->click('Duplicate', '.paragraph-type--hs-postcard');
-  //   $I->waitForText('Card Title', 10, '.hs-duplicated');
-  //   $I->canSeeInField('Card Title', $card_title);
-  // }
+  public function testDuplicateScroll(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('node/add/hs_basic_page');
+    $node = $I->createEntity([
+      'title' => $this->faker->words(3, TRUE),
+      'type' => 'hs_basic_page',
+    ]);
+    $I->amOnPage($node->toUrl('edit-form')->toString());
+    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Collection');
+    $I->click('field_hs_page_components_hs_collection_add_more');
+    $I->waitForText('Items Per Row');
+    $I->click('.dropbutton__toggle');
+    $I->scrollTo('.add-more-button-hs-postcard');
+    $I->click('Add Postcard');
+    $I->waitForText('Card Title');
+    $card_title = $this->faker->words(3, TRUE);
+    $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
+    $I->cantSeeElement('.hs-duplicated');
+    $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
+    $I->click('Duplicate', '.paragraph-type--hs-postcard');
+    $I->waitForText('Card Title', 10, '.hs-duplicated');
+    $I->canSeeInField('Card Title', $card_title);
+  }
 
   /**
    * I can create a page with a hero banner.

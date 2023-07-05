@@ -407,7 +407,7 @@ class FlexiblePageCest {
     $I->waitForText('Text format');
     $I->fillField('.ck-editor__editable_inline', $this->faker->paragraphs(4, TRUE));
     $I->click('Save');
-    $I->acceptPopup();
+
     $I->click('Layout', '.tabs');
     $I->scrollTo('.layout-builder__link--add');
     $I->canSee('Add Block', 'a');

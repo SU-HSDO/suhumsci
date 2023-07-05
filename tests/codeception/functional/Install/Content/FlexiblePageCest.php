@@ -395,7 +395,6 @@ class FlexiblePageCest {
   /**
    * I can add a Back To Top Block.
    */
-  // Failed Asserting that an array is not empty when checking for back to top element
   public function testBackToTopExists(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/node/add/hs_basic_page');

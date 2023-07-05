@@ -76,8 +76,6 @@ class PrivatePageContentCest{
 
   /**
    * A private page has certain fields that should be available.
-   *
-   * @group fixme
    */
   public function testPrivatePageContent(FunctionalTester $I){
     $I->logInWithRole('site_manager');

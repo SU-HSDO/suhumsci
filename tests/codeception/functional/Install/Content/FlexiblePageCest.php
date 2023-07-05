@@ -400,11 +400,18 @@ class FlexiblePageCest {
     $I->logInWithRole('administrator');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Back To Top');
-    $I->click('#edit-field-hs-page-components-add-more-browse');
-    $I->waitForText('Browse');
-    $I->fillField('pb_modal_text', 'text area');
-    $I->click('field_hs_page_components_hs_text_area_add_more');
-    $I->waitForText('Text format');
+    try {
+      // Use existing text area component.
+      $I->canSee('Text format');
+    }
+    catch (\Exception $e) {
+      // Add component if does not already exist.
+      $I->click('#edit-field-hs-page-components-add-more-browse');
+      $I->waitForText('Browse');
+      $I->fillField('pb_modal_text', 'text area');
+      $I->click('field_hs_page_components_hs_text_area_add_more');
+      $I->waitForText('Text format');
+    }
     $I->fillField('.ck-editor__editable_inline', $this->faker->paragraphs(4, TRUE));
     $I->click('Save');
 

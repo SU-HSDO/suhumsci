@@ -430,6 +430,7 @@ class FlexiblePageCest {
     $I->wait(1);
     $I->click('Save layout');
     $I->waitForText('Back To Top');
+    $I->executeJS('window.scrollTo(0, document.body.scrollHeight);');
     $I->seeElement('.hs-back-to-top');
   }
 

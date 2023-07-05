@@ -429,22 +429,30 @@ class FlexiblePageCest {
   /**
    * I can create a text area on the page.
    */
-  // Error: Failed asserting that text field is filled (probably a different css selector)
-  // public function testTextArea(FunctionalTester $I) {
-  //   $I->logInWithRole('contributor');
-  //   $I->amOnPage('/node/add/hs_basic_page');
-  //   $I->fillField('Title', 'Demo Basic Page');
-  //   $I->click('#edit-field-hs-page-components-add-more-browse');
-  //   $I->waitForText('Browse');
-  //   $I->fillField('pb_modal_text', 'text area');
-  //   $I->click('field_hs_page_components_hs_text_area_add_more');
-  //   $I->waitForText('Text format');
-  //   $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
-  //   $I->click('Save');
-  //   $I->canSeeInCurrentUrl('/demo-basic-page');
-  //   $I->canSee('Demo Basic Page', 'h1');
-  //   $I->canSee('Vivamus in erat ut urna cursus vestibulum');
-  // }
+  public function testTextArea(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    try {
+      // Use existing text area component.
+      $I->canSee('Text format');
+    }
+    catch (\Exception $e) {
+      // Add component if does not already exist.
+      $I->click('#edit-field-hs-page-components-add-more-browse');
+      $I->waitForText('Browse');
+      $I->fillField('pb_modal_text', 'text area');
+      $I->click('field_hs_page_components_hs_text_area_add_more');
+      $I->waitForText('Text format');
+    }
+    $paragraph = $this->faker->paragraphs(1, TRUE);
+    $I->fillField('.ck-editor__editable_inline', $paragraph);
+    $I->click('Save');
+
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee($paragraph);
+  }
 
 
   /**

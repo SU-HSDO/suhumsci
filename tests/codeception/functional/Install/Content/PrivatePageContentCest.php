@@ -59,22 +59,6 @@ class PrivatePageContentCest{
   }
 
   /**
-   * Disable if components were originally disabled.
-   */
-  public function _after(FunctionalTester $I) {
-    foreach($this->fieldsToCheck as $component => $component_info) {
-      $I->logInWithRole('administrator');
-      $I->amOnPage('/admin/structure/types/manage/hs_private_page/fields/node.hs_private_page.field_hs_priv_page_components');
-      if ($component_info['disable_component']) {
-        $I->uncheckOption($component);
-        $I->click('Save settings');
-        $component_info['disable'] = FALSE;
-      }
-      $this->fieldsToCheck[$component] = $component_info;
-    }
-  }
-
-  /**
    * A private page has certain fields that should be available.
    */
   public function testPrivatePageContent(FunctionalTester $I){

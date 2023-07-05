@@ -412,7 +412,7 @@ class FlexiblePageCest {
       $I->click('field_hs_page_components_hs_text_area_add_more');
       $I->waitForText('Text format');
     }
-    $I->fillField('.ck-editor__editable_inline', $this->faker->paragraphs(4, TRUE));
+    $I->fillField('.ck-editor__editable_inline', $this->faker->paragraphs(10, TRUE));
     $I->click('Save');
 
     $I->click('Layout', '.tabs');
@@ -430,8 +430,7 @@ class FlexiblePageCest {
     $I->wait(1);
     $I->click('Save layout');
     $I->waitForText('Back To Top');
-    $I->resizeWindow(2000, 500);
-    $I->executeJS('window.scrollTo(0, document.body.scrollHeight);');
+    $I->scrollTo('.hb-local-footer');
     $I->seeElement('.hs-back-to-top');
   }
 

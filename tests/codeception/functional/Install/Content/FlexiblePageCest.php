@@ -345,29 +345,28 @@ class FlexiblePageCest {
   /**
    * I can create a postcard on the page.
    */
-  // Error: Card Title changed
-  // public function testPostCard(FunctionalTester $I) {
-  //   $I->logInWithRole('contributor');
-  //   $I->amOnPage('/node/add/hs_basic_page');
-  //   $I->fillField('Title', 'Demo Basic Page');
-  //   $I->click('Add Component');
-  //   $I->waitForText('Browse');
-  //   $I->fillField('pb_modal_text', 'Postcard');
-  //   $I->click('field_hs_page_components_hs_postcard_add_more');
-  //   $I->waitForText('Card Title');
-  //   $I->canSee('Card Body');
-  //   $I->canSee('Read More Link');
-  //   $I->fillField('Card Title', 'Nam at tortor in tellus');
-  //   $I->fillField('.ck-editor__editable_inline', 'Maecenas vestibulum mollis diam.');
-  //   $I->fillField('URL', 'http://google.com');
-  //   $I->fillField('Link text', 'Praesent egestas tristique nibh');
-  //   $I->click('Save');
-  //   $I->canSeeInCurrentUrl('/demo-basic-page');
+  public function testPostCard(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Postcard');
+    $I->click('field_hs_page_components_hs_postcard_add_more');
+    $I->waitForText('Card Title');
+    $I->canSee('Card Body');
+    $I->canSee('Read More Link');
+    $I->fillField('Card Title', 'Nam at tortor in tellus');
+    $I->fillField('.ck-editor__editable_inline', 'Maecenas vestibulum mollis diam.');
+    $I->fillField('URL', 'http://google.com');
+    $I->fillField('Link text', 'Praesent egestas tristique nibh');
+    $I->click('Save');
 
-  //   $I->canSee('Nam at tortor in tellus', 'h2');
-  //   $I->canSee('Maecenas vestibulum mollis diam.');
-  //   $I->canSeeLink('Praesent egestas tristique nibh', 'http://google.com');
-  // }
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->waitForText('Nam at tortor in tellus');
+    $I->waitForText('Maecenas vestibulum mollis diam.');
+    $I->seeElement(Locator::href('http://google.com'));
+  }
 
   /**
    * I can create an accordion on the page.

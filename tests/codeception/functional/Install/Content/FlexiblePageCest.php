@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Util\Locator;
 use Faker\Factory;
 
 /**

@@ -430,7 +430,9 @@ class FlexiblePageCest {
     $I->wait(1);
     $I->click('Save layout');
     $I->waitForText('Back To Top');
-    $I->scrollTo('.hb-local-footer');
+    $I->executeJS('window.scrollTo(0,document.body.scrollHeight);');
+    // Scroll takes too long in circle ci.
+    $I->wait(1);
     $I->seeElement('.hs-back-to-top');
   }
 

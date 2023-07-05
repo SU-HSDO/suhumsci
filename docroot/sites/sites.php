@@ -104,6 +104,7 @@ $sites['researchadmin-humsci.stanford.edu'] = 'researchadmin_humsci2022';
 $sites['insidehs.stanford.edu'] = 'insidehs2023';
 $sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
 $sites['popstudies.stanford.edu'] = 'popstudies2023';
+$sites['mcs.stanford.edu'] = 'mcs2023';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

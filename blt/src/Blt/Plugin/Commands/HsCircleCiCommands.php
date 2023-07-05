@@ -109,20 +109,20 @@ class HsCircleCiCommands extends BltTasks {
     $this->setVersions($new_version);
 
     $new_branch = "$new_version-release";
-    // Create the new release branch in github.
-    $this->taskGitStack()
-      ->checkout("-b $new_branch")
-      ->run();
+    $message = "$new_version Release" . PHP_EOL . PHP_EOL . '# DO NOT DELETE';
 
-    $this->taskGitStack()
+    // Create the new release branch in Github.
+    $tasks[] = $this->taskGitStack()
+      ->checkout("-b $new_branch");
+
+    $tasks[] = $this->taskGitStack()
       ->add('-A')
       ->commit("$new_version")
-      ->push('origin', $new_branch)
-      ->run();
+      ->push('origin', $new_branch);
+    $tasks[] = $this->taskExec("gh pr create -B develop -b '$message' -f");
+    $tasks[] = $this->blt()->arg('deploy');
 
-    $message = "$new_version Release" . PHP_EOL . PHP_EOL . '# DO NOT DELETE';
-    $this->taskExec("gh pr create -B develop -b '$message' -f")
-      ->run();
+    $this->collectionBuilder()->addTaskList($tasks)->run();
   }
 
   /**

@@ -153,7 +153,7 @@ class FlexiblePageCest {
     $I->click('#field-hs-page-components-add-more-wrapper > ul:nth-child(1) > li:nth-child(2)');
     $I->waitForText('Display Mode');
     $I->click('Save');
-    $I->acceptPopup();
+
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');
     $I->canSeeNumberOfElements('.su-gallery-images img', 1);
@@ -373,24 +373,24 @@ class FlexiblePageCest {
    * I can create an accordion on the page.
    */
   // Error: expand accordion in view
-  // public function testAccordion(FunctionalTester $I) {
-  //   $I->logInWithRole('contributor');
-  //   $I->amOnPage('/node/add/hs_basic_page');
-  //   $I->fillField('Title', 'Demo Basic Page');
-  //   $I->click('#edit-field-hs-page-components-add-more-browse');
-  //   $I->waitForText('Browse');
-  //   $I->fillField('pb_modal_text', 'accordion');
-  //   $I->click('field_hs_page_components_hs_accordion_add_more');
-  //   $I->waitForText('Summary');
-  //   $I->fillField('Summary', 'Sed augue ipsum egestas nec');
-  //   $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
-  //   $I->click('Save');
-  //   $I->canSeeInCurrentUrl('/demo-basic-page');
-  //   $I->canSee('Demo Basic Page', 'h1');
-  //   $I->canSee('Sed augue ipsum egestas nec');
-  //   $I->click('Sed augue ipsum egestas nec');
-  //   $I->canSee('Vivamus in erat ut urna cursus vestibulum');
-  // }
+  public function testAccordion(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'accordion');
+    $I->click('field_hs_page_components_hs_accordion_add_more');
+    $I->waitForText('Summary');
+    $I->fillField('Summary', 'Sed augue ipsum egestas nec');
+    $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
+    $I->click('Save');
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee('Sed augue ipsum egestas nec');
+    $I->click('.field-hs-accordion-summary');
+    $I->canSee('Vivamus in erat ut urna cursus vestibulum');
+  }
 
   /**
    * I can add a Back To Top Block.

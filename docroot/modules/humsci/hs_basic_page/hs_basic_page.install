@@ -94,12 +94,12 @@ function hs_basic_page_update_9001() {
   /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $flexible_form_display */
   $flex_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
   if (!empty($flex_form_display)) {
-    // Only update 'hs_privpage_componts' if it exists.
+    // Only update 'field_hs_priv_page_components' if it exists.
     // Basic page field.
-    $hs_privpage_componts = $flex_form_display->getComponent('hs_privpage_componts');
-    if (!empty($hs_privpage_componts)) {
-      $settings['default_paragraph_type'] = 'hs_privpage_componts';
-      $flex_form_display->setComponent('hs_privpage_componts', [
+    $field_hs_priv_page_components = $flex_form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($field_hs_priv_page_components)) {
+      $settings['default_paragraph_type'] = 'field_hs_priv_page_components';
+      $flex_form_display->setComponent('field_hs_priv_page_components', [
         'weight' => $field_hs_page_hero['weight'],
         'region' => $field_hs_page_hero['region'],
         'type' => 'paragraphs_browser',

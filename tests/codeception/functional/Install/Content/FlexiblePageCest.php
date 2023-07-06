@@ -233,7 +233,8 @@ class FlexiblePageCest {
   /**
    * I can create a page with a spotlight slider.
    */
-  // Error: Adding second spotlight element to slider causes local and
+  // TODO: Investigate Test Hang
+  // Adding second spotlight element to slider causes local and
   // circleci instances to hang.
   // public function testSpotlightSlider(FunctionalTester $I) {
   //   $I->logInWithRole('administrator');

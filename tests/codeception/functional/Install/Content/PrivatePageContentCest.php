@@ -67,7 +67,7 @@ class PrivatePageContentCest{
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $component => $component_info) {
       $I->scrollTo('.field--name-field-priv-wysiwyg-files');
-      $I->click('#edit-field-hs-priv-page-components-add-more-browse');
+      $I->click('Add Paragraph');
       $I->waitForText('Browse');
       $I->fillField('pb_modal_text', $component);
       $I->click($component_info['component_button_name']);

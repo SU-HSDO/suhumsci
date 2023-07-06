@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Provides a h&amp;s entities entity type.
+ * Provides a humsci entity entity type.
  */
 
 use Drupal\Core\Render\Element;
-use Drupal\hs_entities\Entity\HsEntities;
+use Drupal\hs_entities\Entity\HsEntity;
 use Drupal\user\UserInterface;
 
 /**
@@ -14,24 +14,24 @@ use Drupal\user\UserInterface;
  */
 function hs_entities_theme() {
   return [
-    'hs_entities' => [
+    'hs_entity' => [
       'render element' => 'elements',
     ],
   ];
 }
 
 /**
- * Prepares variables for h&amp;s entities templates.
+ * Prepares variables for humsci entity templates.
  *
- * Default template: hs-entities.html.twig.
+ * Default template: hs-entity.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the h&amp;s entities information and any
+ *   - elements: An associative array containing the humsci entity information and any
  *     fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_hs_entities(array &$variables) {
+function template_preprocess_hs_entity(array &$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -44,27 +44,27 @@ function template_preprocess_hs_entities(array &$variables) {
 function hs_entities_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      // Unpublish h&amp;s entitiess.
-      $storage = \Drupal::entityTypeManager()->getStorage('hs_entities');
-      $hs_entities_ids = $storage->getQuery()
+      // Unpublish humsci entities.
+      $storage = \Drupal::entityTypeManager()->getStorage('hs_entity');
+      $hs_entity_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->condition('status', 1)
         ->execute();
-      foreach ($storage->loadMultiple($hs_entities_ids) as $hs_entities) {
-        $hs_entities->set('status', FALSE);
-        $hs_entities->save();
+      foreach ($storage->loadMultiple($hs_entity_ids) as $hs_entity) {
+        $hs_entity->set('status', FALSE);
+        $hs_entity->save();
       }
       break;
 
     case 'user_cancel_reassign':
-      // Anonymize h&amp;s entitiess.
-      $storage = \Drupal::entityTypeManager()->getStorage('hs_entities');
-      $hs_entities_ids = $storage->getQuery()
+      // Anonymize humsci entities.
+      $storage = \Drupal::entityTypeManager()->getStorage('hs_entity');
+      $hs_entity_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->execute();
-      foreach ($storage->loadMultiple($hs_entities_ids) as $hs_entities) {
-        $hs_entities->setOwnerId(0);
-        $hs_entities->save();
+      foreach ($storage->loadMultiple($hs_entity_ids) as $hs_entity) {
+        $hs_entity->setOwnerId(0);
+        $hs_entity->save();
       }
       break;
   }
@@ -74,19 +74,19 @@ function hs_entities_user_cancel($edit, UserInterface $account, $method) {
  * Implements hook_ENTITY_TYPE_predelete() for user entities.
  */
 function hs_entities_user_predelete(UserInterface $account) {
-  // Delete h&amp;s entitiess.
-  $storage = \Drupal::entityTypeManager()->getStorage('hs_entities');
-  $hs_entities_ids = $storage->getQuery()
+  // Delete humsci entities.
+  $storage = \Drupal::entityTypeManager()->getStorage('hs_entity');
+  $hs_entity_ids = $storage->getQuery()
     ->condition('uid', $account->id())
     ->execute();
-  $hs_entitiess = $storage->loadMultiple($hs_entities_ids);
-  $storage->delete($hs_entitiess);
+  $hs_entities = $storage->loadMultiple($hs_entity_ids);
+  $storage->delete($hs_entities);
   // Delete old revisions.
-  $hs_entities_ids = $storage->getQuery()
+  $hs_entity_ids = $storage->getQuery()
     ->allRevisions()
     ->condition('uid', $account->id())
     ->execute();
-  foreach (array_keys($hs_entities_ids) as $revision_id) {
+  foreach (array_keys($hs_entity_ids) as $revision_id) {
     $storage->deleteRevision($revision_id);
   }
 }

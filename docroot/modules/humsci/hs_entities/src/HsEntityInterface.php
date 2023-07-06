@@ -7,8 +7,8 @@ use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
- * Provides an interface defining a h&amp;s entities entity type.
+ * Provides an interface defining a humsci entity entity type.
  */
-interface HsEntitiesInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
+interface HsEntityInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
 }

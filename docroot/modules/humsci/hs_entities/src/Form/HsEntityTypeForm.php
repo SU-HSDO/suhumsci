@@ -7,9 +7,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form handler for h&amp;s entities type forms.
+ * Form handler for humsci entity type forms.
  */
-class HsEntitiesTypeForm extends BundleEntityFormBase {
+class HsEntityTypeForm extends BundleEntityFormBase {
 
   /**
    * {@inheritdoc}
@@ -19,14 +19,14 @@ class HsEntitiesTypeForm extends BundleEntityFormBase {
 
     $entity_type = $this->entity;
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('Edit %label h&amp;s entities type', ['%label' => $entity_type->label()]);
+      $form['#title'] = $this->t('Edit %label humsci entity type', ['%label' => $entity_type->label()]);
     }
 
     $form['label'] = [
       '#title' => $this->t('Label'),
       '#type' => 'textfield',
       '#default_value' => $entity_type->label(),
-      '#description' => $this->t('The human-readable name of this h&amp;s entities type.'),
+      '#description' => $this->t('The human-readable name of this humsci entity type.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
@@ -36,10 +36,10 @@ class HsEntitiesTypeForm extends BundleEntityFormBase {
       '#default_value' => $entity_type->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => [
-        'exists' => ['Drupal\hs_entities\Entity\HsEntitiesType', 'load'],
+        'exists' => ['Drupal\hs_entities\Entity\HsEntityType', 'load'],
         'source' => ['label'],
       ],
-      '#description' => $this->t('A unique machine-readable name for this h&amp;s entities type. It must only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name for this humsci entity type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
 
     return $this->protectBundleIdElement($form);
@@ -50,8 +50,8 @@ class HsEntitiesTypeForm extends BundleEntityFormBase {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Save h&amp;s entities type');
-    $actions['delete']['#value'] = $this->t('Delete h&amp;s entities type');
+    $actions['submit']['#value'] = $this->t('Save humsci entity type');
+    $actions['delete']['#value'] = $this->t('Delete humsci entity type');
     return $actions;
   }
 
@@ -68,10 +68,10 @@ class HsEntitiesTypeForm extends BundleEntityFormBase {
 
     $t_args = ['%name' => $entity_type->label()];
     if ($status == SAVED_UPDATED) {
-      $message = $this->t('The h&amp;s entities type %name has been updated.', $t_args);
+      $message = $this->t('The humsci entity type %name has been updated.', $t_args);
     }
     elseif ($status == SAVED_NEW) {
-      $message = $this->t('The h&amp;s entities type %name has been added.', $t_args);
+      $message = $this->t('The humsci entity type %name has been added.', $t_args);
     }
     $this->messenger()->addStatus($message);
 

@@ -6,9 +6,9 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form controller for the h&amp;s entities entity edit forms.
+ * Form controller for the humsci entity entity edit forms.
  */
-class HsEntitiesForm extends ContentEntityForm {
+class HsEntityForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
@@ -26,17 +26,17 @@ class HsEntitiesForm extends ContentEntityForm {
 
     switch ($result) {
       case SAVED_NEW:
-        $this->messenger()->addStatus($this->t('New h&amp;s entities %label has been created.', $message_arguments));
-        $this->logger('hs_entities')->notice('Created new h&amp;s entities %label', $logger_arguments);
+        $this->messenger()->addStatus($this->t('New humsci entity %label has been created.', $message_arguments));
+        $this->logger('hs_entities')->notice('Created new humsci entity %label', $logger_arguments);
         break;
 
       case SAVED_UPDATED:
-        $this->messenger()->addStatus($this->t('The h&amp;s entities %label has been updated.', $message_arguments));
-        $this->logger('hs_entities')->notice('Updated h&amp;s entities %label.', $logger_arguments);
+        $this->messenger()->addStatus($this->t('The humsci entity %label has been updated.', $message_arguments));
+        $this->logger('hs_entities')->notice('Updated humsci entity %label.', $logger_arguments);
         break;
     }
 
-    $form_state->setRedirect('entity.hs_entities.canonical', ['hs_entities' => $entity->id()]);
+    $form_state->setRedirect('entity.hs_entity.canonical', ['hs_entity' => $entity->id()]);
 
     return $result;
   }

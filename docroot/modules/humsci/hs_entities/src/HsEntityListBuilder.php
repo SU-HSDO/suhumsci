@@ -10,9 +10,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a list controller for the h&amp;s entities entity type.
+ * Provides a list controller for the humsci entity entity type.
  */
-class HsEntitiesListBuilder extends EntityListBuilder {
+class HsEntityListBuilder extends EntityListBuilder {
 
   /**
    * The date formatter service.
@@ -22,7 +22,7 @@ class HsEntitiesListBuilder extends EntityListBuilder {
   protected $dateFormatter;
 
   /**
-   * Constructs a new HsEntitiesListBuilder object.
+   * Constructs a new HsEntityListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
@@ -59,7 +59,7 @@ class HsEntitiesListBuilder extends EntityListBuilder {
       ->count()
       ->execute();
 
-    $build['summary']['#markup'] = $this->t('Total h&amp;s entitiess: @total', ['@total' => $total]);
+    $build['summary']['#markup'] = $this->t('Total humsci entities: @total', ['@total' => $total]);
     return $build;
   }
 
@@ -80,7 +80,7 @@ class HsEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\hs_entities\HsEntitiesInterface $entity */
+    /** @var \Drupal\hs_entities\HsEntityInterface $entity */
     $row['id'] = $entity->id();
     $row['label'] = $entity->toLink();
     $row['status'] = $entity->get('status')->value ? $this->t('Enabled') : $this->t('Disabled');

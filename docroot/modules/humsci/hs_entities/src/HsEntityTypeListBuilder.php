@@ -7,11 +7,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 
 /**
- * Defines a class to build a listing of h&amp;s entities type entities.
+ * Defines a class to build a listing of humsci entity type entities.
  *
- * @see \Drupal\hs_entities\Entity\HsEntitiesType
+ * @see \Drupal\hs_entities\Entity\HsEntityType
  */
-class HsEntitiesTypeListBuilder extends ConfigEntityListBuilder {
+class HsEntityTypeListBuilder extends ConfigEntityListBuilder {
 
   /**
    * {@inheritdoc}
@@ -41,8 +41,8 @@ class HsEntitiesTypeListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
 
     $build['table']['#empty'] = $this->t(
-      'No h&amp;s entities types available. <a href=":link">Add h&amp;s entities type</a>.',
-      [':link' => Url::fromRoute('entity.hs_entities_type.add_form')->toString()]
+      'No humsci entity types available. <a href=":link">Add humsci entity type</a>.',
+      [':link' => Url::fromRoute('entity.hs_entity_type.add_form')->toString()]
     );
 
     return $build;

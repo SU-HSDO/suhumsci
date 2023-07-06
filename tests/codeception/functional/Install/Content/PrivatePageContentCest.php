@@ -67,14 +67,10 @@ class PrivatePageContentCest{
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $component => $component_info) {
       $I->scrollTo('.field--name-field-priv-wysiwyg-files');
-      if ($component === 'Private Collection') {
-        $I->click('Add ' . $component);
-      }
-      else {
-        $I->click(Locator::elementAt('.dropbutton__toggle', -1));
-        $I->wait(1);
-        $I->click($component_info['component_button_name']);
-      }
+      $I->click('#edit-field-hs-page-components-add-more-browse');
+      $I->waitForText('Browse');
+      $I->fillField('pb_modal_text', $component);
+      $I->click($component_info['component_button_name']);
       $I->waitForText($component_info['component_text']);
     }
     $I->see('PRIVATE FILE INSERT');

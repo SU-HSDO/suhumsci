@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Provides a h&amp;s entities entity type.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\hs_entities\Entity\HsEntities;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function hs_entities_theme() {
+  return [
+    'hs_entities' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for h&amp;s entities templates.
+ *
+ * Default template: hs-entities.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the h&amp;s entities information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_hs_entities(array &$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function hs_entities_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish h&amp;s entitiess.
+      $storage = \Drupal::entityTypeManager()->getStorage('hs_entities');
+      $hs_entities_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->execute();
+      foreach ($storage->loadMultiple($hs_entities_ids) as $hs_entities) {
+        $hs_entities->set('status', FALSE);
+        $hs_entities->save();
+      }
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize h&amp;s entitiess.
+      $storage = \Drupal::entityTypeManager()->getStorage('hs_entities');
+      $hs_entities_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->execute();
+      foreach ($storage->loadMultiple($hs_entities_ids) as $hs_entities) {
+        $hs_entities->setOwnerId(0);
+        $hs_entities->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function hs_entities_user_predelete(UserInterface $account) {
+  // Delete h&amp;s entitiess.
+  $storage = \Drupal::entityTypeManager()->getStorage('hs_entities');
+  $hs_entities_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->execute();
+  $hs_entitiess = $storage->loadMultiple($hs_entities_ids);
+  $storage->delete($hs_entitiess);
+  // Delete old revisions.
+  $hs_entities_ids = $storage->getQuery()
+    ->allRevisions()
+    ->condition('uid', $account->id())
+    ->execute();
+  foreach (array_keys($hs_entities_ids) as $revision_id) {
+    $storage->deleteRevision($revision_id);
+  }
+}

@@ -1,0 +1,29 @@
+uuid: 0486bbd8-0d21-45b2-bf2a-ea1d03426119
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.hs_entity.field_category_terms
+    - hs_entities.hs_entity_type.hs_entity_news_rss
+    - taxonomy.vocabulary.hs_news_categories
+id: hs_entity.hs_entity_news_rss.field_category_terms
+field_name: field_category_terms
+entity_type: hs_entity
+bundle: hs_entity_news_rss
+label: 'Category Terms'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_news_categories: hs_news_categories
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

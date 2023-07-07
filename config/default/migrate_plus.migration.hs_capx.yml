@@ -108,8 +108,8 @@ source:
       selector: education
     -
       name: department
-      label: Departement
-      selector: academicOffices/0/department
+      label: Department
+      selector: academicOffices
     -
       name: cv_document
       label: 'CV Document'
@@ -298,17 +298,33 @@ process:
   department:
     -
       plugin: skip_on_empty
-      source: department
       method: process
+      source: department
+    -
+      plugin: sub_process
+      process:
+        value: department
+    -
+      plugin: flatten
+  orgTitle:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: org_title
+    -
+      plugin: explode
+      delimiter: '|/'
   field_hs_person_department:
     -
       plugin: null_coalesce
       source:
         - '@department'
-        - org_title
+        - '@orgTitle'
     -
       plugin: skip_on_empty
       method: process
+    -
+      plugin: multiple_values
     -
       plugin: entity_generate
       entity_type: taxonomy_term

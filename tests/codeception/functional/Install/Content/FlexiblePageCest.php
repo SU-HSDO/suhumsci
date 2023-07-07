@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Util\Locator;
 use Faker\Factory;
 
 /**
@@ -8,6 +9,8 @@ use Faker\Factory;
  * @group install
  */
 class FlexiblePageCest {
+
+  protected $disableCollection = FALSE;
 
   /**
    * Faker service.
@@ -30,10 +33,23 @@ class FlexiblePageCest {
     $I->resizeWindow(2000, 1400);
   }
 
+
+  /**
+   * Disable the collection if it was originally disabled.
+   */
+  public function _after(FunctionalTester $I) {
+    if ($this->disableCollection) {
+      $I->amOnPage('/user/logout');
+      $I->logInWithRole('administrator');
+      $I->amOnPage('/admin/structure/types/manage/hs_basic_page/fields/node.hs_basic_page.field_hs_page_components');
+      $I->checkOption('Collection');
+      $I->click('Save settings');
+      $this->disableCollection = FALSE;
+    }
+  }
+
   /**
    * Duplicated paragraphs should have a class available.
-   *
-   * @group paragraphs
    */
   public function testDuplicateScroll(FunctionalTester $I) {
     $I->logInWithRole('contributor');
@@ -43,15 +59,18 @@ class FlexiblePageCest {
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
-    $I->click('Add Collection');
+    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Collection');
+    $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
-    $I->click('List additional actions', '.paragraphs-subform');
-    $I->click('Add Postcard', '.paragraphs-subform');
+    $I->click('.dropbutton__toggle');
+    $I->scrollTo('.add-more-button-hs-postcard');
+    $I->click('Add Postcard');
     $I->waitForText('Card Title');
     $card_title = $this->faker->words(3, TRUE);
-
-    $I->fillField('Card Title', $card_title);
+    $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
     $I->cantSeeElement('.hs-duplicated');
     $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
     $I->click('Duplicate', '.paragraph-type--hs-postcard');
@@ -68,31 +87,33 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('List additional actions', '#edit-field-hs-page-hero-add-more');
-    $I->click('field_hs_page_hero_hs_hero_image_add_more');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Hero');
+    $I->scrollTo('.field-add-more-submit');
+    $I->click('field_hs_page_components_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');
     $I->canSee('Overlay Details');
     $I->cantSee('Optionally add some overlay text on top of the image');
     $I->cantSee('Body');
     $I->cantSee('Link text');
     $I->cantSee('Overlay Color');
-    $I->click('Add media', '.paragraph-type--hs-hero-image');
-    $I->waitForText('Add or select media');
+    $I->click('field_hs_hero_image-media-library-open-button-field_hs_page_components-1-subform');
+    $I->waitForText('Drop files here to upload them');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
     $I->waitForText('Decorative Image');
+    $I->waitForText('Save and insert');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
-    $I->waitForText('The maximum number of media items have been selected');
-    $I->click('.paragraph-type--hs-hero-image summary');
-    $I->canSee('Optionally add some overlay text on top of the image');
-    $I->canSee('Body');
+    $I->waitForText('logo.jpg');
+    $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
+    $I->waitForText('Body');
     $I->canSee('Link text');
     $I->cantSee('Overlay Color');
-    $I->fillField('field_hs_page_hero[0][subform][field_hs_hero_title][0][value]', 'Overlay Title');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_hero_title][0][value]', 'Overlay Title');
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
-    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSeeNumberOfElements('#main-content img', 1);
     $I->canSee('Overlay Title');
@@ -115,10 +136,10 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
-    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
-    $I->scrollTo('#field-hs-page-components-stanford-gallery-add-more');
-    $I->click('#field-hs-page-components-stanford-gallery-add-more');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('Search', 'Photo Album');
+    $I->click('field_hs_page_components_stanford_gallery_add_more');
     $I->waitForText('Headline');
     $I->fillField('Headline', 'Photo Album Headline');
     $I->click('Add media', '.field--name-su-gallery-images');
@@ -130,19 +151,26 @@ class FlexiblePageCest {
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForElementVisible('.media-library-item__preview img');
     $I->executeJS('window.scrollTo(0,0);');
+    $I->click('#field-hs-page-components-add-more-wrapper > ul:nth-child(1) > li:nth-child(2)');
+    $I->waitForText('Display Mode');
     $I->click('Save');
+
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');
     $I->canSeeNumberOfElements('.su-gallery-images img', 1);
     $I->canSeeNumberOfElements('#cboxContent img', 0);
-
+    $I->waitForText('Edit');
     $I->click('Edit', '.tabs');
-    $I->click('Edit', '.paragraph-type--stanford-gallery');
+    $I->click('field_hs_page_components_1_edit');
     $I->waitForText('Description');
-    $I->click('Style');
+    $I->canSee('Behavior');
+    // Behavior tab is not interactable, use xpath instead.
+    $I->click('(//a[@href="#field-hs-page-components-values"])[2]');
+    $I->waitForText('Display Mode');
     $I->selectOption('Display Mode', 'Slideshow');
     $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
+    $I->waitForText('Demo Basic Page');
     $I->canSeeNumberOfElements('.slick img', 1);
   }
 
@@ -205,70 +233,83 @@ class FlexiblePageCest {
   /**
    * I can create a page with a spotlight slider.
    */
+  // TODO: Investigate Test Hang
+  // Adding second spotlight element to slider causes local and
+  // circleci instances to hang.
   // public function testSpotlightSlider(FunctionalTester $I) {
-    // $I->logInWithRole('contributor');
-    // $I->amOnPage('node/add/hs_basic_page');
-    // $I->fillField('Title', $this->faker->words(3, TRUE));
-    // $I->click('List additional actions', '#edit-field-hs-page-hero-add-more');
-    // $I->click('field_hs_page_hero_hs_sptlght_slder_add_more');
-    // $I->waitForText('No media items are selected');
-    // $I->canSee('Title');
-    // $I->canSee('Height');
-    // $I->canSee('Background Color');
-    // $I->canSee('Image Alignment');
-    // $I->canSee('Body');
+  //   $I->logInWithRole('administrator');
+  //   $I->amOnPage('/admin/structure/types/manage/hs_basic_page/fields/node.hs_basic_page.field_hs_page_components');
+  //   $this->disableCollection = (bool) $I->grabAttributeFrom('[name="settings[handler_settings][target_bundles_drag_drop][hs_sptlght_slder][enabled]"]', 'checked');
+  //   if ($this->disableCollection) {
+  //     $I->uncheckOption('Spotlight - Slider');
+  //     $I->click('Save settings');
+  //   }
 
-    // Populating spotlight #1.
-    // $I->click('Add media', '.paragraph-type--hs-sptlght-slder');
-    // $I->waitForText('Add or select media');
-    // $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-    // $I->click('Upload and Continue');
-    // $I->waitForText('Decorative Image');
-    // $I->click('Save and insert', '.ui-dialog-buttonset');
-    // $I->waitForElementNotVisible('.media-library-widget-modal');
-    // $I->waitForText('The maximum number of media items have been selected');
-    // $I->waitForText('HTML');
-    // $I->click('.ck-source-editing-button.ck-off');
-    // $I->fillField('.ck-source-editing-area textarea', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
-    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
-    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
-    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
+  //   $I->logInWithRole('contributor');
+  //   $I->amOnPage('node/add/hs_basic_page');
+  //   $I->fillField('Title', $this->faker->words(3, TRUE));
+  //   $I->click('#edit-field-hs-page-components-add-more-browse');
+  //   $I->waitForText('Browse');
+  //   $I->fillField('pb_modal_text', 'Spotlight - Slider');
+  //   $I->click('field_hs_page_components_hs_sptlght_slder_add_more');
+  //   $I->waitForText('No media items are selected');
+  //   $I->canSee('Title');
+  //   $I->canSee('Height');
+  //   $I->canSee('Background Color');
+  //   $I->canSee('Image Alignment');
+  //   $I->canSee('Body');
 
-    // Populating spotlight #2.
-    // $I->scrollTo('.paragraphs-add-wrapper');
-    // $I->click('Add Spotlight');
-    // $I->wait(1);
-    // $I->click('Add media', 'div[data-drupal-selector="edit-field-hs-page-hero-0-subform-field-hs-sptlght-sldes-1"]');
-    // $I->waitForText('Add or select media');
-    // $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-    // $I->click('Upload and Continue');
-    // $I->waitForText('Decorative Image');
-    // $I->selectOption("input", 'Add new');
-    // $I->click('Save and insert', '.ui-dialog-buttonset');
-    // $I->waitForElementNotVisible('.media-library-widget-modal');
-    // $I->waitForText('The maximum number of media items have been selected');
-    // $I->waitForText('HTML');
-    // $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
-    // $I->click('.paragraph-type--hs-spotlight.even .ck-source-editing-button.ck-off ');
-    // $I->fillField('.ck-source-editing-area textarea', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
-    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
-    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
-    // $I->fillField('field_hs_page_hero[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
-    // $I->wait(2);
-    // $I->click('Save');
+  //   // Populating spotlight #1.
+  //   $I->click('Add media', '.paragraph-type--hs-sptlght-slder');
+  //   $I->waitForText('Add or select media');
+  //   $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+  //   $I->click('Upload and Continue');
+  //   $I->waitForText('Decorative Image');
+  //   $I->click('Save and insert', '.ui-dialog-buttonset');
+  //   $I->waitForElementNotVisible('.media-library-widget-modal');
+  //   $I->waitForText('The maximum number of media items have been selected');
+  //   $I->waitForText('HTML');
+  //   $I->click('.ck-source-editing-button.ck-off');
+  //   $I->fillField('.ck-source-editing-area textarea', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>');
+  //   $I->fillField('field_hs_page_components[1][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
+  //   $I->fillField('field_hs_page_components[1][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
+  //   $I->fillField('field_hs_page_components[1][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
 
-    // Check spotlight 1.
-    // $I->waitForText('Spotlight #1 Title');
-    // $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
-    // $I->canSee('Google Link', 'a');
-    // $I->canSeeNumberOfElements('picture img', 1);
+  //   // Populating spotlight #2.
+  //   $I->scrollTo('.paragraphs-add-wrapper');
+  //   $I->click('Add Spotlight');
+  //   $I->wait(1);
+  //   $I->click('field_hs_spotlight_image-media-library-open-button-field_hs_page_components-1-subform-field_hs_sptlght_sldes-1-subform');
+  //   $I->waitForText('Add or select media');
+  //   $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+  //   $I->click('Upload and Continue');
+  //   $I->waitForText('Decorative Image');
+  //   $I->selectOption("input", 'Add new');
+  //   $I->click('Save and insert', '.ui-dialog-buttonset');
+  //   $I->waitForElementNotVisible('.media-library-widget-modal');
+  //   $I->waitForText('The maximum number of media items have been selected');
+  //   $I->waitForText('HTML');
+  //   $I->scrollTo('.paragraph-type--hs-spotlight.even .field--type-text-long', 0, -300);
+  //   $I->click('.paragraph-type--hs-spotlight.even .ck-source-editing-button.ck-off ');
+  //   $I->fillField('.ck-source-editing-area textarea', '<p>Aliquet porttitor lacus luctus accumsan tortor posuere ac.</p>');
+  //   $I->fillField('field_hs_page_components[1][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
+  //   $I->fillField('field_hs_page_components[1][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
+  //   $I->fillField('field_hs_page_components[1][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
+  //   $I->wait(2);
+  //   $I->click('Save');
 
-    // Check spotlight 2.
-    // $I->click('.slick-next');
-    // $I->waitForText('Spotlight #2 Title');
-    // $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
-    // $I->canSee('Yahoo Link', 'a');
-    // $I->canSeeNumberOfElements('picture img', 1);
+  //   // Check spotlight 1.
+  //   $I->waitForText('Spotlight #1 Title');
+  //   $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+  //   $I->canSee('Google Link', 'a');
+  //   $I->canSeeNumberOfElements('picture img', 1);
+
+  //   // Check spotlight 2.
+  //   $I->click('.slick-next');
+  //   $I->waitForText('Spotlight #2 Title');
+  //   $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
+  //   $I->canSee('Yahoo Link', 'a');
+  //   $I->canSeeNumberOfElements('picture img', 1);
   // }
 
   /**
@@ -278,9 +319,11 @@ class FlexiblePageCest {
     $I->logInWithRole('administrator');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
-    $I->click('List additional actions', '[data-drupal-selector="edit-field-hs-page-components-add-more-operations"]');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Vertical Timeline');
     $I->click('field_hs_page_components_hs_timeline_add_more');
-    $I->waitForText('Vertical Timeline');
+    $I->waitForText('Collapse by default');
     $I->checkOption('Collapse by default');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][0][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #1 Title');
     $I->click('.ck-source-editing-button.ck-off ');
@@ -289,8 +332,8 @@ class FlexiblePageCest {
     $I->wait(1);
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][1][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #2 Title');
     $I->click('Save');
-    $I->canSee('Timeline Item #1 Title');
-    $I->canSee('Timeline Item #2 Title');
+    $I->waitForText('Timeline Item #1 Title');
+    $I->waitForText('Timeline Item #2 Title');
 
     // Check aria attributes for first item.
     $this->firstItemAriaPressed = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-pressed');
@@ -311,6 +354,165 @@ class FlexiblePageCest {
     $this->firstItemAriaExpanded = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-expanded');
     $I->assertTrue(filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL), 'Aria-expanded should be true in the first item.');
     $I->canSee('Timeline item #1 description.');
+  }
+
+  /**
+   * I can create a postcard on the page.
+   */
+  public function testPostCard(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Postcard');
+    $I->click('field_hs_page_components_hs_postcard_add_more');
+    $I->waitForText('Card Title');
+    $I->canSee('Card Body');
+    $I->canSee('Read More Link');
+    $I->fillField('Card Title', 'Nam at tortor in tellus');
+    $I->fillField('.ck-editor__editable_inline', 'Maecenas vestibulum mollis diam.');
+    $I->fillField('URL', 'http://google.com');
+    $I->fillField('Link text', 'Praesent egestas tristique nibh');
+    $I->click('Save');
+
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->waitForText('Nam at tortor in tellus');
+    $I->waitForText('Maecenas vestibulum mollis diam.');
+    $I->seeElement(Locator::href('http://google.com'));
+  }
+
+  /**
+   * I can create an accordion on the page.
+   */
+  public function testAccordion(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'accordion');
+    $I->click('field_hs_page_components_hs_accordion_add_more');
+    $I->waitForText('Summary');
+    $I->fillField('Summary', 'Sed augue ipsum egestas nec');
+    $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
+    $I->click('Save');
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee('Sed augue ipsum egestas nec');
+    $I->click('.field-hs-accordion-summary');
+    $I->canSee('Vivamus in erat ut urna cursus vestibulum');
+  }
+
+  /**
+   * I can add a Back To Top Block.
+   */
+  public function testBackToTopExists(FunctionalTester $I) {
+    $I->logInWithRole('administrator');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Back To Top');
+    try {
+      // Use existing text area component.
+      $I->canSee('Text format');
+    }
+    catch (\Exception $e) {
+      // Add component if does not already exist.
+      $I->click('#edit-field-hs-page-components-add-more-browse');
+      $I->waitForText('Browse');
+      $I->fillField('pb_modal_text', 'text area');
+      $I->click('field_hs_page_components_hs_text_area_add_more');
+      $I->waitForText('Text format');
+    }
+    $I->fillField('.ck-editor__editable_inline', $this->faker->paragraphs(10, TRUE));
+    $I->click('Save');
+
+    $I->click('Layout', '.tabs');
+    $I->scrollTo('.layout-builder__link--add');
+    $I->canSee('Add Block', 'a');
+    $I->click('Add block');
+    $I->waitForText('Choose a block');
+    $I->fillField('.js-layout-builder-filter', 'back to top');
+    $I->waitForText('Back To Top Block');
+    $I->click('Back To Top Block');
+    $I->waitForText('Configure block');
+    $I->click('Add block');
+    $I->waitForElementNotVisible('.ui-dialog-position-side');
+    $I->executeJS('window.scrollTo(0,0);');
+    $I->wait(1);
+    $I->click('Save layout');
+    $I->waitForText('Back To Top');
+    $I->executeJS('window.scrollTo(0,document.body.scrollHeight);');
+    $I->waitForElement('.hs-back-to-top');
+  }
+
+  /**
+   * I can create a text area on the page.
+   */
+  public function testTextArea(FunctionalTester $I) {
+    $I->logInWithRole('contributor');
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    try {
+      // Use existing text area component.
+      $I->canSee('Text format');
+    }
+    catch (\Exception $e) {
+      // Add component if does not already exist.
+      $I->click('#edit-field-hs-page-components-add-more-browse');
+      $I->waitForText('Browse');
+      $I->fillField('pb_modal_text', 'text area');
+      $I->click('field_hs_page_components_hs_text_area_add_more');
+      $I->waitForText('Text format');
+    }
+    $paragraph = $this->faker->paragraphs(1, TRUE);
+    $I->fillField('.ck-editor__editable_inline', $paragraph);
+    $I->click('Save');
+
+    $I->canSeeInCurrentUrl('/demo-basic-page');
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee($paragraph);
+  }
+
+
+  /**
+   * I can create a collection of items and display them in 2, 3 or 4 per row.
+   */
+  public function testCollections(FunctionalTester $I) {
+    $I->logInWithRole('administrator');
+    $I->amOnPage('/admin/structure/types/manage/hs_basic_page/fields/node.hs_basic_page.field_hs_page_components');
+    $this->disableCollection = (bool) $I->grabAttributeFrom('[name="settings[handler_settings][target_bundles_drag_drop][hs_collection][enabled]"]', 'checked');
+    if ($this->disableCollection) {
+      $I->uncheckOption('Collection');
+      $I->click('Save settings');
+    }
+
+    $I->amOnPage('/node/add/hs_basic_page');
+    $I->fillField('Title', 'Demo Basic Page');
+    $I->click('#edit-field-hs-page-components-add-more-browse');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Collection');
+    $I->click('field_hs_page_components_hs_collection_add_more');
+    $I->waitForText('Items Per Row');
+    $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);
+    $I->selectOption('Items Per Row', 2);
+    $I->canSeeOptionIsSelected('Style', '- None -');
+    $I->click('.dropbutton__toggle');
+    $I->click('.add-more-button-hs-text-area');
+    $I->scrollTo('.dropbutton__toggle');
+    $I->waitForText('Text format');
+    $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Foo Bar Baz');
+    $I->scrollTo('.dropbutton__toggle');
+    $I->click('.dropbutton__toggle');
+    $I->click('.add-more-button-hs-postcard');
+    $I->scrollTo('.dropbutton__toggle');
+    $I->waitForText('Card Title');
+    $I->fillField('Card Title', 'Demo card title');
+    $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Bar Foo Baz');
+    $I->click('Save');
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee('Foo Bar Baz', '.item-per-row--2');
+    $I->canSee('Demo card title', '.item-per-row--2 h2');
+    $I->canSee('Bar Foo Baz', '.item-per-row--2');
   }
 
 }

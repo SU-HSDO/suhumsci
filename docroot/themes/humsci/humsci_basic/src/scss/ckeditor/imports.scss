@@ -68,6 +68,25 @@ $px-only: true;
   @include hb-traditional {
     font-family: $hb-traditional-font--sans;
   }
+
+  // Addresses small media previews in CK5
+  .hb-media-video {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .field-media-oembed-video {
+    position: relative;
+    aspect-ratio: 16/9;
+  }
+
+  .drupal-media,
+  .field-media-oembed-video,
+  .media-oembed-content {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 // REM to PX overrides.
@@ -269,27 +288,6 @@ $px-only: true;
         }
       }
     }
-  }
-}
-
-// Addresses small media previews in CK5
-.ck-editor__main {
-  .hb-media-video {
-    margin: 0;
-    width: 100%;
-    max-width: none;
-  }
-
-  .field-media-oembed-video {
-    position: relative;
-    aspect-ratio: 16/9;
-  }
-
-  .drupal-media,
-  .field-media-oembed-video,
-  .media-oembed-content {
-    width: 100%;
-    height: 100%;
   }
 }
 

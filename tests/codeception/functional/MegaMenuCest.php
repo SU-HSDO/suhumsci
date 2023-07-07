@@ -79,6 +79,7 @@ class MegaMenuCest {
     $I->fillField('Menu link title', $secondLevelTitle);
     $I->scrollTo(['css' => '.form-item--menu-menu-parent'], 0, -100);
     $I->wait(2);
+    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu-menu-parent\"]").style.display = "block";');
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->waitForText('Show row weights');
     $I->click('Show row weights');

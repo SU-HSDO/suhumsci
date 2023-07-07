@@ -16,6 +16,7 @@ class MediaCest {
     $I->amOnPage('/media/add');
     $I->click('Bulk Upload');
     $I->dropFileInDropzone(__DIR__ . '/test.txt');
+    $I->wait(1);
     $I->click('Upload');
     $I->fillField('Name', 'Demo Text File');
     $I->click('Save');

@@ -12,10 +12,26 @@
       }
     }
   }
+
+  .toolbar-tray-horizontal li:hover ul li {
+    float: none;
+  }
 }
 
 // Drupal adds an additional div to the footer when you are logged in from the Toolbar module, creating a thin white line below the footer.
 // This ID below addresses that div specifically and removes the white line.
 #drupal-live-announce.visually-hidden {
   height: 0;
+}
+
+#toolbar-item-shortcuts-tray {
+  li > ul {
+    margin: 0 0 0 1em;
+    padding-inline: 0 20px;
+  }
+
+  a:not([class]):hover {
+    background-image: none;
+    background-color: transparent;
+  }
 }

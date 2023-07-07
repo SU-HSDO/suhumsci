@@ -96,8 +96,8 @@ function hs_basic_page_update_9001() {
   if (!empty($flex_form_display)) {
     // Only update 'field_hs_priv_page_components' if it exists.
     // Basic page field.
-    $field_hs_priv_page_components = $flex_form_display->getComponent('field_hs_priv_page_components');
-    if (!empty($field_hs_priv_page_components)) {
+    $field_priv_compnts = $flex_form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($field_priv_compnts)) {
       $settings['default_paragraph_type'] = 'field_hs_priv_page_components';
       $flex_form_display->setComponent('field_hs_priv_page_components', [
         'weight' => $field_hs_page_hero['weight'],

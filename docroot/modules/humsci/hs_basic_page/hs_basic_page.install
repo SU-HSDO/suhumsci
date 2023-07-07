@@ -26,7 +26,7 @@ function hs_basic_page_install() {
 function hs_basic_page_update_9001() {
   $themes_to_update = [
     'humsci_colorful',
-    'humsci_traditional'
+    'humsci_traditional',
   ];
   $modules = [
     'file',
@@ -67,12 +67,12 @@ function hs_basic_page_update_9001() {
   $basic_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_basic_page.default');
   if (!empty($basic_form_display)) {
     // Only update 'field_hs_page_components' if it exists.
-    $field_hs_page_components = $basic_form_display->getComponent('field_hs_page_components');
-    if (!empty($field_hs_page_components)) {
+    $hs_page_components = $basic_form_display->getComponent('field_hs_page_components');
+    if (!empty($hs_page_components)) {
       $settings['default_paragraph_type'] = 'hs_text_area';
       $basic_form_display->setComponent('field_hs_page_components', [
-        'weight' => $field_hs_page_components['weight'],
-        'region' => $field_hs_page_components['region'],
+        'weight' => $hs_page_components['weight'],
+        'region' => $hs_page_components['region'],
         'type' => 'paragraphs_browser',
         'settings' => $settings,
       ]);
@@ -92,20 +92,20 @@ function hs_basic_page_update_9001() {
   }
 
   /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $flexible_form_display */
-  $flexible_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
-  if (!empty($flexible_form_display)) {
+  $flex_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
+  if (!empty($flex_form_display)) {
     // Only update 'field_hs_priv_page_components' if it exists.
     // Basic page field.
-    $field_hs_priv_page_components = $flexible_form_display->getComponent('field_hs_priv_page_components');
+    $field_hs_priv_page_components = $flex_form_display->getComponent('field_hs_priv_page_components');
     if (!empty($field_hs_priv_page_components)) {
       $settings['default_paragraph_type'] = 'field_hs_priv_page_components';
-      $flexible_form_display->setComponent('field_hs_priv_page_components', [
+      $flex_form_display->setComponent('field_hs_priv_page_components', [
         'weight' => $field_hs_page_hero['weight'],
         'region' => $field_hs_page_hero['region'],
         'type' => 'paragraphs_browser',
         'settings' => $settings,
       ]);
     }
-    $flexible_form_display->save();
+    $flex_form_display->save();
   }
 }

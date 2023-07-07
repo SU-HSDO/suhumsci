@@ -2,11 +2,8 @@
 
 namespace Humsci\Blt\Plugin\Commands;
 
-use Acquia\Blt\Robo\Blt;
 use Acquia\Blt\Robo\BltTasks;
-use Acquia\Blt\Robo\Common\UserConfig;
 use Acquia\Blt\Robo\Exceptions\BltException;
-use Zumba\Amplitude\Amplitude;
 
 /**
  * Defines commands in the "drupal:toggle:modules" namespace.
@@ -57,9 +54,6 @@ class ToggleModulesCommand extends BltTasks {
    * @throws \Acquia\Blt\Robo\Exceptions\BltException
    */
   protected function doToggleModules($command, $config_key) {
-    $userConfig = new UserConfig(Blt::configDir());
-    $eventInfo = $userConfig->getTelemetryUserData();
-
     if ($this->getConfig()->has($config_key)) {
       $this->say("Executing <comment>drush $command</comment> for modules defined in <comment>$config_key</comment>...");
       $modules = (array) $this->getConfigValue($config_key);
@@ -67,20 +61,12 @@ class ToggleModulesCommand extends BltTasks {
       $result = $this->taskDrush()
         ->drush("$command $modules_list")
         ->run();
-      $exit_code = $result->getExitCode();
-      $eventInfo['active'] = TRUE;
-      $eventInfo['modules'] = md5($modules_list);
-      Amplitude::getInstance()->queueEvent('toggle-modules', $eventInfo);
+      if (!$result->wasSuccessful()) {
+        throw new BltException("Could not toggle modules listed in $config_key.");
+      }
     }
     else {
-      $exit_code = 0;
       $this->logger->info("$config_key is not set.");
-      $eventInfo['active'] = FALSE;
-      Amplitude::getInstance()->queueEvent('toggle-modules', $eventInfo);
-    }
-
-    if ($exit_code) {
-      throw new BltException("Could not toggle modules listed in $config_key.");
     }
   }
 

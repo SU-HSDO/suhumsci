@@ -29,7 +29,7 @@ class PrivatePageContentCest{
       'disable_component' => FALSE,
     ],
     'Postcard' => [
-      'component_text' => 'Card Title',
+      'component_text' => 'No media items are selected.',
       'component_button_name' => 'field_hs_priv_page_components_hs_postcard_add_more',
       'admin_name' => '[name="settings[handler_settings][target_bundles_drag_drop][hs_postcard][enabled]"]',
       'disable_component' => FALSE,

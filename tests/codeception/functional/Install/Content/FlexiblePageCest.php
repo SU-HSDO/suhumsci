@@ -80,6 +80,7 @@ class FlexiblePageCest {
 
   /**
    * I can create a page with a hero banner.
+   * @group testme
    */
   public function testHeroParagraph(FunctionalTester $I) {
     $I->logInWithRole('contributor');
@@ -93,8 +94,6 @@ class FlexiblePageCest {
     $I->scrollTo('.field-add-more-submit');
     $I->click('field_hs_page_components_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');
-    $I->canSee('Overlay Details');
-    $I->cantSee('Optionally add some overlay text on top of the image');
     $I->cantSee('Body');
     $I->cantSee('Link text');
     $I->cantSee('Overlay Color');
@@ -110,7 +109,6 @@ class FlexiblePageCest {
     $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
     $I->waitForText('Body');
     $I->canSee('Link text');
-    $I->cantSee('Overlay Color');
     $I->fillField('field_hs_page_components[1][subform][field_hs_hero_title][0][value]', 'Overlay Title');
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');

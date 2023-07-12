@@ -77,7 +77,8 @@ function hs_basic_page_update_9001() {
         'weight' => $hs_page_components['weight'],
         'region' => $hs_page_components['region'],
         'type' => 'paragraphs_browser',
-      ], $settings)->save();
+        'settings' => $settings,
+      ])->save();
     }
     // Only update 'field_hs_page_hero' if it exists.
     $field_hs_page_hero = $basic_form_display->getComponent('field_hs_page_hero');
@@ -89,7 +90,8 @@ function hs_basic_page_update_9001() {
         'weight' => $field_hs_page_hero['weight'],
         'region' => $field_hs_page_hero['region'],
         'type' => 'paragraphs_browser',
-      ], $settings)->save();
+        'settings' => $settings,
+      ])->save();
     }
   }
 
@@ -100,23 +102,22 @@ function hs_basic_page_update_9001() {
     $field_priv_wysiwyg_files = $private_form_display->getComponent('field_priv_wysiwyg_files');
     if (!empty($field_priv_wysiwyg_files) && $field_priv_wysiwyg_files['type'] === 'insert_file') {
       $wysiwyg_settings = [
-        'progress_indicator' => 'throbber',
-        'third_party_settings' => [
-          'insert' => [
-            'styles' => [
-              'link' => 'link',
-              'insert__auto' => 0,
-              'icon_link' => 0,
-              'audio' => 0,
-              'video' => 0,
-            ],
-            'default' => 'link',
-          ]
+        'insert' => [
+          'styles' => [
+            'link' => 'link',
+            'insert__auto' => 0,
+            'icon_link' => 0,
+            'audio' => 0,
+            'video' => 0,
+          ],
+          'default' => 'link',
         ]
       ];
       $private_form_display->setComponent('field_priv_wysiwyg_files', [
         'type' => 'file_generic',
-      ], $wysiwyg_settings)->save();
+        'settings' => ['progress_indicator' => 'throbber'],
+        'third_party_settings' => $wysiwyg_settings
+      ])->save();
     }
 
     // Only update 'field_hs_priv_page_components' if it exists.
@@ -133,7 +134,9 @@ function hs_basic_page_update_9001() {
         'weight' => $field_priv_components['weight'],
         'region' => $field_priv_components['region'],
         'type' => 'paragraphs_browser',
-      ], $settings)->save();
+        'settings' => $settings,
+      ]);
     }
+    $private_form_display->save();
   }
 }

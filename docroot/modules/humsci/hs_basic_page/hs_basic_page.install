@@ -99,8 +99,8 @@ function hs_basic_page_update_9001() {
   $private_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
   if (!empty($private_form_display)) {
     // Check that 'field_priv_wysiwyg_files' is up to date.
-    $field_priv_wysiwyg_files = $private_form_display->getComponent('field_priv_wysiwyg_files');
-    if (!empty($field_priv_wysiwyg_files) && $field_priv_wysiwyg_files['type'] === 'insert_file') {
+    $field_priv_files = $private_form_display->getComponent('field_priv_wysiwyg_files');
+    if (!empty($field_priv_files) && $field_priv_files['type'] === 'insert_file') {
       $wysiwyg_settings = [
         'insert' => [
           'styles' => [
@@ -122,8 +122,8 @@ function hs_basic_page_update_9001() {
 
     // Only update 'field_hs_priv_page_components' if it exists.
     // Basic page field.
-    $field_priv_components = $private_form_display->getComponent('field_hs_priv_page_components');
-    if (!empty($field_priv_components)) {
+    $field_priv_componts = $private_form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($field_priv_componts)) {
       $settings['default_paragraph_type'] = 'hs_priv_text_area';
       $settings['title'] = 'Paragraph';
       $settings['title_plural'] = 'Paragraphs';
@@ -131,8 +131,8 @@ function hs_basic_page_update_9001() {
       $settings['autocollapse'] = 'none';
 
       $private_form_display->setComponent('field_hs_priv_page_components', [
-        'weight' => $field_priv_components['weight'],
-        'region' => $field_priv_components['region'],
+        'weight' => $field_priv_componts['weight'],
+        'region' => $field_priv_componts['region'],
         'type' => 'paragraphs_browser',
         'settings' => $settings,
       ]);

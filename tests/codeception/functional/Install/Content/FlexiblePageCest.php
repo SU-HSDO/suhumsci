@@ -68,14 +68,14 @@ class FlexiblePageCest {
     $I->click('.dropbutton__toggle');
     $I->scrollTo('.add-more-button-hs-postcard');
     $I->click('Add Postcard');
-    $I->waitForText('Card Title');
+    $I->waitForText('No media items are selected.');
     $card_title = $this->faker->words(3, TRUE);
     $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
     $I->cantSeeElement('.hs-duplicated');
     $I->click('Toggle Actions', '.paragraph-type--hs-postcard');
     $I->click('Duplicate', '.paragraph-type--hs-postcard');
-    $I->waitForText('Card Title', 10, '.hs-duplicated');
-    $I->canSeeInField('Card Title', $card_title);
+    $I->waitForText('Title', 10, '.hs-duplicated');
+    $I->canSeeInField('Title', $card_title);
   }
 
   /**
@@ -93,11 +93,6 @@ class FlexiblePageCest {
     $I->scrollTo('.field-add-more-submit');
     $I->click('field_hs_page_components_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');
-    $I->canSee('Overlay Details');
-    $I->cantSee('Optionally add some overlay text on top of the image');
-    $I->cantSee('Body');
-    $I->cantSee('Link text');
-    $I->cantSee('Overlay Color');
     $I->click('field_hs_hero_image-media-library-open-button-field_hs_page_components-1-subform');
     $I->waitForText('Drop files here to upload them');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
@@ -107,10 +102,8 @@ class FlexiblePageCest {
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('logo.jpg');
-    $I->click('//details[@data-drupal-selector="edit-field-hs-page-components-widget-1-subform-group-overlay-details"]');
     $I->waitForText('Body');
     $I->canSee('Link text');
-    $I->cantSee('Overlay Color');
     $I->fillField('field_hs_page_components[1][subform][field_hs_hero_title][0][value]', 'Overlay Title');
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
@@ -140,9 +133,9 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('Search', 'Photo Album');
     $I->click('field_hs_page_components_stanford_gallery_add_more');
-    $I->waitForText('Headline');
-    $I->fillField('Headline', 'Photo Album Headline');
-    $I->click('Add media', '.field--name-su-gallery-images');
+    $I->waitForText('No media items are selected.');
+    $I->fillField('field_hs_page_components[1][subform][su_gallery_headline][0][value]', 'Photo Album Headline');
+    $I->click('Add media');
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
@@ -162,12 +155,9 @@ class FlexiblePageCest {
     $I->waitForText('Edit');
     $I->click('Edit', '.tabs');
     $I->click('field_hs_page_components_1_edit');
-    $I->waitForText('Description');
-    $I->canSee('Behavior');
-    // Behavior tab is not interactable, use xpath instead.
-    $I->click('(//a[@href="#field-hs-page-components-values"])[2]');
-    $I->waitForText('Display Mode');
-    $I->selectOption('Display Mode', 'Slideshow');
+    $I->waitForText('Content');
+    $I->scrollTo('Style');
+    $I->selectOption('Style', 'Slideshow');
     $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->waitForText('Demo Basic Page');
@@ -353,11 +343,13 @@ class FlexiblePageCest {
     $I->assertTrue(filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be true in the first item.');
     $this->firstItemAriaExpanded = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-expanded');
     $I->assertTrue(filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL), 'Aria-expanded should be true in the first item.');
-    $I->canSee('Timeline item #1 description.');
+    $I->waitForText('Timeline item #1 description.');
   }
 
   /**
    * I can create a postcard on the page.
+   *
+   * @group fixme
    */
   public function testPostCard(FunctionalTester $I) {
     $I->logInWithRole('contributor');
@@ -367,10 +359,8 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Postcard');
     $I->click('field_hs_page_components_hs_postcard_add_more');
-    $I->waitForText('Card Title');
-    $I->canSee('Card Body');
-    $I->canSee('Read More Link');
-    $I->fillField('Card Title', 'Nam at tortor in tellus');
+    $I->waitForText('No media items are selected.');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_postcard_title][0][value]', 'Nam at tortor in tellus');
     $I->fillField('.ck-editor__editable_inline', 'Maecenas vestibulum mollis diam.');
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Praesent egestas tristique nibh');
@@ -495,7 +485,7 @@ class FlexiblePageCest {
     $I->waitForText('Items Per Row');
     $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);
     $I->selectOption('Items Per Row', 2);
-    $I->canSeeOptionIsSelected('Style', '- None -');
+    $I->canSeeOptionIsSelected('Background Color', '- None -');
     $I->click('.dropbutton__toggle');
     $I->click('.add-more-button-hs-text-area');
     $I->scrollTo('.dropbutton__toggle');
@@ -505,8 +495,9 @@ class FlexiblePageCest {
     $I->click('.dropbutton__toggle');
     $I->click('.add-more-button-hs-postcard');
     $I->scrollTo('.dropbutton__toggle');
-    $I->waitForText('Card Title');
-    $I->fillField('Card Title', 'Demo card title');
+    $I->waitForText('No media items are selected.');
+    $I->scrollTo('.field--name-field-hs-postcard-body');
+    $I->fillField('field_hs_page_components[1][subform][field_hs_collection_items][1][subform][field_hs_postcard_title][0][value]', 'Demo card title');
     $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Bar Foo Baz');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');

@@ -21,7 +21,7 @@ function hs_basic_page_install() {
 }
 
 /**
- * Update fields configuration with paragraphs_browser widget.
+ * Update field config with paragraphs_browser widget for basic page.
  */
 function hs_basic_page_update_9001() {
   $themes_to_update = [
@@ -94,6 +94,30 @@ function hs_basic_page_update_9001() {
       ])->save();
     }
   }
+}
+
+
+/**
+ * Update field config with paragraphs_browser widget for private page.
+ */
+function hs_basic_page_update_9002() {
+  // The only unique setting per field is 'default_paragraph_type'.
+  $settings = [
+    'edit_mode' => 'closed',
+    'closed_mode' => 'summary',
+    'autocollapse' => 'all',
+    'closed_mode_threshold' => '0',
+    'add_mode' => 'paragraphs_browser',
+    'form_display_mode' => 'default',
+    'features' => [
+      'duplicate' => 'duplicate',
+      'collapse_edit_all' => 'collapse_edit_all',
+      'add_above' => 0,
+    ],
+    'paragraphs_browser' => 'content',
+    'modal_width' => '80%',
+    'modal_height' => 'auto',
+  ];
 
   /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $private_form_display */
   $private_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');

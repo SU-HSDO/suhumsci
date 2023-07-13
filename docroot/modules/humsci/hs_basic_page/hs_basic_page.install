@@ -100,6 +100,28 @@ function hs_basic_page_update_9001() {
  * Update field config with paragraphs_browser widget for private page.
  */
 function hs_basic_page_update_9002() {
+  $themes_to_update = [
+    'humsci_colorful',
+    'humsci_traditional',
+  ];
+  $modules = [
+    'file',
+    'insert',
+    'paragraphs_browser',
+    'path',
+    'paragraphs',
+  ];
+  // Install only on the specified themes.
+  $site_theme = \Drupal::theme()->getActiveTheme()->getName();
+  if (!in_array($site_theme, $themes_to_update, TRUE)) {
+    return;
+  }
+  // Ensure the following dependency modules are installed.
+  foreach ($modules as $module) {
+    if (!(\Drupal::moduleHandler()->moduleExists($module))) {
+      \Drupal::service('module_installer')->install([$module]);
+    }
+  }
   // The only unique setting per field is 'default_paragraph_type'.
   $settings = [
     'edit_mode' => 'closed',

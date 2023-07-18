@@ -39,7 +39,8 @@ function hs_admin_preprocess_html(&$variables) {
 function hs_admin_toolbar_alter(&$items) {
   $uid = \Drupal::currentUser()->id();
   $user = User::load($uid);
-  if ($user->hasPermission('show manage link') && $uid != 1) {
+
+  if (!$user->hasPermission('show manage link') && $uid != 1) {
     unset($items['admin_toolbar_tools']);
     unset($items['administration']);
   }

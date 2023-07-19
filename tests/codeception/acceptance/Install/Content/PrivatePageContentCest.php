@@ -10,7 +10,7 @@ class PrivatePageContentCest{
   private $fieldsToCheck = [
     'input[value="Add Private Text Area"]',
     'input[value="Add Private Collection"]',
-    'input[value="Add Spotlight - Slider"]',
+    'input[value="Add Spotlight(s)"]',
     'input[value="Add Accordion"]',
     'input[value="Add Postcard"]',
   ];

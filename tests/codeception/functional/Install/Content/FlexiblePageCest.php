@@ -135,33 +135,34 @@ class FlexiblePageCest {
     $I->click('field_hs_page_components_stanford_gallery_add_more');
     $I->waitForText('No media items are selected.');
     $I->fillField('field_hs_page_components[1][subform][su_gallery_headline][0][value]', 'Photo Album Headline');
-    // $I->click('Add media');
-    // $I->waitForText('Add or select media');
-    // $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-    // $I->click('Upload and Continue');
-    // $I->waitForText('Decorative Image');
-    // $I->click('Save and insert', '.ui-dialog-buttonset');
-    // $I->waitForElementNotVisible('.media-library-widget-modal');
-    // $I->waitForElementVisible('.media-library-item__preview img');
-    // $I->executeJS('window.scrollTo(0,0);');
-    // $I->click('#field-hs-page-components-add-more-wrapper > ul:nth-child(1) > li:nth-child(2)');
-    // $I->waitForText('Display Mode');
-    // $I->click('Save');
+    $I->scrollTo('.js-media-library-selection');
+    $I->click('su_gallery_images-media-library-open-button-field_hs_page_components-1-subform');
+    $I->waitForText('Add or select media');
+    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+    $I->click('Upload and Continue');
+    $I->waitForText('Decorative Image');
+    $I->click('Save and insert', '.ui-dialog-buttonset');
+    $I->waitForElementNotVisible('.media-library-widget-modal');
+    $I->waitForElementVisible('.media-library-item__preview img');
+    $I->executeJS('window.scrollTo(0,0);');
+    $I->click('#field-hs-page-components-add-more-wrapper > ul:nth-child(1) > li:nth-child(2)');
+    $I->waitForText('Display Mode');
+    $I->click('Save');
 
-    // $I->canSee('Demo Basic Page', 'h1');
-    // $I->canSee('Photo Album Headline', 'h2');
-    // $I->canSeeNumberOfElements('.su-gallery-images img', 1);
-    // $I->canSeeNumberOfElements('#cboxContent img', 0);
-    // $I->waitForText('Edit');
-    // $I->click('Edit', '.tabs');
-    // $I->click('field_hs_page_components_1_edit');
-    // $I->waitForText('Content');
-    // $I->scrollTo('Style');
-    // $I->selectOption('Style', 'Slideshow');
-    // $I->executeJS('window.scrollTo(0,0);');
-    // $I->click('Save');
-    // $I->waitForText('Demo Basic Page');
-    // $I->canSeeNumberOfElements('.slick img', 1);
+    $I->canSee('Demo Basic Page', 'h1');
+    $I->canSee('Photo Album Headline', 'h2');
+    $I->canSeeNumberOfElements('.su-gallery-images img', 1);
+    $I->canSeeNumberOfElements('#cboxContent img', 0);
+    $I->waitForText('Edit');
+    $I->click('Edit', '.tabs');
+    $I->click('field_hs_page_components_1_edit');
+    $I->waitForText('Content');
+    $I->scrollTo('Style');
+    $I->selectOption('Style', 'Slideshow');
+    $I->executeJS('window.scrollTo(0,0);');
+    $I->click('Save');
+    $I->waitForText('Demo Basic Page');
+    $I->canSeeNumberOfElements('.slick img', 1);
   }
 
   /**
@@ -348,8 +349,6 @@ class FlexiblePageCest {
 
   /**
    * I can create a postcard on the page.
-   *
-   * @group fixme
    */
   public function testPostCard(FunctionalTester $I) {
     $I->logInWithRole('contributor');

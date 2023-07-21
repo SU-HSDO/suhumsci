@@ -37,11 +37,14 @@
     min-width: 18rem;
   }
 
-  a:not([class]) {
-    &:hover {
-      color: var(--gin-color-primary-hover);
-      background-color: var(--gin-bg-item-hover);
-      background-image: none;
-    }
+  li:hover > a:not([class]),
+  li:hover > span:not([class]) {
+    color: var(--gin-color-primary-hover);
+    background-color: var(--gin-bg-item-hover);
+    background-image: none;
+  }
+
+  li:hover > span:not([class]) {
+    cursor: default;
   }
 }

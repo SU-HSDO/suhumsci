@@ -21,7 +21,7 @@ function hs_basic_page_install() {
 }
 
 /**
- * Update fields configuration with paragraphs_browser widget.
+ * Update field config with paragraphs_browser widget for basic page.
  */
 function hs_basic_page_update_9001() {
   $themes_to_update = [
@@ -33,8 +33,9 @@ function hs_basic_page_update_9001() {
     'insert',
     'paragraphs_browser',
     'path',
+    'paragraphs',
   ];
-  // In stall only on the specified themes.
+  // Install only on the specified themes.
   $site_theme = \Drupal::theme()->getActiveTheme()->getName();
   if (!in_array($site_theme, $themes_to_update, TRUE)) {
     return;
@@ -70,42 +71,117 @@ function hs_basic_page_update_9001() {
     $hs_page_components = $basic_form_display->getComponent('field_hs_page_components');
     if (!empty($hs_page_components)) {
       $settings['default_paragraph_type'] = 'hs_text_area';
+      $settings['title'] = 'Component';
+      $settings['title_plural'] = 'Components';
       $basic_form_display->setComponent('field_hs_page_components', [
         'weight' => $hs_page_components['weight'],
         'region' => $hs_page_components['region'],
         'type' => 'paragraphs_browser',
         'settings' => $settings,
-      ]);
+      ])->save();
     }
     // Only update 'field_hs_page_hero' if it exists.
     $field_hs_page_hero = $basic_form_display->getComponent('field_hs_page_hero');
     if (!empty($field_hs_page_hero)) {
       $settings['default_paragraph_type'] = '_none';
+      $settings['title'] = 'Hero Image';
+      $settings['title_plural'] = 'Hero Images';
       $basic_form_display->setComponent('field_hs_page_hero', [
         'weight' => $field_hs_page_hero['weight'],
         'region' => $field_hs_page_hero['region'],
         'type' => 'paragraphs_browser',
         'settings' => $settings,
-      ]);
+      ])->save();
     }
-    $basic_form_display->save();
   }
+}
 
-  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $flexible_form_display */
-  $flex_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
-  if (!empty($flex_form_display)) {
+/**
+ * Update field config with paragraphs_browser widget for private page.
+ */
+function hs_basic_page_update_9002() {
+  $themes_to_update = [
+    'humsci_colorful',
+    'humsci_traditional',
+  ];
+  $modules = [
+    'file',
+    'insert',
+    'paragraphs_browser',
+    'path',
+    'paragraphs',
+  ];
+  // Install only on the specified themes.
+  $site_theme = \Drupal::theme()->getActiveTheme()->getName();
+  if (!in_array($site_theme, $themes_to_update, TRUE)) {
+    return;
+  }
+  // Ensure the following dependency modules are installed.
+  foreach ($modules as $module) {
+    if (!(\Drupal::moduleHandler()->moduleExists($module))) {
+      \Drupal::service('module_installer')->install([$module]);
+    }
+  }
+  // The only unique setting per field is 'default_paragraph_type'.
+  $settings = [
+    'edit_mode' => 'closed',
+    'closed_mode' => 'summary',
+    'autocollapse' => 'all',
+    'closed_mode_threshold' => '0',
+    'add_mode' => 'paragraphs_browser',
+    'form_display_mode' => 'default',
+    'features' => [
+      'duplicate' => 'duplicate',
+      'collapse_edit_all' => 'collapse_edit_all',
+      'add_above' => 0,
+    ],
+    'paragraphs_browser' => 'content',
+    'modal_width' => '80%',
+    'modal_height' => 'auto',
+  ];
+
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $private_form_display */
+  $private_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
+  if (!empty($private_form_display)) {
+    // Check that 'field_priv_wysiwyg_files' is up to date.
+    $field_priv_files = $private_form_display->getComponent('field_priv_wysiwyg_files');
+    if (!empty($field_priv_files) && $field_priv_files['type'] === 'insert_file') {
+      $wysiwyg_settings = [
+        'insert' => [
+          'styles' => [
+            'link' => 'link',
+            'insert__auto' => 0,
+            'icon_link' => 0,
+            'audio' => 0,
+            'video' => 0,
+          ],
+          'default' => 'link',
+        ],
+      ];
+      $private_form_display->setComponent('field_priv_wysiwyg_files', [
+        'type' => 'file_generic',
+        'settings' => ['progress_indicator' => 'throbber'],
+        'third_party_settings' => $wysiwyg_settings,
+      ])->save();
+    }
+
     // Only update 'field_hs_priv_page_components' if it exists.
     // Basic page field.
-    $field_hs_priv_page_components = $flex_form_display->getComponent('field_hs_priv_page_components');
-    if (!empty($field_hs_priv_page_components)) {
-      $settings['default_paragraph_type'] = 'field_hs_priv_page_components';
-      $flex_form_display->setComponent('field_hs_priv_page_components', [
-        'weight' => $field_hs_page_hero['weight'],
-        'region' => $field_hs_page_hero['region'],
+    $field_priv_componts = $private_form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($field_priv_componts)) {
+      $settings['default_paragraph_type'] = 'hs_priv_text_area';
+      $settings['title'] = 'Paragraph';
+      $settings['title_plural'] = 'Paragraphs';
+      $settings['edit_mode'] = 'open';
+      $settings['autocollapse'] = 'none';
+
+      $private_form_display->setComponent('field_hs_priv_page_components', [
+        'weight' => $field_priv_componts['weight'],
+        'region' => $field_priv_componts['region'],
         'type' => 'paragraphs_browser',
         'settings' => $settings,
       ]);
     }
-    $flex_form_display->save();
+    $private_form_display->save();
   }
 }

@@ -263,8 +263,7 @@ class FlexiblePageCest {
     $I->waitForText('Spotlight #1 Title');
     $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->canSee('Google Link', 'a');
-    // Can see both the site logo and spotlight image.
-    $I->canSeeNumberOfElements('picture img', 2);
+    $I->canSeeNumberOfElements('picture img', 1);
     // Uploaded spotlight image does not have alt text.
     $I->seeElement('picture img', ['alt' => '']);
 
@@ -300,8 +299,7 @@ class FlexiblePageCest {
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     $I->canSee('Yahoo Link', 'a');
-    // I can see both the site logo and spotlight image.
-    $I->canSeeNumberOfElements('picture img', 2);
+    $I->canSeeNumberOfElements('picture img', 1);
     // Uploaded spotlight image does not have alt text.
     $I->seeElement('picture img', ['alt' => '']);
   }

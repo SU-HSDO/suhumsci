@@ -93,7 +93,7 @@ $px-only: true;
 // Because the :root font size is set by the admin theme, all HumSci Basic
 // classes for the WYSIWYG need to be converted to px to ensure accurate
 // rendering.
-.ck-editor__editable_inline {
+.ck.ck-content {
   @include hb-themes(("colorful", "airy")) {
     font-size: 16px;
 
@@ -272,20 +272,52 @@ $px-only: true;
     }
   }
 
+  // Lists.
+  ul {
+    @include hb-unordered-list;
+    margin: 0 0 32px;
+    padding-left: 22px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 18px;
+
+      &::before {
+        height: 6px;
+        top: 8px;
+        width: 6px;
+      }
+    }
+  }
+
+  ol {
+    @include hb-ordered-list;
+    margin: 0 0 32px;
+    padding-left: 8px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 38px;
+
+      &::before {
+        font-size: 16px;
+        min-width: 30px;
+      }
+    }
+  }
+
   // Override CK styles
-  &.ck-content {
-    .table table {
+  .table table {
+    td,
+    th {
+      padding: 16px;
+    }
+
+    &.hs-table--borderless {
       td,
       th {
-        padding: 16px;
-      }
-
-      &.hs-table--borderless {
-        td,
-        th {
-          border-left: 0;
-          border-right: 0;
-        }
+        border-left: 0;
+        border-right: 0;
       }
     }
   }

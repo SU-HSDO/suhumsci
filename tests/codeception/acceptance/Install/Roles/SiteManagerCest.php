@@ -6,6 +6,7 @@ use Drupal\Core\Serialization\Yaml;
  * Class SiteManagerCest.
  *
  * @group install
+ * @group roles
  */
 class SiteManagerCest {
 

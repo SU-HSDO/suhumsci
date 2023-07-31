@@ -40,6 +40,8 @@ class InstallStateCest {
 
   /**
    * I can see some links as an admin.
+   *
+   * @group roles
    */
   public function testVisibleAdminItems(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
@@ -58,6 +60,7 @@ class InstallStateCest {
    * Contributor can see a certain number of shortcuts.
    *
    * @group shotcuts
+   * @group roles
    */
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
@@ -69,22 +72,24 @@ class InstallStateCest {
    * Site Managers can see a certain number of shortcuts.
    *
    * @group shotcuts
+   * @group roles
    */
   public function testSiteManagerShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('site_manager');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 33);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 34);
   }
 
   /**
    * Developers/Admins can see a certain number of shortcuts.
    *
    * @group shotcuts
+   * @group roles
    */
   public function testDeveloperShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 37);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 38);
   }
 
   /**

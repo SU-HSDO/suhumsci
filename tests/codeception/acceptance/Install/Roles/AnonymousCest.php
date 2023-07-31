@@ -6,6 +6,7 @@ use Drupal\Core\Serialization\Yaml;
  * Class AnonymousCest.
  *
  * @group install
+ * @group roles
  */
 class AnonymousCest {
 

@@ -50,6 +50,8 @@ class FlexiblePageCest {
 
   /**
    * Duplicated paragraphs should have a class available.
+   *
+   * @group paragraphs
    */
   public function testDuplicateScroll(FunctionalTester $I) {
     $I->logInWithRole('contributor');
@@ -444,7 +446,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     try {
       // Use existing text area component.
-      $I->canSee('Text format');
+      $I->canSee('Text Area');
     }
     catch (\Exception $e) {
       // Add component if does not already exist.
@@ -452,8 +454,9 @@ class FlexiblePageCest {
       $I->waitForText('Browse');
       $I->fillField('pb_modal_text', 'text area');
       $I->click('field_hs_page_components_hs_text_area_add_more');
-      $I->waitForText('Text format');
+      $I->waitForText('Text Area');
     }
+    $I->cantSee('Text format');
     $paragraph = $this->faker->paragraphs(1, TRUE);
     $I->fillField('.ck-editor__editable_inline', $paragraph);
     $I->click('Save');

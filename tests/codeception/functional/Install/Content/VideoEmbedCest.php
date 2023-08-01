@@ -56,7 +56,7 @@ class VideoEmbedCest {
     // Enable caption
     $I->click('//button[@data-cke-tooltip-text="Toggle caption on"]');
     $I->fillField('.drupal-media__caption_highlighted', 'Caption for video goes here');
-
+    $I->makeScreenshot('video_screenshot');
     // Save node
     $I->click('Save');
 

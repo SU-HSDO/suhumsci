@@ -63,6 +63,7 @@ class VideoEmbedCest {
     // Verify figure and figcaption
     $I->seeElement('figure');
     $I->seeElement('figcaption');
+    $I->scrollTo('figcaption');
     $I->see("Caption for video goes here");
   }
 }

@@ -279,7 +279,6 @@ class FlexiblePageCest {
     $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_hs_spotlight_add_more');
 
     $I->waitForText('No media items are selected');
-    $I->makeScreenshot('spotlight 1');
     $I->fillField('.ck-editor__editable_inline', 'Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');

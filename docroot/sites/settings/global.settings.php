@@ -50,7 +50,7 @@ $settings['config_readonly_whitelist_patterns'] = ['*'];
 // Set the config_ignore settings so that config imports will function on local.
 if (EnvironmentDetector::isLocalEnv() && !InstallerKernel::installationAttempted()) {
   $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
-  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
+  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'] + array_fill(0, 50, 'foo.bar.baz');
 }
 
 // Don't lock config when using drush.

@@ -55,8 +55,7 @@ class VideoEmbedCest {
 
     // Enable caption
     $I->click('//button[@data-cke-tooltip-text="Toggle caption on"]');
-    $I->fillField('figcaption.ck-editor__nested-editable', 'Caption for video goes here');
-    $I->makeScreenshot('video_screenshot');
+    $I->fillField('figcaption.ck-editor__nested-editable', 'sore was I ere I saw eros');
     // Save node
     $I->click('Save');
 
@@ -64,6 +63,6 @@ class VideoEmbedCest {
     $I->seeElement('figure');
     $I->seeElement('figcaption');
     $I->scrollTo('figcaption');
-    $I->see("Caption for video goes here");
+    $I->see("sore was I ere I saw eros");
   }
 }

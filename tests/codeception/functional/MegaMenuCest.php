@@ -51,7 +51,6 @@ class MegaMenuCest {
     $topLevelTitle = $this->faker->words(3, TRUE);
     $secondLevelTitle = $this->faker->words(3, TRUE);
 
-    $I->logInWithRole('administrator');
     $top_level = $I->createEntity([
       'title' => $topLevelTitle,
       'type' => 'hs_basic_page',

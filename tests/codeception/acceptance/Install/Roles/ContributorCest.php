@@ -6,6 +6,7 @@ use Drupal\Core\Serialization\Yaml;
  * Class ContributorCest.
  *
  * @group install
+ * @group roles
  */
 class ContributorCest {
 

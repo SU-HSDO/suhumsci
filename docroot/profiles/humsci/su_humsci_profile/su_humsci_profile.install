@@ -195,3 +195,10 @@ function su_humsci_profile_update_9005() {
   // Install gin toolbar helper module.
   \Drupal::service('module_installer')->install(['gin_toolbar']);
 }
+
+/**
+ * Disable webp module.
+ */
+function su_humsci_profile_update_9405() {
+  \Drupal::service('module_installer')->uninstall(['webp']);
+}

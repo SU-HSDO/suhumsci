@@ -237,7 +237,7 @@ class FlexiblePageCest {
 
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->fillField('pb_modal_text', 'Spotlight - Slider');
+    $I->fillField('pb_modal_text', 'Spotlight');
     $I->click('field_hs_page_components_hs_sptlght_slder_add_more');
     $I->waitForText('No media items are selected');
     $I->scrollTo('.paragraph-type--hs-sptlght-slder');

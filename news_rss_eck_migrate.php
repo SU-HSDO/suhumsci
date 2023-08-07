@@ -1,7 +1,7 @@
 <?php
 
 // @todo Turn this into an updatedb hook.
-// @todo Use dependency injection (can I with an updatedb hook?)
+// @todo delete the ECK entities.
 
 echo "Loading existing News RSS ECK entities...";
 
@@ -31,11 +31,6 @@ if ($entity_type_manager->hasDefinition('importers')) {
       // add the new value, then set the field value, then save the entity.
       $news_rss_config_pages->field_hs_news_rss->appendItem($new_news_rss->id());
       $news_rss_config_pages->save();
-
-      // $field_hs_news_rss = $news_rss_config_pages->get('field_hs_news_rss');
-      // $field_hs_news_rss->appendItem($new_news_rss->id());
-      // $news_rss_config_pages->set('field_hs_news_rss', $field_hs_news_rss);
-      //
     }
   }
 

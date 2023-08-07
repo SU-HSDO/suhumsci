@@ -8,37 +8,18 @@ dependencies:
     - hs_entities.hs_entity_type.hs_entity_news_rss
   module:
     - link
-    - text
-    - user
 id: hs_entity.hs_entity_news_rss.default
 targetEntityType: hs_entity
 bundle: hs_entity_news_rss
 mode: default
 content:
-  created:
-    type: timestamp
-    label: above
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-    weight: 20
-    region: content
-  description:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
   field_category_terms:
     type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    weight: 21
+    weight: 1
     region: content
   field_rss_url:
     type: link
@@ -50,32 +31,12 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 22
-    region: content
-  label:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: -5
-    region: content
-  status:
-    type: boolean
-    label: above
-    settings:
-      format: enabled-disabled
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
     weight: 0
     region: content
-  uid:
-    type: author
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 15
-    region: content
 hidden:
+  created: true
+  description: true
+  label: true
   search_api_excerpt: true
+  status: true
+  uid: true

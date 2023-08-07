@@ -18,15 +18,25 @@ if ($entity_type_manager->hasDefinition('importers')) {
     $new_news_rss->set('field_category_terms', $entity->get('field_terms')->getValue());
     // Save the new entity.
     $new_news_rss->save();
-    // Load all News Importer Config Page entities referencing this news_rss item.
+    // Load all News RSS Config Page entities referencing this news_rss item.
+    $news_rss_config_pages = \Drupal::entityTypeManager()->getStorage('config_pages')->loadByProperties([
+      'type' => 'news_rss',
+      'field_news_rss' => $entity->id(),
+    ]);
+    // Loop through the News RSS Config Page entities.
+    foreach($news_rss_config_pages as $news_rss_config_pages) {
+      // Add the new hs_entity News RSS entity into the new News RSS field on
+      // the News RSS config page.
+      // The field is a multi-value listItem so need to pull the value(s), then
+      // add the new value, then set the field value, then save the entity.
+      $news_rss_config_pages->field_hs_news_rss->appendItem($new_news_rss->id());
+      $news_rss_config_pages->save();
 
-    // $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties([
-    //   'type' => 'research',
-    //   'field_scientists' => $scientist_id,
-    // ]);
-
-    // var_dump($entity->get('field_url'));
-    // var_dump($entity->get('field_terms'));
+      // $field_hs_news_rss = $news_rss_config_pages->get('field_hs_news_rss');
+      // $field_hs_news_rss->appendItem($new_news_rss->id());
+      // $news_rss_config_pages->set('field_hs_news_rss', $field_hs_news_rss);
+      //
+    }
   }
 
 }

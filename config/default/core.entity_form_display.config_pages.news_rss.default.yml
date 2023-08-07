@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - config_pages.type.news_rss
+    - field.field.config_pages.news_rss.field_hs_news_rss
     - field.field.config_pages.news_rss.field_news_rss
   module:
     - inline_entity_form
@@ -12,6 +13,16 @@ targetEntityType: config_pages
 bundle: news_rss
 mode: default
 content:
+  field_hs_news_rss:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_news_rss:
     type: inline_entity_form_simple
     weight: 0

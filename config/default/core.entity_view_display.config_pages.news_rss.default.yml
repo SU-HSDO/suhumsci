@@ -4,12 +4,21 @@ status: true
 dependencies:
   config:
     - config_pages.type.news_rss
+    - field.field.config_pages.news_rss.field_hs_news_rss
     - field.field.config_pages.news_rss.field_news_rss
 id: config_pages.news_rss.default
 targetEntityType: config_pages
 bundle: news_rss
 mode: default
 content:
+  field_hs_news_rss:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_news_rss:
     type: entity_reference_label
     label: above

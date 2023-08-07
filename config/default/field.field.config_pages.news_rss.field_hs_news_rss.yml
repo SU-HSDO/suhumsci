@@ -1,0 +1,29 @@
+uuid: 1b2de349-5efd-4ffa-890c-06288373fe33
+langcode: en
+status: true
+dependencies:
+  config:
+    - config_pages.type.news_rss
+    - field.storage.config_pages.field_hs_news_rss
+    - hs_entities.hs_entity_type.hs_entity_news_rss
+id: config_pages.news_rss.field_hs_news_rss
+field_name: field_hs_news_rss
+entity_type: config_pages
+bundle: news_rss
+label: 'News RSS'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:hs_entity'
+  handler_settings:
+    target_bundles:
+      hs_entity_news_rss: hs_entity_news_rss
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -6,9 +6,11 @@ dependencies:
     - field.storage.hs_entity.field_category_terms
     - field.storage.hs_entity.field_rss_url
     - hs_entities.hs_entity_type.hs_entity_news_rss
+    - user.role.administrator
   module:
     - hs_entities
     - link
+    - user
 id: humsci_entities
 label: 'Humsci Entities'
 module: views
@@ -248,8 +250,10 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: role
+        options:
+          role:
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -279,6 +283,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.hs_entity.field_category_terms'
         - 'config:field.storage.hs_entity.field_rss_url'
@@ -296,6 +301,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.hs_entity.field_category_terms'
         - 'config:field.storage.hs_entity.field_rss_url'
@@ -364,6 +370,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.roles
       tags:
         - 'config:field.storage.hs_entity.field_category_terms'
         - 'config:field.storage.hs_entity.field_rss_url'

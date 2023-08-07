@@ -14,14 +14,23 @@ bundle: news_rss
 mode: default
 content:
   field_hs_news_rss:
-    type: entity_reference_autocomplete
+    type: inline_entity_form_simple
     weight: 1
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      form_mode: default
+      override_labels: true
+      label_singular: Importer
+      label_plural: Importers
+      hide_fieldset: false
+      hide_title: false
+      collapsible: false
+      collapsed: false
+      revision: false
+      config_labels_button: simple_label
+      labels:
+        label_singular_hs_entity_news_rss: ''
+        label_plural_hs_entity_news_rss: ''
     third_party_settings: {  }
   field_news_rss:
     type: inline_entity_form_simple
@@ -32,9 +41,13 @@ content:
       override_labels: true
       label_singular: Importer
       label_plural: Importers
+      hide_fieldset: false
+      hide_title: false
       collapsible: false
       collapsed: false
       revision: false
+      config_labels_button: _none
+      labels: {  }
     third_party_settings: {  }
 hidden:
   label: true

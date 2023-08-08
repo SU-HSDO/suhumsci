@@ -91,7 +91,7 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
-    $I->fillField('pb_modal_text', 'Hero');
+    $I->fillField('pb_modal_text', 'Banner');
     $I->scrollTo('.field-add-more-submit');
     $I->click('field_hs_page_components_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');

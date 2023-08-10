@@ -14,7 +14,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Store image gallery display mode in paragraph variable.
  */
 function hs_paragraph_types_update_9401() {
-  // Load field_photoalbum_styl field definition exported configuration.
+  // Load field_photoalbum_style field definition exported configuration.
   $config_directory = new FileStorage(Settings::get('config_sync_directory'));
   $field_storage = $config_directory->read('field.storage.paragraph.field_photoalbum_style');
   $field_config = $config_directory->read('field.field.paragraph.stanford_gallery.field_photoalbum_style');
@@ -32,7 +32,7 @@ function hs_paragraph_types_update_9401() {
     ->getStorage('paragraph')
     ->loadByProperties(['type' => 'stanford_gallery']);
   foreach ($paragraphs as $paragraph) {
-    $paragraph->field_photoalbum_style->value = $paragraph->getBehaviorSetting('image_gallery', 'display_mode');
+    $paragraph->set('field_photoalbum_style', $paragraph->getBehaviorSetting('image_gallery', 'display_mode'));
     $paragraph->save();
   }
 }

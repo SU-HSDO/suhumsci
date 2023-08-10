@@ -21,30 +21,21 @@ function hs_basic_page_install() {
 }
 
 /**
- * Update field config with paragraphs_browser widget for basic page.
+ * Enable Paragraphs Browser and update widget field config for basic page.
  */
 function hs_basic_page_update_9001() {
   $themes_to_update = [
     'humsci_colorful',
     'humsci_traditional',
   ];
-  $modules = [
-    'file',
-    'insert',
-    'paragraphs_browser',
-    'path',
-    'paragraphs',
-  ];
   // Install only on the specified themes.
   $site_theme = \Drupal::theme()->getActiveTheme()->getName();
-  if (!in_array($site_theme, $themes_to_update, TRUE)) {
+  if (!in_array($site_theme, $themes_to_update)) {
     return;
   }
-  // Ensure the following dependency modules are installed.
-  foreach ($modules as $module) {
-    if (!(\Drupal::moduleHandler()->moduleExists($module))) {
-      \Drupal::service('module_installer')->install([$module]);
-    }
+  // Ensure that paragraphs browser is installed.
+  if (!(\Drupal::moduleHandler()->moduleExists('paragraphs_browser'))) {
+    \Drupal::service('module_installer')->install(['paragraphs_browser']);
   }
   // The only unique setting per field is 'default_paragraph_type'.
   $settings = [
@@ -104,23 +95,10 @@ function hs_basic_page_update_9002() {
     'humsci_colorful',
     'humsci_traditional',
   ];
-  $modules = [
-    'file',
-    'insert',
-    'paragraphs_browser',
-    'path',
-    'paragraphs',
-  ];
   // Install only on the specified themes.
   $site_theme = \Drupal::theme()->getActiveTheme()->getName();
   if (!in_array($site_theme, $themes_to_update, TRUE)) {
     return;
-  }
-  // Ensure the following dependency modules are installed.
-  foreach ($modules as $module) {
-    if (!(\Drupal::moduleHandler()->moduleExists($module))) {
-      \Drupal::service('module_installer')->install([$module]);
-    }
   }
   // The only unique setting per field is 'default_paragraph_type'.
   $settings = [

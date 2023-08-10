@@ -84,44 +84,25 @@ function hs_admin_preprocess_form_element(&$variables) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function hs_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $node_forms = [
-    'node_hs_basic_page_form',
-    'node_hs_basic_page_edit_form',
-    'node_hs_course_form',
-    'node_hs_course_edit_form',
-    'node_hs_event_series_form',
-    'node_hs_event_series_edit_form',
-    'node_hs_event_form',
-    'node_hs_event_edit_form',
-    'node_hs_news_form',
-    'node_hs_news_edit_form',
-    'node_hs_person_form',
-    'node_hs_person_edit_form',
-    'node_hs_private_page_form',
-    'node_hs_private_page_edit_form',
-    'node_hs_publications_form',
-    'node_hs_publications_edit_form',
-  ];
-  if (in_array($form_id, $node_forms)) {
-    // Some tabs should always be first regardless of newly added tabs.
-    $form['menu']['#weight'] = -4;
-    $form['author']['#weight'] = -3;
-    $form['promote']['#weight'] = -2;
-    $form['options']['#weight'] = -2;
-    $form['path']['#weight'] = -1;
-    // Some tabs should always be last regardless of newly added tabs.
-    $form['url_redirects']['#weight'] = 96;
-    $form['rabbit_hole']['#weight'] = 97;
-    $form['xmlsitemap']['#weight'] = 98;
-    $form['meta']['#weight'] = 99;
-    $form['revision']['#weight'] = 100;
-    $form['revision_information']['#weight'] = 100;
-    // Weight is applied to some tabs after form build.
-    $form['#after_build'][] = 'hs_admin_form_after_build';
-  }
+function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Some tabs should always be first regardless of newly added tabs
+  // in node add/edit forms.
+  $form['menu']['#weight'] = -4;
+  $form['author']['#weight'] = -3;
+  $form['promote']['#weight'] = -2;
+  $form['options']['#weight'] = -2;
+  $form['path']['#weight'] = -1;
+  // Some tabs should always be last regardless of newly added tabs.
+  $form['url_redirects']['#weight'] = 96;
+  $form['rabbit_hole']['#weight'] = 97;
+  $form['xmlsitemap']['#weight'] = 98;
+  $form['meta']['#weight'] = 99;
+  $form['revision']['#weight'] = 100;
+  $form['revision_information']['#weight'] = 100;
+  // Weight is applied to some tabs after form build.
+  $form['#after_build'][] = 'hs_admin_form_after_build';
 }
 
 /**

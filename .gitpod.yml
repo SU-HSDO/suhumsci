@@ -45,7 +45,8 @@ tasks:
       blt sws:keys &&
       blt source:build:simplesamlphp-config &&
       mysql -e 'SET GLOBAL max_allowed_packet=67108864;' &&
-      blt drupal:sync --site=hs_colorful
+      blt drupal:sync --site=hs_colorful -n &&
+      drush sql-sync @hs_colorful.local @self -y
 
     command: >
       git config core.fileMode false &&

@@ -5,7 +5,6 @@
  * Contains hs_admin.module.
  */
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
@@ -108,16 +107,17 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
 }
 
 /**
- * After build callback for hs_admin_form_node_form_alter();
- * 
+ * After build callback for hs_admin_form_node_form_alter().
+ *
  * @param array $form
  *   Form definition array.
  * @param Drupal\Core\Form\FormStateInterface $form_state
  *   Current form state.
+ * 
  * @return array
  *   Updated form.
  */
-function _hs_admin_form_after_build($form, FormStateInterface $form_state) {
+function _hs_admin_form_after_build(array $form, FormStateInterface $form_state) {
   $form['path']['#weight'] = -1;
   $form['url_redirects']['#weight'] = 96;
   return $form;
@@ -136,7 +136,7 @@ function hs_admin_form_node_type_add_form_alter(array &$form, FormStateInterface
  * Implements hook_preprocess_HOOK().
  */
 function hs_admin_preprocess_page(&$variables) {
-  $portal_routes = ['user.register','user.login'];
+  $portal_routes = ['user.register', 'user.login'];
   $current_route = \Drupal::routeMatch()->getRouteName();
   if (in_array($current_route, $portal_routes)) {
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/login_portal';

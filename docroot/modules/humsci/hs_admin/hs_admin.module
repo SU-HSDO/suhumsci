@@ -73,7 +73,7 @@ function hs_admin_preprocess_details(&$variables) {
 }
 
 /**
- * Impelments hook_preprocess_form_element().
+ * Implements hook_preprocess_form_element().
  */
 function hs_admin_preprocess_form_element(&$variables) {
   $name = $variables['name'] ?? '';
@@ -104,13 +104,20 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
   $form['revision']['#weight'] = 100;
   $form['revision_information']['#weight'] = 100;
   // Weight is applied to some tabs after form build.
-  $form['#after_build'][] = 'hs_admin_form_after_build';
+  $form['#after_build'][] = '_hs_admin_form_after_build';
 }
 
 /**
- * Implements hook_form_after_build().
+ * After build callback for hs_admin_form_node_form_alter();
+ * 
+ * @param array $form
+ *   Form definition array.
+ * @param Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ * @return array
+ *   Updated form.
  */
-function hs_admin_form_after_build($form, FormStateInterface $form_state) {
+function _hs_admin_form_after_build($form, FormStateInterface $form_state) {
   $form['path']['#weight'] = -1;
   $form['url_redirects']['#weight'] = 96;
   return $form;

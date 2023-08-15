@@ -88,22 +88,9 @@ function hs_admin_preprocess_form_element(&$variables) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Some tabs should always be first regardless of newly added tabs
-  // in node add/edit forms.
-  $form['menu']['#weight'] = -4;
-  $form['author']['#weight'] = -3;
-  $form['promote']['#weight'] = -2;
-  $form['options']['#weight'] = -2;
-  $form['path']['#weight'] = -1;
-  // Some tabs should always be last regardless of newly added tabs.
-  $form['url_redirects']['#weight'] = 96;
-  $form['rabbit_hole']['#weight'] = 97;
-  $form['xmlsitemap']['#weight'] = 98;
-  $form['meta']['#weight'] = 99;
-  $form['revision']['#weight'] = 100;
-  $form['revision_information']['#weight'] = 100;
   // Weight is applied to some tabs after form build.
   $form['#after_build'][] = '_hs_admin_form_after_build';
+  ksm($form);
 }
 
 /**
@@ -118,6 +105,20 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
  *   Updated form.
  */
 function _hs_admin_form_after_build(array $form, FormStateInterface $form_state) {
+  // Some tabs should always be first regardless of newly added tabs
+  // in node add/edit forms.
+  $form['menu']['#weight'] = -4;
+  $form['author']['#weight'] = -3;
+  $form['promote']['#weight'] = -2;
+  $form['options']['#weight'] = -2;
+  $form['path']['#weight'] = -1;
+  // Some tabs should always be last regardless of newly added tabs.
+  $form['url_redirects']['#weight'] = 96;
+  $form['rabbit_hole']['#weight'] = 97;
+  $form['xmlsitemap']['#weight'] = 98;
+  $form['meta']['#weight'] = 99;
+  $form['revision']['#weight'] = 100;
+  $form['revision_information']['#weight'] = 100;
   $form['path']['#weight'] = -1;
   $form['url_redirects']['#weight'] = 96;
   return $form;

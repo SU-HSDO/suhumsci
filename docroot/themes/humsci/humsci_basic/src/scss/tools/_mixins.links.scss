@@ -125,6 +125,15 @@
     }
   }
 
+  @include hb-themes(('traditional', 'warbler')) {
+    @include hb-pairing-color('color', 'secondary');
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'tertiary-darken-20');
+    }
+  }
+
   @include hb-traditional {
     background-image: none;
   }

@@ -67,8 +67,8 @@ class FlexiblePageCest {
     $I->fillField('pb_modal_text', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
-    $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more"]');
-    $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more"]');
+    $I->scrollTo('[id^="edit-field-hs-page-components-0-subform-field-hs-collection-items-add-more"]');
+    $I->click('[id^="edit-field-hs-page-components-0-subform-field-hs-collection-items-add-more"]');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Postcard');
     $I->click('field_hs_collection_items_hs_postcard_add_more');

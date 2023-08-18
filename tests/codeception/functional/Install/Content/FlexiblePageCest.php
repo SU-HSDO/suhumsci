@@ -480,6 +480,7 @@ class FlexiblePageCest {
 
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
+    // Add a Collection component to the page.
     $I->click('#edit-field-hs-page-components-add-more-browse');
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Collection');
@@ -488,19 +489,26 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);
     $I->selectOption('Items Per Row', 2);
     $I->canSeeOptionIsSelected('Background Color', '- None -');
-    $I->click('.dropbutton__toggle');
-    $I->click('.add-more-button-hs-text-area');
-    $I->scrollTo('.dropbutton__toggle');
+    // Add a Text Area component to the Collection.
+    $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
+    $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Text Area');
+    $I->click('field_hs_collection_items_hs_text_area_add_more');
+    $I->waitForText('Items Per Row');
     $I->waitForText('Text format');
     $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Foo Bar Baz');
-    $I->scrollTo('.dropbutton__toggle');
-    $I->click('.dropbutton__toggle');
-    $I->click('.add-more-button-hs-postcard');
-    $I->scrollTo('.dropbutton__toggle');
+    // Add a Postcard to the Collection.
+    $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
+    $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Postcard');
+    $I->click('field_hs_collection_items_hs_postcard_add_more');
     $I->waitForText('No media items are selected.');
     $I->scrollTo('.field--name-field-hs-postcard-body');
     $I->fillField('field_hs_page_components[1][subform][field_hs_collection_items][1][subform][field_hs_postcard_title][0][value]', 'Demo card title');
     $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Bar Foo Baz');
+    // Save the node and verify the components are visible.
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Foo Bar Baz', '.item-per-row--2');

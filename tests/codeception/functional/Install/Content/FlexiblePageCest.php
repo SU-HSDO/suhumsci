@@ -67,10 +67,14 @@ class FlexiblePageCest {
     $I->fillField('pb_modal_text', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
-    $I->click('.dropbutton__toggle');
-    $I->scrollTo('.add-more-button-hs-postcard');
-    $I->click('Add Postcard');
+
+    $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
+    $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Postcard');
+    $I->click('field_hs_collection_items_hs_postcard_add_more');
     $I->waitForText('No media items are selected.');
+
     $card_title = $this->faker->words(3, TRUE);
     $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
     $I->cantSeeElement('.hs-duplicated');

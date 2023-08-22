@@ -58,6 +58,9 @@ class MegaMenuCest {
 
     $I->amOnPage($top_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
+    // Force the details/summary markup to open
+    $I->executeJS("document.querySelector('.menu-link-form').setAttribute('open', 'true')", []);
+    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu\"]").style.display = "block";', []);
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $topLevelTitle);
     $I->scrollTo(['css' => '.form-submit']);
@@ -69,10 +72,13 @@ class MegaMenuCest {
     ]);
     $I->amOnPage($second_level->toUrl('edit-form')->toString());
     $I->click('.menu-link-form summary');
+    $I->executeJS("document.querySelector('.menu-link-form').setAttribute('open', 'true')", []);
+    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu\"]").style.display = "block";', []);
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $secondLevelTitle);
-    $I->scrollTo(['css' => '.form-item-menu-menu-parent'], 0, -100);
+    $I->scrollTo(['css' => '.form-item--menu-menu-parent'], 0, -100);
     $I->wait(2);
+    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu-menu-parent\"]").style.display = "block";');
     $I->selectOption('Parent link', "-- {$topLevelTitle}");
     $I->waitForText('Show row weights');
     $I->click('Show row weights');
@@ -133,4 +139,3 @@ class MegaMenuCest {
     drupal_flush_all_caches();
   }
 }
-

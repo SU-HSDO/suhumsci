@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_paragraph_types module.
+ */
+
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Config\FileStorage;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Store image gallery display mode in paragraph variable.
+ */
+function hs_paragraph_types_update_9401() {
+  // Load field_photoalbum_style field definition exported configuration.
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $field_storage = $config_directory->read('field.storage.paragraph.field_photoalbum_style');
+  $field_config = $config_directory->read('field.field.paragraph.stanford_gallery.field_photoalbum_style');
+
+  // Create field_photoalbum_style from exported configuration.
+  if (!FieldStorageConfig::loadByName($field_storage['entity_type'], $field_storage['field_name'])) {
+    FieldStorageConfig::create($field_storage)->save();
+  }
+  if (!FieldConfig::loadByName($field_config['entity_type'], $field_config['bundle'], $field_config['field_name'])) {
+    FieldConfig::create($field_config)->save();
+  }
+
+  // Copy 'display_mode' behavior value to new field in stanford_gallery.
+  $paragraphs = \Drupal::entityTypeManager()
+    ->getStorage('paragraph')
+    ->loadByProperties(['type' => 'stanford_gallery']);
+  foreach ($paragraphs as $paragraph) {
+    $paragraph->set('field_photoalbum_style', $paragraph->getBehaviorSetting('image_gallery', 'display_mode'));
+    $paragraph->save();
+  }
+}

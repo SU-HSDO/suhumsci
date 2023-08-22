@@ -12,10 +12,39 @@
       }
     }
   }
+
+  .toolbar-tray-horizontal li:hover ul li {
+    float: none;
+  }
 }
 
 // Drupal adds an additional div to the footer when you are logged in from the Toolbar module, creating a thin white line below the footer.
 // This ID below addresses that div specifically and removes the white line.
 #drupal-live-announce.visually-hidden {
   height: 0;
+}
+
+// Match styles of shortcuts toolbar with manage toolbar
+#toolbar-item-shortcuts-tray {
+  li > ul {
+    margin: 0;
+    padding-inline: 0;
+    box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.3333);
+  }
+
+  .menu:not(.toolbar-menu) li {
+    border-bottom: 1px solid var(--gin-border-color);
+    min-width: 18rem;
+  }
+
+  li:hover > a:not([class]),
+  li:hover > span:not([class]) {
+    color: var(--gin-color-primary-hover);
+    background-color: var(--gin-bg-item-hover);
+    background-image: none;
+  }
+
+  li:hover > span:not([class]) {
+    cursor: default;
+  }
 }

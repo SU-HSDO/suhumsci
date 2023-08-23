@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.stanford_gallery.field_photoalbum_style
     - field.field.paragraph.stanford_gallery.su_gallery_button
     - field.field.paragraph.stanford_gallery.su_gallery_description
     - field.field.paragraph.stanford_gallery.su_gallery_headline
@@ -14,6 +15,7 @@ dependencies:
     - field_formatter_class
     - hs_field_helpers
     - linkit
+    - options
     - stanford_media
     - text
 id: paragraph.stanford_gallery.default
@@ -21,6 +23,13 @@ targetEntityType: paragraph
 bundle: stanford_gallery
 mode: default
 content:
+  field_photoalbum_style:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
   su_gallery_button:
     type: linkit
     label: hidden

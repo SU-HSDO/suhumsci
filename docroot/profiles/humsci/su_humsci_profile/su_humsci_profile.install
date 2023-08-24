@@ -184,3 +184,21 @@ function su_humsci_profile_update_9004() {
 function su_humsci_profile_update_9405() {
   \Drupal::service('module_installer')->uninstall(['webp']);
 }
+
+/**
+ * Enable new admin theme and helper module.
+ */
+function su_humsci_profile_update_9406() {
+  \Drupal::service('module_installer')->install(['hs_admin']);
+  $theme_handler = \Drupal::service('theme_installer');
+  $theme_handler->install([
+    'claro',
+    'gin',
+    'su_humsci_gin_admin',
+  ]);
+  // Set the su_humsci_gin_admin as the admin theme.
+  $config = \Drupal::service('config.factory')->getEditable('system.theme');
+  $config->set('admin', 'su_humsci_gin_admin')->save();
+  // Install gin toolbar helper module.
+  \Drupal::service('module_installer')->install(['gin_toolbar']);
+}

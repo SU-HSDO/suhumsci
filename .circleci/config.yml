@@ -49,6 +49,7 @@ save_cache: &save_cache
     - ./docroot/core
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
+    - ./docroot/themes/contrib
   key: cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
 
 disable_telemetry: &disable_telemetry

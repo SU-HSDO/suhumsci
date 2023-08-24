@@ -1,0 +1,92 @@
+html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
+  --colorGinPrimary: #8c1515;
+  --colorGinPrimaryRGB: 140, 21, 21;
+  --colorGinPrimaryLightRGB: rgb(198, 46, 46);
+  --colorGinAppBackground: rgba(255,250,250,1);
+  --colorGinLayerBackground: rgba(255,255,255,1);
+  --colorGinLayer2Background: rgba(250,242,242,1);
+  --colorGinLayer3Background: rgba(255,255,255,1);
+  --colorGinLayer4Background: rgba(235, 235, 235, 1);
+  --colorGinTableHeader: rgba(235, 235, 235, 1);
+  --colorGinItemHover: rgba(245, 245, 245, 1);;
+}
+
+[data-gin-accent="custom"] fieldset:not(.fieldgroup) {
+  background-color: var(--colorGinLayerBackground);
+}
+
+[data-gin-accent="custom"] .claro-details__wrapper--accordion,
+[data-gin-accent="custom"] .claro-details__wrapper--accordion-item,
+[data-gin-accent="custom"] .claro-details__wrapper--vertical-tabs-item {
+  background-color: var(--colorGinLayer4Background);
+}
+
+.ui-autocomplete {
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.toolbar .toolbar-tray-horizontal li:hover ul li {
+  float: none;
+}
+
+/* Match styles of shortcuts toolbar with manage toolbar */
+#toolbar-item-shortcuts-tray li > ul {
+  margin: 0;
+  padding-inline: 0;
+  box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.3333);
+}
+
+#toolbar-item-shortcuts-tray .menu:not(.toolbar-menu) li {
+  border-bottom: 1px solid var(--gin-border-color);
+  min-width: 18rem;
+}
+
+#toolbar-item-shortcuts-tray li:hover > span {
+  cursor: default;
+}
+
+#toolbar-item-shortcuts-tray li:hover > a:not([class]),
+#toolbar-item-shortcuts-tray li:hover > span:not([class]) {
+  color: var(--gin-color-primary-hover);
+  background-color: var(--gin-bg-item-hover);
+  background-image: none;
+}
+
+.linkit-ui-autocomplete {
+  max-width: 400px !important;
+  max-height: 200px;
+}
+
+.linkit-result-line--title, .linkit-result-line--description {
+  white-space: normal !important;
+}
+
+/* Messsages custom colors */
+.messages--status {
+  --gin-color-green-light: #fff;
+  --gin-bg-green: #008566;
+}
+
+.messages--warning {
+  --gin-color-warning-light: #000;
+  --gin-bg-warning: #e98300;
+}
+
+.messages--error {
+  --gin-color-danger-light: #fff;
+  --gin-bg-danger: #b1040e;
+}
+
+.gin-table-scroll-wrapper {
+  display: contents;
+}
+
+.paragraphs-browser-wrapper fieldset input {
+  background: rgb(var(--gin-color-primary-light-rgb));
+  z-index: 1;
+}
+
+.paragraphs-browser-wrapper fieldset:not(.fieldgroup) {
+  margin-bottom: 2rem;
+}

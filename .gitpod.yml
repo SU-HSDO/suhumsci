@@ -44,17 +44,15 @@ tasks:
       mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default; CREATE DATABASE IF NOT EXISTS drupal' &&
       blt sws:keys &&
       blt source:build:simplesamlphp-config &&
-      drush sql-sync @hs_colorful.prod @self --extra-dump='--no-tablespaces --insert-ignore' -y &&
-      drush updb -y &&
-      blt drupal:toggle:modules &&
-      drush cim --partial -y &&
-      drush cim --partial -y
+      mysql -e 'SET GLOBAL max_allowed_packet=67108864;' &&
+      blt drupal:sync --site=hs_colorful -n &&
+      drush sql-sync @hs_colorful.local @self -y
 
     command: >
       git config core.fileMode false &&
       blt blt:telemetry:disable --no-interaction &&
       git remote set-url origin git@github.com:SU-HSDO/suhumsci.git &&
       apache2ctl restart &&
-      gp await-port 8001 &&
+      gp ports await 8001 &&
       drush uli &&
       drush uli | xargs gp preview --external

@@ -33,14 +33,15 @@ class VideoEmbedCest {
     $I->fillField('Title', $this->faker->words(3, TRUE));
 
     // Add text field
-    $I->scrollTo('#edit-field-hs-page-components-add-more');
-    $I->click('List additional actions', '#edit-field-hs-page-components-add-more');
-    $I->scrollTo('#field-hs-page-components-hs-text-area-add-more');
-    $I->click('#field-hs-page-components-hs-text-area-add-more');
+    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->click('Add Component');
+    $I->waitForText('Browse');
+    $I->fillField('pb_modal_text', 'Text Area');
+    $I->click('field_hs_page_components_hs_text_area_add_more');
     $I->wait(2);
 
     // Add media
-    $I->click('.cke_button__drupalmedialibrary');
+    $I->click('.ck-button[data-cke-tooltip-text="Insert Media"]');
     $I->waitForText('Add or select media');
     $I->click('.media-library-menu__link[data-title="Video"]');
     $I->waitForText('Add Video via URL');
@@ -53,26 +54,15 @@ class VideoEmbedCest {
     $I->wait(2);
 
     // Enable caption
-    $I->switchToIFrame(".cke_wysiwyg_frame");
-    $I->executeJS('document.querySelector(".media-library-item__edit").style.display = "inline"', []);
-    $I->executeJS('document.querySelector(".media-library-item__edit").click()', []);
-    $I->switchToIFrame();
-    $I->waitForText('Caption');
-    $I->executeJS('document.querySelector("input[name=\"hasCaption\"]").click()', []);
-    $I->executeJS('document.querySelector(".ui-dialog-buttonset .js-form-submit").click()', []);
-    $I->wait(1);
-
-    // Add caption
-    $I->switchToIFrame(".cke_wysiwyg_frame");
-    $I->executeJS('document.querySelector("figcaption").textContent += "Caption for video goes here"', []);
-
+    $I->click('//button[@data-cke-tooltip-text="Toggle caption on"]');
+    $I->fillField('figcaption.ck-editor__nested-editable', 'sore was I ere I saw eros');
     // Save node
-    $I->switchToIFrame();
     $I->click('Save');
 
     // Verify figure and figcaption
     $I->seeElement('figure');
     $I->seeElement('figcaption');
-    $I->see("Caption for video goes here");
+    $I->scrollTo('figcaption');
+    $I->see("sore was I ere I saw eros");
   }
 }

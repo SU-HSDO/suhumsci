@@ -206,10 +206,18 @@ function su_humsci_profile_update_9406() {
 /**
  * Uninstall stable and bricks
  */
-function su_humsci_profile_update_9500(){
+function su_humsci_profile_update_9500() {
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
   $theme_installer = \Drupal::service('theme_installer');
-  $theme_installer->uninstall(['stable', 'classy']);
-  $theme_installer->install(['stable9']);
-
+  if ($theme_handler->themeExists('classy')) {
+    $theme_installer->uninstall(['classy']);
+  }
+  if ($theme_handler->themeExists('stable')) {
+    $theme_installer->uninstall(['stable']);
+  }
+  if (!$theme_handler->themeExists('stable9')) {
+    $theme_installer->install(['stable9']);
+  }
   \Drupal::service('module_installer')->uninstall(['bricks']);
 }

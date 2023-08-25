@@ -36,7 +36,7 @@ class HsEntityForm extends ContentEntityForm {
         break;
     }
 
-    $form_state->setRedirect('entity.hs_entity.canonical', ['hs_entity' => $entity->id()]);
+    $form_state->setRedirect('entity.hs_entity.collection');
 
     return $result;
   }

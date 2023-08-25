@@ -8,13 +8,25 @@
 
 {%- set attributes = attributes.addClass(classes) -%}
 
+{# Set path to node #}
+{% if title %}
+  {% set url = path('entity.node.canonical', {'node': title['#row'].nid}) %}
+{% elseif description %}
+  {% set url = path('entity.node.canonical', {'node': description['#row'].nid}) %}
+{% endif %}
+
 <div{{ attributes }}>
   {% if image %}
-  <div class="hb-card__graphics">
-    <div class="hb-card__img">
-      {{ image }}
+    <div class="hb-card__graphics">
+      <div class="hb-card__img">
+        {# Removes duplicate link from tabbing order. #}
+        {% if url %}
+          <a href="{{ url }}" tabindex="-1" aria-hidden="true">{{ image }}</a>
+        {% else %}
+          {{ image }}
+        {% endif %}
+      </div>
     </div>
-  </div>
   {% endif %}
 
   <div class="hb-card__content">

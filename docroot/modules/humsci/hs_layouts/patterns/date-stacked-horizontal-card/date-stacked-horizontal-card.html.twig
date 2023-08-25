@@ -11,14 +11,24 @@
   {%- set attributes = attributes.addClass('hb-card--no-image') -%}
 {% endif %}
 
-<div{{ attributes }}>
+{# Set path to node #}
+{% if title %}
+  {% set url = path('entity.node.canonical', {'node': title['#row'].nid}) %}
+{% elseif description %}
+  {% set url = path('entity.node.canonical', {'node': description['#row'].nid}) %}
+{% endif %}
 
+<div{{ attributes }}>
   {% if image or month or day %}
     <div class="hb-card__graphics{% if month or day %} hb-card__graphics--has-date{% endif %}">
-
       {% if image %}
         <div class="hb-card__img">
-          {{ image }}
+          {# Removes duplicate link from tabbing order. #}
+          {% if url %}
+            <a href="{{ url }}" tabindex="-1" aria-hidden="true">{{ image }}</a>
+          {% else %}
+            {{ image }}
+          {% endif %}
         </div>
       {% endif %}
 
@@ -88,8 +98,14 @@
     {% endif %}
 
     {% if button %}
+      {# Set detailed button text that describes where the link is going for accessibility. #}
+      {% if title %}
+        {% set link_text = 'Read More about '|t ~ title['#row']._entity.title.value %}
+      {% else %}
+        {% set link_text = 'Read More'|t %}
+      {% endif %}
       <div class="hb-card__decorative-link">
-        {{ button }}
+        <a href="{{ url }}" class="hb-card__link">{{ link_text }}</a>
       </div>
     {% endif %}
 

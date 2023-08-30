@@ -1,70 +1,143 @@
-uuid: 768cbbb2-b823-4490-9355-351669fdc0da
+uuid: bc79934d-4914-4df2-9a64-485ac0ae8cdd
 langcode: en
 status: true
 dependencies:
   config:
     - filter.format.basic_html
   module:
-    - ckeditor
-_core:
-  default_config_hash: HkoM0Kph8FRp7_Ml2PudQ0R4aAHnzpu_sRfM_h_fLAo
+    - ckeditor5
 format: basic_html
-editor: ckeditor
+editor: ckeditor5
 settings:
   toolbar:
-    rows:
-      -
-        -
-          name: Formatting
-          items:
-            - Bold
-            - Italic
-            - Outdent
-            - Indent
-            - Table
-            - JustifyLeft
-            - JustifyCenter
-            - JustifyRight
-        -
-          name: Links
-          items:
-            - DrupalLink
-            - DrupalUnlink
-            - Anchor
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-            - HorizontalRule
-        -
-          name: Media
-          items:
-            - Blockquote
-            - DrupalMediaLibrary
-        -
-          name: Styles
-          items:
-            - Format
-            - Styles
-            - DrupalFontAwesome
-        -
-          name: Tools
-          items:
-            - RemoveFormat
-            - PasteFromWord
-            - Source
-            - Undo
-            - Redo
-            - Maximize
+    items:
+      - bold
+      - italic
+      - outdent
+      - indent
+      - insertTable
+      - alignment
+      - '|'
+      - link
+      - '|'
+      - bulletedList
+      - numberedList
+      - horizontalLine
+      - '|'
+      - blockQuote
+      - drupalMedia
+      - '|'
+      - heading
+      - style
+      - '|'
+      - removeFormat
+      - sourceEditing
+      - undo
+      - redo
   plugins:
-    drupallink:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading2
+        - heading3
+        - heading4
+        - heading5
+        - heading6
+    ckeditor5_style:
+      styles:
+        -
+          label: 'Primary Button'
+          element: '<a class="hs-button">'
+        -
+          label: 'Big Primary Button'
+          element: '<a class="hs-button--big">'
+        -
+          label: 'Secondary Button'
+          element: '<a class="hs-secondary-button">'
+        -
+          label: 'More Link'
+          element: '<a class="hs-more-link">'
+        -
+          label: 'External Link'
+          element: '<a class="hs-external-link">'
+        -
+          label: 'File Link'
+          element: '<a class="hs-file-link">'
+        -
+          label: 'PDF Link'
+          element: '<a class="hs-pdf-link">'
+        -
+          label: 'Private Link'
+          element: '<a class="hs-private-link">'
+        -
+          label: 'Lead Font'
+          element: '<p class="hs-font-lead">'
+        -
+          label: 'Splash Font'
+          element: '<p class="hs-font-splash">'
+        -
+          label: 'Short Line Length'
+          element: '<p class="hs-short-line-length">'
+        -
+          label: 'Breakout Box'
+          element: '<p class="hs-breakout-box">'
+        -
+          label: Caption
+          element: '<p class="hs-caption">'
+        -
+          label: Credits
+          element: '<p class="hs-credits">'
+        -
+          label: 'Emphasized Text'
+          element: '<span class="hs-emphasized-text">'
+        -
+          label: 'Borderless Table'
+          element: '<table class="hs-table--borderless">'
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<b>'
+        - '<cite>'
+        - '<dl>'
+        - '<dt>'
+        - '<dd>'
+        - '<i class>'
+        - '<img src alt data-entity-type data-entity-uuid data-align data-caption width height class>'
+        - '<drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button alt title class>'
+        - '<div role id aria-* class>'
+        - '<span class>'
+        - '<blockquote cite>'
+        - '<ul type>'
+        - '<ol type>'
+        - '<h2 id class>'
+        - '<h3 id class>'
+        - '<h4 id class>'
+        - '<h5 id class>'
+        - '<h6 id class>'
+        - '<caption class>'
+        - '<tbody class>'
+        - '<th scope class>'
+        - '<td class>'
+        - '<table class>'
+        - '<a name target hreflang>'
+        - '<drupal-media data-* title>'
+        - '<p class>'
+    ckeditor5_list:
+      reversed: false
+      startIndex: true
+    ckeditor5_alignment:
+      enabled_alignments:
+        - left
+        - center
+        - right
+        - justify
+    media_media:
+      allow_view_mode_override: true
+    editor_advanced_link_link:
+      enabled_attributes:
+        - id
+        - title
+    linkit_extension:
       linkit_enabled: true
       linkit_profile: default
-    stylescombo:
-      styles: "a.hs-button|Primary Button\r\na.hs-button--big|Big Primary Button\r\na.hs-secondary-button|Secondary Button\r\na.hs-more-link|More Link\r\na.hs-external-link|External Link\r\na.hs-file-link|File Link\r\na.hs-pdf-link|PDF Link\r\na.hs-private-link|Private Link\r\np.hs-font-lead|Lead Font\r\np.hs-font-splash|Splash Font\r\np.hs-short-line-length|Short Line Length\r\np.hs-breakout-box|Breakout Box\r\np.hs-caption|Caption\r\np.hs-credits|Credits\r\nspan.hs-emphasized-text|Emphasized Text\r\ntable.hs-table--borderless|Borderless Table"
-    blockimagepaste:
-      block_image_paste_enabled: true
 image_upload:
   status: false
   scheme: public

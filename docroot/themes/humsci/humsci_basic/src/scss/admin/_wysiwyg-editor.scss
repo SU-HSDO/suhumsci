@@ -85,3 +85,14 @@ drupal-media {
   border: 0 none;
   display: table;
 }
+
+// CK5 bugfix. Conflict between paragraphs and tabledrag styles
+.js .field--widget-paragraphs .tabledrag-handle .handle {
+  width: calc(100% + 2px);
+}
+
+// CK5 bugfix. When too many buttons are included in the wysiwyg
+// it causes overflow into the next column
+.ck-editor .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+  flex-wrap: wrap;
+}

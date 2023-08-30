@@ -5,18 +5,6 @@
  * hs_paragraph_types.module
  */
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\paragraphs\ParagraphInterface;
-
-/**
- * Implements hook_entity_view_mode_alter().
- */
-function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
-  if ($entity instanceof ParagraphInterface && $entity->bundle() == 'stanford_gallery') {
-    $view_mode = $entity->getBehaviorSetting('image_gallery', 'display_mode', 'default');
-  }
-}
-
 /**
  * Implements hook_preprocess_HOOK().
  */

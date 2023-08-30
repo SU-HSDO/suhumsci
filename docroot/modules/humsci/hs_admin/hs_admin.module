@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_admin.module.
+ */
+
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_preprocess_node_edit_form().
+ */
+function hs_admin_page_attachments(&$variables) {
+  $logged_in = \Drupal::currentUser()->isAuthenticated();
+
+  if ($logged_in) {
+    $variables['#attached']['library'][] = 'hs_admin/hs_admin';
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function hs_admin_preprocess_html(&$variables) {
+  // Get currently active user and his roles.
+  $account = \Drupal::currentUser();
+  $roles = $account->getRoles();
+
+  foreach ($roles as $role) {
+    $variables['attributes']['class'][] = 'role-' . $role;
+  }
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function hs_admin_toolbar_alter(&$items) {
+  $uid = \Drupal::currentUser()->id();
+  $user = User::load($uid);
+
+  if (!$user->hasPermission('show manage link') && $uid != 1) {
+    unset($items['admin_toolbar_tools']);
+    unset($items['administration']);
+  }
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function hs_admin_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  // Disable edit/create node tabs for publish and delete.
+  unset($data['tabs'][0]['entity.node.publish']);
+  unset($data['tabs'][0]['entity.node.delete_form']);
+}
+
+/**
+ * Implements hook_preprocess_details().
+ */
+function hs_admin_preprocess_details(&$variables) {
+  $current_route = \Drupal::routeMatch()->getRouteName();
+  if (!in_array($current_route, ['node.add', 'entity.node.edit_form'])) {
+    // Don't mess with stuff not on the node forms.
+    return;
+  }
+
+  $expanded = ['menu settings'];
+  // Close all sidebar elements if not Menu Settings.
+  $title = $variables['title'] ?? '';
+  if (!is_array($title) && in_array(strtolower((string) $title), $expanded, TRUE)) {
+    $variables['attributes']['open'] = 'open';
+  }
+  else {
+    unset($variables['attributes']['open']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_form_element().
+ */
+function hs_admin_preprocess_form_element(&$variables) {
+  $name = $variables['name'] ?? '';
+  $type = $variables['element']['#type'] ?? '';
+  // Check that it's the published status field
+  // and check it for a label.
+  if ($type === 'item' && strtolower($name) === 'meta[published]' && isset($variables['children'])) {
+    $variables['children'] = Markup::create('Revisions');
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Weight is applied to some tabs after form build.
+  $form['#after_build'][] = '_hs_admin_form_after_build';
+}
+
+/**
+ * After build callback for hs_admin_form_node_form_alter().
+ *
+ * @param array $form
+ *   Form definition array.
+ * @param Drupal\Core\Form\FormStateInterface $form_state
+ *   Current form state.
+ *
+ * @return array
+ *   Updated form.
+ */
+function _hs_admin_form_after_build(array $form, FormStateInterface $form_state) {
+  // Some tabs should always be first regardless of newly added tabs
+  // in node add/edit forms.
+  $form['menu']['#weight'] = -4;
+  $form['author']['#weight'] = -3;
+  $form['promote']['#weight'] = -2;
+  $form['options']['#weight'] = -2;
+  $form['path']['#weight'] = -1;
+  // Some tabs should always be last regardless of newly added tabs.
+  $form['url_redirects']['#weight'] = 96;
+  $form['rabbit_hole']['#weight'] = 97;
+  $form['xmlsitemap']['#weight'] = 98;
+  $form['meta']['#weight'] = 99;
+  $form['revision']['#weight'] = 100;
+  $form['revision_information']['#weight'] = 100;
+  $form['path']['#weight'] = -1;
+  $form['url_redirects']['#weight'] = 96;
+  return $form;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_admin_form_node_type_add_form_alter(array &$form, FormStateInterface $form_state) {
+  $form['display']['display_submitted']['#default_value'] = FALSE;
+  $form['menu']['menu_options']['#default_value'] = NULL;
+  unset($form['workflow']['options']['#default_value']['promote']);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_admin_preprocess_page(&$variables) {
+  $portal_routes = ['user.register', 'user.login'];
+  $current_route = \Drupal::routeMatch()->getRouteName();
+  if (in_array($current_route, $portal_routes)) {
+    $variables['#attached']['library'][] = 'su_humsci_gin_admin/login_portal';
+  }
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function hs_admin_field_widget_complete_paragraphs_browser_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
+  $max_delta = $field_widget_complete_form['widget']['#max_delta'] ?? -1;
+  for ($delta = 0; $delta <= $max_delta; $delta++) {
+    if (isset($field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'])) {
+      $duplicate_button = &$field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'];
+      $duplicate_button['#ajax']['callback'] = 'su_humsci_profile_paragraphs_duplicate_callback';
+    }
+  }
+}

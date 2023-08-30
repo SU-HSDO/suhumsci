@@ -1,0 +1,334 @@
+// In CKEditor5, we need to create a unique CSS file that *only* contains
+// the necessary styles for the WYSIWYG. In this file we import all
+// the dependencies and the files we need. See _main.scss and
+// _base.scss for reference.
+@charset 'UTF-8';
+
+// Here we add the path to Font Awesome. This is copied from _main.scss
+// and necessary for icons in CKEditor styles.
+$fa-font-path: "../../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts" !default;
+
+$px-only: true;
+
+// Here we import all the various variables, mixins, and dependecies that may
+// potentially be used in one of the CKeditor files.
+@import "decanter/core/src/scss/core/normalize",
+  "decanter/core/src/scss/decanter-no-markup",
+  "decanter/core/src/scss/core/fonts", "decanter/core/src/scss/core/helpers",
+  "decanter/core/src/scss/core/base", "decanter/core/src/scss/elements/image",
+  "decanter/core/src/scss/elements/embed",
+  "decanter/core/src/scss/decanter-grid",
+  // utils
+  "../settings/variables.colorful-pairings",
+  "../settings/variables.traditional-pairings", "../settings/variables.general",
+  "../settings/variables.fonts", "../settings/variables.zindex",
+  "../settings/variables.fonts", "../settings/variables.forms",
+  "../tools/functions.fonts", "../tools/functions.general",
+  "../tools/functions.svg", "../tools/functions.icons",
+  "../tools/functions.animation", "../tools/functions.color-pairings",
+  "../tools/mixins.general", "../tools/mixins.themes",
+  "../tools/mixins.decorative", "../tools/mixins.text", "../tools/mixins.links",
+  "../tools/mixins.layout", "../tools/mixins.forms", "../tools/mixins.general",
+  "../tools/mixins.buttons", "../tools/mixins.menu-icons",
+  "../tools/mixins.icons", "../tools/mixins.lists", "../tools/mixins.tables",
+  "../tools/mixins.color-pairings", "../tools/mixins.heros",
+  "../tools/mixins.slick", "../tools/keyframes.text", "../utilities/fonts",
+  "../utilities/font-awesome", "../utilities/general", "../utilities/lists",
+  "../utilities/card-images", "../utilities/raised-cards", "../utilities/tables",
+  "../utilities/color-pairings", "../utilities/display-more-link-text",
+  "../utilities/dark-pattern", "../utilities/caption-credit",
+  "../utilities/media-embeds",
+  // Here are the files we actually need for CKEditor
+  "../admin/wysiwyg-editor",
+  "../utilities/wysiwyg-text-area";
+
+// See _base.scss in basic theme. We only need the below for CKEditor.
+// Otherwise styles affect the entire admin UI.
+:root {
+  // Colorful Theme
+  @include hb-pairing-custom-properties(
+    $hc-colorful-pairings,
+    $hb-colorful-default
+  );
+
+  // Traditional Theme
+  @include hb-pairing-custom-properties(
+    $ht-traditional-pairings,
+    $hb-traditional-default
+  );
+}
+
+.ck-editor__main {
+  @include font-smoothing;
+
+  @include hb-themes(("colorful", "airy")) {
+    font-family: $hb-colorful-font--sans;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
+  }
+
+  // Addresses small media previews in CK5
+  .hb-media-video {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .field-media-oembed-video {
+    position: relative;
+    aspect-ratio: 16/9;
+  }
+
+  .drupal-media,
+  .field-media-oembed-video,
+  .media-oembed-content {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// REM to PX overrides.
+// Because the :root font size is set by the admin theme, all HumSci Basic
+// classes for the WYSIWYG need to be converted to px to ensure accurate
+// rendering.
+.ck.ck-content {
+  @include hb-themes(("colorful", "airy")) {
+    font-size: 16px;
+
+    @include grid-media-min("lg") {
+      font-size: 18px;
+    }
+  }
+
+  @include hb-traditional {
+    font-size: 18px;
+  }
+
+  .hs-font-lead,
+  .summary {
+    font-size: 20px;
+
+    @include grid-media-min("lg") {
+      font-size: 22px;
+    }
+  }
+
+  .hs-font-splash {
+    @include grid-media-min("md") {
+      margin: 48px 0 16px;
+    }
+
+    @include hb-themes(("colorful", "airy")) {
+      font-size: 36px;
+
+      @include grid-media-min("md") {
+        font-size: 46px;
+      }
+    }
+
+    @include hb-traditional {
+      font-size: 34px;
+
+      @include grid-media-min("md") {
+        font-size: 42px;
+      }
+    }
+  }
+
+  .hs-breakout-box {
+    padding: 20px 18px;
+    display: inline-block;
+  }
+
+  .hs-caption,
+  .hs-credits {
+    font-size: 14px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .hs-more-link {
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-decoration: none;
+
+    &::after {
+      height: 19px;
+      width: 19px;
+      margin-bottom: -4px;
+      margin-left: 8px;
+    }
+  }
+
+  a[href*="//"].hs-external-link,
+  .hs-external-link a[href*="//"] {
+    &::after {
+      margin-bottom: -5px;
+      padding-left: 15px;
+      width: 11px;
+      height: 20px;
+      background-size: 11px;
+    }
+  }
+
+  .hs-file-link,
+  .hs-pdf-link,
+  .hs-private-link {
+    margin-right: 5px;
+  }
+
+  .hs-private-link {
+    &::before {
+      margin-bottom: -2px;
+      margin-right: 2px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .hs-button {
+    @include hb-button;
+  }
+
+  .hs-secondary-button {
+    @include hb-secondary-button;
+  }
+
+  .hs-button,
+  .hs-button--big,
+  .hs-secondary-button {
+    font-size: 16px;
+    border-width: 2px;
+
+    @include hb-themes(("colorful", "airy")) {
+      padding: 4px 20px;
+    }
+
+    @include hb-traditional {
+      padding: 6px 26px;
+    }
+  }
+
+  .hs-button--big {
+    @include hb-button;
+    font-size: 18px;
+    border-width: 3px;
+
+    @include hb-themes(("colorful", "airy")) {
+      padding: 8px 20px;
+    }
+
+    @include hb-traditional {
+      padding: 8px 35px;
+    }
+  }
+
+  table {
+    @include table;
+
+    width: 100%;
+    font-size: 13px;
+    table-layout: fixed;
+
+    @include grid-media-min("sm") {
+      font-size: 16px;
+    }
+
+    th,
+    td {
+      @include table-data;
+
+      padding: 16px;
+    }
+
+    thead th {
+      @include table-heading;
+    }
+
+    thead tr {
+      @include table-head-row;
+    }
+
+    tr:nth-child(even) {
+      @include table-row;
+    }
+  }
+
+  blockquote:nth-child(n) {
+    padding: 40px 0 24px;
+    font-size: 24px;
+    border-left: none;
+    overflow: visible;
+
+    &::before {
+      width: 68px;
+      height: 40px;
+      top: -20px;
+      right: calc(50% - 34px);
+    }
+  }
+
+  // Lists.
+  ul {
+    @include hb-unordered-list;
+    margin: 0 0 32px;
+    padding-left: 22px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 18px;
+
+      &::before {
+        height: 6px;
+        top: 8px;
+        width: 6px;
+      }
+    }
+  }
+
+  ol {
+    @include hb-ordered-list;
+    margin: 0 0 32px;
+    padding-left: 8px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 38px;
+
+      &::before {
+        font-size: 16px;
+        min-width: 30px;
+      }
+    }
+  }
+
+  // Override CK styles
+  .table table {
+    td,
+    th {
+      padding: 16px;
+    }
+
+    &.hs-table--borderless {
+      td,
+      th {
+        border-left: 0;
+        border-right: 0;
+      }
+    }
+  }
+}
+
+// Media embeds previews shouldn't be clickable.
+.ck .drupal-media [data-drupal-media-preview] {
+  pointer-events: none;
+}
+
+/* Temporarily hide gallery tabs */
+.paragraph-type--stanford-gallery .hs-paragraphs-tabs.tabs {
+  display: none;
+}

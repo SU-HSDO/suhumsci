@@ -7,7 +7,7 @@
 
 <div{{ attributes }}>
   <div class="hb-testimonial__wrapper">
-    <div class="hb-testimonial__content">
+    <figure class="hb-testimonial__content">
       {% if variant == "top" %}
         {% if quote %}
           <blockquote class="hb-testimonial__quote hb-testimonial__quote--top">
@@ -15,7 +15,7 @@
           </blockquote>
         {% endif %}
 
-        <div class="hb-testimonial__author-block">
+        <figcaption class="hb-testimonial__author-block">
           {% if image %}
             <div class="hb-testimonial__image">
               {{ image }}
@@ -41,11 +41,11 @@
               </div>
             {% endif %}
           </div>
-        </div>
+        </figcaption>
       {% endif %}
 
       {% if variant == "bottom" %}
-        <div class="hb-testimonial__author-block">
+        <figcaption class="hb-testimonial__author-block">
           {% if image %}
             <div class="hb-testimonial__image">
               {{ image }}
@@ -65,7 +65,7 @@
               </div>
             {% endif %}
           </div>
-        </div>
+        </figcaption>
 
         {% if quote %}
           <blockquote class="hb-testimonial__quote hb-testimonial__quote--bottom">
@@ -79,6 +79,6 @@
           </div>
         {% endif %}
       {% endif %}
-    </div>
+    </figure>
   </div>
 </div>

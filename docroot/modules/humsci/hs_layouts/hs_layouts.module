@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -72,5 +73,17 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
     $paragraph->get('field_hs_accord_expcol')->getString()
   ) {
     $variables['attributes']->addClass('hb-accordion_toggle-all');
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function hs_layouts_views_pre_render(ViewExecutable $view) {
+  $field_names = ['field_hs_event_image', 'field_hs_news_image', 'field_hs_person_square_img', 'field_hs_publication_image'];
+  foreach ($view->field as $name => $field) {
+    if (in_array($name, $field_names)) {
+      $field->options['settings']['link'] = false;
+    }
   }
 }

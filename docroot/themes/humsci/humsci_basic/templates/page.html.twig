@@ -37,14 +37,16 @@
   {{ page.content }}
 </div>
 
-{# Local Footer #}
-{% if page.footer %}
-  <div id="footer" class="hb-local-footer {{ local_footer_variant_classname }}">
-    <div class="hb-page-width flex-container flex-container--row-gap">
-      {{ page.footer }}
-    </div>
-  </div>
-{% endif %}
+<footer id="footer">
+  {# Local Footer #}
+  {% if page.footer %}
+    <section id="footer__local-footer" class="hb-local-footer {{ local_footer_variant_classname }}">
+      <div class="hb-page-width flex-container flex-container--row-gap">
+        {{ page.footer }}
+      </div>
+    </section>
+  {% endif %}
 
-{# Global Footer #}
-{% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/global-footer.html.twig' with { modifier_class : global_footer_variant_classname } %}
+  {# Global Footer #}
+  {% include humsci_basic ~ '/themes/humsci/humsci_basic/templates/components/global-footer.html.twig' with { modifier_class : global_footer_variant_classname } %}
+</footer>

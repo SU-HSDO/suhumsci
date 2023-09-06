@@ -80,6 +80,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
  * Implements hook_views_pre_render().
  */
 function hs_layouts_views_pre_render(ViewExecutable $view) {
+  // Links needs to be disabled for some image fields, they are handled by the pattern template.
   $field_names = ['field_hs_event_image', 'field_hs_news_image', 'field_hs_person_square_img', 'field_hs_publication_image'];
   foreach ($view->field as $name => $field) {
     if (in_array($name, $field_names)) {

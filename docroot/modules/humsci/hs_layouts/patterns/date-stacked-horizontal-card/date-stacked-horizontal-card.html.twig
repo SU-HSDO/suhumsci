@@ -12,9 +12,9 @@
 {% endif %}
 
 {# Set path to node #}
-{% if title %}
+{% if title and title['#row'].nid %}
   {% set url = path('entity.node.canonical', {'node': title['#row'].nid}) %}
-{% elseif description %}
+{% elseif description and description['#row'].nid %}
   {% set url = path('entity.node.canonical', {'node': description['#row'].nid}) %}
 {% endif %}
 

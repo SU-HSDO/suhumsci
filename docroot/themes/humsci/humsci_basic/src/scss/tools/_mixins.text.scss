@@ -200,7 +200,6 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-quote-wrapper;
   @include hb-pairing-color('color', 'secondary');
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
@@ -225,26 +224,32 @@
     @include hb-global-color('color', 'black');
   }
 
-  > p,
-  > div {
-    margin: 0;
-
-    &::before {
-      position: absolute;
-      content: open-quote;
-      margin-left: hb-calculate-rems(-16px);
-    }
-
-    &::after {
-      position: absolute;
-      content: close-quote;
-      margin-right: hb-calculate-rems(10px);
-    }
-  }
-
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-global-color('color', 'white');
+  }
+
+  // Don't apply these rules to blockquotes in testimonials, the structure is not the same and need
+  // a different implementation.
+  &:not(.hb-testimonial__quote) {
+    @include hb-quote-wrapper;
+
+    > p,
+    > div {
+      margin: 0;
+  
+      &::before {
+        position: absolute;
+        content: open-quote;
+        margin-left: hb-calculate-rems(-16px);
+      }
+  
+      &::after {
+        position: absolute;
+        content: close-quote;
+        margin-right: hb-calculate-rems(10px);
+      }
+    }
   }
 }
 

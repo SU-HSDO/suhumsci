@@ -63,13 +63,13 @@
 
     {% if button %}
       {# Set detailed button text that describes where the link is going for accessibility. #}
-      {% if title %}
-        {% set link_text = 'Read More about '|t ~ title['#row']._entity.title.value %}
-      {% else %}
-        {% set link_text = 'Read More'|t %}
-      {% endif %}
       <div class="hb-card__decorative-link">
-        <a href="{{ url }}" class="hb-card__link">{{ link_text }}</a>
+        {% if url %}
+          {% set link_text = 'Read More about '|t ~ title['#row'].node_field_data_title %}
+          <a href="{{ url }}" class="hb-card__link">{{ link_text|default('Read More'|t) }}</a>
+        {% else %}
+          {{ button }}
+        {% endif %}
       </div>
     {% endif %}
   </div>

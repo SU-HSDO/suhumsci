@@ -219,5 +219,19 @@ function su_humsci_profile_update_9500() {
   if (!$theme_handler->themeExists('stable9')) {
     $theme_installer->install(['stable9']);
   }
-  \Drupal::service('module_installer')->uninstall(['bricks']);
+  if (\Drupal::moduleHandler()->moduleExists('bricks')) {
+    \Drupal::service('module_installer')->uninstall(['bricks']);
+  }
+}
+
+/**
+ * Install SamlAuth
+ */
+function su_humsci_profile_update_9501() {
+  $config_ignore = \Drupal::configFactory()
+    ->getEditable('config_ignore.settings');
+  $ignored = $config_ignore->get('ignored_config_entities');
+  $ignored[] = 'stanford_samlauth.settings';
+  $config_ignore->set('ignored_config_entities', $ignored)->save();
+  \Drupal::service('module_installer')->install(['stanford_samlauth']);
 }

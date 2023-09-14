@@ -26,73 +26,6 @@
     }
   }
 
-  &__content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .hb-testimonial--bottom & {
-      padding-top: hb-calculate-rems(6px);
-    }
-  }
-
-  &__quote {
-    @include hb-pairing-color('color', 'secondary');
-    font-size: hb-calculate-rems(24px);
-    font-weight: hb-theme-font-weight(regular);
-    font-style: italic;
-    text-align: center;
-    width: 100%;
-
-    .hb-dark-pattern &,
-    .hb-dark-inversion .views-element-container & {
-      @include hb-global-color('color', 'white');
-    }
-
-    .hb-dark-pattern .hs-paragraph-style--well &,
-    .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-      @include hb-pairing-color('color', 'secondary');
-    }
-
-    @include grid-media-min('lg') {
-      font-size: hb-calculate-rems(28px);
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      line-height: 140%;
-    }
-
-    @include hb-traditional {
-      font-family: $hb-traditional-font--serif;
-      line-height: 136%;
-    }
-
-    // quote marks around quote
-    .field-hs-testimonial-quote, // paragraph type
-    .views-field .field-content p:first-of-type { // views
-      &::before {
-        position: absolute;
-        content: open-quote;
-        margin-left: hb-calculate-rems(-16px);
-      }
-
-      &::after {
-        position: absolute;
-        content: close-quote;
-        margin-right: hb-calculate-rems(10px);
-      }
-    }
-
-    .hb-testimonial--bottom & {
-      padding-bottom: hb-calculate-rems(16px);
-    }
-
-    // A utility class that can be applied via layout builder to override the text color to black
-    .hb-blockquote-black-text & {
-      @include hb-global-color('color', 'black');
-    }
-  }
-
   &__author-block {
     display: flex;
     align-items: center;
@@ -207,6 +140,47 @@
           }
         }
       }
+    }
+  }
+
+  figure.hb-testimonial__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+
+    .hb-testimonial--bottom & {
+      padding-top: hb-calculate-rems(6px);
+    }
+  }
+
+  blockquote.hb-testimonial__quote {
+    width: 100%;
+    margin: 0;
+
+    .hb-dark-pattern .hs-paragraph-style--well &,
+    .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+      @include hb-pairing-color('color', 'secondary');
+    }
+
+    // quote marks around quote
+    .field-hs-testimonial-quote, // paragraph type
+    .views-field .field-content p:first-of-type { // views
+      &::before {
+        position: absolute;
+        content: open-quote;
+        margin-left: hb-calculate-rems(-16px);
+      }
+
+      &::after {
+        position: absolute;
+        content: close-quote;
+        margin-right: hb-calculate-rems(10px);
+      }
+    }
+
+    &.hb-testimonial__quote--bottom {
+      padding-bottom: hb-calculate-rems(16px);
     }
   }
 }

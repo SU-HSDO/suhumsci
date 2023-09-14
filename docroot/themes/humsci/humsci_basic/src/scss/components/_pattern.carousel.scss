@@ -149,7 +149,7 @@
 
         // Line decoration pseudo element
         &::after {
-          top: hb-calculate-rems(32px);
+          top: hb-calculate-rems(24px);
           @include hb-colorful-text-bar('tertiary-reversed');
 
           @include grid-media-min('md') {
@@ -189,6 +189,14 @@
 
           @include grid-media-min('lg') {
             width: auto;
+          }
+        }
+
+        p {
+          margin-top: hb-spacing-width('xs');
+
+          @include grid-media-min('lg') {
+            margin-top: hb-spacing-width('sm');
           }
         }
       }

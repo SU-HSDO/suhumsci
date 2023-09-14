@@ -17,7 +17,11 @@
 
     {% if title %}
       <div class="hb-card__title">
-        <h2>{{ title }}</h2>
+        {% if title_has_heading %}
+          {{ title }}
+        {% else %}
+          <h2>{{ title }}</h2>
+        {% endif %}
       </div>
     {% endif %}
 

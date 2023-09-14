@@ -48,7 +48,7 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
     if (in_array('migrate_plus.migration.hs_news_rss', $names) && $this->entityTypeManager->hasDefinition('importers')) {
 
       $urls = [];
-      $eck_ids = $this->configPagesLoader->getValue('news_rss', 'field_news_rss', [], 'target_id');
+      $eck_ids = $this->configPagesLoader->getValue('hs_entity_news_rss', 'field_hs_news_rss', [], 'target_id');
       if ($eck_ids) {
         $ecks = $this->entityTypeManager->getStorage('importers')
           ->loadMultiple($eck_ids);

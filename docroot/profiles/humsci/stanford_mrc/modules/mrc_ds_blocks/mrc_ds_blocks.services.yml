@@ -1,9 +1,0 @@
-services:
-  mrc_ds_blocks.subscriber:
-    class: Drupal\mrc_ds_blocks\Routing\RouteSubscriber
-    arguments: ['@entity_type.manager']
-    tags:
-     - { name: event_subscriber }
-  mrc_ds_blocks.block_lazyloader:
-    class: Drupal\mrc_ds_blocks\BlockLazyLoader
-    arguments: ['@entity_type.manager', '@entity.repository', '@language_manager', '@theme.registry', '@entity_display.repository']

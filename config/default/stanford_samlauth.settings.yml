@@ -1,0 +1,28 @@
+_core:
+  default_config_hash: Gg16MjldLejVucRsgAVxrnzR6CxV4zt94j_HnyyxQ3g
+hide_local_login: true
+local_login_fieldset_label: 'Drupal Login'
+local_login_fieldset_open: false
+allowed:
+  restrict: false
+  users: null
+  affiliations: null
+  groups: null
+role_mapping:
+  workgroup_api:
+    cert: /var/www/suhumsci/docroot/../keys/saml/workgroup_api.cert
+    key: /var/www/suhumsci/docroot/../keys/saml/workgroup_api.key
+  reevaluate: new
+  mapping:
+    -
+      role: administrator
+      attribute: eduPersonEntitlement
+      value: 'hsdo:web'
+    -
+      role: administrator
+      attribute: eduPersonEntitlement
+      value: 'uit:sws'
+    -
+      role: administrator
+      attribute: eduPersonEntitlement
+      value: 'hsweb:fourkitchens'

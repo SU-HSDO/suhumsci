@@ -46,7 +46,6 @@ class MediaCest {
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
     $I->click('Upload');
     $I->fillField('Name', 'Logo File');
-    $I->click('.claro-details summary');
     $I->uncheckOption('Decorative Image');
     $I->fillField('Alternative text', 'Stanford Logo');
     $I->click('Save');

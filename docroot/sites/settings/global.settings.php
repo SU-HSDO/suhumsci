@@ -18,7 +18,7 @@ $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/conf
  * file in docroot/sites/{site-name}/settings/default.includes.settings.php.
  */
 $additionalSettingsFiles = [
-  __DIR__ . '/simplesaml.php',
+  __DIR__ . '/saml.settings.php',
   __DIR__ . '/environment_indicator.php',
   __DIR__ . '/local.settings.php',
   __DIR__ . '/fast404.settings.php',

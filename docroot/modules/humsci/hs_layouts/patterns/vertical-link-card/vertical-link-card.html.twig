@@ -8,9 +8,11 @@
   {% endif %}
 
   {% if title %}
-    <h2 class="hb-vertical-linked-card__title">
+    {% if title_has_heading %}
       {{ title }}
-    </h2>
+    {% else %}
+      <h2 class="hb-vertical-linked-card__title">{{ title }}</h2>
+    {% endif %}
   {% endif %}
 
   {% if description %}

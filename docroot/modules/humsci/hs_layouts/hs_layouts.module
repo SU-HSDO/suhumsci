@@ -76,13 +76,10 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
 }
 
 // Helper function to check if a title has an element_type.
-function _hs_layouts_field_has_title(&$field, &$variables) {
-  $variables['title_has_heading'] = FALSE;
-  // if the field has an element_type that is a heading, set a variable to
+function _hs_layouts_field_has_title($field) {
+  // if the field has an element_type that is a heading, return TRUE to
   // indicate that the title should be wrapped in a heading tag.
-  if (isset($field->element_type) && preg_match('/h[1-6]/', $field->element_type)) {
-    $variables['title_has_heading'] = TRUE;
-  }
+  return isset($field->element_type) && preg_match('/h[1-6]/', $field->element_type);
 }
 
 /**
@@ -91,8 +88,8 @@ function _hs_layouts_field_has_title(&$field, &$variables) {
 function hs_layouts_preprocess_pattern_vertical_card(&$variables) {
   if (isset($variables['title']['#field'])) {
     $field = $variables['title']['#field'];
+    $variables['title_has_heading'] = _hs_layouts_field_has_title($field);
   }
-  _hs_layouts_field_has_title($field, $variables);
 }
 
 /**
@@ -101,8 +98,8 @@ function hs_layouts_preprocess_pattern_vertical_card(&$variables) {
 function hs_layouts_preprocess_pattern_horizontal_card(&$variables) {
   if (isset($variables['title']['#field'])) {
     $field = $variables['title']['#field'];
+    $variables['title_has_heading'] = _hs_layouts_field_has_title($field);
   }
-  _hs_layouts_field_has_title($field, $variables);
 }
 
 /**
@@ -111,6 +108,6 @@ function hs_layouts_preprocess_pattern_horizontal_card(&$variables) {
 function hs_layouts_preprocess_pattern_vertical_link_card(&$variables) {
   if (isset($variables['title']['#field'])) {
     $field = $variables['title']['#field'];
+    $variables['title_has_heading'] = _hs_layouts_field_has_title($field);
   }
-  _hs_layouts_field_has_title($field, $variables);
 }

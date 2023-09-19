@@ -232,6 +232,8 @@ function su_humsci_profile_update_9501() {
     ->getEditable('config_ignore.settings');
   $ignored = $config_ignore->get('ignored_config_entities');
   $ignored[] = 'stanford_samlauth.settings';
+  $ignored[] = 'samlauth.authentication:map_users_roles';
   $config_ignore->set('ignored_config_entities', $ignored)->save();
   \Drupal::service('module_installer')->install(['stanford_samlauth']);
+  _su_humsci_profile_update_samlauth();
 }

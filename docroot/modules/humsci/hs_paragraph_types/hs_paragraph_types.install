@@ -9,6 +9,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\FileStorage;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\Entity\Role;
 
 /**
  * Store image gallery display mode in paragraph variable.
@@ -45,4 +46,17 @@ function hs_paragraph_types_update_9402() {
   $field_config = \Drupal::configFactory()->getEditable('field.field.paragraph.hs_postcard.field_hs_postcard_body');
   $field_config->set('third_party_settings.allowed_formats.allowed_formats.0', 'minimal_html_with_styles');
   $field_config->save();
+}
+
+/**
+ * Update user permissions for minimal_html_with_styles text format.
+ */
+function hs_paragraph_types_update_9403() {
+  $contributor = Role::load('contributor');
+  $contributor->grantPermission('use text format minimal_html_with_styles');
+  $contributor->save();
+
+  $site_manager = Role::load('site_manager');
+  $site_manager->grantPermission('use text format minimal_html_with_styles');
+  $site_manager->save();
 }

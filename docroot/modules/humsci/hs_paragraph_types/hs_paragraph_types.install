@@ -44,17 +44,20 @@ function hs_paragraph_types_update_9401() {
  * Update postcard body field text format.
  */
 function hs_paragraph_types_update_9402() {
-  // Load field_hs_postcard_body field definition exported configuration.
+  // Load filter_format and editor exported configuration.
   $config_directory = new FileStorage(Settings::get('config_sync_directory'));
-  $filter_format = $config_directory->read('filter.format.minimal_html_with_styles');
-  $editor = $config_directory->read('filter.format.minimal_html_with_styles');
+  $filter_format_config = $config_directory->read('filter.format.minimal_html_with_styles');
+  $editor_config = $config_directory->read('editor.editor.minimal_html_with_styles');
   if (!FilterFormat::load('minimal_html_with_styles')) {
-    FilterFormat::create($filter_format);
+    $filter_format = FilterFormat::create($filter_format_config);
+    $filter_format->save();
   }
-  if (Editor::load('minimal_html_with_styles')) {
-    Editor::create($editor);
+  if (!Editor::load('minimal_html_with_styles')) {
+    $editor = Editor::create($editor_config);
+    $editor->save();
   }
 
+  // Update field_hs_postcard_body field defnition exported configuration.
   $field_config = \Drupal::configFactory()->getEditable('field.field.paragraph.hs_postcard.field_hs_postcard_body');
   $field_config->set('third_party_settings.allowed_formats.allowed_formats.0', 'minimal_html_with_styles');
   $field_config->save();
@@ -64,10 +67,12 @@ function hs_paragraph_types_update_9402() {
  * Update user permissions for minimal_html_with_styles text format.
  */
 function hs_paragraph_types_update_9403() {
+  // Update contributor role permissions.
   $contributor = Role::load('contributor');
   $contributor->grantPermission('use text format minimal_html_with_styles');
   $contributor->save();
 
+  // Update site_manager role permissions.
   $site_manager = Role::load('site_manager');
   $site_manager->grantPermission('use text format minimal_html_with_styles');
   $site_manager->save();

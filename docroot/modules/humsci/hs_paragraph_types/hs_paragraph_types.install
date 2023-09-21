@@ -7,8 +7,10 @@
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\FileStorage;
+use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\user\Entity\Role;
 
 /**
@@ -43,6 +45,16 @@ function hs_paragraph_types_update_9401() {
  */
 function hs_paragraph_types_update_9402() {
   // Load field_hs_postcard_body field definition exported configuration.
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $filter_format = $config_directory->read('filter.format.minimal_html_with_styles');
+  $editor = $config_directory->read('filter.format.minimal_html_with_styles');
+  if (!FilterFormat::load('minimal_html_with_styles')) {
+    FilterFormat::create($filter_format);
+  }
+  if (Editor::load('minimal_html_with_styles')) {
+    Editor::create($editor);
+  }
+
   $field_config = \Drupal::configFactory()->getEditable('field.field.paragraph.hs_postcard.field_hs_postcard_body');
   $field_config->set('third_party_settings.allowed_formats.allowed_formats.0', 'minimal_html_with_styles');
   $field_config->save();

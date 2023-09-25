@@ -2,6 +2,8 @@
 
 // @todo Turn this into an updatedb hook.
 
+$config_page_references = [];
+
 $entity_type_manager = \Drupal::entityTypeManager();
 if ($entity_type_manager->hasDefinition('importers')) {
   // Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage.
@@ -28,15 +30,31 @@ if ($entity_type_manager->hasDefinition('importers')) {
       $delta = array_search($entity->id(), array_column($field_news_rss->getValue(), 'target_id'));
       $field_news_rss->removeItem($delta);
 
-      // Drupal\Core\Field\EntityReferenceFieldItemList $field_hs_news_rss
-      $field_hs_news_rss = $config_page->field_hs_news_rss;
-      $field_hs_news_rss->appendItem($hs_importer->id());
+      $config_page_references[$config_page->id()][] = $hs_importer->id();
 
       $config_page->save();
     }
 
     $entity->delete();
   }
+
+  // Change storage settings here
+
+
+
+  // foreach ($config_page_references as $config_page_id => $config_page_reference) {
+  //   // Drupal\config_pages\Entity\ConfigPages $config_page
+  //   $config_page = \Drupal::entityTypeManager()->getStorage('config_pages')->load($config_page_id);
+
+  //   // Drupal\Core\Field\EntityReferenceFieldItemList $field_news_rss
+  //   $field_news_rss = $config_page->field_news_rss;
+
+  //   foreach($config_page_reference as $hs_importer_id) {
+  //     $field_news_rss->appendItem($hs_importer->id());
+  //   }
+
+  //   $config_page->save();
+  // }
 }
 
 

@@ -9,13 +9,13 @@ if ($entity_type_manager->hasDefinition('importers')) {
   $entities = $storage->loadByProperties(['type' => 'news_rss']);
   // Drupal\eck\Entity\EckEntity $entity.
   foreach ($entities as $entity) {
-    // Drupal\hs_entities\Entity\HsEntity $hs_entity.
-    $hs_entity = \Drupal::entityTypeManager()->getStorage('hs_entity')->create([
-      'bundle' => 'hs_entity_news_rss'
+    // Drupal\hs_entities\Entity\HsImporter $hs_importer.
+    $hs_importer = \Drupal::entityTypeManager()->getStorage('hs_importer')->create([
+      'bundle' => 'news_rss'
     ]);
-    $hs_entity->set('field_rss_url', $entity->get('field_url')->getValue());
-    $hs_entity->set('field_category_terms', $entity->get('field_terms')->getValue());
-    $hs_entity->save();
+    $hs_importer->set('field_url', $entity->get('field_url')->getValue());
+    $hs_importer->set('field_terms', $entity->get('field_terms')->getValue());
+    $hs_importer->save();
 
     $config_pages = \Drupal::entityTypeManager()->getStorage('config_pages')->loadByProperties([
       'type' => 'news_rss',
@@ -30,7 +30,7 @@ if ($entity_type_manager->hasDefinition('importers')) {
 
       // Drupal\Core\Field\EntityReferenceFieldItemList $field_hs_news_rss
       $field_hs_news_rss = $config_page->field_hs_news_rss;
-      $field_hs_news_rss->appendItem($hs_entity->id());
+      $field_hs_news_rss->appendItem($hs_importer->id());
 
       $config_page->save();
     }

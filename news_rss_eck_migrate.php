@@ -21,8 +21,6 @@ use \Drupal\field\Entity\FieldConfig;
 
 
 // SCRIPT STARTS BELOW
-
-
 $config_page_references = [];
 
 $entity_type_manager = \Drupal::entityTypeManager();
@@ -51,7 +49,7 @@ if ($entity_type_manager->hasDefinition('importers')) {
       $delta = array_search($entity->id(), array_column($field_news_rss->getValue(), 'target_id'));
       $field_news_rss->removeItem($delta);
 
-      $config_page_references[$config_page->id()][] = $hs_importer->id();
+      $config_page_references[$config_page->id()][$hs_importer->id()] = $hs_importer->id();
 
       $config_page->save();
     }
@@ -81,7 +79,7 @@ foreach ($config_page_references as $config_page_id => $config_page_reference) {
   $field_news_rss = $config_page->field_news_rss;
 
   foreach($config_page_reference as $hs_importer_id) {
-    $field_news_rss->appendItem($hs_importer->id());
+    $field_news_rss->appendItem($hs_importer_id);
   }
 
   $config_page->save();

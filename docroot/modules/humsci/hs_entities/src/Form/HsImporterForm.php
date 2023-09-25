@@ -6,9 +6,9 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form controller for the humsci entity entity edit forms.
+ * Form controller for the humsci importer entity edit forms.
  */
-class HsEntityForm extends ContentEntityForm {
+class HsImporterForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
@@ -26,17 +26,17 @@ class HsEntityForm extends ContentEntityForm {
 
     switch ($result) {
       case SAVED_NEW:
-        $this->messenger()->addStatus($this->t('New humsci entity %label has been created.', $message_arguments));
-        $this->logger('hs_entities')->notice('Created new humsci entity %label', $logger_arguments);
+        $this->messenger()->addStatus($this->t('New humsci importer %label has been created.', $message_arguments));
+        $this->logger('hs_entities')->notice('Created new humsci importer %label', $logger_arguments);
         break;
 
       case SAVED_UPDATED:
-        $this->messenger()->addStatus($this->t('The humsci entity %label has been updated.', $message_arguments));
-        $this->logger('hs_entities')->notice('Updated humsci entity %label.', $logger_arguments);
+        $this->messenger()->addStatus($this->t('The humsci importer %label has been updated.', $message_arguments));
+        $this->logger('hs_entities')->notice('Updated humsci importer %label.', $logger_arguments);
         break;
     }
 
-    $form_state->setRedirect('entity.hs_entity.collection');
+    $form_state->setRedirect('entity.hs_importer.collection');
 
     return $result;
   }

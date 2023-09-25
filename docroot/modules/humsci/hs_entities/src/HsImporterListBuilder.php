@@ -6,9 +6,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 
 /**
- * Provides a list controller for the humsci entity entity type.
+ * Provides a list controller for the humsci importer entity type.
  */
-class HsEntityListBuilder extends EntityListBuilder {
+class HsImporterListBuilder extends EntityListBuilder {
 
   /**
    * {@inheritdoc}
@@ -22,7 +22,7 @@ class HsEntityListBuilder extends EntityListBuilder {
       ->count()
       ->execute();
 
-    $build['summary']['#markup'] = $this->t('Total humsci entities: @total', ['@total' => $total]);
+    $build['summary']['#markup'] = $this->t('Total humsci importers: @total', ['@total' => $total]);
     return $build;
   }
 
@@ -38,7 +38,7 @@ class HsEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var \Drupal\hs_entities\HsEntityInterface $entity */
+    /** @var \Drupal\hs_entities\HsImporterInterface $entity */
     $row['id'] = $entity->id();
     return $row + parent::buildRow($entity);
   }

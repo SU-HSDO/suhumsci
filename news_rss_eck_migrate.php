@@ -1,6 +1,27 @@
 <?php
 
+use \Drupal\field\Entity\FieldStorageConfig;
+use \Drupal\field\Entity\FieldConfig;
+
 // @todo Turn this into an updatedb hook.
+
+// REVERT STORAGE SETTINGS BACK
+// $field_storage = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
+// $field_storage->setSetting('target_type', 'importers');
+// $field_storage->save();
+
+// $field_config =  \Drupal::entityTypeManager()->getStorage('field_config')
+//   ->load('config_pages.news_rss.field_news_rss');
+// $handler_settings = $field_config->getSetting('handler_settings');
+// $handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
+// $field_config->setSetting('handler_settings', $handler_settings);
+// $field_config->save();
+
+
+
+
+// SCRIPT STARTS BELOW
+
 
 $config_page_references = [];
 
@@ -38,26 +59,33 @@ if ($entity_type_manager->hasDefinition('importers')) {
     $entity->delete();
   }
 
-  // Change storage settings here
-
-
-
-  // foreach ($config_page_references as $config_page_id => $config_page_reference) {
-  //   // Drupal\config_pages\Entity\ConfigPages $config_page
-  //   $config_page = \Drupal::entityTypeManager()->getStorage('config_pages')->load($config_page_id);
-
-  //   // Drupal\Core\Field\EntityReferenceFieldItemList $field_news_rss
-  //   $field_news_rss = $config_page->field_news_rss;
-
-  //   foreach($config_page_reference as $hs_importer_id) {
-  //     $field_news_rss->appendItem($hs_importer->id());
-  //   }
-
-  //   $config_page->save();
-  // }
 }
 
+// Change storage settings here
+$field_storage = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
+$field_storage->setSetting('target_type', 'hs_importer');
+$field_storage->save();
 
+$field_config =  \Drupal::entityTypeManager()->getStorage('field_config')
+  ->load('config_pages.news_rss.field_news_rss');
+$handler_settings = $field_config->getSetting('handler_settings');
+$handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
+$field_config->setSetting('handler_settings', $handler_settings);
+$field_config->save();
+
+foreach ($config_page_references as $config_page_id => $config_page_reference) {
+  // Drupal\config_pages\Entity\ConfigPages $config_page
+  $config_page = \Drupal::entityTypeManager()->getStorage('config_pages')->load($config_page_id);
+
+  // Drupal\Core\Field\EntityReferenceFieldItemList $field_news_rss
+  $field_news_rss = $config_page->field_news_rss;
+
+  foreach($config_page_reference as $hs_importer_id) {
+    $field_news_rss->appendItem($hs_importer->id());
+  }
+
+  $config_page->save();
+}
 
 
 ?>

@@ -11,20 +11,6 @@ use Drupal\Core\Serialization\Yaml;
 class HsHooksCommands extends BltTasks {
 
   /**
-   * Disable Saml module.
-   *
-   * @hook pre-command tests:codeception:run
-   */
-  public function preCodecepton() {
-    $this->taskDrush()
-      ->drush('cset')
-      ->arg('simplesamlphp_auth.settings')
-      ->arg('activate')
-      ->arg(0)
-      ->run();
-  }
-
-  /**
    * @hook pre-command drupal:sync:default:site
    */
   public function preSiteCopy() {

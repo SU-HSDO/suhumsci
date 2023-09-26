@@ -141,6 +141,32 @@
 
   @include hb-traditional {
     background-image: none;
+
+    // It is very difficult to override links for a specific color scheme without clobbering things like titles, labels, and buttons that are styled differently.
+    .body &,
+    .text-long &,
+    .field-hs-person-links &,
+    .field-hs-publication-link &,
+    .field-hs-news-link &,
+    .field-hs-event-map-link &,
+    .field-speaker-person &,
+    .field-hs-person-external-profile &,
+    .field-hs-person-cv-link &,
+    .field-hs-person-email &,
+    .hb-card__subcontent &,
+    .hb-table-wrap &,
+    .hb-columns &,
+    .hb-timeline-item__heading &,
+    .views-field:not(.views-field-title):not(.views-field-edit-node):not(.views-field-field-hs-event-series):not(.views-field-field-hs-news-categories):not(.views-field-view-node):not(.views-field-field-hs-person-research) & {
+      .ht-pairing-warbler & {
+        @include hb-pairing-color('color', 'secondary');
+
+        &:hover,
+        &:focus {
+          @include hb-pairing-color('color', 'tertiary');
+        }
+      }
+    }
   }
 
   .hb-local-footer & {

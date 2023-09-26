@@ -27,6 +27,36 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
 
 /**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function su_humsci_profile_user_role_insert(RoleInterface $role) {
+  _su_humsci_profile_update_samlauth();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function su_humsci_profile_user_role_delete(RoleInterface $entity) {
+  _su_humsci_profile_update_samlauth();
+}
+
+/**
+ * Update samlauth user role mapping to always align with the current roles.
+ */
+function _su_humsci_profile_update_samlauth() {
+  $samlauth_roles = [];
+  foreach (array_keys(user_role_names(TRUE)) as $role_id) {
+    $samlauth_roles[$role_id] = $role_id;
+  }
+  unset($samlauth_roles[UserInterface::AUTHENTICATED_ROLE]);
+  asort($samlauth_roles);
+  \Drupal::configFactory()
+    ->getEditable('samlauth.authentication')
+    ->set('map_users_roles', $samlauth_roles)
+    ->save();
+}
+
+/**
  * Implements hook_help().
  */
 function su_humsci_profile_help($route_name, RouteMatchInterface $route_match) {

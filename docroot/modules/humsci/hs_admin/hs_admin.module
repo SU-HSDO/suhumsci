@@ -99,6 +99,15 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_admin_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['saml']['#attributes']['class'])) {
+    $form['saml']['#attributes']['class'][] = 'simplesamlphp-auth-login-link';
+  }
+}
+
+/**
  * After build callback for hs_admin_form_node_form_alter().
  *
  * @param array $form

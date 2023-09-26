@@ -54,7 +54,7 @@
         "drupal/admin_login_path": "^2.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/allowed_formats": "^2.0",
-        "drupal/anchor_link": "^2.4",
+        "drupal/anchor_link": "3.0.x-dev@dev",
         "drupal/asset_injector": "^2.7",
         "drupal/audio_embed_field": "^2.0",
         "drupal/auto_entitylabel": "^3.0@beta",
@@ -198,7 +198,8 @@
         "su-sws/stanford_fields": "^8.1",
         "su-sws/stanford_media": "dev-HSD8-1416 as 8.3.0",
         "su-sws/stanford_migrate": "^8.4",
-        "su-sws/stanford_ssp": "^8.1"
+        "su-sws/stanford_ssp": "^8.1",
+        "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {
         "drupal/upgrade_status": "^4.0",
@@ -229,6 +230,7 @@
         "enable-patching": true,
         "patches": {
             "drupal/anchor_link": {
+                "https://www.drupal.org/project/anchor_link/issues/3206676#comment-14996705": "https://www.drupal.org/files/issues/2023-08-22/anchor_link-ckeditor5-compatibility-3206676-98.patch",
                 "https://www.drupal.org/project/anchor_link/issues/2958532": "https://www.drupal.org/files/issues/2019-01-11/anchor_link-linkit-support_2958532.patch"
             },
             "drupal/bricks": {
@@ -371,6 +373,15 @@
             "vendor/{$vendor}/{$name}/": [
                 "type:library"
             ]
+        },
+        "merge-plugin": {
+            "require": [
+                "docroot/modules/contrib/anchor_link/composer.libraries.json"
+            ],
+            "merge-dev": false,
+            "merge-extra": false,
+            "merge-replace": true,
+            "merge-scripts": false
         }
     },
     "autoload": {

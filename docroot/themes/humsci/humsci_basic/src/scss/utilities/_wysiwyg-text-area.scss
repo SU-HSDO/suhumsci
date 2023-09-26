@@ -341,6 +341,14 @@ a.private-link,
     @include hb-icon-background('lock', 'secondary');
     background-repeat: no-repeat;
     background-size: cover;
+
+    .hb-dark-pattern & {
+      @include hb-icon-background('lock', 'white');
+
+      &:hover::before {
+        @include hb-icon-background('lock', 'gray-medium');
+      }
+    }
   }
 
   &:hover::before {

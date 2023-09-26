@@ -123,6 +123,20 @@
         background-position-y: bottom;
       }
     }
+
+    .hb-vertical-linked-card__description & {
+      @include hb-colorful {
+        @include hb-global-color('color', 'white');
+        background-image: none;
+      }
+
+      :hover,
+      :focus {
+        @include hb-colorful {
+          @include hb-global-color('color', 'gray-medium');
+        }
+      }
+    }
   }
 
   @include hb-traditional {
@@ -136,6 +150,12 @@
     &:focus {
       @include hb-pairing-color('color', 'tertiary-darken-20');
       background-image: none;
+    }
+  }
+
+  .hb-local-footer.hb-dark-pattern & {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
     }
   }
 
@@ -357,6 +377,21 @@
     color: var(--palette--secondary-highlight);
   }
 
+  .hb-local-footer.hb-dark-pattern &::before {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+  }
+
+  &:hover,
+  &:focus {
+    .hb-local-footer.hb-dark-pattern &::before {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+    }
+  }
+
   @include hb-themes(('colorful', 'airy')) {
     &:hover,
     &:focus {
@@ -386,6 +421,21 @@
 
   .hb-dark-pattern &::before {
     color: var(--palette--secondary-highlight);
+  }
+
+  .hb-local-footer.hb-dark-pattern &::before {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+  }
+
+  &:hover,
+  &:focus {
+    .hb-local-footer.hb-dark-pattern &::before {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+    }
   }
 
   @include hb-themes(('colorful', 'airy')) {

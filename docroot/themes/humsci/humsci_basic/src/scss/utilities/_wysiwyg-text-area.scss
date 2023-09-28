@@ -343,16 +343,28 @@ a.private-link,
     background-size: cover;
 
     .hb-dark-pattern & {
-      @include hb-icon-background('lock', 'white');
+      @include hb-colorful {
+        @include hb-icon-background('lock', 'white');
+      }
 
-      &:hover::before {
-        @include hb-icon-background('lock', 'gray-medium');
+      @include hb-traditional {
+        @include hb-icon-background('lock', 'tertiary-highlight');
       }
     }
   }
 
   &:hover::before {
     @include hb-icon-background('lock', 'tertiary-darken-20');
+
+    .hb-dark-pattern & {
+      @include hb-colorful {
+        @include hb-icon-background('lock', 'gray-medium');
+      }
+
+      @include hb-traditional {
+        @include hb-icon-background('lock', 'tertiary-highlight-darken-10');
+      }
+    }
   }
 }
 

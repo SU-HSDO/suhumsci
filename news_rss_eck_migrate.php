@@ -9,12 +9,16 @@ use \Drupal\field\Entity\FieldConfig;
 // well or will deleting the bundle auto delete the fields? It does through the
 // UI, but I'm not sure about programatically.
 $entity_type_manager = \Drupal::entityTypeManager();
-if ($entity_type_manager->hasDefinition('importers_type')) {
-  $news_rss_eck_bundle = $entity_type_manager->getStorage('importers_type')->load('news_rss');
-  $news_rss_eck_bundle->delete();
-}
+// if ($entity_type_manager->hasDefinition('importers_type')) {
+//   $news_rss_eck_bundle = $entity_type_manager->getStorage('importers_type')->load('news_rss');
+//   $news_rss_eck_bundle->delete();
+// }
 
 // Second delete the Importer collections entity type from ECK.
+if ($entity_type_manager->hasDefinition('eck_entity_type')) {
+  $importers_collection = $entity_type_manager->getStorage('eck_entity_type')->load('importers');
+  $importers_collection->delete();
+}
 
 
 // @todo Turn this into an updatedb hook.

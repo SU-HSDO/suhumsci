@@ -268,6 +268,7 @@ function su_humsci_profile_update_9602() {
 function su_humsci_profile_update_9603() {
   $config_page_references = [];
 
+  // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
   $entity_type_manager = \Drupal::entityTypeManager();
   if ($entity_type_manager->hasDefinition('importers')) {
     // Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage.
@@ -335,12 +336,17 @@ function su_humsci_profile_update_9603() {
  * Delete news_rss ECK bundle and Importer collections ECK Entity Type.
  */
 function su_humsci_profile_update_9504() {
+  // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
   $entity_type_manager = \Drupal::entityTypeManager();
+
   if ($entity_type_manager->hasDefinition('importers_type')) {
-    $news_rss_eck_bundle = $entity_type_manager->getStorage('importers_type')
+    $news_rss_bundle = $entity_type_manager->getStorage('importers_type')
       ->load('news_rss');
-    $news_rss_eck_bundle->delete();
+    $news_rss_bundle->delete();
   }
 
-
+  if ($entity_type_manager->hasDefinition('eck_entity_type')) {
+    $importers_collection = $entity_type_manager->getStorage('eck_entity_type')->load('importers');
+    $importers_collection->delete();
+  }
 }

@@ -54,7 +54,7 @@
         "drupal/admin_login_path": "^2.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/allowed_formats": "^2.0",
-        "drupal/anchor_link": "3.0.x-dev@dev",
+        "drupal/anchor_link": "^2.4",
         "drupal/asset_injector": "^2.7",
         "drupal/audio_embed_field": "^2.0",
         "drupal/auto_entitylabel": "^3.0@beta",
@@ -79,9 +79,9 @@
         "drupal/config_update": "^2.0@alpha",
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
-        "drupal/core": "^9.4.5",
+        "drupal/core": "^9.5",
         "drupal/core-composer-scaffold": "^9",
-        "drupal/core-recommended": "^9",
+        "drupal/core-recommended": "^9.5",
         "drupal/default_content": "^2.0",
         "drupal/diff": "^1.0",
         "drupal/domain_301_redirect": "^2.0",
@@ -198,6 +198,7 @@
         "su-sws/stanford_fields": "^8.1",
         "su-sws/stanford_media": "dev-HSD8-1416 as 8.3.0",
         "su-sws/stanford_migrate": "^8.4",
+        "su-sws/stanford_samlauth": "^1.0",
         "su-sws/stanford_ssp": "^8.1",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
@@ -223,14 +224,13 @@
     },
     "scripts": {
         "post-drupal-scaffold-cmd": [
-            "patch -p1 < patches/htaccess.patch"
+            "patch -p1 < patches/scaffold.patch"
         ]
     },
     "extra": {
         "enable-patching": true,
         "patches": {
             "drupal/anchor_link": {
-                "https://www.drupal.org/project/anchor_link/issues/3206676#comment-14996705": "https://www.drupal.org/files/issues/2023-08-22/anchor_link-ckeditor5-compatibility-3206676-98.patch",
                 "https://www.drupal.org/project/anchor_link/issues/2958532": "https://www.drupal.org/files/issues/2019-01-11/anchor_link-linkit-support_2958532.patch"
             },
             "drupal/bricks": {

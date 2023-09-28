@@ -317,6 +317,33 @@ a[href*="//"].hs-external-link,
 .hs-external-link a[href*="//"] {
   @include hb-link--inline($icon: true);
   @include hb-external-link-icon;
+
+
+  .hb-dark-pattern.hb-local-footer & {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+
+      &::after {
+        @include hb-icon-background('ext-link', 'white');
+      }
+
+      &:hover::after {
+        @include hb-icon-background('ext-link', 'gray-medium');
+      }
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('color', 'tertiary-highlight');
+
+      &::after {
+        @include hb-icon-background('ext-link', 'tertiary-highlight');
+      }
+
+      &:hover::after {
+        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
+      }
+    }
+  }
 }
 
 a.hs-private-link,
@@ -328,6 +355,18 @@ a.private-link,
 
   @include hb-themes(('colorful', 'airy')) {
     @include hb-link-background-image(true, 18px, left, $hb-colorful-default, $hc-colorful-pairings);
+  }
+
+  .hb-dark-pattern.hb-local-footer & {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+
+    &:hover {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+    }
   }
 
   &::before {

@@ -330,3 +330,17 @@ function su_humsci_profile_update_9603() {
     $config_page->save();
   }
 }
+
+/**
+ * Delete news_rss ECK bundle and Importer collections ECK Entity Type.
+ */
+function su_humsci_profile_update_9504() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  if ($entity_type_manager->hasDefinition('importers_type')) {
+    $news_rss_eck_bundle = $entity_type_manager->getStorage('importers_type')
+      ->load('news_rss');
+    $news_rss_eck_bundle->delete();
+  }
+
+
+}

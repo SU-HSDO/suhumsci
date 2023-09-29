@@ -75,14 +75,18 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
   }
 }
 
-// Helper function to check if a title has an element_type.
+/**
+ * Helper function to check if a title has an element_type.
+ */
 function _hs_layouts_field_has_title($field) {
   // if the field has an element_type that is a heading, return TRUE to
   // indicate that the title should be wrapped in a heading tag.
   return isset($field->element_type) && preg_match('/h[1-6]/', $field->element_type);
 }
 
-// Helper function to expose node url when pattern is being used in a view.
+/**
+ * Helper function to expose node url when pattern is being used in a view.
+ */
 function _hs_layouts_view_add_node_url(&$variables) {
   if ($variables['context']->isOfType('views_row')) {
     $node = $variables['context']->getProperty('row')->_entity;
@@ -110,7 +114,7 @@ function hs_layouts_preprocess_pattern_horizontal_card(&$variables) {
     $field = $variables['title']['#field'];
     $variables['title_has_heading'] = _hs_layouts_field_has_title($field);
   }
-  // add node url is pattern is being used in a view.
+  // Add node url is pattern is being used in a view.
   _hs_layouts_view_add_node_url($variables);
 }
 
@@ -128,7 +132,7 @@ function hs_layouts_preprocess_pattern_vertical_link_card(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
-  // add node url is pattern is being used in a view.
+  // Add node url is pattern is being used in a view.
   _hs_layouts_view_add_node_url($variables);
 }
 
@@ -136,6 +140,6 @@ function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function hs_layouts_preprocess_pattern_date_stacked_horizontal_card(&$variables) {
-  // add node url is pattern is being used in a view.
+  // Add node url is pattern is being used in a view.
   _hs_layouts_view_add_node_url($variables);
 }

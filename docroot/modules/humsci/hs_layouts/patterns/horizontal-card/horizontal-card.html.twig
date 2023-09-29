@@ -58,7 +58,13 @@
 
     {% if button %}
       <div class="hb-card__decorative-link">
-        {{ button }}
+        {% if node_url %}
+          <a href="{{ node_url }}" tabindex="-1" aria-hidden="true">
+            {{ 'Read More'|t }}
+          </a>
+        {% else %}
+          {{ button }}
+        {% endif %}
       </div>
     {% endif %}
   </div>

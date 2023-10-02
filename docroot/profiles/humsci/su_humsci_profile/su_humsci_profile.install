@@ -6,6 +6,7 @@
  */
 
 use Drupal\user\UserInterface;
+use Drupal\key\Entity\Key;
 
 /**
  * Implements hook_install_tasks().
@@ -236,4 +237,17 @@ function su_humsci_profile_update_9501() {
   $config_ignore->set('ignored_config_entities', $ignored)->save();
   \Drupal::service('module_installer')->install(['stanford_samlauth']);
   _su_humsci_profile_update_samlauth();
+}
+
+/**
+ * Uninstall seven and fix key configs.
+ */
+function su_humsci_profile_update_9600() {
+  if (\Drupal::service('theme_handler')->themeExists('seven')) {
+    \Drupal::service('theme_installer')->uninstall(['seven']);
+  }
+  // Resave keys to adjust any dependencies.
+  foreach (Key::loadMultiple() as $key) {
+    $key->save();
+  }
 }

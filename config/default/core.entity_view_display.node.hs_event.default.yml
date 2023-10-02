@@ -12,15 +12,20 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
     - field.field.node.hs_event.field_hs_event_date
+    - field.field.node.hs_event.field_hs_event_experience
     - field.field.node.hs_event.field_hs_event_image
     - field.field.node.hs_event.field_hs_event_instances
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_registration
     - field.field.node.hs_event.field_hs_event_series
     - field.field.node.hs_event.field_hs_event_speaker
     - field.field.node.hs_event.field_hs_event_sponsor
     - field.field.node.hs_event.field_hs_event_status
+    - field.field.node.hs_event.field_hs_event_stream
+    - field.field.node.hs_event.field_hs_event_stream_info
+    - field.field.node.hs_event.field_hs_event_ticket
     - field.field.node.hs_event.field_hs_event_type
     - field.field.node.hs_event.field_hs_event_video
     - node.type.hs_event
@@ -42,10 +47,10 @@ third_party_settings:
         layout_id: three_column_w_image
         layout_settings:
           label: ''
-          context_mapping: {  }
           section_width: decanter-grid
           region_widths: center
           image_float: align-right
+          context_mapping: {  }
         components:
           c178ab91-9072-4274-89da-96af227b4f0d:
             uuid: c178ab91-9072-4274-89da-96af227b4f0d
@@ -327,6 +332,16 @@ third_party_settings:
                   allday_label: 'All day'
                   date_first: '1'
                   ampm_reduce: 1
+                  site_time_toggle: '1'
+                  tooltip:
+                    date_format: ''
+                    custom_date_format: ''
+                  time_diff:
+                    enabled: false
+                    future_format: '@interval hence'
+                    past_format: '@interval ago'
+                    granularity: 2
+                    refresh: 60
                 third_party_settings:
                   field_formatter_class:
                     class: hb-highlighted-label

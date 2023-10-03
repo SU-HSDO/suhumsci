@@ -5,6 +5,8 @@
  * su_humsci_profile.install
  */
 
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\user\UserInterface;
 use Drupal\key\Entity\Key;
 
@@ -249,5 +251,82 @@ function su_humsci_profile_update_9600() {
   // Resave keys to adjust any dependencies.
   foreach (Key::loadMultiple() as $key) {
     $key->save();
+  }
+}
+
+/**
+ * Install hs_entities module.
+ */
+function su_humsci_profile_update_9602() {
+  \Drupal::service('module_installer')->install(['hs_entities']);
+}
+
+/**
+ * Migrate News RSS ECK importer collection entities to News RSS HumSci
+ * entities.
+ */
+function su_humsci_profile_update_9603() {
+  // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+  $entity_type_manager = \Drupal::entityTypeManager();
+  // Only ever 1 config page.
+  $config_page = $entity_type_manager->getStorage('config_pages')
+    ->load('news_rss');
+  if ($entity_type_manager->hasDefinition('importers') && $config_page) {
+    $new_values = [];
+
+    /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $field_item */
+    foreach ($config_page->get('field_news_rss') as $field_item) {
+      $eck_entity = $field_item->get('entity')->getValue();
+
+      // Create the new hs entity using the values of the ECK.
+      $hs_entity = $entity_type_manager->getStorage('hs_entity')
+        ->create([
+          'bundle' => 'news_rss',
+          'field_url' => $eck_entity->get('field_url')->getString(),
+          'field_terms' => $eck_entity->get('field_terms')->getString(),
+        ]);
+      $hs_entity->save();
+
+      // Store the new entity for the field value and delete the ECK.
+      $new_values[] = [
+        'target_id' => $hs_entity->id(),
+        'entity' => $hs_entity,
+      ];
+      $eck_entity->delete();
+    }
+    $config_page->set('field_news_rss', $new_values)->save();
+  }
+
+  // Update the field storage settings.
+  $field_storage_config = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
+  $field_storage_config->setSetting('target_type', 'hs_entity');
+  $field_storage_config->save();
+
+  // Update the field config settings.
+  $field_config =  \Drupal::entityTypeManager()->getStorage('field_config')
+    ->load('config_pages.news_rss.field_news_rss');
+  $handler_settings = $field_config->getSetting('handler_settings');
+  $handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
+  $field_config->setSetting('handler_settings', $handler_settings);
+  $field_config->save();
+}
+
+/**
+ * Delete news_rss ECK bundle and importer collections ECK entity type.
+ */
+function su_humsci_profile_update_9604() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Delete the news_rss ECK.
+  if ($entity_type_manager->hasDefinition('importers_type')) {
+    $news_rss_bundle = $entity_type_manager->getStorage('importers_type')
+      ->load('news_rss');
+    $news_rss_bundle->delete();
+  }
+
+  // Delete the importers entity type from ECK.
+  if ($entity_type_manager->hasDefinition('eck_entity_type')) {
+    $importers_collection = $entity_type_manager->getStorage('eck_entity_type')->load('importers');
+    $importers_collection->delete();
   }
 }

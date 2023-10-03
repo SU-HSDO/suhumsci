@@ -7,9 +7,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form handler for humsci importer type forms.
+ * Form handler for HumSci entity type forms.
  */
-class HsImporterTypeForm extends BundleEntityFormBase {
+class HsEntityTypeForm extends BundleEntityFormBase {
 
   /**
    * {@inheritdoc}
@@ -19,14 +19,14 @@ class HsImporterTypeForm extends BundleEntityFormBase {
 
     $entity_type = $this->entity;
     if ($this->operation == 'edit') {
-      $form['#title'] = $this->t('Edit %label humsci importer type', ['%label' => $entity_type->label()]);
+      $form['#title'] = $this->t('Edit %label HumSci entity type', ['%label' => $entity_type->label()]);
     }
 
     $form['label'] = [
       '#title' => $this->t('Label'),
       '#type' => 'textfield',
       '#default_value' => $entity_type->label(),
-      '#description' => $this->t('The human-readable name of this humsci importer type.'),
+      '#description' => $this->t('The human-readable name of this HumSci entity type.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
@@ -36,10 +36,10 @@ class HsImporterTypeForm extends BundleEntityFormBase {
       '#default_value' => $entity_type->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => [
-        'exists' => ['Drupal\hs_entities\Entity\HsImporterType', 'load'],
+        'exists' => ['Drupal\hs_entities\Entity\HsEntityType', 'load'],
         'source' => ['label'],
       ],
-      '#description' => $this->t('A unique machine-readable name for this humsci importer type. It must only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name for this HumSci entity type. It must only contain lowercase letters, numbers, and underscores.'),
     ];
 
     return $this->protectBundleIdElement($form);
@@ -50,8 +50,8 @@ class HsImporterTypeForm extends BundleEntityFormBase {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Save humsci importer type');
-    $actions['delete']['#value'] = $this->t('Delete humsci importer type');
+    $actions['submit']['#value'] = $this->t('Save HumSci entity type');
+    $actions['delete']['#value'] = $this->t('Delete HumSci entity type');
     return $actions;
   }
 
@@ -68,10 +68,10 @@ class HsImporterTypeForm extends BundleEntityFormBase {
 
     $t_args = ['%name' => $entity_type->label()];
     if ($status == SAVED_UPDATED) {
-      $message = $this->t('The humsci importer type %name has been updated.', $t_args);
+      $message = $this->t('The HumSci entity type %name has been updated.', $t_args);
     }
     elseif ($status == SAVED_NEW) {
-      $message = $this->t('The humsci importer type %name has been added.', $t_args);
+      $message = $this->t('The HumSci entity type %name has been added.', $t_args);
     }
     $this->messenger()->addStatus($message);
 

@@ -8,9 +8,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access control handler for the humsci importer entity type.
+ * Defines the access control handler for the HumSci entity entity type.
  */
-class HsImporterAccessControlHandler extends EntityAccessControlHandler {
+class HsEntityAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}
@@ -19,19 +19,19 @@ class HsImporterAccessControlHandler extends EntityAccessControlHandler {
 
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIfHasPermission($account, 'view humsci importer');
+        return AccessResult::allowedIfHasPermission($account, 'view humsci entity');
 
       case 'update':
         return AccessResult::allowedIfHasPermissions(
           $account,
-          ['edit humsci importer', 'administer humsci importer'],
+          ['edit humsci entity', 'administer humsci entity'],
           'OR',
         );
 
       case 'delete':
         return AccessResult::allowedIfHasPermissions(
           $account,
-          ['delete humsci importer', 'administer humsci importer'],
+          ['delete humsci entity', 'administer humsci entity'],
           'OR',
         );
 
@@ -48,7 +48,7 @@ class HsImporterAccessControlHandler extends EntityAccessControlHandler {
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     return AccessResult::allowedIfHasPermissions(
       $account,
-      ['create humsci importer', 'administer humsci importer'],
+      ['create humsci entity', 'administer humsci entity'],
       'OR',
     );
   }

@@ -8,7 +8,7 @@ use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 /**
  * Provides HTML routes for entities with administrative pages.
  */
-class HsImporterHtmlRouteProvider extends AdminHtmlRouteProvider {
+class HsEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
 
   /**
    * {@inheritdoc}

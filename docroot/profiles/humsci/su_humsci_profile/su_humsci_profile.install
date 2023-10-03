@@ -276,13 +276,13 @@ function su_humsci_profile_update_9603() {
     $entities = $storage->loadByProperties(['type' => 'news_rss']);
     // Drupal\eck\Entity\EckEntity $entity.
     foreach ($entities as $entity) {
-      // Drupal\hs_entities\Entity\HsImporter $hs_importer.
-      $hs_importer = \Drupal::entityTypeManager()->getStorage('hs_importer')->create([
+      // Drupal\hs_entities\Entity\HsEntity $hs_entity.
+      $hs_entity = \Drupal::entityTypeManager()->getStorage('hs_entity')->create([
         'bundle' => 'news_rss'
       ]);
-      $hs_importer->set('field_url', $entity->get('field_url')->getValue());
-      $hs_importer->set('field_terms', $entity->get('field_terms')->getValue());
-      $hs_importer->save();
+      $hs_entity->set('field_url', $entity->get('field_url')->getValue());
+      $hs_entity->set('field_terms', $entity->get('field_terms')->getValue());
+      $hs_entity->save();
 
       $config_pages = \Drupal::entityTypeManager()->getStorage('config_pages')->loadByProperties([
         'type' => 'news_rss',
@@ -295,7 +295,7 @@ function su_humsci_profile_update_9603() {
         $delta = array_search($entity->id(), array_column($field_news_rss->getValue(), 'target_id'));
         $field_news_rss->removeItem($delta);
 
-        $config_page_references[$config_page->id()][$hs_importer->id()] = $hs_importer->id();
+        $config_page_references[$config_page->id()][$hs_entity->id()] = $hs_entity->id();
 
         $config_page->save();
       }
@@ -306,7 +306,7 @@ function su_humsci_profile_update_9603() {
 
   // Drupal\field\Entity\FieldStorageConfig $field_storage_config
   $field_storage_config = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
-  $field_storage_config->setSetting('target_type', 'hs_importer');
+  $field_storage_config->setSetting('target_type', 'hs_entity');
   $field_storage_config->save();
 
   // Drupal\field\Entity\FieldConfig $field_config
@@ -324,8 +324,8 @@ function su_humsci_profile_update_9603() {
     // Drupal\Core\Field\EntityReferenceFieldItemList $field_news_rss
     $field_news_rss = $config_page->field_news_rss;
 
-    foreach($config_page_reference as $hs_importer_id) {
-      $field_news_rss->appendItem($hs_importer_id);
+    foreach($config_page_reference as $hs_entity_id) {
+      $field_news_rss->appendItem($hs_entity_id);
     }
 
     $config_page->save();

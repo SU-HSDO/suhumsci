@@ -266,85 +266,65 @@ function su_humsci_profile_update_9602() {
  * entities.
  */
 function su_humsci_profile_update_9603() {
-  $config_page_references = [];
-
   // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
   $entity_type_manager = \Drupal::entityTypeManager();
-  if ($entity_type_manager->hasDefinition('importers')) {
-    // Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage.
-    $storage = $entity_type_manager->getStorage('importers');
-    $entities = $storage->loadByProperties(['type' => 'news_rss']);
-    // Drupal\eck\Entity\EckEntity $entity.
-    foreach ($entities as $entity) {
-      // Drupal\hs_entities\Entity\HsEntity $hs_entity.
-      $hs_entity = \Drupal::entityTypeManager()->getStorage('hs_entity')->create([
-        'bundle' => 'news_rss'
-      ]);
-      $hs_entity->set('field_url', $entity->get('field_url')->getValue());
-      $hs_entity->set('field_terms', $entity->get('field_terms')->getValue());
+  // Only ever 1 config page.
+  $config_page = $entity_type_manager->getStorage('config_pages')
+    ->load('news_rss');
+  if ($entity_type_manager->hasDefinition('importers') && $config_page) {
+    $new_values = [];
+
+    /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $field_item */
+    foreach ($config_page->get('field_news_rss') as $field_item) {
+      $eck_entity = $field_item->get('entity')->getValue();
+
+      // Create the new hs entity using the values of the ECK.
+      $hs_entity = $entity_type_manager->getStorage('hs_entity')
+        ->create([
+          'bundle' => 'news_rss',
+          'field_url' => $eck_entity->get('field_url')->getString(),
+          'field_terms' => $eck_entity->get('field_terms')->getString(),
+        ]);
       $hs_entity->save();
 
-      $config_pages = \Drupal::entityTypeManager()->getStorage('config_pages')->loadByProperties([
-        'type' => 'news_rss',
-        'field_news_rss' => $entity->id(),
-      ]);
-      // Drupal\config_pages\Entity\ConfigPages $config_page
-      foreach ($config_pages as $config_page) {
-        // Drupal\Core\Field\EntityReferenceFieldItemList $field_news_rss
-        $field_news_rss = $config_page->field_news_rss;
-        $delta = array_search($entity->id(), array_column($field_news_rss->getValue(), 'target_id'));
-        $field_news_rss->removeItem($delta);
-
-        $config_page_references[$config_page->id()][$hs_entity->id()] = $hs_entity->id();
-
-        $config_page->save();
-      }
-
-      $entity->delete();
+      // Store the new entity for the field value and delete the ECK.
+      $new_values[] = [
+        'target_id' => $hs_entity->id(),
+        'entity' => $hs_entity,
+      ];
+      $eck_entity->delete();
     }
+    $config_page->set('field_news_rss', $new_values)->save();
   }
 
-  // Drupal\field\Entity\FieldStorageConfig $field_storage_config
+  // Update the field storage settings.
   $field_storage_config = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
   $field_storage_config->setSetting('target_type', 'hs_entity');
   $field_storage_config->save();
 
-  // Drupal\field\Entity\FieldConfig $field_config
+  // Update the field config settings.
   $field_config =  \Drupal::entityTypeManager()->getStorage('field_config')
     ->load('config_pages.news_rss.field_news_rss');
   $handler_settings = $field_config->getSetting('handler_settings');
   $handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
   $field_config->setSetting('handler_settings', $handler_settings);
   $field_config->save();
-
-  foreach ($config_page_references as $config_page_id => $config_page_reference) {
-    // Drupal\config_pages\Entity\ConfigPages $config_page
-    $config_page = \Drupal::entityTypeManager()->getStorage('config_pages')->load($config_page_id);
-
-    // Drupal\Core\Field\EntityReferenceFieldItemList $field_news_rss
-    $field_news_rss = $config_page->field_news_rss;
-
-    foreach($config_page_reference as $hs_entity_id) {
-      $field_news_rss->appendItem($hs_entity_id);
-    }
-
-    $config_page->save();
-  }
 }
 
 /**
  * Delete news_rss ECK bundle and importer collections ECK entity type.
  */
-function su_humsci_profile_update_9504() {
-  // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+function su_humsci_profile_update_9604() {
   $entity_type_manager = \Drupal::entityTypeManager();
 
+  // Delete the news_rss ECK.
   if ($entity_type_manager->hasDefinition('importers_type')) {
     $news_rss_bundle = $entity_type_manager->getStorage('importers_type')
       ->load('news_rss');
     $news_rss_bundle->delete();
   }
 
+  // Delete the importers entity type from ECK.
   if ($entity_type_manager->hasDefinition('eck_entity_type')) {
     $importers_collection = $entity_type_manager->getStorage('eck_entity_type')->load('importers');
     $importers_collection->delete();

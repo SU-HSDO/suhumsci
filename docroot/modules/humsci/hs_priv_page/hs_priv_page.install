@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_priv_page module.
+ */
+
+/**
+ * Updates private page paragraph button text.
+ */
+function hs_priv_page_update_9001() {
+  $themes_to_update = [
+    'humsci_colorful',
+    'humsci_traditional',
+  ];
+
+  // Install only on the specified themes.
+  if(!in_array(\Drupal::theme()->getActiveTheme()->getName(), $themes_to_update, TRUE)) {
+    return;
+  }
+
+  
+}

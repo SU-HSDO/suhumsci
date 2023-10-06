@@ -88,6 +88,7 @@
     {% endif %}
 
     {% if button %}
+      {% set node_url = button['#row'] ? url('entity.node.canonical', { 'node': button['#row']._entity.id }) %}
       <div class="hb-card__decorative-link">
         {% if node_url %}
           <a href="{{ node_url }}" tabindex="-1" aria-hidden="true">

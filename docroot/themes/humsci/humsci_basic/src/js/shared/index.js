@@ -8,6 +8,7 @@ import './media/video-with-caption';
 import './animation/page-scroll';
 import './timeline/expand-collapse-timeline';
 import './accordion/accordion-toggle-all';
+import './vertical-linked-card/vertical-linked-card';
 
 // PoC for new megamenu.
 import './megamenu/index';

@@ -2,6 +2,11 @@
   position: relative;
   background-color: transparent;
 
+  &:hover,
+  &:focus {
+    cursor: pointer;
+  }
+
   @include hb-themes(('colorful', 'airy')) {
     // The margin-top matches the margin-top on both the title and image to prevent
     // overlap issues.
@@ -147,20 +152,9 @@
     }
   }
 
-  &__link {
-    // We need the entire hb-vertical-linked-card to be a link but wrapping the entire
-    // element or wrapping individual elements in anchor tags is not very accessible.
-    // Instead we'll add a link at the bottom of the card (with an aria-label)
-    // and use the Pseudo Content Trick to make the entire card a link:
-    // https://inclusive-components.design/cards/#thepseudocontenttrick
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-    }
+  &__title__link {
+    @include hb-global-color('color', 'white');
+    text-decoration: none;
   }
 
   &__description {

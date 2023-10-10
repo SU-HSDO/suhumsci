@@ -8,6 +8,9 @@
   {% set attributes = attributes.addClass(['hb-three-column-w-image--no-sidebar']) %}
 {% endif %}
 
+{% set main_id = settings.main_content == 'main-region' %}
+{% set attributes = settings.main_content == 'left-sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
+
 {% if content %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
@@ -17,7 +20,7 @@
     {% endif %}
 
 
-    <div class="hb-layout-builder-main-content hb-three-column-w-image__main">
+    <div class="hb-layout-builder-main-content hb-three-column-w-image__main"{% if main_id %} id="main-content"{% endif %}>
 
       {% if content.title %}
         <div class="hb-three-column-w-image__main-title">

@@ -3,15 +3,13 @@
 namespace Drupal\hs_layouts\Plugin\Layout;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Layout\LayoutDefault;
-use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * Class HumsciLayout.
  *
  * @package Drupal\su_humsci_theme\Plugin
  */
-class HumsciLayout extends LayoutDefault implements PluginFormInterface {
+class HumsciLayout extends HumsciBaseLayout {
 
   /**
    * {@inheritdoc}
@@ -29,6 +27,7 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
     $form['section_width'] = [
       '#type' => 'select',
       '#title' => $this->t('Section Width'),
@@ -56,14 +55,8 @@ class HumsciLayout extends LayoutDefault implements PluginFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    parent::submitConfigurationForm($form, $form_state);
     // In case classes is missing entirely, use the defaults.
     $defaults = $this->defaultConfiguration();
     $this->configuration['section_width'] = $form_state->getValue('section_width', $defaults['section_width']);

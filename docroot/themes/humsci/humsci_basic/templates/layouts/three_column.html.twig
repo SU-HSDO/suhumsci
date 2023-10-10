@@ -9,6 +9,9 @@
   {% set attributes = attributes.addClass(['hb-three-column--no-sidebar']) %}
 {% endif %}
 
+{% set main_attributes = settings.main_content == 'main-region' ? region_attributes.main.setAttribute('id', 'main-content') : region_attributes.main %}
+{% set attributes = settings.main_content == 'left-sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
+
 {% if content %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
@@ -22,7 +25,7 @@
 
       <div class="hb-three-column__main-body {% if content.main_below and content.main_above %}break-below-top{% endif %}">
         {% if content.main %}
-          <div{{ region_attributes.main.addClass(['layout__region']) }}>
+          <div{{ main_attributes.addClass(['layout__region']) }}>
             {{ content.main }}
           </div>
         {% endif %}

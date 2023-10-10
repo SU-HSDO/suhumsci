@@ -79,9 +79,9 @@
         "drupal/config_update": "^2.0@alpha",
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
-        "drupal/core": "^9.4.5",
+        "drupal/core": "^9.5",
         "drupal/core-composer-scaffold": "^9",
-        "drupal/core-recommended": "^9",
+        "drupal/core-recommended": "^9.5",
         "drupal/default_content": "^2.0",
         "drupal/diff": "^1.0",
         "drupal/domain_301_redirect": "^2.0",
@@ -192,13 +192,12 @@
         "kenwheeler/slick": "^1.8",
         "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
-        "simplesamlphp/simplesamlphp": "^1.19",
         "su-sws/ckeditor5_plugins": "^1.0",
         "su-sws/stanford_basic": "dev-8.x-2.x#9d6391431de1aefa93c4dfe671e309cef1496d81",
         "su-sws/stanford_fields": "^8.1",
-        "su-sws/stanford_media": "dev-HSD8-1416 as 8.3.0",
+        "su-sws/stanford_media": "9.x-dev",
         "su-sws/stanford_migrate": "^8.4",
-        "su-sws/stanford_ssp": "^8.1"
+        "su-sws/stanford_samlauth": "^1.0"
     },
     "require-dev": {
         "drupal/upgrade_status": "^4.0",
@@ -222,7 +221,7 @@
     },
     "scripts": {
         "post-drupal-scaffold-cmd": [
-            "patch -p1 < patches/htaccess.patch"
+            "patch -p1 < patches/scaffold.patch"
         ]
     },
     "extra": {
@@ -250,7 +249,8 @@
                 "CKEditor 5 headings plugin paragraph label change": "patches/ckeditor5-paragraph-rename.patch"
             },
             "drupal/ds": {
-                "https://www.drupal.org/project/ds/issues/2939322": "https://www.drupal.org/files/issues/2020-01-07/ds-content_entity-2939322-11.patch"
+                "https://www.drupal.org/project/ds/issues/2939322": "https://www.drupal.org/files/issues/2020-01-07/ds-content_entity-2939322-11.patch",
+                "https://www.drupal.org/project/ds/issues/3311925": "https://www.drupal.org/files/issues/2022-09-26/fix-ds-with-hook-entity-update.patch"
             },
             "drupal/fakeobjects": {
                 "https://www.drupal.org/project/fakeobjects/issues/3002953": "https://www.drupal.org/files/issues/2020-06-22/fakeobjects-missing_plugin-3002953-5.patch"
@@ -298,10 +298,6 @@
             "drupal/redirect": {
                 "https://www.drupal.org/project/redirect/issues/3057250": "https://www.drupal.org/files/issues/2020-12-14/validation-issue-3057250-29.patch",
                 "https://www.drupal.org/project/redirect/issues/3018897": "https://www.drupal.org/files/issues/2023-09-05/redirect-3018897-22.patch"
-            },
-            "drupal/simplesamlphp_auth": {
-                "https://www.drupal.org/project/simplesamlphp_auth/issues/2124117": "https://www.drupal.org/files/issues/2020-02-01/2124117-6-reroll-14.patch",
-                "https://www.drupal.org/project/simplesamlphp_auth/issues/2936889": "https://www.drupal.org/files/issues/2020-07-31/simplesamlphp_auth-avoid_unexpected_redirect-2936889-12-d8.patch"
             },
             "drupal/ui_patterns": {
                 "Ui Patterns Views Preview": "patches/contrib/ui_patterns_views-preview.patch"

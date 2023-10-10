@@ -1,0 +1,39 @@
+uuid: f7e15e74-a4f9-49ae-bb31-b9706bb35572
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.news_rss.field_terms
+    - field.field.hs_entity.news_rss.field_url
+    - hs_entities.hs_entity_type.news_rss
+  module:
+    - link
+_core:
+  default_config_hash: I5--W99icSXSgkgScnvPzFdGAp2LjclL6btC443vmlg
+id: hs_entity.news_rss.default
+targetEntityType: hs_entity
+bundle: news_rss
+mode: default
+content:
+  field_terms:
+    type: entity_reference_autocomplete_tags
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_url:
+    type: link_default
+    weight: 0
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  label: true
+  uid: true

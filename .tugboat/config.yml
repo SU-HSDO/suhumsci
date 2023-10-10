@@ -34,10 +34,8 @@ services:
 
         # Init the settings files.
         - blt blt:init:settings
-
-        # Copy SimpleSAMLphp configuration to prevent annoying errors.
-        - blt source:build:simplesamlphp-config
       update:
+        - rm -rf vendor
         - composer install --no-ansi
         # Sync to hs_colorful and hs_colorful database & files.
         - blt drupal:sync:files --site=hs_colorful
@@ -50,6 +48,7 @@ services:
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
+        - rm -rf vendor
         - composer install --no-ansi
 
         - drush @hs_colorful.local cr

@@ -184,5 +184,18 @@
     .field-hs-postcard-body {
       margin-bottom: 0;
     }
+
+    a {
+      @include hb-traditional {
+        @include hb-global-color('color', 'black');
+      }
+
+      &:hover,
+      &:focus {
+        @include hb-traditional {
+          @include hb-global-color('color', 'gray-dark');
+        }
+      }
+    }
   }
 }

@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -109,5 +110,13 @@ function hs_layouts_preprocess_pattern_vertical_link_card(&$variables) {
   if (isset($variables['title']['#field'])) {
     $field = $variables['title']['#field'];
     $variables['title_has_heading'] = _hs_layouts_field_has_title($field);
+  }
+}
+
+function hs_layouts_entity_presave(EntityInterface $entity) {
+  \Drupal::logger('hs_layouts')->debug('Saved Entity Type: @type', ['@type' => $entity->getEntityTypeId()]);
+  if ($entity->getEntityTypeId() === 'entity_view_display') {
+    dump($entity->getThirdPartySetting('layout_builder', 'allow_custom'));
+    dump($entity->getThirdPartySetting('layout_builder', 'sections'));
   }
 }

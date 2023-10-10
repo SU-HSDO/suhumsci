@@ -32,7 +32,7 @@ class HumsciMarkupNormalizer extends MarkupNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $normalized = parent::normalize($object, $format, $context);
     if (strpos($normalized, 'data-attribute-tag') !== FALSE) {
       $normalized = $this->parseMultipleFields($normalized);

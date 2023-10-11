@@ -77,3 +77,42 @@ function hs_paragraph_types_update_9403() {
   $site_manager->grantPermission('use text format minimal_html_with_styles');
   $site_manager->save();
 }
+
+/**
+ * Update field format for existing postcard paragraph content.
+ */
+function hs_paragraph_types_update_9404(&$sandbox = NULL) {
+  $storage_handler = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (!isset($sandbox['total'])) {
+    // Get all existing instances of hs_postcard.
+    $query = $storage_handler->getQuery()
+      ->condition('type', 'hs_postcard')
+      ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL');
+    $total = $query->count()->execute();
+    $sandbox['total'] = $total;
+    $sandbox['current'] = 0;
+  }
+  $batch = 25;
+
+
+  $query = $storage_handler->getQuery()
+    ->condition('type', 'hs_postcard')
+    ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL')
+    ->range($sandbox['current'], $batch);
+  $paragraph_ids = $query->execute();
+
+  $postcard_paragraphs = $storage_handler->loadMultiple($paragraph_ids);
+  foreach ($postcard_paragraphs as $id => $postcard) {
+    // Set correct format.
+    $postcard->field_hs_postcard_body->format = 'minimal_html_with_styles';
+    $postcard->save();
+    $sandbox['current']++;
+  }
+
+  if ($sandbox['total'] == 0) {
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+}

@@ -35,6 +35,12 @@ settings:
       - undo
       - redo
   plugins:
+    ckeditor5_alignment:
+      enabled_alignments:
+        - center
+        - justify
+        - left
+        - right
     ckeditor5_heading:
       enabled_headings:
         - heading2
@@ -42,6 +48,37 @@ settings:
         - heading4
         - heading5
         - heading6
+    ckeditor5_list:
+      reversed: false
+      startIndex: true
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<b>'
+        - '<cite>'
+        - '<dl>'
+        - '<dt>'
+        - '<dd>'
+        - '<i class>'
+        - '<img src alt data-entity-type data-entity-uuid data-align data-caption width height class>'
+        - '<drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button alt title class>'
+        - '<div role id aria-* class>'
+        - '<span class>'
+        - '<blockquote cite>'
+        - '<ul type>'
+        - '<ol type>'
+        - '<h2 id class>'
+        - '<h3 id class>'
+        - '<h4 id class>'
+        - '<h5 id class>'
+        - '<h6 id class>'
+        - '<caption class>'
+        - '<tbody class>'
+        - '<th scope class>'
+        - '<td class>'
+        - '<table class>'
+        - '<a name target hreflang>'
+        - '<drupal-media data-* title>'
+        - '<p class>'
     ckeditor5_style:
       styles:
         -
@@ -92,45 +129,6 @@ settings:
         -
           label: 'Borderless Table'
           element: '<table class="hs-table--borderless">'
-    ckeditor5_sourceEditing:
-      allowed_tags:
-        - '<b>'
-        - '<cite>'
-        - '<dl>'
-        - '<dt>'
-        - '<dd>'
-        - '<i class>'
-        - '<img src alt data-entity-type data-entity-uuid data-align data-caption width height class>'
-        - '<drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button alt title class>'
-        - '<div role id aria-* class>'
-        - '<span class>'
-        - '<blockquote cite>'
-        - '<ul type>'
-        - '<ol type>'
-        - '<h2 id class>'
-        - '<h3 id class>'
-        - '<h4 id class>'
-        - '<h5 id class>'
-        - '<h6 id class>'
-        - '<caption class>'
-        - '<tbody class>'
-        - '<th scope class>'
-        - '<td class>'
-        - '<table class>'
-        - '<a name target hreflang>'
-        - '<drupal-media data-* title>'
-        - '<p class>'
-    ckeditor5_list:
-      reversed: false
-      startIndex: true
-    ckeditor5_alignment:
-      enabled_alignments:
-        - left
-        - center
-        - right
-        - justify
-    media_media:
-      allow_view_mode_override: true
     editor_advanced_link_link:
       enabled_attributes:
         - id
@@ -138,6 +136,8 @@ settings:
     linkit_extension:
       linkit_enabled: true
       linkit_profile: default
+    media_media:
+      allow_view_mode_override: true
 image_upload:
   status: false
   scheme: public

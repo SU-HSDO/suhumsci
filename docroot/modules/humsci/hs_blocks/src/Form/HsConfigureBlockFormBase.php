@@ -47,6 +47,9 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
     }
 
     $configuration = $this->block->getConfiguration();
+    if (!$configuration || !$this->uuid) {
+      return;
+    }
 
     // The "Region" is the same as the machine name of the group. It's a
     // pseudo-region.
@@ -60,6 +63,7 @@ abstract class HsConfigureBlockFormBase extends ConfigureBlockFormBase {
 
     $configuration['context_mapping'] = $this->block->getContextMapping();
     $component_config['children'][$this->uuid] = $configuration;
+    $component_config['children'] = array_filter($component_config['children']);
 
     // Save the new child into the group component.
     $component->setConfiguration($component_config);

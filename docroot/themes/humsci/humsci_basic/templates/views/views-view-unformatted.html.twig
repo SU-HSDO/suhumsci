@@ -17,7 +17,12 @@
 #}
 
 {% if title %}
-  <h3>{{ title }}</h3>
+  {# Check to see if there is already a heading tag in the rendered title. #}
+  {% if '</h' in title|render %}
+    {{ title }}
+  {% else %}
+    <h3>{{ title }}</h3>
+  {% endif %}
   {# Wrap the rows when a title is present (grouped views). #}
   <div class="views-rows">
 {% endif %}

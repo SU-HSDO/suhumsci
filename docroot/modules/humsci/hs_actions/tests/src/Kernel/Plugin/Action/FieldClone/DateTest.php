@@ -70,6 +70,11 @@ class DateTest extends KernelTestBase {
     $this->installEntitySchema('date_format');
     $this->installSchema('node', 'node_access');
 
+    DateFormat::create([
+      'id' => 'fallback',
+      'pattern' => 'D, m/d/Y - H:i',
+    ])->save();
+
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();
 
     $field_storage = FieldStorageConfig::create([

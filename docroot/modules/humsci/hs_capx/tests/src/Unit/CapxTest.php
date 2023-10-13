@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class CapxTest.
@@ -99,9 +100,11 @@ class CapxTest extends UnitTestCase {
    * Tests failed credentials is handled well.
    */
   public function testFailedConnection() {
+    $request = $this->createMock(RequestInterface::class);
+    $response = $this->createMock(ResponseInterface::class);
     $this->guzzle->method('request')
       ->withAnyParameters()
-      ->willThrowException(new ClientException('Failed!', $this->getMockForAbstractClass(RequestInterface::class)));
+      ->willThrowException(new ClientException('Failed!', $request, $response));
 
     $this->expectException(ClientException::class);
     $this->assertFalse($this->capx->testConnection());

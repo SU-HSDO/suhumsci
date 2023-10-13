@@ -36,10 +36,10 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
-    - cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-
+    - cache-d9-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+    - cache-d9-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-
     # fallback to using the latest cache if no exact match is found
-    - cache-{{ .Environment.CACHE_VERSION }}-
+    - cache-d9-{{ .Environment.CACHE_VERSION }}-
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -50,7 +50,7 @@ save_cache: &save_cache
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
     - ./docroot/themes/contrib
-  key: cache-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
+  key: cache-d9-{{ .Environment.CACHE_VERSION }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}
 
 disable_telemetry: &disable_telemetry
   run:

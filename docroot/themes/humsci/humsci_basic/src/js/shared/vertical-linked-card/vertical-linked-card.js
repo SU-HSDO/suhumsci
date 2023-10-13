@@ -12,6 +12,18 @@ function verticalLinkedCard() {
       mainLink.click();
     }
 
+    // Add a focus event listener to each main link
+    mainLink.addEventListener('focus', () => {
+      // Add a focus state class to card
+      card.classList.add('is-focused');
+    });
+
+    // Add a blur event listener to each main link
+    mainLink.addEventListener('blur', () => {
+      // Remove focus state class from card
+      card.classList.remove('is-focused');
+    });
+
     card.addEventListener('click', handleClick);
   });
 }

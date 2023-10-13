@@ -43,7 +43,8 @@
       transition: hb-transition(transform);
 
       .hb-vertical-linked-card:hover &,
-      .hb-vertical-linked-card:focus & {
+      .hb-vertical-linked-card:focus &,
+      .hb-vertical-linked-card.is-focused & {
         transform: scale($hb-image-hover-scale);
       }
     }
@@ -97,7 +98,8 @@
     }
 
     .hb-vertical-linked-card:hover &,
-    .hb-vertical-linked-card:focus & {
+    .hb-vertical-linked-card:focus &,
+    .hb-vertical-linked-card.is-focused & {
       @include hb-themes(('colorful', 'airy')) {
         @include hb-pairing-color('background-color', 'secondary-darken-12');
       }
@@ -109,7 +111,8 @@
     }
 
     .hb-vertical-linked-card:hover &::after,
-    .hb-vertical-linked-card:focus &::after {
+    .hb-vertical-linked-card:focus &::after,
+    .hb-vertical-linked-card.is-focused &::after {
       background-position: 6px;
     }
 
@@ -155,10 +158,6 @@
   &__title__link {
     @include hb-global-color('color', 'white');
     text-decoration: none;
-
-    &:focus {
-      text-decoration: underline;
-    }
   }
 
   &__description {

@@ -86,6 +86,7 @@ function hs_paragraph_types_update_9404(&$sandbox = NULL) {
   if (!isset($sandbox['total'])) {
     // Get all existing instances of hs_postcard.
     $query = $storage_handler->getQuery()
+      ->accessCheck(TRUE)
       ->condition('type', 'hs_postcard')
       ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL');
     $total = $query->count()->execute();
@@ -96,6 +97,7 @@ function hs_paragraph_types_update_9404(&$sandbox = NULL) {
 
 
   $query = $storage_handler->getQuery()
+    ->accessCheck(TRUE)
     ->condition('type', 'hs_postcard')
     ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL')
     ->range($sandbox['current'], $batch);

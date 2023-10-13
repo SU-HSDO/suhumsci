@@ -350,3 +350,18 @@ function su_humsci_profile_post_update_9207() {
     }
   }
 }
+
+/**
+ * Remove dependency on key_encrypt module.
+ */
+function su_humsci_profile_post_update_key_dependency_clean() {
+  $config_names = \Drupal::configFactory()->listAll('key.key.');
+  foreach ($config_names as $config_name) {
+    $config = \Drupal::configFactory()->getEditable($config_name);
+    $dependencies = $config->get('dependencies.module') ?: [];
+    $position = array_search('key_encrypt', $dependencies);
+    if ($position !== FALSE) {
+      $config->clear("dependencies.module.$position")->save();
+    }
+  }
+}

@@ -188,7 +188,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
 
     // Build the render array for each component.
     foreach ($this->configuration['children'] as $uuid => $child) {
-      $component = new SectionComponent($uuid, 'content', $child);
+      $component = new SectionComponent($uuid, 'content', $child ?: []);
 
       if (!empty($child['additional'])) {
         foreach ($child['additional'] as $key => $value) {
@@ -196,7 +196,12 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         }
       }
 
-      $components[$uuid] = $component->toRenderArray($contexts, $in_preview);
+      try {
+        $components[$uuid] = $component->toRenderArray($contexts, $in_preview);
+      }
+      catch (\Throwable $e) {
+        continue;
+      }
     }
 
     // Add administrative links.

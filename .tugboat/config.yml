@@ -29,15 +29,14 @@ services:
         - ln -s docroot htdocs
 
         # Install/update packages managed by composer, including drush
+        - rm -rf vendor
         - composer install --no-ansi
         - blt blt:telemetry:disable --no-interaction
 
         # Init the settings files.
         - blt blt:init:settings
-
-        # Copy SimpleSAMLphp configuration to prevent annoying errors.
-        - blt source:build:simplesamlphp-config
       update:
+        - rm -rf vendor
         - composer install --no-ansi
         # Sync to hs_colorful and hs_colorful database & files.
         - blt drupal:sync:files --site=hs_colorful
@@ -50,6 +49,7 @@ services:
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
+        - rm -rf vendor
         - composer install --no-ansi
 
         - drush @hs_colorful.local cr
@@ -72,6 +72,7 @@ services:
     image: tugboatqa/mysql:5
     commands:
       update:
+        - mysql -e 'SET GLOBAL max_allowed_packet=67108864;'
         # Delete and recreate the database for each site.
         - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
         - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"

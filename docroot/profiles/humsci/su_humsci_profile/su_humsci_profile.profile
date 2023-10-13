@@ -278,7 +278,12 @@ function su_humsci_profile_preprocess_responsive_image_formatter(&$variables) {
     // should be another link with text nearby.
     $variables['responsive_image']['#attributes']['aria-hidden'] = 'true';
     $variables['responsive_image']['#attributes']['tabindex'] = -1;
-    $variables['url']->mergeOptions(['attributes' => ['tabindex' => -1]]);
+    $variables['url']->mergeOptions([
+      'attributes' => [
+        'tabindex' => -1,
+        'aria-hidden' => 'true',
+      ],
+    ]);
   }
 }
 

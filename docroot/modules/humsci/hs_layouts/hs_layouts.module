@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\paragraphs\ParagraphInterface;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -115,10 +115,28 @@ function hs_layouts_preprocess_pattern_vertical_link_card(&$variables) {
   }
 }
 
-function hs_layouts_entity_presave(EntityInterface $entity) {
-  \Drupal::logger('hs_layouts')->debug('Saved Entity Type: @type', ['@type' => $entity->getEntityTypeId()]);
-  if ($entity->getEntityTypeId() === 'entity_view_display') {
-    dump($entity->getThirdPartySetting('layout_builder', 'allow_custom'));
-    dump($entity->getThirdPartySetting('layout_builder', 'sections'));
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_layouts_form_entity_view_display_layout_builder_form_alter(&$form) {
+  $form['#validate'][] = '_hs_layouts_unique_main_content_section_validate';
+}
+
+/**
+ * Verify that only one section is set as 'Main Content' in Layout Builder form.
+ */
+function _hs_layouts_unique_main_content_section_validate(&$form, FormStateInterface $form_state) {
+  $main_content_found = FALSE;
+  foreach ($form['layout_builder']['#section_storage']->getSections() as $section) {
+    if ($section->getLayoutSettings()['main_content'] !== 'none') {
+      if ($main_content_found) {
+        $form_state->setErrorByName('form', 'Only one section should be configured as Main Content');
+        break;
+      }
+      else {
+        $main_content_found = TRUE;
+      }
+    }
   }
+
 }

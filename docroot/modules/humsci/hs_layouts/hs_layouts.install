@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * Set the first section main region of every layout as the "Main content".
+ */
+function hs_layouts_update_9401() {
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  $query = $storage->getQuery()->accessCheck(TRUE);
+  $items = $query->execute();
+  foreach ($items as $item) {
+    if (preg_match('/^node\.\w+\.default/', $item)) {
+      $view_display = $storage->load($item);
+      if ($view_display->isLayoutBuilderEnabled()) {
+        $sections = $view_display->getThirdPartySetting('layout_builder', 'sections');
+        dump($sections[0]->getLayoutSettings());
+        $sections[0]->setLayoutSettings(array_merge($sections[0]->getLayoutSettings(), ['main_content' => 'main-region']));
+        $view_display->save();
+      }
+    }
+  }
+}

@@ -116,7 +116,7 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
   public function testSimpleForm() {
     $events = ConfigReadOnlyEventSubscriber::getSubscribedEvents();
 
-    $this->assertArrayEquals([
+    $this->assertEquals([
       'config_readonly_form_event' => [
         [
           'onFormAlter',

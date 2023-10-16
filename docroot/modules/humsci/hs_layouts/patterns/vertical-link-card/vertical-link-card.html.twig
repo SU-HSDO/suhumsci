@@ -7,7 +7,15 @@
     </div>
   {% endif %}
 
-  {% if title %}
+  {% if title and button %}
+    {% if title_has_heading %}
+      <a href="{{ button }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
+    {% else %}
+      <h2 class="hb-vertical-linked-card__title">
+        <a href="{{ button }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
+      </h2>
+    {% endif %}
+  {% elseif title %}
     {% if title_has_heading %}
       {{ title }}
     {% else %}
@@ -19,9 +27,5 @@
     <div class="hb-vertical-linked-card__description">
       {{ description }}
     </div>
-  {% endif %}
-
-  {% if button %}
-    <a href="{{ button }}" aria-label="{{ title }}" class="hb-vertical-linked-card__link"></a>
   {% endif %}
 </div>

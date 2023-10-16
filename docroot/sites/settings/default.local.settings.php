@@ -1,5 +1,9 @@
 <?php
 
+if (file_exists(DRUPAL_ROOT . '/../keys/secrets.settings.php')) {
+  require DRUPAL_ROOT . '/../keys/secrets.settings.php';
+}
+
 $config['devel.settings']['devel_dumper'] = 'var_dumper';
 // Prevent errors from showing in the UI for prod & qa environments.
 error_reporting(E_ALL & ~E_DEPRECATED);

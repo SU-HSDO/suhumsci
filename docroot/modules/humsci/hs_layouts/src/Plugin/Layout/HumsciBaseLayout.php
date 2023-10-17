@@ -39,7 +39,7 @@ class HumsciBaseLayout extends LayoutDefault implements PluginFormInterface {
         'none' => $this->t('None'),
         'main-region' => $this->t('Main Region'),
         'left-sidebar' => $this->t('Left Sidebar'),
-      ]
+      ],
     ];
 
     return $form;
@@ -52,7 +52,6 @@ class HumsciBaseLayout extends LayoutDefault implements PluginFormInterface {
 
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -63,4 +62,3 @@ class HumsciBaseLayout extends LayoutDefault implements PluginFormInterface {
   }
 
 }
-

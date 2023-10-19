@@ -11,7 +11,22 @@ use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\user\Entity\Role;
+
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function hs_paragraph_types_update_dependencies() {
+  $dependencies = [];
+  // There are roles with non-existing permissions between
+  // Drupal 9 to Drupal 10, so we run the user update hook first.
+  if (function_exists('user_update_10000')) {
+    $dependencies['hs_paragraph_types'][9403] = [
+      'user' => 10000,
+    ];
+  }
+  return $dependencies;
+}
 
 /**
  * Store image gallery display mode in paragraph variable.
@@ -68,14 +83,17 @@ function hs_paragraph_types_update_9402() {
  */
 function hs_paragraph_types_update_9403() {
   // Update contributor role permissions.
-  $contributor = Role::load('contributor');
-  $contributor->grantPermission('use text format minimal_html_with_styles');
-  $contributor->save();
+  $role_config = \Drupal::configFactory()->getEditable('user.role.contributor');
+  $existing_permissions = $role_config->get('permissions');
+  $existing_permissions[] = 'use text format minimal_html_with_styles';
+  $role_config->set('permissions', $existing_permissions);
+  $role_config->save();
 
-  // Update site_manager role permissions.
-  $site_manager = Role::load('site_manager');
-  $site_manager->grantPermission('use text format minimal_html_with_styles');
-  $site_manager->save();
+  $role_config = \Drupal::configFactory()->getEditable('user.role.site_manager');
+  $existing_permissions = $role_config->get('permissions');
+  $existing_permissions[] = 'use text format minimal_html_with_styles';
+  $role_config->set('permissions', $existing_permissions);
+  $role_config->save();
 }
 
 /**

@@ -326,7 +326,7 @@ process:
       source: photo_url
     -
       plugin: explode
-      delimiter: '.'
+      delimiter: .
     -
       plugin: array_pop
   image_name:
@@ -353,7 +353,7 @@ process:
       source:
         - '@image_destination_part_1'
         - '@image_ext'
-      delimiter: '.'
+      delimiter: .
   image_file:
     -
       plugin: skip_on_empty

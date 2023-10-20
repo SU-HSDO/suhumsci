@@ -19,7 +19,7 @@ filters:
     status: true
     weight: -10
     settings:
-      allowed_html: '<br> <p class> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <a class="hs-button hs-button--big hs-secondary-button hs-more-link hs-external-link hs-file-link hs-pdf-link hs-private-link" hreflang href title data-entity-type data-entity-uuid data-entity-substitution> <cite> <dl> <dt> <dd> <blockquote cite> <span class> <table class> <ul type> <ol type start> <strong> <em> <code> <li> <hr> <tr> <td rowspan colspan> <th rowspan colspan> <thead> <tbody> <tfoot> <caption>'
+      allowed_html: '<br> <p class> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <blockquote cite> <span class> <table class> <ul type class id> <ol type class id start> <a hreflang href title data-entity-type data-entity-uuid data-entity-substitution> <strong> <em> <li> <hr>'
       filter_html_help: true
       filter_html_nofollow: false
   filter_htmlcorrector:
@@ -41,18 +41,26 @@ filters:
     status: false
     weight: 4
     settings:
+      caption:
+        alt: '0'
+        title: '0'
       optionset: default
       layout: ''
       background: false
+      box_caption: ''
+      box_caption_custom: ''
       box_media_style: ''
       loading: ''
-      preload: false
       responsive_image_style: ''
       box_style: ''
       image_style: ''
       media_switch: ''
       ratio: ''
       thumbnail_style: ''
+      grid: ''
+      grid_medium: ''
+      grid_small: ''
+      style: ''
       skin: ''
       overridables:
         arrows: '0'
@@ -69,6 +77,8 @@ filters:
       thumbnail_effect: ''
       thumbnail_position: ''
       override: false
+      preserve_keys: false
+      visible_items: null
   blazy_filter:
     id: blazy_filter
     provider: blazy
@@ -78,6 +88,7 @@ filters:
       media_switch: ''
       hybrid_style: ''
       box_style: ''
+      box_media_style: ''
       box_caption: ''
       filter_tags:
         img: img

@@ -140,3 +140,11 @@ function _hs_layouts_unique_main_content_section_validate(&$form, FormStateInter
   }
 
 }
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function hs_layouts_entity_type_alter(array &$entity_types) {
+  // Add validation constraint to the node entity.
+  $entity_types['node']->addConstraint('hs_layouts_unique_main_content_section');
+}

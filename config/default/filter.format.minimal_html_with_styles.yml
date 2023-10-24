@@ -1,4 +1,4 @@
-uuid: beffe16f-8d52-4890-9af1-1a3c1ea577a1
+uuid: 636909dd-558a-4dbd-9ab4-af670883e8f0
 langcode: en
 status: true
 dependencies:
@@ -7,25 +7,33 @@ dependencies:
     - linkit
     - slick
     - spamspan
-name: 'Basic HTML Without Media'
-format: basic_html_without_media
+name: 'Minimal HTML with Styles'
+format: minimal_html_with_styles
 weight: 0
 filters:
+  blazy_filter:
+    id: blazy_filter
+    provider: blazy
+    status: false
+    weight: 3
+    settings:
+      media_switch: ''
+      hybrid_style: ''
+      box_style: ''
+      box_caption: ''
+      filter_tags:
+        img: img
+        iframe: iframe
+      use_data_uri: '0'
   filter_html:
     id: filter_html
     provider: filter
     status: true
     weight: -10
     settings:
-      allowed_html: '<br> <p class> <h2 id class> <h3 id class> <h4 id class> <h5 id class> <h6 id class> <a class="hs-button hs-button--big hs-secondary-button hs-more-link hs-external-link hs-file-link hs-pdf-link hs-private-link" name target hreflang data-entity-substitution data-entity-type data-entity-uuid href title id> <span class> <table class> <cite> <dl> <dt> <dd> <div class> <i class> <blockquote cite> <ul type class id> <ol type class id start> <caption class> <tbody class> <th scope class rowspan colspan> <td class rowspan colspan> <strong> <em> <code> <li> <hr> <tr> <thead> <tfoot>'
+      allowed_html: '<br> <p class> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <a class="hs-button hs-button--big hs-secondary-button hs-more-link hs-external-link hs-file-link hs-pdf-link hs-private-link" hreflang href title data-entity-type data-entity-uuid data-entity-substitution> <span class> <table class> <cite> <dl> <dt> <dd> <blockquote cite> <ul type> <ol type start> <strong> <em> <li> <hr>'
       filter_html_help: true
       filter_html_nofollow: false
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: 10
-    settings: {  }
   linkit:
     id: linkit
     provider: linkit
@@ -39,27 +47,19 @@ filters:
     status: false
     weight: 4
     settings:
-      caption:
-        alt: '0'
-        title: '0'
       optionset: default
       layout: ''
+      skin: ''
       background: false
-      box_caption: ''
-      box_caption_custom: ''
       box_media_style: ''
       loading: ''
+      preload: false
       responsive_image_style: ''
       box_style: ''
       image_style: ''
       media_switch: ''
       ratio: ''
       thumbnail_style: ''
-      grid: ''
-      grid_medium: ''
-      grid_small: ''
-      style: ''
-      skin: ''
       overridables:
         arrows: '0'
         autoplay: '0'
@@ -75,23 +75,6 @@ filters:
       thumbnail_effect: ''
       thumbnail_position: ''
       override: false
-      preserve_keys: false
-      visible_items: null
-  blazy_filter:
-    id: blazy_filter
-    provider: blazy
-    status: false
-    weight: 3
-    settings:
-      media_switch: ''
-      hybrid_style: ''
-      box_style: ''
-      box_media_style: ''
-      box_caption: ''
-      filter_tags:
-        img: img
-        iframe: iframe
-      use_data_uri: '0'
   filter_spamspan:
     id: filter_spamspan
     provider: spamspan
@@ -106,3 +89,9 @@ filters:
       spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
       spamspan_form_default_url: contact
       spamspan_form_default_displaytext: 'contact form'
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: 10
+    settings: {  }

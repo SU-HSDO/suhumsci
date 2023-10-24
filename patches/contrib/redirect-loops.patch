@@ -1,0 +1,26 @@
+diff --git a/src/EventSubscriber/RedirectRequestSubscriber.php b/src/EventSubscriber/RedirectRequestSubscriber.php
+index 3320692..03af8ca 100644
+--- a/src/EventSubscriber/RedirectRequestSubscriber.php
++++ b/src/EventSubscriber/RedirectRequestSubscriber.php
+@@ -16,6 +16,7 @@ use Drupal\redirect\RedirectChecker;
+ use Drupal\redirect\RedirectRepository;
+ use Symfony\Component\HttpFoundation\Response;
+ use Symfony\Component\HttpKernel\Event\RequestEvent;
++use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+ use Symfony\Component\HttpKernel\KernelEvents;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+ use Symfony\Component\Routing\RequestContext;
+@@ -146,11 +147,8 @@ class RedirectRequestSubscriber implements EventSubscriberInterface {
+     }
+     catch (RedirectLoopException $e) {
+       \Drupal::logger('redirect')->warning('Redirect loop identified at %path for redirect %rid', ['%path' => $e->getPath(), '%rid' => $e->getRedirectId()]);
+-      $response = new Response();
+-      $response->setStatusCode(503);
+-      $response->setContent('Service unavailable');
+-      $event->setResponse($response);
+-      return;
++      \Drupal::messenger()->addError(t('Redirect loop identified at %path', ['%path' => $e->getPath()]));
++      throw new NotFoundHttpException();
+     }
+ 
+     if (!empty($redirect)) {

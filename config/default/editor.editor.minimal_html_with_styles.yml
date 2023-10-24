@@ -1,47 +1,29 @@
-uuid: 3fc81761-84af-4a4e-b3c3-1f11184e31fb
+uuid: 4985794b-697f-48e3-8b25-1cdcb4c4b7ef
 langcode: en
 status: true
 dependencies:
   config:
-    - filter.format.basic_html_without_media
+    - filter.format.minimal_html_with_styles
   module:
     - ckeditor5
-format: basic_html_without_media
+format: minimal_html_with_styles
 editor: ckeditor5
 settings:
   toolbar:
     items:
       - bold
       - italic
-      - outdent
-      - indent
-      - insertTable
-      - alignment
+      - heading
+      - horizontalLine
+      - sourceEditing
       - '|'
       - link
       - '|'
       - bulletedList
       - numberedList
-      - horizontalLine
       - '|'
-      - blockQuote
-      - '|'
-      - heading
       - style
-      - '|'
-      - removeFormat
-      - sourceEditing
-      - undo
-      - redo
-      - '|'
-      - code
   plugins:
-    ckeditor5_alignment:
-      enabled_alignments:
-        - center
-        - justify
-        - left
-        - right
     ckeditor5_heading:
       enabled_headings:
         - heading2
@@ -49,33 +31,6 @@ settings:
         - heading4
         - heading5
         - heading6
-    ckeditor5_list:
-      reversed: false
-      startIndex: true
-    ckeditor5_sourceEditing:
-      allowed_tags:
-        - '<cite>'
-        - '<dl>'
-        - '<dt>'
-        - '<dd>'
-        - '<div class>'
-        - '<i class>'
-        - '<span class>'
-        - '<blockquote cite>'
-        - '<ul type class id>'
-        - '<ol type class id start>'
-        - '<h2 id class>'
-        - '<h3 id class>'
-        - '<h4 id class>'
-        - '<h5 id class>'
-        - '<h6 id class>'
-        - '<caption class>'
-        - '<tbody class>'
-        - '<th scope class>'
-        - '<td class>'
-        - '<table class>'
-        - '<a name target hreflang data-entity-substitution data-entity-type data-entity-uuid>'
-        - '<p class>'
     ckeditor5_style:
       styles:
         -
@@ -126,17 +81,31 @@ settings:
         -
           label: 'Borderless Table'
           element: '<table class="hs-table--borderless">'
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - '<cite>'
+        - '<dl>'
+        - '<dt>'
+        - '<dd>'
+        - '<blockquote cite>'
+        - '<span class>'
+        - '<table class>'
+        - '<ul type>'
+        - '<ol type>'
+        - '<h2 id>'
+        - '<h3 id>'
+        - '<h4 id>'
+        - '<h5 id>'
+        - '<h6 id>'
+        - '<p class>'
+        - '<a hreflang>'
+    ckeditor5_list:
+      reversed: false
+      startIndex: true
     editor_advanced_link_link:
       enabled_attributes:
-        - id
         - title
     linkit_extension:
-      linkit_enabled: false
-image_upload:
-  status: false
-  scheme: public
-  directory: inline-images
-  max_size: ''
-  max_dimensions:
-    width: null
-    height: null
+      linkit_enabled: true
+      linkit_profile: default
+image_upload: {  }

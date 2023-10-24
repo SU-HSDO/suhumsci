@@ -19,11 +19,11 @@ module.exports = [
     url: 'http://hs-colorful.suhumsci.loc/',
     waitForSelector: '.js',
     waitForTimeout: 1500,
-    execute() { document.querySelector('.js-megamenu__mobile-btn').click() },
+    execute() { document.querySelector('.hb-main-nav__toggle').click() },
     additionalSnapshots: [{
       suffix: ' - Child open',
       execute() {
-        document.querySelector('.js-megamenu__toggle').click();
+        document.querySelector('.hb-main-nav__button').click();
       }
     }],
     widths: [768]
@@ -33,7 +33,7 @@ module.exports = [
     url: 'http://hs-colorful.suhumsci.loc/',
     waitForSelector: '.js',
     waitForTimeout: 1500,
-    execute() { document.querySelector('.js-megamenu__toggle').click() },
+    execute() { document.querySelector('.hb-main-nav__button').click() },
     widths: [1200]
   },
   {

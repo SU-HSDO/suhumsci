@@ -827,3 +827,13 @@ function su_humsci_profile_block_build_alter(array &$build, BlockPluginInterface
 function su_humsci_profile_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form['simplesamlphp_auth_user_enable']['#default_value'] = (bool) \Drupal::state()->get('humsci_profile.user_saml_default', TRUE);
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
+  $variables['content']['login']['#attributes']['class'] = [
+    'text-align-right',
+    'hs-secondary-button',
+  ];
+}

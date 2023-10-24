@@ -270,24 +270,51 @@ process:
           bundle: hs_event_audience
           value_key: name
           source: name
+  image_ext:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: photo_url
+    -
+      plugin: explode
+      delimiter: .
+    -
+      plugin: array_pop
+  image_name:
+    plugin: callback
+    callable: basename
+    source: url
+  image_destination_part_1:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_ext'
+    -
+      plugin: concat
+      source:
+        - constants/image_path
+        - '@image_name'
+  image_destination:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_destination_part_1'
+    -
+      plugin: concat
+      source:
+        - '@image_destination_part_1'
+        - '@image_ext'
+      delimiter: .
   image_file:
     -
       plugin: skip_on_empty
       method: process
-      source: photo_url
+      source: '@image_destination'
     -
       plugin: file_import
-      destination: constants/image_path
-      id_only: true
-      reuse: true
-  image_name:
-    -
-      plugin: skip_on_empty
-      method: process
       source: photo_url
-    -
-      plugin: callback
-      callable: basename
+      destination: '@image_destination'
+      id_only: true
   field_hs_event_image/target_id:
     -
       plugin: skip_on_empty
@@ -299,13 +326,14 @@ process:
       source: '@image_file'
     -
       plugin: entity_generate
-      source: '@image_name'
-      value_key: name
+      source: '@image_file'
+      value_key: field_media_image
       bundle_key: bundle
       bundle: image
       entity_type: media
       ignore_case: true
       values:
+        name: title
         field_media_image/target_id: '@image_file'
         field_media_image/alt: constants/alt
   field_hs_event_status:

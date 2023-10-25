@@ -116,3 +116,16 @@ function hs_blocks_preprocess_block__layout_builder(&$variables) {
     $variables['label'] = $variables['configuration']['label'];
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function hs_blocks_preprocess_block__views_exposed_filter_block(&$variables) {
+  if ($variables['derivative_plugin_id'] === "custm_blc_search-search_page") {
+    // Append the build id to create
+    // unique form id.
+    $build_id = $variables['content']['#build_id'];
+    $variables['content']['#id'] .= '-' . $build_id;
+    $variables['#cache']['max-age'] = 0;
+  }
+}

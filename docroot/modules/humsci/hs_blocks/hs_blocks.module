@@ -121,7 +121,7 @@ function hs_blocks_preprocess_block__layout_builder(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function hs_blocks_preprocess_block__views_exposed_filter_block(&$variables) {
-  if ($variables['derivative_plugin_id'] === "custm_blc_search-search_page") {
+  if (str_contains($variables['derivative_plugin_id'], "search-search_page")) {
     // Append the build id to create
     // unique form id.
     $build_id = $variables['content']['#build_id'];

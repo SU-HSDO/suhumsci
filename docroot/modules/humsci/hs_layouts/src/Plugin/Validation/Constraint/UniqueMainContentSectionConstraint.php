@@ -20,6 +20,6 @@ class UniqueMainContentSectionConstraint extends Constraint {
    *
    * @var string
    */
-  public $notUnique = 'Only one region should contain the main content id.';
+  public $notUnique = 'Exactly one region should contain the main content id.';
 
 }

@@ -123,20 +123,23 @@ function hs_layouts_form_entity_view_display_layout_builder_form_alter(&$form) {
 }
 
 /**
- * Verify that only one section is set as 'Main Content' in Layout Builder form.
+ * Exactly one section should be set as 'Main Content' in Layout Builder form.
  */
 function _hs_layouts_unique_main_content_section_validate(&$form, FormStateInterface $form_state) {
   $main_content_found = FALSE;
   foreach ($form['layout_builder']['#section_storage']->getSections() as $section) {
     if ($section->getLayoutSettings()['main_content'] !== 'none') {
       if ($main_content_found) {
-        $form_state->setErrorByName('form', 'Only one section should be configured as Main Content');
+        $form_state->setErrorByName('form', 'Exactly one region should contain the main content id.');
         break;
       }
       else {
         $main_content_found = TRUE;
       }
     }
+  }
+  if (!$main_content_found) {
+    $form_state->setErrorByName('form', 'Exactly one region should contain the main content id.');
   }
 
 }
@@ -145,6 +148,7 @@ function _hs_layouts_unique_main_content_section_validate(&$form, FormStateInter
  * Implements hook_entity_type_alter().
  */
 function hs_layouts_entity_type_alter(array &$entity_types) {
-  // Add validation constraint to the node entity.
+  // Add constraint to the node entity for validating layout builder main
+  // content configuration in nodes with overridden layout.
   $entity_types['node']->addConstraint('hs_layouts_unique_main_content_section');
 }

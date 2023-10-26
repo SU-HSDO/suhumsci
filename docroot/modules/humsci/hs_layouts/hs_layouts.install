@@ -77,24 +77,16 @@ function hs_layouts_update_9402() {
             }
           }
           $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
-          $section_storage->save();
+          try {
+            $section_storage->save();
+          }
+          catch (Exception $e) {
+            \Drupal::logger('hs_layouts')->error('Error updating node @id: @message', [
+              '@id' => $node->id(),
+              '@message' => $e->getMessage(),
+            ]);
+          }
         }
-        // $layout = $node->get(OverridesSectionStorage::FIELD_NAME);
-        // $sections = $layout->getSections();
-        // if (count($sections)) {
-        //   dump($node->label());
-        //   $main_section = $sections[0];
-        //   if (count($sections) > 1) {
-        //     foreach ($sections as $section) {
-        //       if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
-        //         $main_section = $section;
-        //         break;
-        //       }
-        //     }
-        //   }
-        //   $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
-        //   $node->save();
-        // }
       }
     }
   }

@@ -60,11 +60,7 @@ class MenuItemsCest {
    * @group install
    */
   public function testPathAuto(AcceptanceTester $I) {
-    $manual_url = '';
-    while (strlen($manual_url) < 5) {
-      $url = parse_url($this->faker->url);
-      $manual_url = substr($url['path'], 0, strpos($url['path'], '.'));
-    }
+    $manual_url = preg_replace('/[^a-z0-9\/]/', '', strtolower('/' . implode('/', $this->faker->words())));;
 
     $I->logInWithRole('administrator');
     $auto_alias = $I->createEntity([
@@ -87,6 +83,8 @@ class MenuItemsCest {
     $I->uncheckOption('Generate automatic URL alias');
     $I->fillField('URL alias', $manual_url);
     $I->click('Save');
+    $I->canSee($manual_alias->label(), 'h1');
+    $I->canSeeInCurrentUrl($manual_url);
 
     $nolink = $I->createEntity([
       'title' => 'Foo Bar',
@@ -106,13 +104,19 @@ class MenuItemsCest {
     $I->selectOption('Parent link', '-- ' . $auto_alias->label());
     $I->click('Change parent (update list of weights)');
     $I->click('Save');
+    $I->canSee($node->label(), 'h1');
+
+    // Save twice to ensure updated alias.
+    $I->amOnPage($node->toUrl('edit-form')->toString());
+    $I->click('Save');
+    $I->canSee($node->label(), 'h1');
     $I->canSeeInCurrentUrl($auto_alias->toUrl()->toString() . '/');
 
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->selectOption('Parent link', '-- ' . $manual_alias->label());
     $I->click('Change parent (update list of weights)');
     $I->click('Save');
-    $I->canSeeInCurrentUrl($manual_alias->toUrl()->toString() . '/');
+    $I->canSeeInCurrentUrl($manual_url . '/');
 
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->selectOption('Parent link', '-- ' . $nolink->label());

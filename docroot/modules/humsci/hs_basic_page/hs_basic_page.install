@@ -181,12 +181,12 @@ function hs_basic_page_update_9003() {
   /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $private_form_display */
   $private_form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
   if (!empty($private_form_display)) {
-    $field_priv_components = $private_form_display->getComponent('field_hs_priv_page_components');
-    if (!empty($field_priv_components)) {
-      $field_priv_components['settings']['title'] = 'Component';
-      $field_priv_components['settings']['title_plural'] = 'Components';
+    $priv_components = $private_form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($priv_components)) {
+      $priv_components['settings']['title'] = 'Component';
+      $priv_components['settings']['title_plural'] = 'Components';
 
-      $private_form_display->setComponent('field_hs_priv_page_components', $field_priv_components);
+      $private_form_display->setComponent('field_hs_priv_page_components', $priv_components);
       $private_form_display->save();
     }
   }

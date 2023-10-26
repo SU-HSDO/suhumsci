@@ -12,7 +12,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 
-
 /**
  * Implements hook_update_dependencies().
  */
@@ -113,7 +112,6 @@ function hs_paragraph_types_update_9404(&$sandbox = NULL) {
   }
   $batch = 25;
 
-
   $query = $storage_handler->getQuery()
     ->accessCheck(TRUE)
     ->condition('type', 'hs_postcard')
@@ -122,7 +120,7 @@ function hs_paragraph_types_update_9404(&$sandbox = NULL) {
   $paragraph_ids = $query->execute();
 
   $postcard_paragraphs = $storage_handler->loadMultiple($paragraph_ids);
-  foreach ($postcard_paragraphs as $id => $postcard) {
+  foreach ($postcard_paragraphs as $postcard) {
     // Set correct format.
     $postcard->field_hs_postcard_body->format = 'minimal_html_with_styles';
     $postcard->save();

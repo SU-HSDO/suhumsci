@@ -5,6 +5,11 @@
  * Update functions for hs_layouts module.
  */
 
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
+
 /**
  * Set the first section main region of every layout as the "Main content".
  */
@@ -13,13 +18,83 @@ function hs_layouts_update_9401() {
   $query = $storage->getQuery()->accessCheck(TRUE);
   $items = $query->execute();
   foreach ($items as $item) {
-    if (preg_match('/^node\.\w+\.default/', $item)) {
+    if (preg_match('/^node\.(\w+)\.default/', $item, $matches)) {
+      $content_type = $matches[1];
       $view_display = $storage->load($item);
       if ($view_display->isLayoutBuilderEnabled()) {
         $sections = $view_display->getThirdPartySetting('layout_builder', 'sections');
-        dump($sections[0]->getLayoutSettings());
-        $sections[0]->setLayoutSettings(array_merge($sections[0]->getLayoutSettings(), ['main_content' => 'main-region']));
-        $view_display->save();
+        if (count($sections)) {
+          $main_section = $sections[0];
+          if ($content_type === 'hs_basic_page' && count($sections) > 1) {
+            foreach ($sections as $section) {
+              if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
+                $main_section = $section;
+                break;
+              }
+            }
+          }
+          $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
+          $view_display->save();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Set the first section main region of every overriden layout as the "Main content".
+ */
+function hs_layouts_update_9402() {
+  $overriden_bundles = ['hs_basic_page', 'hs_private_page'];
+  foreach ($overriden_bundles as $bundle) {
+    $is_overriden = \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', $bundle)
+      ->getThirdPartySettings('layout_builder')['allow_custom'];
+    if ($is_overriden) {
+      $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
+      $ids = $nodeStorage->getQuery()
+        ->condition('type', $bundle)
+        ->accessCheck(TRUE)
+        ->execute();
+      $nodes = $nodeStorage->loadMultiple($ids);
+      foreach ($nodes as $node) {
+        $node_context = EntityContext::fromEntity($node);
+        $manager = \Drupal::service('plugin.manager.layout_builder.section_storage');
+        $section_storage = $manager->load('overrides', [
+          'entity' => $node_context,
+          'view_mode' => new Context(new ContextDefinition('string'), 'default'),
+        ]);
+        if ($section_storage->isOverridden()) {
+          dump($node->label());
+          $sections = $section_storage->getSections();
+          $main_section = $sections[0];
+          if (count($sections) > 1) {
+            foreach ($sections as $section) {
+              if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
+                $main_section = $section;
+                break;
+              }
+            }
+          }
+          $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
+          $section_storage->save();
+        }
+        // $layout = $node->get(OverridesSectionStorage::FIELD_NAME);
+        // $sections = $layout->getSections();
+        // if (count($sections)) {
+        //   dump($node->label());
+        //   $main_section = $sections[0];
+        //   if (count($sections) > 1) {
+        //     foreach ($sections as $section) {
+        //       if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
+        //         $main_section = $section;
+        //         break;
+        //       }
+        //     }
+        //   }
+        //   $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
+        //   $node->save();
+        // }
       }
     }
   }

@@ -8,12 +8,12 @@ use Symfony\Component\Validator\Constraint;
  * Checks that the layout builder config only has one main content section.
  *
  * @Constraint(
- *   id = "hs_layouts_unique_main_content_section",
- *   label = @Translation("Unique Main Content Section", context = "Validation"),
+ *   id = "hs_layouts_unique_main_content",
+ *   label = @Translation("Unique Main Content", context = "Validation"),
  *   type = "string"
  * )
  */
-class UniqueMainContentSectionConstraint extends Constraint {
+class UniqueMainContentConstraint extends Constraint {
 
   /**
    * Message shown when multiple regions contain the main content id.

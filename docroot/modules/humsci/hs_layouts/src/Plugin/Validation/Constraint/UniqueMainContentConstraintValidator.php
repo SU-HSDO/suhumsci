@@ -13,35 +13,35 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Validates the hs_layouts_unique_main_content_section constraint.
+ * Validates the hs_layouts_unique_main_content constraint.
  */
-class UniqueMainContentSectionConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+class UniqueMainContentConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
    * Section Storage Manager service.
    *
    * @var Drupal\layout_builder\SectionStorage\SectionStorageManager
    */
-  private $sectionStorageManager;
+  private $storageManager;
 
   /**
    * Layout Tempstorage Repository service.
    *
    * @var Drupal\layout_builder\LayoutTempstoreRepository
    */
-  private $layoutTempstoreRepository;
+  private $tempstoreRepository;
 
   /**
-   * Create a new UniqueMainContentSectionConstraintValidator instance.
+   * Create a new UniqueMainContentConstraintValidator instance.
    *
-   * @param Drupal\layout_builder\SectionStorage\SectionStorageManager $sectionStorageManager
+   * @param Drupal\layout_builder\SectionStorage\SectionStorageManager $storageManager
    *   Section storage manager service.
-   * @param Drupal\layout_builder\LayoutTempstoreRepository $layoutTempstoreRepository
+   * @param Drupal\layout_builder\LayoutTempstoreRepository $tempstoreRepository
    *   Layout Tempstore Repository service.
    */
-  public function __construct(SectionStorageManager $sectionStorageManager, LayoutTempstoreRepository $layoutTempstoreRepository) {
-    $this->sectionStorageManager = $sectionStorageManager;
-    $this->layoutTempstoreRepository = $layoutTempstoreRepository;
+  public function __construct(SectionStorageManager $storageManager, LayoutTempstoreRepository $tempstoreRepository) {
+    $this->storageManager = $storageManager;
+    $this->tempstoreRepository = $tempstoreRepository;
   }
 
   /**
@@ -59,11 +59,11 @@ class UniqueMainContentSectionConstraintValidator extends ConstraintValidator im
    */
   public function validate($value, Constraint $constraint) {
     $node_context = EntityContext::fromEntity($value);
-    $section_storage = $this->sectionStorageManager->load('overrides', [
+    $section_storage = $this->storageManager->load('overrides', [
       'entity' => $node_context,
       'view_mode' => new Context(new ContextDefinition('string'), 'default'),
     ]);
-    $temp_storage = $this->layoutTempstoreRepository->get($section_storage);
+    $temp_storage = $this->tempstoreRepository->get($section_storage);
     $main_content_found = FALSE;
     foreach ($temp_storage->getSections() as $section) {
       if ($section->getLayoutSettings()['main_content'] !== 'none') {

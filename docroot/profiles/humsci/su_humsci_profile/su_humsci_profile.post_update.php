@@ -365,33 +365,3 @@ function su_humsci_profile_post_update_key_dependency_clean() {
     }
   }
 }
-
-/**
- * Delete blocks that will be duplicated on config import.
- */
-function su_humsci_profile_post_update_fix_duplicate_blocks() {
-  /** @var \Drupal\Core\Config\FileStorage $storage */
-  $storage = \Drupal::service('config.storage.sync');
-  $config_ignore = $storage->read('config_ignore.settings');
-  $forced_blocks = array_filter($config_ignore['ignored_config_entities'], function($ignored_config) {
-    return str_starts_with($ignored_config, '~block.block.');
-  });
-  $block_storage = \Drupal::entityTypeManager()->getStorage('block');
-  foreach ($forced_blocks as $block_id) {
-    $config_name = substr($block_id, 1);
-    $block_id  = str_replace('block.block.', '', $config_name);
-
-    if (!$block_storage->load($block_id)) {
-      try {
-        $block = $storage->read($config_name);
-        $block['status'] = FALSE;
-        $block_storage->create($block)->save();
-      }
-      catch (\Exception $e) {
-        \Drupal::logger('humsci')->error('Failed at '. $block_id);
-        \Drupal::messenger()->addError('Failed at '. $block_id);
-        throw $e;
-      }
-    }
-  }
-}

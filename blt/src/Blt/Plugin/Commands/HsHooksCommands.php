@@ -3,6 +3,7 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Core\Serialization\Yaml;
 
 /**
@@ -14,16 +15,27 @@ class HsHooksCommands extends BltTasks {
    * @hook pre-command drupal:sync:default:site
    */
   public function preSiteCopy() {
+    if (!EnvironmentDetector::isLocalEnv()) {
+      return;
+    }
     $root = $this->getConfigValue('repo.root');
-    $this->taskFilesystemStack()->remove("$root/config/envs/local/config_split.patch.config_ignore.settings.yml")->run();
+    $this->taskFilesystemStack()
+      ->copy("$root/config/envs/local/config_split.patch.config_ignore.settings.yml", sys_get_temp_dir() . '/config_split.patch.config_ignore.settings.yml')
+      ->remove("$root/config/envs/local/config_split.patch.config_ignore.settings.yml")
+      ->run();
   }
 
   /**
    * @hook post-command drupal:sync:default:site
    */
   public function postSiteCopy() {
+    if (!EnvironmentDetector::isLocalEnv()) {
+      return;
+    }
     $root = $this->getConfigValue('repo.root');
-    $this->taskExec("git checkout $root/config/envs/local/config_split.patch.config_ignore.settings.yml")
+    $this->taskFilesystemStack()
+      ->copy(sys_get_temp_dir() . '/config_split.patch.config_ignore.settings.yml', "$root/config/envs/local/config_split.patch.config_ignore.settings.yml")
+      ->remove(sys_get_temp_dir() . '/config_split.patch.config_ignore.settings.yml')
       ->run();
   }
 
@@ -35,7 +47,7 @@ class HsHooksCommands extends BltTasks {
    *
    * @hook pre-command artifact:update:drupal:all-sites
    */
-  public function preUpdateAllSites(){
+  public function preUpdateAllSites() {
     // Disable alias since we are targeting specific uri.
     $this->config->set('drush.alias', '');
 

@@ -5,13 +5,12 @@
  * Update functions for hs_layouts module.
  */
 
-use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 
 /**
- * Set the first section main region of every layout as the "Main content".
+ * Set main content id in content types default layout builder config.
  */
 function hs_layouts_update_9401() {
   $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
@@ -42,7 +41,7 @@ function hs_layouts_update_9401() {
 }
 
 /**
- * Set the first section main region of every overriden layout as the "Main content".
+ * Set main content id in nodes with overridden layout builder config.
  */
 function hs_layouts_update_9402() {
   $overriden_bundles = ['hs_basic_page', 'hs_private_page'];
@@ -77,15 +76,7 @@ function hs_layouts_update_9402() {
             }
           }
           $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
-          try {
-            $section_storage->save();
-          }
-          catch (Exception $e) {
-            \Drupal::logger('hs_layouts')->error('Error updating node @id: @message', [
-              '@id' => $node->id(),
-              '@message' => $e->getMessage(),
-            ]);
-          }
+          $section_storage->save();
         }
       }
     }

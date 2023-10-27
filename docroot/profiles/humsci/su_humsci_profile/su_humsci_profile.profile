@@ -837,3 +837,8 @@ function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
     'hs-secondary-button',
   ];
 }
+
+function mikes(){
+  \Drupal::moduleHandler()->loadInclude('su_humsci_profile', 'post_update.php');
+  su_humsci_profile_post_update_fix_duplicate_blocks();
+}

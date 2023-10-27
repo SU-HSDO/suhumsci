@@ -899,3 +899,23 @@ function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
     'hs-secondary-button',
   ];
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_select(&$variables) {
+//  if (!\Drupal::service('router.admin_context')->isAdminRoute()) {
+//    $variables['attributes']['class'][] = 'preact-select';
+//    $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
+//  }
+}
+
+function su_humsci_profile_preprocess_form_element(&$variables){
+  if (
+    $variables['element']['#type'] == 'select' &&
+    !\Drupal::service('router.admin_context')->isAdminRoute()
+  ) {
+    $variables['attributes']['class'][] = 'select-preact';
+    $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
+  }
+}

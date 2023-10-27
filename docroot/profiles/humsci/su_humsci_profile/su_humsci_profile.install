@@ -334,6 +334,7 @@ function su_humsci_profile_update_9604() {
 }
 
 /**
+<<<<<<< HEAD
  * Delete "Not Live" config split.
  */
 function su_humsci_profile_update_9605() {
@@ -539,4 +540,11 @@ function _su_humsci_profile_reset_node_changed_time(NodeInterface $node, int $ch
     ->fields(['changed' => $changed])
     ->condition('vid', $node->getRevisionId())
     ->execute();
+}
+
+/**
+ * Disable chosen.
+ */
+function su_humsci_profile_update_9609() {
+  \Drupal::service('module_installer')->uninstall(['chosen']);
 }

@@ -175,7 +175,6 @@ class HsAcquiaApiCommands extends BltTasks {
       foreach ($environment_uuids as $environment_uuid => $name) {
         $backups = $this->acquiaDatabaseBackups->getAll($environment_uuid, $database->name);
         foreach ($backups as $backup) {
-
           $start_at = strtotime($backup->startedAt);
           if ($backup->type == 'ondemand' && time() - $start_at > 60 * 60 * 24 * 7) {
             $this->say(sprintf('Deleting %s backup #%s on %s environment.', $database->name, $backup->id, $name));
@@ -199,7 +198,8 @@ class HsAcquiaApiCommands extends BltTasks {
     'resume' => FALSE,
     'env' => 'test',
     'no-notify' => FALSE,
-  ]) {
+  ]
+  ) {
     $this->connectAcquiaApi();
     $from_uuid = $this->getEnvironmentUuid('prod');
     $to_uuid = $this->getEnvironmentUuid($options['env']);
@@ -320,7 +320,7 @@ class HsAcquiaApiCommands extends BltTasks {
    */
   protected function getMachineName($message) {
     $question = new Question($this->formatQuestion($message));
-    $question->setValidator(function ($answer) {
+    $question->setValidator(function($answer) {
       $modified_answer = strtolower($answer);
       $modified_answer = preg_replace("/[^a-z0-9_]/", '_', $modified_answer);
       if ($modified_answer != $answer) {
@@ -351,7 +351,8 @@ class HsAcquiaApiCommands extends BltTasks {
     }
     try {
       $this->acquiaApplications->getAll();
-    } catch (\Throwable $e) {
+    }
+    catch (\Throwable $e) {
       $this->traitConnectAcquiaApi();
     }
   }
@@ -451,13 +452,14 @@ class HsAcquiaApiCommands extends BltTasks {
     foreach ($this->acquiaEnvironments->getAll($this->appId) as $environment) {
       $git_url = $environment->vcs->url;
       $vcs = $environment->vcs->path;
-      if (strpos($vcs, 'tags/') !== FALSE) {
+      if (str_contains($vcs, 'tags/')) {
         $active_tags[] = str_replace('tags/', '', $vcs);
       }
       else {
         $active_branches[] = $vcs;
       }
     }
+
     $root = $this->getConfigValue('repo.root');
     if (file_exists("$root/deploy")) {
       $this->taskExec("rm -rf $root/deploy")->run();
@@ -475,11 +477,10 @@ class HsAcquiaApiCommands extends BltTasks {
     $branches = explode("\n", $branches);
     foreach ($branches as $branch) {
       $branch = trim(str_replace('origin/', '', $branch));
-
       if (
-        !empty($active_branches) &&
+        $active_branches &&
         !in_array($branch, $active_branches) &&
-        preg_match('/^[a-zA-Z0-9-_]+$/', $branch)
+        preg_match('/^[a-zA-Z0-9-_\.]+$/', $branch)
       ) {
         $this->taskGit()
           ->dir("$root/deploy")

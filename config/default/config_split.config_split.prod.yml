@@ -6,6 +6,8 @@ id: prod
 label: Prod
 description: 'Acquia Production Environment'
 weight: 0
+stackable: false
+storage: folder
 folder: ../config/envs/prod
 module:
   acquia_connector: 0
@@ -22,16 +24,14 @@ module:
   purge_queuer_coretags: 0
   purge_ui: 0
 theme: {  }
-blacklist:
+complete_list:
   - acquia_connector.settings
   - google_analytics.settings
   - purge.logger_channels
   - purge.plugins
   - purge_queuer_coretags.settings
   - ultimate_cron.job.google_analytics_cron
-graylist:
+partial_list:
   - field_ui.settings
   - hs_config_prefix.settings
   - system.performance
-graylist_dependents: true
-graylist_skip_equal: true

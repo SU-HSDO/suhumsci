@@ -6,6 +6,8 @@ id: stage
 label: Stage
 description: 'Acquia Staging Environment'
 weight: 0
+stackable: false
+storage: folder
 folder: ../config/envs/stage
 module:
   acquia_connector: 0
@@ -23,15 +25,13 @@ module:
   shield: 0
   stage_file_proxy: 0
 theme: {  }
-blacklist:
+complete_list:
   - acquia_connector.settings
   - purge.logger_channels
   - purge.plugins
   - purge_queuer_coretags.settings
   - key.key.hs_shield_key
   - shield.settings
-graylist:
+partial_list:
   - field_ui.settings
   - system.performance
-graylist_dependents: true
-graylist_skip_equal: true

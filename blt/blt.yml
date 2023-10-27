@@ -19,47 +19,6 @@ drush:
     ci: self
     prod: '${project.machine_name}.prod'
   default_alias: '${drush.aliases.local}'
-modules:
-  local:
-    enable: {  }
-    uninstall:
-      - google_analytics
-      - acquia_connector
-      - purge
-      - shield
-      - config_readonly
-  ci:
-    enable:
-      - hs_config_readonly
-    uninstall:
-      - google_analytics
-      - purge
-      - acquia_connector
-      - shield
-  dev:
-    enable:
-      - acquia_connector
-      - shield
-      - stage_file_proxy
-    uninstall:
-      - google_analytics
-      - config_readonly
-  test:
-    enable:
-      - acquia_connector
-      - shield
-      - stage_file_proxy
-    uninstall:
-      - google_analytics
-      - config_readonly
-  prod:
-    enable:
-      - google_analytics
-      - acquia_connector
-      - hs_config_readonly
-    uninstall:
-      - shield
-      - stage_file_proxy
 multisites:
   - aaas
   - aarc

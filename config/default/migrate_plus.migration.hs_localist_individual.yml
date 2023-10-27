@@ -45,6 +45,10 @@ source:
       label: url
       selector: event/url
     -
+      name: urlname
+      label: urlname
+      selector: event/urlname
+    -
       name: location
       label: location
       selector: event/location_name
@@ -280,10 +284,6 @@ process:
       delimiter: .
     -
       plugin: array_pop
-  image_name:
-    plugin: callback
-    callable: basename
-    source: url
   image_destination_part_1:
     -
       plugin: skip_on_empty
@@ -293,7 +293,7 @@ process:
       plugin: concat
       source:
         - constants/image_path
-        - '@image_name'
+        - urlname
   image_destination:
     -
       plugin: skip_on_empty

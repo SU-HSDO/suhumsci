@@ -3,6 +3,7 @@
 namespace Drupal\hs_field_helpers\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\viewfield\Plugin\Field\FieldFormatter\ViewfieldFormatterDefault;
 use Drupal\views\ViewExecutable;
 
@@ -13,15 +14,23 @@ use Drupal\views\ViewExecutable;
  */
 class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
 
+  use LoggerChannelTrait;
+
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = parent::viewElements($items, $langcode);
+    try {
+      $elements = parent::viewElements($items, $langcode);
+    }
+    catch (\Throwable $e) {
+      $this->getLogger('hs_field_helpers')
+        ->error('Error during rendering: ' . $e->getMessage());
+      return [];
+    }
 
     // Add and customize the view title.
     foreach ($this->getFieldValues($items) as $delta => $value) {
-
       if (empty($elements[$delta]['#content']['#view'])) {
         continue;
       }

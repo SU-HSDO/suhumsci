@@ -63,21 +63,23 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
       'entity' => $node_context,
       'view_mode' => new Context(new ContextDefinition('string'), 'default'),
     ]);
-    $temp_storage = $this->tempstoreRepository->get($section_storage);
-    $main_content_found = FALSE;
-    foreach ($temp_storage->getSections() as $section) {
-      if ($section->getLayoutSettings()['main_content'] !== 'none') {
-        if ($main_content_found) {
-          $this->context->addViolation($constraint->notUnique);
-          break;
-        }
-        else {
-          $main_content_found = TRUE;
+    if ($section_storage && $section_storage->isOverridden()) {
+      $temp_storage = $this->tempstoreRepository->get($section_storage);
+      $main_content_found = FALSE;
+      foreach ($temp_storage->getSections() as $section) {
+        if ($section->getLayoutSettings()['main_content'] !== 'none') {
+          if ($main_content_found) {
+            $this->context->addViolation($constraint->notUnique);
+            break;
+          }
+          else {
+            $main_content_found = TRUE;
+          }
         }
       }
-    }
-    if (!$main_content_found) {
-      $this->context->addViolation($constraint->notUnique);
+      if (!$main_content_found) {
+        $this->context->addViolation($constraint->notUnique);
+      }
     }
   }
 

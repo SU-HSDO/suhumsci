@@ -11,21 +11,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
-
-/**
- * Implements hook_update_dependencies().
- */
-function hs_paragraph_types_update_dependencies() {
-  $dependencies = [];
-  // There are roles with non-existing permissions between
-  // Drupal 9 to Drupal 10, so we run the user update hook first.
-  if (function_exists('user_update_10000')) {
-    $dependencies['hs_paragraph_types'][9403] = [
-      'user' => 10000,
-    ];
-  }
-  return $dependencies;
-}
+use Drupal\user\Entity\Role;
 
 /**
  * Store image gallery display mode in paragraph variable.
@@ -55,69 +41,43 @@ function hs_paragraph_types_update_9401() {
 }
 
 /**
- * Update postcard body field text format.
+ * Update user permissions for minimal_html_with_styles text format.
  */
 function hs_paragraph_types_update_9402() {
-  // Load filter_format and editor exported configuration.
-  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
-  $filter_format_config = $config_directory->read('filter.format.minimal_html_with_styles');
-  $editor_config = $config_directory->read('editor.editor.minimal_html_with_styles');
+
+  // Ensure that the filter format exists in order to grant permissions.
+  $filter_format_config = \Drupal::service('config.storage.sync')->read('filter.format.minimal_html_with_styles');
   if (!FilterFormat::load('minimal_html_with_styles')) {
     $filter_format = FilterFormat::create($filter_format_config);
     $filter_format->save();
   }
-  if (!Editor::load('minimal_html_with_styles')) {
-    $editor = Editor::create($editor_config);
-    $editor->save();
-  }
 
-  // Update field_hs_postcard_body field defnition exported configuration.
-  $field_config = \Drupal::configFactory()->getEditable('field.field.paragraph.hs_postcard.field_hs_postcard_body');
-  $field_config->set('third_party_settings.allowed_formats.allowed_formats.0', 'minimal_html_with_styles');
-  $field_config->save();
-}
+  $role = Role::load('contributor');
+  $role->grantPermission('use text format minimal_html_with_styles');
+  $role->save();
 
-/**
- * Update user permissions for minimal_html_with_styles text format.
- */
-function hs_paragraph_types_update_9403() {
-  // Update contributor role permissions.
-  $role_config = \Drupal::configFactory()->getEditable('user.role.contributor');
-  $existing_permissions = $role_config->get('permissions');
-  $existing_permissions[] = 'use text format minimal_html_with_styles';
-  $role_config->set('permissions', $existing_permissions);
-  $role_config->save();
-
-  $role_config = \Drupal::configFactory()->getEditable('user.role.site_manager');
-  $existing_permissions = $role_config->get('permissions');
-  $existing_permissions[] = 'use text format minimal_html_with_styles';
-  $role_config->set('permissions', $existing_permissions);
-  $role_config->save();
+  $role = Role::load('site_manager');
+  $role->grantPermission('use text format minimal_html_with_styles');
+  $role->save();
 }
 
 /**
  * Update field format for existing postcard paragraph content.
  */
-function hs_paragraph_types_update_9404(&$sandbox = NULL) {
+function hs_paragraph_types_update_9403(&$sandbox = NULL) {
   $storage_handler = \Drupal::entityTypeManager()->getStorage('paragraph');
   if (!isset($sandbox['total'])) {
     // Get all existing instances of hs_postcard.
     $query = $storage_handler->getQuery()
-      ->accessCheck(TRUE)
+      ->accessCheck(FALSE)
       ->condition('type', 'hs_postcard')
       ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL');
-    $total = $query->count()->execute();
-    $sandbox['total'] = $total;
+    $sandbox['ids'] = $query->execute();
+    $sandbox['total'] = count($sandbox['ids']);
     $sandbox['current'] = 0;
   }
-  $batch = 25;
 
-  $query = $storage_handler->getQuery()
-    ->accessCheck(TRUE)
-    ->condition('type', 'hs_postcard')
-    ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL')
-    ->range($sandbox['current'], $batch);
-  $paragraph_ids = $query->execute();
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
 
   $postcard_paragraphs = $storage_handler->loadMultiple($paragraph_ids);
   foreach ($postcard_paragraphs as $postcard) {

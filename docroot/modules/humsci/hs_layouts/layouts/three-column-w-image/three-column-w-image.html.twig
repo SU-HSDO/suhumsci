@@ -6,6 +6,9 @@
 
 {% set attributes = attributes.addClass([settings.section_width, 'clearfix', 'three-column-w-image']) %}
 
+{% set main_id = settings.main_content == 'main-region' %}
+{% set attributes = settings.main_content == 'left-sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
+
 {% if content %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
@@ -15,7 +18,7 @@
     {% endif %}
 
 
-    <div class="main-content {{ main_class }}">
+    <div class="main-content {{ main_class }}"{% if main_id %} id="main-content"{% endif %}>
       {% if content.title %}
         <div{{ region_attributes.title.addClass(['layout__region', 'decanter-width-one-whole']) }}>
           {{ content.title }}

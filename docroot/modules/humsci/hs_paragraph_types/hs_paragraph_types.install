@@ -7,11 +7,9 @@
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\FileStorage;
-use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\user\Entity\Role;
 
 /**
  * Store image gallery display mode in paragraph variable.
@@ -52,45 +50,24 @@ function hs_paragraph_types_update_9402() {
     $filter_format->save();
   }
 
-  $role = Role::load('contributor');
-  $role->grantPermission('use text format minimal_html_with_styles');
-  $role->save();
-
-  $role = Role::load('site_manager');
-  $role->grantPermission('use text format minimal_html_with_styles');
-  $role->save();
+  // Grant permission to use the text format to the roles that require it.
+  user_role_grant_permissions('contributor', ['use text format minimal_html_with_styles']);
+  user_role_grant_permissions('site_manager', ['use text format minimal_html_with_styles']);
 }
 
 /**
  * Update field format for existing postcard paragraph content.
  */
 function hs_paragraph_types_update_9403(&$sandbox = NULL) {
-  $storage_handler = \Drupal::entityTypeManager()->getStorage('paragraph');
-  if (!isset($sandbox['total'])) {
-    // Get all existing instances of hs_postcard.
-    $query = $storage_handler->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', 'hs_postcard')
-      ->condition('field_hs_postcard_body', NULL, 'IS NOT NULL');
-    $sandbox['ids'] = $query->execute();
-    $sandbox['total'] = count($sandbox['ids']);
-    $sandbox['current'] = 0;
-  }
-
-  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
-
-  $postcard_paragraphs = $storage_handler->loadMultiple($paragraph_ids);
-  foreach ($postcard_paragraphs as $postcard) {
-    // Set correct format.
-    $postcard->field_hs_postcard_body->format = 'minimal_html_with_styles';
-    $postcard->save();
-    $sandbox['current']++;
-  }
-
-  if ($sandbox['total'] == 0) {
-    $sandbox['#finished'] = 1;
-  }
-  else {
-    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
-  }
+  $db = \Drupal::database();
+  $db->update('paragraph__field_hs_postcard_body')
+    ->fields([
+      'field_hs_postcard_body_format' => 'minimal_html_with_styles',
+    ])
+    ->execute();
+  $db->update('paragraph_revision__field_hs_postcard_body')
+    ->fields([
+      'field_hs_postcard_body_format' => 'minimal_html_with_styles',
+    ])
+    ->execute();
 }

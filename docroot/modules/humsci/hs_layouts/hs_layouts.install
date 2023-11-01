@@ -76,7 +76,13 @@ function hs_layouts_update_9402() {
             }
           }
           $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
-          $section_storage->save();
+          try {
+            $section_storage->save();
+          }
+          catch(Exception $e) {
+            \Drupal::logger('hs_layouts')->error('Error: @error', ['@error' => $e->getMessage()]);
+            \Drupal::logger('hs_layouts')->notice('Node URL: @url', ['@url' => $node->toUrl()->setAbsolute()->toString()]);
+          }
         }
       }
     }

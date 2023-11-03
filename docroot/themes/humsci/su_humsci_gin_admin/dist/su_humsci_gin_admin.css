@@ -78,12 +78,6 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   --gin-bg-danger: #b1040e;
 }
 
-@media screen and (min-width: 980px) {
-  .gin-table-scroll-wrapper .views-field {
-    word-break: break-word;
-  }
-}
-
 .paragraphs-browser-wrapper fieldset input {
   background: rgb(var(--gin-color-primary-light-rgb));
   z-index: 1;
@@ -91,4 +85,24 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
 
 .paragraphs-browser-wrapper fieldset:not(.fieldgroup) {
   margin-bottom: 2rem;
+}
+
+.views-form {
+  position: relative;
+}
+
+.views-form .gin-table-scroll-wrapper {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.views-form .gin-table-scroll-wrapper::after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 1.5rem;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }

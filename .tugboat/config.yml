@@ -38,6 +38,7 @@ services:
       update:
         - rm -rf vendor
         - composer install --no-ansi
+        - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=67108864;'
         # Sync to hs_colorful and hs_colorful database & files.
         - blt drupal:sync:files --site=hs_colorful
         - drush @hs_colorful.local user:create tugboat --password=tugboat || true
@@ -51,14 +52,13 @@ services:
       build:
         - rm -rf vendor
         - composer install --no-ansi
+        - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=67108864;'
 
         - drush @hs_colorful.local cr
         - blt drupal:update --site=hs_colorful
-        - drush @hs_traditional.local pmu simplesamlphp_auth -y
 
         - drush @hs_traditional.local cr
         - blt drupal:update --site=hs_traditional
-        - drush @hs_colorful.local pmu simplesamlphp_auth -y
 
     # Collection of urls to compare visual results.
     urls:

@@ -1,5 +1,5 @@
 diff --git a/docroot/.htaccess b/docroot/.htaccess
-index 1575c51f..8171985b 100644
+index 4031da47..5366085e 100644
 --- a/docroot/.htaccess
 +++ b/docroot/.htaccess
 @@ -1,3 +1,14 @@
@@ -27,7 +27,7 @@ index 1575c51f..8171985b 100644
  # Add correct encoding for SVGZ.
  AddType image/svg+xml svg svgz
  AddEncoding gzip svgz
-@@ -67,6 +81,61 @@ AddEncoding gzip svgz
+@@ -60,6 +74,61 @@ AddEncoding gzip svgz
  <IfModule mod_rewrite.c>
    RewriteEngine on
  
@@ -89,7 +89,7 @@ index 1575c51f..8171985b 100644
    # Set "protossl" to "s" if we were accessed via https://.  This is used later
    # if you enable "www." stripping or enforcement, in order to ensure that
    # you don't bounce between http and https.
-@@ -144,6 +213,8 @@ AddEncoding gzip svgz
+@@ -137,6 +206,8 @@ AddEncoding gzip svgz
    RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
    # Allow access to test-specific PHP files:
    RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php
@@ -99,7 +99,7 @@ index 1575c51f..8171985b 100644
    # Copy and adapt this rule to directly execute PHP files in contributed or
    # custom modules or to run another PHP application in the same directory.
 diff --git a/docroot/robots.txt b/docroot/robots.txt
-index ebcd04b9..a42d397f 100644
+index ebcd04b9..da827511 100644
 --- a/docroot/robots.txt
 +++ b/docroot/robots.txt
 @@ -14,6 +14,7 @@
@@ -110,3 +110,14 @@ index ebcd04b9..a42d397f 100644
  # CSS, JS, Images
  Allow: /core/*.css$
  Allow: /core/*.css?
+@@ -39,6 +40,10 @@ Disallow: /profiles/
+ # Files
+ Disallow: /README.txt
+ Disallow: /web.config
++# SAML
++Disallow: /saml/
++Disallow: /saml_login
++Disallow: /sso/login
+ # Paths (clean URLs)
+ Disallow: /admin/
+ Disallow: /comment/reply/

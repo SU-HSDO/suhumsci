@@ -2,13 +2,14 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   --colorGinPrimary: #8c1515;
   --colorGinPrimaryRGB: 140, 21, 21;
   --colorGinPrimaryLightRGB: rgb(198, 46, 46);
-  --colorGinAppBackground: rgba(255,250,250,1);
-  --colorGinLayerBackground: rgba(255,255,255,1);
-  --colorGinLayer2Background: rgba(250,242,242,1);
-  --colorGinLayer3Background: rgba(255,255,255,1);
+  --colorGinAppBackground: rgba(255, 250, 250, 1);
+  --colorGinLayerBackground: rgba(255, 255, 255, 1);
+  --colorGinLayer2Background: rgba(250, 242, 242, 1);
+  --colorGinLayer3Background: rgba(255, 255, 255, 1);
   --colorGinLayer4Background: rgba(235, 235, 235, 1);
   --colorGinTableHeader: rgba(235, 235, 235, 1);
-  --colorGinItemHover: rgba(245, 245, 245, 1);;
+  --colorGinItemHover: rgba(245, 245, 245, 1);
+  ;
 }
 
 [data-gin-accent="custom"] fieldset:not(.fieldgroup) {
@@ -31,7 +32,7 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
 }
 
 /* Match styles of shortcuts toolbar with manage toolbar */
-#toolbar-item-shortcuts-tray li > ul {
+#toolbar-item-shortcuts-tray li>ul {
   margin: 0;
   padding-inline: 0;
   box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.3333);
@@ -42,12 +43,12 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   min-width: 18rem;
 }
 
-#toolbar-item-shortcuts-tray li:hover > span {
+#toolbar-item-shortcuts-tray li:hover>span {
   cursor: default;
 }
 
-#toolbar-item-shortcuts-tray li:hover > a:not([class]),
-#toolbar-item-shortcuts-tray li:hover > span:not([class]) {
+#toolbar-item-shortcuts-tray li:hover>a:not([class]),
+#toolbar-item-shortcuts-tray li:hover>span:not([class]) {
   color: var(--gin-color-primary-hover);
   background-color: var(--gin-bg-item-hover);
   background-image: none;
@@ -58,7 +59,8 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   max-height: 200px;
 }
 
-.linkit-result-line--title, .linkit-result-line--description {
+.linkit-result-line--title,
+.linkit-result-line--description {
   white-space: normal !important;
 }
 
@@ -78,10 +80,6 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   --gin-bg-danger: #b1040e;
 }
 
-.gin-table-scroll-wrapper {
-  display: contents;
-}
-
 .paragraphs-browser-wrapper fieldset input {
   background: rgb(var(--gin-color-primary-light-rgb));
   z-index: 1;
@@ -89,4 +87,29 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
 
 .paragraphs-browser-wrapper fieldset:not(.fieldgroup) {
   margin-bottom: 2rem;
+}
+
+/* Form input override. */
+.gin--edit-form input.form-element {
+  width: 100%;
+}
+
+.views-form {
+  position: relative;
+}
+
+.views-form .gin-table-scroll-wrapper {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.views-form .gin-table-scroll-wrapper::after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 1.5rem;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
 }

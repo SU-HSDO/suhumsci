@@ -190,15 +190,49 @@
       margin-bottom: 0;
     }
 
-    a {
+    a,
+    a.hs-private-link,
+    a.hs-pdf-link,
+    a.hs-file-link {
       @include hb-traditional {
         @include hb-global-color('color', 'black');
       }
 
       &:hover,
       &:focus {
+        background-image: none;
+
         @include hb-traditional {
           @include hb-global-color('color', 'gray-dark');
+        }
+
+        @include hb-colorful {
+          @include hb-global-color('color', 'gray-medium');
+        }
+      }
+    }
+
+    .field-hs-postcard-body a.hs-private-link { // Need extra nesting level for specificity.
+      &::before {
+        @include hb-traditional {
+          @include hb-icon-background('lock', 'black');
+        }
+
+        @include hb-colorful {
+          @include hb-icon-background('lock', 'white');
+        }
+      }
+
+      &:hover,
+      &:focus {
+        &::before {
+          @include hb-traditional {
+            @include hb-icon-background('lock', 'gray-dark');
+          }
+
+          @include hb-colorful {
+            @include hb-icon-background('lock', 'gray-medium');
+          }
         }
       }
     }

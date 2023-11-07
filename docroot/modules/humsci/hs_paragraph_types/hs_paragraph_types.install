@@ -9,6 +9,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\FileStorage;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Store image gallery display mode in paragraph variable.
@@ -35,4 +36,38 @@ function hs_paragraph_types_update_9401() {
     $paragraph->set('field_photoalbum_style', $paragraph->getBehaviorSetting('image_gallery', 'display_mode'));
     $paragraph->save();
   }
+}
+
+/**
+ * Update user permissions for minimal_html_with_styles text format.
+ */
+function hs_paragraph_types_update_9402() {
+
+  // Ensure that the filter format exists in order to grant permissions.
+  $filter_format_config = \Drupal::service('config.storage.sync')->read('filter.format.minimal_html_with_styles');
+  if (!FilterFormat::load('minimal_html_with_styles')) {
+    $filter_format = FilterFormat::create($filter_format_config);
+    $filter_format->save();
+  }
+
+  // Grant permission to use the text format to the roles that require it.
+  user_role_grant_permissions('contributor', ['use text format minimal_html_with_styles']);
+  user_role_grant_permissions('site_manager', ['use text format minimal_html_with_styles']);
+}
+
+/**
+ * Update field format for existing postcard paragraph content.
+ */
+function hs_paragraph_types_update_9403() {
+  $db = \Drupal::database();
+  $db->update('paragraph__field_hs_postcard_body')
+    ->fields([
+      'field_hs_postcard_body_format' => 'minimal_html_with_styles',
+    ])
+    ->execute();
+  $db->update('paragraph_revision__field_hs_postcard_body')
+    ->fields([
+      'field_hs_postcard_body_format' => 'minimal_html_with_styles',
+    ])
+    ->execute();
 }

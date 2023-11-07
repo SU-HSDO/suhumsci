@@ -155,9 +155,17 @@
     }
   }
 
-  &__title__link {
+  &__title__link,
+  &__title__link.ext {
     @include hb-global-color('color', 'white');
     text-decoration: none;
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('color', 'white');
+
+      background-image: none;
+    }
   }
 
   &__description {

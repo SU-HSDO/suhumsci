@@ -1,29 +1,33 @@
 <?php
 
+/**
+ * @file
+ * Local development override configuration feature.
+ */
+
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
 assert_options(ASSERT_EXCEPTION, TRUE);
-if (getenv('TUGBOAT_SERVICE')) {
-  /**
-   * Database configuration.
-   */
-  $databases = [
-    'default' =>
-      [
-        'default' =>
-          [
-            'database' => 'tugboat',
-            'username' => 'tugboat',
-            'password' => 'tugboat',
-            'host' => 'mysql',
-            'port' => '3306',
-            'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-            'driver' => 'mysql',
-            'prefix' => '',
-          ],
-      ],
-  ];
-}
+$db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
 
+/**
+ * Database configuration.
+ */
+$databases = [
+  'default' =>
+  [
+    'default' =>
+    [
+      'database' => $db_name,
+      'username' => '${drupal.db.username}',
+      'password' => '${drupal.db.password}',
+      'host' => '${drupal.db.host}',
+      'port' => '${drupal.db.port}',
+      'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+      'driver' => 'mysql',
+      'prefix' => '',
+    ],
+  ],
+];
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
@@ -153,7 +157,3 @@ $settings['file_public_path'] = 'sites/' . EnvironmentDetector::getSiteName($sit
 $settings['trusted_host_patterns'] = [
   '^.+$',
 ];
-
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-
-$config['stanford_samlauth.settings']['hide_local_login'] = FALSE;

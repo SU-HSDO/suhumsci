@@ -8,13 +8,14 @@
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\layout_builder\Section;
 
 /**
  * Set main content id in content types default layout builder config.
  */
 function hs_layouts_update_9401() {
   $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
-  $query = $storage->getQuery()->accessCheck(TRUE);
+  $query = $storage->getQuery()->accessCheck(FALSE);
   $items = $query->execute();
   foreach ($items as $item) {
     if (preg_match('/^node\.(\w+)\.default/', $item, $matches)) {
@@ -44,47 +45,76 @@ function hs_layouts_update_9401() {
  * Set main content id in nodes with overridden layout builder config.
  */
 function hs_layouts_update_9402() {
-  $overriden_bundles = ['hs_basic_page', 'hs_private_page'];
-  foreach ($overriden_bundles as $bundle) {
-    $is_overriden = \Drupal::service('entity_display.repository')
-      ->getViewDisplay('node', $bundle)
-      ->getThirdPartySettings('layout_builder')['allow_custom'];
-    if ($is_overriden) {
-      $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
-      $ids = $nodeStorage->getQuery()
-        ->condition('type', $bundle)
-        ->accessCheck(TRUE)
-        ->execute();
-      $nodes = $nodeStorage->loadMultiple($ids);
-      foreach ($nodes as $node) {
-        $node_context = EntityContext::fromEntity($node);
-        $manager = \Drupal::service('plugin.manager.layout_builder.section_storage');
-        $section_storage = $manager->load('overrides', [
-          'entity' => $node_context,
-          'view_mode' => new Context(new ContextDefinition('string'), 'default'),
-        ]);
-        if ($section_storage->isOverridden()) {
-          dump($node->label());
-          $sections = $section_storage->getSections();
-          $main_section = $sections[0];
-          if (count($sections) > 1) {
-            foreach ($sections as $section) {
-              if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
-                $main_section = $section;
-                break;
-              }
-            }
-          }
-          $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
-          try {
-            $section_storage->save();
-          }
-          catch(Exception $e) {
-            \Drupal::logger('hs_layouts')->error('Error: @error', ['@error' => $e->getMessage()]);
-            \Drupal::logger('hs_layouts')->notice('Node URL: @url', ['@url' => $node->toUrl()->setAbsolute()->toString()]);
-          }
-        }
+  // Get all sections in nodes with overridden layout.
+  $db = \Drupal::database();
+  $result = $db->select('node__layout_builder__layout', 'nl')
+    ->fields('nl', ['entity_id', 'delta', 'layout_builder__layout_section'])
+    ->orderBy('entity_id')
+    ->orderBy('delta')
+    ->execute();
+
+  // Id of the node being currently processed.
+  $current_id = NULL;
+  // Last 'processed' node. A node is considered 'processed' if it has one
+  // section with the 'main_content' setting set to 'main-region'.
+  $processed_id = NULL;
+  // Keep track of a node's first section, in case all sections are
+  // 'full width'.
+  $first_section = NULL;
+
+  foreach($result as $record) {
+    $section = unserialize($record->layout_builder__layout_section);
+    // We're on a new node.
+    if ($record->entity_id !== $current_id) {
+      // Last node wasn't processed, fallback to setting the first section as
+      // main content.
+      if ($current_id !== $processed_id && isset($first_section)) {
+        $settings = $first_section['section']->getLayoutSettings();
+        $settings['main_content'] = 'main-region';
+        $first_section['section']->setLayoutSettings($settings);
+        _update_section($first_section['entity_id'], $first_section['delta'], $first_section['section']);
       }
+      $current_id = $record->entity_id;
+      // Store node's first section.
+      $first_section = [
+        'entity_id' => $record->entity_id,
+        'delta' => $record->delta,
+        'section' => $section,
+      ];
     }
+    $settings = $section->getLayoutSettings();
+    if ($settings['section_width'] !== 'hs-full-width' && $processed_id !== $current_id) {
+      // Set 'main_content' setting to 'main-region' in the first non full
+      // width section.
+      $settings['main_content'] = 'main-region';
+      $processed_id = $current_id;
+    }
+    else {
+      // Set 'main_content' setting to 'none' in all other sections.
+      $settings['main_content'] = 'none';
+    }
+    $section->setLayoutSettings($settings);
+    _update_section($record->entity_id, $record->delta, $section);
   }
+}
+
+/**
+ * Update overridden layout builder section.
+ *
+ * @param int $entity_id
+ *   Id of the node associated to the section.
+ * @param int $delta
+ *   Delta value of the section.
+ * @param \Drupal\layout_builder\Section $section
+ *   Updated section object to write in the database.
+ */
+function _update_section(int $entity_id, int $delta, Section $section) {
+  $db = \Drupal::database();
+  $db->update('node__layout_builder__layout')
+    ->condition('entity_id', $entity_id)
+    ->condition('delta', $delta)
+    ->fields([
+      'layout_builder__layout_section' => serialize($section),
+    ])
+    ->execute();
 }

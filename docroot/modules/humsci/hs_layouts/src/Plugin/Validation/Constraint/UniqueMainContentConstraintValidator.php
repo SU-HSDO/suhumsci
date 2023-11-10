@@ -42,11 +42,11 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
   /**
    * Create a new UniqueMainContentConstraintValidator instance.
    *
-   * @param Drupal\layout_builder\SectionStorage\SectionStorageManager $storageManager
+   * @param \Drupal\layout_builder\SectionStorage\SectionStorageManager $storageManager
    *   Section storage manager service.
-   * @param Drupal\layout_builder\LayoutTempstoreRepository $tempstoreRepository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepository $tempstoreRepository
    *   Layout Tempstore Repository service.
-   * @param Drupal\Core\Entity\EntityDisplayRepository $displayRepository
+   * @param \Drupal\Core\Entity\EntityDisplayRepository $displayRepository
    *   Layout Tempstore Repository service.
    */
   public function __construct(SectionStorageManager $storageManager, LayoutTempstoreRepository $tempstoreRepository, EntityDisplayRepository $displayRepository) {
@@ -70,32 +70,39 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
    * {@inheritdoc}
    */
   public function validate($node, Constraint $constraint) {
+    // Layout builder should be enabled and the layout should be overridable for
+    // the current node, otherwise return.
     $view_display = $this->displayRepository->getViewDisplay('node', $node->bundle());
-    $lb_overridable = $view_display->isLayoutBuilderEnabled() && $view_display->isOverridable();
-    if ($lb_overridable) {
-      $node_context = EntityContext::fromEntity($node);
-      $section_storage = $this->storageManager->load('overrides', [
-        'entity' => $node_context,
-        'view_mode' => new Context(new ContextDefinition('string'), 'default'),
-      ]);
-      if ($section_storage && $this->tempstoreRepository->has($section_storage)) {
-        $temp_storage = $this->tempstoreRepository->get($section_storage);
-        $main_content_found = FALSE;
-        foreach ($temp_storage->getSections() as $section) {
-          if ($section->getLayoutSettings()['main_content'] !== 'none') {
-            if ($main_content_found) {
-              $this->context->addViolation($constraint->notUnique);
-              break;
-            }
-            else {
-              $main_content_found = TRUE;
-            }
-          }
-        }
-        if (!$main_content_found) {
+    if (!($view_display->isLayoutBuilderEnabled() && $view_display->isOverridable()))
+      return NULL;
+
+    // Get node's section storage.
+    $node_context = EntityContext::fromEntity($node);
+    $section_storage = $this->storageManager->load('overrides', [
+      'entity' => $node_context,
+      'view_mode' => new Context(new ContextDefinition('string'), 'default'),
+    ]);
+    // Continue only if a temp section storage exists (layout is being editted).
+    if (!($section_storage && $this->tempstoreRepository->has($section_storage)))
+      return NULL;
+
+    $temp_storage = $this->tempstoreRepository->get($section_storage);
+    $main_content_found = FALSE;
+    foreach ($temp_storage->getSections() as $section) {
+      // If there's more than one section with 'main_content' different to
+      // 'none', raise a violation.
+      if ($section->getLayoutSettings()['main_content'] !== 'none') {
+        if ($main_content_found) {
           $this->context->addViolation($constraint->notUnique);
+          break;
         }
+        $main_content_found = TRUE;
       }
+    }
+    // If there are no sections with 'main_content' different to 'none', raise
+    // a violation.
+    if (!$main_content_found) {
+      $this->context->addViolation($constraint->notUnique);
     }
   }
 

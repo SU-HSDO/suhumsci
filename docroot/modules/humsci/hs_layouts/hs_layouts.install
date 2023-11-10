@@ -5,9 +5,6 @@
  * Update functions for hs_layouts module.
  */
 
-use Drupal\Core\Plugin\Context\EntityContext;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\layout_builder\Section;
 
 /**
@@ -62,7 +59,7 @@ function hs_layouts_update_9402() {
   // 'full width'.
   $first_section = NULL;
 
-  foreach($result as $record) {
+  foreach ($result as $record) {
     $section = unserialize($record->layout_builder__layout_section);
     // We're on a new node.
     if ($record->entity_id !== $current_id) {

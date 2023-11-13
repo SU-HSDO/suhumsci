@@ -12,27 +12,26 @@ use Drupal\layout_builder\Section;
  */
 function hs_layouts_update_9401() {
   $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
-  $query = $storage->getQuery()->accessCheck(FALSE);
+  $query = $storage->getQuery()
+    ->condition('targetEntityType', 'node')
+    ->condition('mode', 'default');
   $items = $query->execute();
   foreach ($items as $item) {
-    if (preg_match('/^node\.(\w+)\.default/', $item, $matches)) {
-      $content_type = $matches[1];
-      $view_display = $storage->load($item);
-      if ($view_display->isLayoutBuilderEnabled()) {
-        $sections = $view_display->getThirdPartySetting('layout_builder', 'sections');
-        if (count($sections)) {
-          $main_section = $sections[0];
-          if ($content_type === 'hs_basic_page' && count($sections) > 1) {
-            foreach ($sections as $section) {
-              if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
-                $main_section = $section;
-                break;
-              }
+    $view_display = $storage->load($item);
+    if ($view_display->isLayoutBuilderEnabled()) {
+      $sections = $view_display->getThirdPartySetting('layout_builder', 'sections');
+      if (count($sections)) {
+        $main_section = $sections[0];
+        if (count($sections) > 1) {
+          foreach ($sections as $section) {
+            if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
+              $main_section = $section;
+              break;
             }
           }
-          $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
-          $view_display->save();
         }
+        $main_section->setLayoutSettings(array_merge($main_section->getLayoutSettings(), ['main_content' => 'main-region']));
+        $view_display->save();
       }
     }
   }

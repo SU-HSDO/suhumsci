@@ -13,5 +13,9 @@
 {% endif %}
 
 <div{{ attributes }}>
-  <h2 class="hb-color-band--text">{{ color_band_text }}</h2>
+  {% if color_band_text %}
+    <h2 class="hb-color-band--text">{{ color_band_text }}</h2>
+  {% else %}
+    {{ '<hr class="hb-color-band--text" />' }}
+  {% endif %}
 </div>

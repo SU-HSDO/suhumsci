@@ -1,0 +1,29 @@
+uuid: 01c5102f-e242-49e6-9908-9f380871327b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.hs_entity.field_person
+    - hs_entities.hs_entity_type.instructor
+    - node.type.hs_person
+id: hs_entity.instructor.field_person
+field_name: field_person
+entity_type: hs_entity
+bundle: instructor
+label: 'Instructor Person'
+description: 'Link the instructor to a person content.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      hs_person: hs_person
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,38 @@
+uuid: e1a43d2b-2d93-46cc-8928-8ab840de4cba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.instructor.field_instructor_role
+    - field.field.hs_entity.instructor.field_person
+    - hs_entities.hs_entity_type.instructor
+id: hs_entity.instructor.default
+targetEntityType: hs_entity
+bundle: instructor
+mode: default
+content:
+  field_instructor_role:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_person:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

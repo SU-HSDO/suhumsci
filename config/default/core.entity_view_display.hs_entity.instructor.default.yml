@@ -1,0 +1,34 @@
+uuid: 2e70ab35-f110-46ae-9747-376f481a051c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.instructor.field_instructor_role
+    - field.field.hs_entity.instructor.field_person
+    - hs_entities.hs_entity_type.instructor
+id: hs_entity.instructor.default
+targetEntityType: hs_entity
+bundle: instructor
+mode: default
+content:
+  field_person:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  field_instructor_role: true
+  search_api_excerpt: true
+  uid: true

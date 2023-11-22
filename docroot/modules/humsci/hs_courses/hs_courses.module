@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
  */
 function hs_courses_course_collections_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   // On the ECK entity, if the instructor person is set, use that to display.
-  if ($entity->get('field_instructor_person')->count()) {
+  if ($entity->get('field_person')->count()) {
     unset($build['title']);
     return;
   }
@@ -30,7 +30,7 @@ function hs_courses_course_collections_view_alter(array &$build, EntityInterface
  *
  * Append the instructor's role onto the link title.
  */
-function hs_courses_preprocess_field__field_instructor_person(&$variables) {
+function hs_courses_preprocess_field__field_person(&$variables) {
   /** @var \Drupal\Core\Field\FieldItemList $instructor_role_list */
   $instructor_role_list = $variables['element']['#object']->get('field_instructor_role');
   if ($instructor_role_list->count() && !empty($variables['items'][0]['content']['#title'])) {

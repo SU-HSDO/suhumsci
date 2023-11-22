@@ -11,6 +11,7 @@ dependencies:
     - field.field.paragraph.hs_collection.field_title_settings
     - paragraphs.paragraphs_type.hs_collection
   module:
+    - conditional_fields
     - paragraphs_browser
 id: paragraph.hs_collection.default
 targetEntityType: paragraph
@@ -65,7 +66,44 @@ content:
     settings:
       size: 60
       placeholder: ''
-    third_party_settings: {  }
+    third_party_settings:
+      conditional_fields:
+        ab19d7bb-eaf3-4004-ad3f-ec75a459829c:
+          entity_type: paragraph
+          bundle: hs_collection
+          dependee: field_title_settings
+          settings:
+            state: '!visible'
+            reset: false
+            condition: value
+            grouping: OR
+            values_set: 1
+            value: ''
+            values: "I've already created a Heading 2 above this Collection\r\nI do not want a heading for this Collection"
+            value_form:
+              -
+                value: "I've already created a Heading 2 above this Collection"
+            effect: show
+            effect_options: {  }
+            selector: ''
+        b3939e90-fefe-4685-9bfa-acf973cbe569:
+          entity_type: paragraph
+          bundle: hs_collection
+          dependee: field_title_settings
+          settings:
+            state: '!visible'
+            reset: false
+            condition: value
+            grouping: OR
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              -
+                value: 'I do not want a heading for this Collection'
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_title_settings:
     type: options_select
     weight: 4

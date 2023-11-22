@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a formatted colorbox image field.
+ *
+ * Available variables:
+ * - image: A collection of image data.
+ * - url: An URL the image can be linked to.
+ * - attributes: Link attributes.
+ *
+ * @see template_preprocess_colorbox_formatter()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{# set a generic link label in case there is no alt attribute on the image or a caption #}
+{% set link_label = "Thumbnail Image" %}
+{# If the image has an alt attribute, use it as the link label. #}
+{% if attributes['data-cbox-img-attrs']|render != "{&quot;alt&quot;:&quot;&quot;}" %}
+  {% set link_label = attributes['data-cbox-img-attrs'] %}
+{# If the image has a title attribute, use it as the link label. #}
+{% elseif attributes['title']|render != "" %}
+  {% set link_label = attributes['title'] %}
+{% endif %}
+
+<a href="{{ url }}" aria-controls="colorbox" role="button" aria-title="{{ link_label|raw }}" data-cbox-img-attrs="{{ link_label|raw }}" {{ attributes }}>{{ image }}</a>

@@ -20,7 +20,7 @@ window.addEventListener('load', () => {
         const style = mutation.addedNodes[0].shadowRoot.querySelector('style');
         style.textContent = `${style.textContent}
         .shut.errors #toggle {
-          color: #000;
+          color: #000000;
         }`;
       }
     });

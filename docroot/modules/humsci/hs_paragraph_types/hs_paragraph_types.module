@@ -56,20 +56,21 @@ function hs_paragraph_types_field_widget_single_element_paragraphs_browser_form_
     }
     $title_settings_name .= '[field_title_settings]';
 
-    $element['subform']['field_title']['widget'][0]['value']['#states'] = [
-      'required' => [
+    $header_conditions = [
+      ':input[name="' . $title_settings_name . '"]' => [
         [
-          ':input[name="' . $title_settings_name . '"]' => [
-            [
-              'value' => 'The Collection title should be visible as a Heading',
-            ],
-            'or',
-            [
-              'value' => 'The Collection title should be available to screen readers only',
-            ],
-          ],
+          'value' => 'The Collection title should be visible as a Heading',
+        ],
+        'or',
+        [
+          'value' => 'The Collection title should be available to screen readers only',
         ],
       ],
+    ];
+
+    $element['subform']['field_title']['widget'][0]['value']['#states'] = [
+      'required' => [$header_conditions],
+      'visible' => [$header_conditions],
     ];
   }
 }

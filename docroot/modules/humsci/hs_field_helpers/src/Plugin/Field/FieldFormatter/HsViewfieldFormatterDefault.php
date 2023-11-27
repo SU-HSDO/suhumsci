@@ -3,6 +3,7 @@
 namespace Drupal\hs_field_helpers\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\viewfield\Plugin\Field\FieldFormatter\ViewfieldFormatterDefault;
 use Drupal\views\ViewExecutable;
@@ -24,9 +25,15 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
       $elements = parent::viewElements($items, $langcode);
     }
     catch (\Throwable $e) {
+      if ($e instanceof EnforcedResponseException) {
+        throw $e;
+      }
+
       $this->getLogger('hs_field_helpers')
         ->error('Error during rendering: ' . $e->getMessage());
-      return [];
+      return [
+        '#markup' => $this->t('An error occurred when generating your content.'),
+      ];
     }
 
     // Add and customize the view title.

@@ -51,9 +51,10 @@ function hs_admin_toolbar_alter(&$items) {
  * Implements hook_menu_local_tasks_alter().
  */
 function hs_admin_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
-  // Disable edit/create node tabs for publish and delete.
+  // Disable edit/create node tabs for publish and delete (non-admin users).
   unset($data['tabs'][0]['entity.node.publish']);
-  unset($data['tabs'][0]['entity.node.delete_form']);
+  if (!\Drupal::currentUser()->hasRole('administrator'))
+    unset($data['tabs'][0]['entity.node.delete_form']);
 }
 
 /**

@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\UserInterface;
 use Drupal\key\Entity\Key;
+use Drupal\hs_entities\Entity\HsEntityType;
 
 /**
  * Implements hook_install_tasks().
@@ -303,7 +304,7 @@ function su_humsci_profile_update_9603() {
   $field_storage_config->save();
 
   // Update the field config settings.
-  $field_config =  \Drupal::entityTypeManager()->getStorage('field_config')
+  $field_config = \Drupal::entityTypeManager()->getStorage('field_config')
     ->load('config_pages.news_rss.field_news_rss');
   $handler_settings = $field_config->getSetting('handler_settings');
   $handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
@@ -326,7 +327,85 @@ function su_humsci_profile_update_9604() {
 
   // Delete the importers entity type from ECK.
   if ($entity_type_manager->hasDefinition('eck_entity_type')) {
-    $importers_collection = $entity_type_manager->getStorage('eck_entity_type')->load('importers');
+    $importers_collection = $entity_type_manager->getStorage('eck_entity_type')
+      ->load('importers');
     $importers_collection->delete();
   }
 }
+
+/**
+ * Create new entities to migrate ECKs.
+ */
+function su_humsci_profile_update_9700() {
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  $field_map = $entity_field_manager->getFieldMap();
+
+  $names = $config_factory->listAll('eck.eck_entity_type.');
+
+  foreach ($names as $name) {
+    $eck_type = $config_factory->get($name);
+    $eck_name = $eck_type->get('id');
+    $bundles = $config_factory->listAll("eck.eck_type.$eck_name.");
+    foreach ($bundles as $bundle) {
+      $eck_bundle = $config_factory->get($bundle);
+      $bundle_id = $eck_bundle->get('type');
+      $new_bundle_id = substr("{$eck_name}__$bundle_id", 0, 32);
+
+      HsEntityType::create([
+        'id' => $new_bundle_id,
+        'label' => $eck_type->get('label') . ': ' . $eck_bundle->get('name'),
+      ])->save();
+
+      foreach ($field_map[$eck_name] as $field_name => $field_info) {
+        if (in_array($bundle_id, $field_info['bundles'])) {
+          /** @var \Drupal\field\FieldStorageConfigInterface $storage */
+          $storage = FieldStorageConfig::loadByName($eck_name, $field_name);
+          /** @var \Drupal\Core\Field\FieldConfigInterface $config */
+          $config = FieldConfig::loadByName($eck_name, $bundle_id, $field_name);
+
+          if (!$storage || !$config) {
+            continue;
+          }
+
+          if (!FieldStorageConfig::loadByName('hs_entity_type', $field_name)) {
+            FieldStorageConfig::create([
+              'type' => $storage->getType(),
+              'field_name' => $field_name,
+              'entity_type' => 'hs_entity',
+              'settings' => $storage->getSettings(),
+              'cardinality' => $storage->getCardinality(),
+            ])->save();
+          }
+
+          if (!FieldConfig::loadByName('hs_entity_type', $new_bundle_id, $field_name)) {
+            FieldConfig::create([
+              'field_type' => $config->getType(),
+              'entity_type' => 'hs_entity',
+              'bundle' => $new_bundle_id,
+              'field_name' => $field_name,
+              'label' => $config->label(),
+              'settings' => $config->getSettings(),
+            ])->save();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Migrate ECKs to the new types.
+ */
+function su_humsci_profile_update_9701() {}
+
+/**
+ * Update content field configs for the new entity types.
+ */
+function su_humsci_profile_update_97002() {}
+
+/**
+ * Delete ECKs and their types.
+ */
+function su_humsci_profile_update_97033() {}

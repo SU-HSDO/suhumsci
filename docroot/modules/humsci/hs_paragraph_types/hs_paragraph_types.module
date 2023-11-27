@@ -39,12 +39,12 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
  */
 function hs_paragraph_types_field_widget_single_element_paragraphs_browser_form_alter(&$element, FormStateInterface $form_state, $context) {
 
-   // There are multiple issues with setting and removing the required state
-   // from paragraph fields when using the `conditional_fields` module, so
-   // use form alter to use the states api instead.
-   // @see https://www.drupal.org/project/conditional_fields/issues/3344587
-
-  // Check that hs_collection is the correct paragraph type and correct fields are present.
+  // There are multiple issues with setting and removing the required state
+  // from paragraph fields when using the `conditional_fields` module, so
+  // use form alter to use the states api instead.
+  // @see https://www.drupal.org/project/conditional_fields/issues/3344587
+  // Check that hs_collection is the correct paragraph type
+  // and correct fields are present.
   if ($element['#paragraph_type'] === 'hs_collection' && !empty($element['subform']['field_title']) && !empty($element['subform']['field_title_settings'])) {
     // Build title settings name for this component.
     $title_settings_name = '';

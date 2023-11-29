@@ -471,8 +471,6 @@ class FlexiblePageCest {
 
   /**
    * I can create a collection of items and display them in 2, 3 or 4 per row.
-   *
-   * @group testme
    */
   public function testCollections(FunctionalTester $I) {
     $I->logInWithRole('administrator');

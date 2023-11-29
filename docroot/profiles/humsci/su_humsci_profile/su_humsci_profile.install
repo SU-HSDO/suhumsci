@@ -346,10 +346,13 @@ function su_humsci_profile_update_9700() {
 
   $names = $config_factory->listAll('eck.eck_entity_type.');
 
+  // Loop through each of the ECK types.
   foreach ($names as $name) {
     $eck_type = $config_factory->get($name);
     $eck_name = $eck_type->get('id');
     $bundles = $config_factory->listAll("eck.eck_type.$eck_name.");
+
+    // Loop through each of the bundles on the ECK type.
     foreach ($bundles as $bundle) {
       $eck_bundle = $config_factory->get($bundle);
       $bundle_id = $eck_bundle->get('type');
@@ -358,6 +361,7 @@ function su_humsci_profile_update_9700() {
       $eck_form = EntityFormDisplay::load("$eck_name.$bundle_id.default");
       $eck_display = EntityViewDisplay::load("$eck_name.$bundle_id.default");
 
+      // Create the new hs entity type to migrate the entities.
       HsEntityType::create([
         'id' => $new_bundle_id,
         'label' => $eck_type->get('label') . ': ' . $eck_bundle->get('name'),
@@ -381,6 +385,7 @@ function su_humsci_profile_update_9700() {
       $hs_entity_display->removeComponent('created');
       $hs_entity_display->removeComponent('uid');
 
+      // Create new fields on the new entity types.
       foreach ($field_map[$eck_name] as $field_name => $field_info) {
         if (in_array($bundle_id, $field_info['bundles'])) {
           /** @var \Drupal\field\FieldStorageConfigInterface $storage */
@@ -412,6 +417,7 @@ function su_humsci_profile_update_9700() {
               'settings' => $config->getSettings(),
             ])->save();
 
+            // Copy the form and display settings for the field.
             if ($form_settings = $eck_form->getComponent($field_name)) {
               $hs_entity_form->setComponent($field_name, $form_settings);
             }
@@ -419,7 +425,6 @@ function su_humsci_profile_update_9700() {
             if ($display_settings = $eck_display->getComponent($field_name)) {
               $hs_entity_display->setComponent($field_name, $display_settings);
             }
-
           }
         }
       }
@@ -433,11 +438,51 @@ function su_humsci_profile_update_9700() {
   }
 }
 
-///**
-// * Migrate ECKs to the new types.
-// */
-//function su_humsci_profile_update_9701() {}
-//
+/**
+ * Migrate ECKs to the new types.
+ */
+function su_humsci_profile_update_9701() {
+  $config_factory = \Drupal::configFactory();
+  $names = $config_factory->listAll('eck.eck_entity_type.');
+
+  // Loop through each of the ECK types.
+  foreach ($names as $name) {
+    $eck_type = $config_factory->get($name);
+    $eck_name = $eck_type->get('id');
+    $bundles = $config_factory->listAll("eck.eck_type.$eck_name.");
+
+    // Loop through each of the bundles on the ECK type.
+    foreach ($bundles as $bundle) {
+      $eck_bundle = $config_factory->get($bundle);
+      $bundle_id = $eck_bundle->get('type');
+      $new_bundle_id = substr("{$eck_name}__$bundle_id", 0, 32);
+
+      /** @var \Drupal\Core\Entity\ContentEntityInterface[] $eck_entities */
+      $eck_entities = \Drupal::entityTypeManager()
+        ->getStorage($eck_name)
+        ->loadByProperties(['type' => $bundle_id]);
+
+      foreach ($eck_entities as $entity) {
+        /** @var \Drupal\hs_entities\HsEntityInterface $new_entity */
+        $new_entity = \Drupal::entityTypeManager()
+          ->getStorage('hs_entity')
+          ->create([
+            'label' => $entity->label(),
+            'bundle' => $new_bundle_id,
+          ]);
+        $skip_fields = ['id', 'uuid'];
+        foreach (array_keys($entity->getFieldDefinitions()) as $field_name) {
+          if ($new_entity->hasField($field_name) && !in_array($field_name, $skip_fields)) {
+            $new_entity->set($field_name, $entity->get($field_name)
+              ->getValue());
+          }
+        }
+        $new_entity->save();
+      }
+    }
+  }
+}
+
 ///**
 // * Update content field configs for the new entity types.
 // */

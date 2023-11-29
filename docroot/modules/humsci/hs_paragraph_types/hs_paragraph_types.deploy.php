@@ -10,22 +10,9 @@
  */
 function hs_paragraph_types_deploy_a_field_title_settings() {
   $db = \Drupal::database();
-  $collections = $db->select('paragraphs_item_field_data', 'p')
-    ->fields('p', ['id', 'revision_id', 'langcode'])
-    ->condition('type', 'hs_collection')
-    ->execute();
-
-  foreach ($collections as $collection) {
-    $db->upsert('paragraph__field_title_settings')
-    ->fields([
-      'entity_id' => $collection->id,
-      'revision_id' => $collection->revision_id,
-      'field_title_settings_value' => 'I do not want a heading for this Collection',
-      'delta' => 0,
-      'langcode' => $collection->langcode,
-      'bundle' => 'hs_collection',
-    ])
-    ->key($collection->id)
-    ->execute();
-  }
+  $db->query("INSERT INTO paragraph__field_title_settings (entity_id, revision_id, langcode, delta, bundle, field_title_settings_value)
+    SELECT DISTINCT id, revision_id, langcode, 0, 'hs_collection', 'I do not want a heading for this Collection'
+    FROM paragraphs_item_field_data
+    WHERE type = 'hs_collection'")
+      ->execute();
 }

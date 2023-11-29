@@ -1,14 +1,14 @@
-uuid: 62da19a0-19a8-490d-aacd-667f11a036bb
+uuid: ad4a350a-7ed1-41e8-9e9d-a18a4c29a68e
 langcode: en
-status: true
+status: null
 dependencies:
   config:
-    - eck.eck_type.course_collections.instructor
-    - field.field.course_collections.instructor.field_instructor_person
-    - field.field.course_collections.instructor.field_instructor_role
-id: course_collections.instructor.default
-targetEntityType: course_collections
-bundle: instructor
+    - field.field.hs_entity.course_collections__instructor.field_instructor_person
+    - field.field.hs_entity.course_collections__instructor.field_instructor_role
+    - hs_entities.hs_entity_type.course_collections__instructor
+id: hs_entity.course_collections__instructor.default
+targetEntityType: hs_entity
+bundle: course_collections__instructor
 mode: default
 content:
   field_instructor_person:
@@ -25,9 +25,9 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  title:
+  label:
     type: string_textfield
-    weight: 0
+    weight: -5
     region: content
     settings:
       size: 60

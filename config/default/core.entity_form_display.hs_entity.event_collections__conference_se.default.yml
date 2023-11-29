@@ -1,17 +1,15 @@
-uuid: ecd887d7-5551-463e-837c-41b455c26bdd
+uuid: 17e42431-31ea-4087-96eb-ed18df155af1
 langcode: en
-status: true
+status: null
 dependencies:
   config:
-    - eck.eck_type.event_collections.conference_session
-    - field.field.event_collections.conference_session.field_session_date_and_time
-    - field.field.event_collections.conference_session.field_session_information
-    - field.field.event_collections.conference_session.field_session_location
-    - field.field.event_collections.conference_session.field_session_speakers
+    - field.field.hs_entity.event_collections__conference_se.field_session_date_and_time
+    - field.field.hs_entity.event_collections__conference_se.field_session_information
+    - field.field.hs_entity.event_collections__conference_se.field_session_location
+    - field.field.hs_entity.event_collections__conference_se.field_session_speakers
+    - hs_entities.hs_entity_type.event_collections__conference_se
   module:
     - field_group
-    - smart_date
-    - text
 third_party_settings:
   field_group:
     group_session_details:
@@ -30,9 +28,9 @@ third_party_settings:
         formatter: closed
         description: ''
         required_fields: true
-id: event_collections.conference_session.default
-targetEntityType: event_collections
-bundle: conference_session
+id: hs_entity.event_collections__conference_se.default
+targetEntityType: hs_entity
+bundle: event_collections__conference_se
 mode: default
 content:
   field_session_date_and_time:
@@ -77,12 +75,14 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  title:
+  label:
     type: string_textfield
-    weight: 0
+    weight: -5
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  created: true
+  uid: true

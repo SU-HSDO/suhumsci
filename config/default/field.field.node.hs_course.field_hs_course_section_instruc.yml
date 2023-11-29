@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.course_collections.instructor
     - field.storage.node.field_hs_course_section_instruc
     - node.type.hs_course
 id: node.hs_course.field_hs_course_section_instruc
@@ -17,13 +16,14 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:course_collections'
+  handler: 'default:hs_entity'
   handler_settings:
     target_bundles:
-      instructor: instructor
+      course_collections__instructor: course_collections__instructor
     sort:
-      field: title
+      field: label
       direction: ASC
-    auto_create: false
+    auto_create: true
     auto_create_bundle: ''
+  target_type: hs_entity
 field_type: entity_reference

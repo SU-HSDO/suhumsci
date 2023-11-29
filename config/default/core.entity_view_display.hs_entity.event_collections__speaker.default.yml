@@ -1,13 +1,13 @@
-uuid: 81906ddb-2892-4118-a015-8c328ed0f198
+uuid: 274962b7-9bbd-4b54-ba75-51c2db83ef3e
 langcode: en
-status: true
+status: null
 dependencies:
   config:
-    - eck.eck_type.event_collections.speaker
-    - field.field.event_collections.speaker.field_speaker_person
-id: event_collections.speaker.default
-targetEntityType: event_collections
-bundle: speaker
+    - field.field.hs_entity.event_collections__speaker.field_speaker_person
+    - hs_entities.hs_entity_type.event_collections__speaker
+id: hs_entity.event_collections__speaker.default
+targetEntityType: hs_entity
+bundle: event_collections__speaker
 mode: default
 content:
   field_speaker_person:
@@ -18,7 +18,7 @@ content:
     third_party_settings: {  }
     weight: -4
     region: content
-  title:
+  label:
     type: string
     label: hidden
     settings:
@@ -27,4 +27,6 @@ content:
     weight: -5
     region: content
 hidden:
+  created: true
   search_api_excerpt: true
+  uid: true

@@ -1,17 +1,13 @@
-uuid: 6b61b4ea-8881-49e2-9675-a5686097906e
+uuid: 247f3b20-abb3-4adb-96e2-07fbaf2325ee
 langcode: en
-status: true
+status: null
 dependencies:
   config:
-    - eck.eck_type.publications_collections.publication_author
-    - field.field.publications_collections.publication_author.field_hs_publication_author
-  module:
-    - field_formatter_class
-    - layout_builder
-    - layout_discovery
-id: publications_collections.publication_author.default
-targetEntityType: publications_collections
-bundle: publication_author
+    - field.field.hs_entity.publications_collections__public.field_hs_publication_author
+    - hs_entities.hs_entity_type.publications_collections__public
+id: hs_entity.publications_collections__public.default
+targetEntityType: hs_entity
+bundle: publications_collections__public
 mode: default
 content:
   field_hs_publication_author:
@@ -24,13 +20,15 @@ content:
         class: ''
     weight: 1
     region: content
-  title:
+  label:
     type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 0
+    weight: -5
     region: content
 hidden:
+  created: true
   search_api_excerpt: true
+  uid: true

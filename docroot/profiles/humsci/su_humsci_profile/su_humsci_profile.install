@@ -485,10 +485,13 @@ function su_humsci_profile_update_9702() {
           $new_target_bundle = $eck_info[$target][reset($handler_settings['target_bundles'])];
 
           $settings = $field_config->getSettings();
-          $settings['handler'] =  'default:hs_entity';
-          $settings['target_type'] = 'hs_entity';
+          $settings['handler'] = 'default:hs_entity';
           $settings['handler_settings']['auto_create'] = TRUE;
           $settings['handler_settings']['target_bundles'] = [$new_target_bundle => $new_target_bundle];
+          $settings['handler_settings']['sort'] = [
+            'field' => 'label',
+            'direction' => 'ASC',
+          ];
           $field_config->set('settings', $settings);
           $field_config->save();
 

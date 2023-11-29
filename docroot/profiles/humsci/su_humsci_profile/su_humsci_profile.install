@@ -10,6 +10,8 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\user\UserInterface;
 use Drupal\key\Entity\Key;
 use Drupal\hs_entities\Entity\HsEntityType;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Implements hook_install_tasks().
@@ -353,10 +355,31 @@ function su_humsci_profile_update_9700() {
       $bundle_id = $eck_bundle->get('type');
       $new_bundle_id = substr("{$eck_name}__$bundle_id", 0, 32);
 
+      $eck_form = EntityFormDisplay::load("$eck_name.$bundle_id.default");
+      $eck_display = EntityViewDisplay::load("$eck_name.$bundle_id.default");
+
       HsEntityType::create([
         'id' => $new_bundle_id,
         'label' => $eck_type->get('label') . ': ' . $eck_bundle->get('name'),
       ])->save();
+
+      $hs_entity_form = EntityFormDisplay::create([
+        'id' => "hs_entity.$new_bundle_id.default",
+        'targetEntityType' => 'hs_entity',
+        'bundle' => $new_bundle_id,
+        'mode' => 'default',
+      ]);
+      $hs_entity_form->removeComponent('created');
+      $hs_entity_form->removeComponent('uid');
+
+      $hs_entity_display = EntityViewDisplay::create([
+        'id' => "hs_entity.$new_bundle_id.default",
+        'targetEntityType' => 'hs_entity',
+        'bundle' => $new_bundle_id,
+        'mode' => 'default',
+      ]);
+      $hs_entity_display->removeComponent('created');
+      $hs_entity_display->removeComponent('uid');
 
       foreach ($field_map[$eck_name] as $field_name => $field_info) {
         if (in_array($bundle_id, $field_info['bundles'])) {
@@ -388,24 +411,39 @@ function su_humsci_profile_update_9700() {
               'label' => $config->label(),
               'settings' => $config->getSettings(),
             ])->save();
+
+            if ($form_settings = $eck_form->getComponent($field_name)) {
+              $hs_entity_form->setComponent($field_name, $form_settings);
+            }
+
+            if ($display_settings = $eck_display->getComponent($field_name)) {
+              $hs_entity_display->setComponent($field_name, $display_settings);
+            }
+
           }
         }
       }
+
+      $hs_entity_form->set('third_party_settings', $eck_form->get('third_party_settings'));
+      $hs_entity_display->set('third_party_settings', $eck_display->get('third_party_settings'));
+
+      $hs_entity_form->save();
+      $hs_entity_display->save();
     }
   }
 }
 
-/**
- * Migrate ECKs to the new types.
- */
-function su_humsci_profile_update_9701() {}
-
-/**
- * Update content field configs for the new entity types.
- */
-function su_humsci_profile_update_97002() {}
-
-/**
- * Delete ECKs and their types.
- */
-function su_humsci_profile_update_97033() {}
+///**
+// * Migrate ECKs to the new types.
+// */
+//function su_humsci_profile_update_9701() {}
+//
+///**
+// * Update content field configs for the new entity types.
+// */
+//function su_humsci_profile_update_97002() {}
+//
+///**
+// * Delete ECKs and their types.
+// */
+//function su_humsci_profile_update_97033() {}

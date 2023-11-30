@@ -460,7 +460,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
   }
 
   $eck_info = _su_humsci_profile_update_eck_info();
-  $batched_items = array_splice($sandbox['items'], 0, 25);
+  $batched_items = array_splice($sandbox['items'], 0, 100);
 
   foreach ($batched_items as $item) {
     [$eck_type, $id] = explode(':', $item);

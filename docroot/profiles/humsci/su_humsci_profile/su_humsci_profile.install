@@ -355,11 +355,13 @@ function su_humsci_profile_update_9700() {
 
       // Create the new hs entity type to migrate the entities.
       HsEntityType::create([
+        'uuid' => _su_humsci_profile_get_uuid("hs_entities.hs_entity_type.$new_bundle_id"),
         'id' => $new_bundle_id,
         'label' => $eck_type->get('label') . ': ' . $eck_bundle->get('name'),
       ])->save();
 
       $hs_entity_form = EntityFormDisplay::create([
+        'uuid' => _su_humsci_profile_get_uuid("core.entity_form_display.hs_entity.$new_bundle_id.default"),
         'id' => "hs_entity.$new_bundle_id.default",
         'targetEntityType' => 'hs_entity',
         'bundle' => $new_bundle_id,
@@ -369,6 +371,7 @@ function su_humsci_profile_update_9700() {
       $hs_entity_form->removeComponent('uid');
 
       $hs_entity_display = EntityViewDisplay::create([
+        'uuid' => _su_humsci_profile_get_uuid("core.entity_view_display.hs_entity.$new_bundle_id.default"),
         'id' => "hs_entity.$new_bundle_id.default",
         'targetEntityType' => 'hs_entity',
         'bundle' => $new_bundle_id,
@@ -391,6 +394,7 @@ function su_humsci_profile_update_9700() {
 
           if (!FieldStorageConfig::loadByName('hs_entity_type', $field_name)) {
             FieldStorageConfig::create([
+              'uuid' => _su_humsci_profile_get_uuid("field.storage.hs_entity.$field_name"),
               'type' => $storage->getType(),
               'field_name' => $field_name,
               'entity_type' => 'hs_entity',
@@ -401,6 +405,7 @@ function su_humsci_profile_update_9700() {
 
           if (!FieldConfig::loadByName('hs_entity_type', $new_bundle_id, $field_name)) {
             FieldConfig::create([
+              'uuid' => _su_humsci_profile_get_uuid("field.field.hs_entity.$new_bundle_id.$field_name"),
               'field_type' => $config->getType(),
               'entity_type' => 'hs_entity',
               'bundle' => $new_bundle_id,
@@ -590,6 +595,7 @@ function su_humsci_profile_update_9702() {
  * Delete ECKs and their types.
  */
 function su_humsci_profile_update_9703(&$sandbox) {
+  $roles = user_role_names();
   $eck_info = _su_humsci_profile_update_eck_info();
   foreach ($eck_info as $eck_type => $bundles) {
     $entities = \Drupal::entityTypeManager()
@@ -603,11 +609,23 @@ function su_humsci_profile_update_9703(&$sandbox) {
     foreach (EckEntityBundle::loadMultiple(array_keys($bundles)) as $eck_bundle) {
       $eck_bundle->delete();
     }
+
+    foreach (array_keys($roles) as $role_id) {
+      user_role_revoke_permissions($role_id, [
+        "create $eck_type entities",
+        "delete any $eck_type entities",
+        "delete own $eck_type entities",
+        "edit any $eck_type entities",
+        "edit own $eck_type entities",
+        "view any $eck_type entities",
+        "view own $eck_type entities",
+      ]);
+    }
     EckEntityType::load($eck_type)->delete();
   }
 }
 
-function _su_humsci_profile_update_eck_info() {
+function _su_humsci_profile_update_eck_info(): array {
   $config_factory = \Drupal::configFactory();
   $names = $config_factory->listAll('eck.eck_entity_type.');
 
@@ -628,4 +646,11 @@ function _su_humsci_profile_update_eck_info() {
     }
   }
   return $info;
+}
+
+function _su_humsci_profile_get_uuid($config_name): string|null {
+  /** @var \Drupal\Core\Config\FileStorage $config_storage */
+  $config_storage = \Drupal::service('config.storage.sync');
+  $config = $config_storage->read($config_name);
+  return $config['uuid'] ?? NULL;
 }

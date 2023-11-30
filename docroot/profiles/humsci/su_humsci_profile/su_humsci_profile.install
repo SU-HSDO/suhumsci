@@ -14,6 +14,7 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\eck\Entity\EckEntityType;
 use Drupal\eck\Entity\EckEntityBundle;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_install_tasks().
@@ -363,6 +364,7 @@ function su_humsci_profile_update_9700() {
       $hs_entity_form = EntityFormDisplay::create([
         'uuid' => _su_humsci_profile_get_uuid("core.entity_form_display.hs_entity.$new_bundle_id.default"),
         'id' => "hs_entity.$new_bundle_id.default",
+        'status' => TRUE,
         'targetEntityType' => 'hs_entity',
         'bundle' => $new_bundle_id,
         'mode' => 'default',
@@ -373,6 +375,7 @@ function su_humsci_profile_update_9700() {
       $hs_entity_display = EntityViewDisplay::create([
         'uuid' => _su_humsci_profile_get_uuid("core.entity_view_display.hs_entity.$new_bundle_id.default"),
         'id' => "hs_entity.$new_bundle_id.default",
+        'status' => TRUE,
         'targetEntityType' => 'hs_entity',
         'bundle' => $new_bundle_id,
         'mode' => 'default',
@@ -623,6 +626,11 @@ function su_humsci_profile_update_9703(&$sandbox) {
     }
     EckEntityType::load($eck_type)->delete();
   }
+  user_role_grant_permissions('site_manager', ['create humsci entity', 'delete humsci entity', 'edit humsci entity']);
+  user_role_grant_permissions('contributor', ['create humsci entity', 'delete humsci entity', 'edit humsci entity']);
+  user_role_grant_permissions('author', ['create humsci entity', 'delete humsci entity', 'edit humsci entity']);
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view humsci entity']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view humsci entity']);
 }
 
 function _su_humsci_profile_update_eck_info(): array {

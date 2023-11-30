@@ -498,28 +498,6 @@ function su_humsci_profile_simplify_condition_forms(array &$condition_elements, 
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
- */
-function su_humsci_profile_eck_entity_type_insert(EntityInterface $entity) {
-  $eck_type = $entity->id();
-  // When a new ECK entity type is create, set initial permissions so that
-  // site builders aren't required to search for the necessary permissions.
-  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ["view any $eck_type entities"]);
-  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ["view any $eck_type entities"]);
-
-  user_role_grant_permissions('contributor', [
-    "create $eck_type entities",
-    "delete own $eck_type entities",
-    "edit own $eck_type entities",
-  ]);
-  user_role_grant_permissions('site_manager', [
-    "create $eck_type entities",
-    "delete any $eck_type entities",
-    "edit any $eck_type entities",
-  ]);
-}
-
-/**
  * Implements hook_preprocess_HOOK().
  */
 function su_humsci_profile_preprocess_menu(&$variables) {

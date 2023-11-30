@@ -5,15 +5,13 @@
  * su_humsci_profile.install
  */
 
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\user\UserInterface;
-use Drupal\key\Entity\Key;
-use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\eck\Entity\EckEntityType;
 use Drupal\eck\Entity\EckEntityBundle;
+use Drupal\eck\Entity\EckEntityType;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\user\RoleInterface;
 
 /**
@@ -31,311 +29,10 @@ function su_humsci_profile_final_task() {
 }
 
 /**
- * Indicates version of profile.
+ * Implements hook_update_last_removed().
  */
-function su_humsci_profile_update_8200() {
-  // Intentionally left empty.
-}
-
-/**
- * Set the permissions for the hero overlay field.
- */
-function su_humsci_profile_update_8201() {
-  $perms = [
-    'view field_hs_hero_overlay_color',
-    'view own field_hs_hero_overlay_color',
-  ];
-  user_role_grant_permissions(UserInterface::ANONYMOUS_ROLE, $perms);
-  $perms = [
-    'create field_hs_hero_overlay_color',
-    'edit field_hs_hero_overlay_color',
-    'edit own field_hs_hero_overlay_color',
-    'view field_hs_hero_overlay_color',
-    'view own field_hs_hero_overlay_color',
-  ];
-  user_role_grant_permissions(UserInterface::AUTHENTICATED_ROLE, $perms);
-}
-
-/**
- * Enable new themes.
- */
-function su_humsci_profile_update_8202() {
-  \Drupal::service('theme_installer')->install([
-    'humsci_basic',
-    'humsci_traditional',
-    'humsci_colorful',
-  ]);
-  drupal_flush_all_caches();
-}
-
-/**
- * Disable preview mode on all content types.
- */
-function su_humsci_profile_update_8203() {
-  $node_types = \Drupal::entityTypeManager()
-    ->getStorage('node_type')
-    ->loadMultiple();
-  $config_factory = \Drupal::configFactory();
-  foreach (array_keys($node_types) as $type) {
-    $config_factory->getEditable("node.type.$type")
-      ->set('preview_mode', 0)
-      ->save();
-  }
-}
-
-/**
- * Disable hs_revision_cleanup module.
- */
-function su_humsci_profile_update_8204() {
-  \Drupal::service('module_installer')->uninstall(['hs_revision_cleanup']);
-}
-
-/**
- * Uninstall deprecated webform_jqueryui_buttons module.
- */
-function su_humsci_profile_update_8205() {
-  \Drupal::service('module_installer')->uninstall(['webform_jqueryui_buttons']);
-}
-
-/**
- * Create the default migration group.
- */
-function su_humsci_profile_update_9000() {
-  $storage = \Drupal::entityTypeManager()
-    ->getStorage('migration_group');
-
-  if (!$storage->load('default')) {
-    $storage->create([
-      'uuid' => 'd97cf71e-57ce-428b-8247-003ce7d5166d',
-      'id' => 'default',
-      'label' => 'Default',
-    ])->save();
-  }
-
-  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
-  $ignored = $config->get('ignored_config_entities');
-  $ignored[] = 'hs_courses_importer.importer_settings';
-  $config->set('ignored_config_entities', $ignored)->save();
-}
-
-/**
- * Update profile settings for the condition plugins settings.
- */
-function su_humsci_profile_update_9001() {
-  $good_plugins = [
-    'node_type',
-    'request_path',
-    'user_role',
-    'entity_bundle:node',
-    'current_theme',
-    'term',
-  ];
-  \Drupal::configFactory()
-    ->getEditable('su_humsci_profile.settings')
-    ->set('allowed.condition_plugins', $good_plugins)
-    ->save();
-}
-
-/**
- * Uninstall Layout Paragraphs.
- */
-function su_humsci_profile_update_9002() {
-  \Drupal::service('module_installer')->uninstall(['layout_paragraphs']);
-}
-
-/**
- * Enable various modules.
- */
-function su_humsci_profile_update_9003() {
-  \Drupal::service('module_installer')->uninstall([
-    'core_event_dispatcher',
-    'field_event_dispatcher',
-    'hook_event_dispatcher',
-    'jsonapi_event_dispatcher',
-    'media_event_dispatcher',
-    'path_event_dispatcher',
-    'preprocess_event_dispatcher',
-    'toolbar_event_dispatcher',
-    'user_event_dispatcher',
-    'views_event_dispatcher',
-    'humsci_events_listeners',
-  ]);
-}
-
-/**
- * Configure migration settings to overwrite fields except node status.
- */
-function su_humsci_profile_update_9004() {
-  $config_factory = \Drupal::configFactory();
-  $migrations = [];
-  foreach ($config_factory->listAll('migrate_plus.migration.') as $config_name) {
-    preg_match('/migration.(.*)/', $config_name, $matches);
-    $migrations[$matches[1]] = $config_factory->getEditable($config_name);
-  }
-
-  foreach ($migrations as $migration_config) {
-    $process = array_keys($migration_config->get('process'));
-    $destination = $migration_config->get('destination.overwrite_properties');
-    $overwrite_properties = $destination['overwrite_properties'] ?? $process;
-    $status_key = array_search('status', $overwrite_properties);
-    if ($status_key !== FALSE) {
-      unset($overwrite_properties[$status_key]);
-    }
-    asort($overwrite_properties);
-    $migration_config->set('destination.overwrite_properties', array_values($overwrite_properties))
-      ->save();
-  }
-}
-
-/**
- * Disable webp module.
- */
-function su_humsci_profile_update_9405() {
-  \Drupal::service('module_installer')->uninstall(['webp']);
-}
-
-/**
- * Enable new admin theme and helper module.
- */
-function su_humsci_profile_update_9406() {
-  \Drupal::service('module_installer')->install(['hs_admin']);
-  $theme_handler = \Drupal::service('theme_installer');
-  $theme_handler->install([
-    'claro',
-    'gin',
-    'su_humsci_gin_admin',
-  ]);
-  // Set the su_humsci_gin_admin as the admin theme.
-  $config = \Drupal::service('config.factory')->getEditable('system.theme');
-  $config->set('admin', 'su_humsci_gin_admin')->save();
-  // Install gin toolbar helper module.
-  \Drupal::service('module_installer')->install(['gin_toolbar']);
-}
-
-/**
- * Uninstall stable and bricks
- */
-function su_humsci_profile_update_9500() {
-  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
-  $theme_handler = \Drupal::service('theme_handler');
-  $theme_installer = \Drupal::service('theme_installer');
-  if ($theme_handler->themeExists('classy')) {
-    $theme_installer->uninstall(['classy']);
-  }
-  if ($theme_handler->themeExists('stable')) {
-    $theme_installer->uninstall(['stable']);
-  }
-  if (!$theme_handler->themeExists('stable9')) {
-    $theme_installer->install(['stable9']);
-  }
-  if (\Drupal::moduleHandler()->moduleExists('bricks')) {
-    \Drupal::service('module_installer')->uninstall(['bricks']);
-  }
-}
-
-/**
- * Install SamlAuth
- */
-function su_humsci_profile_update_9501() {
-  $config_ignore = \Drupal::configFactory()
-    ->getEditable('config_ignore.settings');
-  $ignored = $config_ignore->get('ignored_config_entities');
-  $ignored[] = 'stanford_samlauth.settings';
-  $ignored[] = 'samlauth.authentication:map_users_roles';
-  $config_ignore->set('ignored_config_entities', $ignored)->save();
-  \Drupal::service('module_installer')->install(['stanford_samlauth']);
-  _su_humsci_profile_update_samlauth();
-}
-
-/**
- * Uninstall seven and fix key configs.
- */
-function su_humsci_profile_update_9600() {
-  if (\Drupal::service('theme_handler')->themeExists('seven')) {
-    \Drupal::service('theme_installer')->uninstall(['seven']);
-  }
-  // Resave keys to adjust any dependencies.
-  foreach (Key::loadMultiple() as $key) {
-    $key->save();
-  }
-}
-
-/**
- * Install hs_entities module.
- */
-function su_humsci_profile_update_9602() {
-  \Drupal::service('module_installer')->install(['hs_entities']);
-}
-
-/**
- * Migrate News RSS ECK importer collection entities to News RSS HumSci
- * entities.
- */
-function su_humsci_profile_update_9603() {
-  // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-  $entity_type_manager = \Drupal::entityTypeManager();
-  // Only ever 1 config page.
-  $config_page = $entity_type_manager->getStorage('config_pages')
-    ->load('news_rss');
-  if ($entity_type_manager->hasDefinition('importers') && $config_page) {
-    $new_values = [];
-
-    /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $field_item */
-    foreach ($config_page->get('field_news_rss') as $field_item) {
-      $eck_entity = $field_item->get('entity')->getValue();
-
-      // Create the new hs entity using the values of the ECK.
-      $hs_entity = $entity_type_manager->getStorage('hs_entity')
-        ->create([
-          'bundle' => 'news_rss',
-          'field_url' => $eck_entity->get('field_url')->getString(),
-          'field_terms' => $eck_entity->get('field_terms')->getString(),
-        ]);
-      $hs_entity->save();
-
-      // Store the new entity for the field value and delete the ECK.
-      $new_values[] = [
-        'target_id' => $hs_entity->id(),
-        'entity' => $hs_entity,
-      ];
-      $eck_entity->delete();
-    }
-    $config_page->set('field_news_rss', $new_values)->save();
-  }
-
-  // Update the field storage settings.
-  $field_storage_config = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
-  $field_storage_config->setSetting('target_type', 'hs_entity');
-  $field_storage_config->save();
-
-  // Update the field config settings.
-  $field_config = \Drupal::entityTypeManager()->getStorage('field_config')
-    ->load('config_pages.news_rss.field_news_rss');
-  $handler_settings = $field_config->getSetting('handler_settings');
-  $handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
-  $field_config->setSetting('handler_settings', $handler_settings);
-  $field_config->save();
-}
-
-/**
- * Delete news_rss ECK bundle and importer collections ECK entity type.
- */
-function su_humsci_profile_update_9604() {
-  $entity_type_manager = \Drupal::entityTypeManager();
-
-  // Delete the news_rss ECK.
-  if ($entity_type_manager->hasDefinition('importers_type')) {
-    $news_rss_bundle = $entity_type_manager->getStorage('importers_type')
-      ->load('news_rss');
-    $news_rss_bundle->delete();
-  }
-
-  // Delete the importers entity type from ECK.
-  if ($entity_type_manager->hasDefinition('eck_entity_type')) {
-    $importers_collection = $entity_type_manager->getStorage('eck_entity_type')
-      ->load('importers');
-    $importers_collection->delete();
-  }
+function su_humsci_profile_update_last_removed() {
+  return 9604;
 }
 
 /**
@@ -346,6 +43,8 @@ function su_humsci_profile_update_9700() {
   $entity_field_manager = \Drupal::service('entity_field.manager');
   $field_map = $entity_field_manager->getFieldMap();
 
+  // Go through each of the ECK types and bundles and create new HS Entity
+  // bundles with the matching fields, form and display settings from the ECK.
   foreach (_su_humsci_profile_update_eck_info() as $eck_name => $bundles) {
     $eck_type = \Drupal::config("eck.eck_entity_type.$eck_name");
     foreach ($bundles as $bundle_id => $new_bundle_id) {
@@ -361,6 +60,7 @@ function su_humsci_profile_update_9700() {
         'label' => $eck_type->get('label') . ': ' . $eck_bundle->get('name'),
       ])->save();
 
+      // Create the new form display.
       $hs_entity_form = EntityFormDisplay::create([
         'uuid' => _su_humsci_profile_get_uuid("core.entity_form_display.hs_entity.$new_bundle_id.default"),
         'id' => "hs_entity.$new_bundle_id.default",
@@ -372,6 +72,7 @@ function su_humsci_profile_update_9700() {
       $hs_entity_form->removeComponent('created');
       $hs_entity_form->removeComponent('uid');
 
+      // Create the new view display.
       $hs_entity_display = EntityViewDisplay::create([
         'uuid' => _su_humsci_profile_get_uuid("core.entity_view_display.hs_entity.$new_bundle_id.default"),
         'id' => "hs_entity.$new_bundle_id.default",
@@ -386,15 +87,17 @@ function su_humsci_profile_update_9700() {
       // Create new fields on the new entity types.
       foreach ($field_map[$eck_name] as $field_name => $field_info) {
         if (in_array($bundle_id, $field_info['bundles'])) {
-          /** @var \Drupal\field\FieldStorageConfigInterface $storage */
+          /** @var \Drupal\field\FieldStorageConfigInterface|null $storage */
           $storage = FieldStorageConfig::loadByName($eck_name, $field_name);
-          /** @var \Drupal\Core\Field\FieldConfigInterface $config */
+          /** @var \Drupal\Core\Field\FieldConfigInterface|null $config */
           $config = FieldConfig::loadByName($eck_name, $bundle_id, $field_name);
 
+          // Base fields don't have storage of field configs.
           if (!$storage || !$config) {
             continue;
           }
 
+          // Create the new field storage on the hs entity to match the ECK.
           if (!FieldStorageConfig::loadByName('hs_entity_type', $field_name)) {
             FieldStorageConfig::create([
               'uuid' => _su_humsci_profile_get_uuid("field.storage.hs_entity.$field_name"),
@@ -406,6 +109,7 @@ function su_humsci_profile_update_9700() {
             ])->save();
           }
 
+          // Create the new field config on the hs entity to match the ECK.
           if (!FieldConfig::loadByName('hs_entity_type', $new_bundle_id, $field_name)) {
             FieldConfig::create([
               'uuid' => _su_humsci_profile_get_uuid("field.field.hs_entity.$new_bundle_id.$field_name"),
@@ -429,6 +133,7 @@ function su_humsci_profile_update_9700() {
         }
       }
 
+      // Copy the third party settings to capture DS or field group settings.
       $hs_entity_form->set('third_party_settings', $eck_form->get('third_party_settings'));
       $hs_entity_display->set('third_party_settings', $eck_display->get('third_party_settings'));
 
@@ -443,10 +148,13 @@ function su_humsci_profile_update_9700() {
  */
 function su_humsci_profile_update_9701(&$sandbox) {
   $entity_type_manager = \Drupal::entityTypeManager();
+  $eck_info = _su_humsci_profile_update_eck_info();
   if (!isset($sandbox['count'])) {
     $sandbox['items'] = [];
     $sandbox['convert'] = [];
-    foreach (_su_humsci_profile_update_eck_info() as $eck_name => $bundles) {
+
+    // Store all the ECK ids into the sandbox for batch processing.
+    foreach ($eck_info as $eck_name => $bundles) {
       $ids = $entity_type_manager->getStorage($eck_name)
         ->getQuery()
         ->accessCheck(FALSE)
@@ -459,7 +167,6 @@ function su_humsci_profile_update_9701(&$sandbox) {
     $sandbox['count'] = count($sandbox['items']);
   }
 
-  $eck_info = _su_humsci_profile_update_eck_info();
   $batched_items = array_splice($sandbox['items'], 0, 100);
 
   foreach ($batched_items as $item) {
@@ -474,8 +181,10 @@ function su_humsci_profile_update_9701(&$sandbox) {
         'label' => $entity->label(),
         'bundle' => $new_bundle_id,
       ]);
-    $skip_fields = ['id', 'uuid'];
 
+    // Make sure not to copy the id or uuid fields from the ECK.
+    $skip_fields = ['id', 'uuid'];
+    // Copy any fields that exist on both entity types.
     foreach (array_keys($entity->getFieldDefinitions()) as $field_name) {
       if ($new_entity->hasField($field_name) && !in_array($field_name, $skip_fields)) {
         $new_entity->set($field_name, $entity->get($field_name)->getValue());
@@ -487,6 +196,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
+  // When the conversion is complete, update all the field data.
   if (!empty($sandbox['items'])) {
     return;
   }
@@ -496,6 +206,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
   $field_map = $entity_field_manager->getFieldMapByFieldType('entity_reference');
   $update_fields = [];
 
+  // Find all the fields that reference each of the ECK entity types.
   foreach ($field_map as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
@@ -509,6 +220,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
     }
   }
 
+  // Update the database for the new hs entity ids.
   foreach ($update_fields as $entity_type => $update_entity_fields) {
     foreach ($update_entity_fields as $field_name => $eck_type) {
       $convert_ids = $sandbox['convert'][$eck_type] ?? [];
@@ -549,6 +261,8 @@ function su_humsci_profile_update_9702() {
   /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
   $entity_field_manager = \Drupal::service('entity_field.manager');
   $field_map = $entity_field_manager->getFieldMapByFieldType('entity_reference');
+
+  // For each entity reference field, update the target entity type and bundle.
   foreach ($field_map as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
@@ -566,6 +280,7 @@ function su_humsci_profile_update_9702() {
         if (isset($eck_info[$target])) {
           $new_target_bundle = $eck_info[$target][reset($handler_settings['target_bundles'])];
 
+          // Update the field config first.
           $settings = $field_config->getSettings();
           $settings['handler'] = 'default:hs_entity';
           $settings['target_type'] = 'hs_entity';
@@ -578,9 +293,11 @@ function su_humsci_profile_update_9702() {
           $field_config->set('settings', $settings);
           $field_config->save();
 
+          // Update the field storage.
           $field_storage->setSetting('target_type', 'hs_entity');
           $field_storage->save();
 
+          // Update the config objects to make sure we capture the new values.
           $field_storage_config->set('settings.target_type', 'hs_entity');
           $field_storage_config->save();
 
@@ -600,6 +317,7 @@ function su_humsci_profile_update_9702() {
 function su_humsci_profile_update_9703() {
   $config_factory = \Drupal::configFactory();
   $view_config_names = $config_factory->listAll('views.view.');
+
   foreach ($view_config_names as $config_name) {
     $config = $config_factory->getEditable($config_name);
     $raw = $config->getRawData();
@@ -618,6 +336,7 @@ function _su_humsci_profile_fix_view_data(&$data) {
   $eck_info = _su_humsci_profile_update_eck_info();
 
   if (is_array($data)) {
+    // For the fields and filters, update the ECK types to the hs_entity.
     if (
       isset($data['entity_type']) &&
       is_string($data['entity_type']) &&
@@ -653,6 +372,7 @@ function su_humsci_profile_update_9704() {
     $entities = \Drupal::entityTypeManager()
       ->getStorage($eck_type)
       ->loadMultiple();
+
     // Make sure no ECK entities before deleting the bundles and types.
     foreach ($entities as $entity) {
       $entity->delete();
@@ -663,6 +383,7 @@ function su_humsci_profile_update_9704() {
     }
 
     foreach (array_keys($roles) as $role_id) {
+      // Remove all the permissions before deleting the ECK to avoid errors.
       user_role_revoke_permissions($role_id, [
         "create $eck_type entities",
         "delete any $eck_type entities",
@@ -675,9 +396,23 @@ function su_humsci_profile_update_9704() {
     }
     EckEntityType::load($eck_type)->delete();
   }
-  user_role_grant_permissions('site_manager', ['create humsci entity', 'delete humsci entity', 'edit humsci entity']);
-  user_role_grant_permissions('contributor', ['create humsci entity', 'delete humsci entity', 'edit humsci entity']);
-  user_role_grant_permissions('author', ['create humsci entity', 'delete humsci entity', 'edit humsci entity']);
+
+  // Adjust all the permissions.
+  user_role_grant_permissions('site_manager', [
+    'create humsci entity',
+    'delete humsci entity',
+    'edit humsci entity',
+  ]);
+  user_role_grant_permissions('contributor', [
+    'create humsci entity',
+    'delete humsci entity',
+    'edit humsci entity',
+  ]);
+  user_role_grant_permissions('author', [
+    'create humsci entity',
+    'delete humsci entity',
+    'edit humsci entity',
+  ]);
   user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view humsci entity']);
   user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view humsci entity']);
 }
@@ -709,7 +444,16 @@ function _su_humsci_profile_update_eck_info(): array {
   return $info;
 }
 
-function _su_humsci_profile_get_uuid($config_name): string|null {
+/**
+ * Get the UUID of the config from the sync directory if it exists.
+ *
+ * @param string $config_name
+ *   Config name.
+ *
+ * @return string|null
+ *   UUID string.
+ */
+function _su_humsci_profile_get_uuid(string $config_name): string|null {
   /** @var \Drupal\Core\Config\FileStorage $config_storage */
   $config_storage = \Drupal::service('config.storage.sync');
   $config = $config_storage->read($config_name);

@@ -154,7 +154,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
     $sandbox['convert'] = [];
 
     // Store all the ECK ids into the sandbox for batch processing.
-    foreach ($eck_info as $eck_name => $bundles) {
+    foreach (array_keys($eck_info) as $eck_name) {
       $ids = $entity_type_manager->getStorage($eck_name)
         ->getQuery()
         ->accessCheck(FALSE)
@@ -209,7 +209,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
 
   // Find all the fields that reference each of the ECK entity types.
   foreach ($field_map as $entity_type => $fields) {
-    foreach ($fields as $field_name => $field_info) {
+    foreach (array_keys($fields) as $field_name) {
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
       if (!$field_storage) {
         continue;
@@ -422,6 +422,12 @@ function su_humsci_profile_update_9704() {
   user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view humsci entity']);
 }
 
+/**
+ * Get the migration of eck type and bundle to the new hs_entity type.
+ *
+ * @return array
+ *   Keyed array of eck types and it's bundles.
+ */
 function _su_humsci_profile_update_eck_info(): array {
   $info = &drupal_static(__FUNCTION__, []);
   if ($info) {

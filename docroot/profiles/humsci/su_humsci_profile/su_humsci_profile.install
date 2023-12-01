@@ -165,10 +165,11 @@ function su_humsci_profile_update_9701(&$sandbox) {
     }
     $sandbox['items'] = array_filter($sandbox['items']);
     $sandbox['count'] = count($sandbox['items']);
+    \Drupal::messenger()
+      ->addStatus(t('Updating @count ECK items.', ['@count' => count($sandbox['items'])]));
   }
 
   $batched_items = array_splice($sandbox['items'], 0, 100);
-
   foreach ($batched_items as $item) {
     [$eck_type, $id] = explode(':', $item);
     $entity = $entity_type_manager->getStorage($eck_type)->load($id);
@@ -231,6 +232,9 @@ function su_humsci_profile_update_9701(&$sandbox) {
         ->execute();
 
       while ($entry = $query->fetchAssoc()) {
+        if (!empty($convert_ids[$entry["{$field_name}_target_id"]])) {
+          continue;
+        }
         \Drupal::database()->update("{$entity_type}__$field_name")
           ->fields(["{$field_name}_target_id" => $convert_ids[$entry["{$field_name}_target_id"]]])
           ->condition('entity_id', $entry['entity_id'])

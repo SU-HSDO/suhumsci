@@ -135,15 +135,21 @@ process:
     source:
       - '@pub_author'
       - '@pub_author_lookup'
+  author_id:
+    plugin: concat
+    source:
+      - publication_id
+      - display_name
   field_hs_publication_author/target_id:
     plugin: entity_generate_no_lookup
-    source: display_name
-    value_key: label
-    bundle_key: type
+    source: '@author_id'
+    value_key: field_migration_id
+    bundle_key: bundle
     bundle: publications_collections__public
     entity_type: hs_entity
     ignore_case: true
     values:
+      label: display_name
       field_hs_publication_author/target_id: '@pub_author_id'
   vid:
     plugin: default_value

@@ -232,11 +232,12 @@ function su_humsci_profile_update_9701(&$sandbox) {
         ->execute();
 
       while ($entry = $query->fetchAssoc()) {
-        if (!empty($convert_ids[$entry["{$field_name}_target_id"]])) {
+        $new_target_id = $convert_ids[$entry["{$field_name}_target_id"]] ?? FALSE;
+        if (!$new_target_id > 0) {
           continue;
         }
         \Drupal::database()->update("{$entity_type}__$field_name")
-          ->fields(["{$field_name}_target_id" => $convert_ids[$entry["{$field_name}_target_id"]]])
+          ->fields(["{$field_name}_target_id" => $new_target_id])
           ->condition('entity_id', $entry['entity_id'])
           ->condition('delta', $entry['delta'])
           ->execute();
@@ -247,7 +248,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
 
         if ($revision_table) {
           \Drupal::database()->update("{$entity_type}_revision__$field_name")
-            ->fields(["{$field_name}_target_id" => $convert_ids[$entry["{$field_name}_target_id"]]])
+            ->fields(["{$field_name}_target_id" => $new_target_id])
             ->condition('entity_id', $entry['entity_id'])
             ->condition('delta', $entry['delta'])
             ->execute();

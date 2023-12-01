@@ -14,13 +14,14 @@
  */
 #}
 
-{# set a generic link label in case there is no alt attribute on the image or a caption #}
+{# set a generic link label in case there is no alt attribute on the image #}
 {% set link_label = "Open image in the gallery" %}
-{# If the image has an alt attribute, use it as the link label. #}
-{% if attributes['data-cbox-img-attrs']|render != '{&quot;alt&quot;:&quot;&quot;}' %}
-  {% set link_label = "Open " ~ attributes['data-cbox-img-attrs'] ~ " image in the gallery" %}
+
+{# If the image has an alt attribute, use it in the link label. #}
+{% set alt_text = image['#alt'] %}
+
+{% if alt_text %}
+  {% set link_label = "Open " ~ alt_text ~ " image in the gallery" %}
 {% endif %}
-{% set link_label = link_label|raw %}
-{% set link_label = link_label|replace({'{&quot;alt&quot;:&quot;':'', '&quot;}':''}) %}
 
 <a href="{{ url }}" aria-controls="colorbox" aria-label="{{ link_label }}" role="button" {{ attributes }}>{{ image }}</a>

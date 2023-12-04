@@ -3,13 +3,13 @@
  * Stops page from changing when user is posting.
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, once) {
   'use strict';
 
   Drupal.behaviors.humsciParagraphBehaviors = {
     attach: function (context, settings) {
       $('ul.paragraphs-tabs', context).remove();
-      $('.paragraphs-subform', context).once('hs-heaviors').each(function () {
+      $(once('hs-behaviors', '.paragraphs-subform', context)).each(function () {
         const $subform = $(this);
         const $behaviors = $(this).siblings('.paragraphs-behavior')
         const $tabs = $('<ul class="hs-paragraphs-tabs tabs">');
@@ -32,4 +32,4 @@
       });
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

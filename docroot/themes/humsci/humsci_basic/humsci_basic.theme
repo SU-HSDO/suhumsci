@@ -8,7 +8,7 @@
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
-use Drupal\Core\Url;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_preprocess_block().
@@ -272,5 +272,22 @@ function humsci_basic_preprocess_views_view(&$variables) {
     case 'hs_default_search':
      $variables['#attached']['library'][] =  'humsci_basic/search';
       break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_basic_preprocess_paragraph(&$variables) {
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->bundle() == 'hs_view') {
+    $parent = $paragraph->getParentEntity();
+    if ($parent instanceof ParagraphInterface && $parent->bundle() === 'hs_collection') {
+      $heading_tag = 'h2';
+      if ($parent->get('field_title_settings')->value !== 'collection_title_none') {
+        $heading_tag = 'h3';
+      }
+      $variables['content']['field_hs_view'][0]['#heading_tag'] = $heading_tag;
+    }
   }
 }

@@ -43,7 +43,11 @@
 
     {% if title %}
       <div class="hb-card__title">
-        <h2>{{ title }}</h2>
+        {% if title|render matches '/<h\\d>/' %}
+          {{ title }}
+        {% else %}
+          <h2>{{ title }}</h2>
+        {% endif %}
       </div>
     {% endif %}
 

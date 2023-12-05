@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a formatted colorbox image field.
+ *
+ * Available variables:
+ * - image: A collection of image data.
+ * - url: An URL the image can be linked to.
+ * - attributes: Link attributes.
+ *
+ * @see template_preprocess_colorbox_formatter()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{# set a generic link label in case there is no alt attribute on the image #}
+{% set link_label = "Open image in the gallery" %}
+
+{# If the image has an alt attribute, use it in the link label. #}
+{% set alt_text = image['#alt'] %}
+
+{% if alt_text %}
+  {% set link_label = "Open " ~ alt_text ~ " image in the gallery" %}
+{% endif %}
+
+<a href="{{ url }}" aria-controls="colorbox" aria-label="{{ link_label }}" role="button" {{ attributes }}>{{ image }}</a>

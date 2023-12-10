@@ -258,8 +258,6 @@ function su_humsci_profile_preprocess_image_formatter(&$variables) {
   if (isset($variables['url'])) {
     // Disable screen readers from seeing the link on the image since there
     // should be another link with text nearby.
-    $variables['image']['#attributes']['aria-hidden'] = 'true';
-    $variables['image']['#attributes']['tabindex'] = -1;
     $variables['url']->mergeOptions([
       'attributes' => [
         'tabindex' => -1,
@@ -276,8 +274,6 @@ function su_humsci_profile_preprocess_responsive_image_formatter(&$variables) {
   if (isset($variables['url'])) {
     // Disable screen readers from seeing the link on the image since there
     // should be another link with text nearby.
-    $variables['responsive_image']['#attributes']['aria-hidden'] = 'true';
-    $variables['responsive_image']['#attributes']['tabindex'] = -1;
     $variables['url']->mergeOptions([
       'attributes' => [
         'tabindex' => -1,

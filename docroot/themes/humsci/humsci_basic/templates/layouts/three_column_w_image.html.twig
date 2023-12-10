@@ -10,9 +10,11 @@
 
 {% set main_id = settings.main_content == 'main-region' %}
 {% set attributes = settings.main_content == 'left-sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
+{% set layout_container_tag = settings.main_content == 'left-sidebar' ? 'main' : 'div' %}
+{% set main_container_tag = settings.main_content == 'main-region' ? 'main' : 'div' %}
 
 {% if content %}
-  <div{{ attributes }}>
+  <{{ layout_container_tag }}{{ attributes }}>
     {% if content.left_sidebar %}
       <div{{ region_attributes.left_sidebar.addClass(['hb-three-column-w-image__sidebar-1', 'layout__region']) }}>
         {{ content.left_sidebar }}
@@ -20,7 +22,7 @@
     {% endif %}
 
 
-    <div class="hb-layout-builder-main-content hb-three-column-w-image__main"{% if main_id %} id="main-content"{% endif %}>
+    <{{ main_container_tag }} class="hb-layout-builder-main-content hb-three-column-w-image__main"{% if main_id %} id="main-content"{% endif %}>
 
       {% if content.title %}
         <div class="hb-three-column-w-image__main-title">
@@ -62,13 +64,13 @@
           </div>
         {% endif %}
       </div>
-    </div>
+    </{{ main_container_tag }}>
 
     {% if content.right_sidebar %}
       <div{{ region_attributes.right_sidebar.addClass(['hb-three-column-w-image__sidebar-2', 'layout__region']) }}>
         {{ content.right_sidebar }}
       </div>
     {% endif %}
-  </div>
+  </{{ layout_container_tag }}>
 
 {% endif %}

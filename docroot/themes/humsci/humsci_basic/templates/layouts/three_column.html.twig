@@ -11,9 +11,11 @@
 
 {% set main_attributes = settings.main_content == 'main-region' ? region_attributes.main.setAttribute('id', 'main-content') : region_attributes.main %}
 {% set attributes = settings.main_content == 'left-sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
+{% set layout_container_tag = settings.main_content == 'left-sidebar' ? 'main' : 'div' %}
+{% set main_container_tag = settings.main_content == 'main-region' ? 'main' : 'div' %}
 
 {% if content %}
-  <div{{ attributes }}>
+  <{{ layout_container_tag }}{{ attributes }}>
     {% if content.left_sidebar %}
       <div{{ region_attributes.left_sidebar.addClass(['hb-three-column__sidebar-1', 'layout__region']) }}>
         {{ content.left_sidebar }}
@@ -25,9 +27,9 @@
 
       <div class="hb-three-column__main-body {% if content.main_below and content.main_above %}break-below-top{% endif %}">
         {% if content.main %}
-          <div{{ main_attributes.addClass(['layout__region']) }}>
+          <{{ main_container_tag }}{{ main_attributes.addClass(['layout__region']) }}>
             {{ content.main }}
-          </div>
+          </{{ main_container_tag }}>
         {% endif %}
       </div>
     </div>
@@ -37,5 +39,5 @@
         {{ content.right_sidebar }}
       </div>
     {% endif %}
-  </div>
+  </{{ layout_container_tag }}>
 {% endif %}

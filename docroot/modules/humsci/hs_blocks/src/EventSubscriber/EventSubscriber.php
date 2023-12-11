@@ -2,6 +2,8 @@
 
 namespace Drupal\hs_blocks\EventSubscriber;
 
+use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
+use Drupal\layout_builder\LayoutBuilderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -40,6 +42,7 @@ class EventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST] = ['onKernelRequest'];
+    $events[LayoutBuilderEvents::SECTION_COMPONENT_BUILD_RENDER_ARRAY] = ['onSectionComponentBuild'];
     return $events;
   }
 
@@ -68,6 +71,25 @@ class EventSubscriber implements EventSubscriberInterface {
         ->condition('cid', 'active-trail:route:entity.node%', 'LIKE')
         ->condition('data', '%menu_link_content%', 'NOT LIKE')
         ->execute();
+    }
+  }
+
+  /**
+   * Change the field block label in layout builder to the block label.
+   *
+   * @param \Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent $event
+   *   Layout builder section event.
+   */
+  public function onSectionComponentBuild(SectionComponentBuildRenderArrayEvent $event) {
+    $build = $event->getBuild();
+    if (
+      isset($build['#base_plugin_id']) &&
+      $build['#base_plugin_id'] == 'field_block' &&
+      isset($build['content'][0]['#title'])
+    ) {
+      $label = $event->getComponent()->get('configuration')['label'];
+      $build['content'][0]['#title'] = $label;
+      $event->setBuild($build);
     }
   }
 

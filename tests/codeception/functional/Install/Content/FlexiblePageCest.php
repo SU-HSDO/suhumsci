@@ -520,7 +520,7 @@ class FlexiblePageCest {
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Foo Bar Baz', '.item-per-row--2');
-    $I->canSee('Demo card title', '.item-per-row--2 h2');
+    $I->canSee('Demo card title', '.item-per-row--2 h3');
     $I->canSee('Bar Foo Baz', '.item-per-row--2');
     $I->canSee('Demo Collection Title');
   }

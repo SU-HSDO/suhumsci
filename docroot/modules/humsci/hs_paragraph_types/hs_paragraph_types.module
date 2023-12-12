@@ -5,6 +5,8 @@
  * hs_paragraph_types.module
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_preprocess_HOOK().
  */
@@ -30,4 +32,31 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
     ->getString();
   $variables['attributes']['class'][] = "item-per-row--$items_per_row";
   $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+}
+
+/**
+ * Implements hook_field_widget_single_element_WIDGET_TYPE_form_alter().
+ */
+function hs_paragraph_types_field_widget_single_element_paragraphs_form_alter(&$element, &$form_state, $context) {
+  // Change the paragraph type label for hs_hero_image embedded in hs_carousel.
+  if ($element['#paragraph_type'] === 'hs_hero_image' && $element['#bundle'] === 'hs_carousel') {
+    $label = $element['top']['type']['label']['#markup'];
+    $new_label = str_replace('full overlay and text', 'text box', $label);
+    $element['top']['type']['label']['#markup'] = $new_label;
+  }
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(&$field_widget_form, FormStateInterface $form_state, $context) {
+  // Change the add button label for field_hs_carousel_slides.
+  if (
+    isset($field_widget_form['widget']['add_more']['add_more_button_hs_hero_image'], $field_widget_form['widget']['#field_name']) &&
+    $field_widget_form['widget']['#field_name'] === 'field_hs_carousel_slides'
+  ) {
+    $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
+      '@type' => 'Banner image with text box',
+    ]);
+  }
 }

@@ -39,6 +39,7 @@ function hs_layouts_plugin_filter_block__layout_builder_alter(&$definitions, &$e
  * Implements hook_preprocess().
  */
 function hs_layouts_preprocess(&$variables, $hook) {
+  // List of patterns used for collection children elements.
   $collection_patterns = [
     'pattern_horizontal_card',
     'pattern_vertical_card',
@@ -49,16 +50,22 @@ function hs_layouts_preprocess(&$variables, $hook) {
     'pattern_gradient-hero',
   ];
   if (in_array($hook, $collection_patterns)) {
+    // Set heading tag to h2 by default.
     $variables['heading_tag'] = 'h2';
     $context = $variables['context'];
     if ($context->isOfType('layout')) {
       $paragraph = $context->getProperty('entity');
+      // Get the parent entity of the paragraph.
       $parent = $paragraph->getParentEntity();
-      if ($hook === 'pattern_gradient-hero') {
+      if ($hook === 'pattern_gradient-hero' && !empty($parent)) {
+        // Gradient hero elements can be within a slider,
+        // need to go a level depeer.
         $parent = $parent->getParentEntity();
       }
       if ($parent instanceof ParagraphInterface && $parent->bundle() === 'hs_collection') {
         if ($parent->get('field_title_settings')->value !== 'collection_title_none') {
+          // If the paragraph is within a collection and the collection title is
+          // set to anything other than 'None', set the heading tag to h3.
           $variables['heading_tag'] = 'h3';
         }
       }

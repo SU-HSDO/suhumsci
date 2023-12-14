@@ -5,16 +5,12 @@ dependencies:
   config:
     - eck.eck_type.event_collections.conference_session
     - field.storage.event_collections.field_session_speakers
+    - filter.format.basic_html
+    - filter.format.full_html
+    - filter.format.minimal_html
+    - filter.format.plain_text
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - basic_html
-      - full_html
-      - minimal_html
-      - plain_text
 id: event_collections.conference_session.field_session_speakers
 field_name: field_session_speakers
 entity_type: event_collections
@@ -26,5 +22,9 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  allowed_formats: {  }
+  allowed_formats:
+    - basic_html
+    - full_html
+    - minimal_html
+    - plain_text
 field_type: text_long

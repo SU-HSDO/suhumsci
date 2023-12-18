@@ -4,11 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_lnk
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_wdth
     - paragraphs.paragraphs_type.hs_clr_bnd
   module:
     - ds
+    - link
 third_party_settings:
   ds:
     layout:
@@ -34,6 +37,26 @@ targetEntityType: paragraph
 bundle: hs_clr_bnd
 mode: default
 content:
+  field_hs_clr_bnd_lnk:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_hs_clr_bnd_ttl:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
   field_hs_clr_bnd_txt:
     type: basic_string
     label: hidden

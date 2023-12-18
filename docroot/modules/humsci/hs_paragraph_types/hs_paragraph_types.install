@@ -71,3 +71,115 @@ function hs_paragraph_types_update_9403() {
     ])
     ->execute();
 }
+
+/**
+ * Set new fields in color band component form.
+ */
+function hs_paragraph_color_band_update_10000() {
+
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $clr_bnd_fd */
+  $clr_bnd_fd = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('paragraph.hs_clr_bnd.default');
+  $dependencies = $clr_bnd_fd->get('dependencies');
+  $dependencies['config'][] = 'field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_lnk';
+  $dependencies['config'][] = 'field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl';
+  $dependencies['module'][] = 'link';
+  $clr_bnd_fd->set('dependencies', $dependencies);
+
+  // Update existing field settings.
+  $bgc = $clr_bnd_fd->getComponent('field_hs_clr_bnd_bgc');
+  $bgc['weight'] = 3;
+  $clr_bnd_fd->setComponent('field_hs_clr_bnd_bgc', $bgc);
+  $wdth = $clr_bnd_fd->getComponent('field_hs_clr_bnd_wdth');
+  $wdth['weight'] = 4;
+  $clr_bnd_fd->setComponent('field_hs_clr_bnd_wdth', $wdth);
+  $txt = $clr_bnd_fd->getComponent('field_hs_clr_bnd_txt');
+  $txt['weight'] = 1;
+  $txt['settings']['placeholder'] = '';
+  $txt['third_party_settings']['maxlength']['maxlength_js'] = 180;
+  $txt['third_party_settings']['maxlength']['maxlength_js_enforce'] = TRUE;
+  $clr_bnd_fd->setComponent('field_hs_clr_bnd_txt', $txt);
+
+  // Set new field settings.
+  $lnk = [
+    'type' => 'link_default',
+    'weight' => 2,
+    'region' => 'content',
+    'settings' => [
+      'placeholder_url' => '',
+      'placeholder_title' => ''
+    ],
+    'third_party_settings' => [],
+  ];
+
+  $ttl = [
+    'type' => 'string_text_field',
+    'weight' => 0,
+    'region' => 'content',
+    'settings' => [
+      'size' => 60,
+      'placeholder' => '',
+    ],
+    'third_party_settings' => [
+      'maxlength' => [
+        'maxlength_js' => 105,
+        'maxlength_js_label' => 'Content limited to @limit characters, remaining: <strong>@remaining</strong>',
+        'maxlength_js_enforce' => TRUE,
+      ],
+    ],
+  ];
+  $clr_bnd_fd->setComponent('field_hs_clr_bnd_lnk', $lnk);
+  $clr_bnd_fd->setComponent('field_hs_clr_bnd_ttl', $ttl);
+
+}
+
+/**
+ * Set new fields in color band component view.
+ */
+function hs_paragraph_types_update_10001() {
+  /** @var Drupal\Core\Entity\Display\EntityViewDisplayInterface $clr_bnd_vd_preview */
+  $clr_bnd_vd_preview = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('paragraph.hs_clr_bnd.preview');
+  $dependencies = $clr_bnd_vd_preview->get('dependencies');
+  $dependencies['config'][] = 'field.field.paragraph.hs_clr_bnd.field_clr_bnd_lnk';
+  $dependencies['config'][] = 'field.field.paragraph.hs_clr_bnd.field_clr_bnd_ttl';
+  $clr_bnd_vd_preview->set('dependencies', $dependencies);
+  $clr_bnd_vd_preview->removeComponent('field_clr_bnd_lnk');
+  $clr_bnd_vd_preview->removeComponent('field_clr_bnd_ttl');
+
+  /** @var Drupal\Core\Entity\Display\EntityViewDisplayInterface $clr_bnd_vd_default */
+  $clr_bnd_vd_default = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('paragraph.hs_clr_bnd.default');
+
+  // Update dependencies.
+  $dependencies = $clr_bnd_vd_default->get('dependencies');
+  $dependencies['config'][] = 'field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_lnk';
+  $dependencies = $clr_bnd_vd_default->get('field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl');
+  $dependencies['module'][] = 'link';
+  $clr_bnd_vd_default->set('dependencies', $dependencies);
+
+  // Set new field settings.
+  $lnk = [
+    'type' => 'link',
+    'label' => 'above',
+    'settings' => [
+      'trim_length' => 80,
+      'url_only' => FALSE,
+      'url_plain' => FALSE,
+      'rel' => '',
+      'target' => '',
+    ],
+    'third_party_settings' => [],
+    'weight' => 2,
+    'region' => 'content',
+  ];
+  $ttl = [
+    'type' => 'string',
+    'label' => 'above',
+    'settings' => [
+      'link_to_entity' => FALSE,
+    ],
+    'third_party_settings' => [],
+    'weight' => 3,
+    'region' => 'content',
+  ];
+  $clr_bnd_vd_default->setComponent('field_hs_clr_bnd_lnk', $lnk);
+  $clr_bnd_vd_default->setComponent('field_hs_clr_bnd_ttl', $ttl);
+}

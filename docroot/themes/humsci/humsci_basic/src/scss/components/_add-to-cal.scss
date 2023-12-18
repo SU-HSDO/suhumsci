@@ -1,0 +1,74 @@
+.addtocal-inner {
+  @include hb-global-color('background-color', 'white');
+
+  position: relative;
+  display: flex;
+  margin-top: -(hb-calculate-rems(38px));
+  margin-left: -(hb-calculate-rems(4px));
+  padding: hb-calculate-rems(11px) hb-calculate-rems(6px) hb-calculate-rems(8px) hb-calculate-rems(18px);
+  border: 2px solid;
+  border-radius: hb-calculate-rems(12px);
+
+  @include hb-pairing-color('border-color', 'tertiary-darken-20');
+
+  &::after {
+    @include hb-icon-background('plus', 'gray-dark');
+
+    position: absolute;
+    top: hb-calculate-rems(8px);
+    right: hb-calculate-rems(8px);
+    content: ' ';
+    width: hb-calculate-rems(12px);
+    height: hb-calculate-rems(12px);
+    transform: rotate(45deg);
+  }
+}
+
+.addtocal-title {
+  @include hb-pairing-color('color', 'secondary');
+
+  font-size: hb-calculate-rems(16px);
+  margin: 0 hb-calculate-rems(6px);
+}
+
+.addtocal-links {
+  margin: 0;
+}
+
+.addtocal-link {
+  margin-bottom: hb-calculate-rems(4px);
+  font-size: hb-calculate-rems(16px);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    @include hb-global-color('color', 'gray-dark');
+
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color('color', 'secondary');
+
+      background-image: none;
+
+      &::before {
+        @include hb-icon-background('plus', 'secondary');
+      }
+    }
+
+    &::before {
+      @include hb-icon-background('plus', 'white');
+
+      content: ' ';
+      display: block;
+      width: hb-calculate-rems(10px);
+      height: hb-calculate-rems(10px);
+      margin-right: hb-calculate-rems(4px);
+    }
+  }
+}

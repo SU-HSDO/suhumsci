@@ -185,7 +185,7 @@ function hs_paragraph_types_update_10001() {
 }
 
 /**
- * Move certain content to new field.
+ * Transfer qualifying content to new field.
  */
 function hs_paragraph_types_update_10002($sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
@@ -201,7 +201,7 @@ function hs_paragraph_types_update_10002($sandbox) {
 
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
-    $paragraph->field_hs_clr_bnd_ttl = $paragraph->field_hs_clr_bnd_txt;
+    $paragraph->field_hs_clr_bnd_ttl->value = $paragraph->field_hs_clr_bnd_txt->value;
     unset($paragraph->field_hs_clr_bnd_txt);
     $paragraph->save();
   }

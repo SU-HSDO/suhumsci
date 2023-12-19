@@ -11,6 +11,11 @@
 
   @include hb-pairing-color('border-color', 'tertiary-darken-20');
 
+  @include hb-traditional {
+    margin-top: -(hb-calculate-rems(40px));
+    border-radius: 0;
+  }
+
   &::after {
     @include hb-icon-background('plus', 'gray-dark');
 
@@ -29,6 +34,12 @@
 
   font-size: hb-calculate-rems(16px);
   margin: 0 hb-calculate-rems(6px);
+
+  @include hb-traditional {
+    margin-left: hb-calculate-rems(11px);
+    font-family: $hb-traditional-font--sans;
+    font-weight: hb-theme-font-weight(semibold);
+  }
 }
 
 .addtocal-links {

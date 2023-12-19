@@ -75,7 +75,7 @@ function hs_paragraph_types_update_9403() {
 /**
  * Set new fields in color band component form.
  */
-function hs_paragraph_color_band_update_10000() {
+function hs_paragraph_types_update_10000() {
 
   /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $clr_bnd_fd */
   $clr_bnd_fd = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('paragraph.hs_clr_bnd.default');
@@ -183,3 +183,28 @@ function hs_paragraph_types_update_10001() {
   $clr_bnd_vd_default->setComponent('field_hs_clr_bnd_lnk', $lnk);
   $clr_bnd_vd_default->setComponent('field_hs_clr_bnd_ttl', $ttl);
 }
+
+/**
+ * Move certain content to new field.
+ */
+function hs_paragraph_types_update_10002($sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_clr_bnd')
+      ->condition('field_hs_clr_bnd_txt', 105, '>=')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->field_hs_clr_bnd_ttl = $paragraph->field_hs_clr_bnd_txt;
+    unset($paragraph->field_hs_clr_bnd_txt);
+    $paragraph->save();
+  }
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+

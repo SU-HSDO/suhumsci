@@ -16,6 +16,7 @@ function hs_paragraph_types_deploy_hs_clr_band_ttl_field(&$sandbox) {
     $database->where('CHAR_LENGTH(cbt.field_hs_clr_bnd_txt_value) <= :length', [
       ':length' => 105,
     ]);
+    $database->where("cbt.field_hs_clr_bnd_txt_value <> ''");
     $sandbox['ids'] = $database->execute()->fetchAllKeyed(0,0);
     $sandbox['total'] = count($sandbox['ids']);
   }

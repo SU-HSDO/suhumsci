@@ -11,11 +11,12 @@
 function hs_paragraph_types_deploy_hs_clr_band_ttl_field(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   if (empty($sandbox['ids'])) {
-    $sandbox['ids'] = $paragraph_storage->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('type', 'hs_clr_bnd')
-      ->condition('field_hs_clr_bnd_txt', 105, '>=')
-      ->execute();
+    $database = \Drupal::database()->select('paragraph__field_hs_clr_bnd_txt', 'cbt');
+    $database->fields('cbt', ['entity_id']);
+    $database->where('CHAR_LENGTH(cbt.field_hs_clr_bnd_txt_value) <= :length', [
+      ':length' => 105,
+    ]);
+    $sandbox['ids'] = $database->execute()->fetchAllKeyed(0,0);
     $sandbox['total'] = count($sandbox['ids']);
   }
   $paragraph_ids = array_splice($sandbox['ids'], 0, 10);

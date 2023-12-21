@@ -2,7 +2,7 @@
 
 /**
  * @file
- * hs_paragraph_types.deploy
+ * Deploy hooks for paragraph components.
  */
 
 /**
@@ -17,7 +17,7 @@ function hs_paragraph_types_deploy_hs_clr_band_ttl_field(&$sandbox) {
       ':length' => 105,
     ]);
     $database->where("cbt.field_hs_clr_bnd_txt_value <> ''");
-    $sandbox['ids'] = $database->execute()->fetchAllKeyed(0,0);
+    $sandbox['ids'] = $database->execute()->fetchAllKeyed(0, 0);
     $sandbox['total'] = count($sandbox['ids']);
   }
   $paragraph_ids = array_splice($sandbox['ids'], 0, 10);

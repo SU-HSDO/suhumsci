@@ -15,8 +15,9 @@
  * @ingroup themeable
  */
 #}
+
 <div{{ attributes }}>
-  <button{{ button_attributes }}>{{ button_text }}</button>
+  <button{{ button_attributes.removeAttribute('aria-label').setAttribute('aria-expanded', 'false') }}>{{ button_text }}</button>
   <div{{ menu_attributes }}>
     <div class="addtocal-inner">
       <h2 class="addtocal-title">{{ 'Add to Calendar'|t }}</h2>

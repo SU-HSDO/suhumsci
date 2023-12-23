@@ -84,6 +84,16 @@
       box-shadow: 0 0 0 hb-calculate-rems(1px) var(--palette--secondary-active);
     }
   }
+
+  .hc-pairing-ocean & {
+    @include hb-pairing-color('background-color', 'secondary-darken-12');
+    @include hb-pairing-color('border-color', 'secondary-darken-12');
+
+    &:hover {
+      @include hb-pairing-color('background-color', 'primary-dark');
+      @include hb-pairing-color('border-color', 'primary-dark');
+    }
+  }
 }
 
 @mixin hb-big-button {
@@ -169,6 +179,16 @@
         @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
         @include hb-pairing-color('border-color', 'tertiary-highlight-darken-10');
       }
+    }
+  }
+
+  .hc-pairing-ocean & {
+    @include hb-pairing-color('border-color', 'secondary-darken-12');
+    @include hb-pairing-color('color', 'secondary-darken-12');
+
+    &:hover {
+      @include hb-global-color('color', 'white');
+      @include hb-pairing-color('background-color', 'secondary-darken-12');
     }
   }
 }

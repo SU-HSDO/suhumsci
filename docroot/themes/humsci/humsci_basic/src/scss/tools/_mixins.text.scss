@@ -237,13 +237,13 @@
     > p,
     > div {
       margin: 0;
-  
+
       &::before {
         position: absolute;
         content: open-quote;
         margin-left: hb-calculate-rems(-16px);
       }
-  
+
       &::after {
         position: absolute;
         content: close-quote;
@@ -277,7 +277,8 @@
   text-transform: inherit;
   @include hb-pairing-color('color', 'secondary');
 
-  .hb-well & {
+  .hb-well &,
+  .hc-pairing-ocean & {
     @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
   }
 }

@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.paragraph.hs_collection.field_hs_collection_items
     - field.field.paragraph.hs_collection.field_hs_collection_per_row
+    - field.field.paragraph.hs_collection.field_hs_collection_uh
     - field.field.paragraph.hs_collection.field_paragraph_style
     - field.field.paragraph.hs_collection.field_raised_cards
     - paragraphs.paragraphs_type.hs_collection
@@ -17,7 +18,7 @@ mode: default
 content:
   field_hs_collection_items:
     type: paragraphs_browser
-    weight: 3
+    weight: 4
     region: content
     settings:
       title: Component
@@ -36,12 +37,21 @@ content:
       paragraphs_browser: content
       modal_width: 80%
       modal_height: auto
+      show_group_label: true
+      show_group_filter: true
     third_party_settings: {  }
   field_hs_collection_per_row:
     type: options_select
     weight: 0
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_hs_collection_uh:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_paragraph_style:
     type: options_select

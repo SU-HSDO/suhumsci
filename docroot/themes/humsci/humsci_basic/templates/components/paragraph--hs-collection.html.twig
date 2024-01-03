@@ -42,13 +42,17 @@
 {% if paragraph.field_raised_cards.value == true %}
    {% set raised_cards = true %}
 {% endif %}
+{% if paragraph.field_uniform_height.value == true %}
+  {% set uniform_height = true %}
+{% endif %}
 {%
   set classes = [
     'paragraph',
     'paragraph--type--' ~ paragraph.bundle|clean_class,
     view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
     not paragraph.isPublished() ? 'paragraph--unpublished',
-    raised_cards ? 'hb-raised-cards hb-raised-cards--uniform-height'
+    raised_cards ? 'hb-raised-cards',
+    uniform_height ? 'hb-raised-cards--uniform-height'
   ]
 %}
 

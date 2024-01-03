@@ -43,7 +43,18 @@
 
     {% if title %}
       <div class="hb-card__title">
-        <h2>{{ title }}</h2>
+        <h2>
+          {% set url = path('entity.node.canonical', {'node': title['#row'].nid}) %}
+          {% set title = title['#row']._entity.title.value %}
+          {% set date = month['#row'].node__field_hs_event_date_field_hs_event_date_value|format_date('standard_date') %}
+          <a href="{{ url }}">
+            {% if date %}
+              {{ title }} <span class="visually-hidden">{{ " on "|t }}{{ date }}</span>
+            {% else %}
+              {{ title }}
+            {% endif %}
+          </a>
+        </h2>
       </div>
     {% endif %}
 

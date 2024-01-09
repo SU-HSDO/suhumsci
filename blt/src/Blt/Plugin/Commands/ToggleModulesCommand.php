@@ -3,7 +3,6 @@
 namespace Humsci\Blt\Plugin\Commands;
 
 use Acquia\Blt\Robo\BltTasks;
-use Acquia\Blt\Robo\Exceptions\BltException;
 
 /**
  * Defines commands in the "drupal:toggle:modules" namespace.
@@ -64,7 +63,7 @@ class ToggleModulesCommand extends BltTasks {
       // Unable to uninstall all modules at the same time, try one at a time.
       if (!$result->wasSuccessful()) {
         $this->say('Trying each module separately');
-        foreach($modules as $module){
+        foreach ($modules as $module) {
           // If the module is already uninstalled or installed, the drush
           // command will throw an error. Ignore that.
           $this->taskDrush()

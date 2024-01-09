@@ -330,3 +330,13 @@ function su_humsci_profile_update_9604() {
     $importers_collection->delete();
   }
 }
+
+/**
+ * Delete "Not Live" config split.
+ */
+function su_humsci_profile_update_9605() {
+  \Drupal::entityTypeManager()
+    ->getStorage('config_split')
+    ->load('not_live')
+    ->delete();
+}

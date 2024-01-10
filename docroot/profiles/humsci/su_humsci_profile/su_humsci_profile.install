@@ -6,6 +6,8 @@
  */
 
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\node\NodeInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\UserInterface;
 use Drupal\key\Entity\Key;
@@ -339,4 +341,202 @@ function su_humsci_profile_update_9605() {
     ->getStorage('config_split')
     ->load('not_live')
     ->delete();
+}
+
+/**
+ * Enable new modules and adjust path auto pattern.
+ */
+function su_humsci_profile_update_9606() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
+
+  \Drupal::service('module_installer')->install(['menu_link', 'cshs', 'token_or']);
+  $config_factory->getEditable('menu_link_weight.settings')
+    ->set('menu_parent_form_selector', 'cshs')
+    ->save();
+
+  $patterns = $entity_type_manager->getStorage('pathauto_pattern')
+    ->loadMultiple();
+  /** @var \Drupal\pathauto\PathautoPatternInterface $pattern_entity */
+  foreach ($patterns as $pattern_entity) {
+    $pattern = $pattern_entity->getPattern();
+    if (str_contains($pattern, '[node:menu-link:parent:url:relative]')) {
+      $pattern = str_replace('[node:menu-link:parent:url:relative]', '[node:menu-link:parent:url:relative|node:menu-link:parents:join-path]', $pattern);
+      $pattern_entity->setPattern($pattern)->save();
+    }
+  }
+}
+
+/**
+ * Set up new menu link field on content types.
+ */
+function su_humsci_profile_update_9607() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
+
+  $entity_type_manager->getStorage('field_storage_config')
+    ->create([
+      'uuid' => 'e5cabaa4-0643-4f05-bbcd-6963bc3e95a9',
+      'field_name' => 'field_menulink',
+      'type' => 'menu_link',
+      'entity_type' => 'node',
+      'cardinality' => 1,
+    ])->save();
+  $field_config_storage = $entity_type_manager->getStorage('field_config');
+  $bundles = [];
+  /** @var \Drupal\node\Entity\NodeType $node_type */
+  foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
+    if ($node_type->getThirdPartySetting('menu_ui', 'available_menus')) {
+      $bundles[] = $node_type->id();
+      $node_type->setThirdPartySetting('menu_ui', 'available_menus', []);
+      $node_type->setThirdPartySetting('menu_ui', 'parent', '');
+      $node_type->save();
+    }
+  }
+  foreach ($bundles as $bundle) {
+    $field_config_storage->create([
+      'entity_type' => 'node',
+      'field_name' => 'field_menulink',
+      'bundle' => $bundle,
+      'label' => 'Menu Link',
+      'settings' => [
+        'available_menus' => ['main' => 'main'],
+        'default_menu_parent' => 'main:',
+        'default_expanded' => TRUE,
+      ],
+    ])->save();
+
+    $entity_type_manager->getStorage('entity_form_display')
+      ->load("node.$bundle.default")
+      ->setComponent('field_menulink')
+      ->save();
+
+    $display_names = $config_factory->listAll("core.entity_view_display.node.$bundle.");
+    $displays = $entity_type_manager->getStorage('entity_view_display')
+      ->loadMultiple($display_names);
+    foreach ($displays as $display) {
+      $display->removeComponent('field_menulink')->save();
+    }
+  }
+}
+
+/**
+ * Update menu links on nodes for the updated version of menu_link_weight.
+ */
+function su_humsci_profile_update_9608() {
+  // Instantiate the path alias path processor because it doesn't get added in
+  // this update hook.
+  \Drupal::service('path_processor_manager')
+    ->addOutbound(\Drupal::service('path_alias.path_processor'), 300);
+
+  /** @var \Drupal\Core\Menu\MenuLinkTree $menu_link_tree */
+  $menu_link_tree = \Drupal::service('menu.link_tree');
+  $parameters = new MenuTreeParameters();
+
+  $menu = $menu_link_tree->load('main', $parameters);
+  _su_humsci_profile_fix_menu($menu);
+}
+
+/**
+ * Update menu links on nodes for the updated version of menu_link_weight.
+ *
+ * @param array $menu_items
+ *   Menu items.
+ * @param string|null $parent
+ *   Parent menu id.
+ */
+function _su_humsci_profile_fix_menu(array $menu_items = [], string $parent = NULL): void {
+  $node_storage = \Drupal::entityTypeManager()
+    ->getStorage('node');
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $database = \Drupal::database();
+
+  foreach ($menu_items as $id => $menu_item) {
+    /** @var \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent $link */
+    $link = $menu_item->link;
+    $url = $link->getUrlObject();
+
+    try {
+      if (
+        $url->isRouted() &&
+        $url->getRouteName() == 'entity.node.canonical'
+      ) {
+        $node_id = $link->getUrlObject()->getRouteParameters()['node'] ?? NULL;
+        /** @var \Drupal\node\NodeInterface $node */
+        $node = $node_storage->load($node_id);
+        if (!$node->get('field_menulink')->isEmpty()) {
+          throw new \Exception('Menu link already exists on node ' . $node->label());
+        }
+
+        $menu_field_data = [
+          'menu_name' => $link->getMenuName(),
+          'title' => $link->getTitle(),
+          'description' => $link->getDescription(),
+          'parent' => $parent,
+          'weight' => $link->getweight(),
+          'expanded' => $link->isExpanded(),
+        ];
+        $changed_time = $node->getChangedTime();
+        $node->set('field_menulink', $menu_field_data)->save();
+        $new_parent = 'menu_link_field:node_field_menulink_' . $node->uuid() . '_und';
+
+        _su_humsci_profile_reset_node_changed_time($node, $changed_time);
+
+        if ($menu_item->subtree) {
+          _su_humsci_profile_fix_menu($menu_item->subtree, $new_parent);
+        }
+
+        if (!$link->isEnabled()) {
+          $database->update('menu_tree')
+            ->fields(['enabled' => 0])
+            ->condition('id', $new_parent)
+            ->execute();
+        }
+
+        $link->deleteLink();
+        continue;
+      }
+    }
+    catch (\Throwable $e) {
+      \Drupal::logger('su_humsci_profile')
+        ->error('Unable to update link %title. Error: %error', [
+          '%title' => $link->getTitle(),
+          '%error' => $e->getMessage(),
+        ]);
+    }
+
+    if ($parent) {
+      $link->updateLink(['parent' => $parent], TRUE);
+
+      // Saving the link above, updates the entity, but it doesn't update the
+      // menu tree. So we need to update the menu tree manually.
+      $menu_link_manager->updateDefinition($link->getPluginId(), $link->getPluginDefinition(), FALSE);
+    }
+
+    if ($menu_item->subtree) {
+      _su_humsci_profile_fix_menu($menu_item->subtree, $id);
+    }
+  }
+}
+
+/**
+ * Update the node tables to reset the changed time.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   Node entity.
+ * @param int $changed
+ *   Changed time.
+ */
+function _su_humsci_profile_reset_node_changed_time(NodeInterface $node, int $changed) {
+  $database = \Drupal::database();
+  // Reset the changed time to the value before this process.
+  $database->update('node_field_data')
+    ->fields(['changed' => $changed])
+    ->condition('nid', $node->id())
+    ->execute();
+  $database->update('node_field_revision')
+    ->fields(['changed' => $changed])
+    ->condition('vid', $node->getRevisionId())
+    ->execute();
 }

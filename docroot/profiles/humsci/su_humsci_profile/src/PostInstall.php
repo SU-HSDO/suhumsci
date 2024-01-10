@@ -26,8 +26,7 @@ class PostInstall implements PostInstallInterface {
    * @param \Drupal\Core\State\StateInterface $state
    *   State service.
    */
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager,protected RouteBuilderInterface $routeBuilder,protected ConfigFactoryInterface $configFactory, protected StateInterface $state) {
-  }
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected RouteBuilderInterface $routeBuilder, protected ConfigFactoryInterface $configFactory, protected StateInterface $state) {}
 
   /**
    * {@inheritDoc}

@@ -344,7 +344,7 @@ function su_humsci_profile_update_9605() {
 }
 
 /**
- * Enable new menu link module and set up the field.
+ * Enable new modules and adjust path auto pattern.
  */
 function su_humsci_profile_update_9606() {
   $entity_type_manager = \Drupal::entityTypeManager();
@@ -365,6 +365,15 @@ function su_humsci_profile_update_9606() {
       $pattern_entity->setPattern($pattern)->save();
     }
   }
+}
+
+/**
+ * Set up new menu link field on content types.
+ */
+function su_humsci_profile_update_9607() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
+
   $entity_type_manager->getStorage('field_storage_config')
     ->create([
       'uuid' => 'e5cabaa4-0643-4f05-bbcd-6963bc3e95a9',
@@ -411,21 +420,12 @@ function su_humsci_profile_update_9606() {
       $display->removeComponent('field_menulink')->save();
     }
   }
-  $menu_items = $entity_type_manager->getStorage('menu_link_content')
-    ->loadByProperties(['menu_name' => 'main']);
-
-  // Re-save all menu items to update their link uris.
-  // @see \Drupal\su_humsci_profile_helper\EventSubscriber\EntityEventSubscriber::preSaveMenuLinkContent()
-  foreach ($menu_items as $menu_item) {
-    $menu_item->save();
-  }
-  drupal_flush_all_caches();
 }
 
 /**
  * Update menu links on nodes for the updated version of menu_link_weight.
  */
-function su_humsci_profile_update_9607() {
+function su_humsci_profile_update_9608() {
   // Instantiate the path alias path processor because it doesn't get added in
   // this update hook.
   \Drupal::service('path_processor_manager')

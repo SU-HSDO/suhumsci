@@ -1,11 +1,14 @@
-uuid: f6a93472-9c36-4caa-b752-6e99e19c071e
+uuid: 7a589bb2-a655-43ce-9cda-0f19ba2d8c37
 langcode: en
 status: false
 dependencies: {  }
 id: prod
 label: Prod
-description: 'Acquia Production Environment'
+description: ''
 weight: 0
+stackable: false
+no_patching: true
+storage: folder
 folder: ../config/envs/prod
 module:
   acquia_connector: 0
@@ -14,22 +17,19 @@ module:
   google_analytics: 0
   hs_config_readonly: 0
   purge: 0
-  purge_drush: 0
-  purge_processor_cron: 0
   purge_processor_lateruntime: 0
   purge_queuer_coretags: 0
-  purge_ui: 0
 theme: {  }
-blacklist:
-  - acquia_connector.settings
-  - google_analytics.settings
-  - purge.logger_channels
-  - purge.plugins
-  - purge_queuer_coretags.settings
-  - ultimate_cron.job.google_analytics_cron
-graylist:
-  - field_ui.settings
-  - hs_config_prefix.settings
-  - system.performance
-graylist_dependents: true
-graylist_skip_equal: true
+complete_list: {  }
+partial_list:
+  - config_ignore.settings
+  - user.role.administrator
+  - user.role.anonymous
+  - user.role.authenticated
+  - user.role.author
+  - user.role.contributor
+  - user.role.intranet_viewer
+  - user.role.site_manager
+  - user.role.stanford_faculty
+  - user.role.stanford_staff
+  - user.role.stanford_student

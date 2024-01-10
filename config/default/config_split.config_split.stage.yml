@@ -1,35 +1,24 @@
-uuid: 2d143306-d314-41c6-8187-de88a9aa1551
+uuid: bd38a292-60ef-4cee-bceb-b8d302c2f792
 langcode: en
 status: false
 dependencies: {  }
 id: stage
 label: Stage
-description: 'Acquia Staging Environment'
+description: ''
 weight: 0
+stackable: false
+no_patching: true
+storage: folder
 folder: ../config/envs/stage
 module:
   acquia_connector: 0
   acquia_purge: 0
-  dblog: 0
-  nobots: 0
   purge: 0
-  purge_drush: 0
-  purge_processor_cron: 0
   purge_processor_lateruntime: 0
   purge_queuer_coretags: 0
   purge_ui: 0
   shield: 0
-  stage_file_proxy: 0
 theme: {  }
-blacklist:
-  - acquia_connector.settings
-  - purge.logger_channels
-  - purge.plugins
-  - purge_queuer_coretags.settings
-  - key.key.hs_shield_key
-  - shield.settings
-graylist:
-  - field_ui.settings
-  - system.performance
-graylist_dependents: true
-graylist_skip_equal: true
+complete_list: {  }
+partial_list:
+  - config_ignore.settings

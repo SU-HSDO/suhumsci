@@ -388,10 +388,8 @@ function su_humsci_profile_update_9607() {
   foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
     if ($node_type->getThirdPartySetting('menu_ui', 'available_menus')) {
       $bundles[] = $node_type->id();
-
-      $settings = $node_type->get('third_party_settings');
-      unset($settings['menu_ui']);
-      $node_type->set('third_party_settings', $settings);
+      $node_type->setThirdPartySetting('menu_ui', 'available_menus', []);
+      $node_type->setThirdPartySetting('menu_ui', 'parent', '');
       $node_type->save();
     }
   }

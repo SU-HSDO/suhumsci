@@ -350,11 +350,21 @@ function su_humsci_profile_update_9606() {
   $entity_type_manager = \Drupal::entityTypeManager();
   $config_factory = \Drupal::configFactory();
 
-  \Drupal::service('module_installer')->install(['menu_link', 'cshs']);
+  \Drupal::service('module_installer')->install(['menu_link', 'cshs', 'token_or']);
   $config_factory->getEditable('menu_link_weight.settings')
     ->set('menu_parent_form_selector', 'cshs')
     ->save();
 
+  $patterns = $entity_type_manager->getStorage('pathauto_pattern')
+    ->loadMultiple();
+  /** @var \Drupal\pathauto\PathautoPatternInterface $pattern_entity */
+  foreach ($patterns as $pattern_entity) {
+    $pattern = $pattern_entity->getPattern();
+    if (str_contains($pattern, '[node:menu-link:parent:url:relative]')) {
+      $pattern = str_replace('[node:menu-link:parent:url:relative]', '[node:menu-link:parent:url:relative|node:menu-link:parents:join-path]', $pattern);
+      $pattern_entity->setPattern($pattern)->save();
+    }
+  }
   $entity_type_manager->getStorage('field_storage_config')
     ->create([
       'uuid' => 'e5cabaa4-0643-4f05-bbcd-6963bc3e95a9',
@@ -369,6 +379,11 @@ function su_humsci_profile_update_9606() {
   foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
     if ($node_type->getThirdPartySetting('menu_ui', 'available_menus')) {
       $bundles[] = $node_type->id();
+
+      $settings = $node_type->get('third_party_settings');
+      unset($settings['menu_ui']);
+      $node_type->set('third_party_settings', $settings);
+      $node_type->save();
     }
   }
   foreach ($bundles as $bundle) {
@@ -377,6 +392,11 @@ function su_humsci_profile_update_9606() {
       'field_name' => 'field_menulink',
       'bundle' => $bundle,
       'label' => 'Menu Link',
+      'settings' => [
+        'available_menus' => ['main' => 'main'],
+        'default_menu_parent' => 'main:',
+        'default_expanded' => TRUE,
+      ],
     ])->save();
 
     $entity_type_manager->getStorage('entity_form_display')

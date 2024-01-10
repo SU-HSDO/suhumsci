@@ -38,16 +38,16 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
-  // Change the add button label for field_hs_carousel_slides.
   if (
     isset($field_widget_form['widget']['add_more']['add_more_button_hs_hero_image'], $field_widget_form['widget']['#field_name']) &&
-    $field_widget_form['widget']['#field_name'] === 'field_hs_carousel_slides'
+    $field_widget_form['widget']['#field_name'] == 'field_hs_carousel_slides'
   ) {
     $new_label = 'Banner image with text box';
+    // Change the add button label for field_hs_carousel_slides.
     $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
       '@type' => $new_label,
     ]);
-
+    // Change the paragraph type label for hs_hero_image embedded in hs_carousel.
     foreach ($field_widget_form['widget'] as $key => $element) {
       // Only alter markup in field widget elements.
       if (!is_int($key)) {

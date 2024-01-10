@@ -7,7 +7,6 @@ use Faker\Factory;
  * Class MegaMenuCest.
  *
  * @group install
- * @group foobar
  */
 class MegaMenuCest {
 

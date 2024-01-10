@@ -365,3 +365,18 @@ function su_humsci_profile_post_update_key_dependency_clean() {
     }
   }
 }
+
+/**
+ * Update config split entities.
+ */
+function su_humsci_profile_post_update_update_config_splits() {
+  /** @var \Drupal\Core\Config\FileStorage $config_storage */
+  $config_storage = \Drupal::service('config.storage.sync');
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('config_split.config_split.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    if ($new_data = $config_storage->read($config_name)) {
+      $config->setData($new_data)->save(TRUE);
+    }
+  }
+}

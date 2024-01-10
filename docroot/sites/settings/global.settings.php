@@ -46,15 +46,20 @@ if (!getenv('REAL_AES_ENCRYPTION')) {
 $settings['config_readonly_whitelist_patterns'] = ['*'];
 
 // Don't lock config when using drush.
-if (PHP_SAPI !== 'cli' && EnvironmentDetector::isProdEnv()) {
-  $settings['config_readonly'] = TRUE;
+if (EnvironmentDetector::isProdEnv()) {
+  if (PHP_SAPI !== 'cli') {
+    $settings['config_readonly'] = TRUE;
+  }
+
+  $config['field_ui.settings']['field_prefix'] = 'custm';
+  $config['hs_config_prefix.settings']['prefix'] = 'custm_';
 }
 
 // Enable nobots on any non-prod site.
 if (!EnvironmentDetector::isProdEnv()) {
   $settings['nobots'] = TRUE;
-  $config['google_analytics.settings']['account'] = '';
 
+  $config['google_analytics.settings']['account'] = '';
   $config['domain_301_redirect.settings']['enabled'] = FALSE;
   $config['mail_safety.settings']['enabled'] = TRUE;
   $config['mail_safety.settings']['send_mail_to_dashboard'] = TRUE;

@@ -211,8 +211,10 @@
     }
   }
 
-  .hc-pairing-ocean .hb-well & {
-    @include hb-pairing-color('color', 'primary');
+  @include hb-colorful {
+    .hc-pairing-ocean .hb-well & {
+      @include hb-pairing-color('color', 'primary');
+    }
   }
 }
 
@@ -237,14 +239,16 @@
     transition: hb-transition(transform);
     will-change: contents;
 
-    .hc-pairing-ocean & {
-      @include hb-icon-link-arrow('primary');
-      background-size: 85%;
-    }
+    @include hb-colorful {
+      .hc-pairing-ocean & {
+        @include hb-icon-link-arrow('primary');
+        background-size: 85%;
+      }
 
-    .hc-pairing-ocean .hb-well & {
-      @include hb-icon-link-arrow('secondary-darken-12');
-      background-size: 85%;
+      .hc-pairing-ocean .hb-well & {
+        @include hb-icon-link-arrow('secondary-darken-12');
+        background-size: 85%;
+      }
     }
   }
 
@@ -260,9 +264,11 @@
       background-size: 85%;
       transform: translateX(0.25rem);
 
-      .hc-pairing-ocean & {
-        @include hb-icon-link-arrow('primary-dark');
-        background-size: 85%;
+      @include hb-colorful {
+        .hc-pairing-ocean & {
+          @include hb-icon-link-arrow('primary-dark');
+          background-size: 85%;
+        }
       }
     }
   }
@@ -334,11 +340,13 @@
     }
   }
 
-  .hc-pairing-ocean & {
-    @include hb-pairing-color('color', 'secondary-darken-12');
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      @include hb-pairing-color('color', 'secondary-darken-12');
 
-    &:hover {
-      @include hb-pairing-color('color', 'primary-dark');
+      &:hover {
+        @include hb-pairing-color('color', 'primary-dark');
+      }
     }
   }
 }

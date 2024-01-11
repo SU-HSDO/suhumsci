@@ -277,9 +277,14 @@
   text-transform: inherit;
   @include hb-pairing-color('color', 'secondary');
 
-  .hb-well &,
-  .hc-pairing-ocean & {
+  .hb-well {
     @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
+  }
+
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      @include hb-pairing-color('color', 'secondary-darken-12');
+    }
   }
 }
 

@@ -5,9 +5,11 @@ dependencies:
   config:
     - field.field.node.hs_basic_page.field_hs_page_components
     - field.field.node.hs_basic_page.field_hs_page_hero
+    - field.field.node.hs_basic_page.field_menulink
     - field.field.node.hs_basic_page.layout_builder__layout
     - node.type.hs_basic_page
   module:
+    - menu_link
     - paragraphs_browser
     - path
 _core:
@@ -70,6 +72,12 @@ content:
       modal_height: auto
       show_group_label: 0
       show_group_filter: 0
+    third_party_settings: {  }
+  field_menulink:
+    type: menu_link_default
+    weight: 26
+    region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path

@@ -157,3 +157,5 @@ $settings['file_public_path'] = 'sites/' . EnvironmentDetector::getSiteName($sit
 $settings['trusted_host_patterns'] = [
   '^.+$',
 ];
+
+$config['config_split.config_split.default_local']['status'] = TRUE;

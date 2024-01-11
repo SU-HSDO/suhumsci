@@ -11,25 +11,6 @@ use Drupal\Core\Serialization\Yaml;
 class HsHooksCommands extends BltTasks {
 
   /**
-   * @hook pre-command drupal:sync:default:site
-   */
-  public function preSiteCopy() {
-    $root = $this->getConfigValue('repo.root');
-    $this->taskExec("cp $root/config/envs/local/config_ignore.settings.yml $root/config/local-config_ignore.settings.yml")
-      ->taskExec("cp $root/config/default/config_ignore.settings.yml $root/config/envs/local/config_ignore.settings.yml")
-      ->run();
-  }
-
-  /**
-   * @hook post-command drupal:sync:default:site
-   */
-  public function postSiteCopy() {
-    $root = $this->getConfigValue('repo.root');
-    $this->taskExec("mv $root/config/local-config_ignore.settings.yml $root/config/envs/local/config_ignore.settings.yml")
-      ->run();
-  }
-
-  /**
    * Pre site update command.
    *
    * When deploying code to Acquia, before updating every site with configs,

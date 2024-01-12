@@ -222,7 +222,6 @@ class HsCommands extends BltTasks {
 
     $task = $this->taskDrush()
       ->alias('')
-      ->drush('cache-clear drush')
       ->drush('sql-sync')
       ->arg($remote_alias)
       ->arg($local_alias)
@@ -263,9 +262,8 @@ class HsCommands extends BltTasks {
     $this->switchSiteContext($site);
     $this->taskDrush()
       ->alias("$site.prod")
-      ->drush('cset')
-      ->arg('config_split.config_split.not_live')
-      ->arg('status')
+      ->drush('sset')
+      ->arg('nobots')
       ->arg($options['not-live'] ? 1 : 0)
       ->option('yes')
       ->drush('cset')
@@ -278,8 +276,6 @@ class HsCommands extends BltTasks {
       ->arg('enabled')
       ->arg($options['not-live'] ? 0 : 1)
       ->option('yes')
-      ->drush('pmu')
-      ->arg('nobots')
       ->drush('state:set')
       ->arg('xmlsitemap_base_url')
       ->arg($new_domain)

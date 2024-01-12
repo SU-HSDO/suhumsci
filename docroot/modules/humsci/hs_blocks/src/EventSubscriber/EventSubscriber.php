@@ -87,9 +87,12 @@ class EventSubscriber implements EventSubscriberInterface {
       $build['#base_plugin_id'] == 'field_block' &&
       isset($build['content'][0]['#title'])
     ) {
-      $label = $event->getComponent()->get('configuration')['label'];
-      $build['content'][0]['#title'] = $label;
-      $event->setBuild($build);
+      $config = $event->getComponent()->get('configuration');
+      if (isset($config['label'])) {
+        $label = $event->getComponent()->get('configuration')['label'];
+        $build['content'][0]['#title'] = $label;
+        $event->setBuild($build);
+      }
     }
   }
 

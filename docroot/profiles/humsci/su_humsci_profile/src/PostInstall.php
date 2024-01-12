@@ -5,6 +5,7 @@ namespace Drupal\su_humsci_profile;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuilderInterface;
+use Drupal\Core\State\StateInterface;
 
 /**
  * Class PostInstall service.
@@ -14,44 +15,25 @@ use Drupal\Core\Routing\RouteBuilderInterface;
 class PostInstall implements PostInstallInterface {
 
   /**
-   * Entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Route builder service.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
-   * Config Factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * PostInstall constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity type manager service.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routeBuilder
    *   Route builder service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   Config factory service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   State service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteBuilderInterface $route_builder, ConfigFactoryInterface $config_factory) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->routeBuilder = $route_builder;
-    $this->configFactory = $config_factory;
-  }
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected RouteBuilderInterface $routeBuilder, protected ConfigFactoryInterface $configFactory, protected StateInterface $state) {}
 
   /**
    * {@inheritDoc}
    */
   public function runTasks() {
+    $this->state->set('nobots', TRUE);
+
     $user = $this->entityTypeManager->getStorage('user')->load(1);
     $user->addRole('administrator');
     $user->setUsername('sws-developers');

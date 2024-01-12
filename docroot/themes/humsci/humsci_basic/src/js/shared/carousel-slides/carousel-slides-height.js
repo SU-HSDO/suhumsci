@@ -3,8 +3,6 @@
 // and the Spotlight Slider.
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
 // Find slick arrow from hsCarousel.
-const hsCarousel = document.querySelectorAll('.paragraph--type--hs-carousel');
-const slickArrowWrapper = hsCarousel.querySelector('.slick__arrow');
 const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
@@ -48,7 +46,8 @@ const restrictHeight = () => {
     textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
 
     // Give sickArrowWrapper a top that changes according to the height when resizing the window.
-    if (slickArrowWrapper) {
+    const slickArrowWrapper = slide.querySelector('.slick__arrow');
+    if (slide.classList.contains('paragraph--type--hs-carousel') && slickArrowWrapper) {
       setMinHeight(slickArrowWrapper, maxBoxHeight);
       slickArrowWrapper.style.bottom = 0;
     }

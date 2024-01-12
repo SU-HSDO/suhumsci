@@ -20,8 +20,7 @@ function hs_paragraph_types_deploy_hs_collection_uh_field(&$sandbox) {
   }
   $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
 
-  /** @var \Drupal\paragraphs\Entity */
-  foreach($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     $paragraph->set('field_hs_collection_uh', TRUE);
     $paragraph->save();
   }

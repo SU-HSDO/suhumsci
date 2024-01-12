@@ -45,7 +45,7 @@ class MegaMenuCest {
     if (!$this->megaMenuEnabled) {
       $I->checkOption('Enable New Mega Menu');
       $I->click('Save');
-      drupal_flush_all_caches();
+      $I->runDrush('cache:rebuild');
     }
 
     $topLevelTitle = $this->faker->words(3, TRUE);
@@ -57,10 +57,7 @@ class MegaMenuCest {
     ]);
 
     $I->amOnPage($top_level->toUrl('edit-form')->toString());
-    $I->click('.menu-link-form summary');
-    // Force the details/summary markup to open
-    $I->executeJS("document.querySelector('.menu-link-form').setAttribute('open', 'true')", []);
-    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu\"]").style.display = "block";', []);
+
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $topLevelTitle);
     $I->scrollTo(['css' => '.form-submit']);
@@ -71,18 +68,12 @@ class MegaMenuCest {
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($second_level->toUrl('edit-form')->toString());
-    $I->click('.menu-link-form summary');
-    $I->executeJS("document.querySelector('.menu-link-form').setAttribute('open', 'true')", []);
-    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu\"]").style.display = "block";', []);
+
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $secondLevelTitle);
-    $I->scrollTo(['css' => '.form-item--menu-menu-parent'], 0, -100);
-    $I->wait(2);
-    $I->executeJS('document.querySelector("[data-drupal-selector=\"edit-menu-menu-parent\"]").style.display = "block";');
-    $I->selectOption('Parent link', "-- {$topLevelTitle}");
-    $I->waitForText('Show row weights');
-    $I->click('Show row weights');
-    $I->wait(2);
+
+    $I->selectOption('#edit-field-menulink-0-menu-parent--level-1', $topLevelTitle);
+    $I->waitForAjaxToFinish();
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
@@ -93,7 +84,6 @@ class MegaMenuCest {
     // Desktop Testing
     $I->amOnPage('/user/logout');
     $I->amOnPage('/');
-    $I->waitForText($topLevelTitle);
     $I->see($topLevelTitle, '.js-megamenu__toggle');
 
     // Open first level nav and verify second level title exists
@@ -136,6 +126,6 @@ class MegaMenuCest {
 
     $I->uncheckOption('Enable New Mega Menu');
     $I->click('Save');
-    drupal_flush_all_caches();
+    $I->runDrush('cache:rebuild');
   }
 }

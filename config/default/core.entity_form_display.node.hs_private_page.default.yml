@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.node.hs_private_page.field_hs_priv_page_components
+    - field.field.node.hs_private_page.field_menulink
     - field.field.node.hs_private_page.field_priv_wysiwyg_files
     - node.type.hs_private_page
   module:
     - file
     - insert
+    - menu_link
     - paragraphs_browser
     - path
 id: node.hs_private_page.default
@@ -45,6 +47,12 @@ content:
       modal_height: auto
       show_group_label: 0
       show_group_filter: 0
+    third_party_settings: {  }
+  field_menulink:
+    type: menu_link_default
+    weight: 27
+    region: content
+    settings: {  }
     third_party_settings: {  }
   field_priv_wysiwyg_files:
     type: file_generic

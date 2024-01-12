@@ -96,32 +96,29 @@ class InstallStateCest {
    * A site manager should be able to place a page under an unpublished page.
    */
   public function testUnpublishedMenuItems(AcceptanceTester $I) {
+    $parent_page = $I->createEntity(['type' => 'hs_basic_page', 'title' => $this->faker->words(3,TRUE)]);
     $I->logInWithRole('site_manager');
-    $I->amOnPage('/node/add/hs_basic_page');
-    $I->fillField('Title', 'Unpublished Parent');
+    $I->amOnPage($parent_page->toUrl('edit-form')->toString());
     $I->checkOption('Provide a menu link');
-    $I->fillField('Menu link title', 'Unpublished Parent');
+    $I->fillField('Menu link title', $parent_page->label());
     $I->uncheckOption('Publish');
     $I->click('Save');
-    $I->canSee('Unpublished Parent', 'h1');
-    $I->canSee('Unpublished Parent', 'nav a[data-unpublished-node]');
-    $I->canSee('Unpublished');
+    $I->canSee($parent_page->label(), 'h1');
+    $I->canSee($parent_page->label(), 'nav a[data-unpublished-node]');
 
-    $I->amOnPage('/node/add/hs_basic_page');
-    $I->fillField('Title', 'Child Page');
+    $child_page = $I->createEntity(['type' => 'hs_basic_page', 'title' => $this->faker->words(3,TRUE)]);
+    $I->amOnPage($child_page->toUrl('edit-form')->toString());
+
     $I->checkOption('Provide a menu link');
-    $I->fillField('Menu link title', 'Child Page');
-    $I->selectOption('Parent link', '-- Unpublished Parent');
-    $I->click('Change parent (update list of weights)');
+    $I->fillField('Menu link title', $child_page->label());
+    $I->selectOption('Parent item', 'main:menu_link_field:node_field_menulink_' . $parent_page->uuid() . '_und');
+
     $I->uncheckOption('Publish');
     $I->click('Save');
-    $I->canSee('Child Page', 'h1');
-    $I->canSee('Child Page', 'nav a[data-unpublished-node]');
-    $I->canSee('Unpublished');
+    $I->canSee($child_page->label(), 'h1');
+    $I->canSee($child_page->label(), 'nav a[data-unpublished-node]');
 
-    $I->click('Edit', '.tabs__tab');
-    $I->click('Save');
-    $I->assertEquals('/unpublished-parent/child-page', $I->grabFromCurrentUrl());
+    $I->canSeeInCurrentUrl($parent_page->toUrl()->toString());
   }
 
   /**

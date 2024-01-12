@@ -192,7 +192,6 @@ class HsCircleCiCommands extends BltTasks {
 
     $tasks[] = $this->taskDrush()
       ->alias('')
-      ->drush('cache-clear')->arg('drush')
       ->drush('sql-sync')
       ->arg("@$site.prod")
       ->arg('@self')

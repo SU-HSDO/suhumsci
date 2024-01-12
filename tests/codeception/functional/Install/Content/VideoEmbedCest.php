@@ -51,10 +51,11 @@ class VideoEmbedCest {
     $I->click('Save and select', '.ui-dialog-buttonpane');
     $I->waitForText('Insert selected');
     $I->click('Insert selected', '.ui-dialog-buttonpane');
-    $I->wait(2);
+    $I->waitForElement('figure.drupal-media iframe');
 
     // Enable caption
-    $I->click('//button[@data-cke-tooltip-text="Toggle caption on"]');
+    $I->clickWithLeftButton('figure.drupal-media');
+    $I->clickWithLeftButton('[data-cke-tooltip-text="Toggle caption on"]');
     $I->fillField('figcaption.ck-editor__nested-editable', 'sore was I ere I saw eros');
     // Save node
     $I->click('Save');
@@ -65,4 +66,5 @@ class VideoEmbedCest {
     $I->scrollTo('figcaption');
     $I->see("sore was I ere I saw eros");
   }
+
 }

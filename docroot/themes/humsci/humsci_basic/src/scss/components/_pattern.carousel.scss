@@ -504,17 +504,57 @@
       }
     }
 
+    .slick-list {
+      @include hb-colorful {
+        height: 100% !important;
+      }
+      @include hb-traditional {
+        height: 100% !important;
+      }
+    }
+
     &__arrow {
-      position: absolute;
-      right: 0;
       margin: 0;
       padding: 0;
       font-size: 0;
 
-      @include grid-media-min('md') {
-        position: relative;
-        right: auto;
+      @include hb-colorful {
+        position: absolute;
+        right: 0;
+        bottom: 0%;
+
+        @include grid-media-min('md') {
+          right: 40%;
+        }
+
+        @include grid-media-min('xl') {
+          right: 50%;
+        }
       }
+
+      @include hb-traditional {
+        position: absolute;
+        right: 0%;
+        bottom: 0;
+
+        @include grid-media-min('md') {
+          right: 46%;
+        }
+
+        // the sidebar(s) appear at this breakpoint
+        @include grid-media-min('lg') {
+          right: 55%;
+        }
+
+        @include grid-media-min('xl') {
+          right: 50%;
+        }
+
+        @include grid-media-min('2xl') {
+          right: 100%;
+        }
+      }
+      
 
       .slick-prev,
       .slick-next {
@@ -565,11 +605,12 @@
           bottom: hb-calculate-rems(30px);
 
           @include grid-media-min('md') {
-            bottom: hb-calculate-rems(60px);
+            margin: hb-calculate-rems(18px) 0;
+            bottom: hb-calculate-rems(53px);
           }
 
           @include grid-media-min('xl') {
-            bottom: hb-calculate-rems(57px);
+            bottom: hb-calculate-rems(77px);
           }
 
           .hs-full-width & {
@@ -611,11 +652,10 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(12.5px);
           right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
 
           @include grid-media-min('md') {
-            right: inherit;
+            right: auto;
             left: calc(53% - #{hb-calculate-rems(85px)}); // move it past the slick-next arrow
           }
 
@@ -632,7 +672,6 @@
 
           @include grid-media-min('xl') {
             left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
-            margin-bottom: hb-calculate-rems(40px);
           }
 
           @include grid-media-min('2xl') {
@@ -661,11 +700,10 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(12.5px);
-          right: hb-calculate-rems(50px);
+          right: hb-calculate-rems(40px);
 
           @include grid-media-min('md') {
-            right: inherit;
+            right: auto;
             left: calc(53% - #{hb-calculate-rems(40px)});
           }
 
@@ -682,7 +720,6 @@
 
           @include grid-media-min('xl') {
             left: calc(50% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
-            margin-bottom: hb-calculate-rems(40px);
           }
 
           @include grid-media-min('2xl') {

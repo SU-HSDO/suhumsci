@@ -49,7 +49,6 @@ const restrictHeight = () => {
     const slickArrowWrapper = slide.querySelector('.slick__arrow');
     if (slide.classList.contains('paragraph--type--hs-carousel') && slickArrowWrapper) {
       setMinHeight(slickArrowWrapper, maxBoxHeight);
-      slickArrowWrapper.style.bottom = 0;
     }
 
     // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes

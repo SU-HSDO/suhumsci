@@ -34,7 +34,7 @@ const FilterIsland = ({focus = false}) => {
       const option = optionElements[i];
       const value = option.getAttribute('value')
       const label = option.textContent;
-      options.push({value, label, below: []});
+      options.push({value, label, disabled: option.getAttribute('disabled') === 'disabled'});
     }
     return options;
   }
@@ -72,7 +72,7 @@ const FilterIsland = ({focus = false}) => {
           name={originalSelect.getAttribute('id') + '-preact'}
           options={selectOptions.filter(item => item.value !== 'All')}
           label={label}
-          multiple={originalSelect.getAttribute('multiple')}
+          multiple={originalSelect.getAttribute('multiple') === 'multiple'}
           onChange={onSelectChange}
           defaultValue={getDefaultValue()}
           emptyLabel={selectOptions.find(item => item.value === 'All')?.label}

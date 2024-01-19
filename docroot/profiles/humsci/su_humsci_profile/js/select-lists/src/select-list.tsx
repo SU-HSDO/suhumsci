@@ -35,19 +35,19 @@ const renderSelectedValue = (value: SelectValue<string, boolean>, options: Selec
   return selectedOption ? selectedOption.label : null;
 }
 
-const StyledOption = styled.li<{ selected: boolean, highlighted: boolean }>`
+const StyledOption = styled.li<{ selected: boolean, highlighted: boolean, disabled: boolean }>`
   cursor: pointer;
   overflow: hidden;
   margin: 0 !important;
   padding: 5px 10px !important;
-  background: ${props => props.selected ? "#5d4b3c" : props.highlighted ? "#eaeaea" : ""};
-  color: ${props => props.selected ? "#fff" : props.highlighted ? "#2e2d29" : ""};
+  background: ${props => props.disabled ? "#f1f0ee": props.selected ? "#b6b1a9" : props.highlighted ? "#d9d7d2" : ""};
+  color: ${props => props.disabled? "#b6b1a9":"#000"};
   text-decoration: ${props => props.highlighted ? "underline" : "none"};;
 
   &:hover {
-    background: ${props => props.selected || props.highlighted ? "" : "#eaeaea"};
-    color: ${props => props.selected ? "" : "#2e2d29"};
-    text-decoration: underline;
+    background: ${props => props.disabled ? "#f1f0ee" : (props.selected || props.highlighted ? "" : "#d9d7d2")};
+    color: ${props => props.disabled ? "#b6b1a9" : props.selected ? "" : "#2e2d29"};
+    text-decoration: ${props => !props.disabled && "underline"};
   }
 
   &:before {
@@ -56,7 +56,6 @@ const StyledOption = styled.li<{ selected: boolean, highlighted: boolean }>`
 `
 
 function CustomOption(props: OptionProps) {
-
   const {children, value, rootRef, id, disabled = false} = props;
   const {getRootProps, highlighted, selected} = useOption({
     rootRef: rootRef,
@@ -86,14 +85,20 @@ function CustomOption(props: OptionProps) {
         }
       }
     }
-  }, [rootRef, id, highlighted])
+  }, [rootRef, id])
 
+  if (value === '1111') {
+    console.log('selected', selected);
+    console.log('highlighted', highlighted);
+    console.log('disabled', disabled);
+  }
   return (
     <StyledOption
       {...otherProps}
       id={id}
       selected={selected}
       highlighted={highlighted}
+      disabled={disabled}
     >
       {children}
     </StyledOption>
@@ -228,9 +233,10 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
               </CustomOption>
             }
 
-            {options.map((option) => {
+            {options.map(option => {
+              console.log(option);
               return (
-                <CustomOption key={option.value} value={option.value} rootRef={listboxRef} id={`${name}-${option.value.replace(/\W+/g, '-')}`}>
+                <CustomOption key={option.value} value={option.value} disabled={option.disabled} rootRef={listboxRef} id={`${name}-${option.value.replace(/\W+/g, '-')}`}>
                   {option.label}
                 </CustomOption>
               );

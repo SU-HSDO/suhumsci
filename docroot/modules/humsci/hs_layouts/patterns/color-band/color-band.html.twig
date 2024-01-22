@@ -1,13 +1,21 @@
 {%- set attributes = attributes.addClass('hb-color-band') -%}
 
 {% if variant %}
-  {% set variant_class = "hb-color-band--#{variant}" %} 
+  {% set variant_class = "hb-color-band--#{variant}" %}
   {% set attributes = attributes.addClass(variant_class) %}
 {% endif %}
 
 <div{{ attributes }}>
-  {% if color_band_text %}
-    <h2 class="hb-color-band--text">{{ color_band_text }}</h2>
+  {% if color_band_text or color_band_title or color_band_link %}
+    {% if color_band_title %}
+      <h2 class="hb-color-band--title">{{ color_band_title }}</h2>
+    {% endif %}
+    {% if color_band_text %}
+      <p class="hb-color-band--text">{{ color_band_text }}</p>
+    {% endif %}
+    {% if color_band_link %}
+      {{ color_band_link }}
+    {% endif %}
   {% else %}
     <hr class="hb-color-band--text" />
   {% endif %}

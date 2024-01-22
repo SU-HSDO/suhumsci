@@ -354,16 +354,6 @@
     .slick-dots {
       @include visually-hidden;
 
-      @include grid-media-min('md') {
-        display: inline-block;
-        clip: inherit;
-        height: auto;
-        width: auto;
-        overflow: visible;
-        list-style-type: none;
-        position: absolute;
-      }
-
       @include hb-themes(('airy', 'colorful')) {
         @include grid-media-min('md') {
           bottom: hb-spacing-width();
@@ -374,6 +364,19 @@
           .hb-three-column--two-sidebar & {
             bottom: 0;
           }
+        }
+
+        // slick dots do not display until this breakpoint
+        // there will scenarios where if there are more that four slides and a long 
+        // text link, there will be an overlap between the slick dots and the button.
+        @media (min-width: 890px) {
+          display: inline-block;
+          clip: inherit;
+          height: auto;
+          width: auto;
+          list-style-type: none;
+          position: absolute;
+          overflow: visible;
         }
 
         @include grid-media-min('lg') {
@@ -394,6 +397,14 @@
         // even though the sidebars do not display until the next breakpoint,
         // the classes exist for styling
         @include grid-media-min('md') {
+          display: inline-block;
+          clip: inherit;
+          height: auto;
+          width: auto;
+          list-style-type: none;
+          position: absolute;
+          overflow: visible;
+
           right: calc(50% + #{hb-calculate-rems(77px)}); // move it past the slick-next arrow
           bottom: hb-calculate-rems(53px);
 
@@ -506,24 +517,18 @@
 
     // There was some css being added by a js library that was also causing the issue of the arrows position.
     .slick-list {
-      @include hb-colorful {
-        height: 100% !important;
-      }
-      @include hb-traditional {
-        height: 100% !important;
-      }
+      height: 100% !important;
     }
 
     &__arrow {
       margin: 0;
       padding: 0;
+      position: absolute;
+      right: 0;
+      bottom: 0%;
       font-size: 0;
 
       @include hb-colorful {
-        position: absolute;
-        right: 0;
-        bottom: 0%;
-
         @include grid-media-min('md') {
           right: 40%;
         }
@@ -534,10 +539,6 @@
       }
 
       @include hb-traditional {
-        position: absolute;
-        right: 0%;
-        bottom: 0;
-
         @include grid-media-min('md') {
           right: 46%;
         }
@@ -591,7 +592,7 @@
           }
 
           @include grid-media-min('md') {
-            bottom: hb-spacing-width();
+            bottom: hb-calculate-rems(47px);
 
             /* stylelint-disable max-nesting-depth */
             .hb-three-column--one-sidebar &,
@@ -607,11 +608,11 @@
 
           @include grid-media-min('md') {
             margin: hb-calculate-rems(18px) 0;
-            bottom: hb-calculate-rems(53px);
+            bottom: hb-calculate-rems(54px);
           }
 
           @include grid-media-min('xl') {
-            bottom: hb-calculate-rems(77px);
+            bottom: hb-calculate-rems(78px);
           }
 
           .hs-full-width & {

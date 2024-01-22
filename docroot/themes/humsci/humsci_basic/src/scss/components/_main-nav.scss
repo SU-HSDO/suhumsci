@@ -291,12 +291,21 @@ $item-line-height-lg: 110%;
           @include hb-pairing-color('background-color', 'secondary');
         }
 
+
         .js &:hover {
           background-color: transparent;
 
           &:not(.is-active):not(.hb-main-nav__link--active-trail)::before {
             @include hb-global-color('background-color', 'gray');
           }
+        }
+      }
+    }
+
+    .hb-main-nav__menu-lv1 > .hb-main-nav__item--active-trail > & {
+      @include grid-media-min('lg') {
+        .js &:not(.hb-main-nav__link--active-trail)::before {
+          @include hb-pairing-color('background-color', 'secondary');
         }
       }
     }

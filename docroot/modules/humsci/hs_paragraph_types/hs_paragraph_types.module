@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use \Drupal\Core\Render\Element;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -48,13 +49,12 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
       '@type' => $new_label,
     ]);
     // Change the paragraph type label for hs_hero_image embedded in hs_carousel.
-    foreach ($field_widget_form['widget'] as $key => $element) {
+    foreach (Element::children($field_widget_form['widget']) as $key) {
       // Only alter markup in field widget elements.
       if (!is_int($key)) {
         continue;
       }
-      $element['top']['type']['label']['#markup'] = $new_label;
-      $field_widget_form['widget'][$key] = $element;
+      $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = $new_label;
     }
   }
 }

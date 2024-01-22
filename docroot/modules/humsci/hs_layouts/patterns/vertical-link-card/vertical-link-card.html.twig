@@ -8,7 +8,7 @@
   {% endif %}
 
   {% if title and button %}
-    {% if title_has_heading %}
+    {% if title|render matches '/<h\\d>/' %}
       <a href="{{ button }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
     {% else %}
       <h2 class="hb-vertical-linked-card__title">
@@ -16,7 +16,7 @@
       </h2>
     {% endif %}
   {% elseif title %}
-    {% if title_has_heading %}
+    {% if title|render matches '/<h\\d>/' %}
       {{ title }}
     {% else %}
       <h2 class="hb-vertical-linked-card__title">{{ title }}</h2>

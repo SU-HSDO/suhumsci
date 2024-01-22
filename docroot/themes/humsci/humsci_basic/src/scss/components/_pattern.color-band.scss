@@ -1,6 +1,7 @@
 .hb-color-band {
-  text-align: center;
   position: relative;
+  padding: hb-calculate-rems(20px);
+  text-align: center;
 
   &::before,
   &::after {
@@ -57,13 +58,70 @@
   }
 
   &--light {
+    .hb-color-band--title {
+      @include hb-global-color('color', 'black');
+    }
+
     .hb-color-band--text {
       @include hb-global-color('color', 'black');
     }
+
+    .hb-color-band--link .hs-more-link a,
+    .hb-color-band--link.hs-more-link a,
+    .hb-color-band--link .hs-more-link button,
+    .hb-color-band--link.hs-more-link button {
+      @include hb-global-color('color', 'black');
+
+      &:hover,
+      &:focus {
+        @include hb-global-color('color', 'black');
+
+        &::after {
+          @include hb-icon-link-arrow('black');
+
+          background-size: 85%;
+
+          *[class^="hc-pairing-"] &,
+          *[class^="ht-pairing-"] & {
+            @include hb-icon-link-arrow('black');
+
+            background-size: 85%;
+          }
+        }
+      }
+    }
+
+    .hb-color-band--link .hs-more-link a::after,
+    .hb-color-band--link.hs-more-link a::after,
+    .hb-color-band--link .hs-more-link button::after,
+    .hb-color-band--link.hs-more-link button::after {
+      @include hb-icon-link-arrow('black');
+
+      background-size: 85%;
+
+      *[class^="hc-pairing-"] &,
+      *[class^="ht-pairing-"] & {
+        @include hb-icon-link-arrow('black');
+
+        background-size: 85%;
+      }
+    }
+  }
+
+  &--title {
+    @include hb-global-color('color', 'white');
+
+    margin: 0;
   }
 
   &--text {
     @include hb-global-color('color', 'white');
+
+    margin: 0;
+    padding: hb-calculate-rems(12px);
+    font-size: hb-calculate-rems(24px);
+    font-weight: hb-theme-font-weight(semibold);
+    line-height: 127%;
 
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(12px);
@@ -71,6 +129,51 @@
 
     @include hb-traditional {
       padding: hb-calculate-rems(20px);
+    }
+  }
+
+  &--link .hs-more-link {
+    @include hb-global-color('color', 'white');
+  }
+
+  &--link .hs-more-link a,
+  &--link.hs-more-link a,
+  &--link .hs-more-link button,
+  &--link.hs-more-link button {
+    @include hb-global-color('color', 'white');
+
+    &:hover,
+    &:focus {
+      @include hb-global-color('color', 'white');
+
+      &::after {
+        @include hb-icon-link-arrow('white');
+
+        background-size: 85%;
+
+        *[class^="hc-pairing-"] &,
+        *[class^="ht-pairing-"] & {
+          @include hb-icon-link-arrow('white');
+
+          background-size: 85%;
+        }
+      }
+    }
+  }
+
+  &--link .hs-more-link a::after,
+  &--link.hs-more-link a::after,
+  &--link .hs-more-link button::after,
+  &--link.hs-more-link button::after {
+    @include hb-icon-link-arrow('white');
+
+    background-size: 85%;
+
+    *[class^="hc-pairing-"] &,
+    *[class^="ht-pairing-"] & {
+      @include hb-icon-link-arrow('white');
+
+      background-size: 85%;
     }
   }
 

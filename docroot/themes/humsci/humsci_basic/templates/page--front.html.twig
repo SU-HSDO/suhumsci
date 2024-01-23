@@ -1,4 +1,4 @@
-{% set main_container_tag = lb_enabled ? 'div' : 'main' %}
+{% set main_container_tag = node ? 'div' : 'main' %}
 
 <header id="header" class="su-masthead {{ local_masthead_variant_classname }}">
   <a href="#main-content" class="su-skiplinks ">{{ 'Skip to main content'|t }}</a>
@@ -36,7 +36,7 @@
   </div>
 {% endif %}
 
-<{{ main_container_tag }} class="{{ main_class }}" {% if not lb_enabled %}id="main-content"{% endif %}>
+<{{ main_container_tag }} class="{{ main_class }}" {% if not node %}id="main-content"{% endif %}>
   {{ page.content }}
 </{{ main_container_tag }}>
 

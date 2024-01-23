@@ -91,16 +91,14 @@ function _hs_layouts_unique_main_content_section_validate(&$form, FormStateInter
   foreach ($form['layout_builder']['#section_storage']->getSections() as $section) {
     if ($section->getLayoutSettings()['main_content'] !== 'none') {
       if ($main_content_found) {
-        $form_state->setErrorByName('form', 'Exactly one region should contain the main content id.');
+        $form_state->setErrorByName('form', t('Exactly one region should contain the main content id.'));
         break;
       }
-      else {
-        $main_content_found = TRUE;
-      }
+      $main_content_found = TRUE;
     }
   }
   if (!$main_content_found) {
-    $form_state->setErrorByName('form', 'Exactly one region should contain the main content id.');
+    $form_state->setErrorByName('form', t('Exactly one region should contain the main content id.'));
   }
 
 }

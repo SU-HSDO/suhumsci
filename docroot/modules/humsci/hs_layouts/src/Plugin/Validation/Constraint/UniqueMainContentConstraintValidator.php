@@ -73,8 +73,9 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
     // Layout builder should be enabled and the layout should be overridable for
     // the current node, otherwise return.
     $view_display = $this->displayRepository->getViewDisplay('node', $node->bundle());
-    if (!($view_display->isLayoutBuilderEnabled() && $view_display->isOverridable()))
+    if (!($view_display->isLayoutBuilderEnabled() && $view_display->isOverridable())) {
       return NULL;
+    }
 
     // Get node's section storage.
     $node_context = EntityContext::fromEntity($node);
@@ -83,8 +84,9 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
       'view_mode' => new Context(new ContextDefinition('string'), 'default'),
     ]);
     // Continue only if a temp section storage exists (layout is being editted).
-    if (!($section_storage && $this->tempstoreRepository->has($section_storage)))
+    if (!($section_storage && $this->tempstoreRepository->has($section_storage))) {
       return NULL;
+    }
 
     $temp_storage = $this->tempstoreRepository->get($section_storage);
     $main_content_found = FALSE;

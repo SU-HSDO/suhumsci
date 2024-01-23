@@ -129,15 +129,6 @@ function humsci_basic_preprocess_page(&$vars) {
   $config = \Drupal::config('system.site');
   $vars['site_name'] = $config->get('name');
   $vars['site_slogan'] = $config->get('slogan');
-  
-  if ($route === 'entity.node.canonical') {
-    $node = $vars['node'];
-    // Determine if Layout Builder is enabled for current node. Based on this,
-    // the default main content id will be added/removed.
-    $vars['lb_enabled'] = \Drupal::service('entity_display.repository')
-      ->getViewDisplay('node', $node->bundle())
-      ->isLayoutBuilderEnabled();
-  }
 }
 
 /**

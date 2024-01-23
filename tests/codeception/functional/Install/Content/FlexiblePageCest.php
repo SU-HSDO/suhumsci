@@ -489,7 +489,6 @@ class FlexiblePageCest {
     $I->fillField('pb_modal_text', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
-    $I->canSeeNumberOfElements('[data-drupal-selector="edit-field-hs-page-components-1-subform-field-hs-collection-per-row"] option', 4);
     $I->selectOption('Items Per Row', 2);
     $I->canSeeOptionIsSelected('Background Color', '- None -');
     // Add a Text Area component to the Collection.

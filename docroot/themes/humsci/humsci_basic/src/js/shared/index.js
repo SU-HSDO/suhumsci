@@ -11,7 +11,7 @@ import './accordion/accordion-toggle-all';
 import './vertical-linked-card/vertical-linked-card';
 import './photo-album/colorbox';
 import './editoria11y/editoria11y';
-import './addtocal/addtocal';
+import './vertical-tabs/vertical-tabs';
 
 // PoC for new megamenu.
 import './megamenu/index';

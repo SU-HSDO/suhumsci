@@ -432,6 +432,7 @@ function su_humsci_profile_node_delete(NodeInterface $node) {
     _su_humsci_clear_menu_cache_tags();
   }
 }
+
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
@@ -898,4 +899,17 @@ function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
     'text-align-right',
     'hs-secondary-button',
   ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_form_element(&$variables) {
+  if (
+    $variables['element']['#type'] == 'select' &&
+    !\Drupal::service('router.admin_context')->isAdminRoute()
+  ) {
+    $variables['attributes']['class'][] = 'select-preact';
+    $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
+  }
 }

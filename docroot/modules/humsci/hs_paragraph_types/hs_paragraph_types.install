@@ -76,8 +76,7 @@ function hs_paragraph_types_update_9403() {
  * Creates field configuration found in the sync directory.
  */
 function hs_paragraph_types_update_10000() {
-  $config_directories = Settings::get('config_sync_directory');
-  $file_storage = new FileStorage($config_directories);
+  $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
@@ -86,14 +85,14 @@ function hs_paragraph_types_update_10000() {
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   // If storage does not yet exist, create it.
-  if (empty($field_storage->load("paragraph.field_hs_collection_uh"))) {
-    $field_storage->createFromStorageRecord($file_storage->read("field.storage.paragraph.field_hs_collection_uh"))->save();
+  if (empty($field_storage->load('paragraph.field_hs_collection_uh'))) {
+    $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_hs_collection_uh'))->save();
   }
 
   // Create the field instance.
-  $config = $field_config_storage->load("paragraph.hs_collection.field_hs_collection_uh");
+  $config = $field_config_storage->load('paragraph.hs_collection.field_hs_collection_uh');
   if (empty($config)) {
-    $field_config_storage->create($file_storage->read("field.field.paragraph.hs_collection.field_hs_collection_uh"))->save();
+    $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_hs_collection_uh'))->save();
   }
 }
 

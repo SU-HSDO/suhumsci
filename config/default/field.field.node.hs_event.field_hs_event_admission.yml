@@ -4,15 +4,11 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_hs_event_admission
+    - filter.format.minimal_html
+    - filter.format.plain_text
     - node.type.hs_event
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - minimal_html
-      - plain_text
 _core:
   default_config_hash: OsXGBAd_oCkXVZVqBY7uLDTO9DEu4MzNCyrgdAW8dE8
 id: node.hs_event.field_hs_event_admission
@@ -26,5 +22,7 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  allowed_formats: {  }
+  allowed_formats:
+    - minimal_html
+    - plain_text
 field_type: text_long

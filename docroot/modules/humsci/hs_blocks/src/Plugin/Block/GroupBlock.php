@@ -151,7 +151,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   public function build() {
     $build = [];
 
-    $build['components'] = $this->getComponents((bool) $this->getSectionStorage());
+    $build['components'] = $this->getComponents(!!$this->getSectionStorage());
+
     // Set the cache keys so that each block will have its own cache, even if
     // it has the same machine name on different entity displays.
     $build['#cache']['keys'] = array_keys($build['components']);

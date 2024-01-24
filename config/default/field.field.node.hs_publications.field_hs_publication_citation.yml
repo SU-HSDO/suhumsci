@@ -4,14 +4,10 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_hs_publication_citation
+    - filter.format.minimal_html
     - node.type.hs_publications
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - minimal_html
 id: node.hs_publications.field_hs_publication_citation
 field_name: field_hs_publication_citation
 entity_type: node
@@ -23,5 +19,6 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  allowed_formats: {  }
+  allowed_formats:
+    - minimal_html
 field_type: text_long

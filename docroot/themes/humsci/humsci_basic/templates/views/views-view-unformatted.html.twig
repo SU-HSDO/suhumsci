@@ -17,8 +17,8 @@
 #}
 
 {% if title %}
-  {# Check to see if there is already a heading tag in the rendered title. #}
-  {% if '</h' in title|render %}
+  {% if title|render matches '/<h\\d>/' %}
+    {# Check to see if there is already a heading tag in the rendered title. #}
     {{ title }}
   {% else %}
     <h3>{{ title }}</h3>

@@ -20,6 +20,7 @@ filters:
       media_switch: ''
       hybrid_style: ''
       box_style: ''
+      box_media_style: ''
       box_caption: ''
       filter_tags:
         img: img
@@ -34,6 +35,26 @@ filters:
       allowed_html: '<br> <p class> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <a class="hs-button hs-button--big hs-secondary-button hs-more-link hs-external-link hs-file-link hs-pdf-link hs-private-link" hreflang href title data-entity-type data-entity-uuid data-entity-substitution> <span class> <table class> <cite> <dl> <dt> <dd> <blockquote cite> <ul type> <ol type start> <strong> <em> <li> <hr>'
       filter_html_help: true
       filter_html_nofollow: false
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: 10
+    settings: {  }
+  filter_spamspan:
+    id: filter_spamspan
+    provider: spamspan
+    status: true
+    weight: 0
+    settings:
+      spamspan_at: ' [at] '
+      spamspan_use_graphic: false
+      spamspan_dot_enable: false
+      spamspan_dot: ' [dot] '
+      spamspan_use_form: false
+      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
+      spamspan_form_default_url: contact
+      spamspan_form_default_displaytext: 'contact form'
   linkit:
     id: linkit
     provider: linkit
@@ -75,23 +96,3 @@ filters:
       thumbnail_effect: ''
       thumbnail_position: ''
       override: false
-  filter_spamspan:
-    id: filter_spamspan
-    provider: spamspan
-    status: true
-    weight: 0
-    settings:
-      spamspan_at: ' [at] '
-      spamspan_use_graphic: false
-      spamspan_dot_enable: false
-      spamspan_dot: ' [dot] '
-      spamspan_use_form: false
-      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
-      spamspan_form_default_url: contact
-      spamspan_form_default_displaytext: 'contact form'
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: 10
-    settings: {  }

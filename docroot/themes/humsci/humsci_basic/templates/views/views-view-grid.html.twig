@@ -29,7 +29,12 @@
 {% set viewItems = [] %}
 
 {% if title %}
-  <h3>{{ title }}</h3>
+  {% if title|render matches '/<h\\d>/' %}
+    {# Check to see if there is already a heading tag in the rendered title. #}
+    {{ title }}
+  {% else %}
+    <h3>{{ title }}</h3>
+  {% endif %}
 {% endif %}
 
 {% for row in items %}

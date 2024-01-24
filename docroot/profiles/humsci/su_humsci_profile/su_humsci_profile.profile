@@ -376,9 +376,69 @@ function su_humsci_profile_local_tasks_alter(&$local_tasks) {
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
+function su_humsci_profile_node_insert(NodeInterface $node) {
+  // Clear menu links cache if the node has a menu link data.
+  if (
+    $node->hasField('field_menulink') &&
+    !$node->get('field_menulink')->isEmpty()
+  ) {
+    _su_humsci_clear_menu_cache_tags();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function su_humsci_profile_node_update(NodeInterface $node) {
+  /** @var \Drupal\node\NodeInterface $original_node */
+  $original_node = $node->original;
+  // Compare the original menu link with the new menu link data. If any
+  // important parts changed, clear the menu links cache.
+  if (
+    $node->hasField('field_menulink') &&
+    (!$node->get('field_menulink')->isEmpty() || !$original_node->get('field_menulink')->isEmpty())
+  ) {
+
+    $keys = ['title', 'description', 'weight', 'expanded', 'parent'];
+    $changes = $node->get('field_menulink')->getValue();
+    $original = $original_node->get('field_menulink')->getValue();
+
+    foreach ($keys as $key) {
+      $change_value = $changes[0][$key] ?? NULL;
+      $original_value = $original[0][$key] ?? NULL;
+
+      if ($change_value != $original_value) {
+        _su_humsci_clear_menu_cache_tags();
+        return;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function su_humsci_profile_node_delete(NodeInterface $node) {
+  // If a node has menu link data, delete the menu link.
+  if (
+    $node->hasField('field_menulink') &&
+    !$node->get('field_menulink')->isEmpty()
+  ) {
+    \Drupal::database()->delete('menu_tree')
+      ->condition('id', 'menu_link_field:%', 'LIKE')
+      ->condition('route_param_key', 'node=' . $node->id())
+      ->execute();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+    _su_humsci_clear_menu_cache_tags();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
 function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $entity) {
   // For new menu link items created on a node form (normally), set the expanded
-  // attribute so all menu items are expanded by default.
+  // attribute so all mcenu items are expanded by default.
   if ($entity->isNew()) {
     $entity->set('expanded', TRUE);
   }
@@ -398,6 +458,13 @@ function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $en
         ->execute();
     }
   }
+  _su_humsci_clear_menu_cache_tags();
+}
+
+/**
+ * Clear the menu link cache tags.
+ */
+function _su_humsci_clear_menu_cache_tags() {
   Cache::invalidateTags(['su_humsci_profile:menu_links']);
 }
 
@@ -776,7 +843,7 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
  * Implements hook_ENTITY_TYPE_delete().
  */
 function su_humsci_profile_menu_link_content_delete(MenuLinkContentInterface $entity) {
-  Cache::invalidateTags(['su_humsci_profile:menu_links']);
+  _su_humsci_clear_menu_cache_tags();
 }
 
 /**
@@ -800,7 +867,7 @@ function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $en
     $entity->get('expanded')->getValue(),
   ];
   if (md5(json_encode($original)) != md5(json_encode($updated))) {
-    Cache::invalidateTags(['su_humsci_profile:menu_links']);
+    _su_humsci_clear_menu_cache_tags();
   }
 }
 
@@ -832,4 +899,17 @@ function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
     'text-align-right',
     'hs-secondary-button',
   ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_form_element(&$variables) {
+  if (
+    $variables['element']['#type'] == 'select' &&
+    !\Drupal::service('router.admin_context')->isAdminRoute()
+  ) {
+    $variables['attributes']['class'][] = 'select-preact';
+    $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
+  }
 }

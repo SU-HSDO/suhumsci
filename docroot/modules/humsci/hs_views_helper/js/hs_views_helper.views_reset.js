@@ -7,7 +7,6 @@
         return;
       }
       $.each(Drupal.views.instances, function (key, ajaxView) {
-
         $(once('views-reset', ajaxView['$exposed_form'].find('input[data-drupal-selector=edit-reset]'))).click(function (e) {
           e.preventDefault();
 

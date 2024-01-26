@@ -354,16 +354,6 @@
     .slick-dots {
       @include visually-hidden;
 
-      @include grid-media-min('md') {
-        display: inline-block;
-        clip: inherit;
-        height: auto;
-        width: auto;
-        overflow: visible;
-        list-style-type: none;
-        position: absolute;
-      }
-
       @include hb-themes(('airy', 'colorful')) {
         @include grid-media-min('md') {
           bottom: hb-spacing-width();
@@ -374,6 +364,17 @@
           .hb-three-column--two-sidebar & {
             bottom: 0;
           }
+        }
+
+        // slick dots do not display until this breakpoint
+        @media (min-width: 890px) {
+          display: inline-block;
+          clip: inherit;
+          height: auto;
+          width: auto;
+          list-style-type: none;
+          position: absolute;
+          overflow: visible;
         }
 
         @include grid-media-min('lg') {
@@ -394,6 +395,14 @@
         // even though the sidebars do not display until the next breakpoint,
         // the classes exist for styling
         @include grid-media-min('md') {
+          display: inline-block;
+          clip: inherit;
+          height: auto;
+          width: auto;
+          list-style-type: none;
+          position: absolute;
+          overflow: visible;
+
           right: calc(50% + #{hb-calculate-rems(77px)}); // move it past the slick-next arrow
           bottom: hb-calculate-rems(53px);
 
@@ -504,17 +513,55 @@
       }
     }
 
+    // There was some css being added by a js library that was also causing the issue of the arrows position.
+    .slick-list {
+      height: 100% !important;
+    }
+
     &__arrow {
       margin: 0;
       padding: 0;
+      position: absolute;
+      right: 0;
+      bottom: 0%;
       font-size: 0;
+
+      @include hb-colorful {
+        @include grid-media-min('md') {
+          right: 40%;
+        }
+
+        @include grid-media-min('xl') {
+          right: 50%;
+        }
+      }
+
+      @include hb-traditional {
+        @include grid-media-min('md') {
+          right: 46%;
+        }
+
+        // the sidebar(s) appear at this breakpoint
+        @include grid-media-min('lg') {
+          right: 55%;
+        }
+
+        @include grid-media-min('xl') {
+          right: 50%;
+        }
+
+        @include grid-media-min('2xl') {
+          right: 100%;
+        }
+      }
+      
 
       .slick-prev,
       .slick-next {
         @include hb-unbuttonize;
         position: absolute;
 
-        @include hb-themes(('airy', 'colorful')) {
+        @include hb-themes(('airy')) {
           bottom: calc(#{hb-spacing-width()} * 2);
 
           .hb-three-column--one-sidebar &,
@@ -534,8 +581,37 @@
           }
         }
 
+        @include hb-colorful {
+          bottom: 6rem;
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(48px);
+          }
+
+          @include grid-media-min('md') {
+            bottom: hb-calculate-rems(47px);
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              bottom: 0;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
         @include hb-traditional {
           bottom: hb-calculate-rems(30px);
+
+          @include grid-media-min('md') {
+            margin: hb-calculate-rems(18px) 0;
+            bottom: hb-calculate-rems(54px);
+          }
+
+          @include grid-media-min('xl') {
+            bottom: hb-calculate-rems(78px);
+          }
 
           .hs-full-width & {
             bottom: hb-calculate-rems(60px);
@@ -576,11 +652,10 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(12.5px);
           right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
 
           @include grid-media-min('md') {
-            right: inherit;
+            right: auto;
             left: calc(53% - #{hb-calculate-rems(85px)}); // move it past the slick-next arrow
           }
 
@@ -597,7 +672,6 @@
 
           @include grid-media-min('xl') {
             left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
-            margin-bottom: hb-calculate-rems(40px);
           }
 
           @include grid-media-min('2xl') {
@@ -626,11 +700,10 @@
         }
 
         @include hb-traditional {
-          margin-bottom: hb-calculate-rems(12.5px);
-          right: hb-calculate-rems(50px);
+          right: hb-calculate-rems(40px);
 
           @include grid-media-min('md') {
-            right: inherit;
+            right: auto;
             left: calc(53% - #{hb-calculate-rems(40px)});
           }
 
@@ -647,7 +720,6 @@
 
           @include grid-media-min('xl') {
             left: calc(50% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
-            margin-bottom: hb-calculate-rems(40px);
           }
 
           @include grid-media-min('2xl') {

@@ -2,6 +2,7 @@
 // the Hero Gradient Slider paragraph component slides.
 // and the Spotlight Slider.
 const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
+// Find slick arrow from hsCarousel.
 const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
 let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
@@ -12,8 +13,8 @@ const setMinHeight = (textBox, maxBoxHeight) => textBox.setAttribute('style', `m
 // Set the height of all text boxes within a slider to that
 // of the tallest text box
 const restrictHeight = () => {
-  let boxHeightArray; let
-    maxBoxHeight;
+  let boxHeightArray;
+  let maxBoxHeight;
 
   slides.forEach((slide) => {
     // array must have a default entry of 0 for the banner components
@@ -44,6 +45,12 @@ const restrictHeight = () => {
     // Give all textBoxes the same height
     textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
 
+    // Give sickArrowWrapper a top that changes according to the height when resizing the window.
+    const slickArrowWrapper = slide.querySelector('.slick__arrow');
+    if (slide.classList.contains('paragraph--type--hs-carousel') && slickArrowWrapper) {
+      setMinHeight(slickArrowWrapper, maxBoxHeight);
+    }
+
     // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes
     textBoxes.forEach(
       (textBox) => isSpotlightTextBox(textBox) && setMinHeight(textBox, maxBoxHeight),
@@ -56,7 +63,7 @@ const clearTimeoutOnResize = () => {
   // function to reset the height of the text boxes
   window.addEventListener('resize', () => {
     clearTimeout(timeOutFunctionId);
-    timeOutFunctionId = setTimeout(restrictHeight, 250);
+    timeOutFunctionId = setTimeout(restrictHeight, 100);
   });
 };
 

@@ -58,6 +58,11 @@ if (PHP_SAPI !== 'cli') {
   $settings['config_readonly'] = TRUE;
 }
 
+// Enable nobots on any non-prod site.
+if (!EnvironmentDetector::isProdEnv()) {
+  $settings['nobots'] = TRUE;
+}
+
 if (EnvironmentDetector::isAhEnv()) {
   require 'acquia.settings.php';
 }

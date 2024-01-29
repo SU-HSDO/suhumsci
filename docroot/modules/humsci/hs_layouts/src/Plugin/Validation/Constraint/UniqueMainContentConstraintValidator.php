@@ -21,21 +21,21 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
   /**
    * Section Storage Manager service.
    *
-   * @var Drupal\layout_builder\SectionStorage\SectionStorageManager
+   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManager
    */
   private $storageManager;
 
   /**
    * Layout Tempstorage Repository service.
    *
-   * @var Drupal\layout_builder\LayoutTempstoreRepository
+   * @var \Drupal\layout_builder\LayoutTempstoreRepository
    */
   private $tempstoreRepository;
 
   /**
    * Layout Entity Display Repository service.
    *
-   * @var Drupal\Core\Entity\EntityDisplayRepository
+   * @var \Drupal\Core\Entity\EntityDisplayRepository
    */
   private $displayRepository;
 

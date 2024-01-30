@@ -86,8 +86,9 @@ class MenuItemsCest {
     $I->canSee($manual_alias->label(), 'h1');
     $I->canSeeInCurrentUrl($manual_url);
 
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $nolink */
     $nolink = $I->createEntity([
-      'title' => 'Foo Bar',
+      'title' => $this->faker->word,
       'link' => 'route:<nolink>',
       'weight' => 0,
       'menu_name' => 'main',
@@ -101,7 +102,7 @@ class MenuItemsCest {
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $node->label());
-    $I->selectOption('Parent link', '-- ' . $auto_alias->label());
+    $I->selectOption('Parent item', 'main:menu_link_field:node_field_menulink_' . $auto_alias->uuid() . '_und');
     $I->click('Change parent (update list of weights)');
     $I->click('Save');
     $I->canSee($node->label(), 'h1');
@@ -113,16 +114,16 @@ class MenuItemsCest {
     $I->canSeeInCurrentUrl($auto_alias->toUrl()->toString() . '/');
 
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->selectOption('Parent link', '-- ' . $manual_alias->label());
+    $I->selectOption('Parent item', 'main:menu_link_field:node_field_menulink_' . $manual_alias->uuid() . '_und');
     $I->click('Change parent (update list of weights)');
     $I->click('Save');
     $I->canSeeInCurrentUrl($manual_url . '/');
 
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->selectOption('Parent link', '-- ' . $nolink->label());
+    $I->selectOption('Parent item', 'main:menu_link_content:' . $nolink->uuid());
     $I->click('Change parent (update list of weights)');
     $I->click('Save');
-    $I->canSeeInCurrentUrl('/foo-bar/');
+    $I->canSeeInCurrentUrl('/' . $nolink->getTitle() . '/');
   }
 
   /**

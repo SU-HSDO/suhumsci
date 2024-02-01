@@ -71,3 +71,35 @@ function hs_paragraph_types_update_9403() {
     ])
     ->execute();
 }
+
+/**
+ * Set default field_title_settings value for existing content.
+ */
+function hs_paragraph_types_update_10000() {
+  // Import new field_title_settings configuration.
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // If storage does not yet exist, create it.
+  if (empty($field_storage->load('paragraph.field_title_settings'))) {
+    $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_title_settings'))->save();
+  }
+
+  // Create the field instance.
+  $config = $field_config_storage->load('paragraph.hs_collection.field_title_settings');
+  if (empty($config)) {
+    $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_title_settings'))->save();
+  }
+
+  // Set new field default for existing hs_collection paragraphs.
+  $db = \Drupal::database();
+  $db->query("INSERT INTO paragraph__field_title_settings (entity_id, revision_id, langcode, delta, bundle, field_title_settings_value)
+    SELECT id, revision_id, langcode, 0, 'hs_collection', 'collection_title_none'
+    FROM paragraphs_item_field_data
+    WHERE type = 'hs_collection'");
+}

@@ -1,7 +1,7 @@
 services:
   su_humsci_profile.post_install:
     class: Drupal\su_humsci_profile\PostInstall
-    arguments: ['@entity_type.manager', '@router.builder', '@config.factory']
+    arguments: ['@entity_type.manager', '@router.builder', '@config.factory', '@state']
   su_humsci_profile.route_subscriber:
     class: Drupal\su_humsci_profile\Routing\RouteSubscriber
     arguments: ['@module_handler', '@config.factory']

@@ -3,6 +3,9 @@
 
 use Faker\Factory;
 
+/**
+ * @group install
+ */
 class InstallStateCest {
 
   /**

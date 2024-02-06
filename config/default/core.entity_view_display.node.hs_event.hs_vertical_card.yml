@@ -54,9 +54,9 @@ third_party_settings:
       month:
         - field_hs_event_date
       day:
-        - 'dynamic_block_field:node-hs_event_day'
+        - 'display_field_copy:node-hs_event_day'
       time:
-        - 'dynamic_block_field:node-hs_event_time'
+        - 'display_field_copy:node-hs_event_time'
       location:
         - field_hs_event_location
       title:
@@ -71,16 +71,36 @@ third_party_settings:
           link: true
           wrapper: span
           class: ''
-      'dynamic_block_field:node-hs_event_day':
-        plugin_id: 'dynamic_block_field:node-hs_event_day'
+      'display_field_copy:node-hs_event_day':
+        plugin_id: 'display_field_copy:node-hs_event_day'
         weight: 2
         label: hidden
-        formatter: default
-      'dynamic_block_field:node-hs_event_time':
-        plugin_id: 'dynamic_block_field:node-hs_event_time'
+        formatter: smartdatetime_hs
+        settings:
+          formatter:
+            date_format: j
+            custom_date_format: ''
+            time_format: ''
+            time_hour_format: ''
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+            display: start
+      'display_field_copy:node-hs_event_time':
+        plugin_id: 'display_field_copy:node-hs_event_time'
         weight: 3
         label: hidden
-        formatter: default
+        formatter: smartdatetime_hs
+        settings:
+          formatter:
+            date_format: 'g:i A'
+            custom_date_format: ''
+            time_format: ''
+            time_hour_format: ''
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+            display: start
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
 id: node.hs_event.hs_vertical_card

@@ -5,6 +5,7 @@ namespace Drupal\hs_media_download\EventSubscriber;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Drupal\media_entity_download\Events\MediaDownloadEvent;
 use GuzzleHttp\ClientInterface;
@@ -25,41 +26,42 @@ use Symfony\Component\HttpFoundation\Response;
  * @see https://www.drupal.org/project/media_entity_download/issues/2951316#comment-14340898
  */
 final class DocumentStageFileProxySubscriber implements EventSubscriberInterface {
+  use StringTranslationTrait;
 
   /**
    * The origin server URL, provided by Stage File Proxy.
    *
    * @var string
    */
-  private string $origin;
+  protected string $origin;
 
   /**
    * The lock backend used to prevent concurrent upstream fetches.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface
    */
-  private LockBackendInterface $lock;
+  protected LockBackendInterface $lock;
 
   /**
    * The HTTP client.
    *
    * @var \GuzzleHttp\ClientInterface
    */
-  private ClientInterface $client;
+  protected ClientInterface $client;
 
   /**
    * The filesystem.
    *
    * @var \Drupal\Core\File\FileSystemInterface
    */
-  private FileSystemInterface $filesystem;
+  protected FileSystemInterface $filesystem;
 
   /**
    * The system logger.
    *
    * @var \Psr\Log\LoggerInterface
    */
-  private LoggerInterface $logger;
+  protected LoggerInterface $logger;
 
   /**
    * Construct a new DocumentStageFileProxySubscriber.
@@ -86,7 +88,7 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       MediaDownloadEvent::EVENT_NAME => 'onMediaDownload',
     ];
@@ -98,7 +100,7 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
    * @param \Drupal\media_entity_download\Events\MediaDownloadEvent $event
    *   The event triggered when downloading the media item.
    */
-  public function onMediaDownload(MediaDownloadEvent $event) {
+  public function onMediaDownload(MediaDownloadEvent $event): void {
     if (file_exists($event->getUri())) {
       return;
     }
@@ -106,66 +108,77 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
     $url = $this->origin . $event->getRequest()->getRequestUri();
 
     $lock_id = 'hs_media_download: ' . md5($url);
-    while(!$this->lock->acquire($lock_id)) {
+    // This is mostly needed for situations like image styles, where the same
+    // image may be needed multiple times on a single page.
+    // However, since this can result in tricky bugs or even request failures,
+    // we keep it and namespace the lock to this module.
+    while (!$this->lock->acquire($lock_id)) {
       $this->lock->wait($lock_id, 1);
     }
 
     try {
-      // Fetch remote file.
-      $options ['Connection'] = 'close';
-      $response = $this->client->get($url, $options);
-      $result = $response->getStatusCode();
-
-      if ($result !== Response::HTTP_OK) {
-        $this->logger->warning('HTTP error @errorcode occurred when trying to fetch @remote.', [
-          '@errorcode' => $result,
-          '@remote' => $url,
-        ]);
-        $this->lock->release($lock_id);
-        return;
-      }
-
-      $directory = $this->filesystem->dirname($event->getUri());
-
-      if (!$this->filesystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-        $this->logger->error('Unable to prepare local directory @path.', [
-          '@path' => $directory,
-        ]);
-        $this->lock->release($lock_id);
-        return;
-      }
-
-      $content_length_headers = $response->getHeader('Content-Length');
-      $content_length = (int) array_shift($content_length_headers);
-      $response_data = $response->getBody()->getContents();
-
-      if(isset($content_length) && strlen($response_data) !== $content_length) {
-        $this->logger->error('Incomplete download. Was expecting @content-length bytes, actually got @data-length.', [
-          '@content-length' => $content_length,
-          '@data-length' => $content_length,
-        ]);
-        $this->lock->release($lock_id);
-        return;
-      }
-
-      if ($this->writeFile($event->getUri(), $response_data)) {
-        $this->lock->release($lock_id);
-        return;
-      }
-
-      $this->logger->error('@remote could not be saved to @path.',
-        [
-          '@remote' => $url,
-          '@path' => $directory,
-        ]);
-      $this->lock->release($lock_id);
-      return;
+      $this->getFile($url, $event, $lock_id);
     }
     catch (GuzzleException $e) {
       $this->logger->error('Encountered an error when retrieving file @url. @message in %function (line %line of %file).', Error::decodeException($e) + ['@url' => $url]);
       $this->lock->release($lock_id);
       return;
     }
+    catch (\Exception $e) {
+      $this->logger->error($e->getMessage());
+      $this->lock->release($lock_id);
+      return;
+    }
+  }
+
+  /**
+   * @param string $url
+   *   The url of the remote file.
+   * @param \Drupal\media_entity_download\Events\MediaDownloadEvent $event.
+   *   The event triggered when downloading the media item.
+   * @param string $lock_id
+   *
+   * @throws \Exception If file download and storage is not completed.
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  private function getFile(string $url, MediaDownloadEvent $event, string $lock_id): void {
+    // Fetch remote file.
+    $response = $this->client->get($url, [
+      'Connection' => 'close'
+    ]);
+
+    $result = $response->getStatusCode();
+    if ($result !== Response::HTTP_OK) {
+      throw new \Exception($this->t('HTTP error @errorcode occurred when trying to fetch @remote.', [
+        '@errorcode' => $result,
+        '@remote' => $url,
+      ])->render());
+    }
+
+    $directory = $this->filesystem->dirname($event->getUri());
+    if (!$this->filesystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
+      throw new \Exception($this->t('Unable to prepare local directory @path.', [
+        '@path' => $directory,
+      ])->render());
+    }
+
+    $content_length_headers = $response->getHeader('Content-Length');
+    $content_length = (int) array_shift($content_length_headers);
+    $response_data = $response->getBody()->getContents();
+    if (isset($content_length) && strlen($response_data) !== $content_length) {
+      throw new \Exception($this->t('Incomplete download. Was expecting @content-length bytes, actually got @data-length.', [
+        '@content-length' => $content_length,
+        '@data-length' => $content_length,
+      ])->render());
+    }
+    if (!$this->writeFile($event->getUri(), $response_data)) {
+      $this->logger->error('@remote could not be saved to @path.', [
+        '@remote' => $url,
+        '@path' => $directory,
+      ]);
+    }
+    $this->lock->release($lock_id);
+    return;
   }
 
   /**
@@ -177,14 +190,14 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
    * is needed if the directory is mounted on a separate machine.
    *
    * @param string $destination
-   *   A strnig containnig the destination location.
+   *   A string containnig the destination location.
    * @param string $data
    *   A string containing the contents of the file.
    *
    * @return bool
    *   True if write was successful. False if write or rename failed.
    */
-  private function writeFile(string $destination, string $data) {
+  private function writeFile(string $destination, string $data): bool {
     $dir = $this->filesystem->dirname($destination) . '/';
     $temporary_file = $this->filesystem->tempnam($dir, 'stage_file_proxy_');
     $temporary_file_copy = $temporary_file;
@@ -197,17 +210,17 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
     }
     $temporary_file = str_replace(substr($temporary_file, 0, strpos($temporary_file, 'stage_file_proxy_')), $dir, $temporary_file) . $extension;
 
-    if (!@rename($temporary_file_copy, $temporary_file)) {
-      @unlink($temporary_file_copy);
+    if (!rename($temporary_file_copy, $temporary_file)) {
+      unlink($temporary_file_copy);
       return FALSE;
     }
 
     $filepath = $this->filesystem->saveData($data, $temporary_file, FileSystemInterface::EXISTS_REPLACE);
     if ($filepath) {
-      if (!@rename($filepath, $destination)) {
-        @unlink($destination);
-        if (!@rename($filepath, $destination)) {
-          @unlink($filepath);
+      if (!rename($filepath, $destination)) {
+        unlink($destination);
+        if (!rename($filepath, $destination)) {
+          unlink($filepath);
         }
       }
     }
@@ -216,4 +229,5 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
     }
     return FALSE;
   }
+
 }

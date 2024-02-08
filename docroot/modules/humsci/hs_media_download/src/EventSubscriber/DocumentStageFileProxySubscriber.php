@@ -31,35 +31,35 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
    *
    * @var string
    */
-  protected $origin;
+  private $origin;
 
   /**
    * The lock backend used to prevent concurrent upstream fetches.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface
    */
-  protected LockBackendInterface $lock;
+  private $lock;
 
   /**
    * The HTTP client.
    *
    * @var \GuzzleHttp\ClientInterface
    */
-  protected ClientInterface $client;
+  private $client;
 
   /**
    * The filesystem.
    *
    * @var \Drupal\Core\File\FileSystemInterface
    */
-  protected FileSystemInterface $filesystem;
+  private $filesystem;
 
   /**
    * The system logger.
    *
    * @var \Psr\Log\LoggerInterface
    */
-  protected LoggerInterface $logger;
+  private $logger;
 
   /**
    * Construct a new DocumentStageFileProxySubscriber.

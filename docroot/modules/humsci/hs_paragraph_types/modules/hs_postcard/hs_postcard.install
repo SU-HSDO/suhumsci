@@ -5,6 +5,8 @@
  * hs_postcard.install
  */
 
+use Drupal\user\UserInterface;
+
 /**
  * Implements hook_install().
  */
@@ -20,4 +22,13 @@ function hs_postcard_install() {
     \Drupal::logger('hs_postcard')->error('Unable to set initial display settings for postcard Paragraph');
   }
 
+}
+
+/**
+ * Set the permissions for the postcard download links.
+ */
+function hs_postcard_update_10000() {
+  $perms = ['download media'];
+  user_role_grant_permissions(UserInterface::ANONYMOUS_ROLE, $perms);
+  user_role_grant_permissions(UserInterface::AUTHENTICATED_ROLE, $perms);
 }

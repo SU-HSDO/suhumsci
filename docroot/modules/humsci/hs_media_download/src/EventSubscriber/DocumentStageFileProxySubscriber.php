@@ -5,7 +5,6 @@ namespace Drupal\hs_media_download\EventSubscriber;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Drupal\media_entity_download\Events\MediaDownloadEvent;
 use GuzzleHttp\ClientInterface;
@@ -26,14 +25,13 @@ use Symfony\Component\HttpFoundation\Response;
  * @see https://www.drupal.org/project/media_entity_download/issues/2951316#comment-14340898
  */
 final class DocumentStageFileProxySubscriber implements EventSubscriberInterface {
-  use StringTranslationTrait;
 
   /**
    * The origin server URL, provided by Stage File Proxy.
    *
    * @var string
    */
-  protected string $origin;
+  protected $origin;
 
   /**
    * The lock backend used to prevent concurrent upstream fetches.
@@ -132,44 +130,39 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
   }
 
   /**
+   * Retrieves and stores the file in the site's local filesystem.
+   *
    * @param string $url
    *   The url of the remote file.
-   * @param \Drupal\media_entity_download\Events\MediaDownloadEvent $event.
+   * @param \Drupal\media_entity_download\Events\MediaDownloadEvent $event
    *   The event triggered when downloading the media item.
    * @param string $lock_id
+   *   The id used to lock the file download process.
    *
-   * @throws \Exception If file download and storage is not completed.
+   * @throws \Exception
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   private function getFile(string $url, MediaDownloadEvent $event, string $lock_id): void {
     // Fetch remote file.
     $response = $this->client->get($url, [
-      'Connection' => 'close'
+      'Connection' => 'close',
     ]);
 
     $result = $response->getStatusCode();
     if ($result !== Response::HTTP_OK) {
-      throw new \Exception($this->t('HTTP error @errorcode occurred when trying to fetch @remote.', [
-        '@errorcode' => $result,
-        '@remote' => $url,
-      ])->render());
+      throw new \Exception(sprintf('HTTP error %s occurred when trying to fetch %s.', $result, $url));
     }
 
     $directory = $this->filesystem->dirname($event->getUri());
     if (!$this->filesystem->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-      throw new \Exception($this->t('Unable to prepare local directory @path.', [
-        '@path' => $directory,
-      ])->render());
+      throw new \Exception(sprintf('Unable to prepare local directory %s.', $directory));
     }
 
-    $content_length_headers = $response->getHeader('Content-Length');
-    $content_length = (int) array_shift($content_length_headers);
+    $clh = $response->getHeader('Content-Length');
+    $content_length = (int) array_shift($clh);
     $response_data = $response->getBody()->getContents();
     if (isset($content_length) && strlen($response_data) !== $content_length) {
-      throw new \Exception($this->t('Incomplete download. Was expecting @content-length bytes, actually got @data-length.', [
-        '@content-length' => $content_length,
-        '@data-length' => $content_length,
-      ])->render());
+      throw new \Exception(sprintf('Incomplete download. Was expecting %s bytes, actually got %s.', $content_length, $content_length));
     }
     if (!$this->writeFile($event->getUri(), $response_data)) {
       $this->logger->error('@remote could not be saved to @path.', [
@@ -178,7 +171,6 @@ final class DocumentStageFileProxySubscriber implements EventSubscriberInterface
       ]);
     }
     $this->lock->release($lock_id);
-    return;
   }
 
   /**

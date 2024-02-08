@@ -12,6 +12,7 @@ import './vertical-linked-card/vertical-linked-card';
 import './photo-album/colorbox';
 import './editoria11y/editoria11y';
 import './vertical-tabs/vertical-tabs';
+import './addtocal/addtocal';
 import './prefered-reduced-motion/prefered-reduced-motion';
 
 // PoC for new megamenu.

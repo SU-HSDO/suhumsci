@@ -1,0 +1,6 @@
+services:
+  hs_media_download.document_stage_file_proxy_subscriber:
+    class: '\Drupal\hs_media_download\EventSubscriber\DocumentStageFileProxySubscriber'
+    arguments: ['@config.factory', '@lock', '@http_client', '@file_system', '@logger.channel.stage_file_proxy']
+    tags:
+      - { name: 'event_subscriber' }

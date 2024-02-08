@@ -1,0 +1,226 @@
+diff --git a/src/Controller/DownloadController.php b/src/Controller/DownloadController.php
+index 6b7c0ce50051d932ffb44676d09d91bd8355eafb..05fcace43fd9d9e8f16e65c3c3bced95da007c76 100644
+--- a/src/Controller/DownloadController.php
++++ b/src/Controller/DownloadController.php
+@@ -5,6 +5,8 @@ namespace Drupal\media_entity_download\Controller;
+ use Drupal\Core\Controller\ControllerBase;
+ use Drupal\Core\File\FileSystemInterface;
+ use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
++use Drupal\media_entity_download\Events\MediaDownloadEvent;
++use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+ use Symfony\Component\HttpFoundation\BinaryFileResponse;
+ use Drupal\media\MediaInterface;
+ use Symfony\Component\HttpFoundation\Response;
+@@ -40,6 +42,11 @@ class DownloadController extends ControllerBase {
+    */
+   protected $streamWrapperManager;
+ 
++  /**
++   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
++   */
++  private EventDispatcherInterface $eventDispatcher;
++
+   /**
+    * DownloadController constructor.
+    *
+@@ -50,10 +57,11 @@ class DownloadController extends ControllerBase {
+    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+    *   The stream wrapper manager.
+    */
+-  public function __construct(RequestStack $request_stack, FileSystemInterface $file_system, StreamWrapperManagerInterface $stream_wrapper_manager) {
++  public function __construct(RequestStack $request_stack, FileSystemInterface $file_system, StreamWrapperManagerInterface $stream_wrapper_manager, EventDispatcherInterface $event_dispatcher) {
+     $this->requestStack = $request_stack;
+     $this->fileSystem = $file_system;
+     $this->streamWrapperManager = $stream_wrapper_manager;
++    $this->eventDispatcher = $event_dispatcher;
+   }
+ 
+   /**
+@@ -63,7 +71,8 @@ class DownloadController extends ControllerBase {
+     return new static(
+       $container->get('request_stack'),
+       $container->get('file_system'),
+-      $container->get('stream_wrapper_manager')
++      $container->get('stream_wrapper_manager'),
++      $container->get('event_dispatcher')
+     );
+   }
+ 
+@@ -124,7 +133,10 @@ class DownloadController extends ControllerBase {
+     }
+ 
+     $uri = $file->getFileUri();
+-    $scheme = $this->streamWrapperManager->getScheme($uri);
++    $scheme = $this->streamWrapperManager::getScheme($uri);
++
++    $event = new MediaDownloadEvent($this->requestStack->getCurrentRequest(), $media, $file, $delta, $scheme, $uri);
++    $this->eventDispatcher->dispatch($event, MediaDownloadEvent::EVENT_NAME);
+ 
+     // Or item does not exist on disk.
+     if (!$this->streamWrapperManager->isValidScheme($scheme) || !file_exists($uri)) {
+diff --git a/src/Events/MediaDownloadEvent.php b/src/Events/MediaDownloadEvent.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..b69bb6936148231a4d87b664fcf53b1ee29a324e
+--- /dev/null
++++ b/src/Events/MediaDownloadEvent.php
+@@ -0,0 +1,160 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\media_entity_download\Events;
++
++use Drupal\Component\EventDispatcher\Event;
++use Drupal\file\FileInterface;
++use Drupal\media\MediaInterface;
++use Symfony\Component\HttpFoundation\Request;
++
++/**
++ * Event triggered when downloading a file.
++ */
++final class MediaDownloadEvent extends Event {
++
++  public const EVENT_NAME = 'media_entity_download.media_download';
++
++  /**
++   * The media entity being accessed.
++   *
++   * @var \Drupal\media\MediaInterface
++   */
++  private MediaInterface $media;
++
++  /**
++   * A reference to the file entity that Media Entity Download found.
++   *
++   * @var \Drupal\file\FileInterface
++   */
++  private FileInterface $file;
++
++  /**
++   * The delta in the Media source field the field entity is referenced from.
++   *
++   * @var int|null
++   */
++  private ?int $delta;
++
++  /**
++   * The URI scheme of the file being downloaded.
++   *
++   * @var string
++   */
++  private string $scheme;
++
++  /**
++   * The URI of the file being downloaded.
++   *
++   * @var string
++   */
++  private string $uri;
++
++  /**
++   * The HTTP request that generated the download event.
++   *
++   * @var \Symfony\Component\HttpFoundation\Request
++   */
++  private Request $request;
++
++  /**
++   * Construct a new MediaDownloadEvent.
++   *
++   * @param \Symfony\Component\HttpFoundation\Request $request
++   *   The HTTP request that generated the download event.
++   * @param \Drupal\media\MediaInterface $media
++   *   The media entity being accessed.
++   * @param \Drupal\file\FileInterface $file
++   *   A reference to the file entity that Media Entity Download found.
++   * @param int|null $delta
++   *   (optional) The delta in the Media source field the field entity is
++   *   referenced from.
++   * @param string $scheme
++   *   The URI scheme of the file being downloaded.
++   * @param string $uri
++   *   The URI of the file being downloaded.
++   */
++  public function __construct(Request $request, MediaInterface $media, FileInterface $file, ?int $delta, string $scheme, string $uri) {
++    $this->request = $request;
++    $this->media = $media;
++    $this->file = $file;
++    $this->delta = $delta;
++    $this->scheme = $scheme;
++    $this->uri = $uri;
++  }
++
++  /**
++   * Return the media entity associated with this download event.
++   *
++   * @return \Drupal\media\MediaInterface
++   */
++  public function getMedia(): MediaInterface {
++    return $this->media;
++  }
++
++  /**
++   * Return the file associated with this download event.
++   *
++   * @return \Drupal\file\FileInterface
++   */
++  public function getFile(): FileInterface {
++    return $this->file;
++  }
++
++  /**
++   * Return the delta in the source field of the Media entity.
++   *
++   * @return int|null
++   */
++  public function getDelta(): ?int {
++    return $this->delta;
++  }
++
++  /**
++   * Return the URI scheme of the underlying file.
++   *
++   * @return string
++   */
++  public function getScheme(): string {
++    return $this->scheme;
++  }
++
++  /**
++   * Return the URI of the underlying file.
++   *
++   * @return string
++   */
++  public function getUri(): string {
++    return $this->uri;
++  }
++
++  /**
++   * Set the scheme of the underlying file.
++   *
++   * @param string $scheme
++   */
++  public function setScheme(string $scheme): void {
++    $this->scheme = $scheme;
++  }
++
++  /**
++   * Set the URI of the underlying file.
++   *
++   * @param string $uri
++   */
++  public function setUri(string $uri): void {
++    $this->uri = $uri;
++  }
++
++  /**
++   * Get the HTTP request that generated the download event.
++   *
++   * @return \Symfony\Component\HttpFoundation\Request
++   *   The request object.
++   */
++  public function getRequest(): Request {
++    return $this->request;
++  }
++
++}

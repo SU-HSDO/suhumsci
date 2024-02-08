@@ -10,11 +10,11 @@
 
         // Check if the user prefers reduced motion
         if (!mediaQuery || mediaQuery.matches) {
-          $(slickInstance).on('beforeChange', (event, slick) => {
+          $(slickInstance).on('afterChange', (event, slick) => {
             slick.slickSetOption('cssEase', 'none', true);
           });
         } else {
-          $(slickInstance).on('beforeChange', (event, slick) => {
+          $(slickInstance).on('afterChange', (event, slick) => {
             slick.slickSetOption('cssEase', 'ease', true);
           });
         }

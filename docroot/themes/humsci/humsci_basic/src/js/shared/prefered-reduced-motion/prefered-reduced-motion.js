@@ -1,7 +1,6 @@
 (function ($, Drupal, window) {
   Drupal.behaviors.mySlickBehavior = {
-    // eslint-disable-next-line no-unused-vars
-    attach(context, settings) {
+    attach(context) {
       // Check for reduced motion preference
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 

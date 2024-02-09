@@ -6,10 +6,10 @@
 
 {% set attributes = attributes.addClass([settings.section_width, 'clearfix', 'three-column-w-image']) %}
 
-{% set main_id = settings.main_content == 'main-region' %}
-{% set attributes = settings.main_content == 'left-sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
-{% set layout_container_tag = settings.main_content == 'left-sidebar' ? 'main' : 'div' %}
-{% set main_container_tag = settings.main_content == 'main-region' ? 'main' : 'div' %}
+{% set main_id = settings.main_content == 'main' %}three-column-w
+{% set attributes = settings.main_content == 'left_sidebar' ? attributes.setAttribute('id', 'main-content') : attributes %}
+{% set layout_container_tag = settings.main_content == 'left_sidebar' ? 'main' : 'div' %}
+{% set main_container_tag = settings.main_content == 'main' ? 'main' : 'div' %}
 
 {% if content %}
   <{{ layout_container_tag }}{{ attributes }}>

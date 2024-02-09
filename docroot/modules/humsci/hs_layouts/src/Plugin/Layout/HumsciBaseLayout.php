@@ -37,8 +37,8 @@ class HumsciBaseLayout extends LayoutDefault implements PluginFormInterface {
       '#default_value' => $this->configuration['main_content'] ?: 'none',
       '#options' => [
         'none' => $this->t('None'),
-        'main-region' => $this->t('Main Region'),
-        'left-sidebar' => $this->t('Left Sidebar'),
+        'main' => $this->t('Main Region'),
+        'left_sidebar' => $this->t('Left Sidebar'),
       ],
     ];
 

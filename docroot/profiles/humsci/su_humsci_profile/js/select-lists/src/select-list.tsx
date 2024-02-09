@@ -87,11 +87,6 @@ function CustomOption(props: OptionProps) {
     }
   }, [rootRef, id])
 
-  if (value === '1111') {
-    console.log('selected', selected);
-    console.log('highlighted', highlighted);
-    console.log('disabled', disabled);
-  }
   return (
     <StyledOption
       {...otherProps}
@@ -193,6 +188,11 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
               {renderSelectedValue(value, options)}
             </span>
           }
+          {(!optionChosen && !multiple) &&
+            <span style={{padding: "8px 5px 8px 0", color: "#4c4740"}}>
+              {emptyLabel}
+            </span>
+          }
           {(!optionChosen && multiple) &&
             <span style={{padding: "8px 5px 8px 0", color: "#4c4740"}}>
               Choose one or more from dropdown
@@ -234,7 +234,6 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
             }
 
             {options.map(option => {
-              console.log(option);
               return (
                 <CustomOption key={option.value} value={option.value} disabled={option.disabled} rootRef={listboxRef} id={`${name}-${option.value.replace(/\W+/g, '-')}`}>
                   {option.label}

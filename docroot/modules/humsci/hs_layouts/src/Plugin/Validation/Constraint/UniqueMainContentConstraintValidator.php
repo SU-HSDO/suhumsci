@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityDisplayRepository;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\LayoutTempstoreRepository;
 use Drupal\layout_builder\SectionStorage\SectionStorageManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -73,7 +74,7 @@ class UniqueMainContentConstraintValidator extends ConstraintValidator implement
     // Layout builder should be enabled and the layout should be overridable for
     // the current node, otherwise return.
     $view_display = $this->displayRepository->getViewDisplay('node', $node->bundle());
-    if (!($view_display->isLayoutBuilderEnabled() && $view_display->isOverridable())) {
+    if ($view_display instanceof LayoutEntityDisplayInterface && !($view_display->isLayoutBuilderEnabled() && $view_display->isOverridable())) {
       return NULL;
     }
 

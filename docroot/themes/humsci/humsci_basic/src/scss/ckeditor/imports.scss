@@ -325,7 +325,15 @@ $px-only: true;
 
   // Fix Video preview in CKeditor for "Align center and break text" option
   .drupal-media-style-align-center {
-    max-width: 100%;
+    max-width: none;
+
+    [data-media-source='video'] {
+      max-width: 100%;
+    }
+
+    [data-media-source='image'] {
+      max-width: 25%;
+    }
   }
 }
 

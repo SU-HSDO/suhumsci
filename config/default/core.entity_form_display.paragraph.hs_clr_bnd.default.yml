@@ -4,10 +4,13 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_lnk
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_wdth
     - paragraphs.paragraphs_type.hs_clr_bnd
   module:
+    - link
     - maxlength
 id: paragraph.hs_clr_bnd.default
 targetEntityType: paragraph
@@ -16,25 +19,45 @@ mode: default
 content:
   field_hs_clr_bnd_bgc:
     type: options_select
-    weight: 1
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_hs_clr_bnd_txt:
-    type: string_textarea
+  field_hs_clr_bnd_lnk:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_hs_clr_bnd_ttl:
+    type: string_textfield
     weight: 0
     region: content
     settings:
-      rows: 5
-      placeholder: 'Type your Heading 2 text here.'
+      size: 60
+      placeholder: ''
     third_party_settings:
       maxlength:
-        maxlength_js: 255
+        maxlength_js: 105
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
-        maxlength_js_enforce: false
+        maxlength_js_enforce: true
+  field_hs_clr_bnd_txt:
+    type: string_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      maxlength:
+        maxlength_js: 180
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: true
   field_hs_clr_bnd_wdth:
     type: options_select
-    weight: 2
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }

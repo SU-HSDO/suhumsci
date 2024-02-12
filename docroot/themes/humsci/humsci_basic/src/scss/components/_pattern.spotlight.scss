@@ -42,6 +42,15 @@
     }
   }
 
+  &__title {
+    @include hb-hero-title;
+    margin: 0 0 hb-spacing-width('xs');
+
+    @include grid-media-min('md') {
+      margin: 0 0 hb-spacing-width('xs');
+    }
+  }
+
   &__text {
     @include hb-themes(('colorful', 'airy')) {
       position: relative;
@@ -67,17 +76,6 @@
     }
 
     .field-hs {
-      &-spotlight-title {
-        h2 {
-          @include hb-hero-title;
-          margin: 0 0 hb-spacing-width('xs');
-
-          @include grid-media-min('md') {
-            margin: 0 0 hb-spacing-width('xs');
-          }
-        }
-      }
-
       &-spotlight-link {
         margin-top: hb-spacing-width('md');
 

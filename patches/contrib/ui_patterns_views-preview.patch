@@ -58,16 +58,16 @@ index 0000000..7f1e292
 +  </{{ field.wrapper_element }}>
 +{%- endif %}
 diff --git a/modules/ui_patterns_views/ui_patterns_views.module b/modules/ui_patterns_views/ui_patterns_views.module
-index c33331b..79b8548 100644
+index 5b54c2b..00b8871 100644
 --- a/modules/ui_patterns_views/ui_patterns_views.module
 +++ b/modules/ui_patterns_views/ui_patterns_views.module
 @@ -6,6 +6,9 @@
   */
  
  use Drupal\ui_patterns\Element\PatternContext;
-+use Drupal\Component\Utility\Html;
 +use Drupal\Component\Utility\Xss;
 +use Drupal\Core\Template\Attribute;
++use Drupal\Component\Utility\Html;
  
  /**
   * Implements hook_theme().
@@ -81,12 +81,15 @@ index c33331b..79b8548 100644
    ];
  }
  
-@@ -39,37 +45,122 @@ function template_preprocess_pattern_views_row(array &$variables) {
+@@ -39,41 +45,122 @@ function template_preprocess_pattern_views_row(array &$variables) {
    $options = $variables['options'];
    $row = $variables['row'];
  
 -  foreach ($options['pattern_mapping'] as $mapping) {
 -    $field_name = $mapping['source'];
+-    if (!isset($view->field[$field_name])) {
+-      continue;
+-    }
 -    $field = $view->field[$field_name];
 -    $field_output = $view->style_plugin->getField($row->index, $field_name);
 -    if ($row_plugin->isFieldVisible($field, $field_output)) {
@@ -214,6 +217,7 @@ index c33331b..79b8548 100644
 -    $variables['pattern']['#context']['display'] = $view->current_display;
 -    $variables['pattern']['#context']['view'] = $view;
 -    $variables['pattern']['#context']['row'] = $row;
+-    $variables['pattern']['#context']['entity'] = $row->_entity;
 -  }
 +  $variables['pattern'] = [
 +    '#type' => 'pattern',

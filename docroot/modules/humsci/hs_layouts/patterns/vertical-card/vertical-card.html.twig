@@ -17,10 +17,10 @@
 
     {% if title %}
       <div class="hb-card__title">
-        {% if title|render matches '/<h\\d>/' %}
+        {% if title|render matches '/<\\/h\\d>/' %}
           {{ title }}
         {% else %}
-          <h2>{{ title }}</h2>
+          <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
         {% endif %}
       </div>
     {% endif %}

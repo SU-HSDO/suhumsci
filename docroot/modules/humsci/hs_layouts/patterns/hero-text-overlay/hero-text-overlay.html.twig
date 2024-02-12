@@ -5,6 +5,16 @@
   {% set attributes = attributes.addClass(variant_class) %}
 {% endif %}
 
+{% set text_content = overlay_text %}
+{% if overlay_text['field_hs_hero_title'] is defined %}
+  {% set text_content %}
+    <{{ heading_tag }}>
+      {{ overlay_text['field_hs_hero_title'] }}
+    </{{ heading_tag }}>
+    {{ overlay_text|without('field_hs_hero_title') }}
+  {% endset %}
+{% endif %}
+
 {% apply spaceless %}
   <div{{ attributes }}>
     <div class="hb-hero-overlay__image-wrapper">
@@ -12,7 +22,7 @@
     </div>
 
     <div class="hb-hero-overlay__text">
-      {{ overlay_text }}
+      {{ text_content }}
     </div>
   </div>
 {% endapply %}

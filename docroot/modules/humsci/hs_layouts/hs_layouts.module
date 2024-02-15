@@ -50,16 +50,20 @@ function hs_layouts_preprocess(&$variables, $hook) {
     'pattern_gradient-hero',
   ];
   if (!in_array($hook, $collection_patterns)) {
-    return NULL;
+    return;
   }
   // Set heading tag to h2 by default.
   $variables['heading_tag'] = 'h2';
   // Continue only if the pattern is a layout.
   $context = $variables['context'];
   if (!$context->isOfType('layout')) {
-    return NULL;
+    return;
   }
   $paragraph = $context->getProperty('entity');
+  if (!$paragraph instanceof ParagraphInterface) {
+    return;
+  }
+
   // Get the parent entity of the paragraph.
   $parent = $paragraph->getParentEntity();
   if ($hook === 'pattern_gradient-hero' && !empty($parent)) {
@@ -68,7 +72,7 @@ function hs_layouts_preprocess(&$variables, $hook) {
     $parent = $parent->getParentEntity();
   }
   if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
-    return NULL;
+    return;
   }
   if ($parent->get('field_title_settings')->value !== 'collection_title_none') {
     // If the paragraph is within a collection and the collection title is

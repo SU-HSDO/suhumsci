@@ -15,7 +15,7 @@ use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
  */
 class HsCommands extends BltTasks {
 
-  use SwsCommandTrait;
+  use HsCommandTrait;
 
   /**
    * After code deployed, update all sites on the stack.

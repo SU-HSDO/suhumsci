@@ -327,10 +327,12 @@ $px-only: true;
   .drupal-media-style-align-center {
     max-width: none;
 
-    .align-center:not(.hb-media-video) {
-      max-width: 50%;
-      margin-left: auto;
-      margin-right: auto;
+    &:only-child {
+      &:not(.hb-media-video) {
+        max-width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
 
     .hb-media-video {

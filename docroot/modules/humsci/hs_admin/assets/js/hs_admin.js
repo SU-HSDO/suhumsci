@@ -100,7 +100,7 @@ Drupal.behaviors.menuLinkCshs = {
         const helptext = document.createElement('div');
         helptext.className = 'form-item__description';
         helptext.innerText = helpTexts[index];
-        selectWrapper.insertAdjacentElement('beforebegin', label);
+        selectWrapper.insertAdjacentElement('afterbegin', label);
         selectWrapper.insertAdjacentElement('beforeend', helptext);
       });
     }, 0);

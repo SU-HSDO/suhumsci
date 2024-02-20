@@ -559,11 +559,25 @@ function su_humsci_profile_update_9702() {
 function su_humsci_profile_update_9703() {
   $config_factory = \Drupal::configFactory();
   $view_config_names = $config_factory->listAll('views.view.');
+  $eck_info = _su_humsci_profile_update_eck_info();
 
   foreach ($view_config_names as $config_name) {
     $config = $config_factory->getEditable($config_name);
     $raw = $config->getRawData();
     _su_humsci_profile_fix_view_data($raw);
+
+    if(isset($raw['dependencies']['config'])) {
+      foreach ($raw['dependencies']['config'] as &$config_dependency) {
+        foreach (array_keys($eck_info) as $eck_type) {
+          if (
+            str_starts_with($config_dependency, "field.storage.$eck_type.") ||
+            str_starts_with($config_dependency, "$eck_type.")
+          ) {
+            $config_dependency = str_replace($eck_type, 'hs_entity', $config_dependency);
+          }
+        }
+      }
+    }
     $config->setData($raw)->save(TRUE);
   }
 }
@@ -587,14 +601,27 @@ function _su_humsci_profile_fix_view_data(&$data) {
       $data['entity_type'] = 'hs_entity';
 
       if (isset($data['table']) && is_string($data['table'])) {
-        $data['table'] = 'hs_entity';
+        foreach (array_keys($eck_info) as $eck_type) {
+          $data['table'] = str_replace($eck_type, 'hs_entity', $data['table']);
+        }
       }
 
-      if (isset($data['field']) && is_string($data['field'])) {
+      if (isset($data['field']) && is_string($data['field']) && $data['field'] == 'title') {
         $data['field'] = 'label';
       }
-      if (isset($data['entity_field']) && is_string($data['entity_field'])) {
+      if (isset($data['entity_field']) && is_string($data['entity_field']) && $data['entity_field'] == 'title') {
         $data['entity_field'] = 'label';
+      }
+    }
+
+    if (
+      isset($data['table']) &&
+      is_string($data['table'])
+    ) {
+      foreach (array_keys($eck_info) as $eck_type) {
+        if (str_starts_with($data['table'], $eck_type)) {
+          $data['table'] = str_replace($eck_type, 'hs_entity', $data['table']);
+        }
       }
     }
 

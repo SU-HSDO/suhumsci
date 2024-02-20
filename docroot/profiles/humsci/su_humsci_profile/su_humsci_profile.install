@@ -5,6 +5,7 @@
  * su_humsci_profile.install
  */
 
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Menu\MenuTreeParameters;
@@ -15,6 +16,26 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\node\NodeInterface;
 use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_requirements().
+ */
+function su_humsci_profile_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+
+    $site_path = DrupalKernel::findSitePath(\Drupal::request());
+    $site_path = explode('/', $site_path);
+    $site_name = $site_path[1];
+
+    $requirements['stanford_site_alias'] = [
+      'title' => t('Stanford Site Alias'),
+      'value' => $site_name,
+      'severity' => REQUIREMENT_INFO,
+    ];
+  }
+  return $requirements;
+}
 
 /**
  * Implements hook_install_tasks().

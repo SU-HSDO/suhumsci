@@ -35,4 +35,15 @@ trait HsCommandTrait {
     return $response;
   }
 
+  /**
+   * Return BLT.
+   *
+   * @return \Robo\Task\Base\Exec
+   *   A drush exec command.
+   */
+  protected function blt() {
+    return $this->taskExec($this->getConfigValue('repo.root') . '/vendor/bin/blt')
+      ->option('no-interaction');
+  }
+
 }

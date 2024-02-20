@@ -51,10 +51,12 @@ set title_classes = [
 ]
 %}
 
+{% set heading_tag = element['#heading_tag'] is defined ? element['#heading_tag'] : 'h2' %}
+
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if not label_hidden %}
-    <h2{{ title_attributes.addClass(title_classes) }}>{{ label }}</h2>
+    <{{ heading_tag }}{{ title_attributes.addClass(title_classes) }}>{{ label }}</{{ heading_tag }}>
   {% endif %}
   {{ title_suffix }}
   {% block content %}

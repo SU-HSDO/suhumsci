@@ -21,44 +21,29 @@ drush:
   default_alias: '${drush.aliases.local}'
 modules:
   local:
-    enable: {  }
+    enable: { }
     uninstall:
-      - google_analytics
       - acquia_connector
       - purge
-      - shield
-      - config_readonly
   ci:
-    enable:
-      - hs_config_readonly
+    enable: { }
     uninstall:
-      - google_analytics
       - purge
       - acquia_connector
-      - shield
   dev:
     enable:
       - acquia_connector
-      - shield
       - stage_file_proxy
-    uninstall:
-      - google_analytics
-      - config_readonly
+    uninstall: { }
   test:
     enable:
       - acquia_connector
-      - shield
       - stage_file_proxy
-    uninstall:
-      - google_analytics
-      - config_readonly
+    uninstall: { }
   prod:
     enable:
-      - google_analytics
       - acquia_connector
-      - hs_config_readonly
     uninstall:
-      - shield
       - stage_file_proxy
 multisites:
   - aaai
@@ -145,12 +130,13 @@ multisites:
   - linguistics
   - lowe
   - mathematics
-  - mathematics2023
+  - mathematics2024
   - mcs
   - mcs2023
   - mediterraneanstudies
   - memorylab
   - morrisoninstitute
+  - mrc
   - mtl
   - music
   - oconnell

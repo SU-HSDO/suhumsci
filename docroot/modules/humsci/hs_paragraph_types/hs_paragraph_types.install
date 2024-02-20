@@ -71,3 +71,149 @@ function hs_paragraph_types_update_9403() {
     ])
     ->execute();
 }
+
+/**
+ * Creates field configuration found in the sync directory.
+ */
+function hs_paragraph_types_update_10000() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // If storage does not yet exist, create it.
+  if (empty($field_storage->load('paragraph.field_hs_collection_uh'))) {
+    $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_hs_collection_uh'))->save();
+  }
+
+  // Create the field instance.
+  $config = $field_config_storage->load('paragraph.hs_collection.field_hs_collection_uh');
+  if (empty($config)) {
+    $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_hs_collection_uh'))->save();
+  }
+}
+
+/**
+ * Update existing hs_collection content if raised cards is enabled.
+ */
+function hs_paragraph_types_update_10001(&$sandbox) {
+
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_collection')
+      ->condition('field_raised_cards', TRUE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->set('field_hs_collection_uh', TRUE);
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Set default field_title_settings value for existing content.
+ */
+function hs_paragraph_types_update_10002(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Import new field_title_settings configuration.
+    $config_storage = \Drupal::service('config.storage.sync');
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+    $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+    $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+    // If storage does not yet exist, create it.
+    if (empty($field_storage->load('paragraph.field_title_settings'))) {
+      $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_title_settings'))->save();
+    }
+
+    // Create the field instance.
+    $config = $field_config_storage->load('paragraph.hs_collection.field_title_settings');
+    if (empty($config)) {
+      $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_title_settings'))->save();
+    }
+
+    // Get list of collection paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_collection')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  // Set new field default for existing hs_collection paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    $paragraph->set('field_title_settings', 'collection_title_none');
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Creates field configuration for new field.
+ */
+function hs_paragraph_types_update_10003() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // If storage does not yet exist, create it.
+  if (empty($field_storage->load('paragraph.field_hs_clr_bnd_ttl'))) {
+    $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_hs_clr_bnd_ttl'))->save();
+  }
+
+  // Create the field instance.
+  $config = $field_config_storage->load('paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl');
+  if (empty($config)) {
+    $field_config_storage->create($config_storage->read('field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl'))->save();
+  }
+}
+
+/**
+ * Transfer qualifying content to new field.
+ */
+function hs_paragraph_types_update_10004(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_clr_bnd')
+      ->condition('field_hs_clr_bnd_txt', '', '<>')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $string_to_move = $paragraph->get('field_hs_clr_bnd_txt')->getValue()[0]['value'];
+    if (strlen($string_to_move) > 105) {
+      continue;
+    }
+    $paragraph->set('field_hs_clr_bnd_ttl', $string_to_move);
+    $paragraph->set('field_hs_clr_bnd_txt', '');
+    $paragraph->save();
+  }
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

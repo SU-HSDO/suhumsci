@@ -5,14 +5,19 @@ dependencies:
   config:
     - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_lnk
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_wdth
     - paragraphs.paragraphs_type.hs_clr_bnd
   module:
+    - blazy
     - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - layout_builder
+    - link
 third_party_settings:
   ds:
     layout:
@@ -31,8 +36,12 @@ third_party_settings:
             gray: gray
             light: light
     regions:
+      color_band_title:
+        - field_hs_clr_bnd_ttl
       color_band_text:
         - field_hs_clr_bnd_txt
+      color_band_link:
+        - field_hs_clr_bnd_lnk
   layout_builder:
     enabled: false
     allow_custom: false
@@ -41,6 +50,34 @@ targetEntityType: paragraph
 bundle: hs_clr_bnd
 mode: preview
 content:
+  field_hs_clr_bnd_lnk:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: hs-more-link
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
+    region: color_band_link
+  field_hs_clr_bnd_ttl:
+    type: blazy_title
+    label: hidden
+    settings:
+      delimiter: '|'
+      tag: small
+      break: false
+    third_party_settings: {  }
+    weight: 0
+    region: color_band_title
   field_hs_clr_bnd_txt:
     type: basic_string
     label: hidden
@@ -50,7 +87,7 @@ content:
         class: ''
       hs_field_helpers:
         inline_contents: 0
-    weight: 0
+    weight: 1
     region: color_band_text
 hidden:
   field_hs_clr_bnd_bgc: true

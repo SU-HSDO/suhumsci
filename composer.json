@@ -7,8 +7,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://packages.drupal.org/8",
-            "exclude": ["drupal/role_watchdog"]
+            "url": "https://packages.drupal.org/8"
         },
         {
             "type": "package",
@@ -39,10 +38,6 @@
                     "composer/installers": "^1.2.0"
                 }
             }
-        },
-        {
-            "type": "git",
-            "url": "https://git.drupalcode.org/issue/role_watchdog-3297981.git"
         }
     ],
     "require": {
@@ -86,6 +81,7 @@
         "drupal/cshs": "^4.0",
         "drupal/default_content": "^2.0",
         "drupal/diff": "^1.0",
+        "drupal/display_field_copy": "^2.1",
         "drupal/domain_301_redirect": "^2.0",
         "drupal/domain_registration": "^1.6",
         "drupal/draggableviews": "^2.0",
@@ -150,7 +146,7 @@
         "drupal/real_aes": "^2.3",
         "drupal/redirect": "^1.6",
         "drupal/role_delegation": "^1.1",
-        "drupal/role_watchdog": "dev-3297981-automated-drupal-10 as 2.0.2",
+        "drupal/role_watchdog": "^2.1",
         "drupal/search_api": "^1.18",
         "drupal/seckit": "^2.0",
         "drupal/selective_better_exposed_filters": "^3.0@beta",
@@ -219,6 +215,9 @@
     "extra": {
         "enable-patching": true,
         "patches": {
+            "drupal/conditional_fields": {
+                "https://www.drupal.org/project/conditional_fields/issues/2902164": "https://www.drupal.org/files/issues/2023-09-28/2902164-149.patch"
+            },
             "drupal/config_ignore": {
                 "https://www.drupal.org/project/config_ignore/issues/2857247": "https://www.drupal.org/files/issues/2020-01-11/support-for-export-2857247-44.patch",
                 "https://www.drupal.org/project/config_ignore/issues/2865419": "https://www.drupal.org/files/issues/2020-07-20/config_ignore-wildcard_force_import.patch"
@@ -232,7 +231,7 @@
                 "CKEditor 5 headings plugin paragraph label change": "patches/ckeditor5-paragraph-rename.patch"
             },
             "drupal/gin": {
-                "https://www.drupal.org/project/gin/issues/3276752": "https://www.drupal.org/files/issues/2022-12-07/gin-stick-after-ajax-reload-3276752-23.patch"
+                "https://www.drupal.org/project/gin/issues/3342513": "https://www.drupal.org/files/issues/2024-02-02/3342513-entity-edit-form-update-ajax-ids-12.patch"
             },
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"
@@ -243,6 +242,9 @@
             },
             "drupal/focal_point": {
                 "https://www.drupal.org/project/focal_point/issues/3328807": "https://www.drupal.org/files/issues/2023-01-06/3328807-focal_point-image_width_when_no_image_to_crop.patch"
+            },
+            "drupal/google_analytics": {
+                "https://www.drupal.org/project/google_analytics/issues/3373921": "https://www.drupal.org/files/issues/2023-08-07/google-analytics-issues-3373921-cannot-install-from-existing-config-11.patch"
             },
             "drupal/hook_event_dispatcher": {
                 "https://www.drupal.org/project/hook_event_dispatcher/issues/3354751": "https://www.drupal.org/files/issues/2023-04-17/hook_event_dispatcher-4.x-3354751.patch"
@@ -256,6 +258,7 @@
                 "https://www.drupal.org/project/menu_link/issues/3358081": "https://git.drupalcode.org/project/menu_link/-/merge_requests/9.patch"
             },
             "drupal/menu_link_weight": {
+                "https://www.drupal.org/project/menu_link_weight/issues/2875984": "https://git.drupalcode.org/project/menu_link_weight/-/merge_requests/2.diff",
                 "https://www.drupal.org/project/menu_link_weight/issues/3410674": "https://www.drupal.org/files/issues/2023-12-23/menu_link_weight-3410674.patch",
                 "https://www.drupal.org/project/menu_link_weight/issues/3099139": "https://www.drupal.org/files/issues/2019-12-05/menu_link_weight-target_blank-3099139.patch"
             },

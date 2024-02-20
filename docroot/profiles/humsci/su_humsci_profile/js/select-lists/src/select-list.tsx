@@ -87,11 +87,6 @@ function CustomOption(props: OptionProps) {
     }
   }, [rootRef, id])
 
-  if (value === '1111') {
-    console.log('selected', selected);
-    console.log('highlighted', highlighted);
-    console.log('disabled', disabled);
-  }
   return (
     <StyledOption
       {...otherProps}
@@ -164,7 +159,11 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
       {label &&
         <div
           id={labelId}
-          style={{padding: "6px", fontWeight: "600"}}
+          style={{
+            marginBottom: "1.2rem",
+            fontSize: "1.8rem",
+            fontWeight: "600"
+          }}
         >
           {label}
         </div>
@@ -191,6 +190,11 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
           {optionChosen &&
             <span style={{overflow: "hidden", maxWidth: "calc(100% - 30px)", padding: "8px 5px 8px 0"}}>
               {renderSelectedValue(value, options)}
+            </span>
+          }
+          {(!optionChosen && !multiple) &&
+            <span style={{padding: "8px 5px 8px 0", color: "#4c4740"}}>
+              {emptyLabel}
             </span>
           }
           {(!optionChosen && multiple) &&
@@ -234,7 +238,6 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
             }
 
             {options.map(option => {
-              console.log(option);
               return (
                 <CustomOption key={option.value} value={option.value} disabled={option.disabled} rootRef={listboxRef} id={`${name}-${option.value.replace(/\W+/g, '-')}`}>
                   {option.label}

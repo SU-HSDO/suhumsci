@@ -1,5 +1,5 @@
 diff --git a/docroot/.htaccess b/docroot/.htaccess
-index 4031da47..5366085e 100644
+index 4031da47..c18b9eb7 100644
 --- a/docroot/.htaccess
 +++ b/docroot/.htaccess
 @@ -1,3 +1,14 @@
@@ -20,17 +20,17 @@ index 4031da47..5366085e 100644
 @@ -18,6 +29,9 @@ Options -Indexes
  # Set the default handler.
  DirectoryIndex index.php index.html index.htm
- 
+
 +# Add webp MIME type so that Apache knows how to handle WebP images
 +AddType image/webp .webp
 +
  # Add correct encoding for SVGZ.
  AddType image/svg+xml svg svgz
  AddEncoding gzip svgz
-@@ -60,6 +74,61 @@ AddEncoding gzip svgz
+@@ -60,6 +74,57 @@ AddEncoding gzip svgz
  <IfModule mod_rewrite.c>
    RewriteEngine on
- 
+
 +  # Block access via specific user-agents.
 +  RewriteCond %{HTTP_USER_AGENT} CQ-API-Spyder [NC]
 +  RewriteRule .* - [F,L]
@@ -65,10 +65,6 @@ index 4031da47..5366085e 100644
 +  # See https://httpd.apache.org/docs/2.4/rewrite/flags.html#flag_f.
 +  RewriteRule .* - [F]
 +
-+  RewriteCond %{HTTP_HOST} ^statistics [NC]
-+  RewriteCond %{REQUEST_URI} ^\/~ [NC]
-+  RewriteRule (.*)$ https://statweb.stanford.edu/$1 [L,R=301]
-+
 +  # Redirect HTTP to HTTPS on cloud
 +  RewriteCond %{HTTPS} off
 +  RewriteCond %{HTTP:X-Forwarded-Proto} !https
@@ -89,7 +85,7 @@ index 4031da47..5366085e 100644
    # Set "protossl" to "s" if we were accessed via https://.  This is used later
    # if you enable "www." stripping or enforcement, in order to ensure that
    # you don't bounce between http and https.
-@@ -137,6 +206,8 @@ AddEncoding gzip svgz
+@@ -137,6 +202,8 @@ AddEncoding gzip svgz
    RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
    # Allow access to test-specific PHP files:
    RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php
@@ -104,7 +100,7 @@ index ebcd04b9..9d38e5ff 100644
 +++ b/docroot/robots.txt
 @@ -14,6 +14,7 @@
  # http://www.robotstxt.org/robotstxt.html
- 
+
  User-agent: *
 +Crawl-delay: 30
  # CSS, JS, Images

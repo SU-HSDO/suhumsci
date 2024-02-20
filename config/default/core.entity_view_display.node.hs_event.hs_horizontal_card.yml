@@ -13,16 +13,23 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
     - field.field.node.hs_event.field_hs_event_date
+    - field.field.node.hs_event.field_hs_event_experience
     - field.field.node.hs_event.field_hs_event_image
+    - field.field.node.hs_event.field_hs_event_instances
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_registration
     - field.field.node.hs_event.field_hs_event_series
     - field.field.node.hs_event.field_hs_event_speaker
     - field.field.node.hs_event.field_hs_event_sponsor
     - field.field.node.hs_event.field_hs_event_status
+    - field.field.node.hs_event.field_hs_event_stream
+    - field.field.node.hs_event.field_hs_event_stream_info
+    - field.field.node.hs_event.field_hs_event_ticket
     - field.field.node.hs_event.field_hs_event_type
     - field.field.node.hs_event.field_hs_event_video
+    - field.field.node.hs_event.field_menulink
     - node.type.hs_event
   module:
     - ds
@@ -49,7 +56,7 @@ third_party_settings:
       date:
         - field_hs_event_date
       time:
-        - 'dynamic_block_field:node-hs_event_time_range'
+        - 'display_field_copy:node-hs_event_time_range'
       location:
         - field_hs_event_location
       category:
@@ -66,11 +73,23 @@ third_party_settings:
           link: true
           wrapper: span
           class: ''
-      'dynamic_block_field:node-hs_event_time_range':
-        plugin_id: 'dynamic_block_field:node-hs_event_time_range'
+      'display_field_copy:node-hs_event_time_range':
+        plugin_id: 'display_field_copy:node-hs_event_time_range'
         weight: 3
         label: hidden
-        formatter: default
+        formatter: smartdate_custom
+        settings:
+          formatter:
+            separator: ' - '
+            date_format: 'g:i A'
+            custom_date_format: ''
+            timezone: ''
+            join: ''
+            time_format: ''
+            time_hour_format: ''
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
 id: node.hs_event.hs_horizontal_card
 targetEntityType: node
 bundle: hs_event
@@ -91,6 +110,16 @@ content:
       separator: ' - '
       join: ', '
       timezone: ''
+      tooltip:
+        date_format: ''
+        custom_date_format: ''
+      site_time_toggle: '1'
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
     third_party_settings:
       field_formatter_class:
         class: ''
@@ -153,5 +182,6 @@ hidden:
   field_hs_event_ticket: true
   field_hs_event_type: true
   field_hs_event_video: true
+  field_menulink: true
   links: true
   search_api_excerpt: true

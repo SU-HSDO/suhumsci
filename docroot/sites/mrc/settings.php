@@ -1,7 +1,5 @@
 <?php
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
-
 // @codingStandardsIgnoreFile
 
 /**
@@ -782,13 +780,6 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
-$settings['config_sync_directory'] = '../config/mrc';
-
-if (!EnvironmentDetector::isAhProdEnv()) {
-  $config['stage_file_proxy.settings']['origin'] = 'https://mrc.stanford.edu';
-  $config['stage_file_proxy.settings']['origin_dir'] = 'sites/mrc/files';
-}
-
 /**
  * IMPORTANT.
  *

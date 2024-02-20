@@ -15,8 +15,14 @@
  * @see template_preprocess_views_view_unformatted()
  */
 #}
+
 {% if title %}
-  <h3>{{ title }}</h3>
+  {% if title|render matches '/<h\\d>/' %}
+    {# Check to see if there is already a heading tag in the rendered title. #}
+    {{ title }}
+  {% else %}
+    <h3>{{ title }}</h3>
+  {% endif %}
   {# Wrap the rows when a title is present (grouped views). #}
   <div class="views-rows">
 {% endif %}

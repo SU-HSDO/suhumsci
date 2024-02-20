@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.stanford_gallery.field_photoalbum_style
     - field.field.paragraph.stanford_gallery.su_gallery_button
     - field.field.paragraph.stanford_gallery.su_gallery_description
     - field.field.paragraph.stanford_gallery.su_gallery_headline
@@ -10,9 +11,11 @@ dependencies:
     - paragraphs.paragraphs_type.stanford_gallery
   module:
     - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - linkit
+    - options
     - stanford_media
     - text
 id: paragraph.stanford_gallery.default
@@ -20,6 +23,13 @@ targetEntityType: paragraph
 bundle: stanford_gallery
 mode: default
 content:
+  field_photoalbum_style:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
   su_gallery_button:
     type: linkit
     label: hidden
@@ -54,13 +64,16 @@ content:
     weight: 0
     region: content
   su_gallery_images:
-    type: media_image_formatter
+    type: media_responsive_image_formatter
     label: hidden
     settings:
       view_mode: caption_credit
       link: false
-      image_style: hs_medium_rectangle_360x250
+      image_style: photo_album_grid
+      remove_alt: 0
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       ds:

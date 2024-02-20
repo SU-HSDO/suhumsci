@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\PrivateKey;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
@@ -71,6 +72,13 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   protected $privateKey;
 
   /**
+   * Renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -85,13 +93,16 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Context repository service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
    *   Uuid Service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   Rendering service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo, UuidInterface $uuid_generator, PrivateKey $private_key) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, ContextRepositoryInterface $context_repo, UuidInterface $uuid_generator, PrivateKey $private_key, RendererInterface $renderer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->requestStack = $request_stack;
     $this->contextRepository = $context_repo;
     $this->uuidGenerator = $uuid_generator;
     $this->privateKey = $private_key->get();
+    $this->renderer = $renderer;
   }
 
   /**
@@ -105,7 +116,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
       $container->get('request_stack'),
       $container->get('context.repository'),
       $container->get('uuid'),
-      $container->get('private_key')
+      $container->get('private_key'),
+      $container->get('renderer')
     );
   }
 
@@ -127,7 +139,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
 
     $components = $this->getComponents();
     // This prevents the block label from displaying if there are no contents.
-    if (empty(render($components))) {
+    if (empty($this->renderer->renderPlain($components))) {
       return AccessResult::forbidden();
     }
     return parent::blockAccess($account);
@@ -139,7 +151,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
   public function build() {
     $build = [];
 
-    $build['components'] = $this->getComponents((bool) $this->getSectionStorage());
+    $build['components'] = $this->getComponents(!!$this->getSectionStorage());
+
     // Set the cache keys so that each block will have its own cache, even if
     // it has the same machine name on different entity displays.
     $build['#cache']['keys'] = array_keys($build['components']);
@@ -176,7 +189,7 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
 
     // Build the render array for each component.
     foreach ($this->configuration['children'] as $uuid => $child) {
-      $component = new SectionComponent($uuid, 'content', $child);
+      $component = new SectionComponent($uuid, 'content', $child ?: []);
 
       if (!empty($child['additional'])) {
         foreach ($child['additional'] as $key => $value) {
@@ -184,7 +197,12 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
         }
       }
 
-      $components[$uuid] = $component->toRenderArray($contexts, $in_preview);
+      try {
+        $components[$uuid] = $component->toRenderArray($contexts, $in_preview);
+      }
+      catch (\Throwable $e) {
+        continue;
+      }
     }
 
     // Add administrative links.

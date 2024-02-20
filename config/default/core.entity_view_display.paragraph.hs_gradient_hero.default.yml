@@ -11,6 +11,7 @@ dependencies:
     - paragraphs.paragraphs_type.hs_gradient_hero
   module:
     - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - link
@@ -52,9 +53,13 @@ content:
       trim_suffix: ''
       wrap_output: false
       wrap_class: trimmed
-      more_link: false
-      more_class: more-link
-      more_text: More
+      more:
+        display_link: false
+        target_blank: false
+        link_trim_only: false
+        class: more-link
+        text: More
+        aria_label: 'Read more about [node:title]'
       summary_handler: full
       trim_options:
         text: false
@@ -73,7 +78,10 @@ content:
       view_mode: caption_credit
       link: false
       image_style: hero_with_text
+      remove_alt: 0
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       hs_field_helpers:
@@ -97,6 +105,7 @@ content:
     label: hidden
     settings:
       tag: h2
+      linked: false
     third_party_settings:
       field_formatter_class:
         class: ''

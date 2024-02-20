@@ -27,6 +27,9 @@ modules:
         browser: chrome
         url: '${project.local.protocol}://${project.local.hostname}/'
         window_size: maximize
+        capabilities:
+          unexpectedAlertBehaviour: 'accept'
+          handlesAlerts: true
     - StanfordCaravan\Codeception\Drupal\DrupalEntity:
         cleanup_test: true
         cleanup_failed: false

@@ -17,6 +17,55 @@ class HsCommands extends BltTasks {
   use HsCommandTrait;
 
   /**
+   * Generate a list of emails for the given role on all sites.
+   *
+   * @command humsci:role-report
+   */
+  public function roleReport($role) {
+    $information = [];
+    foreach ($this->getConfigValue('multisites') as $site) {
+      $emails = $this->taskDrush()
+        ->alias("$site.prod")
+        ->drush('sqlq')
+        ->arg('SELECT d.mail FROM users_field_data d INNER JOIN user__roles r ON d.uid = r.entity_id WHERE r.roles_target_id = "' . $role . '" and d.mail NOT LIKE "%localhost%"')
+        ->printOutput(FALSE)
+        ->run()
+        ->getMessage();
+
+      $site_url = str_replace('_', '-', str_replace('__', '.', $site));
+
+
+      if (str_contains($site_url, '.')) {
+        [$first, $last] = explode('.', $site_url);
+        $site_url = "$first-prod.$last";
+      }
+      else {
+        $site_url .= "-prod";
+      }
+      if ($emails) {
+        $emails = array_filter(explode("\n", $emails));
+      }
+      if(!$emails) {
+        continue;
+      }
+      foreach ($emails as $email) {
+        $information[] = [
+          'site' => $site,
+          'url' => "https://$site_url.stanford.edu",
+          'users' => $email,
+        ];
+      }
+
+    }
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['Site', 'Url', 'Emails']);
+    foreach ($information as $info) {
+      fputcsv($out, $info);
+    }
+    fclose($out);
+  }
+
+  /**
    * Set up local blt settings and necessary files.
    *
    * @command humsci:local:setup
@@ -173,7 +222,6 @@ class HsCommands extends BltTasks {
 
     $task = $this->taskDrush()
       ->alias('')
-      ->drush('cache-clear drush')
       ->drush('sql-sync')
       ->arg($remote_alias)
       ->arg($local_alias)
@@ -214,9 +262,8 @@ class HsCommands extends BltTasks {
     $this->switchSiteContext($site);
     $this->taskDrush()
       ->alias("$site.prod")
-      ->drush('cset')
-      ->arg('config_split.config_split.not_live')
-      ->arg('status')
+      ->drush('sset')
+      ->arg('nobots')
       ->arg($options['not-live'] ? 1 : 0)
       ->option('yes')
       ->drush('cset')
@@ -229,8 +276,6 @@ class HsCommands extends BltTasks {
       ->arg('enabled')
       ->arg($options['not-live'] ? 0 : 1)
       ->option('yes')
-      ->drush('pmu')
-      ->arg('nobots')
       ->drush('state:set')
       ->arg('xmlsitemap_base_url')
       ->arg($new_domain)

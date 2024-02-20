@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_paragraph_types module.
+ */
+
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Config\FileStorage;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Entity\FilterFormat;
+
+/**
+ * Store image gallery display mode in paragraph variable.
+ */
+function hs_paragraph_types_update_9401() {
+  // Load field_photoalbum_style field definition exported configuration.
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $field_storage = $config_directory->read('field.storage.paragraph.field_photoalbum_style');
+  $field_config = $config_directory->read('field.field.paragraph.stanford_gallery.field_photoalbum_style');
+
+  // Create field_photoalbum_style from exported configuration.
+  if (!FieldStorageConfig::loadByName($field_storage['entity_type'], $field_storage['field_name'])) {
+    FieldStorageConfig::create($field_storage)->save();
+  }
+  if (!FieldConfig::loadByName($field_config['entity_type'], $field_config['bundle'], $field_config['field_name'])) {
+    FieldConfig::create($field_config)->save();
+  }
+
+  // Copy 'display_mode' behavior value to new field in stanford_gallery.
+  $paragraphs = \Drupal::entityTypeManager()
+    ->getStorage('paragraph')
+    ->loadByProperties(['type' => 'stanford_gallery']);
+  foreach ($paragraphs as $paragraph) {
+    $paragraph->set('field_photoalbum_style', $paragraph->getBehaviorSetting('image_gallery', 'display_mode'));
+    $paragraph->save();
+  }
+}
+
+/**
+ * Update user permissions for minimal_html_with_styles text format.
+ */
+function hs_paragraph_types_update_9402() {
+
+  // Ensure that the filter format exists in order to grant permissions.
+  $filter_format_config = \Drupal::service('config.storage.sync')->read('filter.format.minimal_html_with_styles');
+  if (!FilterFormat::load('minimal_html_with_styles')) {
+    $filter_format = FilterFormat::create($filter_format_config);
+    $filter_format->save();
+  }
+
+  // Grant permission to use the text format to the roles that require it.
+  user_role_grant_permissions('contributor', ['use text format minimal_html_with_styles']);
+  user_role_grant_permissions('site_manager', ['use text format minimal_html_with_styles']);
+}
+
+/**
+ * Update field format for existing postcard paragraph content.
+ */
+function hs_paragraph_types_update_9403() {
+  $db = \Drupal::database();
+  $db->update('paragraph__field_hs_postcard_body')
+    ->fields([
+      'field_hs_postcard_body_format' => 'minimal_html_with_styles',
+    ])
+    ->execute();
+  $db->update('paragraph_revision__field_hs_postcard_body')
+    ->fields([
+      'field_hs_postcard_body_format' => 'minimal_html_with_styles',
+    ])
+    ->execute();
+}
+
+/**
+ * Creates field configuration found in the sync directory.
+ */
+function hs_paragraph_types_update_10000() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // If storage does not yet exist, create it.
+  if (empty($field_storage->load('paragraph.field_hs_collection_uh'))) {
+    $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_hs_collection_uh'))->save();
+  }
+
+  // Create the field instance.
+  $config = $field_config_storage->load('paragraph.hs_collection.field_hs_collection_uh');
+  if (empty($config)) {
+    $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_hs_collection_uh'))->save();
+  }
+}
+
+/**
+ * Update existing hs_collection content if raised cards is enabled.
+ */
+function hs_paragraph_types_update_10001(&$sandbox) {
+
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_collection')
+      ->condition('field_raised_cards', TRUE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->set('field_hs_collection_uh', TRUE);
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

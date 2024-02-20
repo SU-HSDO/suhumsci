@@ -56,14 +56,18 @@ class MenuEvents implements EventSubscriberInterface {
     $expanded = $entity->isNew() ?: (bool) $entity->get('expanded')->getString();
     $entity->set('expanded', $expanded);
 
+    $entity_type_manager = \Drupal::entityTypeManager();
+
     // When a menu item is added as a child of another menu item clear the
     // parent pages cache so that the block shows up as it doesn't get
     // invalidated just by the menu cache tags.
     while ($entity && ($parent_id = $entity->getParentId())) {
-
       [$entity_name, $uuid] = explode(':', $parent_id);
-      $entity = \Drupal::entityTypeManager()
-        ->getStorage($entity_name)
+      if (!$entity_type_manager->hasDefinition($entity_name)) {
+        break;
+      }
+
+      $entity = $entity_type_manager->getStorage($entity_name)
         ->loadByProperties(['uuid' => $uuid]);
 
       if (!$entity) {

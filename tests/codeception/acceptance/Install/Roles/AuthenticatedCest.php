@@ -6,6 +6,7 @@ use Drupal\Core\Serialization\Yaml;
  * Class AuthenticatedCest.
  *
  * @group install
+ * @group roles
  */
 class AuthenticatedCest {
 

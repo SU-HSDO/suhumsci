@@ -204,6 +204,7 @@ function hs_fields_helpers_cleanup_layout_builder(array &$variables) {
  *   Pattern ID being used.
  */
 function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id) {
+  $renderer = \Drupal::service('renderer');
   try {
     $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
   } catch (Exception $e) {
@@ -212,7 +213,26 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
-      $rendered = render($pattern[$region]);
+
+      // Rebuild render() function since it will be removed
+      $element = $pattern[$region];
+      if (is_array($element)) {
+        if (
+          isset($element['#printed']) &&
+          $element['#printed'] == TRUE &&
+          isset($element['#markup']) &&
+          strlen($element['#markup']) > 0
+        ) {
+          $rendered = $element['#markup'];
+        }
+        else {
+          show($element);
+          $rendered = $renderer->render($element);
+        }
+      }
+      else {
+        $rendered = $element;
+      }
 
       // Remove all wrapper divs so we can check if the region actually has any
       // visible output.
@@ -548,84 +568,6 @@ function _hs_field_helpers_get_view_mode_component(FieldableEntityInterface $ent
       }
     }
   }
-}
-
-/**
- * Implements hook_cron().
- */
-function hs_field_helpers_cron() {
-  if (!Settings::get('hs_field_helpers_cron', FALSE)) {
-    return;
-  }
-  $deleted = _he_field_helpers_clean_eck();
-  $logger = \Drupal::logger('hs_field_helpers');
-  foreach ($deleted as $entity_type => $ids) {
-    $logger->info(t('Deleted %count entities due to no usages. %type: %ids'), [
-      '%count' => count($ids),
-      '%type' => $entity_type,
-      '%ids' => implode(', ', $ids),
-    ]);
-  }
-}
-
-/**
- * Deletes any ECK entities that don't have any usage of them anywhere.
- *
- * With entity reference fields, entity_usage module tracks the use of ECK
- * entities. Because of that we can safely delete these entities that have no
- * usage statitistics of them. Mostly this is from doing a migration rollback.
- * Deleting a node manually seems to clean the ECK entities.
- *
- * @return array
- *   Keyed array of entity type to entity ids that were deleted.
- */
-function _he_field_helpers_clean_eck() {
-  /** @var \Drupal\entity_usage\EntityUsage $entity_usage */
-  $entity_usage = \Drupal::service('entity_usage.usage');
-  $deleted = [];
-  foreach (_hs_field_helpers_get_cleanup_entity_types() as $entity_type) {
-    $entity_storage = \Drupal::entityTypeManager()
-      ->getStorage($entity_type);
-    $entity_ids = $entity_storage->getQuery()
-      ->accessCheck(FALSE)
-      ->execute();
-
-    // Chunk it up so that we don't try to load every single entity at once.
-    $chuncked_ids = array_chunk($entity_ids, 100);
-
-    foreach ($chuncked_ids as $entity_ids) {
-      $entities = $entity_storage->loadMultiple($entity_ids);
-
-      // Delete all ECK entities that aren't being used. Some ECK's don't get
-      // deleted if they were imported by a migration.
-      foreach ($entities as $entity) {
-        if (empty($entity_usage->listSources($entity))) {
-          $deleted[$entity_type][] = $entity->id();
-          $entity->delete();
-        }
-      }
-    }
-  }
-  return $deleted;
-}
-
-/**
- * Get the entity types to clean if there are no usages.
- *
- * @return string[]
- *   Entity type ids.
- */
-function _hs_field_helpers_get_cleanup_entity_types(): array {
-  $cleanup_types = ['paragraph'];
-  $definitions = \Drupal::entityTypeManager()->getDefinitions();
-  /** @var \Drupal\Core\Entity\ContentEntityType $entity_type */
-  foreach ($definitions as $entity_type_id => $entity_type) {
-    // Find all the entity types ECK has available.
-    if ($entity_type->getOriginalClass() == EckEntity::class) {
-      $cleanup_types[] = $entity_type_id;
-    }
-  }
-  return $cleanup_types;
 }
 
 /**

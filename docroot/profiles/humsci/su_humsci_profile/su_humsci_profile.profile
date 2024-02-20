@@ -23,6 +23,91 @@ use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function su_humsci_profile_user_role_insert(RoleInterface $role) {
+  _su_humsci_profile_update_samlauth();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function su_humsci_profile_user_role_delete(RoleInterface $entity) {
+  _su_humsci_profile_update_samlauth();
+}
+
+/**
+ * Update samlauth user role mapping to always align with the current roles.
+ */
+function _su_humsci_profile_update_samlauth() {
+  $samlauth_roles = [];
+  foreach (array_keys(user_role_names(TRUE)) as $role_id) {
+    $samlauth_roles[$role_id] = $role_id;
+  }
+  unset($samlauth_roles[UserInterface::AUTHENTICATED_ROLE]);
+  asort($samlauth_roles);
+  \Drupal::configFactory()
+    ->getEditable('samlauth.authentication')
+    ->set('map_users_roles', $samlauth_roles)
+    ->save();
+}
+
+/**
+ * Implements hook_help().
+ */
+function su_humsci_profile_help($route_name, RouteMatchInterface $route_match) {
+  $path = $route_match->getRouteObject()->getPath();
+  switch ($path) {
+    case '/admin/users':
+      return '<p>Need help giving someone permission to edit the site? Consult the <a href="https://hsweb.slite.page/p/Qlk4KqR8GW9qsn/Manage-User-Permissions">Manage User Permission section of the User Guide</a>.</p>';
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function su_humsci_profile_library_info_alter(&$libraries, $extension) {
+  // Disable confirm leave library during testing.
+  if ($extension == 'confirm_leave' && getenv('CI')) {
+    unset($libraries['confirm-leave']);
+  }
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function su_humsci_profile_field_widget_complete_paragraphs_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
+  $max_delta = $field_widget_complete_form['widget']['#max_delta'] ?? -1;
+  for ($delta = 0; $delta <= $max_delta; $delta++) {
+    if (isset($field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'])) {
+      $duplicate_button = &$field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'];
+      $duplicate_button['#ajax']['callback'] = 'su_humsci_profile_paragraphs_duplicate_callback';
+    }
+  }
+}
+
+/**
+ * Ajax callback for duplicate button on paragraphs.
+ *
+ * @param array $form
+ *   Complete form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   Ajax form state.
+ *
+ * @return array
+ *   Modified ajax element.
+ */
+function su_humsci_profile_paragraphs_duplicate_callback(array $form, FormStateInterface $form_state) {
+  $element = ParagraphsWidget::itemAjax($form, $form_state);
+  $added_delta = $element['#max_delta'];
+  $element[$added_delta]['#attributes']['class'][] = 'hs-duplicated';
+  $element['#attached']['library'][] = 'su_humsci_profile/paragraphs';
+  return $element;
+}
 
 /**
  * Implements hook_entity_type_alter().
@@ -173,8 +258,6 @@ function su_humsci_profile_preprocess_image_formatter(&$variables) {
   if (isset($variables['url'])) {
     // Disable screen readers from seeing the link on the image since there
     // should be another link with text nearby.
-    $variables['image']['#attributes']['aria-hidden'] = 'true';
-    $variables['image']['#attributes']['tabindex'] = -1;
     $variables['url']->mergeOptions([
       'attributes' => [
         'tabindex' => -1,
@@ -191,9 +274,12 @@ function su_humsci_profile_preprocess_responsive_image_formatter(&$variables) {
   if (isset($variables['url'])) {
     // Disable screen readers from seeing the link on the image since there
     // should be another link with text nearby.
-    $variables['responsive_image']['#attributes']['aria-hidden'] = 'true';
-    $variables['responsive_image']['#attributes']['tabindex'] = -1;
-    $variables['url']->mergeOptions(['attributes' => ['tabindex' => -1]]);
+    $variables['url']->mergeOptions([
+      'attributes' => [
+        'tabindex' => -1,
+        'aria-hidden' => 'true',
+      ],
+    ]);
   }
 }
 
@@ -290,9 +376,69 @@ function su_humsci_profile_local_tasks_alter(&$local_tasks) {
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
+function su_humsci_profile_node_insert(NodeInterface $node) {
+  // Clear menu links cache if the node has a menu link data.
+  if (
+    $node->hasField('field_menulink') &&
+    !$node->get('field_menulink')->isEmpty()
+  ) {
+    _su_humsci_clear_menu_cache_tags();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function su_humsci_profile_node_update(NodeInterface $node) {
+  /** @var \Drupal\node\NodeInterface $original_node */
+  $original_node = $node->original;
+  // Compare the original menu link with the new menu link data. If any
+  // important parts changed, clear the menu links cache.
+  if (
+    $node->hasField('field_menulink') &&
+    (!$node->get('field_menulink')->isEmpty() || !$original_node->get('field_menulink')->isEmpty())
+  ) {
+
+    $keys = ['title', 'description', 'weight', 'expanded', 'parent'];
+    $changes = $node->get('field_menulink')->getValue();
+    $original = $original_node->get('field_menulink')->getValue();
+
+    foreach ($keys as $key) {
+      $change_value = $changes[0][$key] ?? NULL;
+      $original_value = $original[0][$key] ?? NULL;
+
+      if ($change_value != $original_value) {
+        _su_humsci_clear_menu_cache_tags();
+        return;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function su_humsci_profile_node_delete(NodeInterface $node) {
+  // If a node has menu link data, delete the menu link.
+  if (
+    $node->hasField('field_menulink') &&
+    !$node->get('field_menulink')->isEmpty()
+  ) {
+    \Drupal::database()->delete('menu_tree')
+      ->condition('id', 'menu_link_field:%', 'LIKE')
+      ->condition('route_param_key', 'node=' . $node->id())
+      ->execute();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+    _su_humsci_clear_menu_cache_tags();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
 function su_humsci_profile_menu_link_content_presave(MenuLinkContentInterface $entity) {
   // For new menu link items created on a node form (normally), set the expanded
-  // attribute so all menu items are expanded by default.
+  // attribute so all mcenu items are expanded by default.
   if ($entity->isNew()) {
     $entity->set('expanded', TRUE);
   }
@@ -312,6 +458,13 @@ function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $en
         ->execute();
     }
   }
+  _su_humsci_clear_menu_cache_tags();
+}
+
+/**
+ * Clear the menu link cache tags.
+ */
+function _su_humsci_clear_menu_cache_tags() {
   Cache::invalidateTags(['su_humsci_profile:menu_links']);
 }
 
@@ -690,7 +843,7 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
  * Implements hook_ENTITY_TYPE_delete().
  */
 function su_humsci_profile_menu_link_content_delete(MenuLinkContentInterface $entity) {
-  Cache::invalidateTags(['su_humsci_profile:menu_links']);
+  _su_humsci_clear_menu_cache_tags();
 }
 
 /**
@@ -714,7 +867,7 @@ function su_humsci_profile_menu_link_content_update(MenuLinkContentInterface $en
     $entity->get('expanded')->getValue(),
   ];
   if (md5(json_encode($original)) != md5(json_encode($updated))) {
-    Cache::invalidateTags(['su_humsci_profile:menu_links']);
+    _su_humsci_clear_menu_cache_tags();
   }
 }
 
@@ -736,4 +889,27 @@ function su_humsci_profile_block_build_alter(array &$build, BlockPluginInterface
  */
 function su_humsci_profile_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form['simplesamlphp_auth_user_enable']['#default_value'] = (bool) \Drupal::state()->get('humsci_profile.user_saml_default', TRUE);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
+  $variables['content']['login']['#attributes']['class'] = [
+    'text-align-right',
+    'hs-secondary-button',
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_profile_preprocess_form_element(&$variables) {
+  if (
+    $variables['element']['#type'] == 'select' &&
+    !\Drupal::service('router.admin_context')->isAdminRoute()
+  ) {
+    $variables['attributes']['class'][] = 'select-preact';
+    $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
+  }
 }

@@ -5,7 +5,32 @@
  * su_humsci_profile.install
  */
 
+use Drupal\Core\DrupalKernel;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\key\Entity\Key;
+use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_requirements().
+ */
+function su_humsci_profile_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+
+    $site_path = DrupalKernel::findSitePath(\Drupal::request());
+    $site_path = explode('/', $site_path);
+    $site_name = $site_path[1];
+
+    $requirements['stanford_site_alias'] = [
+      'title' => t('Stanford Site Alias'),
+      'value' => $site_name,
+      'severity' => REQUIREMENT_INFO,
+    ];
+  }
+  return $requirements;
+}
 
 /**
  * Implements hook_install_tasks().
@@ -176,4 +201,369 @@ function su_humsci_profile_update_9004() {
     $migration_config->set('destination.overwrite_properties', array_values($overwrite_properties))
       ->save();
   }
+}
+
+/**
+ * Disable webp module.
+ */
+function su_humsci_profile_update_9405() {
+  \Drupal::service('module_installer')->uninstall(['webp']);
+}
+
+/**
+ * Enable new admin theme and helper module.
+ */
+function su_humsci_profile_update_9406() {
+  \Drupal::service('module_installer')->install(['hs_admin']);
+  $theme_handler = \Drupal::service('theme_installer');
+  $theme_handler->install([
+    'claro',
+    'gin',
+    'su_humsci_gin_admin',
+  ]);
+  // Set the su_humsci_gin_admin as the admin theme.
+  $config = \Drupal::service('config.factory')->getEditable('system.theme');
+  $config->set('admin', 'su_humsci_gin_admin')->save();
+  // Install gin toolbar helper module.
+  \Drupal::service('module_installer')->install(['gin_toolbar']);
+}
+
+/**
+ * Uninstall stable and bricks
+ */
+function su_humsci_profile_update_9500() {
+  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
+  $theme_handler = \Drupal::service('theme_handler');
+  $theme_installer = \Drupal::service('theme_installer');
+  if ($theme_handler->themeExists('classy')) {
+    $theme_installer->uninstall(['classy']);
+  }
+  if ($theme_handler->themeExists('stable')) {
+    $theme_installer->uninstall(['stable']);
+  }
+  if (!$theme_handler->themeExists('stable9')) {
+    $theme_installer->install(['stable9']);
+  }
+  if (\Drupal::moduleHandler()->moduleExists('bricks')) {
+    \Drupal::service('module_installer')->uninstall(['bricks']);
+  }
+}
+
+/**
+ * Install SamlAuth
+ */
+function su_humsci_profile_update_9501() {
+  $config_ignore = \Drupal::configFactory()
+    ->getEditable('config_ignore.settings');
+  $ignored = $config_ignore->get('ignored_config_entities');
+  $ignored[] = 'stanford_samlauth.settings';
+  $ignored[] = 'samlauth.authentication:map_users_roles';
+  $config_ignore->set('ignored_config_entities', $ignored)->save();
+  \Drupal::service('module_installer')->install(['stanford_samlauth']);
+  _su_humsci_profile_update_samlauth();
+}
+
+/**
+ * Uninstall seven and fix key configs.
+ */
+function su_humsci_profile_update_9600() {
+  if (\Drupal::service('theme_handler')->themeExists('seven')) {
+    \Drupal::service('theme_installer')->uninstall(['seven']);
+  }
+  // Resave keys to adjust any dependencies.
+  foreach (Key::loadMultiple() as $key) {
+    $key->save();
+  }
+}
+
+/**
+ * Install hs_entities module.
+ */
+function su_humsci_profile_update_9602() {
+  \Drupal::service('module_installer')->install(['hs_entities']);
+}
+
+/**
+ * Migrate News RSS ECK importer collection entities to News RSS HumSci
+ * entities.
+ */
+function su_humsci_profile_update_9603() {
+  // Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+  $entity_type_manager = \Drupal::entityTypeManager();
+  // Only ever 1 config page.
+  $config_page = $entity_type_manager->getStorage('config_pages')
+    ->load('news_rss');
+  if ($entity_type_manager->hasDefinition('importers') && $config_page) {
+    $new_values = [];
+
+    /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $field_item */
+    foreach ($config_page->get('field_news_rss') as $field_item) {
+      $eck_entity = $field_item->get('entity')->getValue();
+
+      // Create the new hs entity using the values of the ECK.
+      $hs_entity = $entity_type_manager->getStorage('hs_entity')
+        ->create([
+          'bundle' => 'news_rss',
+          'field_url' => $eck_entity->get('field_url')->getString(),
+          'field_terms' => $eck_entity->get('field_terms')->getString(),
+        ]);
+      $hs_entity->save();
+
+      // Store the new entity for the field value and delete the ECK.
+      $new_values[] = [
+        'target_id' => $hs_entity->id(),
+        'entity' => $hs_entity,
+      ];
+      $eck_entity->delete();
+    }
+    $config_page->set('field_news_rss', $new_values)->save();
+  }
+
+  // Update the field storage settings.
+  $field_storage_config = FieldStorageConfig::loadByName('config_pages', 'field_news_rss');
+  $field_storage_config->setSetting('target_type', 'hs_entity');
+  $field_storage_config->save();
+
+  // Update the field config settings.
+  $field_config =  \Drupal::entityTypeManager()->getStorage('field_config')
+    ->load('config_pages.news_rss.field_news_rss');
+  $handler_settings = $field_config->getSetting('handler_settings');
+  $handler_settings['target_bundles'] = ['news_rss' => 'news_rss'];
+  $field_config->setSetting('handler_settings', $handler_settings);
+  $field_config->save();
+}
+
+/**
+ * Delete news_rss ECK bundle and importer collections ECK entity type.
+ */
+function su_humsci_profile_update_9604() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Delete the news_rss ECK.
+  if ($entity_type_manager->hasDefinition('importers_type')) {
+    $news_rss_bundle = $entity_type_manager->getStorage('importers_type')
+      ->load('news_rss');
+    $news_rss_bundle->delete();
+  }
+
+  // Delete the importers entity type from ECK.
+  if ($entity_type_manager->hasDefinition('eck_entity_type')) {
+    $importers_collection = $entity_type_manager->getStorage('eck_entity_type')->load('importers');
+    $importers_collection->delete();
+  }
+}
+
+/**
+ * Delete "Not Live" config split.
+ */
+function su_humsci_profile_update_9605() {
+  \Drupal::entityTypeManager()
+    ->getStorage('config_split')
+    ->load('not_live')
+    ->delete();
+}
+
+/**
+ * Enable new modules and adjust path auto pattern.
+ */
+function su_humsci_profile_update_9606() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
+
+  \Drupal::service('module_installer')->install(['menu_link', 'cshs', 'token_or']);
+  $config_factory->getEditable('menu_link_weight.settings')
+    ->set('menu_parent_form_selector', 'cshs')
+    ->save();
+
+  $patterns = $entity_type_manager->getStorage('pathauto_pattern')
+    ->loadMultiple();
+  /** @var \Drupal\pathauto\PathautoPatternInterface $pattern_entity */
+  foreach ($patterns as $pattern_entity) {
+    $pattern = $pattern_entity->getPattern();
+    if (str_contains($pattern, '[node:menu-link:parent:url:relative]')) {
+      $pattern = str_replace('[node:menu-link:parent:url:relative]', '[node:menu-link:parent:url:relative|node:menu-link:parents:join-path]', $pattern);
+      $pattern_entity->setPattern($pattern)->save();
+    }
+  }
+}
+
+/**
+ * Set up new menu link field on content types.
+ */
+function su_humsci_profile_update_9607() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $config_factory = \Drupal::configFactory();
+
+  $entity_type_manager->getStorage('field_storage_config')
+    ->create([
+      'uuid' => 'e5cabaa4-0643-4f05-bbcd-6963bc3e95a9',
+      'field_name' => 'field_menulink',
+      'type' => 'menu_link',
+      'entity_type' => 'node',
+      'cardinality' => 1,
+    ])->save();
+  $field_config_storage = $entity_type_manager->getStorage('field_config');
+  $bundles = [];
+  /** @var \Drupal\node\Entity\NodeType $node_type */
+  foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
+    if ($node_type->getThirdPartySetting('menu_ui', 'available_menus')) {
+      $bundles[] = $node_type->id();
+      $node_type->setThirdPartySetting('menu_ui', 'available_menus', []);
+      $node_type->setThirdPartySetting('menu_ui', 'parent', '');
+      $node_type->save();
+    }
+  }
+  foreach ($bundles as $bundle) {
+    $field_config_storage->create([
+      'entity_type' => 'node',
+      'field_name' => 'field_menulink',
+      'bundle' => $bundle,
+      'label' => 'Menu Link',
+      'settings' => [
+        'available_menus' => ['main' => 'main'],
+        'default_menu_parent' => 'main:',
+        'default_expanded' => TRUE,
+      ],
+    ])->save();
+
+    $entity_type_manager->getStorage('entity_form_display')
+      ->load("node.$bundle.default")
+      ->setComponent('field_menulink')
+      ->save();
+
+    $display_names = $config_factory->listAll("core.entity_view_display.node.$bundle.");
+    $displays = $entity_type_manager->getStorage('entity_view_display')
+      ->loadMultiple($display_names);
+    foreach ($displays as $display) {
+      $display->removeComponent('field_menulink')->save();
+    }
+  }
+}
+
+/**
+ * Update menu links on nodes for the updated version of menu_link_weight.
+ */
+function su_humsci_profile_update_9608() {
+  // Instantiate the path alias path processor because it doesn't get added in
+  // this update hook.
+  \Drupal::service('path_processor_manager')
+    ->addOutbound(\Drupal::service('path_alias.path_processor'), 300);
+
+  /** @var \Drupal\Core\Menu\MenuLinkTree $menu_link_tree */
+  $menu_link_tree = \Drupal::service('menu.link_tree');
+  $parameters = new MenuTreeParameters();
+
+  $menu = $menu_link_tree->load('main', $parameters);
+  _su_humsci_profile_fix_menu($menu);
+}
+
+/**
+ * Update menu links on nodes for the updated version of menu_link_weight.
+ *
+ * @param array $menu_items
+ *   Menu items.
+ * @param string|null $parent
+ *   Parent menu id.
+ */
+function _su_humsci_profile_fix_menu(array $menu_items = [], string $parent = NULL): void {
+  $node_storage = \Drupal::entityTypeManager()
+    ->getStorage('node');
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $database = \Drupal::database();
+
+  foreach ($menu_items as $id => $menu_item) {
+    /** @var \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent $link */
+    $link = $menu_item->link;
+    $url = $link->getUrlObject();
+
+    try {
+      if (
+        $url->isRouted() &&
+        $url->getRouteName() == 'entity.node.canonical'
+      ) {
+        $node_id = $link->getUrlObject()->getRouteParameters()['node'] ?? NULL;
+        /** @var \Drupal\node\NodeInterface $node */
+        $node = $node_storage->load($node_id);
+        if (!$node->get('field_menulink')->isEmpty()) {
+          throw new \Exception('Menu link already exists on node ' . $node->label());
+        }
+
+        $menu_field_data = [
+          'menu_name' => $link->getMenuName(),
+          'title' => $link->getTitle(),
+          'description' => $link->getDescription(),
+          'parent' => $parent,
+          'weight' => $link->getweight(),
+          'expanded' => $link->isExpanded(),
+        ];
+        $changed_time = $node->getChangedTime();
+        $node->set('field_menulink', $menu_field_data)->save();
+        $new_parent = 'menu_link_field:node_field_menulink_' . $node->uuid() . '_und';
+
+        _su_humsci_profile_reset_node_changed_time($node, $changed_time);
+
+        if ($menu_item->subtree) {
+          _su_humsci_profile_fix_menu($menu_item->subtree, $new_parent);
+        }
+
+        if (!$link->isEnabled()) {
+          $database->update('menu_tree')
+            ->fields(['enabled' => 0])
+            ->condition('id', $new_parent)
+            ->execute();
+        }
+
+        $link->deleteLink();
+        continue;
+      }
+    }
+    catch (\Throwable $e) {
+      \Drupal::logger('su_humsci_profile')
+        ->error('Unable to update link %title. Error: %error', [
+          '%title' => $link->getTitle(),
+          '%error' => $e->getMessage(),
+        ]);
+    }
+
+    if ($parent) {
+      $link->updateLink(['parent' => $parent], TRUE);
+
+      // Saving the link above, updates the entity, but it doesn't update the
+      // menu tree. So we need to update the menu tree manually.
+      $menu_link_manager->updateDefinition($link->getPluginId(), $link->getPluginDefinition(), FALSE);
+    }
+
+    if ($menu_item->subtree) {
+      _su_humsci_profile_fix_menu($menu_item->subtree, $id);
+    }
+  }
+}
+
+/**
+ * Update the node tables to reset the changed time.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   Node entity.
+ * @param int $changed
+ *   Changed time.
+ */
+function _su_humsci_profile_reset_node_changed_time(NodeInterface $node, int $changed) {
+  $database = \Drupal::database();
+  // Reset the changed time to the value before this process.
+  $database->update('node_field_data')
+    ->fields(['changed' => $changed])
+    ->condition('nid', $node->id())
+    ->execute();
+  $database->update('node_field_revision')
+    ->fields(['changed' => $changed])
+    ->condition('vid', $node->getRevisionId())
+    ->execute();
+}
+
+/**
+ * Disable chosen.
+ */
+function su_humsci_profile_update_9609() {
+  \Drupal::service('module_installer')->uninstall(['chosen']);
 }

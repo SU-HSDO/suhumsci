@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.hs_research.body
+    - field.field.node.hs_research.field_menulink
     - node.type.hs_research
   module:
+    - menu_link
     - path
     - text
 _core:
@@ -28,6 +30,12 @@ content:
   created:
     type: datetime_timestamp
     weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_menulink:
+    type: menu_link_default
+    weight: 122
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -13,16 +13,23 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
     - field.field.node.hs_event.field_hs_event_date
+    - field.field.node.hs_event.field_hs_event_experience
     - field.field.node.hs_event.field_hs_event_image
+    - field.field.node.hs_event.field_hs_event_instances
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_registration
     - field.field.node.hs_event.field_hs_event_series
     - field.field.node.hs_event.field_hs_event_speaker
     - field.field.node.hs_event.field_hs_event_sponsor
     - field.field.node.hs_event.field_hs_event_status
+    - field.field.node.hs_event.field_hs_event_stream
+    - field.field.node.hs_event.field_hs_event_stream_info
+    - field.field.node.hs_event.field_hs_event_ticket
     - field.field.node.hs_event.field_hs_event_type
     - field.field.node.hs_event.field_hs_event_video
+    - field.field.node.hs_event.field_menulink
     - node.type.hs_event
   module:
     - datetime_range
@@ -55,7 +62,7 @@ third_party_settings:
       date:
         - field_hs_event_date
       time:
-        - 'dynamic_block_field:node-hs_event_time'
+        - 'display_field_copy:node-hs_event_time'
       location:
         - field_hs_event_location
       category:
@@ -70,11 +77,21 @@ third_party_settings:
         weight: 0
         label: hidden
         formatter: default
-      'dynamic_block_field:node-hs_event_time':
-        plugin_id: 'dynamic_block_field:node-hs_event_time'
+      'display_field_copy:node-hs_event_time':
+        plugin_id: 'display_field_copy:node-hs_event_time'
         weight: 3
         label: hidden
-        formatter: default
+        formatter: smartdatetime_hs
+        settings:
+          formatter:
+            date_format: 'g:i A'
+            custom_date_format: ''
+            time_format: ''
+            time_hour_format: ''
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 0
+            display: start
 _core:
   default_config_hash: Pg8viXyep1xkahAJ1PuLkHohrDbm4d4QxZBJIrb32-g
 id: node.hs_event.search_result
@@ -169,4 +186,5 @@ hidden:
   field_hs_event_ticket: true
   field_hs_event_type: true
   field_hs_event_video: true
+  field_menulink: true
   links: true

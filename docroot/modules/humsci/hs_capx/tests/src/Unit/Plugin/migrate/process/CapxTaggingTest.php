@@ -60,7 +60,7 @@ class CapxTaggingTest extends UnitTestCase {
 
     // Urls do match.
     $tranformed_value = $plugin->transform(NULL, $migrate_executable, $row, $destination_property);
-    $this->assertArrayEquals([1, 2, 3], $tranformed_value);
+    $this->assertEquals([1, 2, 3], $tranformed_value);
   }
 
   /**

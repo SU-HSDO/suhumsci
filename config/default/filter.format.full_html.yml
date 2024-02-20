@@ -25,6 +25,21 @@ name: 'Full HTML'
 format: full_html
 weight: 0
 filters:
+  blazy_filter:
+    id: blazy_filter
+    provider: blazy
+    status: false
+    weight: 3
+    settings:
+      media_switch: ''
+      hybrid_style: ''
+      box_style: ''
+      box_media_style: ''
+      box_caption: ''
+      filter_tags:
+        img: img
+        iframe: iframe
+      use_data_uri: '0'
   editor_file_reference:
     id: editor_file_reference
     provider: editor
@@ -55,15 +70,9 @@ filters:
     status: false
     weight: -43
     settings:
-      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <table class="decanter-table--borderless"> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <drupal-entity data-entity-type data-entity-uuid data-entity-embed-display data-entity-embed-display-settings data-align data-caption data-embed-button> <h1> <pre> <a href hreflang data-entity-substitution data-entity-type data-entity-uuid title class="decanter-button decanter-button--big decanter-button--secondary decanter-more-link decanter-external-link"> <hr> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-* alt data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title> <p class="decanter-font-lead decanter-font-splash decanter-short-line-length decanter-caption decanter-credits"> <span class="emphasized-text">'
+      allowed_html: '<a class="hs-button hs-button--big hs-secondary-button hs-more-link hs-external-link hs-file-link hs-pdf-link hs-private-link"> <p class="hs-font-lead hs-font-splash hs-short-line-length hs-breakout-box hs-caption hs-credits"> <span class="hs-emphasized-text"> <table class="hs-table--borderless">'
       filter_html_help: true
       filter_html_nofollow: false
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: -47
-    settings: {  }
   filter_html_escape:
     id: filter_html_escape
     provider: filter
@@ -76,6 +85,32 @@ filters:
     status: false
     weight: -40
     settings: {  }
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: -47
+    settings: {  }
+  filter_image_lazy_load:
+    id: filter_image_lazy_load
+    provider: filter
+    status: true
+    weight: -49
+    settings: {  }
+  filter_spamspan:
+    id: filter_spamspan
+    provider: spamspan
+    status: true
+    weight: 0
+    settings:
+      spamspan_at: ' [at] '
+      spamspan_use_graphic: false
+      spamspan_dot_enable: false
+      spamspan_dot: ' [dot] '
+      spamspan_use_form: false
+      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
+      spamspan_form_default_url: contact
+      spamspan_form_default_displaytext: 'contact form'
   filter_url:
     id: filter_url
     provider: filter
@@ -83,19 +118,19 @@ filters:
     weight: -48
     settings:
       filter_url_length: 72
-  linkit:
-    id: linkit
-    provider: linkit
-    status: true
-    weight: -44
-    settings:
-      title: true
   hs_table_filter:
     id: hs_table_filter
     provider: hs_table_filter
     status: false
     weight: -39
     settings: {  }
+  linkit:
+    id: linkit
+    provider: linkit
+    status: true
+    weight: -44
+    settings:
+      title: false
   media_embed:
     id: media_embed
     provider: media
@@ -114,12 +149,6 @@ filters:
         stanford_image_xl: stanford_image_xl
         stanford_image_xl_square: stanford_image_xl_square
       allowed_media_types: {  }
-  stanford_media_embed_markup:
-    id: stanford_media_embed_markup
-    provider: stanford_media
-    status: true
-    weight: 0
-    settings: {  }
   slick_filter:
     id: slick_filter
     provider: slick
@@ -128,7 +157,6 @@ filters:
     settings:
       optionset: default
       layout: ''
-      skin: ''
       background: false
       box_media_style: ''
       loading: ''
@@ -139,6 +167,7 @@ filters:
       media_switch: ''
       ratio: ''
       thumbnail_style: ''
+      skin: ''
       overridables:
         arrows: '0'
         autoplay: '0'
@@ -154,31 +183,3 @@ filters:
       thumbnail_effect: ''
       thumbnail_position: ''
       override: false
-  blazy_filter:
-    id: blazy_filter
-    provider: blazy
-    status: false
-    weight: 3
-    settings:
-      media_switch: ''
-      hybrid_style: ''
-      box_style: ''
-      box_caption: ''
-      filter_tags:
-        img: img
-        iframe: iframe
-      use_data_uri: '0'
-  filter_spamspan:
-    id: filter_spamspan
-    provider: spamspan
-    status: true
-    weight: 0
-    settings:
-      spamspan_at: ' [at] '
-      spamspan_use_graphic: '0'
-      spamspan_dot_enable: '0'
-      spamspan_dot: ' [dot] '
-      spamspan_use_form: '0'
-      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
-      spamspan_form_default_url: contact
-      spamspan_form_default_displaytext: 'contact form'

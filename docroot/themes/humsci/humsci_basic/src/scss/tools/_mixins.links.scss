@@ -123,10 +123,50 @@
         background-position-y: bottom;
       }
     }
+
+    .hb-vertical-linked-card__description & {
+      @include hb-colorful {
+        @include hb-global-color('color', 'white');
+        background-image: none;
+      }
+
+      :hover,
+      :focus {
+        @include hb-colorful {
+          @include hb-global-color('color', 'gray-medium');
+        }
+      }
+    }
   }
 
   @include hb-traditional {
     background-image: none;
+
+    // It is very difficult to override links for a specific color scheme without clobbering things like titles, labels, and buttons that are styled differently.
+    #main-content .body &,
+    .text-long:not(.field-hs-postcard-body) &,
+    .field-hs-person-links &,
+    .field-hs-publication-link &,
+    .field-hs-news-link &,
+    .field-hs-event-map-link &,
+    .field-speaker-person &,
+    .field-hs-person-external-profile &,
+    .field-hs-person-cv-link &,
+    .field-hs-person-email &,
+    .hb-card__subcontent &,
+    .hb-table-wrap &,
+    .hb-columns &,
+    .hb-timeline-item__heading &,
+    .views-field:not(.views-field-title):not(.views-field-edit-node):not(.views-field-field-hs-event-series):not(.views-field-field-hs-news-categories):not(.views-field-field-hs-person-research) & {
+      .ht-pairing-warbler & {
+        @include hb-pairing-color('color', 'secondary');
+
+        &:hover,
+        &:focus {
+          @include hb-pairing-color('color', 'tertiary');
+        }
+      }
+    }
   }
 
   .hb-local-footer & {
@@ -136,6 +176,12 @@
     &:focus {
       @include hb-pairing-color('color', 'tertiary-darken-20');
       background-image: none;
+    }
+  }
+
+  .hb-local-footer.hb-dark-pattern & {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
     }
   }
 
@@ -164,6 +210,12 @@
       }
     }
   }
+
+  @include hb-colorful {
+    .hc-pairing-ocean .hb-well & {
+      @include hb-pairing-color('color', 'primary');
+    }
+  }
 }
 
 // More Link Styles
@@ -186,6 +238,18 @@
     background-size: 85%;
     transition: hb-transition(transform);
     will-change: contents;
+
+    @include hb-colorful {
+      .hc-pairing-ocean & {
+        @include hb-icon-link-arrow('primary');
+        background-size: 85%;
+      }
+
+      .hc-pairing-ocean .hb-well & {
+        @include hb-icon-link-arrow('secondary-darken-12');
+        background-size: 85%;
+      }
+    }
   }
 
   &:hover,
@@ -199,6 +263,13 @@
       @include hb-icon-link-arrow('secondary-darken-12');
       background-size: 85%;
       transform: translateX(0.25rem);
+
+      @include hb-colorful {
+        .hc-pairing-ocean & {
+          @include hb-icon-link-arrow('primary-dark');
+          background-size: 85%;
+        }
+      }
     }
   }
 
@@ -265,6 +336,16 @@
           @include hb-icon-link-arrow('tertiary-highlight-darken-10');
           background-size: 85%;
         }
+      }
+    }
+  }
+
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      @include hb-pairing-color('color', 'secondary-darken-12');
+
+      &:hover {
+        @include hb-pairing-color('color', 'primary-dark');
       }
     }
   }
@@ -353,8 +434,43 @@
     margin-right: hb-calculate-rems(5px);
   }
 
+  .hb-dark-pattern.hb-local-footer & {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+
+    &:hover {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+    }
+  }
+
   .hb-dark-pattern &::before {
     color: var(--palette--secondary-highlight);
+  }
+
+  .hb-local-footer.hb-dark-pattern &::before {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('color', 'tertiary-highlight');
+    }
+  }
+
+  &:hover,
+  &:focus {
+    .hb-local-footer.hb-dark-pattern &::before {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+      }
+    }
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -369,6 +485,18 @@
 @mixin hb-file-link {
   @include hb-link--inline;
   @include hb-pairing-color('color', 'secondary');
+
+  .hb-dark-pattern.hb-local-footer & {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+
+    &:hover {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+    }
+  }
 
   &::before {
     content: "\f15b";
@@ -386,6 +514,29 @@
 
   .hb-dark-pattern &::before {
     color: var(--palette--secondary-highlight);
+  }
+
+  .hb-local-footer.hb-dark-pattern &::before {
+    @include hb-colorful {
+      @include hb-global-color('color', 'white');
+    }
+
+    @include hb-traditional {
+      @include hb-pairing-color('color', 'tertiary-highlight');
+    }
+  }
+
+  &:hover,
+  &:focus {
+    .hb-local-footer.hb-dark-pattern &::before {
+      @include hb-colorful {
+        @include hb-global-color('color', 'gray-medium');
+      }
+
+      @include hb-traditional {
+        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+      }
+    }
   }
 
   @include hb-themes(('colorful', 'airy')) {

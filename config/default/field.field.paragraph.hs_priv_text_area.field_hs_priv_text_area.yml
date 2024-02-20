@@ -4,14 +4,10 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_hs_priv_text_area
+    - filter.format.basic_html_without_media
     - paragraphs.paragraphs_type.hs_priv_text_area
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - basic_html_without_media
 id: paragraph.hs_priv_text_area.field_hs_priv_text_area
 field_name: field_hs_priv_text_area
 entity_type: paragraph
@@ -22,5 +18,7 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats:
+    - basic_html_without_media
 field_type: text_long

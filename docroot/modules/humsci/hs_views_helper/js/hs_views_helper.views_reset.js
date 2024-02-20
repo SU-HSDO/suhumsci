@@ -1,4 +1,4 @@
-(function ($, Drupal) {
+(function ($, Drupal, once) {
   'use strict';
 
   Drupal.behaviors.hsFieldHelpersViewsReset = {
@@ -7,7 +7,7 @@
         return;
       }
       $.each(Drupal.views.instances, function (key, ajaxView) {
-        ajaxView['$exposed_form'].find('input[data-drupal-selector=edit-reset]').once('views-reset').click(function (e) {
+        $(once('views-reset', ajaxView['$exposed_form'].find('input[data-drupal-selector=edit-reset]'))).click(function (e) {
           e.preventDefault();
 
           // Reset the form and trigger chosen select fields.
@@ -27,4 +27,4 @@
       });
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

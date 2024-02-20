@@ -4,23 +4,21 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_hs_gradient_hero_body
+    - filter.format.minimal_html
     - paragraphs.paragraphs_type.hs_gradient_hero
   module:
-    - allowed_formats
     - text
-third_party_settings:
-  allowed_formats:
-    allowed_formats:
-      - minimal_html
 id: paragraph.hs_gradient_hero.field_hs_gradient_hero_body
 field_name: field_hs_gradient_hero_body
 entity_type: paragraph
 bundle: hs_gradient_hero
-label: 'Gradient Hero Body'
+label: Body
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
+settings:
+  allowed_formats:
+    - minimal_html
 field_type: text_long

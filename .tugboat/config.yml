@@ -32,16 +32,16 @@ services:
         - ln -s docroot htdocs
 
         # Install/update packages managed by composer, including drush
+        - rm -rf vendor
         - composer install --no-ansi
         - blt blt:telemetry:disable --no-interaction
 
         # Init the settings files.
         - blt blt:init:settings
-
-        # Copy SimpleSAMLphp configuration to prevent annoying errors.
-        - blt source:build:simplesamlphp-config
       update:
+        - rm -rf vendor
         - composer install --no-ansi
+        - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=67108864;'
         # Sync to hs_colorful and hs_colorful database & files.
         - blt drupal:sync:files --site=hs_colorful
         - drush @hs_colorful.local user:create tugboat --password=tugboat || true
@@ -53,15 +53,17 @@ services:
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
+        - rm -rf vendor
         - composer install --no-ansi
+        - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=67108864;'
 
         - drush @hs_colorful.local cr
+        - drush @hs_colorful.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_colorful
-        - drush @hs_traditional.local pmu simplesamlphp_auth -y
 
         - drush @hs_traditional.local cr
+        - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
-        - drush @hs_colorful.local pmu simplesamlphp_auth -y
 
     # Collection of urls to compare visual results.
     urls:
@@ -75,6 +77,7 @@ services:
     image: tugboatqa/mysql:5
     commands:
       update:
+        - mysql -e 'SET GLOBAL max_allowed_packet=67108864;'
         # Delete and recreate the database for each site.
         - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
         - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"

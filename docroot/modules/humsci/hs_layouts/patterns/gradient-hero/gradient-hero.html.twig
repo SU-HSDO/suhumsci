@@ -1,11 +1,11 @@
 {%- set attributes = attributes.addClass('hb-gradient-hero') -%}
 
 {% if variant == 'right' %}
-  {% set variant_class = "hb-gradient-hero--content-#{variant}" %} 
+  {% set variant_class = "hb-gradient-hero--content-#{variant}" %}
   {% set attributes = attributes.addClass(variant_class) %}
 {% endif %}
 
-{% spaceless %}
+{% apply spaceless %}
   <div{{ attributes }}>
     {% if image %}
       <div class="hb-gradient-hero__image-wrapper">
@@ -18,4 +18,4 @@
       </div>
     {% endif %}
   </div>
-{% endspaceless %}
+{% endapply %}

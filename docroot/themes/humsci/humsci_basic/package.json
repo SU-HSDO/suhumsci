@@ -9,8 +9,9 @@
     "backstop:reference": "backstop reference --config='./backstop/backstop.json'",
     "backstop:test": "backstop test --config='./backstop/backstop.json'",
     "build:sass": "grunt compile",
+    "build:ckeditor": "grunt ckeditor",
     "build:js": "webpack",
-    "build": "npm run build:sass && npm run build:js",
+    "build": "npm run build:sass && npm run build:ckeditor && npm run build:js",
     "lint:sass": "stylelint 'src/scss/**/*.scss' --config ../../../../.stylelintrc",
     "test:sass": "mocha 'tests/true-sass-spec.js'",
     "watch:sass": "grunt watch",
@@ -27,13 +28,13 @@
   "license": "MIT",
   "dependencies": {
     "bourbon": "^5.1.0",
-    "decanter": "^6.2.12",
+    "decanter": "^6.2.19",
     "dotenv": "^8.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
-    "@percy/cli": "^1.18.0",
+    "@percy/cli": "^1.27.3",
     "autoprefixer": "^9.8.6",
     "babel-loader": "^9.1.2",
     "backstopjs": "^6.1.4",

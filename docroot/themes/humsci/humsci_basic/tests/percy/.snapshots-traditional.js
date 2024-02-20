@@ -177,6 +177,13 @@ module.exports = [
     widths: [576, 768, 1200]
   },
   {
+    name: 'Traditional - Collections cards uniform and stretch 1',
+    url: 'https://hs-traditional.suhumsci.loc/collections-cards-uniform-and-stretch-1',
+    waitForSelector: '.js',
+    waitForTimeout: 1500,
+    widths: [576, 768, 1200]
+  },
+  {
     name: 'Traditional - Mixed Pages - Mixed Page',
     url: 'http://hs-traditional.suhumsci.loc/mixed-pages/mixed-page',
     waitForSelector: '.js',

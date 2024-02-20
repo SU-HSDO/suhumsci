@@ -88,19 +88,13 @@ foreach ($settings as $settings_file) {
 
 // Manually point URL's that don't match their site paths.
 $sites['iranian-studies.stanford.edu'] = 'iranianstudies';
-$sites['mrc.stanford.edu'] = 'mrc2021';
-$sites['gus-humsci.stanford.edu'] = 'gus_humsci2021';
-$sites['dfetter.humsci.stanford.edu'] = 'dfetter2022__humsci';
-$sites['heidi-williams.humsci.stanford.edu'] = 'heidi_williams2022__humsci';
-$sites['gavin-wright.humsci.stanford.edu'] = 'gavin_wright2022__humsci';
-$sites['humanitiescore.stanford.edu'] = 'humanitiescore2022';
 $sites['facultyaffairs-humsci.stanford.edu'] = 'facultyaffairs_humsci2021';
-$sites['lowe.stanford.edu'] = 'lowe2022';
-$sites['shenlab.stanford.edu'] = 'shenlab2022';
-$sites['duboislab.stanford.edu'] = 'duboislab2022';
-$sites['francestanford.stanford.edu'] = 'francestanford2022';
 $sites['hsweb-userguide-traditional.stanford.edu'] = 'swshumsci_sandbox';
-$sites['researchadmin-humsci.stanford.edu'] = 'researchadmin_humsci2022';
+$sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
+$sites['mcs.stanford.edu'] = 'mcs2023';
+$sites['philit.stanford.edu'] = 'philit2023';
+$sites['ccsre.stanford.edu'] = 'ccsre2023';
+$sites['archaeology.stanford.edu'] = 'archaeology2023';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

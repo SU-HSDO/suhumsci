@@ -701,7 +701,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -711,7 +710,7 @@ display:
         - 'config:field.storage.node.field_hs_publication_year'
   author_list:
     id: author_list
-    display_title: 'Author''s List'
+    display_title: "Author's List"
     display_plugin: block
     position: 4
     display_options:
@@ -1044,7 +1043,6 @@ display:
           title: ''
           default_argument_type: node
           default_argument_options: {  }
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -1477,11 +1475,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
             view_mode: caption_credit
             link: true
-            image_style: responsive_small
+            image_style: publications_doc
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -1984,11 +1983,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
             view_mode: caption_credit
             link: true
-            image_style: responsive_small
+            image_style: publications_grid
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -2475,11 +2475,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
             view_mode: caption_credit
             link: true
-            image_style: responsive_small
+            image_style: publications_grid
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -3052,7 +3053,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -3117,11 +3117,12 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: target_id
-          type: media_image_formatter
+          type: media_responsive_image_formatter
           settings:
             view_mode: caption_credit
             link: true
-            image_style: hs_large_scaled_480px
+            image_style: responsive_scaled
+            remove_alt: 0
           group_column: target_id
           group_columns: {  }
           group_rows: true

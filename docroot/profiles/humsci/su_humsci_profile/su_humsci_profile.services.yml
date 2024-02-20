@@ -1,7 +1,7 @@
 services:
   su_humsci_profile.post_install:
     class: Drupal\su_humsci_profile\PostInstall
-    arguments: ['@entity_type.manager', '@router.builder', '@config.factory']
+    arguments: ['@entity_type.manager', '@router.builder', '@config.factory', '@state']
   su_humsci_profile.route_subscriber:
     class: Drupal\su_humsci_profile\Routing\RouteSubscriber
     arguments: ['@module_handler', '@config.factory']
@@ -17,7 +17,7 @@ services:
     arguments: ['@entity_type.manager', '@entity_type.bundle.info']
   su_humsci_profile.overrider:
     class: Drupal\su_humsci_profile\Overrides\ConfigOverrides
-    arguments: ['@module_handler', '@config.factory', '@encryption', '@entity_type.manager', '@config_pages.loader', '@state', '@site.path']
+    arguments: ['@module_handler', '@config.factory', '@encryption', '@entity_type.manager', '@config_pages.loader', '@state', '%site.path%']
     tags:
       - {name: config.factory.override, priority: 5}
   su_humsci_profile.menu_link_tree:

@@ -13,16 +13,23 @@ dependencies:
     - field.field.node.hs_event.field_hs_event_contact_email
     - field.field.node.hs_event.field_hs_event_contact_phone
     - field.field.node.hs_event.field_hs_event_date
+    - field.field.node.hs_event.field_hs_event_experience
     - field.field.node.hs_event.field_hs_event_image
+    - field.field.node.hs_event.field_hs_event_instances
     - field.field.node.hs_event.field_hs_event_link
     - field.field.node.hs_event.field_hs_event_location
     - field.field.node.hs_event.field_hs_event_map_link
+    - field.field.node.hs_event.field_hs_event_registration
     - field.field.node.hs_event.field_hs_event_series
     - field.field.node.hs_event.field_hs_event_speaker
     - field.field.node.hs_event.field_hs_event_sponsor
     - field.field.node.hs_event.field_hs_event_status
+    - field.field.node.hs_event.field_hs_event_stream
+    - field.field.node.hs_event.field_hs_event_stream_info
+    - field.field.node.hs_event.field_hs_event_ticket
     - field.field.node.hs_event.field_hs_event_type
     - field.field.node.hs_event.field_hs_event_video
+    - field.field.node.hs_event.field_menulink
     - node.type.hs_event
   module:
     - hs_field_helpers
@@ -89,6 +96,24 @@ content:
       display: start
       date_format: 'Y-m-d\TH:i:s'
       time_format: ''
+      tooltip:
+        date_format: ''
+        custom_date_format: ''
+      separator: ' - '
+      join: ', '
+      time_hour_format: ga
+      allday_label: 'All day'
+      date_first: '1'
+      ampm_reduce: '1'
+      site_time_toggle: '1'
+      custom_date_format: ''
+      timezone: ''
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
     third_party_settings: {  }
     weight: 12
     region: content
@@ -190,5 +215,6 @@ hidden:
   field_hs_event_stream: true
   field_hs_event_stream_info: true
   field_hs_event_ticket: true
+  field_menulink: true
   links: true
   search_api_excerpt: true

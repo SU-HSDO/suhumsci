@@ -11,16 +11,20 @@ use Drupal\Core\Serialization\Yaml;
 class HsHooksCommands extends BltTasks {
 
   /**
-   * Disable Saml module.
-   *
-   * @hook pre-command tests:codeception:run
+   * @hook pre-command drupal:sync:default:site
    */
-  public function preCodecepton() {
-    $this->taskDrush()
-      ->drush('cset')
-      ->arg('simplesamlphp_auth.settings')
-      ->arg('activate')
-      ->arg(0)
+  public function preSiteCopy() {
+    $root = $this->getConfigValue('repo.root');
+    $this->taskExec("cp $root/config/default/config_ignore.settings.yml $root/config/envs/local/config_ignore.settings.yml")
+      ->run();
+  }
+
+  /**
+   * @hook post-command drupal:sync:default:site
+   */
+  public function postSiteCopy() {
+    $root = $this->getConfigValue('repo.root');
+    $this->taskExec("git checkout $root/config/envs/local/config_ignore.settings.yml")
       ->run();
   }
 

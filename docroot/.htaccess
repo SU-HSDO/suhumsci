@@ -4,22 +4,6 @@
 <ifmodule mod_setenvif.c>
   # Match specific IP addresses.
   SetEnvIf AH_CLIENT_IP ^67\.225\.152\.21$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^52\.143\.102\.216$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^52\.237\.223\.18$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^107\.161\.51\.47$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^47\.241\.20\.234$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^161\.117\.182\.32$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^161\.117\.88\.143$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^47\.241\.104\.252$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^161\.117\.235\.27$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^206\.189\.77\.91$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^161\.117\.176\.134$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^213\.226\.123\.19$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^159\.223\.3\.1$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^146\.190\.20\.213$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^146\.190\.24\.114$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^193\.134\.209\.57$ Deny_Host
-  SetEnvIf AH_CLIENT_IP ^104\.248\.195\.73$ Deny_Host
   Order allow,deny
   Allow from all
   Deny from env=Deny_Host
@@ -56,13 +40,6 @@ AddEncoding gzip svgz
 # sites/default/default.settings.php and
 # Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be
 # changed at runtime.
-
-# PHP 7, Apache 1 and 2.
-<IfModule mod_php7.c>
-  php_value assert.active                   0
-</IfModule>
-
-# PHP 8, Apache 1 and 2.
 <IfModule mod_php.c>
   php_value assert.active                   0
 </IfModule>
@@ -72,8 +49,8 @@ AddEncoding gzip svgz
   # Enable expirations.
   ExpiresActive On
 
-  # Cache all files and redirects for 2 weeks after access (A).
-  ExpiresDefault A1209600
+  # Cache all files for 1 year after access.
+  ExpiresDefault "access plus 1 year"
 
   <FilesMatch \.php$>
     # Do not allow PHP scripts to be cached unless they explicitly send cache
@@ -245,12 +222,12 @@ AddEncoding gzip svgz
     # Serve gzip compressed CSS files if they exist and the client accepts gzip.
     RewriteCond %{HTTP:Accept-encoding} gzip
     RewriteCond %{REQUEST_FILENAME}\.gz -s
-    RewriteRule ^(.*css_[a-zA-Z0-9-_])\.css$ $1\.css\.gz [QSA]
+    RewriteRule ^(.*css_[a-zA-Z0-9-_]+)\.css$ $1\.css\.gz [QSA]
 
     # Serve gzip compressed JS files if they exist and the client accepts gzip.
     RewriteCond %{HTTP:Accept-encoding} gzip
     RewriteCond %{REQUEST_FILENAME}\.gz -s
-    RewriteRule ^(.*js_[a-zA-Z0-9-_])\.js$ $1\.js\.gz [QSA]
+    RewriteRule ^(.*js_[a-zA-Z0-9-_]+)\.js$ $1\.js\.gz [QSA]
 
     # Serve correct content types, and prevent double compression.
     RewriteRule \.css\.gz$ - [T=text/css,E=no-gzip:1,E=no-brotli:1]
@@ -267,7 +244,13 @@ AddEncoding gzip svgz
 
 # Various header fixes.
 <IfModule mod_headers.c>
-  # Disable content sniffing, since it's an attack vector.
+  # Disable content sniffing for all responses, since it's an attack vector.
+  # This header is also set in FinishResponseSubscriber, which depending on
+  # Apache configuration might get placed in the 'onsuccess' table. To prevent
+  # header duplication, unset that one prior to setting in the 'always' table.
+  # See "To circumvent this limitation..." in
+  # https://httpd.apache.org/docs/current/mod/mod_headers.html.
+  Header onsuccess unset X-Content-Type-Options
   Header always set X-Content-Type-Options nosniff
   # Disable Proxy header, since it's an attack vector.
   RequestHeader unset Proxy

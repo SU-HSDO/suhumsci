@@ -1,35 +1,9 @@
 id: hs_event_time
 label: 'Event Start Time'
 ui_limit: 'hs_event|*'
-type: block
-type_label: 'Block field'
+type: display_field_copy
+type_label: 'Copy field'
 entities:
   node: node
 properties:
-  block: 'field_block:node:hs_event:field_hs_event_date'
-  use_block_title: false
-  add_block_wrappers: false
-  config:
-    id: 'field_block:node:hs_event:field_hs_event_date'
-    label: ''
-    label_display: ''
-    provider: layout_builder
-    context_mapping:
-      entity: '@node.node_route_context:node'
-    formatter:
-      type: smartdatetime_hs
-      label: hidden
-      settings:
-        date_format: 'g:i A'
-        custom_date_format: ''
-        time_format: ''
-        time_hour_format: ''
-        allday_label: 'All day'
-        date_first: '1'
-        ampm_reduce: 0
-        display: start
-      third_party_settings:
-        field_formatter_class:
-          class: ''
-        hs_field_helpers:
-          inline_contents: 0
+  field_id: node.hs_event.field_hs_event_date

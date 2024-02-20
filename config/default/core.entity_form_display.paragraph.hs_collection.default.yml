@@ -5,34 +5,40 @@ dependencies:
   config:
     - field.field.paragraph.hs_collection.field_hs_collection_items
     - field.field.paragraph.hs_collection.field_hs_collection_per_row
+    - field.field.paragraph.hs_collection.field_hs_collection_uh
     - field.field.paragraph.hs_collection.field_paragraph_style
     - field.field.paragraph.hs_collection.field_raised_cards
     - paragraphs.paragraphs_type.hs_collection
   module:
-    - paragraphs
+    - paragraphs_browser
 id: paragraph.hs_collection.default
 targetEntityType: paragraph
 bundle: hs_collection
 mode: default
 content:
   field_hs_collection_items:
-    type: paragraphs
-    weight: 3
+    type: paragraphs_browser
+    weight: 4
     region: content
     settings:
-      title: Paragraph
-      title_plural: Paragraphs
+      title: Component
+      title_plural: Components
       edit_mode: closed
       closed_mode: summary
-      autocollapse: none
-      closed_mode_threshold: 0
-      add_mode: dropdown
+      autocollapse: all
+      closed_mode_threshold: '0'
+      add_mode: paragraphs_browser
       form_display_mode: default
       default_paragraph_type: _none
       features:
-        add_above: '0'
-        collapse_edit_all: collapse_edit_all
         duplicate: duplicate
+        collapse_edit_all: collapse_edit_all
+        add_above: 0
+      paragraphs_browser: content
+      modal_width: 80%
+      modal_height: auto
+      show_group_label: true
+      show_group_filter: true
     third_party_settings: {  }
   field_hs_collection_per_row:
     type: options_select
@@ -40,6 +46,31 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_hs_collection_uh:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings:
+      conditional_fields:
+        d755369a-3372-40fb-896b-2cfddbdaff67:
+          entity_type: paragraph
+          bundle: hs_collection
+          dependee: field_raised_cards
+          settings:
+            state: visible
+            reset: false
+            condition: checked
+            grouping: AND
+            values_set: 1
+            value: ''
+            values: {  }
+            value_form:
+              value: false
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_paragraph_style:
     type: options_select
     weight: 1

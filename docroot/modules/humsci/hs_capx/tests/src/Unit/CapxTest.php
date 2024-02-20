@@ -5,7 +5,7 @@ namespace Drupal\Tests\hs_capx\Unit;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\Database\Driver\mysql\Connection;
+use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageBase;
@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class CapxTest.
@@ -53,7 +54,7 @@ class CapxTest extends UnitTestCase {
 
 
     $this->cache = $this->createMock(CacheBackendInterface::class);
-    $database = $this->createMock(Connection::class);
+    $database = $this->createMock(DatabaseConnection::class);
     $merge = $this->createMock(Merge::class);
     $merge->method('fields')->will($this->returnValue($merge));
     $merge->method('key')->will($this->returnValue($merge));
@@ -99,9 +100,11 @@ class CapxTest extends UnitTestCase {
    * Tests failed credentials is handled well.
    */
   public function testFailedConnection() {
+    $request = $this->createMock(RequestInterface::class);
+    $response = $this->createMock(ResponseInterface::class);
     $this->guzzle->method('request')
       ->withAnyParameters()
-      ->willThrowException(new ClientException('Failed!', $this->getMockForAbstractClass(RequestInterface::class)));
+      ->willThrowException(new ClientException('Failed!', $request, $response));
 
     $this->expectException(ClientException::class);
     $this->assertFalse($this->capx->testConnection());

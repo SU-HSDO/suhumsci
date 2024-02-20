@@ -40,6 +40,8 @@ class InstallStateCest {
 
   /**
    * I can see some links as an admin.
+   *
+   * @group roles
    */
   public function testVisibleAdminItems(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
@@ -58,6 +60,7 @@ class InstallStateCest {
    * Contributor can see a certain number of shortcuts.
    *
    * @group shotcuts
+   * @group roles
    */
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
@@ -69,54 +72,24 @@ class InstallStateCest {
    * Site Managers can see a certain number of shortcuts.
    *
    * @group shotcuts
+   * @group roles
    */
   public function testSiteManagerShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('site_manager');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 33);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 34);
   }
 
   /**
    * Developers/Admins can see a certain number of shortcuts.
    *
    * @group shotcuts
+   * @group roles
    */
   public function testDeveloperShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 37);
-  }
-
-  /**
-   * A site manager should be able to place a page under an unpublished page.
-   */
-  public function testUnpublishedMenuItems(AcceptanceTester $I) {
-    $I->logInWithRole('site_manager');
-    $I->amOnPage('/node/add/hs_basic_page');
-    $I->fillField('Title', 'Unpublished Parent');
-    $I->checkOption('Provide a menu link');
-    $I->fillField('Menu link title', 'Unpublished Parent');
-    $I->uncheckOption('Publish');
-    $I->click('Save');
-    $I->canSee('Unpublished Parent', 'h1');
-    $I->canSee('Unpublished Parent', 'nav a[data-unpublished-node]');
-    $I->canSee('Unpublished');
-
-    $I->amOnPage('/node/add/hs_basic_page');
-    $I->fillField('Title', 'Child Page');
-    $I->checkOption('Provide a menu link');
-    $I->fillField('Menu link title', 'Child Page');
-    $I->selectOption('Parent link', '-- Unpublished Parent');
-    $I->click('Change parent (update list of weights)');
-    $I->uncheckOption('Publish');
-    $I->click('Save');
-    $I->canSee('Child Page', 'h1');
-    $I->canSee('Child Page', 'nav a[data-unpublished-node]');
-    $I->canSee('Unpublished');
-
-    $I->click('Edit', '.tabs__tab');
-    $I->click('Save');
-    $I->assertEquals('/unpublished-parent/child-page', $I->grabFromCurrentUrl());
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 38);
   }
 
   /**

@@ -18,7 +18,7 @@ $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/conf
  * file in docroot/sites/{site-name}/settings/default.includes.settings.php.
  */
 $additionalSettingsFiles = [
-  __DIR__ . '/simplesaml.php',
+  __DIR__ . '/saml.settings.php',
   __DIR__ . '/environment_indicator.php',
   __DIR__ . '/local.settings.php',
   __DIR__ . '/fast404.settings.php',
@@ -50,7 +50,7 @@ $settings['config_readonly_whitelist_patterns'] = ['*'];
 // Set the config_ignore settings so that config imports will function on local.
 if (EnvironmentDetector::isLocalEnv() && !InstallerKernel::installationAttempted()) {
   $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
-  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'];
+  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'] + array_fill(0, 50, 'foo.bar.baz');
 }
 
 // Don't lock config when using drush.
@@ -58,9 +58,16 @@ if (PHP_SAPI !== 'cli') {
   $settings['config_readonly'] = TRUE;
 }
 
+// Enable nobots on any non-prod site.
+if (!EnvironmentDetector::isProdEnv()) {
+  $settings['nobots'] = TRUE;
+}
+
 if (EnvironmentDetector::isAhEnv()) {
   require 'acquia.settings.php';
 }
 else {
   $config['domain_301_redirect.settings']['enabled'] = FALSE;
+  $config['mail_safety.settings']['enabled'] = TRUE;
+  $config['mail_safety.settings']['send_mail_to_dashboard'] = TRUE;
 }

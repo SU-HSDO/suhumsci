@@ -34,13 +34,13 @@
       <span class="hb-main-nav__toggle-icon"></span>
     </button>
     {% endblock %}
-    {% spaceless %}
+    {% apply spaceless %}
     {% if items is iterable %}
       {{ menus.nav_menu(items, 1, 'hb-main-nav', []) }}
     {% else %}
       {# If custom markup is provided, emit it as-is #}
       {{ items }}
     {% endif %}
-    {% endspaceless %}
+    {% endapply %}
   </nav>
 {% endif %}

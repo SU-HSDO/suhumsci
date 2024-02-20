@@ -350,3 +350,124 @@ function su_humsci_profile_post_update_9207() {
     }
   }
 }
+
+/**
+ * Remove dependency on key_encrypt module.
+ */
+function su_humsci_profile_post_update_key_dependency_clean() {
+  $config_names = \Drupal::configFactory()->listAll('key.key.');
+  foreach ($config_names as $config_name) {
+    $config = \Drupal::configFactory()->getEditable($config_name);
+    $dependencies = $config->get('dependencies.module') ?: [];
+    $position = array_search('key_encrypt', $dependencies);
+    if ($position !== FALSE) {
+      $config->clear("dependencies.module.$position")->save();
+    }
+  }
+}
+
+/**
+ * Update display suite fields from layout builder to field copy.
+ */
+function su_humsci_profile_post_update_fix_ds_fields() {
+  \Drupal::service('module_installer')->install(['display_field_copy']);
+  $ds_configs = [
+    'hs_event_day' => [
+      'type' => 'smartdatetime_hs',
+      'settings' => [
+        'date_format' => 'j',
+        'custom_date_format' => '',
+        'time_format' => '',
+        'time_hour_format' => '',
+        'allday_label' => 'All day',
+        'date_first' => '1',
+        'ampm_reduce' => 0,
+        'display' => 'start',
+      ],
+    ],
+    'hs_event_time' => [
+      'type' => 'smartdatetime_hs',
+      'settings' => [
+        'date_format' => 'g:i A',
+        'custom_date_format' => '',
+        'time_format' => '',
+        'time_hour_format' => '',
+        'allday_label' => 'All day',
+        'date_first' => '1',
+        'ampm_reduce' => 0,
+        'display' => 'start',
+      ],
+    ],
+    'hs_event_time_range' => [
+      'type' => 'smartdate_custom',
+      'settings' => [
+        'separator' => ' - ',
+        'date_format' => 'g:i A',
+        'custom_date_format' => '',
+        'timezone' => '',
+        'join' => '',
+        'time_format' => '',
+        'time_hour_format' => '',
+        'allday_label' => 'All day',
+        'date_first' => '1',
+        'ampm_reduce' => 0,
+      ],
+    ],
+  ];
+
+  /** @var \Drupal\Core\Config\FileStorage $config_storage */
+  $config_storage = \Drupal::service('config.storage.sync');
+  $config_factory = \Drupal::configFactory();
+  foreach (array_keys($ds_configs) as $config_name) {
+    $config_factory->getEditable("ds.field.$config_name")
+      ->setData($config_storage->read("ds.field.$config_name"))
+      ->save(TRUE);
+  }
+
+
+  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface[] $event_displays */
+  $event_displays = \Drupal::entityTypeManager()
+    ->getStorage('entity_view_display')
+    ->loadByProperties(['bundle' => 'hs_event']);
+  foreach ($event_displays as $display) {
+    $save_display = false;
+    $ds_settings = $display->getThirdPartySettings('ds');
+    if (!$ds_settings) {
+      continue;
+    }
+
+    foreach ($ds_settings['regions'] as &$region_fields) {
+      foreach (array_keys($ds_configs) as $name) {
+        $field_position = array_search("dynamic_block_field:node-$name", $region_fields);
+        if ($field_position !== FALSE) {
+          $region_fields[$field_position] = "display_field_copy:node-$name";
+          $save_display = TRUE;
+        }
+      }
+    }
+
+    foreach (array_keys($ds_settings['fields']) as $field_name) {
+      foreach (array_keys($ds_configs) as $name) {
+        if ($field_name == "dynamic_block_field:node-$name") {
+          $ds_settings['fields']["display_field_copy:node-$name"] = [
+            'plugin_id' => "display_field_copy:node-$name",
+            'weight' => $ds_settings['fields'][$field_name]['weight'],
+            'label' => $ds_settings['fields'][$field_name]['label'],
+            'formatter' => $ds_configs[$name]['type'],
+            'settings' => ['formatter' => $ds_configs[$name]['settings']],
+          ];
+
+          unset($ds_settings['fields'][$field_name]);
+          $save_display = TRUE;
+        }
+      }
+    }
+
+    if ($save_display) {
+      foreach ($ds_settings as $setting_key => $settings) {
+        $display->setThirdPartySetting('ds', $setting_key, $settings);
+      }
+      $display->save();
+    }
+  }
+}

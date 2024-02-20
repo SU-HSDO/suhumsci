@@ -9,8 +9,6 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\eck\Entity\EckEntityBundle;
-use Drupal\eck\Entity\EckEntityType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
@@ -566,7 +564,7 @@ function su_humsci_profile_update_9703() {
     $raw = $config->getRawData();
     _su_humsci_profile_fix_view_data($raw);
 
-    if(isset($raw['dependencies']['config'])) {
+    if (isset($raw['dependencies']['config'])) {
       foreach ($raw['dependencies']['config'] as &$config_dependency) {
         foreach (array_keys($eck_info) as $eck_type) {
           if (
@@ -637,7 +635,7 @@ function _su_humsci_profile_fix_view_data(&$data) {
 function su_humsci_profile_update_9704() {
   $roles = user_role_names();
   $eck_info = _su_humsci_profile_update_eck_info();
-  foreach ($eck_info as $eck_type => $bundles) {
+  foreach (array_keys($eck_info) as $eck_type) {
     foreach (array_keys($roles) as $role_id) {
       // Remove all the permissions before deleting the ECK to avoid errors.
       user_role_revoke_permissions($role_id, [

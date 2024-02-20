@@ -431,7 +431,6 @@ function su_humsci_profile_update_9701(&$sandbox) {
     }
     $new_entity->save();
     $sandbox['convert'][$eck_type][$id] = $new_entity->id();
-    $entity->delete();
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
@@ -612,19 +611,6 @@ function su_humsci_profile_update_9704() {
   $roles = user_role_names();
   $eck_info = _su_humsci_profile_update_eck_info();
   foreach ($eck_info as $eck_type => $bundles) {
-    $entities = \Drupal::entityTypeManager()
-      ->getStorage($eck_type)
-      ->loadMultiple();
-
-    // Make sure no ECK entities before deleting the bundles and types.
-    foreach ($entities as $entity) {
-      $entity->delete();
-    }
-
-    foreach (EckEntityBundle::loadMultiple(array_keys($bundles)) as $eck_bundle) {
-      $eck_bundle->delete();
-    }
-
     foreach (array_keys($roles) as $role_id) {
       // Remove all the permissions before deleting the ECK to avoid errors.
       user_role_revoke_permissions($role_id, [
@@ -637,7 +623,6 @@ function su_humsci_profile_update_9704() {
         "view own $eck_type entities",
       ]);
     }
-    EckEntityType::load($eck_type)->delete();
   }
 
   // Adjust all the permissions.

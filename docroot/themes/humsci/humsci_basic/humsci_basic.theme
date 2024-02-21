@@ -8,7 +8,7 @@
 use Drupal\Core\Template\Attribute;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\Node;
-use Drupal\Core\Url;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_preprocess_block().
@@ -273,4 +273,27 @@ function humsci_basic_preprocess_views_view(&$variables) {
      $variables['#attached']['library'][] =  'humsci_basic/search';
       break;
   }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_basic_preprocess_paragraph(&$variables) {
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->bundle() != 'hs_view') {
+    return NULL;
+  }
+  // Get the parent entity of hs_view paragraphs.
+  $parent = $paragraph->getParentEntity();
+  // Test if the paragraph is within a collection.
+  if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
+    return NULL;
+  }
+  $heading_tag = 'h2';
+  if ($parent->get('field_title_settings')->value !== 'collection_title_none') {
+    // If the collection title is set to anything other than 'None',
+    // set the heading tag to h3.
+    $heading_tag = 'h3';
+  }
+  $variables['content']['field_hs_view'][0]['#heading_tag'] = $heading_tag;
 }

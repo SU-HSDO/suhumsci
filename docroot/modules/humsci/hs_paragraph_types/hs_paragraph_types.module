@@ -39,22 +39,60 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
+  $elements_to_change = [
+    'field_hs_carousel_slides',
+    'field_hs_gradient_hero_slides',
+    'field_hs_sptlght_sldes',
+  ];
+  // We need the field name to alter the correct element.
   if (
-    isset($field_widget_form['widget']['add_more']['add_more_button_hs_hero_image'], $field_widget_form['widget']['#field_name']) &&
-    $field_widget_form['widget']['#field_name'] == 'field_hs_carousel_slides'
+    empty($field_widget_form['widget']['#field_name']) ||
+    !in_array($field_widget_form['widget']['#field_name'], $elements_to_change)
   ) {
-    $new_label = 'Banner image with text box';
-    // Change the add button label for field_hs_carousel_slides.
-    $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
-      '@type' => $new_label,
-    ]);
-    // Change the paragraph type label for hs_hero_image embedded in hs_carousel.
-    foreach (Element::children($field_widget_form['widget']) as $key) {
-      // Only alter markup in field widget elements.
-      if (!is_int($key)) {
-        continue;
+    return;
+  }
+  switch ($field_widget_form['widget']['#field_name']) {
+    case('field_hs_carousel_slides'):
+      if(empty($field_widget_form['widget']['add_more'])) {
+        return;
       }
-      $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = $new_label;
-    }
+      // Change the add button label for field_hs_carousel_slides.
+      $new_label = 'Banner image with text box';
+      $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
+        '@type' => $new_label,
+      ]);
+      // Change the paragraph type label for hs_hero_image embedded in hs_carousel.
+      foreach (Element::children($field_widget_form['widget']) as $key) {
+        // Only alter markup in field widget elements.
+        if (!is_int($key)) {
+          continue;
+        }
+        $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = $new_label;
+      }
+      break;
+    case('field_hs_gradient_hero_slides'):
+      // Change the title label for field_hs_gradient_hero_link.
+      foreach (Element::children($field_widget_form['widget']) as $key) {
+        if (
+          !is_int($key) ||
+          empty($field_widget_form['widget'][$key]['subform']['field_hs_gradient_hero_link']['widget'][0]['#title'])
+        ) {
+          continue;
+        }
+        $field_widget_form['widget'][$key]['subform']['field_hs_gradient_hero_link']['widget'][0]['#title'] = 'Link';
+      }
+      break;
+    case('field_hs_sptlght_sldes'):
+      // Change the spotlight widget title.
+      $new_label = 'Spotlight(s)';
+      $field_widget_form['widget']['#title'] = $new_label;
+      if(empty($field_widget_form['widget']['add_more']['#suffix'])) {
+        return;
+      }
+      // Change the paragraph type label for the add more button.
+      $field_widget_form['widget']['add_more']['#suffix'] = t('to %type', [
+        '%type' => $new_label,
+      ]);
+      break;
   }
 }

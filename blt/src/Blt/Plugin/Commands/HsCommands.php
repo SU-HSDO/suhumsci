@@ -17,6 +17,8 @@ class HsCommands extends BltTasks {
 
   use HsCommandTrait;
 
+  const UPDATE_PARALLEL_PROCESSES = 'UPDATE_PARALLEL_PROCESSES';
+
   /**
    * After code deployed, update all sites on the stack.
    *
@@ -24,9 +26,10 @@ class HsCommands extends BltTasks {
    *
    * @aliases humsci:post-code-update
    */
-  public function postCodeDeployUpdate() {
+  public function postCodeDeployUpdate($target_env, $deployed_tag) {
     $sites = $this->getConfigValue('multisites');
-    $parallel_executions = 10;
+    $parallel_executions = (int) getenv(self::UPDATE_PARALLEL_PROCESSES) ?: 10;
+
     $site_chunks = array_chunk($sites, ceil(count($sites) / $parallel_executions));
     $commands = [];
     foreach ($site_chunks as $sites) {
@@ -50,11 +53,41 @@ class HsCommands extends BltTasks {
         $failed[] = $site;
       }
     }
+    unlink(sys_get_temp_dir() . '/update-report.txt');
+
     $this->yell(sprintf('Updated %s sites successfully.', count($success)), 100);
+
     if ($failed) {
       $this->yell(sprintf("Update failed for the following sites:\n%s", implode("\n", $failed)), 100, 'red');
+
+      if (EnvironmentDetector::isAhStageEnv() || EnvironmentDetector::isAhProdEnv()) {
+        $this->sendSlackNotification("A new deployment has been made to *$target_env* using *$deployed_tag*. At least one site failed updating.");
+      }
+      throw new \Exception('Failed update');
     }
-    unlink(sys_get_temp_dir() . '/update-report.txt');
+
+    if (EnvironmentDetector::isAhStageEnv() || EnvironmentDetector::isAhProdEnv()) {
+      $this->sendSlackNotification("A new deployment has been made to *$target_env* using *$deployed_tag*.");
+    }
+  }
+
+  /**
+   * Send out a slack notification.
+   *
+   * @param string $message
+   *   Slack message.
+   */
+  protected function sendSlackNotification(string $message) {
+    $client = new Client();
+    $client->post(getenv('SLACK_NOTIFICATION_URL'), [
+      'form_params' => [
+        'payload' => json_encode([
+          'username' => 'Acquia Cloud',
+          'text' => $message,
+          'icon_emoji' => 'information_source',
+        ]),
+      ],
+    ]);
   }
 
   /**

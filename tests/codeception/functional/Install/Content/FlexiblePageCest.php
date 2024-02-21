@@ -249,7 +249,7 @@ class FlexiblePageCest {
     // Populating spotlight #1.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
-    $I->waitForText('Spotlight(s)');
+    $I->waitForText('Body');
     $I->fillField('.ck-editor__editable_inline', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
@@ -275,7 +275,7 @@ class FlexiblePageCest {
     // // Populating spotlight #2.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
-    $I->waitForText('Spotlight(s)');
+    $I->waitForText('Collapse');
     $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_0_collapse');
     $I->wait(1);
     $I->scrollTo('.field-add-more-submit');

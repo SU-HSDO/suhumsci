@@ -54,13 +54,14 @@ if (EnvironmentDetector::isLocalEnv() && !InstallerKernel::installationAttempted
 }
 
 // Don't lock config when using drush.
-if (PHP_SAPI !== 'cli') {
+if (PHP_SAPI !== 'cli' && EnvironmentDetector::isProdEnv()) {
   $settings['config_readonly'] = TRUE;
 }
 
 // Enable nobots on any non-prod site.
 if (!EnvironmentDetector::isProdEnv()) {
   $settings['nobots'] = TRUE;
+  $config['google_analytics.settings']['account'] = '';
 }
 
 if (EnvironmentDetector::isAhEnv()) {

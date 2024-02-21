@@ -159,7 +159,11 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
       {label &&
         <div
           id={labelId}
-          style={{padding: "6px", fontWeight: "600"}}
+          style={{
+            marginBottom: "1.2rem",
+            fontSize: "1.8rem",
+            fontWeight: "600"
+          }}
         >
           {label}
         </div>

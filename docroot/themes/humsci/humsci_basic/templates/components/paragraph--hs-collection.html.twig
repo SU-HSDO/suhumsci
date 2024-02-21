@@ -56,10 +56,18 @@
   ]
 %}
 
+{% set title_visible = paragraph.field_title_settings.value in ['collection_title_visible', 'collection_title_sr_only'] %}
+{% set title_sr_only = paragraph.field_title_settings.value == 'collection_title_sr_only' %}
+
 {% block paragraph %}
   <div{{ attributes.addClass(classes) }}>
+    {% if title_visible %}
+      <h2 class="{% if title_sr_only %}visually-hidden{% endif %}">
+        {{ paragraph.field_title.value }}
+      </h2>
+    {% endif %}
     {% block content %}
-      {{ content }}
+      {{ content|without('field_title') }}
     {% endblock %}
   </div>
 {% endblock paragraph %}

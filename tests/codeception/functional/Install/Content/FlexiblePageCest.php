@@ -275,7 +275,7 @@ class FlexiblePageCest {
     // // Populating spotlight #2.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
-    $I->waitForText('Collapse');
+    $I->waitForText('Body');
     $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_0_collapse');
     $I->wait(1);
     $I->scrollTo('.field-add-more-submit');

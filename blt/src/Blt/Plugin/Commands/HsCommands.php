@@ -17,8 +17,6 @@ class HsCommands extends BltTasks {
 
   use HsCommandTrait;
 
-  const UPDATE_PARALLEL_PROCESSES = 'UPDATE_PARALLEL_PROCESSES';
-
   /**
    * After code deployed, update all sites on the stack.
    *
@@ -28,7 +26,7 @@ class HsCommands extends BltTasks {
    */
   public function postCodeDeployUpdate($target_env, $deployed_tag) {
     $sites = $this->getConfigValue('multisites');
-    $parallel_executions = (int) getenv(self::UPDATE_PARALLEL_PROCESSES) ?: 10;
+    $parallel_executions = (int) getenv('UPDATE_PARALLEL_PROCESSES') ?: 10;
 
     $site_chunks = array_chunk($sites, ceil(count($sites) / $parallel_executions));
     $commands = [];

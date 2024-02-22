@@ -8,10 +8,20 @@
   {% set attributes = attributes.addClass('hb-timeline__expanded') %}
 {% endif %}
 
+{% set timeline_content = timeline %}
+{% if timeline['field_hs_time_title'] is defined %}
+  {% set timeline_content %}
+    <{{ heading_tag }} class="hb-timeline__title">
+      {{ timeline['field_hs_time_title'] }}
+    </{{ heading_tag }}>
+    {{ timeline|without('field_hs_time_title') }}
+  {% endset %}
+{% endif %}
+
 <div {{ attributes }}>
   <div class="hb-timelime__wrapper">
-    {% if timeline %}
-      {{ timeline }}
+    {% if timeline_content %}
+      {{ timeline_content }}
     {% endif %}
   </div>
 </div>

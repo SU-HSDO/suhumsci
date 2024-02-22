@@ -36,10 +36,10 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - cache-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
-    - cache-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-
+    - cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
+    - cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-
     # fallback to using the latest cache if no exact match is found
-    - cache-{{ checksum "composer.json" }}
+    - cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -50,7 +50,7 @@ save_cache: &save_cache
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
     - ./docroot/themes/contrib
-  key: cache-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
+  key: cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
 
 disable_telemetry: &disable_telemetry
   run:

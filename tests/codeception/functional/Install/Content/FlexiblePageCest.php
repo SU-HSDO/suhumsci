@@ -492,6 +492,10 @@ class FlexiblePageCest {
     $I->selectOption('Items Per Row', 2);
     $I->canSeeOptionIsSelected('Background Color', '- None -');
     // Add a Text Area component to the Collection.
+    $I->selectOption('Title Settings', 'I do not want a heading for this Collection');
+    $I->cantSee('field_hs_page_components[1][subform][field_title][0][value]');
+    $I->selectOption('Title Settings', 'The Collection title should be visible as a Heading');
+    $I->fillField('field_hs_page_components[1][subform][field_title][0][value]', 'Demo Collection Title');
     $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
     $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-browse"]');
     $I->waitForText('Browse');
@@ -511,11 +515,13 @@ class FlexiblePageCest {
     $I->fillField('field_hs_page_components[1][subform][field_hs_collection_items][1][subform][field_hs_postcard_title][0][value]', 'Demo card title');
     $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Bar Foo Baz');
     // Save the node and verify the components are visible.
+    $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Foo Bar Baz', '.item-per-row--2');
-    $I->canSee('Demo card title', '.item-per-row--2 h2');
+    $I->canSee('Demo card title', '.item-per-row--2 h3');
     $I->canSee('Bar Foo Baz', '.item-per-row--2');
+    $I->canSee('Demo Collection Title');
   }
 
 }

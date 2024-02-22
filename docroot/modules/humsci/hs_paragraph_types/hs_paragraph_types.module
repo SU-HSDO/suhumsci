@@ -41,7 +41,6 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
 function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
   $elements_to_change = [
     'field_hs_carousel_slides',
-    'field_hs_gradient_hero_slides',
     'field_hs_sptlght_sldes',
   ];
   // We need the field name to alter the correct element.
@@ -68,18 +67,6 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
           continue;
         }
         $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = $new_label;
-      }
-      break;
-    case('field_hs_gradient_hero_slides'):
-      // Change the title label for field_hs_gradient_hero_link.
-      foreach (Element::children($field_widget_form['widget']) as $key) {
-        if (
-          !is_int($key) ||
-          empty($field_widget_form['widget'][$key]['subform']['field_hs_gradient_hero_link']['widget'][0]['#title'])
-        ) {
-          continue;
-        }
-        $field_widget_form['widget'][$key]['subform']['field_hs_gradient_hero_link']['widget'][0]['#title'] = 'Link';
       }
       break;
     case('field_hs_sptlght_sldes'):

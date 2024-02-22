@@ -58,14 +58,14 @@ class HsCommands extends BltTasks {
     if ($failed) {
       $this->yell(sprintf("Update failed for the following sites:\n%s", implode("\n", $failed)), 100, 'red');
 
-      if (EnvironmentDetector::isAhStageEnv() || EnvironmentDetector::isAhProdEnv()) {
+      if (in_array($target_env, ['prod', 'test'])) {
         $count = count($failed);
         $this->sendSlackNotification("A new deployment has been made to *$target_env* using *$deployed_tag*.\n\n*$count* sites failed to update.");
       }
       throw new \Exception('Failed update');
     }
 
-    if (EnvironmentDetector::isAhStageEnv() || EnvironmentDetector::isAhProdEnv()) {
+    if (in_array($target_env, ['prod', 'test'])) {
       $this->sendSlackNotification("A new deployment has been made to *$target_env* using *$deployed_tag*.");
     }
   }

@@ -51,7 +51,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
     return;
   }
   switch ($field_widget_form['widget']['#field_name']) {
-    case('field_hs_carousel_slides'):
+    case 'field_hs_carousel_slides':
       if (empty($field_widget_form['widget']['add_more'])) {
         return;
       }
@@ -69,7 +69,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = $new_label;
       }
       break;
-    case('field_hs_sptlght_sldes'):
+    case 'field_hs_sptlght_sldes':
       // Change the spotlight widget title.
       $new_label = 'Spotlight(s)';
       $field_widget_form['widget']['#title'] = $new_label;

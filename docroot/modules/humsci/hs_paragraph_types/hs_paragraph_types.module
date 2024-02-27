@@ -66,13 +66,13 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         if (!is_int($key)) {
           continue;
         }
-        $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = $new_label;
+        $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = t($new_label);
       }
       break;
     case 'field_hs_sptlght_sldes':
       // Change the spotlight widget title.
       $new_label = 'Spotlight(s)';
-      $field_widget_form['widget']['#title'] = $new_label;
+      $field_widget_form['widget']['#title'] = t($new_label);
       if (!empty($field_widget_form['widget']['add_more']['#suffix'])) {
         // Change the paragraph type label for the add more button.
         $field_widget_form['widget']['add_more']['#suffix'] = t('to %type', [

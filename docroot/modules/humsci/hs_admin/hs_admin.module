@@ -23,7 +23,7 @@ function hs_admin_page_attachments(&$variables) {
 
   if (\Drupal::state()->get('set_default_shortcuts: ' . \Drupal::currentUser()->id())) {
     $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
-    // Remove state after the first check
+    // Remove state after the first check.
     \Drupal::state()->delete('set_default_shortcuts: ' . \Drupal::currentUser()->id());
   }
 }
@@ -186,6 +186,6 @@ function hs_admin_field_widget_complete_paragraphs_browser_form_alter(&$field_wi
 function hs_admin_user_login(UserInterface $account) {
   if ($account->isAuthenticated() && $account->hasPermission('access toolbar')) {
     // Only add this state if user is logged in and has toolbar access.
-    \Drupal::state()->set('set_default_shortcuts: ' . $account->id(), true);
+    \Drupal::state()->set('set_default_shortcuts: ' . $account->id(), TRUE);
   }
 }

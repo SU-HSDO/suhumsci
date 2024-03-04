@@ -9,6 +9,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_preprocess_node_edit_form().
@@ -18,6 +19,12 @@ function hs_admin_page_attachments(&$variables) {
 
   if ($logged_in) {
     $variables['#attached']['library'][] = 'hs_admin/hs_admin';
+  }
+
+  if (\Drupal::state()->get('set_default_shortcuts: ' . \Drupal::currentUser()->id())) {
+    $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+    // Remove state after the first check.
+    \Drupal::state()->delete('set_default_shortcuts: ' . \Drupal::currentUser()->id());
   }
 }
 
@@ -194,5 +201,15 @@ function hs_admin_field_widget_complete_paragraphs_browser_form_alter(&$field_wi
       $duplicate_button = &$field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'];
       $duplicate_button['#ajax']['callback'] = 'su_humsci_profile_paragraphs_duplicate_callback';
     }
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function hs_admin_user_login(UserInterface $account) {
+  if ($account->isAuthenticated() && $account->hasPermission('access toolbar')) {
+    // Only add this state if user is logged in and has toolbar access.
+    \Drupal::state()->set('set_default_shortcuts: ' . $account->id(), TRUE);
   }
 }

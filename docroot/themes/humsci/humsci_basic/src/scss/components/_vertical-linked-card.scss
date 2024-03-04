@@ -25,6 +25,7 @@
   .hb-stretch-vertical-linked-cards & {
     display: flex;
     flex-flow: column nowrap;
+    height: 100%;
   }
 
   &__img {
@@ -89,14 +90,6 @@
       margin: 0;
     }
 
-    // Only extend the title if it's not
-    // the last visual element on the card.
-    &:nth-last-child(2) {
-      .hb-stretch-vertical-linked-cards & {
-        flex: 1 1 auto;
-      }
-    }
-
     .hb-vertical-linked-card:hover &,
     .hb-vertical-linked-card:focus &,
     .hb-vertical-linked-card.is-focused & {
@@ -142,16 +135,10 @@
 
       position: absolute;
       right: 0;
+      top: 50%;
+      transform: translateY(-50%);
 
       transition: hb-transition(background-position);
-
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: hb-calculate-rems(10px);
-      }
-
-      @include hb-traditional {
-        bottom: hb-calculate-rems(7px);
-      }
     }
   }
 

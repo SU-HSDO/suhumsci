@@ -68,7 +68,10 @@ function hs_admin_preprocess_details(&$variables) {
     return;
   }
 
-  $expanded = ['menu settings'];
+  $expanded = [
+    'menu settings',
+    'user guide',
+  ];
   // Close all sidebar elements if not Menu Settings.
   $title = $variables['title'] ?? '';
   if (!is_array($title) && in_array(strtolower((string) $title), $expanded, TRUE)) {
@@ -98,6 +101,27 @@ function hs_admin_preprocess_form_element(&$variables) {
 function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Weight is applied to some tabs after form build.
   $form['#after_build'][] = '_hs_admin_form_after_build';
+
+  // Add user guide link to node form details.
+  $form['user_guide'] = [
+    '#title' => t('User Guide'),
+    '#type' => 'details',
+    '#group' => 'advanced',
+    '#weight' => 100,
+    '#open' => TRUE,
+  ];
+
+  $form['user_guide']['link'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'a',
+    '#value' => t('User Guide'),
+    '#attributes' => [
+      'href' => '/user-guide',
+      'target' => '_blank',
+    ],
+    '#group' => 'advanced',
+    '#weight' => 100,
+  ];
 }
 
 /**

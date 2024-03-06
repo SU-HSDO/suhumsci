@@ -16,6 +16,10 @@
   @include hb-icon-background('plus', $color);
   background-size: hb-calculate-rems(18px);
   transition: hb-transition(transform);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 @mixin hb-menu-minus-icon($color: 'gray-dark') {
@@ -28,6 +32,10 @@
   @include hb-icon-background('chevron', 'black');
   background-size: hb-calculate-rems(10px) hb-calculate-rems(7px);
   transition: hb-transition(transform);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 @mixin hb-menu-up-arrow-icon {

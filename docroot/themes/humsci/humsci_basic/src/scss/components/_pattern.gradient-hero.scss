@@ -31,6 +31,8 @@
 
   &__text {
     @include hb-hero-text;
+    display: flex;
+    flex-direction: column;
     max-width: hb-calculate-rems($hb-layout-XXL-width) !important; // override max page width set in hb-page-width mixin
     padding-right: hb-calculate-rems(24px);
 
@@ -43,6 +45,7 @@
     }
 
     h2,
+    h3,
     .field-hs-gradient-hero-body p {
       @include hb-traditional {
         margin-bottom: 0;
@@ -56,6 +59,11 @@
         display: flex;
         justify-content: flex-end;
         text-align: right;
+      }
+
+      h2,
+      h3 {
+        align-self: flex-end;
       }
 
       .field-hs-gradient-hero-body {

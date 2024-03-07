@@ -599,6 +599,14 @@
             }
             /* stylelint-enable max-nesting-depth */
           }
+
+          .hs-full-width & {
+            bottom: 11rem;
+
+            @include grid-media-min('md') {
+              bottom: hb-calculate-rems(47px);
+            }
+          }
         }
 
         @include hb-traditional {
@@ -614,7 +622,15 @@
           }
 
           .hs-full-width & {
-            bottom: hb-calculate-rems(60px);
+            bottom: hb-calculate-rems(78px);
+
+            @include grid-media-min('md') {
+              bottom: hb-calculate-rems(54px);
+            }
+
+            @include grid-media-min('xl') {
+              bottom: hb-calculate-rems(78px);
+            }
           }
         }
 

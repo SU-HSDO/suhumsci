@@ -1,7 +1,32 @@
 <?php
 
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
+
 assert_options(ASSERT_EXCEPTION, TRUE);
+
+$databases = [
+  'default' =>
+    [
+      'default' =>
+        [
+          'database' => 'drupal',
+          'username' => 'drupal',
+          'password' => 'drupal',
+          'host' => getenv('CIRCLECI') ? '127.0.0.1' : 'mysql',
+          'port' => '3306',
+          'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+          'driver' => 'mysql',
+          'prefix' => '',
+        ],
+    ],
+];
+
+// On CircleCI we only do dependency updates. T help that work better, make sure
+// the system doesn't ignore any configs.
+if (getenv('CIRCLECI')) {
+  $config['config_ignore.settings']['ignored_config_entities'] = range(1, 100);
+}
+
 if (getenv('TUGBOAT_SERVICE')) {
   /**
    * Database configuration.
@@ -23,7 +48,6 @@ if (getenv('TUGBOAT_SERVICE')) {
       ],
   ];
 }
-
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
@@ -94,7 +118,6 @@ $config['system.performance']['js']['preprocess'] = FALSE;
  * purposes.
  */
 $settings['extension_discovery_scan_tests'] = FALSE;
-
 
 /**
  * Configure static caches.

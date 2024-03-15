@@ -9,6 +9,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_preprocess_node_edit_form().
@@ -19,6 +20,9 @@ function hs_admin_page_attachments(&$variables) {
   if ($logged_in) {
     $variables['#attached']['library'][] = 'hs_admin/hs_admin';
   }
+
+  // Show shortcuts toolbar when user is logged in.
+  $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
 }
 
 /**

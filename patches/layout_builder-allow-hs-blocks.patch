@@ -1,0 +1,13 @@
+diff --git a/modules/layout_builder/js/layout-builder.js b/modules/layout_builder/js/layout-builder.js
+index 76b751c6..9353579d 100644
+--- a/modules/layout_builder/js/layout-builder.js
++++ b/modules/layout_builder/js/layout-builder.js
+@@ -460,7 +460,7 @@
+   $(window).on('drupalContextualLinkAdded', (event, data) => {
+     const element = data.$el;
+     const contextualId = element.attr('data-contextual-id');
+-    if (contextualId && !contextualId.startsWith('layout_builder_block:')) {
++    if (contextualId && !(contextualId.startsWith('layout_builder_block:') || contextualId.startsWith('hs_blocks_block:'))) {
+       element.remove();
+     }
+   });

@@ -1,0 +1,33 @@
+.hb-vertical-card {
+  &:hover,
+  &:focus {
+    cursor: pointer;
+  }
+
+  .hb-card__img {
+    overflow: hidden;
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('sm') {
+        .field-hs-row-components & {
+          margin-top: hb-calculate-rems(-24px);
+        }
+      }
+    }
+
+    img {
+      width: 100%;
+      transition: hb-transition(transform);
+
+      .hb-vertical-linked-card:hover &,
+      .hb-vertical-linked-card:focus &,
+      .hb-vertical-linked-card.is-focused & {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
+  }
+
+  .field-media-image {
+    margin: 0;
+  }
+}

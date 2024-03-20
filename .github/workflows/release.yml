@@ -67,8 +67,7 @@ jobs:
           ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
           blt blt:telemetry:disable --no-interaction &&
-          DATE=$(date +'%Y-%m-%d') &&
-          blt deploy --tag=$(echo $DATE_${{ steps.tag.outputs.tag }}) --commit-msg=${{ steps.tag.outputs.tag }} --no-interaction
+          blt deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} --no-interaction
       - name: Get Next Release
         if: ${{ steps.tag.outputs.tag }}
         id: next_tag

@@ -282,6 +282,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
     }
 
     $clone_target_types[] = 'paragraph';
+    $clone_target_types[] = 'hs_entity';
 
     // Filter out fields that we dont care about. We only need entity reference
     // fields that are not base fields. Also we only want entity reference

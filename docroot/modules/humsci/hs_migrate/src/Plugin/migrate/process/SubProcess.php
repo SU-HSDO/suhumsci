@@ -15,7 +15,7 @@ class SubProcess extends OriginalSubProcess {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $return = [];
+    $return = $source = [];
     if ($this->configuration['include_source']) {
       $key = $this->configuration['source_key'];
       $source[$key] = $row->getSource();
@@ -27,7 +27,7 @@ class SubProcess extends OriginalSubProcess {
         // This is the difference with the original process plugin. When using
         // SimpleXML parters, the `$new_value` is a SimpleXmlElement. So we have
         // to cast it to an array to construct the new row.
-        $new_row = new Row((array) $new_value, []);
+        $new_row = new Row((array) $new_value + $source);
         $migrate_executable->processRow($new_row, $this->configuration['process']);
         $destination = $new_row->getDestination();
         if (array_key_exists('key', $this->configuration)) {

@@ -54,7 +54,9 @@ class MigrationOverrides implements ConfigFactoryOverrideInterface {
         $news_entities = $this->entityTypeManager->getStorage('hs_entity')
           ->loadMultiple($entity_ids);
         foreach ($news_entities as $entity) {
-          $urls[] = $entity->get('field_url')->getString();
+          if ($entity->hasField('field_url')) {
+            $urls[] = $entity->get('field_url')->getString();
+          }
         }
       }
       $overrides['migrate_plus.migration.hs_news_rss']['status'] = !empty($urls);

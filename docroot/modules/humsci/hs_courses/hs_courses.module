@@ -5,23 +5,25 @@
  * hs_courses.module
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\hs_entities\HsEntityInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_view_alter().
  */
-function hs_courses_course_collections_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  // On the ECK entity, if the instructor person is set, use that to display.
+function hs_courses_hs_entity_view_alter(array &$build, HsEntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->bundle() != 'course_collections__instructor') {
+    return;
+  }
   if ($entity->get('field_instructor_person')->count()) {
-    unset($build['title']);
+    unset($build['label']);
     return;
   }
 
   /** @var \Drupal\Core\Field\FieldItemList $instructor_role_list */
   $instructor_role_list = $entity->get('field_instructor_role');
   if ($instructor_role_list->count()) {
-    $build['title'][0]['#context']['value'] .= ' (' . $instructor_role_list->getString() . ')';
+    $build['label'][0]['#context']['value'] .= ' (' . $instructor_role_list->getString() . ')';
   }
 }
 

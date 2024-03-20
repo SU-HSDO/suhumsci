@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.publications_collections.publication_author
     - field.storage.node.field_hs_publication_author
     - node.type.hs_publications
 _core:
@@ -19,12 +18,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:publications_collections'
+  handler: 'default:hs_entity'
   handler_settings:
     target_bundles:
-      publication_author: publication_author
+      publications_collections__public: publications_collections__public
     sort:
-      field: _none
+      field: label
+      direction: ASC
     auto_create: true
     auto_create_bundle: ''
 field_type: entity_reference

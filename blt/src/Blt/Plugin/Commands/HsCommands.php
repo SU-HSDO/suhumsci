@@ -8,7 +8,6 @@ use Acquia\Blt\Robo\Exceptions\BltException;
 use Drupal\Core\Serialization\Yaml;
 use GuzzleHttp\Client;
 use Robo\Exception\TaskException;
-use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 
 /**
  * Various BLT commands for H&S stack.

@@ -86,6 +86,12 @@ jobs:
           base: develop
           title: ${{ steps.next_tag.outputs.version }}
           body: "# DO NOT DELETE"
+      - uses: actions/checkout@v4
+        if: ${{ steps.next_tag.outputs.version }}
+        with:
+          ref: ${{ steps.next_tag.outputs.version }}-release
       - name: Push New Branch
-        if: ${{ steps.tag.outputs.tag }}
-        run: blt deploy -n
+        if: ${{ steps.next_tag.outputs.version }}
+        run: |
+          composer install -n &&
+          blt deploy -n

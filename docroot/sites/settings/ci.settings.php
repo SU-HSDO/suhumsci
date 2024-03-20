@@ -21,7 +21,7 @@ $databases = [
     ],
 ];
 
-// On CircleCI we only do dependency updates. T help that work better, make sure
+// On CircleCI we only do dependency updates. To help that work better, make sure
 // the system doesn't ignore any configs.
 if (getenv('CIRCLECI')) {
   $config['config_ignore.settings']['ignored_config_entities'] = range(1, 100);

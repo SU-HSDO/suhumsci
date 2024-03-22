@@ -2,28 +2,35 @@
   &:hover,
   &:focus {
     cursor: pointer;
+
+    .hb-card__img img {
+      transform: scale($hb-image-hover-scale);
+    }
+
+    .hb-card__title a {
+      @include hb-global-color('color', 'black');
+
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight-darken-10');
+        transition-delay: 0s, 0s;
+        box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
+        box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--tertiary-highlight);
+      }
+  
+      @include hb-traditional {
+        @include hb-global-color('color', 'black');
+        background-image: none;
+        @include hb-pairing-color('text-decoration-color', 'primary');
+      }
+    }
   }
 
   .hb-card__img {
     overflow: hidden;
 
-    @include hb-themes(('colorful', 'airy')) {
-      @include grid-media-min('sm') {
-        .field-hs-row-components & {
-          margin-top: hb-calculate-rems(-24px);
-        }
-      }
-    }
-
     img {
       width: 100%;
       transition: hb-transition(transform);
-
-      .hb-vertical-linked-card:hover &,
-      .hb-vertical-linked-card:focus &,
-      .hb-vertical-linked-card.is-focused & {
-        transform: scale($hb-image-hover-scale);
-      }
     }
   }
 

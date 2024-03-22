@@ -3,6 +3,12 @@
   &:focus {
     cursor: pointer;
 
+    @include hb-colorful {
+      .hb-raised-cards & {
+        @include hb-pairing-color('border-color', 'secondary-darken-12');
+      }
+    }
+
     .hb-card__img img {
       transform: scale($hb-image-hover-scale);
     }

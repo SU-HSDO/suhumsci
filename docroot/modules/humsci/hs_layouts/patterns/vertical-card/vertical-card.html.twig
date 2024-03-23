@@ -17,21 +17,20 @@
 
     {% if title %}
       <div class="hb-card__title">
+      {% set title_content %}
         {% if button %}
-          {% if title|render matches '/<\\/h\\d>/' %}
-            <a href="{{ button }}" id="hb-vertical-card__title__link">{{ title }}</a>
-          {% else %}
-            <{{ heading_tag }} class="hb-vertical-card__title">
-              <a href="{{ button }}" id="hb-vertical-card__title__link">{{ title }}</a>
-            </{{ heading_tag }}>
-          {% endif %}
+          <a href="{{ button }}" id="hb-vertical-card__title__link">{{ title }}</a>
         {% else %}
-          {% if title|render matches '/<h\\d>/' %}
-            {{ title }}
-          {% else %}
-            <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
-          {% endif %}
+          {{ title }}
         {% endif %}
+      {% endset %}
+      {% if title|render matches '/<h\\d>/' %}
+        {{ title_content }}
+      {% else %}
+        <{{ heading_tag }} class="hb-vertical-card__title">
+          {{ title_content }}
+        </{{ heading_tag }}>
+      {% endif %}
       </div>
     {% endif %}
 

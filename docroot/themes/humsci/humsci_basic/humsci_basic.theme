@@ -239,24 +239,8 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
 /**
  * Implements hook_preprocess_HOOK().
  */
-function humsci_basic_preprocess_pattern_vertical_card(&$variables, $hook) {
-  // $context = $variables['context'];
-  // if (!$context->isOfType('layout')) {
-    // return;
-  // }
-  // $paragraph = $context->getProperty('entity');
-  // if (!$paragraph instanceof ParagraphInterface) {
-    // return;
-  // }
-
-  // Get the parent entity of the paragraph.
-  // $parent = $paragraph->getParentEntity();
-
-  // if ($hook === 'pattern_vertical_card' && $parent instanceof ParagraphInterface) {
-    // Set variable to make changes only when pattern is being used in Paragraphs
-    // $variables['is_paragraph'] = true;
-    _humsci_basic_make_title_the_link($variables);
-  // }
+function humsci_basic_preprocess_pattern_vertical_card(&$variables) {
+  _humsci_basic_make_title_the_link($variables);
 }
 
 /**

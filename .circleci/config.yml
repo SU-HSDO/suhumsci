@@ -22,7 +22,6 @@ add_known_hosts: &add_known_hosts
 defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
-    - image: selenium/standalone-chrome:latest
     - image: circleci/mysql:5.7
       environment:
         MYSQL_DATABASE: drupal
@@ -56,126 +55,6 @@ disable_telemetry: &disable_telemetry
   run:
     name: Disable Telemetry
     command: vendor/bin/blt blt:telemetry:disable --no-interaction
-#Jobs
-
-directory_setup: &directory_setup
-  <<: *defaults
-  steps:
-    - checkout
-    - restore_cache: *restore_cache
-    - run:
-        name: Composer setup
-        command: |
-          composer install --optimize-autoloader --no-interaction
-          composer dump-autoload
-          vendor/bin/blt blt:telemetry:disable --no-interaction
-          vendor/bin/blt settings --no-interaction
-    - save_cache: *save_cache
-    - persist_to_workspace:
-        root: .
-        paths:
-          - .
-
-### Job to run the update path and Codeception tests.
-acceptance_first: &acceptance_first
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - *add_known_hosts
-    - attach_workspace:
-        at: .
-    - *disable_telemetry
-    - run:
-        name: Run Acceptance tests
-        command: vendor/bin/blt circleci:codeception 0
-    - store_test_results:
-        path: /var/www/html/artifacts
-    - store_artifacts:
-        path: /var/www/html/artifacts
-
-### Job to run the update path and Codeception tests.
-acceptance_second: &acceptance_second
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - *add_known_hosts
-    - attach_workspace:
-        at: .
-    - *disable_telemetry
-    - run:
-        name: Run Acceptance tests
-        command: vendor/bin/blt circleci:codeception 1
-    - store_test_results:
-        path: /var/www/html/artifacts
-    - store_artifacts:
-        path: /var/www/html/artifacts
-
-## Job to run Unit and Kernel tests.
-acceptance: &acceptance
-  <<: *defaults
-  steps:
-    - attach_workspace:
-        at: .
-    - *disable_telemetry
-    - run:
-        name: Run installation Acceptance tests
-        command: vendor/bin/blt circleci:codeception
-    - store_test_results:
-        path: /var/www/html/artifacts
-    - store_artifacts:
-        path: /var/www/html/artifacts
-
-phpunit_coverage: &phpunit_coverage
-  <<: *defaults
-  steps:
-    - attach_workspace:
-        at: .
-    - *disable_telemetry
-    - run:
-        name: Run PHPUnit Coverage Tests
-        command: |
-          dockerize -wait tcp://localhost:3306 -timeout 1m
-          apachectl stop; apachectl start
-          vendor/bin/blt tests:phpunit:coverage --no-interaction
-    - store_test_results:
-        path: artifacts/phpunit
-    - store_artifacts:
-        path: artifacts/phpunit
-
-## Job to deploy the current branch to Acquia hosting using BLT.
-deploy_branch: &deploy_branch
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - *add_known_hosts
-    - attach_workspace:
-        at: .
-    - *disable_telemetry
-    - run:
-        name: Deploying branch to Acquia
-        command: |
-          git config --global user.email "sws-developers@lists.stanford.edu"
-          git config --global user.name "CircleCI"
-          vendor/bin/blt deploy --no-interaction
-
-## Job to deploy the new tag to Acquia hosting using BLT.
-deploy_tag: &deploy_tag
-  <<: *defaults
-  steps:
-    - *add_ssh
-    - *add_known_hosts
-    - checkout
-    - restore_cache: *restore_cache
-    - run: composer install --optimize-autoloader
-    - *disable_telemetry
-    - run:
-        name: Deploying Tag to Acquia
-        command: |
-          git config --global user.email "sws-developers@lists.stanford.edu"
-          git config --global user.name "CircleCI"
-          DATE=`date +%Y-%m-%d`
-          vendor/bin/blt deploy --tag=$(echo ${DATE}_${CIRCLE_TAG}) --commit-msg=$CIRCLE_TAG --no-interaction
-          vendor/bin/blt circleci:new-release-branch ${CIRCLE_TAG}
 
 update_dependencies: &update_dependencies
   <<: *defaults
@@ -190,89 +69,30 @@ update_dependencies: &update_dependencies
         name: Update dependencies
         no_output_timeout: 30m
         command: |
-          git config --global user.email "sws-developers@lists.stanford.edu"
-          git config --global user.name "CircleCI"
-          vendor/bin/blt circleci:update $CIRCLE_BRANCH
-          vendor/bin/blt humsci:clean-backups
+          dockerize -wait tcp://localhost:3306 -timeout 1m &&
+          apachectl stop && apachectl start &&
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "CircleCI" &&
+          blt drupal:install -n &&
+          drush cim -y &&
+          composer update -n &&
+          drush updatedb -y &&
+          drush config:export -y &&
+          git add config composer.lock docroot &&
+          git commit -m "Updated dependencies $DATE" &&
+          git push origin $CIRCLE_BRANCH &&
+          blt humsci:clean-backups &&
+          blt humsci:clean-branches
     - save_cache: *save_cache
-
-run-content-stage: &run-content-stage
-  docker:
-    - image: cimg/php:7.4
-  steps:
-    - checkout
-    - run: composer install --optimize-autoloader
-    - *disable_telemetry
-    - run: vendor/bin/blt stage --no-interaction
-    - slack/notify:
-        event: fail
-        channel: C750VBZCZ
-        template: basic_fail_1
-    - slack/notify:
-        event: pass
-        channel: C750VBZCZ
-        template: basic_success_1
 
 # Declare all the jobs we should run.
 jobs:
   run-updates:
     <<: *update_dependencies
-  run-setup:
-    <<: *directory_setup
-  run-acceptance-first:
-    <<: *acceptance_first
-  run-acceptance-second:
-    <<: *acceptance_second
-  run-acceptance:
-    <<: *acceptance
-  run-code-coverage:
-    <<: *phpunit_coverage
-  run-deploy-branch:
-    <<: *deploy_branch
-  run-deploy-tag:
-    <<: *deploy_tag
-  run-content-stage:
-    <<: *run-content-stage
 
 version: 2.1
-orbs:
-  slack: circleci/slack@4.4.2
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
-  version: 2.1
-  deploy_tag:
-    jobs:
-      # Tags are only created on successful code. Deploy the tag after creation.
-      # This will trigger after the release is created above.
-      - run-deploy-tag:
-          filters:
-            tags:
-              only:
-                - /.*/
-            branches:
-              ignore:
-                - /.*/
-  test_lint_deploy:
-    jobs:
-      - run-setup
-      - run-acceptance-first:
-          requires:
-            - run-setup
-      - run-acceptance-second:
-          requires:
-            - run-setup
-      - run-acceptance:
-          requires:
-            - run-setup
-      - run-code-coverage:
-          requires:
-            - run-setup
-      # If the above jobs complete successfully, deploy the branch.
-      - run-deploy-branch:
-          requires:
-            - run-acceptance-first
-            - run-acceptance-second
-            - run-acceptance
   dependency_updates:
     triggers:
       - schedule:
@@ -283,14 +103,3 @@ workflows:
                 - /10\..*-release/
     jobs:
       - run-updates
-#  'Stage Content from Production':
-#    jobs:
-#      - run-content-stage:
-#          context: slack-secrets
-#    triggers:
-#      - schedule:
-#          cron: "0 23 * * 3"
-#          filters:
-#            branches:
-#              only:
-#                - /develop/

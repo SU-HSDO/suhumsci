@@ -5,9 +5,7 @@ function verticalCard() {
   // Loop through each card
   cards.forEach((card) => {
     // Find the main link within each card
-    const mainLink = card.querySelector(
-      '#hb-vertical-card__title__link',
-    );
+    const mainLink = card.querySelector('[data-vertical-card-link]');
 
     if (!mainLink) {
       return;

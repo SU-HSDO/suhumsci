@@ -59,6 +59,8 @@ class ToggleModulesCommand extends BltTasks {
       $modules_list = implode(' ', $modules);
       $result = $this->taskDrush()
         ->drush("$command $modules_list")
+        ->drush('eval')
+        ->arg('\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();')
         ->run();
       // Unable to uninstall all modules at the same time, try one at a time.
       if (!$result->wasSuccessful()) {
@@ -68,6 +70,8 @@ class ToggleModulesCommand extends BltTasks {
           // command will throw an error. Ignore that.
           $this->taskDrush()
             ->drush("$command $module")
+            ->drush('eval')
+            ->arg('\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();')
             ->printOutput(FALSE)
             ->run();
         }

@@ -3,16 +3,89 @@ name: Release
 
 on:
   pull_request:
-    types: closed
-
+    types: [ closed ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: write-all
+    if: github.event.pull_request.merged
+    container:
+      image: pookmish/drupal8ci:latest
     steps:
-      - name: Tag
+      - name: Get Next Release
+        id: tag
         uses: K-Phoen/semver-release-action@master
         with:
+          release_strategy: none
           release_branch: develop
           tag_format: "%major%.%minor%.%patch%"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Creating new release for ${{ steps.tag.outputs.tag }}
+        if: ${{ steps.tag.outputs.tag }}
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ steps.tag.outputs.tag }}
+          tag: ${{ steps.tag.outputs.tag }}
+          commit: ${{ github.sha }}
+          generateReleaseNotes: true
+          makeLatest: true
+      - name: Install SSH key
+        if: ${{ steps.tag.outputs.tag }}
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: fail
+      - uses: actions/checkout@v4
+        if: ${{ steps.tag.outputs.tag }}
+        with:
+          ref: ${{ github.sha }}
+      - name: Restore Cache
+        if: ${{ steps.tag.outputs.tag }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-${{ hashFiles('blt/blt.yml') }}-
+      - name: Deploy Tag
+        if: ${{ steps.tag.outputs.tag }}
+        run: |
+          git config --system --add safe.directory '*' &&
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "Github Actions" &&
+          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          composer install -n &&
+          blt blt:telemetry:disable --no-interaction &&
+          blt deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} --no-interaction
+      - name: Get Next Release
+        if: ${{ steps.tag.outputs.tag }}
+        id: next_tag
+        run: |
+          NEXT_VERSION=$(echo ${{ steps.tag.outputs.tag }} | awk -F. -v OFS=. '{$NF += 1 ; print}') &&
+          sed -i "s/^version:.*/version: $NEXT_VERSION/g" docroot/profiles/humsci/su_humsci_profile/su_humsci_profile.info.yml &&
+          echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+      - name: Create Next Release
+        if: ${{ steps.tag.outputs.tag }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          committer: Github Actions <sws-developers@lists.stanford.edu>
+          author: Github Actions <sws-developers@lists.stanford.edu>
+          commit-message: ${{ steps.next_tag.outputs.version }}
+          branch: ${{ steps.next_tag.outputs.version }}-release
+          base: develop
+          title: ${{ steps.next_tag.outputs.version }}
+          body: "# DO NOT DELETE"
+      - name: Push New Branch
+        if: ${{ steps.tag.outputs.tag }}
+        run: blt deploy -n

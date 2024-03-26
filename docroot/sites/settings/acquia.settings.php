@@ -9,8 +9,8 @@ $environment = EnvironmentDetector::getAhEnv();
 $settings['file_temp_path'] = '/mnt/gfs/' . EnvironmentDetector::getAhGroup() . '.' . EnvironmentDetector::getAhEnv() . '/tmp';
 $settings['letsencrypt_challenge_directory'] = $settings['file_temp_path'];
 
-if (!EnvironmentDetector::isProdEnv()) {
-  // Disables domain redirect on all environments except production.
-  $config['domain_301_redirect.settings']['enabled'] = FALSE;
-}
+// Disables domain redirect on all environments except production.
+$config['domain_301_redirect.settings']['enabled'] = EnvironmentDetector::isProdEnv();
 
+// Enable shield on non prod.
+$config['shield.settings']['shield_enable'] = !EnvironmentDetector::isProdEnv();

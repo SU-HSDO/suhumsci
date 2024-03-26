@@ -22,7 +22,6 @@ add_known_hosts: &add_known_hosts
 defaults: &defaults
   docker:
     - image: pookmish/drupal8ci:latest
-    - image: selenium/standalone-chrome:latest
     - image: circleci/mysql:5.7
       environment:
         MYSQL_DATABASE: drupal
@@ -36,10 +35,10 @@ defaults: &defaults
 restore_cache: &restore_cache
   # We use the composer.lock as a way to determine if we can cache our build.
   keys:
-    - cache-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
-    - cache-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-
+    - cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
+    - cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-
     # fallback to using the latest cache if no exact match is found
-    - cache-{{ checksum "composer.json" }}
+    - cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}
 
 ## Defines the cache saving mechanism.
 save_cache: &save_cache
@@ -50,7 +49,7 @@ save_cache: &save_cache
     - ./docroot/modules/contrib
     - ./docroot/modules/custom
     - ./docroot/themes/contrib
-  key: cache-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
+  key: cache-{{ checksum "blt/blt.yml" }}-{{ checksum "composer.json" }}-{{ checksum "composer.lock" }}-{{ .Environment.CACHE_VERSION }}
 
 disable_telemetry: &disable_telemetry
   run:
@@ -197,89 +196,30 @@ update_dependencies: &update_dependencies
         name: Update dependencies
         no_output_timeout: 30m
         command: |
-          git config --global user.email "sws-developers@lists.stanford.edu"
-          git config --global user.name "CircleCI"
-          vendor/bin/blt circleci:update $CIRCLE_BRANCH
-          vendor/bin/blt humsci:clean-backups
+          dockerize -wait tcp://localhost:3306 -timeout 1m &&
+          apachectl stop && apachectl start &&
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "CircleCI" &&
+          blt drupal:install -n &&
+          drush cim -y &&
+          composer update -n &&
+          drush updatedb -y &&
+          drush config:export -y &&
+          git add config composer.lock docroot &&
+          git commit -m "Updated dependencies $DATE" &&
+          git push origin $CIRCLE_BRANCH &&
+          blt humsci:clean-backups &&
+          blt humsci:clean-branches
     - save_cache: *save_cache
-
-run-content-stage: &run-content-stage
-  docker:
-    - image: cimg/php:7.4
-  steps:
-    - checkout
-    - run: composer install --optimize-autoloader
-    - *disable_telemetry
-    - run: vendor/bin/blt stage --no-interaction
-    - slack/notify:
-        event: fail
-        channel: C750VBZCZ
-        template: basic_fail_1
-    - slack/notify:
-        event: pass
-        channel: C750VBZCZ
-        template: basic_success_1
 
 # Declare all the jobs we should run.
 jobs:
   run-updates:
     <<: *update_dependencies
-  run-setup:
-    <<: *directory_setup
-  run-acceptance-first:
-    <<: *acceptance_first
-  run-acceptance-second:
-    <<: *acceptance_second
-  run-acceptance:
-    <<: *acceptance
-  run-code-coverage:
-    <<: *phpunit_coverage
-  run-deploy-branch:
-    <<: *deploy_branch
-  run-deploy-tag:
-    <<: *deploy_tag
-  run-content-stage:
-    <<: *run-content-stage
 
 version: 2.1
-orbs:
-  slack: circleci/slack@4.4.2
 # Declare a workflow that runs all of our jobs in parallel.
 workflows:
-  version: 2.1
-  deploy_tag:
-    jobs:
-      # Tags are only created on successful code. Deploy the tag after creation.
-      # This will trigger after the release is created above.
-      - run-deploy-tag:
-          filters:
-            tags:
-              only:
-                - /.*/
-            branches:
-              ignore:
-                - /.*/
-  test_lint_deploy:
-    jobs:
-      - run-setup
-      - run-acceptance-first:
-          requires:
-            - run-setup
-      - run-acceptance-second:
-          requires:
-            - run-setup
-      - run-acceptance:
-          requires:
-            - run-setup
-      - run-code-coverage:
-          requires:
-            - run-setup
-      # If the above jobs complete successfully, deploy the branch.
-      - run-deploy-branch:
-          requires:
-            - run-acceptance-first
-            - run-acceptance-second
-            - run-acceptance
   dependency_updates:
     triggers:
       - schedule:
@@ -290,14 +230,3 @@ workflows:
                 - /10\..*-release/
     jobs:
       - run-updates
-#  'Stage Content from Production':
-#    jobs:
-#      - run-content-stage:
-#          context: slack-secrets
-#    triggers:
-#      - schedule:
-#          cron: "0 23 * * 3"
-#          filters:
-#            branches:
-#              only:
-#                - /develop/

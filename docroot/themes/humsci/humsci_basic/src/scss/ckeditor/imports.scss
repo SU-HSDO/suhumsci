@@ -259,16 +259,17 @@ $px-only: true;
   }
 
   blockquote:nth-child(n) {
-    padding: 40px 0 24px;
-    font-size: 24px;
-    border-left: none;
+    @include hb-blockquote;
     overflow: visible;
 
+    font-size: 24px;
+
     &::before {
-      width: 68px;
-      height: 40px;
-      top: -20px;
-      right: calc(50% - 34px);
+      left: unset;
+    }
+
+    @include grid-media-min('lg') {
+      font-size: 28px;
     }
   }
 
@@ -319,6 +320,21 @@ $px-only: true;
         border-left: 0;
         border-right: 0;
       }
+    }
+  }
+
+  // Fix Video preview in CKeditor for "Align center and break text" option
+  .drupal-media-style-align-center {
+    max-width: none;
+
+    article:not(.hb-media-video) {
+      max-width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hb-media-video {
+      max-width: 100%;
     }
   }
 }

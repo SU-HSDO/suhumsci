@@ -11,9 +11,9 @@
     {% if title|render matches '/<\\/h\\d>/' %}
       <a href="{{ button }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
     {% else %}
-      <h2 class="hb-vertical-linked-card__title">
+      <{{ heading_tag }} class="hb-vertical-linked-card__title">
         <a href="{{ button }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
-      </h2>
+      </{{ heading_tag }}>
     {% endif %}
   {% elseif title %}
     {% if title|render matches '/<h\\d>/' %}

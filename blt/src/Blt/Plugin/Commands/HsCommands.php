@@ -8,6 +8,7 @@ use Acquia\Blt\Robo\Exceptions\BltException;
 use Drupal\Core\Serialization\Yaml;
 use GuzzleHttp\Client;
 use Robo\Exception\TaskException;
+use Sws\BltSws\Blt\Plugin\Commands\SwsCommandTrait;
 
 /**
  * Various BLT commands for H&S stack.
@@ -15,6 +16,97 @@ use Robo\Exception\TaskException;
 class HsCommands extends BltTasks {
 
   use HsCommandTrait;
+
+  /**
+   * After code deployed, update all sites on the stack.
+   *
+   * @command humsci:post-code-deploy
+   *
+   * @aliases humsci:post-code-update
+   */
+  public function postCodeDeployUpdate($target_env, $deployed_tag) {
+    $sites = $this->getConfigValue('multisites');
+    $parallel_executions = (int) getenv('UPDATE_PARALLEL_PROCESSES') ?: 10;
+
+    $site_chunks = array_chunk($sites, ceil(count($sites) / $parallel_executions));
+    $commands = [];
+    foreach ($site_chunks as $sites) {
+      $commands[] = $this->blt()
+        ->arg('humsci:update-sites')
+        ->arg(implode(',', $sites))
+        ->getCommand();
+    }
+    file_put_contents(sys_get_temp_dir() . '/update-report.txt', '');
+    $this->taskExec(implode(" &\n", $commands) . PHP_EOL . 'wait')->run();
+    $report = array_filter(explode("\n", file_get_contents(sys_get_temp_dir() . '/update-report.txt')));
+
+    $success = [];
+    $failed = [];
+    foreach ($report as $line) {
+      [$site, $status] = explode(':', $line);
+      if ((int) $status) {
+        $success[] = $site;
+      }
+      else {
+        $failed[] = $site;
+      }
+    }
+    unlink(sys_get_temp_dir() . '/update-report.txt');
+
+    $this->yell(sprintf('Updated %s sites successfully.', count($success)), 100);
+
+    if ($failed) {
+      $this->yell(sprintf("Update failed for the following sites:\n%s", implode("\n", $failed)), 100, 'red');
+
+      if (in_array($target_env, ['prod', 'test'])) {
+        $count = count($failed);
+        $this->sendSlackNotification("A new deployment has been made to *$target_env* using *$deployed_tag*.\n\n*$count* sites failed to update.");
+      }
+      throw new \Exception('Failed update');
+    }
+
+    if (in_array($target_env, ['prod', 'test'])) {
+      $this->sendSlackNotification("A new deployment has been made to *$target_env* using *$deployed_tag*.");
+    }
+  }
+
+  /**
+   * Send out a slack notification.
+   *
+   * @param string $message
+   *   Slack message.
+   */
+  protected function sendSlackNotification(string $message) {
+    $client = new Client();
+    $client->post(getenv('SLACK_NOTIFICATION_URL'), [
+      'form_params' => [
+        'payload' => json_encode([
+          'username' => 'Acquia Cloud',
+          'text' => $message,
+          'icon_emoji' => 'information_source',
+        ]),
+      ],
+    ]);
+  }
+
+  /**
+   * @command humsci:update-sites
+   *
+   * @var string $sites
+   *   List of sites to update.
+   */
+  public function updateSites($sites = NULL) {
+    $sites = $sites ? explode(',', $sites) : $this->getConfigValue('multisites');
+    foreach ($sites as $site_name) {
+      $this->switchSiteContext($site_name);
+      $result = $this->taskDrush()
+        ->drush('updb')
+        ->drush('config:import')
+        ->option('partial')
+        ->run();
+      file_put_contents(sys_get_temp_dir() . '/update-report.txt', $site_name . ($result->wasSuccessful() ? ':1' : ':0') . PHP_EOL, FILE_APPEND);
+    }
+  }
 
   /**
    * Generate a list of emails for the given role on all sites.
@@ -33,7 +125,6 @@ class HsCommands extends BltTasks {
         ->getMessage();
 
       $site_url = str_replace('_', '-', str_replace('__', '.', $site));
-
 
       if (str_contains($site_url, '.')) {
         [$first, $last] = explode('.', $site_url);

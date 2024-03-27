@@ -18,13 +18,13 @@
     {% if title %}
       <div class="hb-card__title">
       {% set title_content %}
-        {% if button %}
-          <a href="{{ button }}" data-vertical-card-link>{{ title }}</a>
+        {% if href %}
+          <a href="{{ href }}" data-vertical-card-link>{{ title }}</a>
         {% else %}
           {{ title }}
         {% endif %}
       {% endset %}
-      {% if title|render matches '/<h\\d>/' %}
+      {% if title|render matches '/<\\/h\\d>/' %}
         {{ title_content }}
       {% else %}
         <{{ heading_tag }} class="hb-vertical-card__title">

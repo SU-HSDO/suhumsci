@@ -178,6 +178,9 @@ command-hooks:
   post-deploy-build:
     dir: '${deploy.dir}'
     command: 'chmod +x blt/cleanup.sh; blt/cleanup.sh'
+  frontend-reqs:
+   dir: ${deploy.dir}
+   command: ./hooks/common/build-theme.sh
 cm:
   strategy: config-split
   allow-overrides: true

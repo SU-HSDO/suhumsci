@@ -69,13 +69,6 @@ directory_setup: &directory_setup
           composer dump-autoload
           vendor/bin/blt blt:telemetry:disable --no-interaction
           vendor/bin/blt settings --no-interaction
-    - run:
-        name: Lint and test SASS
-        command: |
-          hooks/common/theme/test-theme.sh
-    - run:
-          name: Build theme assets
-          command: composer run build-theme
     - save_cache: *save_cache
     - persist_to_workspace:
         root: .

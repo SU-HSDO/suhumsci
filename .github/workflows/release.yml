@@ -87,5 +87,5 @@ jobs:
           title: ${{ steps.next_tag.outputs.version }}
           body: "# DO NOT DELETE"
       - name: Push New Branch
-        if: ${{ steps.tag.outputs.tag }}
-        run: blt deploy -n
+        if: ${{ steps.next_tag.outputs.version }}
+        run: blt deploy --branch=${{ steps.next_tag.outputs.version }}-release-build --commit-msg=${{ steps.next_tag.outputs.version }} --ignore-dirty -n

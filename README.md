@@ -24,8 +24,8 @@ To set up your local environment and begin developing for this project, refer to
 
 CSS assets are built using the Grunt task runner, but are run using npm scripts as shortcuts.
 
-- `npm run build` - Compile Sass for production for all themes, **except Humsci_basic** which requires additional Grunt tasks to compile sub-theme specific CSS.
-- `npm run watch` - Compile a CSS build and watch for changes in the existing `.scss` files (other than humsci_basic)
+- `npm run build-theme` - Compile Sass for production for all themes, **except Humsci_basic** which requires additional Grunt tasks to compile sub-theme specific CSS.
+- `npm run watch-theme` - Compile a CSS build and watch for changes in the existing `.scss` files (other than humsci_basic)
 
 ## Testing
 
@@ -58,3 +58,4 @@ be the wrapper around the codeception commands.
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/fa85d434c3928bbf8d80/maintainability)](https://codeclimate.com/github/SU-HSDO/suhumsci/maintainability)
 [![CircleCI](https://circleci.com/gh/SU-HSDO/suhumsci/tree/develop.svg?style=svg)](https://circleci.com/gh/SU-HSDO/suhumsci/tree/develop)
+

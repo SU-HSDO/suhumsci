@@ -128,6 +128,9 @@ proxy:
     - womensleadership.suhumsci.loc
 services:
   appserver:
+    build_as_root:
+      - curl -fsSL https://deb.nodesource.com/setup_current.x | bash - &&\
+      - apt-get install -y nodejs
     build:
       - composer install && /app/vendor/bin/blt blt:init:settings
       - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal'/g" {}
@@ -152,9 +155,15 @@ services:
       security_opt:
         - seccomp:unconfined
       command: ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
+  node:
+    type: node:16
 tooling:
   blt:
     service: appserver
     cmd: /app/vendor/bin/blt
   git:
+    service: appserver
+  node:
+    service: appserver
+  npm:
     service: appserver

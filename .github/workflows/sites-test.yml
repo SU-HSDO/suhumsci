@@ -150,6 +150,12 @@ jobs:
           apachectl stop
           apachectl start
           blt codeception --group=existingSite
+      - name: Save Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeception--${{ matrix.site }}
+          path: /var/www/html/artifacts
   test_new_site:
     runs-on: ubuntu-latest
     container:
@@ -207,6 +213,12 @@ jobs:
           apachectl stop
           apachectl start
           blt codeception --group=install
+      - name: Save Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeception--new-site
+          path: /var/www/html/artifacts
   deploy_branch:
     needs:
       - test_phpunit

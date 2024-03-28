@@ -128,6 +128,9 @@ proxy:
     - womensleadership.suhumsci.loc
 services:
   appserver:
+    build_as_root:
+      - curl -fsSL https://deb.nodesource.com/setup_current.x | bash - &&\
+      - apt-get install -y nodejs
     build:
       - composer install && /app/vendor/bin/blt blt:init:settings
       - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal'/g" {}
@@ -160,5 +163,7 @@ tooling:
     cmd: /app/vendor/bin/blt
   git:
     service: appserver
+  node:
+    service: appserver
   npm:
-    service: node
+    service: appserver

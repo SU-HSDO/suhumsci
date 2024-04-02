@@ -14,6 +14,7 @@ import './editoria11y/editoria11y';
 import './vertical-tabs/vertical-tabs';
 import './addtocal/addtocal';
 import './prefered-reduced-motion/prefered-reduced-motion';
+import './main-content-fallback/main-content-fallback';
 
 // PoC for new megamenu.
 import './megamenu/index';

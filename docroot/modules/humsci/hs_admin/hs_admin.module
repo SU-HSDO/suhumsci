@@ -7,9 +7,9 @@
 
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 
 /**
  * Implements hook_preprocess_node_edit_form().
@@ -197,6 +197,22 @@ function hs_admin_field_widget_complete_paragraphs_browser_form_alter(&$field_wi
     if (isset($field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'])) {
       $duplicate_button = &$field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'];
       $duplicate_button['#ajax']['callback'] = 'su_humsci_profile_paragraphs_duplicate_callback';
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function hs_admin_field_widget_complete_menu_link_default_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  // Go through each widget element.
+  foreach (Element::children($field_widget_complete_form['widget']) as $key) {
+    if (!is_int($key) || !($field_widget_complete_form['widget'][$key]['expanded'] ?? FALSE)) {
+      continue;
+    } else {
+      // Disable access to `expanded` checbox.
+      $field_widget_complete_form['widget'][$key]['expanded']['#access'] = FALSE;
+      break;
     }
   }
 }

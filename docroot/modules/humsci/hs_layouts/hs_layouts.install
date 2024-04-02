@@ -1,0 +1,95 @@
+<?php
+
+use \Drupal\layout_builder\SectionComponent;
+
+/**
+ * @file
+ * Update functions for hs_layouts module.
+ */
+
+/**
+ * Add the main content anchor block to the existing layouts.
+ */
+function hs_layouts_update_10001(&$sandbox) {
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $storage->getQuery()
+      ->condition('targetEntityType', 'node')
+      ->condition('mode', 'default')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $items = array_splice($sandbox['ids'], 0, 10);
+
+  foreach ($items as $item) {
+    $view_display = $storage->load($item);
+    if ($view_display->isLayoutBuilderEnabled()) {
+      $sections = $view_display->getSections();
+      $main_section = $sections[0] ?? NULL;
+      foreach ($sections as $section) {
+        if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
+          $main_section = $section;
+          break;
+        }
+      }
+      if ($main_section) {
+        $region = $main_section->getLayoutId() == 'three_column_w_image' ? 'title' : 'main';
+        $block_configuration = [
+          'id' => 'hs_layouts_skipnav_main_anchor',
+          'label' => 'Main content anchor target',
+          'label_display' => 'hidden',
+          'provider' => 'hs_layouts',
+          'context_mapping' => [],
+        ];
+        $component = new SectionComponent(\Drupal::service('uuid')->generate(), $region, $block_configuration);
+        // Insert component at the top of the region.
+        $main_section->insertComponent(0, $component);
+        $view_display->save();
+      }
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Add the main content anchor block to the overridden layouts.
+ */
+function hs_layouts_update_10002(&$sandbox) {
+  $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $nodeStorage->getQuery()
+      ->condition('layout_builder__layout', NULL, 'IS NOT NULL')
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $node_ids = array_splice($sandbox['ids'], 0, 10);
+
+  foreach ($nodeStorage->loadMultiple($node_ids) as $node) {
+    $sections = $node->get('layout_builder__layout')->getSections();
+    $main_section = $sections[0] ?? NULL;
+    foreach ($sections as $section) {
+      if ($section->getLayoutSettings()['section_width'] !== 'hs-full-width') {
+        $main_section = $section;
+        break;
+      }
+    }
+    if ($main_section) {
+      $region = $main_section->getLayoutId() == 'three_column_w_image' ? 'title' : 'main';
+      $block_configuration = [
+        'id' => 'hs_layouts_skipnav_main_anchor',
+        'label' => 'Main content anchor target',
+        'label_display' => 'hidden',
+        'provider' => 'hs_layouts',
+        'context_mapping' => [],
+      ];
+      $component = new SectionComponent(\Drupal::service('uuid')->generate(), $region, $block_configuration);
+      // Insert component at the top of the region.
+      $main_section->insertComponent(0, $component);
+      $node->save();
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

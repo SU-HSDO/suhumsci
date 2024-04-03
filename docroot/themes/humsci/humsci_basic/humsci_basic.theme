@@ -242,9 +242,11 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
 function humsci_basic_preprocess_pattern_vertical_card(&$variables) {
   $context = $variables['context'];
   $paragraph = $context->getProperty('entity');
+  // Functionality for paragraphs
   if ($paragraph instanceof ParagraphInterface) {
     _humsci_basic_make_title_the_link($variables);
   } else {
+    // Functionality for Views.
     $renderer = \Drupal::service('renderer');
     $temp_title = $variables['title'];
     $title_rendered = $renderer->renderPlain($variables['title']);
@@ -265,6 +267,7 @@ function humsci_basic_preprocess_pattern_vertical_card(&$variables) {
       $variables['title'] = ['#markup' => $dom->saveHTML()];
     } else {
       _humsci_basic_make_title_the_link($variables);
+      // Needs to override the title since the way the function is doing it, doesn't render anything.
       $variables['title'] = $temp_title;
     }
   }

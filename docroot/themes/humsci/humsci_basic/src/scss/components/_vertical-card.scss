@@ -1,4 +1,14 @@
 .hb-vertical-card {
+  .hb-card__title a:not([class]) {
+    @include hb-link;
+  }
+
+  .hb-card__title a > div > * {
+    display: inline;
+
+    @include hb-link;
+  }
+
   &:hover,
   &:focus {
     cursor: pointer;
@@ -13,7 +23,9 @@
       transform: scale($hb-image-hover-scale);
     }
 
-    .hb-card__title a {
+    .hb-card__title a,
+    .hb-card__title a:not([class]),
+    .hb-card__title a > div > * {
       @include hb-global-color('color', 'black');
 
       @include hb-themes(('airy', 'colorful')) {

@@ -1,12 +1,13 @@
 .hb-vertical-card {
-  .hb-card__title a:not([class]) {
+  // Needed to make the styles work when the anchor is the wrapper.
+  .hb-card__title a:not([class]),
+  .hb-card__title a > div > * {
     @include hb-link;
   }
 
+  // Needed to make the styles work when the anchor is the wrapper.
   .hb-card__title a > div > * {
     display: inline;
-
-    @include hb-link;
   }
 
   &:hover,
@@ -24,6 +25,7 @@
     }
 
     .hb-card__title a,
+    // Needed to make the styles work when the anchor is the wrapper.
     .hb-card__title a:not([class]),
     .hb-card__title a > div > * {
       @include hb-global-color('color', 'black');

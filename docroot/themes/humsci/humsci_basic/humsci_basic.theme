@@ -247,11 +247,24 @@ function humsci_basic_preprocess_pattern_vertical_card(&$variables) {
   } else {
     $renderer = \Drupal::service('renderer');
     $title_rendered = $renderer->renderPlain($variables['title']);
-    if (strpos($title_rendered, '<a ') !== false) {
-      $title_rendered = preg_replace('~<a (.*?)href="([^"]*)"([^>]*)>([^<]*)</a>~', '<a \1href="\2" data-vertical-card-link\3>\4</a>', $title_rendered);
+
+    // Create a new DOMDocument instance and load the rendered title HTML.
+    $dom = new DOMDocument();
+    $dom->loadHTML($title_rendered);
+
+    // Create a DOMXPath instance to query the DOM.
+    $xpath = new DOMXPath($dom);
+
+    // Find all anchor elements in the DOM.
+    $links = $xpath->query('//a');
+  
+    // If the markup is a link, set a new attribute to it.
+    if ($links->length >= 1) {
+      $links->item(0)->setAttribute('data-vertical-card-link', '');
+      $variables['title'] = ['#markup' => $dom->saveHTML()];
+    } else {
+      // TODO: Check for title who are not linked and also has or don't have html custom settings
     }
-    // Update the title field with the modified HTML.
-    $variables['title']['#markup'] = $title_rendered;
   }
 }
 

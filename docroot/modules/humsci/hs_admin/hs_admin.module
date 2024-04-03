@@ -207,13 +207,11 @@ function hs_admin_field_widget_complete_paragraphs_browser_form_alter(&$field_wi
 function hs_admin_field_widget_complete_menu_link_default_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
   // Go through each widget element.
   foreach (Element::children($field_widget_form['widget']) as $key) {
-    if (!is_int($key) || !($field_widget_form['widget'][$key]['expanded'] ?? FALSE)) {
+    if (!is_int($key) || !isset($field_widget_form['widget'][$key]['expanded'])) {
       continue;
     }
-    else {
-      // Disable access to `expanded` checbox.
-      $field_widget_form['widget'][$key]['expanded']['#access'] = FALSE;
-      break;
-    }
+    // Disable access to `expanded` checkbox.
+    $field_widget_form['widget'][$key]['expanded']['#access'] = FALSE;
+    break;
   }
 }

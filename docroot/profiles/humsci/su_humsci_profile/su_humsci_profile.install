@@ -366,7 +366,37 @@ function su_humsci_profile_update_9700() {
               $hs_entity_display->setComponent($field_name, $display_settings);
             }
           }
+
+          try {
+            if ($field_display_settings = $eck_display->getComponent($field_name)) {
+              $hs_entity_display->setComponent($field_name, $field_display_settings);
+            }
+          }
+          catch (\Throwable $t) {
+            \Drupal::logger('su_humsci_profile')
+              ->error('Unable to set display settings for %field on %bundle entity type.', [
+                '%field' => $field_name,
+                '%bundle' => $new_bundle_id,
+              ]);
+          }
+
+          try {
+            if ($form_display_settings = $eck_form->getComponent($field_name)) {
+              $hs_entity_form->setComponent($field_name, $form_display_settings);
+            }
+          }
+          catch (\Throwable $t) {
+            \Drupal::logger('su_humsci_profile')
+              ->error('Unable to set form settings for %field on %bundle entity type.', [
+                '%field' => $field_name,
+                '%bundle' => $new_bundle_id,
+              ]);
+          }
         }
+      }
+
+      if ($title_settings = $eck_display->getComponent('title')) {
+        $hs_entity_display->setComponent('label', $title_settings);
       }
 
       // Copy the third party settings to capture DS or field group settings.

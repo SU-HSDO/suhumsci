@@ -11,6 +11,14 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
+ * Implements hook_preprocess_hook().
+ */
+function humsci_basic_preprocess_field__hs_entity__label(&$variables){
+  // Add the title class to match the eck title classes.
+  $variables['attributes']['class'][] = 'title';
+}
+
+/**
  * Implements hook_preprocess_block().
  * The following code block (lines 16 - 30) is an adaptation of the code found
  * within the su_humsci theme preprocess block.

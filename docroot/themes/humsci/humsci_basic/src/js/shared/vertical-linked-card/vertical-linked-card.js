@@ -5,7 +5,13 @@ function verticalLinkedCard() {
   // Loop through each card
   cards.forEach((card) => {
     // Find the main link within each card
-    const mainLink = card.querySelector('.hb-vertical-linked-card__title__link');
+    const mainLink = card.querySelector(
+      '.hb-vertical-linked-card__title__link',
+    );
+
+    if (!mainLink) {
+      return;
+    }
 
     // Add a click event listener to each card
     function handleClick() {

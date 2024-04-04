@@ -1,0 +1,262 @@
+name: Unit and Acceptance Tests
+on: push
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test_phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+      options: '--network-alias drupal8ci'
+    env:
+      REAL_AES_ENCRYPTION: ${{secrets.REAL_AES_ENCRYPTION}}
+      DRUPAL_DATABASE_NAME: drupal
+      DRUPAL_DATABASE_USERNAME: drupal
+      DRUPAL_DATABASE_PASSWORD: drupal
+      DRUPAL_DATABASE_HOST: mysql
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-
+      - run: git config --system --add safe.directory '*'
+      - name: Install Dependencies
+        run: |
+          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
+          rm -rf /var/www/html &&
+          ln -snf $GITHUB_WORKSPACE /var/www/html &&
+          composer install -n &&
+          vendor/bin/blt blt:telemetry:disable --no-interaction &&
+          blt settings &&
+          mkdir -p docroot/sites/default/files &&
+          chmod -R 777 docroot/sites/default/files/
+      - name: Codeception Tests
+        run: |
+          blt tests:phpunit:coverage --no-interaction
+  set_sites:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-${{ hashFiles('blt/blt.yml') }}-
+      - id: set-matrix
+        run: |
+          composer install -n &&
+          vendor/bin/blt blt:telemetry:disable --no-interaction &&
+          SITES=$(echo -n "$(blt blt:config:get multisites | shuf -n 10)" | jq -R -s -c 'split("\n") | sort')
+          echo "matrix={\"site\": $SITES}" >> $GITHUB_OUTPUT
+  test_existing_site:
+    needs: set_sites
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJSON(needs.set_sites.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+      options: '--network-alias drupal8ci'
+    env:
+      REAL_AES_ENCRYPTION: ${{secrets.REAL_AES_ENCRYPTION}}
+      DRUPAL_DATABASE_NAME: drupal
+      DRUPAL_DATABASE_USERNAME: drupal
+      DRUPAL_DATABASE_PASSWORD: drupal
+      DRUPAL_DATABASE_HOST: mysql
+    services:
+      selenium:
+        image: selenium/standalone-chrome:115.0
+        options: '--shm-size="2g"'
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-${{ hashFiles('blt/blt.yml') }}-
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: fail
+      - run: git config --system --add safe.directory '*'
+      - name: Sync Database
+        run: |
+          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
+          rm -rf /var/www/html &&
+          ln -snf $GITHUB_WORKSPACE /var/www/html &&
+          composer install -n &&
+          vendor/bin/blt blt:telemetry:disable --no-interaction &&
+          blt settings &&
+          blt drupal:sync --site=${{ matrix.site }} -n
+          mkdir -p docroot/sites/default/files &&
+          chmod -R 777 docroot/sites/default/files/
+      - name: Codeception Tests ${{ matrix.site }}
+        run: |
+          apachectl stop
+          apachectl start
+          blt codeception --group=existingSite
+      - name: Save Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeception--${{ matrix.site }}
+          path: /var/www/html/artifacts
+  test_new_site:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+      options: '--network-alias drupal8ci'
+    env:
+      REAL_AES_ENCRYPTION: ${{secrets.REAL_AES_ENCRYPTION}}
+      DRUPAL_DATABASE_NAME: drupal
+      DRUPAL_DATABASE_USERNAME: drupal
+      DRUPAL_DATABASE_PASSWORD: drupal
+      DRUPAL_DATABASE_HOST: mysql
+    services:
+      selenium:
+        image: selenium/standalone-chrome:115.0
+        options: '--shm-size="2g"'
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-${{ hashFiles('blt/blt.yml') }}-
+      - run: git config --system --add safe.directory '*'
+      - name: Install Site
+        run: |
+          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
+          rm -rf /var/www/html &&
+          ln -snf $GITHUB_WORKSPACE /var/www/html &&
+          composer install -n &&
+          vendor/bin/blt blt:telemetry:disable --no-interaction &&
+          blt settings &&
+          mkdir -p docroot/sites/default/files &&
+          chmod -R 777 docroot/sites/default/files/ &&
+          blt drupal:install -n
+      - name: Codeception Tests
+        run: |
+          apachectl stop
+          apachectl start
+          blt codeception --group=install
+      - name: Save Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: codeception--new-site
+          path: /var/www/html/artifacts
+  deploy_branch:
+    needs:
+      - test_phpunit
+      - set_sites
+      - test_existing_site
+      - test_new_site
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+      options: '--network-alias drupal8ci'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-${{ hashFiles('blt/blt.yml') }}-
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: fail
+      - run: git config --system --add safe.directory '*'
+      - name: Deploy Branch
+        run: |
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "Github Actions" &&
+          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          composer install -n &&
+          blt blt:telemetry:disable --no-interaction &&
+          blt deploy -n

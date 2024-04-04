@@ -55,7 +55,7 @@
   &--light,
   &--light::before,
   &--light::after {
-    @include hb-pairing-color('background-color', 'spotlight-lighten-8');
+    @include hb-pairing-color('background-color', 'spotlight');
   }
 
   &--light {
@@ -73,17 +73,29 @@
     .hb-color-band--link.hs-more-link button {
       @include hb-global-color('color', 'black');
 
+      @include hb-colorful {
+        .hc-pairing-ocean & {
+          @include hb-global-color('color', 'black');
+        }
+      }
+
       &:hover,
       &:focus {
         @include hb-global-color('color', 'black');
+
+        @include hb-colorful {
+          .hc-pairing-ocean & {
+            @include hb-global-color('color', 'black');
+          }
+        }
 
         &::after {
           @include hb-icon-link-arrow('black');
 
           background-size: 85%;
 
-          *[class*="hc-pairing-"] &,
-          *[class*="ht-pairing-"] & {
+          *[class*='hc-pairing-'] &,
+          *[class*='ht-pairing-'] & {
             @include hb-icon-link-arrow('black');
 
             background-size: 85%;
@@ -100,8 +112,8 @@
 
       background-size: 85%;
 
-      *[class*="hc-pairing-"] &,
-      *[class*="ht-pairing-"] & {
+      *[class*='hc-pairing-'] &,
+      *[class*='ht-pairing-'] & {
         @include hb-icon-link-arrow('black');
 
         background-size: 85%;
@@ -142,17 +154,30 @@
     display: inline-block;
     margin-bottom: hb-calculate-rems(12px);
 
+    @include hb-colorful {
+      .hc-pairing-ocean & {
+        @include hb-global-color('color', 'white');
+      }
+    }
+
     &:hover,
     &:focus {
       @include hb-global-color('color', 'white');
+      text-decoration: underline;
+
+      @include hb-colorful {
+        .hc-pairing-ocean & {
+          @include hb-global-color('color', 'white');
+        }
+      }
 
       &::after {
         @include hb-icon-link-arrow('white');
 
         background-size: 85%;
 
-        [class*="hc-pairing-"] &,
-        [class*="ht-pairing-"] & {
+        [class*='hc-pairing-'] &,
+        [class*='ht-pairing-'] & {
           @include hb-icon-link-arrow('white');
 
           background-size: 85%;
@@ -169,8 +194,8 @@
 
     background-size: 85%;
 
-    [class*="hc-pairing-"] &,
-    [class*="ht-pairing-"] & {
+    [class*='hc-pairing-'] &,
+    [class*='ht-pairing-'] & {
       @include hb-icon-link-arrow('white');
 
       background-size: 85%;

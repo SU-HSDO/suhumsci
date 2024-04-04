@@ -415,7 +415,7 @@ function su_humsci_profile_update_9701(&$sandbox) {
     $new_entity = \Drupal::entityTypeManager()
       ->getStorage('hs_entity')
       ->create([
-        'label' => $entity->label(),
+        'label' => trim($entity->label()),
         'bundle' => $new_bundle_id,
       ]);
 

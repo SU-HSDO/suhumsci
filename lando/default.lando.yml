@@ -129,7 +129,7 @@ proxy:
 services:
   appserver:
     build_as_root:
-      - curl -fsSL https://deb.nodesource.com/setup_current.x | bash - &&\
+      - curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
       - apt-get install -y nodejs
     build:
       - composer install && /app/vendor/bin/blt blt:init:settings

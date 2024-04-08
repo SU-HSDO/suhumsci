@@ -92,6 +92,10 @@ source:
       name: photo_url
       label: photo_url
       selector: event/photo_url
+        -
+      name: photo_id
+      label: photo_id
+      selector: event/photo_id
     -
       name: departments
       label: departments
@@ -294,6 +298,7 @@ process:
       source:
         - constants/image_path
         - urlname
+        - photo_id
   image_destination:
     -
       plugin: skip_on_empty

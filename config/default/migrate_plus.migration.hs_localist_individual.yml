@@ -288,6 +288,23 @@ process:
       delimiter: .
     -
       plugin: array_pop
+  urlname_trimmed:
+    -
+      plugin: substr
+      source: urlname
+      start: 0
+      length: 220
+  image_name:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: '@image_ext'
+    -
+      plugin: concat
+      source:
+        - '@urlname_trimmed'
+        - photo_id
+      delimiter: '_'
   image_destination_part_1:
     -
       plugin: skip_on_empty
@@ -297,8 +314,7 @@ process:
       plugin: concat
       source:
         - constants/image_path
-        - urlname
-        - photo_id
+        - '@image_name'
   image_destination:
     -
       plugin: skip_on_empty

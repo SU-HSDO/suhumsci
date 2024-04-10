@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Template\Attribute;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -114,6 +115,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
   if (!($paragraph instanceof ParagraphInterface)) {
     return;
   }
+
   if (
     $paragraph->hasField('field_hs_accord_expcol') &&
     !$paragraph->field_hs_accord_expcol->isEmpty() &&
@@ -121,11 +123,12 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
   ) {
     $variables['attributes']->addClass('hb-accordion_toggle-all');
   }
+
   if (
     $paragraph->hasField('field_accordion_style') &&
     !$paragraph->field_accordion_style->isEmpty() &&
     $paragraph->get('field_accordion_style')->getString() == 'secondary'
   ) {
-    $variables['attributes']->addClass('hb-accordion-secondary');
+    $variables['wrapper_attributes'] = new Attribute(['class' => 'hb-accordion-secondary']);
   }
 }

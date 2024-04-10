@@ -1,7 +1,6 @@
 (() => {
-  const mainContentTarget = document.querySelector('#main-content');
   // Return if main content target is found, nothing to do.
-  if (mainContentTarget) {
+  if (document.querySelector('#main-content')) {
     return;
   }
 

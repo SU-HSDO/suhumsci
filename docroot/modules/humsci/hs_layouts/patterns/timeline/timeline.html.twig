@@ -9,7 +9,7 @@
 {% endif %}
 
 {% set timeline_content = timeline %}
-{% if timeline['field_hs_time_title'] is defined %}
+{% if timeline['field_hs_time_title'] is defined and timeline['field_hs_time_title'][0] %}
   {% set timeline_content %}
     <{{ heading_tag }} class="hb-timeline__title">
       {{ timeline['field_hs_time_title'] }}

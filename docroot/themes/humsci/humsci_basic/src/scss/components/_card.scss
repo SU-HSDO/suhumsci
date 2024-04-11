@@ -433,22 +433,26 @@
     h4,
     h5,
     h6 {
-      @include hb-heading-5;
       margin: 0;
+      font-weight: hb-theme-font-weight(semibold);
       overflow-wrap: break-word;
 
       @include hb-traditional {
         font-size: hb-calculate-rems(20px);
+        line-height: 126%;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        font-size: hb-calculate-rems(18px);
+        line-height: 124%;
       }
 
       @include grid-media-min('sm') {
-        font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(24px);
         line-height: 124%;
       }
 
       @include grid-media-min('md') {
-        font-weight: hb-theme-font-weight(semibold);
         font-size: hb-calculate-rems(27px);
         line-height: 119%;
       }
@@ -460,20 +464,19 @@
       .ptype-hs-row & {
         @include hb-themes(('colorful', 'airy')) {
           @include grid-media-min('sm') {
-            @include hb-heading-5;
+            font-size: hb-calculate-rems(18px);
+            line-height: 124%;
           }
 
           @include grid-media-min('lg') {
-            font-weight: hb-theme-font-weight(semibold);
             font-size: hb-calculate-rems(20px);
-            line-height: 124%;
           }
         }
 
         @include hb-traditional {
           @include grid-media-min('sm') {
-            @include hb-heading-5;
             font-size: hb-calculate-rems(22px);
+            line-height: 126%;
           }
         }
       }

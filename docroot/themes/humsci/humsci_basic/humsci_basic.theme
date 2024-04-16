@@ -242,29 +242,16 @@ function humsci_basic_preprocess_pattern_vertical_link_card(&$variables) {
 function humsci_basic_preprocess_pattern_vertical_card(&$variables) {
   $context = $variables['context'];
   if ($context->isOfType('layout')) {
-    // Functionality for paragraphs
+    // Functionality for paragraphs.
     _humsci_basic_make_title_the_link($variables);
   } else {
     // Functionality for Views.
     $renderer = \Drupal::service('renderer');
     $title_rendered = $renderer->renderPlain($variables['title']);
 
-    // Create a new DOMDocument instance and load the rendered title HTML.
-    $dom = new DOMDocument();
-    $dom->loadHTML($title_rendered);
-
-    // Create a DOMXPath instance to query the DOM.
-    $xpath = new DOMXPath($dom);
-
-    // Find all anchor elements in the DOM.
-    $links = $xpath->query('//a');
-
-    // If the markup is a link, set a new attribute to it.
-    if ($links->length >= 1) {
-      $links->item(0)->setAttribute('data-vertical-card-link', '');
-      $variables['title'] = ['#markup' => $dom->saveHTML()];
-    } else {
+    if (strpos($title_rendered, '<a') === FALSE) {
       $original_title = $variables['title'];
+      // If the title is not linked, get the link from the button.
       _humsci_basic_make_title_the_link($variables);
       // Restore original title, because _humsci_basic_make_title_the_link() overwrote it.
       $variables['title'] = $original_title;

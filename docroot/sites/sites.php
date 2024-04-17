@@ -93,6 +93,7 @@ $sites['hsweb-userguide-traditional.stanford.edu'] = 'swshumsci_sandbox';
 $sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
 $sites['mcs.stanford.edu'] = 'mcs2023';
 $sites['philit.stanford.edu'] = 'philit2023';
+$sites['publichumanities.stanford.edu'] = 'humanexperience';
 $sites['ccsre.stanford.edu'] = 'ccsre2023';
 $sites['archaeology.stanford.edu'] = 'archaeology2023';
 $sites['symsys.stanford.edu'] = 'symsys2023';

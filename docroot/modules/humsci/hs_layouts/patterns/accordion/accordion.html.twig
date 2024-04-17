@@ -1,24 +1,22 @@
 {% if variant == 'open' %}
   {% set attributes = attributes.setAttribute('open', 'open') %}
 {% endif %}
-{# style wrapper #}
-<div {{ wrapper_attributes }}>
-  <details{{ attributes }}>
-    {%- if title -%}
-      <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
-    {%- endif -%}
-    <div class="revealed-details">
-      <div class="description">
-        {{ description }}
-      </div>
 
-      {%- if children -%}
-        <div class="children">
-          {{ children }}
-        </div>
-      {%- endif -%}
-
-      {{ value }}
+<details{{ attributes }}>
+  {%- if title -%}
+    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
+  {%- endif -%}
+  <div class="revealed-details">
+    <div class="description">
+      {{ description }}
     </div>
-  </details>
-</div>
+
+    {%- if children -%}
+      <div class="children">
+        {{ children }}
+      </div>
+    {%- endif -%}
+
+    {{ value }}
+  </div>
+</details>

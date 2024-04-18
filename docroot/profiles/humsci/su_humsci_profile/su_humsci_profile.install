@@ -272,6 +272,13 @@ function su_humsci_profile_update_9609() {
 }
 
 /**
+ * Disable page_cache_query_ignore.
+ */
+function su_humsci_profile_update_9610() {
+  \Drupal::service('module_installer')->uninstall(['page_cache_query_ignore']);
+}
+
+/**
  * Create new entities to migrate ECKs.
  */
 function su_humsci_profile_update_9700() {

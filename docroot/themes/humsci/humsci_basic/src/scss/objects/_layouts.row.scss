@@ -61,50 +61,13 @@
 }
 
 // Decanter uses flexbox for row components. For modern browsers, let's use CSS Grid.
-// These styles are written within an @supports statement so that browsers that do not
-// support CSS Grid will continue to recieve the flexbox styles.
-// See docroot/modules/humsci/hs_paragraph_types/modules/hs_row/modules/hs_row_display/scss/hs_row_display.scss
-// for fallback styles.
 // Collections items have been added to this group, base Collection styles here: docroot/modules/humsci/hs_paragraph_types/css/hs_collection.css
 .field-hs-row-components,
 .field-hs-collection-items {
-  // When there is more than one item in a row it uses grid (and flexbox as a fallback)
-  // however when there is only one item in a row and we use flexbox it causes overflow issues in IE 11.
-  @supports (display: grid) {
-    @include grid-media-min('sm') {
-      display: grid;
-      gap: hb-spacing-width();
-    }
-
-    @for $i from 1 through $hb-counted-items-count {
-      &.counted-items-#{$i},
-      &.item-per-row--#{$i} {
-        @include grid-media-min('sm') {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        @if ($i > 2) {
-          @include grid-media-min('md') {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @if ($i > 3) {
-          @include grid-media-min('lg') {
-            grid-template-columns: repeat(#{$i}, 1fr);
-          }
-        }
-      }
-    }
-
-    @for $i from 1 through $hb-counted-items-count {
-      &.counted-items-#{$i},
-      &.item-per-row--#{$i} {
-        .paragraph-item {
-          @include hb-column($i);
-        }
-      }
-    }
+  // When there is more than one item in a row it uses grid
+  @include grid-media-min('sm') {
+    display: grid;
+    gap: hb-spacing-width();
   }
 
   &.counted-items-1,
@@ -112,34 +75,35 @@
     display: block;
   }
 
-  // counted-items are Row items, items-per-row are Collection items
-  &.counted-items-2,
-  &.counted-items-3,
-  &.counted-items-4,
-  &.item-per-row--2,
-  &.item-per-row--3,
-  &.item-per-row--4 {
-    display: block;
+  @for $i from 2 through $hb-counted-items-count {
+    &.counted-items-#{$i},
+    &.item-per-row--#{$i} {
+      @include grid-media-min('sm') {
+        grid-template-columns: repeat(2, 1fr);
+      }
 
-    @include grid-media-min('sm') {
-      display: flex;
+      @if ($i > 2) {
+        @include grid-media-min('md') {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
 
-      @supports (display: grid) {
-        display: grid;
+      @if ($i > 3) {
+        @include grid-media-min('lg') {
+          grid-template-columns: repeat(#{$i}, 1fr);
+        }
+      }
+
+      .paragraph-item {
+        @include grid-media-min('sm') {
+          margin: 0 !important;
+        }
       }
 
       .hs-paragraph-style--well &,
       .hs-paragraph-style--well-full-width & {
-        margin: hb-spacing-width() auto;
-      }
-    }
-
-    .paragraph-item {
-      margin-bottom: hb-spacing-width() !important;
-
-      @supports (display: grid) {
         @include grid-media-min('sm') {
-          margin: 0 !important;
+          margin: hb-spacing-width() auto;
         }
       }
     }

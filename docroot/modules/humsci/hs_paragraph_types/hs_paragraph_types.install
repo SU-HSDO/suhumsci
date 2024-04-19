@@ -217,3 +217,49 @@ function hs_paragraph_types_update_10004(&$sandbox) {
   }
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
+
+/**
+ * Set default field_accordion_style value for existing content.
+ */
+function hs_paragraph_types_update_10005(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Import new field_title_settings configuration.
+    $config_storage = \Drupal::service('config.storage.sync');
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+    $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+    $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+    // If storage does not yet exist, create it.
+    if (empty($field_storage->load('paragraph.field_accordion_style'))) {
+      $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_accordion_style'))->save();
+    }
+
+    // Create the field instance.
+    $config = $field_config_storage->load('paragraph.hs_accordion.field_accordion_style');
+    if (empty($config)) {
+      $field_config_storage->create($config_storage->read('field.field.paragraph.hs_accordion.field_accordion_style'))->save();
+    }
+
+    // Get list of collection paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_accordion')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  // Set new field default for existing hs_accordion paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    $paragraph->set('field_accordion_style', 'default');
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

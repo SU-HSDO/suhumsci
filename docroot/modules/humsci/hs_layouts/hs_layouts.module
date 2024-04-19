@@ -111,12 +111,23 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
  */
 function hs_layouts_preprocess_pattern_accordion(&$variables) {
   $paragraph = $variables['context']->getProperty('entity');
+  if (!($paragraph instanceof ParagraphInterface)) {
+    return;
+  }
+
   if (
-    $paragraph instanceof ParagraphInterface &&
     $paragraph->hasField('field_hs_accord_expcol') &&
     !$paragraph->field_hs_accord_expcol->isEmpty() &&
     $paragraph->get('field_hs_accord_expcol')->getString()
   ) {
     $variables['attributes']->addClass('hb-accordion_toggle-all');
+  }
+
+  if (
+    $paragraph->hasField('field_accordion_style') &&
+    !$paragraph->field_accordion_style->isEmpty() &&
+    $paragraph->get('field_accordion_style')->getString() == 'secondary'
+  ) {
+    $variables['attributes']->addClass('hb-accordion-secondary');
   }
 }

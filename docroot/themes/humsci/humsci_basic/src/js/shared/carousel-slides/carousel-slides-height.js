@@ -55,6 +55,12 @@ const restrictHeight = () => {
     textBoxes.forEach(
       (textBox) => isSpotlightTextBox(textBox) && setMinHeight(textBox, maxBoxHeight),
     );
+
+    // Find images inside each slider.
+    const imageWrapper = slide.querySelector('.hb-spotlight__image-wrapper');
+    if (slide.classList.contains('paragraph--type--hs-sptlght-slder') && !imageWrapper) {
+      slide.classList.add('paragraph--type--hs-sptlght-slder--no-image');
+    }
   });
 };
 

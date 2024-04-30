@@ -155,50 +155,49 @@
 }
 
 // Alters appearance of accordion(s) to its secondary variation
-.hb-accordion-secondary {
+.hb-accordion-secondary .ptype-hs-accordion details,
+details.hb-accordion-secondary {
   // Overriding _details.scss
-  .ptype-hs-accordion {
-    summary:not(.hb-timeline-item__summary) {
-      @include hb-pairing-color("border-color", "primary");
-      @include hb-global-color("color", "black");
+  summary:not(.hb-timeline-item__summary) {
+    @include hb-pairing-color("border-color", "primary");
+    @include hb-global-color("color", "black");
 
-      border-width: hb-calculate-rems(2px);
-      background-color: transparent;
+    border-width: hb-calculate-rems(2px);
+    background-color: transparent;
+
+    &::after {
+      @include hb-menu-plus-icon("black");
+    }
+
+    &:hover {
+      @include hb-pairing-color("color", "secondary");
 
       &::after {
-        @include hb-menu-plus-icon("black");
+        @include hb-menu-minus-icon("secondary");
       }
+    }
+  }
 
-      &:hover {
-        @include hb-pairing-color("color", "secondary");
+  &[open] {
+    @include hb-pairing-color("border-color", "primary");
 
-        &::after {
-          @include hb-menu-minus-icon("secondary");
-        }
+    border-width: hb-calculate-rems(2px);
+    border-bottom: none;
+
+    summary:not(.hb-timeline-item__summary) {
+      background: transparent;
+      border-bottom: none;
+
+      &::after {
+        @include hb-menu-minus-icon("black");
       }
     }
 
-    details[open] {
+    .revealed-details {
       @include hb-pairing-color("border-color", "primary");
 
       border-width: hb-calculate-rems(2px);
-      border-bottom: none;
-
-      summary:not(.hb-timeline-item__summary) {
-        background: transparent;
-        border-bottom: none;
-
-        &::after {
-          @include hb-menu-minus-icon("black");
-        }
-      }
-
-      .revealed-details {
-        @include hb-pairing-color("border-color", "primary");
-
-        border-width: hb-calculate-rems(2px);
-        border-top: none;
-      }
+      border-top: none;
     }
   }
 }

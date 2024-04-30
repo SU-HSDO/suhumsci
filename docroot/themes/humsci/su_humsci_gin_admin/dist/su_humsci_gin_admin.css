@@ -141,19 +141,29 @@ body.gin--edit-form .views-exposed-form .select-preact div > div {
   }
   
 body.gin--edit-form .views-exposed-form .select-preact div > div > div:first-of-type {
-  font-size: 0.875rem !important;
-  font-weight: 525 !important;
-  color: #222330;
+  font-size: var(--gin-font-size-s) !important;
+  font-weight: var(--gin-font-weight-semibold) !important;
+  line-height: var(--line-height-form-label) !important;
+  color: var(--gin-color-title);
+  margin-block: calc(var(--space-xs) / 2);
   margin-top: 0;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: var(--gin-spacing-xs) !important;
 }
 
 body.gin--edit-form .views-exposed-form .select-preact button {
-  padding: 0.5rem 0.75rem !important;
-  min-height: calc(0.5rem* 2 + 1.5rem) !important;
-  font-size: 1rem !important;
-  line-height: 1.5rem;
-  border-color: #8e929c !important;
+  padding: calc(var(--input-padding-vertical) - 1px) var(--input-padding-horizontal) !important;
+  min-height: calc(var(--input-padding-vertical)* 2 + var(--input-line-height)) !important;
+  font-size: var(--input-font-size) !important;
+  line-height: var(--input-line-height);
+  background-color: var(--gin-bg-input) !important;
+  border-color: var(--gin-border-color-form-element) !important;
+  border-radius: var(--gin-border-m) !important;
+  color: var(--gin-color-text) !important;
+}
+
+body.gin--edit-form .views-exposed-form .select-preact button:hover {
+  border-color: var(--gin-color-text) !important;
+  box-shadow: inset 0 0 0 1px var(--gin-color-text) !important;
 }
 
 body.gin--edit-form .views-exposed-form .select-preact button span > span:first-of-type {

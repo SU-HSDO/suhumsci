@@ -235,7 +235,6 @@ function _humsci_basic_make_title_the_link(&$variables) {
   }
 }
 
-
 /**
  * Implements hook_preprocess_HOOK().
  */
@@ -263,6 +262,22 @@ function humsci_basic_preprocess_pattern_vertical_card(&$variables) {
       // Restore original title, because _humsci_basic_make_title_the_link() overwrote it.
       $variables['title'] = $original_title;
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_basic_preprocess_pattern_date_stacked_vertical_card(&$variables) {
+  $renderer = \Drupal::service('renderer');
+  $title_rendered = $renderer->renderPlain($variables['title']);
+
+  if (strpos($title_rendered, '<a') === FALSE) {
+    $original_title = $variables['title'];
+    // If the title is not linked, get the link from the button.
+    _humsci_basic_make_title_the_link($variables);
+    // Restore original title, because _humsci_basic_make_title_the_link() overwrote it.
+    $variables['title'] = $original_title;
   }
 }
 

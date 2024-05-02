@@ -1,6 +1,6 @@
-function verticalCard() {
+function linkedCards() {
   // find all hb-vertical-card elements
-  const cards = document.querySelectorAll('.hb-vertical-card');
+  const cards = document.querySelectorAll('.hb-vertical-card', '.hb-card--date-stacked');
 
   // Loop through each card
   cards.forEach((card) => {
@@ -32,4 +32,4 @@ function verticalCard() {
   });
 }
 
-verticalCard();
+linkedCards();

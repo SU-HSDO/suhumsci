@@ -1,0 +1,60 @@
+.hb-vertical-card {
+  // Needed to make the styles work when the anchor is the wrapper.
+  .hb-card__title a:not([class]),
+  .hb-card__title a > div > * {
+    @include hb-link;
+  }
+
+  // Needed to make the styles work when the anchor is the wrapper.
+  .hb-card__title a > div > * {
+    display: inline;
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+
+    @include hb-colorful {
+      .hb-raised-cards & {
+        @include hb-pairing-color('border-color', 'secondary-darken-12');
+      }
+    }
+
+    .hb-card__img img {
+      transform: scale($hb-image-hover-scale);
+    }
+
+    .hb-card__title a,
+    // Needed to make the styles work when the anchor is the wrapper.
+    .hb-card__title a:not([class]),
+    .hb-card__title a > div > * {
+      @include hb-global-color('color', 'black');
+
+      @include hb-themes(('airy', 'colorful')) {
+        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight-darken-10');
+        transition-delay: 0s, 0s;
+        box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color('tertiary-highlight', $hb-colorful-default, $hc-colorful-pairings);
+        box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--tertiary-highlight);
+      }
+  
+      @include hb-traditional {
+        @include hb-global-color('color', 'black');
+        background-image: none;
+        @include hb-pairing-color('text-decoration-color', 'primary');
+      }
+    }
+  }
+
+  .hb-card__img {
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: hb-transition(transform);
+    }
+  }
+
+  .field-media-image {
+    margin: 0;
+  }
+}

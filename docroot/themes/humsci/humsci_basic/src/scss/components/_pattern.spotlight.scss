@@ -92,8 +92,14 @@
               @include hb-pairing-color('border-color', 'secondary-darken-12');
 
               &:hover {
-                @include hb-pairing-color('background-color', 'secondary-darken-12');
-                @include hb-pairing-color('border-color', 'secondary-darken-12');
+                @include hb-pairing-color(
+                  'background-color',
+                  'secondary-darken-12'
+                );
+                @include hb-pairing-color(
+                  'border-color',
+                  'secondary-darken-12'
+                );
                 @include hb-global-color('color', 'white');
               }
             }
@@ -146,6 +152,43 @@
   .hs-full-width & {
     .hb-spotlight {
       margin-top: 0;
+    }
+  }
+}
+
+.paragraph--type--hs-sptlght-slder.paragraph--type--hs-sptlght-slder--no-image {
+  @media only screen and (max-width: 767px) {
+    .hb-spotlight {
+      height: 100%;
+    }
+
+    .slick-track {
+      bottom: 0;
+      height: 100%;
+    }
+
+    .slick__slide > div:first-child {
+      height: 100%;
+    }
+
+    .slick-prev {
+      @include hb-traditional {
+        bottom: 15% !important;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: 25% !important;
+      }
+    }
+
+    .slick-next {
+      @include hb-traditional {
+        bottom: 55% !important;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: 55% !important;
+      }
     }
   }
 }

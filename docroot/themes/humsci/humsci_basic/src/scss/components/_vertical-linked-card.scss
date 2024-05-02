@@ -107,24 +107,26 @@
       display: inline-block;
       position: relative;
       height: hb-calculate-rems(14px);
+      @include hb-icon-link-arrow('white');
 
       @include hb-themes(('airy', 'colorful')) {
-        width: hb-calculate-rems(30px);
+        width: hb-calculate-rems(17.5px);
+        background-size: 85%;
       }
-    
+      
       @include hb-traditional {
-        width: hb-calculate-rems(48px);
+        width: hb-calculate-rems(22px);
+        background-size: auto;
       }
-  
-      @include hb-icon-link-arrow('white');
-      background-position: 6px;
-      transition: hb-transition(background-position);
+
+      margin-left: hb-calculate-rems(6px);
+      transition: hb-transition(margin-left);
     }
 
     .hb-vertical-linked-card:hover &::after,
     .hb-vertical-linked-card:focus &::after,
     .hb-vertical-linked-card.is-focused &::after {
-      background-position: 12px;
+      margin-left: hb-calculate-rems(12px);
     }
   }
 

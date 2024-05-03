@@ -639,16 +639,17 @@ function _su_humsci_profile_fix_view_data(&$data) {
       if (isset($data['table']) && is_string($data['table'])) {
         foreach (array_keys($eck_info) as $eck_type) {
           $data['table'] = str_replace($eck_type, 'hs_entity', $data['table']);
+          if ($data['table'] == 'hs_entity_field_data') {
+            $data['table'] = 'hs_entity';
+          }
         }
       }
 
       if (isset($data['field']) && is_string($data['field']) && $data['field'] == 'title') {
         $data['field'] = 'label';
-        $data['table'] = 'hs_entity';
       }
       if (isset($data['entity_field']) && is_string($data['entity_field']) && $data['entity_field'] == 'title') {
         $data['entity_field'] = 'label';
-        $data['table'] = 'hs_entity';
       }
     }
 

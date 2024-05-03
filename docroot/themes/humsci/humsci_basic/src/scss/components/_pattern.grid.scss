@@ -8,20 +8,20 @@
     &.hb-grid--cols-#{$i} {
       @include grid-media-min('sm') {
         // 2 columns
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       @if ($i > 2) {
         @include grid-media-min('md') {
           // 3 columns
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
 
       @if ($i > 3) {
         @include grid-media-min('lg') {
           // 4 or more columns
-          grid-template-columns: repeat(#{$i}, 1fr);
+          grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
         }
       }
     }

@@ -653,6 +653,36 @@ function _su_humsci_profile_fix_view_data(&$data) {
       }
     }
 
+    // Fix reverse relationships.
+    if (
+      isset($data['relationships']) &&
+      !empty($data['relationships'])
+    ) {
+      foreach ($data['relationships'] as $relationship => $relationship_data) {
+        $relationship_key = $relationship;
+        foreach (array_keys($eck_info) as $eck_type) {
+          if (str_starts_with($relationship, 'reverse__' . $eck_type)) {
+            $relationship_key = str_replace($eck_type, 'hs_entity', $relationship);
+          }
+        }
+        unset($data['relationships'][$relationship]);
+        $data['relationships'][$relationship_key] = $relationship_data;
+      }
+    }
+    if (isset($data['relationship'])) {
+      foreach (array_keys($eck_info) as $eck_type) {
+        if (str_starts_with($data['relationship'], 'reverse__' . $eck_type)) {
+          $data['relationship'] = str_replace($eck_type, 'hs_entity', $data['relationship']);
+        }
+        if (isset($data['id']) && isset($data['field'])) {
+          if (str_starts_with($data['id'], 'reverse__' . $eck_type)) {
+            $data['id'] = str_replace($eck_type, 'hs_entity', $data['id']);
+            $data['field'] = str_replace($eck_type, 'hs_entity', $data['field']);
+          }
+        }
+      }
+    }
+
     if (
       isset($data['table']) &&
       is_string($data['table'])
@@ -660,6 +690,9 @@ function _su_humsci_profile_fix_view_data(&$data) {
       foreach (array_keys($eck_info) as $eck_type) {
         if (str_starts_with($data['table'], $eck_type)) {
           $data['table'] = str_replace($eck_type, 'hs_entity', $data['table']);
+          if ($data['table'] == 'hs_entity_field_data') {
+            $data['table'] = 'hs_entity';
+          }
         }
       }
     }

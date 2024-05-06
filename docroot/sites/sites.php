@@ -97,6 +97,7 @@ $sites['publichumanities.stanford.edu'] = 'humanexperience';
 $sites['ccsre.stanford.edu'] = 'ccsre2023';
 $sites['archaeology.stanford.edu'] = 'archaeology2023';
 $sites['symsys.stanford.edu'] = 'symsys2023';
+$sites['mathematics.stanford.edu'] = 'mathematics2024';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

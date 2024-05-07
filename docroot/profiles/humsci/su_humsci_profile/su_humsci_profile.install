@@ -695,6 +695,48 @@ function _su_humsci_profile_fix_view_data(&$data) {
           }
         }
       }
+      if ($data['table'] == 'hs_entity') {
+        if (isset($data['field']) && is_string($data['field']) && $data['field'] == 'title') {
+          $data['field'] = 'label';
+        }
+        if (isset($data['entity_field']) && is_string($data['entity_field']) && $data['entity_field'] == 'title') {
+          $data['entity_field'] = 'label';
+        }
+        if (isset($data['field']) && is_string($data['field']) && $data['field'] == 'type') {
+          $data['field'] = 'bundle';
+        }
+        if (isset($data['entity_field']) && is_string($data['entity_field']) && $data['entity_field'] == 'type') {
+          $data['entity_field'] = 'bundle';
+        }
+
+        // Fix filter value.
+        if (isset($data['id']) && is_string($data['id']) && $data['id'] == 'type') {
+          if (isset($data['value']) && is_array($data['value'])) {
+            foreach ($eck_info as $eck_type) {
+              foreach ($eck_type as $eck_bundle => $hs_entity_bundle) {
+                if (isset($data['value'][$eck_bundle]) && $data['value'][$eck_bundle] == $eck_bundle) {
+                  $data['value'][$hs_entity_bundle] = $hs_entity_bundle;
+                  unset($data['value'][$eck_bundle]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (
+      isset($data['base_table']) &&
+      is_string($data['base_table'])
+    ) {
+      foreach (array_keys($eck_info) as $eck_type) {
+        if (str_starts_with($data['base_table'], $eck_type)) {
+          $data['base_table'] = str_replace($eck_type, 'hs_entity', $data['base_table']);
+          if ($data['base_table'] == 'hs_entity_field_data') {
+            $data['base_table'] = 'hs_entity';
+          }
+        }
+      }
     }
 
     foreach ($data as &$value) {

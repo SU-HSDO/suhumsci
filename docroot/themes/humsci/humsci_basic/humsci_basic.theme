@@ -214,7 +214,13 @@ function _humsci_basic_make_title_the_link(&$variables) {
     $dom = new DOMDocument();
     try {
       $button = is_array($variables['button']) ? $variables['button'] : (string) $variables['button'];
-      $dom->loadHTML($renderer->renderPlain($button));
+      // Get the first element index, if one exists.
+      if (!empty($button['field_hs_postcard_link'][0]['#url']) && $button['field_hs_postcard_link'][0]['#url']->isRouted()) {
+        $variables['href'] = ['#markup' => $button['field_hs_postcard_link'][0]['#url']->toString()];
+      }
+      else {
+        $dom->loadHTML($renderer->renderPlain($button));
+      }
     }
     catch (\Throwable $e) {
       return;
@@ -226,8 +232,9 @@ function _humsci_basic_make_title_the_link(&$variables) {
       $variables['href'] = $links->item(0)->nodeValue;
     }
     else {
-      // The markup is just a string with the url, we can use that.
-      $variables['href'] = htmlspecialchars_decode(trim(strip_tags($renderer->renderPlain($variables['button']))));
+      // First check if variables is already set from route url, otherwise
+      // the markup is just a string with the url, we can use that.
+      $variables['href'] = $variables['href'] ?? htmlspecialchars_decode(trim(strip_tags($renderer->renderPlain($variables['button']))));
     }
   }
   if (!empty($variables['title'])) {

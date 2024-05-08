@@ -59,22 +59,19 @@
     // Without this the negative margins on the title cause it to lay under the
     // image. Adding position relative makes sure everything is layered correctly.
     position: relative;
-    font-size: hb-calculate-rems(20px);
+    font-size: hb-calculate-rems(18px);
     hyphens: auto;
     line-height: 118%;
     word-break: break-word;
     transition: hb-transition(background-color);
 
-    @include grid-media-min('sm') {
-      font-size: hb-calculate-rems(24px);
-    }
-
     @include grid-media-min('md') {
-      font-size: hb-calculate-rems(27px);
+      font-size: hb-calculate-rems(20px);
+      line-height: hb-calculare-rems(27.24px);
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(54px) hb-calculate-rems(20px) hb-calculate-rems(20px);
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
       @include hb-pairing-color('background-color', 'secondary');
 
@@ -84,7 +81,7 @@
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(54px) hb-calculate-rems(16px) hb-calculate-rems(16px);
+      padding: hb-calculate-rems(16px);
       @include hb-global-color('color', 'white');
       @include hb-pairing-color('background-color', 'primary');
       margin: 0;
@@ -102,43 +99,34 @@
         text-decoration: underline;
       }
     }
+  }
+
+  &__title__link {
+    &::after {
+      content: '';
+      display: inline-block;
+      position: relative;
+      height: hb-calculate-rems(14px);
+      @include hb-icon-link-arrow('white');
+
+      @include hb-themes(('airy', 'colorful')) {
+        width: hb-calculate-rems(27.5px);
+        background-size: 60%;
+      }
+      
+      @include hb-traditional {
+        width: hb-calculate-rems(33px);
+        background-size: auto;
+      }
+
+      background-position: 6px;
+      transition: hb-transition(background-position);
+    }
 
     .hb-vertical-linked-card:hover &::after,
     .hb-vertical-linked-card:focus &::after,
     .hb-vertical-linked-card.is-focused &::after {
-      background-position: 6px;
-    }
-
-    // If this title is in a grid or row,
-    // keep it smaller longer.
-    .hb-grid &,
-    .ptype-hs-row &,
-    .ptype-hs-collection &,
-    .ptype-hs-priv-collection & {
-      @include grid-media-min('sm') {
-        font-size: hb-calculate-rems(20px);
-        line-height: 118%;
-      }
-
-      @include grid-media-min('lg') {
-        font-size: hb-calculate-rems(24px);
-        line-height: 121%;
-      }
-    }
-
-    &::after {
-      content: '';
-      display: block;
-      height: hb-calculate-rems(48px);
-      width: hb-calculate-rems(48px);
-      @include hb-icon-link-arrow('white');
-
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-
-      transition: hb-transition(background-position);
+      background-position: 12px;
     }
   }
 

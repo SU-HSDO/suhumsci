@@ -87,8 +87,10 @@ jobs:
     container:
       image: pookmish/drupal8ci:latest
     steps:
-      run: |
-        bash hooks/common/theme/test-theme.sh
+      - uses: actions/checkout@v4
+      - name: Lint Theme
+        run: |
+          bash hooks/common/theme/test-theme.sh
   test_existing_site:
     needs: set_sites
     strategy:

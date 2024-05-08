@@ -82,6 +82,13 @@ jobs:
           vendor/bin/blt blt:telemetry:disable --no-interaction &&
           SITES=$(echo -n "$(blt blt:config:get multisites | shuf -n 10)" | jq -R -s -c 'split("\n") | sort')
           echo "matrix={\"site\": $SITES}" >> $GITHUB_OUTPUT
+  lint_theme:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+    steps:
+      run: |
+        bash hooks/common/theme/test-theme.sh
   test_existing_site:
     needs: set_sites
     strategy:

@@ -262,9 +262,13 @@ details.hb-accordion-light {
     .revealed-details {
       @include hb-colorful {
         border: none;
+        border-left: $hb-thin-border;
+        border-width: hb-calculate-rems(2px);
       }
 
       @include hb-traditional {
+        @include hb-global-color('background-color', 'white');
+
         border: $hb-thin-border;
         border-top: none;
         @include hb-pairing-color('border-color', 'secondary');

@@ -43,20 +43,20 @@
 
     {% if title %}
       <div class="hb-card__title">
-      {% set title_content %}
-        {% if href %}
-          <a href="{{ href }}">{{ title }}</a>
-        {% else %}
-          {{ title }}
-        {% endif %}
-      {% endset %}
-      {% if title|render matches '/<\\/h\\d>/' %}
-        {{ title_content }}
-      {% else %}
-        <h2>
+        {% set title_content %}
+          {% if href %}
+            <a href="{{ href }}">{{ title }}</a>
+          {% else %}
+            {{ title }}
+          {% endif %}
+        {% endset %}
+        {% if title|render matches '/<\\/h\\d>/' %}
           {{ title_content }}
-        </h2>
-      {% endif %}
+        {% else %}
+          <h2>
+            {{ title_content }}
+          </h2>
+        {% endif %}
       </div>
     {% endif %}
 

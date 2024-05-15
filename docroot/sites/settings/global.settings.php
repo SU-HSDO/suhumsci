@@ -9,6 +9,17 @@ use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
 
+// When the encryption environment variable is not provided (local/ci/etc),
+// fake the encryption string so that the site doesn't break.
+if (!getenv('REAL_AES_ENCRYPTION')) {
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $randomString = '';
+  for ($i = 0; $i < 256 / 8; $i++) {
+    $randomString .= $characters[rand(0, strlen($characters) - 1)];
+  }
+  putenv("REAL_AES_ENCRYPTION=$randomString");
+}
+
 $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/config/default';
 
 /**
@@ -22,6 +33,7 @@ $additionalSettingsFiles = [
   __DIR__ . '/environment_indicator.php',
   __DIR__ . '/local.settings.php',
   __DIR__ . '/fast404.settings.php',
+  DRUPAL_ROOT . '/../keys/secrets.settings.php',
 ];
 
 foreach ($additionalSettingsFiles as $settingsFile) {
@@ -29,17 +41,6 @@ foreach ($additionalSettingsFiles as $settingsFile) {
     // phpcs:ignore
     require $settingsFile;
   }
-}
-
-// When the encryption environment variable is not provided (local/ci/etc),
-// fake the encryption string so that the site doesn't break.
-if (!getenv('REAL_AES_ENCRYPTION')) {
-  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  $randomString = '';
-  for ($i = 0; $i < 256 / 8; $i++) {
-    $randomString .= $characters[rand(0, strlen($characters) - 1)];
-  }
-  putenv("REAL_AES_ENCRYPTION=$randomString");
 }
 
 // Lets whitelist everything because in our event subscriber we have the

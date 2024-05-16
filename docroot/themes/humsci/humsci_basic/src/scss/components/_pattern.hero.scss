@@ -10,6 +10,16 @@
 
 .hb-hero-overlay {
   @include hb-hero-component;
+  
+  .ptype-hs-hero-image & {
+    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+  }
+
+  &::before {
+    .ptype-hs-hero-image & {
+      content: none;
+    }
+  }
 
   &__image-wrapper {
     @include hb-hero-image-wrapper;

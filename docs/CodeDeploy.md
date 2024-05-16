@@ -1,28 +1,22 @@
 # Code Deployment
 
-CircleCI handles branch and tag deployments. Communicate with others involved before 
-changing code on any Acquia environment.
+This document gives a general overview of the code deployment workflow. Github Actions workflows automate the code deployments to Acquia.
 
-## Branches
-Every branch with a pull request in github will be tested by behat and PHPUnit. 
-If all those tests pass, a build will be deployed to Acquia. A branch named 
-`feature-branch` will be deployed to Acquia as `feature-branch-build`. These 
-branches are never to be used on the production environment. 
+**SWS Developers**: Please refer to internal Confluence documentation for more detailed and technical step-by-step instructions for production deployments.
 
-## Tags
-When a release is ready for production, create the release in GitHub. A suggested
-tool is [release-it](https://github.com/release-it/release-it). This tool takes the
-commit log and produces a release in GitHub with the log and links to the commits. 
-If using this tool, simply use the command `release-it patch` or `release-it minor`.
-Use [semver](https://semver.org/) as the release tag. Once a release is created in 
-GitHub, CircleCI will automatically build and deploy that tag to Acquia. A tag named
-`8.1.0` will be deployed with the current date prepended, ie `2019-06-01_8.1.0`.
+## Release Branch
+A release branch is named using the format `VERSION-release`. All code changes in a release branch must go through a PR. To merge a PR into a release branch it must:
+- Pass all required github actions checks (Primarily CodeCeption and PHPUnit tests)
+- Receive an approved PR review
 
-## Production Release
-1. Create a release tag as instructed above.
-1. Deploy the tag to the staging environment.
-1. Copy files & databases from production environment to the staging environment for QA
-   * Only copy up to 4 databases at a time. Do not attempt to copy all at one time.
-1. Back up all databases on production environment
-1. Choose the new tag for the production environment
-1. Review production URLs.
+When code is merged into a release branch, the branch runs through tests again, creates a new code artifact and pushes it to Acquia. The code artifact for the release branch is active on the staging environment. This way the most up to date release branch is always available on the staging environment for review.
+
+## Production Deployment Process
+Once a release branch is ready to be released and deployed to production it is merged into the `develop` branch. When a release branch is merged into the `develop branch`, it triggers github actions.
+
+The github actions:
+- Create a code artifact for deployment and pushes it up to Acquia
+- Create a new tag and release on github based on the SEMVER patch/minor/major PR label
+- Create a new release branch for the next release and open a PR
+
+Once the code artifact is pushed to Acquia, it can be deployed to production.

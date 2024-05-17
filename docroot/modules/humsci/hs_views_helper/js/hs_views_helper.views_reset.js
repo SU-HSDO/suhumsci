@@ -16,7 +16,6 @@
             .val('')
             .prop('checked', false)
             .prop('selected', false);
-          $(ajaxView['$exposed_form'][0]).find('select').trigger("chosen:updated");
 
           // Trigger('RefreshView') causes the view to reload twice. So we use
           // a click action on the submit button after clearing all the field

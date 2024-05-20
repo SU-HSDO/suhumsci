@@ -1,13 +1,21 @@
-function verticalLinkedCard() {
-  // find all hb-vertical-linked-card elements
-  const cards = document.querySelectorAll('.hb-vertical-linked-card');
+(() => {
+  // find all hb-vertical-card elements
+  const cards = document.querySelectorAll('.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card');
 
   // Loop through each card
   cards.forEach((card) => {
     // Find the main link within each card
-    const mainLink = card.querySelector(
-      '.hb-vertical-linked-card__title__link',
-    );
+    let mainLink = '';
+
+    // Logic for vertical card and date stacked card.
+    if (card.querySelector('.hb-card__title a')) {
+      mainLink = card.querySelector('.hb-card__title a');
+    // Logic for vertical linked card.
+    } else {
+      mainLink = card.querySelector(
+        '.hb-vertical-linked-card__title__link',
+      );
+    }
 
     if (!mainLink) {
       return;
@@ -32,6 +40,4 @@ function verticalLinkedCard() {
 
     card.addEventListener('click', handleClick);
   });
-}
-
-verticalLinkedCard();
+})();

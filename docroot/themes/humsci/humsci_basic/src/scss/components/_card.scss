@@ -388,7 +388,7 @@
       @include hb-global-color('border-color', 'gray-medium');
       @include hb-pairing-color('color', 'primary');
       font-size: hb-calculate-rems(36px);
-      padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px);
+      padding: hb-calculate-rems(10px) 0;
 
       .views-element-container .hb-dark-pattern & .field-content,
       .hb-dark-inversion .views-element-container & .field-content {
@@ -403,6 +403,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(6);
+
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;

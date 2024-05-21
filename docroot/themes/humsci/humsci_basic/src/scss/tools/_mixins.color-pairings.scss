@@ -7,7 +7,7 @@
 // extra specificity. This is set to false by default.
 @mixin hb-pairing-color($property, $color-swatch, $important: false) {
   @include hb-themes(('colorful', 'airy')) {
-    @if ($important) {
+    @if $important {
       // Fallback for browsers that do not support CSS variables
       #{$property}: hb-get-pairing-color($color-swatch, $hb-colorful-default, $hc-colorful-pairings) !important;
 
@@ -23,13 +23,14 @@
   }
 
   @include hb-traditional {
-    @if ($important) {
+    @if $important {
       // scss-lint:disable ImportantRule
       // Fallback for browsers that do not support CSS variables
       #{$property}: hb-get-pairing-color($color-swatch, $hb-traditional-default, $ht-traditional-pairings) !important;
 
       // All modern browsers that support CSS variables
       #{$property}: var(--palette--#{$color-swatch}) !important;
+
       // scss-lint:enable ImportantRule
     } @else {
       // Fallback for browsers that do not support CSS variables
@@ -43,7 +44,7 @@
 
 @mixin hb-global-color($property, $color-swatch, $important: false) {
   @include hb-themes(('colorful', 'airy')) {
-    @if ($important) {
+    @if $important {
       #{$property}: hb-get-global-color($color-swatch, $hc-colorful-globals) !important;
     } @else {
       #{$property}: hb-get-global-color($color-swatch, $hc-colorful-globals);
@@ -51,9 +52,10 @@
   }
 
   @include hb-traditional {
-    @if ($important) {
+    @if $important {
       // scss-lint:disable ImportantRule
       #{$property}: hb-get-global-color($color-swatch, $ht-traditional-globals) !important;
+
       // scss-lint:enable ImportantRule
     } @else {
       #{$property}: hb-get-global-color($color-swatch, $ht-traditional-globals);

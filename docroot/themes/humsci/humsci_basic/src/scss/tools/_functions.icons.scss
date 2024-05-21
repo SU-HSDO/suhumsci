@@ -6,43 +6,43 @@
 // ⚠️ Icons should not have height and width attributes, viewBox only. This will
 // allow the icons to scale when used.
 @function hc-get-icons($icon, $color) {
-  @if ($icon == 'plus') {
+  @if $icon == 'plus' {
     @return '<svg viewBox="0 0 18 18"><g stroke-width="2" stroke="#{$color}" stroke-linecap="round"><path d="M1,9 17,9" /><path d="M9,1 9,17" /></g></svg>';
-  } @else if ($icon == 'minus') {
+  } @else if $icon == 'minus' {
     @return '<svg viewBox="0 0 18 2"><path d="M1,1 17,1" stroke-width="2" stroke="#{$color}" stroke-linecap="round" /></svg>';
-  } @else if ($icon == 'chevron') {
+  } @else if $icon == 'chevron' {
     @return '<svg viewBox="0 0 10 7"><path d="M1 1L5.14815 5L9 1" fill="transparent" stroke="#{$color}" stroke-width="2" /></svg>';
-  } @else if ($icon == 'ext-link') {
+  } @else if $icon == 'ext-link' {
     @return '<svg viewBox="0 0 12 12"><path d="M11.273 5.818v5.455H.727V.727h5.091m1.455 0h4v4m0-4L6.182 5.818" fill="transparent" stroke="#{$color}" stroke-width="2" stroke-miterlimit="10"/></svg>';
-  } @else if ($icon == 'search') {
+  } @else if $icon == 'search' {
     @return '<svg viewBox="0 0 25 26"><path fill-rule="evenodd" clip-rule="evenodd" d="M21.4737 10.2016C21.4737 14.0385 18.3632 17.149 14.5263 17.149C10.6894 17.149 7.57895 14.0385 7.57895 10.2016C7.57895 6.36466 10.6894 3.25422 14.5263 3.25422C18.3632 3.25422 21.4737 6.36466 21.4737 10.2016ZM24 10.2016C24 15.4338 19.7585 19.6753 14.5263 19.6753C12.5029 19.6753 10.6277 19.0409 9.08862 17.9603L2.11994 24.3929C1.60732 24.8661 0.808175 24.8341 0.334991 24.3215C-0.138192 23.8089 -0.106226 23.0098 0.406389 22.5366L7.22679 16.2408C5.86882 14.6013 5.05264 12.4968 5.05264 10.2016C5.05264 4.96942 9.29415 0.727905 14.5263 0.727905C19.7585 0.727905 24 4.96942 24 10.2016Z" stroke="#{$color}" stroke-width="0.5" stroke-linecap="square" fill="#{$color}" /></svg>';
-  } @else if ($icon == 'arrow-right') {
+  } @else if $icon == 'arrow-right' {
     @return '<svg viewBox="0 0 23 24"><path fill="#{$color}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>';
-  } @else if ($icon == 'arrow-right-box-shadow') { // Colorful carousel arrow
+  } @else if $icon == 'arrow-right-box-shadow' { // Colorful carousel arrow
     @return '<svg viewBox="0 0 23 24"><path fill="#{$color}" d="M11 23l-2-2 7-7H0v-3h16L9 3l2-2 10 10 1 1-11 11z"/></svg>';
-  } @else if ($icon == 'calendar') {
+  } @else if $icon == 'calendar' {
     @return '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M17 2h-1V0h-2v2H6V0H4v2H3c-.26217 0-.52176.0518-.76386.15243-.24209.10063-.46191.24811-.64683.43396-.18492.18585-.33129.40641-.43071.649-.09942.24259-.14992.50244-.1486.76461L1 18c0 .5304.21071 1.0391.58579 1.4142C1.96086 19.7893 2.46957 20 3 20h14c.5304 0 1.0391-.2107 1.4142-.5858S19 18.5304 19 18V4c0-.53043-.2107-1.03914-.5858-1.41421C18.0391 2.21071 17.5304 2 17 2Zm0 16H3V7h14v11Z" fill="#{$color}"/><path d="M5.04004 9.08997h2.425V11.515h-2.425V9.08997Zm0 4.24303h2.425v2.425h-2.425v-2.425ZM12.313 9.08997h2.424V11.515h-2.424V9.08997Zm0 4.24303h2.424v2.425h-2.424v-2.425ZM8.67704 9.08997H11.101V11.515H8.67704V9.08997Zm0 4.24303H11.101v2.425H8.67704v-2.425Z" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'location') {
+  } @else if $icon == 'location' {
     @return '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M10 0C5.86429 0 2.5 3.24894 2.5 7.24287 2.5 12.1991 9.21143 19.475 9.4975 19.7834c.06331.0681.14077.1227.22735.16.08658.0373.18033.0566.27515.0566.0948 0 .1886-.0193.2751-.0566.0866-.0373.1641-.0919.2274-.16.2861-.3094 6.9975-7.5843 6.9975-12.54053C17.5 3.24894 14.1357 0 10 0Zm0 10.8871c-2.08071 0-3.77357-1.63485-3.77357-3.64423S7.91929 3.59867 10 3.59867c2.0807 0 3.7736 1.63482 3.7736 3.6442S12.0807 10.8871 10 10.8871Z" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'speaker') {
+  } @else if $icon == 'speaker' {
     @return '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M9.8052 10.1523c1.2578 0 2.3465-.45125 3.2367-1.34045.8892-.89015 1.3395-1.9779 1.3395-3.2357 0-1.25685-.4503-2.3465-1.3395-3.2357C12.1508 1.45125 11.0621 1 9.80425 1c-1.2559 0-2.3446.45125-3.2338 1.34045-.89015.89015-1.3414 1.9779-1.3414 3.2357s.45125 2.3465 1.3414 3.2357c.8892.8892 1.9779 1.34045 3.23475 1.34045Zm8.0075 5.4577c-.0256-.3705-.0769-.7742-.1538-1.2008-.0717-.4081-.17-.8112-.2946-1.2064-.1263-.3914-.2928-.7687-.4968-1.1258-.2009-.3598-.453-.6885-.7486-.9756-.3111-.2923-.676-.5214-1.0744-.6745-.4375-.1689-.903-.2533-1.3718-.2489-.1948 0-.3819.0797-.7439.3153-.2232.1454-.4845.3135-.7752.4997-.2489.1587-.5861.3069-1.0022.4418-.3957.1295-.8092.1962-1.22555.1976-.4085 0-.8208-.0665-1.2274-.1976-.4161-.1349-.75335-.2831-1.0013-.4418-.2888-.1843-.5491-.3524-.77615-.4997-.361-.2356-.5491-.3153-.7429-.3153-.494 0-.9557.0835-1.3718.2479-.39886.1533-.7641.3827-1.0754.6755-.28215.2707-.5339.5984-.74765.9756-.20615.3629-.37335.741-.49685 1.1258-.11875.3705-.2185.777-.2945 1.2064-.076.4256-.12825.8303-.1539 1.2008-.02565.3639-.038.741-.038 1.122 0 .9918.3154 1.7955.9367 2.3873.6137.5843 1.4269.8807 2.4149.8807h9.1485c.988 0 1.8003-.2964 2.414-.8807.6222-.5918.9376-1.3946.9376-2.3873 0-.3829-.0133-.76-.038-1.122h-.001Z" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'arrow-right-long') {
+  } @else if $icon == 'arrow-right-long' {
     @return '<svg viewBox="0 0 22 14"><path d="M0 7h20M14 1l6 5.923-6 5.577" stroke="#{$color}" stroke-width="2" fill="none"/></svg>';
-  } @else if ($icon == 'arrow-right-long-box-shadow') { // Traditional carousel arrow
+  } @else if $icon == 'arrow-right-long-box-shadow' { // Traditional carousel arrow
     @return '<svg viewBox="0 0 23 20"><path d="m15,0.2l-1.4,1.4l4.7,4.6h-18.2v2h17.9l-4.4,4.1l1.4,1.5l7.1,-6.6z" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'lock') {
+  } @else if $icon == 'lock' {
     @return '<svg viewBox="0 0 24 24"><path fill="#{$color}" d="M18 10v-4c0-3.313-2.687-6-6-6s-6 2.687-6 6v4h-3v14h18v-14h-3zm-5 7.723v2.277h-2v-2.277c-.595-.347-1-.984-1-1.723 0-1.104.896-2 2-2s2 .896 2 2c0 .738-.404 1.376-1 1.723zm-5-7.723v-4c0-2.206 1.794-4 4-4 2.205 0 4 1.794 4 4v4h-8z"/></svg>';
-  } @else if ($icon == 'ellipse-border') {
+  } @else if $icon == 'ellipse-border' {
     @return '<svg viewBox="0 0 11 11" fill="none"><circle cx="5.49989" cy="5.49994" r="5" stroke="#{$color}"/></svg>';
-  } @else if ($icon == 'ellipse') {
+  } @else if $icon == 'ellipse' {
     @return '<svg viewBox="0 0 11 11" fill="none"><circle cx="5.49989" cy="5.49994" r="5.5" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'quote-mark') {
+  } @else if $icon == 'quote-mark' {
     @return '<svg viewBox="0 0 88 48" fill="none"><path d="M28.2,47.1c5.4,0,9.3-3.7,9.3-9.6c0-5.8-4.5-8.9-9.3-8.9c-0.5,0-1.1,0-1.6,0.2C26.7,18.9,31,12.8,40,7l-4.2-6.8	c-12.1,7-18.5,17.2-18.5,31.2C17.2,41.5,21.2,47.1,28.2,47.1z M59.2,47.1c5.4,0,9.3-3.7,9.3-9.6c0-5.8-4.5-8.9-9.3-8.9	c-0.5,0-1,0-1.6,0.2c0-9.8,4.4-15.9,13.3-21.7l-4.2-6.8c-12.1,7-18.6,17.2-18.6,31.2C48.2,41.5,52.2,47.1,59.2,47.1z" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'timeline-toggle') {
+  } @else if $icon == 'timeline-toggle' {
     @return '<svg viewBox="0 0 14 7" fill="#{$color}"><path d="M0 0L5 5L10 0H0Z"/></svg>';
-  } @else if ($icon == 'timeline-circle') {
+  } @else if $icon == 'timeline-circle' {
     @return '<svg viewBox="0 0 24 24" fill="none"><path d="M0 0h24v24H0V0z"/><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12zm10 6c3.31 0 6-2.69 6-6s-2.69-6-6-6-6 2.69-6 6 2.69 6 6 6z" fill="#{$color}"/></svg>';
-  } @else if ($icon == 'slider-caret') {
+  } @else if $icon == 'slider-caret' {
     @return '<svg viewBox="0 0 17 30"><path d="m15.8867 15.6525.8545-.8427-14.60517-14.8098-2.13603 2.10651 12.516 12.69139-12.516 12.6914 2.13603 2.1065z" fill="#{$color}"/></svg>';
   }
 }

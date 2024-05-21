@@ -2,7 +2,7 @@
 @function hb-get-pairing-list($theme-map, $palette) {
   $result: map-get($theme-map, $palette);
 
-  @if ($result) {
+  @if $result {
     // Return value if it exists
     @return $result;
   } @else {
@@ -16,7 +16,7 @@
   // Assign a single color from the mapped palette
   $result: map-get(hb-get-pairing-list($theme-map, $palette), $key);
 
-  @if ($result) {
+  @if $result {
     // Return value if it exists
     @return $result;
   } @else {
@@ -27,10 +27,9 @@
 
 // Map through all global colors and return a single color
 @function hb-get-global-color($key, $globals-map) {
-
   $result: map-get($globals-map, $key);
 
-  @if ($result) {
+  @if $result {
     // Return value if it exists
     @return $result;
   } @else {

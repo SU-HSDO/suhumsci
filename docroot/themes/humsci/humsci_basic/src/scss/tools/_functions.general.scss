@@ -16,12 +16,12 @@
   $is-valid-theme: false;
 
   @each $theme in $hb-global-theme-list {
-    @if ($theme == $hb-current-theme) {
+    @if $theme == $hb-current-theme {
       $is-valid-theme: true;
     }
   }
 
-  @if ($is-valid-theme) {
+  @if $is-valid-theme {
     @return map-get($requested-array, $hb-current-theme);
   } @else {
     @return null;
@@ -39,9 +39,9 @@
   $theme-spacing-list: get-theme-array-list($hb-spacing-list);
   $result: map-get($theme-spacing-list, $size);
 
-  @if ($result) {
+  @if $result {
     // Return spacing value if it exists
-    @if ($convert-to-rem) {
+    @if $convert-to-rem {
       // use hb-calculate-rems and then return rem value
       @return hb-calculate-rems($result);
     } @else {
@@ -60,7 +60,7 @@
 @function hb-sidebar-width() {
   $result: get-theme-array-list($hb-sidebar-list);
 
-  @if ($result) {
+  @if $result {
     @return $result;
   } @else {
     // Error if value doesn't exist

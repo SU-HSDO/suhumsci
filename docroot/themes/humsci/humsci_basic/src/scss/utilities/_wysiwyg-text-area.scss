@@ -113,10 +113,7 @@
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 // hs-caption and D7 import utility class map and loop
-$captions: (
-  hs-caption,
-  caption,
-);
+$captions: (hs-caption, caption);
 
 @each $caption in $captions {
   .#{$caption},
@@ -126,10 +123,7 @@ $captions: (
   }
 }
 
-$credits: (
-  hs-credits,
-  credits,
-);
+$credits: (hs-credits, credits);
 
 @each $credit in $credits {
   .#{$credit},
@@ -314,10 +308,10 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"] {
+.hs-external-link a[href*="//"]
+{
   @include hb-link--inline($icon: true);
   @include hb-external-link-icon;
-
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
@@ -354,7 +348,13 @@ a.private-link,
   @include hb-pairing-color('color', 'secondary');
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image(true, 18px, left, $hb-colorful-default, $hc-colorful-pairings);
+    @include hb-link-background-image(
+      true,
+      18px,
+      left,
+      $hb-colorful-default,
+      $hc-colorful-pairings
+    );
   }
 
   .hb-dark-pattern.hb-local-footer & {
@@ -412,7 +412,13 @@ a.hs-mailto-link {
   @include hb-fa-mailto-icon;
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image(true, 22px, right, $hb-colorful-default, $hc-colorful-pairings);
+    @include hb-link-background-image(
+      true,
+      22px,
+      right,
+      $hb-colorful-default,
+      $hc-colorful-pairings
+    );
   }
 
   // The font awesome icon is hidden by default in themes, this shows it
@@ -422,9 +428,7 @@ a.hs-mailto-link {
 }
 
 // hs-more-link and D7 import utility class map and loop
-$more-links: (
-  hs-more-link
-);
+$more-links: (hs-more-link);
 
 @each $more-link in $more-links {
   a.#{$more-link},
@@ -439,7 +443,7 @@ $more-links: (
 a.hs-pdf-link {
   @include hb-pdf-link;
 
-  //Outline pdf icon option
+  // Outline pdf icon option
   &--outline {
     @include hb-pdf-link;
 
@@ -452,7 +456,7 @@ a.hs-pdf-link {
 a.hs-file-link {
   @include hb-file-link;
 
-  //Outline file icon option
+  // Outline file icon option
   &--outline {
     @include hb-file-link;
 

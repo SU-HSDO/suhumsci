@@ -31,7 +31,7 @@ $nested-padding: hb-calculate-rems(22px);
 
 @mixin hb-lock-props {
   @include hb-icon-background("lock", "black");
-  @include hb-lock-position();
+  @include hb-lock-position;
 
   .hb-dark-pattern & {
     @include hb-icon-background("lock", "white");
@@ -43,7 +43,7 @@ $nested-padding: hb-calculate-rems(22px);
     @include grid-media-min("lg") {
       .js & {
         @include hb-icon-background("lock", "black");
-        @include hb-lock-position();
+        @include hb-lock-position;
 
         .hb-dark-pattern & {
           @include hb-icon-background("lock", "white");
@@ -212,7 +212,7 @@ $hb-link-bar-link: 100%;
     @include hb-global-color("border-color", "gray");
 
     .hb-private-page-link {
-      @include hb-lock-props();
+      @include hb-lock-props;
     }
 
     @include grid-media-min("lg") {
@@ -498,7 +498,7 @@ $hb-link-bar-link: 100%;
         width: 200%;
         color: hb-get-global-color("black", $hc-colorful-globals);
         box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px)
-          rgba(0, 0, 0, 0.63);
+          rgba(0 0 0 0.63);
         opacity: 0;
         transform: translateX(-50%) scaleY(0);
         transform-origin: top;

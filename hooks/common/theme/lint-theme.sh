@@ -9,5 +9,5 @@ then
 else
   cd docroot/themes/humsci/humsci_basic
   npm ci
-  npm run test
+  npm run lint
 fi

@@ -202,6 +202,81 @@ details.hb-accordion-secondary {
   }
 }
 
+// Alters appearance of accordion(s) to its light variation
+details.hb-accordion-light {
+  border: none;
+
+  @include hb-colorful {
+    @include hb-pairing-color("background-color", "secondary-highlight");
+  }
+
+  @include hb-traditional {
+    @include hb-pairing-color("background-color", "tertiary-highlight");
+  }
+
+  // Overriding _details.scss
+  summary:not(.hb-timeline-item__summary) {
+    border: $hb-thin-border;
+    background-color: transparent;
+
+    @include hb-global-color("color", "black");
+    border-color: transparent;
+    @include hb-pairing-color('border-left-color', 'secondary');
+
+    @include hb-colorful {
+      border-width: hb-calculate-rems(2px);
+    }
+
+    &::after {
+      @include hb-colorful {
+        @include hb-menu-plus-icon("secondary");
+      }
+
+      @include hb-traditional {
+        @include hb-menu-plus-icon("primary");
+      }
+    }
+
+    &:hover,
+    &:focus {
+      @include hb-pairing-color("color", "primary");
+    }
+  }
+
+  &[open] {
+    summary:not(.hb-timeline-item__summary) {
+      background: transparent;
+      
+      @include hb-pairing-color('border-color', 'secondary');
+
+      &::after {
+        @include hb-colorful {
+          @include hb-menu-minus-icon("secondary");
+        }
+        @include hb-traditional {
+          @include hb-menu-minus-icon("primary");
+        }
+      }
+    }
+
+    .revealed-details {
+      @include hb-colorful {
+        border: none;
+        border-left: $hb-thin-border;
+        border-width: hb-calculate-rems(2px);
+      }
+
+      @include hb-traditional {
+        @include hb-global-color('background-color', 'white');
+
+        border: $hb-thin-border;
+        border-top: none;
+        @include hb-pairing-color('border-color', 'secondary');
+      }
+    }
+  }
+}
+
 // Utility class for clearing floats
 .hb-clear {
   clear: both;

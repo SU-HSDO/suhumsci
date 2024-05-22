@@ -21,8 +21,6 @@
             console.log($(this));
             var name = $(this).attr('name').split('[').pop();
             var value = $(this).val();
-            $endDate.find('select[name*="end_value][' + name + '"], input[name*="end_value][' + name + '"]')
-              .val(value).trigger("chosen:updated");
           });
 
           $endDate.show();

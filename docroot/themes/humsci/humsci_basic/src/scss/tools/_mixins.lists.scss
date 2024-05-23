@@ -7,7 +7,7 @@
   padding: 0 0 hb-calculate-rems(2px) hb-calculate-rems(12px);
 
   @include hb-themes(('airy', 'colorful')) {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
 
     &::before {
       height: hb-calculate-rems(12px);
@@ -18,7 +18,7 @@
   }
 
   @include hb-traditional {
-    @include hb-global-color('color', 'gray-dark');
+    color: var(--palette--gray-dark);
 
     &::before {
       height: hb-calculate-rems(5px);
@@ -40,7 +40,7 @@
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
   }
 }
 
@@ -53,16 +53,16 @@
   line-height: 134%; // Increase the line height to override the hb-subheading mixin on line 2. This will allow the hover state of links to display as expected.
 
   @include hb-themes(('airy', 'colorful')) {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
 
     &:hover,
     &:focus {
-      @include hb-global-color('border-color', 'black');
+      border-color: var(--palette--black);
     }
   }
 
   @include hb-traditional {
-    @include hb-global-color('color', 'gray-dark');
+    color: var(--palette--gray-dark);
 
     &:hover,
     &:focus {
@@ -72,13 +72,13 @@
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     border-color: transparent;
   }
 
   &:hover,
   &:focus {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
   }
 }
 
@@ -91,12 +91,12 @@
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('color', 'gray-dark', 'important');
+    color: var(--palette--gray-dark) !important;
   }
 
   @include hb-themes(('colorful', 'airy')) {
     @include hb-pairing-color('background-color', 'tertiary-highlight-darken-10');
-    @include hb-global-color('color', 'gray-dark');
+    color: var(--palette--gray-dark);
     padding: hb-calculate-rems(1px) hb-calculate-rems(12px);
     border-radius: hb-calculate-rems(13px);
     border: 2px solid transparent;
@@ -104,7 +104,7 @@
 
   @include hb-traditional {
     @include hb-pairing-color('background-color', 'secondary-highlight');
-    @include hb-global-color('color', 'gray-dark');
+    color: var(--palette--gray-dark);
     padding: hb-calculate-rems(1px) hb-calculate-rems(6px);
     font-weight: hb-theme-font-weight(semibold);
     text-transform: uppercase;
@@ -125,7 +125,7 @@
     &:hover {
       @include hb-themes(('colorful', 'airy')) {
         @include hb-pairing-color('border-color', 'tertiary-highlight-darken-10');
-        @include hb-global-color('background-color', 'white');
+        background-color: var(--palette--white);
       }
 
       .hb-dark-pattern &,

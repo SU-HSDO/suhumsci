@@ -151,14 +151,14 @@ $credits: (
   font-size: hb-calculate-rems(20px);
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  @include hb-global-color('color', 'gray-dark');
+  color: var(--palette--gray-dark);
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(22px);
   }
 
   .hb-dark-pattern & {
-    @include hb-global-color('color', 'gray-light');
+    color: var(--palette--gray-light);
   }
 
   li & {
@@ -198,7 +198,7 @@ $credits: (
       @include hb-pairing-color('color', 'primary');
 
       .hb-dark-pattern & {
-        @include hb-global-color('color', 'gray-light');
+        color: var(--palette--gray-light);
       }
     }
 
@@ -321,7 +321,7 @@ a[href*="//"].hs-external-link,
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
 
       &::after {
         @include hb-icon-background('ext-link', 'white');
@@ -359,12 +359,12 @@ a.private-link,
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
     }
 
     &:hover {
       @include hb-colorful {
-        @include hb-global-color('color', 'gray-medium');
+        color: var(--palette--gray-medium);
       }
     }
   }

@@ -45,7 +45,7 @@
   }
 
   .hb-card {
-    @include hb-global-color('background-color', 'white');
+    background-color: var(--palette--white);
     flex-grow: 1;
 
     @include hb-traditional {
@@ -115,7 +115,7 @@
 
   .hb-testimonial,
   .hb-timelime__wrapper {
-    @include hb-global-color('background-color', 'white');
+    background-color: var(--palette--white);
     @include hb-raised-cards-shadow;
     padding: hb-spacing-width('md') hb-spacing-width('xs');
     margin-top: 0;
@@ -124,7 +124,7 @@
   .hs-paragraph-style--well,
   .hs-paragraph-style--well-full-width {
     .hb-testimonial__wrapper::before {
-      @include hb-global-color('background-color', 'white');
+      background-color: var(--palette--white);
     }
   }
 
@@ -140,11 +140,11 @@
 // Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied
 .hb-raised-cards .hb-dark-pattern .hb-card,
 .hb-dark-inversion .hb-raised-cards .views-element-container .hb-card {
-  @include hb-global-color('color', 'black');
-
+  color: var(--palette--black);
+  
   .field-content,
   .views-label {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
   }
 
   a {
@@ -159,13 +159,13 @@
   &__date-tile {
     .field-content {
       @include hb-themes(('airy', 'colorful')) {
-        @include hb-global-color('color', 'white');
+        color: var(--palette--white);
       }
     }
 
     &-month .field-content {
       @include hb-traditional {
-        @include hb-global-color('color', 'white');
+        color: var(--palette--white);
       }
     }
 
@@ -187,8 +187,8 @@
     }
 
     @include hb-traditional {
-      @include hb-global-color('color', 'black');
-      @include hb-global-color('text-decoration-color', 'black');
+      color: var(--palette--black);
+      text-decoration-color: var(--palette--black);
 
       &:hover,
       &:focus {

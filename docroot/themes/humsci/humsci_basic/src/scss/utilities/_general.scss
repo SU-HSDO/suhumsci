@@ -39,7 +39,7 @@
       @include grid-media-min("sm") {
         margin: 0 hb-calculate-rems(10px);
         content: "|";
-        @include hb-global-color("color", "gray-dark");
+        color: var(--palette--gray-dark);
       }
     }
 
@@ -160,7 +160,7 @@ details.hb-accordion-secondary {
   // Overriding _details.scss
   summary:not(.hb-timeline-item__summary) {
     @include hb-pairing-color("border-color", "primary");
-    @include hb-global-color("color", "black");
+    color: var(--palette--black);
 
     border-width: hb-calculate-rems(2px);
     background-color: transparent;
@@ -219,7 +219,7 @@ details.hb-accordion-light {
     border: $hb-thin-border;
     background-color: transparent;
 
-    @include hb-global-color("color", "black");
+    color: var(--palette--black);
     border-color: transparent;
     @include hb-pairing-color('border-left-color', 'secondary');
 
@@ -268,7 +268,7 @@ details.hb-accordion-light {
       }
 
       @include hb-traditional {
-        @include hb-global-color('background-color', 'white');
+        background-color: var(--palette--white);
 
         border: $hb-thin-border;
         border-top: none;

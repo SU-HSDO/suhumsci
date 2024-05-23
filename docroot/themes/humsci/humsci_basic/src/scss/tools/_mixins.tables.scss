@@ -8,11 +8,11 @@
   font-size: hb-calculate-rems(13px);
   text-align: left;
   border: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray-medium');
+  border-color: var(--palette--gray-medium);
 
   .hb-dark-pattern & {
-    @include hb-global-color('color', 'black');
-    @include hb-global-color('background-color', 'white');
+    color: var(--palette--black);
+    background-color: var(--palette--white);
   }
 
   @include grid-media-min('sm') {
@@ -24,11 +24,11 @@
 @mixin table-heading {
   position: sticky;
   top: 0;
-  @include hb-global-color('border-color', 'white');
+  border-color: var(--palette--white);
 
   a,
   a:not([class]) {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     background-image: none;
 
     &:hover,
@@ -44,7 +44,7 @@
   text-transform: uppercase;
   // set themed color for header background color table variable
   @include hb-pairing-color('background-color', 'primary');
-  @include hb-global-color('color', 'white');
+  color: var(--palette--white);
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
@@ -67,7 +67,7 @@
 }
 
 @mixin table-row {
-  @include hb-global-color('background-color', 'gray-light');
+  background-color: var(--palette--gray-light);
 }
 
 // Table Data
@@ -75,7 +75,7 @@
   padding: hb-calculate-rems(16px);
   vertical-align: top;
   border: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray-medium');
+  border-color: var(--palette--gray-medium);
 
   a {
     &:hover,

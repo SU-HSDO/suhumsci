@@ -87,7 +87,8 @@ jobs:
     strategy:
       fail-fast: false
       # matrix: ${{fromJSON(needs.set_sites.outputs.matrix)}}
-      matrix: [gus_humsci,facultyaffairs_humsci]
+      matrix:
+        site: [gus_humsci,facultyaffairs_humsci]
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:latest

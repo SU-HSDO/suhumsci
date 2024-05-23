@@ -7,7 +7,7 @@ index cbe8344..eff3683 100644
      }
      if (!UrlHelper::isValid($url, TRUE)) {
 -      throw new InvalidExpressionException('The URL is invalid.');
-+      throw new InvalidExpressionException('The URL is invalid: ' . $url');
++      throw new InvalidExpressionException('The URL is invalid: ' . $url);
      }
      if ($this->wildCardCheck && (strpos($url, '*') !== FALSE)) {
        throw new InvalidExpressionException('URL invalidations should not contain asterisks!');

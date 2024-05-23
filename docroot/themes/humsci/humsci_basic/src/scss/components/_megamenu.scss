@@ -14,11 +14,11 @@ $nested-padding: hb-calculate-rems(22px);
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
-  @include hb-pairing-color("color", "tertiary");
+  color: var(--palette--tertiary);
 
   &:hover:not(.is-active),
   &:focus {
-    @include hb-pairing-color("color", "tertiary-darken-20");
+    color: var(--palette--tertiary-darken-20);
   }
 }
 
@@ -71,7 +71,7 @@ $hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
 $hb-link-bar-link: 100%;
 
 @mixin hb-link-bar($width: $hb-link-bar-link) {
-  @include hb-pairing-color("background-color", "secondary");
+  background-color: var(--palette--secondary);
 
   content: "";
   display: block;
@@ -87,7 +87,7 @@ $hb-link-bar-link: 100%;
 }
 
 @mixin hb-active-border {
-  @include hb-pairing-color("border-color", "secondary");
+  border-color: var(--palette--secondary);
 
   border-width: hb-calculate-rems(6px);
   border-style: solid;
@@ -265,7 +265,7 @@ $hb-link-bar-link: 100%;
       }
 
       @include hb-traditional {
-        @include hb-pairing-color("background-color", "tertiary-highlight");
+        background-color: var(--palette--tertiary-highlight);
       }
 
       @include grid-media-min("lg") {
@@ -638,10 +638,10 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__no-link {
-      @include hb-pairing-color("color", "tertiary");
-
+      color: var(--palette--tertiary);
+      
       &:hover {
-        @include hb-pairing-color("color", "tertiary");
+        color: var(--palette--tertiary);
 
         background: none;
 

@@ -73,7 +73,7 @@
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
-      @include hb-pairing-color('background-color', 'secondary');
+      background-color: var(--palette--secondary);
 
       @include grid-media-min('sm') {
         margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
@@ -83,7 +83,7 @@
     @include hb-traditional {
       padding: hb-calculate-rems(16px);
       color: var(--palette--white);
-      @include hb-pairing-color('background-color', 'primary');
+      background-color: var(--palette--primary);
       margin: 0;
     }
 
@@ -91,11 +91,11 @@
     .hb-vertical-linked-card:focus &,
     .hb-vertical-linked-card.is-focused & {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('background-color', 'secondary-darken-12');
+        background-color: var(--palette--secondary-darken-12);
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('background-color', 'primary-dark');
+        background-color: var(--palette--primary-dark);
         text-decoration: underline;
       }
     }
@@ -153,7 +153,7 @@
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('background-color', 'tertiary-reversed');
+      background-color: var(--palette--tertiary-reversed);
       padding: hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(28px);
     }
 

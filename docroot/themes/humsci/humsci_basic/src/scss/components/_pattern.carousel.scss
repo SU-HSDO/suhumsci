@@ -47,7 +47,7 @@
         display: block;
         height: 100%;
         z-index: $hb-z-index-hero1-overlay;
-        @include hb-pairing-color('background-color', 'secondary');
+        background-color: var(--palette--secondary);
 
         @include grid-media-min('md') {
           grid-column-start: 1;
@@ -125,7 +125,7 @@
 
     &__text {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        background-color: var(--palette--primary-hero-overlay);
         padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
         width: auto !important;
@@ -202,7 +202,7 @@
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        background-color: var(--palette--primary-hero-overlay);
         position: relative;
         margin: hb-spacing-width() 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         align-self: stretch;

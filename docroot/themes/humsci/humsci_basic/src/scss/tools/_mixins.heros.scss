@@ -55,7 +55,7 @@
   @include hb-hero-full-width();
 
   &::before {
-    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    background-color: var(--palette--primary-hero-overlay);
     content: "";
     position: absolute;
     top: 0;
@@ -124,7 +124,7 @@
   ul {
     li {
       &::before {
-        @include hb-pairing-color('background-color', 'secondary');
+        background-color: var(--palette--secondary);
       }
     }
   }
@@ -132,7 +132,7 @@
   ol {
     li {
       &::before {
-        @include hb-pairing-color('color', 'secondary-active');
+        color: var(--palette--secondary-active);
       }
     }
   }
@@ -187,12 +187,12 @@
 // hero link
 @mixin hb-hero-anchor-link {
   @include hb-description;
-  @include hb-pairing-color('color', 'tertiary-reversed');
+  color: var(--palette--tertiary-reversed);
   background-image: none;
 
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'tertiary-highlight');
+    color: var(--palette--tertiary-highlight);
   }
 }
 
@@ -234,29 +234,29 @@
   @include hb-themes(('colorful', 'airy')) {
     background-color: transparent;
     border-radius: hb-calculate-rems(42px);
-    @include hb-pairing-color('color', $button-color);
-    @include hb-pairing-color('border-color', $button-color);
+    color: var(--palette--#{$button-color});
+    border-color: var(--palette--#{$button-color});
     border-width: 3px;
     border-style: solid;
-
+    
     &:hover,
     &:focus {
-      @include hb-pairing-color('border-color', $button-color-hover);
-      @include hb-pairing-color('color', $button-color-hover);
+      border-color: var(--palette--#{$button-color-hover});
+      color: var(--palette--#{$button-color-hover});
     }
   }
-
+  
   @include hb-traditional {
-    @include hb-pairing-color('background-color', $button-color);
+    background-color: var(--palette--#{$button-color});
     color: var(--palette--white);
     border-color: transparent;
     border-width: 3px;
     border-style: solid;
-
+    
     &:hover,
     &:focus {
       background-color: transparent;
-      @include hb-pairing-color('border-color', $button-color);
+      border-color: var(--palette--#{$button-color});
     }
 
     &:focus {

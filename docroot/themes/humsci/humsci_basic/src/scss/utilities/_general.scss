@@ -159,7 +159,7 @@
 details.hb-accordion-secondary {
   // Overriding _details.scss
   summary:not(.hb-timeline-item__summary) {
-    @include hb-pairing-color("border-color", "primary");
+    border-color: var(--palette--primary);
     color: var(--palette--black);
 
     border-width: hb-calculate-rems(2px);
@@ -170,7 +170,7 @@ details.hb-accordion-secondary {
     }
 
     &:hover {
-      @include hb-pairing-color("color", "secondary");
+      color: var(--palette--secondary);
 
       &::after {
         @include hb-menu-minus-icon("secondary");
@@ -179,8 +179,7 @@ details.hb-accordion-secondary {
   }
 
   &[open] {
-    @include hb-pairing-color("border-color", "primary");
-
+    border-color: var(--palette--primary);
     border-width: hb-calculate-rems(2px);
     border-bottom: none;
 
@@ -194,8 +193,7 @@ details.hb-accordion-secondary {
     }
 
     .revealed-details {
-      @include hb-pairing-color("border-color", "primary");
-
+      border-color: var(--palette--primary);
       border-width: hb-calculate-rems(2px);
       border-top: none;
     }
@@ -207,11 +205,11 @@ details.hb-accordion-light {
   border: none;
 
   @include hb-colorful {
-    @include hb-pairing-color("background-color", "secondary-highlight");
+    background-color: var(--palette--secondary-highlight);
   }
-
+  
   @include hb-traditional {
-    @include hb-pairing-color("background-color", "tertiary-highlight");
+    background-color: var(--palette--tertiary-highlight);
   }
 
   // Overriding _details.scss
@@ -221,7 +219,7 @@ details.hb-accordion-light {
 
     color: var(--palette--black);
     border-color: transparent;
-    @include hb-pairing-color('border-left-color', 'secondary');
+    border-left-color: var(--palette--secondary);
 
     @include hb-colorful {
       border-width: hb-calculate-rems(2px);
@@ -239,15 +237,14 @@ details.hb-accordion-light {
 
     &:hover,
     &:focus {
-      @include hb-pairing-color("color", "primary");
+      color: var(--palette--primary);
     }
   }
 
   &[open] {
     summary:not(.hb-timeline-item__summary) {
-      background: transparent;
-      
-      @include hb-pairing-color('border-color', 'secondary');
+      background: transparent;      
+      border-color: var(--palette--secondary);
 
       &::after {
         @include hb-colorful {
@@ -264,7 +261,7 @@ details.hb-accordion-light {
         border: none;
         border-left: $hb-thin-border;
         border-width: hb-calculate-rems(2px);
-        @include hb-pairing-color('border-left-color', 'secondary');
+        border-left-color: var(--palette--secondary);
       }
 
       @include hb-traditional {
@@ -272,7 +269,7 @@ details.hb-accordion-light {
 
         border: $hb-thin-border;
         border-top: none;
-        @include hb-pairing-color('border-color', 'secondary');
+        border-color: var(--palette--secondary);
       }
     }
   }

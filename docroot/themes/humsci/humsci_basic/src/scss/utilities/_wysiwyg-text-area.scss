@@ -195,7 +195,7 @@ $credits: (
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'primary');
+      color: var(--palette--primary);
 
       .hb-dark-pattern & {
         color: var(--palette--gray-light);
@@ -203,7 +203,7 @@ $credits: (
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'primary');
+      color: var(--palette--primary);
     }
 
     li & {
@@ -333,7 +333,7 @@ a[href*="//"].hs-external-link,
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
 
       &::after {
         @include hb-icon-background('ext-link', 'tertiary-highlight');
@@ -351,7 +351,7 @@ a.hs-private-link,
 a.private-link,
 .private-link a {
   @include hb-link--inline;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   @include hb-themes(('colorful', 'airy')) {
     @include hb-link-background-image(true, 18px, left, $hb-colorful-default, $hc-colorful-pairings);

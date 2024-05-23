@@ -9,8 +9,8 @@ summary:not(.hb-timeline-item__summary) {
   font-weight: hb-theme-font-weight('semibold');
   cursor: pointer;
   border: $hb-thin-border;
-  @include hb-pairing-color('border-color', 'secondary');
-  @include hb-pairing-color('background-color', 'secondary');
+  border-color: var(--palette--secondary);
+  background-color: var(--palette--secondary);
   color: var(--palette--white);
 
   // This is to position everything correctly in browsers that do not support the
@@ -49,8 +49,8 @@ summary:not(.hb-timeline-item__summary) {
 
   &:hover,
   details[open] & {
-    @include hb-pairing-color('background-color', 'secondary-darken-12');
-    @include hb-pairing-color('border-color', 'secondary-darken-12');
+    background-color: var(--palette--secondary-darken-12);
+    border-color: var(--palette--secondary-darken-12);
   }
 
   &:focus,

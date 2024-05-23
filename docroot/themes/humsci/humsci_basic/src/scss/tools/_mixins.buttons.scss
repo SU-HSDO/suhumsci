@@ -53,18 +53,18 @@
 @mixin hb-button {
   @include hb-button-base;
   color: var(--palette--white);
-  @include hb-pairing-color('background-color', 'secondary');
-  @include hb-pairing-color('border-color', 'secondary');
-
+  background-color: var(--palette--secondary);
+  border-color: var(--palette--secondary);
+  
   &:hover {
-    @include hb-pairing-color('background-color', 'secondary-darken-12');
-    @include hb-pairing-color('border-color', 'secondary-darken-12');
+    background-color: var(--palette--secondary-darken-12);
+    border-color: var(--palette--secondary-darken-12);
     color: var(--palette--white);
   }
-
+  
   &:active,
   &:focus {
-    @include hb-pairing-color('background-color', 'secondary');
+    background-color: var(--palette--secondary);
     border-color: var(--palette--white);
     color: var(--palette--white);
   }
@@ -87,12 +87,12 @@
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      @include hb-pairing-color('background-color', 'secondary-darken-12');
-      @include hb-pairing-color('border-color', 'secondary-darken-12');
+      background-color: var(--palette--secondary-darken-12);
+      border-color: var(--palette--secondary-darken-12);
 
       &:hover {
-        @include hb-pairing-color('background-color', 'primary-dark');
-        @include hb-pairing-color('border-color', 'primary-dark');
+        background-color: var(--palette--primary-dark);
+        border-color: var(--palette--primary-dark);
       }
     }
   }
@@ -114,19 +114,19 @@
 
 @mixin hb-secondary-button {
   @include hb-button-base;
-  @include hb-pairing-color('border-color', 'secondary');
-  @include hb-pairing-color('color', 'secondary');
-
+  border-color: var(--palette--secondary);
+  color: var(--palette--secondary);
+  
   &:hover {
     color: var(--palette--white);
-    @include hb-pairing-color('background-color', 'secondary');
-    @include hb-pairing-color('border-color', 'secondary');
+    background-color: var(--palette--secondary);
+    border-color: var(--palette--secondary);
   }
 
   &:active,
   &:focus {
     background-color: transparent;
-    @include hb-pairing-color('color', 'secondary');
+    color: var(--palette--secondary);
     box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-global-color('white', $hc-colorful-globals), 0 0 0 hb-calculate-rems(4px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
     box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-global-color('white', $hc-colorful-globals), 0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
   }
@@ -136,7 +136,7 @@
 
     &:hover {
       color: var(--palette--white);
-      @include hb-pairing-color('background-color', 'secondary');
+      background-color: var(--palette--secondary);
     }
 
     &:active,
@@ -160,38 +160,38 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'tertiary-reversed');
-      @include hb-pairing-color('border-color', 'tertiary-reversed');
-
+      color: var(--palette--tertiary-reversed);
+      border-color: var(--palette--tertiary-reversed);
+      
       &:hover,
       &:active,
       &:focus {
-        @include hb-pairing-color('color', 'secondary-highlight');
-        @include hb-pairing-color('border-color', 'secondary-highlight');
+        color: var(--palette--secondary-highlight);
+        border-color: var(--palette--secondary-highlight);
       }
     }
-
+    
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
-      @include hb-pairing-color('border-color', 'tertiary-highlight');
-
+      color: var(--palette--tertiary-highlight);
+      border-color: var(--palette--tertiary-highlight);
+      
       &:hover,
       &:active,
       &:focus {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
-        @include hb-pairing-color('border-color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
+        border-color: var(--palette--tertiary-highlight-darken-10);
       }
     }
   }
-
+  
   @include hb-colorful {
     .hc-pairing-ocean & {
-      @include hb-pairing-color('border-color', 'secondary-darken-12');
-      @include hb-pairing-color('color', 'secondary-darken-12');
-
+      border-color: var(--palette--secondary-darken-12);
+      color: var(--palette--secondary-darken-12);
+      
       &:hover {
         color: var(--palette--white);
-        @include hb-pairing-color('background-color', 'secondary-darken-12');
+        background-color: var(--palette--secondary-darken-12);
       }
     }
   }
@@ -201,23 +201,21 @@
   background-color: transparent;
   border-color: transparent;
   border-radius: 0;
-
   line-height: 1;
   min-height: auto;
-
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-pairing-color('color', 'tertiary-reversed');
+    color: var(--palette--tertiary-reversed);
   }
 
   &:hover {
-    @include hb-pairing-color('color', 'secondary-darken-12');
+    color: var(--palette--secondary-darken-12);
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
     }
   }
 
@@ -233,19 +231,19 @@
   @include hb-themes(('colorful', 'airy')) {
     padding: hb-calculate-rems(4px) 0;
     border-bottom: $hb-thin-border;
-    @include hb-pairing-color('border-bottom-color', 'secondary');
-
+    border-bottom-color: var(--palette--secondary);
+    
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      @include hb-pairing-color('border-bottom-color', 'tertiary-reversed');
+      border-bottom-color: var(--palette--tertiary-reversed);
     }
-
+    
     &:hover {
-      @include hb-pairing-color('border-bottom-color', 'secondary-darken-12');
-
+      border-bottom-color: var(--palette--secondary-darken-12);
+      
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
+        border-bottom-color: var(--palette--tertiary-highlight);
       }
     }
   }
@@ -259,20 +257,19 @@
 
     &:focus,
     &:active {
-      @include hb-pairing-color('border-color', 'secondary');
+      border-color: var(--palette--secondary);
       box-shadow: none;
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      @include hb-pairing-color('color', 'secondary-darken-12');
-      @include hb-pairing-color('border-bottom-color', 'secondary-darken-12');
+      color: var(--palette--secondary-darken-12);
+      border-bottom-color: var(--palette--secondary-darken-12);
 
       &:hover {
-        @include hb-pairing-color('color', 'primary-dark');
-        @include hb-pairing-color('border-bottom-color', 'primary-dark');
-
+        color: var(--palette--primary-dark);
+        border-bottom-color: var(--palette--primary-dark);
         background-color: transparent;
         border-top-color: transparent;
         border-left-color: transparent;

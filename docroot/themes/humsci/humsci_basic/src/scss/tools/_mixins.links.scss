@@ -13,16 +13,16 @@
   @include hb-themes(('colorful', 'airy')) {
     &:hover,
     &:focus {
-      @include hb-pairing-color('border-bottom-color', $border-color);
+      border-bottom-color: var(--palette--#{$border-color});
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-colorful-default, $hc-colorful-pairings);
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
     }
   }
-
+  
   @include hb-traditional {
     &:hover,
     &:focus {
-      @include hb-pairing-color('border-bottom-color', $border-color);
+      border-bottom-color: var(--palette--#{$border-color});
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-traditional-default, $ht-traditional-pairings);
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
     }
@@ -47,7 +47,7 @@
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
+        border-bottom-color: var(--palette--tertiary-highlight);
         box-shadow: none;
         background-position-y: bottom;
       }
@@ -63,17 +63,17 @@
     &:focus {
       color: var(--palette--black);
       background-image: none;
-      @include hb-pairing-color('text-decoration-color', 'primary');
+      text-decoration-color: var(--palette--primary);
     }
   }
 }
 
 @mixin hb-heading-link-color {
-  @include hb-pairing-color('color', 'tertiary');
-
+  color: var(--palette--tertiary);
+  
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'tertiary-darken-20');
+    color: var(--palette--tertiary-darken-20);
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -81,12 +81,12 @@
   }
 
   @include hb-traditional {
-    @include hb-pairing-color('text-decoration-color', 'tertiary');
+    text-decoration-color: var(--palette--tertiary);
     transition: hb-transition(all); // set the color and text-decoration-color to transition together on hover
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('text-decoration-color', 'tertiary-darken-20');
+      text-decoration-color: var(--palette--tertiary-darken-20);
     }
 
     .hb-dark-inversion & {
@@ -99,11 +99,11 @@
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px, $icon-position: right) {
   // no font size by default
-  @include hb-pairing-color('color', 'tertiary');
-
+  color: var(--palette--tertiary);
+  
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'tertiary-darken-20');
+    color: var(--palette--tertiary-darken-20);
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -118,7 +118,7 @@
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
+        border-bottom-color: var(--palette--tertiary-highlight);
         box-shadow: none;
         background-position-y: bottom;
       }
@@ -159,11 +159,11 @@
     .hb-timeline-item__heading &,
     .views-field:not(.views-field-title):not(.views-field-edit-node):not(.views-field-field-hs-event-series):not(.views-field-field-hs-news-categories):not(.views-field-field-hs-person-research) & {
       .ht-pairing-warbler & {
-        @include hb-pairing-color('color', 'secondary');
-
+        color: var(--palette--secondary);
+        
         &:hover,
         &:focus {
-          @include hb-pairing-color('color', 'tertiary');
+          color: var(--palette--tertiary);
         }
       }
     }
@@ -174,7 +174,7 @@
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('color', 'tertiary-darken-20');
+      color: var(--palette--tertiary-darken-20);
       background-image: none;
     }
   }
@@ -188,32 +188,32 @@
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'tertiary-reversed');
-      @include hb-pairing-color('border-bottom-color', 'tertiary-reversed');
+      color: var(--palette--tertiary-reversed);
+      border-bottom-color: var(--palette--tertiary-reversed);
     }
-
+    
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
     }
-
+    
     &:hover,
     &:focus {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('color', 'tertiary-highlight');
+        color: var(--palette--tertiary-highlight);
         @include hb-ext-icon-color('tertiary-highlight');
       }
-
+      
       @include hb-traditional {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
+        text-decoration-color: var(--palette--tertiary-highlight-darken-10);
         @include hb-ext-icon-color('tertiary-highlight-darken-10');
-        @include hb-pairing-color('text-decoration-color', 'tertiary-highlight-darken-10');
       }
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean .hb-well & {
-      @include hb-pairing-color('color', 'primary');
+      color: var(--palette--primary);
     }
   }
 }
@@ -228,7 +228,7 @@
   border: none;
   background: none;
   padding: 0;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   &::after {
     content: '';
@@ -254,7 +254,7 @@
 
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'secondary-darken-12');
+    color: var(--palette--secondary-darken-12);
 
     background-image: none;
     background-color: transparent;
@@ -285,10 +285,10 @@
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      @include hb-pairing-color('color', 'secondary-darken-12');
+      color: var(--palette--secondary-darken-12);
 
       &:hover {
-        @include hb-pairing-color('color', 'primary-dark');
+        color: var(--palette--primary-dark);
       }
     }
   }
@@ -312,7 +312,7 @@
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'tertiary-reversed');
+      color: var(--palette--tertiary-reversed);
 
       &::after {
         @include hb-icon-link-arrow('tertiary-reversed');
@@ -321,16 +321,16 @@
 
       &:hover,
       &:focus {
-        @include hb-pairing-color('color', 'secondary-highlight');
-
+        color: var(--palette--secondary-highlight);
+        
         .hc-pairing-ocean & {
-          @include hb-pairing-color('color', 'tertiary-highlight');
+          color: var(--palette--tertiary-highlight);
         }
-
+        
         &::after {
           @include hb-icon-link-arrow('secondary-highlight');
           background-size: 85%;
-
+          
           .hc-pairing-ocean & {
             @include hb-icon-link-arrow('tertiary-highlight');
             background-size: 85%;
@@ -338,18 +338,18 @@
         }
       }
     }
-
+    
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
-
+      color: var(--palette--tertiary-highlight);
+      
       &::after {
         @include hb-icon-link-arrow('tertiary-highlight');
         background-size: 85%;
       }
-
+      
       &:hover,
       &:focus {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
 
         &::after {
           @include hb-icon-link-arrow('tertiary-highlight-darken-10');
@@ -427,7 +427,7 @@
 //PDF Icon Link
 @mixin hb-pdf-link {
   @include hb-link--inline;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   &::before {
     content: "\f1c1";
@@ -465,7 +465,7 @@
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
     }
   }
 
@@ -477,7 +477,7 @@
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
       }
     }
   }
@@ -493,7 +493,7 @@
 //File Icon Link
 @mixin hb-file-link {
   @include hb-link--inline;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
@@ -531,7 +531,7 @@
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
     }
   }
 
@@ -543,7 +543,7 @@
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
       }
     }
   }

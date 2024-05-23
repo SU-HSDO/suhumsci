@@ -224,7 +224,7 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
   font-style: italic;
@@ -299,15 +299,15 @@
   font-size: hb-calculate-rems(16px);
   font-style: normal;
   text-transform: inherit;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   .hb-well {
-    @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
+    color: var(--palette--secondary-darken-12) !important;
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      @include hb-pairing-color('color', 'secondary-darken-12');
+      color: var(--palette--secondary-darken-12);
     }
   }
 }

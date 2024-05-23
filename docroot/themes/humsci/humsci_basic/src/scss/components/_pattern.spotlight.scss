@@ -1,6 +1,6 @@
 .hb-spotlight {
   padding: hb-spacing-width('md') 0;
-  @include hb-pairing-color('background-color', 'spotlight');
+  background-color: var(--palette--spotlight);
 
   &--background-gray {
     background-color: var(--palette--gray-medium);
@@ -10,7 +10,7 @@
   // Note this is an extraordinary use case.
   // Targeting styles per color pairing should not become standard practice.
   .hc-pairing-lake & {
-    @include hb-pairing-color('background-color', 'secondary-highlight');
+    background-color: var(--palette--secondary-highlight);
   }
 
   @include grid-media-min('md') {
@@ -88,18 +88,12 @@
             // Note this is an extraordinary use case.
             // Targeting styles per color pairing should not become standard practice.
             .hc-pairing-ocean & {
-              @include hb-pairing-color('color', 'secondary-darken-12');
-              @include hb-pairing-color('border-color', 'secondary-darken-12');
-
+              color: var(--palette--secondary-darken-12);
+              border-color: var(--palette--secondary-darken-12);
+              
               &:hover {
-                @include hb-pairing-color(
-                  'background-color',
-                  'secondary-darken-12'
-                );
-                @include hb-pairing-color(
-                  'border-color',
-                  'secondary-darken-12'
-                );
+                background-color: var(--palette--secondary-darken-12);
+                border-color: var(--palette--secondary-darken-12);
                 color: var(--palette--white);
               }
             }

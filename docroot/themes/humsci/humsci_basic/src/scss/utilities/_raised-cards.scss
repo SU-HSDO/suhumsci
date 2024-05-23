@@ -132,7 +132,7 @@
   .hb-card--date-stacked {
     @include hb-colorful {
       border-bottom: 3px solid;
-      @include hb-pairing-color('border-color', 'secondary');
+      border-color: var(--palette--secondary);
     }
   }
 }
@@ -148,11 +148,11 @@
   }
 
   a {
-    @include hb-pairing-color('color', 'tertiary');
-
+    color: var(--palette--tertiary);
+    
     &:hover,
     &:focus {
-      @include hb-pairing-color('color', 'tertiary-darken-20');
+      color: var(--palette--tertiary-darken-20);
     }
   }
 
@@ -171,18 +171,18 @@
 
     &-day .field-content {
       @include hb-traditional {
-        @include hb-pairing-color('color', 'primary');
+        color: var(--palette--primary);
       }
     }
   }
 
   &__title a {
     @include hb-themes(('airy', 'colorful')) {
-      @include hb-pairing-color('border-bottom-color', 'tertiary');
+      border-bottom-color: var(--palette--tertiary);
 
       &:hover,
       &:focus {
-        @include hb-pairing-color('border-bottom-color', 'tertiary-darken-20', 'important');
+        border-bottom-color: var(--palette--tertiary-darken-20) !important;
       }
     }
 
@@ -192,7 +192,7 @@
 
       &:hover,
       &:focus {
-        @include hb-pairing-color('text-decoration-color', 'tertiary-darken-20');
+        text-decoration-color: var(--palette--tertiary-darken-20);
       }
     }
   }

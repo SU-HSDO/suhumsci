@@ -32,18 +32,18 @@
 // Link style for headings
 @mixin hb-link {
   // no font size by default
-  @include hb-global-color('color', 'black');
+  color: var(--palette--black);
   font-weight: hb-theme-font-weight(semibold);
 
   @include hb-themes(('colorful', 'airy')) {
     border-bottom-width: 2px;
     border-bottom-style: solid;
-    @include hb-global-color('border-bottom-color', 'gray-medium');
+    border-bottom-color: var(--palette--gray-medium);
     @include hb-link--hover-style('tertiary-highlight', 'tertiary-highlight-darken-10');
 
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'black');
+      color: var(--palette--black);
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {

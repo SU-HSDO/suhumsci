@@ -268,7 +268,7 @@
 @mixin hb-divider {
   width: 100%;
   border-bottom: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray');
+  border-color: var(--palette--gray);
 }
 
 // Used for link typography mixins across all themes
@@ -296,7 +296,7 @@
 
 @mixin hb-well {
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-global-color('background-color', 'gray-light');
+    background-color: var(--palette--gray-light);
   }
 
   @include hb-traditional {
@@ -305,7 +305,7 @@
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
   }
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);

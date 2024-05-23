@@ -48,7 +48,7 @@
 
     // date stacked vertical UI pattern item
     &-item {
-      @include hb-global-color('color', 'gray-dark');
+      color: var(--palette--gray-dark);
       font-size: hb-calculate-rems(16px);
       @include grid-media-min('sm') {
         display: flex;
@@ -67,7 +67,7 @@
           content: '';
           margin: 0 hb-calculate-rems(8px);
           border-left: $hb-thin-border;
-          @include hb-global-color('border-color', 'gray-dark');
+          border-color: var(--palette--gray-dark);
 
           // from grid--col 3 and above we won't display pipes
           .hb-grid--cols-10 &,
@@ -85,7 +85,7 @@
 
           .hb-dark-pattern &,
           .hb-dark-inversion .views-element-container & {
-            @include hb-global-color('border-color', 'white');
+            border-color: var(--palette--white);
           }
         }
       }
@@ -194,7 +194,7 @@
   }
 
   &__location {
-    @include hb-global-color('color', 'gray-dark');
+    color: var(--palette--gray-dark);
     font-size: hb-calculate-rems(14px);
     margin-bottom: hb-spacing-width('xxs');
 
@@ -204,7 +204,7 @@
   }
 
   &__highlighted {
-    @include hb-global-color('color', 'gray-dark');
+    color: var(--palette--gray-dark);
 
     @include hb-themes(('colorful', 'airy')) {
       font-size: hb-calculate-rems(14px);
@@ -322,7 +322,7 @@
       width: hb-calculate-rems(110px);
       height: hb-calculate-rems(110px);
       @include hb-pairing-color('background-color', 'secondary');
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
       padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
       bottom: hb-calculate-rems(18px);
       left: hb-calculate-rems(-10px);
@@ -337,7 +337,7 @@
     @include hb-traditional {
       display: inline-block;
       min-width: hb-calculate-rems(100px);
-      @include hb-global-color('background-color', 'white');
+      background-color: var(--palette--white);
       padding: 0;
       top: 0;
       left: 0;
@@ -367,7 +367,7 @@
 
     @include hb-traditional {
       @include hb-pairing-color('background-color', 'primary');
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
       font-size: hb-calculate-rems(14px);
       padding: hb-calculate-rems(10px);
       width: 100%;
@@ -385,7 +385,7 @@
     @include hb-traditional {
       border: $hb-thin-border;
       border-top-width: 0;
-      @include hb-global-color('border-color', 'gray-medium');
+      border-color: var(--palette--gray-medium);
       @include hb-pairing-color('color', 'primary');
       font-size: hb-calculate-rems(36px);
       padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px);

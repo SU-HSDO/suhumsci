@@ -112,7 +112,7 @@
   align-self: center;
   padding: hb-calculate-rems(54px) 0;
   z-index: $hb-z-index-hero1-overlay;
-  @include hb-global-color('color', 'white');
+  color: var(--palette--white);
   @include hb-page-width;
   @include hb-hero-text-animation;
 
@@ -248,7 +248,7 @@
 
   @include hb-traditional {
     @include hb-pairing-color('background-color', $button-color);
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     border-color: transparent;
     border-width: 3px;
     border-style: solid;
@@ -261,7 +261,7 @@
 
     &:focus {
       outline: hb-calculate-rems(2px) solid;
-      @include hb-global-color('outline-color', 'white');
+      outline-color: var(--palette--white);
       box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--primary);
     }

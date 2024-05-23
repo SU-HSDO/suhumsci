@@ -14,7 +14,7 @@
     // overlap issues.
     margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
 
     $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
     $hb-bg--pairing: var(--palette--primary-dark);
@@ -82,7 +82,7 @@
 
     @include hb-traditional {
       padding: hb-calculate-rems(16px);
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
       @include hb-pairing-color('background-color', 'primary');
       margin: 0;
     }
@@ -132,12 +132,12 @@
 
   &__title__link,
   &__title__link.ext {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     text-decoration: none;
 
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
 
       background-image: none;
     }
@@ -170,7 +170,7 @@
     a.hs-pdf-link,
     a.hs-file-link {
       @include hb-traditional {
-        @include hb-global-color('color', 'black');
+        color: var(--palette--black);
       }
 
       &:hover,
@@ -178,11 +178,11 @@
         background-image: none;
 
         @include hb-traditional {
-          @include hb-global-color('color', 'gray-dark');
+          color: var(--palette--gray-dark);
         }
 
         @include hb-colorful {
-          @include hb-global-color('color', 'gray-medium');
+          color: var(--palette--gray-medium);
         }
       }
     }

@@ -52,21 +52,21 @@
 
 @mixin hb-button {
   @include hb-button-base;
-  @include hb-global-color('color', 'white');
+  color: var(--palette--white);
   @include hb-pairing-color('background-color', 'secondary');
   @include hb-pairing-color('border-color', 'secondary');
 
   &:hover {
     @include hb-pairing-color('background-color', 'secondary-darken-12');
     @include hb-pairing-color('border-color', 'secondary-darken-12');
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
   }
 
   &:active,
   &:focus {
     @include hb-pairing-color('background-color', 'secondary');
-    @include hb-global-color('border-color', 'white');
-    @include hb-global-color('color', 'white');
+    border-color: var(--palette--white);
+    color: var(--palette--white);
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -118,7 +118,7 @@
   @include hb-pairing-color('color', 'secondary');
 
   &:hover {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     @include hb-pairing-color('background-color', 'secondary');
     @include hb-pairing-color('border-color', 'secondary');
   }
@@ -135,14 +135,14 @@
     border-width: hb-calculate-rems(1px);
 
     &:hover {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
       @include hb-pairing-color('background-color', 'secondary');
     }
 
     &:active,
     &:focus {
       outline: hb-calculate-rems(2px) solid;
-      @include hb-global-color('outline-color', 'white');
+      outline-color: var(--palette--white);
       box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
       box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--secondary-active);
     }
@@ -190,7 +190,7 @@
       @include hb-pairing-color('color', 'secondary-darken-12');
 
       &:hover {
-        @include hb-global-color('color', 'white');
+        color: var(--palette--white);
         @include hb-pairing-color('background-color', 'secondary-darken-12');
       }
     }

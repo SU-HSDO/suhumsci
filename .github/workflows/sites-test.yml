@@ -55,37 +55,38 @@ jobs:
       - name: Codeception Tests
         run: |
           blt tests:phpunit:coverage --no-interaction
-  set_sites:
-    runs-on: ubuntu-latest
-    container:
-      image: pookmish/drupal8ci:latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Restore Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            vendor
-            docroot/core
-            docroot/libraries
-            docroot/modules/contrib
-          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
-            1.x-${{ hashFiles('blt/blt.yml') }}-
-      - id: set-matrix
-        run: |
-          composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          SITES=$(echo -n "$(blt blt:config:get multisites | shuf -n 10)" | jq -R -s -c 'split("\n") | sort')
-          echo "matrix={\"site\": $SITES}" >> $GITHUB_OUTPUT
+  # set_sites:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: pookmish/drupal8ci:latest
+  #   outputs:
+  #     matrix: ${{ steps.set-matrix.outputs.matrix }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Restore Cache
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: |
+  #           vendor
+  #           docroot/core
+  #           docroot/libraries
+  #           docroot/modules/contrib
+  #         key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+  #         restore-keys: |
+  #           1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+  #           1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+  #           1.x-${{ hashFiles('blt/blt.yml') }}-
+  #     - id: set-matrix
+  #       run: |
+  #         composer install -n &&
+  #         vendor/bin/blt blt:telemetry:disable --no-interaction &&
+  #         SITES=$(echo -n "$(blt blt:config:get multisites | shuf -n 10)" | jq -R -s -c 'split("\n") | sort')
+  #         echo "matrix={\"site\": $SITES}" >> $GITHUB_OUTPUT
   test_existing_site:
-    needs: set_sites
+    # needs: set_sites
     strategy:
       fail-fast: false
+      # matrix: ${{fromJSON(needs.set_sites.outputs.matrix)}}
       matrix: [gus_humsci,facultyaffairs_humsci]
     runs-on: ubuntu-latest
     container:

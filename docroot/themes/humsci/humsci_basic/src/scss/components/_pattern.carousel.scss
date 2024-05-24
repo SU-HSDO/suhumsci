@@ -480,8 +480,8 @@
 
           // Use box shadow property to improve visual accessibiity of slick dots.
           @include hb-themes(('airy', 'colorful')) {
-            $light-shadow: hb-get-global-color('gray-light', $hc-colorful-globals);
-            $dark-shadow: hb-get-global-color('black', $hc-colorful-globals);
+            $light-shadow: var(--palette--gray-light);
+            $dark-shadow: var(--palette--gray-black);
 
             // Fallback colors
             $accent-shadow: hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
@@ -493,8 +493,8 @@
           }
 
           @include hb-traditional {
-            $light-shadow: hb-get-global-color('gray-light', $ht-traditional-globals);
-            $dark-shadow: hb-get-global-color('black', $ht-traditional-globals);
+            $light-shadow: var(--palette--gray-light);
+            $dark-shadow: var(--palette--black);
 
             // Fallback accent color
             $accent-shadow: hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);

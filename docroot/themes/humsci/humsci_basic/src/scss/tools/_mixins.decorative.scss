@@ -88,15 +88,15 @@
 
 @mixin hb-raised-cards-shadow {
   @include hb-traditional {
-    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) hb-get-global-color('gray-medium', $ht-traditional-globals);
+    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) var(--palette--gray-medium);
   }
 
   @include hb-themes(('airy', 'colorful')) {
-    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.12);
+    box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(var(--palette--black), 0.12);
   }
 }
 
 @mixin hb-raised-cards-shadow--alt {
-  box-shadow: 0 0 hb-calculate-rems(5px) rgba(hb-get-global-color('black', $hc-colorful-globals), 0.34);
-  border: 1px solid rgba(hb-get-global-color('black', $hc-colorful-globals), 0.22);
+  box-shadow: 0 0 hb-calculate-rems(5px) rgba(var(--palette--black), 0.34);
+  border: 1px solid rgba(var(--palette--black), 0.22);
 }

@@ -35,29 +35,14 @@ $px-only: true;
   "../tools/mixins.slick", "../tools/keyframes.text", "../utilities/fonts",
   "../utilities/font-awesome", "../utilities/general", "../utilities/lists",
   "../utilities/card-images", "../utilities/raised-cards", "../utilities/tables",
-  "../utilities/color-pairings", "../utilities/display-more-link-text",
-  "../utilities/dark-pattern", "../utilities/caption-credit",
-  "../utilities/media-embeds",
+  "../utilities/display-more-link-text", "../utilities/dark-pattern", 
+  "../utilities/caption-credit", "../utilities/media-embeds",
   // Here are the files we actually need for CKEditor
   "../admin/wysiwyg-editor",
   "../utilities/wysiwyg-text-area";
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
-:root {
-  // Colorful Theme
-  @include hb-pairing-custom-properties(
-    $hc-colorful-pairings,
-    $hb-colorful-default
-  );
-
-  // Traditional Theme
-  @include hb-pairing-custom-properties(
-    $ht-traditional-pairings,
-    $hb-traditional-default
-  );
-}
-
 .ck-editor__main {
   @include font-smoothing;
 

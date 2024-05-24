@@ -98,6 +98,7 @@ class RedirectEvents implements EventSubscriberInterface {
 
     $url = Url::fromUserInput('/' . trim($path, '/'), ['absolute' => TRUE])
       ->toString();
+    $url = self::fixPurgeUrl($url);
 
     $purgeInvalidationFactory = \Drupal::service('purge.invalidation.factory');
     $purgeProcessors = \Drupal::service('purge.processors');
@@ -112,6 +113,40 @@ class RedirectEvents implements EventSubscriberInterface {
     catch (\Exception $e) {
       \Drupal::logger('humsci_events_listeners')->error($e->getMessage());
     }
+  }
+
+  /**
+   * When running something via CLI, the domain might not be correct, fix it.
+   *
+   * @param string $url
+   *   Url string about to be purged.
+   *
+   * @return string
+   *   Corrected url.
+   */
+  protected static function fixPurgeUrl(string $url): string {
+    // When the url is updated while in the UI, the url will have a correct
+    // domain.
+    if (PHP_SAPI != 'cli') {
+      return $url;
+    }
+
+    // Make sure the url is https
+    $url = preg_replace('/^http:/', 'https:', $url);
+
+    // Get the domain so we can fix it up.
+    $domain = str_replace(parse_url($url, PHP_URL_PATH), '', $url);
+
+    // Use the domain set in the domain redirect for simplicity.
+    $canonical_domain = \Drupal::config('domain_301_redirect.settings')
+      ->get('domain');
+
+    if ($canonical_domain) {
+      return str_replace($domain, $canonical_domain, $url);
+    }
+    // If the domain redirect isn't configured, just fix it up as much as we
+    // can to avoid any errors.
+    return str_replace($domain, str_replace('_', '-', str_replace('__', '.', $domain)), $url);
   }
 
 }

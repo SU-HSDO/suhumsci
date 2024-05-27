@@ -1,75 +1,14 @@
 // This mixin could use some additional work to DRY up the code.
 @mixin hb-icon-background($icon, $color) {
   @include hb-themes(('colorful', 'airy')) {
-    @if (map-has-key($hc-colorful-globals, $color)) {
-      $icon-color: var(--palette--#{$color});
-
-      background-image: svg(hc-get-icons($icon, $icon-color));
-    } @else {
-      $icon-color: hb-get-pairing-color($color, $hb-colorful-default, $hc-colorful-pairings);
-      background-image: svg(hc-get-icons($icon, $icon-color));
-
-      .hc-pairing-ocean & {
-        $icon-color: hb-get-pairing-color($color, 'ocean', $hc-colorful-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .hc-pairing-mountain & {
-        $icon-color: hb-get-pairing-color($color, 'mountain', $hc-colorful-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .hc-pairing-cardinal & {
-        $icon-color: hb-get-pairing-color($color, 'cardinal', $hc-colorful-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .hc-pairing-lake & {
-        $icon-color: hb-get-pairing-color($color, 'lake', $hc-colorful-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .hc-pairing-canyon & {
-        $icon-color: hb-get-pairing-color($color, 'canyon', $hc-colorful-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .hc-pairing-cliff & {
-        $icon-color: hb-get-pairing-color($color, 'cliff', $hc-colorful-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-    }
+    $icon-color: var(--palette--#{$color});
+    background-image: svg(hc-get-icons($icon, $icon-color));
   }
 
   @include hb-traditional {
-    @if (map-has-key($ht-traditional-globals, $color)) {
-      $icon-color: var(--palette--#{$color});
+    $icon-color: var(--palette--#{$color});
+    background-image: svg(hc-get-icons($icon, $icon-color));
 
-      background-image: svg(hc-get-icons($icon, $icon-color));
-    } @else {
-      $icon-color: hb-get-pairing-color($color, $hb-traditional-default, $ht-traditional-pairings);
-      background-image: svg(hc-get-icons($icon, $icon-color));
-
-      .ht-pairing-cardinal & {
-        $icon-color: hb-get-pairing-color($color, 'cardinal', $ht-traditional-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .ht-pairing-bluejay & {
-        $icon-color: hb-get-pairing-color($color, 'bluejay', $ht-traditional-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .ht-pairing-warbler & {
-        $icon-color: hb-get-pairing-color($color, 'warbler', $ht-traditional-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-
-      .ht-pairing-firefinch & {
-        $icon-color: hb-get-pairing-color($color, 'firefinch', $ht-traditional-pairings);
-        background-image: svg(hc-get-icons($icon, $icon-color));
-      }
-    }
   }
 }
 

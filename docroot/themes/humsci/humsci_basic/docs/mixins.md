@@ -5,7 +5,6 @@ Sass Mixins allow us to write clean, consistent code by defining styles that can
 | Mixins |
 |--------|
 | Buttons |
-| [Color Pairings](#color-pairings) |
 | Forms |
 | [General](#general) |
 | Icons |
@@ -16,13 +15,6 @@ Sass Mixins allow us to write clean, consistent code by defining styles that can
 | Tables |
 | Text |
 | [Themes](#themes) |
-
-### Color Pairings
-
-| Mixin | Description | Example |
-|-------|-------------|---------|
-| @mixin hb-pairing-color($property, $color-swatch, $important: false) { } | Applies a specific pairing color to a class. Used in place of the css property that needs to have a color pairing. | <code>.example { @include hb-pairing-color('background-color', 'primary', $important: true); }</code> |
-| @mixin hb-pairing-custom-properties($theme-list, $color-pairing) { } | Generates a list of custom properties for a specific color pairing. | <code>.example { @include hb-pairing-custom-properties($hc-colorful-pairings, $palette); }</code> |
 
 ### General
 

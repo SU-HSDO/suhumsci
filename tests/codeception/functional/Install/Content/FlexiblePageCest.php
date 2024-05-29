@@ -113,7 +113,7 @@ class FlexiblePageCest {
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
     $I->click('Save');
-    $I->canSeeNumberOfElements('#main-content img', 1);
+    $I->canSeeNumberOfElements('.field-hs-page-components img', 1);
     $I->canSee('Overlay Title');
     $I->canSee('Google CTA', 'a');
   }

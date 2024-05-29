@@ -124,9 +124,15 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
   }
 
   if (
-    $paragraph->hasField('field_accordion_style') &&
-    $paragraph->get('field_accordion_style')->getString() == 'secondary'
+    $paragraph->hasField('field_accordion_style')
   ) {
-    $variables['attributes']->addClass('hb-accordion-secondary');
+    switch ($paragraph->get('field_accordion_style')->getString()) {
+      case 'secondary':
+        $variables['attributes']->addClass('hb-accordion-secondary');
+        break;
+      case 'light':
+        $variables['attributes']->addClass('hb-accordion-light');
+        break;
+    }
   }
 }

@@ -279,6 +279,13 @@ function su_humsci_profile_update_9610() {
 }
 
 /**
+ * Disable chosen_lib.
+ */
+function su_humsci_profile_update_9611() {
+  \Drupal::service('module_installer')->uninstall(['chosen_lib']);
+}
+
+/**
  * Create new entities to migrate ECKs.
  */
 function su_humsci_profile_update_9700() {

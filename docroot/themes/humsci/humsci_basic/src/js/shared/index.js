@@ -8,13 +8,13 @@ import './media/video-with-caption';
 import './animation/page-scroll';
 import './timeline/expand-collapse-timeline';
 import './accordion/accordion-toggle-all';
-import './vertical-card/vertical-card';
-import './vertical-linked-card/vertical-linked-card';
+import './linked-cards/linked-cards';
 import './photo-album/colorbox';
 import './editoria11y/editoria11y';
 import './vertical-tabs/vertical-tabs';
 import './addtocal/addtocal';
 import './prefered-reduced-motion/prefered-reduced-motion';
+import './main-content-fallback/main-content-fallback';
 
 // PoC for new megamenu.
 import './megamenu/index';

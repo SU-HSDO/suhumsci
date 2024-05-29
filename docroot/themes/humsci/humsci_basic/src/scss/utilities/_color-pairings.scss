@@ -1,0 +1,31 @@
+@include hb-themes(('colorful', 'airy')) {
+  @each $pairing, $colors in $hc-colorful-pairings {
+    .hc-pairing-#{$pairing} {
+      @each $color, $value in $colors {
+        --palette--#{$color}: #{$value};
+      }
+    }
+  }
+
+  :root {
+    @each $color, $value in $hc-colorful-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+}
+
+@include hb-traditional {
+  @each $pairing, $colors in $ht-traditional-pairings {
+    .ht-pairing-#{$pairing} {
+      @each $color, $value in $colors {
+        --palette--#{$color}: #{$value};
+      }
+    }
+  }
+
+  :root {
+    @each $color, $value in $ht-traditional-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+}

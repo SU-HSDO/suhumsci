@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28a4ff08f954428965b602ff2a1e8514",
+    "content-hash": "83efc711340ed0056b4cf7de285a2a93",
     "packages": [
         {
             "name": "acquia/blt",
@@ -12919,6 +12919,65 @@
             "time": "2024-05-18T18:05:11+00:00"
         },
         {
+            "name": "fourkitchens/stanford_migrate",
+            "version": "dev-SHS-5641--prevent-delete-imported-media",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fourkitchens/stanford_migrate.git",
+                "reference": "44631c8511e16425fef943897e1f5fabd70b8004"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fourkitchens/stanford_migrate/zipball/44631c8511e16425fef943897e1f5fabd70b8004",
+                "reference": "44631c8511e16425fef943897e1f5fabd70b8004",
+                "shasum": ""
+            },
+            "require": {
+                "drupal/empty_fields": "^1.0@beta",
+                "drupal/migrate_file": "^2.0",
+                "drupal/migrate_plus": "^6.0",
+                "drupal/migrate_source_csv": "^3.4",
+                "drupal/migrate_tools": "^6.0",
+                "drupal/readonly_field_widget": "^1.4",
+                "drupal/ultimate_cron": "^2.0@alpha",
+                "joshfraser/php-name-parser": "dev-master",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "drupal/entity_reference_revisions": "^1.9"
+            },
+            "type": "drupal-custom-module",
+            "extra": {
+                "patches": {
+                    "drupal/readonly_field_widget": {
+                        "https://www.drupal.org/project/readonly_field_widget/issues/3220671": "https://www.drupal.org/files/issues/2022-08-14/third-party-settings-3220671-6.patch"
+                    },
+                    "drupal/migrate_plus": {
+                        "https://www.drupal.org/project/migrate_plus/issues/2837684": "https://www.drupal.org/files/issues/2023-01-13/2837684-14-migrate-plus-xml-return-as-xml.patch"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\stanford_migrate\\": "./src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Drupal\\Tests\\stanford_migrate\\": "./tests/src"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Stanford Migrate Helper functions",
+            "homepage": "https://github.com/SU-SWS/stanford_migrate",
+            "support": {
+                "source": "https://github.com/fourkitchens/stanford_migrate/tree/SHS-5641--prevent-delete-imported-media"
+            },
+            "time": "2024-05-29T22:57:19+00:00"
+        },
+        {
             "name": "grasmash/expander",
             "version": "3.0.0",
             "source": {
@@ -15647,62 +15706,6 @@
                 "source": "https://github.com/SU-SWS/stanford_media/tree/11.0.3"
             },
             "time": "2024-04-09T19:16:42+00:00"
-        },
-        {
-            "name": "su-sws/stanford_migrate",
-            "version": "8.5.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SU-SWS/stanford_migrate.git",
-                "reference": "7acf1a719a97f73c5fc4bcf604ba2a50b17a453d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_migrate/zipball/7acf1a719a97f73c5fc4bcf604ba2a50b17a453d",
-                "reference": "7acf1a719a97f73c5fc4bcf604ba2a50b17a453d",
-                "shasum": ""
-            },
-            "require": {
-                "drupal/empty_fields": "^1.0@beta",
-                "drupal/migrate_file": "^2.0",
-                "drupal/migrate_plus": "^6.0",
-                "drupal/migrate_source_csv": "^3.4",
-                "drupal/migrate_tools": "^6.0",
-                "drupal/readonly_field_widget": "^1.4",
-                "drupal/ultimate_cron": "^2.0@alpha",
-                "joshfraser/php-name-parser": "dev-master",
-                "php": ">=8.0"
-            },
-            "require-dev": {
-                "drupal/entity_reference_revisions": "^1.9"
-            },
-            "type": "drupal-custom-module",
-            "extra": {
-                "patches": {
-                    "drupal/readonly_field_widget": {
-                        "https://www.drupal.org/project/readonly_field_widget/issues/3220671": "https://www.drupal.org/files/issues/2022-08-14/third-party-settings-3220671-6.patch"
-                    },
-                    "drupal/migrate_plus": {
-                        "https://www.drupal.org/project/migrate_plus/issues/2837684": "https://www.drupal.org/files/issues/2023-01-13/2837684-14-migrate-plus-xml-return-as-xml.patch"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\stanford_migrate\\": "./src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "Stanford Migrate Helper functions",
-            "homepage": "https://github.com/SU-SWS/stanford_migrate",
-            "support": {
-                "issues": "https://github.com/SU-SWS/stanford_migrate/issues",
-                "source": "https://github.com/SU-SWS/stanford_migrate/tree/8.5.9"
-            },
-            "time": "2024-04-05T17:51:19+00:00"
         },
         {
             "name": "su-sws/stanford_samlauth",
@@ -25414,6 +25417,7 @@
         "drupal/views_field_view": 10,
         "drupal/views_ical": 15,
         "drupal/webform": 10,
+        "fourkitchens/stanford_migrate": 20,
         "onlyextart/colorbox": 20,
         "su-sws/stanford_basic": 20,
         "su-sws/blt-sws": 20

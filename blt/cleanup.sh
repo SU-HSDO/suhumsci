@@ -4,4 +4,4 @@
 #rm -rf keys
 
 # make all hook files executable.
-chmod -R +x hooks/
+#chmod -R +x hooks/

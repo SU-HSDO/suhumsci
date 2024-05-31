@@ -55,13 +55,13 @@
   color: var(--palette--white);
   background-color: var(--palette--secondary);
   border-color: var(--palette--secondary);
-  
+
   &:hover {
     background-color: var(--palette--secondary-darken-12);
     border-color: var(--palette--secondary-darken-12);
     color: var(--palette--white);
   }
-  
+
   &:active,
   &:focus {
     background-color: var(--palette--secondary);
@@ -114,7 +114,7 @@
   @include hb-button-base;
   border-color: var(--palette--secondary);
   color: var(--palette--secondary);
-  
+
   &:hover {
     color: var(--palette--white);
     background-color: var(--palette--secondary);
@@ -125,7 +125,9 @@
   &:focus {
     background-color: transparent;
     color: var(--palette--secondary);
-    box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--white), 0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
+    box-shadow:
+      0 0 0 hb-calculate-rems(2px) var(--palette--white),
+      0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
   }
 
   @include hb-traditional {
@@ -158,7 +160,7 @@
     @include hb-themes(('colorful', 'airy')) {
       color: var(--palette--tertiary-reversed);
       border-color: var(--palette--tertiary-reversed);
-      
+
       &:hover,
       &:active,
       &:focus {
@@ -166,11 +168,11 @@
         border-color: var(--palette--secondary-highlight);
       }
     }
-    
+
     @include hb-traditional {
       color: var(--palette--tertiary-highlight);
       border-color: var(--palette--tertiary-highlight);
-      
+
       &:hover,
       &:active,
       &:focus {
@@ -179,12 +181,12 @@
       }
     }
   }
-  
+
   @include hb-colorful {
     .hc-pairing-ocean & {
       border-color: var(--palette--secondary-darken-12);
       color: var(--palette--secondary-darken-12);
-      
+
       &:hover {
         color: var(--palette--white);
         background-color: var(--palette--secondary-darken-12);
@@ -228,15 +230,15 @@
     padding: hb-calculate-rems(4px) 0;
     border-bottom: $hb-thin-border;
     border-bottom-color: var(--palette--secondary);
-    
+
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
       border-bottom-color: var(--palette--tertiary-reversed);
     }
-    
+
     &:hover {
       border-bottom-color: var(--palette--secondary-darken-12);
-      
+
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         border-bottom-color: var(--palette--tertiary-highlight);

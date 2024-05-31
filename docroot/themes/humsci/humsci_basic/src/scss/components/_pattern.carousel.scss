@@ -26,7 +26,7 @@
         grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
       }
 
-      // Offset background color psuedo element
+      // Offset background color pseudo element
       &::before {
         background-color: var(--palette--gray-light);
         z-index: $hb-z-index-hero1-background;
@@ -41,7 +41,7 @@
         }
       }
 
-      // Secondary color block psuedo element that shows up in the grid
+      // Secondary color block pseudo element that shows up in the grid
       &::after {
         content: '';
         display: block;
@@ -87,14 +87,14 @@
           padding-top: 0;
         }
 
-        // On mobile, make the secondary color box out of psuedo element,
+        // On mobile, make the secondary color box out of pseudo element,
         // then on 'md' breakpoint, it becomes part of the grid
         &::before {
           display: block;
           bottom: 0;
           left: -8.75%;
           top: initial;
-          @include psuedo-background-box('secondary', 50%, 8.75%);
+          @include pseudo-background-box('secondary', 50%, 8.75%);
           opacity: 1;
 
           @include grid-media-min('md') {
@@ -548,7 +548,7 @@
           right: 100%;
         }
       }
-      
+
 
       .slick-prev,
       .slick-next {

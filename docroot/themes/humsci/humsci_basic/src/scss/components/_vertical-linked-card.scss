@@ -16,10 +16,12 @@
     padding-bottom: hb-calculate-rems(28px);
     color: var(--palette--white);
 
-    $hb-bg--fallback: var(--palette--primary-dark);
-    $hb-bg--pairing: var(--palette--primary-dark);
-
-    @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      transparent hb-calculate-rems(20px),
+      var(--palette--primary-dark) hb-calculate-rems(20px)
+    );
   }
 
   .hb-stretch-vertical-linked-cards & {
@@ -76,7 +78,8 @@
       background-color: var(--palette--secondary);
 
       @include grid-media-min('sm') {
-        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0
+          hb-calculate-rems(-31px);
       }
     }
 
@@ -113,7 +116,7 @@
         width: hb-calculate-rems(27.5px);
         background-size: 60%;
       }
-      
+
       @include hb-traditional {
         width: hb-calculate-rems(33px);
         background-size: auto;
@@ -154,7 +157,8 @@
 
     @include hb-traditional {
       background-color: var(--palette--tertiary-reversed);
-      padding: hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(28px);
+      padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
+        hb-calculate-rems(28px);
     }
 
     @include grid-media-min('sm') {
@@ -187,7 +191,8 @@
       }
     }
 
-    .field-hs-postcard-body a.hs-private-link { // Need extra nesting level for specificity.
+    .field-hs-postcard-body a.hs-private-link {
+      // Need extra nesting level for specificity.
       &::before {
         @include hb-traditional {
           @include hb-icon-background('lock', 'black');

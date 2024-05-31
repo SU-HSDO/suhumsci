@@ -17,7 +17,7 @@
       box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
     }
   }
-  
+
   @include hb-traditional {
     &:hover,
     &:focus {
@@ -68,7 +68,7 @@
 
 @mixin hb-heading-link-color {
   color: var(--palette--tertiary);
-  
+
   &:hover,
   &:focus {
     color: var(--palette--tertiary-darken-20);
@@ -98,7 +98,7 @@
 @mixin hb-link--inline($icon: false, $icon-width: 16px, $icon-position: right) {
   // no font size by default
   color: var(--palette--tertiary);
-  
+
   &:hover,
   &:focus {
     color: var(--palette--tertiary-darken-20);
@@ -158,7 +158,7 @@
     .views-field:not(.views-field-title):not(.views-field-edit-node):not(.views-field-field-hs-event-series):not(.views-field-field-hs-news-categories):not(.views-field-field-hs-person-research) & {
       .ht-pairing-warbler & {
         color: var(--palette--secondary);
-        
+
         &:hover,
         &:focus {
           color: var(--palette--tertiary);
@@ -189,22 +189,24 @@
       color: var(--palette--tertiary-reversed);
       border-bottom-color: var(--palette--tertiary-reversed);
     }
-    
+
     @include hb-traditional {
       color: var(--palette--tertiary-highlight);
     }
-    
+
     &:hover,
     &:focus {
       @include hb-themes(('colorful', 'airy')) {
-        color: var(--palette--tertiary-highlight);
         @include hb-ext-icon-color('tertiary-highlight');
+
+        color: var(--palette--tertiary-highlight);
       }
-      
+
       @include hb-traditional {
+        @include hb-ext-icon-color('tertiary-highlight-darken-10');
+
         color: var(--palette--tertiary-highlight-darken-10);
         text-decoration-color: var(--palette--tertiary-highlight-darken-10);
-        @include hb-ext-icon-color('tertiary-highlight-darken-10');
       }
     }
   }
@@ -320,15 +322,15 @@
       &:hover,
       &:focus {
         color: var(--palette--secondary-highlight);
-        
+
         .hc-pairing-ocean & {
           color: var(--palette--tertiary-highlight);
         }
-        
+
         &::after {
           @include hb-icon-link-arrow('secondary-highlight');
           background-size: 85%;
-          
+
           .hc-pairing-ocean & {
             @include hb-icon-link-arrow('tertiary-highlight');
             background-size: 85%;
@@ -336,15 +338,15 @@
         }
       }
     }
-    
+
     @include hb-traditional {
       color: var(--palette--tertiary-highlight);
-      
+
       &::after {
         @include hb-icon-link-arrow('tertiary-highlight');
         background-size: 85%;
       }
-      
+
       &:hover,
       &:focus {
         color: var(--palette--tertiary-highlight-darken-10);

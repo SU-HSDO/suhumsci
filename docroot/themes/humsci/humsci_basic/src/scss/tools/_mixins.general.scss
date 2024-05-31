@@ -27,7 +27,7 @@
 // Adds a background box pseudo element
 // You can choose the color and height
 // Remember to add position: relative to the parent element
-@mixin psuedo-background-box($color, $height: 100%, $width: 100%) {
+@mixin pseudo-background-box($color, $height: 100%, $width: 100%) {
   content: ' ';
   position: absolute;
   height: $height;
@@ -39,25 +39,12 @@
 }
 
 // Meant for the Colorful theme
-// Applies a colorful bar above text to a psuedo element
+// Applies a colorful bar above text to a pseudo element
 // You can choose the color and width
 // Remember to add position: relative to the parent element
 @mixin hb-colorful-text-bar($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
   display: block;
-  @include psuedo-background-box($color, $height, $width);
-}
-
-// Adds a background linear gradient for use in the
-// vertical linked card
-// The gradient adds a 20px height white block at the top of the linked card
-// so that the title looks like it has a negative margin on the top when
-// there isn't an image.
-@mixin hb-vertical-card-background-block($white, $fallback, $background) {
-  // The gradient looks intimidating but it's only because of all the mixins
-  // we have to use. If we get rid of those it looks more like this:
-  // linear-gradient(to bottom, white, white 20px, traditional-color 20px);
-  background-image: linear-gradient(to bottom, $white, $white hb-calculate-rems(20px), $fallback hb-calculate-rems(20px));
-  background-image: linear-gradient(to bottom, $white, $white hb-calculate-rems(20px), $background hb-calculate-rems(20px));
+  @include pseudo-background-box($color, $height, $width);
 }
 
 // Support nested list styles within both the ordered and unordered lists
@@ -294,7 +281,7 @@
   }
 
   @include hb-traditional {
-    background-color: var(--palette--secondary-highlight);
+    background-color: var(--palette--tertiary-highlight);
   }
 
   .hb-dark-pattern &,

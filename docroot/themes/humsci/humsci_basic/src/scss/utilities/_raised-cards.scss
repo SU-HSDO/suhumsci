@@ -54,7 +54,7 @@
     }
 
     @include hb-themes(('airy', 'colorful')) {
-      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) rgba(var(--palette--black), 0.12);
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 12%, transparent);
 
       @supports (object-fit: cover) {
         align-items: stretch;
@@ -141,7 +141,7 @@
 .hb-raised-cards .hb-dark-pattern .hb-card,
 .hb-dark-inversion .hb-raised-cards .views-element-container .hb-card {
   color: var(--palette--black);
-  
+
   .field-content,
   .views-label {
     color: var(--palette--black);
@@ -149,7 +149,7 @@
 
   a {
     color: var(--palette--tertiary);
-    
+
     &:hover,
     &:focus {
       color: var(--palette--tertiary-darken-20);

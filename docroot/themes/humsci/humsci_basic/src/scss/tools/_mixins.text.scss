@@ -224,7 +224,7 @@
 }
 
 @mixin hb-blockquote {
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
   font-style: italic;
@@ -245,12 +245,12 @@
 
   // A utility class that can be applied via layout builder to override the text color to black
   .hb-blockquote-black-text & {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
   }
 
   // Don't apply these rules to blockquotes in testimonials, the structure is not the same and need
@@ -280,7 +280,7 @@
 @mixin hb-field-label {
   font-style: normal;
   text-transform: uppercase;
-  @include hb-global-color('color', 'black');
+  color: var(--palette--black);
 
   @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(bold);
@@ -299,21 +299,21 @@
   font-size: hb-calculate-rems(16px);
   font-style: normal;
   text-transform: inherit;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   .hb-well {
-    @include hb-pairing-color('color', 'secondary-darken-12', $important: true);
+    color: var(--palette--secondary-darken-12) !important;
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      @include hb-pairing-color('color', 'secondary-darken-12');
+      color: var(--palette--secondary-darken-12);
     }
   }
 }
 
 @mixin hb-descriptor {
-  @include hb-global-color('color', 'gray-dark');
+  color: var(--palette--gray-dark);
   font-size: hb-calculate-rems(16px);
 
   @include grid-media-min('lg') {
@@ -324,7 +324,7 @@
 // Styles for WYSIWYG / text captions
 @mixin hb-caption($italic: false) {
   @include hb-text-reset;
-  @include hb-global-color('color', 'gray-dark');
+  color: var(--palette--gray-dark);
 
   @if $italic {
     font-style: italic;
@@ -340,18 +340,18 @@
 
   .hb-dark-pattern & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
     }
 
     @include hb-traditional {
-      @include hb-global-color('color', 'gray-light');
+      color: var(--palette--gray-light);
     }
   }
 }
 
 // Styles for captions and credits
 @mixin hb-caption-credit {
-  @include hb-global-color('color', 'white');
+  color: var(--palette--white);
   font-style: italic;
   font-size: hb-calculate-rems(12px);
   position: absolute;
@@ -368,7 +368,7 @@
   }
 
   @include hb-themes(('colorful', 'airy')) {
-    background: linear-gradient(to top, hb-get-global-color('black', $hc-colorful-globals), transparent);
+    background: linear-gradient(to top, var(--palette--black), transparent);
 
     .paragraph--type--hs-carousel & { // the percentage on this left side is larger to prevent the caption from running under carousel overlay
       @include grid-media-min('md') {
@@ -378,7 +378,7 @@
   }
 
   @include hb-traditional {
-    background: linear-gradient(to top, hb-get-global-color('black', $ht-traditional-globals), transparent);
+    background: linear-gradient(to top, var(--palette--black), transparent);
   }
 
   .hb-card__graphics--has-date & {
@@ -414,7 +414,7 @@
   .hs-private-link {
     @include hb-text-reset;
     font-style: italic;
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
   }
 
   h1 a,
@@ -424,7 +424,7 @@
   h5 a,
   h6 a,
   a {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     text-decoration: underline !important;
     display: inline;
 

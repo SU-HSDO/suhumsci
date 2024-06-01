@@ -316,15 +316,25 @@ process:
     -
       plugin: sub_process
       key: sunet
+      include_source: true
       process:
+        instructor_id:
+          plugin: concat
+          delimiter: '|'
+          source:
+            - name
+            - source/course_id
+            - source/code
+            - source/guid
         target_id:
-          plugin: entity_generate_no_lookup
-          entity_type: course_collections
-          bundle_key: type
-          bundle: instructor
-          value_key: title
-          source: name
+          plugin: entity_generate
+          entity_type: hs_entity
+          bundle_key: bundle
+          bundle: course_collections__instructor
+          value_key: field_migration_id
+          source: '@instructor_id'
           values:
+            label: name
             field_instructor_role: role
     -
       plugin: flatten

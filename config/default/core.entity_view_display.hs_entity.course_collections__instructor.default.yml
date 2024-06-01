@@ -1,0 +1,38 @@
+uuid: 9ad61287-9178-4092-893f-c01286f05b0f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.course_collections__instructor.field_instructor_person
+    - hs_entities.hs_entity_type.course_collections__instructor
+id: hs_entity.course_collections__instructor.default
+targetEntityType: hs_entity
+bundle: course_collections__instructor
+mode: default
+content:
+  field_instructor_person:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden:
+  created: true
+  field_instructor_role: true
+  field_migration_id: true
+  search_api_excerpt: true
+  uid: true

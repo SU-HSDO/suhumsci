@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.event_collections.speaker
     - field.storage.node.field_hs_event_speaker
     - node.type.hs_event
 _core:
@@ -19,12 +18,13 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:event_collections'
+  handler: 'default:hs_entity'
   handler_settings:
     target_bundles:
-      speaker: speaker
+      event_collections__speaker: event_collections__speaker
     sort:
-      field: _none
-    auto_create: false
+      field: label
+      direction: ASC
+    auto_create: true
     auto_create_bundle: ''
 field_type: entity_reference

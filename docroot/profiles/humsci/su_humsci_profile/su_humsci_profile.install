@@ -474,6 +474,10 @@ function su_humsci_profile_update_9701(&$sandbox) {
     }
     $new_entity->save();
     $sandbox['convert'][$eck_type][$id] = $new_entity->id();
+
+    // Clear entity caches
+    $entity_type_manager->getStorage($eck_type)->resetCache(array($id));
+    $entity_type_manager->getStorage('hs_entity')->resetCache(array($new_entity->id()));
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
@@ -753,7 +757,7 @@ function _su_humsci_profile_fix_view_data(&$data) {
 }
 
 /**
- * Delete ECKs and their types.
+ * Update ECK and hs_entity permissions.
  */
 function su_humsci_profile_update_9704() {
   $roles = user_role_names();

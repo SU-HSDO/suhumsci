@@ -1,0 +1,35 @@
+uuid: 247f3b20-abb3-4adb-96e2-07fbaf2325ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.publications_collections__public.field_hs_publication_author
+    - hs_entities.hs_entity_type.publications_collections__public
+id: hs_entity.publications_collections__public.default
+targetEntityType: hs_entity
+bundle: publications_collections__public
+mode: default
+content:
+  field_hs_publication_author:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 1
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden:
+  created: true
+  field_migration_id: true
+  search_api_excerpt: true
+  uid: true

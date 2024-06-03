@@ -95,7 +95,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: $themePath/node_modules
-          key: ${{ runner.os }}-${{ hasfiles('$themePath/package-lock.json') }}
+          key: ${{ runner.os }}-${{ hashFiles('$themePath/package-lock.json') }}
       - name: Install theme node_modules
         if: steps.cache-theme-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix $themePath

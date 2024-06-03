@@ -287,6 +287,11 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - run: git config --system --add safe.directory '*'
+      - name: Restore theme node_modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.themePath }}/node_modules
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Deploy Branch
         run: |
           git config --global user.email "sws-developers@lists.stanford.edu" &&

@@ -1,0 +1,88 @@
+uuid: 17e42431-31ea-4087-96eb-ed18df155af1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.event_collections__conference_se.field_session_date_and_time
+    - field.field.hs_entity.event_collections__conference_se.field_session_information
+    - field.field.hs_entity.event_collections__conference_se.field_session_location
+    - field.field.hs_entity.event_collections__conference_se.field_session_speakers
+    - hs_entities.hs_entity_type.event_collections__conference_se
+  module:
+    - field_group
+third_party_settings:
+  field_group:
+    group_session_details:
+      children:
+        - field_session_location
+        - field_session_information
+        - field_session_speakers
+      label: 'Session Details'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: tab
+      format_settings:
+        classes: ''
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+id: hs_entity.event_collections__conference_se.default
+targetEntityType: hs_entity
+bundle: event_collections__conference_se
+mode: default
+content:
+  field_session_date_and_time:
+    type: smartdate_default
+    weight: 1
+    region: content
+    settings:
+      modal: false
+      default_duration: 60
+      default_duration_increments: |-
+        30
+        60|1 hour
+        90
+        120|2 hours
+        custom
+      show_extra: true
+      hide_date: false
+    third_party_settings: {  }
+  field_session_information:
+    type: text_textarea_with_summary
+    weight: 6
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_session_location:
+    type: string_textfield
+    weight: 5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_session_speakers:
+    type: text_textarea
+    weight: 7
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

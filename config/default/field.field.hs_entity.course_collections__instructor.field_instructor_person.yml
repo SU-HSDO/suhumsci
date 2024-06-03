@@ -1,0 +1,29 @@
+uuid: 28a728d8-5a0a-4663-aa30-0c40df900a2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.hs_entity.field_instructor_person
+    - hs_entities.hs_entity_type.course_collections__instructor
+    - node.type.hs_person
+id: hs_entity.course_collections__instructor.field_instructor_person
+field_name: field_instructor_person
+entity_type: hs_entity
+bundle: course_collections__instructor
+label: 'Instructor Person'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      hs_person: hs_person
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

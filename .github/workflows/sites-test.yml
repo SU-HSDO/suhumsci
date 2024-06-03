@@ -95,7 +95,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('${{ env.themePath }}/package-lock.json') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme node_modules
         if: steps.cache-theme-node-modules.outputs.cache-hit != 'true'
         run: npm install --prefix $themePath
@@ -159,7 +159,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('${{ env.themePath }}/package-lock.json') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Sync Database
         run: |
           mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
@@ -239,7 +239,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('${{ env.themePath }}/package-lock.json') }}
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Compile theme assets
         run: npm run build --prefix $themePath
       - name: Codeception Tests

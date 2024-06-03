@@ -24,8 +24,9 @@ To set up your local environment and begin developing for this project, refer to
 
 CSS assets are built using the Grunt task runner, but are run using npm scripts as shortcuts.
 
-- `npm run build-theme` - Compile Sass for production for all themes, **except Humsci_basic** which requires additional Grunt tasks to compile sub-theme specific CSS.
-- `npm run watch-theme` - Compile a CSS build and watch for changes in the existing `.scss` files (other than humsci_basic)
+- `npm run theme-build` - Compile Sass for production for all themes based on `humsci_basic`.
+- `npm run theme-watch` - Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
+- `npm run theme-visreg` - Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
 
 ## Testing
 
@@ -40,7 +41,7 @@ be the wrapper around the codeception commands.
 - [List of current tests](/docs/Codeception.md)
 
 ### SASS
-- `npm test` - Run linting for all Sass in the project (including humsci_basic).
+- `npm test` - Run tests for all Sass in the project (including humsci_basic).
 
 ## Other documentation
 * [Change Log](docs/CHANGELOG.md)

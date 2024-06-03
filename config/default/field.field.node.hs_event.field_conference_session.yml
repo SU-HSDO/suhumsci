@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - eck.eck_type.event_collections.conference_session
     - field.storage.node.field_conference_session
     - node.type.hs_event
 id: node.hs_event.field_conference_session
@@ -17,12 +16,12 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:event_collections'
+  handler: 'default:hs_entity'
   handler_settings:
     target_bundles:
-      conference_session: conference_session
+      event_collections__conference_se: event_collections__conference_se
     sort:
-      field: _none
+      field: label
       direction: ASC
     auto_create: true
     auto_create_bundle: ''

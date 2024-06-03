@@ -3,6 +3,8 @@ on: push
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+env:
+  themePath: docroot/themes/humsci/humsci_basic
 jobs:
   test_phpunit:
     runs-on: ubuntu-latest
@@ -86,8 +88,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:latest
-    env:
-      themePath: docroot/themes/humsci/humsci_basic
     steps:
       - uses: actions/checkout@v4
       - name: Cache theme node_modules
@@ -155,6 +155,11 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - run: git config --system --add safe.directory '*'
+      - name: Restore theme node_modules
+        uses: actions/cache@v4
+        with:
+          path: $themePath/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('docroot/themes/humsci/humsci_basic/package-lock.json') }}
       - name: Sync Database
         run: |
           mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
@@ -230,6 +235,13 @@ jobs:
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           blt drupal:install -n
+      - name: Restore theme node_modules
+        uses: actions/cache@v4
+        with:
+          path: $themePath/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('docroot/themes/humsci/humsci_basic/package-lock.json') }}
+      - name: Compile theme assets
+        run: npm run build --prefix $themePath
       - name: Codeception Tests
         run: |
           apachectl stop

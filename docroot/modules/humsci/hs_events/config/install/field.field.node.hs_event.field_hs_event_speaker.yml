@@ -1,0 +1,30 @@
+uuid: f895cb4a-1b05-40e6-a711-b0f7da0c9e40
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_event_speaker
+    - node.type.hs_event
+_core:
+  default_config_hash: 4xGrQJ4s8WhZhKnySZZI6nnswVgZmhEI21ab1EBGk58
+id: node.hs_event.field_hs_event_speaker
+field_name: field_hs_event_speaker
+entity_type: node
+bundle: hs_event
+label: Speaker
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:hs_entity'
+  handler_settings:
+    target_bundles:
+      event_collections__speaker: event_collections__speaker
+    sort:
+      field: label
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

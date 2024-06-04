@@ -1,0 +1,342 @@
+uuid: 3aba6306-c6a8-417c-afab-8fe6bf827a1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_course.body
+    - field.field.node.hs_course.field_hs_course_academic_career
+    - field.field.node.hs_course.field_hs_course_academic_year
+    - field.field.node.hs_course.field_hs_course_code
+    - field.field.node.hs_course.field_hs_course_code_int
+    - field.field.node.hs_course.field_hs_course_explore_tags
+    - field.field.node.hs_course.field_hs_course_grading
+    - field.field.node.hs_course.field_hs_course_id
+    - field.field.node.hs_course.field_hs_course_link
+    - field.field.node.hs_course.field_hs_course_requirements
+    - field.field.node.hs_course.field_hs_course_section_comp
+    - field.field.node.hs_course.field_hs_course_section_days
+    - field.field.node.hs_course.field_hs_course_section_end_date
+    - field.field.node.hs_course.field_hs_course_section_end_time
+    - field.field.node.hs_course.field_hs_course_section_id
+    - field.field.node.hs_course.field_hs_course_section_instruc
+    - field.field.node.hs_course.field_hs_course_section_location
+    - field.field.node.hs_course.field_hs_course_section_number
+    - field.field.node.hs_course.field_hs_course_section_quarter
+    - field.field.node.hs_course.field_hs_course_section_st_date
+    - field.field.node.hs_course.field_hs_course_section_st_time
+    - field.field.node.hs_course.field_hs_course_section_syllabus
+    - field.field.node.hs_course.field_hs_course_section_units
+    - field.field.node.hs_course.field_hs_course_subject
+    - field.field.node.hs_course.field_hs_course_tags
+    - node.type.hs_course
+  module:
+    - datetime
+    - field_group
+    - hs_field_helpers
+    - inline_entity_form
+    - link
+    - media_library
+    - path
+    - text
+third_party_settings:
+  field_group:
+    group_section_information:
+      children:
+        - field_hs_course_section_id
+        - field_hs_course_section_number
+        - field_hs_course_section_instruc
+        - field_hs_course_section_syllabus
+        - field_hs_course_section_location
+        - group_section_dates
+      label: 'Section Information'
+      region: content
+      parent_name: ''
+      weight: 14
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        id: ''
+        description: ''
+        required_fields: true
+    group_section_dates:
+      children:
+        - field_hs_course_section_days
+        - field_hs_course_section_st_date
+        - field_hs_course_section_st_time
+        - field_hs_course_section_end_date
+        - field_hs_course_section_end_time
+      label: 'Section Dates'
+      region: content
+      parent_name: group_section_information
+      weight: 13
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        id: ''
+        description: ''
+        required_fields: true
+id: node.hs_course.default
+targetEntityType: node
+bundle: hs_course
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 13
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_course_academic_career:
+    type: options_select
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_course_academic_year:
+    type: datetime_academic_year
+    weight: 5
+    region: content
+    settings:
+      min: 'now - 10 years'
+      max: 'now + 10 years'
+    third_party_settings: {  }
+  field_hs_course_code:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_code_int:
+    type: number
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_explore_tags:
+    type: entity_reference_autocomplete
+    weight: 23
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_grading:
+    type: string_textfield
+    weight: 6
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_id:
+    type: number
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_link:
+    type: link_default
+    weight: 12
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_hs_course_requirements:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_comp:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_days:
+    type: string_textfield
+    weight: 15
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_end_date:
+    type: datetime_default
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_course_section_end_time:
+    type: string_textfield
+    weight: 19
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_id:
+    type: number
+    weight: 8
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_instruc:
+    type: inline_entity_form_complex
+    weight: 10
+    region: content
+    settings:
+      form_mode: default
+      override_labels: true
+      label_singular: Instructor
+      label_plural: Instructors
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: false
+      collapsed: false
+    third_party_settings: {  }
+  field_hs_course_section_location:
+    type: string_textfield
+    weight: 12
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_number:
+    type: number
+    weight: 9
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_quarter:
+    type: options_select
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_course_section_st_date:
+    type: datetime_default
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_hs_course_section_st_time:
+    type: string_textfield
+    weight: 17
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_section_syllabus:
+    type: media_library_widget
+    weight: 11
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_hs_course_section_units:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_subject:
+    type: string_textfield
+    weight: 9
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_course_tags:
+    type: entity_reference_autocomplete
+    weight: 11
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 19
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 16
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 21
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 17
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

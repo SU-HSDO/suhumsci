@@ -1,0 +1,30 @@
+uuid: 5cea35ba-84fc-48ec-adcc-642be912abb6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_publication_author
+    - node.type.hs_publications
+_core:
+  default_config_hash: V1lfXLPGn1Vnv-rV8S1sUAPdFVind2VZKIH5vDLxlqM
+id: node.hs_publications.field_hs_publication_author
+field_name: field_hs_publication_author
+entity_type: node
+bundle: hs_publications
+label: Author
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:hs_entity'
+  handler_settings:
+    target_bundles:
+      publications_collections__public: publications_collections__public
+    sort:
+      field: label
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

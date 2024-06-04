@@ -1,0 +1,117 @@
+uuid: 1b1e3c62-6830-4692-8ae1-e41ef8315560
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.hs_vertical_card
+    - field.field.node.hs_publications.body
+    - field.field.node.hs_publications.field_hs_publication_author
+    - field.field.node.hs_publications.field_hs_publication_citation
+    - field.field.node.hs_publications.field_hs_publication_documents
+    - field.field.node.hs_publications.field_hs_publication_image
+    - field.field.node.hs_publications.field_hs_publication_link
+    - field.field.node.hs_publications.field_hs_publication_publisher
+    - field.field.node.hs_publications.field_hs_publication_type
+    - field.field.node.hs_publications.field_hs_publication_year
+    - node.type.hs_publications
+  module:
+    - datetime
+    - ds
+    - field_formatter_class
+    - hs_field_helpers
+    - stanford_media
+    - user
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_vertical_card
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+    regions:
+      image:
+        - field_hs_publication_image
+      description:
+        - field_hs_publication_type
+        - node_title
+      author:
+        - field_hs_publication_author
+      year:
+        - field_hs_publication_year
+    fields:
+      node_title:
+        plugin_id: node_title
+        weight: 2
+        label: hidden
+        formatter: default
+        settings:
+          link: true
+          wrapper: h2
+          class: ''
+id: node.hs_publications.hs_vertical_card
+targetEntityType: node
+bundle: hs_publications
+mode: hs_vertical_card
+content:
+  field_hs_publication_author:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: vertical-card__author-year--author
+      ds:
+        ds_limit: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 3
+    region: author
+  field_hs_publication_image:
+    type: media_responsive_image_formatter
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+      image_style: portrait_rectangle
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: image
+  field_hs_publication_type:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: accent-dash
+    weight: 1
+    region: description
+  field_hs_publication_year:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'Y'
+    third_party_settings:
+      field_formatter_class:
+        class: vertical-card__author-year--year
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 4
+    region: year
+hidden:
+  body: true
+  field_hs_publication_citation: true
+  field_hs_publication_documents: true
+  field_hs_publication_link: true
+  field_hs_publication_publisher: true
+  links: true
+  search_api_excerpt: true

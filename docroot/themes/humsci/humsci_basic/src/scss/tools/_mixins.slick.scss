@@ -11,7 +11,7 @@
 @mixin slick-arrows {
   .slick__arrow button {
     @include hb-unbuttonize;
-    @include hb-global-color('background-color', 'white');
+    background-color: var(--palette--white);
     position: absolute;
     opacity: 0.5;
 
@@ -163,7 +163,7 @@
 
         button {
           @include hb-unbuttonize;
-          @include hb-global-color('background-color', 'gray');
+          background-color: var(--palette--gray);
           padding: 0 hb-calculate-rems(22px);
           margin: 0 hb-calculate-rems(8px);
           font-size: 0; // hide text
@@ -177,11 +177,11 @@
             transform: scale(0.9);
 
             @include hb-traditional {
-              @include hb-global-color('background-color', 'black');
+              background-color: var(--palette--black);
             }
 
             @include hb-themes(('colorful', 'airy')) {
-              @include hb-pairing-color('background-color', 'secondary');
+              background-color: var(--palette--secondary);
             }
           }
         }
@@ -189,11 +189,11 @@
         // active button representing the slide currently on display
         &.slick-active button {
           @include hb-traditional {
-            @include hb-global-color('background-color', 'black');
+            background-color: var(--palette--black);
           }
 
           @include hb-themes(('colorful', 'airy')) {
-            @include hb-pairing-color('background-color', 'secondary');
+            background-color: var(--palette--secondary);
           }
 
           &:hover {

@@ -14,11 +14,11 @@ $nested-padding: hb-calculate-rems(22px);
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
-  @include hb-pairing-color("color", "tertiary");
+  color: var(--palette--tertiary);
 
   &:hover:not(.is-active),
   &:focus {
-    @include hb-pairing-color("color", "tertiary-darken-20");
+    color: var(--palette--tertiary-darken-20);
   }
 }
 
@@ -71,7 +71,7 @@ $hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
 $hb-link-bar-link: 100%;
 
 @mixin hb-link-bar($width: $hb-link-bar-link) {
-  @include hb-pairing-color("background-color", "secondary");
+  background-color: var(--palette--secondary);
 
   content: "";
   display: block;
@@ -87,7 +87,7 @@ $hb-link-bar-link: 100%;
 }
 
 @mixin hb-active-border {
-  @include hb-pairing-color("border-color", "secondary");
+  border-color: var(--palette--secondary);
 
   border-width: hb-calculate-rems(6px);
   border-style: solid;
@@ -149,7 +149,7 @@ $hb-link-bar-link: 100%;
     .hb-dark-pattern &,
     .hb-dark-pattern &::after,
     .hb-dark-pattern &::before {
-      @include hb-global-color("background-color", "white");
+      background-color: var(--palette--white);
     }
   }
 
@@ -170,7 +170,7 @@ $hb-link-bar-link: 100%;
     // You must include the mixin after the variable if
     // you want the color to apply.
     border-bottom: $hb-medium-border;
-    @include hb-global-color("border-color", "gray");
+    border-color: var(--palette--gray);
 
     display: none;
     margin-bottom: hb-calculate-rems(28px);
@@ -209,7 +209,7 @@ $hb-link-bar-link: 100%;
 
   .megamenu__item {
     border-top: $hb-medium-border;
-    @include hb-global-color("border-color", "gray");
+    border-color: var(--palette--gray);
 
     .hb-private-page-link {
       @include hb-lock-props;
@@ -258,14 +258,14 @@ $hb-link-bar-link: 100%;
     }
 
     &:hover {
-      @include hb-global-color("color", "black");
+      color: var(--palette--black);
 
       @include hb-themes(("airy", "colorful")) {
-        @include hb-global-color("background-color", "gray-light");
+        background-color: var(--palette--gray-light);
       }
 
       @include hb-traditional {
-        @include hb-pairing-color("background-color", "tertiary-highlight");
+        background-color: var(--palette--tertiary-highlight);
       }
 
       @include grid-media-min("lg") {
@@ -275,7 +275,7 @@ $hb-link-bar-link: 100%;
 
         .hb-dark-pattern & {
           .js & {
-            @include hb-global-color("color", "white");
+            color: var(--palette--white);
           }
         }
       }
@@ -456,7 +456,7 @@ $hb-link-bar-link: 100%;
       @include hb-active-border;
 
       &:not(:has(+ .megamenu__list .megamenu__is-active)) {
-        @include hb-global-color("background-color", "gray-light");
+        background-color: var(--palette--gray-light);
 
         @include grid-media-min("lg") {
           background: none;
@@ -466,7 +466,7 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__is-active {
-    @include hb-global-color("background-color", "gray-light");
+    background-color: var(--palette--gray-light);
 
     @include grid-media-min("lg") {
       background: none;
@@ -490,13 +490,13 @@ $hb-link-bar-link: 100%;
       display: block;
 
       .js & {
-        @include hb-global-color("background-color", "white");
+        background-color: var(--palette--white);
 
         position: absolute;
         padding: hb-calculate-rems(44px) 0 hb-calculate-rems(89px);
         left: 50%;
         width: 200%;
-        color: hb-get-global-color("black", $hc-colorful-globals);
+        color: var(--palette--black);
         box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px)
           rgba(0, 0, 0, 0.63);
         opacity: 0;
@@ -514,14 +514,14 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub {
-    @include hb-global-color("color", "gray-dark");
+    color: var(--palette--gray-dark);
 
     padding-left: hb-calculate-rems(16px);
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight(semibold);
 
     .hb-dark-pattern & {
-      @include hb-global-color("color", "white");
+      color: var(--palette--white);
     }
 
     @include grid-media-min("md") {
@@ -530,7 +530,7 @@ $hb-link-bar-link: 100%;
 
     @include grid-media-min("lg") {
       .js & {
-        @include hb-global-color("color", "black");
+        color: var(--palette--black);
 
         display: flex;
         grid-gap: 0 hb-calculate-rems(52px);
@@ -548,7 +548,7 @@ $hb-link-bar-link: 100%;
           &:hover {
             .js & {
               &::after {
-                @include hb-global-color("background-color", "gray-light");
+                background-color: var(--palette--gray-light);
 
                 content: "";
                 position: absolute;
@@ -566,7 +566,7 @@ $hb-link-bar-link: 100%;
 
     .megamenu__item {
       border-top: $hb-thin-border;
-      @include hb-global-color("border-color", "gray");
+      border-color: var(--palette--gray);
 
       display: block;
       width: 100%;
@@ -589,7 +589,7 @@ $hb-link-bar-link: 100%;
         @include grid-media-min("lg") {
           .js & {
             border-top: $hb-medium-border;
-            @include hb-global-color("border-color", "gray-medium");
+            border-color: var(--palette--gray-medium);
 
             margin-top: hb-calculate-rems(12px);
             padding-top: hb-calculate-rems(16px);
@@ -609,7 +609,7 @@ $hb-link-bar-link: 100%;
       &:hover {
         @include grid-media-min("lg") {
           .js & {
-            @include hb-global-color("background-color", "gray-light");
+            background-color: var(--palette--gray-light);
 
             &::before {
               display: none;
@@ -638,10 +638,10 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__no-link {
-      @include hb-pairing-color("color", "tertiary");
+      color: var(--palette--tertiary);
 
       &:hover {
-        @include hb-pairing-color("color", "tertiary");
+        color: var(--palette--tertiary);
 
         background: none;
 
@@ -668,7 +668,7 @@ $hb-link-bar-link: 100%;
         @include grid-media-min("lg") {
           .js & {
             &:hover {
-              @include hb-global-color("color", "black");
+              color: var(--palette--black);
             }
           }
         }

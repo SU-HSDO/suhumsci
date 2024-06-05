@@ -2,40 +2,40 @@
 @mixin hb-icon-background($icon, $color) {
   @include hb-themes(('colorful', 'airy')) {
     @if map-has-key($hc-colorful-globals, $color) {
-      $icon-color: hb-get-global-color($color, $hc-colorful-globals);
-
+      $icon-color: map-get($hc-colorful-globals, $color);
       background-image: svg(hc-get-icons($icon, $icon-color));
+
     } @else {
-      $icon-color: hb-get-pairing-color($color, $hb-colorful-default, $hc-colorful-pairings);
+      $icon-color: map-get(map-get($hc-colorful-pairings, 'ocean'), $color);
       background-image: svg(hc-get-icons($icon, $icon-color));
 
       .hc-pairing-ocean & {
-        $icon-color: hb-get-pairing-color($color, 'ocean', $hc-colorful-pairings);
+        $icon-color: map-get(map-get($hc-colorful-pairings, 'ocean'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-mountain & {
-        $icon-color: hb-get-pairing-color($color, 'mountain', $hc-colorful-pairings);
+        $icon-color: map-get(map-get($hc-colorful-pairings, 'mountain'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-cardinal & {
-        $icon-color: hb-get-pairing-color($color, 'cardinal', $hc-colorful-pairings);
+        $icon-color: map-get(map-get($hc-colorful-pairings, 'cardinal'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-lake & {
-        $icon-color: hb-get-pairing-color($color, 'lake', $hc-colorful-pairings);
+        $icon-color: map-get(map-get($hc-colorful-pairings, 'lake'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-canyon & {
-        $icon-color: hb-get-pairing-color($color, 'canyon', $hc-colorful-pairings);
+        $icon-color: map-get(map-get($hc-colorful-pairings, 'canyon'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .hc-pairing-cliff & {
-        $icon-color: hb-get-pairing-color($color, 'cliff', $hc-colorful-pairings);
+        $icon-color: map-get(map-get($hc-colorful-pairings, 'cliff'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
     }
@@ -43,32 +43,33 @@
 
   @include hb-traditional {
     @if map-has-key($ht-traditional-globals, $color) {
-      $icon-color: hb-get-global-color($color, $ht-traditional-globals);
-
+      $icon-color: map-get($ht-traditional-globals, $color);
       background-image: svg(hc-get-icons($icon, $icon-color));
+
     } @else {
-      $icon-color: hb-get-pairing-color($color, $hb-traditional-default, $ht-traditional-pairings);
+      $icon-color: map-get(map-get($ht-traditional-pairings, 'cardinal'), $color);
       background-image: svg(hc-get-icons($icon, $icon-color));
 
       .ht-pairing-cardinal & {
-        $icon-color: hb-get-pairing-color($color, 'cardinal', $ht-traditional-pairings);
+        $icon-color: map-get(map-get($ht-traditional-pairings, 'cardinal'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .ht-pairing-bluejay & {
-        $icon-color: hb-get-pairing-color($color, 'bluejay', $ht-traditional-pairings);
+        $icon-color: map-get(map-get($ht-traditional-pairings, 'bluejay'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .ht-pairing-warbler & {
-        $icon-color: hb-get-pairing-color($color, 'warbler', $ht-traditional-pairings);
+        $icon-color: map-get(map-get($ht-traditional-pairings, 'warbler'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
 
       .ht-pairing-firefinch & {
-        $icon-color: hb-get-pairing-color($color, 'firefinch', $ht-traditional-pairings);
+        $icon-color: map-get(map-get($ht-traditional-pairings, 'firefinch'), $color);
         background-image: svg(hc-get-icons($icon, $icon-color));
       }
+
     }
   }
 }
@@ -156,12 +157,12 @@
 
   @include hb-themes(('airy', 'colorful')) {
     @include hb-icon-background('arrow-right-box-shadow', $color);
-    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 hb-get-global-color('black', $hc-colorful-globals));
+    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
   }
 
   @include hb-traditional {
     @include hb-icon-background('arrow-right-long-box-shadow', $color);
-    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 hb-get-global-color('black', $ht-traditional-globals));
+    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
   }
 }
 
@@ -200,7 +201,7 @@
     margin-left: hb-calculate-rems(4px);
 
     span.fa-envelope {
-      @include hb-pairing-color('color', 'tertiary');
+      color: var(--palette--tertiary);
     }
   }
 
@@ -208,7 +209,7 @@
   &:focus {
     span.fa-mailto {
       span.fa-envelope {
-        @include hb-pairing-color('color', 'tertiary-darken-20');
+        color: var(--palette--tertiary-darken-20);
       }
     }
   }

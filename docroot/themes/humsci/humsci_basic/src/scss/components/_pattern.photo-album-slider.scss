@@ -54,7 +54,7 @@
         @include hb-themes(("colorful", "airy")) {
           background: linear-gradient(
             to top,
-            hb-get-global-color("black", $hc-colorful-globals),
+            var(--palette--black),
             transparent
           );
         }
@@ -62,7 +62,7 @@
         @include hb-traditional {
           background: linear-gradient(
             to top,
-            hb-get-global-color("black", $ht-traditional-globals),
+            var(--palette--black),
             transparent
           );
         }
@@ -84,7 +84,7 @@
 
       li button {
         @include hb-unbuttonize;
-        @include hb-global-color("color", "white");
+        color: var(--palette--white);
         font-weight: hb-theme-font-weight(bold);
         display: none;
 

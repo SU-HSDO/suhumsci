@@ -26,9 +26,9 @@
         grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
       }
 
-      // Offset background color psuedo element
+      // Offset background color pseudo element
       &::before {
-        @include hb-global-color('background-color', 'gray-light');
+        background-color: var(--palette--gray-light);
         z-index: $hb-z-index-hero1-background;
 
         @include grid-media-min('md') {
@@ -39,13 +39,13 @@
         }
       }
 
-      // Secondary color block psuedo element that shows up in the grid
+      // Secondary color block pseudo element that shows up in the grid
       &::after {
         content: '';
         display: block;
         height: 100%;
         z-index: $hb-z-index-hero1-overlay;
-        @include hb-pairing-color('background-color', 'secondary');
+        background-color: var(--palette--secondary);
 
         @include grid-media-min('md') {
           grid-column: 1 / 2;
@@ -81,14 +81,14 @@
           padding-top: 0;
         }
 
-        // On mobile, make the secondary color box out of psuedo element,
+        // On mobile, make the secondary color box out of pseudo element,
         // then on 'md' breakpoint, it becomes part of the grid
         &::before {
           display: block;
           bottom: 0;
           left: -8.75%;
           top: initial;
-          @include psuedo-background-box('secondary', 50%, 8.75%);
+          @include pseudo-background-box('secondary', 50%, 8.75%);
           opacity: 1;
 
           @include grid-media-min('md') {
@@ -119,7 +119,7 @@
 
     &__text {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        background-color: var(--palette--primary-hero-overlay);
         padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
         width: auto !important;
@@ -194,7 +194,7 @@
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('background-color', 'primary-hero-overlay');
+        background-color: var(--palette--primary-hero-overlay);
         position: relative;
         margin: hb-spacing-width() 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         align-self: stretch;
@@ -461,7 +461,7 @@
         padding-top: hb-calculate-rems(5px);
 
         &::before {
-          @include hb-global-color('color', 'white');
+          color: var(--palette--white);
           content: '';
           @include hb-icon-ellipse-border('gray-light');
           height: hb-calculate-rems(11px);
@@ -472,11 +472,8 @@
 
           // Use box shadow property to improve visual accessibiity of slick dots.
           @include hb-themes(('airy', 'colorful')) {
-            $light-shadow: hb-get-global-color('gray-light', $hc-colorful-globals);
-            $dark-shadow: hb-get-global-color('black', $hc-colorful-globals);
-
-            // Fallback colors
-            $accent-shadow: hb-get-pairing-color('secondary', $hb-colorful-default, $hc-colorful-pairings);
+            $light-shadow: var(--palette--gray-light);
+            $dark-shadow: var(--palette--black);
 
             // For modern browsers
             $accent-shadow: var(--palette--secondary);
@@ -485,11 +482,8 @@
           }
 
           @include hb-traditional {
-            $light-shadow: hb-get-global-color('gray-light', $ht-traditional-globals);
-            $dark-shadow: hb-get-global-color('black', $ht-traditional-globals);
-
-            // Fallback accent color
-            $accent-shadow: hb-get-pairing-color('secondary', $hb-traditional-default, $ht-traditional-pairings);
+            $light-shadow: var(--palette--gray-light);
+            $dark-shadow: var(--palette--black);
 
             // For modern browsers
             $accent-shadow: var(--palette--secondary);

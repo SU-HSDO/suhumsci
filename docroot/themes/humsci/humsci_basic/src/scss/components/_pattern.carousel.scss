@@ -457,7 +457,7 @@
       .slick-active {
         button {
           &::before {
-            @include hb-icon-ellipse('gray-light');
+            @include hb-icon-type($icon: 'ellipse', $color: 'gray-light');
             font-size: hb-calculate-rems(40px);
           }
         }
@@ -471,7 +471,7 @@
         &::before {
           @include hb-global-color('color', 'white');
           content: '';
-          @include hb-icon-ellipse-border('gray-light');
+          @include hb-icon-type($icon: 'ellipse-border', $color: 'gray-light');
           height: hb-calculate-rems(11px);
           width: hb-calculate-rems(11px);
           display: block;
@@ -508,7 +508,7 @@
 
         &:hover::before,
         &:focus::before {
-          @include hb-icon-ellipse('gray-light');
+          @include hb-icon-type($icon: 'ellipse', $color: 'gray-light');
         }
       }
     }
@@ -637,7 +637,7 @@
         &::before {
           content: '';
           display: inline-block;
-          @include hb-icon-link-arrow-box-shadow('gray-light');
+          @include hb-icon-link-arrow($color: 'gray-light', $drop-shadow: true);
           background-size: 85%;
           height: hb-calculate-rems(25px);
           width: hb-calculate-rems(25px);

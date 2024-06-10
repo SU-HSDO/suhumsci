@@ -9,7 +9,7 @@
     position: absolute;
     height: calc(100% - 20px);
     width: 4px;
-    @include hb-pairing-color('background-color', 'primary');
+    background-color: var(--palette--primary);
     left: 1rem;
     bottom: hb-calculate-rems(-2px);
   }
@@ -26,14 +26,14 @@
         position: absolute;
         height: calc(100% - 20px);
         width: 4px;
-        @include hb-pairing-color('background-color', 'primary');
+        background-color: var(--palette--primary);
         left: 1rem;
         bottom: hb-calculate-rems(-2px);
       }
 
       // last item has small filled circle or square endcap when open
       &::after {
-        @include hb-pairing-color('background-color', 'primary');
+        background-color: var(--palette--primary);
         content: '';
         position: absolute;
         height: 12px;
@@ -75,7 +75,7 @@
     // in Safari where :focus-visible is not supported
     &:focus {
       outline: solid;
-      @include hb-pairing-color('outline-color', 'secondary-highlight-darken');
+      outline-color: var(--palette--secondary-highlight-darken);
     }
 
     // :only-child prevents timeline items without a description (revealed details) from having a pointer cursor
@@ -97,7 +97,7 @@
   }
 
   &__heading {
-    @include hb-pairing-color('color', 'primary');
+    color: var(--palette--primary);
     font-size: hb-calculate-rems(18px);
     font-weight: hb-theme-font-weight('bold');
     padding: 0 hb-calculate-rems(32px);

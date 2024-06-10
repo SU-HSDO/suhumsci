@@ -123,25 +123,26 @@
   &:hover {
     color: var(--palette--white);
     background-color: var(--palette--secondary);
-    border-color: var(--palette--secondary);
+
+    .hb-dark-pattern & {
+      background-color: transparent;
+    }
   }
 
   &:active,
   &:focus {
     background-color: transparent;
-    color: var(--palette--secondary);
     box-shadow:
       0 0 0 hb-calculate-rems(2px) var(--palette--white),
       0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
+
+    .hb-dark-pattern & {
+      box-shadow: none;
+    }
   }
 
   @include hb-traditional {
     border-width: hb-calculate-rems(1px);
-
-    &:hover {
-      color: var(--palette--white);
-      background-color: var(--palette--secondary);
-    }
 
     &:active,
     &:focus {
@@ -149,34 +150,10 @@
       outline-color: var(--palette--white);
       box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--secondary-active);
     }
-  }
 
-  .hb-dark-pattern & {
-    &:hover {
-      background-color: transparent;
-    }
-
-    &:active,
-    &:focus {
-      background-color: transparent;
-      box-shadow: none;
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--tertiary-reversed);
-      border-color: var(--palette--tertiary-reversed);
-
-      &:hover,
-      &:active,
-      &:focus {
-        color: var(--palette--secondary-highlight);
-        border-color: var(--palette--secondary-highlight);
-      }
-    }
-
-    @include hb-traditional {
+    .hb-dark-pattern & {
       color: var(--palette--tertiary-highlight);
-      border-color: var(--palette--tertiary-highlight);
+      border-color: var(--palette--tertiary-highlight); 
 
       &:hover,
       &:active,
@@ -195,6 +172,18 @@
       &:hover {
         color: var(--palette--white);
         background-color: var(--palette--secondary-darken-12);
+      }
+    }
+
+    .hb-dark-pattern & {
+      color: var(--palette--tertiary-reversed);
+      border-color: var(--palette--tertiary-reversed);
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--palette--secondary-highlight);
+        border-color: var(--palette--secondary-highlight);
       }
     }
   }

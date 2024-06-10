@@ -30,7 +30,6 @@
   margin: 0;
   background-color: transparent;
   color: inherit;
-  font: inherit;
 
   &:hover {
     cursor: pointer;
@@ -174,7 +173,9 @@
         background-color: var(--palette--secondary-darken-12);
       }
     }
+  }
 
+  @include hb-themes(('colorful', 'airy')) { 
     .hb-dark-pattern & {
       color: var(--palette--tertiary-reversed);
       border-color: var(--palette--tertiary-reversed);
@@ -196,6 +197,7 @@
   line-height: 1;
   min-height: auto;
   color: var(--palette--secondary);
+  cursor: pointer;
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
@@ -213,11 +215,6 @@
 
   &:focus {
     border-bottom-color: transparent;
-  }
-
-  &:hover,
-  &:focus {
-    cursor: pointer;
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -262,10 +259,6 @@
       &:hover {
         color: var(--palette--primary-dark);
         border-bottom-color: var(--palette--primary-dark);
-        background-color: transparent;
-        border-top-color: transparent;
-        border-left-color: transparent;
-        border-right-color: transparent;
       }
     }
   }

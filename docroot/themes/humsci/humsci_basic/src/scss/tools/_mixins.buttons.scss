@@ -15,7 +15,6 @@
 }
 
 @mixin hb-button-base {
-  @include hb-unbuttonize;
   display: inline-block;
   width: auto;
   font-weight: hb-theme-font-weight(semibold);
@@ -26,6 +25,12 @@
   border-width: hb-calculate-rems(2px);
   border-style: solid;
   transition: hb-transition(background-color), hb-transition(border-color);
+  border-radius: 0;
+  appearance: none; // Just in case we missed anything.
+  margin: 0;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
 
   &:hover {
     cursor: pointer;

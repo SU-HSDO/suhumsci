@@ -32,19 +32,11 @@
   position: absolute;
   height: $height;
   width: $width;
+  display: block;
 
   @include hb-colorful {
     background-color: var(--palette--#{$color});
   }
-}
-
-// Meant for the Colorful theme
-// Applies a colorful bar above text to a pseudo element
-// You can choose the color and width
-// Remember to add position: relative to the parent element
-@mixin hb-colorful-text-bar($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
-  display: block;
-  @include pseudo-background-box($color, $height, $width);
 }
 
 // Support nested list styles within both the ordered and unordered lists

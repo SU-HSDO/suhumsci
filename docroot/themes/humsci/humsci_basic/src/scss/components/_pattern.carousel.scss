@@ -90,11 +90,10 @@
         // On mobile, make the secondary color box out of pseudo element,
         // then on 'md' breakpoint, it becomes part of the grid
         &::before {
-          display: block;
+          @include pseudo-background-box('secondary', 50%, 8.75%);
           bottom: 0;
           left: -8.75%;
           top: initial;
-          @include pseudo-background-box('secondary', 50%, 8.75%);
           opacity: 1;
 
           @include grid-media-min('md') {
@@ -150,7 +149,7 @@
         // Line decoration pseudo element
         &::after {
           top: hb-calculate-rems(24px);
-          @include hb-colorful-text-bar('tertiary-reversed');
+          @include pseudo-background-box('tertiary-reversed', hb-calculate-rems(4px), hb-calculate-rems(65px));
 
           @include grid-media-min('md') {
             top: hb-calculate-rems(56px);

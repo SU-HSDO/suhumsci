@@ -58,13 +58,13 @@
 
       &::before {
         top: 0;
-        @include hb-colorful-text-bar('secondary');
+        @include pseudo-background-box('secondary', hb-calculate-rems(4px), hb-calculate-rems(65px));
 
         // Add a unique secondary color for Ocean on Colorful.
         // Note this is an extraordinary use case.
         // Targeting styles per color pairing should not become standard practice.
         .hc-pairing-ocean & {
-          @include hb-colorful-text-bar('secondary-darken-12');
+          @include pseudo-background-box('secondary-darken-12', hb-calculate-rems(4px), hb-calculate-rems(65px));
         }
       }
     }

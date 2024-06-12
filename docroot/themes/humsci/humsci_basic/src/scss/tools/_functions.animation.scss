@@ -4,7 +4,7 @@
 @function hb-transition($property) {
   $theme-animation-list: get-theme-array-list($hb-animation-list);
 
-  @if (length($theme-animation-list) > 0) {
+  @if length($theme-animation-list) > 0 {
     $duration: nth($theme-animation-list, 1);
     $timing-function: nth($theme-animation-list, 2);
     @return $property $duration $timing-function;

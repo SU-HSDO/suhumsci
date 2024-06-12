@@ -4,7 +4,7 @@
     display: none;
   }
 
-  @include hb-hero-full-width();
+  @include hb-hero-full-width;
 
   .hb-hero-overlay {
     display: block;
@@ -34,10 +34,8 @@
         @include grid-media-min('md') {
           position: unset;
           padding: hb-spacing-width() 0 hb-spacing-width() 10%;
-          grid-column-start: 1;
-          grid-column-end: 5;
-          grid-row-start: 1;
-          grid-row-end: 6;
+          grid-column: 1 / 5;
+          grid-row: 1 / 6;
         }
       }
 
@@ -50,10 +48,8 @@
         background-color: var(--palette--secondary);
 
         @include grid-media-min('md') {
-          grid-column-start: 1;
-          grid-column-end: 2;
-          grid-row-start: 3;
-          grid-row-end: 4;
+          grid-column: 1 / 2;
+          grid-row: 3 / 4;
         }
       }
     }
@@ -80,10 +76,8 @@
           // This will make sure that the image fills the entire area
           display: flex;
           margin-top: 0;
-          grid-column-start: 3;
-          grid-column-end: 6;
-          grid-row-start: 2;
-          grid-row-end: 5;
+          grid-column: 3 / 6;
+          grid-row: 2 / 5;
           padding-top: 0;
         }
 
@@ -129,16 +123,14 @@
         padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
         width: auto !important;
-        margin: 0 0 !important;
+        margin: 0 !important;
         transform: none;
         top: 0;
         left: 0;
 
         @include grid-media-min('md') {
-          grid-column-start: 2;
-          grid-column-end: 4;
-          grid-row-start: 4;
-          grid-row-end: 7;
+          grid-column: 2 / 4;
+          grid-row: 4 / 7;
           padding: hb-calculate-rems(64px) hb-spacing-width() hb-spacing-width();
           width: auto !important;
         }
@@ -215,7 +207,7 @@
         }
 
         @include grid-media-min('md') {
-          padding: 5rem 0 5rem;
+          padding: 5rem 0;
           left: hb-spacing-width();
           width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }

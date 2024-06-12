@@ -43,7 +43,7 @@ $item-line-height-lg: 110%;
       .hb-dark-pattern &,
       .hb-dark-pattern &::after,
       .hb-dark-pattern &::before {
-        @include hb-global-color('background-color', 'white');
+        background-color: var(--palette--white);
       }
     }
 
@@ -73,7 +73,7 @@ $item-line-height-lg: 110%;
       font-weight: hb-theme-font-weight(semibold);
       font-size: hb-calculate-rems(20px);
       border-bottom: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray');
+      border-color: var(--palette--gray);
 
       &[aria-hidden="false"] {
         margin-bottom: hb-calculate-rems(28px);
@@ -130,7 +130,7 @@ $item-line-height-lg: 110%;
 
     .hb-main-nav__menu-lv1 > & {
       border-top: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray');
+      border-color: var(--palette--gray);
 
       @include grid-media-min('lg') {
         .js & {
@@ -142,7 +142,7 @@ $item-line-height-lg: 110%;
 
     .hb-main-nav__menu-lv2 &:not(:last-child) {
       border-bottom: $hb-thin-border;
-      @include hb-global-color('border-color', 'gray');
+      border-color: var(--palette--gray);
 
       @include grid-media-min('lg') {
         .js & {
@@ -160,11 +160,11 @@ $item-line-height-lg: 110%;
     line-height: $item-line-height-sm;
 
     @include hb-themes(('airy', 'colorful')) {
-      @include hb-global-color('color', 'black');
+      color: var(--palette--black);
     }
 
     @include hb-traditional {
-      @include hb-global-color('color', 'gray-dark');
+      color: var(--palette--gray-dark);
     }
 
     @include grid-media-min('md') {
@@ -189,10 +189,10 @@ $item-line-height-lg: 110%;
     }
 
     &:hover:not(.is-active) {
-      @include hb-global-color('color', 'black');
-
+      color: var(--palette--black);
+      
       .hb-dark-pattern & {
-        @include hb-global-color('color', 'black');
+        color: var(--palette--black);
 
         & + .hb-main-nav__button,
         &.hb-nested-toggler::after {
@@ -205,10 +205,10 @@ $item-line-height-lg: 110%;
         }
 
         @include grid-media-min('lg') {
-          @include hb-global-color('color', 'white');
+          color: var(--palette--white);
 
           .no-js & {
-            @include hb-global-color('color', 'black');
+            color: var(--palette--black);
           }
 
           & + .hb-main-nav__button,
@@ -224,27 +224,27 @@ $item-line-height-lg: 110%;
       }
 
       @include hb-themes(('airy', 'colorful')) {
-        @include hb-global-color('background-color', 'gray-light');
+        background-color: var(--palette--gray-light);
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('background-color', 'tertiary-highlight');
+        background-color: var(--palette--tertiary-highlight);
       }
     }
 
     // Targeting only the first level of navigation on desktop
     .hb-main-nav__menu-lv1 > li > & {
-      @include hb-global-color('color', 'black');
+      color: var(--palette--black);
 
       .hb-dark-pattern & {
-        @include hb-global-color('color','white');
+        color: var(--palette--white);
 
         &.is-active {
-          @include hb-global-color('color', 'black');
-          @include hb-pairing-color('background-color', 'secondary-highlight');
-
+          color: var(--palette--black);
+          background-color: var(--palette--secondary-highlight);
+          
           @include grid-media-min('lg') {
-            @include hb-global-color('color', 'white');
+            color: var(--palette--white);
           }
         }
 
@@ -252,16 +252,16 @@ $item-line-height-lg: 110%;
           &.hb-main-nav__link--active-trail {
             /* stylelint-disable max-nesting-depth */
             &::before {
-              @include hb-pairing-color('background-color', 'tertiary-reversed');
+              background-color: var(--palette--tertiary-reversed);
             }
 
             &:hover,
             &:focus {
               &::before {
-                @include hb-pairing-color('background-color', 'secondary');
+                background-color: var(--palette--secondary);
 
                 @include grid-media-min('lg') {
-                  @include hb-pairing-color('background-color', 'tertiary-reversed');
+                  background-color: var(--palette--tertiary-reversed);
                 }
               }
             }
@@ -288,14 +288,14 @@ $item-line-height-lg: 110%;
         }
 
         .js &.hb-main-nav__link--active-trail::before {
-          @include hb-pairing-color('background-color', 'secondary');
+          background-color: var(--palette--secondary);
         }
 
         .js &:hover {
           background-color: transparent;
 
           &:not(.is-active):not(.hb-main-nav__link--active-trail)::before {
-            @include hb-global-color('background-color', 'gray');
+            background-color: var(--palette--gray);
           }
         }
       }
@@ -311,18 +311,18 @@ $item-line-height-lg: 110%;
 
       &:focus,
       &:hover:not(.is-active) {
-        @include hb-global-color('color', 'black');
+        color: var(--palette--black);
 
         @include hb-themes(('colorful', 'airy')) {
-          @include hb-global-color('background-color', 'gray-light');
+          background-color: var(--palette--gray-light);
         }
 
         @include hb-traditional {
-          @include hb-pairing-color('background-color', 'tertiary-highlight');
+          background-color: var(--palette--tertiary-highlight);
         }
 
         .hb-dark-pattern & {
-          @include hb-global-color('color', 'black');
+          color: var(--palette--black);
 
           & + .hb-nested-toggler,
           &::after {
@@ -340,39 +340,39 @@ $item-line-height-lg: 110%;
         @include grid-media-min('lg') {
           &:hover,
           &:focus {
-            @include hb-global-color('color', 'white');
-            @include hb-pairing-color('background-color', 'primary-dark');
+            color: var(--palette--white);
+            background-color: var(--palette--primary-dark);
           }
         }
       }
 
       .hb-dark-pattern & {
-        @include hb-global-color('color', 'white');
+        color: var(--palette--white);
 
         &.is-active {
-          @include hb-global-color('color', 'black');
-          @include hb-pairing-color('background-color', 'secondary-highlight');
+          color: var(--palette--black);
+          background-color: var(--palette--secondary-highlight);
 
           &::before {
-            @include hb-pairing-color('background-color', 'secondary');
+            background-color: var(--palette--secondary);
           }
         }
 
         @include grid-media-min('lg') {
           .no-js & {
-            @include hb-global-color('color', 'white');
+            color: var(--palette--white);
           }
 
           &,
           &:hover:not(.is-active),
           &.is-active {
-            @include hb-global-color('color', 'black');
+            color: var(--palette--black);
           }
 
           .hb-dark-inversion & {
             /* stylelint-disable max-nesting-depth */
             &:hover:not(.is-active) {
-              @include hb-global-color('color', 'white');
+              color: var(--palette--white);
             }
             /* stylelint-enable max-nesting-depth */
           }
@@ -390,15 +390,15 @@ $item-line-height-lg: 110%;
         top: 0;
         bottom: 0;
         left: 0;
-        @include hb-pairing-color('background-color', 'secondary');
+        background-color: var(--palette--secondary);
       }
 
       &.is-active {
-        @include hb-pairing-color('background-color', 'secondary-highlight');
-        @include hb-global-color('color', 'black');
+        background-color: var(--palette--secondary-highlight);
+        color: var(--palette--black);
 
         &::before {
-          @include hb-pairing-color('background-color', 'secondary');
+          background-color: var(--palette--secondary);
         }
       }
     }
@@ -561,7 +561,7 @@ $item-line-height-lg: 110%;
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
     border-top: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray');
+    border-color: var(--palette--gray);
 
     &[aria-hidden="true"] {
       display: none;
@@ -575,8 +575,8 @@ $item-line-height-lg: 110%;
         width: 100%;
         padding: 0;
         border: $hb-thin-border;
-        @include hb-global-color('border-color', 'gray');
-        @include hb-global-color('background-color', 'white');
+        border-color: var(--palette--gray);
+        background-color: var(--palette--white);
       }
 
       // Prevents the last dropdown from hanging off the edge of the screen if

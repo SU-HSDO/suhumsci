@@ -9,9 +9,9 @@ summary:not(.hb-timeline-item__summary) {
   font-weight: hb-theme-font-weight('semibold');
   cursor: pointer;
   border: $hb-thin-border;
-  @include hb-pairing-color('border-color', 'secondary');
-  @include hb-pairing-color('background-color', 'secondary');
-  @include hb-global-color('color', 'white');
+  border-color: var(--palette--secondary);
+  background-color: var(--palette--secondary);
+  color: var(--palette--white);
 
   // This is to position everything correctly in browsers that do not support the
   // -webkit-details-marker pseudo element
@@ -49,28 +49,28 @@ summary:not(.hb-timeline-item__summary) {
 
   &:hover,
   details[open] & {
-    @include hb-pairing-color('background-color', 'secondary-darken-12');
-    @include hb-pairing-color('border-color', 'secondary-darken-12');
+    background-color: var(--palette--secondary-darken-12);
+    border-color: var(--palette--secondary-darken-12);
   }
 
   &:focus,
   details[open] &:focus {
     outline: none;
-    @include hb-global-color('border-color', 'white');
+    border-color: var(--palette--white);
 
     @include hb-themes(('colorful', 'airy')) {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-colorful-default, $hc-colorful-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
     }
 
     @include hb-traditional {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) hb-get-pairing-color('secondary-active', $hb-traditional-default, $ht-traditional-pairings);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
     }
 
     box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
   }
 
   .summary {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
 
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight('semibold');
@@ -89,6 +89,6 @@ summary:not(.hb-timeline-item__summary) {
 .revealed-details {
   padding: hb-calculate-rems(20px) hb-calculate-rems(16px);
   border: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray-medium');
+  border-color: var(--palette--gray-medium);
   border-top: none;
 }

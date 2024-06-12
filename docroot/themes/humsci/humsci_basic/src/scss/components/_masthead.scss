@@ -2,7 +2,7 @@
   box-shadow: none;
   z-index: $hb-z-index-masthead;
   border-bottom: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray');
+  border-color: var(--palette--gray);
 
   .su-lockup {
     // Match and override inherited 'decanter' styles
@@ -62,7 +62,7 @@
           width: hb-calculate-rems(120px);
 
           .hb-dark-pattern & {
-            @include hb-global-color('border-color', 'white');
+            border-color: var(--palette--white);
           }
         }
       }
@@ -118,7 +118,7 @@
       &__line3,
       &__line4,
       &__line5 {
-        @include hb-global-color('color', 'white');
+        color: var(--palette--white);
       }
 
       // Dark mode masthead lockup vertical pipe
@@ -126,7 +126,7 @@
       &__cell2,
       &__line4::after,
       &__line5::before {
-        @include hb-global-color('border-color', 'white');
+        border-color: var(--palette--white);
       }
     }
   }

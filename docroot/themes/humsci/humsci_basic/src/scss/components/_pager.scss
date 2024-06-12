@@ -16,31 +16,31 @@
   .pager__item--next,
   .pager__item--previous {
     a {
-      @include hb-pairing-color('color', 'secondary');
+      color: var(--palette--secondary);
       text-decoration: none;
-
+      
       &:focus,
       &:hover {
-        @include hb-pairing-color('color', 'secondary');
+        color: var(--palette--secondary);
         text-decoration: underline;
         background-image: none;
         background-color: transparent;
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
-          @include hb-pairing-color('color', 'tertiary-highlight');
+          color: var(--palette--tertiary-highlight);
         }
       }
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         border: none;
-        @include hb-pairing-color('color', 'tertiary-reversed');
+        color: var(--palette--tertiary-reversed);
       }
 
       @include hb-colorful {
         .hc-pairing-ocean & {
-          @include hb-pairing-color('color', 'secondary-darken-12');
+          color: var(--palette--secondary-darken-12);
         }
       }
     }
@@ -65,7 +65,7 @@
     }
 
     a {
-      @include hb-global-color('color', 'gray-dark');
+      color: var(--palette--gray-dark);
       display: inline-block;
       padding: hb-calculate-rems(6px) hb-calculate-rems(9px);
       border-radius: $hb-button-border-radius;
@@ -88,23 +88,23 @@
 
       &:hover,
       &:focus {
-        @include hb-global-color('background-color', 'gray-medium');
+        background-color: var(--palette--gray-medium);
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
           background-color: transparent;
-          @include hb-pairing-color('border-color', 'tertiary-highlight');
+          border-color: var(--palette--tertiary-highlight);
         }
       }
     }
 
     &.is-active {
-      @include hb-global-color('background-color', 'gray-dark');
+      background-color: var(--palette--gray-dark);
       display: inline-block;
       border-radius: $hb-button-border-radius;
 
       a {
-        @include hb-global-color('color', 'white');
+        color: var(--palette--white);
 
         &:hover,
         &:focus {
@@ -114,7 +114,7 @@
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
-          @include hb-pairing-color('color', 'tertiary-highlight');
+          color: var(--palette--tertiary-highlight);
         }
       }
     }

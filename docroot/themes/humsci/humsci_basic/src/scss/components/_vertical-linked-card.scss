@@ -14,12 +14,14 @@
     // overlap issues.
     margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
     padding-bottom: hb-calculate-rems(28px);
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
 
-    $hb-bg--fallback: hb-get-pairing-color('primary-dark', $hb-colorful-default, $hc-colorful-pairings);
-    $hb-bg--pairing: var(--palette--primary-dark);
-
-    @include hb-vertical-card-background-block(transparent, $hb-bg--fallback, $hb-bg--pairing);
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      transparent hb-calculate-rems(20px),
+      var(--palette--primary-dark) hb-calculate-rems(20px)
+    );
   }
 
   .hb-stretch-vertical-linked-cards & {
@@ -73,17 +75,18 @@
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
-      @include hb-pairing-color('background-color', 'secondary');
+      background-color: var(--palette--secondary);
 
       @include grid-media-min('sm') {
-        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0
+          hb-calculate-rems(-31px);
       }
     }
 
     @include hb-traditional {
       padding: hb-calculate-rems(16px);
-      @include hb-global-color('color', 'white');
-      @include hb-pairing-color('background-color', 'primary');
+      color: var(--palette--white);
+      background-color: var(--palette--primary);
       margin: 0;
     }
 
@@ -91,11 +94,11 @@
     .hb-vertical-linked-card:focus &,
     .hb-vertical-linked-card.is-focused & {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('background-color', 'secondary-darken-12');
+        background-color: var(--palette--secondary-darken-12);
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('background-color', 'primary-dark');
+        background-color: var(--palette--primary-dark);
         text-decoration: underline;
       }
     }
@@ -113,7 +116,7 @@
         width: hb-calculate-rems(27.5px);
         background-size: 60%;
       }
-      
+
       @include hb-traditional {
         width: hb-calculate-rems(33px);
         background-size: auto;
@@ -132,12 +135,12 @@
 
   &__title__link,
   &__title__link.ext {
-    @include hb-global-color('color', 'white');
+    color: var(--palette--white);
     text-decoration: none;
 
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
 
       background-image: none;
     }
@@ -153,8 +156,9 @@
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('background-color', 'tertiary-reversed');
-      padding: hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(28px);
+      background-color: var(--palette--tertiary-reversed);
+      padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
+        hb-calculate-rems(28px);
     }
 
     @include grid-media-min('sm') {
@@ -170,7 +174,7 @@
     a.hs-pdf-link,
     a.hs-file-link {
       @include hb-traditional {
-        @include hb-global-color('color', 'black');
+        color: var(--palette--black);
       }
 
       &:hover,
@@ -178,16 +182,17 @@
         background-image: none;
 
         @include hb-traditional {
-          @include hb-global-color('color', 'gray-dark');
+          color: var(--palette--gray-dark);
         }
 
         @include hb-colorful {
-          @include hb-global-color('color', 'gray-medium');
+          color: var(--palette--gray-medium);
         }
       }
     }
 
-    .field-hs-postcard-body a.hs-private-link { // Need extra nesting level for specificity.
+    .field-hs-postcard-body a.hs-private-link {
+      // Need extra nesting level for specificity.
       &::before {
         @include hb-traditional {
           @include hb-icon-background('lock', 'black');

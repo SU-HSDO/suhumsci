@@ -1,6 +1,6 @@
 @mixin hb-input-border {
   border: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray');
+  border-color: var(--palette--gray);
 
   @include hb-themes(('colorful', 'airy')) {
     border-radius: $hb-border-radius;
@@ -13,7 +13,7 @@
 }
 
 @mixin hb-focus {
-  @include hb-pairing-color('outline-color', 'primary');
+  outline-color: var(--palette--primary);
 
   outline-width: hb-calculate-rems(3px);
   outline-style: solid;

@@ -27,7 +27,7 @@
 // Adds a background box pseudo element
 // You can choose the color and height
 // Remember to add position: relative to the parent element
-@mixin pseudo-background-box($color, $height: 100%, $width: 100%) {
+@mixin pseudo-background-box($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
   content: ' ';
   position: absolute;
   height: $height;
@@ -101,12 +101,12 @@
   }
 }
 
-@mixin hb-base-list {
+@mixin hb-unordered-list {
   list-style-type: none;
   margin: 0 0 hb-spacing-width('md');
+  padding-left: hb-calculate-rems(22px);
 
-  ul,
-  ol {
+  ul {
     margin: hb-calculate-rems(10px) 0 0;
   }
 
@@ -114,23 +114,10 @@
     position: relative;
     line-height: 122%;
     margin-bottom: hb-calculate-rems(10px);
-
-    // This prevents the list item to float behind images that are floated to the left
-    overflow: hidden;
-
-    &::before {
-      position: absolute;
-      left: 0;
-    }
-  }
-}
-
-@mixin hb-unordered-list {
-  @include hb-base-list;
-  padding-left: hb-calculate-rems(22px);
-
-  li {
     padding-left: hb-calculate-rems(18px);
+
+     // This prevents the list item to float behind images that are floated to the left
+     overflow: hidden;
 
     &::before {
       content: '';
@@ -139,6 +126,8 @@
       width: hb-calculate-rems(6px);
       border-radius: 50%;
       background-color: var(--palette--secondary);
+      position: absolute;
+      left: 0;
       top: hb-calculate-rems(8px);
 
       .hb-dark-pattern &,
@@ -157,12 +146,23 @@
 }
 
 @mixin hb-ordered-list {
-  @include hb-base-list;
   counter-reset: li;
+  list-style-type: none;
+  margin: 0 0 hb-spacing-width('md');
   padding-left: hb-calculate-rems(8px);
 
+  ol {
+    margin: hb-calculate-rems(10px) 0 0;
+  }
+
   li {
+    position: relative;
+    line-height: 122%;
+    margin-bottom: hb-calculate-rems(10px);
     padding-left: hb-calculate-rems(38px); // should only be 18px when on a UL // was 28
+
+     // This prevents the list item to float behind images that are floated to the left
+     overflow: hidden;
 
     &::before {
       content: counter(li) '.';
@@ -170,6 +170,8 @@
       font-size: hb-calculate-rems(16px);
       font-weight: hb-theme-font-weight(semibold);
       color: var(--palette--secondary);
+      position: absolute;
+      left: 0;
       top: 0;
       min-width: hb-calculate-rems(30px);
       text-align: right;

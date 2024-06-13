@@ -34,9 +34,7 @@
   font-weight: hb-theme-font-weight(semibold);
 
   @include hb-themes(('colorful', 'airy')) {
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    border-bottom-color: var(--palette--gray-medium);
+    border-bottom: 2px solid var(--palette--gray-medium);
     @include hb-link--hover-style('tertiary-highlight', 'tertiary-highlight-darken-10');
 
     &:hover,
@@ -155,7 +153,12 @@
     .hb-table-wrap &,
     .hb-columns &,
     .hb-timeline-item__heading &,
-    .views-field:not(.views-field-title):not(.views-field-edit-node):not(.views-field-field-hs-event-series):not(.views-field-field-hs-news-categories):not(.views-field-field-hs-person-research) & {
+    .views-field:not(.views-field-title):not(.views-field-edit-node):not(
+        .views-field-field-hs-event-series
+      ):not(.views-field-field-hs-news-categories):not(
+        .views-field-field-hs-person-research
+      )
+      & {
       .ht-pairing-warbler & {
         color: var(--palette--secondary);
 
@@ -401,7 +404,8 @@
     }
   }
 
-  &::before { // postcard arrow
+  &::before {
+    // postcard arrow
     content: '';
     position: absolute;
     left: 0;
@@ -424,15 +428,15 @@
   }
 }
 
-//PDF Icon Link
+// PDF Icon Link
 @mixin hb-pdf-link {
   @include hb-link--inline;
   color: var(--palette--secondary);
 
   &::before {
-    content: "\f1c1";
+    content: '\f1c1';
     /* stylelint-disable */
-    font-family: "Font Awesome 5 Free";
+    font-family: 'Font Awesome 5 Free';
     /* stylelint-enable */
     font-weight: 900;
     -webkit-font-smoothing: antialiased;
@@ -490,7 +494,7 @@
   }
 }
 
-//File Icon Link
+// File Icon Link
 @mixin hb-file-link {
   @include hb-link--inline;
   color: var(--palette--secondary);
@@ -508,9 +512,9 @@
   }
 
   &::before {
-    content: "\f15b";
+    content: '\f15b';
     /* stylelint-disable */
-    font-family: "Font Awesome 5 Free";
+    font-family: 'Font Awesome 5 Free';
     /* stylelint-enable */
     font-weight: 900;
     -webkit-font-smoothing: antialiased;

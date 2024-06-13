@@ -23,6 +23,9 @@ services:
 
       # Commands that set up the basic preview infrastructure
       init:
+        # Add nodeJS to build theme assets after composer install
+        - curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
+        - apt-get install -y nodejs
         # Symlink the tugboat directory to the docker image expected path.
         - rm -rf /var/www/localhost
         - ln -snf ${TUGBOAT_ROOT} /var/www/localhost
@@ -61,6 +64,8 @@ services:
         - drush @hs_traditional.local cr
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
+
+        - npm run theme-build
 
     # Collection of urls to compare visual results.
     urls:

@@ -1,7 +1,7 @@
 // This mixin could use some additional work to DRY up the code.
 @mixin hb-icon-background($icon, $color) {
   @include hb-themes(('colorful', 'airy')) {
-    @if (map-has-key($hc-colorful-globals, $color)) {
+    @if map-has-key($hc-colorful-globals, $color) {
       $icon-color: map-get($hc-colorful-globals, $color);
       background-image: svg(hc-get-icons($icon, $icon-color));
 
@@ -42,7 +42,7 @@
   }
 
   @include hb-traditional {
-    @if (map-has-key($ht-traditional-globals, $color)) {
+    @if map-has-key($ht-traditional-globals, $color) {
       $icon-color: map-get($ht-traditional-globals, $color);
       background-image: svg(hc-get-icons($icon, $icon-color));
 
@@ -174,7 +174,7 @@
       color: var(--palette--tertiary);
     }
   }
-  
+
   &:hover,
   &:focus {
     span.fa-mailto {

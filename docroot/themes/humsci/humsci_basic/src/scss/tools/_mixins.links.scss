@@ -188,6 +188,19 @@
   padding: 0;
   color: var(--palette--secondary);
 
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+    word-break: break-word;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-weight: hb-theme-font-weight(bold);
+
+    .hc-pairing-ocean & {
+      color: var(--palette--secondary-darken-12);
+    }
+  }
+
   &::after {
     content: '';
     display: inline-block;
@@ -197,7 +210,11 @@
     transition: hb-transition(transform);
     will-change: contents;
 
-    @include hb-colorful {
+    @include hb-themes(('colorful', 'airy')) {
+      height: hb-calculate-rems(19px);
+      width: hb-calculate-rems(19px);
+      margin-bottom: hb-calculate-rems(-4px);
+
       .hc-pairing-ocean & {
         @include hb-icon-link-arrow('primary');
         background-size: 85%;
@@ -208,6 +225,12 @@
         background-size: 85%;
       }
     }
+
+    @include hb-traditional {
+      height: hb-calculate-rems(25px);
+      width: hb-calculate-rems(25px);
+      margin-bottom: hb-calculate-rems(-7px);
+    };
   }
 
   &:hover,
@@ -230,47 +253,19 @@
       }
     }
 
-    // Warbler color pairing override.
-    @include hb-traditional {
-      .ht-pairing-warbler & {
-        color: var(--palette--secondary-darken-12);
-      }
-    }
-  }
-
-  @include hb-themes(('colorful', 'airy')) {
-    font-weight: hb-theme-font-weight(bold);
-
-    &::after {
-      height: hb-calculate-rems(19px);
-      width: hb-calculate-rems(19px);
-      margin-bottom: hb-calculate-rems(-4px);
-    }
-  }
-
-  @include hb-colorful {
-    .hc-pairing-ocean & {
-      color: var(--palette--secondary-darken-12);
-
-      &:hover {
+    @include hb-themes(('colorful', 'airy')) {
+      .hc-pairing-ocean & {
         color: var(--palette--primary-dark);
       }
     }
-  }
 
-  @include hb-traditional {
-    font-weight: hb-theme-font-weight(semibold);
-    word-break: break-word;
-
-    &:hover,
-    &:focus {
+    // Warbler color pairing override.
+    @include hb-traditional {
       text-decoration: underline;
-    }
 
-    &::after {
-      height: hb-calculate-rems(25px);
-      width: hb-calculate-rems(25px);
-      margin-bottom: hb-calculate-rems(-7px);
+      .ht-pairing-warbler & {
+        color: var(--palette--secondary-darken-12);
+      }
     }
   }
 

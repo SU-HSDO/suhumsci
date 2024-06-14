@@ -27,16 +27,24 @@
 // Adds a background box pseudo element
 // You can choose the color and height
 // Remember to add position: relative to the parent element
-@mixin pseudo-background-box($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
+@mixin pseudo-background-box($color, $height: 100%, $width: 100%) {
   content: ' ';
   position: absolute;
   height: $height;
   width: $width;
-  display: block;
 
   @include hb-colorful {
     background-color: var(--palette--#{$color});
   }
+}
+
+// Meant for the Colorful theme
+// Applies a colorful bar above text to a pseudo element
+// You can choose the color and width
+// Remember to add position: relative to the parent element
+@mixin hb-colorful-text-bar($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
+  display: block;
+  @include pseudo-background-box($color, $height, $width);
 }
 
 // Support nested list styles within both the ordered and unordered lists
@@ -116,8 +124,8 @@
     margin-bottom: hb-calculate-rems(10px);
     padding-left: hb-calculate-rems(18px);
 
-     // This prevents the list item to float behind images that are floated to the left
-     overflow: hidden;
+    // This prevents the list item to float behind images that are floated to the left
+    overflow: hidden;
 
     &::before {
       content: '';
@@ -161,8 +169,8 @@
     margin-bottom: hb-calculate-rems(10px);
     padding-left: hb-calculate-rems(38px); // should only be 18px when on a UL // was 28
 
-     // This prevents the list item to float behind images that are floated to the left
-     overflow: hidden;
+    // This prevents the list item to float behind images that are floated to the left
+    overflow: hidden;
 
     &::before {
       content: counter(li) '.';

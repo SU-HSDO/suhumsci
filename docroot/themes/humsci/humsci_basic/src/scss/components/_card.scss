@@ -486,6 +486,17 @@
     h6 {
       text-transform: initial;
     }
+
+    a {
+      // Warbler color pairing override.
+      @include hb-traditional {
+        .ht-pairing-warbler & {
+          &, &:hover, &:focus {
+            color: var(--palette--black);
+          }
+        }
+      }
+    }
   }
 
   &__author {

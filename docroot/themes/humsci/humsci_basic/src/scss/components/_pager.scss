@@ -18,7 +18,7 @@
     a {
       color: var(--palette--secondary);
       text-decoration: none;
-      
+
       &:focus,
       &:hover {
         color: var(--palette--secondary);
@@ -115,6 +115,35 @@
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
           color: var(--palette--tertiary-highlight);
+        }
+      }
+    }
+
+    // Warbler color pairing override.
+    @include hb-traditional {
+      .ht-pairing-warbler & {
+        a {
+          color: var(--palette--gray-dark);
+
+          &:hover, &:focus {
+            color: var(--palette--tertiary-darken-20);
+          }
+
+        }
+        &.is-active {
+          a {
+            &, &:hover, &:focus {
+              color: var(--palette--white);
+            }
+          }
+        }
+
+        &--first, &--last, &--next, &--previous {
+          a {
+            &, &:hover, &:focus {
+              color: var(--palette--secondary);
+            }
+          }
         }
       }
     }

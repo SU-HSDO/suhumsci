@@ -73,41 +73,14 @@
   // no font size by default
   color: var(--palette--tertiary);
 
-  &:hover,
-  &:focus {
-    color: var(--palette--tertiary-darken-20);
-  }
-
   @include hb-themes(('colorful', 'airy')) {
     @include hb-link-background-image($icon, $icon-width, $icon-position);
     background-size: 100% 200%;
     background-position-y: -102%;
     background-repeat: no-repeat;
 
-    &:hover,
-    &:focus {
-      background-position-y: -50%;
-
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        border-bottom-color: var(--palette--tertiary-highlight);
-        box-shadow: none;
-        background-position-y: bottom;
-      }
-    }
-
-    .hb-vertical-linked-card__description & {
-      @include hb-colorful {
-        color: var(--palette--white);
-        background-image: none;
-      }
-
-      :hover,
-      :focus {
-        @include hb-colorful {
-          color: var(--palette--gray-medium);
-        }
-      }
+    .hc-pairing-ocean .hb-well & {
+      color: var(--palette--primary);
     }
   }
 
@@ -117,9 +90,20 @@
     // Warbler color pairing override.
     .ht-pairing-warbler & {
       color: var(--palette--secondary);
+    }
+  }
 
-      &:hover,
-      &:focus {
+  &:hover,
+  &:focus {
+    color: var(--palette--tertiary-darken-20);
+
+    @include hb-themes(('colorful', 'airy')) {
+      background-position-y: -50%;
+    }
+
+    @include hb-traditional {
+      // Warbler color pairing override.
+      .ht-pairing-warbler & {
         color: var(--palette--tertiary);
       }
     }
@@ -158,6 +142,9 @@
         @include hb-ext-icon-color('tertiary-highlight');
 
         color: var(--palette--tertiary-highlight);
+        border-bottom-color: var(--palette--tertiary-highlight);
+        box-shadow: none;
+        background-position-y: bottom;
       }
 
       @include hb-traditional {
@@ -166,12 +153,6 @@
         color: var(--palette--tertiary-highlight-darken-10);
         text-decoration-color: var(--palette--tertiary-highlight-darken-10);
       }
-    }
-  }
-
-  @include hb-colorful {
-    .hc-pairing-ocean .hb-well & {
-      color: var(--palette--primary);
     }
   }
 }

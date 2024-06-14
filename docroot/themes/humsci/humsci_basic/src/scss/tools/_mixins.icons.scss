@@ -136,62 +136,32 @@
   }
 }
 
-@mixin hb-icon-link-arrow($color: 'black') {
+@mixin hb-icon-link-arrow($color: 'black', $box-shadow: false) {
   background-repeat: no-repeat;
   background-position: left;
   background-size: 55%;
 
   @include hb-themes(('airy', 'colorful')) {
-    @include hb-icon-background('arrow-right', $color);
+    @if $box-shadow {
+      @include hb-icon-background('arrow-right-box-shadow', $color);
+      filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+    } @else {
+      @include hb-icon-background('arrow-right', $color);
+    }
   }
 
   @include hb-traditional {
-    @include hb-icon-background('arrow-right-long', $color);
+    @if $box-shadow {
+      @include hb-icon-background('arrow-right-long-box-shadow', $color);
+      filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+    } @else {
+      @include hb-icon-background('arrow-right-long', $color);
+    }
   }
 }
 
-@mixin hb-icon-link-arrow-box-shadow($color: 'black') {
-  background-repeat: no-repeat;
-  background-position: left;
-  background-size: 55%;
-
-  @include hb-themes(('airy', 'colorful')) {
-    @include hb-icon-background('arrow-right-box-shadow', $color);
-    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
-  }
-
-  @include hb-traditional {
-    @include hb-icon-background('arrow-right-long-box-shadow', $color);
-    filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
-  }
-}
-
-@mixin hb-icon-calendar($color: 'black') {
-  @include hb-icon-background('calendar', $color);
-  background-repeat: no-repeat;
-  background-position: top left;
-}
-
-@mixin hb-icon-location($color: 'black') {
-  @include hb-icon-background('location', $color);
-  background-repeat: no-repeat;
-  background-position: top left;
-}
-
-@mixin hb-icon-speaker($color: 'black') {
-  @include hb-icon-background('speaker', $color);
-  background-repeat: no-repeat;
-  background-position: top left;
-}
-
-@mixin hb-icon-ellipse($color: 'black') {
-  @include hb-icon-background('ellipse', $color);
-  background-repeat: no-repeat;
-  background-position: top left;
-}
-
-@mixin hb-icon-ellipse-border($color: 'black') {
-  @include hb-icon-background('ellipse-border', $color);
+@mixin hb-icon-type($type, $color) {
+  @include hb-icon-background($type, $color);
   background-repeat: no-repeat;
   background-position: top left;
 }

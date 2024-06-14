@@ -136,13 +136,13 @@
   }
 }
 
-@mixin hb-icon-link-arrow($color: 'black', $drop-shadow: false) {
+@mixin hb-icon-link-arrow($color: 'black', $box-shadow: false) {
   background-repeat: no-repeat;
   background-position: left;
   background-size: 55%;
 
   @include hb-themes(('airy', 'colorful')) {
-    @if $drop-shadow {
+    @if $box-shadow {
       @include hb-icon-background('arrow-right-box-shadow', $color);
       filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
     } @else {
@@ -151,7 +151,7 @@
   }
 
   @include hb-traditional {
-    @if $drop-shadow {
+    @if $box-shadow {
       @include hb-icon-background('arrow-right-long-box-shadow', $color);
       filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
     } @else {
@@ -160,8 +160,8 @@
   }
 }
 
-@mixin hb-icon-type($icon, $color) {
-  @include hb-icon-background($icon, $color);
+@mixin hb-icon-type($type, $color) {
+  @include hb-icon-background($type, $color);
   background-repeat: no-repeat;
   background-position: top left;
 }

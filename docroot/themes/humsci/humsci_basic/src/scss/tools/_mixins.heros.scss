@@ -101,7 +101,16 @@
     height: inherit;
     width: 100%;
     object-fit: cover;
-    @include hb-hero-image-animation;
+    
+    @include hb-themes(('colorful', 'airy')) {
+      &.animate {
+        .hb-has-animation-enhancements & {
+          animation-duration: 950ms;
+          animation-timing-function: ease-out;
+          animation-name: colorfulHeroImage;
+        }
+      }
+    }
   }
 }
 
@@ -114,7 +123,6 @@
   z-index: $hb-z-index-hero1-overlay;
   color: var(--palette--white);
   @include hb-page-width;
-  @include hb-hero-text-animation;
 
   h2,
   h3 {
@@ -162,6 +170,32 @@
 
       @include grid-media-min('lg') {
         width: 60%;
+      }
+    }
+  }
+
+  .hb-has-animation-enhancements.js & {
+    opacity: 0;
+  }
+
+  &.animate {
+    .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
+    .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
+    .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
+    .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
+    .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
+    .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+
+      @include hb-traditional {
+        animation-duration: 1700ms;
+        animation-name: traditionalHeroText;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        animation-duration: 2000ms;
+        animation-name: colorfulHeroText;
       }
     }
   }
@@ -325,106 +359,6 @@
         animation-timing-function: ease-out;
         animation-name: traditionalHeroOverlay;
       }
-    }
-  }
-}
-
-@mixin hb-hero-image-animation {
-  @include hb-themes(('colorful', 'airy')) {
-    &.animate {
-      .hb-has-animation-enhancements & {
-        animation-duration: 950ms;
-        animation-timing-function: ease-out;
-        animation-name: colorfulHeroImage;
-      }
-    }
-  }
-}
-
-@mixin hb-hero-text-animation {
-  .hb-has-animation-enhancements.js & {
-    opacity: 0;
-  }
-
-  @include hb-traditional {
-    &.animate {
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
-      .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
-        animation-duration: 1700ms;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-        animation-name: traditionalHeroText;
-      }
-    }
-  }
-
-  @include hb-themes(('colorful', 'airy')) {
-    .hb-has-animation-enhancements.js & {
-      opacity: 0; // Prevent text from displaying if page loads before the animate class is applied. If JS is turned off we don't want to hide the text, therefore we are only setting opacity to zero when there is JS.
-    }
-
-    &.animate {
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
-      .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
-        animation-duration: 2000ms;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-        animation-name: colorfulHeroText;
-      }
-    }
-  }
-}
-
-// hero animation keyframes
-@mixin hb-hero-animation-keyframes {
-  @keyframes colorfulHeroText {
-    0% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes colorfulHeroImage {
-    10% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-
-  // Traditional Hero Animations
-  @keyframes traditionalHeroText {
-    0% {
-      opacity: 0;
-      transform: translateY(-15px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes traditionalHeroOverlay {
-    0% {
-      opacity: 0.9;
-    }
-
-    100% {
-      opacity: 1;
     }
   }
 }

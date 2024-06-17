@@ -175,6 +175,16 @@
     a.hs-file-link {
       @include hb-traditional {
         color: var(--palette--black);
+
+        // Warbler color pairing override.
+        .ht-pairing-warbler & {
+          color: var(--palette--black);
+        }
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        color: var(--palette--white);
+        background-image: none;
       }
 
       &:hover,
@@ -183,9 +193,14 @@
 
         @include hb-traditional {
           color: var(--palette--gray-dark);
+
+          // Warbler color pairing override.
+          .ht-pairing-warbler & {
+            color: var(--palette--gray-dark);
+          }
         }
 
-        @include hb-colorful {
+        @include hb-themes(('colorful', 'airy')) {
           color: var(--palette--gray-medium);
         }
       }

@@ -84,11 +84,12 @@
         // On mobile, make the secondary color box out of pseudo element,
         // then on 'md' breakpoint, it becomes part of the grid
         &::before {
+          @include pseudo-background-box('secondary', 50%, 8.75%);
+
           display: block;
           bottom: 0;
           left: -8.75%;
           top: initial;
-          @include pseudo-background-box('secondary', 50%, 8.75%);
           opacity: 1;
 
           @include grid-media-min('md') {
@@ -449,7 +450,7 @@
       .slick-active {
         button {
           &::before {
-            @include hb-icon-ellipse('gray-light');
+            @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
             font-size: hb-calculate-rems(40px);
           }
         }
@@ -463,7 +464,7 @@
         &::before {
           color: var(--palette--white);
           content: '';
-          @include hb-icon-ellipse-border('gray-light');
+          @include hb-icon-type($type: 'ellipse-border', $color: 'gray-light');
           height: hb-calculate-rems(11px);
           width: hb-calculate-rems(11px);
           display: block;
@@ -494,7 +495,7 @@
 
         &:hover::before,
         &:focus::before {
-          @include hb-icon-ellipse('gray-light');
+          @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
         }
       }
     }
@@ -623,7 +624,7 @@
         &::before {
           content: '';
           display: inline-block;
-          @include hb-icon-link-arrow-box-shadow('gray-light');
+          @include hb-icon-link-arrow($color: 'gray-light', $box-shadow: true);
           background-size: 85%;
           height: hb-calculate-rems(25px);
           width: hb-calculate-rems(25px);

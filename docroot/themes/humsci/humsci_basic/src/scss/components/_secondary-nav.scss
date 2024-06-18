@@ -71,6 +71,13 @@
   &__link.ext {
     color: var(--palette--black);
 
+    // Warbler color pairing override.
+    @include hb-traditional {
+      .ht-pairing-warbler & {
+        color: var(--palette--black);
+      }
+    }
+
     .hb-dark-inversion & {
       color: var(--palette--white);
     }
@@ -78,6 +85,13 @@
     &:hover,
     &:focus {
       color: var(--palette--black);
+
+      // Warbler color pairing override.
+      @include hb-traditional {
+        .ht-pairing-warbler & {
+          color: var(--palette--black);
+        }
+      }
 
       @include hb-themes(('airy', 'colorful')) {
         background-image: none;

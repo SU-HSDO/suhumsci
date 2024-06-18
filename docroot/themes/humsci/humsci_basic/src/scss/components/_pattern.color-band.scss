@@ -62,7 +62,7 @@
     .hb-color-band--title {
       color: var(--palette--black);
     }
-    
+
     .hb-color-band--text {
       color: var(--palette--black);
     }
@@ -79,12 +79,26 @@
         }
       }
 
+      // Warbler color pairing override.
+      @include hb-traditional {
+        .ht-pairing-warbler & {
+          color: var(--palette--black);
+        }
+      }
+
       &:hover,
       &:focus {
         color: var(--palette--black);
 
         @include hb-colorful {
           .hc-pairing-ocean & {
+            color: var(--palette--black);
+          }
+        }
+
+        // Warbler color pairing override.
+        @include hb-traditional {
+          .ht-pairing-warbler & {
             color: var(--palette--black);
           }
         }
@@ -160,6 +174,13 @@
       }
     }
 
+    // Warbler color pairing override.
+    @include hb-traditional {
+      .ht-pairing-warbler & {
+        color: var(--palette--white);
+      }
+    }
+
     &:hover,
     &:focus {
       color: var(--palette--white);
@@ -167,6 +188,13 @@
 
       @include hb-colorful {
         .hc-pairing-ocean & {
+          color: var(--palette--white);
+        }
+      }
+
+      // Warbler color pairing override.
+      @include hb-traditional {
+        .ht-pairing-warbler & {
           color: var(--palette--white);
         }
       }

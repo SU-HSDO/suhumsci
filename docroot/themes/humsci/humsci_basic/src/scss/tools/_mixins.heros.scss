@@ -253,6 +253,8 @@
   text-decoration: none;
   text-align: center;
   transition: hb-transition(all);
+  border-width: 3px;
+  border-style: solid;
 
   &:hover,
   &:focus {
@@ -264,8 +266,6 @@
     border-radius: hb-calculate-rems(42px);
     color: var(--palette--#{$button-color});
     border-color: var(--palette--#{$button-color});
-    border-width: 3px;
-    border-style: solid;
 
     &:hover,
     &:focus {
@@ -278,8 +278,6 @@
     background-color: var(--palette--#{$button-color});
     color: var(--palette--white);
     border-color: transparent;
-    border-width: 3px;
-    border-style: solid;
 
     &:hover,
     &:focus {
@@ -306,6 +304,10 @@
       max-width: 80%;
       @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
       margin-top: hb-spacing-width('md');
+
+      @include grid-media-min('md') {
+        margin-top: hb-spacing-width();
+      }
 
       @include grid-media-min('lg') {
         max-width: 75%;
@@ -336,12 +338,6 @@
 
     // Override the padding from the hb-hero-button mixin used above
     padding: hb-calculate-rems(12px);
-
-    @include hb-themes(('colorful', 'airy')) {
-      @include grid-media-min('md') {
-        margin-top: hb-spacing-width();
-      }
-    }
   }
 }
 

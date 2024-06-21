@@ -1,0 +1,32 @@
+uuid: 274962b7-9bbd-4b54-ba75-51c2db83ef3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.event_collections__speaker.field_speaker_person
+    - hs_entities.hs_entity_type.event_collections__speaker
+id: hs_entity.event_collections__speaker.default
+targetEntityType: hs_entity
+bundle: event_collections__speaker
+mode: default
+content:
+  field_speaker_person:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: -4
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden:
+  created: true
+  search_api_excerpt: true
+  uid: true

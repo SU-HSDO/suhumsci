@@ -13,9 +13,10 @@ dependencies:
     - paragraphs.paragraphs_type.hs_spotlight
   module:
     - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
-    - link
+    - linkit
     - smart_trim
     - stanford_media
 third_party_settings:
@@ -79,6 +80,7 @@ content:
       view_mode: caption_credit
       link: false
       image_style: spotlight_portrait_responsive
+      remove_alt: false
     third_party_settings:
       field_formatter_class:
         class: ''
@@ -87,7 +89,7 @@ content:
     weight: 0
     region: image
   field_hs_spotlight_link:
-    type: link
+    type: linkit
     label: hidden
     settings:
       trim_length: 80
@@ -95,7 +97,10 @@ content:
       url_plain: false
       rel: '0'
       target: '0'
+      linkit_profile: default
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       hs_field_helpers:

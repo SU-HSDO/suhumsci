@@ -1,0 +1,39 @@
+uuid: ad4a350a-7ed1-41e8-9e9d-a18a4c29a68e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.course_collections__instructor.field_instructor_person
+    - field.field.hs_entity.course_collections__instructor.field_instructor_role
+    - hs_entities.hs_entity_type.course_collections__instructor
+id: hs_entity.course_collections__instructor.default
+targetEntityType: hs_entity
+bundle: course_collections__instructor
+mode: default
+content:
+  field_instructor_person:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_instructor_role:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_migration_id: true
+  uid: true

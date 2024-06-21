@@ -20,7 +20,7 @@
       &.ptype-hs-accordion {
         details {
           margin: 0;
-          @include hb-global-color('background-color', 'white');
+          background-color: var(--palette--white);
         }
       }
 
@@ -31,7 +31,7 @@
 
         .hb-hero-overlay::before,
         .hb-gradient-hero::before {
-          @include hb-global-color('background-color', 'gray-medium');
+          background-color: var(--palette--gray-medium);
         }
       }
     }
@@ -82,13 +82,13 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      @if ($i > 2) {
+      @if $i > 2 {
         @include grid-media-min('md') {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
 
-      @if ($i > 3) {
+      @if $i > 3 {
         @include grid-media-min('lg') {
           grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
         }

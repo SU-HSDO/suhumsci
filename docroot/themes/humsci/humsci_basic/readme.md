@@ -51,6 +51,7 @@ line into your `.bashrc` or `.zshrc` file located in your `$HOME` directory as `
 ( Alternatively, you can include that token in a `.env` file in this directory `humsci_basic/` that is at the same level as package.json. )
 
 The pages tested are located in the `tests/percy/.snapshots-colorful.js` and `tests/percy/.snapshots-traditional.js` respectively. To test the sites individually, you can run
+
 `npm run visreg:colorful` and `npm run visreg:traditional`.
 
 In order to have consistent testing, we need to ensure certain features are

@@ -11,9 +11,9 @@
 @mixin slick-arrows {
   .slick__arrow button {
     @include hb-unbuttonize;
-    @include hb-global-color('background-color', 'white');
+    background-color: var(--palette--white);
     position: absolute;
-    opacity: 50%;
+    opacity: 0.5;
 
     width: hb-calculate-rems(44px);
     height: hb-calculate-rems(88px);
@@ -24,17 +24,17 @@
     transition: hb-transition(opacity);
 
     &:hover {
-      opacity: 60%;
+      opacity: 0.6;
     }
 
     &:focus {
-      opacity: 100%;
+      opacity: 1;
     }
 
     // additional focus styles for keyboard users only
     // that compliments browser default styles
     &:focus-visible {
-      opacity: 100%;
+      opacity: 1;
       outline: 5px auto -webkit-focus-ring-color; // Chrome only
     }
 
@@ -163,7 +163,7 @@
 
         button {
           @include hb-unbuttonize;
-          @include hb-global-color('background-color', 'gray');
+          background-color: var(--palette--gray);
           padding: 0 hb-calculate-rems(22px);
           margin: 0 hb-calculate-rems(8px);
           font-size: 0; // hide text
@@ -177,11 +177,11 @@
             transform: scale(0.9);
 
             @include hb-traditional {
-              @include hb-global-color('background-color', 'black');
+              background-color: var(--palette--black);
             }
 
             @include hb-themes(('colorful', 'airy')) {
-              @include hb-pairing-color('background-color', 'secondary');
+              background-color: var(--palette--secondary);
             }
           }
         }
@@ -189,11 +189,11 @@
         // active button representing the slide currently on display
         &.slick-active button {
           @include hb-traditional {
-            @include hb-global-color('background-color', 'black');
+            background-color: var(--palette--black);
           }
 
           @include hb-themes(('colorful', 'airy')) {
-            @include hb-pairing-color('background-color', 'secondary');
+            background-color: var(--palette--secondary);
           }
 
           &:hover {

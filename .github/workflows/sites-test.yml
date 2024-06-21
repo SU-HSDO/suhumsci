@@ -3,6 +3,8 @@ on: push
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+env:
+  themePath: docroot/themes/humsci/humsci_basic
 jobs:
   test_phpunit:
     runs-on: ubuntu-latest
@@ -82,8 +84,27 @@ jobs:
           vendor/bin/blt blt:telemetry:disable --no-interaction &&
           SITES=$(echo -n "$(blt blt:config:get multisites | shuf -n 10)" | jq -R -s -c 'split("\n") | sort')
           echo "matrix={\"site\": $SITES}" >> $GITHUB_OUTPUT
+  lint_theme:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache theme node_modules
+        id: cache-theme-node-modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.themePath }}/node_modules
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+      - name: Install theme node_modules
+        if: steps.cache-theme-node-modules.outputs.cache-hit != 'true'
+        run: npm install --prefix $themePath
+      - name: Lint Theme
+        run: npm run lint --prefix $themePath
   test_existing_site:
-    needs: set_sites
+    needs:
+      - set_sites
+      - lint_theme
     strategy:
       fail-fast: false
       matrix: ${{fromJSON(needs.set_sites.outputs.matrix)}}
@@ -134,6 +155,11 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - run: git config --system --add safe.directory '*'
+      - name: Restore theme node_modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.themePath }}/node_modules
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Sync Database
         run: |
           mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
@@ -158,6 +184,7 @@ jobs:
           path: /var/www/html/artifacts
   test_new_site:
     runs-on: ubuntu-latest
+    needs: lint_theme
     container:
       image: pookmish/drupal8ci:latest
       options: '--network-alias drupal8ci'
@@ -208,6 +235,13 @@ jobs:
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           blt drupal:install -n
+      - name: Restore theme node_modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.themePath }}/node_modules
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+      - name: Compile theme assets
+        run: npm run build --prefix $themePath
       - name: Codeception Tests
         run: |
           apachectl stop
@@ -222,6 +256,7 @@ jobs:
   deploy_branch:
     needs:
       - test_phpunit
+      - lint_theme
       - set_sites
       - test_existing_site
       - test_new_site
@@ -252,6 +287,11 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - run: git config --system --add safe.directory '*'
+      - name: Restore theme node_modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.themePath }}/node_modules
+          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Deploy Branch
         run: |
           git config --global user.email "sws-developers@lists.stanford.edu" &&

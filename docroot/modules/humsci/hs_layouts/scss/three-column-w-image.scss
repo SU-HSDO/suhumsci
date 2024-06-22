@@ -4,9 +4,19 @@
 // Page layout: Three column with image
 //
 
-@import
-  'decanter-no-markup',
-  '../../../../themes/humsci/su_humsci_theme/scss/utilities/mixins/index';
+@import "decanter-no-markup";
+
+@mixin accent-dash($dash-height, $dash-color, $dash-width) {
+  &::before {
+    border-bottom: $dash-height solid $dash-color;
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: $dash-width;
+
+    @include margin(null 10px null null);
+  }
+}
 
 .three-column-w-image {
   .image-wrapper {

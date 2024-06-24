@@ -1,0 +1,33 @@
+// Loops through the number of available columns (12). Classes determine the number
+// of columns that the image in cards will span.
+@mixin hb-image-sizes() {
+  @for $i from 1 through 12 {
+    &-#{$i}-of-12 {
+      .hb-card__graphics {
+        @include flex-column($i);
+      }
+
+      @include grid-media-min($hb-horizontal-card-breakpoint) {
+        .hb-card--horizontal:not(.hb-card--no-image) .hb-card__content {
+          @include flex-column(12 - $i);
+        }
+      }
+    }
+  }
+}
+
+.hb-card-image {
+  // Creates the base classes that are not tied to a media query
+  // Example: .hb-card-image-4-of-12
+  @include hb-image-sizes;
+
+  // Loops though the media query breakpoints to create responsive classes
+  // Example: .hb-card-image-md-4-of-12
+  @each $bp-key, $bp-value in $hb-grid-media {
+    @include grid-media-min($bp-key) {
+      &-#{$bp-key} {
+        @include hb-image-sizes;
+      }
+    }
+  }
+}

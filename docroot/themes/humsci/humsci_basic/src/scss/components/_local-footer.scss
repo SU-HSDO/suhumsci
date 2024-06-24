@@ -51,4 +51,21 @@
       margin-bottom: hb-calculate-rems(14px);
     }
   }
+
+  // Warbler color pairing override.
+  @include hb-traditional {
+    .ht-pairing-warbler &:not(.hb-dark-pattern) {
+      a:not([class]),
+      a.mailto,
+      a[href^='mailto:'],
+      a.ext {
+        color: var(--palette--tertiary);
+
+        &:hover,
+        &:focus {
+          color: var(--palette--tertiary-darken-20);
+        }
+      }
+    }
+  }
 }

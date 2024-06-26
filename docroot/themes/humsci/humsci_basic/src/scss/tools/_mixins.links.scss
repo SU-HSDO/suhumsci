@@ -1,53 +1,25 @@
-// Link hover style for certain elements
-@mixin hb-link--hover-style($box-shadow-color, $border-color) {
-  margin-bottom: 0.0625em;
-  text-decoration: none;
-  transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
-
-  &:hover,
-  &:focus {
-    transition-delay: 0s, 0s;
-    border-bottom-color: $border-color;
-  }
-
-  @include hb-themes(('colorful', 'airy')) {
-    &:hover,
-    &:focus {
-      @include hb-pairing-color('border-bottom-color', $border-color);
-      box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-colorful-default, $hc-colorful-pairings);
-      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
-    }
-  }
-
-  @include hb-traditional {
-    &:hover,
-    &:focus {
-      @include hb-pairing-color('border-bottom-color', $border-color);
-      box-shadow: inset 0 hb-calculate-rems(-14px) 0 hb-get-pairing-color($box-shadow-color, $hb-traditional-default, $ht-traditional-pairings);
-      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--#{$box-shadow-color});
-    }
-  }
-}
-
 // Link style for headings
 @mixin hb-link {
   // no font size by default
-  @include hb-global-color('color', 'black');
+  color: var(--palette--black);
   font-weight: hb-theme-font-weight(semibold);
 
   @include hb-themes(('colorful', 'airy')) {
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-    @include hb-global-color('border-bottom-color', 'gray-medium');
-    @include hb-link--hover-style('tertiary-highlight', 'tertiary-highlight-darken-10');
+    border-bottom: 2px solid var(--palette--gray-medium);
+    margin-bottom: 0.0625em;
+    text-decoration: none;
+    transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
 
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'black');
+      color: var(--palette--black);
+      transition-delay: 0s, 0s;
+      border-bottom-color: var(--palette--tertiary-highlight-darken-10);
+      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--tertiary-highlight);
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
+        border-bottom-color: var(--palette--tertiary-highlight);
         box-shadow: none;
         background-position-y: bottom;
       }
@@ -57,23 +29,23 @@
   @include hb-traditional {
     text-decoration: underline;
     transition: hb-transition(text-decoration-color);
-    @include hb-global-color('text-decoration-color', 'gray-medium');
+    text-decoration-color: var(--palette--gray-medium);
 
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'black');
+      color: var(--palette--black);
       background-image: none;
-      @include hb-pairing-color('text-decoration-color', 'primary');
+      text-decoration-color: var(--palette--primary);
     }
   }
 }
 
 @mixin hb-heading-link-color {
-  @include hb-pairing-color('color', 'tertiary');
+  color: var(--palette--tertiary);
 
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'tertiary-darken-20');
+    color: var(--palette--tertiary-darken-20);
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -81,12 +53,12 @@
   }
 
   @include hb-traditional {
-    @include hb-pairing-color('text-decoration-color', 'tertiary');
+    text-decoration-color: var(--palette--tertiary);
     transition: hb-transition(all); // set the color and text-decoration-color to transition together on hover
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('text-decoration-color', 'tertiary-darken-20');
+      text-decoration-color: var(--palette--tertiary-darken-20);
     }
 
     .hb-dark-inversion & {
@@ -99,72 +71,40 @@
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline($icon: false, $icon-width: 16px, $icon-position: right) {
   // no font size by default
-  @include hb-pairing-color('color', 'tertiary');
-
-  &:hover,
-  &:focus {
-    @include hb-pairing-color('color', 'tertiary-darken-20');
-  }
+  color: var(--palette--tertiary);
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image($icon, $icon-width, $icon-position, $hb-colorful-default, $hc-colorful-pairings);
+    @include hb-link-background-image($icon, $icon-width, $icon-position);
     background-size: 100% 200%;
     background-position-y: -102%;
     background-repeat: no-repeat;
 
-    &:hover,
-    &:focus {
-      background-position-y: -50%;
-
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        @include hb-pairing-color('border-bottom-color', 'tertiary-highlight');
-        box-shadow: none;
-        background-position-y: bottom;
-      }
-    }
-
-    .hb-vertical-linked-card__description & {
-      @include hb-colorful {
-        @include hb-global-color('color', 'white');
-        background-image: none;
-      }
-
-      :hover,
-      :focus {
-        @include hb-colorful {
-          @include hb-global-color('color', 'gray-medium');
-        }
-      }
+    .hc-pairing-ocean .hb-well & {
+      color: var(--palette--primary);
     }
   }
 
   @include hb-traditional {
     background-image: none;
 
-    // It is very difficult to override links for a specific color scheme without clobbering things like titles, labels, and buttons that are styled differently.
-    #main-content .body &,
-    .text-long:not(.field-hs-postcard-body) &,
-    .field-hs-person-links &,
-    .field-hs-publication-link &,
-    .field-hs-news-link &,
-    .field-hs-event-map-link &,
-    .field-speaker-person &,
-    .field-hs-person-external-profile &,
-    .field-hs-person-cv-link &,
-    .field-hs-person-email &,
-    .hb-card__subcontent &,
-    .hb-table-wrap &,
-    .hb-columns &,
-    .hb-timeline-item__heading &,
-    .views-field:not(.views-field-title):not(.views-field-edit-node):not(.views-field-field-hs-event-series):not(.views-field-field-hs-news-categories):not(.views-field-field-hs-person-research) & {
-      .ht-pairing-warbler & {
-        @include hb-pairing-color('color', 'secondary');
+    // Warbler color pairing override.
+    .ht-pairing-warbler & {
+      color: var(--palette--secondary);
+    }
+  }
 
-        &:hover,
-        &:focus {
-          @include hb-pairing-color('color', 'tertiary');
-        }
+  &:hover,
+  &:focus {
+    color: var(--palette--tertiary-darken-20);
+
+    @include hb-themes(('colorful', 'airy')) {
+      background-position-y: -50%;
+    }
+
+    @include hb-traditional {
+      // Warbler color pairing override.
+      .ht-pairing-warbler & {
+        color: var(--palette--tertiary);
       }
     }
   }
@@ -174,46 +114,45 @@
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('color', 'tertiary-darken-20');
+      color: var(--palette--tertiary-darken-20);
       background-image: none;
     }
   }
 
   .hb-local-footer.hb-dark-pattern & {
     @include hb-colorful {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
     }
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'tertiary-reversed');
-      @include hb-pairing-color('border-bottom-color', 'tertiary-reversed');
+      color: var(--palette--tertiary-reversed);
+      border-bottom-color: var(--palette--tertiary-reversed);
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
     }
 
     &:hover,
     &:focus {
       @include hb-themes(('colorful', 'airy')) {
-        @include hb-pairing-color('color', 'tertiary-highlight');
         @include hb-ext-icon-color('tertiary-highlight');
+
+        color: var(--palette--tertiary-highlight);
+        border-bottom-color: var(--palette--tertiary-highlight);
+        box-shadow: none;
+        background-position-y: bottom;
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
         @include hb-ext-icon-color('tertiary-highlight-darken-10');
-        @include hb-pairing-color('text-decoration-color', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
 
-  @include hb-colorful {
-    .hc-pairing-ocean .hb-well & {
-      @include hb-pairing-color('color', 'primary');
+        color: var(--palette--tertiary-highlight-darken-10);
+        text-decoration-color: var(--palette--tertiary-highlight-darken-10);
+      }
     }
   }
 }
@@ -228,7 +167,20 @@
   border: none;
   background: none;
   padding: 0;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
+
+  @include hb-traditional {
+    font-weight: hb-theme-font-weight(semibold);
+    word-break: break-word;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-weight: hb-theme-font-weight(bold);
+
+    .hc-pairing-ocean & {
+      color: var(--palette--secondary-darken-12);
+    }
+  }
 
   &::after {
     content: '';
@@ -239,7 +191,11 @@
     transition: hb-transition(transform);
     will-change: contents;
 
-    @include hb-colorful {
+    @include hb-themes(('colorful', 'airy')) {
+      height: hb-calculate-rems(19px);
+      width: hb-calculate-rems(19px);
+      margin-bottom: hb-calculate-rems(-4px);
+
       .hc-pairing-ocean & {
         @include hb-icon-link-arrow('primary');
         background-size: 85%;
@@ -250,11 +206,17 @@
         background-size: 85%;
       }
     }
+
+    @include hb-traditional {
+      height: hb-calculate-rems(25px);
+      width: hb-calculate-rems(25px);
+      margin-bottom: hb-calculate-rems(-7px);
+    };
   }
 
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'secondary-darken-12');
+    color: var(--palette--secondary-darken-12);
 
     background-image: none;
     background-color: transparent;
@@ -271,48 +233,27 @@
         }
       }
     }
-  }
 
-  @include hb-themes(('colorful', 'airy')) {
-    font-weight: hb-theme-font-weight(bold);
-
-    &::after {
-      height: hb-calculate-rems(19px);
-      width: hb-calculate-rems(19px);
-      margin-bottom: hb-calculate-rems(-4px);
-    }
-  }
-
-  @include hb-colorful {
-    .hc-pairing-ocean & {
-      @include hb-pairing-color('color', 'secondary-darken-12');
-
-      &:hover {
-        @include hb-pairing-color('color', 'primary-dark');
+    @include hb-themes(('colorful', 'airy')) {
+      .hc-pairing-ocean & {
+        color: var(--palette--primary-dark);
       }
     }
-  }
 
-  @include hb-traditional {
-    font-weight: hb-theme-font-weight(semibold);
-    word-break: break-word;
-
-    &:hover,
-    &:focus {
+    // Warbler color pairing override.
+    @include hb-traditional {
       text-decoration: underline;
-    }
 
-    &::after {
-      height: hb-calculate-rems(25px);
-      width: hb-calculate-rems(25px);
-      margin-bottom: hb-calculate-rems(-7px);
+      .ht-pairing-warbler & {
+        color: var(--palette--secondary-darken-12);
+      }
     }
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'tertiary-reversed');
+      color: var(--palette--tertiary-reversed);
 
       &::after {
         @include hb-icon-link-arrow('tertiary-reversed');
@@ -321,10 +262,10 @@
 
       &:hover,
       &:focus {
-        @include hb-pairing-color('color', 'secondary-highlight');
+        color: var(--palette--secondary-highlight);
 
         .hc-pairing-ocean & {
-          @include hb-pairing-color('color', 'tertiary-highlight');
+          color: var(--palette--tertiary-highlight);
         }
 
         &::after {
@@ -340,7 +281,7 @@
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
 
       &::after {
         @include hb-icon-link-arrow('tertiary-highlight');
@@ -349,7 +290,7 @@
 
       &:hover,
       &:focus {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
 
         &::after {
           @include hb-icon-link-arrow('tertiary-highlight-darken-10');
@@ -401,7 +342,8 @@
     }
   }
 
-  &::before { // postcard arrow
+  &::before {
+    // postcard arrow
     content: '';
     position: absolute;
     left: 0;
@@ -424,15 +366,13 @@
   }
 }
 
-//PDF Icon Link
-@mixin hb-pdf-link {
+@mixin hb-icon-link-inline($icon) {
   @include hb-link--inline;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   &::before {
-    content: "\f1c1";
     /* stylelint-disable */
-    font-family: "Font Awesome 5 Free";
+    font-family: 'Font Awesome 5 Free';
     /* stylelint-enable */
     font-weight: 900;
     -webkit-font-smoothing: antialiased;
@@ -441,16 +381,34 @@
     font-variant: normal;
     text-rendering: auto;
     margin-right: hb-calculate-rems(5px);
+
+    @if $icon == 'pdf' {
+      content: '\f1c1';
+    } @else if $icon == 'file' {
+      content: '\f15b';
+    } @else {
+      @error 'Invalid icon type. Use "pdf" or "file".';
+    }
   }
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
     }
 
     &:hover {
       @include hb-colorful {
-        @include hb-global-color('color', 'gray-medium');
+        color: var(--palette--gray-medium);
+      }
+    }
+
+    &::before {
+      @include hb-colorful {
+        color: var(--palette--white);
+      }
+
+      @include hb-traditional {
+        color: var(--palette--tertiary-highlight);
       }
     }
   }
@@ -459,99 +417,21 @@
     color: var(--palette--secondary-highlight);
   }
 
-  .hb-local-footer.hb-dark-pattern &::before {
-    @include hb-colorful {
-      @include hb-global-color('color', 'white');
-    }
-
-    @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
-    }
-  }
-
   &:hover,
   &:focus {
+    @include hb-themes(('colorful', 'airy')) {
+      @include hb-link-background-image(true, 0.9em, left);
+    }
+
     .hb-local-footer.hb-dark-pattern &::before {
       @include hb-colorful {
-        @include hb-global-color('color', 'gray-medium');
+        color: var(--palette--gray-medium);
       }
 
       @include hb-traditional {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
+        color: var(--palette--tertiary-highlight-darken-10);
       }
     }
   }
 
-  @include hb-themes(('colorful', 'airy')) {
-    &:hover,
-    &:focus {
-      @include hb-link-background-image(true, 0.9em, left, $hb-colorful-default, $hc-colorful-pairings);
-    }
-  }
-}
-
-//File Icon Link
-@mixin hb-file-link {
-  @include hb-link--inline;
-  @include hb-pairing-color('color', 'secondary');
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      @include hb-global-color('color', 'white');
-    }
-
-    &:hover {
-      @include hb-colorful {
-        @include hb-global-color('color', 'gray-medium');
-      }
-    }
-  }
-
-  &::before {
-    content: "\f15b";
-    /* stylelint-disable */
-    font-family: "Font Awesome 5 Free";
-    /* stylelint-enable */
-    font-weight: 900;
-    -webkit-font-smoothing: antialiased;
-    display: inline-block;
-    font-style: normal;
-    font-variant: normal;
-    text-rendering: auto;
-    margin-right: hb-calculate-rems(5px);
-  }
-
-  .hb-dark-pattern &::before {
-    color: var(--palette--secondary-highlight);
-  }
-
-  .hb-local-footer.hb-dark-pattern &::before {
-    @include hb-colorful {
-      @include hb-global-color('color', 'white');
-    }
-
-    @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
-    }
-  }
-
-  &:hover,
-  &:focus {
-    .hb-local-footer.hb-dark-pattern &::before {
-      @include hb-colorful {
-        @include hb-global-color('color', 'gray-medium');
-      }
-
-      @include hb-traditional {
-        @include hb-pairing-color('color', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
-
-  @include hb-themes(('colorful', 'airy')) {
-    &:hover,
-    &:focus {
-      @include hb-link-background-image(true, 0.9em, left, $hb-colorful-default, $hc-colorful-pairings);
-    }
-  }
 }

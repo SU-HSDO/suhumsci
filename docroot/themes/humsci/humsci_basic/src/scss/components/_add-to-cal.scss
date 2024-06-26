@@ -1,6 +1,5 @@
 .addtocal-inner {
-  @include hb-global-color('background-color', 'white');
-
+  background-color: var(--palette--white);
   position: relative;
   display: flex;
   margin-top: -(hb-calculate-rems(38px));
@@ -9,7 +8,7 @@
   border: 2px solid;
   border-radius: hb-calculate-rems(12px);
 
-  @include hb-pairing-color('border-color', 'tertiary-darken-20');
+  border-color: var(--palette--tertiary-darken-20);
 
   @include hb-traditional {
     margin-top: -(hb-calculate-rems(40px));
@@ -18,7 +17,7 @@
 }
 
 .addtocal-title {
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   font-size: hb-calculate-rems(16px);
   margin: 0 hb-calculate-rems(6px);
@@ -43,8 +42,7 @@
   }
 
   a {
-    @include hb-global-color('color', 'gray-dark');
-
+    color: var(--palette--gray-dark);
     display: flex;
     align-items: center;
     background-image: none;
@@ -52,8 +50,7 @@
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('color', 'secondary');
-
+      color: var(--palette--secondary);
       background-image: none;
 
       &::before {

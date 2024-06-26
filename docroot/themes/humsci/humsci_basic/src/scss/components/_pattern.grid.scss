@@ -11,19 +11,27 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      @if ($i > 2) {
+      @if $i > 2 {
         @include grid-media-min('md') {
           // 3 columns
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
       }
 
-      @if ($i > 3) {
+      @if $i > 3 {
         @include grid-media-min('lg') {
           // 4 or more columns
           grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
         }
       }
+    }
+  }
+
+  &__item {
+    margin-bottom: calc(#{hb-spacing-width('default', false)} / 2);
+
+    @include grid-media-min('sm') {
+      margin-bottom: 0;
     }
   }
 }

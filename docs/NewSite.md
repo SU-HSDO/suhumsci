@@ -1,5 +1,7 @@
 # Provisioning a new site
 
+**SWS Developers**: Please refer to internal Confluence documentation for more up to date step-by-step instructions for Site Provisioning.
+
 ## Choose a final url and machine name
 * To keep consistent with site directories, its important to structure the machine name
 and the url appropriately.

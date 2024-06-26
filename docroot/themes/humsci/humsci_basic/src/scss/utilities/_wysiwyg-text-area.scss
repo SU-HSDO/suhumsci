@@ -113,10 +113,7 @@
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 // hs-caption and D7 import utility class map and loop
-$captions: (
-  hs-caption,
-  caption,
-);
+$captions: (hs-caption, caption);
 
 @each $caption in $captions {
   .#{$caption},
@@ -126,10 +123,7 @@ $captions: (
   }
 }
 
-$credits: (
-  hs-credits,
-  credits,
-);
+$credits: (hs-credits, credits);
 
 @each $credit in $credits {
   .#{$credit},
@@ -151,14 +145,14 @@ $credits: (
   font-size: hb-calculate-rems(20px);
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  @include hb-global-color('color', 'gray-dark');
+  color: var(--palette--gray-dark);
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(22px);
   }
 
   .hb-dark-pattern & {
-    @include hb-global-color('color', 'gray-light');
+    color: var(--palette--gray-light);
   }
 
   li & {
@@ -195,15 +189,15 @@ $credits: (
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      @include hb-pairing-color('color', 'primary');
+      color: var(--palette--primary);
 
       .hb-dark-pattern & {
-        @include hb-global-color('color', 'gray-light');
+        color: var(--palette--gray-light);
       }
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'primary');
+      color: var(--palette--primary);
     }
 
     li & {
@@ -314,14 +308,14 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"] {
+.hs-external-link a[href*="//"]
+{
   @include hb-link--inline($icon: true);
   @include hb-external-link-icon;
 
-
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
 
       &::after {
         @include hb-icon-background('ext-link', 'white');
@@ -333,7 +327,7 @@ a[href*="//"].hs-external-link,
     }
 
     @include hb-traditional {
-      @include hb-pairing-color('color', 'tertiary-highlight');
+      color: var(--palette--tertiary-highlight);
 
       &::after {
         @include hb-icon-background('ext-link', 'tertiary-highlight');
@@ -351,20 +345,20 @@ a.hs-private-link,
 a.private-link,
 .private-link a {
   @include hb-link--inline;
-  @include hb-pairing-color('color', 'secondary');
+  color: var(--palette--secondary);
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image(true, 18px, left, $hb-colorful-default, $hc-colorful-pairings);
+    @include hb-link-background-image(true, 18px, left);
   }
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
     }
 
     &:hover {
       @include hb-colorful {
-        @include hb-global-color('color', 'gray-medium');
+        color: var(--palette--gray-medium);
       }
     }
   }
@@ -412,7 +406,7 @@ a.hs-mailto-link {
   @include hb-fa-mailto-icon;
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image(true, 22px, right, $hb-colorful-default, $hc-colorful-pairings);
+    @include hb-link-background-image(true, 22px, right);
   }
 
   // The font awesome icon is hidden by default in themes, this shows it
@@ -422,9 +416,7 @@ a.hs-mailto-link {
 }
 
 // hs-more-link and D7 import utility class map and loop
-$more-links: (
-  hs-more-link
-);
+$more-links: (hs-more-link);
 
 @each $more-link in $more-links {
   a.#{$more-link},
@@ -437,11 +429,11 @@ $more-links: (
 }
 
 a.hs-pdf-link {
-  @include hb-pdf-link;
+  @include hb-icon-link-inline('pdf');
 
-  //Outline pdf icon option
+  // Outline pdf icon option
   &--outline {
-    @include hb-pdf-link;
+    @include hb-icon-link-inline('pdf');
 
     &::before {
       font-weight: 400;
@@ -450,11 +442,11 @@ a.hs-pdf-link {
 }
 
 a.hs-file-link {
-  @include hb-file-link;
+  @include hb-icon-link-inline('file');
 
-  //Outline file icon option
+  // Outline file icon option
   &--outline {
-    @include hb-file-link;
+    @include hb-icon-link-inline('file');
 
     &::before {
       font-weight: 400;

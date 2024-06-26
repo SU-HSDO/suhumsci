@@ -199,7 +199,7 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
           }
           {(!optionChosen && multiple) &&
             <span style={{padding: "8px 5px 8px 0", color: "#4c4740"}}>
-              Choose one or more from dropdown
+              Choose one or more options
             </span>
           }
 

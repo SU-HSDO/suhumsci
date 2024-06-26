@@ -850,7 +850,7 @@ function _su_humsci_profile_get_uuid(string $config_name): string|null {
 * Uninstall legacy themes.
 */
 function su_humsci_profile_update_9705() {
-  $extension_config = \Drupal::service('config.factory')->get('core.extension');
+  $installed_themes = \Drupal::service('extension.list.theme')->getAllInstalledInfo();
   $legacy_themes = [
     'archaeology',
     'francestanford',
@@ -858,9 +858,8 @@ function su_humsci_profile_update_9705() {
     'su_humsci_subtheme',
     'su_humsci_theme',
   ];
-  // Filter out the themes that are not installed.
-  $installed_themes = array_filter($legacy_themes, function ($theme) use ($extension_config) {
-    return $extension_config->get("theme.{$theme}") !== NULL;
-  });
-  \Drupal::service('theme_installer')->uninstall($installed_themes);
+
+  // Get list of legacy themes to uninstall.
+  $themes_to_uninstall = array_intersect($legacy_themes, array_keys($installed_themes));
+  \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
 }

@@ -3,6 +3,7 @@
 // the dependencies and the files we need. See _main.scss and
 // _base.scss for reference.
 @charset 'UTF-8';
+@use "sass:map";
 
 // Here we add the path to Font Awesome. This is copied from _main.scss
 // and necessary for icons in CKEditor styles.
@@ -30,7 +31,7 @@ $px-only: true;
   "../tools/mixins.buttons", "../tools/mixins.menu-icons",
   "../tools/mixins.icons", "../tools/mixins.lists", "../tools/mixins.tables",
   "../tools/mixins.heros", "../tools/mixins.slick", "../tools/keyframes.text",
-  "../utilities/color-pairings", "../utilities/fonts", "../utilities/font-awesome", "../utilities/general", 
+  "../utilities/color-pairings", "../utilities/fonts", "../utilities/font-awesome", "../utilities/general",
   "../utilities/lists", "../utilities/raised-cards",
   "../utilities/tables", "../utilities/display-more-link-text",
   "../utilities/dark-pattern", "../utilities/caption-credit", "../utilities/media-embeds",
@@ -40,6 +41,26 @@ $px-only: true;
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
+:root {
+  @include hb-themes(("colorful", "airy")) {
+    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default) {
+      --palette--#{$color}: #{$value};
+    }
+    @each $color, $value in $hc-colorful-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+
+  @include hb-traditional {
+    @each $color, $value in map.get($ht-traditional-pairings, $hb-traditional-default) {
+      --palette--#{$color}: #{$value};
+    }
+    @each $color, $value in $ht-traditional-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+}
+
 .ck-editor__main {
   @include font-smoothing;
 

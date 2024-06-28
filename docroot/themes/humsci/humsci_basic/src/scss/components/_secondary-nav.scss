@@ -37,14 +37,14 @@
     padding-left: hb-calculate-rems(16px);
 
     .hb-dark-inversion & {
-      @include hb-pairing-color('background-color', 'primary-dark');
+      background-color: var(--palette--primary-dark);
     }
   }
 
   &__menu-lv1 {
     padding-left: 0;
     border-top: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray-medium');
+    border-color: var(--palette--gray-medium);
   }
 
   &__menu-lv1 > &__item > &__link {
@@ -54,30 +54,44 @@
   &__item,
   &__link {
     font-size: hb-calculate-rems(16px);
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
 
     .hb-dark-inversion & {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
 
       &:hover,
       &:focus,
       &.is-active {
-        @include hb-global-color('color', 'black');
+        color: var(--palette--black);
       }
     }
   }
 
   // make sure external links within the secondary nav receive the same styles as other links
   &__link.ext {
-    @include hb-global-color('color', 'black');
+    color: var(--palette--black);
+
+    // Warbler color pairing override.
+    @include hb-traditional {
+      .ht-pairing-warbler & {
+        color: var(--palette--black);
+      }
+    }
 
     .hb-dark-inversion & {
-      @include hb-global-color('color', 'white');
+      color: var(--palette--white);
     }
 
     &:hover,
     &:focus {
-      @include hb-global-color('color', 'black');
+      color: var(--palette--black);
+
+      // Warbler color pairing override.
+      @include hb-traditional {
+        .ht-pairing-warbler & {
+          color: var(--palette--black);
+        }
+      }
 
       @include hb-themes(('airy', 'colorful')) {
         background-image: none;
@@ -95,7 +109,7 @@
       &::before {
         content: '';
         display: block;
-        @include hb-global-color('background-color', 'gray-dark');
+        background-color: var(--palette--gray-dark);
 
         position: absolute;
         height: 100%;
@@ -121,7 +135,7 @@
     padding: hb-calculate-rems(16px) hb-calculate-rems(48px) hb-calculate-rems(16px) hb-calculate-rems(18px);
     text-decoration: none;
     border-bottom: $hb-thin-border;
-    @include hb-global-color('border-color', 'gray-medium');
+    border-color: var(--palette--gray-medium);
 
     &:hover,
     &:focus {
@@ -141,11 +155,11 @@
         }
 
         @include hb-themes(('airy', 'colorful')) {
-          @include hb-global-color('background-color', 'gray-light');
+          background-color: var(--palette--gray-light);
         }
 
         @include hb-traditional {
-          @include hb-pairing-color('background-color', 'tertiary-highlight');
+          background-color: var(--palette--tertiary-highlight);
         }
       }
     }
@@ -160,23 +174,23 @@
       }
 
       &::before {
-        @include hb-pairing-color('background-color', 'tertiary-reversed');
+        background-color: var(--palette--tertiary-reversed);
       }
 
       &:hover,
       &:focus {
         &::before {
-          @include hb-pairing-color('background-color', 'secondary');
+          background-color: var(--palette--secondary);
         }
       }
     }
 
     &.is-active {
       font-weight: hb-theme-font-weight(semibold);
-      @include hb-pairing-color('background-color', 'secondary-highlight');
+      background-color: var(--palette--secondary-highlight);
 
       &::before {
-        @include hb-pairing-color('background-color', 'secondary');
+        background-color: var(--palette--secondary);
       }
 
       .hb-dark-inversion & {

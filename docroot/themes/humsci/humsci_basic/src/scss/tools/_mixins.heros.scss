@@ -9,12 +9,6 @@
     margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
   }
 
-  :is(.hb-gradient-hero) {
-    .hs-full-width & {
-      margin-top: 0;
-    }
-  }
-
   // img element styles should only be applied to the gradient hero
   // and the hero image overlay field type classes
   @if $background {
@@ -52,10 +46,10 @@
     min-height: 49rem;
   }
 
-  @include hb-hero-full-width();
+  @include hb-hero-full-width;
 
   &::before {
-    @include hb-pairing-color('background-color', 'primary-hero-overlay');
+    background-color: var(--palette--primary-hero-overlay);
     content: "";
     position: absolute;
     top: 0;
@@ -101,7 +95,16 @@
     height: inherit;
     width: 100%;
     object-fit: cover;
-    @include hb-hero-image-animation;
+    
+    @include hb-themes(('colorful', 'airy')) {
+      &.animate {
+        .hb-has-animation-enhancements & {
+          animation-duration: 950ms;
+          animation-timing-function: ease-out;
+          animation-name: colorfulHeroImage;
+        }
+      }
+    }
   }
 }
 
@@ -112,9 +115,8 @@
   align-self: center;
   padding: hb-calculate-rems(54px) 0;
   z-index: $hb-z-index-hero1-overlay;
-  @include hb-global-color('color', 'white');
+  color: var(--palette--white);
   @include hb-page-width;
-  @include hb-hero-text-animation;
 
   h2,
   h3 {
@@ -124,7 +126,7 @@
   ul {
     li {
       &::before {
-        @include hb-pairing-color('background-color', 'secondary');
+        background-color: var(--palette--secondary);
       }
     }
   }
@@ -132,7 +134,7 @@
   ol {
     li {
       &::before {
-        @include hb-pairing-color('color', 'secondary-active');
+        color: var(--palette--secondary-active);
       }
     }
   }
@@ -165,6 +167,32 @@
       }
     }
   }
+
+  .hb-has-animation-enhancements.js & {
+    opacity: 0;
+  }
+
+  &.animate {
+    .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
+    .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
+    .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
+    .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
+    .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
+    .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+
+      @include hb-traditional {
+        animation-duration: 1700ms;
+        animation-name: traditionalHeroText;
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        animation-duration: 2000ms;
+        animation-name: colorfulHeroText;
+      }
+    }
+  }
 }
 
 // hero body
@@ -187,12 +215,12 @@
 // hero link
 @mixin hb-hero-anchor-link {
   @include hb-description;
-  @include hb-pairing-color('color', 'tertiary-reversed');
+  color: var(--palette--tertiary-reversed);
   background-image: none;
 
   &:hover,
   &:focus {
-    @include hb-pairing-color('color', 'tertiary-highlight');
+    color: var(--palette--tertiary-highlight);
   }
 }
 
@@ -225,6 +253,8 @@
   text-decoration: none;
   text-align: center;
   transition: hb-transition(all);
+  border-width: 3px;
+  border-style: solid;
 
   &:hover,
   &:focus {
@@ -234,35 +264,31 @@
   @include hb-themes(('colorful', 'airy')) {
     background-color: transparent;
     border-radius: hb-calculate-rems(42px);
-    @include hb-pairing-color('color', $button-color);
-    @include hb-pairing-color('border-color', $button-color);
-    border-width: 3px;
-    border-style: solid;
+    color: var(--palette--#{$button-color});
+    border-color: var(--palette--#{$button-color});
 
     &:hover,
     &:focus {
-      @include hb-pairing-color('border-color', $button-color-hover);
-      @include hb-pairing-color('color', $button-color-hover);
+      border-color: var(--palette--#{$button-color-hover});
+      color: var(--palette--#{$button-color-hover});
     }
   }
 
   @include hb-traditional {
-    @include hb-pairing-color('background-color', $button-color);
-    @include hb-global-color('color', 'white');
+    background-color: var(--palette--#{$button-color});
+    color: var(--palette--white);
     border-color: transparent;
-    border-width: 3px;
-    border-style: solid;
 
     &:hover,
     &:focus {
       background-color: transparent;
-      @include hb-pairing-color('border-color', $button-color);
+      border-color: var(--palette--#{$button-color});
+      color: var(--palette--white);
     }
 
     &:focus {
       outline: hb-calculate-rems(2px) solid;
-      @include hb-global-color('outline-color', 'white');
-      box-shadow: 0 0 0 hb-calculate-rems(3px) hb-get-pairing-color('primary', $hb-traditional-default, $ht-traditional-pairings);
+      outline-color: var(--palette--white);
       box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--primary);
     }
   }
@@ -278,6 +304,10 @@
       max-width: 80%;
       @include hb-hero-button('tertiary-reversed', 'secondary-highlight');
       margin-top: hb-spacing-width('md');
+
+      @include grid-media-min('md') {
+        margin-top: hb-spacing-width();
+      }
 
       @include grid-media-min('lg') {
         max-width: 75%;
@@ -308,12 +338,6 @@
 
     // Override the padding from the hb-hero-button mixin used above
     padding: hb-calculate-rems(12px);
-
-    @include hb-themes(('colorful', 'airy')) {
-      @include grid-media-min('md') {
-        margin-top: hb-spacing-width();
-      }
-    }
   }
 }
 
@@ -326,106 +350,6 @@
         animation-timing-function: ease-out;
         animation-name: traditionalHeroOverlay;
       }
-    }
-  }
-}
-
-@mixin hb-hero-image-animation {
-  @include hb-themes(('colorful', 'airy')) {
-    &.animate {
-      .hb-has-animation-enhancements & {
-        animation-duration: 950ms;
-        animation-timing-function: ease-out;
-        animation-name: colorfulHeroImage;
-      }
-    }
-  }
-}
-
-@mixin hb-hero-text-animation {
-  .hb-has-animation-enhancements.js & {
-    opacity: 0;
-  }
-
-  @include hb-traditional {
-    &.animate {
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
-      .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
-        animation-duration: 1700ms;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-        animation-name: traditionalHeroText;
-      }
-    }
-  }
-
-  @include hb-themes(('colorful', 'airy')) {
-    .hb-has-animation-enhancements.js & {
-      opacity: 0; // Prevent text from displaying if page loads before the animate class is applied. If JS is turned off we don't want to hide the text, therefore we are only setting opacity to zero when there is JS.
-    }
-
-    &.animate {
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .slick-active &,
-      .hb-has-animation-enhancements.js .paragraph--type--hs-gradient-hero-slider .unslick &,
-      .hb-has-animation-enhancements.js .ptype-hs-hero-image &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .hb-hero-overlay &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .slick-active &,
-      .hb-has-animation-enhancements.js .field-hs-page-hero > :not(.paragraph--type--hs-carousel) .unslick & {
-        animation-duration: 2000ms;
-        animation-timing-function: ease-in-out;
-        animation-fill-mode: forwards;
-        animation-name: colorfulHeroText;
-      }
-    }
-  }
-}
-
-// hero animation keyframes
-@mixin hb-hero-animation-keyframes {
-  @keyframes colorfulHeroText {
-    0% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes colorfulHeroImage {
-    10% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-
-  // Traditional Hero Animations
-  @keyframes traditionalHeroText {
-    0% {
-      opacity: 0;
-      transform: translateY(-15px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes traditionalHeroOverlay {
-    0% {
-      opacity: 0.9;
-    }
-
-    100% {
-      opacity: 1;
     }
   }
 }

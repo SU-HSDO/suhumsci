@@ -1,5 +1,7 @@
 # Launch Process
 
+**SWS Developers**: Please refer to internal Confluence documentation for more up to date step-by-step instructions for site launches.
+
 A "Launch" is any change to a domain that can impact visitors.
 
 Prerequisite:

@@ -1,8 +1,8 @@
 # Code Deployment
 
-This document gives a general overview of the code deployment workflow. Github Actions workflows automate the code deployments to Acquia.
+**SWS Developers**: Please refer to internal Confluence documentation for more up to date step-by-step instructions for Production Deployments.
 
-**SWS Developers**: Please refer to internal Confluence documentation for more detailed and technical step-by-step instructions for production deployments.
+This document gives a general overview of the code deployment workflow. Github Actions workflows automate the code deployments to Acquia.
 
 ## Release Branch
 A release branch is named using the format `VERSION-release`. All code changes in a release branch must go through a PR. To merge a PR into a release branch it must:

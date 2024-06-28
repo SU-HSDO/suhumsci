@@ -23,7 +23,7 @@ class HsBackToTopBlock extends BlockBase {
         '#type' => 'html_tag',
         '#tag' => 'a',
         '#attributes' => [
-          'href' => ['#main-content'],
+          'href' => ['#header'],
           'class' => ['hs-back-to-top'],
         ],
         '#value' => $this->t('Back to Top'),

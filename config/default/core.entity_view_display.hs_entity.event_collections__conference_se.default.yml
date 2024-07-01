@@ -1,0 +1,91 @@
+uuid: 1e142f5e-2086-4889-a74d-5e38ed1c032b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.hs_entity.event_collections__conference_se.field_session_date_and_time
+    - field.field.hs_entity.event_collections__conference_se.field_session_information
+    - field.field.hs_entity.event_collections__conference_se.field_session_location
+    - field.field.hs_entity.event_collections__conference_se.field_session_speakers
+    - hs_entities.hs_entity_type.event_collections__conference_se
+  module:
+    - ds
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_horizontal_card
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant_field: field_session_date_and_time
+    regions:
+      title:
+        - title
+      description:
+        - field_session_date_and_time
+        - field_session_information
+        - field_session_speakers
+        - field_session_documents
+id: hs_entity.event_collections__conference_se.default
+targetEntityType: hs_entity
+bundle: event_collections__conference_se
+mode: default
+content:
+  field_session_date_and_time:
+    type: smartdate_default
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+      format: october_1_2021
+      force_chronological: false
+      add_classes: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: description
+  field_session_information:
+    type: text_summary_or_trimmed
+    label: above
+    settings:
+      trim_length: 450
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
+    region: description
+  field_session_location:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_session_speakers:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: description
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden:
+  created: true
+  search_api_excerpt: true
+  uid: true

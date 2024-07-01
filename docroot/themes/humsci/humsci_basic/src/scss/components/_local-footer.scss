@@ -2,7 +2,7 @@
   font-size: hb-calculate-rems(16px);
   padding: hb-calculate-rems(48px) 0;
   border-top: $hb-thin-border;
-  @include hb-global-color('border-color', 'gray');
+  border-color: var(--palette--gray);
 
   .hb-secondary-nav {
     // overwrite default secondary nav styles for menu items
@@ -49,6 +49,23 @@
 
     .menu-item {
       margin-bottom: hb-calculate-rems(14px);
+    }
+  }
+
+  // Warbler color pairing override.
+  @include hb-traditional {
+    .ht-pairing-warbler &:not(.hb-dark-pattern) {
+      a:not([class]),
+      a.mailto,
+      a[href^='mailto:'],
+      a.ext {
+        color: var(--palette--tertiary);
+
+        &:hover,
+        &:focus {
+          color: var(--palette--tertiary-darken-20);
+        }
+      }
     }
   }
 }

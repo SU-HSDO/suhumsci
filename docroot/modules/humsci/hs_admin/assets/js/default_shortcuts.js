@@ -3,6 +3,7 @@ Drupal.behaviors.defaultShortcuts = {
     if (!settings.user.uid) {
       // If the user is not logged in, clear the active toolbar tab ID.
       window.localStorage.removeItem('Drupal.toolbar.activeTabID');
+      window.sessionStorage.removeItem('Drupal.toolbar.toolbarState')
       return;
     }
 

@@ -9,7 +9,7 @@ use Drupal\Core\Plugin\PluginFormInterface;
 /**
  * Class HumsciLayout.
  *
- * @package Drupal\su_humsci_theme\Plugin
+ * @package Drupal\hs_layouts\Plugin
  */
 class HumsciLayout extends LayoutDefault implements PluginFormInterface {
 

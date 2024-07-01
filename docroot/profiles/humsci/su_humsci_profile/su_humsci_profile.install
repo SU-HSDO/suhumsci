@@ -845,3 +845,21 @@ function _su_humsci_profile_get_uuid(string $config_name): string|null {
   $config = $config_storage->read($config_name);
   return $config['uuid'] ?? NULL;
 }
+
+/**
+ * Uninstall legacy themes.
+ */
+function su_humsci_profile_update_9705() {
+  $installed_themes = \Drupal::service('extension.list.theme')->getAllInstalledInfo();
+  $legacy_themes = [
+    'archaeology',
+    'francestanford',
+    'mathematics',
+    'su_humsci_subtheme',
+    'su_humsci_theme',
+  ];
+
+  // Get list of legacy themes to uninstall.
+  $themes_to_uninstall = array_intersect($legacy_themes, array_keys($installed_themes));
+  \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
+}

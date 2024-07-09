@@ -264,15 +264,24 @@ $px-only: true;
   blockquote:nth-child(n) {
     @include hb-blockquote;
     overflow: visible;
-
-    font-size: 24px;
+    font-size: 24px !important;
+    line-height:35.56px !important;
 
     &::before {
-      left: unset;
+      background-color: transparent;
+      left: -12px !important;
+      top: 24px !important;
+      width: 68px !important;
+      height: 40px !important;
+    }
+
+    &::after {
+      width: 40px !important;
+      height: 40px !important;
     }
 
     @include grid-media-min('lg') {
-      font-size: 28px;
+      font-size: 28px !important;
     }
   }
 

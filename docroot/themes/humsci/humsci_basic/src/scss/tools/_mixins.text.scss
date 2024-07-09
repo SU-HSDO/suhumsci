@@ -253,25 +253,45 @@
     color: var(--palette--white);
   }
 
-  // Don't apply these rules to blockquotes in testimonials, the structure is not the same and need
-  // a different implementation.
   &:not(.hb-testimonial__quote) {
-    @include hb-quote-wrapper;
+    position: relative;
+    color: var(--palette--primary);
+    font-style: normal;
+    line-height: hb-calculate-rems(35.56px);
+    text-align: left;
+    padding: hb-calculate-rems(40px);
 
-    > p,
-    > div {
-      margin: 0;
+    &::before,
+    &::after {
+      content: ' ';
+      position: absolute;
+      background-repeat: no-repeat;
+    }
 
-      &::before {
-        position: absolute;
-        content: open-quote;
-        margin-left: hb-calculate-rems(-16px);
+    &::before {
+      @include hb-icon-background('quote-mark', 'tertiary');
+
+      width: hb-calculate-rems(68px);
+      height: hb-calculate-rems(40px);
+      left: hb-calculate-rems(-42px);
+      top: hb-calculate-rems(14px);
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-background('quote-mark', 'white');
       }
+    }
 
-      &::after {
-        position: absolute;
-        content: close-quote;
-        margin-right: hb-calculate-rems(10px);
+    &::after {
+      @include hb-icon-background('close-quote-mark', 'tertiary');
+
+      width: hb-calculate-rems(40px);
+      height: hb-calculate-rems(40px);
+      right: 0;
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-background('close-quote-mark', 'white');
       }
     }
   }
@@ -361,18 +381,23 @@
   text-align: right;
   line-height: 120%;
   height: auto;
-  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) 15%; // Using a percentage to the left to control the width of the captions
+  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px)
+    15%; // Using a percentage to the left to control the width of the captions
 
-  @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
-    padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 15%;
+  @include grid-media-min('sm') {
+    // the right side calculation is lower to adjust for the margin-right on the child elements
+    padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+      hb-calculate-rems(16px) 15%;
   }
 
   @include hb-themes(('colorful', 'airy')) {
     background: linear-gradient(to top, var(--palette--black), transparent);
 
-    .paragraph--type--hs-carousel & { // the percentage on this left side is larger to prevent the caption from running under carousel overlay
+    .paragraph--type--hs-carousel & {
+      // the percentage on this left side is larger to prevent the caption from running under carousel overlay
       @include grid-media-min('md') {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 58%;
+        padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+          hb-calculate-rems(16px) 58%;
       }
     }
   }
@@ -382,8 +407,10 @@
   }
 
   .hb-card__graphics--has-date & {
-    @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
-      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(100px);
+    @include grid-media-min('sm') {
+      // the right side calculation is lower to adjust for the margin-right on the child elements
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+        hb-calculate-rems(16px) hb-calculate-rems(100px);
     }
   }
 
@@ -462,7 +489,11 @@
 // Splash Font Animation
 @mixin hb-font-splash-animation {
   @include hb-traditional {
-    @include hasAnimationEnhancements(ease-in-out, 1700ms, traditionalSplashFont);
+    @include hasAnimationEnhancements(
+      ease-in-out,
+      1700ms,
+      traditionalSplashFont
+    );
   }
 
   @include hb-themes(('colorful', 'airy')) {

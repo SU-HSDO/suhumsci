@@ -249,7 +249,8 @@
   }
 
   .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
+  .hb-dark-inversion .views-element-container &,
+  .hb-dark-pattern.hb-local-footer & {
     color: var(--palette--white);
   }
 
@@ -270,15 +271,19 @@
 
     &::before {
       @include hb-icon-background('quote-mark', 'tertiary');
-
+      
       width: hb-calculate-rems(68px);
       height: hb-calculate-rems(40px);
       left: hb-calculate-rems(-42px);
       top: hb-calculate-rems(14px);
-
+      
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         @include hb-icon-background('quote-mark', 'white');
+      }
+      
+      .hb-dark-pattern.hb-local-footer & {
+        @include hb-icon-background('quote-mark', 'tertiary');
       }
     }
 
@@ -292,6 +297,10 @@
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         @include hb-icon-background('close-quote-mark', 'white');
+      }
+
+      .hb-dark-pattern.hb-local-footer & {
+        @include hb-icon-background('close-quote-mark', 'tertiary');
       }
     }
   }

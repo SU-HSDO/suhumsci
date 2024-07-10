@@ -193,8 +193,13 @@ function hs_views_helper_views_post_execute(ViewExecutable $view) {
  * Implements hook_views_pre_view().
  */
 function hs_views_helper_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
-  $display_options = &$view->getDisplay()->options;
-  $default_options = &$view->getDisplay()->default_display->options;
+  $display = $view->getDisplay();
+  $display_options = &$display->options;
+  $default_display = &$display;
+  if (!empty($display->default_display)) {
+    $default_display = &$display->default_display;
+  }
+  $default_options = &$default_display->options;
   $filters = !empty($display_options['filters']) ? $display_options['filters'] : $default_options['filters'];
 
   if (

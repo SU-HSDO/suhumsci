@@ -258,41 +258,21 @@
     position: relative;
     color: var(--palette--primary);
     font-style: normal;
-    line-height: hb-calculate-rems(35.56px);
+    line-height: 1.27;
     text-align: left;
-    padding: hb-calculate-rems(40px);
+    padding: hb-calculate-rems(40px) hb-calculate-rems(36px);
 
     &::before,
     &::after {
+      @include hb-icon-background('close-quote-mark', 'tertiary');
+
       content: ' ';
       position: absolute;
       background-repeat: no-repeat;
-    }
-
-    &::before {
-      @include hb-icon-background('quote-mark', 'tertiary');
-      
-      width: hb-calculate-rems(68px);
-      height: hb-calculate-rems(40px);
-      left: hb-calculate-rems(-42px);
-      top: hb-calculate-rems(14px);
-      
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        @include hb-icon-background('quote-mark', 'white');
-      }
-      
-      .hb-dark-pattern.hb-local-footer & {
-        @include hb-icon-background('quote-mark', 'tertiary');
-      }
-    }
-
-    &::after {
-      @include hb-icon-background('close-quote-mark', 'tertiary');
-
-      width: hb-calculate-rems(40px);
-      height: hb-calculate-rems(40px);
-      right: 0;
+      background-size: cover;
+      background-position: center;
+      width: hb-calculate-rems(36px);
+      height: hb-calculate-rems(31px);
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
@@ -302,6 +282,17 @@
       .hb-dark-pattern.hb-local-footer & {
         @include hb-icon-background('close-quote-mark', 'tertiary');
       }
+    }
+
+    &::before {
+      left: hb-calculate-rems(-36px);
+      top: hb-calculate-rems(14px);
+      transform: rotate(180deg);
+      transform-origin: center;
+    }
+
+    &::after {
+      right: 0;
     }
   }
 }

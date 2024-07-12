@@ -264,24 +264,26 @@ $px-only: true;
   blockquote:nth-child(n) {
     @include hb-blockquote;
     overflow: visible;
-    font-size: 24px !important;
-    line-height:35.56px !important;
-
-    &::before {
-      background-color: transparent;
-      left: -12px !important;
-      top: 24px !important;
-      width: 68px !important;
-      height: 40px !important;
-    }
-
-    &::after {
-      width: 40px !important;
-      height: 40px !important;
-    }
+    font-size: 24px;
 
     @include grid-media-min('lg') {
-      font-size: 28px !important;
+      font-size: 28px;
+    }
+
+    &:not(.hb-testimonial__quote) {
+      padding: 40px 36px;
+
+      &::before,
+      &::after {
+        background-color: transparent;
+        width: 36px;
+        height: 31px;
+      }
+
+      &::before {
+        left: -12px;
+        top: 24px;
+      }
     }
   }
 

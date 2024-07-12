@@ -14,7 +14,8 @@
     padding-bottom: hb-calculate-rems(34px);
     margin: 0;
 
-    @include grid-media-min('lg') { // override hb-quote-wrapper mixin
+    @include grid-media-min('lg') {
+      // override hb-quote-wrapper mixin
       padding-bottom: hb-calculate-rems(34px);
     }
 
@@ -93,14 +94,13 @@
     }
   }
 
-
   &__link {
     position: relative;
 
     a {
       @include hb-more-link;
 
-      [class*="-pairing-"] .hb-dark-pattern &,
+      [class*='-pairing-'] .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         // make arrow and text color white for all themes
         color: var(--palette--white);
@@ -157,6 +157,19 @@
   blockquote.hb-testimonial__quote {
     width: 100%;
     margin: 0;
+    // Testimonial blockquote includes styling from hb-blockquote mixin,
+    // so we need to reset some of the styles.
+    color: var(--palette--secondary);
+    font-style: italic;
+    text-align: center;
+
+    @include hb-themes(('colorful', 'airy')) {
+      line-height: 140%;
+    }
+
+    @include hb-traditional {
+      line-height: 136%;
+    }
 
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {
@@ -165,7 +178,8 @@
 
     // quote marks around quote
     .field-hs-testimonial-quote, // paragraph type
-    .views-field .field-content p:first-of-type { // views
+    .views-field .field-content p:first-of-type {
+      // views
       &::before {
         position: absolute;
         content: open-quote;

@@ -3,47 +3,50 @@
 // the dependencies and the files we need. See _main.scss and
 // _base.scss for reference.
 @charset 'UTF-8';
-@use "sass:map";
+@use 'sass:map';
 
 // Here we add the path to Font Awesome. This is copied from _main.scss
 // and necessary for icons in CKEditor styles.
-$fa-font-path: "../../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts" !default;
+$fa-font-path: '../../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts' !default;
 $px-only: true;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
-@import "decanter/core/src/scss/core/normalize",
-  "decanter/core/src/scss/decanter-no-markup",
-  "decanter/core/src/scss/core/fonts", "decanter/core/src/scss/core/helpers",
-  "decanter/core/src/scss/core/base", "decanter/core/src/scss/elements/image",
-  "decanter/core/src/scss/elements/embed",
-  "decanter/core/src/scss/decanter-grid",
+@import 'decanter/core/src/scss/core/normalize',
+  'decanter/core/src/scss/decanter-no-markup',
+  'decanter/core/src/scss/core/fonts', 'decanter/core/src/scss/core/helpers',
+  'decanter/core/src/scss/core/base', 'decanter/core/src/scss/elements/image',
+  'decanter/core/src/scss/elements/embed',
+  'decanter/core/src/scss/decanter-grid',
   // utils
-  "../settings/variables.colorful-pairings",
-  "../settings/variables.traditional-pairings", "../settings/variables.general",
-  "../settings/variables.fonts", "../settings/variables.zindex",
-  "../settings/variables.fonts", "../settings/variables.forms",
-  "../tools/functions.fonts", "../tools/functions.general",
-  "../tools/functions.svg", "../tools/functions.icons",
-  "../tools/functions.animation", "../tools/mixins.general", "../tools/mixins.themes",
-  "../tools/mixins.decorative", "../tools/mixins.text", "../tools/mixins.links",
-  "../tools/mixins.layout", "../tools/mixins.forms", "../tools/mixins.general",
-  "../tools/mixins.buttons", "../tools/mixins.menu-icons", "../tools/keyframes.hero",
-  "../tools/mixins.icons", "../tools/mixins.lists", "../tools/mixins.tables",
-  "../tools/mixins.heros", "../tools/mixins.slick", "../tools/keyframes.text",
-  "../utilities/color-pairings", "../utilities/fonts", "../utilities/font-awesome", "../utilities/general",
-  "../utilities/lists", "../utilities/raised-cards",
-  "../utilities/tables", "../utilities/display-more-link-text",
-  "../utilities/dark-pattern", "../utilities/caption-credit", "../utilities/media-embeds",
+  '../settings/variables.colorful-pairings',
+  '../settings/variables.traditional-pairings', '../settings/variables.general',
+  '../settings/variables.fonts', '../settings/variables.zindex',
+  '../settings/variables.fonts', '../settings/variables.forms',
+  '../tools/functions.fonts', '../tools/functions.general',
+  '../tools/functions.svg', '../tools/functions.icons',
+  '../tools/functions.animation', '../tools/mixins.general',
+  '../tools/mixins.themes', '../tools/mixins.decorative', '../tools/mixins.text',
+  '../tools/mixins.links', '../tools/mixins.layout', '../tools/mixins.forms',
+  '../tools/mixins.general', '../tools/mixins.buttons',
+  '../tools/mixins.menu-icons', '../tools/keyframes.hero',
+  '../tools/mixins.icons', '../tools/mixins.lists', '../tools/mixins.tables',
+  '../tools/mixins.heros', '../tools/mixins.slick', '../tools/keyframes.text',
+  '../utilities/color-pairings', '../utilities/fonts',
+  '../utilities/font-awesome', '../utilities/general', '../utilities/lists',
+  '../utilities/raised-cards', '../utilities/tables',
+  '../utilities/display-more-link-text', '../utilities/dark-pattern',
+  '../utilities/caption-credit', '../utilities/media-embeds',
   // Here are the files we actually need for CKEditor
-  "../admin/wysiwyg-editor",
-  "../utilities/wysiwyg-text-area";
+  '../admin/wysiwyg-editor',
+  '../utilities/wysiwyg-text-area';
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
 :root {
-  @include hb-themes(("colorful", "airy")) {
-    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default) {
+  @include hb-themes(('colorful', 'airy')) {
+    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default)
+    {
       --palette--#{$color}: #{$value};
     }
     @each $color, $value in $hc-colorful-globals {
@@ -52,7 +55,9 @@ $px-only: true;
   }
 
   @include hb-traditional {
-    @each $color, $value in map.get($ht-traditional-pairings, $hb-traditional-default) {
+    @each $color,
+      $value in map.get($ht-traditional-pairings, $hb-traditional-default)
+    {
       --palette--#{$color}: #{$value};
     }
     @each $color, $value in $ht-traditional-globals {
@@ -64,7 +69,7 @@ $px-only: true;
 .ck-editor__main {
   @include font-smoothing;
 
-  @include hb-themes(("colorful", "airy")) {
+  @include hb-themes(('colorful', 'airy')) {
     font-family: $hb-colorful-font--sans;
   }
 
@@ -97,10 +102,10 @@ $px-only: true;
 // classes for the WYSIWYG need to be converted to px to ensure accurate
 // rendering.
 .ck.ck-content {
-  @include hb-themes(("colorful", "airy")) {
+  @include hb-themes(('colorful', 'airy')) {
     font-size: 16px;
 
-    @include grid-media-min("lg") {
+    @include grid-media-min('lg') {
       font-size: 18px;
     }
   }
@@ -113,20 +118,20 @@ $px-only: true;
   .summary {
     font-size: 20px;
 
-    @include grid-media-min("lg") {
+    @include grid-media-min('lg') {
       font-size: 22px;
     }
   }
 
   .hs-font-splash {
-    @include grid-media-min("md") {
+    @include grid-media-min('md') {
       margin: 48px 0 16px;
     }
 
-    @include hb-themes(("colorful", "airy")) {
+    @include hb-themes(('colorful', 'airy')) {
       font-size: 36px;
 
-      @include grid-media-min("md") {
+      @include grid-media-min('md') {
         font-size: 46px;
       }
     }
@@ -134,7 +139,7 @@ $px-only: true;
     @include hb-traditional {
       font-size: 34px;
 
-      @include grid-media-min("md") {
+      @include grid-media-min('md') {
         font-size: 42px;
       }
     }
@@ -168,7 +173,8 @@ $px-only: true;
   }
 
   a[href*="//"].hs-external-link,
-  .hs-external-link a[href*="//"] {
+  .hs-external-link a[href*="//"]
+  {
     &::after {
       margin-bottom: -5px;
       padding-left: 15px;
@@ -207,7 +213,7 @@ $px-only: true;
     font-size: 16px;
     border-width: 2px;
 
-    @include hb-themes(("colorful", "airy")) {
+    @include hb-themes(('colorful', 'airy')) {
       padding: 4px 20px;
     }
 
@@ -221,7 +227,7 @@ $px-only: true;
     font-size: 18px;
     border-width: 3px;
 
-    @include hb-themes(("colorful", "airy")) {
+    @include hb-themes(('colorful', 'airy')) {
       padding: 8px 20px;
     }
 
@@ -237,7 +243,7 @@ $px-only: true;
     font-size: 13px;
     table-layout: fixed;
 
-    @include grid-media-min("sm") {
+    @include grid-media-min('sm') {
       font-size: 16px;
     }
 
@@ -270,20 +276,27 @@ $px-only: true;
       font-size: 28px;
     }
 
-    &:not(.hb-testimonial__quote) {
-      padding: 40px 36px;
+    padding: 40px 36px !important;
 
-      &::before,
-      &::after {
-        background-color: transparent;
-        width: 36px;
-        height: 31px;
-      }
+    &::before,
+    &::after {
+      background-color: transparent;
+      width: 36px !important;
+      height: 31px !important;
+    }
 
-      &::before {
-        left: -12px;
-        top: 24px;
-      }
+    &::before {
+      left: -12px !important;
+      top: 14px !important;
+    }
+  }
+
+  // Paragraphs.
+  p:not([class]) {
+    margin-top: 0;
+
+    &:last-of-type {
+      margin-bottom: 0;
     }
   }
 

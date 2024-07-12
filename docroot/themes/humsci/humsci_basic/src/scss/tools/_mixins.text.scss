@@ -224,23 +224,17 @@
 }
 
 @mixin hb-blockquote {
-  color: var(--palette--secondary);
+  color: var(--palette--primary);
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
-  font-style: italic;
-  text-align: center;
+  line-height: 1.27;
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(28px);
   }
 
-  @include hb-themes(('colorful', 'airy')) {
-    line-height: 140%;
-  }
-
   @include hb-traditional {
     font-family: $hb-traditional-font--serif;
-    line-height: 136%;
   }
 
   // A utility class that can be applied via layout builder to override the text color to black
@@ -256,17 +250,13 @@
 
   &:not(.hb-testimonial__quote) {
     position: relative;
-    color: var(--palette--primary);
-    font-style: normal;
-    line-height: 1.27;
-    text-align: left;
     padding: hb-calculate-rems(40px) hb-calculate-rems(36px);
 
     &::before,
     &::after {
       @include hb-icon-background('close-quote-mark', 'tertiary');
 
-      content: ' ';
+      content: '';
       position: absolute;
       background-repeat: no-repeat;
       background-size: cover;

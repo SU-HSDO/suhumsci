@@ -898,11 +898,11 @@ function su_humsci_profile_preprocess_form_element(&$variables) {
  */
 function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definitions) {
   if (isset($plugin_definitions['ckeditor5_table'])) {
-    $table_plugin_definition = $plugin_definitions['ckeditor5_table']->toArray();
-    $table_plugin_definition['ckeditor5']['config']['table']['defaultHeadings'] = [
+    $tableDefinition = $plugin_definitions['ckeditor5_table']->toArray();
+    $tableDefinition['ckeditor5']['config']['table']['defaultHeadings'] = [
       'rows' => 1,
       'columns' => 0,
     ];
-    $plugin_definitions['ckeditor5_table'] = new CKEditor5PluginDefinition($table_plugin_definition);
+    $plugin_definitions['ckeditor5_table'] = new CKEditor5PluginDefinition($tableDefinition);
   }
 }

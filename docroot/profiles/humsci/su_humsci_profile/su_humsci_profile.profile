@@ -897,6 +897,10 @@ function su_humsci_profile_preprocess_form_element(&$variables) {
  * Implements hook_ckeditor5_plugin_info_alter().
  */
 function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definitions) {
+  /*
+   * Adds default header row to CKEditor tables.
+   * @see https://www.drupal.org/forum/support/post-installation/2023-10-19/how-can-i-configure-defaultheadings-in-ckeditor-tables
+   * */
   if (isset($plugin_definitions['ckeditor5_table'])) {
     $tableDefinition = $plugin_definitions['ckeditor5_table']->toArray();
     $tableDefinition['ckeditor5']['config']['table']['defaultHeadings'] = [

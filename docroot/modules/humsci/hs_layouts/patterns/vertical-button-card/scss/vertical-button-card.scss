@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+//
+// Vertical Card
+//
+
+// Decanter
+@import
+  'decanter-no-markup';
+
+// SU HumSci
+@import
+  '../utilities/mixins/index';
+
+.vertical-button-card{
+  .vertical-button-card__img {
+    img {
+      width: 100%;
+    }
+  }
+
+  .vertical-button-card__content-container {
+    @include card;
+
+    .vertical-button-card__title {
+      font-size: 3rem;
+
+      @include margin(0 null null);
+    }
+
+    > *:last-child > *:last-child {
+      @include margin(null null 0 null);
+    }
+  }
+
+  > * {
+    word-break: break-word;
+  }
+}

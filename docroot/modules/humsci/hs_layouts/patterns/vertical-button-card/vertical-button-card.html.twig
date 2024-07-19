@@ -1,0 +1,37 @@
+{% set attributes = attributes.addClass(['hb-card', 'hb-vertical-button-card']) %}
+
+<div{{ attributes }}>
+
+  {% if image %}
+    <div class="hb-card__graphics">
+      <div class="hb-card__img">
+        {{ image }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="hb-card__content">
+    {% if title %}
+      <div class="hb-card__title">
+      {% set title_content %}
+        {% if href %}
+          <a href="{{ href }}">{{ title }}</a>
+        {% else %}
+          {{ title }}
+        {% endif %}
+      {% endset %}
+      {% if title|render matches '/<\\/h\\d>/' %}
+        {{ title_content }}
+      {% else %}
+        <{{ heading_tag }}>
+          {{ title_content }}
+        </{{ heading_tag }}>
+      {% endif %}
+      </div>
+    {% endif %}
+
+    {% if description %}
+      <div class="hb-card__description">{{ description }}</div>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,102 @@
+uuid: 344ca5c0-4913-4495-bbbf-1b043b86d9b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.vertical_button_card
+    - field.field.paragraph.hs_postcard.field_hs_postcard_body
+    - field.field.paragraph.hs_postcard.field_hs_postcard_display
+    - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_link
+    - field.field.paragraph.hs_postcard.field_hs_postcard_title
+    - paragraphs.paragraphs_type.hs_postcard
+  module:
+    - ds
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
+    - linkit
+    - stanford_media
+    - text
+third_party_settings:
+  ds:
+    layout:
+      id: pattern_vertical_button_card
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant_field: field_hs_postcard_body
+    regions:
+      title:
+        - field_hs_postcard_title
+      image:
+        - field_hs_postcard_image
+      description:
+        - field_hs_postcard_body
+      button:
+        - field_hs_postcard_link
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: pD2JUVXvQBSgYIl6eg5c8YEnrxvftUnux2cz-3A-P9Y
+id: paragraph.hs_postcard.vertical_button_card
+targetEntityType: paragraph
+bundle: hs_postcard
+mode: vertical_button_card
+content:
+  field_hs_postcard_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: description
+  field_hs_postcard_image:
+    type: media_responsive_image_formatter
+    label: hidden
+    settings:
+      view_mode: caption_credit
+      link: false
+      image_style: postcard_vertical
+      remove_alt: 0
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: image
+  field_hs_postcard_link:
+    type: linkit
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+      linkit_profile: default
+    third_party_settings:
+      field_formatter_class:
+        class: decanter-button
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 3
+    region: button
+  field_hs_postcard_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: title
+hidden:
+  field_hs_postcard_display: true
+  search_api_excerpt: true

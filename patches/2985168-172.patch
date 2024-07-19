@@ -1,0 +1,388 @@
+diff --git a/core/modules/media_library/js/media_library.widget.js b/core/modules/media_library/js/media_library.widget.js
+index b9f5b8a5cb1..6205288c167 100644
+--- a/core/modules/media_library/js/media_library.widget.js
++++ b/core/modules/media_library/js/media_library.widget.js
+@@ -72,6 +72,28 @@
+     },
+   };
+ 
++  /**
++   * Allow users to edit media library items inside a modal.
++   */
++  Drupal.behaviors.MediaLibraryWidgetEditItem = {
++    attach: function attach(context) {
++      const mediaLibraryEdit = once(
++        'media-library-edit',
++        '.media-library-widget .edit-media',
++        context,
++      );
++      $(mediaLibraryEdit).on('click', function () {
++        // Remove any "selected-media" classes.
++        $(this)
++          .closest('.media-library-selection')
++          .find('.selected-media')
++          .removeClass('selected-media');
++        // Mark the media item as selected to render it properly when submitting an ajax media edit request.
++        $(this).parent().find('article').addClass('selected-media');
++      });
++    },
++  };
++
+   /**
+    * Disable the open button when the user is not allowed to add more items.
+    *
+diff --git a/core/modules/media_library/media_library.module b/core/modules/media_library/media_library.module
+index d92028d7755..20adc675f7a 100644
+--- a/core/modules/media_library/media_library.module
++++ b/core/modules/media_library/media_library.module
+@@ -5,13 +5,19 @@
+  * Contains hook implementations for the media_library module.
+  */
+ 
++use Drupal\Component\Utility\Html;
+ use Drupal\Component\Utility\UrlHelper;
+ use Drupal\Core\Access\AccessResult;
++use Drupal\Core\Ajax\AjaxResponse;
++use Drupal\Core\Ajax\CloseModalDialogCommand;
++use Drupal\Core\Ajax\ReplaceCommand;
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\Entity\EntityFormDisplay;
+ use Drupal\Core\Entity\Entity\EntityViewDisplay;
++use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+ use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Messenger\MessengerInterface;
+ use Drupal\Core\Render\Element;
+ use Drupal\Core\Routing\RouteMatchInterface;
+ use Drupal\Core\Session\AccountInterface;
+@@ -220,6 +226,90 @@ function media_library_views_post_render(ViewExecutable $view, &$output, CachePl
+   }
+ }
+ 
++/**
++ * Implements hook_form_FORM_ID_alter() for media_form forms.
++ */
++function media_library_form_media_form_alter(array &$form, FormStateInterface $form_state) {
++  // Make the media edit form work inside modal dialogs.
++  $form_object = $form_state->getFormObject();
++  if (is_object($form_object) && $form_object->getOperation() === 'edit') {
++    $wrapper_format = \Drupal::request()->query->get(MainContentViewSubscriber::WRAPPER_FORMAT);
++
++    // Make sure that the media library opener is actually the 'field_widget'.
++    // Get the request uri for the $form.
++    $request_stack = \Drupal::service('request_stack');
++    $currentRequest = $request_stack->getCurrentRequest();
++    $mediaLibraryOpenerId = $currentRequest->getRequestUri();
++
++    // Extract and parse the 'media_library_opener_id' from the request URI.
++    $queryString = parse_url($mediaLibraryOpenerId, PHP_URL_QUERY);
++    parse_str($queryString ?? '', $queryParams);
++    $mediaLibraryOpenerId = $queryParams['media_library_opener_id'] ?? NULL;
++
++    if (($wrapper_format === 'drupal_modal' || $wrapper_format === 'drupal_ajax') && $mediaLibraryOpenerId === 'media_library.opener.field_widget') {
++      foreach (Element::children($form['actions']) as $key) {
++        if ($key === 'submit') {
++          // The default name is 'op', but we change it on purpose so that it is
++          // easier to detect our modified AJAX call above.
++          $form['actions'][$key]['#name'] = 'media_library_ajax_submit';
++          $form['actions'][$key]['#ajax'] = [
++            'callback' => 'media_library_media_form_ajax_submit',
++          ];
++
++          // Prevent the form that opened the modal dialog to refocus to the
++          // 'Save' button at the bottom of the form.
++          $form['actions'][$key]['#attributes']['data-disable-refocus'] = 'true';
++
++          // Reattach dialog AJAX library.
++          $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
++
++          // The data-drupal-selector needs to be the same between the various
++          // AJAX requests. A bug in \Drupal\Core\Form\FormBuilder prevents that
++          // from happening unless $form['#id'] is also the same. Normally, #id
++          // is set to a unique HTML ID via Html::getUniqueId(), but here we
++          // bypass that in order to work around the data-drupal-selector bug.
++          // This is okay so long as we assume that this form only ever occurs
++          // once on a page.
++          // @todo: Remove once https://www.drupal.org/node/2897377 is fixed.
++          $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
++        }
++        else {
++          // We just want to allow the save action for now. Just hide other
++          // actions like the delete action.
++          $form['actions'][$key]['#access'] = FALSE;
++        }
++      }
++    }
++  }
++}
++
++/**
++ * AJAX callback for media edit form when form is shown inside modal dialog.
++ *
++ * @ingroup form
++ */
++function media_library_media_form_ajax_submit(array &$form, FormStateInterface $form_state) {
++  $response = new AjaxResponse();
++  if (!$form_state->hasAnyErrors()) {
++    $media = $form_state->getFormObject()->getEntity();
++    $render_array = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media, 'media_library');
++    $html = \Drupal::service('renderer')->render($render_array);
++    $response->addCommand(new CloseModalDialogCommand());
++    $response->addCommand(new ReplaceCommand('.selected-media', $html));
++
++    // Remove status messages when editing medias.
++    \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_STATUS);
++  }
++  else {
++    $form['status_messages'] = [
++      '#type' => 'status_messages',
++      '#weight' => -1000,
++    ];
++    $response->addCommand(new ReplaceCommand('[data-drupal-selector="' . $form['#attributes']['data-drupal-selector'] . '"]', $form));
++  }
++  return $response;
++}
++
+ /**
+  * Implements hook_preprocess_media().
+  */
+diff --git a/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php b/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
+index 6ba3510eb75..01ed892d597 100644
+--- a/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
++++ b/core/modules/media_library/src/Plugin/Field/FieldWidget/MediaLibraryWidget.php
+@@ -379,6 +379,55 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+       ];
+     }
+ 
++    $cardinality_unlimited = ($element['#cardinality'] === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
++    $remaining = $element['#cardinality'] - count($referenced_entities);
++
++    // Inform the user of how many items are remaining.
++    if (!$cardinality_unlimited) {
++      if ($remaining) {
++        $cardinality_message = $this->formatPlural($remaining, 'One media item remaining.', '@count media items remaining.');
++      }
++      else {
++        $cardinality_message = $this->t('The maximum number of media items have been selected.');
++      }
++
++      // Add a line break between the field message and the cardinality message.
++      if (!empty($element['#description'])) {
++        $element['#description'] .= '<br />';
++      }
++      $element['#description'] .= $cardinality_message;
++    }
++
++    // Create a new media library URL with the correct state parameters.
++    $selected_type_id = reset($allowed_media_type_ids);
++    $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
++    // This particular media library opener needs some extra metadata for its
++    // \Drupal\media_library\MediaLibraryOpenerInterface::getSelectionResponse()
++    // to be able to target the element whose 'data-media-library-widget-value'
++    // attribute is the same as $field_widget_id. The entity ID, entity type ID,
++    // bundle, field name are used for access checking.
++    $entity = $items->getEntity();
++    $opener_parameters = [
++      'field_widget_id' => $field_widget_id,
++      'entity_type_id' => $entity->getEntityTypeId(),
++      'bundle' => $entity->bundle(),
++      'field_name' => $field_name,
++    ];
++    if (isset($form['#form_mode'])) {
++      $opener_parameters['form_mode'] = $form['#form_mode'];
++    }
++    // Only add the entity ID when we actually have one. The entity ID needs to
++    // be a string to ensure that the media library state generates its
++    // tamper-proof hash in a consistent way.
++    if (!$entity->isNew()) {
++      $opener_parameters['entity_id'] = (string) $entity->id();
++
++      if ($entity->getEntityType()->isRevisionable()) {
++        $opener_parameters['revision_id'] = (string) $entity->getRevisionId();
++      }
++    }
++    $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, $opener_parameters);
++
+     $element['selection'] = [
+       '#type' => 'container',
+       '#theme_wrappers' => [
+@@ -427,6 +476,7 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+           '#type' => 'submit',
+           '#name' => $field_name . '-' . $delta . '-media-library-remove-button' . $id_suffix,
+           '#value' => $this->t('Remove'),
++          '#weight' => -10,
+           '#media_id' => $media_item->id(),
+           '#attributes' => [
+             'aria-label' => $media_item->access('view label') ? $this->t('Remove @label', ['@label' => $media_item->label()]) : $this->t('Remove media'),
+@@ -443,6 +493,19 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+           // Prevent errors in other widgets from preventing removal.
+           '#limit_validation_errors' => $limit_validation_errors,
+         ],
++        'edit_button' => [
++          '#type' => 'submit',
++          '#value' => $this->t('Edit'),
++          '#weight' => 1,
++          '#access' => $media_item->access('update'),
++          '#attributes' => [
++            'aria-label' => $media_item->access('view label') ? $this->t('Edit @label', ['@label' => $media_item->label()]) : $this->t('Edit media'),
++            'class' => ['edit-media', 'use-ajax'],
++            'href' => $media_item->toUrl('edit-form', ['query' => $state->all()])->toString(),
++            'data-dialog-type' => 'modal',
++            'data-dialog-options' => '{"width":"80%"}',
++          ],
++        ],
+         'rendered_entity' => $preview,
+         'target_id' => [
+           '#type' => 'hidden',
+@@ -464,52 +527,6 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
+       ];
+     }
+ 
+-    $cardinality_unlimited = ($element['#cardinality'] === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+-    $remaining = $element['#cardinality'] - count($referenced_entities);
+-
+-    // Inform the user of how many items are remaining.
+-    if (!$cardinality_unlimited) {
+-      if ($remaining) {
+-        $cardinality_message = $this->formatPlural($remaining, 'One media item remaining.', '@count media items remaining.');
+-      }
+-      else {
+-        $cardinality_message = $this->t('The maximum number of media items have been selected.');
+-      }
+-
+-      // Add a line break between the field message and the cardinality message.
+-      if (!empty($element['#description'])) {
+-        $element['#description'] .= '<br />';
+-      }
+-      $element['#description'] .= $cardinality_message;
+-    }
+-
+-    // Create a new media library URL with the correct state parameters.
+-    $selected_type_id = reset($allowed_media_type_ids);
+-    $remaining = $cardinality_unlimited ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : $remaining;
+-    // This particular media library opener needs some extra metadata for its
+-    // \Drupal\media_library\MediaLibraryOpenerInterface::getSelectionResponse()
+-    // to be able to target the element whose 'data-media-library-widget-value'
+-    // attribute is the same as $field_widget_id. The entity ID, entity type ID,
+-    // bundle, field name are used for access checking.
+-    $entity = $items->getEntity();
+-    $opener_parameters = [
+-      'field_widget_id' => $field_widget_id,
+-      'entity_type_id' => $entity->getEntityTypeId(),
+-      'bundle' => $entity->bundle(),
+-      'field_name' => $field_name,
+-    ];
+-    // Only add the entity ID when we actually have one. The entity ID needs to
+-    // be a string to ensure that the media library state generates its
+-    // tamper-proof hash in a consistent way.
+-    if (!$entity->isNew()) {
+-      $opener_parameters['entity_id'] = (string) $entity->id();
+-
+-      if ($entity->getEntityType()->isRevisionable()) {
+-        $opener_parameters['revision_id'] = (string) $entity->getRevisionId();
+-      }
+-    }
+-    $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, $opener_parameters);
+-
+     // Add a button that will load the Media library in a modal using AJAX.
+     $element['open_button'] = [
+       '#type' => 'button',
+diff --git a/core/themes/claro/claro.theme b/core/themes/claro/claro.theme
+index f33e425c165..4826c25e234 100644
+--- a/core/themes/claro/claro.theme
++++ b/core/themes/claro/claro.theme
+@@ -1505,6 +1505,8 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
+  * This targets each media item selected in an entity reference field.
+  */
+ function claro_preprocess_media_library_item__widget(array &$variables) {
++  $variables['content']['edit_button']['#attributes']['class'][] = 'media-library-item__edit';
++  $variables['content']['edit_button']['#attributes']['class'][] = 'icon-link';
+   $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
+   $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
+ }
+diff --git a/core/themes/claro/css/theme/media-library.css b/core/themes/claro/css/theme/media-library.css
+index 951f95d85f6..f98cb27ab06 100644
+--- a/core/themes/claro/css/theme/media-library.css
++++ b/core/themes/claro/css/theme/media-library.css
+@@ -752,6 +752,12 @@
+ .media-library-item__edit,
+ .media-library-item__edit:hover,
+ .media-library-item__edit:focus,
++.media-library-item__edit.button,
++.media-library-item__edit.button:disabled,
++.media-library-item__edit.button:disabled:active,
++.media-library-item__edit.button:hover,
++.media-library-item__edit.button:focus,
++.media-library-item__edit.button:not(:focus),
+ .media-library-item__remove,
+ .media-library-item__remove:hover,
+ .media-library-item__remove:focus,
+@@ -794,7 +800,13 @@
+   left: 0.625rem;
+ }
+ 
+-.media-library-item__edit {
++.media-library-item__edit,
++.media-library-item__edit.button,
++.media-library-item__edit.button:disabled,
++.media-library-item__edit.button:disabled:active,
++.media-library-item__edit.button:hover,
++.media-library-item__edit.button:focus,
++.media-library-item__edit.button:not(:focus) {
+   /* !important to override button class border. */
+   border: 1px solid var(--color-gray-200) !important;
+   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg fill='%23545560'%3e%3cpath d='M14.545 3.042l-1.586-1.585a1.003 1.003 0 00-1.414 0L10.252 2.75l3 3 1.293-1.293a1.004 1.004 0 000-1.415zM5.25 13.751l-3-3 6.998-6.998 3 3zM.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
+@@ -803,7 +815,9 @@
+   background-size: 0.75rem;
+ }
+ 
+-.media-library-item__edit:active {
++.media-library-item__edit:active,
++.media-library-item__edit.button:active,
++.media-library-item__edit.button:disabled:active {
+   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
+ }
+ 
+diff --git a/core/themes/claro/css/theme/media-library.pcss.css b/core/themes/claro/css/theme/media-library.pcss.css
+index 318b4339b0e..b404f318137 100644
+--- a/core/themes/claro/css/theme/media-library.pcss.css
++++ b/core/themes/claro/css/theme/media-library.pcss.css
+@@ -692,6 +692,12 @@
+ .media-library-item__edit,
+ .media-library-item__edit:hover,
+ .media-library-item__edit:focus,
++.media-library-item__edit.button,
++.media-library-item__edit.button:disabled,
++.media-library-item__edit.button:disabled:active,
++.media-library-item__edit.button:hover,
++.media-library-item__edit.button:focus,
++.media-library-item__edit.button:not(:focus),
+ .media-library-item__remove,
+ .media-library-item__remove:hover,
+ .media-library-item__remove:focus,
+@@ -732,7 +738,13 @@
+   left: 10px;
+ }
+ 
+-.media-library-item__edit {
++.media-library-item__edit,
++.media-library-item__edit.button,
++.media-library-item__edit.button:disabled,
++.media-library-item__edit.button:disabled:active,
++.media-library-item__edit.button:hover,
++.media-library-item__edit.button:focus,
++.media-library-item__edit.button:not(:focus) {
+   /* !important to override button class border. */
+   border: 1px solid var(--color-gray-200) !important;
+   background-image: url("../../images/icons/545560/pencil.svg");
+@@ -740,7 +752,9 @@
+   background-position: center;
+   background-size: 12px;
+ }
+-.media-library-item__edit:active {
++.media-library-item__edit:active,
++.media-library-item__edit.button:active,
++.media-library-item__edit.button:disabled:active {
+   background-image: url("../../../../misc/icons/ffffff/pencil.svg");
+ }
+ .media-library-item__remove,

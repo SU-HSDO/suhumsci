@@ -13,20 +13,11 @@
   <div class="hb-card__content">
     {% if title %}
       <div class="hb-card__title">
-      {% set title_content %}
-        {% if href %}
-          <a href="{{ href }}">{{ title }}</a>
-        {% else %}
+        {% if title|render matches '/<\\/h\\d>/' %}
           {{ title }}
+        {% else %}
+          <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
         {% endif %}
-      {% endset %}
-      {% if title|render matches '/<\\/h\\d>/' %}
-        {{ title_content }}
-      {% else %}
-        <{{ heading_tag }}>
-          {{ title_content }}
-        </{{ heading_tag }}>
-      {% endif %}
       </div>
     {% endif %}
 

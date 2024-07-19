@@ -5,7 +5,7 @@ index b9f5b8a5cb1..6205288c167 100644
 @@ -72,6 +72,28 @@
      },
    };
- 
+
 +  /**
 +   * Allow users to edit media library items inside a modal.
 +   */
@@ -38,7 +38,7 @@ index d92028d7755..20adc675f7a 100644
 @@ -5,13 +5,19 @@
   * Contains hook implementations for the media_library module.
   */
- 
+
 +use Drupal\Component\Utility\Html;
  use Drupal\Component\Utility\UrlHelper;
  use Drupal\Core\Access\AccessResult;
@@ -58,7 +58,7 @@ index d92028d7755..20adc675f7a 100644
 @@ -220,6 +226,90 @@ function media_library_views_post_render(ViewExecutable $view, &$output, CachePl
    }
  }
- 
+
 +/**
 + * Implements hook_form_FORM_ID_alter() for media_form forms.
 + */
@@ -103,7 +103,7 @@ index d92028d7755..20adc675f7a 100644
 +          // bypass that in order to work around the data-drupal-selector bug.
 +          // This is okay so long as we assume that this form only ever occurs
 +          // once on a page.
-+          // @todo: Remove once https://www.drupal.org/node/2897377 is fixed.
++          // Remove once https://www.drupal.org/node/2897377 is fixed.
 +          $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
 +        }
 +        else {
@@ -153,7 +153,7 @@ index 6ba3510eb75..01ed892d597 100644
 @@ -379,6 +379,55 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
        ];
      }
- 
+
 +    $cardinality_unlimited = ($element['#cardinality'] === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 +    $remaining = $element['#cardinality'] - count($referenced_entities);
 +
@@ -237,7 +237,7 @@ index 6ba3510eb75..01ed892d597 100644
 @@ -464,52 +527,6 @@ public function formElement(FieldItemListInterface $items, $delta, array $elemen
        ];
      }
- 
+
 -    $cardinality_unlimited = ($element['#cardinality'] === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 -    $remaining = $element['#cardinality'] - count($referenced_entities);
 -
@@ -320,7 +320,7 @@ index 951f95d85f6..f98cb27ab06 100644
 @@ -794,7 +800,13 @@
    left: 0.625rem;
  }
- 
+
 -.media-library-item__edit {
 +.media-library-item__edit,
 +.media-library-item__edit.button,
@@ -335,14 +335,14 @@ index 951f95d85f6..f98cb27ab06 100644
 @@ -803,7 +815,9 @@
    background-size: 0.75rem;
  }
- 
+
 -.media-library-item__edit:active {
 +.media-library-item__edit:active,
 +.media-library-item__edit.button:active,
 +.media-library-item__edit.button:disabled:active {
    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
  }
- 
+
 diff --git a/core/themes/claro/css/theme/media-library.pcss.css b/core/themes/claro/css/theme/media-library.pcss.css
 index 318b4339b0e..b404f318137 100644
 --- a/core/themes/claro/css/theme/media-library.pcss.css
@@ -363,7 +363,7 @@ index 318b4339b0e..b404f318137 100644
 @@ -732,7 +738,13 @@
    left: 10px;
  }
- 
+
 -.media-library-item__edit {
 +.media-library-item__edit,
 +.media-library-item__edit.button,

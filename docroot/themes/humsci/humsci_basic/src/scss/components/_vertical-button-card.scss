@@ -1,0 +1,114 @@
+.hb-vertical-button-card {
+  .hb-card__graphics {
+    margin-bottom: 0;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .hs-button {
+    width: 100%;
+    font-size: hb-calculate-rems(18px);
+
+    &:hover,
+    &:focus,
+    &.is-focused {
+      background-color: var(--palette--primary-dark);
+      border-color: var(--palette--primary-dark);
+    }
+  }
+
+  @include hb-traditional {
+    border: 2px solid var(--palette--secondary);
+
+    .hb-card__graphics {
+      padding: hb-spacing-width('xs') hb-spacing-width('sm') 0;
+    }
+
+    .hb-card__content {
+      padding: hb-spacing-width('sm');
+      margin-bottom: hb-spacing-width('sm');
+    }
+
+    .hs-button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: hb-theme-font-weight(regular);
+
+      &::after {
+        content: '';        
+        display: inline-block;
+        position: relative;
+        height: hb-calculate-rems(22px);
+        width: hb-calculate-rems(33px);
+  
+        @include hb-icon-background('arrow-right', 'white');
+        background-repeat: no-repeat;
+        background-size: auto;
+        background-position: 12px;
+        transition: hb-transition(background-position);
+      }
+  
+      &:hover,
+      &:focus,
+      &.is-focused {
+        &::after {
+          background-position: 18px;
+        }
+      }
+    }
+  }
+
+  @include hb-colorful {
+    position: relative;
+    padding-top: 40%;
+    
+    .paragraph--type--hs-collection & {
+      padding-top: hb-calculate-rems(130px);
+    }
+
+    .hb-card__graphics {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 0 hb-calculate-rems(36px);
+    }
+
+    .hb-card__title {
+      margin-top: hb-calculate-rems(28px);
+      margin-bottom: hb-calculate-rems(18px);
+      color: var(--palette--secondary);
+    }
+
+    .hb-card__content-wrapper {
+      padding: 25% hb-calculate-rems(36px) hb-spacing-width('md');
+      border: 2px solid var(--palette--tertiary-highlight);
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 12%, transparent);
+
+      .paragraph--type--hs-collection & {
+        padding-top: hb-calculate-rems(70px);
+      }
+
+      .hb-raised-cards--uniform-height & {
+        height: 100%;
+      }
+
+      .hb-card__content {
+        padding: 0;
+      }
+    }
+
+    .hs-button {
+      border-radius: 0;
+      background-color: var(--palette--primary);
+      border-color: var(--palette--primary);
+    }
+  }
+}

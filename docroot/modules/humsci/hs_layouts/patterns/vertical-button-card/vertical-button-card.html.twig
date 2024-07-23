@@ -1,28 +1,31 @@
-{% set attributes = attributes.addClass(['hb-card', 'hb-vertical-button-card']) %}
-
-<div{{ attributes }}>
-
-  {% if image %}
-    <div class="hb-card__graphics">
-      <div class="hb-card__img">
-        {{ image }}
-      </div>
-    </div>
-  {% endif %}
-
-  <div class="hb-card__content">
-    {% if title %}
-      <div class="hb-card__title">
-        {% if title|render matches '/<\\/h\\d>/' %}
-          {{ title }}
-        {% else %}
-          <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
-        {% endif %}
+<div class="hb-card hb-vertical-button-card">
+  <div class="hb-card__content-wrapper">
+    {% if image %}
+      <div class="hb-card__graphics">
+        <div class="hb-card__img">
+          {{ image }}
+        </div>
       </div>
     {% endif %}
+    <div class="hb-card__content">
+      {% if title %}
+        <div class="hb-card__title">
+          {% if title|render matches '/<\\/h\\d>/' %}
+            {{ title }}
+          {% else %}
+            <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
+          {% endif %}
+        </div>
+      {% endif %}
 
-    {% if description %}
-      <div class="hb-card__description">{{ description }}</div>
+      {% if description %}
+        <div class="hb-card__description">{{ description }}</div>
+      {% endif %}
+    </div>
+
+    {% if button %}
+      {% set link = button.field_hs_postcard_link[0] %}
+      <a href="{{ link['#url'].toString() }}" class="hs-button">{{ link['#title'] }}</a>
     {% endif %}
   </div>
 </div>

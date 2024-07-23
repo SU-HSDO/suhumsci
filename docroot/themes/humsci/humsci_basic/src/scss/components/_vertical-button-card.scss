@@ -70,7 +70,9 @@
   @include hb-colorful {
     padding-top: 40%;
     
-    .paragraph--type--hs-collection & {
+    .paragraph--type--hs-collection .item-per-row--2 &,
+    .paragraph--type--hs-collection .item-per-row--3 &,
+    .paragraph--type--hs-collection .item-per-row--4 & {
       padding-top: 30%;
     }
 
@@ -92,6 +94,14 @@
       padding: 25% hb-calculate-rems(36px) hb-spacing-width('sm');
       border: 2px solid var(--palette--tertiary-highlight);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 10%, transparent);
+
+      .paragraph--type--hs-collection .item-per-row--2 & {
+        padding-top: 30%;
+      }
+
+      .paragraph--type--hs-collection .item-per-row--4 & {
+        padding-top: 15%;
+      }
 
       .hb-raised-cards--uniform-height & {
         height: 100%;

@@ -3,7 +3,7 @@ type: theme
 base theme: gin
 description: "Gin specific overrides unique to Stanford Humsci"
 core_version_requirement: ^8.8 || ^9 || ^10
-version: '1.0'
+version: "1.0"
 hidden: false
 
 libraries:
@@ -11,6 +11,8 @@ libraries:
   - gin/gin
   - su_humsci_gin_admin/global-styling
   - su_humsci_gin_admin/fix-autocomplete-width
+  - su_humsci_gin_admin/humsci-traditional-styling
+  - su_humsci_gin_admin/humsci-colorful-styling
 
 # Regions
 regions:
@@ -25,3 +27,8 @@ regions:
   sidebar_first: "First sidebar"
 regions_hidden:
   - sidebar_first
+
+components:
+  namespaces:
+    humsci_basic: ../humsci_basic/templates
+    patterns: ../../../modules/humsci/hs_layouts/patterns

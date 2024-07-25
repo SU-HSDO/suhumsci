@@ -224,23 +224,17 @@
 }
 
 @mixin hb-blockquote {
-  color: var(--palette--secondary);
+  color: var(--palette--primary);
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
-  font-style: italic;
-  text-align: center;
+  line-height: 1.27;
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(28px);
   }
 
-  @include hb-themes(('colorful', 'airy')) {
-    line-height: 140%;
-  }
-
   @include hb-traditional {
     font-family: $hb-traditional-font--serif;
-    line-height: 136%;
   }
 
   // A utility class that can be applied via layout builder to override the text color to black
@@ -249,30 +243,46 @@
   }
 
   .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
+  .hb-dark-inversion .views-element-container &,
+  .hb-dark-pattern.hb-local-footer & {
     color: var(--palette--white);
   }
 
-  // Don't apply these rules to blockquotes in testimonials, the structure is not the same and need
-  // a different implementation.
   &:not(.hb-testimonial__quote) {
-    @include hb-quote-wrapper;
+    position: relative;
+    padding: hb-calculate-rems(40px) hb-calculate-rems(36px);
 
-    > p,
-    > div {
-      margin: 0;
+    &::before,
+    &::after {
+      @include hb-icon-background('close-quote-mark', 'tertiary');
 
-      &::before {
-        position: absolute;
-        content: open-quote;
-        margin-left: hb-calculate-rems(-16px);
+      content: '';
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: hb-calculate-rems(36px);
+      height: hb-calculate-rems(31px);
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-background('close-quote-mark', 'white');
       }
 
-      &::after {
-        position: absolute;
-        content: close-quote;
-        margin-right: hb-calculate-rems(10px);
+      .hb-dark-pattern.hb-local-footer & {
+        @include hb-icon-background('close-quote-mark', 'tertiary');
       }
+    }
+
+    &::before {
+      left: hb-calculate-rems(-36px);
+      top: hb-calculate-rems(14px);
+      transform: rotate(180deg);
+      transform-origin: center;
+    }
+
+    &::after {
+      right: 0;
     }
   }
 }
@@ -361,18 +371,23 @@
   text-align: right;
   line-height: 120%;
   height: auto;
-  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) 15%; // Using a percentage to the left to control the width of the captions
+  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px)
+    15%; // Using a percentage to the left to control the width of the captions
 
-  @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
-    padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 15%;
+  @include grid-media-min('sm') {
+    // the right side calculation is lower to adjust for the margin-right on the child elements
+    padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+      hb-calculate-rems(16px) 15%;
   }
 
   @include hb-themes(('colorful', 'airy')) {
     background: linear-gradient(to top, var(--palette--black), transparent);
 
-    .paragraph--type--hs-carousel & { // the percentage on this left side is larger to prevent the caption from running under carousel overlay
+    .paragraph--type--hs-carousel & {
+      // the percentage on this left side is larger to prevent the caption from running under carousel overlay
       @include grid-media-min('md') {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 58%;
+        padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+          hb-calculate-rems(16px) 58%;
       }
     }
   }
@@ -382,8 +397,10 @@
   }
 
   .hb-card__graphics--has-date & {
-    @include grid-media-min('sm') { // the right side calculation is lower to adjust for the margin-right on the child elements
-      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(100px);
+    @include grid-media-min('sm') {
+      // the right side calculation is lower to adjust for the margin-right on the child elements
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+        hb-calculate-rems(16px) hb-calculate-rems(100px);
     }
   }
 
@@ -462,7 +479,11 @@
 // Splash Font Animation
 @mixin hb-font-splash-animation {
   @include hb-traditional {
-    @include hasAnimationEnhancements(ease-in-out, 1700ms, traditionalSplashFont);
+    @include hasAnimationEnhancements(
+      ease-in-out,
+      1700ms,
+      traditionalSplashFont
+    );
   }
 
   @include hb-themes(('colorful', 'airy')) {

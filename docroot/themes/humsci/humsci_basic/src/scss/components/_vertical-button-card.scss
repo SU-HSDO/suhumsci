@@ -23,6 +23,7 @@
 
   @include hb-traditional {
     border: 2px solid var(--palette--secondary);
+    background-color: var(--palette--white);
 
     .hb-card__graphics {
       padding: hb-spacing-width('xs') hb-spacing-width('sm') 0;
@@ -35,7 +36,7 @@
 
     .hs-button {
       @include hb-secondary-button;
-  
+
       position: absolute;
       bottom: 0;
       left: 0;
@@ -64,6 +65,10 @@
       border: 2px solid var(--palette--tertiary-highlight);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 10%, transparent);
 
+      @include hb-themes(('airy', 'colorful')) {
+        background-color: var(--palette--white);
+      }
+
       .hb-raised-cards--uniform-height & {
         height: 100%;
         display: flex;
@@ -78,7 +83,7 @@
 
     &:has(.hb-card__graphics) {
       padding-top: 40%;
-    
+
       .paragraph--type--hs-collection .item-per-row--2 &,
       .paragraph--type--hs-collection .item-per-row--3 &,
       .paragraph--type--hs-collection .item-per-row--4 & {

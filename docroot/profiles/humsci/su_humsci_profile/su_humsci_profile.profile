@@ -5,6 +5,8 @@
  * su_humsci_profile.profile
  */
 
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
@@ -12,19 +14,18 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
 use Drupal\pathauto\PathautoPatternInterface;
 use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -889,5 +890,23 @@ function su_humsci_profile_preprocess_form_element(&$variables) {
   ) {
     $variables['attributes']['class'][] = 'select-preact';
     $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
+  }
+}
+
+/**
+ * Implements hook_ckeditor5_plugin_info_alter().
+ */
+function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definitions) {
+  /*
+   * Adds default header row to CKEditor tables.
+   * @see https://www.drupal.org/forum/support/post-installation/2023-10-19/how-can-i-configure-defaultheadings-in-ckeditor-tables
+   * */
+  if (isset($plugin_definitions['ckeditor5_table'])) {
+    $tableDefinition = $plugin_definitions['ckeditor5_table']->toArray();
+    $tableDefinition['ckeditor5']['config']['table']['defaultHeadings'] = [
+      'rows' => 1,
+      'columns' => 0,
+    ];
+    $plugin_definitions['ckeditor5_table'] = new CKEditor5PluginDefinition($tableDefinition);
   }
 }

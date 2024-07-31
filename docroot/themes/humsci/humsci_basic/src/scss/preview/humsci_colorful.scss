@@ -1,14 +1,3 @@
-@use 'sass:meta';
+$hb-current-theme: 'colorful';
 
-@import '../settings/variables.colorful-pairings';
-
-.paragraph-admin-preview {
-  @each $color, $value in $hc-colorful-globals {
-    --palette--#{$color}: #{$value};
-  }
-
-  @include meta.load-css(
-    '../main',
-    $with: ('hb-current-theme': 'colorful', 'hb-root-font-size': 16px)
-  );
-}
+@import 'preview';

@@ -1,0 +1,22 @@
+@use 'sass:meta';
+
+@import '../settings/variables.colorful-pairings';
+@import '../tools/mixins.themes';
+
+$hb-current-theme: 'traditional' !default;
+
+.paragraph-admin-preview {
+  @each $color, $value in $hc-colorful-globals {
+    --palette--#{$color}: #{$value};
+  }
+
+  @include meta.load-css(
+    '../main',
+    $with: ('hb-current-theme': $hb-current-theme, 'hb-root-font-size': 16px)
+  );
+
+  // Gin styles overrides.
+  div.link {
+    display: block;
+  }
+}

@@ -6,14 +6,10 @@
     not paragraph.isPublished() ? 'paragraph--unpublished'
   ]
 %}
-<div class="paragraph-admin-preview">
-  <div{{wrapper_attributes}}>
-    {% block paragraph %}
-      <div{{ attributes.addClass(classes) }}>
-        {% block content %}
-          {{ content }}
-        {% endblock %}
-      </div>
-    {% endblock paragraph %}
+{% block paragraph %}
+  <div{{ attributes.addClass(classes) }}>
+    {% block content %}
+      {{ content }}
+    {% endblock %}
   </div>
-</div>
+{% endblock paragraph %}

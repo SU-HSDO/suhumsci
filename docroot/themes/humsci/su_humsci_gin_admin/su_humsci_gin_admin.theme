@@ -22,17 +22,21 @@ function su_humsci_gin_admin_library_info_alter(&$libraries, $extension) {
  */
 function su_humsci_gin_admin_preprocess(&$variables, $hook) {
   if (str_starts_with($hook, 'pattern_') || $hook === 'paragraph') {
-      $theme = \Drupal::config('system.theme')->get('default');
-  $color_pairing = theme_get_setting('theme_color_pairing', $theme);
-  $prefix = [
-    'humsci_traditional' => 'ht',
-    'humsci_colorful' => 'hc',
-  ];
+    $theme = \Drupal::config('system.theme')->get('default');
+    $color_pairing = theme_get_setting('theme_color_pairing', $theme);
+    $prefix = [
+      'humsci_traditional' => 'ht',
+      'humsci_colorful' => 'hc',
+    ];
     $variables['wrapper_attributes'] = new Attribute([
       'class' => [
         $prefix[$theme] . '-pairing-' . $color_pairing,
       ],
     ]);
+    if ($hook === 'paragraph') {
+      $variables['wrapper_attributes']->addClass('paragraph-item', 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType()));
+    }
+
   }
 }
 

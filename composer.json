@@ -70,7 +70,7 @@
         "drupal/config_filter": "^1.0",
         "drupal/config_ignore": "^2.2",
         "drupal/config_pages_overrides": "^2.0",
-        "drupal/config_readonly": "^1.0@beta",
+        "drupal/config_readonly": "1.0-beta5",
         "drupal/config_split": "^1.0",
         "drupal/config_update": "^2.0@alpha",
         "drupal/confirm_leave": "^1.0@beta",
@@ -208,6 +208,14 @@
         "allow-plugins": true
     },
     "scripts": {
+        "build-theme": [
+            "npm ci --prefix docroot/themes/humsci/humsci_basic",
+            "npm run build --prefix docroot/themes/humsci/humsci_basic"
+        ],
+        "test-theme": [
+            "npm ci --prefix docroot/themes/humsci/humsci_basic",
+            "npm run test --prefix docroot/themes/humsci/humsci_basic"
+        ],
         "post-drupal-scaffold-cmd": [
             "patch -p1 < patches/scaffold.patch"
         ]
@@ -233,9 +241,6 @@
                 "views form null fix": "patches/core-views.patch",
                 "CKEditor 5 headings plugin paragraph label change": "patches/ckeditor5-paragraph-rename.patch",
                 "Allow hs group blocks in layout_builder": "patches/layout_builder-allow-hs-blocks.patch"
-            },
-            "drupal/gin": {
-                "https://www.drupal.org/project/gin/issues/3342513": "https://www.drupal.org/files/issues/2024-02-02/3342513-entity-edit-form-update-ajax-ids-12.patch"
             },
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"

@@ -159,11 +159,11 @@
     &--date {
       // only apply calendar icon when the label exists
       [class*="views-label-field-hs-event-date"] + .field-content {
-        @include hb-icon-calendar($color: 'secondary');
+        @include hb-icon-type($type: 'calendar', $color: 'secondary');
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
-          @include hb-icon-calendar($color: 'white');
+          @include hb-icon-type($type: 'calendar', $color: 'white');
         }
       }
     }
@@ -171,11 +171,11 @@
     &--location {
       // only apply location pin icon when the label exists
       [class*="views-label-field-hs-event-location"] + .field-content {
-        @include hb-icon-location($color: 'secondary');
+        @include hb-icon-type($type: 'location', $color: 'secondary');
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
-          @include hb-icon-location($color: 'white');
+          @include hb-icon-type($type: 'location', $color: 'white');
         }
       }
     }
@@ -183,11 +183,11 @@
     &--speaker {
       // only apply speaker icon when the label exists
       [class*="views-label-field-hs-event-speaker"] + .field-content {
-        @include hb-icon-speaker($color: 'secondary');
+        @include hb-icon-type($type: 'speaker', $color: 'secondary');
 
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
-          @include hb-icon-speaker($color: 'white');
+          @include hb-icon-type($type: 'speaker', $color: 'white');
         }
       }
     }
@@ -388,7 +388,7 @@
       border-color: var(--palette--gray-medium);
       color: var(--palette--primary);
       font-size: hb-calculate-rems(36px);
-      padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px);
+      padding: hb-calculate-rems(10px) 0;
 
       .views-element-container .hb-dark-pattern & .field-content,
       .hb-dark-inversion .views-element-container & .field-content {
@@ -403,6 +403,7 @@
     .hb-card--horizontal & {
       @include grid-media-min('md') {
         @include flex-column(6);
+
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;
@@ -484,6 +485,17 @@
 
     h6 {
       text-transform: initial;
+    }
+
+    a {
+      // Warbler color pairing override.
+      @include hb-traditional {
+        .ht-pairing-warbler & {
+          &, &:hover, &:focus {
+            color: var(--palette--black);
+          }
+        }
+      }
     }
   }
 

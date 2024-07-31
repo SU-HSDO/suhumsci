@@ -5,7 +5,7 @@
   border-bottom-style: solid;
   border-width: hb-calculate-rems(1px);
   border-color: var(--palette--gray);
-  margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px) 0;
+  margin: hb-calculate-rems(48px) 0 hb-calculate-rems(32px);
   padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
 
   @include grid-media-min('lg') {
@@ -30,7 +30,19 @@
       }
     }
 
-    @include hb-themes(('colorful', 'airy')) {
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      background-color: var(--palette--primary-dark);
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      border-color: var(--palette--secondary);
+    }
+
+    &::before {
       @include hb-icon-background('quote-mark', 'secondary');
 
       .hb-callout-box &,
@@ -41,8 +53,20 @@
         background-color: var(--palette--gray-light);
       }
     }
+  }
 
-    @include hb-traditional {
+  @include hb-traditional {
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      border-color: var(--palette--white);
+    }
+
+    .hb-dark-pattern .hs-paragraph-style--well &,
+    .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+      border-color: var(--palette--secondary);
+    }
+
+    &::before {
       @include hb-icon-background('quote-mark', 'gray-dark');
 
       .hb-callout-box &,
@@ -52,34 +76,14 @@
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         background-color: var(--palette--tertiary-highlight);
       }
-    }
-  }
 
-  .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
-    @include hb-themes(('colorful', 'airy')) {
-      border-color: var(--palette--secondary);
-    }
-
-    @include hb-traditional {
-      border-color: var(--palette--white);
-    }
-
-    &::before {
-      background-color: var(--palette--primary-dark);
-
-      @include hb-traditional {
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
         @include hb-icon-background('quote-mark', 'white');
       }
-    }
-  }
 
-  .hb-dark-pattern .hs-paragraph-style--well &,
-  .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-    @include hb-traditional {
-      border-color: var(--palette--secondary);
-
-      &::before {
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         @include hb-icon-background('quote-mark', 'secondary');
       }
     }

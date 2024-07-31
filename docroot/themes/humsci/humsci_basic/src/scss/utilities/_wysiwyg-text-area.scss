@@ -113,10 +113,7 @@
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 // hs-caption and D7 import utility class map and loop
-$captions: (
-  hs-caption,
-  caption,
-);
+$captions: (hs-caption, caption);
 
 @each $caption in $captions {
   .#{$caption},
@@ -126,10 +123,7 @@ $captions: (
   }
 }
 
-$credits: (
-  hs-credits,
-  credits,
-);
+$credits: (hs-credits, credits);
 
 @each $credit in $credits {
   .#{$credit},
@@ -314,10 +308,10 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"] {
+.hs-external-link a[href*="//"]
+{
   @include hb-link--inline($icon: true);
   @include hb-external-link-icon;
-
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
@@ -422,9 +416,7 @@ a.hs-mailto-link {
 }
 
 // hs-more-link and D7 import utility class map and loop
-$more-links: (
-  hs-more-link
-);
+$more-links: (hs-more-link);
 
 @each $more-link in $more-links {
   a.#{$more-link},
@@ -437,11 +429,11 @@ $more-links: (
 }
 
 a.hs-pdf-link {
-  @include hb-pdf-link;
+  @include hb-icon-link-inline('pdf');
 
-  //Outline pdf icon option
+  // Outline pdf icon option
   &--outline {
-    @include hb-pdf-link;
+    @include hb-icon-link-inline('pdf');
 
     &::before {
       font-weight: 400;
@@ -450,11 +442,11 @@ a.hs-pdf-link {
 }
 
 a.hs-file-link {
-  @include hb-file-link;
+  @include hb-icon-link-inline('file');
 
-  //Outline file icon option
+  // Outline file icon option
   &--outline {
-    @include hb-file-link;
+    @include hb-icon-link-inline('file');
 
     &::before {
       font-weight: 400;

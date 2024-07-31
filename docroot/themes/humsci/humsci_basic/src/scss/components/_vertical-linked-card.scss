@@ -73,7 +73,7 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(20px);
+      padding: hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
       background-color: var(--palette--secondary);
 
@@ -138,11 +138,20 @@
     color: var(--palette--white);
     text-decoration: none;
 
+    // Warbler color pairing override.
+    .ht-pairing-warbler & {
+      color: var(--palette--white);
+    }
+
     &:hover,
     &:focus {
       color: var(--palette--white);
-
       background-image: none;
+
+      // Warbler color pairing override.
+      .ht-pairing-warbler & {
+        color: var(--palette--white);
+      }
     }
   }
 
@@ -175,6 +184,16 @@
     a.hs-file-link {
       @include hb-traditional {
         color: var(--palette--black);
+
+        // Warbler color pairing override.
+        .ht-pairing-warbler & {
+          color: var(--palette--black);
+        }
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        color: var(--palette--white);
+        background-image: none;
       }
 
       &:hover,
@@ -183,9 +202,14 @@
 
         @include hb-traditional {
           color: var(--palette--gray-dark);
+
+          // Warbler color pairing override.
+          .ht-pairing-warbler & {
+            color: var(--palette--gray-dark);
+          }
         }
 
-        @include hb-colorful {
+        @include hb-themes(('colorful', 'airy')) {
           color: var(--palette--gray-medium);
         }
       }

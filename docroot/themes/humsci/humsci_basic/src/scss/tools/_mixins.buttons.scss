@@ -15,7 +15,6 @@
 }
 
 @mixin hb-button-base {
-  @include hb-unbuttonize;
   display: inline-block;
   width: auto;
   font-weight: hb-theme-font-weight(semibold);
@@ -26,6 +25,11 @@
   border-width: hb-calculate-rems(2px);
   border-style: solid;
   transition: hb-transition(background-color), hb-transition(border-color);
+  border-radius: 0;
+  appearance: none; // Just in case we missed anything.
+  margin: 0;
+  background-color: transparent;
+  color: inherit;
 
   &:hover {
     cursor: pointer;
@@ -118,25 +122,26 @@
   &:hover {
     color: var(--palette--white);
     background-color: var(--palette--secondary);
-    border-color: var(--palette--secondary);
+
+    .hb-dark-pattern & {
+      background-color: transparent;
+    }
   }
 
   &:active,
   &:focus {
     background-color: transparent;
-    color: var(--palette--secondary);
     box-shadow:
       0 0 0 hb-calculate-rems(2px) var(--palette--white),
       0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
+
+    .hb-dark-pattern & {
+      box-shadow: none;
+    }
   }
 
   @include hb-traditional {
     border-width: hb-calculate-rems(1px);
-
-    &:hover {
-      color: var(--palette--white);
-      background-color: var(--palette--secondary);
-    }
 
     &:active,
     &:focus {
@@ -144,32 +149,8 @@
       outline-color: var(--palette--white);
       box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--secondary-active);
     }
-  }
 
-  .hb-dark-pattern & {
-    &:hover {
-      background-color: transparent;
-    }
-
-    &:active,
-    &:focus {
-      background-color: transparent;
-      box-shadow: none;
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--tertiary-reversed);
-      border-color: var(--palette--tertiary-reversed);
-
-      &:hover,
-      &:active,
-      &:focus {
-        color: var(--palette--secondary-highlight);
-        border-color: var(--palette--secondary-highlight);
-      }
-    }
-
-    @include hb-traditional {
+    .hb-dark-pattern & {
       color: var(--palette--tertiary-highlight);
       border-color: var(--palette--tertiary-highlight);
 
@@ -193,6 +174,20 @@
       }
     }
   }
+
+  @include hb-themes(('colorful', 'airy')) {
+    .hb-dark-pattern & {
+      color: var(--palette--tertiary-reversed);
+      border-color: var(--palette--tertiary-reversed);
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--palette--secondary-highlight);
+        border-color: var(--palette--secondary-highlight);
+      }
+    }
+  }
 }
 
 @mixin hb-reset-button {
@@ -202,6 +197,7 @@
   line-height: 1;
   min-height: auto;
   color: var(--palette--secondary);
+  cursor: pointer;
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
@@ -219,11 +215,6 @@
 
   &:focus {
     border-bottom-color: transparent;
-  }
-
-  &:hover,
-  &:focus {
-    cursor: pointer;
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -267,11 +258,8 @@
 
       &:hover {
         color: var(--palette--primary-dark);
-        border-bottom-color: var(--palette--primary-dark);
+        border-color: transparent transparent var(--palette--primary-dark);
         background-color: transparent;
-        border-top-color: transparent;
-        border-left-color: transparent;
-        border-right-color: transparent;
       }
     }
   }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75d693fe072a58e96213c55eeb33a2e7",
+    "content-hash": "fe85383cdd93047bc7f105f9a67c8179",
     "packages": [
         {
             "name": "acquia/blt",
@@ -13003,6 +13003,69 @@
             "time": "2024-05-18T18:05:11+00:00"
         },
         {
+            "name": "fourkitchens/stanford_media",
+            "version": "dev-SHS-5630",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fourkitchens/stanford_media.git",
+                "reference": "1743b290a9819a073ca8fd9703ea2ee34da74412"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fourkitchens/stanford_media/zipball/1743b290a9819a073ca8fd9703ea2ee34da74412",
+                "reference": "1743b290a9819a073ca8fd9703ea2ee34da74412",
+                "shasum": ""
+            },
+            "require": {
+                "davidbarratt/custom-installer": "^1.1",
+                "drupal/core": "^10.2",
+                "drupal/dropzonejs": "^2.7",
+                "drupal/entity_usage": "^2.0@beta",
+                "drupal/focal_point": "^2.0@alpha",
+                "drupal/inline_entity_form": "^3.0",
+                "drupal/oembed_providers": "^2.1",
+                "enyo/dropzone": "^5.9",
+                "php": ">=8.1"
+            },
+            "type": "drupal-custom-module",
+            "extra": {
+                "custom-installer": {
+                    "docroot/libraries/{$name}/": [
+                        "enyo/dropzone"
+                    ]
+                },
+                "patches": []
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\stanford_media\\": "./src",
+                    "Drupal\\media_duplicate_validation\\": "./modules/media_duplicate_validation/src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Drupal\\Tests\\stanford_media\\": "./tests/src",
+                    "Drupal\\Tests\\media_duplicate_validation\\": "./modules/media_duplicate_validation/tests/src"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Decker",
+                    "email": "pookmish@stanford.edu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Stanford Media module for Drupal 8 Media management",
+            "homepage": "https://github.com/SU-SWS/stanford_media",
+            "support": {
+                "source": "https://github.com/fourkitchens/stanford_media/tree/SHS-5630"
+            },
+            "time": "2024-07-29T22:27:45+00:00"
+        },
+        {
             "name": "grasmash/expander",
             "version": "3.0.0",
             "source": {
@@ -15675,69 +15738,6 @@
                 "source": "https://github.com/SU-SWS/stanford_fields/tree/8.2.7"
             },
             "time": "2024-06-26T17:53:08+00:00"
-        },
-        {
-            "name": "su-sws/stanford_media",
-            "version": "dev-SHS-5630",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fourkitchens/stanford_media.git",
-                "reference": "bfa3142ff3b0760df4e0f31907c69927ae4c8a37"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fourkitchens/stanford_media/zipball/bfa3142ff3b0760df4e0f31907c69927ae4c8a37",
-                "reference": "bfa3142ff3b0760df4e0f31907c69927ae4c8a37",
-                "shasum": ""
-            },
-            "require": {
-                "davidbarratt/custom-installer": "^1.1",
-                "drupal/core": "^10.2",
-                "drupal/dropzonejs": "^2.7",
-                "drupal/entity_usage": "^2.0@beta",
-                "drupal/focal_point": "^2.0@alpha",
-                "drupal/inline_entity_form": "^3.0",
-                "drupal/oembed_providers": "^2.1",
-                "enyo/dropzone": "^5.9",
-                "php": ">=8.1"
-            },
-            "type": "drupal-custom-module",
-            "extra": {
-                "custom-installer": {
-                    "docroot/libraries/{$name}/": [
-                        "enyo/dropzone"
-                    ]
-                },
-                "patches": []
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\stanford_media\\": "./src",
-                    "Drupal\\media_duplicate_validation\\": "./modules/media_duplicate_validation/src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\stanford_media\\": "./tests/src",
-                    "Drupal\\Tests\\media_duplicate_validation\\": "./modules/media_duplicate_validation/tests/src"
-                }
-            },
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Mike Decker",
-                    "email": "pookmish@stanford.edu",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Stanford Media module for Drupal 8 Media management",
-            "homepage": "https://github.com/SU-SWS/stanford_media",
-            "support": {
-                "source": "https://github.com/fourkitchens/stanford_media/tree/SHS-5630"
-            },
-            "time": "2024-07-24T01:28:11+00:00"
         },
         {
             "name": "su-sws/stanford_migrate",
@@ -25486,7 +25486,7 @@
         "drupal/webform": 10,
         "onlyextart/colorbox": 20,
         "su-sws/stanford_basic": 20,
-        "su-sws/stanford_media": 20,
+        "fourkitchens/stanford_media": 20,
         "su-sws/blt-sws": 20
     },
     "prefer-stable": true,

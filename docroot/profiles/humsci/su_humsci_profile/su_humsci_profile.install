@@ -863,3 +863,12 @@ function su_humsci_profile_update_9705() {
   $themes_to_uninstall = array_intersect($legacy_themes, array_keys($installed_themes));
   \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
 }
+
+/**
+ * Clean up and deprecate ECK.
+ */
+function su_humsci_profile_update_9706() {
+  // Delete ECK settings configuration.
+  $eck_settings = \Drupal::configFactory()->getEditable('eck.settings');
+  $eck_settings->delete();
+}

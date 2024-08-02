@@ -863,3 +863,55 @@ function su_humsci_profile_update_9705() {
   $themes_to_uninstall = array_intersect($legacy_themes, array_keys($installed_themes));
   \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
 }
+
+/**
+ * Remove eck dependencies in views configuration.
+ */
+function su_humsci_profile_update_9706() {
+  $config_factory = \Drupal::configFactory();
+  $view_config_names = $config_factory->listAll('views.view.');
+
+  $count_config = 0;
+  $count_module = 0;
+
+  foreach ($view_config_names as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    $raw = $config->getRawData();
+
+    // Remove eck_type dependencies.
+    if (isset($raw['dependencies']['config'])) {
+      foreach ($raw['dependencies']['config'] as $key => $config_dependency) {
+        if (str_contains($config_dependency, 'eck_type')) {
+          unset($raw['dependencies']['config'][$key]);
+          $count_config++;
+        }
+      }
+    }
+
+    // Remove eck module dependency.
+    if (isset($raw['dependencies']['module'])) {
+      foreach ($raw['dependencies']['module'] as $key => $module_dependency) {
+        if ($module_dependency == 'eck') {
+          unset($raw['dependencies']['module'][$key]);
+          $count_module++;
+        }
+      }
+    }
+    $config->setData($raw)->save(TRUE);
+  }
+
+  return "Removed " . $count_config . " config dependencies and " . $count_module . " module dependencies.";
+}
+
+
+/**
+ * Delete eck configuration and uninstall eck module.
+ */
+function su_humsci_profile_update_9707() {
+  // Delete ECK settings configuration.
+  $eck_settings = \Drupal::configFactory()->getEditable('eck.settings');
+  $eck_settings->delete();
+
+  // Uninstall eck module.
+  \Drupal::service('module_installer')->uninstall(['eck']);
+}

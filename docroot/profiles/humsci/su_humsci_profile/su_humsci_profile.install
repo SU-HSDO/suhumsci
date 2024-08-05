@@ -845,3 +845,25 @@ function _su_humsci_profile_get_uuid(string $config_name): string|null {
   $config = $config_storage->read($config_name);
   return $config['uuid'] ?? NULL;
 }
+
+/**
+ * Remove permission for non-developers from deleting media.
+ */
+function su_humsci_profile_update_9706() {
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
+  if ($roles) {
+    foreach (array_keys($roles) as $roleName) {
+      if ($roleName != 'administrator') {
+        user_role_revoke_permissions($roleName, [
+          'delete any media',
+          'delete any embeddable media',
+          'delete any file media',
+          'delete any google_form media',
+          'delete any image media',
+          'delete any video media',
+        ]);
+      }
+    }
+  }
+}

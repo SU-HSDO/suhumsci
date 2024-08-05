@@ -8,7 +8,7 @@ use Twig\TwigFilter;
 /**
  * Additional twig filters for custom functionality.
  *
- * @package Drupal\su_humsci_theme\TwigExtension
+ * @package Drupal\hs_layouts\TwigExtension
  */
 class TwigFilters extends AbstractExtension {
 

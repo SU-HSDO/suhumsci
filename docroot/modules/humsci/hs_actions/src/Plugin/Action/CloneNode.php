@@ -223,7 +223,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   protected function duplicateEntity(ContentEntityInterface $entity) {
     $duplicate_entity = $entity->createDuplicate();
 
-    // Loop through paragraph and eck fields to clone those entities.
+    // Loop through paragraph fields to clone those entities.
     foreach ($this->getReferenceFields($entity->getEntityTypeId(), $entity->bundle()) as $field) {
       foreach ($duplicate_entity->{$field->getName()} as $value) {
         $value->entity = $this->duplicateEntity($value->entity);
@@ -274,12 +274,6 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
    */
   protected function getReferenceFields($entity_type_id, $bundle) {
     $fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
-
-    if ($this->entityTypeManager->hasDefinition('eck_entity_type')) {
-      $eck_types = $this->entityTypeManager->getStorage('eck_entity_type')
-        ->loadMultiple();
-      $clone_target_types = array_keys($eck_types);
-    }
 
     $clone_target_types[] = 'paragraph';
     $clone_target_types[] = 'hs_entity';

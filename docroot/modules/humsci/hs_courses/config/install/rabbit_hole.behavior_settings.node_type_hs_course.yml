@@ -1,9 +1,14 @@
 uuid: 80a6fb19-2785-497d-81df-a3968ad35509
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - node.type.hs_course
 id: node_type_hs_course
+entity_type_id: node_type
+entity_id: hs_course
 action: page_redirect
 allow_override: 0
 redirect: '[node:field_hs_course_link:uri]'
 redirect_code: 301
+redirect_fallback_action: access_denied

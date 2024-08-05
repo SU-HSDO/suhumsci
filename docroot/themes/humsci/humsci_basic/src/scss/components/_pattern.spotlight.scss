@@ -179,10 +179,13 @@
 
       @include grid-media-min('md') {
         padding: 0;
-        flex-basis: 50%;
+        flex-basis: 45%;
         flex-grow: 1;
-        max-width: 50%;
-        padding: 0 hb-spacing-width();
+        padding: 0 hb-calculate-rems(20px);
+
+        .field-hs-spotlight-link {
+          margin-top: 1rem;
+        }
       }
     }
 
@@ -195,13 +198,8 @@
 
           h2 {
             font-size: hb-calculate-rems(32px);
+            margin-top: 0;
           }
-        }
-      }
-
-      @include grid-media-min('md') {
-        h2 {
-          margin-top: 0;
         }
       }
     }

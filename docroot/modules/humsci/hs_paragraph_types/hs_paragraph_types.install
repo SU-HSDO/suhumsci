@@ -236,6 +236,7 @@ function hs_paragraph_types_update_10006() {
     foreach (array_keys($roles) as $roleName) {
       if ($roleName != 'administrator') {
         user_role_revoke_permissions($roleName, [
+          'create field_hs_hero_overlay_color',
           'edit field_hs_hero_overlay_color',
           'edit own field_hs_hero_overlay_color',
           'view field_hs_hero_overlay_color',

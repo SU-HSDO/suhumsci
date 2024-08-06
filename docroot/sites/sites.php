@@ -91,7 +91,6 @@ $sites['iranian-studies.stanford.edu'] = 'iranianstudies';
 $sites['facultyaffairs-humsci.stanford.edu'] = 'facultyaffairs_humsci2021';
 $sites['hsweb-userguide-traditional.stanford.edu'] = 'swshumsci_sandbox';
 $sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
-$sites['philit.stanford.edu'] = 'philit2023';
 $sites['publichumanities.stanford.edu'] = 'humanexperience';
 $sites['symsys.stanford.edu'] = 'symsys2023';
 

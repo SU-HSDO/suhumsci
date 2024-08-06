@@ -1,14 +1,14 @@
 .hb-spotlight {
   background-color: var(--palette--spotlight);
-  
+
   @include grid-media-min('md') {
     margin: hb-spacing-width() 0;
   }
-  
+
   &--background-gray {
     background-color: var(--palette--gray-medium);
   }
-  
+
   // Add a unique background-color for Lake on Colorful.
   // Note this is an extraordinary use case.
   // Targeting styles per color pairing should not become standard practice.
@@ -20,7 +20,7 @@
     @include hb-hero-full-width;
 
     padding: hb-spacing-width('md') 0;
-  
+
     @include grid-media-min('md') {
       padding: hb-spacing-width() 0;
     }
@@ -36,8 +36,8 @@
 
       .hb-spotlight--classic.hb-spotlight--image-default & {
         flex-direction: row-reverse;
-        }
-      
+      }
+
       .hb-spotlight--classic.hb-spotlight--image-left & {
         flex-direction: row;
       }
@@ -73,9 +73,9 @@
       }
 
       @include grid-media-min('md') {
-          flex-basis: 55%;
-          flex-grow: 1;
-          max-width: 75%;
+        flex-basis: 55%;
+        flex-grow: 1;
+        max-width: 75%;
       }
     }
 
@@ -163,7 +163,7 @@
       background: var(--palette--white);
       min-height: fit-content !important;
       transform: translate(0%, -15%);
-      
+
       @include grid-media-min('md') {
         position: absolute;
         padding: hb-calculate-rems(40px);
@@ -171,6 +171,10 @@
         max-width: hb-calculate-rems(600px);
         top: auto;
         transform: none;
+      }
+
+      @include grid-media-min('lg') {
+        max-width: hb-calculate-rems(500px);
       }
     }
 
@@ -233,6 +237,12 @@
       }
 
       .hb-spotlight__text {
+        left: hb-calculate-rems(30px);
+      }
+    }
+
+    @include grid-media-min('lg') {
+      .hb-spotlight__text {
         left: hb-calculate-rems(70px);
       }
     }
@@ -253,6 +263,12 @@
         justify-content: flex-start;
       }
 
+      .hb-spotlight__text {
+        right: hb-calculate-rems(30px);
+      }
+    }
+
+    @include grid-media-min('lg') {
       .hb-spotlight__text {
         right: hb-calculate-rems(70px);
       }

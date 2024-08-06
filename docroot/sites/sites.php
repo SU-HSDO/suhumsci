@@ -94,7 +94,6 @@ $sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
 $sites['philit.stanford.edu'] = 'philit2023';
 $sites['publichumanities.stanford.edu'] = 'humanexperience';
 $sites['symsys.stanford.edu'] = 'symsys2023';
-$sites['mathematics.stanford.edu'] = 'mathematics2024';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

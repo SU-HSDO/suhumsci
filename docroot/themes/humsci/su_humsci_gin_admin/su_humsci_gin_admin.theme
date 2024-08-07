@@ -1,7 +1,11 @@
 <?php
 
-use Drupal\Core\Template\Attribute;
+/**
+ * @file
+ */
+
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Implements hook_library_info_alter().
@@ -36,7 +40,6 @@ function su_humsci_gin_admin_preprocess(&$variables, $hook) {
     if ($hook === 'paragraph') {
       $variables['wrapper_attributes']->addClass('paragraph-item', 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType()));
     }
-
   }
 }
 
@@ -49,8 +52,8 @@ function su_humsci_gin_admin_preprocess_field(&$variables) {
   $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_type']);
   $variables['attributes']['class'][] = Html::cleanCssIdentifier('label-' . $variables['label_display']);
 
-  $first_item = isset($variables['element'][0]) ? $variables['element'][0] : NULL;
-  $is_paragraph = isset($first_item['#paragraph']) ? $first_item['#paragraph'] : FALSE;
+  $first_item = $variables['element'][0] ?? NULL;
+  $is_paragraph = $first_item['#paragraph'] ?? FALSE;
   $has_items = isset($variables['items']) ? count($variables['items']) : FALSE;
 
   // Add additional information to paragraph fields.

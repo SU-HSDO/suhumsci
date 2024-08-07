@@ -5,8 +5,8 @@
  * Update functions for hs_paragraph_types module.
  */
 
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -224,4 +224,25 @@ function hs_paragraph_types_update_10004(&$sandbox) {
 function hs_paragraph_types_update_10005() {
   // SHS-5661 - remove legacy Banner image(s) with text box Overlay Color field.
   FieldConfig::loadByName('paragraph', 'hs_hero_image', 'field_hs_hero_overlay_color')->delete();
+}
+
+/**
+ * Remove legacy field field_hs_hero_overlay_color permissions.
+ */
+function hs_paragraph_types_update_10006() {
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
+  if ($roles) {
+    foreach (array_keys($roles) as $roleName) {
+      if ($roleName != 'administrator') {
+        user_role_revoke_permissions($roleName, [
+          'create field_hs_hero_overlay_color',
+          'edit field_hs_hero_overlay_color',
+          'edit own field_hs_hero_overlay_color',
+          'view field_hs_hero_overlay_color',
+          'view own field_hs_hero_overlay_color',
+        ]);
+      }
+    }
+  }
 }

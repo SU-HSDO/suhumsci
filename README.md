@@ -20,7 +20,7 @@ Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts
 You can either run the site on Lando or bare metal.
 
 #### Setup on Lando
-[Follow the Lando instructions](./lando/README.md).
+[Follow the Lando instructions](lando/README.md).
 
 #### Or setup on bare metal
 1. Clone the repository and check out the develop branch.
@@ -44,7 +44,7 @@ Acceptance testing and user testing id done use a testing framework [Codeception
 very good documentation on codeception testing steps and how that is structured.
 
 #### Codeception on Lando
-[Run Codeception on Lando](./lando/README.md#setup-for-local-codeception-testing)
+[Run Codeception on Lando](lando/README.md#setup-for-local-codeception-testing)
 
 #### Codeception on bare metal
 To run those tests locally, `blt` will
@@ -59,12 +59,10 @@ be the wrapper around the codeception commands.
 - `npm test` - Run tests for all Sass in the project (including humsci_basic).
 
 ## Other documentation
-* [Change Log](docs/CHANGELOG.md)
 * [Code Deployment Process](docs/CodeDeploy.md)
 * [Configuration Management Information](docs/Config.md)
 * [Launch Processes](docs/Launch.md)
 * [SSL Certificate Information](docs/LetsEncrypt.md)
-* [SAML Information](docs/SimpleSAML.md)
 * [New Site](docs/NewSite.md)
 
 ## Resources

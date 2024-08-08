@@ -130,12 +130,12 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
     ```
 
 4. Build your containers: `lando rebuild`
-    * Note: You should then see a list a APPSERVER URLS. A green URL signifies the step 3 worked correctly, and you'll be able to access the site in your browser (you'll see errors until you complete all the steps). If you see a red URL, go back to step 3.
+    * Note: You should then see a list a APPSERVER URLS. A green URL signifies the step 3 worked correctly, and you'll be able to access the site in your browser (you'll see errors until you complete all the steps). If you see a red URL, go back to step 3.  TODO: someone with a working proxy system should confirm this.  Can you get green URLs after this step, or will it only work after you have a database?
     * Watch for [`sed` errors](#sed-error-when-docker-uses-virtiofs)
 5. Run `lando blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
-6. Run `lando drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `lando drush @music.local uli`).  It will give you a URL like `http://hs-traditional.suhumsci.loc/user/reset/1/12345/abcd9876/login`
+6. Run `lando drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `lando drush @music.local uli`).  It will give you a URL like `http://hs-traditional.suhumsci.loc/user/reset/1/12345/abcd9876/login`  This should also run the front-end build.
 7. If you have issues, see [Troubleshooting](#troubleshooting).
-8. Return to the main documentation to [build the front-end](../README.md#builds).
+8. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
 
 ## Common commands
 
@@ -161,17 +161,21 @@ When Docker is configured to use _VirtioFS_ for file sharing, you might get mult
 ```
 sed: preserving permissions for '/app/docroot/sites/sts/settings/sed7b9pfU': Permission denied
 ```
+or
+```
+sed: couldn't open temporary file /app/docroot/sites/africanstudies/settings/sed5mM1CH: Permission denied
+```
 
-This is caused by [a bug](https://forums.docker.com/t/sed-couldnt-open-temporary-file-xyz-permission-denied-when-using-virtiofs/125473) in the `sed` command that causes imcompatibilites with _VirtioFS_. It has been fixed, but the images used by Lando don't have the latest version. To work around it, do the following:
+This is caused by [a bug](https://forums.docker.com/t/sed-couldnt-open-temporary-file-xyz-permission-denied-when-using-virtiofs/125473) in the `sed` command that causes incompatibilities with _VirtioFS_. It has been fixed, but the images used by Lando don't have the latest version. To work around it, do the following:
 
 1. Edit `.lando.yml` and comment or remove the following lines:
-    ```
+    ```yaml
     - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'drupal'/g" {}
     - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'drupal'/g" {}
     - find /app/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'host' => 'localhost'/'host' => 'database'/g" {}
     - cp /app/lando/lando.sites.php /app/docroot/sites/local.sites.php
     ```
-2. After running `lando rebuild`, execute the lines manually, changing the paths to match the ones on your local machine. If you're on MacOS, you also need to alter the options for the `sed` command a bit:
+2. After running `lando rebuild`, execute the lines manually, changing the paths to match the ones on your local machine. If you're on macOS, you also need to alter the options for the `sed` command a bit:
 
     ```bash
     find docroot/sites/ -name local.settings.php | xargs -I {} sed -i '' "s/'username' => 'root'/'username' => 'drupal'/g" {}
@@ -258,20 +262,20 @@ In order to sync from a staging or dev site, you will have to do the following:
 
 ## Configuration for local SimpleSAML authentication
 
-To configure the SimpleSAML module so you stop seeing the configuration errors in Drupal from that module and also to allow you to login from the /user login page with your Stanford account. (These commands should be run from the root directory.)
+To configure the SimpleSAML module so that you stop seeing the configuration errors in Drupal from that module and also to allow you to login from the /user login page with your Stanford account. (These commands should be run from the root directory.)
 
 1. Run `lando blt sws:keys`
 2. Run `lando blt sbsc`
-3. Go to the the `/simplesamlphp/config` folder and edit the `local.config.php` file.
+3. Go to the `/simplesamlphp/config` folder and edit the `local.config.php` file.
 4. Make sure lines 10,11,12 match the information from your `lando.yml` file for the site you are working on.
     * Example: If you are working on `sparkbox_sandbox` you will want to add `sparkbox_sandbox` in for the host and the dbname on line 10 and update the username and password below to drupal.
 5. After you’ve gotten that file up to date, you need to `run lando blt sbsc` once more and then clear your site cache with `lando drush @[site_name] cr` and the error should be gone upon reloading.
 
 **Notes:**
 
-* There is still some slight bugs to work out with SimplsSAML’s login but it will work for login, but after login may throw errors on the login page, this can be resolved by clearing the browser cookies for that site.
+* There are still some slight bugs to work out with SimpleSAML. It will work for log in, but after logging in may throw errors on the login page. This can be resolved by clearing the browser cookies for that site.
 
-* The command for `lando drush @SITENAME.local uli` should still function with or without SimpleSAML configured to login to the local site, if this is redirecting or not functioning correctly you should ensure the module is enabled or resync your configuration on your local site.
+* The command for `lando drush @SITENAME.local uli` should still function with or without SimpleSAML configured to log in to the local site, if this is redirecting or not functioning correctly you should ensure the module is enabled or resync the configuration on your local site.
 
 ## Other useful links
 

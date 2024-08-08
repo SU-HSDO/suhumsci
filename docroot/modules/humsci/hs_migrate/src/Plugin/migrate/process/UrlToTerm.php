@@ -50,14 +50,14 @@ class UrlToTerm extends ProcessPluginBase implements ContainerFactoryPluginInter
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $importer_storage = $this->entityTypeManager->getStorage('importers');
-    $eck_ids = $importer_storage->getQuery()
+    $entity_reference_ids = $importer_storage->getQuery()
       ->condition('field_url', $value)
       ->accessCheck(FALSE)
       ->execute();
 
-    if ($eck_ids) {
-      $eck = $importer_storage->load(reset($eck_ids));
-      return $eck->get('field_terms')->getValue();
+    if ($entity_reference_ids) {
+      $entity_references = $importer_storage->load(reset($entity_reference_ids));
+      return $entity_references->get('field_terms')->getValue();
     }
     return NULL;
   }

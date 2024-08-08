@@ -147,4 +147,8 @@ function hs_paragraph_types_field_widget_complete_options_select_form_alter(arra
   if (isset($context['items']) && $context['items']->getName() == 'field_accordion_style') {
     $field_widget_form['widget']['#options']['_none'] = t('Default');
   }
+  // Change the default option label for field_spotlight_style.
+  if (isset($context['items']) && $context['items']->getName() == 'field_spotlight_style') {
+    $field_widget_form['widget']['#options']['_none'] = t('Classic');
+  }
 }

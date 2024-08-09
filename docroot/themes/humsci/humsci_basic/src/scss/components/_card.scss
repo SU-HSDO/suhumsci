@@ -490,23 +490,6 @@
     a {
       @include hb-link;
 
-      &:hover,
-      &:focus {
-        color: var(--palette--black);
-
-        @include hb-themes(('airy', 'colorful')) {
-          border-bottom-color: var(--palette--tertiary-highlight-darken-10);
-          transition-delay: 0s, 0s;
-          box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--tertiary-highlight);
-        }
-    
-        @include hb-traditional {
-          color: var(--palette--black);
-          background-image: none;
-          text-decoration-color: var(--palette--primary);
-        }
-      }
-  
       // Warbler color pairing override.
       @include hb-traditional {
         .ht-pairing-warbler & {

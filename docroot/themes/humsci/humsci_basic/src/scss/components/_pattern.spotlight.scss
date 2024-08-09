@@ -1,6 +1,9 @@
 .hb-spotlight {
-  padding: hb-spacing-width('md') 0;
   background-color: var(--palette--spotlight);
+
+  @include grid-media-min('md') {
+    margin: hb-spacing-width() 0;
+  }
 
   &--background-gray {
     background-color: var(--palette--gray-medium);
@@ -13,12 +16,15 @@
     background-color: var(--palette--secondary-highlight);
   }
 
-  @include grid-media-min('md') {
-    padding: hb-spacing-width() 0;
-    margin: hb-spacing-width() 0;
-  }
+  &--classic {
+    @include hb-hero-full-width;
 
-  @include hb-hero-full-width;
+    padding: hb-spacing-width('md') 0;
+
+    @include grid-media-min('md') {
+      padding: hb-spacing-width() 0;
+    }
+  }
 
   &__wrapper {
     @include hb-page-width;
@@ -27,16 +33,12 @@
     @include grid-media-min('md') {
       display: flex;
       align-items: center;
-    }
 
-    .hb-spotlight--image-default & {
-      @include grid-media-min('md') {
+      .hb-spotlight--image-default & {
         flex-direction: row-reverse;
       }
-    }
 
-    .hb-spotlight--image-left & {
-      @include grid-media-min('md') {
+      .hb-spotlight--image-left & {
         flex-direction: row;
       }
     }
@@ -52,27 +54,29 @@
   }
 
   &__text {
-    @include hb-themes(('colorful', 'airy')) {
-      position: relative;
-      padding-top: hb-spacing-width('md');
+    .hb-spotlight--classic & {
+      @include hb-themes(('colorful', 'airy')) {
+        position: relative;
+        padding-top: hb-spacing-width('md');
 
-      &::before {
-        top: 0;
-        @include hb-colorful-text-bar('secondary');
+        &::before {
+          top: 0;
+          @include hb-colorful-text-bar('secondary');
 
-        // Add a unique secondary color for Ocean on Colorful.
-        // Note this is an extraordinary use case.
-        // Targeting styles per color pairing should not become standard practice.
-        .hc-pairing-ocean & {
-          @include hb-colorful-text-bar('secondary-darken-12');
+          // Add a unique secondary color for Ocean on Colorful.
+          // Note this is an extraordinary use case.
+          // Targeting styles per color pairing should not become standard practice.
+          .hc-pairing-ocean & {
+            @include hb-colorful-text-bar('secondary-darken-12');
+          }
         }
       }
-    }
 
-    @include grid-media-min('md') {
-      flex-basis: 55%;
-      flex-grow: 1;
-      max-width: 75%;
+      @include grid-media-min('md') {
+        flex-basis: 55%;
+        flex-grow: 1;
+        max-width: 75%;
+      }
     }
 
     .field-hs {
@@ -110,20 +114,22 @@
   }
 
   &__image-wrapper {
-    margin-bottom: hb-spacing-width('md');
+    .hb-spotlight--classic & {
+      margin-bottom: hb-spacing-width('md');
 
-    @include grid-media-min('md') {
-      width: 45%;
-      margin-bottom: 0;
+      @include grid-media-min('md') {
+        width: 45%;
+        margin-bottom: 0;
+      }
     }
 
-    .hb-spotlight--image-default & {
+    .hb-spotlight--classic.hb-spotlight--image-default & {
       @include grid-media-min('md') {
         margin-left: hb-spacing-width();
       }
     }
 
-    .hb-spotlight--image-left & {
+    .hb-spotlight--classic.hb-spotlight--image-left & {
       @include grid-media-min('md') {
         margin-right: hb-spacing-width();
       }
@@ -131,6 +137,111 @@
 
     img {
       width: 100%;
+    }
+  }
+}
+
+.hb-spotlight--expanded {
+  position: relative;
+
+  @include hb-traditional {
+    .hs-paragraph-style--well &,
+    .hs-paragraph-style--well-full-width & {
+      background-color: var(--palette--white);
+    }
+  }
+
+  .hb-spotlight__wrapper {
+    position: relative;
+    width: 100% !important;
+  }
+
+  .hb-spotlight__text {
+    min-height: fit-content !important;
+
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(20px);
+      margin: hb-calculate-rems(20px);
+      background: var(--palette--white);
+      transform: translate(0%, -15%);
+
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(30px) hb-calculate-rems(40px);
+        margin: 0;
+        flex-basis: 55%;
+        flex-grow: 1;
+        max-width: 75%;
+      }
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(40px);
+
+      @include grid-media-min('md') {
+        flex-basis: 60%;
+        flex-grow: 1;
+      }
+    }
+
+    .field-hs-spotlight-link {
+      margin-top: hb-calculate-rems(20px);
+    }
+
+    .hb-spotlight__title {
+      &, h2 {
+        margin-top: 0;
+        margin-bottom: hb-calculate-rems(15px);
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        color: var(--palette--primary);
+
+        @include grid-media-min('md') {
+          &, h2 {
+            font-size: hb-calculate-rems(32px);
+          }
+        }
+      }
+    }
+  }
+
+  .hb-spotlight__image-wrapper {
+    @include hb-traditional {
+      @include grid-media-min('md') {
+        flex-basis: 40%;
+        max-width: 500px;
+      }
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      .field-media-image + .field-media-image-caption {
+        z-index: 0;
+      }
+
+      @include grid-media-min('md') {
+        width: 45%;
+        max-width: 500px;
+      }
+    }
+  }
+}
+
+.hb-spotlight--expanded.hb-spotlight--image-default {
+  .hb-spotlight__text {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('md') {
+        transform: translate(14%, 0%);
+      }
+    }
+  }
+}
+
+.hb-spotlight--expanded.hb-spotlight--image-left {
+  .hb-spotlight__text {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('md') {
+        transform: translate(-14%, 0%);
+      }
     }
   }
 }
@@ -146,6 +257,12 @@
   .hs-full-width & {
     .hb-spotlight {
       margin-top: 0;
+    }
+  }
+
+  &:has(.hb-spotlight--expanded) {
+    .slick-dots {
+      bottom: 0;
     }
   }
 }

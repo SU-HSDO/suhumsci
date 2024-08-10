@@ -1,0 +1,46 @@
+@use 'sass:meta';
+
+@import '../settings/variables.colorful-pairings';
+@import '../tools/mixins.themes';
+
+$hb-current-theme: 'traditional' !default;
+
+.paragraph-admin-preview {
+  @each $color, $value in $hc-colorful-globals {
+    --palette--#{$color}: #{$value};
+  }
+
+  @include meta.load-css(
+    '../main',
+    $with: ('hb-current-theme': $hb-current-theme, 'hb-root-font-size': 16px)
+  );
+
+  // Set dimensions for carousels.
+  .ptype-hs-gradient-hero-slider,
+  .ptype-hs-carousel,
+  .ptype-stanford-gallery,
+  .ptype-hs-sptlght-slder {
+    max-width: 75rem;
+  }
+
+  .paragraph--type--hs-gradient-hero-slider {
+    .slick-dots {
+      bottom: -2rem;
+    }
+  }
+
+  .ptype-hs-carousel .ptype-hs-hero-image {
+    .hb-hero-overlay {
+      background-color: transparent;
+
+      &::before {
+        content: '';
+      }
+    }
+  }
+
+  // Gin styles overrides.
+  div.link {
+    display: block;
+  }
+}

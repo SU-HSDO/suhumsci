@@ -1,8 +1,9 @@
-uuid: 3f7dd514-2c58-493c-a5c8-46457282d5ae
+uuid: ffc2cd1f-cb6d-4db8-9274-55c970e47ce8
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.preview
     - field.field.paragraph.hs_gradient_hero_slider.field_hs_gradient_hero_slides
     - paragraphs.paragraphs_type.hs_gradient_hero_slider
   module:
@@ -10,11 +11,16 @@ dependencies:
     - empty_fields
     - field_formatter_class
     - hs_field_helpers
+    - layout_builder
     - slick_paragraphs
-id: paragraph.hs_gradient_hero_slider.default
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.hs_gradient_hero_slider.preview
 targetEntityType: paragraph
 bundle: hs_gradient_hero_slider
-mode: default
+mode: preview
 content:
   field_hs_gradient_hero_slides:
     type: slick_paragraphs_vanilla

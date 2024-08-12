@@ -2,7 +2,7 @@
 
 /**
  * @file
- * hs_layouts.module
+ * Hs_layouts.module.
  */
 
 use Drupal\Component\Utility\Html;
@@ -48,7 +48,7 @@ function hs_layouts_preprocess(&$variables, $hook) {
     'pattern_spotlight',
     'pattern_timeline',
     'pattern_hero_text_overlay',
-    'pattern_gradient-hero',
+    'pattern_gradient_hero',
   ];
   if (!in_array($hook, $collection_patterns)) {
     return;
@@ -131,6 +131,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
       case 'secondary':
         $variables['attributes']->addClass('hb-accordion-secondary');
         break;
+
       case 'light':
         $variables['attributes']->addClass('hb-accordion-light');
         break;

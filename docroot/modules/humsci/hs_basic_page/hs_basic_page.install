@@ -226,3 +226,58 @@ function hs_basic_page_update_10000() {
     }
   }
 }
+
+/**
+ * Use default paragraph widget instead of paragraphs_browser in flexible pages.
+ */
+function hs_basic_page_update_10001() {
+  $fields = ['field_hs_page_components', 'field_hs_page_hero'];
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+  $form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_basic_page.default');
+  if (!empty($form_display)) {
+    foreach ($fields as $field) {
+      $component = $form_display->getComponent($field);
+      if (!empty($component)) {
+        $component['type'] = 'paragraphs';
+        $component['settings']['closed_mode_threshold'] = 0;
+        $component['settings']['add_mode'] = 'modal';
+        $component['settings']['features']['add_above'] = 'add_above';
+        $component['settings']['features']['convert'] = '0';
+        unset($component['settings']['paragraphs_browser']);
+        unset($component['settings']['modal_width']);
+        unset($component['settings']['modal_height']);
+        unset($component['settings']['show_group_label']);
+        unset($component['settings']['show_group_filter']);
+        $form_display->setComponent($field, $component);
+      }
+    }
+    $form_display->save();
+  }
+}
+
+/**
+ * Use default paragraph widget instead of paragraphs_browser in private pages.
+ */
+function hs_basic_page_update_10002() {
+  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+  $form_display = \Drupal::entityTypeManager()->getStorage('entity_form_display')->load('node.hs_private_page.default');
+  if (!empty($form_display)) {
+    $component = $form_display->getComponent('field_hs_priv_page_components');
+    if (!empty($component)) {
+      $component['type'] = 'paragraphs';
+      $component['settings']['edit_mode'] = 'closed';
+      $component['settings']['autocollapse'] = 'all';
+      $component['settings']['closed_mode_threshold'] = 0;
+      $component['settings']['add_mode'] = 'modal';
+      $component['settings']['features']['add_above'] = 'add_above';
+      $component['settings']['features']['convert'] = '0';
+      unset($component['settings']['paragraphs_browser']);
+      unset($component['settings']['modal_width']);
+      unset($component['settings']['modal_height']);
+      unset($component['settings']['show_group_label']);
+      unset($component['settings']['show_group_filter']);
+      $form_display->setComponent('field_hs_priv_page_components', $component);
+    }
+    $form_display->save();
+  }
+}

@@ -13,14 +13,14 @@ dependencies:
     - paragraphs.paragraphs_type.hs_collection
   module:
     - conditional_fields
-    - paragraphs_browser
+    - paragraphs
 id: paragraph.hs_collection.default
 targetEntityType: paragraph
 bundle: hs_collection
 mode: default
 content:
   field_hs_collection_items:
-    type: paragraphs_browser
+    type: paragraphs
     weight: 6
     region: content
     settings:
@@ -29,19 +29,15 @@ content:
       edit_mode: closed
       closed_mode: summary
       autocollapse: all
-      closed_mode_threshold: '0'
-      add_mode: paragraphs_browser
+      closed_mode_threshold: 0
+      add_mode: modal
       form_display_mode: default
       default_paragraph_type: _none
       features:
-        duplicate: duplicate
+        add_above: add_above
         collapse_edit_all: collapse_edit_all
-        add_above: 0
-      paragraphs_browser: content
-      modal_width: 80%
-      modal_height: auto
-      show_group_label: true
-      show_group_filter: true
+        convert: '0'
+        duplicate: duplicate
     third_party_settings: {  }
   field_hs_collection_per_row:
     type: options_select

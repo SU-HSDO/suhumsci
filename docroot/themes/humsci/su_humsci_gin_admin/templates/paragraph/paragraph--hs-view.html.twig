@@ -1,0 +1,18 @@
+
+{% set view = paragraph.field_hs_view.0.entity %}
+{% set view_name = view.label %}
+{% set display_id = paragraph.field_hs_view.0.display_id %}
+{% set display = view.getDisplay(display_id) %}
+{% set display_name = display.display_title %}
+{% set overridden_title = paragraph.field_hs_view.0.override_title ? paragraph.field_hs_view.0.overridden_title : null %}
+{% set display_title = overridden_title ?? (display.display_options.title ?? view.getDisplay('default').display_options.title) %}
+<div class="paragraph-admin-preview">
+  <div{{wrapper_attributes}}>
+    {% if view %}
+      <h2>{{ view_name }} - {{ display_name }} - {{ display_title }}</h2>
+    {% else %}
+      <h2>No view selected</h2>
+    {% endif %}
+    <p>No preview available for this component</p>
+  </div>
+</div>

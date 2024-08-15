@@ -20,21 +20,6 @@ const SelectedItem = styled.span`
   white-space: nowrap;
 `
 
-const renderSelectedValue = (value: SelectValue<string, boolean>, options: SelectOptionDefinition<string>[]) => {
-
-  if (Array.isArray(value)) {
-    return value.map(item =>
-      <SelectedItem
-        key={item}
-      >
-        {renderSelectedValue(item, options)}
-      </SelectedItem>
-    );
-  }
-  const selectedOption = options.find((option) => option.value === value);
-  return selectedOption ? selectedOption.label : null;
-}
-
 const StyledOption = styled.li<{ selected: boolean, highlighted: boolean, disabled: boolean }>`
   cursor: pointer;
   overflow: hidden;
@@ -189,7 +174,7 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
         }}>
           {optionChosen &&
             <span style={{overflow: "hidden", maxWidth: "calc(100% - 30px)", padding: "8px 5px 8px 0"}}>
-              {renderSelectedValue(value, options)}
+              { value?.length == options.length ? 'All' : `${value?.length} selected` }
             </span>
           }
           {(!optionChosen && !multiple) &&

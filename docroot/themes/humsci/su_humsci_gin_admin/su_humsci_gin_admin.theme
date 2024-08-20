@@ -70,4 +70,10 @@ function su_humsci_gin_admin_preprocess_field(&$variables) {
       $pitem['attributes']['class'][] = $ptype;
     }
   }
+  // Image fields.
+  if ($variables['field_type'] == 'image') {
+    // Needed to correctly display media library images.
+    $variables['attributes']['class'][] = 'field';
+    $variables['attributes']['class'][] = 'field--name-' . $variables['field_name'];
+  }
 }

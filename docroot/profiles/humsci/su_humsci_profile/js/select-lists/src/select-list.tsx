@@ -260,7 +260,7 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
           position: "absolute",
           zIndex: "10",
           background: "#fff",
-          maxHeight: "300px",
+          maxHeight: "125px",
           overflowY: "scroll",
           width: "100%",
           border: "1px solid #D5D5D4",

@@ -246,3 +246,84 @@ function hs_paragraph_types_update_10006() {
     }
   }
 }
+
+/**
+ * Set new config for color wells.
+ */
+function hs_paragraph_types_update_10007(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Import new color well configuration.
+    $config_storage = \Drupal::service('config.storage.sync');
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+    $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+    $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+    // If storage does not yet exist, create it.
+    if (empty($field_storage->load('paragraph.field_bg_color'))) {
+      $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_bg_color'))->save();
+    }
+
+    // If storage does not yet exist, create it.
+    if (empty($field_storage->load('paragraph.field_bg_color_width'))) {
+      $field_storage->createFromStorageRecord($config_storage->read('field.storage.paragraph.field_bg_color_width'))->save();
+    }
+
+    // Create the field instance.
+    $config = $field_config_storage->load('paragraph.hs_collection.field_bg_color');
+    if (empty($config)) {
+      $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_bg_color'))->save();
+    }
+
+    // Create the field instance.
+    $config = $field_config_storage->load('paragraph.hs_collection.field_bg_color_width');
+    if (empty($config)) {
+      $field_config_storage->create($config_storage->read('field.field.paragraph.hs_collection.field_bg_color_width'))->save();
+    }
+
+    // View display.
+    $config_factory = \Drupal::configFactory();
+    $config = $config_factory->getEditable('core.entity_view_display.paragraph.hs_collection.default');
+    $new_config_data = $config_storage->read('core.entity_view_display.paragraph.hs_collection.default');
+    $config->setData($new_config_data);
+    $config->save();
+
+    // Form display.
+    $config_factory = \Drupal::configFactory();
+    $config = $config_factory->getEditable('core.entity_form_display.paragraph.hs_collection.default');
+    $new_config_data = $config_storage->read('core.entity_form_display.paragraph.hs_collection.default');
+    $config->setData($new_config_data);
+    $config->save();
+
+    // Get list of collection paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_collection')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 10);
+
+  // Set new field default for existing hs_collection paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    if (
+      $paragraph->hasField('field_paragraph_style') &&
+      $paragraph->hasField('field_bg_color') &&
+      $paragraph->hasField('field_bg_color_width')) {
+      // Only set new field if old field had data.
+      if ($paragraph->get('field_paragraph_style')->value) {
+        $paragraph->set('field_bg_color', 'color_palette_default');
+      }
+      // Sets default for background width always.
+      $paragraph->set('field_bg_color_width', 'limited_width');
+      $paragraph->save();
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

@@ -10,6 +10,7 @@ interface OptionProps {
   children?: ReactNode;
   value: string;
   disabled?: boolean;
+  multiple?: boolean;
 }
 
 const SelectedItem = styled.span`
@@ -20,28 +21,82 @@ const SelectedItem = styled.span`
   white-space: nowrap;
 `
 
+const renderSelectedValue = (value: SelectValue<string, boolean>, options: SelectOptionDefinition<string>[]) => {
+
+  if (Array.isArray(value)) {
+    return value.map(item =>
+      <SelectedItem
+        key={item}
+      >
+        {renderSelectedValue(item, options)}
+      </SelectedItem>
+    );
+  }
+  const selectedOption = options.find((option) => option.value === value);
+  return selectedOption ? selectedOption.label : null;
+}
+
 const StyledOption = styled.li<{ selected: boolean, highlighted: boolean, disabled: boolean }>`
   cursor: pointer;
   overflow: hidden;
   margin: 0 !important;
   padding: 5px 10px !important;
-  background: ${props => props.disabled ? "#f1f0ee": props.selected ? "#b6b1a9" : props.highlighted ? "#d9d7d2" : ""};
-  color: ${props => props.disabled? "#b6b1a9":"#000"};
+  background: ${props => props.disabled ? "#f1f0ee" : props.selected ? "#b6b1a9" : props.highlighted ? "#d9d7d2" : ""};
+  color: ${props => props.disabled? "#b6b1a9" : "#000"};
   text-decoration: ${props => props.highlighted ? "underline" : "none"};;
 
   &:hover {
-    background: ${props => props.disabled ? "#f1f0ee" : (props.selected || props.highlighted ? "" : "#d9d7d2")};
-    color: ${props => props.disabled ? "#b6b1a9" : props.selected ? "" : "#2e2d29"};
+    background: ${props => props.disabled ? "#f1f0ee" : (props.selected || props.highlighted ? "" : "#dbdcde")};
+    color: ${props => props.disabled ? "#b6b1a9" : props.selected ? "" : "#000"};
     text-decoration: ${props => !props.disabled && "underline"};
   }
 
   &:before {
     display: none !important;
   }
+
+  input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: #413e39;
+    border-color: #413e39;
+  }
+
+  input[type="checkbox"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 4px;
+    width: 6px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Adjusting for disabled state */
+  input[type="checkbox"]:disabled {
+    background-color: #f1f0ee;
+    border-color: #b6b1a9;
+  }
+
+  input[type="checkbox"]:disabled:checked::before {
+    border-color: #b6b1a9;
+  }
 `
 
 function CustomOption(props: OptionProps) {
-  const {children, value, rootRef, id, disabled = false} = props;
+  const {children, value, rootRef, id, disabled = false, multiple} = props;
   const {getRootProps, highlighted, selected} = useOption({
     rootRef: rootRef,
     value,
@@ -80,6 +135,10 @@ function CustomOption(props: OptionProps) {
       highlighted={highlighted}
       disabled={disabled}
     >
+      {/* Checkbox Element if multiple */}
+      {multiple && (
+        <input type="checkbox" checked={selected} readOnly disabled={disabled} />
+      )}
       {children}
     </StyledOption>
   );
@@ -174,7 +233,11 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
         }}>
           {optionChosen &&
             <span style={{overflow: "hidden", maxWidth: "calc(100% - 30px)", padding: "8px 5px 8px 0"}}>
-              { value?.length == options.length ? 'All' : `${value?.length} selected` }
+              {(multiple) ? 
+                value?.length == options.length ? 'All selected' : `${value?.length} selected`
+              :
+              renderSelectedValue(value, options)
+              }
             </span>
           }
           {(!optionChosen && !multiple) &&
@@ -224,7 +287,7 @@ const SelectList = ({options = [], label, multiple, ariaLabelledby, required, de
 
             {options.map(option => {
               return (
-                <CustomOption key={option.value} value={option.value} disabled={option.disabled} rootRef={listboxRef} id={`${name}-${option.value.replace(/\W+/g, '-')}`}>
+                <CustomOption key={option.value} value={option.value} disabled={option.disabled} rootRef={listboxRef} id={`${name}-${option.value.replace(/\W+/g, '-')}`} multiple={multiple}>
                   {option.label}
                 </CustomOption>
               );

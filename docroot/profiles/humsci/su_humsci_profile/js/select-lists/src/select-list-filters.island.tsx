@@ -24,37 +24,31 @@ const FilterIsland = ({ focus = false }) => {
     origLabel.style.visibility = "hidden";
     origLabel.style.height = "0";
     origLabel.style.position = "absolute";
+
+    if (origSelect?.getAttribute("multiple")) {
+      const allValues = Array.from(origSelect.children).map(option => option.getAttribute('value'));
+      const selectedOptions = Array.from(origSelect.children)
+        .filter(option => option.getAttribute('selected') === 'selected')
+        .map(option => option.getAttribute('value'));
+
+      if (selectedOptions.length === allValues.length) {
+        selectedOptions.push('All');
+      }
+
+      setSelectedValues(selectedOptions);
+    }
   }, []);
 
-  const addAllOptionToSelect = (selectElement) => {
-    if (!selectElement) return;
-  
-    // Check if "All" option already exists to avoid duplicates
-    const allOptionExists = Array.from(selectElement.children).some(
-      option => option.getAttribute("value") === "All"
-    );
-  
-    if (!allOptionExists) {
-      // Create a new <option> element for "All"
-      const allOption = document.createElement("option");
-      allOption.value = "All";
-      allOption.textContent = "All";
-      allOption.disabled = false; // Optional: change this if needed
-  
-      // Insert "All" at the top of the children
-      selectElement.insertBefore(allOption, selectElement.firstChild);
-    }
-  };
-
   const getSelectOptions = (selectElement) => {
-    if (selectElement?.getAttribute("multiple")) {
-      addAllOptionToSelect(selectElement);
-    }
-
     const options = [];
 
+    if (selectElement?.getAttribute("multiple")) {
+      // Add "All" as the first option
+      options.push({ value: "All", label: "All", disabled: false });
+    }
+
     const optionElements = selectElement.children;
-    
+
     for (let i = 0; i < optionElements.length; i++) {
       const option = optionElements[i];
       const value = option.getAttribute("value");
@@ -65,7 +59,7 @@ const FilterIsland = ({ focus = false }) => {
         disabled: option.getAttribute("disabled") === "disabled",
       });
     }
-  
+
     return options;
   };
 
@@ -86,28 +80,37 @@ const FilterIsland = ({ focus = false }) => {
 
   const onSelectChange = (e, value) => {
     if (!originalSelect.getAttribute('multiple')) {
-      return originalSelect.value = value;
+      originalSelect.value = value;
+      return;
+    } 
+    
+    const allValues = Array.from(originalSelect.children).map(option => option.getAttribute('value'));
+    
+    if (value.includes('All')) {
+      setSelectedValues([...allValues, "All"]);
+       Array.from(originalSelect.children).forEach(option => {
+          option.setAttribute('selected', 'selected');
+        });
     } else {
-      const allValues = Array.from(originalSelect.children).map(option => option.getAttribute('value'));
-      console.log(value);
-      if (value.includes('All')) {
-        for (let option of originalSelect.children) {
-          option.setAttribute('selected', 'true');
-        }
+      if (selectedValues.includes('All')) {
+        setSelectedValues([]);
+        Array.from(originalSelect.children).forEach(option => {
+          option.removeAttribute('selected');
+        });
+      } else if (value.length === allValues.length) {
+        setSelectedValues([...allValues, "All"]);
+        Array.from(originalSelect.children).forEach(option => {
+          option.setAttribute('selected', 'selected');
+        });
       } else {
-        if (!value.includes('All') && value.length + 1 === allValues.length) {
-          for (let option of originalSelect.children) {
-            option.setAttribute('selected', 'true');
+        setSelectedValues(value);
+        Array.from(originalSelect.children).forEach(option => {
+          if (value.includes(option.getAttribute('value'))) {
+            option.setAttribute('selected', 'selected');
+          } else {
+            option.removeAttribute('selected');
           }
-        } else {
-          for (let option of originalSelect.children) {
-            if (value.includes(option.getAttribute('value'))) {
-              option.setAttribute('selected', 'true')
-            } else {
-              option.removeAttribute('selected');
-            }
-          }
-        }
+        });
       }
     }
   };
@@ -126,6 +129,7 @@ const FilterIsland = ({ focus = false }) => {
           multiple={originalSelect.getAttribute("multiple") === "multiple"}
           onChange={onSelectChange}
           defaultValue={getDefaultValue()}
+          value={originalSelect.getAttribute("multiple") === "multiple" ? selectedValues : undefined}
           emptyLabel={selectOptions.find((item) => item.value === "All")?.label}
         />
       )}

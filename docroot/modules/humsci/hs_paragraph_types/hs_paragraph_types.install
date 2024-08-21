@@ -319,8 +319,12 @@ function hs_paragraph_types_update_10007(&$sandbox) {
       if ($paragraph->get('field_paragraph_style')->value) {
         $paragraph->set('field_bg_color', 'color_palette_default');
       }
-      // Sets default for background width always.
-      $paragraph->set('field_bg_color_width', 'limited_width');
+      if ($paragraph->get('field_paragraph_style')->value == 'well-full-width') {
+        $paragraph->set('field_bg_color_width', 'full_width');
+      }
+      if ($paragraph->get('field_paragraph_style')->value != 'well-full-width') {
+        $paragraph->set('field_bg_color_width', 'limited_width');
+      }
       $paragraph->save();
     }
   }

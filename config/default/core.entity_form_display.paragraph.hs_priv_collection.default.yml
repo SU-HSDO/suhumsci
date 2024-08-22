@@ -11,6 +11,8 @@ dependencies:
     - paragraphs.paragraphs_type.hs_priv_collection
   module:
     - paragraphs
+    - paragraphs_ee
+    - paragraphs_features
 id: paragraph.hs_priv_collection.default
 targetEntityType: paragraph
 bundle: hs_priv_collection
@@ -35,7 +37,17 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        show_drag_and_drop: true
+        show_collapse_all: true
+      paragraphs_ee:
+        paragraphs_ee:
+          dialog_off_canvas: false
+          dialog_style: tiles
   field_hs_collection_per_row:
     type: options_select
     weight: 0

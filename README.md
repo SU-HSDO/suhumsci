@@ -7,7 +7,10 @@ This codebase runs the Humanities and Sciences Drupal (or Digital) Platform a.k.
 This project is based on [Acquia BLT](https://docs.acquia.com/acquia-cms/add-ons/blt) (Bacon Lettuce Tomato, or Build and Launch Tool), an open-source project template and tool that enables building, testing, and deploying Drupal installations following Acquia Professional Services best practices.
 
 Note the following properties of this project:
-* Primary development branch: `develop`
+* Stable branch: `develop`
+* Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
+* Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
+* Development branching convention: branch off the current release branch
 * Local environment: Lando or DrupalVM
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc

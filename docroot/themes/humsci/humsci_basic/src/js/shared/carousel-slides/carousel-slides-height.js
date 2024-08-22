@@ -52,9 +52,21 @@ const restrictHeight = () => {
     }
 
     // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes
-    textBoxes.forEach(
-      (textBox) => isSpotlightTextBox(textBox) && setMinHeight(textBox, maxBoxHeight),
-    );
+    textBoxes.forEach((textBox) => {
+      const classicSpotlight = slide.querySelector('.hb-spotlight--classic');
+      if (isSpotlightTextBox(textBox) && classicSpotlight) {
+        setMinHeight(textBox, maxBoxHeight);
+      }
+    });
+
+    // Find all spotlights texBoxes wrappers to give them the same height on all screen sizes
+    const expandedSpotlights = slide.querySelectorAll('.hb-spotlight--expanded');
+    if (expandedSpotlights) {
+      expandedSpotlights.forEach((expandedSpotlight) => {
+        const expandedSpotlightWrapper = expandedSpotlight.querySelector('.hb-spotlight__wrapper');
+        setMinHeight(expandedSpotlightWrapper, maxBoxHeight);
+      });
+    }
 
     // Find images inside each slider.
     const imageWrapper = slide.querySelector('.hb-spotlight__image-wrapper');

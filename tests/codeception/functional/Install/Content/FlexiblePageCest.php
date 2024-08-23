@@ -63,13 +63,11 @@ class FlexiblePageCest {
     $I->scrollTo('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
     $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-add-modal-form-area-add-more"]');
     $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-add-modal-form-area-add-more"]');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Postcard');
     $I->click('field_hs_collection_items_hs_postcard_add_more');
     $I->waitForText('No media items are selected.');
 
@@ -93,7 +91,6 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Banner');
     $I->scrollTo('.field-add-more-submit');
     $I->click('field_hs_page_components_hs_hero_image_add_more');
     $I->waitForText('No media items are selected');
@@ -135,7 +132,6 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Photo Album');
     $I->click('field_hs_page_components_stanford_gallery_add_more');
     $I->waitForText('No media items are selected.');
     $I->fillField('field_hs_page_components[1][subform][su_gallery_headline][0][value]', 'Photo Album Headline');
@@ -316,7 +312,6 @@ class FlexiblePageCest {
     $I->fillField('Title', $this->faker->words(3, TRUE));
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Vertical Timeline');
     $I->click('field_hs_page_components_hs_timeline_add_more');
     $I->waitForText('Collapse by default');
     $I->checkOption('Collapse by default');
@@ -360,7 +355,6 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Postcard');
     $I->click('field_hs_page_components_hs_postcard_add_more');
     $I->waitForText('No media items are selected.');
     $I->fillField('field_hs_page_components[1][subform][field_hs_postcard_title][0][value]', 'Nam at tortor in tellus');
@@ -384,7 +378,6 @@ class FlexiblePageCest {
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'accordion');
     $I->click('field_hs_page_components_hs_accordion_add_more');
     $I->waitForText('Summary');
     $I->fillField('Summary', 'Sed augue ipsum egestas nec');
@@ -412,7 +405,6 @@ class FlexiblePageCest {
       // Add component if does not already exist.
       $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
       $I->waitForText('Add Component');
-      $I->fillField('input[type="search"]', 'text area');
       $I->click('field_hs_page_components_hs_text_area_add_more');
       $I->waitForText('Text format');
     }
@@ -453,7 +445,6 @@ class FlexiblePageCest {
       // Add component if does not already exist.
       $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
       $I->waitForText('Add Component');
-      $I->fillField('input[type="search"]', 'text area');
       $I->click('field_hs_page_components_hs_text_area_add_more');
       $I->waitForText('Text Area');
     }
@@ -484,7 +475,6 @@ class FlexiblePageCest {
     // Add a Collection component to the page.
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Collection');
     $I->click('field_hs_page_components_hs_collection_add_more');
     $I->waitForText('Items Per Row');
     $I->selectOption('Items Per Row', 2);
@@ -497,7 +487,6 @@ class FlexiblePageCest {
     $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-add-modal-form-area-add-more"]');
     $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-add-modal-form-area-add-more"]');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Text Area');
     $I->click('field_hs_collection_items_hs_text_area_add_more');
     $I->waitForText('Items Per Row');
     $I->waitForText('Text format');
@@ -506,7 +495,6 @@ class FlexiblePageCest {
     $I->scrollTo('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-add-modal-form-area-add-more"]');
     $I->click('[id^="edit-field-hs-page-components-1-subform-field-hs-collection-items-add-more-add-modal-form-area-add-more"]');
     $I->waitForText('Add Component');
-    $I->fillField('input[type="search"]', 'Postcard');
     $I->click('field_hs_collection_items_hs_postcard_add_more');
     $I->waitForText('No media items are selected.');
     $I->scrollTo('.field--name-field-hs-postcard-body');

@@ -216,7 +216,9 @@ const SelectList = ({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listboxRef = useRef<HTMLUListElement | null>(null);
   const [listboxVisible, setListboxVisible] = useState<boolean>(false);
-  const containerProps = useOutsideClick(() => setListboxVisible(false));
+  const containerProps = useOutsideClick((event) => {
+    setTimeout(() => setListboxVisible(false), 50); // Short delay to let state settle
+  });
 
   const { getButtonProps, getListboxProps, contextValue, value } = useSelect<
     string,
@@ -232,8 +234,10 @@ const SelectList = ({
   });
 
   useEffect(() => {
-    listboxVisible && listboxRef.current?.focus();
-  }, [listboxVisible]);
+    if (!listboxVisible && value.length > 0) {
+      listboxVisible && listboxRef.current?.focus();
+    }
+  }, [listboxVisible, value]);
 
   useLayoutEffect(() => {
     const parentContainer =

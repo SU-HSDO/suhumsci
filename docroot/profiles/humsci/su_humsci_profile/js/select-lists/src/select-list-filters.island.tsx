@@ -2,7 +2,7 @@ import { createIslandWebComponent } from 'preact-island';
 import SelectList from './select-list';
 import { useEffect, useRef, useState } from 'preact/compat';
 
-const FilterIsland = ({focus = false}) => {
+const FilterIsland = ({}) => {
   const ref = useRef();
   const [originalSelect, setOriginalSelect] = useState(null);
   const [label, setLabel] = useState('');
@@ -40,6 +40,18 @@ const FilterIsland = ({focus = false}) => {
       setSelectedValues(selectedOptions);
     }
   }, []);
+
+  useEffect(() => {
+    if (originalSelect) {
+      Array.from(originalSelect.children).forEach((option) => {
+        if (selectedValues.includes(option.getAttribute('value'))) {
+          option.setAttribute('selected', 'selected');
+        } else {
+          option.removeAttribute('selected');
+        }
+      });
+    }
+  }, [selectedValues]);
 
   const getSelectOptions = (selectElement) => {
     const options = [];
@@ -90,34 +102,25 @@ const FilterIsland = ({focus = false}) => {
       option.getAttribute('value'),
     );
 
+    // Handle "All" selection logic
     if (value.includes('All')) {
-      setSelectedValues([...allValues, 'All']);
-      Array.from(originalSelect.children).forEach((option) => {
-        option.setAttribute('selected', 'selected');
-      });
-    } else {
       if (selectedValues.includes('All')) {
+        const valueWithoutAll = value.filter((v) => v !== 'All');
+        setSelectedValues(valueWithoutAll);
+      } else {
+        setSelectedValues([...allValues, 'All']);
+      }
+    } else {
+      if (selectedValues.includes('All') && value.length === allValues.length) {
         setSelectedValues([]);
-        Array.from(originalSelect.children).forEach((option) => {
-          option.removeAttribute('selected');
-        });
       } else if (value.length === allValues.length) {
         setSelectedValues([...allValues, 'All']);
-        Array.from(originalSelect.children).forEach((option) => {
-          option.setAttribute('selected', 'selected');
-        });
       } else {
         setSelectedValues(value);
-        Array.from(originalSelect.children).forEach((option) => {
-          if (value.includes(option.getAttribute('value'))) {
-            option.setAttribute('selected', 'selected');
-          } else {
-            option.removeAttribute('selected');
-          }
-        });
       }
     }
   };
+
 
   return (
     <div ref={ref}>

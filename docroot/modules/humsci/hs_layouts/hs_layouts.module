@@ -96,7 +96,11 @@ function hs_layouts_preprocess_container(&$variables) {
  * Implements hook_preprocess_preprocess_pattern_spotlight().
  */
 function hs_layouts_preprocess_pattern_spotlight(&$variables) {
-  $paragraph = $variables['context']->getProperty('entity');
+  $context = $variables['context'];
+  $paragraph = $context->getProperty('entity');
+  if ($context->isOfType('views_row')) {
+    $variables['attributes']->addClass('hb-spotlight--classic');
+  }
   if (
     $paragraph instanceof ParagraphInterface &&
     $paragraph->hasField('field_hs_spotlight_bg') &&
@@ -104,6 +108,13 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   ) {
     $bgValue = $paragraph->get('field_hs_spotlight_bg')->getString();
     $variables['attributes']->addClass(Html::cleanCssIdentifier($bgValue));
+  }
+  if (
+    $paragraph instanceof ParagraphInterface &&
+    $paragraph->hasField('field_spotlight_style')
+  ) {
+    $className = $paragraph->get('field_spotlight_style')->isEmpty() ? 'classic' : $paragraph->get('field_spotlight_style')->getString();
+    $variables['attributes']->addClass(Html::cleanCssIdentifier('hb-spotlight--' . $className));
   }
 }
 

@@ -6,6 +6,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Template\Attribute;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_library_info_alter().
@@ -39,6 +40,14 @@ function su_humsci_gin_admin_preprocess(&$variables, $hook) {
     ]);
     if ($hook === 'paragraph') {
       $variables['wrapper_attributes']->addClass('paragraph-item', 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType()));
+    } else {
+      $paragraph = $variables['context']->getProperty('entity');
+      if ($paragraph->bundle() == 'hs_hero_image') {
+        $parent = $paragraph->getParentEntity();
+        if ($parent instanceof ParagraphInterface) {
+          $variables['wrapper_attributes']->addClass('paragraph--type--hs-carousel');
+        }
+      }
     }
   }
 }

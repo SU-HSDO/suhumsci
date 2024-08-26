@@ -51,3 +51,25 @@ function hs_migrate_update_8005() {
     }
   }
 }
+
+/**
+ * Remove permission for non-developers from deleting media.
+ */
+function hs_migrate_profile_update_8006() {
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
+  if ($roles) {
+    foreach (array_keys($roles) as $roleName) {
+      if ($roleName != 'administrator') {
+        user_role_revoke_permissions($roleName, [
+          'delete any media',
+          'delete any embeddable media',
+          'delete any file media',
+          'delete any google_form media',
+          'delete any image media',
+          'delete any video media',
+        ]);
+      }
+    }
+  }
+}

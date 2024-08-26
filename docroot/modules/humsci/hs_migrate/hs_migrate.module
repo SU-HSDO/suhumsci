@@ -5,9 +5,10 @@
  * Contains hs_migrate.module.
  */
 
+use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\config_pages\ConfigPagesInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_help().
@@ -41,4 +42,90 @@ function hs_migrate_config_pages_presave(ConfigPagesInterface $config_page) {
   if ($config_page->id() == 'drupal_7_importers') {
     Cache::invalidateTags(['migration_plugins']);
   }
+}
+
+
+/**
+ * Impliments hook_preprocess_form().
+ */
+function hs_migrate_preprocess_form(&$variables) {
+  $formId = $variables['element']['#form_id'];
+  if ($formId == 'media_image_edit_form') {
+    // Checks if this media is part of a migration and if so, prevent delete.
+    $mediaId = \Drupal::routeMatch()->getParameter('media');
+    if ($mediaId instanceof \Drupal\media\Entity\Media) {
+      $mediaImported = _hs_migrate_media_imported($mediaId->id());
+      if ($mediaImported) {
+        \Drupal::messenger()
+          ->addWarning(t('This media can not be deleted since it contains imported & synced data.'));
+
+        $variables['#attached']['library'][] = 'hs_migrate/readonly';
+        $variables['attributes']['class'][] = 'messages--readonly';
+      }
+    }
+
+  }
+}
+
+/**
+ * Checks to see if a given mediaID is associated with a migration.
+ *
+ * @var int $mediaID
+ *   The media ID
+ *
+ * @return bool
+ *   TRUE if media was part of a migration
+ */
+function _hs_migrate_media_imported($mediaId) {
+  /*
+   * Contains content type as the top-level key, and fields on each content
+   * type to disable removal of images.
+   */
+  $fieldsToDisable = \Drupal::service('config.factory')->get('hs_migrate.settings')->get('migrated_image_fields');
+
+  $current_user = \Drupal::currentUser();
+  $roles = $current_user->getRoles();
+  if (!in_array('administrator', $roles)) {
+    // Find nodes that have a reference to this media id.
+    $query = \Drupal::entityQuery('node')
+      ->accessCheck(TRUE);
+
+    // Or condition for all content types.
+    $contentTypeGroup = $query->orConditionGroup();
+
+    foreach ($fieldsToDisable as $contentType => $fields) {
+
+      // And condition group for specific content type.
+      $contentTypeGroupItem = $query->andConditionGroup()
+        ->condition('type', $contentType);
+
+      // Or condition for fields in content type.
+      $fieldsGroup = $query->orConditionGroup();
+      foreach ($fields as $field) {
+        $fieldsGroup->condition($field, $mediaId);
+      }
+
+      // Add fields to group.
+      $contentTypeGroupItem->condition($fieldsGroup);
+
+      // Add group to content type.
+      $contentTypeGroup->condition($contentTypeGroupItem);
+    }
+
+    // Add all groups to query and execute.
+    $query->condition($contentTypeGroup);
+    $results = $query->execute();
+
+    if ($results) {
+      $nodes = Node::loadMultiple($results);
+      foreach ($nodes as $node) {
+        $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
+      }
+      if ($migration) {
+        return TRUE;
+      }
+    }
+  }
+
+  return FALSE;
 }

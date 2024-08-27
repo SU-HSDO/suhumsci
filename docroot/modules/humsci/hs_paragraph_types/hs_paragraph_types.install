@@ -246,3 +246,36 @@ function hs_paragraph_types_update_10006() {
     }
   }
 }
+
+/**
+ * Moves drag & drop action for paragraphs from 3 dot menu to paragraph toolbar.
+ */
+function hs_paragraph_types_update_10007() {
+  $config_to_update = [
+    'core.entity_form_display.node.hs_basic_page.default',
+    'core.entity_form_display.node.hs_private_page.default',
+  ];
+  // Load the configuration from the config/sync directory.
+  $config_storage_location = \Drupal::service('config.storage.sync');
+  foreach ($config_to_update as $config) {
+    $config_data = $config_storage_location->read($config);
+
+    // Check if the form display configuration already exists.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    /** @var ConfigEntityStorageInterface $config_storage */
+    $config_storage = $entity_type_manager->getStorage('entity_form_display');
+    $existing_config = $config_storage->load($config_data['id']);
+
+    if ($existing_config) {
+      foreach ($config_data as $key => $value) {
+        $existing_config->set($key, $value);
+      }
+      $existing_config->save();
+    }
+    else {
+      // If it doesn't exist, create and save it.
+      $config_storage->create($config_data)->save();
+    }
+  }
+
+}

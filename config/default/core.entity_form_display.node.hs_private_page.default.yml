@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.hs_private_page.field_hs_priv_page_components
     - field.field.node.hs_private_page.field_menulink
     - field.field.node.hs_private_page.field_priv_wysiwyg_files
+    - field.field.node.hs_private_page.layout_builder__layout
     - node.type.hs_private_page
   module:
     - file
@@ -42,6 +43,8 @@ content:
         duplicate: duplicate
         collapse_edit_all: collapse_edit_all
         add_above: 0
+        convert: 0
+      expose_drag_drop: '1'
       paragraphs_browser: content
       modal_width: 80%
       modal_height: auto
@@ -50,13 +53,13 @@ content:
     third_party_settings: {  }
   field_menulink:
     type: menu_link_default
-    weight: 27
+    weight: 26
     region: content
     settings: {  }
     third_party_settings: {  }
   field_priv_wysiwyg_files:
     type: file_generic
-    weight: 26
+    weight: 9
     region: content
     settings:
       progress_indicator: throbber
@@ -119,4 +122,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  layout_builder__layout: true

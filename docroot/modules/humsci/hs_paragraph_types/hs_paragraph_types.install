@@ -256,9 +256,10 @@ function hs_paragraph_types_update_10007() {
     'core.entity_form_display.node.hs_private_page.default',
   ];
   // Load the configuration from the config/sync directory.
-  $config_storage_location = \Drupal::service('config.storage.sync');
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+
   foreach ($config_to_update as $config) {
-    $config_data = $config_storage_location->read($config);
+    $config_data = $config_directory->read($config);
 
     // Check if the form display configuration already exists.
     $entity_type_manager = \Drupal::entityTypeManager();

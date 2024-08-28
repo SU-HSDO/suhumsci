@@ -56,12 +56,12 @@ function hs_migrate_update_8005() {
  * Remove permission for non-developers from deleting media.
  */
 function hs_migrate_update_8006() {
-  $entityTypeManager = \Drupal::service('entity_type.manager');
-  $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $roles = $entity_type_manager->getStorage('user_role')->loadMultiple();
   if ($roles) {
-    foreach (array_keys($roles) as $roleName) {
-      if ($roleName != 'administrator') {
-        user_role_revoke_permissions($roleName, [
+    foreach (array_keys($roles) as $role_name) {
+      if ($role_name != 'administrator') {
+        user_role_revoke_permissions($role_name, [
           'delete any media',
           'delete any embeddable media',
           'delete any file media',

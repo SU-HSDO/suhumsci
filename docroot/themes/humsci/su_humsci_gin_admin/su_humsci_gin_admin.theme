@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Theme functions for su_humsci_gin_admin theme.
  */
 
 use Drupal\Component\Utility\Html;
@@ -26,63 +27,31 @@ function su_humsci_gin_admin_library_info_alter(&$libraries, $extension) {
  * Implements hook_preprocess_HOOK().
  */
 function su_humsci_gin_admin_preprocess(&$variables, $hook) {
-  if (str_starts_with($hook, 'pattern_') || $hook === 'paragraph') {
-    $theme = \Drupal::config('system.theme')->get('default');
-    $color_pairing = theme_get_setting('theme_color_pairing', $theme);
-    $prefix = [
-      'humsci_traditional' => 'ht',
-      'humsci_colorful' => 'hc',
-    ];
-    $variables['wrapper_attributes'] = new Attribute([
-      'class' => [
-        $prefix[$theme] . '-pairing-' . $color_pairing,
-      ],
-    ]);
-    if ($hook === 'paragraph') {
-      $variables['wrapper_attributes']->addClass('paragraph-item', 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType()));
-    } else {
-      $paragraph = $variables['context']->getProperty('entity');
-      if ($paragraph->bundle() == 'hs_hero_image') {
-        $parent = $paragraph->getParentEntity();
-        if ($parent instanceof ParagraphInterface) {
-          $variables['wrapper_attributes']->addClass('paragraph--type--hs-carousel');
-        }
-      }
-    }
+  if (!(str_starts_with($hook, 'pattern_') || $hook == 'paragraph')) {
+    return NULL;
   }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function su_humsci_gin_admin_preprocess_field(&$variables) {
-  // Make additional variables available to the template.
-  $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_name']);
-  $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_type']);
-  $variables['attributes']['class'][] = Html::cleanCssIdentifier('label-' . $variables['label_display']);
-
-  $first_item = $variables['element'][0] ?? NULL;
-  $is_paragraph = $first_item['#paragraph'] ?? FALSE;
-  $has_items = isset($variables['items']) ? count($variables['items']) : FALSE;
-
-  // Add additional information to paragraph fields.
-  // Bricks has a different field type and structures the array differently, so
-  // we need to check if its actual normal paragraph fields as well.
-  if ($variables['field_type'] == 'entity_reference_revisions' && $is_paragraph && $has_items) {
-    foreach ($variables['items'] as &$pitem) {
-      $paragraph_type = $pitem['content']['#paragraph']->getType();
-      $ptype = Html::cleanCssIdentifier("ptype-" . $paragraph_type);
-      if (!isset($pitem['attributes']['class'])) {
-        $pitem['attributes']['class'] = [];
-      }
-      $pitem['attributes']['class'][] = "paragraph-item";
-      $pitem['attributes']['class'][] = $ptype;
-    }
+  $theme = \Drupal::config('system.theme')->get('default');
+  $color_pairing = theme_get_setting('theme_color_pairing', $theme);
+  $prefix = [
+    'humsci_traditional' => 'ht',
+    'humsci_colorful' => 'hc',
+  ];
+  $variables['wrapper_attributes'] = new Attribute([
+    'class' => [
+      $prefix[$theme] . '-pairing-' . $color_pairing,
+    ],
+  ]);
+  if ($hook === 'paragraph') {
+    $variables['wrapper_attributes']->addClass('paragraph-item', 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType()));
   }
-  // Image fields.
-  if ($variables['field_type'] == 'image') {
-    // Needed to correctly display media library images.
-    $variables['attributes']['class'][] = 'field';
-    $variables['attributes']['class'][] = 'field--name-' . $variables['field_name'];
+  else {
+    $paragraph = isset($variables['context']) ? $variables['context']->getProperty('entity') : NULL;
+    if (!($paragraph instanceof ParagraphInterface && $paragraph->bundle() == 'hs_hero_image')) {
+      return NULL;
+    }
+    $parent = $paragraph->getParentEntity();
+    if ($parent instanceof ParagraphInterface) {
+      $variables['wrapper_attributes']->addClass('paragraph--type--hs-carousel');
+    }
   }
 }

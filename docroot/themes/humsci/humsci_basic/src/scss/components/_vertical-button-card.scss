@@ -2,11 +2,19 @@
   position: relative;
 
   .hb-card__graphics {
-    margin-bottom: 0;
-
     img {
       width: 100%;
     }
+  }
+
+  .hb-card__graphics {
+    &, .hb-raised-cards & {
+      margin-bottom: hb-calculate-rems(32px);
+    }
+  }
+
+  .field-hs-postcard-body {
+    margin-bottom: 0;
   }
 
   .hs-button {
@@ -25,24 +33,36 @@
     border: 2px solid var(--palette--secondary);
     background-color: var(--palette--white);
 
+    .hb-card__content-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .hb-card__title {
+      margin-bottom: hb-calculate-rems(16px);
+
+      &:only-child {
+        margin-bottom: 0;
+      }
+    }
+
     .hb-card__graphics {
-      padding: hb-spacing-width('xs') hb-spacing-width('sm') 0;
+      padding: hb-calculate-rems(24px) hb-spacing-width('sm') 0;
     }
 
     .hb-card__content {
-      padding: hb-spacing-width('sm');
-      margin-bottom: hb-spacing-width('sm');
+      padding: hb-calculate-rems(32px) hb-spacing-width('sm');
     }
 
     .hs-button {
       @include hb-secondary-button;
 
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: relative;
+      width: 100%;
       border-width: 0;
       border-top-width: 2px;
+      margin-top: auto;
 
       // Warbler color pairing override.
       .ht-pairing-warbler & {
@@ -53,24 +73,47 @@
         }
       }
     }
+
+    &:has(.hb-card__graphics) {
+      .hb-card__content {
+        padding-top: 0;
+      }
+    }
+
+    &:has(.hs-button) {
+      .hb-card__content {
+        padding-bottom: hb-calculate-rems(16px);
+      }
+    }
   }
 
   @include hb-colorful {
     .hb-card__graphics {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding: 0 hb-calculate-rems(36px);
+      &, .hb-raised-cards & {
+        margin-top: -40%;
+
+        @include grid-media('md') {
+          .paragraph--type--hs-collection .item-per-row--2 & {
+            margin-top: -50%;
+          }
+    
+          .paragraph--type--hs-collection .item-per-row--3 & {
+            margin-top: -65%;
+          }
+    
+          .paragraph--type--hs-collection .item-per-row--4 & {
+            margin-top: -75%;
+          }
+        }
+      }
     }
 
     .hb-card__title {
-      margin-bottom: hb-calculate-rems(18px);
       color: var(--palette--secondary);
     }
 
     .hb-card__content-wrapper {
-      padding: hb-spacing-width('sm') hb-calculate-rems(36px);
+      padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
       border: 2px solid var(--palette--tertiary-highlight);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 10%, transparent);
 
@@ -82,7 +125,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
       }
 
       .hb-card__content {
@@ -98,28 +141,38 @@
       .paragraph--type--hs-collection .item-per-row--4 & {
         padding-top: 30%;
       }
-
+    }
+  
+    &:has(.hb-card__description) {
       .hb-card__title {
-        margin-top: hb-calculate-rems(28px);
+        &, .hb-raised-cards & {
+          margin-bottom: hb-calculate-rems(16px);
+        }
+      }
+    }
+
+    &:has(.hs-button) {
+      .hb-card__title {
+        &,
+        .hb-raised-cards,
+        &:only-child {
+          margin-bottom: hb-calculate-rems(24px);
+        }
       }
 
-      .hb-card__content-wrapper {
-        padding-top: 25%;
-
-        .paragraph--type--hs-collection .item-per-row--2 & {
-          padding-top: 30%;
-        }
-
-        .paragraph--type--hs-collection .item-per-row--4 & {
-          padding-top: 15%;
-        }
+      .hb-card__description {
+        margin-bottom: hb-calculate-rems(24px);
       }
     }
 
     .hs-button {
       border-radius: 0;
+      padding: hb-calculate-rems(4px) hb-calculate-rems(24px) hb-calculate-rems(6px);
       background-color: var(--palette--primary);
       border-color: var(--palette--primary);
+      border-radius: 100px;
+      hyphens: auto;
+      word-break: break-word;
     }
   }
 }

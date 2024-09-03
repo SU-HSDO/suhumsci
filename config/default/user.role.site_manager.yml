@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - entityqueue.entity_queue.hs_person
     - filter.format.basic_html
     - filter.format.minimal_html
     - filter.format.minimal_html_with_styles
@@ -54,6 +55,7 @@ dependencies:
     - publishcontent
     - rabbit_hole
     - role_delegation
+    - stanford_migrate
     - su_humsci_profile
     - system
     - taxonomy
@@ -110,7 +112,6 @@ permissions:
   - 'create terms in hs_publication_type'
   - 'create url aliases'
   - 'create video media'
-  - 'delete any file media'
   - 'delete any hs_basic_page content'
   - 'delete any hs_course content'
   - 'delete any hs_event content'
@@ -120,9 +121,6 @@ permissions:
   - 'delete any hs_private_page content'
   - 'delete any hs_publications content'
   - 'delete any hs_research content'
-  - 'delete any image media'
-  - 'delete any media'
-  - 'delete any video media'
   - 'delete humsci entity'
   - 'delete media'
   - 'delete own file media'
@@ -193,8 +191,10 @@ permissions:
   - 'edit terms in hs_person_staff_type'
   - 'edit terms in hs_person_student_type'
   - 'edit terms in hs_publication_type'
-  - 'manage editoria11y results'
+  - 'import hs_capx migration'
+  - 'import hs_events_importer migration'
   - 'manipulate entityqueues'
+  - 'mark as hidden in editoria11y'
   - 'mark as ok in editoria11y'
   - 'notify of path changes'
   - 'publish any content'
@@ -222,6 +222,7 @@ permissions:
   - 'view 403 reports'
   - 'view 404 reports'
   - 'view any unpublished content'
+  - 'view editoria11y checker'
   - 'view field_paragraph_style'
   - 'view hs_basic_page revisions'
   - 'view hs_course revisions'

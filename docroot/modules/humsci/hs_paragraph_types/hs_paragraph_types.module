@@ -12,13 +12,34 @@ use \Drupal\Core\Render\Element;
  * Implements hook_preprocess_HOOK().
  */
 function hs_paragraph_types_preprocess_paragraph(&$variables) {
-  if (in_array($variables['paragraph']->bundle(), ['hs_collection', 'hs_priv_collection'])) {
-    /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
-    $paragraph = $variables['paragraph'];
-    $row_style = $paragraph->get('field_paragraph_style')->getString();
-    if (!empty($row_style)) {
-      $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $row_style;
+  /** @var \Drupal\paragraphs\ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $bundle = $paragraph->bundle();
+
+  if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
+    $classes = [];
+    // Logic for normal collections
+    if ($bundle == 'hs_collection') {
+      // Replace underscores with hyphens in the bg_color value
+      $bg_color = str_replace('_', '-', $paragraph->get('field_bg_color')->getString());
+
+      // Append "-well" to the bg_color
+      $bg_width = $paragraph->get('field_bg_color_width')->getString();
+      if (!empty($bg_color)) {
+        $classes = ['hs-paragraph-style'];
+        $bg_color .= '-well';
+        $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
+        $classes[] = 'hs-paragraph-style--' . $bg_width_class;
+        $classes[] = 'hs-paragraph-style--' . $bg_color;
+      }
+    } else { // Logic for private collections
+      $row_style = $paragraph->get('field_paragraph_style')->getString();
+      if (!empty($row_style)) {
+        $classes = ['hs-paragraph-style'];
+        $classes[] = 'hs-paragraph-style--' . $row_style;
+      }
     }
+    $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $classes);
     $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
   }
 }

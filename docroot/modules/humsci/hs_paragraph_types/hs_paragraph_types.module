@@ -17,7 +17,6 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $bundle = $paragraph->bundle();
 
   if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    $classes = ['hs-paragraph-style'];
     // Logic for normal collections
     if ($bundle == 'hs_collection') {
       // Replace underscores with hyphens in the bg_color value
@@ -28,16 +27,14 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
       if (!empty($bg_color)) {
         $bg_color .= '-well';
         $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-        $classes[] = 'hs-paragraph-style--' . $bg_width_class;
-        $classes[] = 'hs-paragraph-style--' . $bg_color;
+        $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $bg_width_class . ' hs-paragraph-style--' . $bg_color;
       }
     } else { // Logic for private collections
       $row_style = $paragraph->get('field_paragraph_style')->getString();
       if (!empty($row_style)) {
-        $classes[] = 'hs-paragraph-style--' . $row_style;
+        $variables['attributes']['class'][] = 'hs-paragraph-style hs-paragraph-style--' . $row_style;
       }
     }
-    $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $classes);
     $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
   }
 }

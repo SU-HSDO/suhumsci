@@ -238,7 +238,7 @@ class FlexiblePageCest {
 
     $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->waitForText('Add Component');
-    $I->fillField('search[type="search"]', 'Spotlight');
+    $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Spotlight');
     $I->click('Spotlight(s)', '.paragraphs-ee-add-dialog');
     $I->waitForText('No media items are selected');
     $I->scrollTo('.paragraph-type--hs-sptlght-slder');

@@ -201,6 +201,30 @@ function hs_admin_field_widget_complete_paragraphs_form_alter(&$field_widget_com
       unset($field_widget_complete_form['widget'][$delta]['top']['type']['icon']);
     }
   }
+  // Change the add paragraph button in flexible page, private page and
+  // collection fields to match the previously used paragraph browser viersion.
+  $fields_to_change = [
+    'field_hs_page_components',
+    'field_hs_page_hero',
+    'field_hs_priv_page_components',
+    'field_hs_collection_items',
+  ];
+  if (
+    empty($field_widget_complete_form['widget']['#field_name']) ||
+    !in_array($field_widget_complete_form['widget']['#field_name'], $fields_to_change) ||
+    !isset($field_widget_complete_form['widget']['add_more']['add_modal_form_area'])) {
+    return;
+  }
+  // Remove suffix after the add button.
+  unset($field_widget_complete_form['widget']['add_more']['add_modal_form_area']['#suffix']);
+  if (!isset($field_widget_complete_form['widget']['add_more']['add_modal_form_area']['add_more']['#attributes']['class'])) {
+    return;
+  }
+  // Change the class of the button to make it bigger.
+  $class_index = array_search('button--small', $field_widget_complete_form['widget']['add_more']['add_modal_form_area']['add_more']['#attributes']['class']);
+  if ($class_index !== FALSE) {
+    $field_widget_complete_form['widget']['add_more']['add_modal_form_area']['add_more']['#attributes']['class'][$class_index] = 'button';
+  }
 }
 
 /**

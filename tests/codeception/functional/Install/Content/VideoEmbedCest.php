@@ -33,7 +33,7 @@ class VideoEmbedCest {
     $I->fillField('Title', $this->faker->words(3, TRUE));
 
     // Add text field.
-    $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
+    $I->scrollTo('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
     $I->click('Add Component');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Text Area');

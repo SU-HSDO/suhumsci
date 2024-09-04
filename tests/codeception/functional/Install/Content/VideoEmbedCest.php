@@ -27,20 +27,20 @@ class VideoEmbedCest {
    * I can create a page with a video embed and verify caption.
    */
   public function testVideoEmbed(FunctionalTester $I) {
-    // Login and add flexible page
+    // Login and add flexible page.
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
 
-    // Add text field
+    // Add text field.
     $I->scrollTo('#edit-field-hs-page-components-add-more-browse');
     $I->click('Add Component');
-    $I->waitForText('Browse');
-    $I->fillField('pb_modal_text', 'Text Area');
-    $I->click('field_hs_page_components_hs_text_area_add_more');
+    $I->waitForText('Add Component');
+    $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Text Area');
+    $I->click('Text Area', '.paragraphs-ee-add-dialog');
     $I->wait(2);
 
-    // Add media
+    // Add media.
     $I->click('.ck-button[data-cke-tooltip-text="Insert Media"]');
     $I->waitForText('Add or select media');
     $I->click('.media-library-menu__link[data-title="Video"]');
@@ -53,14 +53,14 @@ class VideoEmbedCest {
     $I->click('Insert selected', '.ui-dialog-buttonpane');
     $I->waitForElement('figure.drupal-media iframe');
 
-    // Enable caption
+    // Enable caption.
     $I->clickWithLeftButton('figure.drupal-media');
     $I->clickWithLeftButton('[data-cke-tooltip-text="Toggle caption on"]');
     $I->fillField('figcaption.ck-editor__nested-editable', 'sore was I ere I saw eros');
-    // Save node
+    // Save node.
     $I->click('Save');
 
-    // Verify figure and figcaption
+    // Verify figure and figcaption.
     $I->seeElement('figure');
     $I->seeElement('figcaption');
     $I->scrollTo('figcaption');

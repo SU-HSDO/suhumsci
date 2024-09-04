@@ -5,7 +5,7 @@ const backstopFile = './backstop/backstop.json';
 const sites = ['hs-colorful', 'hs-traditional'];
 const colorPairings = {
   'hs-colorful': ['ocean', 'mountain', 'cardinal', 'lake', 'canyon', 'cliff'],
-  'hs-traditional': ['cardinal', 'bluejay', 'warbler', 'firefinch'],
+  'hs-traditional': ['cardinal', 'bluejay', 'warbler', 'firefinch', 'vireo'],
 };
 const testPages = [
   '/',

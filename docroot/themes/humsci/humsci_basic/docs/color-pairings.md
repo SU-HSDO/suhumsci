@@ -25,3 +25,4 @@ A user can update the color pairing in the Drupal admin by going to Appearance /
 | Blue Jay | ht-pairing-bluejay   |
 | Warbler  | ht-pairing-warbler   |
 | Firefinch| ht-pairing-firefinch |
+| Vireo| ht-pairing-vireo |

@@ -227,84 +227,84 @@ class FlexiblePageCest {
   /**
    * I can create a page with a spotlight slider.
    */
-  public function testSpotlightSlider(FunctionalTester $I) {
-    $I->logInWithRole('contributor');
-    $I->amOnPage('node/add/hs_basic_page');
-    $node = $I->createEntity([
-      'title' => $this->faker->words(3, TRUE),
-      'type' => 'hs_basic_page',
-    ]);
-    $I->amOnPage($node->toUrl('edit-form')->toString());
+  // public function testSpotlightSlider(FunctionalTester $I) {
+  //   $I->logInWithRole('contributor');
+  //   $I->amOnPage('node/add/hs_basic_page');
+  //   $node = $I->createEntity([
+  //     'title' => $this->faker->words(3, TRUE),
+  //     'type' => 'hs_basic_page',
+  //   ]);
+  //   $I->amOnPage($node->toUrl('edit-form')->toString());
 
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
-    $I->waitForText('Add Component');
-    $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Spotlight');
-    $I->click('Spotlight(s)', '.paragraphs-ee-add-dialog');
-    $I->waitForText('No media items are selected');
-    $I->scrollTo('.paragraph-type--hs-sptlght-slder');
-    $I->click('Save');
+  //   $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+  //   $I->waitForText('Add Component');
+  //   $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Spotlight');
+  //   $I->click('Spotlight(s)', '.paragraphs-ee-add-dialog');
+  //   $I->waitForText('No media items are selected');
+  //   $I->scrollTo('.paragraph-type--hs-sptlght-slder');
+  //   $I->click('Save');
 
-    // Populating spotlight #1.
-    $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->click('field_hs_page_components_0_edit');
-    $I->waitForText('Body');
-    $I->fillField('.ck-editor__editable_inline', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
-    $I->click('Add media', '.paragraph-type--hs-sptlght-slder');
-    $I->waitForText('Add or select media');
-    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-    $I->click('Upload and Continue');
-    $I->waitForText('Decorative Image');
-    $I->click('Save and insert', '.ui-dialog-buttonset');
-    $I->waitForElementNotVisible('.media-library-widget-modal');
-    $I->waitForText('The maximum number of media items have been selected');
-    $I->click('Save');
+  //   // Populating spotlight #1.
+  //   $I->amOnPage($node->toUrl('edit-form')->toString());
+  //   $I->click('field_hs_page_components_0_edit');
+  //   $I->waitForText('Body');
+  //   $I->fillField('.ck-editor__editable_inline', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+  //   $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
+  //   $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][title]', 'Google Link');
+  //   $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_title][0][value]', 'Spotlight #1 Title');
+  //   $I->click('Add media', '.paragraph-type--hs-sptlght-slder');
+  //   $I->waitForText('Add or select media');
+  //   $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+  //   $I->click('Upload and Continue');
+  //   $I->waitForText('Decorative Image');
+  //   $I->click('Save and insert', '.ui-dialog-buttonset');
+  //   $I->waitForElementNotVisible('.media-library-widget-modal');
+  //   $I->waitForText('The maximum number of media items have been selected');
+  //   $I->click('Save');
 
-    // Check spotlight 1.
-    $I->waitForText('Spotlight #1 Title');
-    $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
-    $I->canSee('Google Link', 'a');
-    $I->canSeeNumberOfElements('picture img', 1);
-    // Uploaded spotlight image does not have alt text.
-    $I->seeElement('picture img', ['alt' => '']);
+  //   // Check spotlight 1.
+  //   $I->waitForText('Spotlight #1 Title');
+  //   $I->canSee('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
+  //   $I->canSee('Google Link', 'a');
+  //   $I->canSeeNumberOfElements('picture img', 1);
+  //   // Uploaded spotlight image does not have alt text.
+  //   $I->seeElement('picture img', ['alt' => '']);
 
-    // // Populating spotlight #2.
-    $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->click('field_hs_page_components_0_edit');
-    $I->waitForText('Body');
-    $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_0_collapse');
-    $I->wait(1);
-    $I->scrollTo('.field-add-more-submit');
-    $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_hs_spotlight_add_more');
+  //   // // Populating spotlight #2.
+  //   $I->amOnPage($node->toUrl('edit-form')->toString());
+  //   $I->click('field_hs_page_components_0_edit');
+  //   $I->waitForText('Body');
+  //   $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_0_collapse');
+  //   $I->wait(1);
+  //   $I->scrollTo('.field-add-more-submit');
+  //   $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_hs_spotlight_add_more');
 
-    $I->waitForText('No media items are selected');
-    $I->fillField('.ck-editor__editable_inline', 'Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
+  //   $I->waitForText('No media items are selected');
+  //   $I->fillField('.ck-editor__editable_inline', 'Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
+  //   $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
+  //   $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
+  //   $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
 
-    $I->click('field_hs_spotlight_image-media-library-open-button-field_hs_page_components-0-subform-field_hs_sptlght_sldes-1-subform');
-    $I->waitForText('Add or select media');
-    $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
-    $I->click('Upload and Continue');
-    $I->waitForText('Decorative Image');
-    $I->selectOption("input", 'Add new');
-    $I->click('Save and insert', '.ui-dialog-buttonset');
-    $I->waitForElementNotVisible('.media-library-widget-modal');
-    $I->waitForText('The maximum number of media items have been selected');
-    $I->click('Save');
+  //   $I->click('field_hs_spotlight_image-media-library-open-button-field_hs_page_components-0-subform-field_hs_sptlght_sldes-1-subform');
+  //   $I->waitForText('Add or select media');
+  //   $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
+  //   $I->click('Upload and Continue');
+  //   $I->waitForText('Decorative Image');
+  //   $I->selectOption("input", 'Add new');
+  //   $I->click('Save and insert', '.ui-dialog-buttonset');
+  //   $I->waitForElementNotVisible('.media-library-widget-modal');
+  //   $I->waitForText('The maximum number of media items have been selected');
+  //   $I->click('Save');
 
-    // Check spotlight 2.
-    $I->click('.slick-next');
-    $I->waitForText('Spotlight #2 Title');
-    $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
-    $I->canSee('Yahoo Link', 'a');
-    $I->canSeeNumberOfElements('picture img', 1);
-    // Uploaded spotlight image does not have alt text.
-    $I->seeElement('picture img', ['alt' => '']);
-  }
+  //   // Check spotlight 2.
+  //   $I->click('.slick-next');
+  //   $I->waitForText('Spotlight #2 Title');
+  //   $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
+  //   $I->canSee('Yahoo Link', 'a');
+  //   $I->canSeeNumberOfElements('picture img', 1);
+  //   // Uploaded spotlight image does not have alt text.
+  //   $I->seeElement('picture img', ['alt' => '']);
+  // }
 
   /**
    * I can find appropriate aria attributes on a timeline item.

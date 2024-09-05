@@ -5,6 +5,7 @@
  * hs_blocks.install
  */
 
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
@@ -77,4 +78,23 @@ function _hs_blocks_fix_sections(array $sections) {
     }
   }
   return $was_changed;
+}
+
+/**
+ * Update user permissions for social media footer block.
+ */
+function hs_blocks_update_10001() {
+
+  // Ensure the block type config exists before granting permissions.
+  $block_type_config = \Drupal::service('config.storage.sync')->read('block_content.type.hs_social_media_footer_block');
+
+  if (!BlockContentType::load('hs_social_media_footer_block')) {
+    // Create the block type if it doesn't already exist.
+    $block_type = BlockContentType::create($block_type_config);
+    $block_type->save();
+  }
+
+  // Grant permission to appropriate roles.
+  user_role_grant_permissions('contributor', ['update any hs_social_media_footer_block block content']);
+  user_role_grant_permissions('site_manager', ['update any hs_social_media_footer_block block content']);
 }

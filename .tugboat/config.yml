@@ -38,6 +38,22 @@ services:
 
         # Init the settings files.
         - blt blt:init:settings
+
+        # Download the Diffy CLI tool, and authenticate. The latest version can be
+        # found at https://github.com/DiffyWebsite/diffy-cli/releases
+        - curl -L https://github.com/DiffyWebsite/diffy-cli/releases/download/0.1.33/diffy.phar -o /usr/local/bin/diffy
+        - chmod +x /usr/local/bin/diffy
+        - diffy auth:login ${DIFFY_API_KEY}
+
+        # Clean up after apt-get, if it was used
+        #- apt-get clean
+        #- rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+      online:
+        # If you would like to compare this service with production
+        - diffy project:compare ${DIFFY_PROJECT_ID} prod custom --env2Url="${TUGBOAT_SERVICE_URL}"
+          --commit-sha=${TUGBOAT_PREVIEW_SHA}
+        
       update:
         - rm -rf vendor
         - composer install --no-ansi
@@ -70,6 +86,7 @@ services:
     # Collection of urls to compare visual results.
     urls:
       - /
+      - /components/collections-0/collections-postcards
 
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.

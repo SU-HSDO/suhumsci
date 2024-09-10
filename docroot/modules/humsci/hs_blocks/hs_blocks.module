@@ -128,3 +128,16 @@ function hs_blocks_preprocess_block__views_exposed_filter_block(&$variables) {
     $variables['content']['#id'] .= '-' . $build_id;
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_block_alter().
+ */
+
+function hs_blocks_theme_suggestions_block_alter(array &$suggestions, array $variables, $hook) {
+  // Check if this is a content block.
+  if (isset($variables['elements']['content']['#block_content'])) {
+    // Add template suggestion for specific content blocks.
+    $block_bundle = $variables['elements']['content']['#block_content']->bundle();
+    $suggestions[] = "block__block_content__{$block_bundle}";
+  }
+}

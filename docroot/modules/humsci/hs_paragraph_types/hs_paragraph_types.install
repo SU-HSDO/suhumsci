@@ -343,3 +343,10 @@ function _hs_paragraph_types_well_color_config() {
     $config->save();
   }
 }
+
+/**
+ * Removes legacy background color field from collection paragraph.
+ */
+function hs_paragraph_types_update_10008() {
+  FieldConfig::loadByName('paragraph', 'hs_collection', 'field_paragraph_style')->delete();
+}

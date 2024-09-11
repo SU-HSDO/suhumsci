@@ -36,22 +36,23 @@ function su_humsci_gin_admin_preprocess(&$variables, $hook) {
     'humsci_traditional' => 'ht',
     'humsci_colorful' => 'hc',
   ];
-  $variables['wrapper_attributes'] = new Attribute([
-    'class' => [
-      $prefix[$theme] . '-pairing-' . $color_pairing,
-    ],
-  ]);
+
+  $classes = [];
+  $classes[] = $prefix[$theme] . '-pairing-' . $color_pairing;
   if ($hook === 'paragraph') {
-    $variables['wrapper_attributes']->addClass('paragraph-item', 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType()));
+    $classes[] = 'paragraph-item';
+    $classes[] = 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType());
   }
   else {
     $paragraph = isset($variables['context']) ? $variables['context']->getProperty('entity') : NULL;
-    if (!($paragraph instanceof ParagraphInterface && $paragraph->bundle() == 'hs_hero_image')) {
-      return NULL;
-    }
-    $parent = $paragraph->getParentEntity();
-    if ($parent instanceof ParagraphInterface) {
-      $variables['wrapper_attributes']->addClass('paragraph--type--hs-carousel');
+    if ($paragraph instanceof ParagraphInterface && $paragraph->bundle() == 'hs_hero_image') {
+      $parent = $paragraph->getParentEntity();
+      if ($parent instanceof ParagraphInterface) {
+        $classes[] = 'paragraph--type--hs-carousel';
+      }
     }
   }
+
+  $variables['wrapper_attributes'] = new Attribute();
+  $variables['wrapper_attributes']->addClass($classes);
 }

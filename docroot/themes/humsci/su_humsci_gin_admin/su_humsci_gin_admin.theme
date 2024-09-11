@@ -28,7 +28,7 @@ function su_humsci_gin_admin_library_info_alter(&$libraries, $extension) {
  */
 function su_humsci_gin_admin_preprocess(&$variables, $hook) {
   if (!(str_starts_with($hook, 'pattern_') || $hook == 'paragraph')) {
-    return NULL;
+    return;
   }
   $theme = \Drupal::config('system.theme')->get('default');
   $color_pairing = theme_get_setting('theme_color_pairing', $theme);

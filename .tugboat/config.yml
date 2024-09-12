@@ -71,7 +71,7 @@ services:
         - blt drupal:update --site=hs_traditional
 
         - drush @english.local cr
-        - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        # - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=english
 
         - npm run theme-build

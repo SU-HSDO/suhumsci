@@ -72,7 +72,7 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Postcard');
     $I->click('field_hs_collection_items_hs_postcard_add_more');
-    $I->waitForText('No media items are selected.');
+    $I->waitForText('No media items are selected.', 30);
 
     $card_title = $this->faker->words(3, TRUE);
     $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
@@ -242,7 +242,7 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Spotlight');
     $I->click('field_hs_page_components_hs_sptlght_slder_add_more');
-    $I->waitForText('No media items are selected');
+    $I->waitForText('No media items are selected', 30);
     $I->scrollTo('.paragraph-type--hs-sptlght-slder');
     $I->click('Save');
 

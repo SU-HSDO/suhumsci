@@ -256,7 +256,7 @@ function hs_paragraph_types_update_10007() {
     'core.entity_form_display.node.hs_private_page.default',
   ];
   // Load the configuration from the config/sync directory.
-  $config_directory = \Drupal::service('config.storage.sync');
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
 
   foreach ($config_to_update as $config) {
     $config_data = $config_directory->read($config);

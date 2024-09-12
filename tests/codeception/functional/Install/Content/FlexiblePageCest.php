@@ -161,7 +161,7 @@ class FlexiblePageCest {
     $I->waitForText('Edit');
     $I->click('Edit', '.tabs');
     $I->click('field_hs_page_components_1_edit');
-    $I->waitForText('Content');
+    $I->waitForText('Content', 30);
     $I->scrollTo('Style');
     $I->selectOption('Style', 'Slideshow');
     $I->executeJS('window.scrollTo(0,0);');

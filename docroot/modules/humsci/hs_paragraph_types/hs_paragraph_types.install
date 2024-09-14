@@ -248,7 +248,7 @@ function hs_paragraph_types_update_10006() {
 }
 
 /**
- * Set new config for color wells.
+ * Set new config for collection color wells.
  */
 function hs_paragraph_types_update_10007(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
@@ -260,7 +260,7 @@ function hs_paragraph_types_update_10007(&$sandbox) {
     // Get list of collection paragraphs.
     $sandbox['ids'] = $paragraph_storage->getQuery()
       ->accessCheck(FALSE)
-      ->condition('type', 'hs_collection')
+      ->condition('type', ['hs_collection', 'hs_priv_collection'], 'IN')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
   }
@@ -271,22 +271,24 @@ function hs_paragraph_types_update_10007(&$sandbox) {
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
     if (
-      $paragraph->hasField('field_paragraph_style') &&
-      $paragraph->hasField('field_bg_color') &&
-      $paragraph->hasField('field_bg_color_width')) {
-      // Only set new field if old field had data.
-      if ($paragraph->get('field_paragraph_style')->value) {
-        $paragraph->set('field_bg_color', 'default');
-      }
-      if ($paragraph->get('field_paragraph_style')->value == 'well-full-width') {
-        $paragraph->set('field_bg_color_width', 'full_width');
-      }
-      else {
-        $paragraph->set('field_bg_color_width', 'limited_width');
-      }
-
-      $paragraph->save();
+      !$paragraph->hasField('field_paragraph_style') ||
+      !$paragraph->hasField('field_bg_color') ||
+      !$paragraph->hasField('field_bg_color_width')) {
+      continue;
     }
+
+    // Only set new field if old field had data.
+    if ($paragraph->get('field_paragraph_style')->value) {
+      $paragraph->set('field_bg_color', 'default');
+    }
+    if ($paragraph->get('field_paragraph_style')->value == 'well-full-width') {
+      $paragraph->set('field_bg_color_width', 'full_width');
+    }
+    else {
+      $paragraph->set('field_bg_color_width', 'limited_width');
+    }
+
+    $paragraph->save();
   }
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
@@ -320,6 +322,8 @@ function _hs_paragraph_types_well_color_config() {
   $field_instances = [
     'paragraph.hs_collection.field_bg_color' => 'field.field.paragraph.hs_collection.field_bg_color',
     'paragraph.hs_collection.field_bg_color_width' => 'field.field.paragraph.hs_collection.field_bg_color_width',
+    'paragraph.hs_priv_collection.field_bg_color' => 'field.field.paragraph.hs_priv_collection.field_bg_color',
+    'paragraph.hs_priv_collection.field_bg_color_width' => 'field.field.paragraph.hs_priv_collection.field_bg_color_width',
   ];
 
   // Create the field instance.
@@ -333,6 +337,8 @@ function _hs_paragraph_types_well_color_config() {
   $displays = [
     'core.entity_view_display.paragraph.hs_collection.default',
     'core.entity_form_display.paragraph.hs_collection.default',
+    'core.entity_view_display.paragraph.hs_priv_collection.default',
+    'core.entity_form_display.paragraph.hs_priv_collection.default',
   ];
 
   foreach ($displays as $display) {

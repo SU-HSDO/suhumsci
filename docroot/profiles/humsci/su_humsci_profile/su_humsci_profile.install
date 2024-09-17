@@ -929,30 +929,12 @@ function su_humsci_profile_update_9708() {
 }
 
 /**
- * Uninstall and remove config for webform module.
+ * Uninstall and remove config for hs_webform module.
  */
 
 function su_humsci_profile_update_9709() {
   // First remove existing hs_webform paragraph entities, type, and module.
   _su_humsci_profile_remove_hs_webform();
-
-  // Second. remove existing config.
-  $query = \Drupal::database()
-    ->select('config', 'c')
-    ->fields('c', ['name'])
-    ->condition('name', '%' . Database::getConnection()->escapeLike('webform') . '%', 'LIKE')
-    ->execute();
-  $config_names = $query->fetchCol();
-
-  $config_factory = \Drupal::configFactory();
-
-  foreach ($config_names as $config) {
-    $config_factory->getEditable($config)->delete();
-    $message = t('Deleted @config', [
-      '@config' => $config,
-    ]);
-    Drush::logger()->notice($message);
-  }
 
   // Third, uninstall the modules.
   //\Drupal::service('module_installer')->uninstall(['webform_ui', 'webform']);
@@ -1012,5 +994,28 @@ function _su_humsci_profile_remove_hs_webform() {
   }
 
   // Fourth, uninstall the module.
-  \Drupal::service('module_installer')->uninstall(['hs_webform']);
+  //\Drupal::service('module_installer')->uninstall(['hs_webform']);
+
+  // Next, remove hs_webform from config ignored configs.
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  $configs_to_change = [
+    'node.hs_basic_page.field_hs_page_components' => 'field.field.node.hs_basic_page.field_hs_page_components',
+    'paragraph.hs_collection.field_hs_collection_items' => 'field.field.paragraph.hs_collection.field_hs_collection_items',
+    'paragraph.hs_row.field_hs_row_components' => 'field.field.paragraph.hs_row.field_hs_row_components',
+    'node.hs_basic_page.field_hs_page_hero' => 'field.field.node.hs_basic_page.field_hs_page_hero',
+    'node.hs_private_page.field_hs_priv_page_components' => 'field.field.node.hs_private_page.field_hs_priv_page_components',
+  ];
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  foreach ($configs_to_change as $config_no_field => $config_w_field)
+
+  // Create the field instance.
+  $config = $field_config_storage->load($config_no_field);
+  if (empty($config)) {
+    $field_config_storage->create($config_storage->read($config_w_field))->save();
+  }
+
 }

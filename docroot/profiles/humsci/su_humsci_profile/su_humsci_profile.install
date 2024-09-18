@@ -987,21 +987,29 @@ function su_humsci_profile_update_9709() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   $configs_to_change = [
-    'node.hs_basic_page.field_hs_page_components' => 'field.field.node.hs_basic_page.field_hs_page_components',
-    'paragraph.hs_collection.field_hs_collection_items' => 'field.field.paragraph.hs_collection.field_hs_collection_items',
-    'paragraph.hs_row.field_hs_row_components' => 'field.field.paragraph.hs_row.field_hs_row_components',
-    'node.hs_basic_page.field_hs_page_hero' => 'field.field.node.hs_basic_page.field_hs_page_hero',
-    'node.hs_private_page.field_hs_priv_page_components' => 'field.field.node.hs_private_page.field_hs_priv_page_components',
+    'node.hs_basic_page.field_hs_page_components' => 'node.field_hs_page_components',
+    'paragraph.hs_collection.field_hs_collection_items' => 'paragraph.field_hs_collection_items',
+    'paragraph.hs_row.field_hs_row_components' => 'paragraph.field_hs_row_components',
+    'node.hs_private_page.field_hs_priv_page_components' => 'node.field_hs_priv_page_components',
   ];
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
   $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
 
-  foreach ($configs_to_change as $config_no_field => $config_w_field) {
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  foreach ($configs_to_change as $field_config => $field_storage_config) {
+
+    // If storage does not yet exist, create it.
+    if (empty($field_storage->load($field_storage_config))) {
+      $field_storage->createFromStorageRecord($config_storage->read('field.storage.' . $field_storage_config))->save();
+    }
+
     // Update the field instances from filesystem.
-    $config = $field_config_storage->load($config_no_field);
+    $config = $field_config_storage->load($field_config);
     if (empty($config)) {
-      $field_config_storage->create($config_storage->read($config_w_field))->save();
+      $field_config_storage->create($config_storage->read('field.field.' . $field_config))->save();
     }
   }
 

@@ -1,0 +1,37 @@
+# .github/workflows/acquia-cleanup.yml
+# Clean up stale site backups and branches on Acquia
+name: Acquia Cleanup
+on:
+  schedule:
+    # Run on Tuesdays at Midnight (Monday Nights)
+    - cron: '0 0 * * 2'
+jobs:
+  Copy-Prod-Database-Down:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.x-${{ hashFiles('blt/blt.yml') }}-
+      - name: Clean up backups and branches
+        env:
+          SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
+          ACQUIA_KEY: ${{ secrets.ACQUIA_KEY }}
+          ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
+        run: |
+          composer install -n &&
+          blt blt:telemetry:disable --no-interaction &&
+          blt humsci:clean-backups &&
+          blt humsci:clean-branches

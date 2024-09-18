@@ -7,14 +7,18 @@ const useOutsideClick = (onClickOutside: (e: Event) => void) => {
 
   const documentClick = (event: Event) => {
     if (!clickCaptured.current && onClickOutside) {
-      onClickOutside(event);
+      setTimeout(() => {
+        onClickOutside(event);
+      }, 10);
     }
     clickCaptured.current = false;
   }
 
   const documentFocus = (event: Event) => {
     if (!focusCaptured.current && onClickOutside) {
-      onClickOutside(event);
+      setTimeout(() => {
+        onClickOutside(event);
+      }, 10);
     }
     focusCaptured.current = false;
   }

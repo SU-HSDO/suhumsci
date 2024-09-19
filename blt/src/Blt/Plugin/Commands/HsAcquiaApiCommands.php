@@ -140,7 +140,7 @@ class HsAcquiaApiCommands extends BltTasks {
   public function backupDatabases($options = ['start-at' => NULL]) {
     $this->connectAcquiaApi();
     $skip = TRUE;
-    foreach ($this->acquiaDatabases->getAll($this->appId) as $database) {
+    foreach ($this->acquiaDatabases->getNames($this->appId) as $database) {
       if (!empty($options['start-at']) && $skip) {
         if ($options['start-at'] == $database->name) {
           $skip = FALSE;
@@ -169,7 +169,7 @@ class HsAcquiaApiCommands extends BltTasks {
       }
     }
 
-    foreach ($this->acquiaDatabases->getAll($this->appId) as $database) {
+    foreach ($this->acquiaDatabases->getNames($this->appId) as $database) {
       $this->say(sprintf('Gather database backup info for %s', $database->name));
 
       foreach ($environment_uuids as $environment_uuid => $name) {

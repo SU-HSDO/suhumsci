@@ -7,21 +7,24 @@
         </div>
       </div>
     {% endif %}
-    <div class="hb-card__content">
-      {% if title %}
-        <div class="hb-card__title">
-          {% if title|render matches '/<\\/h\\d>/' %}
-            {{ title }}
-          {% else %}
-            <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
-          {% endif %}
-        </div>
-      {% endif %}
 
-      {% if description %}
-        <div class="hb-card__description">{{ description }}</div>
-      {% endif %}
-    </div>
+    {% if title or description %}
+      <div class="hb-card__content">
+        {% if title %}
+          <div class="hb-card__title">
+            {% if title|render matches '/<\\/h\\d>/' %}
+              {{ title }}
+            {% else %}
+              <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if description %}
+          <div class="hb-card__description">{{ description }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
 
     {% if button %}
       {% set link = button.field_hs_postcard_link[0] %}

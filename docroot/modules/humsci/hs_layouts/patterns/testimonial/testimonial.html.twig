@@ -64,6 +64,12 @@
                 {{ position }}
               </div>
             {% endif %}
+
+            {% if link and isInCollection %}
+              <div class="hb-testimonial__link">
+                {{ link }}
+              </div>
+            {% endif %}
           </div>
         </figcaption>
 
@@ -73,7 +79,7 @@
           </blockquote>
         {% endif %}
 
-        {% if link %}
+        {% if link and not isInCollection %}
           <div class="hb-testimonial__link">
             {{ link }}
           </div>

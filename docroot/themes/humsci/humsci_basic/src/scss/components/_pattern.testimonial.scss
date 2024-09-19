@@ -3,10 +3,7 @@
 
   .field-hs-row-components .ptype-hs-testimonial &,
   .field-hs-collection-items .ptype-hs-testimonial & {
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width & {
-      margin-top: 0;
-    }
+    margin-top: 0;
   }
 
   &__wrapper {
@@ -25,6 +22,21 @@
         margin: 0;
       }
     }
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      border-left-style: solid;
+      border-right-style: solid;
+      border-color: var(--palette--primary);
+
+      &::before {
+        content: none;
+      }
+
+      @include grid-media-min('lg') {
+        padding: hb-calculate-rems(42px) hb-calculate-rems(45px);
+      }
+    }
   }
 
   &__author-block {
@@ -36,6 +48,12 @@
     @include grid-media-min('sm') {
       max-width: 80%;
       flex-direction: row;
+
+      // Reset some of the styles for Testimonial in collections
+      .field-hs-collection-items .ptype-hs-testimonial & {
+        max-width: 100%;
+        width: 100%;
+      }
     }
 
     // allow more breathing room for content when 2 testimonials
@@ -54,8 +72,30 @@
       flex-direction: column;
     }
 
+    // Add some styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      border-width: hb-calculate-rems(1px);
+      border-color: var(--palette--tertiary);
+    }
+
     .hb-testimonial--top & {
       padding-top: hb-calculate-rems(36px);
+
+      // Reset some of the styles for Testimonial in collections
+      .field-hs-collection-items .ptype-hs-testimonial & {
+        border-top-style: solid;
+        padding-top: hb-calculate-rems(32px);
+        margin-top: hb-calculate-rems(18px);
+      }
+    }
+
+    .hb-testimonial--bottom & {
+      // Reset some of the styles for Testimonial in collections
+      .field-hs-collection-items .ptype-hs-testimonial & {
+        border-bottom-style: solid;
+        padding-bottom: hb-calculate-rems(32px);
+        margin-bottom: hb-calculate-rems(18px);
+      }
     }
   }
 
@@ -63,6 +103,11 @@
     min-width: hb-calculate-rems(100px);
     width: hb-calculate-rems(100px);
     margin: 0 hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      margin-bottom: 0;
+    }
 
     img {
       max-width: inherit;
@@ -80,10 +125,20 @@
 
   &__author-credits {
     margin-bottom: hb-calculate-rems(20px);
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      margin-bottom: 0;
+    }
   }
 
   &__name {
     font-weight: hb-theme-font-weight(semibold);
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      color: var(--palette--primary);
+    }
   }
 
   &__position {
@@ -91,6 +146,11 @@
 
     + .hb-testimonial__link {
       padding-top: hb-calculate-rems(16px);
+    }
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      color: var(--palette--gray-dark);
     }
   }
 
@@ -140,6 +200,20 @@
           }
         }
       }
+
+      // Reset some of the styles for Testimonial in collections
+      .field-hs-collection-items .ptype-hs-testimonial & {
+        font-weight: hb-theme-font-weight(regular);
+        
+        @include hb-traditional {
+          font-size: hb-calculate-rems(14px);
+
+          &::after {
+            height: hb-calculate-rems(22.5px);
+            width: hb-calculate-rems(22.5px);
+          }
+        }
+      }
     }
   }
 
@@ -151,6 +225,11 @@
 
     .hb-testimonial--bottom & {
       padding-top: hb-calculate-rems(6px);
+    }
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      align-items: flex-start;
     }
   }
 
@@ -196,6 +275,22 @@
 
     &.hb-testimonial__quote--bottom {
       padding-bottom: hb-calculate-rems(16px);
+    }
+
+    // Reset some of the styles for Testimonial in collections
+    .field-hs-collection-items .ptype-hs-testimonial & {
+      color: var(--palette--black);
+      font-size: hb-calculate-rems(20px);
+      line-height: hb-calculate-rems(28.4px);
+      text-align: left;
+
+      .field-hs-testimonial-quote,
+      .views-field .field-content p:first-of-type {
+        &::before,
+        &::after {
+          content: none;
+        }
+      }
     }
   }
 }

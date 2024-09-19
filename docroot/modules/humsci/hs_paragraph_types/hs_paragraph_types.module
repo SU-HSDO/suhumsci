@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use \Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -49,7 +49,7 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
       ],
       [
         'domains' => ['youtube.com', 'youtu.be'],
-        'icon_classes' => 'fa-brands fa-youtube',
+        'icon_classes' => 'fa-brands fa-square-youtube',
         'name' => 'Youtube',
       ],
       [
@@ -108,6 +108,11 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
         }
       }
     }
+
+    if (!isset($variables['icon_classes'])) {
+      $variables['icon_classes'] = 'fa-solid fa-globe';
+      $variables['name'] = 'PLACEHOLDER';
+    }
   }
 }
 
@@ -157,6 +162,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = t('@label', ['@label' => $new_label]);
       }
       break;
+
     case 'field_hs_sptlght_sldes':
       // Change the spotlight widget title.
       $new_label = 'Spotlight(s)';

@@ -213,7 +213,7 @@ function hs_layouts_preprocess_pattern_vertical_card(&$variables) {
       $original_title = $variables['title'];
       // If the title is not linked, get the link from the button.
       _hs_layouts_make_title_the_link($variables);
-      // Restore original title, because _hs_layouts_make_title_the_link() overwrote it.
+      // Restore original title, because it was overriden above.
       $variables['title'] = $original_title;
     }
   }
@@ -230,7 +230,7 @@ function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
     $original_title = $variables['title'];
     // If the title is not linked, get the link from the button.
     _hs_layouts_make_title_the_link($variables);
-    // Restore original title, because _hs_layouts_make_title_the_link() overwrote it.
+    // Restore original title, because it was overriden above.
     $variables['title'] = $original_title;
   }
 }

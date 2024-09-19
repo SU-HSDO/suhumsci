@@ -1,0 +1,16 @@
+{% set base_class = 'block-social-media-footer' %}
+{% set classes = [
+  base_class,
+  base_class ~ '--layout-' ~ content['#block_content'].field_layout.value|clean_class,
+  base_class ~ '--icons-' ~ content['#block_content'].field_icon_size.value|clean_class,
+] %}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes.addClass('block__title') }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    {{ content }}
+  {% endblock %}
+</div>

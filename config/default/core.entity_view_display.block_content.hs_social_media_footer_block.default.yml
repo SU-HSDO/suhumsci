@@ -9,26 +9,11 @@ dependencies:
     - field.field.block_content.hs_social_media_footer_block.field_links
   module:
     - entity_reference_revisions
-    - options
 id: block_content.hs_social_media_footer_block.default
 targetEntityType: block_content
 bundle: hs_social_media_footer_block
 mode: default
 content:
-  field_icon_size:
-    type: list_key
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_layout:
-    type: list_key
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
   field_links:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -36,7 +21,9 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 0
     region: content
 hidden:
+  field_icon_size: true
+  field_layout: true
   search_api_excerpt: true

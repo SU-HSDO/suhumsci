@@ -3,13 +3,14 @@
     padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
     border-width: hb-calculate-rems(1px);
     border-style: solid;
-    
+
     @include grid-media-min('lg') {
       padding: hb-calculate-rems(42px) hb-calculate-rems(45px);
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      &,
+      border-color: var(--palette--primary);
+
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         border-color: var(--palette--primary);
@@ -17,7 +18,8 @@
     }
 
     @include hb-traditional {
-      &,
+      border-color: var(--palette--secondary);
+
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         border-color: var(--palette--secondary);
@@ -47,7 +49,8 @@
     }
 
     @include hb-themes(('colorful', 'airy')) {
-      &,
+      border-color: var(--palette--secondary);
+
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         border-color: var(--palette--secondary);
@@ -55,7 +58,8 @@
     }
 
     @include hb-traditional {
-      &,
+      border-color: var(--palette--tertiary);
+
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         border-color: var(--palette--tertiary);
@@ -112,7 +116,8 @@
     font-weight: hb-theme-font-weight(semibold);
 
     @include hb-themes(('colorful', 'airy')) {
-      &,
+      color: var(--palette--primary);
+
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         color: var(--palette--primary);
@@ -120,7 +125,8 @@
     }
 
     @include hb-traditional {
-      &,
+      color: var(--palette--secondary);
+
       .hb-dark-pattern .hs-paragraph-style--well &,
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         color: var(--palette--secondary);
@@ -134,17 +140,16 @@
 
   &__position {
     font-size: hb-calculate-rems(16px);
-    
-    + .hb-testimonial__link {
+    color: var(--palette--gray-dark);
+
+    +.hb-testimonial__link {
       padding-top: hb-calculate-rems(16px);
     }
 
-    &,
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {
       color: var(--palette--gray-dark);
     }
-
 
     .hb-dark-pattern & {
       color: var(--palette--white);
@@ -253,8 +258,8 @@
     margin: 0;
     font-size: hb-calculate-rems(20px);
     line-height: hb-calculate-rems(28.4px);
+    color: var(--palette--black);
 
-    &,
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {
       color: var(--palette--black);

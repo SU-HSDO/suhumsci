@@ -9,11 +9,14 @@
 @mixin visually-hidden($status:null) {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(100%);
   padding: 0;
+  margin: -1px;
   border: 0;
   height: 1px;
   width: 1px;
   overflow: hidden;
+  white-space: nowrap;
 
   @if $status == 'disable' {
     position: static;

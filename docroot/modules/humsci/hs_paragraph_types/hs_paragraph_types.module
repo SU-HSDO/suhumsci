@@ -111,7 +111,11 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
 
     if (!isset($variables['icon_classes'])) {
       $variables['icon_classes'] = 'fa-solid fa-globe';
-      $variables['name'] = 'PLACEHOLDER';
+      $variables['name'] = '';
+      // Use the domain as the name if the provider is not listed above.
+      if (preg_match('/https?:\/\/(.+?)\//', $provider_url, $matches)) {
+        $variables['name'] = $matches[1];
+      }
     }
   }
 }

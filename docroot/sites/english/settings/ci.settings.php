@@ -1,34 +1,29 @@
 <?php
 
-/**
- * @file
- * Local development override configuration feature.
- */
-
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
-use Drupal\Component\Assertion\Handle;
-
-$db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
-
-/**
- * Database configuration.
- */
-$databases = [
-  'default' =>
-  [
+assert_options(ASSERT_EXCEPTION, TRUE);
+if (getenv('TUGBOAT_SERVICE')) {
+  /**
+   * Database configuration.
+   */
+  $databases = [
     'default' =>
-    [
-      'database' => $db_name,
-      'username' => '${drupal.db.username}',
-      'password' => '${drupal.db.password}',
-      'host' => '${drupal.db.host}',
-      'port' => '${drupal.db.port}',
-      'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-      'driver' => 'mysql',
-      'prefix' => '',
-    ],
-  ],
-];
+      [
+        'default' =>
+          [
+            'database' => 'english',
+            'username' => 'tugboat',
+            'password' => 'tugboat',
+            'host' => 'mysql',
+            'port' => '3306',
+            'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+            'driver' => 'mysql',
+            'prefix' => '',
+          ],
+      ],
+  ];
+}
+
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
@@ -54,7 +49,7 @@ $settings['update_free_access'] = TRUE;
  * @see https://wiki.php.net/rfc/expectations
  */
 assert_options(ASSERT_ACTIVE, TRUE);
-Handle::register();
+assert_options(ASSERT_EXCEPTION, TRUE);
 
 /**
  * Show all error messages, with backtrace information.

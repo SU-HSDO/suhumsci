@@ -302,6 +302,7 @@ class FlexiblePageCest {
     $I->click('.slick-next');
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
+    $I->wait(1);
     $I->canSee('Yahoo Link', 'a');
     $I->canSeeNumberOfElements('picture img', 1);
     // Uploaded spotlight image does not have alt text.

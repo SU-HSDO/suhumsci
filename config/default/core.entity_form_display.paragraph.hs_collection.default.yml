@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_collection.field_bg_color
+    - field.field.paragraph.hs_collection.field_bg_color_width
     - field.field.paragraph.hs_collection.field_hs_collection_items
     - field.field.paragraph.hs_collection.field_hs_collection_per_row
     - field.field.paragraph.hs_collection.field_hs_collection_uh
@@ -19,9 +21,40 @@ targetEntityType: paragraph
 bundle: hs_collection
 mode: default
 content:
+  field_bg_color:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_bg_color_width:
+    type: options_select
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings:
+      conditional_fields:
+        6d910fc3-1e3b-4f69-86c7-679fa8dd308b:
+          entity_type: paragraph
+          bundle: hs_collection
+          dependee: field_bg_color
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 5
+            value: ''
+            values: _none
+            value_form:
+              -
+                value: default
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_hs_collection_items:
     type: paragraphs_browser
-    weight: 6
+    weight: 7
     region: content
     settings:
       title: Component
@@ -52,13 +85,13 @@ content:
     third_party_settings: {  }
   field_hs_collection_uh:
     type: boolean_checkbox
-    weight: 5
+    weight: 6
     region: content
     settings:
       display_label: true
     third_party_settings:
       conditional_fields:
-        d755369a-3372-40fb-896b-2cfddbdaff67:
+        ae032945-b707-4d7d-97db-8e7d4075a8a2:
           entity_type: paragraph
           bundle: hs_collection
           dependee: field_raised_cards
@@ -75,15 +108,9 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
-  field_paragraph_style:
-    type: options_select
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_raised_cards:
     type: boolean_checkbox
-    weight: 4
+    weight: 5
     region: content
     settings:
       display_label: true
@@ -105,4 +132,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_paragraph_style: true
   status: true

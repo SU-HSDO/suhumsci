@@ -28,7 +28,7 @@ class SkipNavAnchorBlock extends BlockBase {
         '#attributes' => [
           'id' => $id,
           'tabindex' => '-1',
-          'class' => ['visually-hidden', 'focusable'],
+          'class' => ['visually-hidden'],
         ],
       ],
     ];

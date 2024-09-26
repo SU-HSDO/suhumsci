@@ -72,7 +72,7 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Postcard');
     $I->click('field_hs_collection_items_hs_postcard_add_more');
-    $I->waitForText('No media items are selected.', 30);
+    $I->waitForText('No media items are selected.');
 
     $card_title = $this->faker->words(3, TRUE);
     $I->fillField('field_hs_page_components[0][subform][field_hs_collection_items][0][subform][field_hs_postcard_title][0][value]', $card_title);
@@ -242,13 +242,15 @@ class FlexiblePageCest {
     $I->waitForText('Browse');
     $I->fillField('pb_modal_text', 'Spotlight');
     $I->click('field_hs_page_components_hs_sptlght_slder_add_more');
-    $I->waitForText('No media items are selected', 30);
+    $I->waitForText('No media items are selected');
     $I->scrollTo('.paragraph-type--hs-sptlght-slder');
     $I->click('Save');
 
     // Populating spotlight #1.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
+    $I->wait(1);
+    $I->click('field_hs_page_components_1_subform_field_hs_sptlght_sldes_0_edit');
     $I->waitForText('Body');
     $I->fillField('.ck-editor__editable_inline', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][0][subform][field_hs_spotlight_link][0][uri]', 'http://google.com');
@@ -272,11 +274,9 @@ class FlexiblePageCest {
     // Uploaded spotlight image does not have alt text.
     $I->seeElement('picture img', ['alt' => '']);
 
-    // // Populating spotlight #2.
+    // Populating spotlight #2.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
-    $I->waitForText('Body');
-    $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_0_collapse');
     $I->wait(1);
     $I->scrollTo('.field-add-more-submit');
     $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_hs_spotlight_add_more');

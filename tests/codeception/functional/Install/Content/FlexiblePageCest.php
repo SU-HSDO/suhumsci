@@ -332,22 +332,22 @@ class FlexiblePageCest {
     $I->waitForText('Timeline Item #2 Title');
 
     // Check aria attributes for first item.
-    $this->firstItemAriaPressed = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-pressed');
+    $this->firstItemAriaPressed = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-pressed');
     $I->assertFalse(filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be false in the first item.');
-    $this->firstItemAriaExpanded = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-expanded');
+    $this->firstItemAriaExpanded = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-expanded');
     $I->assertFalse(filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL), 'arria-expanded should be false in the first item');
 
     // Check aria attributes for second item.
-    $this->secondItemAriaPressed = $I->grabAttributeFrom('.hb-timeline-item__summary:last-child', 'aria-pressed');
+    $this->secondItemAriaPressed = $I->grabAttributeFrom('.ptype-hs-timeline-item:last-child .hb-timeline-item__summary', 'aria-pressed');
     $I->assertFalse(filter_var($this->secondItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be false in the second item.');
-    $this->secondItemAriaExpanded = $I->grabAttributeFrom('.hb-timeline-item__summary:last-child', 'aria-expanded');
+    $this->secondItemAriaExpanded = $I->grabAttributeFrom('.ptype-hs-timeline-item:last-child .hb-timeline-item__summary', 'aria-expanded');
     $I->assertFalse(filter_var($this->secondItemAriaExpanded, FILTER_VALIDATE_BOOL), 'Aria-expanded should be false in the second item.');
 
     // Open first summary.
-    $I->click('.hb-timeline-item__summary:first-child');
-    $this->firstItemAriaPressed = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-pressed');
+    $I->click('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary');
+    $this->firstItemAriaPressed = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-pressed');
     $I->assertTrue(filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be true in the first item.');
-    $this->firstItemAriaExpanded = $I->grabAttributeFrom('.hb-timeline-item__summary:first-child', 'aria-expanded');
+    $this->firstItemAriaExpanded = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-expanded');
     $I->assertTrue(filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL), 'Aria-expanded should be true in the first item.');
     $I->waitForText('Timeline item #1 description.');
   }

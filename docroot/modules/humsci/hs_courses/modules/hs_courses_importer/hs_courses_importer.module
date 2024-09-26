@@ -43,7 +43,14 @@ function hs_courses_importer_search_api_index_items_alter(IndexInterface $index,
  *   If this item should be indexed.
  */
 function hs_courses_importer_index_item($nid) {
-  $source_ids = \Drupal::database()->select('migrate_map_hs_courses', 'm')
+  $database = \Drupal::database();
+  // There have been no courses imported if the table does not exist; ignore
+  // this course.
+  if (!$database->schema()->tableExists('migrate_map_hs_courses')) {
+    return TRUE;
+  }
+
+  $source_ids = $database->select('migrate_map_hs_courses', 'm')
     ->fields('m', ['sourceid1', 'sourceid2'])
     ->condition('destid1', $nid)
     ->execute()
@@ -58,7 +65,7 @@ function hs_courses_importer_index_item($nid) {
   // Get all migrate mapped courses that match the course id & the course code.
   // sorted by the destination id (nid) this will give us the very first node
   // that was imported from the source.
-  $first_course_id = \Drupal::database()
+  $first_course_id = $database
     ->select('migrate_map_hs_courses', 'm')
     ->fields('m', ['destid1'])
     ->condition('sourceid1', $source_ids['sourceid1'])

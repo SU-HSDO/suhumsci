@@ -268,7 +268,7 @@ function hs_paragraph_types_update_10007() {
   foreach ($storage_to_create as $storage) {
     $storage_config = $config_directory->read($storage);
     if (!FieldStorageConfig::loadByName($storage_config['entity_type'], $storage_config['field_name'])) {
-      $field_storage_config->createFromStorageRecord($config_directory->read($storage))->save();
+      $field_storage_config->createFromStorageRecord($storage_config)->save();
     }
   }
 
@@ -282,7 +282,7 @@ function hs_paragraph_types_update_10007() {
   // Create the field instance.
   foreach ($field_instances as $instance) {
     $instance_config = $config_directory->read($instance);
-    if (FieldConfig::loadByName($instance_config['entity_type'], $instance_config['bundle'], $instance_config['field_name'])) {
+    if (!FieldConfig::loadByName($instance_config['entity_type'], $instance_config['bundle'], $instance_config['field_name'])) {
       $field_config->createFromStorageRecord($instance_config)->save();
     }
   }
@@ -312,7 +312,6 @@ function hs_paragraph_types_update_10008(&$sandbox) {
       !$paragraph->hasField('field_bg_color') ||
       !$paragraph->hasField('field_bg_color_width')
     ) {
-      dump('Fields not found');
       continue;
     }
 

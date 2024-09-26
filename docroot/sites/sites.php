@@ -89,9 +89,7 @@ foreach ($settings as $settings_file) {
 // Manually point URL's that don't match their site paths.
 $sites['iranian-studies.stanford.edu'] = 'iranianstudies';
 $sites['facultyaffairs-humsci.stanford.edu'] = 'facultyaffairs_humsci2021';
-$sites['hsweb-userguide-traditional.stanford.edu'] = 'swshumsci_sandbox';
 $sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
-$sites['publichumanities.stanford.edu'] = 'humanexperience';
 
 
 if (file_exists(__DIR__ . '/local.sites.php')) {

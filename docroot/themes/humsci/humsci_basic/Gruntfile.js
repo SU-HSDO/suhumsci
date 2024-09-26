@@ -124,5 +124,5 @@ module.exports = function (grunt) {
 
   grunt.registerTask('compile', ['dart-sass:dist', 'postcss:dist']);
   grunt.registerTask('ckeditor', ['dart-sass:ckeditor', 'postcss:dist']);
-  grunt.registerTask('ckeditor', ['dart-sass:preview', 'postcss:dist']);
+  grunt.registerTask('preview', ['dart-sass:preview', 'postcss:dist']);
 };

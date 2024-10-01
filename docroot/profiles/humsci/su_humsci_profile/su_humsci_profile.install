@@ -923,3 +923,29 @@ function su_humsci_profile_update_9707() {
 function su_humsci_profile_update_9708() {
   \Drupal::service('module_installer')->uninstall(['page_cache']);
 }
+
+/**
+ * Updates existing blocks with new SAML logout button functionality.
+ */
+function su_humsci_profile_update_9709() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $blocks = $entity_type_manager->getStorage('block')->loadByProperties([
+    'plugin' => 'stanford_samlauth_login_block',
+  ]);
+  if ($blocks) {
+    foreach ($blocks as $block) {
+      /** @var Drupal\block\Entity\BlockDrupal\block\Entity\Block $block */
+      $settings = $block->get('settings');
+
+      $log_in = $settings['link_text'];
+      $log_out = preg_replace('/in\b/', 'out', $log_in);
+      $log_out = preg_replace('/In\b/', 'Out', $log_out);
+      $log_out = str_replace(' to ', ' from ', $log_out);
+      $log_out = str_replace(' To ', ' From ', $log_out);
+
+      $settings['logout_link_text'] = $log_out;
+      $block->set('settings', $settings);
+      $block->save();
+    }
+  }
+}

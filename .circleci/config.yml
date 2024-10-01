@@ -80,9 +80,7 @@ update_dependencies: &update_dependencies
           drush config:export -y &&
           git add config composer.lock docroot &&
           git commit -m "Updated dependencies $DATE" &&
-          git push origin $CIRCLE_BRANCH &&
-          blt humsci:clean-backups &&
-          blt humsci:clean-branches
+          git push origin $CIRCLE_BRANCH
     - save_cache: *save_cache
 
 # Declare all the jobs we should run.

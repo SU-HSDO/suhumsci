@@ -36,11 +36,12 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center center;
+    background-size: hb-calculate-rems(18px);
     border-width: 0;
     position: absolute;
     bottom: 0;
-    right: hb-calculate-rems(14px);
-    width: hb-calculate-rems(18px);
+    right: hb-calculate-rems(10px);
+    width: hb-calculate-rems(24px);
     height: hb-calculate-rems(15px);
     transform: scaleX(-1);
     opacity: 0.6;
@@ -58,6 +59,14 @@
     &:active,
     &:focus {
       box-shadow: none;
+    }
+
+    &:focus {
+      @include hb-focus;
+
+      @include hb-themes(('colorful', 'airy')) {
+        border-radius: hb-calculate-rems(4px);
+      }
     }
   }
 }

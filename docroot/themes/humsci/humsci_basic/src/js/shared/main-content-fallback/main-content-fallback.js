@@ -8,7 +8,7 @@
   if (mainElement) {
     mainElement.insertAdjacentHTML(
       'afterbegin',
-      '<div id="main-content" class="visually-hidden focusable" tabindex="-1">Main content start</div>',
+      '<div id="main-content" class="visually-hidden" tabindex="-1">Main content start</div>',
     );
   }
 })();

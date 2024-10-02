@@ -13,7 +13,10 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\user\RoleInterface;
+use Drush\Drush;
 
 /**
  * Implements hook_requirements().
@@ -903,7 +906,6 @@ function su_humsci_profile_update_9706() {
   return "Removed " . $count_config . " config dependencies and " . $count_module . " module dependencies.";
 }
 
-
 /**
  * Delete eck configuration and uninstall eck module.
  */
@@ -916,10 +918,68 @@ function su_humsci_profile_update_9707() {
   \Drupal::service('module_installer')->uninstall(['eck']);
 }
 
-
 /**
  * Uninstall page_cache.
  */
 function su_humsci_profile_update_9708() {
   \Drupal::service('module_installer')->uninstall(['page_cache']);
+}
+
+/**
+ * Uninstall and remove config for hs_row paragraph type and modules.
+ */
+function su_humsci_profile_update_9709() {
+  // Remove existing paragraph entities.
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $paragraph_machine_name = 'hs_row';
+
+  $query = $paragraph_storage->getQuery()
+    ->condition('type', $paragraph_machine_name)
+    ->accessCheck(FALSE);
+  $paragraph_ids = $query->execute();
+
+  if ($paragraph_ids) {
+    $paragraphs = Paragraph::loadMultiple($paragraph_ids);
+    foreach ($paragraphs as $paragraph) {
+      $paragraph->delete();
+    }
+
+    $message = t('Deleted all paragraphs of type @type.', [
+      '@type' => $paragraph_machine_name,
+    ]);
+    Drush::logger()->notice($message);
+  }
+
+  // Delete the field and field storage on the paragraph.
+  $fields = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->loadByProperties(['bundle' => $paragraph_machine_name]);
+
+  if ($fields) {
+    foreach ($fields as $field) {
+      /** @var Drupal\field\Entity $field */
+
+      // Delete the field configuration (instance) from the paragraph type.
+      $field->delete();
+
+      // Load the corresponding field storage.
+      $field_storage = FieldStorageConfig::load($field->getName());
+      if ($field_storage) {
+        // Check if the field storage is used elsewhere.
+        if (!$field_storage->isLocked()) {
+          // Delete the field storage if it's no longer in use by any other bundles.
+          $field_storage->delete();
+        }
+      }
+    }
+  }
+
+  // Delete the paragraph itself.
+  $paragraph_type = ParagraphsType::load($paragraph_machine_name);
+  if ($paragraph_type) {
+    $paragraph_type->delete();
+  }
+
+  // Uninstall hs_row and hs_row_display modules.
+  \Drupal::service('module_installer')->uninstall(['hs_row', 'hs_row_display']);
 }

@@ -26,7 +26,7 @@ module.exports = function (grunt) {
     watch: {
       css: {
         files: ['src/**/*.{scss,sass}'],
-        tasks: ['dart-sass:dist', 'dart-sass:ckeditor'],
+        tasks: ['dart-sass:dist', 'dart-sass:ckeditor', 'dart-sass:preview'],
         options: {
           interrupt: true,
         },

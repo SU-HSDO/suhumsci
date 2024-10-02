@@ -10,16 +10,13 @@ use Drupal\Core\Template\Attribute;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
- * Implements hook_library_info_alter().
+ * Implements hook_form_alter().
  */
-function su_humsci_gin_admin_library_info_alter(&$libraries, $extension) {
-  $libraries_unset = [
-    'humsci_traditional' => 'humsci-colorful-styling',
-    'humsci_colorful' => 'humsci-traditional-styling',
-  ];
-  if ($extension === 'su_humsci_gin_admin') {
+function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
+  // Adds the fe theme admin-preview library on flexible and private page forms.
+  if (preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id)) {
     $theme = \Drupal::config('system.theme')->get('default');
-    unset($libraries[$libraries_unset[$theme]]);
+    $form['#attached']['library'][] = $theme . '/admin-preview';
   }
 }
 

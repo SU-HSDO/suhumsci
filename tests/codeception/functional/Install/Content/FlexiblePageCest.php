@@ -225,6 +225,7 @@ class FlexiblePageCest {
 
   /**
    * I can create a page with a spotlight slider.
+   * @group spotlight_paragraph
    */
   public function testSpotlightSlider(FunctionalTester $I) {
     $I->logInWithRole('contributor');
@@ -244,7 +245,7 @@ class FlexiblePageCest {
     // Populating spotlight #1.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
-    $I->wait(1);
+    $I->wait(3);
     $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_0_edit');
     $I->waitForText('Body');
     $I->fillField('.ck-editor__editable_inline', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
@@ -270,7 +271,7 @@ class FlexiblePageCest {
     // Populating spotlight #2.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
-    $I->wait(1);
+    $I->wait(3);
     $I->scrollTo('.field-add-more-submit');
     $I->click('field_hs_page_components_0_subform_field_hs_sptlght_sldes_hs_spotlight_add_more');
     $I->waitForText('No media items are selected');
@@ -282,8 +283,8 @@ class FlexiblePageCest {
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
-    $I->waitForText('Possible similar items');
-    $I->selectOption("input", 'Add new');
+    $I->waitForText('Decorative Image');
+    $I->selectOption('Label', 'Add new');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');
     $I->waitForText('The maximum number of media items have been selected');

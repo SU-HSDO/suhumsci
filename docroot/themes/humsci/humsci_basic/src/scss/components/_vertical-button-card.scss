@@ -2,14 +2,9 @@
   position: relative;
 
   .hb-card__graphics {
-    &, .hb-raised-cards & {
-      margin-bottom: hb-calculate-rems(32px);
-    }
-
     img {
       width: 100%;
     }
-
   }
 
   .hb-card__title:only-child {
@@ -50,6 +45,10 @@
 
     .hb-card__graphics {
       padding: hb-calculate-rems(24px) hb-spacing-width('sm') 0;
+
+      &, .hb-raised-cards & {
+        margin-bottom: hb-calculate-rems(32px);
+      }
     }
 
     .hb-card__content {
@@ -91,21 +90,8 @@
   @include hb-colorful {
     .hb-card__graphics {
       &, .hb-raised-cards & {
-        margin-top: -40%;
-
-        @include grid-media('md') {
-          .paragraph--type--hs-collection .item-per-row--2 & {
-            margin-top: -50%;
-          }
-
-          .paragraph--type--hs-collection .item-per-row--3 & {
-            margin-top: -65%;
-          }
-
-          .paragraph--type--hs-collection .item-per-row--4 & {
-            margin-top: -75%;
-          }
-        }
+        padding: 0 hb-calculate-rems(36px);
+        margin-bottom: hb-calculate-rems(-20px);
       }
     }
 
@@ -113,34 +99,17 @@
       color: var(--palette--secondary);
     }
 
-    .hb-card__content-wrapper {
-      padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
+    .hb-card__content {
+      padding: hb-calculate-rems(62px) hb-calculate-rems(36px) hb-calculate-rems(32px);
       border: 2px solid var(--palette--tertiary-highlight);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 10%, transparent);
-
-      @include hb-themes(('airy', 'colorful')) {
-        background-color: var(--palette--white);
-      }
+      background-color: var(--palette--white);
 
       .hb-raised-cards--uniform-height & {
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-      }
-
-      .hb-card__content {
-        padding: 0;
-      }
-    }
-
-    &:has(.hb-card__graphics) {
-      padding-top: 40%;
-
-      .paragraph--type--hs-collection .item-per-row--2 &,
-      .paragraph--type--hs-collection .item-per-row--3 &,
-      .paragraph--type--hs-collection .item-per-row--4 & {
-        padding-top: 30%;
       }
     }
 

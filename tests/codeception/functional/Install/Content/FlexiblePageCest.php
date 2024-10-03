@@ -282,7 +282,7 @@ class FlexiblePageCest {
     $I->waitForText('Add or select media');
     $I->dropFileInDropzone(dirname(__FILE__, 3) . '/logo.jpg');
     $I->click('Upload and Continue');
-    $I->waitForText('Decorative Image');
+    $I->waitForText('Possible similar items');
     $I->selectOption("input", 'Add new');
     $I->click('Save and insert', '.ui-dialog-buttonset');
     $I->waitForElementNotVisible('.media-library-widget-modal');

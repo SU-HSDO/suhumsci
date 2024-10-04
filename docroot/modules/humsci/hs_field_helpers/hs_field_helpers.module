@@ -7,8 +7,8 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterInterface;
@@ -28,7 +28,6 @@ use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\ui_patterns\UiPatterns;
-use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -42,7 +41,8 @@ function hs_field_helpers_preprocess_media_oembed_iframe(&$variables) {
       $iframe = (string) $variables['media'];
       $variables['media'] = preg_replace('/src="(.[^"]+)"/', 'src="$1&modestbranding=1&rel=0"', $iframe);
     }
-  } catch (\Throwable $e) {
+  }
+  catch (\Throwable $e) {
     // Nothing to do.
   }
 }
@@ -145,9 +145,6 @@ function hs_field_helpers_entity_view_mode_alter(&$view_mode, EntityInterface $e
  * Implements hook_preprocess().
  */
 function hs_field_helpers_preprocess(&$variables, $hook) {
-  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
-    return;
-  }
   // UI Patterns cleanup to remove regions that don't have anything to render.
   if (isset($variables['context']) && $variables['context'] instanceof PatternContext) {
     $pattern_id = str_replace('pattern_', '', $hook);
@@ -159,7 +156,7 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
 
   // Layout Builder cleanup.
   // Each layout has its own preprocess hook. So we have to use generic hook.
-  if (isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
+  if (!\Drupal::service('router.admin_context')->isAdminRoute() && isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
     hs_fields_helpers_cleanup_layout_builder($variables);
   }
 }
@@ -206,14 +203,15 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
   $renderer = \Drupal::service('renderer');
   try {
     $pattern_definition = UiPatterns::getPatternDefinition($pattern_id);
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     // No pattern found.
     return;
   }
   foreach (array_keys($pattern_definition->getFieldsAsOptions()) as $region) {
     if (empty($pattern[$region]) || !is_array($pattern[$region]) || isset($pattern[$region]['#theme'])) {
 
-      // Rebuild render() function since it will be removed
+      // Rebuild render() function since it will be removed.
       $element = $pattern[$region];
       if (is_array($element)) {
         if (
@@ -486,6 +484,30 @@ function hs_field_helpers_preprocess_field(&$variables) {
       if ($height) {
         $item['content']['#attributes']['height'] = $height;
       }
+    }
+  }
+
+  // Make additional variables available to the template.
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier($field_name);
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier($variables['field_type']);
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier('label-' . $variables['label_display']);
+
+  $first_item = $variables['element'][0] ?? NULL;
+  $is_paragraph = $first_item['#paragraph'] ?? FALSE;
+  $has_items = isset($variables['items']) ? count($variables['items']) : FALSE;
+
+  // Add additional information to paragraph fields.
+  // Bricks has a different field type and structures the array differently, so
+  // we need to check if its actual normal paragraph fields as well.
+  if ($variables['field_type'] == 'entity_reference_revisions' && $is_paragraph && $has_items) {
+    foreach ($variables['items'] as &$pitem) {
+      $paragraph_type = $pitem['content']['#paragraph']->getType();
+      $ptype = Html::cleanCssIdentifier("ptype-" . $paragraph_type);
+      if (!isset($pitem['attributes']['class'])) {
+        $pitem['attributes']['class'] = [];
+      }
+      $pitem['attributes']['class'][] = "paragraph-item";
+      $pitem['attributes']['class'][] = $ptype;
     }
   }
 }

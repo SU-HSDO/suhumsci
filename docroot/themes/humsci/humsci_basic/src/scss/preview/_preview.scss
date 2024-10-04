@@ -1,0 +1,104 @@
+@use 'sass:meta';
+
+$hb-current-theme: 'traditional' !default;
+$hb-root-font-size: 16px !default;
+
+@import 'decanter/core/src/scss/decanter-no-markup';
+@import 'decanter/core/src/scss/core/fonts';
+@import '../settings/variables.general';
+@import '../settings/variables.fonts';
+@import '../settings/variables.colorful-pairings';
+@import '../tools/functions.general';
+@import '../tools/functions.fonts';
+@import '../tools/mixins.themes';
+@import '../tools/mixins.text';
+
+.paragraph-admin-preview {
+  @each $color, $value in $hc-colorful-globals {
+    --palette--#{$color}: #{$value};
+  }
+
+  @include meta.load-css(
+    '../main',
+    $with: (
+      'hb-current-theme': $hb-current-theme,
+      'hb-root-font-size': $hb-root-font-size
+    )
+  );
+
+  // Style fixes for specific elements.
+  .paragraph--type--hs-sptlght-slder.paragraph--view-mode--preview {
+    padding-right: 0;
+  }
+
+  .paragraph--type--hs-gradient-hero-slider {
+    .slick-dots {
+      bottom: -2rem;
+    }
+  }
+
+  .ptype-hs-carousel .ptype-hs-hero-image,
+  .paragraph--type--hs-carousel.ptype-hs-hero-image {
+    .hb-hero-overlay {
+      background-color: transparent;
+
+      &::before {
+        content: '';
+      }
+    }
+  }
+
+  .hs-paragraph-style--well {
+    width: auto;
+  }
+
+  .hs-paragraph-style--well-full-width {
+    left: auto;
+    width: auto;
+  }
+
+  .hb-color-band {
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  .ptype-hs-view {
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .ptype-hs-timeline .ptype-hs-timeline-item:not(:last-child) {
+    .hb-timeline-item[open]::after {
+      content: none;
+    }
+  }
+
+  .ptype-hs-callout-box > p {
+    margin: 0 0 1rem !important;
+    font-size: 0.875rem;
+  }
+
+  // Gin styles overrides.
+  @include hb-description;
+
+  box-sizing: border-box;
+  font-family: $su-font-sans;
+
+  div.link {
+    display: block;
+    text-decoration: none;
+  }
+
+  blockquote::before {
+    content: none;
+    background-color: transparent;
+  }
+
+  details summary {
+    background-color: transparent;
+    font-weight: 400;
+  }
+}

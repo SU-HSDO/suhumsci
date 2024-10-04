@@ -12,9 +12,39 @@ dependencies:
     - field.field.paragraph.hs_testimonial.field_hs_testimonial_quote_align
     - paragraphs.paragraphs_type.hs_testimonial
   module:
+    - ds
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
     - layout_builder
     - link
+    - stanford_media
 third_party_settings:
+  ds:
+    layout:
+      id: pattern_testimonial
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: _field
+          variant_field: field_hs_testimonial_quote_align
+          variant_field_values:
+            top: quote-top
+            bottom: quote-bottom
+    regions:
+      name:
+        - field_hs_testimonial_name
+      position:
+        - field_hs_testimonial_position
+      link:
+        - field_hs_testimonial_link
+      image:
+        - field_hs_testimonial_image
+      quote:
+        - field_hs_testimonial_quote
   layout_builder:
     enabled: false
     allow_custom: false
@@ -24,14 +54,22 @@ bundle: hs_testimonial
 mode: preview
 content:
   field_hs_testimonial_image:
-    type: entity_reference_entity_view
+    type: media_responsive_image_formatter
     label: hidden
     settings:
       view_mode: default
       link: false
-    third_party_settings: {  }
-    weight: 4
-    region: content
+      image_style: testimonial
+      remove_alt: 0
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 3
+    region: image
   field_hs_testimonial_link:
     type: link
     label: hidden
@@ -39,34 +77,38 @@ content:
       trim_length: 80
       url_only: false
       url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 3
-    region: content
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
+    region: link
   field_hs_testimonial_name:
     type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 1
-    region: content
+    weight: 0
+    region: name
   field_hs_testimonial_position:
     type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 2
-    region: content
+    weight: 1
+    region: position
   field_hs_testimonial_quote:
     type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
-    region: content
+    weight: 4
+    region: quote
 hidden:
   field_hs_testimonial_quote_align: true
   search_api_excerpt: true

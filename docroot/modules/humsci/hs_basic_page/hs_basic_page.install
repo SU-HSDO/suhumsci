@@ -255,3 +255,71 @@ function hs_basic_page_update_10001() {
       ->save();
   }
 }
+
+/**
+ * Replace paragraphs_browser with default paragraphs widget.
+ */
+function hs_basic_page_update_10002() {
+  $base_settings = [
+    'edit_mode' => 'closed',
+    'closed_mode' => 'preview',
+    'autocollapse' => 'all',
+    'closed_mode_threshold' => 0,
+    'add_mode' => 'modal',
+    'form_display_mode' => 'default',
+    'features' => [
+      'add_above' => 'add_above',
+      'collapse_edit_all' => 'collapse_edit_all',
+      'convert' => '0',
+      'duplicate' => 'duplicate',
+    ],
+  ];
+  $third_party_settings = [
+    'paragraphs_features' => [
+      'add_in_between' => FALSE,
+      'add_in_between_link_count' => 3,
+      'delete_confirmation' => FALSE,
+      'show_drag_and_drop' => TRUE,
+      'show_collapse_all' => TRUE,
+    ],
+    'paragraphs_ee' => [
+      'paragraphs_ee' => [
+        'dialog_off_canvas' => FALSE,
+        'dialog_style' => 'tiles',
+      ],
+    ],
+  ];
+  $fields = [
+    'field_hs_page_components' => 'node.hs_basic_page.default',
+    'field_hs_page_hero' => 'node.hs_basic_page.default',
+    'field_hs_priv_page_components' => 'node.hs_private_page.default',
+  ];
+
+  $entity_form_display_storage = \Drupal::entityTypeManager()->getStorage('entity_form_display');
+  foreach ($fields as $field => $form_display_id) {
+    /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+    $form_display = $entity_form_display_storage->load($form_display_id);
+    if (empty($form_display)) {
+      continue;
+    }
+
+    $component = $form_display->getComponent($field);
+    if (empty($component)) {
+      continue;
+    }
+
+    $component_settings = array_intersect_key($component['settings'], array_flip([
+      'title',
+      'title_plural',
+      'default_paragraph_type',
+    ]));
+    $settings = array_merge($base_settings, $component_settings);
+
+    $component['type'] = 'paragraphs';
+    $component['settings'] = $settings;
+    $component['third_party_settings'] = $third_party_settings;
+
+    $form_display->setComponent($field, $component)
+      ->save();
+  }
+}

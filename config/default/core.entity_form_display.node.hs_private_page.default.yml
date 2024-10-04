@@ -6,12 +6,15 @@ dependencies:
     - field.field.node.hs_private_page.field_hs_priv_page_components
     - field.field.node.hs_private_page.field_menulink
     - field.field.node.hs_private_page.field_priv_wysiwyg_files
+    - field.field.node.hs_private_page.layout_builder__layout
     - node.type.hs_private_page
   module:
     - file
     - insert
     - menu_link
-    - paragraphs_browser
+    - paragraphs
+    - paragraphs_ee
+    - paragraphs_features
     - path
 id: node.hs_private_page.default
 targetEntityType: node
@@ -25,29 +28,35 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_hs_priv_page_components:
-    type: paragraphs_browser
+    type: paragraphs
     weight: 8
     region: content
     settings:
-      edit_mode: closed
-      closed_mode: preview
-      autocollapse: none
-      closed_mode_threshold: '0'
-      add_mode: paragraphs_browser
-      form_display_mode: default
-      features:
-        duplicate: duplicate
-        collapse_edit_all: collapse_edit_all
-        add_above: 0
-      paragraphs_browser: content
-      modal_width: 80%
-      modal_height: auto
-      default_paragraph_type: hs_priv_text_area
       title: Component
       title_plural: Components
-      show_group_label: 0
-      show_group_filter: 0
-    third_party_settings: {  }
+      default_paragraph_type: hs_priv_text_area
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      closed_mode_threshold: 0
+      add_mode: modal
+      form_display_mode: default
+      features:
+        add_above: add_above
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        show_drag_and_drop: true
+        show_collapse_all: true
+      paragraphs_ee:
+        paragraphs_ee:
+          dialog_off_canvas: false
+          dialog_style: tiles
   field_menulink:
     type: menu_link_default
     weight: 26
@@ -119,4 +128,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  layout_builder__layout: true

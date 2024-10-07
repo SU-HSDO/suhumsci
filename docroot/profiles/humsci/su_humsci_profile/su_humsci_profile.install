@@ -923,3 +923,11 @@ function su_humsci_profile_update_9707() {
 function su_humsci_profile_update_9708() {
   \Drupal::service('module_installer')->uninstall(['page_cache']);
 }
+
+/**
+ * Install paragraphs_ee and paragraphs_features modules.
+ */
+function su_humsci_profile_update_9709() {
+  \Drupal::service('module_installer')->install(['paragraphs_features']);
+  \Drupal::service('module_installer')->install(['paragraphs_ee']);
+}

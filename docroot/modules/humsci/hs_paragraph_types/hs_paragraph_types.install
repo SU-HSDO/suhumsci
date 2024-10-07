@@ -5,8 +5,8 @@
  * Update functions for hs_paragraph_types module.
  */
 
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -248,9 +248,95 @@ function hs_paragraph_types_update_10006() {
 }
 
 /**
- * Moves drag & drop action for paragraphs from 3 dot menu to paragraph toolbar.
+ * Set new config for collection color wells.
  */
 function hs_paragraph_types_update_10007() {
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage_config = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storage_to_create = [
+    'field.storage.paragraph.field_bg_color',
+    'field.storage.paragraph.field_bg_color_width',
+  ];
+
+  // Create the field storage.
+  foreach ($storage_to_create as $storage) {
+    $storage_config = $config_directory->read($storage);
+    if (!FieldStorageConfig::loadByName($storage_config['entity_type'], $storage_config['field_name'])) {
+      $field_storage_config->createFromStorageRecord($storage_config)->save();
+    }
+  }
+
+  $field_instances = [
+    'field.field.paragraph.hs_collection.field_bg_color',
+    'field.field.paragraph.hs_collection.field_bg_color_width',
+    'field.field.paragraph.hs_priv_collection.field_bg_color',
+    'field.field.paragraph.hs_priv_collection.field_bg_color_width',
+  ];
+
+  // Create the field instance.
+  foreach ($field_instances as $instance) {
+    $instance_config = $config_directory->read($instance);
+    if (!FieldConfig::loadByName($instance_config['entity_type'], $instance_config['bundle'], $instance_config['field_name'])) {
+      $field_config->createFromStorageRecord($instance_config)->save();
+    }
+  }
+}
+
+/**
+ * Migrate data from old to new well fields in regular and private collections.
+ */
+function hs_paragraph_types_update_10008(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Get list of collection paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', ['hs_collection', 'hs_priv_collection'], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  // Set new field default for existing hs_collection paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    if (
+      !$paragraph->hasField('field_paragraph_style') ||
+      !$paragraph->hasField('field_bg_color') ||
+      !$paragraph->hasField('field_bg_color_width')
+    ) {
+      continue;
+    }
+
+    // Only set new field if old field had data.
+    $field_paragraph_style = $paragraph->get('field_paragraph_style')->value;
+    if ($field_paragraph_style) {
+      $paragraph->set('field_bg_color', 'default');
+    }
+
+    $bg_color_width = 'limited_width';
+    if ($field_paragraph_style == 'well-full-width') {
+      $bg_color_width = 'full_width';
+    }
+
+    $paragraph->set('field_bg_color_width', $bg_color_width);
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Moves drag & drop action for paragraphs from 3 dot menu to paragraph toolbar.
+ */
+function hs_paragraph_types_update_10009() {
   $config_to_update = [
     'core.entity_form_display.node.hs_basic_page.default',
     'core.entity_form_display.node.hs_private_page.default',
@@ -278,5 +364,4 @@ function hs_paragraph_types_update_10007() {
       $config_storage->create($config_data)->save();
     }
   }
-
 }

@@ -11,6 +11,7 @@ dependencies:
   module:
     - ds
     - layout_builder
+    - text
 third_party_settings:
   ds:
     layout:
@@ -22,17 +23,17 @@ third_party_settings:
         pattern:
           field_templates: default
           variant: closed
-          variant_field: field_description
+          variant_field: field_hs_timeline_item_descripti
           variant_field_values:
             closed: ''
             open: ''
     regions:
-      summary:
-        - field_summary
       subheading:
-        - field_subheading
+        - field_hs_timeline_item_subheadin
       description:
-        - field_description
+        - field_hs_timeline_item_descripti
+      summary:
+        - field_hs_timeline_item_summary
   layout_builder:
     enabled: false
     allow_custom: false
@@ -40,9 +41,29 @@ id: paragraph.hs_timeline_item.preview
 targetEntityType: paragraph
 bundle: hs_timeline_item
 mode: preview
-content: {  }
+content:
+  field_hs_timeline_item_descripti:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: description
+  field_hs_timeline_item_subheadin:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: subheading
+  field_hs_timeline_item_summary:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: summary
 hidden:
-  field_hs_timeline_item_descripti: true
-  field_hs_timeline_item_subheadin: true
-  field_hs_timeline_item_summary: true
   search_api_excerpt: true

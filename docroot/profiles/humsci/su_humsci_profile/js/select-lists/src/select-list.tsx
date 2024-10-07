@@ -235,6 +235,7 @@ const SelectList = ({
 
   useEffect(() => {
     if (!listboxVisible && value.length > 0) {
+    if (!listboxVisible && value && value.length > 0) {
       listboxVisible && listboxRef.current?.focus();
     }
   }, [listboxVisible, value]);

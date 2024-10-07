@@ -3,6 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_priv_collection.field_bg_color
+    - field.field.paragraph.hs_priv_collection.field_bg_color_width
     - field.field.paragraph.hs_priv_collection.field_hs_collection_items
     - field.field.paragraph.hs_priv_collection.field_hs_collection_per_row
     - field.field.paragraph.hs_priv_collection.field_hs_collection_uh
@@ -11,30 +13,74 @@ dependencies:
     - paragraphs.paragraphs_type.hs_priv_collection
   module:
     - paragraphs
+    - paragraphs_ee
+    - paragraphs_features
 id: paragraph.hs_priv_collection.default
 targetEntityType: paragraph
 bundle: hs_priv_collection
 mode: default
 content:
+  field_bg_color:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_bg_color_width:
+    type: options_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings:
+      conditional_fields:
+        6d910fc3-1e3b-4f69-86c7-679fa8dd308b:
+          entity_type: paragraph
+          bundle: hs_collection
+          dependee: field_bg_color
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 5
+            value: ''
+            values: _none
+            value_form:
+              -
+                value: default
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_hs_collection_items:
     type: paragraphs
-    weight: 4
+    weight: 5
     region: content
     settings:
       title: Paragraph
       title_plural: Paragraphs
       edit_mode: closed
-      closed_mode: summary
+      closed_mode: preview
       autocollapse: none
       closed_mode_threshold: 0
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: _none
       features:
-        add_above: '0'
+        add_above: add_above
         collapse_edit_all: collapse_edit_all
+        convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        show_drag_and_drop: true
+        show_collapse_all: true
+      paragraphs_ee:
+        paragraphs_ee:
+          dialog_off_canvas: false
+          dialog_style: tiles
   field_hs_collection_per_row:
     type: options_select
     weight: 0
@@ -43,7 +89,7 @@ content:
     third_party_settings: {  }
   field_hs_collection_uh:
     type: boolean_checkbox
-    weight: 3
+    weight: 4
     region: content
     settings:
       display_label: true
@@ -66,19 +112,14 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
-  field_paragraph_style:
-    type: options_select
-    weight: 1
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_raised_cards:
     type: boolean_checkbox
-    weight: 2
+    weight: 3
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
 hidden:
   created: true
+  field_paragraph_style: true
   status: true

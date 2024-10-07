@@ -1,29 +1,33 @@
 .hb-testimonial {
-  margin-top: hb-calculate-rems(40px);
-
-  .field-hs-row-components .ptype-hs-testimonial &,
-  .field-hs-collection-items .ptype-hs-testimonial & {
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width & {
-      margin-top: 0;
-    }
-  }
-
   &__wrapper {
-    @include hb-quote-wrapper;
-    padding-bottom: hb-calculate-rems(34px);
-    margin: 0;
+    padding: hb-calculate-rems(40px) hb-calculate-rems(24px);
+    border-width: hb-calculate-rems(1px);
+    border-style: solid;
 
     @include grid-media-min('lg') {
-      // override hb-quote-wrapper mixin
-      padding-bottom: hb-calculate-rems(34px);
+      padding: hb-calculate-rems(42px) hb-calculate-rems(45px);
     }
 
-    .counted-items-2 &,
-    .counted-items-3 & {
-      @include grid-media-min('sm') {
-        margin: 0;
+    @include hb-themes(('colorful', 'airy')) {
+      border-color: var(--palette--primary);
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        border-color: var(--palette--primary);
       }
+    }
+
+    @include hb-traditional {
+      border-color: var(--palette--secondary);
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        border-color: var(--palette--secondary);
+      }
+    }
+
+    .hb-dark-pattern & {
+      border-color: var(--palette--white);
     }
   }
 
@@ -32,16 +36,38 @@
     align-items: center;
     flex-direction: column;
     max-width: 100%;
+    width: 100%;
+    border-width: hb-calculate-rems(1px);
 
     @include grid-media-min('sm') {
-      max-width: 80%;
       flex-direction: row;
+    }
+
+    .hb-dark-pattern & {
+      border-color: var(--palette--white);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      border-color: var(--palette--secondary);
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        border-color: var(--palette--secondary);
+      }
+    }
+
+    @include hb-traditional {
+      border-color: var(--palette--tertiary);
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        border-color: var(--palette--tertiary);
+      }
     }
 
     // allow more breathing room for content when 2 testimonials
     // are placed beside each other in a well
     .counted-items-2 & {
-      max-width: 100%;
       flex-direction: column;
 
       @include grid-media-min('xl') {
@@ -50,12 +76,19 @@
     }
 
     .counted-items-3 & {
-      max-width: 100%;
       flex-direction: column;
     }
 
     .hb-testimonial--top & {
-      padding-top: hb-calculate-rems(36px);
+      padding-top: hb-calculate-rems(32px);
+      margin-top: hb-calculate-rems(18px);
+      border-top-style: solid;
+    }
+
+    .hb-testimonial--bottom & {
+      padding-bottom: hb-calculate-rems(32px);
+      margin-bottom: hb-calculate-rems(18px);
+      border-bottom-style: solid;
     }
   }
 
@@ -71,6 +104,10 @@
       object-fit: cover;
     }
 
+    @include grid-media-min('sm') {
+      margin-bottom: 0;
+    }
+
     @include hb-themes(('colorful', 'airy')) {
       img {
         border-radius: 50%;
@@ -78,19 +115,47 @@
     }
   }
 
-  &__author-credits {
-    margin-bottom: hb-calculate-rems(20px);
-  }
-
   &__name {
     font-weight: hb-theme-font-weight(semibold);
+
+    @include hb-themes(('colorful', 'airy')) {
+      color: var(--palette--primary);
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        color: var(--palette--primary);
+      }
+    }
+
+    @include hb-traditional {
+      color: var(--palette--secondary);
+
+      .hb-dark-pattern .hs-paragraph-style--well &,
+      .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+        color: var(--palette--secondary);
+      }
+    }
+
+    .hb-dark-pattern & {
+      color: var(--palette--white);
+    }
   }
 
   &__position {
     font-size: hb-calculate-rems(16px);
+    color: var(--palette--gray-dark);
 
-    + .hb-testimonial__link {
+    +.hb-testimonial__link {
       padding-top: hb-calculate-rems(16px);
+    }
+
+    .hb-dark-pattern .hs-paragraph-style--well &,
+    .hb-dark-pattern .hs-paragraph-style--well-full-width & {
+      color: var(--palette--gray-dark);
+    }
+
+    .hb-dark-pattern & {
+      color: var(--palette--white);
     }
   }
 
@@ -99,6 +164,15 @@
 
     a {
       @include hb-more-link;
+      font-weight: hb-theme-font-weight(regular);
+
+      @include hb-traditional {
+        font-size: hb-calculate-rems(14px);
+
+        &::after {
+          height: hb-calculate-rems(22.5px);
+        }
+      }
 
       [class*='-pairing-'] .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
@@ -125,18 +199,46 @@
       .hb-dark-pattern .hs-paragraph-style--well-full-width & {
         color: var(--palette--secondary);
 
+        @include hb-themes(('colorful', 'airy')) {
+          .hc-pairing-ocean & {
+            color: var(--palette--secondary-darken-12);
+          }
+        }
+
         &::after {
           @include hb-icon-link-arrow('secondary');
           background-size: 85%;
+
+          @include hb-themes(('colorful', 'airy')) {
+            .hc-pairing-ocean & {
+              @include hb-icon-link-arrow('secondary-darken-12');
+              background-size: 85%;
+            }
+          }
         }
 
         &:hover,
         &:focus {
           color: var(--palette--secondary-darken-12);
 
+          .hc-pairing-ocean & {
+            color: var(--palette--primary-dark);
+          }
+
+          .ht-pairing-warbler & {
+            color: var(--palette--secondary-darken-12);
+          }
+
           &::after {
             @include hb-icon-link-arrow('secondary-darken-12');
             background-size: 85%;
+
+            @include hb-colorful {
+              .hc-pairing-ocean & {
+                @include hb-icon-link-arrow('primary-dark');
+                background-size: 85%;
+              }
+            }
           }
         }
       }
@@ -146,7 +248,7 @@
   figure.hb-testimonial__content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 0;
 
     .hb-testimonial--bottom & {
@@ -157,78 +259,17 @@
   blockquote.hb-testimonial__quote {
     width: 100%;
     margin: 0;
-
-    // Testimonial blockquote includes styling from hb-blockquote mixin,
-    // so we need to reset some of the styles.
-    color: var(--palette--secondary);
-    font-style: italic;
-    text-align: center;
-
-    @include hb-themes(('colorful', 'airy')) {
-      line-height: 140%;
-    }
-
-    @include hb-traditional {
-      line-height: 136%;
-    }
+    font-size: hb-calculate-rems(20px);
+    line-height: hb-calculate-rems(28.4px);
+    color: var(--palette--black);
 
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {
-      color: var(--palette--secondary);
+      color: var(--palette--black);
     }
 
-    // quote marks around quote
-    .field-hs-testimonial-quote, // paragraph type
-    .views-field .field-content p:first-of-type {
-      // views
-      &::before {
-        position: absolute;
-        content: open-quote;
-        margin-left: hb-calculate-rems(-16px);
-      }
-
-      &::after {
-        position: absolute;
-        content: close-quote;
-        margin-right: hb-calculate-rems(10px);
-      }
-    }
-
-    &.hb-testimonial__quote--bottom {
-      padding-bottom: hb-calculate-rems(16px);
-    }
-  }
-}
-
-// When a testimonial is the first paragraph type on a page and the hb-dark-pattern class has been applied via layout builder, add padding to the first testimonial paragraph type to compensate for the quotation mark
-.hb-dark-pattern:first-child {
-  .ptype-hs-testimonial:first-of-type {
-    padding-top: hb-calculate-rems(20px);
-
-    .hb-testimonial__wrapper {
-      margin-top: hb-calculate-rems(40px);
-    }
-  }
-
-  // Testimonials in a row on with the hb-dark-pattern utility class
-  .ptype-hs-row,
-  .ptype-hs-row .hs-paragraph-style--well {
-    .counted-items-1 {
-      .ptype-hs-testimonial:first-of-type {
-        padding-top: initial;
-
-        // when there is only one, we need more spacing
-        .hb-testimonial__wrapper {
-          margin-top: hb-calculate-rems(60px);
-        }
-      }
-    }
-
-    .counted-items-2,
-    .counted-items-3 {
-      .ptype-hs-testimonial:first-of-type {
-        padding-top: initial;
-      }
+    @include hb-traditional {
+      font-family: $hb-traditional-font--sans;
     }
   }
 }

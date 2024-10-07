@@ -1,19 +1,32 @@
-# Stanford Humanities And Sciences
+# Stanford School of Humanities And Sciences HSDP
 
-This is an Acquia BLT tool to assist in deploying code for Humanities and Sciences installation profile..
+This codebase runs the Humanities and Sciences Drupal (or Digital) Platform a.k.a. HSDP.  This platform runs 130+ sites for departments, programs, centers, councils, initiatives, etc. The platform is hosted on Acquia.
 
-## Getting Started
 
-This project is based on BLT, an open-source project template and tool that enables building, testing, and deploying Drupal installations following Acquia Professional Services best practices.
+## Overview
 
-To set up your local environment and begin developing for this project, refer to the [BLT onboarding documentation](https://docs.acquia.com/blt/developer/onboarding/). Note the following properties of this project:
-* Primary development branch: develop
-* Local environment: DrupalVM
-* Local drush alias: @my-project.local
-* Local site URL: http://local.my-project.com
+This project is based on [Acquia BLT](https://docs.acquia.com/acquia-cms/add-ons/blt) (Bacon Lettuce Tomato, or Build and Launch Tool), an open-source project template and tool that enables building, testing, and deploying Drupal installations following Acquia Professional Services best practices.
 
-### Want to run the site with Lando? [Follow these instructions here.](/lando/README.md)
+Note the following properties of this project:
+* Stable branch: `develop`
+* Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
+* Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
+* Development branching convention: branch off the current release branch
+* Local environment: Lando or DrupalVM
+* Local drush alias: @[SITE_ALIAS].local
+* Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
+### Prerequisites
+
+Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
+
+### Local setup and installation
+You can either run the site on Lando or bare metal.
+
+#### Setup on Lando
+[Follow the Lando instructions](lando/README.md).
+
+#### Or setup on bare metal
 1. Clone the repository and check out the develop branch.
 2. Run a `composer install --prefer-source` answer yes to any questions during this step.
 3. Run `blt humsci:local:setup` and answer the questions to configure your database settings.
@@ -32,7 +45,13 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 
 ### Codeception
 Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is
-very good documentation on codeception testing steps and how that is structured. To run those tests locally, `blt` will
+very good documentation on codeception testing steps and how that is structured.
+
+#### Codeception on Lando
+[Run Codeception on Lando](lando/README.md#setup-for-local-codeception-testing)
+
+#### Codeception on bare metal
+To run those tests locally, `blt` will
 be the wrapper around the codeception commands.
 - To run codeception first uninstall the SimpleSaml module `drush pmu simplesamlphp_auth -y`
 - `blt codeception` will run all acceptance tests.
@@ -44,12 +63,10 @@ be the wrapper around the codeception commands.
 - `npm test` - Run tests for all Sass in the project (including humsci_basic).
 
 ## Other documentation
-* [Change Log](docs/CHANGELOG.md)
 * [Code Deployment Process](docs/CodeDeploy.md)
 * [Configuration Management Information](docs/Config.md)
 * [Launch Processes](docs/Launch.md)
 * [SSL Certificate Information](docs/LetsEncrypt.md)
-* [SAML Information](docs/SimpleSAML.md)
 * [New Site](docs/NewSite.md)
 
 ## Resources

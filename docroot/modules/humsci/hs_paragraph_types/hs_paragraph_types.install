@@ -342,7 +342,7 @@ function hs_paragraph_types_update_10009() {
     'core.entity_form_display.node.hs_private_page.default',
   ];
   // Load the configuration from the config/sync directory.
-  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $config_directory = \Drupal::service('config.storage.sync');
 
   foreach ($config_to_update as $config) {
     $config_data = $config_directory->read($config);
@@ -354,9 +354,8 @@ function hs_paragraph_types_update_10009() {
     $existing_config = $config_storage->load($config_data['id']);
 
     if ($existing_config) {
-      foreach ($config_data as $key => $value) {
-        $existing_config->set($key, $value);
-      }
+      $existing_config = $config_storage
+        ->updateFromStorageRecord($existing_config, $config_data);
       $existing_config->save();
     }
     else {

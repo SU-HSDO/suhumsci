@@ -53,16 +53,26 @@
 
     .hb-card__content {
       padding: hb-calculate-rems(32px) hb-spacing-width('sm');
+      flex-grow: 1;
+
+      &:has(.hs-button) {
+        padding-bottom: 0;
+
+        .hb-card__description {
+          margin-bottom: hb-calculate-rems(16px);
+        }
+      }
     }
 
     .hs-button {
       @include hb-secondary-button;
 
       position: relative;
-      width: 100%;
       border-width: 0;
       border-top-width: 2px;
       margin-top: auto;
+      margin-left: hb-calculate-rems(-24px);
+      margin-right: hb-calculate-rems(-24px);
 
       // Warbler color pairing override.
       .ht-pairing-warbler & {
@@ -79,19 +89,13 @@
         padding-top: 0;
       }
     }
-
-    &:has(.hs-button) {
-      .hb-card__content {
-        padding-bottom: hb-calculate-rems(16px);
-      }
-    }
   }
 
   @include hb-colorful {
     .hb-card__graphics {
       &, .hb-raised-cards & {
         padding: 0 hb-calculate-rems(36px);
-        margin-bottom: hb-calculate-rems(-20px);
+        margin-bottom: hb-calculate-rems(-40px);
       }
     }
 
@@ -100,7 +104,7 @@
     }
 
     .hb-card__content {
-      padding: hb-calculate-rems(62px) hb-calculate-rems(36px) hb-calculate-rems(32px);
+      padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
       border: 2px solid var(--palette--tertiary-highlight);
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 10%, transparent);
       background-color: var(--palette--white);
@@ -110,6 +114,28 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+      }
+
+      .hb-raised-cards & {
+        padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
+      }
+    }
+
+    &:has(.hb-card__graphics) {
+      .hb-card__content {
+        padding-top: hb-calculate-rems(62px);
+
+        .hb-raised-cards & {
+          padding-top: hb-calculate-rems(62px);
+        }
+      }
+    }
+
+    .hb-card__content-wrapper {
+      .hb-raised-cards--uniform-height & {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
       }
     }
 

@@ -15,7 +15,9 @@ dependencies:
     - paragraphs.paragraphs_type.hs_collection
   module:
     - conditional_fields
-    - paragraphs_browser
+    - paragraphs
+    - paragraphs_ee
+    - paragraphs_features
 id: paragraph.hs_collection.default
 targetEntityType: paragraph
 bundle: hs_collection
@@ -53,29 +55,35 @@ content:
             effect_options: {  }
             selector: ''
   field_hs_collection_items:
-    type: paragraphs_browser
+    type: paragraphs
     weight: 7
     region: content
     settings:
       title: Component
       title_plural: Components
       edit_mode: closed
-      closed_mode: summary
+      closed_mode: preview
       autocollapse: all
-      closed_mode_threshold: '0'
-      add_mode: paragraphs_browser
+      closed_mode_threshold: 0
+      add_mode: modal
       form_display_mode: default
       default_paragraph_type: _none
       features:
-        duplicate: duplicate
+        add_above: add_above
         collapse_edit_all: collapse_edit_all
-        add_above: 0
-      paragraphs_browser: content
-      modal_width: 80%
-      modal_height: auto
-      show_group_label: true
-      show_group_filter: true
-    third_party_settings: {  }
+        convert: '0'
+        duplicate: duplicate
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        show_drag_and_drop: true
+        show_collapse_all: true
+      paragraphs_ee:
+        paragraphs_ee:
+          dialog_off_canvas: false
+          dialog_style: tiles
   field_hs_collection_per_row:
     type: options_select
     weight: 2

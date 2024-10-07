@@ -5,9 +5,9 @@
  * hs_paragraph_types.module
  */
 
-use Drupal\Core\Form\FormStateInterface;
-use \Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -17,29 +17,22 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $bundle = $paragraph->bundle();
 
-  // Exit early if it's not a relevant bundle
+  // Exit early if it's not a relevant bundle.
   if (!in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    return NULL;
+    return;
   }
 
   $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
   $variables['attributes']['class'][] = 'hs-paragraph-style';
 
-  // Logic for private collections
-  if ($bundle == 'hs_priv_collection') {
-    // Logic for private collections
-    $row_style = $paragraph->get('field_paragraph_style')->getString();
-    if (!empty($row_style)) {
-      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $row_style;
-    }
+  if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
     return;
   }
-  
-  // Logic for normal collections.
-  // Replace underscores with hyphens in the bg_color value
+
+  // Replace underscores with hyphens in the bg_color value.
   $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
 
-  // Append "-well" to the bg_color
+  // Append "-well" to the bg_color.
   $bg_width = $paragraph->get('field_bg_color_width')->getString();
   if (!empty($bg_color)) {
     $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
@@ -68,6 +61,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
   $elements_to_change = [
     'field_hs_carousel_slides',
     'field_hs_sptlght_sldes',
+    'field_hs_page_components',
   ];
   // We need the field name to alter the correct element.
   if (
@@ -95,6 +89,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         $field_widget_form['widget'][$key]['top']['type']['label']['#markup'] = t('@label', ['@label' => $new_label]);
       }
       break;
+
     case 'field_hs_sptlght_sldes':
       // Change the spotlight widget title.
       $new_label = 'Spotlight(s)';
@@ -106,62 +101,56 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         ]);
       }
       break;
-  }
-}
 
-/**
- * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
- */
-function hs_paragraph_types_field_widget_complete_paragraphs_browser_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
-  // There are multiple issues with setting and removing the required state
-  // from paragraph fields when using the `conditional_fields` module, so
-  // use form alter to use the states api instead.
-  // @see https://www.drupal.org/project/conditional_fields/issues/3344587
-  // Check that hs_collection is the correct paragraph type
-  // and correct fields are present.
-  if (empty($field_widget_form['widget']['#field_name']) || $field_widget_form['widget']['#field_name'] != 'field_hs_page_components') {
-    return NULL;
-  }
-  foreach (Element::children($field_widget_form['widget']) as $key) {
-    if (!is_int($key)) {
-      continue;
-    }
-    $element = $field_widget_form['widget'][$key];
-    if (
-      empty($element['#paragraph_type']) ||
-      $element['#paragraph_type'] != 'hs_collection' ||
-      empty($element['subform']['field_title']) ||
-      empty($element['subform']['field_title_settings'])
-    ) {
-      continue;
-    }
-    // Build title settings name for this component.
-    $title_settings_name = '';
-    foreach ($element['subform']['field_title_settings']['widget']['#field_parents'] as $delta) {
-      if (!empty($title_settings_name)) {
-        $delta = "[$delta]";
+    case 'field_hs_page_components':
+      // There are multiple issues with setting and removing the required state
+      // from paragraph fields when using the `conditional_fields` module, so
+      // use form alter to use the states api instead.
+      // @see https://www.drupal.org/project/conditional_fields/issues/3344587
+      // Check that hs_collection is the correct paragraph type
+      // and correct fields are present.
+      foreach (Element::children($field_widget_form['widget']) as $key) {
+        if (!is_int($key)) {
+          continue;
+        }
+        $element = $field_widget_form['widget'][$key];
+        if (
+          empty($element['#paragraph_type']) ||
+          $element['#paragraph_type'] != 'hs_collection' ||
+          empty($element['subform']['field_title']) ||
+          empty($element['subform']['field_title_settings'])
+        ) {
+          continue;
+        }
+        // Build title settings name for this component.
+        $title_settings_name = '';
+        foreach ($element['subform']['field_title_settings']['widget']['#field_parents'] as $delta) {
+          if (!empty($title_settings_name)) {
+            $delta = "[$delta]";
+          }
+          $title_settings_name .= $delta;
+        }
+        $title_settings_name .= '[field_title_settings]';
+
+        $header_conditions = [
+          ':input[name="' . $title_settings_name . '"]' => [
+            [
+              'value' => 'collection_title_visible',
+            ],
+            'or',
+            [
+              'value' => 'collection_title_sr_only',
+            ],
+          ],
+        ];
+
+        $element['subform']['field_title']['widget'][0]['value']['#states'] = [
+          'required' => [$header_conditions],
+          'visible' => [$header_conditions],
+        ];
+        $field_widget_form['widget'][$key] = $element;
       }
-      $title_settings_name .= $delta;
-    }
-    $title_settings_name .= '[field_title_settings]';
-
-    $header_conditions = [
-      ':input[name="' . $title_settings_name . '"]' => [
-        [
-          'value' => 'collection_title_visible',
-        ],
-        'or',
-        [
-          'value' => 'collection_title_sr_only',
-        ],
-      ],
-    ];
-
-    $element['subform']['field_title']['widget'][0]['value']['#states'] = [
-      'required' => [$header_conditions],
-      'visible' => [$header_conditions],
-    ];
-    $field_widget_form['widget'][$key] = $element;
+      break;
   }
 }
 

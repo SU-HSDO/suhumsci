@@ -66,7 +66,7 @@ class HumsciCommands extends DrushCommands {
         $collection = $paragraph_storage->create([
           'type' => $collection_type,
           'field_hs_collection_per_row' => count($row_components),
-          'field_paragraph_style' => $style,
+          'field_bg_color' => $style,
         ]);
         $collection->save();
         $collection_components = [];

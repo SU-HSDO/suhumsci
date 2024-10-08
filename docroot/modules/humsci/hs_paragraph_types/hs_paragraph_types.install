@@ -333,3 +333,11 @@ function hs_paragraph_types_update_10008(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
+
+/**
+ * Removes legacy background color field from collection and priv collection.
+ */
+function hs_paragraph_types_update_10009() {
+  FieldConfig::loadByName('paragraph', 'hs_collection', 'field_paragraph_style')->delete();
+  FieldConfig::loadByName('paragraph', 'hs_priv_collection', 'field_paragraph_style')->delete();
+}

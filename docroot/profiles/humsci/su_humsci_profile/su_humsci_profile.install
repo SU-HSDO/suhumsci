@@ -479,9 +479,9 @@ function su_humsci_profile_update_9701(&$sandbox) {
     $new_entity->save();
     $sandbox['convert'][$eck_type][$id] = $new_entity->id();
 
-    // Clear entity caches
-    $entity_type_manager->getStorage($eck_type)->resetCache(array($id));
-    $entity_type_manager->getStorage('hs_entity')->resetCache(array($new_entity->id()));
+    // Clear entity caches.
+    $entity_type_manager->getStorage($eck_type)->resetCache([$id]);
+    $entity_type_manager->getStorage('hs_entity')->resetCache([$new_entity->id()]);
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
@@ -907,7 +907,6 @@ function su_humsci_profile_update_9706() {
   return "Removed " . $count_config . " config dependencies and " . $count_module . " module dependencies.";
 }
 
-
 /**
  * Delete eck configuration and uninstall eck module.
  */
@@ -920,7 +919,6 @@ function su_humsci_profile_update_9707() {
   \Drupal::service('module_installer')->uninstall(['eck']);
 }
 
-
 /**
  * Uninstall page_cache.
  */
@@ -929,9 +927,17 @@ function su_humsci_profile_update_9708() {
 }
 
 /**
- * Uninstall and remove config for hs_webform module and webform.
+ * Install paragraphs_ee and paragraphs_features modules.
  */
 function su_humsci_profile_update_9709() {
+  \Drupal::service('module_installer')->install(['paragraphs_features']);
+  \Drupal::service('module_installer')->install(['paragraphs_ee']);
+}
+
+/**
+ * Uninstall and remove config for hs_webform module and webform.
+ */
+function su_humsci_profile_update_9710() {
   // Remove existing paragraph entities.
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   $paragraph_machine_name = 'hs_webform';

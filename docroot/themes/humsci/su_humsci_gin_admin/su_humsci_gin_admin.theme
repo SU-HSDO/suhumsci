@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Theme functions for su_humsci_gin_admin theme.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Template\Attribute;
+use Drupal\paragraphs\ParagraphInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
+  // Adds the fe theme admin-preview library on flexible and private page forms.
+  if (preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id)) {
+    $theme = \Drupal::config('system.theme')->get('default');
+    $form['#attached']['library'][] = $theme . '/admin-preview';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function su_humsci_gin_admin_preprocess(&$variables, $hook) {
+  if (!(str_starts_with($hook, 'pattern_') || $hook == 'paragraph')) {
+    return;
+  }
+  $theme = \Drupal::config('system.theme')->get('default');
+  $color_pairing = theme_get_setting('theme_color_pairing', $theme);
+  $prefix = [
+    'humsci_traditional' => 'ht',
+    'humsci_colorful' => 'hc',
+  ];
+
+  $classes = [];
+  $classes[] = $prefix[$theme] . '-pairing-' . $color_pairing;
+  if ($hook === 'paragraph') {
+    $classes[] = 'paragraph-item';
+    $classes[] = 'ptype-' . Html::cleanCssIdentifier($variables['paragraph']->getType());
+  }
+  else {
+    $paragraph = isset($variables['context']) ? $variables['context']->getProperty('entity') : NULL;
+    if ($paragraph instanceof ParagraphInterface && $paragraph->bundle() == 'hs_hero_image') {
+      $parent = $paragraph->getParentEntity();
+      if ($parent instanceof ParagraphInterface) {
+        $classes[] = 'paragraph--type--hs-carousel';
+      }
+    }
+  }
+
+  $variables['wrapper_attributes'] = new Attribute();
+  $variables['wrapper_attributes']->addClass($classes);
+}

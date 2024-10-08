@@ -1,0 +1,58 @@
+uuid: ffc2cd1f-cb6d-4db8-9274-55c970e47ce8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_gradient_hero_slider.field_hs_gradient_hero_slides
+    - paragraphs.paragraphs_type.hs_gradient_hero_slider
+  module:
+    - ds
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - slick_paragraphs
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.hs_gradient_hero_slider.preview
+targetEntityType: paragraph
+bundle: hs_gradient_hero_slider
+mode: preview
+content:
+  field_hs_gradient_hero_slides:
+    type: slick_paragraphs_vanilla
+    label: hidden
+    settings:
+      optionset: hs_slideshow
+      view_mode: hero_layered_slide
+      cache: 0
+      use_theme_field: false
+      skin: ''
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      override: false
+      skin_arrows: ''
+      skin_dots: ''
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      ds:
+        ds_limit: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

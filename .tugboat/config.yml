@@ -17,6 +17,7 @@ services:
     aliases:
       - hs-colorful
       - hs-traditional
+      - english
 
     # A set of commands to run while building this service
     commands:
@@ -42,7 +43,7 @@ services:
         - rm -rf vendor
         - composer install --no-ansi
         - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=67108864;'
-        # Sync to hs_colorful and hs_colorful database & files.
+        # Sync to hs_colorful, hs_colorful and english database & files.
         - blt drupal:sync:files --site=hs_colorful
         - drush @hs_colorful.local user:create tugboat --password=tugboat || true
         - drush @hs_colorful.local user:role:add administrator tugboat || true
@@ -50,6 +51,8 @@ services:
         - blt drupal:sync:files --site=hs_traditional
         - drush @hs_traditional.local user:create tugboat --password=tugboat || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
+
+        - blt drupal:sync:files --site=english
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
@@ -64,6 +67,10 @@ services:
         - drush @hs_traditional.local cr
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
+
+        - drush @english.local cr
+        - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=english
 
         - npm run theme-build
 
@@ -83,6 +90,7 @@ services:
         # Delete and recreate the database for each site.
         - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
         - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"
+        - mysql -e "DROP DATABASE IF EXISTS english; CREATE DATABASE english;"
 
         # Give the tugboat user access to the new databases.
         - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'tugboat'; FLUSH PRIVILEGES;"
@@ -90,10 +98,12 @@ services:
         # Download each database dump.
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_colorful-humscigrydb423120-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_colorful.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_traditional-humscigrydb423132-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_traditional.sql.gz
+        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-english-humscigrydb423084-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/english.sql.gz
 
         # Import each database dump into the associated table.
         - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
         - zcat /tmp/hs_traditional.sql.gz | mysql hs_traditional
+        - zcat /tmp/english.sql.gz | mysql english
 
         # Clean up after ourselves to keep the Preview size small.
         - rm /tmp/*.sql.gz

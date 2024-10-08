@@ -335,9 +335,41 @@ function hs_paragraph_types_update_10008(&$sandbox) {
 }
 
 /**
- * Removes legacy background color field from collection and priv collection.
+ * Moves drag & drop action for paragraphs from 3 dot menu to paragraph toolbar.
  */
 function hs_paragraph_types_update_10009() {
+  $config_to_update = [
+    'core.entity_form_display.node.hs_basic_page.default',
+    'core.entity_form_display.node.hs_private_page.default',
+  ];
+  // Load the configuration from the config/sync directory.
+  $config_directory = \Drupal::service('config.storage.sync');
+
+  foreach ($config_to_update as $config) {
+    $config_data = $config_directory->read($config);
+
+    // Check if the form display configuration already exists.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    /** @var ConfigEntityStorageInterface $config_storage */
+    $config_storage = $entity_type_manager->getStorage('entity_form_display');
+    $existing_config = $config_storage->load($config_data['id']);
+
+    if ($existing_config) {
+      $existing_config = $config_storage
+        ->updateFromStorageRecord($existing_config, $config_data);
+      $existing_config->save();
+    }
+    else {
+      // If it doesn't exist, create and save it.
+      $config_storage->create($config_data)->save();
+    }
+  }
+}
+
+/**
+ * Removes legacy background color field from collection and priv collection.
+ */
+function hs_paragraph_types_update_10010() {
   FieldConfig::loadByName('paragraph', 'hs_collection', 'field_paragraph_style')->delete();
   FieldConfig::loadByName('paragraph', 'hs_priv_collection', 'field_paragraph_style')->delete();
 }

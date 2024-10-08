@@ -925,9 +925,17 @@ function su_humsci_profile_update_9708() {
 }
 
 /**
- * Updates existing blocks with new SAML logout button functionality.
+ * Install paragraphs_ee and paragraphs_features modules.
  */
 function su_humsci_profile_update_9709() {
+  \Drupal::service('module_installer')->install(['paragraphs_features']);
+  \Drupal::service('module_installer')->install(['paragraphs_ee']);
+}
+
+/**
+ * Updates existing blocks with new SAML logout button functionality.
+ */
+function su_humsci_profile_update_9710() {
   $entity_type_manager = \Drupal::entityTypeManager();
   $blocks = $entity_type_manager->getStorage('block')->loadByProperties([
     'plugin' => 'stanford_samlauth_login_block',

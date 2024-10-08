@@ -39,11 +39,11 @@
 // hero component base
 @mixin hb-hero-component {
   position: relative;
-  min-height: 39rem;
+  min-height: hb-calculate-rems(390px);
   display: flex;
 
   @include grid-media-min('md') {
-    min-height: 49rem;
+    min-height: hb-calculate-rems(490px);
   }
 
   @include hb-hero-full-width;
@@ -95,7 +95,7 @@
     height: inherit;
     width: 100%;
     object-fit: cover;
-    
+
     @include hb-themes(('colorful', 'airy')) {
       &.animate {
         .hb-has-animation-enhancements & {

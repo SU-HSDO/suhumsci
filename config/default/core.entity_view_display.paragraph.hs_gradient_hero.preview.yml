@@ -11,8 +11,36 @@ dependencies:
     - field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_title
     - paragraphs.paragraphs_type.hs_gradient_hero
   module:
+    - ds
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
     - layout_builder
+    - link
+    - smart_trim
+    - stanford_media
 third_party_settings:
+  ds:
+    layout:
+      id: pattern_gradient-hero
+      library: null
+      disable_css: false
+      entity_classes: all_classes
+      settings:
+        pattern:
+          field_templates: default
+          variant: _field
+          variant_field: field_hs_gradient_hero_align
+          variant_field_values:
+            default: content-default
+            right: content-right
+    regions:
+      image:
+        - field_hs_gradient_hero_image
+      overlay_text:
+        - field_hs_gradient_hero_title
+        - field_hs_gradient_hero_body
+        - field_hs_gradient_hero_link
   layout_builder:
     enabled: false
     allow_custom: false
@@ -20,11 +48,75 @@ id: paragraph.hs_gradient_hero.preview
 targetEntityType: paragraph
 bundle: hs_gradient_hero
 mode: preview
-content: {  }
+content:
+  field_hs_gradient_hero_body:
+    type: smart_trim
+    label: hidden
+    settings:
+      trim_length: 200
+      trim_type: chars
+      trim_suffix: ''
+      wrap_output: false
+      wrap_class: trimmed
+      more:
+        display_link: false
+        target_blank: false
+        link_trim_only: false
+        class: more-link
+        text: More
+        aria_label: 'Read more about [node:title]'
+      summary_handler: full
+      trim_options:
+        text: false
+        trim_zero: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
+    region: overlay_text
+  field_hs_gradient_hero_image:
+    type: media_responsive_image_formatter
+    label: hidden
+    settings:
+      view_mode: caption_credit
+      link: false
+      image_style: hero_with_text
+      remove_alt: 0
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: image
+  field_hs_gradient_hero_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 3
+    region: overlay_text
+  field_hs_gradient_hero_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: overlay_text
 hidden:
   field_hs_gradient_hero_align: true
-  field_hs_gradient_hero_body: true
-  field_hs_gradient_hero_image: true
-  field_hs_gradient_hero_link: true
-  field_hs_gradient_hero_title: true
   search_api_excerpt: true

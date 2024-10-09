@@ -57,14 +57,14 @@
     @include hb-traditional { // hb-hero-overlay
       margin-top: 0;
       display: flex;
-      min-height: 32rem;
+      min-height: hb-calculate-rems(320px);
 
       &::before {
         animation: traditionalCarouselOverlay;
       }
 
       @include grid-media-min('md') {
-        min-height: 42rem;
+        min-height: hb-calculate-rems(420px);
       }
     }
 
@@ -208,7 +208,7 @@
         }
 
         @include grid-media-min('md') {
-          padding: 5rem 0;
+          padding: hb-calculate-rems(50px) 0;
           left: hb-spacing-width();
           width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
@@ -223,11 +223,11 @@
 
         @include grid-media-min('xl') {
           width: 48% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
-          margin: 5.2rem 0 !important;
+          margin: hb-calculate-rems(52px) 0 !important;
         }
 
         @include grid-media-min('2xl') {
-          width: 650px !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+          width: hb-calculate-rems(650px) !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
 
         &.animate {
@@ -569,7 +569,7 @@
         }
 
         @include hb-colorful {
-          bottom: 6rem;
+          bottom: hb-calculate-rems(60px);
 
           .hb-three-column--one-sidebar &,
           .hb-three-column--two-sidebar & {
@@ -588,7 +588,7 @@
           }
 
           .hs-full-width & {
-            bottom: 11rem;
+            bottom: hb-calculate-rems(110px);
 
             @include grid-media-min('md') {
               bottom: hb-calculate-rems(47px);

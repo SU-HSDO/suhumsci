@@ -31,34 +31,35 @@
 
     &:hover,
     &:focus {
-      color: $su-color-black;
-      text-decoration: none;
+      background-color: transparent;
+      color: #413e39;
+    }
+  }
+
+  &--text-light {
+    .hb-dark-pattern & a,
+    a:not([class]),
+    a.mailto,
+    a[href^='mailto:'],
+    a.ext,
+    a {
+      color: var(--palette--white);
+
+      &:hover,
+      &:focus {
+        color: #ebebeb;
+      }
     }
   }
 
   &--text-light,
-  &--text-light a,
   &--text-light .fa,
   &--text-light .fas,
-  &.su-alert--text-light a:not([class]),
-  &.su-alert--text-light a.mailto,
-  &.su-alert--text-light a[href^='mailto:'],
-  &.su-alert--text-light a.ext,
-  .hb-dark-pattern &.su-alert--text-light a,
   .hb-dark-pattern &.su-alert--text-light .fa,
   .hb-dark-pattern &.su-alert--text-light .fas,
   .hb-dark-pattern &.su-alert--text-light ol:not([class]) li::before,
   &--text-light ol:not([class]) li::before {
     color: var(--palette--white);
-
-    &:hover {
-      color: var(--palette--white);
-    }
-  }
-
-  // For light text, the hover links should be black.
-  &--text-light &__text a:hover {
-    color: var(--palette--black);
   }
 
   .hb-dark-pattern &--text-light ul:not([class]) li::before,
@@ -75,7 +76,7 @@
   }
 
   &--success {
-    background-color: #008566;
+    background-color: #00755a;
   }
 
   &--warning {
@@ -109,7 +110,7 @@
     font-weight: hb-theme-font-weight(semibold);
 
     &::after {
-      content: ":";
+      content: ':';
     }
   }
 

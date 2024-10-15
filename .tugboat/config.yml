@@ -20,7 +20,6 @@ services:
       - english
       - history
       - west
-      - economics
 
     # A set of commands to run while building this service
     commands:
@@ -55,14 +54,13 @@ services:
         - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
         
-        # Sync to english, history,west, economics hs_colorful database & files and create user.
+        # Sync to english, history, and west database & files, does not create a user.
         - blt drupal:sync:files --site=english
 
         - blt drupal:sync:files --site=history
 
         - blt drupal:sync:files --site=west
 
-        - blt drupal:sync:files --site=economics
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
@@ -90,10 +88,6 @@ services:
         - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=west
 
-        - drush @economics.local cr
-        - drush @economics.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=economics
-
         - npm run theme-build
 
     # Collection of urls to compare visual results.
@@ -118,7 +112,6 @@ services:
         - mysql -e "DROP DATABASE IF EXISTS english; CREATE DATABASE english;"
         - mysql -e "DROP DATABASE IF EXISTS history; CREATE DATABASE history;"
         - mysql -e "DROP DATABASE IF EXISTS west; CREATE DATABASE west;"
-        - mysql -e "DROP DATABASE IF EXISTS economics; CREATE DATABASE economics;"
 
         # Give the tugboat user access to the new databases.
         - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'tugboat'; FLUSH PRIVILEGES;"
@@ -129,7 +122,6 @@ services:
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-english-humscigrydb423084-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/english.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-history-humscigrydb423116-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/history.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-west-humscigrydb423301-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/west.sql.gz
-        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-economics-humscigrydb423080-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/economics.sql.gz
 
         # Import each database dump into the associated table.
         - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
@@ -137,7 +129,6 @@ services:
         - zcat /tmp/english.sql.gz | mysql english
         - zcat /tmp/history.sql.gz | mysql history
         - zcat /tmp/west.sql.gz | mysql west
-        - zcat /tmp/economics.sql.gz | mysql economics
 
         # Clean up after ourselves to keep the Preview size small.
         - rm /tmp/*.sql.gz

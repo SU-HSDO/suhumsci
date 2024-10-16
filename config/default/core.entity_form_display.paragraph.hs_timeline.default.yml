@@ -9,6 +9,8 @@ dependencies:
     - paragraphs.paragraphs_type.hs_timeline
   module:
     - paragraphs
+    - paragraphs_ee
+    - paragraphs_features
 id: paragraph.hs_timeline.default
 targetEntityType: paragraph
 bundle: hs_timeline
@@ -37,17 +39,28 @@ content:
       title: 'Timeline Item'
       title_plural: 'Timeline Items'
       edit_mode: closed
-      closed_mode: summary
+      closed_mode: preview
       autocollapse: all
       closed_mode_threshold: 0
       add_mode: button
       form_display_mode: default
       default_paragraph_type: hs_timeline_item
       features:
-        add_above: '0'
+        add_above: add_above
         collapse_edit_all: collapse_edit_all
+        convert: '0'
         duplicate: duplicate
-    third_party_settings: {  }
+    third_party_settings:
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        show_drag_and_drop: true
+        show_collapse_all: true
+      paragraphs_ee:
+        paragraphs_ee:
+          dialog_off_canvas: false
+          dialog_style: tiles
 hidden:
   created: true
   status: true

@@ -53,9 +53,15 @@
       width: 100%;
     }
 
+    > h2 {
+      @include hb-page-width;
+    }
+
     .field-hs-row-components,
     .field-hs-collection-items {
-      @include hb-page-width;
+      .hb-three-column--no-sidebar & {
+        @include hb-page-width;
+      }
     }
   }
 

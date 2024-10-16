@@ -1,0 +1,31 @@
+uuid: 88bfa6a3-2dac-4bf9-8be8-1fb290a96ba4
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.hs_social_media_footer_block
+    - field.field.block_content.hs_social_media_footer_block.field_hs_block_hide_title
+    - field.field.block_content.hs_social_media_footer_block.field_icon_size
+    - field.field.block_content.hs_social_media_footer_block.field_layout
+    - field.field.block_content.hs_social_media_footer_block.field_links
+  module:
+    - entity_reference_revisions
+id: block_content.hs_social_media_footer_block.default
+targetEntityType: block_content
+bundle: hs_social_media_footer_block
+mode: default
+content:
+  field_links:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_hs_block_hide_title: true
+  field_icon_size: true
+  field_layout: true
+  search_api_excerpt: true

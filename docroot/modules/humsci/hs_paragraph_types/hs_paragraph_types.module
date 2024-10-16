@@ -18,27 +18,121 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $bundle = $paragraph->bundle();
 
   // Exit early if it's not a relevant bundle.
-  if (!in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    return;
+  if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
+    $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+    $variables['attributes']['class'][] = 'hs-paragraph-style';
+
+    if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
+      return;
+    }
+
+    // Replace underscores with hyphens in the bg_color value.
+    $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
+
+    // Append "-well" to the bg_color.
+    $bg_width = $paragraph->get('field_bg_color_width')->getString();
+    if (!empty($bg_color)) {
+      $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
+      $bg_color .= '-well';
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+    }
   }
 
-  $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
-  $variables['attributes']['class'][] = 'hs-paragraph-style';
+  // Set icon for social media links.
+  if ($paragraph->bundle() == 'hs_social_media_link' && $paragraph->hasField('field_url') && !$paragraph->get('field_url')->isEmpty()) {
+    $provider_url = $paragraph->get('field_url')->first()->getUrl()->toString();
+    $providers = [
+      [
+        'domains' => ['facebook.com', 'fb.com', 'fb.me'],
+        'icon_classes' => 'fa-brands fa-square-facebook',
+        'name' => 'Facebook',
+      ],
+      [
+        'domains' => ['twitter.com', 'x.com'],
+        'icon_classes' => 'fa-brands fa-square-x-twitter',
+        'name' => 'Twitter',
+      ],
+      [
+        'domains' => ['linkedin.com', 'lnkd.in'],
+        'icon_classes' => 'fa-brands fa-linkedin',
+        'name' => 'Linkedin',
+      ],
+      [
+        'domains' => ['instagram.com', 'instagr.am'],
+        'icon_classes' => 'fa-brands fa-square-instagram',
+        'name' => 'Instagram',
+      ],
+      [
+        'domains' => ['youtube.com', 'youtu.be'],
+        'icon_classes' => 'fa-brands fa-square-youtube',
+        'name' => 'Youtube',
+      ],
+      [
+        'domains' => ['vimeo.com'],
+        'icon_classes' => 'fa-brands fa-vimeo',
+        'name' => 'Vimeo',
+      ],
+      [
+        'domains' => ['snapchat.com'],
+        'icon_classes' => 'fa-brands fa-square-snapchat',
+        'name' => 'Snapchat',
+      ],
+      [
+        'domains' => ['soundcloud.com'],
+        'icon_classes' => 'fa-brands fa-soundcloud',
+        'name' => 'Soundcloud',
+      ],
+      [
+        'domains' => ['spotify.com'],
+        'icon_classes' => 'fa-brands fa-spotify',
+        'name' => 'Spotify',
+      ],
+      [
+        'domains' => ['apple.com'],
+        'icon_classes' => 'fa-brands fa-apple',
+        'name' => 'Apple',
+      ],
+      [
+        'domains' => ['telegram.me', 't.me'],
+        'icon_classes' => 'fa-brands fa-telegram',
+        'name' => 'Telegram',
+      ],
+      [
+        'domains' => ['mailto:'],
+        'icon_classes' => 'fa-solid fa-square-envelope',
+        'name' => 'Email',
+      ],
+      [
+        'domains' => ['pinterest.com', 'pin.it'],
+        'icon_classes' => 'fa-brands fa-square-pinterest',
+        'name' => 'Pinterest',
+      ],
+      [
+        'domains' => ['tiktok.com'],
+        'icon_classes' => 'fa-brands fa-tiktok',
+        'name' => 'Tiktok',
+      ],
+    ];
 
-  if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
-    return;
-  }
+    foreach ($providers as $provider) {
+      foreach ($provider['domains'] as $domain) {
+        if (strpos($provider_url, $domain) !== FALSE) {
+          $variables['icon_classes'] = $provider['icon_classes'];
+          $variables['name'] = $provider['name'];
+          break 2;
+        }
+      }
+    }
 
-  // Replace underscores with hyphens in the bg_color value.
-  $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
-
-  // Append "-well" to the bg_color.
-  $bg_width = $paragraph->get('field_bg_color_width')->getString();
-  if (!empty($bg_color)) {
-    $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-    $bg_color .= '-well';
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+    if (!isset($variables['icon_classes'])) {
+      $variables['icon_classes'] = 'fa-solid fa-globe';
+      $variables['name'] = '';
+      // Use the domain as the name if the provider is not listed above.
+      if (preg_match('/https?:\/\/(.+?)\//', $provider_url, $matches)) {
+        $variables['name'] = $matches[1];
+      }
+    }
   }
 }
 

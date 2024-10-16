@@ -1,0 +1,70 @@
+.block-social-media-footer {
+  ul {
+    @include hb-list-empty-styles;
+  }
+
+  li {
+    display: flex;
+  }
+
+  .social-media-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .social-media-link__icon {
+    width: 1em;
+    text-align: center;
+
+    // Override for Soundcloud icon (too wide).
+    &.fa-soundcloud {
+      font-size: 0.73em;
+      width: 1.37em;
+    }
+  }
+}
+
+// Grid Layout.
+.block-social-media-footer--layout-grid {
+  ul {
+    display: grid;
+    gap: hb-calculate-rems(16px);
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .social-media-link__label {
+    @include visually-hidden;
+  }
+}
+
+// Vertical List Layout.
+.block-social-media-footer--layout-vertical-list {
+  li {
+    margin-bottom: hb-calculate-rems(16px);
+  }
+
+  .social-media-link {
+    gap: hb-calculate-rems(16px);
+  }
+
+  .social-media-link__label {
+    font-size: hb-calculate-rems(16px);
+    text-decoration: underline;
+  }
+}
+
+// Small icons.
+.block-social-media-footer--icons-small {
+  .social-media-link {
+    font-size: hb-calculate-rems(32px);
+  }
+}
+
+// Large icons.
+.block-social-media-footer--icons-large {
+  .social-media-link {
+    font-size: hb-calculate-rems(48px);
+  }
+}

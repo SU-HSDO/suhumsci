@@ -998,9 +998,16 @@ function su_humsci_profile_update_9712() {
 }
 
 /**
- * Uninstall and remove config for hs_webform module and webform.
+ * Uninstall admin_login_path module.
  */
 function su_humsci_profile_update_9713() {
+  \Drupal::service('module_installer')->uninstall(['admin_login_path']);
+}
+
+/**
+ * Uninstall and remove config for hs_webform module and webform.
+ */
+function su_humsci_profile_update_9714() {
   // Remove existing paragraph entities.
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   $paragraph_machine_name = 'hs_webform';

@@ -369,6 +369,10 @@ function hs_paragraph_types_update_10009() {
  * Removes legacy background color field from collection and priv collection.
  */
 function hs_paragraph_types_update_10010() {
-  FieldConfig::loadByName('paragraph', 'hs_collection', 'field_paragraph_style')->delete();
-  FieldConfig::loadByName('paragraph', 'hs_priv_collection', 'field_paragraph_style')->delete();
+  if ($hs_collection_style = FieldConfig::loadByName('paragraph', 'hs_collection', 'field_paragraph_style')) {
+    $hs_collection_style->delete();
+  }
+  if ($hs_priv_collection_style = FieldConfig::loadByName('paragraph', 'hs_priv_collection', 'field_paragraph_style')) {
+    $hs_priv_collection_style->delete();
+  }
 }

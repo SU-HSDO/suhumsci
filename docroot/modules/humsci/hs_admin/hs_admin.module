@@ -191,13 +191,39 @@ function hs_admin_preprocess_page(&$variables) {
 /**
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
-function hs_admin_field_widget_complete_paragraphs_browser_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
+function hs_admin_field_widget_complete_paragraphs_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
   $max_delta = $field_widget_complete_form['widget']['#max_delta'] ?? -1;
   for ($delta = 0; $delta <= $max_delta; $delta++) {
     if (isset($field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'])) {
       $duplicate_button = &$field_widget_complete_form['widget'][$delta]['top']['actions']['dropdown_actions']['duplicate_button'];
       $duplicate_button['#ajax']['callback'] = 'su_humsci_profile_paragraphs_duplicate_callback';
+      // Remove icon from paragraph items in node edit form.
+      unset($field_widget_complete_form['widget'][$delta]['top']['type']['icon']);
     }
+  }
+  // Change the add paragraph button in flexible page, private page and
+  // collection fields.
+  $fields_to_change = [
+    'field_hs_page_components',
+    'field_hs_page_hero',
+    'field_hs_priv_page_components',
+    'field_hs_collection_items',
+  ];
+  if (
+    empty($field_widget_complete_form['widget']['#field_name']) ||
+    !in_array($field_widget_complete_form['widget']['#field_name'], $fields_to_change) ||
+    !isset($field_widget_complete_form['widget']['add_more']['add_modal_form_area'])) {
+    return;
+  }
+  // Remove suffix after the add button.
+  unset($field_widget_complete_form['widget']['add_more']['add_modal_form_area']['#suffix']);
+  if (!isset($field_widget_complete_form['widget']['add_more']['add_modal_form_area']['add_more']['#attributes']['class'])) {
+    return;
+  }
+  // Change the class of the button to make it bigger.
+  $class_index = array_search('button--small', $field_widget_complete_form['widget']['add_more']['add_modal_form_area']['add_more']['#attributes']['class']);
+  if ($class_index !== FALSE) {
+    $field_widget_complete_form['widget']['add_more']['add_modal_form_area']['add_more']['#attributes']['class'][$class_index] = 'button';
   }
 }
 
@@ -209,6 +235,7 @@ function hs_admin_field_widget_complete_menu_link_default_form_alter(array &$fie
   foreach (Element::children($field_widget_form['widget']) as $key) {
     if (!is_int($key) || !isset($field_widget_form['widget'][$key]['expanded'])) {
       continue;
+
     }
     // Disable access to `expanded` checkbox.
     $field_widget_form['widget'][$key]['expanded']['#access'] = FALSE;

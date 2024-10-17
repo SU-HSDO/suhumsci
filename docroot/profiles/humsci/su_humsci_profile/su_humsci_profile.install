@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\user\RoleInterface;
 
 /**
@@ -475,9 +476,9 @@ function su_humsci_profile_update_9701(&$sandbox) {
     $new_entity->save();
     $sandbox['convert'][$eck_type][$id] = $new_entity->id();
 
-    // Clear entity caches
-    $entity_type_manager->getStorage($eck_type)->resetCache(array($id));
-    $entity_type_manager->getStorage('hs_entity')->resetCache(array($new_entity->id()));
+    // Clear entity caches.
+    $entity_type_manager->getStorage($eck_type)->resetCache([$id]);
+    $entity_type_manager->getStorage('hs_entity')->resetCache([$new_entity->id()]);
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
@@ -903,7 +904,6 @@ function su_humsci_profile_update_9706() {
   return "Removed " . $count_config . " config dependencies and " . $count_module . " module dependencies.";
 }
 
-
 /**
  * Delete eck configuration and uninstall eck module.
  */
@@ -915,7 +915,6 @@ function su_humsci_profile_update_9707() {
   // Uninstall eck module.
   \Drupal::service('module_installer')->uninstall(['eck']);
 }
-
 
 /**
  * Uninstall page_cache.
@@ -930,4 +929,67 @@ function su_humsci_profile_update_9708() {
 function su_humsci_profile_update_9709() {
   \Drupal::service('module_installer')->install(['paragraphs_features']);
   \Drupal::service('module_installer')->install(['paragraphs_ee']);
+}
+
+/**
+ * Remove any existing hs_row paragraph entities.
+ */
+function su_humsci_profile_update_9710($sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $paragraph_machine_name = 'hs_row';
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->condition('type', $paragraph_machine_name)
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete hs_row paragraph type.
+ */
+function su_humsci_profile_update_9711() {
+  $paragraph_machine_name = 'hs_row';
+  // Delete the field and field storage on the paragraph.
+  $fields = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->loadByProperties(['bundle' => $paragraph_machine_name]);
+
+  if ($fields) {
+    foreach ($fields as $field) {
+      /** @var Drupal\field\Entity $field */
+
+      // Delete the field configuration (instance) from the paragraph type.
+      $field->delete();
+    }
+  }
+
+  // Delete the field_hs_row_components field storage.
+  $field_storage = FieldStorageConfig::load('field_hs_row_components');
+  if ($field_storage) {
+    $field_storage->delete();
+  }
+
+  // Delete the paragraph itself.
+  $paragraph_type = ParagraphsType::load($paragraph_machine_name);
+  if ($paragraph_type) {
+    $paragraph_type->delete();
+  }
+}
+
+/**
+ * Uninstall hs_row modules.
+ */
+function su_humsci_profile_update_9712() {
+  // Uninstall hs_row and hs_row_display modules.
+  \Drupal::service('module_installer')->uninstall(['hs_row', 'hs_row_display']);
 }

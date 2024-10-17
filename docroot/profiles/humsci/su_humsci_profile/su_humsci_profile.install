@@ -935,9 +935,72 @@ function su_humsci_profile_update_9709() {
 }
 
 /**
+ * Remove any existing hs_row paragraph entities.
+ */
+function su_humsci_profile_update_9710($sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $paragraph_machine_name = 'hs_row';
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->condition('type', $paragraph_machine_name)
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete hs_row paragraph type.
+ */
+function su_humsci_profile_update_9711() {
+  $paragraph_machine_name = 'hs_row';
+  // Delete the field and field storage on the paragraph.
+  $fields = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->loadByProperties(['bundle' => $paragraph_machine_name]);
+
+  if ($fields) {
+    foreach ($fields as $field) {
+      /** @var Drupal\field\Entity $field */
+
+      // Delete the field configuration (instance) from the paragraph type.
+      $field->delete();
+    }
+  }
+
+  // Delete the field_hs_row_components field storage.
+  $field_storage = FieldStorageConfig::load('field_hs_row_components');
+  if ($field_storage) {
+    $field_storage->delete();
+  }
+
+  // Delete the paragraph itself.
+  $paragraph_type = ParagraphsType::load($paragraph_machine_name);
+  if ($paragraph_type) {
+    $paragraph_type->delete();
+  }
+}
+
+/**
+ * Uninstall hs_row modules.
+ */
+function su_humsci_profile_update_9712() {
+  // Uninstall hs_row and hs_row_display modules.
+  \Drupal::service('module_installer')->uninstall(['hs_row', 'hs_row_display']);
+}
+
+/**
  * Uninstall and remove config for hs_webform module and webform.
  */
-function su_humsci_profile_update_9710() {
+function su_humsci_profile_update_9713() {
   // Remove existing paragraph entities.
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   $paragraph_machine_name = 'hs_webform';

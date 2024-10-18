@@ -508,6 +508,10 @@ function hs_field_helpers_preprocess_field(&$variables) {
       }
       $pitem['attributes']['class'][] = "paragraph-item";
       $pitem['attributes']['class'][] = $ptype;
+
+      if ($paragraph_type == 'hs_clr_bnd') {
+        $pitem['attributes']['id'] = 'component-' . $pitem['content']['#paragraph']->id();
+      }
     }
   }
 }

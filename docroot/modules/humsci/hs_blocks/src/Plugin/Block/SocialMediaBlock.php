@@ -118,7 +118,7 @@ final class SocialMediaBlock extends BlockBase {
       'route_parameters' => ['block' => $this->getDerivativeId()],
     ];
 
-    $build['#attached']['library'][] = 'contextual';
+    $build['#attached']['library'][] = 'contextual/drupal.contextual-links';
 
     return $build;
   }

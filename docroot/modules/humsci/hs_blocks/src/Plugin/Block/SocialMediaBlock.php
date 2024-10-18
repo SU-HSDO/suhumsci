@@ -26,6 +26,7 @@ final class SocialMediaBlock extends BlockBase {
     return [
       'icon_size' => 'small',
       'layout' => 'grid',
+      'links' => [],
     ];
   }
 
@@ -109,7 +110,8 @@ final class SocialMediaBlock extends BlockBase {
       '#links' => $this->configuration['links'],
       '#cache' => [
         'tags' => $this->getCacheTags(),
-      ]
+        'contexts' => ['user'],
+      ],
     ];
 
     $build['#contextual_links']['hs_blocks.social_media_block'] = [

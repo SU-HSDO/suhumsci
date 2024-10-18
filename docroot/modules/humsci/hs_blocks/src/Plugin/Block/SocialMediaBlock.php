@@ -118,6 +118,8 @@ final class SocialMediaBlock extends BlockBase {
       'route_parameters' => ['block' => $this->getDerivativeId()],
     ];
 
+    $build['#attached']['library'][] = 'contextual';
+
     return $build;
   }
 

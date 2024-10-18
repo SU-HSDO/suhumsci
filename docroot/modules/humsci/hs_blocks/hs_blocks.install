@@ -78,3 +78,10 @@ function _hs_blocks_fix_sections(array $sections) {
   }
   return $was_changed;
 }
+
+/**
+ * Update user permissions for new social media block.
+ */
+function hs_blocks_update_10201() {
+  user_role_grant_permissions('site_manager', ['edit social media block']);
+}

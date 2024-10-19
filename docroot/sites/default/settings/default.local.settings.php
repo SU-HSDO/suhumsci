@@ -157,3 +157,12 @@ $settings['file_public_path'] = 'sites/' . EnvironmentDetector::getSiteName($sit
 $settings['trusted_host_patterns'] = [
   '^.+$',
 ];
+
+// Include additional settings files for local development
+$additionalSettingsFiles = [__DIR__ . '/settings.ddev.php'];
+
+foreach ($additionalSettingsFiles as $additionalSettingsFile) {
+  if (file_exists($additionalSettingsFile)) {
+    require $additionalSettingsFile;
+  }
+}

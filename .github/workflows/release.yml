@@ -53,11 +53,11 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-            1.x-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
-            1.x-${{ hashFiles('blt/blt.yml') }}-
+            1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+            1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
+            1.0-${{ hashFiles('blt/blt.yml') }}-
       - name: Deploy Tag
         if: ${{ steps.tag.outputs.tag }}
         run: |

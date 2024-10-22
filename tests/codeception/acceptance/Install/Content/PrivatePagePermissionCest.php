@@ -36,6 +36,7 @@ class PrivatePagePermissionCest{
     $I->canSee('Test Private Page','h1');
     $url = $I->grabFromCurrentUrl();
     $I->amOnPage('/user/logout');
+    $I->click('Log out', 'form');
 
     // Test roles with permission
     foreach ($this->rolesWithAccess as $role) {
@@ -43,6 +44,7 @@ class PrivatePagePermissionCest{
       $I->amOnPage($url);
       $I->canSeeResponseCodeIs(200);
       $I->amOnPage('/user/logout');
+      $I->click('Log out', 'form');
     }
 
     // Test roles without permission
@@ -51,6 +53,7 @@ class PrivatePagePermissionCest{
       $I->amOnPage($url);
       $I->canSeeResponseCodeIs(403);
       $I->amOnPage('/user/logout');
+      $I->click('Log out', 'form');
     }
   }
 }

@@ -39,6 +39,7 @@ class FlexiblePageCest {
   public function _after(FunctionalTester $I) {
     if ($this->disableCollection) {
       $I->amOnPage('/user/logout');
+      $I->click('Log out', 'form');
       $I->logInWithRole('administrator');
       $I->amOnPage('/admin/structure/types/manage/hs_basic_page/fields/node.hs_basic_page.field_hs_page_components');
       $I->checkOption('Collection');

@@ -278,7 +278,7 @@ class FlexiblePageCest {
     $I->waitForText('No media items are selected');
     $I->fillField('.ck-editor__editable_inline', 'Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][uri]', 'http://yahoo.com');
-    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo Link');
+    $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_link][0][title]', 'Yahoo');
     $I->fillField('field_hs_page_components[0][subform][field_hs_sptlght_sldes][1][subform][field_hs_spotlight_title][0][value]', 'Spotlight #2 Title');
     $I->click('field_hs_spotlight_image-media-library-open-button-field_hs_page_components-0-subform-field_hs_sptlght_sldes-1-subform');
     $I->waitForText('Add or select media');
@@ -294,8 +294,8 @@ class FlexiblePageCest {
     $I->click('.slick-next');
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
-    $I->waitForText('Yahoo Link');
-    $I->canSee('Yahoo Link', 'a');
+    $I->waitForText('Yahoo');
+    $I->canSee('Yahoo', 'a');
     $I->canSeeNumberOfElements('picture img', 1);
     // Uploaded spotlight image does not have alt text.
     $I->seeElement('picture img', ['alt' => '']);

@@ -14,7 +14,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\node\NodeInterface;
-use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\user\RoleInterface;
 use Drush\Drush;
@@ -1005,30 +1004,33 @@ function su_humsci_profile_update_9713() {
 }
 
 /**
- * Uninstall and remove config for hs_webform module and webform.
+ * Remove any existing hs_webform paragraph entities.
  */
-function su_humsci_profile_update_9714() {
-  // Remove existing paragraph entities.
+function su_humsci_profile_update_9714($sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   $paragraph_machine_name = 'hs_webform';
 
-  $query = $paragraph_storage->getQuery()
-    ->condition('type', $paragraph_machine_name)
-    ->accessCheck(FALSE);
-  $paragraph_ids = $query->execute();
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->condition('type', $paragraph_machine_name)
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
-  if ($paragraph_ids) {
-    $paragraphs = Paragraph::loadMultiple($paragraph_ids);
-    foreach ($paragraphs as $paragraph) {
-      $paragraph->delete();
-    }
-
-    $message = t('Deleted all paragraphs of type @type.', [
-      '@type' => $paragraph_machine_name,
-    ]);
-    Drush::logger()->notice($message);
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->delete();
   }
 
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete hs_webform paragraph type and remove webform config.
+ */
+function su_humsci_profile_update_9715() {
+  $paragraph_machine_name = 'hs_webform';
   // Delete the field and field storage on the paragraph.
   $fields = \Drupal::entityTypeManager()
     ->getStorage('field_config')
@@ -1040,17 +1042,13 @@ function su_humsci_profile_update_9714() {
 
       // Delete the field configuration (instance) from the paragraph type.
       $field->delete();
-
-      // Load the corresponding field storage.
-      $field_storage = FieldStorageConfig::load($field->getName());
-      if ($field_storage) {
-        // Check if the field storage is used elsewhere.
-        if (!$field_storage->isLocked()) {
-          // Delete the field storage if it's no longer in use by any other bundles.
-          $field_storage->delete();
-        }
-      }
     }
+  }
+
+  // Delete the field_hs_webform field storage.
+  $field_storage = FieldStorageConfig::load('field_hs_webform');
+  if ($field_storage) {
+    $field_storage->delete();
   }
 
   // Delete the paragraph itself.
@@ -1105,8 +1103,12 @@ function su_humsci_profile_update_9714() {
     ]);
     Drush::logger()->notice($message);
   }
+}
 
+/**
+ * Uninstall hs_webform and webform modules.
+ */
+function su_humsci_profile_update_9716() {
   // Uninstalls modules after removing configs to prevent updb errors.
-  \Drupal::service('module_installer')->uninstall(['webform_ui', 'webform']);
-
+  \Drupal::service('module_installer')->uninstall(['hs_webform', 'webform_ui', 'webform']);
 }

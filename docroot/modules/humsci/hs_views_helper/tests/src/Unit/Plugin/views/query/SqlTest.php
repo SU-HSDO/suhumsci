@@ -14,6 +14,7 @@ use Drupal\field\FieldStorageConfigStorage;
 use Drupal\hs_views_helper\Plugin\views\query\Sql;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\query\DateSqlInterface;
+use Drupal\views\Plugin\ViewsPluginManager;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsData;
@@ -61,7 +62,8 @@ class SqlTest extends UnitTestCase {
     $user = $this->createMock(AccountInterface::class);
     $views_data = $this->createMock(ViewsData::class);
     $route_provider = $this->createMock(RouteProviderInterface::class);
-    $view = new ViewExecutable($storage, $user, $views_data, $route_provider);
+    $display_plugin_manager = $this->createMock(ViewsPluginManager::class);
+    $view = new ViewExecutable($storage, $user, $views_data, $route_provider, $display_plugin_manager);
     $sql->alterQuery($view);
     $this->assertEmpty($sql->orderby);
     $sql->fields = [

@@ -36,7 +36,7 @@ These settings can be found on the "Manage form display" tab on most Entity type
 
   - Adding a new Paragraphs component to the Flexible Page "Components" field?
     - New components should be added in alphabetical order AFTER Text Area.
-  - Adding a new Paragraphs component to the "Collection" or "Row" components list?
+  - Adding a new Paragraphs component to the "Collection" components list?
     - Components should be in alphabetical order.
   - [Paragraph Form Display Settings.](#paragraph-field-form-display)
 

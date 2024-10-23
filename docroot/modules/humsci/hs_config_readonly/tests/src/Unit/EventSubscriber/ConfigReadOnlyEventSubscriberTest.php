@@ -128,12 +128,14 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     $form_state = new FormState();
     $form_state->setBuildInfo(['callback_object' => new TestFormCallbackObject()]);
 
-    $event = new ReadOnlyFormEvent($form_state);
+    $form = [];
+
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertFalse($event->isFormReadOnly());
 
     $form_state->setBuildInfo(['callback_object' => new TestFormCallbackObject('bypassed_form')]);
-    $event = new ReadOnlyFormEvent($form_state);
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertFalse($event->isFormReadOnly());
   }
@@ -143,19 +145,20 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
    */
   public function testConfigForm() {
     $form_state = new FormState();
+    $form = [];
 
     $form_state->setBuildInfo(['callback_object' => new TestConfigFormCallbackObject()]);
-    $event = new ReadOnlyFormEvent($form_state);
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertTRUE($event->isFormReadOnly());
 
     $form_state->setBuildInfo(['callback_object' => new TestConfigFormCallbackObject('ignore.wildcard.config.testing')]);
-    $event = new ReadOnlyFormEvent($form_state);
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertFalse($event->isFormReadOnly());
 
     $form_state->setBuildInfo(['callback_object' => new TestConfigFormCallbackObject('ignore.part.config')]);
-    $event = new ReadOnlyFormEvent($form_state);
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertFalse($event->isFormReadOnly());
   }
@@ -165,6 +168,7 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
    */
   public function testEntityForm() {
     $form_state = new FormState();
+    $form = [];
 
     $config_entity = $this->createMock(ConfigEntityInterface::class);
     $config_entity->method('getConfigDependencyName')
@@ -175,7 +179,7 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
 
     $form_state->setBuildInfo(['callback_object' => $form_callback]);
 
-    $event = new ReadOnlyFormEvent($form_state);
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertTRUE($event->isFormReadOnly());
   }
@@ -185,12 +189,13 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
    */
   public function testWizardForm() {
     $form_state = new FormState();
+    $form = [];
 
     $form_callback = new TestEntityFormWizardCallbackObject();
 
     $form_state->setBuildInfo(['callback_object' => $form_callback]);
 
-    $event = new ReadOnlyFormEvent($form_state);
+    $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertTRUE($event->isFormReadOnly());
   }

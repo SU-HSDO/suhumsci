@@ -10,7 +10,7 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Logger\LoggerChannelFactory;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\hs_capx\Capx;
 use Drupal\key\KeyInterface;
 use Drupal\Tests\UnitTestCase;
@@ -63,7 +63,7 @@ class CapxTest extends UnitTestCase {
     $config_object = $this->createMock(ImmutableConfig::class);
     $config_object->method('get')->willReturn($this->randomMachineName());
 
-    $logger = new LoggerChannelFactory();
+    $logger = $this->createMock(LoggerChannelFactoryInterface::class);
     $logger->addLogger($this->createMock(Logger::class));
 
     $config_factory = $this->createMock(ConfigFactoryInterface::class);

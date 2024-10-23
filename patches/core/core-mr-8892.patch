@@ -1,0 +1,63 @@
+diff --git a/core/misc/dialog/dialog.jquery-ui.js b/core/misc/dialog/dialog.jquery-ui.js
+index d796835ba2fa1d75bcac915fca52e26dce735863..fdcb50e7fb48340b6860212d6c51dd672381c076 100644
+--- a/core/misc/dialog/dialog.jquery-ui.js
++++ b/core/misc/dialog/dialog.jquery-ui.js
+@@ -147,6 +147,7 @@
+         hasFocus = this.uiDialog.get(0);
+       }
+       $(hasFocus).eq(0).trigger('focus');
++      $(hasFocus).removeAttr('tabindex');
+     },
+   });
+ })(jQuery, window.tabbable);
+diff --git a/core/misc/dialog/dialog.js b/core/misc/dialog/dialog.js
+index dff0faf22a8b706ab8e8df5013ec2d7d813e770f..c4b4132cc278e1b4caabcf8fb67df034d04948aa 100644
+--- a/core/misc/dialog/dialog.js
++++ b/core/misc/dialog/dialog.js
+@@ -97,6 +97,7 @@ class DrupalDialogEvent extends Event {
+         bodyScrollLock.lock(domElement);
+       }
+ 
++      $($element.get(0).parentElement).removeAttr('tabindex');
+       domElement.dispatchEvent(
+         new DrupalDialogEvent('aftercreate', dialog, settings),
+       );
+diff --git a/core/misc/dialog/dialog.position.js b/core/misc/dialog/dialog.position.js
+index a09e3cd8c08478eaa1cf2ed4ac0ce4f0c22aa5b0..ea10ef331f47be7db328c3348d4ae8fc61d4a1bf 100644
+--- a/core/misc/dialog/dialog.position.js
++++ b/core/misc/dialog/dialog.position.js
+@@ -118,7 +118,6 @@
+   }
+ 
+   window.addEventListener('dialog:aftercreate', (e) => {
+-    const autoResize = debounce(resetSize, 20);
+     const $element = $(e.target);
+     const { settings } = e;
+     const eventData = { settings, $element };
+@@ -129,12 +128,12 @@
+         .dialog('widget');
+       uiDialog[0].style.position = 'fixed';
+       $(window)
+-        .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)
++        .on('resize.dialogResize scroll.dialogResize', eventData, resetSize)
+         .trigger('resize.dialogResize');
+       $(document).on(
+         'drupalViewportOffsetChange.dialogResize',
+         eventData,
+-        autoResize,
++        resetSize,
+       );
+     }
+   });
+diff --git a/core/modules/ckeditor5/css/ckeditor5.dialog.fix.css b/core/modules/ckeditor5/css/ckeditor5.dialog.fix.css
+index da2837934aee1f028b3b2ce83f3213aa187d99dc..7d5815243320b72c2e8c5690f523d35744c75315 100644
+--- a/core/modules/ckeditor5/css/ckeditor5.dialog.fix.css
++++ b/core/modules/ckeditor5/css/ckeditor5.dialog.fix.css
+@@ -1,3 +1,7 @@
+ .ui-dialog ~ .ck-body-wrapper {
+   --ck-z-panel: 1261;
+ }
++
++.ck-balloon-panel {
++  z-index: 10000 !important;
++}

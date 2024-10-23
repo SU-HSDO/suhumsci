@@ -5,6 +5,7 @@
  * su_humsci_profile.install
  */
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -15,6 +16,7 @@ use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\user\RoleInterface;
+use Drush\Drush;
 
 /**
  * Implements hook_requirements().
@@ -999,4 +1001,114 @@ function su_humsci_profile_update_9712() {
  */
 function su_humsci_profile_update_9713() {
   \Drupal::service('module_installer')->uninstall(['admin_login_path']);
+}
+
+/**
+ * Remove any existing hs_webform paragraph entities.
+ */
+function su_humsci_profile_update_9714($sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $paragraph_machine_name = 'hs_webform';
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->condition('type', $paragraph_machine_name)
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete hs_webform paragraph type and remove webform config.
+ */
+function su_humsci_profile_update_9715() {
+  $paragraph_machine_name = 'hs_webform';
+  // Delete the field and field storage on the paragraph.
+  $fields = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->loadByProperties(['bundle' => $paragraph_machine_name]);
+
+  if ($fields) {
+    foreach ($fields as $field) {
+      /** @var Drupal\field\Entity $field */
+
+      // Delete the field configuration (instance) from the paragraph type.
+      $field->delete();
+    }
+  }
+
+  // Delete the field_hs_webform field storage.
+  $field_storage = FieldStorageConfig::load('field_hs_webform');
+  if ($field_storage) {
+    $field_storage->delete();
+  }
+
+  // Delete the paragraph itself.
+  $paragraph_type = ParagraphsType::load($paragraph_machine_name);
+  if ($paragraph_type) {
+    $paragraph_type->delete();
+  }
+
+  // Remove hs_webform from config ignored configs.
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  $configs_to_change = [
+    'node.hs_basic_page.field_hs_page_components' => 'node.field_hs_page_components',
+    'paragraph.hs_collection.field_hs_collection_items' => 'paragraph.field_hs_collection_items',
+    'node.hs_private_page.field_hs_priv_page_components' => 'node.field_hs_priv_page_components',
+  ];
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  foreach ($configs_to_change as $field_config => $field_storage_config) {
+
+    // If storage does not yet exist, create it.
+    if (empty($field_storage->load($field_storage_config))) {
+      $field_storage->createFromStorageRecord($config_storage->read('field.storage.' . $field_storage_config))->save();
+    }
+
+    // Update the field instances from filesystem.
+    $config = $field_config_storage->load($field_config);
+    if (empty($config)) {
+      $field_config_storage->create($config_storage->read('field.field.' . $field_config))->save();
+    }
+  }
+
+  // Remove webform existing config - needs to be done before uninstall.
+  $query = \Drupal::database()
+    ->select('config', 'c')
+    ->fields('c', ['name'])
+    ->condition('name', '%' . Database::getConnection()->escapeLike('webform') . '%', 'LIKE')
+    ->execute();
+  $config_names = $query->fetchCol();
+
+  $config_factory = \Drupal::configFactory();
+
+  foreach ($config_names as $config) {
+    $config_factory->getEditable($config)->delete();
+    $message = t('Deleted @config', [
+      '@config' => $config,
+    ]);
+    Drush::logger()->notice($message);
+  }
+}
+
+/**
+ * Uninstall hs_webform and webform modules.
+ */
+function su_humsci_profile_update_9716() {
+  // Uninstalls modules after removing configs to prevent updb errors.
+  \Drupal::service('module_installer')->uninstall(['hs_webform', 'webform_ui', 'webform']);
 }

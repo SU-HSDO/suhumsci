@@ -4,6 +4,7 @@
  * Class PrivatePageContentCest.
  *
  * @group install
+ * @group private-page
  */
 class PrivatePageContentCest {
 
@@ -55,7 +56,7 @@ class PrivatePageContentCest {
       $this->fieldsToCheck[$component] = $component_info;
     }
     $I->amOnPage('/user/logout');
-    $I->click('Log out', '.user-logout-confirm .form-submit');
+    $I->click('.user-logout-confirm #edit-submit');
   }
 
   /**

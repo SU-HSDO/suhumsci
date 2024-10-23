@@ -1,0 +1,19 @@
+Icon size: {{ (icon_size) }}
+<br>
+Layout: {{ layout }}
+<br>
+{% if links %}
+    <ul>
+      {% for link in links %}
+        <li>
+          <a href="{{ link.link_url }}">
+            {% if link.link_title %}
+              {{ link.link_title }}
+            {% else %}
+              {{ link.link_url }}
+            {% endif %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}

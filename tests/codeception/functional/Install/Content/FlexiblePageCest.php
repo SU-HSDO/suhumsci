@@ -393,6 +393,7 @@ class FlexiblePageCest {
 
   /**
    * I can add a Back To Top Block.
+   * @group back-to-top
    */
   public function testBackToTopExists(FunctionalTester $I) {
     $I->logInWithRole('administrator');

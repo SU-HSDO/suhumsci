@@ -55,7 +55,7 @@ class PrivatePageContentCest {
       $this->fieldsToCheck[$component] = $component_info;
     }
     $I->amOnPage('/user/logout');
-    $I->click('Log out', 'form');
+    $I->click('Log out', '.user-logout-confirm .form-submit');
   }
 
   /**

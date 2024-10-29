@@ -69,24 +69,17 @@
 
 // Link style for main content that is not a heading
 // The default $icon-width is set for the width of external link icons
-@mixin hb-link--inline($icon: false, $icon-width: 16px, $icon-position: right) {
+@mixin hb-link--inline {
   // no font size by default
   color: var(--palette--tertiary);
 
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image($icon, $icon-width, $icon-position);
-    background-size: 100% 200%;
-    background-position-y: -102%;
-    background-repeat: no-repeat;
-
     .hc-pairing-ocean .hb-well & {
       color: var(--palette--primary);
     }
   }
 
   @include hb-traditional {
-    background-image: none;
-
     // Warbler color pairing override.
     .ht-pairing-warbler & {
       color: var(--palette--secondary);
@@ -97,10 +90,6 @@
   &:focus {
     color: var(--palette--tertiary-darken-20);
 
-    @include hb-themes(('colorful', 'airy')) {
-      background-position-y: -50%;
-    }
-
     @include hb-traditional {
       // Warbler color pairing override.
       .ht-pairing-warbler & {
@@ -110,12 +99,9 @@
   }
 
   .hb-local-footer & {
-    background-image: none;
-
     &:hover,
     &:focus {
       color: var(--palette--tertiary-darken-20);
-      background-image: none;
     }
   }
 
@@ -144,7 +130,6 @@
         color: var(--palette--tertiary-highlight);
         border-bottom-color: var(--palette--tertiary-highlight);
         box-shadow: none;
-        background-position-y: bottom;
       }
 
       @include hb-traditional {
@@ -419,10 +404,6 @@
 
   &:hover,
   &:focus {
-    @include hb-themes(('colorful', 'airy')) {
-      @include hb-link-background-image(true, 0.9em, left);
-    }
-
     .hb-local-footer.hb-dark-pattern &::before {
       @include hb-colorful {
         color: var(--palette--gray-medium);

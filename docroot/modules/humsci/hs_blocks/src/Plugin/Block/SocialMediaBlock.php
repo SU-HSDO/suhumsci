@@ -109,8 +109,8 @@ final class SocialMediaBlock extends BlockBase {
       '#layout' => $this->configuration['layout'],
       '#links' => $this->configuration['links'],
       '#cache' => [
-        'tags' => $this->getCacheTags(),
-        'contexts' => ['user'],
+        'tags' => array_merge($this->getCacheTags(), ['block_view']),
+        'contexts' => ['user', 'user.permissions'],
       ],
     ];
 

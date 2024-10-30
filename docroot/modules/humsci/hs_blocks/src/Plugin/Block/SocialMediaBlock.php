@@ -64,7 +64,7 @@ final class SocialMediaBlock extends BlockBase {
       '#default_value' => ($this->configuration['links']) ? $this->configuration['links'] : [],
       '#element_validate' => [
           [get_class($this), 'validateLinks'],
-        ],
+      ],
       'link_url' => [
         '#type' => 'url',
         '#title' => $this->t('URL'),
@@ -103,11 +103,12 @@ final class SocialMediaBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build(): array {
+    $links = array_map([$this, 'linkWithIcon'], $this->configuration['links']);
     $build = [
       '#theme' => 'hs_blocks_social_media',
       '#icon_size' => $this->configuration['icon_size'],
       '#layout' => $this->configuration['layout'],
-      '#links' => $this->configuration['links'],
+      '#links' => $links,
       '#cache' => [
         'tags' => $this->getCacheTags(),
         'contexts' => ['user'],
@@ -144,6 +145,118 @@ final class SocialMediaBlock extends BlockBase {
         }
       }
     }
+  }
+
+  /**
+   * Adds the social media icon and name information to a link.
+   *
+   * @param array $link
+   *   The link item.
+   *
+   * @return array
+   *   The updated link item with the icon and social provider name.
+   */
+  protected function linkWithIcon(array $link) {
+    $url = $link['link_url'];
+    $providers = [
+      [
+        'domains' => ['facebook.com', 'fb.com', 'fb.me'],
+        'icon_classes' => 'fa-brands fa-square-facebook',
+        'name' => 'Facebook',
+      ],
+      [
+        'domains' => ['twitter.com', 'x.com'],
+        'icon_classes' => 'fa-brands fa-square-x-twitter',
+        'name' => 'Twitter',
+      ],
+      [
+        'domains' => ['linkedin.com', 'lnkd.in'],
+        'icon_classes' => 'fa-brands fa-linkedin',
+        'name' => 'Linkedin',
+      ],
+      [
+        'domains' => ['instagram.com', 'instagr.am'],
+        'icon_classes' => 'fa-brands fa-square-instagram',
+        'name' => 'Instagram',
+      ],
+      [
+        'domains' => ['youtube.com', 'youtu.be'],
+        'icon_classes' => 'fa-brands fa-square-youtube',
+        'name' => 'Youtube',
+      ],
+      [
+        'domains' => ['vimeo.com'],
+        'icon_classes' => 'fa-brands fa-vimeo',
+        'name' => 'Vimeo',
+      ],
+      [
+        'domains' => ['snapchat.com'],
+        'icon_classes' => 'fa-brands fa-square-snapchat',
+        'name' => 'Snapchat',
+      ],
+      [
+        'domains' => ['soundcloud.com'],
+        'icon_classes' => 'fa-brands fa-soundcloud',
+        'name' => 'Soundcloud',
+      ],
+      [
+        'domains' => ['spotify.com'],
+        'icon_classes' => 'fa-brands fa-spotify',
+        'name' => 'Spotify',
+      ],
+      [
+        'domains' => ['apple.com'],
+        'icon_classes' => 'fa-brands fa-apple',
+        'name' => 'Apple',
+      ],
+      [
+        'domains' => ['telegram.me', 't.me'],
+        'icon_classes' => 'fa-brands fa-telegram',
+        'name' => 'Telegram',
+      ],
+      [
+        'domains' => ['mailto:'],
+        'icon_classes' => 'fa-solid fa-square-envelope',
+        'name' => 'Email',
+      ],
+      [
+        'domains' => ['pinterest.com', 'pin.it'],
+        'icon_classes' => 'fa-brands fa-square-pinterest',
+        'name' => 'Pinterest',
+      ],
+      [
+        'domains' => ['tiktok.com'],
+        'icon_classes' => 'fa-brands fa-tiktok',
+        'name' => 'Tiktok',
+      ],
+    ];
+
+    $icon_classes = '';
+    $icon_name = '';
+
+    foreach ($providers as $provider) {
+      foreach ($provider['domains'] as $domain) {
+        if (strpos($url, $domain) !== FALSE) {
+          $icon_classes = $provider['icon_classes'];
+          $icon_name = $provider['name'];
+          break 2;
+        }
+      }
+    }
+
+    if (!$icon_classes) {
+      $icon_classes = 'fa-solid fa-globe';
+      // Use the domain as the name if the provider is not listed above.
+      if (preg_match('/https?:\/\/(.+?)\//', $url, $matches)) {
+        $icon_name = $matches[1];
+      }
+    }
+
+    return [
+      'link_url' => $url,
+      'link_title' => $link['link_title'] ?: $icon_name,
+      'icon_classes' => $icon_classes,
+    ];
   }
 
 }

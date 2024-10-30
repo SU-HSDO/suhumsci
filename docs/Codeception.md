@@ -57,7 +57,6 @@ The following Codeception tests are currently run during a CI build. Unless othe
 * [Paragraphs](../tests/codeception/acceptance/Paragraphs/ParagraphsCest.php)
   * Tests specific paragraphs included/excluded from collections on:
     * Private Page
-    * Rows
     * Public Collections
     * Flexible Page
 * [Menu Items](../tests/codeception/acceptance/MenuItemsCest.php)
@@ -87,6 +86,3 @@ The following Codeception tests are currently run during a CI build. Unless othe
   * Add top level and second level item
   * Toggles menu items
   * Mobile menu button and toggles
-
-## Disabled Acceptance Tests
-  * [Flexible Page - Row with Text Area](../tests/codeception/acceptance/Install/Content/FlexiblePageCest.php#L109)

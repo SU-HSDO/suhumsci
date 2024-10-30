@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\hs_blocks\Plugin\Block;
 
@@ -63,8 +63,8 @@ final class SocialMediaBlock extends BlockBase {
       '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
       '#default_value' => ($this->configuration['links']) ? $this->configuration['links'] : [],
       '#element_validate' => [
-          [get_class($this), 'validateLinks'],
-        ],
+        [get_class($this), 'validateLinks'],
+      ],
       'link_url' => [
         '#type' => 'url',
         '#title' => $this->t('URL'),
@@ -75,7 +75,6 @@ final class SocialMediaBlock extends BlockBase {
         '#title' => $this->t('Label'),
         '#description' => $this->t('If empty the domain name will be used.'),
       ],
-
     ];
 
     return $form;
@@ -90,6 +89,7 @@ final class SocialMediaBlock extends BlockBase {
 
     // Only save links if they have data.
     $links = $form_state->getValue('links');
+    $filtered_links = [];
     foreach ($links as $link) {
       if (!empty($link['link_url'] || !empty($link['link_title']))) {
         $filtered_links[] = $link;
@@ -131,7 +131,7 @@ final class SocialMediaBlock extends BlockBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public static function validateLinks($element, FormStateInterface $form_state) {
+  public static function validateLinks(array $element, FormStateInterface $form_state) {
     $links = $form_state->getValue($element['#parents']);
     foreach ($links as $key => $link) {
       if (is_array($link)) {

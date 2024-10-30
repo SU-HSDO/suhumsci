@@ -82,8 +82,7 @@ function _hs_blocks_fix_sections(array $sections) {
 /**
  * Remove paragraph_style permissions. Needs to be run before social media perm.
  */
-
- function hs_blocks_update_10201() {
+function hs_blocks_update_10201() {
   $entityTypeManager = \Drupal::service('entity_type.manager');
   $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
   if ($roles) {
@@ -99,7 +98,7 @@ function _hs_blocks_fix_sections(array $sections) {
       }
     }
   }
- }
+}
 
 /**
  * Update user permissions for new social media block.

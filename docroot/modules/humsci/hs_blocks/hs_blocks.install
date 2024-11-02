@@ -80,29 +80,19 @@ function _hs_blocks_fix_sections(array $sections) {
 }
 
 /**
- * Remove paragraph_style permissions. Needs to be run before social media perm.
+ * Implements hook_update_dependencies().
  */
-function hs_blocks_update_10201() {
-  $entityTypeManager = \Drupal::service('entity_type.manager');
-  $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
-  if ($roles) {
-    foreach (array_keys($roles) as $roleName) {
-      if ($roleName != 'administrator') {
-        user_role_revoke_permissions($roleName, [
-          'create field_paragraph_style',
-          'edit field_paragraph_style',
-          'edit own field_paragraph_style',
-          'view field_paragraph_style',
-          'view own field_paragraph_style',
-        ]);
-      }
-    }
-  }
+function hs_blocks_update_dependencies() {
+  // Permissions for field_paragraph_style need to be removed first.
+  $dependencies['hs_blocks'][10201] = [
+    'su_humsci_profile' => 9714,
+  ];
+  return $dependencies;
 }
 
 /**
  * Update user permissions for new social media block.
  */
-function hs_blocks_update_10202() {
+function hs_blocks_update_10201() {
   user_role_grant_permissions('site_manager', ['edit social media block']);
 }

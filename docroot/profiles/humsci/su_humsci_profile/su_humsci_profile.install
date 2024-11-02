@@ -1000,3 +1000,29 @@ function su_humsci_profile_update_9712() {
 function su_humsci_profile_update_9713() {
   \Drupal::service('module_installer')->uninstall(['admin_login_path']);
 }
+
+/**
+ * Remove field_paragraph_style permissions.
+ */
+function su_humsci_profile_update_9714() {
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $roles = $entity_type_manager->getStorage('user_role')->loadMultiple();
+  if (!$roles) {
+    return;
+  }
+
+  $permissions = [
+    'create field_paragraph_style',
+    'edit field_paragraph_style',
+    'edit own field_paragraph_style',
+    'view field_paragraph_style',
+    'view own field_paragraph_style',
+  ];
+
+  foreach ($roles as $role) {
+    foreach ($permissions as $permission) {
+      $role->revokePermission($permission);
+    }
+    $role->save();
+  }
+}

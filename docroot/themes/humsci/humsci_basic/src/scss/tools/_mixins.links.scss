@@ -3,39 +3,18 @@
   // no font size by default
   color: var(--palette--black);
   font-weight: hb-theme-font-weight(semibold);
+  text-decoration: underline;
+  transition: hb-transition(text-decoration-color);
+  text-decoration-color: var(--palette--gray-medium);
 
-  @include hb-themes(('colorful', 'airy')) {
-    border-bottom: 2px solid var(--palette--gray-medium);
-    margin-bottom: 0.0625em;
-    text-decoration: none;
-    transition: box-shadow 100ms 0s, border-bottom-color 0s 100ms;
+  &:hover,
+  &:focus {
+    color: var(--palette--black);
+    text-decoration-color: var(--palette--primary);
 
-    &:hover,
-    &:focus {
-      color: var(--palette--black);
-      transition-delay: 0s, 0s;
-      border-bottom-color: var(--palette--tertiary-highlight-darken-10);
-      box-shadow: inset 0 hb-calculate-rems(-14px) 0 var(--palette--tertiary-highlight);
-
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        border-bottom-color: var(--palette--tertiary-highlight);
-        box-shadow: none;
-        background-position-y: bottom;
-      }
-    }
-  }
-
-  @include hb-traditional {
-    text-decoration: underline;
-    transition: hb-transition(text-decoration-color);
-    text-decoration-color: var(--palette--gray-medium);
-
-    &:hover,
-    &:focus {
-      color: var(--palette--black);
-      background-image: none;
-      text-decoration-color: var(--palette--primary);
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      border-bottom-color: var(--palette--tertiary-highlight);
     }
   }
 }

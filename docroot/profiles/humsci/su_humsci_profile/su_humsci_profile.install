@@ -1004,9 +1004,35 @@ function su_humsci_profile_update_9713() {
 }
 
 /**
+ * Remove field_paragraph_style permissions.
+ */
+function su_humsci_profile_update_9714() {
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $roles = $entity_type_manager->getStorage('user_role')->loadMultiple();
+  if (!$roles) {
+    return;
+  }
+
+  $permissions = [
+    'create field_paragraph_style',
+    'edit field_paragraph_style',
+    'edit own field_paragraph_style',
+    'view field_paragraph_style',
+    'view own field_paragraph_style',
+  ];
+
+  foreach ($roles as $role) {
+    foreach ($permissions as $permission) {
+      $role->revokePermission($permission);
+    }
+    $role->save();
+  }
+}
+
+/**
  * Remove any existing hs_webform paragraph entities.
  */
-function su_humsci_profile_update_9714($sandbox) {
+function su_humsci_profile_update_9715($sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   $paragraph_machine_name = 'hs_webform';
 
@@ -1029,7 +1055,7 @@ function su_humsci_profile_update_9714($sandbox) {
 /**
  * Delete hs_webform paragraph type and remove webform config.
  */
-function su_humsci_profile_update_9715() {
+function su_humsci_profile_update_9716() {
   $paragraph_machine_name = 'hs_webform';
   // Delete the field and field storage on the paragraph.
   $fields = \Drupal::entityTypeManager()
@@ -1108,7 +1134,7 @@ function su_humsci_profile_update_9715() {
 /**
  * Uninstall hs_webform and webform modules.
  */
-function su_humsci_profile_update_9716() {
+function su_humsci_profile_update_9717() {
   // Uninstalls modules after removing configs to prevent updb errors.
   \Drupal::service('module_installer')->uninstall(['hs_webform', 'webform_ui', 'webform']);
 }

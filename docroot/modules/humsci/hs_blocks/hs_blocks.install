@@ -80,6 +80,17 @@ function _hs_blocks_fix_sections(array $sections) {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function hs_blocks_update_dependencies() {
+  // Permissions for field_paragraph_style need to be removed first.
+  $dependencies['hs_blocks'][10201] = [
+    'su_humsci_profile' => 9714,
+  ];
+  return $dependencies;
+}
+
+/**
  * Update user permissions for new social media block.
  */
 function hs_blocks_update_10201() {

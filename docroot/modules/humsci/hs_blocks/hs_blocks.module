@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -144,10 +144,10 @@ function hs_blocks_entity_access(EntityInterface $entity, $operation, AccountInt
   /** @var Drupal\block\Entity\Block $entity */
   if ($entity->getEntityTypeId() === 'block' && $entity->getPluginId() === 'hs_blocks_social_media_block') {
     if ($operation === 'update' && $account->hasPermission('edit social media block')) {
-      return \Drupal\Core\Access\AccessResult::allowed();
+      return AccessResult::allowed();
     }
   }
 
   // No change, return neutral result.
-  return \Drupal\Core\Access\AccessResult::neutral();
+  return AccessResult::neutral();
 }

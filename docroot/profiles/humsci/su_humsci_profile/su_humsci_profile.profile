@@ -622,7 +622,7 @@ function su_humsci_profile_page_attachments(array &$attachments) {
   if ($current_user->hasPermission('access toolbar') && !$current_user->hasPermission('view toolbar manage')) {
     // HSD8-771 Roll back hide manage toolbar. Lets keep this here in case we
     // come back to it at a later date.
-    // $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';.
+    // $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';
   }
 }
 
@@ -916,7 +916,7 @@ function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definition
  */
 function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form_state) {
   // Remove unnecessary URL alias fields from the user edit form.
-  unset($form['path']);
+  $form['path']['#access'] = FALSE;
   // Remove Delete account button, it isn't necessary as we're using SSO.
-  unset($form['actions']['delete']); .
+  $form['actions']['delete']['#access'] = FALSE;
 }

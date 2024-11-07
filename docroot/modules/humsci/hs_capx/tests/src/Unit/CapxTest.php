@@ -193,6 +193,7 @@ class CapxTest extends UnitTestCase {
    *   Cached data.
    */
   public function cacheGetCallback($cid) {
+    $data = '';
     switch ($cid) {
       case 'capx:org_data':
         $data = json_decode(file_get_contents(__DIR__ . '/orgs.json'), TRUE);

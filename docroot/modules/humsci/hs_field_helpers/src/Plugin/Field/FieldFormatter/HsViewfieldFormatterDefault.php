@@ -88,10 +88,11 @@ class HsViewfieldFormatterDefault extends ViewfieldFormatterDefault {
    * @return bool
    *   If the view has results or an empty result display.
    */
-  protected function viewHasResults(ViewExecutable $view) {
+  protected function viewHasResults(ViewExecutable $view): bool {
     if ($view->result || $view->empty) {
       return TRUE;
     }
+    return FALSE;
   }
 
 }

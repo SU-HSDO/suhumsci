@@ -24,7 +24,7 @@ class CourseTagListBuilderTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'hs_courses_importer'];
+  protected static $modules = ['system', 'hs_courses_importer'];
 
   /**
    * {@inheritdoc}

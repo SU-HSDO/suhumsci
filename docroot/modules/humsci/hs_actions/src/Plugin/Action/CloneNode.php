@@ -100,6 +100,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
       '#options' => array_combine($values, $values),
     ];
 
+    $node_ids = [];
     foreach ($this->context['list'] as $item) {
       $node_ids[] = $item[0];
     }

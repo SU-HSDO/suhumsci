@@ -346,7 +346,7 @@ function su_humsci_profile_contextual_links_alter(array &$links, $group, array $
   }
 
   if (
-    !in_array($group, ['media', 'block_content']) &&
+    !in_array($group, ['media', 'block_content', 'social_media_block']) &&
     !$current_user->hasPermission('view all contextual links')
   ) {
     $links = [];

@@ -35,6 +35,30 @@
       right: unset;
       left: 100%;
     }
+
+    li:has(.menu) {
+      & > a {
+        position: relative;
+        padding-right: 15px;
+
+        &::after {
+          content: '>';
+          display: block;
+          position: absolute;
+          position: absolute;
+          top: var(--gin-spacing-m);
+          right: var(--gin-spacing-s);
+          color: var(--gin-color-disabled);
+          font-size: 16px;
+        }
+      }
+
+      &:hover {
+        & > a::after {
+          color: var(--gin-color-primary-hover)
+        }
+      }
+    }
   }
 
   .menu:not(.toolbar-menu) li {

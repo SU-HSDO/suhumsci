@@ -222,7 +222,7 @@ class TestCapx extends Capx {
   /**
    * {@inheritdoc}
    */
-  public function getAccessToken() {
+  public function getAccessToken(): string {
     return parent::getAccessToken();
   }
 

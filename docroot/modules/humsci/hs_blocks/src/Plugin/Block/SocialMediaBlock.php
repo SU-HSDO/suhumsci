@@ -6,7 +6,10 @@ namespace Drupal\hs_blocks\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\multivalue_form_element\Element\MultiValue;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a social media block.
@@ -17,7 +20,44 @@ use Drupal\multivalue_form_element\Element\MultiValue;
  *   category = @Translation("H&S Blocks"),
  * )
  */
-final class SocialMediaBlock extends BlockBase {
+final class SocialMediaBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    AccountProxyInterface $current_user,
+    ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+    ) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('current_user')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -73,7 +113,7 @@ final class SocialMediaBlock extends BlockBase {
       'link_title' => [
         '#type' => 'textfield',
         '#title' => $this->t('Label'),
-        '#description' => $this->t('If empty the domain name will be used.'),
+        '#description' => $this->t('If empty, the social platform name will be used for popular platforms. If the platform is unknown then the domain name will be used.'),
       ],
     ];
 
@@ -95,8 +135,10 @@ final class SocialMediaBlock extends BlockBase {
         $filtered_links[] = $link;
       }
     }
-
     $this->configuration['links'] = $filtered_links;
+
+    // This sets the placed block ID to be used for a custom contextual link.
+    $this->configuration['placed_block_id'] = $form['id']['#default_value'];
   }
 
   /**
@@ -104,6 +146,8 @@ final class SocialMediaBlock extends BlockBase {
    */
   public function build(): array {
     $links = array_map([$this, 'linkWithIcon'], $this->configuration['links']);
+    $placed_block_id = $this->configuration['placed_block_id'];
+
     $build = [
       '#theme' => 'hs_blocks_social_media',
       '#icon_size' => $this->configuration['icon_size'],
@@ -113,13 +157,12 @@ final class SocialMediaBlock extends BlockBase {
         'tags' => array_merge($this->getCacheTags(), ['block_view']),
         'contexts' => ['user', 'user.permissions'],
       ],
+      '#contextual_links' => [
+        'social_media_block' => [
+          'route_parameters' => ['block' => $placed_block_id],
+        ],
+      ],
     ];
-
-    $build['#contextual_links']['hs_blocks.social_media_block'] = [
-      'route_parameters' => ['block' => $this->getDerivativeId()],
-    ];
-
-    $build['#attached']['library'][] = 'contextual/drupal.contextual-links';
 
     return $build;
   }

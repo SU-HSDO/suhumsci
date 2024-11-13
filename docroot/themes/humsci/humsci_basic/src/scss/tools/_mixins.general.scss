@@ -256,24 +256,6 @@
   border-color: var(--palette--gray);
 }
 
-// Used for link typography mixins across all themes
-// both with and without icons
-@mixin hb-link-background-image($icon, $icon-width, $icon-position) {
-  // For links without an icon
-  // Color Pairing Custom Variable
-  background-image: linear-gradient(to top, transparent 50%, var(--palette--tertiary-highlight) 50%);
-
-  // For links with an icon
-  // Changes the value passed into background-image to
-  // create space for the external link space to exist
-  @if $icon {
-    $icon-width: calc(100% - #{$icon-width});
-
-    // Color Pairing Custom Variable
-    background-image: linear-gradient(to $icon-position, var(--palette--tertiary-highlight) $icon-width, transparent $icon-width);
-  }
-}
-
 @mixin hb-well {
   @include hb-themes(('colorful', 'airy')) {
     background-color: var(--palette--gray-light);

@@ -110,7 +110,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->setPublicationOverrides($names, $overrides);
     $this->setThemeSettingsOverrides($names, $overrides);
     $this->setSearchApiOverrides($names, $overrides);
-    $this->setPageCacheQueryIgnore($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {

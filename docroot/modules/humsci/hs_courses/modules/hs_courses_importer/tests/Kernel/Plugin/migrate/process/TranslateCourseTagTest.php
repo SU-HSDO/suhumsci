@@ -41,7 +41,7 @@ class TranslateCourseTagTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'hs_courses_importer',
     'migrate',

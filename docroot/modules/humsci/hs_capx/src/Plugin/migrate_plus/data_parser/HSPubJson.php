@@ -17,8 +17,8 @@ class HSPubJson extends Json {
   /**
    * {@inheritDoc}
    */
-  protected function getSourceData(string $url): array {
-    $source_data = parent::getSourceData($url);
+  protected function getSourceData(string $url, string|int $item_selector = ''): array {
+    $source_data = parent::getSourceData($url, $item_selector);
     $modified_data = [];
     foreach ($source_data as $item) {
       if (!empty($item['publications'])) {

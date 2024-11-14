@@ -13,7 +13,7 @@ class PageReportsEventSubscriberTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'hs_page_reports',
   ];

@@ -80,22 +80,30 @@ display:
           buttons: false
           action_title: Action
           clear_on_exposed: false
+          force_selection_info: false
           selected_actions:
-            0:
+            -
               action_id: node_clone_action
-            1:
+              preconfiguration:
+                add_confirmation: false
+                message_override: ''
+            -
               action_id: migration_ignore
-            2:
-              action_id: node_unpublish_action
-            7:
-              action_id: node_publish_action
-            12:
+              preconfiguration:
+                add_confirmation: false
+                message_override: ''
+            -
               action_id: views_bulk_edit
               preconfiguration:
+                add_confirmation: false
                 label_override: 'Change Field Values'
+                message_override: ''
                 get_bundles_from_results: true
-            13:
+            -
               action_id: views_bulk_operations_delete_entity
+              preconfiguration:
+                add_confirmation: true
+                message_override: ''
         title:
           id: title
           table: node_field_data
@@ -306,6 +314,7 @@ display:
       pager:
         type: full
         options:
+          pagination_heading_level: h4
           items_per_page: 50
           tags:
             next: 'Next ›'

@@ -310,7 +310,7 @@ blockquote:nth-child(n) {
 a[href*="//"].hs-external-link,
 .hs-external-link a[href*="//"]
 {
-  @include hb-link--inline($icon: true);
+  @include hb-link--inline;
   @include hb-external-link-icon;
 
   .hb-dark-pattern.hb-local-footer & {
@@ -346,10 +346,6 @@ a.private-link,
 .private-link a {
   @include hb-link--inline;
   color: var(--palette--secondary);
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image(true, 18px, left);
-  }
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
@@ -404,10 +400,6 @@ a.private-link,
 .hs-mailto-link a,
 a.hs-mailto-link {
   @include hb-fa-mailto-icon;
-
-  @include hb-themes(('colorful', 'airy')) {
-    @include hb-link-background-image(true, 22px, right);
-  }
 
   // The font awesome icon is hidden by default in themes, this shows it
   .fa-mailto {

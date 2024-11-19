@@ -25,7 +25,7 @@ _['low', 'medium', 'high', etc.]_
 - [ ] Are tests provided?
 
 ### Code security
-- [ ] Are all [forms properly sanitized](https://www.drupal.org/docs/8/security/drupal-8-sanitizing-output)?
+- [ ] Is all [user input properly sanitized when rendered](https://www.drupal.org/docs/8/security/drupal-8-sanitizing-output)?
 - [ ] Any obvious [security flaws or new areas for attack](https://www.drupal.org/docs/8/security)?
 
 ## General

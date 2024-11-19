@@ -1,7 +1,4 @@
-# NOT READY FOR REVIEW
-_[edit above to reflect status]_
-
-## Summary
+# Summary
 _[briefly summarize the changes here. TL;DR - what's this PR for?]_
 
 ## Need Review By (Date)
@@ -13,6 +10,8 @@ _['low', 'medium', 'high', etc.]_
 ## Steps to Test
 1. _[First testing step]_
 2. ...
+
+# Review Tasks
 
 ## Backend / Functional Validation
 ### Code
@@ -28,6 +27,6 @@ _['low', 'medium', 'high', etc.]_
 - [ ] Is all [user input properly sanitized when rendered](https://www.drupal.org/docs/8/security/drupal-8-sanitizing-output)?
 - [ ] Any obvious [security flaws or new areas for attack](https://www.drupal.org/docs/8/security)?
 
-## General
+### General
 - [ ] Is there anything included in this PR that is not related to the problem it is trying to solve?
 - [ ] Is the approach to the problem appropriate?

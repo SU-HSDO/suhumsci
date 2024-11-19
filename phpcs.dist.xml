@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset name="Project Standard" namespace="Advomatic\project\CS\Standard">
+  <config name="installed_paths" value="../../drupal/coder/coder_sniffer/,../../sirbrillig/phpcs-variable-analysis/,../../slevomat/coding-standard/" />
+
+  <arg name="ignore" value="*.css,*.md,*.txt,*.png,*.gif,*.jpeg,*.jpg,*.svg"/>
+  <arg name="extensions" value="php,module,inc,install,test,profile,theme,info,yml"/>
+
+  <rule ref="Drupal">
+    <exclude name="Drupal.Commenting.FunctionComment.MissingReturnComment"/>
+    <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
+    <exclude name="Drupal.Commenting.FunctionComment.MissingParamComment"/>
+    <!-- Custom modules and themes aren't packaged with drupal.org. Remove these
+    warnings.  -->
+    <exclude name="Drupal.InfoFiles.AutoAddedKeys.Project"/>
+    <exclude name="Drupal.InfoFiles.AutoAddedKeys.Version"/>
+  </rule>
+
+  <file>docroot/profiles/humsci</file>
+  <file>docroot/modules/humsci</file>
+  <file>docroot/themes/humsci</file>
+
+  <exclude-pattern>*/tests/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/dist/*</exclude-pattern>
+</ruleset>

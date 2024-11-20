@@ -1,0 +1,169 @@
+diff --git a/core/lib/Drupal/Core/Template/RemoveCheckToStringNodeVisitor.php b/core/lib/Drupal/Core/Template/RemoveCheckToStringNodeVisitor.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..568b22ace9d48ff91c2d50a70cccd419c358382a
+--- /dev/null
++++ b/core/lib/Drupal/Core/Template/RemoveCheckToStringNodeVisitor.php
+@@ -0,0 +1,56 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Template;
++
++use Twig\Environment;
++use Twig\Node\CheckToStringNode;
++use Twig\Node\Node;
++use Twig\NodeVisitor\NodeVisitorInterface;
++
++/**
++ * Defines a TwigNodeVisitor that replaces CheckToStringNodes.
++ *
++ * Twig 3.14.1 resulted in a performance regression in Drupal due to checking if
++ * __toString is an allowed method on objects. __toString is allowed on all
++ * objects when Drupal's default SandboxPolicy is active. Therefore, Twig's
++ * SandboxExtension checks are unnecessary.
++ */
++final class RemoveCheckToStringNodeVisitor implements NodeVisitorInterface {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function enterNode(Node $node, Environment $env): Node {
++    if ($node instanceof CheckToStringNode) {
++      // Replace CheckToStringNode with the faster equivalent, __toString is an
++      // allowed method so any checking of __toString on a per-object basis is
++      // performance overhead.
++      $new = new TwigSimpleCheckToStringNode($node->getNode('expr'));
++      // @todo https://www.drupal.org/project/drupal/issues/3488584 Update for
++      //   Twig 4 as the spread attribute has been removed there.
++      if ($node->hasAttribute('spread')) {
++        $new->setAttribute('spread', $node->getAttribute('spread'));
++      }
++      return $new;
++    }
++    return $node;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function leaveNode(Node $node, Environment $env): ?Node {
++    return $node;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function getPriority() {
++    // Runs after sandbox visitor.
++    return 1;
++  }
++
++}
+diff --git a/core/lib/Drupal/Core/Template/TwigExtension.php b/core/lib/Drupal/Core/Template/TwigExtension.php
+index cd34aec44973bc8b2a2baf1044c8f2982cdf1ae5..b5a6a5c2ee097667117a554f45694ad9014756c2 100644
+--- a/core/lib/Drupal/Core/Template/TwigExtension.php
++++ b/core/lib/Drupal/Core/Template/TwigExtension.php
+@@ -158,10 +158,18 @@ public function getFilters() {
+   public function getNodeVisitors() {
+     // The node visitor is needed to wrap all variables with
+     // render_var -> TwigExtension->renderVar() function.
+-    return [
++    $visitors = [
+       new TwigNodeVisitor(),
+       new TwigNodeVisitorCheckDeprecations(),
+     ];
++    if (\in_array('__toString', TwigSandboxPolicy::getMethodsAllowedOnAllObjects(), TRUE)) {
++      // When __toString is an allowed method, there is no point in running
++      // \Twig\Extension\SandboxExtension::ensureToStringAllowed, so we add a
++      // node visitor to remove any CheckToStringNode nodes added by the
++      // sandbox extension.
++      $visitors[] = new RemoveCheckToStringNodeVisitor();
++    }
++    return $visitors;
+   }
+ 
+   /**
+diff --git a/core/lib/Drupal/Core/Template/TwigSandboxPolicy.php b/core/lib/Drupal/Core/Template/TwigSandboxPolicy.php
+index 2a8dfe7dae64a62cd228290ab722b21ed28f1cfb..67d04d5d7f2c5afb59cfefd86eef473b48706033 100644
+--- a/core/lib/Drupal/Core/Template/TwigSandboxPolicy.php
++++ b/core/lib/Drupal/Core/Template/TwigSandboxPolicy.php
+@@ -57,15 +57,7 @@ public function __construct() {
+     // Flip the array so we can check using isset().
+     $this->allowed_classes = array_flip($allowed_classes);
+ 
+-    $allowed_methods = Settings::get('twig_sandbox_allowed_methods', [
+-      // Only allow idempotent methods.
+-      'id',
+-      'label',
+-      'bundle',
+-      'get',
+-      '__toString',
+-      'toString',
+-    ]);
++    $allowed_methods = static::getMethodsAllowedOnAllObjects();
+     // Flip the array so we can check using isset().
+     $this->allowed_methods = array_flip($allowed_methods);
+ 
+@@ -112,4 +104,22 @@ public function checkMethodAllowed($obj, $method): void {
+     throw new SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, get_class($obj)));
+   }
+ 
++  /**
++   * Gets the list of allowed methods on all objects.
++   *
++   * @return string[]
++   *   The list of allowed methods on all objects.
++   */
++  public static function getMethodsAllowedOnAllObjects(): array {
++    return Settings::get('twig_sandbox_allowed_methods', [
++      // Only allow idempotent methods.
++      'id',
++      'label',
++      'bundle',
++      'get',
++      '__toString',
++      'toString',
++    ]);
++  }
++
+ }
+diff --git a/core/lib/Drupal/Core/Template/TwigSimpleCheckToStringNode.php b/core/lib/Drupal/Core/Template/TwigSimpleCheckToStringNode.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..42f32a5d469415e661589a66167fdc6bf36a5941
+--- /dev/null
++++ b/core/lib/Drupal/Core/Template/TwigSimpleCheckToStringNode.php
+@@ -0,0 +1,33 @@
++<?php
++
++declare(strict_types=1);
++
++namespace Drupal\Core\Template;
++
++use Twig\Compiler;
++use Twig\Node\CheckToStringNode;
++
++/**
++ * Defines a twig node for simplifying CheckToStringNode.
++ *
++ * Drupal's sandbox policy is very permissive with checking whether an object
++ * can be converted to a string. We allow any object with a __toString method.
++ * This means that the array traversal in the default SandboxExtension
++ * implementation added by the parent class is a performance overhead we don't
++ * need.
++ *
++ * @see \Drupal\Core\Template\TwigSandboxPolicy
++ * @see \Drupal\Core\Template\RemoveCheckToStringNodeVisitor
++ */
++final class TwigSimpleCheckToStringNode extends CheckToStringNode {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function compile(Compiler $compiler): void {
++    $expr = $this->getNode('expr');
++    $compiler
++      ->subcompile($expr);
++  }
++
++}

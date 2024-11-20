@@ -23,7 +23,7 @@ abstract class HsCoursesImporterTestBase extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'hs_courses_importer',
   ];

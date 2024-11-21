@@ -110,7 +110,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     $this->setPublicationOverrides($names, $overrides);
     $this->setThemeSettingsOverrides($names, $overrides);
     $this->setSearchApiOverrides($names, $overrides);
-    $this->setPageCacheQueryIgnore($names, $overrides);
 
     if (in_array('google_analytics.settings', $names)) {
       if ($value = $this->configPages->getValue('hs_site_options', 'field_site_ga_account')) {
@@ -368,39 +367,6 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
     foreach (array_keys($node_types) as $node_type) {
       $overrides['search_api.index.default_index']['field_settings']['rendered']['configuration']['view_mode']['entity:node'][$node_type] = 'search_index';
     }
-  }
-
-  /**
-   * Set the config overrides for the page_cache_query_ignore settings.
-   *
-   * @param array $names
-   *   Array of config names.
-   * @param array $overrides
-   *   Keyed array of config overrides.
-   */
-  protected function setPageCacheQueryIgnore(array $names, array &$overrides) {
-    if (!in_array('page_cache_query_ignore.settings', $names)) {
-      return;
-    }
-    $original_setting = $this->configFactory->getEditable('page_cache_query_ignore.settings')
-      ->getOriginal('query_parameters', FALSE);
-    $allowed_parameters = [
-      'hash',
-      'offset',
-      'page',
-      'search',
-      'sort_by',
-      'sort_order',
-      'url',
-    ];
-    $view_params = $this->getViewQueryParams();
-    $params = [
-      ...$original_setting,
-      ...$allowed_parameters,
-      ...$view_params,
-    ];
-    asort($params);
-    $overrides['page_cache_query_ignore.settings']['query_parameters'] = array_values(array_unique($params));
   }
 
   /**

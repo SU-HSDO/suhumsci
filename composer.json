@@ -53,6 +53,7 @@
         "drupal/addtocal": "^3.0",
         "drupal/admin_toolbar": "^3.0",
         "drupal/allowed_formats": "^3.0",
+        "drupal/anchor_link": "~3.0",
         "drupal/asset_injector": "^2.7",
         "drupal/auto_entitylabel": "^3.0@beta",
         "drupal/better_exposed_filters": "^7.0",
@@ -191,7 +192,8 @@
         "su-sws/stanford_fields": "^8.1",
         "su-sws/stanford_media": "^11.0",
         "su-sws/stanford_migrate": "^8.4",
-        "su-sws/stanford_samlauth": "^1.0"
+        "su-sws/stanford_samlauth": "^1.0",
+        "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {
         "drupal/upgrade_status": "^4.0",
@@ -360,6 +362,11 @@
             ],
             "vendor/{$vendor}/{$name}/": [
                 "type:library"
+            ]
+        },
+        "merge-plugin": {
+            "include": [
+                "docroot/modules/contrib/anchor_link/composer.libraries.json"
             ]
         }
     },

@@ -1,5 +1,5 @@
 (function (Drupal) {
-  Drupal.behaviors.addMainContentStart = {
+  Drupal.behaviors.addMainContentFallback = {
     attach(context) {
       // Return if main content target is found, nothing to do.
       if (context.querySelector('#main-content')) {

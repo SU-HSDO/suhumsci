@@ -1,7 +1,7 @@
 import changeNav from './change-nav';
 import togglerHandler from './toggler-handler';
 
-(function (Drupal) {
+(function (Drupal, window) {
   Drupal.behaviors.NestedToggler = {
     attach(context) {
       const togglers = context.querySelectorAll('.hb-nested-toggler');
@@ -64,4 +64,4 @@ import togglerHandler from './toggler-handler';
       }
     },
   };
-}(Drupal));
+}(Drupal, window));

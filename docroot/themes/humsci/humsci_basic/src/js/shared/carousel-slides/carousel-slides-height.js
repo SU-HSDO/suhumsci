@@ -1,7 +1,7 @@
 // This work below applies uniform height to both the Hero Layered Slider (formerly Carousel),
 // the Hero Gradient Slider paragraph component slides.
 // and the Spotlight Slider.
-(function (Drupal) {
+(function (Drupal, window) {
   Drupal.behaviors.restrictHeightBehavior = {
     attach(context) {
       const slides = context.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
@@ -96,4 +96,4 @@
       }
     },
   };
-}(Drupal));
+}(Drupal, window));

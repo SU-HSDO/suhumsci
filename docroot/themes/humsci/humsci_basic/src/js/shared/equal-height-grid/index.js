@@ -1,7 +1,7 @@
 import equalHeightGrid from './equal-height-grid';
 import resetHeightGrid from './reset-height-grid';
 
-(function (Drupal) {
+(function (Drupal, window) {
   Drupal.behaviors.hbStretchVerticalLinkedCards = {
     attach(context) {
       const applyStretchClass = () => {
@@ -62,4 +62,4 @@ import resetHeightGrid from './reset-height-grid';
       });
     },
   };
-}(Drupal));
+}(Drupal, window));

@@ -1,6 +1,6 @@
 import changeNav from './change-nav';
 
-(function (Drupal) {
+(function (Drupal, window) {
   Drupal.behaviors.toggleNavigation = {
     attach(context) {
       const menuToggle = context.querySelector('.hb-main-nav__toggle');
@@ -45,4 +45,4 @@ import changeNav from './change-nav';
       }
     },
   };
-}(Drupal));
+}(Drupal, window));

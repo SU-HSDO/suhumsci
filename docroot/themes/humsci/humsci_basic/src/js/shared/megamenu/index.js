@@ -1,5 +1,5 @@
 (function (Drupal, window) {
-  Drupal.behaviors.pageScrollBehavior = {
+  Drupal.behaviors.megaMenuBehavior = {
     attach(context) {
       const menu = context.querySelector('.js-megamenu');
 

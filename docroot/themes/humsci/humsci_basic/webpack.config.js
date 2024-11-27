@@ -21,8 +21,7 @@ module.exports = {
     // Shared files have two entries, one for each theme.
     Object.keys(shared).forEach((key) => {
       const file = shared[key];
-      entries[`humsci_traditional.${key}`] = path.resolve(srcDir, file);
-      entries[`humsci_colorful.${key}`] = path.resolve(srcDir, file);
+      entries[`shared.${key}`] = path.resolve(srcDir, file);
     });
 
     // Traditional theme specific files.
@@ -43,9 +42,10 @@ module.exports = {
   output: {
     filename(pathData) {
       const [theme, filename] = pathData.chunk.name.split('.');
-      return `${theme}/js/${filename}.js`;
+      const themePath = theme === 'shared' ? 'dist/js' : `../${theme}/js`;
+      return `${themePath}/${filename}.js`;
     },
-    path: path.resolve(__dirname, '../'),
+    path: path.resolve(__dirname, '.'),
   },
   module: {
     rules: [

@@ -73,7 +73,9 @@ class HsEntityTypeForm extends BundleEntityFormBase {
     elseif ($status == SAVED_NEW) {
       $message = $this->t('The HumSci entity type %name has been added.', $t_args);
     }
-    $this->messenger()->addStatus($message);
+    if ($message) {
+      $this->messenger()->addStatus($message);
+    }
 
     $form_state->setRedirectUrl($entity_type->toUrl('collection'));
   }

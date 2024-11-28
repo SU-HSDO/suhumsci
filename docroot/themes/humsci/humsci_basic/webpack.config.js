@@ -8,7 +8,7 @@ const srcDir = path.resolve(__dirname, 'src/js/');
 const shared = {
   accordion: 'shared/accordion/accordion-toggle-all.js',
   addtocal: 'shared/addtocal/addtocal.js',
-  pagescroll: 'shared/animation/page-scroll.js',
+  pagescrollanimations: 'shared/animation/page-scroll.js',
   carouselslidesheight: 'shared/carousel-slides/carousel-slides-height.js',
   editoria11y: 'shared/editoria11y/editoria11y.js',
   equalheightgrid: 'shared/equal-height-grid/index.js',

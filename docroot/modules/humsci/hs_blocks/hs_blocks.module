@@ -5,9 +5,9 @@
  * Contains hs_blocks.module.
  */
 
+use Drupal\block\Entity\Block;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -141,15 +141,16 @@ function hs_blocks_preprocess_block__views_exposed_filter_block(&$variables) {
 }
 
 /**
- * Implements hook_entity_access().
+ * Implements hook_block_access().
  */
-function hs_blocks_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+function hs_blocks_block_access(Block $block, $operation, AccountInterface $account) {
   // Allows roles with "Edit social media block" to edit the custom block.
-  /** @var Drupal\block\Entity\Block $entity */
-  if ($entity->getEntityTypeId() === 'block' && $entity->getPluginId() === 'hs_blocks_social_media_block') {
-    if ($operation === 'update' && $account->hasPermission('edit social media block')) {
-      return AccessResult::allowed();
-    }
+  if (
+    $block->getPluginId() === 'hs_blocks_social_media_block' &&
+    $operation === 'update' &&
+    $account->hasPermission('edit social media block')
+  ) {
+    return AccessResult::allowed();
   }
 
   // No change, return neutral result.

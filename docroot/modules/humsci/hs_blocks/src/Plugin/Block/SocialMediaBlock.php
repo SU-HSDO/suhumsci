@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\hs_blocks\Plugin\Block;
 
@@ -32,12 +32,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    AccountProxyInterface $current_user,
-    ) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountProxyInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->currentUser = $current_user;
   }
@@ -45,12 +40,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public static function create(
-    ContainerInterface $container,
-    array $configuration,
-    $plugin_id,
-    $plugin_definition
-    ) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
@@ -101,7 +91,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#title' => $this->t('Links'),
       '#description' => $this->t('Popular social platforms will show their icon, otherwise a generic icon will be shown.'),
       '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-      '#default_value' => ($this->configuration['links']) ? $this->configuration['links'] : [],
+      '#default_value' => $this->configuration['links'],
       '#element_validate' => [
         [get_class($this), 'validateLinks'],
       ],
@@ -128,14 +118,10 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     $this->configuration['layout'] = $form_state->getValue('layout');
 
     // Only save links if they have data.
-    $links = $form_state->getValue('links');
-    $filtered_links = [];
-    foreach ($links as $link) {
-      if (!empty($link['link_url'] || !empty($link['link_title']))) {
-        $filtered_links[] = $link;
-      }
-    }
-    $this->configuration['links'] = $filtered_links;
+    $links = array_filter($form_state->getValue('links'), function ($link) {
+      return !empty($link['link_url']);
+    });
+    $this->configuration['links'] = $links;
 
     // This sets the placed block ID to be used for a custom contextual link.
     $this->configuration['placed_block_id'] = $form['id']['#default_value'];
@@ -178,126 +164,133 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
   public static function validateLinks(array $element, FormStateInterface $form_state) {
     $links = $form_state->getValue($element['#parents']);
     foreach ($links as $key => $link) {
-      if (is_array($link)) {
-        // Test if there is a title but no URL.
-        if (!empty($link['link_title']) && empty($link['link_url'])) {
-          $form_state->setErrorByName(
-            implode('][', array_merge($element['#parents'], [$key, 'link_url'])),
-            t('The URL must be provided if a label is set')
-          );
-        }
+      if (!is_array($link)) {
+        continue;
+      }
+      // Test if there is a title but no URL.
+      if (!empty($link['link_title']) && empty($link['link_url'])) {
+        $form_state->setErrorByName(
+          implode('][', array_merge($element['#parents'], [$key, 'link_url'])),
+          t('The URL must be provided if a label is set')
+        );
       }
     }
   }
 
   /**
-   * Adds the social media icon and name information to a link.
+   * Returns a list of social media providers with their url, title and icon.
+   *
+   * @return array
+   *   The list of social media providers.
+   */
+  protected function getProviders(): array {
+    return [
+      [
+        'domains' => ['facebook.com', 'fb.com', 'fb.me'],
+        'icon_classes' => 'fa-brands fa-square-facebook',
+        'title' => 'Facebook',
+      ],
+      [
+        'domains' => ['twitter.com', 'x.com'],
+        'icon_classes' => 'fa-brands fa-square-x-twitter',
+        'title' => 'Twitter',
+      ],
+      [
+        'domains' => ['linkedin.com', 'lnkd.in'],
+        'icon_classes' => 'fa-brands fa-linkedin',
+        'title' => 'Linkedin',
+      ],
+      [
+        'domains' => ['instagram.com', 'instagr.am'],
+        'icon_classes' => 'fa-brands fa-square-instagram',
+        'title' => 'Instagram',
+      ],
+      [
+        'domains' => ['youtube.com', 'youtu.be'],
+        'icon_classes' => 'fa-brands fa-square-youtube',
+        'title' => 'Youtube',
+      ],
+      [
+        'domains' => ['vimeo.com'],
+        'icon_classes' => 'fa-brands fa-vimeo',
+        'title' => 'Vimeo',
+      ],
+      [
+        'domains' => ['snapchat.com'],
+        'icon_classes' => 'fa-brands fa-square-snapchat',
+        'title' => 'Snapchat',
+      ],
+      [
+        'domains' => ['soundcloud.com'],
+        'icon_classes' => 'fa-brands fa-soundcloud',
+        'title' => 'Soundcloud',
+      ],
+      [
+        'domains' => ['spotify.com'],
+        'icon_classes' => 'fa-brands fa-spotify',
+        'title' => 'Spotify',
+      ],
+      [
+        'domains' => ['apple.com'],
+        'icon_classes' => 'fa-brands fa-apple',
+        'title' => 'Apple',
+      ],
+      [
+        'domains' => ['telegram.me', 't.me'],
+        'icon_classes' => 'fa-brands fa-telegram',
+        'title' => 'Telegram',
+      ],
+      [
+        'domains' => ['mailto:'],
+        'icon_classes' => 'fa-solid fa-square-envelope',
+        'title' => 'Email',
+      ],
+      [
+        'domains' => ['pinterest.com', 'pin.it'],
+        'icon_classes' => 'fa-brands fa-square-pinterest',
+        'title' => 'Pinterest',
+      ],
+      [
+        'domains' => ['tiktok.com'],
+        'icon_classes' => 'fa-brands fa-tiktok',
+        'title' => 'Tiktok',
+      ],
+    ];
+  }
+
+  /**
+   * Adds the social media icon and title information to a link.
    *
    * @param array $link
    *   The link item.
    *
    * @return array
-   *   The updated link item with the icon and social provider name.
+   *   The updated link item with the icon and social provider title.
    */
-  protected function linkWithIcon(array $link) {
+  protected function linkWithIcon(array $link): array {
     $url = $link['link_url'];
-    $providers = [
-      [
-        'domains' => ['facebook.com', 'fb.com', 'fb.me'],
-        'icon_classes' => 'fa-brands fa-square-facebook',
-        'name' => 'Facebook',
-      ],
-      [
-        'domains' => ['twitter.com', 'x.com'],
-        'icon_classes' => 'fa-brands fa-square-x-twitter',
-        'name' => 'Twitter',
-      ],
-      [
-        'domains' => ['linkedin.com', 'lnkd.in'],
-        'icon_classes' => 'fa-brands fa-linkedin',
-        'name' => 'Linkedin',
-      ],
-      [
-        'domains' => ['instagram.com', 'instagr.am'],
-        'icon_classes' => 'fa-brands fa-square-instagram',
-        'name' => 'Instagram',
-      ],
-      [
-        'domains' => ['youtube.com', 'youtu.be'],
-        'icon_classes' => 'fa-brands fa-square-youtube',
-        'name' => 'Youtube',
-      ],
-      [
-        'domains' => ['vimeo.com'],
-        'icon_classes' => 'fa-brands fa-vimeo',
-        'name' => 'Vimeo',
-      ],
-      [
-        'domains' => ['snapchat.com'],
-        'icon_classes' => 'fa-brands fa-square-snapchat',
-        'name' => 'Snapchat',
-      ],
-      [
-        'domains' => ['soundcloud.com'],
-        'icon_classes' => 'fa-brands fa-soundcloud',
-        'name' => 'Soundcloud',
-      ],
-      [
-        'domains' => ['spotify.com'],
-        'icon_classes' => 'fa-brands fa-spotify',
-        'name' => 'Spotify',
-      ],
-      [
-        'domains' => ['apple.com'],
-        'icon_classes' => 'fa-brands fa-apple',
-        'name' => 'Apple',
-      ],
-      [
-        'domains' => ['telegram.me', 't.me'],
-        'icon_classes' => 'fa-brands fa-telegram',
-        'name' => 'Telegram',
-      ],
-      [
-        'domains' => ['mailto:'],
-        'icon_classes' => 'fa-solid fa-square-envelope',
-        'name' => 'Email',
-      ],
-      [
-        'domains' => ['pinterest.com', 'pin.it'],
-        'icon_classes' => 'fa-brands fa-square-pinterest',
-        'name' => 'Pinterest',
-      ],
-      [
-        'domains' => ['tiktok.com'],
-        'icon_classes' => 'fa-brands fa-tiktok',
-        'name' => 'Tiktok',
-      ],
-    ];
 
-    $icon_classes = '';
-    $icon_name = '';
+    $icon_classes = 'fa-solid fa-globe';
+    $link_title = $link['link_title'] ?: '';
 
-    foreach ($providers as $provider) {
+    foreach ($this->getProviders() as $provider) {
       foreach ($provider['domains'] as $domain) {
         if (strpos($url, $domain) !== FALSE) {
           $icon_classes = $provider['icon_classes'];
-          $icon_name = $provider['name'];
+          $link_title = $link_title ?: $provider['title'];
           break 2;
         }
       }
     }
 
-    if (!$icon_classes) {
-      $icon_classes = 'fa-solid fa-globe';
-      // Use the domain as the name if the provider is not listed above.
-      if (preg_match('/https?:\/\/(.+?)\//', $url, $matches)) {
-        $icon_name = $matches[1];
-      }
+    // Use the domain as the link title if the provider is not listed above.
+    if (!$link_title && preg_match('/https?:\/\/(.+?)\//', $url, $matches)) {
+      $link_title = $matches[1];
     }
 
     return [
       'link_url' => $url,
-      'link_title' => $link['link_title'] ?: $icon_name,
+      'link_title' => $link_title,
       'icon_classes' => $icon_classes,
     ];
   }

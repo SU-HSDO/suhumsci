@@ -8,7 +8,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\multivalue_form_element\Element\MultiValue;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -64,6 +63,21 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state): array {
+    // If the form is being rendered for the first time, need to set the links
+    // in the form_state, because we'll used them to generate the form elements.
+    if (is_null($form_state->get('links'))) {
+      $links = $this->configuration['links'];
+      // Add an empty item at the bottom, to make it easier for users to add
+      // new links.
+      $weight = !empty($links) ? $links[count($links) - 1]['_weight'] + 1 : 0;
+      $links[] = [
+        'link_title' => '',
+        'link_url' => '',
+        '_weight' => $weight,
+      ];
+      $form_state->set('links', $links);
+    }
+
     $form['icon_size'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon Size'),
@@ -87,23 +101,60 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     ];
 
     $form['links'] = [
-      '#type' => 'multivalue',
+      '#type' => 'container',
+      '#field_name' => 'links',
       '#title' => $this->t('Links'),
-      '#description' => $this->t('Popular social platforms will show their icon, otherwise a generic icon will be shown.'),
-      '#cardinality' => MultiValue::CARDINALITY_UNLIMITED,
-      '#default_value' => $this->configuration['links'],
+      '#input' => TRUE,
+      '#theme' => 'field_multiple_value_form',
+      '#cardinality_multiple' => TRUE,
+      '#cardinality' => -1,
+      '#description' => $this->t(
+        'Supported social platforms will show their icon, otherwise a generic icon will be shown. See which <a href="@user_guide_url" target="_blank">social platforms are currently supported.</a>',
+        ['@user_guide_url' => 'https://hsweb.slite.page/p/NeJL89GqNsiOY-/Social-Media-Footer-block']
+      ),
+      '#add_more_label' => $this->t('Add another item'),
       '#element_validate' => [
         [get_class($this), 'validateLinks'],
       ],
-      'link_url' => [
-        '#type' => 'url',
-        '#title' => $this->t('URL'),
-        '#description' => $this->t('Social Media Profile URL.'),
+      '#attributes' => [
+        'id' => 'links-wrapper',
       ],
-      'link_title' => [
-        '#type' => 'textfield',
-        '#title' => $this->t('Label'),
-        '#description' => $this->t('If empty, the social platform name will be used for popular platforms. If the platform is unknown then the domain name will be used.'),
+    ];
+
+    foreach ($form_state->get('links') as $key => $link) {
+      $form['links'][$key] = [
+        '#type' => 'container',
+        'link_url' => [
+          '#type' => 'url',
+          '#title' => $this->t('URL'),
+          '#description' => $this->t('Social Media Profile URL.'),
+          '#default_value' => $link['link_url'],
+        ],
+        'link_title' => [
+          '#type' => 'textfield',
+          '#title' => $this->t('Label'),
+          '#description' => $this->t('If empty, the social platform name will be used for supported platforms, otherwise the domain name will be used.'),
+          '#default_value' => $link['link_title'],
+        ],
+        '_weight' => [
+          '#type' => 'weight',
+          '#title' => $this->t('Weight'),
+          '#title_display' => 'invisible',
+          '#delta' => count($this->configuration['links']),
+          '#default_value' => $link['_weight'],
+        ],
+      ];
+    }
+
+    $form['links']['add_more'] = [
+      '#type' => 'submit',
+      '#name' => 'links_add_more',
+      '#value' => $form['links']['#add_more_label'],
+      '#submit' => [[get_class($this), 'addMoreSubmit']],
+      '#ajax' => [
+        'callback' => [get_class($this), 'addMoreAjax'],
+        'wrapper' => 'links-wrapper',
+        'effect' => 'fade',
       ],
     ];
 
@@ -117,7 +168,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     $this->configuration['icon_size'] = $form_state->getValue('icon_size');
     $this->configuration['layout'] = $form_state->getValue('layout');
 
-    // Only save links if they have data.
+    // Only save links if they're not empty.
     $links = array_filter($form_state->getValue('links'), function ($link) {
       return !empty($link['link_url']);
     });
@@ -171,10 +222,47 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       if (!empty($link['link_title']) && empty($link['link_url'])) {
         $form_state->setErrorByName(
           implode('][', array_merge($element['#parents'], [$key, 'link_url'])),
-          t('The URL must be provided if a label is set')
+          t('The URL must be provided if a label is set.')
         );
       }
     }
+  }
+
+  /**
+   * Submit handler for the "Add another item" button in the "Links" element.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public static function addMoreSubmit(array $form, FormStateInterface $form_state): void {
+    $links = $form_state->get('links');
+    // Add new empty element at the bottom
+    // (weight greater than the last current element).
+    $weight = !empty($links) ? $links[count($links) - 1]['_weight'] + 1 : 0;
+    $links[] = [
+      'link_url' => '',
+      'link_title' => '',
+      '_weight' => $weight,
+    ];
+    $form_state->set('links', $links);
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Ajax Callback for the "Add another item" button in the "Links" element.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return array
+   *   The form element to replace.
+   */
+  public static function addMoreAjax(array $form, FormStateInterface $form_state): array {
+    return $form['settings']['links'];
   }
 
   /**
@@ -193,7 +281,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       [
         'domains' => ['twitter.com', 'x.com'],
         'icon_classes' => 'fa-brands fa-square-x-twitter',
-        'title' => 'Twitter',
+        'title' => 'X',
       ],
       [
         'domains' => ['linkedin.com', 'lnkd.in'],

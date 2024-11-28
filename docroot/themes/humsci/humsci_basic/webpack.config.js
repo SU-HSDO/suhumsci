@@ -8,6 +8,26 @@ const srcDir = path.resolve(__dirname, 'src/js/');
 const shared = {
   accordion: 'shared/accordion/accordion-toggle-all.js',
   addtocal: 'shared/addtocal/addtocal.js',
+  pagescroll: 'shared/animation/page-scroll.js',
+  carouselslidesheight: 'shared/carousel-slides/carousel-slides-height.js',
+  editoria11y: 'shared/editoria11y/editoria11y.js',
+  equalheightgrid: 'shared/equal-height-grid/index.js',
+  linkedcards: 'shared/linked-cards/linked-cards.js',
+  maincontentfallback: 'shared/main-content-fallback/main-content-fallback.js',
+  videowithcaption: 'shared/media/video-with-caption.js',
+  megamenu: 'shared/megamenu/index.js',
+  mainmenutoggle: 'shared/navigation/main-menu-toggle.js',
+  mainmenunestedtoggler: 'shared/navigation/main-menu-nested-toggler.js',
+  collapsemainmenu: 'shared/navigation/collapse-main-menu.js',
+  secondarytoggler: 'shared/navigation/secondary-toggler.js',
+  colorbox: 'shared/photo-album/colorbox.js',
+  preferedreducedmotion: 'shared/prefered-reduced-motion/prefered-reduced-motion.js',
+  search: 'shared/search/search-expand.js',
+  tablescope: 'shared/tables/scope.js',
+  tablepattern: 'shared/tables/table-pattern.js',
+  tablewrap: 'shared/tables/wrap.js',
+  timeline: 'shared/timeline/expand-collapse-timeline.js',
+  verticaltabs: 'shared/vertical-tabs/vertical-tabs.js',
 };
 
 // Colorful and traditional theme specific JS files.

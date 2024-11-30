@@ -2,7 +2,7 @@
 // Find when a timeline has been set to collapsed so that we can
 // adjust the default attribute values
 (function (Drupal) {
-  Drupal.behaviors.pageScrollBehavior = {
+  Drupal.behaviors.timelineCollapseBehavior = {
     attach(context) {
       const timelineCollapsed = context.querySelectorAll('.hb-timeline__collapsed');
 

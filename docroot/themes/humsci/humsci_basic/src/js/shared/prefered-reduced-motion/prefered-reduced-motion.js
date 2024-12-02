@@ -1,5 +1,5 @@
 (function ($, Drupal, window) {
-  Drupal.behaviors.mySlickBehavior = {
+  Drupal.behaviors.preferedReducedMotionBehavior = {
     attach(context) {
       // Check for reduced motion preference
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');

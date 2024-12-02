@@ -235,6 +235,10 @@ function humsci_basic_preprocess_views_view(&$variables) {
  */
 function humsci_basic_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
+  // Attach library to stanford gallery
+  if ($paragraph->bundle() == 'stanford_gallery') {
+    $variables['#attached']['library'][] = 'humsci_basic/preferedreducedmotion';
+  }
   if ($paragraph->bundle() != 'hs_view') {
     return NULL;
   }
@@ -261,4 +265,11 @@ function humsci_basic_preprocess_field(&$variables) {
     $variables['#attached']['library'][] = 'humsci_basic/tablewrap';
     $variables['#attached']['library'][] = 'humsci_basic/tablescope';
   }
+}
+
+/**
+ * Implements hook_preprocess_ENTITY__BUNDLE().
+ */
+function humsci_basic_preprocess_node__hs_event(&$variables) {
+  $variables['#attached']['library'][] = 'humsci_basic/addtocal';
 }

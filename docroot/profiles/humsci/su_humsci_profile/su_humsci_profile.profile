@@ -910,3 +910,16 @@ function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definition
     $plugin_definitions['ckeditor5_table'] = new CKEditor5PluginDefinition($tableDefinition);
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form_state) {
+  // Get current user roles and determine if has the 'administrator' role.
+  $roles = \Drupal::currentUser()->getRoles();
+  $is_admin = in_array('administrator', $roles);
+  // Remove unnecessary URL alias fields from the user edit form for all users.
+  $form['path']['#access'] = FALSE;
+  // Remove Delete account button for all roles expect 'administrator'.
+  $form['actions']['delete']['#access'] = $is_admin;
+}

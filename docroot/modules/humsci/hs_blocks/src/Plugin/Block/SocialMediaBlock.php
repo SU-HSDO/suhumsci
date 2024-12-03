@@ -109,7 +109,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#cardinality_multiple' => TRUE,
       '#cardinality' => -1,
       '#description' => $this->t(
-        'Supported social platforms will show their icon, otherwise a generic icon will be shown. See which <a href="@user_guide_url" target="_blank">social platforms are currently supported.</a>',
+        '<p>Supported social platforms will show their icon, otherwise a generic icon will be shown.</p><p>See which <a href="@user_guide_url" target="_blank">social platforms are currently supported</a>.</p>',
         ['@user_guide_url' => 'https://hsweb.slite.page/p/NeJL89GqNsiOY-/Social-Media-Footer-block']
       ),
       '#add_more_label' => $this->t('Add another item'),

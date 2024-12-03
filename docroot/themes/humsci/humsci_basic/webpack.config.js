@@ -27,7 +27,6 @@ const shared = {
   tablepattern: 'shared/tables/table-pattern.js',
   tablewrap: 'shared/tables/wrap.js',
   timeline: 'shared/timeline/expand-collapse-timeline.js',
-  verticaltabs: 'shared/vertical-tabs/vertical-tabs.js',
 };
 
 // Colorful and traditional theme specific JS files.

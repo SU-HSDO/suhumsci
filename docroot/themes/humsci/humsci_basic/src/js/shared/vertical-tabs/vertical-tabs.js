@@ -1,5 +1,5 @@
 (function (Drupal) {
-  Drupal.behaviors.addTableScopeAttributes = {
+  Drupal.behaviors.verticalTabsBehavior = {
     // eslint-disable-next-line no-unused-vars
     attach(context) {
       function closeDetails() {

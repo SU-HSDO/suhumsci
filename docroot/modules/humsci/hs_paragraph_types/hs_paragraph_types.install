@@ -381,30 +381,27 @@ function hs_paragraph_types_update_10010() {
  * Adds add between buttons to existing paragraphs.
  */
 function hs_paragraph_types_update_10011() {
-  $config_to_update = [
-    'core.entity_form_display.node.hs_basic_page.default',
-    'core.entity_form_display.node.hs_private_page.default',
+  $fields = [
+    'field_hs_page_components' => 'node.hs_basic_page.default',
+    'field_hs_page_hero' => 'node.hs_basic_page.default',
+    'field_hs_priv_page_components' => 'node.hs_private_page.default',
   ];
-  // Load the configuration from the config/sync directory.
-  $config_directory = \Drupal::service('config.storage.sync');
-
-  foreach ($config_to_update as $config) {
-    $config_data = $config_directory->read($config);
-
-    // Check if the form display configuration already exists.
-    $entity_type_manager = \Drupal::entityTypeManager();
-    /** @var ConfigEntityStorageInterface $config_storage */
-    $config_storage = $entity_type_manager->getStorage('entity_form_display');
-    $existing_config = $config_storage->load($config_data['id']);
-
-    if ($existing_config) {
-      $existing_config = $config_storage
-        ->updateFromStorageRecord($existing_config, $config_data);
-      $existing_config->save();
+  $form_display_storage = \Drupal::entityTypeManager()->getStorage('entity_form_display');
+  foreach ($fields as $field => $form_display_id) {
+    /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
+    $form_display = $form_display_storage->load($form_display_id);
+    if (empty($form_display)) {
+      continue;
     }
-    else {
-      // If it doesn't exist, create and save it.
-      $config_storage->create($config_data)->save();
+
+    $component = $form_display->getComponent($field);
+
+    if (empty($component)) {
+      continue;
     }
+    $component['third_party_settings']['paragraphs_features']['add_in_between'] = 'true';
+    $component['third_party_settings']['paragraphs_features']['add_in_between_link_count'] = 0;
+    $form_display->setComponent($field, $component)
+      ->save();
   }
 }

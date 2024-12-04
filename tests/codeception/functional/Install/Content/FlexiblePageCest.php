@@ -91,7 +91,7 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Banner');
     $I->click('Banner image with full overlay and text', '.paragraphs-ee-add-dialog');

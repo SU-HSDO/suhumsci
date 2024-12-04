@@ -352,7 +352,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Postcard');
     $I->click('Postcard', '.paragraphs-ee-add-dialog');

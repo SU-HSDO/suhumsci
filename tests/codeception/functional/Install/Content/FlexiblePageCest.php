@@ -158,7 +158,7 @@ class FlexiblePageCest {
     $I->canSeeNumberOfElements('#cboxContent img', 0);
     $I->waitForText('Edit');
     $I->click('Edit', '.tabs');
-    $I->click('field_hs_page_components_1_edit');
+    $I->click('//input[@data-paragraphs-split-text-type="stanford_gallery"]/preceding::input[contains(@class, "paragraphs-icon-button-edit")][1]');
     $I->waitForText('Content');
     $I->scrollTo('Style');
     $I->selectOption('Style', 'Slideshow');

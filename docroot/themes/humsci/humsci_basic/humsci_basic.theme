@@ -174,7 +174,6 @@ function _humsci_basic_check_link_access(array &$link_items) {
   }
 }
 
-
 /**
  * Implements hook_preprocess_HOOK() for we_megamenu li.
  */
@@ -220,8 +219,8 @@ function humsci_basic_preprocess_we_megamenu_frontend(&$vars) {
  */
 function humsci_basic_preprocess_views_view(&$variables) {
   $view = $variables['view'];
-  $variables['#attached']['library'][] = 'humsci_basic/tablewrap';
-  $variables['#attached']['library'][] = 'humsci_basic/tablepattern';
+  $variables['#attached']['library'][] = 'humsci_basic/table-wrap';
+  $variables['#attached']['library'][] = 'humsci_basic/table-pattern';
 
   switch ($view->id()) {
     case 'hs_default_search':
@@ -235,9 +234,9 @@ function humsci_basic_preprocess_views_view(&$variables) {
  */
 function humsci_basic_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
-  // Attach library to stanford gallery
+  // Attach library to stanford gallery.
   if ($paragraph->bundle() == 'stanford_gallery') {
-    $variables['#attached']['library'][] = 'humsci_basic/preferedreducedmotion';
+    $variables['#attached']['library'][] = 'humsci_basic/prefered-reduced-motion';
     $variables['#attached']['library'][] = 'humsci_basic/colorbox';
   }
   if ($paragraph->bundle() != 'hs_view') {
@@ -263,9 +262,9 @@ function humsci_basic_preprocess_paragraph(&$variables) {
  */
 function humsci_basic_preprocess_field(&$variables) {
   if ($variables['field_name'] == 'field_hs_text_area') {
-    $variables['#attached']['library'][] = 'humsci_basic/tablewrap';
-    $variables['#attached']['library'][] = 'humsci_basic/tablescope';
-    $variables['#attached']['library'][] = 'humsci_basic/videowithcaption';
+    $variables['#attached']['library'][] = 'humsci_basic/table-wrap';
+    $variables['#attached']['library'][] = 'humsci_basic/table-scope';
+    $variables['#attached']['library'][] = 'humsci_basic/video-with-caption';
   }
 }
 

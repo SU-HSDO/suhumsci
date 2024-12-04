@@ -184,13 +184,14 @@ class Capx {
    * @return int
    *   Total number of profiles.
    */
-  public function getTotalProfileCount($url) {
+  public function getTotalProfileCount($url): int {
     $token = $this->getAccessToken();
     $response = self::getApiResponse("$url&ps=1&access_token=$token");
     if ($response) {
       $response = json_decode($response, TRUE);
       return $response['totalCount'] ?? 0;
     }
+    return 0;
   }
 
   /**
@@ -276,7 +277,7 @@ class Capx {
    * @return string
    *   API Token.
    */
-  protected function getAccessToken() {
+  protected function getAccessToken(): string {
     if ($cache = $this->cache->get('capx:access_token')) {
       return $cache->data['access_token'];
     }
@@ -293,6 +294,7 @@ class Capx {
       ]);
       return $result['access_token'];
     }
+    return '';
   }
 
 }

@@ -508,6 +508,10 @@ function hs_field_helpers_preprocess_field(&$variables) {
       }
       $pitem['attributes']['class'][] = "paragraph-item";
       $pitem['attributes']['class'][] = $ptype;
+
+      if ($paragraph_type == 'hs_clr_bnd') {
+        $pitem['attributes']['id'] = 'component-' . $pitem['content']['#paragraph']->id();
+      }
     }
   }
 }
@@ -625,13 +629,6 @@ function hs_field_helpers_field_storage_config_presave(FieldStorageConfigInterfa
     // Reset dependencies.
     $entity->calculateDependencies();
   }
-}
-
-/**
- * Implements hook_audio_embed_field_provider_info_alter().
- */
-function hs_field_helpers_audio_embed_field_provider_info_alter(&$definitions) {
-  $definitions['soundcloud']['class'] = '\Drupal\hs_field_helpers\Plugin\audio_embed_field\Provider\StanfordSoundCloud';
 }
 
 /**

@@ -61,8 +61,8 @@ class FlexiblePageCest {
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->scrollTo('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->scrollTo('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Collection');
     $I->click('Collection', '.paragraphs-ee-add-dialog');
@@ -132,7 +132,7 @@ class FlexiblePageCest {
     // Prevent JS alerts from firing before loading a new page.
     $I->executeJS('window.onbeforeunload = undefined;');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Photo Album');
     $I->click('Photo Album', '.paragraphs-ee-add-dialog');
@@ -236,7 +236,7 @@ class FlexiblePageCest {
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Spotlight');
     $I->click('Spotlight(s)', '.paragraphs-ee-add-dialog');
@@ -308,7 +308,7 @@ class FlexiblePageCest {
     $I->logInWithRole('administrator');
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', $this->faker->words(3, TRUE));
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Vertical Timeline');
     $I->click('Vertical Timeline', '.paragraphs-ee-add-dialog');
@@ -376,7 +376,7 @@ class FlexiblePageCest {
     $I->logInWithRole('contributor');
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'accordion');
     $I->click('Accordion', '.paragraphs-ee-add-dialog');
@@ -405,7 +405,7 @@ class FlexiblePageCest {
     }
     catch (\Exception $e) {
       // Add component if does not already exist.
-      $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+      $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
       $I->waitForText('Add Component');
       $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'text area');
       $I->click('Text Area', '.paragraphs-ee-add-dialog');
@@ -446,7 +446,7 @@ class FlexiblePageCest {
     }
     catch (\Exception $e) {
       // Add component if does not already exist.
-      $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+      $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
       $I->waitForText('Add Component');
       $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'text area');
       $I->click('Text Area', '.paragraphs-ee-add-dialog');
@@ -477,7 +477,7 @@ class FlexiblePageCest {
     $I->amOnPage('/node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     // Add a Collection component to the page.
-    $I->click('#edit-field-hs-page-components-add-more-add-modal-form-area-add-more');
+    $I->click('#field-hs-page-components-values .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Collection');
     $I->click('Collection', '.paragraphs-ee-add-dialog');

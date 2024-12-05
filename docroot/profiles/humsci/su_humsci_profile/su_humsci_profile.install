@@ -1057,38 +1057,18 @@ function su_humsci_profile_update_9715($sandbox) {
  */
 function su_humsci_profile_update_9716() {
   $paragraph_machine_name = 'hs_webform';
-  // Delete the field and field storage on the paragraph.
-  $fields = \Drupal::entityTypeManager()
-    ->getStorage('field_config')
-    ->loadByProperties(['bundle' => $paragraph_machine_name]);
-
-  if ($fields) {
-    foreach ($fields as $field) {
-      /** @var Drupal\field\Entity $field */
-
-      // Delete the field configuration (instance) from the paragraph type.
-      $field->delete();
-    }
-  }
-
-  // Delete the field_hs_webform field storage.
-  $field_storage = FieldStorageConfig::load('field_hs_webform');
-  if ($field_storage) {
-    $field_storage->delete();
-  }
+  // Delete the field_hs_webform field storage (and field instances).
+  FieldStorageConfig::load('field_hs_webform')?->delete();
 
   // Delete the paragraph itself.
-  $paragraph_type = ParagraphsType::load($paragraph_machine_name);
-  if ($paragraph_type) {
-    $paragraph_type->delete();
-  }
+  ParagraphsType::load($paragraph_machine_name)?->delete();
 
   // Remove hs_webform from config ignored configs.
   $config_storage = \Drupal::service('config.storage.sync');
 
   $configs_to_change = [
     'node.hs_basic_page.field_hs_page_components' => 'node.field_hs_page_components',
-    'paragraph.hs_collection.field_hs_collection_items' => 'paragraph.field_hs_collection_items',
+    'node.hs_basic_page.field_hs_page_hero' => 'node.field_hs_page_hero',
     'node.hs_private_page.field_hs_priv_page_components' => 'node.field_hs_priv_page_components',
   ];
 

@@ -67,7 +67,8 @@ class PrivatePageContentCest {
     $I->amOnPage('/node/add/hs_private_page');
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $component => $component_info) {
-      $I->click('#field-hs-priv-page-components-values .paragraphs-features__add-in-between__button');
+      $I->scrollTo('.field--name-field-priv-wysiwyg-files');
+      $I->click('+ Add');
       $I->waitForText('Add Component');
       $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', $component);
       $I->click($component_info['component_button_name'], '.paragraphs-ee-add-dialog');

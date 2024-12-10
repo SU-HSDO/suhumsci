@@ -871,13 +871,24 @@ function su_humsci_profile_form_user_register_form_alter(&$form, FormStateInterf
 }
 
 /**
- * Implements hook_preprocess_HOOK().
+ * Implements hook_preprocess_block().
  */
-function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
-  $variables['content']['login']['#attributes']['class'] = [
+function su_humsci_profile_preprocess_block(&$variables) {
+  $classes = [
     'text-align-right',
     'hs-secondary-button',
   ];
+
+  $base_plugin_id = $variables['base_plugin_id'];
+
+  switch ($base_plugin_id) {
+    case 'stanford_samlauth_login_block':
+      $variables['content']['login']['#attributes']['class'] = $classes;
+      break;
+
+    case 'stanford_samlauth_logout_block':
+      $variables['content']['logout']['#attributes']['class'] = $classes;
+  }
 }
 
 /**

@@ -5,10 +5,12 @@
  * su_humsci_profile.install
  */
 
+use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
@@ -1041,12 +1043,10 @@ function su_humsci_profile_update_9715() {
 /**
  * Add new logout block to existing sites.
  */
-
 function su_humsci_profile_update_9716() {
+  $config_storage = new FileStorage(Settings::get('config_sync_directory'));
   $entity_type_manager = \Drupal::service('entity_type.manager');
-  $config_storage = \Drupal::service('config.storage.sync');
 
-  // Specify the configuration name (without the .yml extension).
   $config_names = [
     'block.block.humsci_colorful_samlsunetidlogoutblock',
     'block.block.humsci_traditional_samlsunetidlogoutblock',
@@ -1066,6 +1066,7 @@ function su_humsci_profile_update_9716() {
     $existing_config = $block_storage->load($config_data['id']);
 
     if (!$existing_config) {
+      // Change the logout link text to match what the existing login text is.
       $login_blocks = $entity_type_manager->getStorage('block')->loadByProperties([
         'plugin' => 'stanford_samlauth_login_block',
       ]);

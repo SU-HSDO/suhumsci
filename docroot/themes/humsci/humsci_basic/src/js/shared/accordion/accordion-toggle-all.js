@@ -1,4 +1,4 @@
-(function (Drupal) {
+(function (Drupal, once) {
 /**
  * Loops through a list of accordions and either opens or closes all items
  *
@@ -50,7 +50,7 @@
   Drupal.behaviors.accordionToggleAllBehavior = {
     attach(context) {
       // Create a list of all accordions on the page
-      const accordionList = [...context.querySelectorAll('details')];
+      const accordionList = once('list-of-all-accordions', 'details', context);
 
       if (accordionList.length >= 1) {
         let allExpanded = false;
@@ -105,4 +105,5 @@
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

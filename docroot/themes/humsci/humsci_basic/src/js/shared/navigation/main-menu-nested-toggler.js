@@ -1,10 +1,10 @@
 import changeNav from './change-nav';
 import togglerHandler from './toggler-handler';
 
-(function (Drupal, window) {
+(function (Drupal, window, once) {
   Drupal.behaviors.NestedToggler = {
     attach(context) {
-      const togglers = context.querySelectorAll('.hb-nested-toggler');
+      const togglers = once('nested-toggle-navigation', '.hb-nested-toggler', context);
       const mobileNavBreakpoint = 992;
 
       if (togglers) {
@@ -64,4 +64,5 @@ import togglerHandler from './toggler-handler';
       }
     },
   };
-}(Drupal, window));
+// eslint-disable-next-line no-undef
+}(Drupal, window, once));

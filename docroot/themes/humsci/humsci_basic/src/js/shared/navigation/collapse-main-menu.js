@@ -4,12 +4,12 @@ import changeNav from './change-nav';
 // which allows users who have JavaScript disabled to navigate.
 // This script collapses the pre-expanded menus so
 // it's ready to use for those w/ JavaScript enabled.
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.collapseMainMenu = {
     attach(context) {
-      const mainToggle = context.querySelector('.hb-main-nav__toggle');
-      const mainNavContent = context.querySelector('.hb-main-nav__menu-lv1');
-      const nestedTogglers = context.querySelectorAll('.hb-nested-toggler');
+      const mainToggle = once('main-toggle-navigation', '.hb-main-nav__toggle', context)[0];
+      const mainNavContent = once('main-nav-content', '.hb-main-nav__menu-lv1', context)[0];
+      const nestedTogglers = once('main-nested-togglers', '.hb-nested-toggler', context);
       const isBelowMobileNavBreakpoint = (window.innerWidth < 992);
 
       // Collapse the main hamburger nav on mobile.
@@ -43,4 +43,5 @@ import changeNav from './change-nav';
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

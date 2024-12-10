@@ -3,7 +3,7 @@
  * This improves table accessibility
  */
 
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.addTableScopeAttributes = {
     attach(context) {
     /**
@@ -18,12 +18,13 @@
       }
 
       // set scope attribute on column headers
-      const columnEls = context.querySelectorAll('thead th');
+      const columnEls = once('add-table-scope-col', 'thead th', context);
       setScopeOnElements(columnEls, 'col');
 
       // set scope attribute on row headers
-      const rowEls = context.querySelectorAll('tbody th');
+      const rowEls = once('add-table-scope-row', 'tbody th', context);
       setScopeOnElements(rowEls, 'row');
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

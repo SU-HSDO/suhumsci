@@ -1,4 +1,4 @@
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.wrapTableElements = {
     attach(context) {
       /**
@@ -20,8 +20,8 @@
       }
 
       // Select every table element
-      const elements = context.querySelectorAll('table');
-      const uiPatternTable = context.querySelectorAll('.hb-table-pattern');
+      const elements = once('wrap-table', 'table', context);
+      const uiPatternTable = once('wrap-ui-pattern-table', '.hb-table-pattern', context);
 
       // Wrap every table element
       for (let i = 0; i < elements.length; i++) {
@@ -34,4 +34,5 @@
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

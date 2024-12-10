@@ -1,6 +1,6 @@
 // account for different ways in which a table heading may be declared
 
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.updateTableHeaders = {
     attach(context) {
       const div = 'div.hb-table-pattern__header > div.hb-table-pattern__row > div';
@@ -8,10 +8,10 @@
       const paragraph = 'div.hb-table-pattern__header > div.hb-table-pattern__row > p';
 
       // retrieve table column headings
-      const columnHeaders = context.querySelectorAll(`${div}, ${span}, ${paragraph}`);
+      const columnHeaders = once('update-table-headers-col', `${div}, ${span}, ${paragraph}`, context);
 
       // retrieve all rows
-      const tableRows = context.querySelectorAll('.hb-table-row');
+      const tableRows = once('update-table-headers-row', '.hb-table-row', context);
 
       if (tableRows) {
       // For each row in the table
@@ -29,4 +29,5 @@
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

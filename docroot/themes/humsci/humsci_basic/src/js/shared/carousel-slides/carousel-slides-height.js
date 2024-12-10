@@ -1,10 +1,10 @@
 // This work below applies uniform height to both the Hero Layered Slider (formerly Carousel),
 // the Hero Gradient Slider paragraph component slides.
 // and the Spotlight Slider.
-(function (Drupal, window) {
+(function (Drupal, window, once) {
   Drupal.behaviors.restrictHeightBehavior = {
     attach(context) {
-      const slides = context.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
+      const slides = once('restrict-height-slides', '.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder', context);
       // Find slick arrow from hsCarousel.
       const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
       let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
@@ -96,4 +96,5 @@
       }
     },
   };
-}(Drupal, window));
+// eslint-disable-next-line no-undef
+}(Drupal, window, once));

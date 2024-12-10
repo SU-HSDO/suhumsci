@@ -1,10 +1,10 @@
 import changeNav from './change-nav';
 import togglerHandler from './toggler-handler';
 
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.secondaryToggleNavigation = {
     attach(context) {
-      const togglers = context.querySelectorAll('.hb-secondary-toggler');
+      const togglers = once('secondary-toggler', '.hb-secondary-toggler', context);
 
       if (togglers) {
         for (let i = 0; i < togglers.length; i += 1) {
@@ -29,4 +29,5 @@ import togglerHandler from './toggler-handler';
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

@@ -65,15 +65,3 @@ function su_humsci_gin_admin_preprocess_field(&$variables) {
     $variables['#attached']['library'][] = 'humsci_basic/video-with-caption';
   }
 }
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function su_humsci_gin_admin_preprocess_paragraph(&$variables) {
-  $paragraph = $variables['paragraph'];
-  // Attach library to stanford gallery.
-  if ($paragraph->bundle() == 'stanford_gallery') {
-    $variables['#attached']['library'][] = 'humsci_basic/prefered-reduced-motion';
-    $variables['#attached']['library'][] = 'humsci_basic/colorbox';
-  }
-}

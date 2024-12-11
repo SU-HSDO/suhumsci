@@ -1,12 +1,12 @@
-(function (Drupal, window) {
+(function (Drupal, window, once) {
   Drupal.behaviors.megaMenuBehavior = {
     attach(context) {
-      const menu = context.querySelector('.js-megamenu');
+      const menu = once('js-mega-menu', '.js-megamenu', context)[0];
 
       // Because all JS is smashed together instead of using libraries,
       // we need to 'if' all the parent variables we create.
       if (menu) {
-        const menuBtnMobile = context.querySelector('.js-megamenu__mobile-btn');
+        const menuBtnMobile = once('js-megamenu-mobile-btn', '.js-megamenu__mobile-btn', context)[0];
         const menuList = menu.querySelector('.js-megamenu__list--main');
         const menuBtns = menu.querySelectorAll('.js-megamenu__toggle');
         const mobileNavBreakpoint = 992;
@@ -110,4 +110,5 @@
       }
     },
   };
-}(Drupal, window));
+// eslint-disable-next-line no-undef
+}(Drupal, window, once));

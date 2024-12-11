@@ -1,12 +1,12 @@
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.addMainContentFallback = {
     attach(context) {
       // Return if main content target is found, nothing to do.
-      if (context.querySelector('#main-content')) {
+      if (once('main-content-target', '#main-content', context)[0]) {
         return;
       }
 
-      const mainElement = context.querySelector('main');
+      const mainElement = once('main-element', 'main', context)[0];
       if (mainElement) {
         mainElement.insertAdjacentHTML(
           'afterbegin',
@@ -15,4 +15,5 @@
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

@@ -1,13 +1,13 @@
 import equalHeightGrid from './equal-height-grid';
 import resetHeightGrid from './reset-height-grid';
 
-(function (Drupal, window) {
+(function (Drupal, window, once) {
   Drupal.behaviors.hbStretchVerticalLinkedCards = {
     attach(context) {
       const applyStretchClass = () => {
-        const hasStretchClass = context.querySelector('.hb-stretch-vertical-linked-cards');
-        const verticalLinkedCardTitles = [...context.querySelectorAll('.hb-vertical-linked-card__title')];
-        const cardCollections = context.querySelectorAll('.ptype-hs-collection, .ptype-hs-priv-collection');
+        const hasStretchClass = once('has-stretch-vertical-linked-cards', '.hb-stretch-vertical-linked-cards', context)[0];
+        const verticalLinkedCardTitles = once('vertical-linked-card-title', '.hb-vertical-linked-card__title', context);
+        const cardCollections = once('card-collections', '.ptype-hs-collection, .ptype-hs-priv-collection', context);
 
         // Matches the $su-breakpoint-sm variable. Screen sizes smaller than this variable
         // stack all grid columns making it unnecessary to set a height on cards.
@@ -62,4 +62,5 @@ import resetHeightGrid from './reset-height-grid';
       });
     },
   };
-}(Drupal, window));
+// eslint-disable-next-line no-undef
+}(Drupal, window, once));

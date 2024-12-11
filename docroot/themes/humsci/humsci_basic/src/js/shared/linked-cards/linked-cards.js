@@ -1,8 +1,8 @@
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.linkedCardsBehavior = {
     attach(context) {
       // find all hb-vertical-card elements
-      const cards = context.querySelectorAll('.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card');
+      const cards = once('linked-cards-events', '.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card', context);
 
       // Loop through each card
       cards.forEach((card) => {
@@ -44,4 +44,5 @@
       });
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

@@ -2,10 +2,10 @@
 // This causes issues when there is a video in a figure because the video no longer
 // fills the entire space of the container.
 // This JS sets a width of 100% to figures that contain videos.
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.videoWithCaptionBehavior = {
     attach(context) {
-      const videos = context.querySelectorAll('.field-media-oembed-video');
+      const videos = once('videos-with-caption', '.field-media-oembed-video', context);
 
       if (videos && videos.length > 0) {
         for (let i = 0; i < videos.length; i++) {
@@ -21,4 +21,5 @@
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

@@ -1,10 +1,10 @@
 // Timelines are expanded by default
 // Find when a timeline has been set to collapsed so that we can
 // adjust the default attribute values
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.timelineCollapseBehavior = {
     attach(context) {
-      const timelineCollapsed = context.querySelectorAll('.hb-timeline__collapsed');
+      const timelineCollapsed = once('collapsed-timeline', '.hb-timeline__collapsed', context);
 
       // Find timeline items are are open inside of timelineCollapsed and close them!
       timelineCollapsed.forEach((timeline) => {
@@ -26,7 +26,7 @@
       });
 
       // When a user clicks on a timeline, update the aria properties accordingly
-      const timelineItems = context.querySelectorAll('.hb-timeline-item');
+      const timelineItems = once('timeline-item-event', '.hb-timeline-item', context);
 
       if (timelineItems) {
         timelineItems.forEach((timelineItem) => {
@@ -72,4 +72,5 @@
       }
     },
   };
-}(Drupal));
+// eslint-disable-next-line no-undef
+}(Drupal, once));

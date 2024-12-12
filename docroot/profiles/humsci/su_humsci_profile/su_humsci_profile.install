@@ -1073,35 +1073,6 @@ function su_humsci_profile_update_9717() {
   // Delete the paragraph itself.
   ParagraphsType::load($paragraph_machine_name)?->delete();
 
-  // Remove hs_webform from config ignored configs.
-  $config_storage = \Drupal::service('config.storage.sync');
-
-  $configs_to_change = [
-    'node.hs_basic_page.field_hs_page_components' => 'node.field_hs_page_components',
-    'node.hs_basic_page.field_hs_page_hero' => 'node.field_hs_page_hero',
-    'node.hs_private_page.field_hs_priv_page_components' => 'node.field_hs_priv_page_components',
-  ];
-
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
-  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
-
-  /** @var \Drupal\Core\Entity\EntityStorageInterface $fieldConfigStorage */
-  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
-
-  foreach ($configs_to_change as $field_config => $field_storage_config) {
-
-    // If storage does not yet exist, create it.
-    if (empty($field_storage->load($field_storage_config))) {
-      $field_storage->createFromStorageRecord($config_storage->read('field.storage.' . $field_storage_config))->save();
-    }
-
-    // Update the field instances from filesystem.
-    $config = $field_config_storage->load($field_config);
-    if (empty($config)) {
-      $field_config_storage->create($config_storage->read('field.field.' . $field_config))->save();
-    }
-  }
-
   // Remove webform existing config - needs to be done before uninstall.
   $config_factory = \Drupal::configFactory();
 
@@ -1114,7 +1085,7 @@ function su_humsci_profile_update_9717() {
     $message = t('Deleted @config', [
       '@config' => $config,
     ]);
-    Drush::logger()->notice($message);
+    \Drupal::logger('su_humsci_profile')->notice($message);
   }
 }
 

@@ -1029,9 +1029,20 @@ function su_humsci_profile_update_9714() {
 }
 
 /**
+ * Update config ignore settings.
+ */
+function su_humsci_profile_update_9715() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $ignored_config_entities = $config->get('ignored_config_entities');
+  $ignored_config_entities[] = 'single_content_sync.settings:allowed_entity_types.node';
+  $config->set('ignored_config_entities', $ignored_config_entities);
+  $config->save();
+}
+
+/**
  * Remove any existing hs_webform paragraph entities.
  */
-function su_humsci_profile_update_9715($sandbox) {
+function su_humsci_profile_update_9716($sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   $paragraph_machine_name = 'hs_webform';
 
@@ -1054,7 +1065,7 @@ function su_humsci_profile_update_9715($sandbox) {
 /**
  * Delete hs_webform paragraph type and remove webform config.
  */
-function su_humsci_profile_update_9716() {
+function su_humsci_profile_update_9717() {
   $paragraph_machine_name = 'hs_webform';
   // Delete the field_hs_webform field storage (and field instances).
   FieldStorageConfig::load('field_hs_webform')?->delete();
@@ -1110,7 +1121,7 @@ function su_humsci_profile_update_9716() {
 /**
  * Uninstall hs_webform and webform modules.
  */
-function su_humsci_profile_update_9717() {
+function su_humsci_profile_update_9718() {
   // Uninstalls modules after removing configs to prevent updb errors.
   \Drupal::service('module_installer')->uninstall(['hs_webform', 'webform_ui', 'webform']);
 }

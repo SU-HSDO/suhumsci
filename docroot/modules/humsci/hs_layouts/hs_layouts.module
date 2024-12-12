@@ -13,8 +13,16 @@ use Drupal\paragraphs\ParagraphInterface;
  */
 function hs_layouts_plugin_filter_layout__layout_builder_alter(&$definitions, &$extra, &$consumer) {
   /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
+  $active_theme = \Drupal::theme()->getActiveTheme()->getName();
   foreach ($definitions as $id => $definition) {
-    if ($definition->getProvider() !== 'hs_layouts') {
+    $provider = $definition->getProvider();
+    // Define providers to unset for the gin admin theme.
+    $admin_providers_to_unset = [
+      'ui_patterns_library',
+      'hs_layouts',
+      'ds',
+    ];
+    if (($active_theme === 'su_humsci_gin_admin' && in_array($provider, $admin_providers_to_unset)) || ($active_theme !== 'su_humsci_gin_admin' && $provider !== 'hs_layouts')){
       unset($definitions[$id]);
     }
   }

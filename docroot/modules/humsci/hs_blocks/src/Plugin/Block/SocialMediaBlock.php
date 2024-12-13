@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\hs_blocks\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a social media block.
- *
- * @Block(
- *   id = "hs_blocks_social_media_block",
- *   admin_label = @Translation("Social Media Block"),
- *   category = @Translation("H&S Blocks"),
- * )
  */
+#[Block(
+  id: "hs_blocks_social_media_block",
+  admin_label: new TranslatableMarkup("Social Media Block"),
+  category: new TranslatableMarkup("H&S Blocks"),
+)]
 final class SocialMediaBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -190,10 +191,6 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#icon_size' => $this->configuration['icon_size'],
       '#layout' => $this->configuration['layout'],
       '#links' => $links,
-      '#cache' => [
-        'tags' => array_merge($this->getCacheTags(), ['block_view']),
-        'contexts' => ['user', 'user.permissions'],
-      ],
       '#contextual_links' => [
         'social_media_block' => [
           'route_parameters' => ['block' => $placed_block_id],

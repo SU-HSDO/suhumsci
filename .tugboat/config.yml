@@ -43,13 +43,13 @@ services:
         - rm -rf vendor
         - composer install --no-ansi
         - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=67108864;'
-        # Sync to hs_colorful, hs_colorful and english database & files.
+        # Sync to hs_colorful, hs_colorful database & files and create user.
         - blt drupal:sync:files --site=hs_colorful
-        - drush @hs_colorful.local user:create tugboat --password=tugboat || true
+        - drush @hs_colorful.local user:create tugboat --password=pushcar || true
         - drush @hs_colorful.local user:role:add administrator tugboat || true
 
         - blt drupal:sync:files --site=hs_traditional
-        - drush @hs_traditional.local user:create tugboat --password=tugboat || true
+        - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
         - blt drupal:sync:files --site=economics
@@ -72,11 +72,22 @@ services:
         - drush @economics.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=economics
 
+        - drush @history.local cr
+        - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=history
+
+        - drush @west.local cr
+        - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=west
+
         - npm run theme-build
 
     # Collection of urls to compare visual results.
     urls:
       - /
+      - /mixed-pages/mixed-page-raised-cards
+      - /mixed-page-wells-raised-cards-full-width
+      - /mixed-pages/mixed-page-wells-raised-cards-full-width-sidebar
 
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
@@ -104,6 +115,7 @@ services:
         - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
         - zcat /tmp/hs_traditional.sql.gz | mysql hs_traditional
         - zcat /tmp/economics.sql.gz | mysql economics
+
 
         # Clean up after ourselves to keep the Preview size small.
         - rm /tmp/*.sql.gz

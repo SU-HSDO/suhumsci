@@ -72,14 +72,6 @@ services:
         - drush @economics.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=economics
 
-        - drush @history.local cr
-        - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=history
-
-        - drush @west.local cr
-        - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=west
-
         - npm run theme-build
 
     # Collection of urls to compare visual results.

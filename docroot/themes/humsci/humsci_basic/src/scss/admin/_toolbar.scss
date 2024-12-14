@@ -35,6 +35,34 @@
       right: unset;
       left: 100%;
     }
+
+    li:has(.menu) {
+      & > a {
+        position: relative;
+        padding-right: 15px;
+
+        &::after {
+          content: '';
+          width: 16px;
+          height: 16px;
+          display: block;
+          position: absolute;
+          background-color: var(--gin-color-disabled);
+          mask-image: url('../../../contrib/gin/dist/media/sprite.svg#handle-view');
+          mask-position: center center;
+          mask-repeat: no-repeat;
+          mask-size: 14px 14px;
+          top: var(--gin-spacing-m);
+          right: var(--gin-spacing-s);
+        }
+      }
+
+      &:hover {
+        & > a::after {
+          background-color: var(--gin-color-primary-hover)
+        }
+      }
+    }
   }
 
   .menu:not(.toolbar-menu) li {

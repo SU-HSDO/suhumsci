@@ -1132,7 +1132,7 @@ function su_humsci_profile_update_9719() {
 
       if ($login_blocks) {
         foreach ($login_blocks as $login_block) {
-          /** @var Drupal\block\Entity\BlockDrupal\block\Entity\Block $block */
+          /** @var Drupal\block\Entity\BlockDrupal\block\Entity\Block $login_block */
           $settings = $login_block->get('settings');
 
           $log_in = $settings['link_text'];
@@ -1144,9 +1144,8 @@ function su_humsci_profile_update_9719() {
       }
 
       $config_data['settings']['link_text'] = $log_out;
-      $block = $block_storage->create($config_data);
+      $block_storage->create($config_data)->save();
 
-      $block->save();
       \Drupal::logger('su_humsci_profile')->info('Block configuration %config_name has been imported.', ['%config_name' => $config_name]);
     }
   }

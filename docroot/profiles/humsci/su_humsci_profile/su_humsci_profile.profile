@@ -873,7 +873,7 @@ function su_humsci_profile_form_user_register_form_alter(&$form, FormStateInterf
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK().
  */
 function su_humsci_profile_preprocess_block(&$variables) {
   $classes = [

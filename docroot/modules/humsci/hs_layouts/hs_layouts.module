@@ -14,7 +14,6 @@ use Drupal\dashboard\Plugin\SectionStorage\DashboardSectionStorage;
  */
 function hs_layouts_plugin_filter_layout__layout_builder_alter(&$definitions, &$extra, &$consumer) {
   /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
-  $active_theme = \Drupal::theme()->getActiveTheme()->getName();
   foreach ($definitions as $id => $definition) {
     $provider = $definition->getProvider();
     if ($extra['section_storage'] instanceof DashboardSectionStorage) {

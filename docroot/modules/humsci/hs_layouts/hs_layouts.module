@@ -5,9 +5,9 @@
  * hs_layouts.module
  */
 
+use Drupal\dashboard\Plugin\SectionStorage\DashboardSectionStorage;
 use Drupal\Component\Utility\Html;
 use Drupal\paragraphs\ParagraphInterface;
-use Drupal\dashboard\Plugin\SectionStorage\DashboardSectionStorage;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -17,13 +17,13 @@ function hs_layouts_plugin_filter_layout__layout_builder_alter(&$definitions, &$
   foreach ($definitions as $id => $definition) {
     $provider = $definition->getProvider();
     if ($extra['section_storage'] instanceof DashboardSectionStorage) {
-      // Define providers to unset for the gin admin theme.
-      $admin_providers_to_unset = [
+      // Define providers to unset for the dashboard.
+      $providers_to_unset = [
         'ui_patterns_library',
         'hs_layouts',
         'ds',
       ];
-      if (in_array($provider, $admin_providers_to_unset)) {
+      if (in_array($provider, $providers_to_unset)) {
         unset($definitions[$id]);
       }
     } else {

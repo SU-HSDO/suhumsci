@@ -45,6 +45,8 @@ services:
         - rm -rf vendor
         - composer install --no-ansi
         - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=536870912;'
+        # Ensure this packet size persists even if MySQL restarts.
+        - echo "max_allowed_packet=536870912" >> /etc/mysql/conf.d/tugboat.cnf
         # Sync to hs_colorful, hs_colorful database & files and create user.
         - blt drupal:sync:files --site=hs_colorful
         - drush @hs_colorful.local user:create tugboat --password=pushcar || true
@@ -67,6 +69,7 @@ services:
         - rm -rf vendor
         - composer install --no-ansi
         - mysql -h mysql -P 3306 -u tugboat -ptugboat -e 'SET GLOBAL max_allowed_packet=536870912;'
+        # Ensure this packet size persists even if MySQL restarts.
         - echo "max_allowed_packet=536870912" >> /etc/mysql/conf.d/tugboat.cnf
 
         - drush @hs_colorful.local cr

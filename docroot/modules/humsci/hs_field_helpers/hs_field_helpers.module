@@ -16,9 +16,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field_permissions\Plugin\FieldPermissionTypeInterface;
 use Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\AddToCalFormatter;
 use Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\EntityTitleHeading;
 use Drupal\hs_field_helpers\Plugin\Field\FieldFormatter\HsViewfieldFormatterDefault;
@@ -26,6 +26,7 @@ use Drupal\hs_field_helpers\Plugin\Field\FieldType\DisplayModeField;
 use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\DateTimeYearOnly;
 use Drupal\hs_field_helpers\Plugin\Field\FieldWidget\HsViewfieldWidgetSelect;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\link\Plugin\Field\FieldType\LinkItem;
 use Drupal\ui_patterns\Element\PatternContext;
 use Drupal\ui_patterns\UiPatterns;
 
@@ -650,5 +651,26 @@ function hs_field_helpers_form_alter(&$form, FormStateInterface $form_state, $fo
     // from the active filters.
     // @link https://www.drupal.org/project/views_bulk_operations/issues/3055770#comment-13116724
     unset($form['header']['views_bulk_operations_bulk_form']['select_all']);
+  }
+}
+
+function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
+  $field_definition = $context['items']->getFieldDefinition();
+  $settings = $field_definition->getSettings();
+  $link_type = $settings['link_type'];
+  $supports_internal = ($link_type & LinkItem::LINK_INTERNAL) === LinkItem::LINK_INTERNAL;
+  $supports_external = ($link_type & LinkItem::LINK_EXTERNAL) === LinkItem::LINK_EXTERNAL;
+  $supports_both = $supports_internal && $supports_external;
+
+  dpm("internal:" . $supports_internal);
+  dpm("external:" . $supports_external);
+  dpm("both:" . $supports_both);
+
+  if (isset($field_widget_complete_form['widget']) && is_array($field_widget_complete_form['widget'])) {
+    foreach ($field_widget_complete_form['widget'] as $key => &$item) {
+      if (is_array($item) && isset($item['uri'])) {
+        $item['uri']['#description'] = t('Custom hotdogs for sale');
+      }
+    }
   }
 }

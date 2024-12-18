@@ -1120,50 +1120,56 @@ function su_humsci_profile_update_9719() {
  * Add new logout block to existing sites.
  */
 function su_humsci_profile_update_9720() {
-  $config_storage = \Drupal::service('config.storage.sync');
   $entity_type_manager = \Drupal::service('entity_type.manager');
+  $config_storage = \Drupal::service('config.storage.sync');
+  $site_theme = \Drupal::theme()->getActiveTheme()->getName();
+  $logger = \Drupal::logger('su_humsci_profile');
 
-  $config_names = [
-    'block.block.humsci_colorful_samlsunetidlogoutblock',
-    'block.block.humsci_traditional_samlsunetidlogoutblock',
+  $theme_config_map = [
+    'humsci_colorful' => 'block.block.humsci_colorful_samlsunetidlogoutblock',
+    'humsci_traditional' => 'block.block.humsci_traditional_samlsunetidlogoutblock',
   ];
 
-  foreach ($config_names as $config_name) {
-
-    // Load the configuration data from the sync directory.
-    $config_data = $config_storage->read($config_name);
-
-    if (!$config_data) {
-      throw new \Exception(t('The configuration %config_name was not found in the sync directory.', ['%config_name' => $config_name]));
-    }
-
-    // Get the block storage and possible existing config.
-    $block_storage = $entity_type_manager->getStorage('block');
-    $existing_config = $block_storage->load($config_data['id']);
-
-    if (!$existing_config) {
-      // Change the logout link text to match what the existing login text is.
-      $login_blocks = $entity_type_manager->getStorage('block')->loadByProperties([
-        'plugin' => 'stanford_samlauth_login_block',
-      ]);
-
-      if ($login_blocks) {
-        foreach ($login_blocks as $login_block) {
-          /** @var Drupal\block\Entity\BlockDrupal\block\Entity\Block $login_block */
-          $settings = $login_block->get('settings');
-
-          $log_in = $settings['link_text'];
-          $log_out = preg_replace('/in\b/', 'out', $log_in);
-          $log_out = preg_replace('/In\b/', 'Out', $log_out);
-          $log_out = str_replace(' to ', ' from ', $log_out);
-          $log_out = str_replace(' To ', ' From ', $log_out);
-        }
-      }
-
-      $config_data['settings']['link_text'] = $log_out;
-      $block_storage->create($config_data)->save();
-
-      \Drupal::logger('su_humsci_profile')->info('Block configuration %config_name has been imported.', ['%config_name' => $config_name]);
-    }
+  if (isset($theme_config_map[$site_theme])) {
+    $config_name = $theme_config_map[$site_theme];
   }
+
+  $config_data = $config_storage->read($config_name);
+
+  if (!$config_data) {
+    $logger->error('Configuration %config_name not found for theme %theme.', [
+      '%config_name' => $config_name,
+      '%theme' => $site_theme,
+    ]);
+    return;
+  }
+
+  $block_storage = $entity_type_manager->getStorage('block');
+  $existing_block = $block_storage->load($config_data['id']);
+
+  if (!$existing_block) {
+    // Change the logout link text to match what the existing login text is.
+    $login_blocks = $entity_type_manager->getStorage('block')->loadByProperties([
+      'plugin' => 'stanford_samlauth_login_block',
+    ]);
+
+    if ($login_blocks) {
+      foreach ($login_blocks as $login_block) {
+        /** @var Drupal\block\Entity\BlockDrupal\block\Entity\Block $login_block */
+        $settings = $login_block->get('settings');
+
+        $log_in = $settings['link_text'];
+        $log_out = preg_replace('/in\b/', 'out', $log_in);
+        $log_out = preg_replace('/In\b/', 'Out', $log_out);
+        $log_out = str_replace(' to ', ' from ', $log_out);
+        $log_out = str_replace(' To ', ' From ', $log_out);
+      }
+    }
+
+    $config_data['settings']['link_text'] = $log_out;
+    $block_storage->create($config_data)->save();
+
+    \Drupal::logger('su_humsci_profile')->info('Block configuration %config_name has been imported.', ['%config_name' => $config_name]);
+  }
+
 }

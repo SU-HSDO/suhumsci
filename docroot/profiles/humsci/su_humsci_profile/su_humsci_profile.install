@@ -22,7 +22,6 @@ use Drupal\user\RoleInterface;
 function su_humsci_profile_requirements($phase) {
   $requirements = [];
   if ($phase == 'runtime') {
-
     $site_path = DrupalKernel::findSitePath(\Drupal::request());
     $site_path = explode('/', $site_path);
     $site_name = $site_path[1];
@@ -74,7 +73,11 @@ function su_humsci_profile_update_9606() {
   $entity_type_manager = \Drupal::entityTypeManager();
   $config_factory = \Drupal::configFactory();
 
-  \Drupal::service('module_installer')->install(['menu_link', 'cshs', 'token_or']);
+  \Drupal::service('module_installer')->install([
+    'menu_link',
+    'cshs',
+    'token_or',
+  ]);
   $config_factory->getEditable('menu_link_weight.settings')
     ->set('menu_parent_form_selector', 'cshs')
     ->save();
@@ -109,7 +112,8 @@ function su_humsci_profile_update_9607() {
   $field_config_storage = $entity_type_manager->getStorage('field_config');
   $bundles = [];
   /** @var \Drupal\node\Entity\NodeType $node_type */
-  foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
+  foreach ($entity_type_manager->getStorage('node_type')
+    ->loadMultiple() as $node_type) {
     if ($node_type->getThirdPartySetting('menu_ui', 'available_menus')) {
       $bundles[] = $node_type->id();
       $node_type->setThirdPartySetting('menu_ui', 'available_menus', []);
@@ -478,7 +482,8 @@ function su_humsci_profile_update_9701(&$sandbox) {
 
     // Clear entity caches.
     $entity_type_manager->getStorage($eck_type)->resetCache([$id]);
-    $entity_type_manager->getStorage('hs_entity')->resetCache([$new_entity->id()]);
+    $entity_type_manager->getStorage('hs_entity')
+      ->resetCache([$new_entity->id()]);
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
@@ -851,7 +856,8 @@ function _su_humsci_profile_get_uuid(string $config_name): string|null {
  * Uninstall legacy themes.
  */
 function su_humsci_profile_update_9705() {
-  $installed_themes = \Drupal::service('extension.list.theme')->getAllInstalledInfo();
+  $installed_themes = \Drupal::service('extension.list.theme')
+    ->getAllInstalledInfo();
   $legacy_themes = [
     'archaeology',
     'francestanford',
@@ -1095,7 +1101,7 @@ function su_humsci_profile_update_9718() {
   // Remove webform existing config - needs to be done before uninstall.
   $config_factory = \Drupal::configFactory();
 
-  $config_names = array_filter($config_factory->listAll(), function ($item) {
+  $config_names = array_filter($config_factory->listAll(), function($item) {
     return str_contains($item, 'webform');
   });
 
@@ -1113,57 +1119,59 @@ function su_humsci_profile_update_9718() {
  */
 function su_humsci_profile_update_9719() {
   // Uninstalls modules after removing configs to prevent updb errors.
-  \Drupal::service('module_installer')->uninstall(['hs_webform', 'webform_ui', 'webform']);
+  \Drupal::service('module_installer')->uninstall([
+    'hs_webform',
+    'webform_ui',
+    'webform',
+  ]);
 }
 
 /**
  * Add new logout block to existing sites.
  */
 function su_humsci_profile_update_9720() {
-  $config_storage = \Drupal::service('config.storage.sync');
-  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $block_storage = \Drupal::entityTypeManager()->getStorage('block');
+  /** @var Drupal\block\Entity\Block[] $login_blocks */
+  $login_blocks = $block_storage->loadByProperties([
+    'plugin' => 'stanford_samlauth_login_block',
+  ]);
+  $log_out = 'SUNetID Logout';
 
-  $config_names = [
-    'block.block.humsci_colorful_samlsunetidlogoutblock',
-    'block.block.humsci_traditional_samlsunetidlogoutblock',
-  ];
+  if ($login_blocks) {
+    $login_block = reset($login_blocks);
+    $settings = $login_block->get('settings');
 
-  foreach ($config_names as $config_name) {
-
-    // Load the configuration data from the sync directory.
-    $config_data = $config_storage->read($config_name);
-
-    if (!$config_data) {
-      throw new \Exception(t('The configuration %config_name was not found in the sync directory.', ['%config_name' => $config_name]));
-    }
-
-    // Get the block storage and possible existing config.
-    $block_storage = $entity_type_manager->getStorage('block');
-    $existing_config = $block_storage->load($config_data['id']);
-
-    if (!$existing_config) {
-      // Change the logout link text to match what the existing login text is.
-      $login_blocks = $entity_type_manager->getStorage('block')->loadByProperties([
-        'plugin' => 'stanford_samlauth_login_block',
-      ]);
-
-      if ($login_blocks) {
-        foreach ($login_blocks as $login_block) {
-          /** @var Drupal\block\Entity\BlockDrupal\block\Entity\Block $login_block */
-          $settings = $login_block->get('settings');
-
-          $log_in = $settings['link_text'];
-          $log_out = preg_replace('/in\b/', 'out', $log_in);
-          $log_out = preg_replace('/In\b/', 'Out', $log_out);
-          $log_out = str_replace(' to ', ' from ', $log_out);
-          $log_out = str_replace(' To ', ' From ', $log_out);
-        }
-      }
-
-      $config_data['settings']['link_text'] = $log_out;
-      $block_storage->create($config_data)->save();
-
-      \Drupal::logger('su_humsci_profile')->info('Block configuration %config_name has been imported.', ['%config_name' => $config_name]);
-    }
+    $log_in = $settings['link_text'];
+    $log_out = preg_replace('/in\b/', 'out', $log_in);
+    $log_out = preg_replace('/In\b/', 'Out', $log_out);
+    $log_out = str_replace(' to ', ' from ', $log_out);
+    $log_out = str_replace(' To ', ' From ', $log_out);
   }
+
+  $block_info = [
+    'status' => TRUE,
+    'region' => 'footer',
+    'plugin' => 'stanford_samlauth_logout_block',
+    'weight' => 0,
+    'settings' => [
+      'id' => 'stanford_samlauth_logout_block',
+      'label' => 'SAML SUNetID Logout Block',
+      'label_display' => 0,
+      'provider' => 'stanford_samlauth',
+      'link_text' => $log_out,
+    ],
+    'visibility' => [],
+  ];
+  $block_storage->create([
+    'uuid' => '7e424b1f-3692-41a3-a48a-dd1a450e0203',
+    'id' => 'humsci_colorful_samlsunetidlogoutblock',
+    'theme' => 'humsci_colorful',
+    ...$block_info,
+  ])->save();
+  $block_storage->create([
+    'uuid' => '2f7f0d52-c463-411d-a2e2-656d185acd4d',
+    'id' => 'humsci_traditional_samlsunetidlogoutblock',
+    'theme' => 'humsci_traditional',
+    ...$block_info,
+  ])->save();
 }

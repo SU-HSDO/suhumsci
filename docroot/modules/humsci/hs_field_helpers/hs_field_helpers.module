@@ -673,6 +673,10 @@ function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_
   $supports_internal = ($link_type & LinkItem::LINK_INTERNAL) === LinkItem::LINK_INTERNAL;
   $supports_external = ($link_type & LinkItem::LINK_EXTERNAL) === LinkItem::LINK_EXTERNAL;
 
+  if (!$supports_internal && !$supports_external) {
+    return;
+  }
+
   // Append extra text to the following form_ids.
   $base_form = $form_state->getBuildInfo()['base_form_id'];
   $append_extra_text_to = [

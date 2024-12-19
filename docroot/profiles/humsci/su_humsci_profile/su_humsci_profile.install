@@ -1042,13 +1042,12 @@ function su_humsci_profile_update_9715() {
 /**
  * Remove any existing hs_webform paragraph entities.
  */
-function su_humsci_profile_update_9716($sandbox) {
+function su_humsci_profile_update_9716(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
-  $paragraph_machine_name = 'hs_webform';
 
   if (empty($sandbox['ids'])) {
     $sandbox['ids'] = $paragraph_storage->getQuery()
-      ->condition('type', $paragraph_machine_name)
+      ->condition('type', 'hs_webform')
       ->accessCheck(FALSE)
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
@@ -1063,9 +1062,30 @@ function su_humsci_profile_update_9716($sandbox) {
 }
 
 /**
+ * Delete webform submissions.
+ */
+function su_humsci_profile_update_9717(&$sandbox) {
+  $submission_storage = \Drupal::entityTypeManager()
+    ->getStorage('webform_submission');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $submission_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $submission_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($submission_storage->loadMultiple($submission_ids) as $submission) {
+    $submission->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
  * Delete hs_webform paragraph type and remove webform config.
  */
-function su_humsci_profile_update_9717() {
+function su_humsci_profile_update_9718() {
   $paragraph_machine_name = 'hs_webform';
   // Delete the field_hs_webform field storage (and field instances).
   FieldStorageConfig::load('field_hs_webform')?->delete();
@@ -1092,7 +1112,7 @@ function su_humsci_profile_update_9717() {
 /**
  * Uninstall hs_webform and webform modules.
  */
-function su_humsci_profile_update_9718() {
+function su_humsci_profile_update_9719() {
   // Uninstalls modules after removing configs to prevent updb errors.
   \Drupal::service('module_installer')->uninstall(['hs_webform', 'webform_ui', 'webform']);
 }

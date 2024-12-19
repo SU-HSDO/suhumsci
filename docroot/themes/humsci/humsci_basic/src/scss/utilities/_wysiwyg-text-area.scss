@@ -308,7 +308,8 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"]
+.hs-external-link a[href*="//"],
+.ck-content a.hs-external-link
 {
   @include hb-link--inline;
   @include hb-external-link-icon;
@@ -336,6 +337,16 @@ a[href*="//"].hs-external-link,
       &:hover::after {
         @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
       }
+    }
+  }
+  
+  .ck-style-grid__button & {
+    &::after {
+      width: 18px;
+      height: 11px;
+      margin-bottom: 0;
+      background-size: 11px;
+      padding-left: 0;
     }
   }
 }

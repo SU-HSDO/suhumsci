@@ -4,7 +4,7 @@ import togglerHandler from './toggler-handler';
 (function (Drupal, window, once) {
   Drupal.behaviors.NestedToggler = {
     attach(context) {
-      const togglers = once('nested-toggle-navigation', '.hb-nested-toggler', context);
+      const togglers = once('nested-toggler', '.hb-nested-toggler', context);
       const mobileNavBreakpoint = 992;
 
       if (togglers) {
@@ -12,7 +12,9 @@ import togglerHandler from './toggler-handler';
           let windowWidth = window.innerWidth;
           const toggler = togglers[i];
           const togglerID = toggler.getAttribute('id');
-          const togglerContent = context.querySelector('[aria-labelledby="'.concat(togglerID, '"]'));
+          const togglerContent = context.querySelector(
+            `[aria-labelledby="${togglerID}"]`,
+          );
           const togglerParent = toggler.parentNode;
 
           // Togglers should always have content but in the event that they don't we
@@ -54,15 +56,21 @@ import togglerHandler from './toggler-handler';
           // 1. (focusin) When tabbing through the navigation the previously opened dropdown closes
           // 2. (click) When clicking outside of the dropdown area it will close
           ['focusin', 'click'].forEach((event) => {
-            document.body.addEventListener(event, (e) => {
-              if (windowWidth >= mobileNavBreakpoint && !togglerParent.contains(e.target)) {
-                changeNav(toggler, togglerContent, false);
-              }
-            }, false);
+            document.body.addEventListener(
+              event,
+              (e) => {
+                if (
+                  windowWidth >= mobileNavBreakpoint
+                  && !togglerParent.contains(e.target)
+                ) {
+                  changeNav(toggler, togglerContent, false);
+                }
+              },
+              false,
+            );
           });
         }
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, window, once));

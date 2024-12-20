@@ -4,7 +4,11 @@
 (function (Drupal, once) {
   Drupal.behaviors.timelineCollapseBehavior = {
     attach(context) {
-      const timelineCollapsed = once('collapsed-timeline', '.hb-timeline__collapsed', context);
+      const timelineCollapsed = once(
+        'collapsed-timeline',
+        '.hb-timeline__collapsed',
+        context,
+      );
 
       // Find timeline items are are open inside of timelineCollapsed and close them!
       timelineCollapsed.forEach((timeline) => {
@@ -17,7 +21,9 @@
         });
 
         // Find the summary element and update the aria attribute values
-        const summaries = timeline.querySelectorAll('.hb-timeline-item__summary');
+        const summaries = timeline.querySelectorAll(
+          '.hb-timeline-item__summary',
+        );
 
         summaries.forEach((summary) => {
           summary.setAttribute('aria-expanded', 'false');
@@ -26,11 +32,13 @@
       });
 
       // When a user clicks on a timeline, update the aria properties accordingly
-      const timelineItems = once('timeline-item-event', '.hb-timeline-item', context);
+      const timelineItems = once('timeline-item', '.hb-timeline-item', context);
 
       if (timelineItems) {
         timelineItems.forEach((timelineItem) => {
-          const summary = timelineItem.querySelector('.hb-timeline-item__summary');
+          const summary = timelineItem.querySelector(
+            '.hb-timeline-item__summary',
+          );
 
           // Find the value of aria-expanded for a timeline item summary
           let ariaExpanded = summary.getAttribute('aria-expanded');
@@ -67,10 +75,12 @@
         });
       }
 
-      if (Object.keys(params).length && Object.prototype.hasOwnProperty.call(params, 'search')) {
+      if (
+        Object.keys(params).length
+        && Object.prototype.hasOwnProperty.call(params, 'search')
+      ) {
         toggleTimelineFromSearch();
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, once));

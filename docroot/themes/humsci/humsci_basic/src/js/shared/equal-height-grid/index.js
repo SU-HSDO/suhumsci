@@ -4,34 +4,39 @@ import resetHeightGrid from './reset-height-grid';
 (function (Drupal, window, once) {
   Drupal.behaviors.hbStretchVerticalLinkedCards = {
     attach(context) {
-      const applyStretchClass = () => {
-        const hasStretchClass = once('has-stretch-vertical-linked-cards', '.hb-stretch-vertical-linked-cards', context)[0];
-        const verticalLinkedCardTitles = once('vertical-linked-card-title', '.hb-vertical-linked-card__title', context);
-        const cardCollections = once('card-collections', '.ptype-hs-collection, .ptype-hs-priv-collection', context);
-
+      const applyStretchClass = (container) => {
         // Matches the $su-breakpoint-sm variable. Screen sizes smaller than this variable
         // stack all grid columns making it unnecessary to set a height on cards.
         // See: https://github.com/SU-SWS/decanter/blob/master/core/src/scss/utilities/variables/core/_breakpoints.scss
         const smallScreenBreakpoint = 576;
 
-        Array.prototype.forEach.call(cardCollections, (collection) => {
-          const verticalLinkedCards = [...collection.querySelectorAll('.hb-vertical-linked-card')];
+        const cardCollections = container.querySelectorAll(
+          '.ptype-hs-collection, .ptype-hs-priv-collection',
+        );
+
+        cardCollections.forEach((collection) => {
+          const verticalLinkedCards = [
+            ...collection.querySelectorAll('.hb-vertical-linked-card'),
+          ];
           // Reset any min-heights that were previously set.
           // We need to do this so cards will not have a height set when resizing to small
           // screen sizes.
-          if (hasStretchClass && verticalLinkedCards.length > 0) {
+          if (verticalLinkedCards.length > 0) {
             resetHeightGrid(verticalLinkedCards);
           }
 
+          const verticalLinkedCardTitles = [
+            ...collection.querySelectorAll('.hb-vertical-linked-card__title'),
+          ];
           // Reset any min-heights that were previously set.
           // Because not all Vertical Linked Cards will have a title, this needs a separate
           // if statement.
-          if (hasStretchClass && verticalLinkedCardTitles.length > 0) {
+          if (verticalLinkedCardTitles.length > 0) {
             resetHeightGrid(verticalLinkedCardTitles);
           }
 
           // Only set heights for certain screen sizes
-          if (hasStretchClass && window.innerWidth >= smallScreenBreakpoint) {
+          if (window.innerWidth >= smallScreenBreakpoint) {
             if (verticalLinkedCardTitles.length > 0) {
               // Make the vertical linked card titles AND cards the same max height.
               // The title height has to be set first because it influences the final
@@ -47,20 +52,28 @@ import resetHeightGrid from './reset-height-grid';
           }
         });
       };
+      const stretchContainers = once(
+        'stretch-vertical-linked-cards',
+        '.hb-stretch-vertical-linked-cards',
+        context,
+      );
 
       // Wait a 1 sec for page to load in before setting heights
       setTimeout(() => {
-        applyStretchClass();
+        stretchContainers.forEach((container) => {
+          applyStretchClass(container);
+        });
       }, 1000);
 
       // Recalculate when the window is resized
       window.addEventListener('resize', () => {
         // Wait a half of a second before setting the heights
         setTimeout(() => {
-          applyStretchClass();
+          stretchContainers.forEach((container) => {
+            applyStretchClass(container);
+          });
         }, 500);
       });
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, window, once));

@@ -6,7 +6,7 @@
       // Because all JS is smashed together instead of using libraries,
       // we need to 'if' all the parent variables we create.
       if (menu) {
-        const menuBtnMobile = once('js-megamenu-mobile-btn', '.js-megamenu__mobile-btn', context)[0];
+        const menuBtnMobile = menu.querySelector('.js-megamenu__mobile-btn');
         const menuList = menu.querySelector('.js-megamenu__list--main');
         const menuBtns = menu.querySelectorAll('.js-megamenu__toggle');
         const mobileNavBreakpoint = 992;
@@ -61,7 +61,9 @@
 
         // Displays nested child menus on mobile
         const expandMobileSubmenus = () => {
-          const activeParent = context.querySelector('.js-megamenu__active-trail');
+          const activeParent = context.querySelector(
+            '.js-megamenu__active-trail',
+          );
           // Only expand menu tree if active-trail exists.
           if (activeParent) {
             const childMenu = activeParent.nextElementSibling;
@@ -110,5 +112,4 @@
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, window, once));

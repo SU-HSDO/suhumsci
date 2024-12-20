@@ -1,10 +1,10 @@
 (function (Drupal, once) {
-/**
- * Loops through a list of accordions and either opens or closes all items
- *
- * @param {array} expects a list of accordion elements
- * @param {string} expects a string that specifies if all accordions should be opened or closed
- */
+  /**
+   * Loops through a list of accordions and either opens or closes all items
+   *
+   * @param {array} expects a list of accordion elements
+   * @param {string} expects a string that specifies if all accordions should be opened or closed
+   */
   function toggleAllAccordions(accordionList, command) {
     if (command === 'closeAll') {
       accordionList.forEach((accordion) => {
@@ -18,10 +18,10 @@
   }
 
   /**
- * Creates a button element that can act as a toggle for all accordions on a page.
- *
- * @return {element}
- */
+   * Creates a button element that can act as a toggle for all accordions on a page.
+   *
+   * @return {element}
+   */
   function createToggle() {
     const toggleButton = document.createElement('Button');
     toggleButton.innerText = 'Expand All';
@@ -32,11 +32,11 @@
   }
 
   /**
- * Updates the all toggle buttons when one has been clicked depending on whether
- * or not all accordions are being opened or closed.
- * @param {array} expects the list of all accordion toggle buttons on the page
- * @param {string} expects a string that specifies if all accordions should be opened or closed
- */
+   * Updates the all toggle buttons when one has been clicked depending on whether
+   * or not all accordions are being opened or closed.
+   * @param {array} expects the list of all accordion toggle buttons on the page
+   * @param {string} expects a string that specifies if all accordions should be opened or closed
+   */
   function updateToggle(toggleList, command) {
     toggleList.forEach((toggleButton) => {
       if (command === 'closeAll') {
@@ -50,7 +50,7 @@
   Drupal.behaviors.accordionToggleAllBehavior = {
     attach(context) {
       // Create a list of all accordions on the page
-      const accordionList = once('list-of-all-accordions', 'details', context);
+      const accordionList = once('accordion', 'details', context);
 
       if (accordionList.length >= 1) {
         let allExpanded = false;
@@ -68,7 +68,11 @@
         // Create a list of all toggle buttons generated on the page. This has to run
         // after the block of code that loops through the accordion lists and creates
         // the buttons.
-        const allToggleButtons = [...context.querySelectorAll('.hb-accordion-toggle-all')];
+        const allToggleButtons = once(
+          'accordion-toggle-all',
+          '.hb-accordion-toggle-all',
+          context,
+        );
 
         allToggleButtons.forEach((toggleButton) => {
           toggleButton.addEventListener('click', (e) => {
@@ -100,10 +104,12 @@
         });
       }
 
-      if (Object.keys(params).length && Object.prototype.hasOwnProperty.call(params, 'search')) {
+      if (
+        Object.keys(params).length
+        && Object.prototype.hasOwnProperty.call(params, 'search')
+      ) {
         toggleAccordionFromSearch();
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, once));

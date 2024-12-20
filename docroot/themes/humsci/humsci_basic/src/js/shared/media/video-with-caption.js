@@ -5,12 +5,20 @@
 (function (Drupal, once) {
   Drupal.behaviors.videoWithCaptionBehavior = {
     attach(context) {
-      const videos = once('videos-with-caption', '.field-media-oembed-video', context);
+      const videos = once(
+        'video-with-caption',
+        '.field-media-oembed-video',
+        context,
+      );
 
       if (videos && videos.length > 0) {
         for (let i = 0; i < videos.length; i++) {
           const video = videos[i];
-          if (video.parentNode && video.parentNode.parentNode && video.parentNode.parentNode.nodeName === 'FIGURE') {
+          if (
+            video.parentNode
+            && video.parentNode.parentNode
+            && video.parentNode.parentNode.nodeName === 'FIGURE'
+          ) {
             const figure = video.parentNode.parentNode;
 
             if (figure.classList.contains('caption')) {
@@ -21,5 +29,4 @@
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, once));

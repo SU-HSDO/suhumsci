@@ -26,5 +26,4 @@
       mediaQuery.addEventListener('change', handleReducedMotionPreference);
     },
   };
-// eslint-disable-next-line no-undef
-}(jQuery, Drupal, window, document));
+}(jQuery, Drupal, window));

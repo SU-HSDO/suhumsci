@@ -96,5 +96,4 @@
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, window, once));

@@ -7,13 +7,19 @@ import changeNav from './change-nav';
 (function (Drupal, once) {
   Drupal.behaviors.collapseMainMenu = {
     attach(context) {
-      const mainToggle = once('main-toggle-navigation', '.hb-main-nav__toggle', context)[0];
-      const mainNavContent = once('main-nav-content', '.hb-main-nav__menu-lv1', context)[0];
-      const nestedTogglers = once('main-nested-togglers', '.hb-nested-toggler', context);
-      const isBelowMobileNavBreakpoint = (window.innerWidth < 992);
+      const [mainNav] = once('main-nav-collapse', '.hb-main-nav', context);
+
+      if (!mainNav) {
+        return;
+      }
+
+      const mainToggle = mainNav.querySelector('.hb-main-nav__toggle');
+      const mainNavContent = mainNav.querySelector('.hb-main-nav__menu-lv1');
+      const nestedTogglers = mainNav.querySelectorAll('.hb-nested-toggler');
+      const isBelowMobileNavBreakpoint = window.innerWidth < 992;
 
       // Collapse the main hamburger nav on mobile.
-      if (isBelowMobileNavBreakpoint && mainToggle) {
+      if (isBelowMobileNavBreakpoint && mainNavContent && mainToggle) {
         changeNav(mainToggle, mainNavContent, false);
       }
 
@@ -22,8 +28,12 @@ import changeNav from './change-nav';
         for (let i = 0; i < nestedTogglers.length; i += 1) {
           const toggler = nestedTogglers[i];
           const togglerID = toggler.getAttribute('id');
-          const togglerContent = context.querySelector('[aria-labelledby="'.concat(togglerID, '"]'));
-          const subnavIsActive = !!toggler.parentNode.classList.contains('hb-main-nav__item--active-trail');
+          const togglerContent = context.querySelector(
+            '[aria-labelledby="'.concat(togglerID, '"]'),
+          );
+          const subnavIsActive = !!toggler.parentNode.classList.contains(
+            'hb-main-nav__item--active-trail',
+          );
 
           if (!togglerContent) {
             continue;
@@ -31,7 +41,7 @@ import changeNav from './change-nav';
 
           // On page load, all menus in the active section should be expanded on mobile.
           // All other menus should be hidden.
-          const isExpanded = !!((subnavIsActive && isBelowMobileNavBreakpoint));
+          const isExpanded = !!(subnavIsActive && isBelowMobileNavBreakpoint);
           changeNav(toggler, togglerContent, isExpanded);
         }
       }
@@ -39,9 +49,10 @@ import changeNav from './change-nav';
       // Now that we've manually collapsed the main nav and subnavs,
       // we can remove the "still loading" class and disable the CSS-powered menu suppression.
       if (mainToggle) {
-        context.querySelector('.hb-main-nav--is-still-loading').classList.remove('hb-main-nav--is-still-loading');
+        context
+          .querySelector('.hb-main-nav--is-still-loading')
+          .classList.remove('hb-main-nav--is-still-loading');
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, once));

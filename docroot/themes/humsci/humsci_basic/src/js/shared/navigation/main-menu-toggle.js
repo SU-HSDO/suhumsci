@@ -3,8 +3,14 @@ import changeNav from './change-nav';
 (function (Drupal, window, once) {
   Drupal.behaviors.toggleNavigation = {
     attach(context) {
-      const menuToggle = once('toggle-navigation', '.hb-main-nav__toggle', context)[0];
-      const mainMenu = once('main-menu', '.hb-main-nav__menu-lv1', context)[0];
+      const [mainNav] = once('main-nav-toggle', '.hb-main-nav', context);
+
+      if (!mainNav) {
+        return;
+      }
+
+      const menuToggle = mainNav.querySelector('.hb-main-nav__toggle');
+      const mainMenu = mainNav.querySelector('.hb-main-nav__menu-lv1');
       const mobileNavBreakpoint = 992;
       let windowWidth;
       let wasDesktopSize;
@@ -45,5 +51,4 @@ import changeNav from './change-nav';
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, window, once));

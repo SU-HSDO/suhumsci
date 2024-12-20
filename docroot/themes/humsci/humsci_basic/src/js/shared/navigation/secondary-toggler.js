@@ -29,5 +29,4 @@ import togglerHandler from './toggler-handler';
       }
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, once));

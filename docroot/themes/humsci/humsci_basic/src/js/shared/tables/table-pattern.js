@@ -3,31 +3,38 @@
 (function (Drupal, once) {
   Drupal.behaviors.updateTableHeaders = {
     attach(context) {
-      const div = 'div.hb-table-pattern__header > div.hb-table-pattern__row > div';
-      const span = 'div.hb-table-pattern__header > div.hb-table-pattern__row > span';
-      const paragraph = 'div.hb-table-pattern__header > div.hb-table-pattern__row > p';
+      const tables = once('table-pattern', '.hb-table-pattern', context);
 
-      // retrieve table column headings
-      const columnHeaders = once('update-table-headers-col', `${div}, ${span}, ${paragraph}`, context);
+      tables.forEach((table) => {
+        const div = 'div.hb-table-pattern__header > div.hb-table-pattern__row > div';
+        const span = 'div.hb-table-pattern__header > div.hb-table-pattern__row > span';
+        const paragraph = 'div.hb-table-pattern__header > div.hb-table-pattern__row > p';
 
-      // retrieve all rows
-      const tableRows = once('update-table-headers-row', '.hb-table-row', context);
+        // retrieve table column headings
+        const columnHeaders = table.querySelectorAll(
+          `${div}, ${span}, ${paragraph}`,
+        );
 
-      if (tableRows) {
-      // For each row in the table
-        for (let i = 0; i < tableRows.length; i += 1) {
-        // find the row headers in each cell
-          const tableRowHeaders = tableRows[i].querySelectorAll('.hb-table-row__heading');
+        // retrieve all rows
+        const tableRows = table.querySelectorAll('.hb-table-row');
 
-          // we need h to step through columnHeaders and get the correct heading text
-          for (let h = 0; h < tableRowHeaders.length; h += 1) {
-            if (tableRowHeaders[h].innerHTML !== '') {
-              tableRowHeaders[h].innerHTML = columnHeaders[h].innerHTML;
+        if (tableRows) {
+          // For each row in the table
+          for (let i = 0; i < tableRows.length; i += 1) {
+            // find the row headers in each cell
+            const tableRowHeaders = tableRows[i].querySelectorAll(
+              '.hb-table-row__heading',
+            );
+
+            // we need h to step through columnHeaders and get the correct heading text
+            for (let h = 0; h < tableRowHeaders.length; h += 1) {
+              if (tableRowHeaders[h].innerHTML !== '') {
+                tableRowHeaders[h].innerHTML = columnHeaders[h].innerHTML;
+              }
             }
           }
         }
-      }
+      });
     },
   };
-// eslint-disable-next-line no-undef
 }(Drupal, once));

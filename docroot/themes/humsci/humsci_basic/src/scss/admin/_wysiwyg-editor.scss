@@ -100,46 +100,16 @@ drupal-media {
 }
 
 /* Match styles of external link in the WYSIWYG style's dropdown preview with the original design */
-.ck-content a.hs-external-link {
+.ck-style-grid__button__preview a.hs-external-link {
   @include hb-link--inline;
   @include hb-external-link-icon;
 
-  &
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-
-      &::after {
-        @include hb-icon-background('ext-link', 'white');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'gray-medium');
-      }
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-
-      &::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
-
   /* Resize the icon, using px instead of rem, because when using rem the icon looks way bigger */
-  .ck-style-grid__button & {
-    &::after {
-      width: 18px;
-      height: 11px;
-      margin-bottom: 0;
-      background-size: 11px;
-      padding-left: 0;
-    }
+  &::after {
+    width: 18px;
+    height: 11px;
+    margin-bottom: 0;
+    background-size: 11px;
+    padding-left: 0;
   }
 }

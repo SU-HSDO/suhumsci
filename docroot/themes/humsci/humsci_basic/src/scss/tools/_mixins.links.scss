@@ -53,7 +53,10 @@
   color: var(--palette--tertiary);
 
   @include hb-themes(('colorful', 'airy')) {
-    .hc-pairing-ocean .hb-well & {
+    // Ocean, canyon and montain color pairing override when link is inside a hb-well.
+    .hc-pairing-ocean .hb-well &,
+    .hc-paring-canyon .hb-well &,
+    .hc-paring-mountain .hb-well & {
       color: var(--palette--primary);
     }
   }

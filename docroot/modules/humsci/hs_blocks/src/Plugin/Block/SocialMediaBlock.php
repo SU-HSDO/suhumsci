@@ -156,6 +156,16 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
         'callback' => [get_class($this), 'addMoreAjax'],
         'wrapper' => 'links-wrapper',
         'effect' => 'fade',
+        'event' => 'click',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => NULL,
+        ],
+      ],
+      '#attached' => [
+        'library' => [
+          'hs_blocks/prevent_modal_scroll',
+        ],
       ],
     ];
 

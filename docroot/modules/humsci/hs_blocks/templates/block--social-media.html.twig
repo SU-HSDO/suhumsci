@@ -1,0 +1,12 @@
+{% if links %}
+  <ul{{ attributes.addClass('social-media-link__list') }}>
+    {% for link in links %}
+      <li>
+        <a href="{{ link.link_url }}" class="social-media-link" title="{{ link.link_title }}">
+          <i class="social-media-link__icon {{ link.icon_classes }}"></i>
+          <span class="social-media-link__label">{{ link.link_title }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

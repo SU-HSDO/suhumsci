@@ -1185,3 +1185,17 @@ function su_humsci_profile_update_9720() {
     ...$block_info,
   ])->save();
 }
+
+/**
+ * Uninstall hs_paragraphs_between and paragraphs_browser.
+ */
+function su_humsci_profile_update_9721() {
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('paragraphs_browser.paragraphs_browser_type.content')->delete();
+
+  \Drupal::service('module_installer')->uninstall([
+    'hs_paragraphs_between',
+    'paragraphs_browser',
+  ]);
+
+}

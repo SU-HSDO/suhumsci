@@ -327,6 +327,7 @@ function su_humsci_profile_preprocess_table(&$variables) {
  * Implements hook_contextual_links_alter().
  */
 function su_humsci_profile_contextual_links_alter(array &$links, $group, array $route_parameters) {
+  $current_user = \Drupal::service('current_user');
   if ($group == 'paragraph') {
     // Paragraphs edit module clone link does not function correctly. Remove it
     // from available links. Also remove delete to avoid unwanted delete.
@@ -343,9 +344,10 @@ function su_humsci_profile_contextual_links_alter(array &$links, $group, array $
       $link['title'] .= " {$entity_types[$group]}";
     }
   }
+
   if (
-    !in_array($group, ['media', 'block_content']) &&
-    !\Drupal::currentUser()->hasPermission('view all contextual links')
+    !in_array($group, ['media', 'block_content', 'social_media_block']) &&
+    !$current_user->hasPermission('view all contextual links')
   ) {
     $links = [];
   }
@@ -873,11 +875,22 @@ function su_humsci_profile_form_user_register_form_alter(&$form, FormStateInterf
 /**
  * Implements hook_preprocess_HOOK().
  */
-function su_humsci_profile_preprocess_block__stanford_samlauth(&$variables) {
-  $variables['content']['login']['#attributes']['class'] = [
+function su_humsci_profile_preprocess_block(&$variables) {
+  $classes = [
     'text-align-right',
     'hs-secondary-button',
   ];
+
+  $base_plugin_id = $variables['base_plugin_id'];
+
+  switch ($base_plugin_id) {
+    case 'stanford_samlauth_login_block':
+      $variables['content']['login']['#attributes']['class'] = $classes;
+      break;
+
+    case 'stanford_samlauth_logout_block':
+      $variables['content']['logout']['#attributes']['class'] = $classes;
+  }
 }
 
 /**
@@ -909,4 +922,17 @@ function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definition
     ];
     $plugin_definitions['ckeditor5_table'] = new CKEditor5PluginDefinition($tableDefinition);
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form_state) {
+  // Get current user roles and determine if has the 'administrator' role.
+  $roles = \Drupal::currentUser()->getRoles();
+  $is_admin = in_array('administrator', $roles);
+  // Remove unnecessary URL alias fields from the user edit form for all users.
+  $form['path']['#access'] = FALSE;
+  // Remove Delete account button for all roles expect 'administrator'.
+  $form['actions']['delete']['#access'] = $is_admin;
 }

@@ -1118,6 +1118,16 @@ function su_humsci_profile_update_9718() {
  * Uninstall hs_webform and webform modules.
  */
 function su_humsci_profile_update_9719() {
+  /** @var \Drupal\user\RoleInterface[] $roles */
+  $roles = \Drupal::entityTypeManager()
+    ->getStorage('user_role')
+    ->loadMultiple();
+  foreach ($roles as $role) {
+    foreach (array_filter($role->getPermissions(), fn($perm) => str_contains($perm, 'webform')) as $perm) {
+      $role->revokePermission($perm);
+    }
+    $role->trustData()->save();
+  }
   // Uninstalls modules after removing configs to prevent updb errors.
   \Drupal::service('module_installer')->uninstall([
     'hs_webform',

@@ -320,13 +320,6 @@ $px-only: true;
     }
   }
 
-  // This prevents the list item to float behind images that are floated to the left
-  figure.drupal-media-style-align-left ~ ul:not([class]) {
-    li {
-      overflow: hidden;
-    }
-  }
-
   ol {
     @include hb-ordered-list;
     margin: 0 0 32px;
@@ -340,6 +333,14 @@ $px-only: true;
         font-size: 16px;
         min-width: 30px;
       }
+    }
+  }
+
+  // This prevents the list item to float behind images that are floated to the left
+  figure.drupal-media-style-align-left ~ ul:not([class]),
+  figure.drupal-media-style-align-left ~ ol:not([class]) {
+    li {
+      overflow: hidden;
     }
   }
 

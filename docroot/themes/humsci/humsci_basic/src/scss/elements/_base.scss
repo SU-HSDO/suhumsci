@@ -129,16 +129,18 @@ ul:not([class]) {
   @include hb-unordered-list;
 }
 
+ol:not([class]) {
+  @include hb-ordered-list;
+}
+
 // This prevents the list item to float behind images that are floated to the left
 figure.align-left ~ ul:not([class]),
-.align-left.hb-media-image ~ ul:not([class]) {
+.align-left.hb-media-image ~ ul:not([class]),
+figure.align-left ~ ol:not([class]),
+.align-left.hb-media-image ~ ol:not([class]) {
   li {
     overflow: hidden;
   }
-}
-
-ol:not([class]) {
-  @include hb-ordered-list;
 }
 
 caption:not([class]) {

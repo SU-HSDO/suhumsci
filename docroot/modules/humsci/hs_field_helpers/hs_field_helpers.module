@@ -231,12 +231,16 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
         $rendered = $element;
       }
 
-      // Remove all wrapper divs so we can check if the region actually has any
-      // visible output.
-      $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
-      $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
-      if (empty(trim($rendered))) {
+      if (is_null($rendered)) {
         unset($pattern[$region]);
+      } else {
+        // Remove all wrapper divs so we can check if the region actually has any
+        // visible output.
+        $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
+        $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
+        if (empty(trim($rendered))) {
+          unset($pattern[$region]);
+        }
       }
 
       continue;

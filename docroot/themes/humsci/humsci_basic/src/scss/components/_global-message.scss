@@ -36,6 +36,36 @@
     }
   }
 
+  a {
+    &.su-button,
+    &.su-button--secondary {
+      @include button-secondary;
+    }
+
+    &.su-button--big {
+      @include button-big;
+    }
+  }
+
+  &--error,
+  &--success,
+  &--info {
+    a {
+      &.su-button,
+      &.su-button--secondary,
+      &.su-button--big {
+        box-shadow: $su-button-stroke $su-color-white;
+        color: color(light-text, $su-alert-colors);
+
+        &:hover,
+        &:focus {
+          box-shadow: $su-button-stroke $su-color-white;
+          color: color(light-text, $su-alert-colors);
+        }
+      }
+    }
+  }
+
   &--text-light {
     .hb-dark-pattern & a,
     a:not([class]),
@@ -48,6 +78,35 @@
       &:hover,
       &:focus {
         color: #ebebeb;
+        text-decoration: underline;
+      }
+    }
+
+    .su-alert__text {
+      a {
+        &:hover,
+        &:focus {
+          background-color: $su-color-white;
+          color: $su-color-black;
+        }
+      }
+    }
+
+    .su-alert__footer {
+      .su-link {
+        &::after {
+          background: $su-color-white;
+        }
+      }
+    }
+  
+    .su-alert__dismiss-button {
+      color: color(light-text, $su-alert-colors);
+  
+      &:hover,
+      &:focus {
+        background-color: transparent;
+        color: $su-color-white;
       }
     }
   }
@@ -73,29 +132,101 @@
 
   &--error {
     background-color: $su-color-bright-red;
+    color: color(light-text, $su-alert-colors);
+
+    a {
+      color: color(light-text, $su-alert-colors);
+
+      &:hover,
+      &:focus {
+        text-decoration: underline;
+      }
+
+      &.su-button,
+      &.su-button--secondary,
+      &.su-button--big {
+        background-color: color(error, $su-alert-colors);
+
+        &:hover,
+        &:focus {
+          background-color: color(error, $su-alert-colors);
+        }
+      }
+    }
   }
 
   &--success {
     background-color: #00755a;
+
+    a {
+      &.su-button,
+      &.su-button--secondary,
+      &.su-button--big {
+        background-color: color(success, $su-alert-colors);
+  
+        &:hover,
+        &:focus {
+          background-color: color(success, $su-alert-colors);
+        }
+      }
+    }
   }
 
   &--warning {
     background-color: #eaab00;
+
+    a {
+      color: $su-color-black;
+  
+      &:hover,
+      &:focus {
+        color: $su-color-black;
+        text-decoration: underline;
+      }
+  
+      &.su-button,
+      &.su-button--secondary,
+      &.su-button--big {  
+        background-color: color(warning, $su-alert-colors);
+        box-shadow: $su-button-stroke $su-color-black;
+        color: $su-color-black;
+  
+        &:hover,
+        &:focus {
+          background-color: color(warning, $su-alert-colors);
+          box-shadow: $su-button-stroke $su-color-black;
+          color: $su-color-black;
+        }
+      }
+    }
   }
 
   &--info {
     background-color: $su-color-bright-blue;
+
+    a {
+      &.su-button,
+      &.su-button--secondary,
+      &.su-button--big {  
+        background-color: color(info, $su-alert-colors);
+  
+        &:hover,
+        &:focus {
+          background-color: color(info, $su-alert-colors);
+        }
+      }
+    }
   }
 
   &__header {
     margin-bottom: 1em;
     width: 100%;
     margin-right: hb-calculate-rems(20px);
+    order: 1;
+    flex-shrink: 1;
 
     @include grid-media-min('lg') {
       margin-right: hb-calculate-rems(26px);
-      order: 1;
-      flex-shrink: 1;
       width: auto;
       margin-bottom: 0;
     }
@@ -108,6 +239,7 @@
     font-size: hb-calculate-rems(17px);
     text-transform: uppercase;
     font-weight: hb-theme-font-weight(semibold);
+    letter-spacing: 0.1em;
 
     &::after {
       content: ':';
@@ -131,12 +263,105 @@
 
   &__text {
     margin-bottom: 0;
+
+    a {
+      color: $su-color-black;
+      text-decoration: underline;
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+
+      &:hover,
+      &:focus {
+        color: $su-color-black;
+        background-color: $su-color-digital-blue-light;
+        text-decoration: underline;
+      }
+
+      &.su-button,
+      &.su-button--secondary {
+        @include button-secondary;
+
+        background-color: color(default, $su-alert-colors);
+        box-shadow: $su-button-stroke $su-color-black;
+        color: color(dark-text, $su-alert-colors);
+
+        &:hover,
+        &:focus {
+          background-color: color(default, $su-alert-colors);
+        }
+      }
+
+      &.su-button--big {
+        @include button-big;
+
+        background-color: color(default, $su-alert-colors);
+        box-shadow: $su-button-stroke $su-color-black;
+        color: color(dark-text, $su-alert-colors);
+
+        &:hover,
+        &:focus {
+          background-color: color(default, $su-alert-colors);
+          color: color(dark-text, $su-alert-colors);
+        }
+      }
+    }
   }
 
   &__icon {
     margin-right: hb-calculate-rems(5px);
     display: inline-block;
     max-width: hb-calculate-rems(20px);
+
+    i,
+    .su-far,
+    .su-fas {
+      font-style: normal;
+    }
+  }
+
+  &__dismiss {
+    @include responsive-spacing('margin', null null null 1);
+    order: 3;
+    height: 100%;
+    align-content: flex-end;
+    flex-shrink: 1;
+    text-align: right;
+
+    @include grid-media-max('xs') {
+      width: 100%;
+    }
+
+    .su-alert__dismiss-button {
+      padding: 0;
+      background-color: transparent;
+      text-transform: uppercase;
+      font-weight: hb-theme-font-weight(semibold);
+      color: color(dark-text, $su-alert-colors);
+      font-size: 1.7rem;
+      letter-spacing: 0.1em;
+
+      .su-far,
+      .su-fas,
+      .fas {
+        @include margin(null null null 0.5em);
+      }
+
+      i,
+      .su-far,
+      .su-fas,
+      .fas {
+        font-style: normal;
+        text-decoration: none;
+      }
+
+      &.su-text-black {
+
+        &:hover,
+        &:focus {
+          background-color: transparent;
+          color: $su-color-black;
+        }
+      }
+    }
   }
 
   .centered-container {
@@ -149,5 +374,46 @@
     @include grid-media-min('md') {
       padding: hb-calculate-rems(19px) 0;
     }
+  }
+}
+
+// Optional open footer area.
+// -----------------------------------------------------------------------------
+.su-alert__footer {
+
+  a {
+    color: color(dark-text, $su-alert-colors);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: color(dark-text, $su-alert-colors);
+      text-decoration: underline;
+    }
+  }
+
+  .su-link {
+    &::after {
+      background: color(dark-text, $su-alert-colors);
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+
+      &::after {
+        background: color(dark-text, $su-alert-colors);
+      }
+    }
+  }
+}
+
+.su-alert__text+.su-alert__footer {
+  @include responsive-spacing('margin', 0 null null null);
+}
+
+.su-alert__dismiss~.su-alert__body {
+  @include grid-media-max('sm') {
+    @include margin(null null 1em null);
   }
 }

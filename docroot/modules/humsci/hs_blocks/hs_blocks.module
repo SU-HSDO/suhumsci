@@ -118,7 +118,7 @@ function hs_blocks_form_block_form_alter(&$form, FormStateInterface $form_state)
   $block_form = $form_state->getFormObject();
   /** @var Drupal\block\BlockForm $block_form */
   $block = $block_form->getEntity();
-  // Hide block visibility and region fields from non-developers.
+  // Hide visibility & region fields from non-developers on social media block.
   if ($block instanceof Block && $block->getPluginId() == 'hs_blocks_social_media_block') {
     /** @var Drupal\Entity\User $current_user */
     $current_user = \Drupal::currentUser();

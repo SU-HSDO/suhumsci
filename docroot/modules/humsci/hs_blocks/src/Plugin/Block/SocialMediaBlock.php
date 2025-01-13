@@ -8,6 +8,7 @@ use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Element\Url;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -128,7 +129,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
         'link_url' => [
           '#type' => 'textfield',
           '#title' => $this->t('URL'),
-          '#description' => $this->t('Social Media Profile URL.'),
+          '#description' => $this->t('Social Media Profile URL. Must start with https:// or mailto:'),
           '#default_value' => $link['link_url'],
           '#element_validate' => [
             [get_class($this), 'validateUrl'],
@@ -184,9 +185,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       }
     }
     else {
-      if (!filter_var($value, FILTER_VALIDATE_URL)) {
-        $form_state->setError($element, t('The URL must be a valid web address (e.g., https://www.stanford.edu) or a valid email address (e.g., mailto:example@stanford.edu).'));
-      }
+      URL::validateUrl($element, $form_state, $complete_form);
     }
   }
 

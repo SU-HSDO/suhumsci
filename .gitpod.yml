@@ -5,7 +5,7 @@ ports:
   - port: 33060
     onOpen: ignore
     visibility: private
-  - port: 8001
+  - port: 8001-8999
     onOpen: ignore
     visibility: public
 image: pookmish/drupal8ci:gitpod
@@ -24,6 +24,7 @@ tasks:
       export PREVIEW_FULL_URL=`gp url 8001` &&
       export PREVIEW_URL=${PREVIEW_FULL_URL#"https://"} &&
       cp .gitpod/blt.yml blt/local.blt.yml &&
+      cp .gitpod/sites.php docroot/sites/local.sites.php &&
       composer install --no-interaction &&
       rm -rf docroot/*/custom/* &&
       composer install --prefer-source --no-interaction &&
@@ -41,7 +42,6 @@ tasks:
       fi
     command: >
       git config core.fileMode false &&
-      blt blt:telemetry:disable --no-interaction &&
       apache2ctl restart &&
       gp ports await 8001 &&
       drush uli &&

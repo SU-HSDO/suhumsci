@@ -181,12 +181,12 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     if (str_starts_with($value, 'mailto')) {
       if (!preg_match($mailto_regex, $value)) {
         $form_state->setError($element, t('The mailto link must include a valid email address (e.g., mailto:example@example.com).'));
-        return;
       }
+      return;
     }
-    else {
-      URL::validateUrl($element, $form_state, $complete_form);
-    }
+
+    URL::validateUrl($element, $form_state, $complete_form);
+
   }
 
   /**

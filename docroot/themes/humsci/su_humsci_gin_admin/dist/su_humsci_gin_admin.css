@@ -274,9 +274,26 @@ html .dashboard-content.user-logged-in {
   margin-block-end: 31px;
 }
 
-.dashboard-content .layout .layout__region .block li a,
-.dashboard-content .layout .layout__region .block li::marker {
+.dashboard-content .layout .layout__region .block a,
+.dashboard-content .layout .layout__region .block li::marker,
+.dashboard-content .layout .layout__region .block .more-link a.button--primary:focus,
+.dashboard-content .layout .layout__region .block .more-link a.button--primary:hover  {
   color: var(--color-dashboard-brick-red);
+}
+
+.dashboard-content .layout .layout__region .block li a {
+  text-decoration: none;
+}
+
+.dashboard-content .layout .layout__region .block .more-link a.button--primary,
+.dashboard-content .layout .layout__region .block .more-link a.button--primary:focus,
+.dashboard-content .layout .layout__region .block .more-link a.button--primary:hover  {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  border: none !important;
+  border-radius: 0;
+  margin: 2rem 0 0;
 }
 
 .dashboard-content .layout .layout__region .block h2:first-of-type {
@@ -288,6 +305,15 @@ html .dashboard-content.user-logged-in {
   font-size: 1.25rem;
   font-weight: 500;
 }
+
+.dashboard-content .layout .layout__region .block a:focus,
+.dashboard-content .layout .layout__region .block a:hover,
+.dashboard-content .layout .layout__region .block .more-link a.button--primary:focus,
+.dashboard-content .layout .layout__region .block .more-link a.button--primary:hover  {
+  text-decoration: underline;
+  border: none !important;
+}
+
 
 .dashboard-content nav.gin-breadcrumb .gin-breadcrumb__list {
   padding-bottom: 0.5rem;

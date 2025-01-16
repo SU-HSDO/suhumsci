@@ -103,26 +103,34 @@ function hs_migrate_update_8007() {
   $site_name = \Drupal::config('system.site')->get('name');
   $is_mrc = str_contains($site_name, 'Mathematics Research Center');
 
-  $config_factory = \Drupal::configFactory();
   $schema = \Drupal::database()->schema();
 
   foreach ($unused_importers as $importer) {
-    $is_hs_d7_news = str_contains($importer, 'hs_d7_news');
 
-    if (!$is_mrc || !$is_hs_d7_news) {
-      // Remove migration importer configuration.
-      $config_name = 'migrate_plus.migration.' . $importer;
-      $config_factory->getEditable($config_name)->delete();
+    if ($is_mrc && ($importer === 'hs_d7_news')) {
+      continue;
+    }
 
-      // Drop migration database tables.
-      $migrate_map_table = 'migrate_map_' . $importer;
-      if ($schema->tableExists($migrate_map_table)) {
-        $schema->dropTable($migrate_map_table);
-      }
-      $migrate_message_table = 'migrate_message_' . $importer;
-      if ($schema->tableExists($migrate_message_table)) {
-        $schema->dropTable($migrate_message_table);
-      }
+    // Verify migration entity exists.
+    $migration = \Drupal::entityTypeManager()
+      ->getStorage('migration')
+      ->load($importer);
+
+    if(is_null($migration)){
+      continue;
+    }
+
+    // Remove migration importer configuration.
+    $migration->delete();
+
+    // Drop migration database tables.
+    $migrate_map_table = 'migrate_map_' . $importer;
+    if ($schema->tableExists($migrate_map_table)) {
+      $schema->dropTable($migrate_map_table);
+    }
+    $migrate_message_table = 'migrate_message_' . $importer;
+    if ($schema->tableExists($migrate_message_table)) {
+      $schema->dropTable($migrate_message_table);
     }
   }
 }

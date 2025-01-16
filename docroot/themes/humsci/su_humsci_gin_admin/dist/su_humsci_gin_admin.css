@@ -9,6 +9,7 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   --colorGinLayer4Background: rgba(235, 235, 235, 1);
   --colorGinTableHeader: rgba(235, 235, 235, 1);
   --colorGinItemHover: rgba(245, 245, 245, 1);
+  --color-dashboard-brick-red: #7d332f;
   ;
 }
 
@@ -216,4 +217,45 @@ body.gin--edit-form .views-exposed-form .select-preact button svg {
 
 .ck-powered-by-balloon {
   z-index: 1000 !important;
+}
+
+/* Dashboard */
+html .dashboard-content.user-logged-in {
+  --color-dashboard-brick-red: #7d332f;
+  --color-dashboard-ivory-sand: #f7f4f0;
+  --color-dashboard-white: #ffffff;
+}
+
+.dashboard-content,
+.dashboard-content header.region-sticky {
+  background: var(--color-dashboard-ivory-sand);
+}
+
+.dashboard-content header.region-sticky #block-su-humsci-gin-admin-local-actions .local-actions .button--primary:not(:focus) {
+  background: var(--color-dashboard-brick-red);
+  border-color: var(--color-dashboard-brick-red) !important;
+}
+
+.dashboard-content header.region-sticky #block-su-humsci-gin-admin-local-actions .local-actions .button--primary:hover,
+.dashboard-content header.region-sticky #block-su-humsci-gin-admin-local-actions .local-actions .button--primary:focus {
+  background: transparent;
+  border-color: var(--color-dashboard-brick-red) !important;
+  color: var(--color-dashboard-brick-red);
+}
+
+.dashboard-content .layout .layout__region .block {
+  background: var(--color-dashboard-white);
+  border: 1px solid #d1cfcb;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+}
+
+.dashboard-content .layout,
+.dashboard-content .layout .block {
+  margin-block-end: 31px;
+}
+
+.dashboard-content .layout .layout__region .block li a,
+.dashboard-content .layout .layout__region .block li::marker {
+  color: var(--color-dashboard-brick-red);
 }

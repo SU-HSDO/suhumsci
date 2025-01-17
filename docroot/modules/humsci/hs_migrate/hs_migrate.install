@@ -122,15 +122,27 @@ function hs_migrate_update_8007() {
 
     // Remove migration importer configuration.
     $migration->delete();
+    $message = t('Deleted @config', [
+      '@config' => 'migrate_plus.migration.' . $importer,
+    ]);
+    \Drupal::logger('hs_migrate')->notice($message);
 
     // Drop migration database tables.
     $migrate_map_table = 'migrate_map_' . $importer;
     if ($schema->tableExists($migrate_map_table)) {
       $schema->dropTable($migrate_map_table);
+      $message = t('Dropped table @table', [
+        '@table' => $migrate_map_table,
+      ]);
+      \Drupal::logger('hs_migrate')->notice($message);
     }
     $migrate_message_table = 'migrate_message_' . $importer;
     if ($schema->tableExists($migrate_message_table)) {
       $schema->dropTable($migrate_message_table);
+      $message = t('Dropped table @table', [
+        '@table' => $migrate_message_table,
+      ]);
+      \Drupal::logger('hs_migrate')->notice($message);
     }
   }
 }

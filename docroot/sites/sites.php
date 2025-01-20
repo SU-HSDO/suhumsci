@@ -88,7 +88,6 @@ foreach ($settings as $settings_file) {
 
 // Manually point URL's that don't match their site paths.
 $sites['iranian-studies.stanford.edu'] = 'iranianstudies';
-$sites['facultyaffairs-humsci.stanford.edu'] = 'facultyaffairs_humsci2021';
 $sites['hsweb-referencecolorful.stanford.edu'] = 'hsweb_userguide';
 
 

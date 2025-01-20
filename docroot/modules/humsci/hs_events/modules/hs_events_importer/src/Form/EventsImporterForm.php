@@ -286,6 +286,7 @@ class EventsImporterForm extends ConfigFormBase {
       }
       return $url;
     }
+    return '';
   }
 
   /**

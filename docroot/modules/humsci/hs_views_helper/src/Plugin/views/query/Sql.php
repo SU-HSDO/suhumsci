@@ -112,7 +112,7 @@ class Sql extends OriginalSql {
 
       // Only operate on CCK Fields. We dont care about base fields like entity
       // title, published etc.
-      if (strpos($table, '__') === FALSE) {
+      if (is_null($table) || strpos($table, '__') === FALSE) {
         continue;
       }
 

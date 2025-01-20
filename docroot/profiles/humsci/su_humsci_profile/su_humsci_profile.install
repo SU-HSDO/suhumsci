@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\Entity\ParagraphsType;
 use Drupal\user\RoleInterface;
 
 /**
@@ -21,7 +22,6 @@ use Drupal\user\RoleInterface;
 function su_humsci_profile_requirements($phase) {
   $requirements = [];
   if ($phase == 'runtime') {
-
     $site_path = DrupalKernel::findSitePath(\Drupal::request());
     $site_path = explode('/', $site_path);
     $site_name = $site_path[1];
@@ -73,7 +73,11 @@ function su_humsci_profile_update_9606() {
   $entity_type_manager = \Drupal::entityTypeManager();
   $config_factory = \Drupal::configFactory();
 
-  \Drupal::service('module_installer')->install(['menu_link', 'cshs', 'token_or']);
+  \Drupal::service('module_installer')->install([
+    'menu_link',
+    'cshs',
+    'token_or',
+  ]);
   $config_factory->getEditable('menu_link_weight.settings')
     ->set('menu_parent_form_selector', 'cshs')
     ->save();
@@ -108,7 +112,8 @@ function su_humsci_profile_update_9607() {
   $field_config_storage = $entity_type_manager->getStorage('field_config');
   $bundles = [];
   /** @var \Drupal\node\Entity\NodeType $node_type */
-  foreach ($entity_type_manager->getStorage('node_type')->loadMultiple() as $node_type) {
+  foreach ($entity_type_manager->getStorage('node_type')
+    ->loadMultiple() as $node_type) {
     if ($node_type->getThirdPartySetting('menu_ui', 'available_menus')) {
       $bundles[] = $node_type->id();
       $node_type->setThirdPartySetting('menu_ui', 'available_menus', []);
@@ -475,9 +480,10 @@ function su_humsci_profile_update_9701(&$sandbox) {
     $new_entity->save();
     $sandbox['convert'][$eck_type][$id] = $new_entity->id();
 
-    // Clear entity caches
-    $entity_type_manager->getStorage($eck_type)->resetCache(array($id));
-    $entity_type_manager->getStorage('hs_entity')->resetCache(array($new_entity->id()));
+    // Clear entity caches.
+    $entity_type_manager->getStorage($eck_type)->resetCache([$id]);
+    $entity_type_manager->getStorage('hs_entity')
+      ->resetCache([$new_entity->id()]);
   }
   $sandbox['#finished'] = empty($sandbox['items']) ? 1 : ($sandbox['count'] - count($sandbox['items'])) / $sandbox['count'];
 
@@ -850,7 +856,8 @@ function _su_humsci_profile_get_uuid(string $config_name): string|null {
  * Uninstall legacy themes.
  */
 function su_humsci_profile_update_9705() {
-  $installed_themes = \Drupal::service('extension.list.theme')->getAllInstalledInfo();
+  $installed_themes = \Drupal::service('extension.list.theme')
+    ->getAllInstalledInfo();
   $legacy_themes = [
     'archaeology',
     'francestanford',
@@ -903,7 +910,6 @@ function su_humsci_profile_update_9706() {
   return "Removed " . $count_config . " config dependencies and " . $count_module . " module dependencies.";
 }
 
-
 /**
  * Delete eck configuration and uninstall eck module.
  */
@@ -915,7 +921,6 @@ function su_humsci_profile_update_9707() {
   // Uninstall eck module.
   \Drupal::service('module_installer')->uninstall(['eck']);
 }
-
 
 /**
  * Uninstall page_cache.
@@ -930,4 +935,264 @@ function su_humsci_profile_update_9708() {
 function su_humsci_profile_update_9709() {
   \Drupal::service('module_installer')->install(['paragraphs_features']);
   \Drupal::service('module_installer')->install(['paragraphs_ee']);
+}
+
+/**
+ * Remove any existing hs_row paragraph entities.
+ */
+function su_humsci_profile_update_9710($sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  $paragraph_machine_name = 'hs_row';
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->condition('type', $paragraph_machine_name)
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete hs_row paragraph type.
+ */
+function su_humsci_profile_update_9711() {
+  $paragraph_machine_name = 'hs_row';
+  // Delete the field and field storage on the paragraph.
+  $fields = \Drupal::entityTypeManager()
+    ->getStorage('field_config')
+    ->loadByProperties(['bundle' => $paragraph_machine_name]);
+
+  if ($fields) {
+    foreach ($fields as $field) {
+      /** @var Drupal\field\Entity $field */
+
+      // Delete the field configuration (instance) from the paragraph type.
+      $field->delete();
+    }
+  }
+
+  // Delete the field_hs_row_components field storage.
+  $field_storage = FieldStorageConfig::load('field_hs_row_components');
+  if ($field_storage) {
+    $field_storage->delete();
+  }
+
+  // Delete the paragraph itself.
+  $paragraph_type = ParagraphsType::load($paragraph_machine_name);
+  if ($paragraph_type) {
+    $paragraph_type->delete();
+  }
+}
+
+/**
+ * Uninstall hs_row modules.
+ */
+function su_humsci_profile_update_9712() {
+  // Uninstall hs_row and hs_row_display modules.
+  \Drupal::service('module_installer')->uninstall(['hs_row', 'hs_row_display']);
+}
+
+/**
+ * Uninstall admin_login_path module.
+ */
+function su_humsci_profile_update_9713() {
+  \Drupal::service('module_installer')->uninstall(['admin_login_path']);
+}
+
+/**
+ * Remove field_paragraph_style permissions.
+ */
+function su_humsci_profile_update_9714() {
+  $entity_type_manager = \Drupal::service('entity_type.manager');
+  $roles = $entity_type_manager->getStorage('user_role')->loadMultiple();
+  if (!$roles) {
+    return;
+  }
+
+  $permissions = [
+    'create field_paragraph_style',
+    'edit field_paragraph_style',
+    'edit own field_paragraph_style',
+    'view field_paragraph_style',
+    'view own field_paragraph_style',
+  ];
+
+  foreach ($roles as $role) {
+    foreach ($permissions as $permission) {
+      $role->revokePermission($permission);
+    }
+    $role->save();
+  }
+}
+
+/**
+ * Update config ignore settings.
+ */
+function su_humsci_profile_update_9715() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $ignored_config_entities = $config->get('ignored_config_entities');
+  $ignored_config_entities[] = 'single_content_sync.settings:allowed_entity_types.node';
+  $config->set('ignored_config_entities', $ignored_config_entities);
+  $config->save();
+}
+
+/**
+ * Remove any existing hs_webform paragraph entities.
+ */
+function su_humsci_profile_update_9716(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->condition('type', 'hs_webform')
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $paragraph->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete webform submissions.
+ */
+function su_humsci_profile_update_9717(&$sandbox) {
+  $submission_storage = \Drupal::entityTypeManager()
+    ->getStorage('webform_submission');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $submission_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $submission_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($submission_storage->loadMultiple($submission_ids) as $submission) {
+    $submission->delete();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Delete hs_webform paragraph type and remove webform config.
+ */
+function su_humsci_profile_update_9718() {
+  $paragraph_machine_name = 'hs_webform';
+  // Delete the field_hs_webform field storage (and field instances).
+  FieldStorageConfig::load('field_hs_webform')?->delete();
+
+  // Delete the paragraph itself.
+  ParagraphsType::load($paragraph_machine_name)?->delete();
+
+  // Remove webform existing config - needs to be done before uninstall.
+  $config_factory = \Drupal::configFactory();
+
+  $config_names = array_filter($config_factory->listAll(), function($item) {
+    return str_contains($item, 'webform');
+  });
+
+  foreach ($config_names as $config) {
+    $config_factory->getEditable($config)->delete();
+    $message = t('Deleted @config', [
+      '@config' => $config,
+    ]);
+    \Drupal::logger('su_humsci_profile')->notice($message);
+  }
+}
+
+/**
+ * Uninstall hs_webform and webform modules.
+ */
+function su_humsci_profile_update_9719() {
+  /** @var \Drupal\user\RoleInterface[] $roles */
+  $roles = \Drupal::entityTypeManager()
+    ->getStorage('user_role')
+    ->loadMultiple();
+  foreach ($roles as $role) {
+    foreach (array_filter($role->getPermissions(), fn($perm) => str_contains($perm, 'webform')) as $perm) {
+      $role->revokePermission($perm);
+    }
+    $role->trustData()->save();
+  }
+  // Uninstalls modules after removing configs to prevent updb errors.
+  \Drupal::service('module_installer')->uninstall([
+    'hs_webform',
+    'webform_ui',
+    'webform',
+  ]);
+}
+
+/**
+ * Add new logout block to existing sites.
+ */
+function su_humsci_profile_update_9720() {
+  $block_storage = \Drupal::entityTypeManager()->getStorage('block');
+  /** @var Drupal\block\Entity\Block[] $login_blocks */
+  $login_blocks = $block_storage->loadByProperties([
+    'plugin' => 'stanford_samlauth_login_block',
+  ]);
+  $log_out = 'SUNetID Logout';
+
+  if ($login_blocks) {
+    $login_block = reset($login_blocks);
+    $settings = $login_block->get('settings');
+
+    $log_in = $settings['link_text'];
+    $log_out = preg_replace('/in\b/', 'out', $log_in);
+    $log_out = preg_replace('/In\b/', 'Out', $log_out);
+    $log_out = str_replace(' to ', ' from ', $log_out);
+    $log_out = str_replace(' To ', ' From ', $log_out);
+  }
+
+  $block_info = [
+    'status' => TRUE,
+    'region' => 'footer',
+    'plugin' => 'stanford_samlauth_logout_block',
+    'weight' => 0,
+    'settings' => [
+      'id' => 'stanford_samlauth_logout_block',
+      'label' => 'SAML SUNetID Logout Block',
+      'label_display' => 0,
+      'provider' => 'stanford_samlauth',
+      'link_text' => $log_out,
+    ],
+    'visibility' => [],
+  ];
+  $block_storage->create([
+    'uuid' => '7e424b1f-3692-41a3-a48a-dd1a450e0203',
+    'id' => 'humsci_colorful_samlsunetidlogoutblock',
+    'theme' => 'humsci_colorful',
+    ...$block_info,
+  ])->save();
+  $block_storage->create([
+    'uuid' => '2f7f0d52-c463-411d-a2e2-656d185acd4d',
+    'id' => 'humsci_traditional_samlsunetidlogoutblock',
+    'theme' => 'humsci_traditional',
+    ...$block_info,
+  ])->save();
+}
+
+/**
+ * Remove honeypot, paragraphs browser, and hs paragraphs between.
+ */
+function su_humsci_profile_update_9721() {
+  \Drupal::service('module_installer')->uninstall([
+    'honeypot',
+    'hs_paragraphs_between',
+    'paragraphs_browser',
+  ]);
 }

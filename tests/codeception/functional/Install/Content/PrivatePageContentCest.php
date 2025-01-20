@@ -4,6 +4,7 @@
  * Class PrivatePageContentCest.
  *
  * @group install
+ * @group private-page
  */
 class PrivatePageContentCest {
 
@@ -44,8 +45,8 @@ class PrivatePageContentCest {
    * Enable components at the start.
    */
   public function _before(FunctionalTester $I) {
+    $I->logInWithRole('administrator');
     foreach ($this->fieldsToCheck as $component => $component_info) {
-      $I->logInWithRole('administrator');
       $I->amOnPage('/admin/structure/types/manage/hs_private_page/fields/node.hs_private_page.field_hs_priv_page_components');
       $component_info['disable_component'] = (bool) $I->grabAttributeFrom($component_info['admin_name'], 'checked');
       if (!$component_info['disable_component']) {
@@ -54,6 +55,8 @@ class PrivatePageContentCest {
       }
       $this->fieldsToCheck[$component] = $component_info;
     }
+    $I->amOnPage('/user/logout');
+    $I->click('.user-logout-confirm #edit-submit');
   }
 
   /**
@@ -64,8 +67,8 @@ class PrivatePageContentCest {
     $I->amOnPage('/node/add/hs_private_page');
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $component => $component_info) {
-      $I->scrollTo('.field--name-field-priv-wysiwyg-files');
-      $I->click('Add Component');
+      $I->scrollTo('table[id^="field-hs-priv-page-components-values"] tr:last-child .paragraphs-features__add-in-between__button');
+      $I->click('table[id^="field-hs-priv-page-components-values"] tr:last-child .paragraphs-features__add-in-between__button');
       $I->waitForText('Add Component');
       $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', $component);
       $I->click($component_info['component_button_name'], '.paragraphs-ee-add-dialog');

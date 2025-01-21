@@ -36,9 +36,15 @@ In our `.browserlistrc` file we specify support for `"last 1 major version"` of 
 
 ## Testing
 
-- `npm test` - Run linting and sass true tests
+### Linting
+
+We use [stylelint](https://stylelint.io/) to lint all of our Sass code to maintain a consistent code style. To test it you can run: `npm run lint:sass`
+
+Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbox/stylelint-config-sparkbox) as a base for our linting rules.
 
 ## Visual Regression Testing
+
+### Percy
 
 - `npm run visreg` - Runs percy script to test the visual regression of both the
 Colorful and Traditional sites.
@@ -60,17 +66,7 @@ enabled/disabled before testing. These include:
 * The Traditional site should use the standard dropdown menu
 * Both Colorful and Traditional sites should have the 'Use Animation Enhancements' feature turned off on their respective theme settings.
 
-### Sass True
-
-We use the [Sass True](https://github.com/oddbird/true) testing framework to test our Sass function and mixins.
-
-### Linting
-
-We use [stylelint](https://stylelint.io/) to lint all of our Sass code to maintain a consistent code style. To test it you can run: `npm run lint:sass`
-
-Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbox/stylelint-config-sparkbox) as a base for our linting rules.
-
-### Visual Regression Testing
+### BackstopJS
 [Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
 
 The visual regression tests are run locally and used to compare what is on Staging versus what is on the Dev environment. Backstop is setup to test two identical sites (pages and content) with the only difference being the theme they use.
@@ -87,45 +83,18 @@ Visual regression testing should be completed bi-weekly at the end of each sprin
 2. Update the [hs-traditional dev](https://hs-traditional-dev.stanford.edu/) site to use the Traditional theme
 3. Set the dev environment to use the sprint build branch in Acquia
 
-#### Running Visual Regression Tests
-Running the backstop tests:
+#### Running BackstopJS Tests
 1. Cd the `humsci_basic` directory.
-1. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
-1. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
-1. Run `npm run backstop:test` to run the tests.
-1. Backstop will open an HTML page that contains the report which highlights errors.
+2. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
+3. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
+4. Run `npm run backstop:test` to run the tests.
+5. Backstop will open an HTML page that contains the report which highlights errors.
 _Note: Differences in content will also be reported as failures. Some failures can result in images not loading fully before the snapshot is taken._
 
 #### Adding new scenarios in the `backstop/backstop.json`.
 - Any new page and its content need to be present in both the [HS Colorful](https://hs-colorful-stage.stanford.edu/) and [HS Traditional](https://hs-traditional-stage.stanford.edu/) sites on the staging environment.
 - Add the resource path of the new page to the `testPages` array in `backstop/generate-backstop.js`
 - If adding a new theme add the theme name to the `sites` array in `backstop/generate-backstop.js`
-
-## Contributing
-### Github
-To make it easier to find work being done we should use the following naming conventions:
-
-### Branch Names:
-`SHS-XXX--descriptive-message`
-
-#### Commit Messages:
-`feat(SHS-XXX): descriptive message shorter than 80 chars`
-`fix(SHS-XXX): descriptive message shorter than 80 chars`
-`refactor(SHS-XXX): descriptive message shorter than 80 chars`
-`chore(SHS-XXX): descriptive message shorter than 80 chars`
-`docs(SHS-XXX): descriptive message shorter than 80 chars`
-
-https://www.conventionalcommits.org/en/v1.0.0-beta.2/
-
-#### Pull Request Titles:
-`SHS-XXX: Short Descriptive Titles`
-
-Pull request descriptions should follow the PR template that is generated when creating a new commit.
-
-There's a Tugboat implementation that build previews for some sites to help reviewing the work done in the PR.
-
-#### Green Button Merging:
-After receiving a review and getting a PR approved, we do green-button merges for our PRs ("Rebase and Merge") because Github includes a link to the PR in our commit message header.
 
 ## Decanter Integration
 

@@ -17,6 +17,8 @@ There are currently 3 children sub-themes based on Humsci Basic. Themes referenc
 - Humsci Traditional (humsci_traditional)
 - Humsci Airy (humsci_airy)
 
+> **_NOTE:_**  The Humsci Airy (humsci_airy) theme is not currently being used in any site. It is a placeholder for a potential future theme.
+
 ## Getting Started
 
 This theme contains its own node module dependencies and build system which is separate from the root project. All commands should be run from this theme's directory.
@@ -112,8 +114,8 @@ Inside the diff, you’ll see a Before visualization on the left, an After visua
 
 You’ll also see an option to Regenerate visual diffs; use this if you’ve updated your Base Preview, and want to see a new version of the visual diffs for this build.
 
-#### To configure Visual Diffs
-To configure new pages to generate Visual Diffs, ask any of the [Tugboat manage users](https://dashboard.tugboatqa.com/5db08be544c5fa63ef0e09f2/settings/) who have access to specify the relative URLs of the pages in the service definition.
+> **_NOTE:_**
+> To configure new pages to generate Visual Diffs, you need access to Tugboat configuration. If you don't have access, please ask any of the [Tugboat manage users](https://dashboard.tugboatqa.com/5db08be544c5fa63ef0e09f2/settings/) to help you to specify the relative URLs of the pages in the service definition.
 
 ## Decanter Integration
 

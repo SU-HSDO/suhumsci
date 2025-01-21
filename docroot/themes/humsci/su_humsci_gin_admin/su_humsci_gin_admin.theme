@@ -62,10 +62,11 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
   $current_path = \Drupal::service('path.current')->getPath();
   $path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
   // Check if the path matches '/admin/dashboard'.
-  if ($path_alias === '/admin/dashboard' || 
+  if (preg_match('~^/admin/dashboard(/.*)?$~', $path_alias) || 
     preg_match('#^/admin/structure/dashboard/[^/]+/preview$#', $path_alias)
   ) {
     // Add a custom class to the <html> element.
     $variables['attributes']['class'][] = 'dashboard-content';
+    $variables['#attached']['library'][] = 'su_humsci_gin_admin/su_humsci_dashboard';
   }
 }

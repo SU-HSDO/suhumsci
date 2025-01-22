@@ -1185,3 +1185,14 @@ function su_humsci_profile_update_9720() {
     ...$block_info,
   ])->save();
 }
+
+/**
+ * Remove honeypot, paragraphs browser, and hs paragraphs between.
+ */
+function su_humsci_profile_update_9721() {
+  \Drupal::service('module_installer')->uninstall([
+    'honeypot',
+    'hs_paragraphs_between',
+    'paragraphs_browser',
+  ]);
+}

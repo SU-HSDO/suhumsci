@@ -98,3 +98,18 @@ drupal-media {
 .ck-editor .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
   flex-wrap: wrap;
 }
+
+/* Match styles of external link in the WYSIWYG style's dropdown preview with the original design */
+.ck-style-grid__button__preview a.hs-external-link {
+  @include hb-link--inline;
+  @include hb-external-link-icon;
+
+  /* Resize the icon, using px instead of rem, because when using rem the icon looks way bigger */
+  &::after {
+    width: 18px;
+    height: 11px;
+    margin-bottom: 0;
+    background-size: 11px;
+    padding-left: 0;
+  }
+}

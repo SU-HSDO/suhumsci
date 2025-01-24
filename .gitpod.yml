@@ -1,3 +1,12 @@
+github:
+  prebuilds:
+    master: true
+    branches: false
+    pullRequests: true
+    pullRequestsFromForks: false
+    addCheck: false
+    addComment: false
+    addBadge: false
 ports:
   - port: 3306
     onOpen: ignore
@@ -5,26 +14,27 @@ ports:
   - port: 33060
     onOpen: ignore
     visibility: private
-  - port: 8001-8999
+  - port: 8001
     onOpen: ignore
     visibility: public
 image: pookmish/drupal8ci:gitpod
 tasks:
-  - name: SSH Keys
-    before: |
-      mkdir -p ~/.ssh
-      if [[ ! -z $SSH_PRIVATE_KEY ]]; then
-          echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa &&
-          git remote set-url origin git@github.com:SU-HSDO/suhumsci.git
-      fi
-      if [[ ! -z $GITCONFIG ]]; then
-          echo $GITCONFIG | base64 -d > ~/.gitconfig && chmod 644 ~/.gitconfig
-      fi
+  - before: >
+      eval $(command gp env -e) &&
+      mkdir -p ~/.ssh &&
+      [[ ! -z $SSH_PUBLIC_KEY  ]] &&
+      echo $SSH_PUBLIC_KEY | base64 -d > ~/.ssh/id_rsa.pub &&
+      chmod 644 ~/.ssh/id_rsa.pub &&
+      [[ ! -z $SSH_PRIVATE_KEY  ]] &&
+      echo $SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_rsa &&
+      chmod 600 ~/.ssh/id_rsa &&
+      [[ ! -z $GITCONFIG  ]] &&
+      echo $GITCONFIG | base64 -d > ~/.gitconfig &&
+      chmod 644 ~/.gitconfig
     init: >
       export PREVIEW_FULL_URL=`gp url 8001` &&
       export PREVIEW_URL=${PREVIEW_FULL_URL#"https://"} &&
       cp .gitpod/blt.yml blt/local.blt.yml &&
-      cp .gitpod/sites.php docroot/sites/local.sites.php &&
       composer install --no-interaction &&
       rm -rf docroot/*/custom/* &&
       composer install --prefer-source --no-interaction &&
@@ -33,15 +43,15 @@ tasks:
       blt settings &&
       mysql -u root -e 'CREATE DATABASE IF NOT EXISTS drupal_default; CREATE DATABASE IF NOT EXISTS drupal' &&
       blt sws:keys &&
+      blt source:build:simplesamlphp-config &&
       mysql -e 'SET GLOBAL max_allowed_packet=67108864;' &&
-      if [[ ! -z $SSH_PRIVATE_KEY ]]; then
-        blt drupal:sync --site=hs_colorful -n &&
-        drush sql-sync @hs_colorful.local @self -y
-      else
-        blt drupal:install --no-interaction
-      fi
+      blt drupal:sync --site=hs_colorful -n &&
+      drush sql-sync @hs_colorful.local @self -y
+
     command: >
       git config core.fileMode false &&
+      blt blt:telemetry:disable --no-interaction &&
+      git remote set-url origin git@github.com:SU-HSDO/suhumsci.git &&
       apache2ctl restart &&
       gp ports await 8001 &&
       drush uli &&

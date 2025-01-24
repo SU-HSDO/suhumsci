@@ -129,16 +129,13 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
       127.0.0.1 womensleadershipcp.suhumsci.loc
     ```
 
-4. Trust the Lando Development certificate. [Trusting the CA](https://docs.lando.dev/config/security.html#trusting-the-ca)
-    * Note: If you've tried to trust the certificate but are still seeing browser warnings you may need to remove the proxy with `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1` and then `lando rebuild` your app.
-5. Build your containers: `lando rebuild`
-    * Note: You should then see a list a APPSERVER URLS. A green URL with a 302 or 200 status signifies the step 3 worked correctly, and you'll be able to access the site in your browser (you'll see errors until you complete all the steps). If you see a red URL, go back to step 3.
-    * If the APPSERVER URLS show a 404 status run `lando poweroff`, delete the proxy server with `docker rm -f landoproxyhyperion5000gandalfedition_proxy_1`, and restart it with `lando start`. There's an issue with too many APPSERVER URLS causing a failure in the proxy setup. This step seems to work around that.
+4. Build your containers: `lando rebuild`
+    * Note: You should then see a list a APPSERVER URLS. A green URL signifies the step 3 worked correctly, and you'll be able to access the site in your browser (you'll see errors until you complete all the steps). If you see a red URL, go back to step 3.  TODO: someone with a working proxy system should confirm this.  Can you get green URLs after this step, or will it only work after you have a database?
     * Watch for [`sed` errors](#sed-error-when-docker-uses-virtiofs)
-6. Run `lando blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
-7. Run `lando drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `lando drush @music.local uli`).  It will give you a URL like `http://hs-traditional.suhumsci.loc/user/reset/1/12345/abcd9876/login`  This should also run the front-end build.
-8. If you have issues, see [Troubleshooting](#troubleshooting).
-9. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
+5. Run `lando blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
+6. Run `lando drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `lando drush @music.local uli`).  It will give you a URL like `http://hs-traditional.suhumsci.loc/user/reset/1/12345/abcd9876/login`  This should also run the front-end build.
+7. If you have issues, see [Troubleshooting](#troubleshooting).
+8. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
 
 ## Common commands
 

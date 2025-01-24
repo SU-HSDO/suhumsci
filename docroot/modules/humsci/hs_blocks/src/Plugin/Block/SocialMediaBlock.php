@@ -8,7 +8,6 @@ use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Element\Url;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -127,13 +126,10 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       $form['links'][$key] = [
         '#type' => 'container',
         'link_url' => [
-          '#type' => 'textfield',
+          '#type' => 'url',
           '#title' => $this->t('URL'),
-          '#description' => $this->t('Social Media Profile URL. Must start with https:// or mailto:'),
+          '#description' => $this->t('Social Media Profile URL.'),
           '#default_value' => $link['link_url'],
-          '#element_validate' => [
-            [get_class($this), 'validateUrl'],
-          ],
         ],
         'link_title' => [
           '#type' => 'textfield',
@@ -164,29 +160,6 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     ];
 
     return $form;
-  }
-
-  /**
-   * Custom validation for the link_url field.
-   */
-  public static function validateUrl(array &$element, FormStateInterface $form_state, array &$complete_form) {
-    $value = $element['#value'];
-
-    if (empty($value)) {
-      return;
-    }
-
-    $mailto_regex = '/^mailto:[\w.%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}(?:\?[^\s]*)?$/i';
-
-    if (str_starts_with($value, 'mailto')) {
-      if (!preg_match($mailto_regex, $value)) {
-        $form_state->setError($element, t('The mailto link must include a valid email address (e.g., mailto:example@example.com).'));
-      }
-      return;
-    }
-
-    URL::validateUrl($element, $form_state, $complete_form);
-
   }
 
   /**

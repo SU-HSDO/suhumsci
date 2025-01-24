@@ -1,7 +1,9 @@
 <?php
 
-use Drupal\views\ViewExecutable;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_views_query_alter().
@@ -22,4 +24,19 @@ function hs_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $q
       'node_field_data.title IN (' . $sub_query->__toString() . ')'
     );
   }
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function hs_dashboard_entity_operation(EntityInterface $entity) {
+  $operations = [];
+  if ($entity->getEntityTypeId() == 'node') {
+    $operations['revision_link'] = [
+      'title' => t('Revisions'),
+      'url' => Url::fromRoute('entity.node.version_history', ['node' => $entity->id()]),
+      'weight' => 10,
+    ];
+  }
+  return $operations;
 }

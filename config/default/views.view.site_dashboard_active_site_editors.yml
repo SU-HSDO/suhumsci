@@ -318,13 +318,27 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
-      use_more: true
-      use_more_always: true
-      use_more_text: 'View all active site editors'
-      link_display: custom_url
-      link_url: '/admin/users?name=&mail=&status=1'
+      use_ajax: false
+      use_more: false
+      use_more_always: false
+      use_more_text: ''
+      link_display: '0'
+      link_url: ''
       header: {  }
-      footer: {  }
+      footer:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<div class="more-link"><a href="/admin/users?name=&amp;mail=&amp;status=1">View all<span class="visually-hidden"> active site editors</span></a></div>'
+            format: basic_html
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1

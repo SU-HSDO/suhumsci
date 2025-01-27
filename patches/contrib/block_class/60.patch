@@ -1,0 +1,30 @@
+From d7b41e153f421a416fdd66572a6767efd14f8e8a Mon Sep 17 00:00:00 2001
+From: sandippoddar <sandip.poddar@innoraft.com>
+Date: Tue, 7 Jan 2025 12:36:41 +0530
+Subject: [PATCH] Issue #3497768: Click JavaScript to close details causes
+ modals to scroll unnecessarily
+
+---
+ js/block-class.js | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/js/block-class.js b/js/block-class.js
+index 9eedf9b..343285c 100644
+--- a/js/block-class.js
++++ b/js/block-class.js
+@@ -19,10 +19,10 @@
+         $('.show-items-used').css( "display", "none" );
+ 
+         // Collapse the details field when the Modal is open.
+-        $('.replaced-id-details').find('summary').trigger( "click" );
++        $('.replaced-id-details').removeAttr("open");
+ 
+         // Collapse the attribute as well on this scenario.
+-        $('.attribute-details').find('summary').trigger( "click" );
++        $('.attribute-details').removeAttr("open");
+ 
+       }
+ 
+-- 
+GitLab
+

@@ -15,7 +15,7 @@ dependencies:
     - user
     - views_bulk_operations
 id: new_default_image_alt_text
-label: 'Default Image Alt Text'
+label: 'Image Alt Text'
 module: views
 description: ''
 tag: ''
@@ -818,7 +818,7 @@ display:
     display_plugin: block
     position: 2
     display_options:
-      title: 'Missing alt text'
+      title: 'Missing Alt Text'
       fields:
         field_media_image:
           id: field_media_image
@@ -1007,6 +1007,18 @@ display:
         options:
           offset: 0
           items_per_page: 5
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: 'No images with missing alt text found.'
+          tokenize: false
       filters:
         bundle_1:
           id: bundle_1
@@ -1094,11 +1106,26 @@ display:
         groups:
           1: AND
       defaults:
+        empty: false
         title: false
         pager: false
         fields: false
         filters: false
         filter_groups: false
+        footer: false
+      display_description: ''
+      footer:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: false
+          content: '<div class="more-link"><a href="/admin/content/alt?alt=2">View all<span class="visually-hidden"> images with missing alt text</span></a>'
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1

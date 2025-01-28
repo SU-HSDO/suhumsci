@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\Markup;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -234,3 +235,95 @@ function hs_layouts_preprocess_pattern_date_stacked_vertical_card(&$variables) {
     $variables['title'] = $original_title;
   }
 }
+
+/**
+ * Helper function to process html of content of structured card.
+ */
+function _hs_layouts_process_html_content($content, $dom) {
+  $renderer = \Drupal::service('renderer');
+
+  try {
+    $content_string = is_array($content) ? $content : (string) $content;
+    libxml_use_internal_errors(true);
+    $dom->loadHTML($renderer->renderInIsolation($content));
+    libxml_clear_errors();
+  }
+  catch (\Throwable $e) {
+    return;
+  }
+}
+
+/**
+ * Implements hook_preprocess_pattern_structured_card().
+ */
+function hs_layouts_preprocess_pattern_structured_card(&$variables) {
+  if (!empty($variables['title'])) {
+    $dom = new DOMDocument();
+    _hs_layouts_process_html_content($variables['title'], $dom);
+
+    // Find the <a> tag and extract its text content.
+    $links = $dom->getElementsByTagName('a');
+    $title = $links->item(0)->textContent;
+  }
+
+  if (!empty($variables['columns'])) {
+    if (!empty($variables['columns']['#sources'])) {
+      $links = $variables['columns']['#sources'];
+
+      foreach ($links as $link) {
+        $dom = new DOMDocument();
+        _hs_layouts_process_html_content($link, $dom);
+
+        // Find all <a> tags in the DOM
+        $anchors = $dom->getElementsByTagName('a');
+        $updated_content = '';
+        $total_anchors = $anchors->length;
+        $current_index = 0;
+        
+        foreach ($anchors as $anchor) {
+          $current_index++;
+          $href = $anchor->getAttribute('href');
+
+          // Check if the link is a valid mailto or a regular URL, and construct the desired text
+          $span_text = (strpos($href, 'mailto:') === 0) ? 'email of ' . $title : ' of ' . $title;
+          $span = $dom->createElement('span', $span_text);
+          $span->setAttribute('class', 'visually-hidden');
+          $anchor->appendChild($span);
+          $updated_content .= $dom->saveHTML($anchor);
+
+           // Add a comma after each <a>, except the last one
+          if ($current_index < $total_anchors) {
+            $updated_content .= ', ';
+          }
+        }
+
+        // Replace the original content with the updated content
+        $link['#field']->content = ['#markup' => $updated_content];
+      }
+    }
+  }
+
+  if (!empty($variables['image'])) {
+    $dom = new DOMDocument();
+    _hs_layouts_process_html_content($variables['image'], $dom);
+    
+    // Remove all <a> tags and replace them with their inner content.
+    $anchors = $dom->getElementsByTagName('a');
+    while ($anchors->length > 0) {
+      $anchor = $anchors->item(0);
+      $parent = $anchor->parentNode;
+
+      // Replace the <a> tag with its child nodes.
+      foreach (iterator_to_array($anchor->childNodes) as $child) {
+        $parent->insertBefore($child, $anchor);
+      }
+      $parent->removeChild($anchor);
+    }
+    // Save the updated HTML.
+    $updated_content = $dom->saveHTML();
+
+    // Update the content back into the field as a new Markup object.
+    $variables['image']['#field']->content = ['#markup' => $updated_content];
+  }
+}
+

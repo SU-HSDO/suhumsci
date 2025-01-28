@@ -1,13 +1,13 @@
 (() => {
   // find all hb-vertical-card elements
-  const cards = document.querySelectorAll('.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card');
+  const cards = document.querySelectorAll('.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card, .hb-card--structured');
 
   // Loop through each card
   cards.forEach((card) => {
     // Find the main link within each card
     let mainLink = '';
 
-    // Logic for vertical card and date stacked card.
+    // Logic for vertical card, date stacked card and structured card.
     if (card.querySelector('.hb-card__title a')) {
       mainLink = card.querySelector('.hb-card__title a');
     // Logic for vertical linked card.

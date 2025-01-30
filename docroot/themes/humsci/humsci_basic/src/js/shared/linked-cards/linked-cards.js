@@ -22,7 +22,11 @@
     }
 
     // Add a click event listener to each card
-    function handleClick() {
+    function handleClick(event) {
+      // Ensure clicks on "Add to Calendar" button do not trigger the card click
+      if (event.target.classList.contains('addtocal')) {
+        return;
+      }
       mainLink.click();
     }
 

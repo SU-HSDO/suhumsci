@@ -1198,16 +1198,6 @@ function su_humsci_profile_update_9721() {
 }
 
 /**
- * Grants site managers access to the new content access simple module.
- */
-function su_humsci_profile_update_9722() {
-  \Drupal::service('module_installer')->install(['content_access_simple']);
-  user_role_grant_permissions('site_manager', [
-    'grant content access simple',
-  ]);
-}
-
-/**
  * Changes all private pages to allow site managers view access.
  */
 function su_humsci_profile_update_9723(&$sandbox) {

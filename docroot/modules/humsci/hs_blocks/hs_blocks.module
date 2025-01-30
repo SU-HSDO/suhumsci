@@ -5,9 +5,12 @@
  * Contains hs_blocks.module.
  */
 
+use Drupal\block\Entity\Block;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Implements hook_help().
@@ -33,6 +36,14 @@ function hs_blocks_theme($existing, $type, $theme, $path) {
     'hs_blocks_login' => [
       'template' => 'block--hs-login',
       'variables' => ['preface' => NULL, 'link' => NULL, 'postface' => NULL],
+    ],
+    'hs_blocks_social_media' => [
+      'template' => 'block--social-media',
+      'variables' => [
+        'icon_size' => NULL,
+        'layout' => NULL,
+        'links' => [],
+      ],
     ],
   ];
 }
@@ -101,6 +112,24 @@ function hs_blocks_form_layout_builder_add_block_alter(&$form, FormStateInterfac
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_blocks_form_block_form_alter(&$form, FormStateInterface $form_state) {
+  $block_form = $form_state->getFormObject();
+  /** @var Drupal\block\BlockForm $block_form */
+  $block = $block_form->getEntity();
+  // Hide visibility & region fields from non-developers on social media block.
+  if ($block instanceof Block && $block->getPluginId() == 'hs_blocks_social_media_block') {
+    /** @var Drupal\Entity\User $current_user */
+    $current_user = \Drupal::currentUser();
+    if (!$current_user->hasRole('administrator')) {
+      $form['visibility']['#access'] = FALSE;
+      $form['region']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function hs_blocks_preprocess_block__layout_builder(&$variables) {
@@ -127,4 +156,21 @@ function hs_blocks_preprocess_block__views_exposed_filter_block(&$variables) {
     $build_id = $variables['content']['#build_id'];
     $variables['content']['#id'] .= '-' . $build_id;
   }
+}
+
+/**
+ * Implements hook_block_access().
+ */
+function hs_blocks_block_access(Block $block, $operation, AccountInterface $account) {
+  // Allows roles with "Edit social media block" to edit the custom block.
+  if (
+    $block->getPluginId() === 'hs_blocks_social_media_block' &&
+    $operation === 'update' &&
+    $account->hasPermission('edit social media block')
+  ) {
+    return AccessResult::allowed();
+  }
+
+  // No change, return neutral result.
+  return AccessResult::neutral();
 }

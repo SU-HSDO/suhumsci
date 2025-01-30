@@ -129,3 +129,72 @@ function _hs_migrate_media_imported($media_id) {
 
   return FALSE;
 }
+
+/**
+ * Deletes importer configuration and drops migration tables.
+ *
+ * This function takes either a single string or an array of importer names as
+ * strings, removes their configuration, migration tables, and logs the results.
+ * No return value is provided as results are logged directly.
+ *
+ * @param string|string[] $input
+ *   A single string or an array of importer names to process.
+ *
+ * @throws \InvalidArgumentException
+ *   When the input is neither a string nor an array of strings.
+ */
+function _hs_migrate_remove_importers(string|array $input): void {
+  // Convert single string to array for consistent processing
+  $importers = is_array($input) ? $input : [$input];
+
+  // Validate all elements are strings
+  foreach ($importers as $importer) {
+    if (!is_string($importer)) {
+      throw new \InvalidArgumentException(
+        'All elements in the input array must be strings.'
+      );
+    }
+  }
+
+  foreach ($importers as $importer) {
+    // Verify migration entity exists.
+    $migration = \Drupal::entityTypeManager()
+      ->getStorage('migration')
+      ->load($importer);
+
+    if (!$migration) {
+      continue;
+    }
+
+    // Initialize logger and schema for the first importer found.
+    if (!isset($logger)) {
+      $logger = \Drupal::logger('hs_migrate');
+      $schema = \Drupal::database()->schema();
+    }
+
+    // Remove migration importer configuration.
+    $migration->delete();
+    $message = t('Deleted @config', [
+      '@config' => 'migrate_plus.migration.' . $importer,
+    ]);
+    $logger->notice($message);
+
+    // Drop migration database tables.
+    $migrate_map_table = 'migrate_map_' . $importer;
+    if ($schema->tableExists($migrate_map_table)) {
+      $schema->dropTable($migrate_map_table);
+      $message = t('Dropped table @table', [
+        '@table' => $migrate_map_table,
+      ]);
+      $logger->notice($message);
+    }
+    $migrate_message_table = 'migrate_message_' . $importer;
+    if ($schema->tableExists($migrate_message_table)) {
+      $schema->dropTable($migrate_message_table);
+      $message = t('Dropped table @table', [
+        '@table' => $migrate_message_table,
+      ]);
+      $logger->notice($message);
+    }
+  }
+}

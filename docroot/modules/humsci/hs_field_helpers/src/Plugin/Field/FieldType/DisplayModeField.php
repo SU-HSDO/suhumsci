@@ -36,7 +36,7 @@ class DisplayModeField extends ListItemBase {
       '#element_validate' => [[$this, 'elementValidate']],
     ];
 
-    // Todo: change this to dependency injection when
+    // @todo: change this to dependency injection when
     // https://www.drupal.org/node/2053415 is resolved.
     /** @var \Drupal\Core\Entity\EntityDisplayRepository $display_repo */
     $display_repo = \Drupal::service('entity_display.repository');

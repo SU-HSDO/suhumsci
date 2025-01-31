@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   category = @Translation("H&amp;S Blocks"),
  * )
  */
-final class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The announcements manager.
@@ -36,7 +36,7 @@ final class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactory
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param mixed $announcements_manager
+   * @param Drupal\hs_dashboard\AnnouncementsManager $announcements_manager
    *   The announcements manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, AnnouncementsManager $announcements_manager) {

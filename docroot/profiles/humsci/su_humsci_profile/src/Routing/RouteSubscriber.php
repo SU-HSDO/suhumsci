@@ -56,7 +56,6 @@ class RouteSubscriber extends RouteSubscriberBase implements ContainerInjectionI
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   Module handler service.
-   *
    * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   Config factory service.
    */

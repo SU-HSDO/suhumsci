@@ -155,15 +155,14 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    */
   private function convertDate(string $value): string|int {
     $value = str_replace("\u{A0}", ' ', $value);
-
     $date = \DateTime::createFromFormat('M d, Y', $value);
 
     if ($date) {
-      return $date->getTimestamp(); // Convert to Unix timestamp
+      return $date->getTimestamp();
     }
 
-    return $value; // Return original value if not a valid date
-}
+    return $value;
+  }
 
   /**
    * @todo Add method description.

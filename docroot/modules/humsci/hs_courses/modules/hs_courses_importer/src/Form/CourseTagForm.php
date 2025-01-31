@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 
 /**
- * Class CourseTagForm.
+ * Course Tagging configuration form.
  */
 class CourseTagForm extends EntityForm {
 

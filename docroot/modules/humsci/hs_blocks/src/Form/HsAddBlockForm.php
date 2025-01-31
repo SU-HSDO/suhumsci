@@ -30,7 +30,7 @@ class HsAddBlockForm extends HsConfigureBlockFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $plugin_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $plugin_id = NULL) {
     // Only generate a new component once per form submission.
     if (!$component = $form_state->get('layout_builder__component')) {
       // This is the new component that will get saved to the group block as a

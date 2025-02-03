@@ -23,24 +23,12 @@
 
     // Add a click event listener to each card
     function handleClick(event) {
-      // Ensure clicks on "Add to Calendar" button or title do not trigger the card click
-      if (event.target.classList.contains('addtocal') || event.target.classList.contains('addtocal-title')) {
+      // Ensure clicks on "Add to Calendar" container
+      if (event.target.closest('.addtocal-container')) {
         return;
       }
       mainLink.click();
     }
-
-    // Stop the click propagation if the click is inside the addtocal menu links
-    function handleMenuLinkClick(event) {
-      // Prevent the event from bubbling up to the card
-      event.stopPropagation();
-    }
-
-    // Add event listener to each menu link to stop propagation
-    const addToCalLinks = card.querySelectorAll('.addtocal-menu .addtocal-link a');
-    addToCalLinks.forEach((link) => {
-      link.addEventListener('click', handleMenuLinkClick);
-    });
 
     // Add a focus event listener to each main link
     mainLink.addEventListener('focus', () => {

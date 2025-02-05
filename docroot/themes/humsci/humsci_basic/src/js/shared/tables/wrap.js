@@ -17,7 +17,7 @@ function wrapElement(element) {
 }
 
 // Select every table element
-const elements = document.querySelectorAll('table');
+const elements = document.querySelectorAll('table:not(.field-multiple-table)');
 const uiPatternTable = document.querySelectorAll('.hb-table-pattern');
 
 // Wrap every table element

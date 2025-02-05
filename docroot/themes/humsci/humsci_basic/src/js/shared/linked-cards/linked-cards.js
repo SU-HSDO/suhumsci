@@ -21,23 +21,35 @@
       return;
     }
 
-    // Add a click event listener to each card
-    function handleClick() {
-      mainLink.click();
+    let downTime = 0;
+
+    // Calculate when the "click" starts.
+    function handleMouseDown() {
+      downTime = Date.now();
     }
 
-    // Add a focus event listener to each main link
-    mainLink.addEventListener('focus', () => {
-      // Add a focus state class to card
+    // Calculate when the "click" ends.
+    function handleMouseUp() {
+      const upTime = Date.now();
+      // If the click "duration" is less than 200ms, trigger a click.
+      if (upTime - downTime < 200) {
+        mainLink.click();
+      }
+    }
+
+    // Add a focus state class to card
+    function handleFocus() {
       card.classList.add('is-focused');
-    });
+    }
 
-    // Add a blur event listener to each main link
-    mainLink.addEventListener('blur', () => {
-      // Remove focus state class from card
+    // Remove focus state class from card
+    function handleBlur() {
       card.classList.remove('is-focused');
-    });
+    }
 
-    card.addEventListener('click', handleClick);
+    mainLink.addEventListener('focus', handleFocus);
+    mainLink.addEventListener('blur', handleBlur);
+    card.addEventListener('mousedown', handleMouseDown);
+    card.addEventListener('mouseup', handleMouseUp);
   });
 })();

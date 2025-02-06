@@ -8,7 +8,7 @@ use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 
 /**
- * Class ConfigOverrides.
+ * Configuration overrides for the Events Importer.
  *
  * @package Drupal\hs_events_importer\Overrides
  */

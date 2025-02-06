@@ -14,7 +14,7 @@ use Drupal\hs_capx\Entity\CapxImporterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CapxImporterForm.
+ * Configuration form for the CapX importer.
  */
 class CapxImporterForm extends EntityForm {
 

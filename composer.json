@@ -178,12 +178,12 @@
         "drupal/views_ical": "^1.0@alpha",
         "drupal/views_infinite_scroll": "^2.0",
         "drupal/views_taxonomy_term_name_depth": "^7.0",
-        "drupal/webform": "^6.2@beta",
         "drupal/xmlsitemap": "^1.0",
         "drush/drush": "^12",
         "harvesthq/chosen": "^1.8",
         "kenwheeler/slick": "^1.8",
         "leongersen/nouislider": "15.5.1",
+        "mnsami/composer-custom-directory-installer": "^2.0",
         "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
         "su-sws/ckeditor5_plugins": "^1.0",
@@ -194,13 +194,11 @@
         "su-sws/stanford_samlauth": "^1.0"
     },
     "require-dev": {
+        "drupal/core-dev": "~10.3.0",
         "drupal/upgrade_status": "^4.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "su-sws/blt-sws": "dev-main",
         "su-sws/drupal-dev": "^10"
-    },
-    "replace": {
-        "drupal/coder": "*"
     },
     "conflict": {
         "drupal/drupal": "*",
@@ -319,7 +317,9 @@
                 "type:drupal-core"
             ],
             "docroot/libraries/{$name}": [
-                "type:drupal-library"
+                "type:drupal-library",
+                "enyo/dropzone",
+                "harvesthq/chosen"
             ],
             "docroot/modules/contrib/{$name}": [
                 "type:drupal-module"
@@ -351,14 +351,7 @@
                 "type:stanford-profile"
             ],
             "docroot/libraries/{$name}/": [
-                "type:component",
-                "ckeditor/ckeditor",
-                "enyo/dropzone",
-                "components/jquery",
-                "harvesthq/chosen"
-            ],
-            "vendor/{$vendor}/{$name}/": [
-                "type:library"
+                "type:component"
             ]
         }
     },

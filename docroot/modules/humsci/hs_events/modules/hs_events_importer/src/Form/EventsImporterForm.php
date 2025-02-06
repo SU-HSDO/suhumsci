@@ -13,7 +13,7 @@ use GuzzleHttp\ClientInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class EventsImporterForm.
+ * Configuration form for the Events Importer.
  */
 class EventsImporterForm extends ConfigFormBase {
 
@@ -271,7 +271,7 @@ class EventsImporterForm extends ConfigFormBase {
   protected function getFullUrl(array $choices) {
     // All our extra form fields are stored in _other.
     $type = $choices['type'] ?? NULL;
-    $val = $choices[$type] ?? null;
+    $val = $choices[$type] ?? NULL;
     $extra = $choices['org_status'] ?? '';
 
     // Valid Data. Create a url for the uri column.

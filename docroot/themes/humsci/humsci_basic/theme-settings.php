@@ -24,7 +24,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#title' => t('Theme Specific Settings'),
   ];
 
-  // Brandbar
+  // Brandbar.
   $form['options_settings']['humsci_basic_brand_bar'] = [
     '#type' => 'fieldset',
     '#title' => t('Brand Bar Settings'),
@@ -42,7 +42,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#default_value' => theme_get_setting('brand_bar_variant_classname'),
   ];
   $theme_path = \Drupal::service('extension.list.theme')->getPath('humsci_basic');
-  // Lockup
+  // Lockup.
   $img = '<img src="' . base_path() . $theme_path . '/lockup-example.png" />';
   $image_markup = Markup::create($img);
   $decanter = Link::fromTextAndUrl('Decanter Lockup Component', Url::fromUri('https://decanter.stanford.edu/component/identity-lockup/'))->toString();
@@ -120,7 +120,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#description' => t("Last line full width option."),
   ];
 
-  // Global Footer
+  // Global Footer.
   $form['options_settings']['humsci_basic_global_footer'] = [
     '#type' => 'fieldset',
     '#title' => t('Global Footer Settings'),
@@ -132,12 +132,12 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#options' => [
       'default' => '- Default -',
       'bright' => t('Bright'),
-      'dark' => t('Dark')
+      'dark' => t('Dark'),
     ],
     '#default_value' => theme_get_setting('global_footer_variant_classname'),
   ];
 
-  // Animation Enhancement
+  // Animation Enhancement.
   $form['options_settings']['humsci_basic_animation_enhancement'] = [
     '#type' => 'fieldset',
     '#title' => t('Animation Enhancements'),
@@ -150,7 +150,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#description' => t('This enables/disables animations and can be useful to prevent users from experiencing distraction or nausea from animated content. This also provides a method for meeting <a href="https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions.html">WACG 2.1 Level AAA success criterion</a> if desired or required.'),
   ];
 
-  // Experimental Features
+  // Experimental Features.
   $form['options_settings']['humsci_basic_experimental_feature'] = [
     '#type' => 'fieldset',
     '#title' => t('Experimental Features'),
@@ -163,7 +163,7 @@ function humsci_basic_form_system_theme_settings_alter(array &$form, FormStateIn
     '#description' => t('This enables/disables experimental features, please use with caution. The following features are implemented: There are no experimental features implemented at the moment.'),
   ];
 
-  // Mega Menu Hides Standard Menu on Desktop
+  // Mega Menu Hides Standard Menu on Desktop.
   $form['options_settings']['use_megamenu'] = [
     '#type' => 'fieldset',
     '#title' => t('Megamenu Settings'),

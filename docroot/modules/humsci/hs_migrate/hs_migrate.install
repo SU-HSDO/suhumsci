@@ -96,7 +96,7 @@ function hs_migrate_update_8007() {
     'custm_sgs_d7_testimonials',
     'custm_stats_tech_reports',
     'custm_hs_wmlcp_users',
-    'hs_d7_news'
+    'hs_d7_news',
   ];
 
   $schema = \Drupal::database()->schema();
@@ -117,7 +117,7 @@ function hs_migrate_update_8007() {
       ->getStorage('migration')
       ->load($importer);
 
-    if(!$migration){
+    if (!$migration) {
       continue;
     }
 

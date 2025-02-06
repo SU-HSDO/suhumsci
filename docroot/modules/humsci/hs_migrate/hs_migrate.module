@@ -8,6 +8,7 @@
 use Drupal\config_pages\ConfigPagesInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 
 /**
@@ -44,7 +45,6 @@ function hs_migrate_config_pages_presave(ConfigPagesInterface $config_page) {
   }
 }
 
-
 /**
  * Impliments hook_preprocess_form().
  */
@@ -53,7 +53,7 @@ function hs_migrate_preprocess_form(&$variables) {
   if ($form_id == 'media_image_edit_form') {
     // Checks if this media is part of a migration and if so, prevent delete.
     $media_id = \Drupal::routeMatch()->getParameter('media');
-    if ($media_id instanceof \Drupal\media\Entity\Media) {
+    if ($media_id instanceof Media) {
       $media_imported = _hs_migrate_media_imported($media_id->id());
       if ($media_imported) {
         \Drupal::messenger()

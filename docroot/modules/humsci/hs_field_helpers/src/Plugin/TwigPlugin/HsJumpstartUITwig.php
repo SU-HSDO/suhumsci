@@ -27,7 +27,7 @@ class HsJumpstartUITwig extends AbstractExtension {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   Renderer service.
    */
-  public function __construct(?RendererInterface $renderer = NULL) {
+  public function __construct(RendererInterface $renderer = NULL) {
     $this->renderer = $renderer;
   }
 

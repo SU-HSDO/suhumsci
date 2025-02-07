@@ -9,7 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\Entity\View;
 
 /**
- * Clean up tasks for the profile.
+ * Class HumsciCleanup.
  *
  * @package Drupal\su_humsci_profile
  */

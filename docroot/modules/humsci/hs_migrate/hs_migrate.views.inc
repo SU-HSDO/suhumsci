@@ -18,5 +18,6 @@ function hs_migrate_views_data() {
     'field' => ['id' => 'entity_migration'],
   ];
 
+
   return $data;
 }

@@ -13,7 +13,7 @@ use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Subscribe to events.
+ * Class EventSubscriber.
  *
  * @package Drupal\hs_field_helpers\EventSubscriber
  */

@@ -367,11 +367,6 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
         'icon_classes' => 'fa-brands fa-tiktok',
         'title' => 'Tiktok',
       ],
-      [
-        'domains' => ['bsky.app', 'bsky.social'],
-        'icon_classes' => 'fa-brands fa-square-bluesky',
-        'title' => 'Bluesky',
-      ],
     ];
   }
 

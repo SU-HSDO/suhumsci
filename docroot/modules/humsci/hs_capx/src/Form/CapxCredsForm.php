@@ -100,7 +100,7 @@ class CapxCredsForm extends ConfigFormBase {
       '#options' => [
         EventsSubscriber::ORPHAN_DELETE => $this->t('Delete'),
         EventsSubscriber::ORPHAN_UNPUBLISH => $this->t('Unpublish'),
-      ],
+      ]
     ];
     return $form;
   }

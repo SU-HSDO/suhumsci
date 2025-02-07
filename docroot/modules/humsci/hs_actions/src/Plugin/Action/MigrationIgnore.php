@@ -59,10 +59,11 @@ class MigrationIgnore extends ViewsBulkOperationsActionBase implements Container
     $this->migrationPluginManager = $migration_plugin_manager;
   }
 
+
   /**
    * {@inheritdoc}
    */
-  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     if (!$account->hasPermission('ignore content from importer')) {
       return $return_as_object ? AccessResult::forbidden() : FALSE;
     }

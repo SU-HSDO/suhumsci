@@ -5,7 +5,7 @@ namespace Drupal\hs_migrate\Plugin\Menu;
 use Drupal\Core\Menu\MenuLinkDefault;
 
 /**
- * Migrate configuration page link.
+ * Class ConfigPageLink.
  *
  * @package Drupal\hs_migrate\Plugin\Menu
  */

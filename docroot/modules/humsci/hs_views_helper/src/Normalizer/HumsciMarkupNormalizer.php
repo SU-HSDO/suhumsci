@@ -6,7 +6,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\serialization\Normalizer\MarkupNormalizer;
 
 /**
- * Normalize markup.
+ * Class HumsciMarkupNormalizer.
  *
  * @package Drupal\hs_views_helper\Normalizer
  */

@@ -8,7 +8,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Add H&S migrate config page links.
+ * Class ConfigPageLink.
  *
  * @package Drupal\hs_migrate\Plugin\Derivative
  */

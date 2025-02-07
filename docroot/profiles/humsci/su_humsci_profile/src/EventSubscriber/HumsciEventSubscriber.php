@@ -8,7 +8,7 @@ use Drupal\default_content\Event\ImportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * An event subscriber for the H&S profile.
+ * Class HumsciEventSubscriber.
  *
  * @package Drupal\su_humsci_profile\EventSubscriber
  */

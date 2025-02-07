@@ -54,7 +54,7 @@ class NodeEvents implements EventSubscriberInterface {
    * @param \Drupal\rabbit_hole\Plugin\RabbitHoleBehaviorPluginManager $rabbitHolePluginManager
    *   Rabbit hole behavior plugin manager.
    */
-  public function __construct(?BehaviorInvokerInterface $rabbitHoleBehavior = NULL, ?RabbitHoleBehaviorPluginManager $rabbitHolePluginManager = NULL) {
+  public function __construct(BehaviorInvokerInterface $rabbitHoleBehavior = NULL, RabbitHoleBehaviorPluginManager $rabbitHolePluginManager = NULL) {
     $this->rabbitHoleBehavior = $rabbitHoleBehavior;
     $this->rabbitHolePluginManager = $rabbitHolePluginManager;
   }
@@ -134,8 +134,7 @@ class NodeEvents implements EventSubscriberInterface {
     $target_url = $redirect_response->getTargetUrl();
     try {
       $url = Url::fromUserInput($target_url, ['absolute' => TRUE]);
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       $url = Url::fromUri($target_url, ['absolute' => TRUE]);
     }
     return $url->toString();

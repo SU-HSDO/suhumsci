@@ -5,7 +5,7 @@ namespace Drupal\hs_field_helpers;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
- * Alter data before rendering.
+ * Class PreRenderer
  *
  * @package Drupal\hs_field_helpers
  */

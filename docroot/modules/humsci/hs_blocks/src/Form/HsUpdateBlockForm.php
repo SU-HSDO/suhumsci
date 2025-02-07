@@ -30,7 +30,7 @@ class HsUpdateBlockForm extends HsConfigureBlockFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
     $section = $section_storage->getSection($delta);
     $group_component = $section->getComponent($group);
     $group_config = $group_component->get('configuration');

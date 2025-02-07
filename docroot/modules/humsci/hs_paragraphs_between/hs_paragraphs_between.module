@@ -17,7 +17,12 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function hs_paragraphs_between_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.block':
-      return '<p>' . t('This module provide a button on unlimited paragraph fields that allows the user to quickly add a paragraph below any existing paragraph. This is very similar to the built in functionality paragraphs has for "Add Above" but this does not require a modal paragraph selection and also works on the material theme which the "Add Above" does not.') . '</p>';
+      return '<p>' . t('This module provide a button on unlimited' .
+          'paragraph fields that allows the user to quickly add a ' .
+          'paragraph below any existing paragraph. This is very similar ' .
+          'to the built in functionality paragraphs has for "Add Above" ' .
+          'but this does not require a modal paragraph selection and ' .
+          'also works on the material theme which the "Add Above" does not.') . '</p>';
   }
 }
 

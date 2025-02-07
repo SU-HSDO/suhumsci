@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\key\Entity\Key;
 
 /**
- * Configuration Overrides for the CapX importer.
+ * Class ConfigOverrides.
  *
  * @package Drupal\hs_capx\Overrides
  */
@@ -107,7 +107,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         ];
       }
       catch (\Exception $e) {
-        // Do nothing.
+        // Do nothing
       }
     }
 
@@ -131,7 +131,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
         ];
       }
       catch (\Exception $e) {
-        // Do nothing.
+        // Do nothing
       }
     }
     return $overrides;

@@ -8,7 +8,7 @@ use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
- * Run additional tasks after installing the profile.
+ * Class PostInstall service.
  *
  * @package Drupal\su_humsci_profile
  */

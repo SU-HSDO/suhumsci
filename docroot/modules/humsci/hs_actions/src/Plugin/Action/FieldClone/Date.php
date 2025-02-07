@@ -21,11 +21,6 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class Date extends FieldCloneBase {
 
-  /**
-   * Entity id's.
-   *
-   * @var array
-   */
   protected $entityIds = [];
 
   /**

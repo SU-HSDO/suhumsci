@@ -1,13 +1,13 @@
 # Humsci Basic (humsci_basic) Theme
 
-Humsci Basic (humsci_basic) is a theme that can be used as a base for future H&S themes. We have pulled patterns and templates for Humsci Basic from Stanford Basic (stanford_basic) Theme. Humsci Basic integrates selectively with Decanter (v6) Sass, styles, and patterns.
+Humsci Basic (humsci_basic) is a theme that can be used as a base for future H&S themes. We have pulled patterns and templates for Humsci Basic from Stanford Basic (stanford_basic) and Stanford University Humsci Theme (su_humsci_theme) Themes. Humsci Basic integrates selectively with Decanter (v6) Sass, styles, and patterns.
 
 ![Humsci Theme Diagrams](humsci-theme-diagram.png)
 
 ## Requirements
 
-- Drupal 10.3.0
-- Node 22
+- Drupal 8.7.10
+- Node 10.15+
 
 ## Sub-themes
 
@@ -16,8 +16,6 @@ There are currently 3 children sub-themes based on Humsci Basic. Themes referenc
 - Humsci Colorful (humsci_colorful)
 - Humsci Traditional (humsci_traditional)
 - Humsci Airy (humsci_airy)
-
-> **_NOTE:_**  The Humsci Airy (humsci_airy) theme is not currently being used in any site. It is a placeholder for a potential future theme.
 
 ## Getting Started
 
@@ -30,7 +28,7 @@ This theme contains its own node module dependencies and build system which is s
 Frontend assets are built using the Grunt task runner, but are run using npm scripts as shortcuts. CSS assets are compiled to their respective child theme `css/` directory. JS assets are compiled to the `scripts/build/scripts.js` file.
 
 - `npm start` - Runs the build task followed by the watch task
-- `npm run build` - Compile Sass and JS for production
+- `npm run build` - Compile Sass  and JS for production
 - `npm run watch` - Compile a CSS and JS build and watch for changes in the existing `.scss` or `.js` files
 
 ### Browserslist
@@ -38,15 +36,9 @@ In our `.browserlistrc` file we specify support for `"last 1 major version"` of 
 
 ## Testing
 
-### Linting
-
-We use [stylelint](https://stylelint.io/) to lint all of our Sass code to maintain a consistent code style. To test it you can run: `npm run lint:sass`
-
-Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbox/stylelint-config-sparkbox) as a base for our linting rules.
+- `npm test` - Run linting and sass true tests
 
 ## Visual Regression Testing
-
-### Percy
 
 - `npm run visreg` - Runs percy script to test the visual regression of both the
 Colorful and Traditional sites.
@@ -68,7 +60,17 @@ enabled/disabled before testing. These include:
 * The Traditional site should use the standard dropdown menu
 * Both Colorful and Traditional sites should have the 'Use Animation Enhancements' feature turned off on their respective theme settings.
 
-### BackstopJS
+### Sass True
+
+We use the [Sass True](https://github.com/oddbird/true) testing framework to test our Sass function and mixins.
+
+### Linting
+
+We use [stylelint](https://stylelint.io/) to lint all of our Sass code to maintain a consistent code style.
+
+Our linting rules use the [Sparkbox Stylelint Config](https://github.com/sparkbox/stylelint-config-sparkbox) as a base for our linting rules.
+
+### Visual Regression Testing
 [Backstopjs](https://github.com/garris/BackstopJS) is a CLI visual regression tool that uses headless Chrome.
 
 The visual regression tests are run locally and used to compare what is on Staging versus what is on the Dev environment. Backstop is setup to test two identical sites (pages and content) with the only difference being the theme they use.
@@ -85,12 +87,13 @@ Visual regression testing should be completed bi-weekly at the end of each sprin
 2. Update the [hs-traditional dev](https://hs-traditional-dev.stanford.edu/) site to use the Traditional theme
 3. Set the dev environment to use the sprint build branch in Acquia
 
-#### Running BackstopJS Tests
+#### Running Visual Regression Tests
+Running the backstop tests:
 1. Cd the `humsci_basic` directory.
-2. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
-3. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
-4. Run `npm run backstop:test` to run the tests.
-5. Backstop will open an HTML page that contains the report which highlights errors.
+1. Run `npm run backstop:init` to save a copy of the Backstop config to `./backtop/backstop.js`.
+1. Run `npm run backstop:reference` to generate reference images, in our case reference is staging.
+1. Run `npm run backstop:test` to run the tests.
+1. Backstop will open an HTML page that contains the report which highlights errors.
 _Note: Differences in content will also be reported as failures. Some failures can result in images not loading fully before the snapshot is taken._
 
 #### Adding new scenarios in the `backstop/backstop.json`.
@@ -98,30 +101,35 @@ _Note: Differences in content will also be reported as failures. Some failures c
 - Add the resource path of the new page to the `testPages` array in `backstop/generate-backstop.js`
 - If adding a new theme add the theme name to the `sites` array in `backstop/generate-backstop.js`
 
-### Tugboat Visual Diff
-[Tugboat Visual Diff](https://docs.tugboatqa.com/visual-diffs/) is a visual regression tool to visually diff changes to the preview of our sites.
+## Contributing
+### Github
+To make it easier to find work being done we should use the following naming conventions:
 
-When a Preview is built from a Base Preview, Tugboat can generate Visual Diff images to highlight any changes between the Base Preview and the new Preview.
+### Branch Names:
+`STN-XXX--descriptive-message`
 
-#### To view Visual Diffs
-In order to view Tugboat’s visual diffs, you must be using at least one Base Preview.
+#### Commit Messages:
+`feat(STN-XXX): descriptive message shorter than 80 chars`
+`fix(STN-XXX): descriptive message shorter than 80 chars`
+`refactor(STN-XXX): descriptive message shorter than 80 chars`
+`chore(STN-XXX): descriptive message shorter than 80 chars`
+`docs(STN-XXX): descriptive message shorter than 80 chars`
 
-1. Click into the link to the Visual Diff Dashboard that is included on each PR along with the tugboat links.
-2. Scroll down past the Services and Lighthouse Reports, and you’ll see the Visual Diffs pane.
-3. Click into the Visual Diff for Mobile, Tablet or Desktop to see the diff.
+https://www.conventionalcommits.org/en/v1.0.0-beta.2/
 
-Inside the diff, you’ll see a Before visualization on the left, an After visualization on the right, and a composite in the middle, which highlights changes to the page.
+#### Pull Request Titles:
+`STN-XXX: Short Descriptive Titles`
 
-You’ll also see an option to Regenerate visual diffs; use this if you’ve updated your Base Preview, and want to see a new version of the visual diffs for this build.
+Pull request descriptions should follow the PR template that is generated when creating a new commit.
 
-> **_NOTE:_**
-> To configure new pages to generate Visual Diffs, you need access to Tugboat configuration. If you don't have access, please ask any of the [Tugboat manage users](https://dashboard.tugboatqa.com/5db08be544c5fa63ef0e09f2/settings/) to help you to specify the relative URLs of the pages in the service definition.
+#### Green Button Merging:
+After receiving a review and getting a PR approved, we do green-button merges for our PRs ("Rebase and Merge") because Github includes a link to the PR in our commit message header.
 
 ## Decanter Integration
 
 This theme aims to **partially** integrate [Decanter](https://github.com/SU-SWS/decanter). Instead of rendering all the styles generated by Decanter we:
 
-- Import some variables, function and mixins
+- Import variables, function and mixins
 - Compile various helpers classes
 - Compile specific components such as Brand Bar, Logo, Lockup and Footer
 

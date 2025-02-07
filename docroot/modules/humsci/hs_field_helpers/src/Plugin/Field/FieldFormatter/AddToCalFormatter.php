@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
- * Field Formatter for Add to Cal.
+ * Class AddToCalFormatter.
  *
  * @package Drupal\hs_field_helpers\Plugin\Field\FieldFormatter
  */

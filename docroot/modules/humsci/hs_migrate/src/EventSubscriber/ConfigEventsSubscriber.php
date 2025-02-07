@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Event subscriber for hs_migrate configuration.
+ * Class ConfigEventsSubscriber.
  *
  * @package Drupal\hs_migrate\EventSubscriber
  */

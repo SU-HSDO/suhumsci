@@ -59,7 +59,7 @@ class DownloadFile extends Download {
     if ($row->isStub()) {
       return NULL;
     }
-    [$source, $dest_directory] = $value;
+    list($source, $dest_directory) = $value;
 
     $file_name = basename($source);
     $destination = "$dest_directory/$file_name";

@@ -41,7 +41,7 @@ class CourseHttp extends Http {
     $body = str_replace('> ', ">", $body);
     $body = str_replace(' <', "<", $body);
 
-    $data = new \DOMDocument('1.0', 'UTF-8');
+    $data = new \DOMDocument('1.0', 'UTF-8');;
     $data->loadXML($body);
     $this->cleanCourses($data);
     $this->setSectionGuids($data);
@@ -79,10 +79,10 @@ class CourseHttp extends Http {
    */
   protected function setSectionGuids($dom) {
     $xpath = new \DOMXPath($dom);
-    /** @var \SimpleXMLElement $all_sections [] */
+    /* @var \SimpleXMLElement $all_sections [] */
     $all_sections = $xpath->query('//sections');
 
-    /** @var \DOMElement $course_sections */
+    /* @var \DOMElement $course_sections */
     foreach ($all_sections as $course_sections) {
       // Courses that have no sections, we'll add an empty section just for the
       // guid.
@@ -102,7 +102,7 @@ class CourseHttp extends Http {
       }
       $code = $xpath->query('../code', $course_sections)->item(0)->textContent;
 
-      /** @var \DOMElement $section */
+      /* @var \DOMElement $section */
       foreach ($xpath->query('section', $course_sections) as $section) {
         $guid = "$course_id-$code";
         if ($xpath->query('classId', $section)->length) {

@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class HsActionsSubscriber implements EventSubscriberInterface {
 
+
   /**
    * {@inheritdoc}
    */

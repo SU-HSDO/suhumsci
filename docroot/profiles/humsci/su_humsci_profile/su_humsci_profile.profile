@@ -614,6 +614,21 @@ function su_humsci_profile_toolbar_alter(&$items) {
 }
 
 /**
+ * Implements hook_page_attachments().
+ */
+function su_humsci_profile_page_attachments(array &$attachments) {
+  $current_user = \Drupal::currentUser();
+  // Hide the manage button in the toolbar if the user doesnt have permission.
+  // Also don't add the library if user doesn't doesnt have access to the
+  // toolbar.
+  if ($current_user->hasPermission('access toolbar') && !$current_user->hasPermission('view toolbar manage')) {
+    // HSD8-771 Roll back hide manage toolbar. Lets keep this here in case we
+    // come back to it at a later date.
+    // $attachments['#attached']['library'][] = 'su_humsci_profile/hide_manage';
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function su_humsci_profile_form_key_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -752,7 +767,7 @@ function su_humsci_profile_user_access(UserInterface $entity, $operation, Accoun
 /**
  * Implements hook_entity_field_access().
  */
-function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+function su_humsci_profile_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
   if ($operation == 'view' && $field_definition->getTargetEntityTypeId() == 'user') {
     return AccessResult::allowedIfHasPermission($account, 'view user list');
   }

@@ -41,7 +41,7 @@ class HsRemoveBlockForm extends RemoveBlockForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
     $this->group = $group;
     $this->uuid = $uuid;
     // For some reason the uuid property doesn't carry through to the method

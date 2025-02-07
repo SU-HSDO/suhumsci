@@ -16,7 +16,8 @@ $theme_name = \Drupal::theme()->getActiveTheme()->getName();
  * Form override for theme settings.
  */
 function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStateInterface $form_state) {
-  // Colorful theme color pairing setting theme_color_pairing.
+  // Colorful theme color pairing setting
+  // theme_color_pairing
   $form['options_settings']['humsci_colorful_color_pairing'] = [
     '#type' => 'fieldset',
     '#title' => t('Color Pairing'),
@@ -36,7 +37,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
     '#default_value' => theme_get_setting('theme_color_pairing'),
   ];
 
-  // Local Masthead.
+  // Local Masthead
   $form['options_settings']['humsci_colorful_local_masthead'] = [
     '#type' => 'fieldset',
     '#title' => t('Local Masthead Settings'),
@@ -52,7 +53,7 @@ function humsci_colorful_form_system_theme_settings_alter(array &$form, FormStat
     '#default_value' => theme_get_setting('local_masthead_variant_classname'),
   ];
 
-  // Local Footer.
+  // Local Footer
   $form['options_settings']['humsci_colorful_local_footer'] = [
     '#type' => 'fieldset',
     '#title' => t('Local Footer Settings'),

@@ -102,7 +102,7 @@ class PatternsStyle extends StylePluginBase {
       '#empty_value' => '_none',
       '#title' => $this->t('Pattern'),
       '#options' => $this->patternsManager->getPatternsOptions(),
-      '#default_value' => $this->options['pattern'] ?? NULL,
+      '#default_value' => isset($this->options['pattern']) ? $this->options['pattern'] : NULL,
       '#required' => TRUE,
       '#attributes' => ['id' => 'patterns-select'],
     ];

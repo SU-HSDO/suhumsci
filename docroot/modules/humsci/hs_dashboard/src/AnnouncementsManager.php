@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Output\RenderedContentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class to handle HDSP Announcements.
  */
 class AnnouncementsManager implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Announcement CSV location.
@@ -44,6 +50,13 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   protected $fileSystem;
 
   /**
+   * Date formatter interface.
+   *
+   * @var Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected DateFormatterInterface $dateFormatter;
+
+  /**
    * Constructs a new ViewsBasicManager object.
    *
    * @param GuzzleHttp\ClientInterface $http_client
@@ -52,15 +65,19 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   The logger interface.
    * @param Drupal\Core\File\FileSystemInterface $file_system
    *   The logger interface.
+   * @param Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter interface.
    */
   public function __construct(
     ClientInterface $http_client,
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
+    DateFormatterInterface $date_formatter,
   ) {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('hs_dashboard');
     $this->fileSystem = $file_system;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -71,6 +88,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $container->get('http_client'),
       $container->get('logger.factory'),
       $container->get('file_system'),
+      $container->get('date.formatter'),
     );
   }
 
@@ -141,6 +159,14 @@ class AnnouncementsManager implements ContainerInjectionInterface {
             $data[1] = $this->convertDate($data[1]);
           }
 
+          if (isset($data[2])) {
+            $data[2] = $this->convertMarkdown($data[2]);
+          }
+
+          if (isset($data[3])) {
+            $data[3] = $this->convertMarkdown($data[3]);
+          }
+
           $rows[] = $data;
         }
         fclose($handle);
@@ -158,27 +184,39 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     $date = \DateTime::createFromFormat('M d, Y', $value);
 
     if ($date) {
-      return $date->getTimestamp();
+      $timestamp = $date->getTimestamp();
+      return $this->dateFormatter->format($timestamp, 'medium');
     }
 
     return $value;
   }
 
   /**
+   * Convert markdown into HTML.
+   */
+  private function convertMarkdown(string $text): RenderedContentInterface {
+    $converter = new CommonMarkConverter(
+      [
+        'html_input' => 'escape',
+        'allow_unsafe_links' => FALSE,
+      ]);
+    return $converter->convert($text);
+  }
+
+  /**
    * @todo Add method description.
    */
   public function getTableHeader(): array {
-    $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
-    kint($csv_data);
+
     $tableHeader = [
       [
-        'data' => 'Date',
+        'data' => $this->t('Date'),
       ],
       [
-        'data' => 'Title',
+        'data' => $this->t('Title'),
       ],
       [
-        'data' => 'Description',
+        'data' => $this->t('Description'),
       ],
     ];
 
@@ -189,34 +227,17 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    * @todo Add method description.
    */
   public function getTableRows(): array {
-    $tableRows = [
-      [
+    $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
+
+    foreach ($csv_data as $row) {
+      $tableRows[] = [
         'data' => [
-          [
-            'data' => '01-30-2025 15:11:01',
-          ],
-          [
-            'data' => 'A happy little stream',
-          ],
-          [
-            'data' => 'Citizens of distant epochs worldlets ship of the imagination light years finite but unbounded, star stuff harvesting star light. The carbon in our apple pies, shores of the cosmic ocean brain is the seed of intelligence a very small stage in a vast cosmic arena of brilliant syntheses tendrils of gossamer clouds. A very small stage in a vast cosmic arena. Colonies. Evidence. Science and billions upon billions upon billions upon billions upon billions upon billions upon billions.',
-          ],
+          ['data' => $row[1]],
+          ['data' => ['#markup' => $row[2]]],
+          ['data' => ['#markup' => $row[3]]],
         ],
-      ],
-      [
-        'data' => [
-          [
-            'data' => '01-30-2025 15:11:11',
-          ],
-          [
-            'data' => 'White mazagran',
-          ],
-          [
-            'data' => 'At grounds mocha single shot cup so kopi-luwak affogato coffee flavour. Flavour, id, caramelization, sit, flavour robusta ristretto frappuccino white mazagran. As saucer, americano, con panna cup cortado cappuccino sit espresso. Turkish, white, turkish steamed con panna doppio grinder grounds. Crema aroma decaffeinated whipped carajillo cinnamon to go.',
-          ],
-        ],
-      ],
-    ];
+      ];
+    }
 
     return $tableRows;
   }

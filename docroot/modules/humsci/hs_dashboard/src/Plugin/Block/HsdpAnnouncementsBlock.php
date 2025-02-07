@@ -64,6 +64,9 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
       '#theme' => 'table',
       '#header' => $this->announcementsManager->getTableHeader(),
       '#rows' => $this->announcementsManager->getTableRows(),
+      '#cache' => [
+        'max-age' => 120,
+      ],
     ];
     return $build;
   }

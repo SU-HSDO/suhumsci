@@ -111,6 +111,10 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       ]);
 
       if ($response->getStatusCode() !== 200) {
+        $this->logger->error('Invalid response status from {url} { message }: ', [
+          'url' => $url,
+          'message' => $response->getStatusCode(),
+        ]);
         throw new \Exception('Invalid response status: ' . $response->getStatusCode());
       }
 
@@ -177,9 +181,15 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   }
 
   /**
-   * Converts dates from Google Sheets into Unix timestamps.
+   * Converts dates from Google Sheets into formatted dates.
+   *
+   * @param string $value
+   *   A string of text to convert into a formatted date.
+   *
+   * @return string
+   *   A formatted date or the original data if a date could not be created.
    */
-  private function convertDate(string $value): string|int {
+  private function convertDate(string $value): string {
     $value = str_replace("\u{A0}", ' ', $value);
     $date = \DateTime::createFromFormat('M d, Y', $value);
 
@@ -193,6 +203,12 @@ class AnnouncementsManager implements ContainerInjectionInterface {
 
   /**
    * Convert markdown into HTML.
+   *
+   * @param string $text
+   *   Text to covert from markdown into HTML.
+   *
+   * @return League\CommonMark\Output\RenderedContentInterface
+   *   The rendered HTML output.
    */
   private function convertMarkdown(string $text): RenderedContentInterface {
     $converter = new CommonMarkConverter(
@@ -204,7 +220,10 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   }
 
   /**
-   * @todo Add method description.
+   * Returns table headers. These are statically set.
+   *
+   * @return array
+   *   An array of table headers.
    */
   public function getTableHeader(): array {
 
@@ -224,9 +243,13 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   }
 
   /**
-   * @todo Add method description.
+   * Returns table rows based on the announcements found in csv.
+   *
+   * @return array
+   *   An array of table rows with announcement data.
    */
   public function getTableRows(): array {
+    $tableRows = [];
     $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
 
     foreach ($csv_data as $row) {

@@ -60,14 +60,24 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function build(): array {
+    $rows = $this->announcementsManager->getTableRows();
+
     $build['content'] = [
-      '#theme' => 'table',
-      '#header' => $this->announcementsManager->getTableHeader(),
-      '#rows' => $this->announcementsManager->getTableRows(),
       '#cache' => [
         'max-age' => 120,
       ],
     ];
+
+    if (!$rows) {
+      $build['content']['#theme'] = 'markup';
+      $build['content']['#markup'] = $this->t('There were no announcements found.');
+    }
+    else {
+      $build['content']['#theme'] = 'table';
+      $build['content']['#header'] = $this->announcementsManager->getTableHeader();
+      $build['content']['#rows'] = $this->announcementsManager->getTableRows();
+    }
+
     return $build;
   }
 

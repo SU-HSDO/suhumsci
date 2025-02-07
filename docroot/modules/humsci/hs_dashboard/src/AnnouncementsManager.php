@@ -160,21 +160,31 @@ class AnnouncementsManager implements ContainerInjectionInterface {
           }
 
           if (isset($data[1])) {
-            $data[1] = $this->convertDate($data[1]);
+            $data[1] = $this->convertDateToTimestamp(trim($data[1]));
           }
 
           if (isset($data[2])) {
-            $data[2] = $this->convertMarkdown($data[2]);
+            $data[2] = $this->convertMarkdown('**' . trim($data[2]) . '**');
           }
 
           if (isset($data[3])) {
-            $data[3] = $this->convertMarkdown($data[3]);
+            $data[3] = $this->convertMarkdown(trim($data[3]));
           }
 
           $rows[] = $data;
         }
         fclose($handle);
       }
+    }
+
+    // Sort by date descending.
+    usort($rows, function ($a, $b) {
+      return $b[1] <=> $a[1];
+    });
+
+    // Convert dates.
+    foreach ($rows as &$row) {
+      $row[1] = $this->formatDate($row[1]);
     }
 
     return $rows;
@@ -186,19 +196,28 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    * @param string $value
    *   A string of text to convert into a formatted date.
    *
-   * @return string
-   *   A formatted date or the original data if a date could not be created.
+   * @return int
+   *   A Unix timestamp.
    */
-  private function convertDate(string $value): string {
+  private function convertDateToTimestamp(string $value): int {
     $value = str_replace("\u{A0}", ' ', $value);
     $date = \DateTime::createFromFormat('M d, Y', $value);
 
-    if ($date) {
-      $timestamp = $date->getTimestamp();
-      return $this->dateFormatter->format($timestamp, 'medium');
-    }
+    return $date ? $date->getTimestamp() : 0;
 
-    return $value;
+  }
+
+  /**
+   * Converts a Unix timestamp into a Drupal formatted date.
+   *
+   * @param int $timestamp
+   *   The Unix timestamp.
+   *
+   * @return string
+   *   A formatted Drupal date.
+   */
+  private function formatDate(int $timestamp): string {
+    return $this->dateFormatter->format($timestamp, 'medium');
   }
 
   /**

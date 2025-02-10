@@ -13,6 +13,7 @@ const shared = {
   editoria11y: 'shared/editoria11y/editoria11y.js',
   'equal-height-grid': 'shared/equal-height-grid/index.js',
   'linked-cards': 'shared/cards/linked-cards.js',
+  'structured-card': 'shared/cards/structured-card.js',
   'main-content-fallback': 'shared/main-content-fallback/main-content-fallback.js',
   'video-with-caption': 'shared/media/video-with-caption.js',
   megamenu: 'shared/megamenu/index.js',

@@ -103,7 +103,7 @@ function hs_migrate_update_8007() {
   $site_path = \Drupal::getContainer()->getParameter('site.path');
   $is_mrc = $site_path == 'sites/mrc';
 
-  // Remove hs_d7_news for MRC
+  // Remove hs_d7_news for MRC.
   if ($is_mrc) {
     $unused_importers = array_diff($unused_importers, ['hs_d7_news']);
   }
@@ -122,7 +122,7 @@ function hs_migrate_update_8008() {
     'custm_mrc_events',
     'custm_mrc_news',
     'custm_mrc_terms',
-    'custm_mrc_visitors'
+    'custm_mrc_visitors',
   ];
 
   _hs_migrate_remove_importers($unused_importers);
@@ -141,10 +141,10 @@ function hs_migrate_update_8008() {
  *   When the input is neither a string nor an array of strings.
  */
 function _hs_migrate_remove_importers(string|array $input): void {
-  // Convert single string to array for consistent processing
+  // Convert single string to array for consistent processing.
   $importers = is_array($input) ? $input : [$input];
 
-  // Validate all elements are strings
+  // Validate all elements are strings.
   foreach ($importers as $importer) {
     if (!is_string($importer)) {
       throw new \InvalidArgumentException(

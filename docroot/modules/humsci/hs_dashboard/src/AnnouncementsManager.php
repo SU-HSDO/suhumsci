@@ -226,7 +226,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    * @param string $text
    *   Text to covert from markdown into HTML.
    */
-  private function convertMarkdownLinks(string $text) {
+  private function convertMarkdownLinks(string $text): string {
     $markdown_link_regex = "/\[(.*?)\]\((https?:\/\/.*?)\)/";
 
     return preg_replace_callback($markdown_link_regex, function ($matches) {

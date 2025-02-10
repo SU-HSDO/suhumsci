@@ -10,35 +10,35 @@
  */
 function humsci_traditional_preprocess_html(&$vars) {
 
-  // Theme color pairing setting to set the way the Traditional theme will appear.
+  // Theme color pairing setting to set the way the Traditional theme will
+  // appear.
   $color_pairing = theme_get_setting('theme_color_pairing');
   if ($color_pairing) {
-    // Set html_attributes for html DOM element
+    // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('ht-pairing-' . $color_pairing);
   }
 
   // Font family swap for Traditional theme.
   $font_family = theme_get_setting('humsci_font_family');
   if ($font_family) {
-    // Set html_attributes for html DOM element
+    // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-font-' . $font_family);
   }
 
   // Dark Inversion Variants.
   $div = theme_get_setting('dark_inversion_variant_classname');
   if ($div) {
-    // Set html_attributes for html DOM element
+    // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-dark-inversion');
   }
 }
 
 /**
- * Implements hook_preprocess_block().
- * for Mega Menu module
+ * Implements hook_preprocess_block() for Mega Menu module.
  */
 function humsci_traditional_preprocess_block__we_megamenu(array &$vars) {
-  // Load base megamenu CSS when megamenu is enabled
-  $vars['#attached']['library'][] =  'humsci_traditional/megamenu';
+  // Load base megamenu CSS when megamenu is enabled.
+  $vars['#attached']['library'][] = 'humsci_traditional/megamenu';
 }
 
 /**
@@ -57,4 +57,3 @@ function humsci_traditional_preprocess_page(&$vars) {
     $vars['local_masthead_variant_classname'] = 'hb-' . $lmv . '-pattern';
   }
 }
-

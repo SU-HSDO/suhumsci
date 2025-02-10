@@ -3,7 +3,7 @@
 namespace Drupal\su_humsci_profile;
 
 /**
- * Interface PostInstallInterface.
+ * Interface for tasks to run after profile is installed.
  *
  * @package Drupal\su_humsci_profile
  */

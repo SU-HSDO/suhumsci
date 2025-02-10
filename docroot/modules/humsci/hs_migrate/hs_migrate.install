@@ -73,3 +73,77 @@ function hs_migrate_update_8006() {
     }
   }
 }
+
+/**
+ * Remove unused importers.
+ */
+function hs_migrate_update_8007() {
+  $unused_importers = [
+    'hs_d7_gallery_nodes',
+    'hs_d7_gallery_paragraphs',
+    'hs_d7_people',
+    'hs_d7_publications',
+    'hs_news_rss',
+    'custm_cesta_publications',
+    'custm_dlcl_research',
+    'custm_dlcl_research_unit_group',
+    'custm_em1060_manuscript',
+    'custm_facultyaffairs_users',
+    'custm_hs_d7_gc_publication_component',
+    'custm_hshr_client',
+    'custm_sgs_d7_degrees_offered',
+    'custm_sgs_d7_fund_opp',
+    'custm_sgs_d7_testimonials',
+    'custm_stats_tech_reports',
+    'custm_hs_wmlcp_users',
+    'hs_d7_news',
+  ];
+
+  $schema = \Drupal::database()->schema();
+  $logger = \Drupal::logger('hs_migrate');
+
+  // Get site path to prevent removing hs_d7_news from MRC.
+  $site_path = \Drupal::getContainer()->getParameter('site.path');
+  $is_mrc = $site_path == 'sites/mrc';
+
+  foreach ($unused_importers as $importer) {
+
+    if ($is_mrc && $importer == 'hs_d7_news') {
+      continue;
+    }
+
+    // Verify migration entity exists.
+    $migration = \Drupal::entityTypeManager()
+      ->getStorage('migration')
+      ->load($importer);
+
+    if (!$migration) {
+      continue;
+    }
+
+    // Remove migration importer configuration.
+    $migration->delete();
+    $message = t('Deleted @config', [
+      '@config' => 'migrate_plus.migration.' . $importer,
+    ]);
+    $logger->notice($message);
+
+    // Drop migration database tables.
+    $migrate_map_table = 'migrate_map_' . $importer;
+    if ($schema->tableExists($migrate_map_table)) {
+      $schema->dropTable($migrate_map_table);
+      $message = t('Dropped table @table', [
+        '@table' => $migrate_map_table,
+      ]);
+      $logger->notice($message);
+    }
+    $migrate_message_table = 'migrate_message_' . $importer;
+    if ($schema->tableExists($migrate_message_table)) {
+      $schema->dropTable($migrate_message_table);
+      $message = t('Dropped table @table', [
+        '@table' => $migrate_message_table,
+      ]);
+      $logger->notice($message);
+    }
+  }
+}

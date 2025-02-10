@@ -11,7 +11,7 @@ use Drupal\paragraphs\ParagraphInterface;
 use Drupal\paragraphs\ParagraphsBehaviorBase;
 
 /**
- * Class GalleryBehaviors.
+ * Behaviors for the stanford_gallery paragraph type.
  *
  * @ParagraphsBehavior(
  *   id = "image_gallery",

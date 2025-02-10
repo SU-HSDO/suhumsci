@@ -8,12 +8,12 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Output\RenderedContentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -164,11 +164,11 @@ class AnnouncementsManager implements ContainerInjectionInterface {
           }
 
           if (isset($data[2])) {
-            $data[2] = $this->convertMarkdown('**' . trim($data[2]) . '**');
+            $data[2] = $this->convertMarkdownLinks('<strong>' . trim($data[2]) . '</strong>');
           }
 
           if (isset($data[3])) {
-            $data[3] = $this->convertMarkdown(trim($data[3]));
+            $data[3] = $this->convertMarkdownLinks(trim($data[3]));
           }
 
           $rows[] = $data;
@@ -221,21 +221,23 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   }
 
   /**
-   * Convert markdown into HTML.
+   * Convert markdown links into HTML links.
    *
    * @param string $text
    *   Text to covert from markdown into HTML.
-   *
-   * @return League\CommonMark\Output\RenderedContentInterface
-   *   The rendered HTML output.
    */
-  private function convertMarkdown(string $text): RenderedContentInterface {
-    $converter = new CommonMarkConverter(
-      [
-        'html_input' => 'escape',
-        'allow_unsafe_links' => FALSE,
-      ]);
-    return $converter->convert($text);
+  private function convertMarkdownLinks(string $text) {
+    $markdown_link_regex = "/\[(.*?)\]\((https?:\/\/.*?)\)/";
+
+    return preg_replace_callback($markdown_link_regex, function ($matches) {
+      $converted_link = Link::fromTextAndUrl(
+        $this->t('@link_text', ['@link_text' => $matches[1]]),
+        Url::fromUri($matches[2])
+      );
+
+      return $converted_link->toString()->__toString();
+    }, $text);
+
   }
 
   /**

@@ -93,6 +93,8 @@ class GroupBlock extends BlockBase implements ContainerFactoryPluginInterface, R
    *   Context repository service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
    *   Uuid Service.
+   * @param Drupal\Core\PrivateKey $private_key
+   *   Private Key manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   Rendering service.
    */

@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class RouteSubscriber.
+ * Subscriber to alter routes.
  *
  * @package Drupal\su_humsci_profile\Routing
  */
@@ -56,6 +56,8 @@ class RouteSubscriber extends RouteSubscriberBase implements ContainerInjectionI
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   Module handler service.
+   * @param Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   Config factory service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
     $this->moduleHandler = $module_handler;

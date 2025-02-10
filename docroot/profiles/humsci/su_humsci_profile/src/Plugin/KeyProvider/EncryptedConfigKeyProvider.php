@@ -66,7 +66,7 @@ class EncryptedConfigKeyProvider extends ConfigKeyProvider {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $encryption_profiles = [];
-    /** @var EncryptionProfile $profile */
+    /** @var Drupal\encrypt\Entity\EncryptionProfile $profile */
     foreach (EncryptionProfile::loadMultiple() as $profile) {
       $encryption_profiles[$profile->id()] = $profile->label();
     }
@@ -112,7 +112,7 @@ class EncryptedConfigKeyProvider extends ConfigKeyProvider {
    */
   public function calculateDependencies() {
     $dependencies = parent::calculateDependencies();
-    /** @var EncryptionProfile $encryption_profile */
+    /** @var Drupal\encrypt\Entity\EncryptionProfile $encryption_profile */
     if ($encryption_profile = EncryptionProfile::load($this->configuration['encryption_profile'])) {
       $dependencies['config'][] = $encryption_profile->getConfigDependencyName();
     }

@@ -80,7 +80,8 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
       $field_widget_form['widget']['add_more']['add_more_button_hs_hero_image']['#value'] = t('Add @type', [
         '@type' => $new_label,
       ]);
-      // Change the paragraph type label for hs_hero_image embedded in hs_carousel.
+      // Change the paragraph type label for hs_hero_image embedded in
+      // hs_carousel.
       foreach (Element::children($field_widget_form['widget']) as $key) {
         // Only alter markup in field widget elements.
         if (!is_int($key)) {

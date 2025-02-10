@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Database\Connection;
 
 /**
- * Class EventSubscriber.
+ * Event Subscriber for custom H&S Blocks.
  */
 class EventSubscriber implements EventSubscriberInterface {
 

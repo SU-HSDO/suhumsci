@@ -5,7 +5,7 @@ namespace Drupal\hs_layouts\Plugin\Layout;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class HumsciImageLayout.
+ * Extend the layout configuration form for images.
  *
  * @package Drupal\hs_layouts\Plugin
  */

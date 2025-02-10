@@ -85,7 +85,7 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    * @param string|null $site_path
    *   Current multisite directory path.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages, StateInterface $state = NULL, $site_path = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EncryptService $encrypt_service, EntityTypeManagerInterface $entity_type_manager, ConfigPagesLoaderServiceInterface $config_pages, ?StateInterface $state = NULL, $site_path = NULL) {
     $this->moduleHandler = $module_handler;
     $this->configFactory = $config_factory;
     $this->encryption = $encrypt_service;

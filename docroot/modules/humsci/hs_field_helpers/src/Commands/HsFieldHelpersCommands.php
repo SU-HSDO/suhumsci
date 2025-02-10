@@ -51,7 +51,7 @@ class HsFieldHelpersCommands extends DrushCommands {
    * @return string[]
    *   Entity type ids.
    */
-  function getEntityTypes(): array {
+  public function getEntityTypes(): array {
     $cleanup_types = ['paragraph', 'hs_entity'];
     $definitions = $this->entityTypeManager->getDefinitions();
 
@@ -64,4 +64,5 @@ class HsFieldHelpersCommands extends DrushCommands {
     }
     return $cleanup_types;
   }
+
 }

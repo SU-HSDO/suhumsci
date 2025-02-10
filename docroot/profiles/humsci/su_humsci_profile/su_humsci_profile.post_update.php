@@ -182,7 +182,7 @@ function su_humsci_profile_post_update_9200() {
     $parent_id = $spotlight->get('parent_id')->getString();
 
     if (!$parent_type || !\Drupal::entityTypeManager()
-        ->hasDefinition($parent_type)) {
+      ->hasDefinition($parent_type)) {
       continue;
     }
     $parent = \Drupal::entityTypeManager()
@@ -424,13 +424,12 @@ function su_humsci_profile_post_update_fix_ds_fields() {
       ->save(TRUE);
   }
 
-
   /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface[] $event_displays */
   $event_displays = \Drupal::entityTypeManager()
     ->getStorage('entity_view_display')
     ->loadByProperties(['bundle' => 'hs_event']);
   foreach ($event_displays as $display) {
-    $save_display = false;
+    $save_display = FALSE;
     $ds_settings = $display->getThirdPartySettings('ds');
     if (!$ds_settings) {
       continue;

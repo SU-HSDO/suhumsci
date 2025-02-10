@@ -56,7 +56,7 @@ class CoursesLinkWidget extends LinkWidget {
   }
 
   /**
-   * {@inheritDoc}.
+   * {@inheritDoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $delta => &$value) {

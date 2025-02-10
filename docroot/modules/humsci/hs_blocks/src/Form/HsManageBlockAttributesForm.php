@@ -9,7 +9,7 @@ use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\layout_builder_component_attributes\Form\ManageComponentAttributesForm;
 
 /**
- * Class HsManageBlockAttributesForm.
+ * Manage block attributes form.
  *
  * @package Drupal\hs_blocks\Form
  */
@@ -39,7 +39,7 @@ class HsManageBlockAttributesForm extends ManageComponentAttributesForm {
   /**
    * {@inheritDoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $group = NULL, $uuid = NULL) {
     $this->group = $group;
     $this->groupDelta = $delta;
 

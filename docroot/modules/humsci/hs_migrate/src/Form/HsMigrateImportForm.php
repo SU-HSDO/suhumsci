@@ -9,7 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Class HsMigrateImportForm.
+ * Import form for H&S migrations.
  *
  * @package Drupal\hs_migrate\Form
  */
@@ -26,6 +26,7 @@ class HsMigrateImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // Use the importers form from the stanford_migrate module instead.
     $response = new RedirectResponse('/admin/config/importers');
     $response->send();
     return [];

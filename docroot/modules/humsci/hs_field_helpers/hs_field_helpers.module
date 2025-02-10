@@ -158,7 +158,7 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
   // Layout Builder cleanup.
   // Each layout has its own preprocess hook. So we have to use generic hook.
   if (!\Drupal::service('router.admin_context')->isAdminRoute() && isset($variables['layout']) && $variables['layout'] instanceof LayoutDefinition) {
-    hs_fields_helpers_cleanup_layout_builder($variables);
+    _hs_field_helpers_cleanup_layout_builder($variables);
   }
 }
 
@@ -168,7 +168,7 @@ function hs_field_helpers_preprocess(&$variables, $hook) {
  * @param array $variables
  *   Preprocess variables.
  */
-function hs_fields_helpers_cleanup_layout_builder(array &$variables) {
+function _hs_field_helpers_cleanup_layout_builder(array &$variables) {
   // This attribute exists when on the layout management page. We don't want
   // to clean up the regions when on that page because it will break the UI.
   if (!empty($variables['attributes']['data-layout-update-url'])) {
@@ -234,9 +234,10 @@ function _hs_field_helpers_cleanup_pattern_regions(array &$pattern, $pattern_id)
 
       if (is_null($rendered)) {
         unset($pattern[$region]);
-      } else {
-        // Remove all wrapper divs so we can check if the region actually has any
-        // visible output.
+      }
+      else {
+        // Remove all wrapper divs so we can check if the region actually has
+        // any visible output.
         $rendered = preg_replace("/<div.*?>(.*?)<\/div>/s", "$1", $rendered);
         $rendered = preg_replace("/<div>(.*?)<\/div>/s", "$1", $rendered);
         if (empty(trim($rendered))) {

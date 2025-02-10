@@ -1,28 +1,36 @@
 import addCardEvents from './event-handlers';
 
-(() => {
-  // find all hb-vertical-card elements
-  const cards = document.querySelectorAll('.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card');
-
-  // Loop through each card
-  cards.forEach((card) => {
-    // Find the main link within each card
-    let mainLink = '';
-
-    // Logic for vertical card, date stacked card and structured card.
-    if (card.querySelector('.hb-card__title a')) {
-      mainLink = card.querySelector('.hb-card__title a');
-    // Logic for vertical linked card.
-    } else {
-      mainLink = card.querySelector(
-        '.hb-vertical-linked-card__title__link',
+(function (Drupal, once) {
+  Drupal.behaviors.linkedCardsBehavior = {
+    attach(context) {
+      // find all hb-vertical-card elements
+      const cards = once(
+        'linked-cards-events',
+        '.hb-vertical-card, .hb-card--date-stacked, .hb-vertical-linked-card',
+        context,
       );
-    }
 
-    if (!mainLink) {
-      return;
-    }
+      // Loop through each card
+      cards.forEach((card) => {
+        // Find the main link within each card
+        let mainLink = '';
 
-    addCardEvents(card, mainLink);
-  });
-})();
+        // Logic for vertical card and date stacked card.
+        if (card.querySelector('.hb-card__title a')) {
+          mainLink = card.querySelector('.hb-card__title a');
+          // Logic for vertical linked card.
+        } else {
+          mainLink = card.querySelector(
+            '.hb-vertical-linked-card__title__link',
+          );
+        }
+
+        if (!mainLink) {
+          return;
+        }
+
+        addCardEvents(card, mainLink);
+      });
+    },
+  };
+}(Drupal, once));

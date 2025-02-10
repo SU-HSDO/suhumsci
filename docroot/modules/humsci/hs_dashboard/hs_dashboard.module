@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Custom functions for dashboard-related views and tasks.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function hs_dashboard_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  // Finds duplicated published person nodes.
+  if ($view->id() === 'duplicate_people' && in_array('node_field_data', $view->getBaseTables())) {
+    $sub_query = \Drupal::database()->select('node_field_data', 'sub_query')
+      ->fields('sub_query', ['title'])
+      ->condition('sub_query.type', 'person')
+      ->condition('sub_query.status', '1')
+      ->groupBy('sub_query.title')
+      ->having('COUNT(sub_query.title) > 1');
+
+    /** @var Drupal\hs_views_helper\Plugin\views\query\Sql $query */
+    $query->addWhereExpression(
+      NULL,
+      'node_field_data.title IN (' . $sub_query->__toString() . ')'
+    );
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function hs_dashboard_views_data_alter(array &$data) {
+  // Source field - imported or local.
+  $data['node_field_data']['hs_dashboard_source_field'] = [
+    'title' => t('Content source'),
+    'help' => t('The source of the content - imported or local.'),
+    'field' => [
+      'id' => 'hs_dashboard_source_field',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function hs_dashboard_entity_operation(EntityInterface $entity) {
+  $operations = [];
+  if ($entity->getEntityTypeId() == 'node') {
+    $operations['revision_link'] = [
+      'title' => t('Revisions'),
+      'url' => Url::fromRoute('entity.node.version_history', ['node' => $entity->id()]),
+      'weight' => 10,
+    ];
+  }
+  return $operations;
+}

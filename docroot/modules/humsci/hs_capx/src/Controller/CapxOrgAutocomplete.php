@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class CapxOrgAutocomplete.
+ * Controller for Capx Autocomplete field text.
  *
  * @package Drupal\hs_capx\Controller
  */

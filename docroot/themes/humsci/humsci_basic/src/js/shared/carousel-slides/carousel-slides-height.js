@@ -1,91 +1,99 @@
 // This work below applies uniform height to both the Hero Layered Slider (formerly Carousel),
 // the Hero Gradient Slider paragraph component slides.
 // and the Spotlight Slider.
-const slides = document.querySelectorAll('.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder');
-// Find slick arrow from hsCarousel.
-const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
-let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
+(function (Drupal, window, once) {
+  Drupal.behaviors.restrictHeightBehavior = {
+    attach(context) {
+      const slides = once('restrict-height-slides', '.paragraph--type--hs-carousel, .paragraph--type--hs-gradient-hero-slider, .paragraph--type--hs-sptlght-slder', context);
+      // Find slick arrow from hsCarousel.
+      const slidesTextboxClasses = '.hb-hero-overlay__text, .hb-gradient-hero__text, .hb-spotlight__text';
+      let timeOutFunctionId; // a numeric ID which is used by clearTimeOut to reset the timer
 
-// @boolean to determine if the textBox is a spotlight textBox
-const isSpotlightTextBox = (textBox) => textBox.classList.contains('hb-spotlight__text');
-const setMinHeight = (textBox, maxBoxHeight) => textBox.setAttribute('style', `min-height: ${maxBoxHeight}px`);
+      // @boolean to determine if the textBox is a spotlight textBox
+      const isSpotlightTextBox = (textBox) => textBox.classList.contains('hb-spotlight__text');
+      const setMinHeight = (textBox, maxBoxHeight) => textBox.setAttribute('style', `min-height: ${maxBoxHeight}px`);
 
-// Set the height of all text boxes within a slider to that
-// of the tallest text box
-const restrictHeight = () => {
-  let boxHeightArray;
-  let maxBoxHeight;
+      // Set the height of all text boxes within a slider to that
+      // of the tallest text box
+      const restrictHeight = () => {
+        let boxHeightArray;
+        let maxBoxHeight;
 
-  slides.forEach((slide) => {
-    // array must have a default entry of 0 for the banner components
-    // and must be declare within the loop to set a baseline for each indiviual slider on a page
-    boxHeightArray = [0];
+        slides.forEach((slide) => {
+          // array must have a default entry of 0 for the banner components and must be
+          // declare within the loop to set a baseline for each indiviual slider on a page
+          boxHeightArray = [0];
 
-    // Find all the textBoxes inside each slider
-    const textBoxes = slide.querySelectorAll(slidesTextboxClasses);
+          // Find all the textBoxes inside each slider
+          const textBoxes = slide.querySelectorAll(slidesTextboxClasses);
 
-    // Loop through all the textBoxes and gather their heights into an array
-    textBoxes.forEach((textBox) => {
-      // Clear any inline styles that may have been set previously
-      // This is necessary to determine the default height of text boxes
-      textBox.removeAttribute('style');
+          // Loop through all the textBoxes and gather their heights into an array
+          textBoxes.forEach((textBox) => {
+            // Clear any inline styles that may have been set previously
+            // This is necessary to determine the default height of text boxes
+            textBox.removeAttribute('style');
 
-      let boxHeight = textBox.offsetHeight;
+            let boxHeight = textBox.offsetHeight;
 
-      // Parse boxHeight to be a number that can be used to set the min-height value
-      boxHeight = parseInt(boxHeight, 10);
+            // Parse boxHeight to be a number that can be used to set the min-height value
+            boxHeight = parseInt(boxHeight, 10);
 
-      // Create an array containing all the heights of textBoxes
-      boxHeightArray.push(boxHeight);
-    });
+            // Create an array containing all the heights of textBoxes
+            boxHeightArray.push(boxHeight);
+          });
 
-    // Find largest number in array of textBoxes
-    maxBoxHeight = Math.max(...boxHeightArray);
+          // Find largest number in array of textBoxes
+          maxBoxHeight = Math.max(...boxHeightArray);
 
-    // Give all textBoxes the same height
-    textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
+          // Give all textBoxes the same height
+          textBoxes.forEach((textBox) => setMinHeight(textBox, maxBoxHeight));
 
-    // Give sickArrowWrapper a top that changes according to the height when resizing the window.
-    const slickArrowWrapper = slide.querySelector('.slick__arrow');
-    if (slide.classList.contains('paragraph--type--hs-carousel') && slickArrowWrapper) {
-      setMinHeight(slickArrowWrapper, maxBoxHeight);
-    }
+          // Give sickArrowWrapper a top that changes according
+          // to the height when resizing the window.
+          const slickArrowWrapper = slide.querySelector('.slick__arrow');
+          if (slide.classList.contains('paragraph--type--hs-carousel') && slickArrowWrapper) {
+            setMinHeight(slickArrowWrapper, maxBoxHeight);
+          }
 
-    // If the textBoxes are spotlight textBoxes, then give them the same height on all screen sizes
-    textBoxes.forEach((textBox) => {
-      const classicSpotlight = slide.querySelector('.hb-spotlight--classic');
-      if (isSpotlightTextBox(textBox) && classicSpotlight) {
-        setMinHeight(textBox, maxBoxHeight);
+          // If the textBoxes are spotlight textBoxes,
+          // then give them the same height on all screen sizes
+          textBoxes.forEach((textBox) => {
+            const classicSpotlight = slide.querySelector('.hb-spotlight--classic');
+            if (isSpotlightTextBox(textBox) && classicSpotlight) {
+              setMinHeight(textBox, maxBoxHeight);
+            }
+          });
+
+          // Find all spotlights texBoxes wrappers to give them the same height on all screen sizes
+          const expandedSpotlights = slide.querySelectorAll('.hb-spotlight--expanded');
+          if (expandedSpotlights) {
+            expandedSpotlights.forEach((expandedSpotlight) => {
+              const expandedSpotlightWrapper = expandedSpotlight.querySelector('.hb-spotlight__wrapper');
+              setMinHeight(expandedSpotlightWrapper, maxBoxHeight);
+            });
+          }
+
+          // Find images inside each slider.
+          const imageWrapper = slide.querySelector('.hb-spotlight__image-wrapper');
+          if (slide.classList.contains('paragraph--type--hs-sptlght-slder') && !imageWrapper) {
+            slide.classList.add('paragraph--type--hs-sptlght-slder--no-image');
+          }
+        });
+      };
+
+      const clearTimeoutOnResize = () => {
+        // Watch for when the browser window resizes, then run the restrictHeight
+        // function to reset the height of the text boxes
+        window.addEventListener('resize', () => {
+          clearTimeout(timeOutFunctionId);
+          timeOutFunctionId = setTimeout(restrictHeight, 100);
+        });
+      };
+
+      if (slides.length > 0) {
+        restrictHeight();
+        clearTimeoutOnResize();
       }
-    });
-
-    // Find all spotlights texBoxes wrappers to give them the same height on all screen sizes
-    const expandedSpotlights = slide.querySelectorAll('.hb-spotlight--expanded');
-    if (expandedSpotlights) {
-      expandedSpotlights.forEach((expandedSpotlight) => {
-        const expandedSpotlightWrapper = expandedSpotlight.querySelector('.hb-spotlight__wrapper');
-        setMinHeight(expandedSpotlightWrapper, maxBoxHeight);
-      });
-    }
-
-    // Find images inside each slider.
-    const imageWrapper = slide.querySelector('.hb-spotlight__image-wrapper');
-    if (slide.classList.contains('paragraph--type--hs-sptlght-slder') && !imageWrapper) {
-      slide.classList.add('paragraph--type--hs-sptlght-slder--no-image');
-    }
-  });
-};
-
-const clearTimeoutOnResize = () => {
-  // Watch for when the browser window resizes, then run the restrictHeight
-  // function to reset the height of the text boxes
-  window.addEventListener('resize', () => {
-    clearTimeout(timeOutFunctionId);
-    timeOutFunctionId = setTimeout(restrictHeight, 100);
-  });
-};
-
-if (slides.length > 0) {
-  restrictHeight();
-  clearTimeoutOnResize();
-}
+    },
+  };
+}(Drupal, window, once));

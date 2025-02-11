@@ -7,16 +7,35 @@
     display: flex;
   }
 
-  .social-media-link {
+  a.social-media-link {
+    color: unset;
     text-decoration: none;
     display: flex;
     align-items: center;
     flex-grow: 1;
+
+    &:hover {
+      color: unset;
+
+      .social-media-link__icon,
+      .social-media-link__label {
+        color: var(--palette--secondary-darken-12);
+
+        .hb-dark-pattern & {
+          color: var(--palette--tertiary-highlight-darken-10);
+        }
+      }
+    }
   }
 
   .social-media-link__icon {
     width: 1em;
     text-align: center;
+    color: var(--palette--secondary);
+
+    .hb-dark-pattern & {
+      color: var(--palette--secondary-highlight);
+    }
 
     // Override for Soundcloud icon (too wide).
     &.fa-soundcloud {
@@ -52,6 +71,11 @@
   .social-media-link__label {
     font-size: hb-calculate-rems(16px);
     text-decoration: underline;
+    color: var(--palette--black);
+
+    .hb-dark-pattern & {
+      color: var(--palette--secondary-highlight);
+    }
   }
 }
 

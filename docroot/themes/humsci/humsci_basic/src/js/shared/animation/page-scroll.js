@@ -1,39 +1,53 @@
-const animationEnhancements = document.querySelector('.hb-has-animation-enhancements');
-const experimentalFeaturesClass = document.querySelector('.hb-experimental');
-const experimentalClassesToAnimate = [document.querySelectorAll('.hs-font-lead')];
+(function (Drupal, once) {
+  Drupal.behaviors.pageScrollBehavior = {
+    attach(context) {
+      // Selectors for elements
+      const animationEnhancements = context.querySelector(
+        '.hb-has-animation-enhancements',
+      );
+      const experimentalFeaturesClass = context.querySelector('.hb-experimental');
+      const experimentalClassesToAnimate = ['.hs-font-lead'];
 
-// The classes of items we want to add animations to
-const classesToAnimate = [
-  document.querySelectorAll('.hb-gradient-hero'),
-  document.querySelectorAll('.hb-gradient-hero__text'),
-  document.querySelectorAll('.hb-gradient-hero__image-wrapper'),
-  document.querySelectorAll('.field-hs-gradient-hero-image'),
-  document.querySelectorAll('.hb-hero-overlay'),
-  document.querySelectorAll('.hb-hero-overlay__text'),
-  document.querySelectorAll('.hb-hero-overlay__image-wrapper'),
-  document.querySelectorAll('.field-hs-hero-image'),
-  document.querySelectorAll('.hs-font-splash'),
-];
+      // If the animation enhancements are not enabled, do nothing.
+      if (!animationEnhancements) {
+        return;
+      }
 
-if (experimentalFeaturesClass) {
-  classesToAnimate.push(experimentalClassesToAnimate);
-}
+      // The classes of items we want to add animations to
+      const classesToAnimate = [
+        '.hb-gradient-hero',
+        '.hb-gradient-hero__text',
+        '.hb-gradient-hero__image-wrapper',
+        '.field-hs-gradient-hero-image',
+        '.hb-hero-overlay',
+        '.hb-hero-overlay__text',
+        '.hb-hero-overlay__image-wrapper',
+        '.field-hs-hero-image',
+        '.hs-font-splash',
+      ];
 
-// check if top of element is in viewport
-const isElementVisible = new IntersectionObserver((items) => {
-  items.forEach((item) => {
-    if (item.intersectionRatio > 0) {
-      item.target.classList.add('animate');
-    }
-  });
-});
+      if (experimentalFeaturesClass) {
+        classesToAnimate.push(experimentalClassesToAnimate);
+      }
 
-if (animationEnhancements) {
-  classesToAnimate.forEach((items) => {
-    if (items) {
-      items.forEach((item) => {
-        isElementVisible.observe(item);
+      const elementsToAnimate = once(
+        'page-scroll-animate',
+        classesToAnimate.join(','),
+        context,
+      );
+
+      // check if top of element is in viewport
+      const isElementVisible = new IntersectionObserver((items) => {
+        items.forEach((item) => {
+          if (item.intersectionRatio > 0) {
+            item.target.classList.add('animate');
+          }
+        });
       });
-    }
-  });
-}
+
+      elementsToAnimate.forEach((element) => {
+        isElementVisible.observe(element);
+      });
+    },
+  };
+}(Drupal, once));

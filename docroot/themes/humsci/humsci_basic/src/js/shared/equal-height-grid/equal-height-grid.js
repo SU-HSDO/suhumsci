@@ -5,11 +5,6 @@ const equalHeightGrid = (elements) => {
     // Create array with all of the heights of each element
     const elementHeights = Array.prototype.map.call(elements, (el) => el.scrollHeight);
 
-    // Create array with _unique_ height values
-    // const uniqueHeights = elementHeights.filter((height, index, array) => {
-    //   return array.indexOf(height) == index;
-    // });
-
     return new Promise((resolve) => {
       const maxHeight = Math.max.apply(null, elementHeights);
       const tallestElementIndex = elementHeights.indexOf(maxHeight);

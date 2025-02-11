@@ -1,3 +1,5 @@
+import addCardEvents from './event-handlers';
+
 (function (Drupal, once) {
   Drupal.behaviors.linkedCardsBehavior = {
     attach(context) {
@@ -27,28 +29,7 @@
           return;
         }
 
-        // Add a click event listener to each card
-        function handleClick() {
-          // Ensure clicks on "Add to Calendar" container
-          if (event.target.closest('.addtocal-container')) {
-            return;
-          }
-          mainLink.click();
-        }
-
-        // Add a focus event listener to each main link
-        mainLink.addEventListener('focus', () => {
-          // Add a focus state class to card
-          card.classList.add('is-focused');
-        });
-
-        // Add a blur event listener to each main link
-        mainLink.addEventListener('blur', () => {
-          // Remove focus state class from card
-          card.classList.remove('is-focused');
-        });
-
-        card.addEventListener('click', handleClick);
+        addCardEvents(card, mainLink);
       });
     },
   };

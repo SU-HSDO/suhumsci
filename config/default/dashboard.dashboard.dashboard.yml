@@ -6,6 +6,9 @@ dependencies:
     - views.view.editoria11y_results
     - views.view.new_default_image_alt_text
     - views.view.site_dashboard_active_site_editors
+    - views.view.new_default_image_alt_text
+    - views.view.duplicate_people
+    - views.view.my_latest_edits
   module:
     - layout_builder
     - layout_discovery
@@ -61,6 +64,42 @@ layout:
           items_per_page: none
           exposed: {  }
         weight: 2
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_twocol_section
+    layout_settings:
+      label: 'Latest edits / Duplicate people'
+      context_mapping: {  }
+      column_widths: 50-50
+    components:
+      05eea9b3-fa79-4860-941a-8e8218787f5e:
+        uuid: 05eea9b3-fa79-4860-941a-8e8218787f5e
+        region: first
+        configuration:
+          id: 'views_block:my_latest_edits-block_1'
+          label: ''
+          label_display: visible
+          provider: views
+          context_mapping: {  }
+          views_label: ''
+          items_per_page: none
+          exposed: {  }
+        weight: 0
+        additional: {  }
+      52924173-ad11-438f-8233-3c214307ee82:
+        uuid: 52924173-ad11-438f-8233-3c214307ee82
+        region: second
+        configuration:
+          id: 'views_block:duplicate_people-block_1'
+          label: ''
+          label_display: visible
+          provider: views
+          context_mapping: {  }
+          views_label: ''
+          items_per_page: none
+          exposed: {  }
+        weight: 0
         additional: {  }
     third_party_settings: {  }
 weight: 0

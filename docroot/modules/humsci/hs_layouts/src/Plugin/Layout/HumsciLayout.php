@@ -7,7 +7,7 @@ use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
- * Class HumsciLayout.
+ * Extend the layout configuration form.
  *
  * @package Drupal\hs_layouts\Plugin
  */

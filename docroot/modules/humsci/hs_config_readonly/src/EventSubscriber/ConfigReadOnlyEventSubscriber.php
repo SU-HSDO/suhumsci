@@ -230,7 +230,7 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
     foreach ($ignored_configs as $ignored_config) {
       // Split the ignore settings so that we can ignore individual keys.
       $ignore = explode(':', $ignored_config);
-      if (count($ignore) > 1 && fnmatch($ignore[0], $config_name)) {
+      if (count($ignore) > 1 && self::wildcardMatch($ignore[0], $config_name)) {
         return FALSE;
       }
     }
@@ -264,6 +264,26 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Check for wild cards. Added to replace fnmatch() function.
+   *
+   * Drupal\config_ignore\Plugin\ConfigFilter::wilcardMatch().
+   * https://www.drupal.org/project/config_ignore/issues/3182849.
+   *
+   * @param string $pattern
+   *   The pattern to match.
+   * @param string $string
+   *   The string to check.
+   *
+   * @return bool
+   *   Whether the pattern matches.
+   */
+  protected static function wildcardMatch(string $pattern, string $string): bool {
+    $pattern = '/^' . preg_quote($pattern, '/') . '$/';
+    $pattern = str_replace('\*', '.*', $pattern);
+    return (bool) preg_match($pattern, $string);
   }
 
 }

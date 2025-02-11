@@ -13,25 +13,24 @@ function humsci_colorful_preprocess_html(&$vars) {
   // Theme color pairing setting to set the way the Colorful theme will appear.
   $color_pairing = theme_get_setting('theme_color_pairing');
   if ($color_pairing) {
-    // Set html_attributes for html DOM element
+    // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hc-pairing-' . $color_pairing);
   }
 
   // Dark Inversion Variants.
   $div = theme_get_setting('dark_inversion_variant_classname');
   if ($div) {
-    // Set html_attributes for html DOM element
+    // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-dark-inversion');
   }
 }
 
 /**
- * Implements hook_preprocess_block().
- * for Mega Menu module
+ * Implements hook_preprocess_block() for Mega Menu module.
  */
 function humsci_colorful_preprocess_block__we_megamenu(array &$vars) {
-  // Load base megamenu CSS when megamenu is enabled
-  $vars['#attached']['library'][] =  'humsci_colorful/megamenu';
+  // Load base megamenu CSS when megamenu is enabled.
+  $vars['#attached']['library'][] = 'humsci_colorful/megamenu';
 }
 
 /**

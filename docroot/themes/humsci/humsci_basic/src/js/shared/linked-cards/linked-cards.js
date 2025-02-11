@@ -52,4 +52,4 @@
       });
     },
   };
-})(Drupal, once);
+}(Drupal, once));

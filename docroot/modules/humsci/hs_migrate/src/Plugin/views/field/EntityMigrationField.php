@@ -59,7 +59,8 @@ class EntityMigrationField extends FieldPluginBase {
       if ($migration) {
         return ['#markup' => $migration->label()];
       }
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       // Nothing to do.
     }
     return NULL;

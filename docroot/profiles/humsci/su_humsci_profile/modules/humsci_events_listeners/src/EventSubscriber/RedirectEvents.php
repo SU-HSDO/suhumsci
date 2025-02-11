@@ -131,7 +131,7 @@ class RedirectEvents implements EventSubscriberInterface {
       return $url;
     }
 
-    // Make sure the url is https
+    // Make sure the url is https.
     $url = preg_replace('/^http:/', 'https:', $url);
 
     // Get the domain so we can fix it up.

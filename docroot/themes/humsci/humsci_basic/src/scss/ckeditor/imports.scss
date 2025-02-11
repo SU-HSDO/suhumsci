@@ -336,6 +336,14 @@ $px-only: true;
     }
   }
 
+  // This prevents the list item to float behind images that are floated to the left
+  figure.drupal-media-style-align-left ~ ul:not([class]),
+  figure.drupal-media-style-align-left ~ ol:not([class]) {
+    li {
+      overflow: hidden;
+    }
+  }
+
   // Override CK styles
   .table table {
     td,

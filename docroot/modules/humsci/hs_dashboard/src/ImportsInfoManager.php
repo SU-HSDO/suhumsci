@@ -64,7 +64,10 @@ class ImportsInfoManager implements ContainerInjectionInterface {
   public function generatePeopleTable(): array {
     $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
     if (!$capx_importers) {
-      return [];
+      return [
+        '#theme' => 'markup',
+        '#markup' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
+      ];
     }
 
     $table_rows = [];

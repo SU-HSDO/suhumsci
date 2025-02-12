@@ -62,12 +62,6 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
   public function build(): array {
     $rows = $this->announcementsManager->getTableRows();
 
-    $build['content'] = [
-      '#cache' => [
-        'max-age' => 120,
-      ],
-    ];
-
     if (!$rows) {
       $build['content']['#theme'] = 'markup';
       $build['content']['#markup'] = $this->t('There were no announcements found.');
@@ -75,7 +69,7 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
     else {
       $build['content']['#theme'] = 'table';
       $build['content']['#header'] = $this->announcementsManager->getTableHeader();
-      $build['content']['#rows'] = $this->announcementsManager->getTableRows();
+      $build['content']['#rows'] = $rows;
     }
 
     return $build;

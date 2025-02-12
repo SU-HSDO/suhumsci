@@ -159,6 +159,11 @@ class AnnouncementsManager implements ContainerInjectionInterface {
             continue;
           }
 
+          // Removes empty rows.
+          if (empty($data[2]) && empty($data[3])) {
+            continue;
+          }
+
           if (isset($data[1])) {
             $data[1] = $this->convertDateToTimestamp(trim($data[1]));
           }
@@ -270,11 +275,15 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   An array of table rows with announcement data.
    */
   public function getTableRows(): array {
-    $tableRows = [];
+    $table_rows = [];
+
+    if ($cache = \Drupal::cache()->get('hs_dashboard_csv_announcements')) {
+      return $cache->data;
+    }
     $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
 
     foreach ($csv_data as $row) {
-      $tableRows[] = [
+      $table_rows[] = [
         'data' => [
           ['data' => $row[1]],
           ['data' => ['#markup' => $row[2]]],
@@ -283,7 +292,8 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       ];
     }
 
-    return $tableRows;
+    \Drupal::cache()->set('hs_dashboard_csv_announcements', $table_rows, time() + 120);
+    return $table_rows;
   }
 
 }

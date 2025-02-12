@@ -1,5 +1,5 @@
 (function ($, Drupal, window) {
-  Drupal.behaviors.mySlickBehavior = {
+  Drupal.behaviors.preferedReducedMotionBehavior = {
     attach(context) {
       // Check for reduced motion preference
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,5 +26,4 @@
       mediaQuery.addEventListener('change', handleReducedMotionPreference);
     },
   };
-// eslint-disable-next-line no-undef
-}(jQuery, Drupal, window, document));
+}(jQuery, Drupal, window));

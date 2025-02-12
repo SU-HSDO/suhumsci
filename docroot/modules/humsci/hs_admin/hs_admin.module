@@ -29,7 +29,7 @@ function hs_admin_page_attachments(&$variables) {
  * Implements hook_preprocess_html().
  */
 function hs_admin_preprocess_html(&$variables) {
-  // Get currently active user and his roles.
+  // Get currently active user and their roles.
   $account = \Drupal::currentUser();
   $roles = $account->getRoles();
 
@@ -126,15 +126,6 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
     '#group' => 'advanced',
     '#weight' => 100,
   ];
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function hs_admin_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (isset($form['saml']['#attributes']['class'])) {
-    $form['saml']['#attributes']['class'][] = 'simplesamlphp-auth-login-link';
-  }
 }
 
 /**

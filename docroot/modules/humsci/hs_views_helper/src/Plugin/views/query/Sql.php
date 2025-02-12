@@ -112,11 +112,11 @@ class Sql extends OriginalSql {
 
       // Only operate on CCK Fields. We dont care about base fields like entity
       // title, published etc.
-      if (strpos($table, '__') === FALSE) {
+      if (is_null($table) || strpos($table, '__') === FALSE) {
         continue;
       }
 
-      list($entity_type, $field_name) = explode('__', $table);
+      [$entity_type, $field_name] = explode('__', $table);
       $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
 
       if ($field_storage && in_array($field_storage->getType(), $field_types)) {

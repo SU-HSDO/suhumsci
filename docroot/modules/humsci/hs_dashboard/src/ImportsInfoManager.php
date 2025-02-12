@@ -30,7 +30,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $capExConfig;
+  protected $capxConfig;
 
   /**
    * Constructs a new ViewsBasicManager object.
@@ -45,7 +45,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     ConfigFactoryInterface $config_factory,
   ) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->capExConfig = $config_factory->getEditable('hs_capx.settings');
+    $this->capxConfig = $config_factory->getEditable('hs_capx.settings');
   }
 
   /**
@@ -67,19 +67,24 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       return [];
     }
 
-    $tableRows = [];
+    $table_rows = [];
+    $orphan_action = $this->t('Do nothing');
 
-    $orphan_labels = [
-      EventsSubscriber::ORPHAN_DELETE => $this->t('Delete'),
-      EventsSubscriber::ORPHAN_UNPUBLISH => $this->t('Unpublish'),
-    ];
+    if ($orphan_setting = $this->capxConfig->get('orphan_action')) {
+      $orphan_labels = [
+        EventsSubscriber::ORPHAN_DELETE => $this->t('Delete'),
+        EventsSubscriber::ORPHAN_UNPUBLISH => $this->t('Unpublish'),
+      ];
+
+      $orphan_action = $orphan_labels[$orphan_setting];
+    }
 
     foreach ($capx_importers as $importer) {
       /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-      $tableRows[] = [
+      $table_rows[] = [
         'data' => [
           ['data' => $importer->label()],
-          ['data' => $orphan_labels[$this->capExConfig->get('orphan_action')]],
+          ['data' => $orphan_action],
           ['data' => $importer->getWorkgroups(TRUE)],
         ],
       ];
@@ -93,7 +98,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
         ['data' => $this->t('Orphan action')],
         ['data' => $this->t('Organization or Workcode')],
       ],
-      '#rows' => $tableRows,
+      '#rows' => $table_rows,
     ];
   }
 

@@ -1208,7 +1208,6 @@ function su_humsci_profile_update_9722() {
     $config_storage = \Drupal::service('config.storage.sync');
     $reviewer_role_config = $config_storage->read($config_name);
     $config->setData($reviewer_role_config)->save();
-
     // There might be custom content types in the site, so we need to manually
     // add permissions to view any unpublished content (expect Private Page).
     $content_types = \Drupal::entityTypeManager()
@@ -1223,4 +1222,44 @@ function su_humsci_profile_update_9722() {
     }, $ct_no_private_page);
     user_role_grant_permissions('reviewer', $permissions);
   }
+}
+
+/**
+ * Changes all private pages to allow site managers view access.
+ */
+function su_humsci_profile_update_9723(&$sandbox) {
+  $node_type = 'hs_private_page';
+
+  // Update content type (and defaults for new nodes).
+  $settings = content_access_get_settings('all', $node_type);
+
+  array_push($settings['view'], 'site_manager');
+  array_push($settings['view_own'], 'site_manager');
+
+  content_access_set_settings($settings, $node_type);
+
+  // Update existing nodes, if they have different settings than default.
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $node_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $node_type)
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $node_ids = array_splice($sandbox['ids'], 0, 50);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($node_storage->loadMultiple($node_ids) as $node) {
+    /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
+    $settings = content_access_get_per_node_settings($node);
+
+    if ($settings) {
+      array_push($settings['view'], 'site_manager');
+      array_push($settings['view_own'], 'site_manager');
+      content_access_save_per_node_settings($node, $settings);
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }

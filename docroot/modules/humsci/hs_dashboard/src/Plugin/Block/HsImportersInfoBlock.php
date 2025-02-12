@@ -60,13 +60,13 @@ class HsImportersInfoBlock extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function build(): array {
-    $tables = [];
+    $importers = [];
 
-    $tables[] = $this->importsInfoManager->generatePeopleTable();
+    $importers[] = $this->importsInfoManager->generatePeopleTable();
 
     $build = [
       '#theme' => 'hs_importers_info',
-      '#tables' => $tables,
+      '#importers' => $importers,
     ];
     return $build;
   }

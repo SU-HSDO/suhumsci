@@ -63,6 +63,7 @@ class HsImportersInfoBlock extends BlockBase implements ContainerFactoryPluginIn
     $importers = [];
 
     $importers[] = $this->importsInfoManager->generatePeopleTable();
+    $importers[] = $this->importsInfoManager->generateEventTable();
 
     $build = [
       '#theme' => 'hs_importers_info',

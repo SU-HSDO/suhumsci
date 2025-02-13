@@ -1,4 +1,8 @@
 services:
   hs_dashboard.imports_info_manager:
     class: Drupal\hs_dashboard\ImportsInfoManager
-    arguments: ['@entity_type.manager', '@config.factory']
+    arguments:
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@config_pages.loader'
+      - '@plugin.manager.field.widget'

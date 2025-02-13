@@ -87,7 +87,6 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       $table_rows[] = [
         'data' => [
           ['data' => $importer->label()],
-          ['data' => $orphan_action],
           ['data' => $importer->getWorkgroups(TRUE)],
         ],
       ];
@@ -98,10 +97,13 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       '#caption' => $this->t('People Importers'),
       '#header' => [
         ['data' => $this->t('Importer (migration) name')],
-        ['data' => $this->t('Orphan action')],
-        ['data' => $this->t('Organization or Workcode')],
+        ['data' => $this->t('Org Code and Workgroup')],
       ],
       '#rows' => $table_rows,
+      '#suffix' => $this->t(
+        '<p>People importer orphan action: @action</p>',
+        ['@action' => $orphan_action]
+      ),
     ];
   }
 

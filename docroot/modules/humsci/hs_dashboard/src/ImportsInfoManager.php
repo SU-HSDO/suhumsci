@@ -155,32 +155,63 @@ class ImportsInfoManager implements ContainerInjectionInterface {
 
     $localist_api_data = $widget->getApiData($base_url);
 
-    $dept_groups = [];
-    foreach ($localist_api_data['departments'] as $department) {
-      $dept_groups[$department['department']['id']] = $department['department']['name'];
+    $localist_lookup = [
+      'dept_groups' => [],
+      'places' => [],
+      'filters' => [],
+    ];
+
+    foreach (['departments' => 'department', 'groups' => 'group'] as $key => $subkey) {
+      if (!empty($localist_api_data[$key])) {
+        foreach ($localist_api_data[$key] as $item) {
+          if (isset($item[$subkey]['id'], $item[$subkey]['name'])) {
+            $localist_lookup['dept_groups'][$item[$subkey]['id']] = $item[$subkey]['name'];
+          }
+        }
+      }
     }
 
-    foreach ($localist_api_data['groups'] as $group) {
-      $dept_groups[$group['group']['id']] = $group['group']['name'];
+    if (!empty($localist_api_data['places'])) {
+      foreach ($localist_api_data['places'] as $place) {
+        if (isset($place['place']['id'], $place['place']['name'])) {
+          $localist_lookup['places'][$place['place']['id']] = $place['place']['name'];
+        }
+      }
     }
 
-    $places = [];
-    foreach ($localist_api_data['places'] as $place) {
-      $places[$place['place']['id']] = $place['place']['name'];
+    if (!empty($localist_api_data['events/filters'])) {
+      foreach ($localist_api_data['events/filters'] as $filters) {
+        foreach ($filters as $filter) {
+          if (isset($filter['id'], $filter['name'])) {
+            $localist_lookup['filters'][$filter['id']] = $filter['name'];
+          }
+        }
+      }
     }
 
     $localist_urls = $config_pages->get('field_url_separate')->getValue();
 
+    $temp = $config_pages->get('field_url_book_s')->getValue();
+kint($temp);
     foreach ($localist_urls as $url) {
       parse_str(parse_url(urldecode($url['uri']), PHP_URL_QUERY), $query_parameters);
+
+      $types = [];
+      if (isset($query_parameters['type'])) {
+        foreach ($query_parameters['type'] as $type_id) {
+          $types[] = $localist_lookup['filters'][$type_id];
+        }
+      }
+
       $filters = [
-        $dept_groups[$query_parameters['group_id']],
-        isset($query_parameters['venue_id']) ? $places[$query_parameters['venue_id']] : NULL,
+        $localist_lookup['dept_groups'][$query_parameters['group_id']],
+        isset($query_parameters['venue_id']) ? $localist_lookup['places'][$query_parameters['venue_id']] : NULL,
+        $types ? implode(', ', $types) : NULL,
       ];
 
       $table_rows[] = [
         'data' => [
-          ['data' => implode(', ', $filters)],
+          ['data' => implode(', ', array_filter($filters))],
         ],
       ];
     }

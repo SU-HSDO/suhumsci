@@ -195,7 +195,7 @@ function _hs_layouts_make_title_the_link(&$variables) {
 
   if (!empty($variables['title'])) {
     $title = is_array($variables['title']) ? $renderer->renderInIsolation($variables['title']) : $variables['title'];
-    $variables['title'] = $title ?? ['#markup' => trim(strip_tags($title))];
+    $variables['title'] = $title ? ['#markup' => trim(strip_tags($title))] : NULL;
   }
 }
 

@@ -147,44 +147,43 @@ class ImportsInfoManager implements ContainerInjectionInterface {
   public function generateEventTable(): array {
     $config_pages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
     $field_definition = $config_pages->getFieldDefinition('field_url_separate');
-    //$widget = $this->getWidgetInstance('localist_url', $field_definition);
-    kint($config_pages->get('field_url_separate')->first()->getValue()['uri']);
-    //parse_str(parse_url(urldecode($config_pages->get('field_url_separate')->first()->getValue()['uri']), PHP_URL_QUERY), $query_parameters);
-    //kint($query_parameters);
-    //kint($widget->getApiData());
-    //kint(get_class_methods($config_pages->get('field_url_separate')));
-    //$url = $config_pages->get('field_url_separate')->first()->getValue()['uri'];
-    //parse_str(parse_url(urldecode($url), PHP_URL_QUERY), $query_parameters);
-    //kint($query_parameters);
-  //   if (!$capx_importers) {
-  //     return [
-  //       '#theme' => 'markup',
-  //       '#markup' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
-  //     ];
-  //   }
+    $widget = $this->getWidgetInstance('localist_url', $field_definition);
 
-  $table_rows = [];
-  //   $orphan_action = $this->t('Do nothing');
+    $full_url = $config_pages->get('field_url_separate')->first()->getValue()['uri'];
+    $parsed_url = parse_url($full_url);
+    $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
 
-  //   if ($orphan_setting = $this->capxConfig->get('orphan_action')) {
-  //     $orphan_labels = [
-  //       EventsSubscriber::ORPHAN_DELETE => $this->t('Delete'),
-  //       EventsSubscriber::ORPHAN_UNPUBLISH => $this->t('Unpublish'),
-  //     ];
+    $localist_api_data = $widget->getApiData($base_url);
 
-  //     $orphan_action = $orphan_labels[$orphan_setting];
-  //   }
+    $dept_groups = [];
+    foreach ($localist_api_data['departments'] as $department) {
+      $dept_groups[$department['department']['id']] = $department['department']['name'];
+    }
 
-  //   foreach ($capx_importers as $importer) {
-  //     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-  //     $table_rows[] = [
-  //       'data' => [
-  //         ['data' => $importer->label()],
-  //         ['data' => $orphan_action],
-  //         ['data' => $importer->getWorkgroups(TRUE)],
-  //       ],
-  //     ];
-  //   }
+    foreach ($localist_api_data['groups'] as $group) {
+      $dept_groups[$group['group']['id']] = $group['group']['name'];
+    }
+
+    $places = [];
+    foreach ($localist_api_data['places'] as $place) {
+      $places[$place['place']['id']] = $place['place']['name'];
+    }
+
+    $localist_urls = $config_pages->get('field_url_separate')->getValue();
+
+    foreach ($localist_urls as $url) {
+      parse_str(parse_url(urldecode($url['uri']), PHP_URL_QUERY), $query_parameters);
+      $filters = [
+        $dept_groups[$query_parameters['group_id']],
+        isset($query_parameters['venue_id']) ? $places[$query_parameters['venue_id']] : NULL,
+      ];
+
+      $table_rows[] = [
+        'data' => [
+          ['data' => implode(', ', $filters)],
+        ],
+      ];
+    }
 
     return [
       '#theme' => 'table',

@@ -192,7 +192,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     $localist_urls = $config_pages->get('field_url_separate')->getValue();
 
     $temp = $config_pages->get('field_url_book_s')->getValue();
-kint($temp);
+
     foreach ($localist_urls as $url) {
       parse_str(parse_url(urldecode($url['uri']), PHP_URL_QUERY), $query_parameters);
 

@@ -58,7 +58,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
    *   Config pages loader service.
    * @param \Drupal\Core\Field\WidgetPluginManager $widget_manager
-   *  The widget manager.
+   *   The widget manager.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -84,6 +84,9 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     );
   }
 
+  /**
+   * Returns a field widget instance.
+   */
   public function getWidgetInstance($plugin_id, $field_definition, $settings = [], $third_party_settings = []) {
     return $this->widgetManager->createInstance($plugin_id, [
       'field_definition' => $field_definition,
@@ -99,8 +102,8 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
     if (!$capx_importers) {
       return [
-        '#theme' => 'table',
-        '#caption' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
+        '#theme' => 'markup',
+        '#markup' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
       ];
     }
 

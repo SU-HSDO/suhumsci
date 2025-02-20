@@ -187,7 +187,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\node\NodeInterface $object */
     $result = $object->access('update', $account, TRUE)
       ->andIf($object->access('create', $account, TRUE));

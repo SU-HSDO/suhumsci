@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\hs_dashboard;
 
@@ -53,7 +53,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    *
    * @var array
    */
-  protected $eventImporterTableRows;
+  protected $eventTableRows;
 
   /**
    * The entity field manager.
@@ -85,6 +85,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     $this->widgetManager = $widget_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->localistConfigPages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
+    $this->eventTableRows = [];
   }
 
   /**
@@ -184,6 +185,13 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       }
     }
 
+    if (!$this->eventTableRows) {
+      return [
+        '#theme' => 'table',
+        '#caption' => $this->t('<p>Events Importers</p><em>There are no events importers configured.</em>'),
+      ];
+    }
+
     return [
       '#theme' => 'table',
       '#caption' => $this->t('Events Importers'),
@@ -191,7 +199,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
         ['data' => $this->t('Filters')],
         ['data' => $this->t('Recurring event treatment')],
       ],
-      '#rows' => $this->eventImporterTableRows,
+      '#rows' => $this->eventTableRows,
     ];
   }
 
@@ -218,56 +226,135 @@ class ImportsInfoManager implements ContainerInjectionInterface {
      * allow users to edit the URLs, this is a fair assumption that all URLs
      * have the same base URL.
      */
-    $full_url = $this->localistConfigPages->get($field_name)->first()->getValue()['uri'];
-    $parsed_url = parse_url($full_url);
-    $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
+    if (!$this->localistConfigPages->get($field_name)->getValue()) {
+      return [];
+    }
 
-    $field_definition = $this->localistConfigPages->getFieldDefinition($field_name);
-    $widget = $this->getWidgetInstance('localist_url', $field_definition);
-    $localist_api_data = $widget->getApiData($base_url);
+    $base_url = $this->getLocalistBaseUrl($field_name);
+    if (!$base_url) {
+      return [];
+    }
 
-    $localist_lookup = [
-      'dept_groups' => [],
-      'places' => [],
-      'filters' => [],
+    $localist_api_data = $this->fetchLocalistApiData($field_name, $base_url);
+
+    return [
+      'dept_groups' => $this->processDepartmentsAndGroups($localist_api_data),
+      'places' => $this->processPlaces($localist_api_data),
+      'filters' => $this->processFilters($localist_api_data),
     ];
 
-    // Combines departments and groups into the same lookup table.
-    foreach (['departments' => 'department', 'groups' => 'group'] as $key => $subkey) {
-      if (!empty($localist_api_data[$key])) {
-        foreach ($localist_api_data[$key] as $item) {
-          if (isset($item[$subkey]['id'], $item[$subkey]['name'])) {
-            $localist_lookup['dept_groups'][$item[$subkey]['id']] = $item[$subkey]['name'];
-          }
-        }
-      }
-    }
-
-    // Retrieves places.
-    if (!empty($localist_api_data['places'])) {
-      foreach ($localist_api_data['places'] as $place) {
-        if (isset($place['place']['id'], $place['place']['name'])) {
-          $localist_lookup['places'][$place['place']['id']] = $place['place']['name'];
-        }
-      }
-    }
-
-    // Retrieves audience, subject, and types.
-    if (!empty($localist_api_data['events/filters'])) {
-      foreach ($localist_api_data['events/filters'] as $filters) {
-        foreach ($filters as $filter) {
-          if (isset($filter['id'], $filter['name'])) {
-            $localist_lookup['filters'][$filter['id']] = $filter['name'];
-          }
-        }
-      }
-    }
-
-    return $localist_lookup;
   }
 
   /**
-   * Generates event filters.
+   * Gets the base URL for Localist API from the field.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return string|null
+   *   The base URL or NULL if it can't be determined.
+   */
+  private function getLocalistBaseUrl($field_name) {
+    $full_url = $this->localistConfigPages->get($field_name)->first()->getValue()['uri'] ?? NULL;
+    if (!$full_url) {
+      return NULL;
+    }
+
+    $parsed_url = parse_url($full_url);
+    return isset($parsed_url['scheme'], $parsed_url['host'])
+      ? $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/"
+      : NULL;
+  }
+
+  /**
+   * Fetches the Localist API data.
+   *
+   * @param string $field_name
+   *   The field name.
+   * @param string $base_url
+   *   The base URL.
+   *
+   * @return array
+   *   The Localist API data.
+   */
+  private function fetchLocalistApiData($field_name, $base_url) {
+    $field_definition = $this->localistConfigPages->getFieldDefinition($field_name);
+    $widget = $this->getWidgetInstance('localist_url', $field_definition);
+
+    $field_definition = $this->localistConfigPages->getFieldDefinition($field_name);
+    $widget = $this->getWidgetInstance('localist_url', $field_definition);
+    return $widget->getApiData($base_url) ?? [];
+  }
+
+  /**
+   * Processes departments and groups into a lookup table.
+   *
+   * @param array $api_data
+   *   The Localist API data.
+   *
+   * @return array
+   *   The department and group lookup table.
+   */
+  private function processDepartmentsAndGroups(array $api_data) {
+    $dept_groups = [];
+    foreach (['departments' => 'department', 'groups' => 'group'] as $key => $subkey) {
+      if (!empty($api_data[$key])) {
+        foreach ($api_data[$key] as $item) {
+          if (isset($item[$subkey]['id'], $item[$subkey]['name'])) {
+            $dept_groups[$item[$subkey]['id']] = $item[$subkey]['name'];
+          }
+        }
+      }
+    }
+    return $dept_groups;
+  }
+
+  /**
+   * Processes places into a lookup table.
+   *
+   * @param array $api_data
+   *   The Localist API data.
+   *
+   * @return array
+   *   The places lookup table.
+   */
+  private function processPlaces(array $api_data) {
+    $places = [];
+    if (!empty($api_data['places'])) {
+      foreach ($api_data['places'] as $place) {
+        if (isset($place['place']['id'], $place['place']['name'])) {
+          $places[$place['place']['id']] = $place['place']['name'];
+        }
+      }
+    }
+    return $places;
+  }
+
+  /**
+   * Processes filters (audience, subject, types) into a lookup table.
+   *
+   * @param array $api_data
+   *   The Localist API data.
+   *
+   * @return array
+   *   The filters lookup table.
+   */
+  private function processFilters(array $api_data) {
+    $filters = [];
+    if (!empty($api_data['events/filters'])) {
+      foreach ($api_data['events/filters'] as $filters_group) {
+        foreach ($filters_group as $filter) {
+          if (isset($filter['id'], $filter['name'])) {
+            $filters[$filter['id']] = $filter['name'];
+          }
+        }
+      }
+    }
+    return $filters;
+  }
+
+  /**
+   * Generates rendered event filters.
    *
    * Stored URLs have query parameters that are IDs for each filter.
    * We parse each query parameter and then lookup the ID in the localist API
@@ -279,6 +366,9 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    * @return void
    */
   private function generateEventFilters($field_name) {
+    if (!$this->localistConfigPages) {
+      return;
+    }
     $localist_lookup = $this->getLocalistLookup($field_name);
     $localist_urls = $this->localistConfigPages->get($field_name)->getValue();
     foreach ($localist_urls as $url) {
@@ -297,7 +387,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
         $types ? implode(', ', $types) : NULL,
       ];
 
-      $this->eventImporterTableRows[] = [
+      $this->eventTableRows[] = [
         'data' => [
           ['data' => implode(', ', array_filter($filters))],
           ['data' => $this->getFieldLabel($field_name)],
@@ -307,7 +397,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
   }
 
   /**
-   * Generates event bookmarks.
+   * Generates rendered event bookmarks.
    *
    * @param string $field_name
    *   The field name.
@@ -315,11 +405,14 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    * @return void
    */
   private function generateEventBookmarks($field_name) {
+    if (!$this->localistConfigPages) {
+      return;
+    }
     $bookmarks = $this->localistConfigPages->get($field_name)->getValue();
     foreach ($bookmarks as $bookmark) {
-      $this->eventImporterTableRows[] = [
+      $this->eventTableRows[] = [
         'data' => [
-          ['data' => $this->t('Bookmark')],
+          ['data' => $this->t('Bookmark <small>(@url)</small>', ['@url' => $bookmark['uri']])],
           ['data' => $this->getFieldLabel($field_name)],
         ],
       ];

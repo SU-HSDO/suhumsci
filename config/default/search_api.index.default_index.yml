@@ -25,9 +25,10 @@ field_settings:
     type: text
     configuration:
       roles:
-        - administrator
+        - search_indexer
       view_mode:
         'entity:node':
+          ':default': ''
           hs_basic_page: search_index
           hs_course: search_index
           hs_event: search_index
@@ -85,15 +86,18 @@ processor_settings:
     weights:
       preprocess_index: -6
       preprocess_query: -50
+  custom_value: {  }
   entity_status:
     weights:
       preprocess_index: -10
+  entity_type: {  }
   highlight:
     weights:
       postprocess_query: 0
     prefix: '<strong>'
     suffix: '</strong>'
     excerpt: true
+    excerpt_always: false
     excerpt_length: 256
     exclude_fields:
       - title
@@ -208,6 +212,7 @@ tracker_settings:
     indexing_order: fifo
 options:
   cron_limit: 50
+  delete_on_fail: true
   index_directly: true
   track_changes_in_references: true
 server: default_server

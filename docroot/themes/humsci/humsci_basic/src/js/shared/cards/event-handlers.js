@@ -18,6 +18,11 @@ const addCardEvents = (card, mainLink) => {
 
   // Calculate when the "click" ends.
   card.addEventListener('mouseup', () => {
+    // Ensure clicks on "Add to Calendar" container
+    if (event.target.closest('.addtocal-container')) {
+      return;
+    }
+
     const upTime = Date.now();
     // If the click "duration" is less than 200ms, trigger a click.
     if (upTime - downTime < 200) {

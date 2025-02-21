@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard;
 
-use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -35,18 +35,32 @@ class ImportsInfoManager implements ContainerInjectionInterface {
   protected $capxConfig;
 
   /**
-   * Config pages loader service.
-   *
-   * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
-   */
-  protected $configPagesLoader;
-
-  /**
    * The widget manager.
    *
    * @var \Drupal\Core\Field\WidgetPluginManager
    */
   protected $widgetManager;
+
+  /**
+   * Localist config pages entity.
+   *
+   * @var \Drupal\config_pages\Entity\ConfigPages
+   */
+  protected $localistConfigPages;
+
+  /**
+   * Event table rows.
+   *
+   * @var array
+   */
+  protected $eventImporterTableRows;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
 
   /**
    * Constructs a new ViewsBasicManager object.
@@ -55,21 +69,22 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.
-   * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
-   *   Config pages loader service.
    * @param \Drupal\Core\Field\WidgetPluginManager $widget_manager
    *   The widget manager.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     ConfigFactoryInterface $config_factory,
-    ConfigPagesLoaderServiceInterface $config_pages_loader,
     WidgetPluginManager $widget_manager,
+    EntityFieldManagerInterface $entity_field_manager,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->capxConfig = $config_factory->getEditable('hs_capx.settings');
-    $this->configPagesLoader = $config_pages_loader;
     $this->widgetManager = $widget_manager;
+    $this->entityFieldManager = $entity_field_manager;
+    $this->localistConfigPages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
   }
 
   /**
@@ -79,8 +94,8 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('config.factory'),
-      $container->get('config_pages.loader'),
       $container->get('plugin.manager.field.widget'),
+      $container->get('entity_field.manager'),
     );
   }
 
@@ -102,8 +117,8 @@ class ImportsInfoManager implements ContainerInjectionInterface {
     $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
     if (!$capx_importers) {
       return [
-        '#theme' => 'markup',
-        '#markup' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
+        '#theme' => 'table',
+        '#caption' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
       ];
     }
 
@@ -148,14 +163,67 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    * Generates a table with event import information.
    */
   public function generateEventTable(): array {
-    $config_pages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
-    $field_definition = $config_pages->getFieldDefinition('field_url_separate');
-    $widget = $this->getWidgetInstance('localist_url', $field_definition);
 
-    $full_url = $config_pages->get('field_url_separate')->first()->getValue()['uri'];
+    $filters_to_create = [
+      'field_url_individ' => 'filter',
+      'field_url_book_i' => 'bookmark',
+      'field_url_separate' => 'filter',
+      'field_url_book_s' => 'bookmark',
+    ];
+
+    foreach ($filters_to_create as $field_name => $type) {
+      switch ($type) {
+        case 'filter':
+          $this->generateEventFilters($field_name);
+          break;
+
+        case 'bookmark':
+          $this->generateEventBookmarks($field_name);
+
+          break;
+      }
+    }
+
+    return [
+      '#theme' => 'table',
+      '#caption' => $this->t('Events Importers'),
+      '#header' => [
+        ['data' => $this->t('Filters')],
+        ['data' => $this->t('Recurring event treatment')],
+      ],
+      '#rows' => $this->eventImporterTableRows,
+    ];
+  }
+
+  /**
+   * Gets the localist lookup data from the localist API.
+   *
+   * This method piggybacks off of a custom localist widget in the
+   * stanford_fields module. That widget contains a way to get Localist API
+   * data and cache it for future calls.
+   *
+   * Once the API data is obtained, a lookup table/array of IDs and filter names
+   * is generated. This allows the generateEventFilters() function to more
+   * easily get a filter name to display in the table.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return array
+   *   The localist lookup data by key.
+   */
+  private function getLocalistLookup($field_name) {
+    /* We can't seem to get the widget base URL from settings. So, we grab the
+     * first URL and parse it as the base URL. Since the custom widget does not
+     * allow users to edit the URLs, this is a fair assumption that all URLs
+     * have the same base URL.
+     */
+    $full_url = $this->localistConfigPages->get($field_name)->first()->getValue()['uri'];
     $parsed_url = parse_url($full_url);
     $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
 
+    $field_definition = $this->localistConfigPages->getFieldDefinition($field_name);
+    $widget = $this->getWidgetInstance('localist_url', $field_definition);
     $localist_api_data = $widget->getApiData($base_url);
 
     $localist_lookup = [
@@ -164,6 +232,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       'filters' => [],
     ];
 
+    // Combines departments and groups into the same lookup table.
     foreach (['departments' => 'department', 'groups' => 'group'] as $key => $subkey) {
       if (!empty($localist_api_data[$key])) {
         foreach ($localist_api_data[$key] as $item) {
@@ -174,6 +243,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       }
     }
 
+    // Retrieves places.
     if (!empty($localist_api_data['places'])) {
       foreach ($localist_api_data['places'] as $place) {
         if (isset($place['place']['id'], $place['place']['name'])) {
@@ -182,6 +252,7 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       }
     }
 
+    // Retrieves audience, subject, and types.
     if (!empty($localist_api_data['events/filters'])) {
       foreach ($localist_api_data['events/filters'] as $filters) {
         foreach ($filters as $filter) {
@@ -192,10 +263,24 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       }
     }
 
-    $localist_urls = $config_pages->get('field_url_separate')->getValue();
+    return $localist_lookup;
+  }
 
-    $temp = $config_pages->get('field_url_book_s')->getValue();
-
+  /**
+   * Generates event filters.
+   *
+   * Stored URLs have query parameters that are IDs for each filter.
+   * We parse each query parameter and then lookup the ID in the localist API
+   * data to get the filter name. @see getLocalistLookup() for more info.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return void
+   */
+  private function generateEventFilters($field_name) {
+    $localist_lookup = $this->getLocalistLookup($field_name);
+    $localist_urls = $this->localistConfigPages->get($field_name)->getValue();
     foreach ($localist_urls as $url) {
       parse_str(parse_url(urldecode($url['uri']), PHP_URL_QUERY), $query_parameters);
 
@@ -212,22 +297,50 @@ class ImportsInfoManager implements ContainerInjectionInterface {
         $types ? implode(', ', $types) : NULL,
       ];
 
-      $table_rows[] = [
+      $this->eventImporterTableRows[] = [
         'data' => [
           ['data' => implode(', ', array_filter($filters))],
+          ['data' => $this->getFieldLabel($field_name)],
         ],
       ];
     }
+  }
 
-    return [
-      '#theme' => 'table',
-      '#caption' => $this->t('Events Importers'),
-      '#header' => [
-        ['data' => $this->t('Filters')],
-        ['data' => $this->t('Recurring event treatment')],
-      ],
-      '#rows' => $table_rows,
-    ];
+  /**
+   * Generates event bookmarks.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return void
+   */
+  private function generateEventBookmarks($field_name) {
+    $bookmarks = $this->localistConfigPages->get($field_name)->getValue();
+    foreach ($bookmarks as $bookmark) {
+      $this->eventImporterTableRows[] = [
+        'data' => [
+          ['data' => $this->t('Bookmark')],
+          ['data' => $this->getFieldLabel($field_name)],
+        ],
+      ];
+    }
+  }
+
+  /**
+   * Gets the field label from a field name for localist_events config_pages.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return string
+   *   The field label.
+   */
+  private function getFieldLabel($field_name) {
+    $field_definitions = $this->entityFieldManager->getFieldDefinitions('config_pages', 'localist_events');
+    if (isset($field_definitions[$field_name])) {
+      return $field_definitions[$field_name]->getLabel();
+    }
+    return '';
   }
 
 }

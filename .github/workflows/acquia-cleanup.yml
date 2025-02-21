@@ -42,6 +42,10 @@ jobs:
           ACQUIA_KEY: ${{ secrets.ACQUIA_KEY }}
           ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: |
+          git config --system --add safe.directory '*' &&
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "Github Actions" &&
+          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
           blt blt:telemetry:disable --no-interaction &&
           # blt humsci:clean-backups &&

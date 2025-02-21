@@ -5,7 +5,10 @@ name: Acquia Cleanup
 #   schedule:
 #     # Run on Tuesdays at Midnight (Monday Nights)
 #     - cron: '0 0 * * 2'
-
+on: push
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   acquia_cleanup:
     runs-on: ubuntu-latest

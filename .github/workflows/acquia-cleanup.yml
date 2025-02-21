@@ -1,16 +1,25 @@
 # .github/workflows/acquia-cleanup.yml
 # Clean up stale site backups and branches on Acquia
 name: Acquia Cleanup
-on:
-  schedule:
-    # Run on Tuesdays at Midnight (Monday Nights)
-    - cron: '0 0 * * 2'
+# on:
+#   schedule:
+#     # Run on Tuesdays at Midnight (Monday Nights)
+#     - cron: '0 0 * * 2'
+
 jobs:
   acquia_cleanup:
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
+      - name: Install SSH key
+        if: ${{ steps.tag.outputs.tag }}
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: fail
       - uses: actions/checkout@v4
       - name: Restore Cache
         uses: actions/cache@v4
@@ -33,5 +42,5 @@ jobs:
         run: |
           composer install -n &&
           blt blt:telemetry:disable --no-interaction &&
-          blt humsci:clean-backups &&
+          # blt humsci:clean-backups &&
           blt humsci:clean-branches

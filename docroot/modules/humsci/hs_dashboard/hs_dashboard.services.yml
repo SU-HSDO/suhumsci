@@ -1,4 +1,7 @@
 services:
+  hs_dashboard.imports_info_manager:
+    class: Drupal\hs_dashboard\ImportsInfoManager
+    arguments: ['@entity_type.manager', '@config.factory']
   hs_dashboard.announcements_manager:
     class: Drupal\hs_dashboard\AnnouncementsManager
     arguments: ['@http_client', '@logger.factory', '@file_system', '@date.formatter']

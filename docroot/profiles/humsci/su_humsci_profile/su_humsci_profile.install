@@ -1263,3 +1263,18 @@ function su_humsci_profile_update_9723(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
+
+/**
+ * Allow hs_private_page nodes to be exported via single_content_sync.
+ */
+function su_humsci_profile_update_9724() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('single_content_sync.settings');
+  $allowed_entity_types = $config->get('allowed_entity_types.node');
+
+  array_push($allowed_entity_types, 'hs_private_page');
+  asort($allowed_entity_types);
+  $allowed_entity_types = array_unique($allowed_entity_types);
+
+  $config->set('allowed_entity_types.node', $allowed_entity_types)->save();
+}

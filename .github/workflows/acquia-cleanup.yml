@@ -11,6 +11,13 @@ jobs:
     container:
       image: pookmish/drupal8ci:php8.3
     steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          if_key_exists: fail
       - uses: actions/checkout@v4
       - name: Restore Cache
         uses: actions/cache@v4
@@ -31,6 +38,10 @@ jobs:
           ACQUIA_KEY: ${{ secrets.ACQUIA_KEY }}
           ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: |
+          git config --system --add safe.directory '*' &&
+          git config --global user.email "sws-developers@lists.stanford.edu" &&
+          git config --global user.name "Github Actions" &&
+          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
           blt blt:telemetry:disable --no-interaction &&
           blt humsci:clean-backups &&

@@ -160,16 +160,12 @@ class AnnouncementsManager implements ContainerInjectionInterface {
           }
 
           // Removes empty rows.
-          if (empty($data[1]) || (empty($data[2]) && empty($data[3]))) {
+          if (empty($data[1]) || empty($data[3])) {
             continue;
           }
 
           if (isset($data[1])) {
             $data[1] = $this->convertDateToTimestamp(trim($data[1]));
-          }
-
-          if (isset($data[2])) {
-            $data[2] = $this->convertMarkdownLinks(trim($data[2]));
           }
 
           if (isset($data[3])) {
@@ -258,10 +254,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
         'data' => $this->t('Date'),
       ],
       [
-        'data' => $this->t('Title'),
-      ],
-      [
-        'data' => $this->t('Description'),
+        'data' => $this->t('Update'),
       ],
     ];
 
@@ -286,13 +279,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $table_rows[] = [
         'data' => [
           ['data' => $row[1]],
-          [
-            'data' => [
-              '#markup' => $row[2],
-              '#prefix' => '<strong>',
-              '#suffix' => '</strong>',
-            ],
-          ],
           ['data' => ['#markup' => $row[3]]],
         ],
       ];

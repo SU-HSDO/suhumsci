@@ -12,7 +12,11 @@
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
-    margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
+    &:has(.hb-vertical-linked-card__img):has(.hb-vertical-linked-card__title),
+    &:has(.hb-vertical-linked-card__title) {
+      margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
+    }
+
     padding-bottom: hb-calculate-rems(28px);
     color: var(--palette--white);
 

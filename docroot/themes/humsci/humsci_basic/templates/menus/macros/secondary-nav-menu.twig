@@ -36,10 +36,10 @@
         #}
         {% set link_attributes = link_attributes.addClass('hb-secondary-toggler') %}
         {% set randomInt = random(0, 100) %}
-        <a{{ link_attributes }} id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true" role="button">{{ item.title }}</a>
+        <a{{ link_attributes }} aria-controls="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true" role="button">{{ item.title }}</a>
 
         {% if item.below %}
-          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}">
+          <div class="{{ class_prefix }}__menu-container" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-hidden="false">
             {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
           </div>
         {% endif %}
@@ -53,10 +53,10 @@
 
         {% if item.below %}
           {% set randomInt = random(0, 100) %}
-          <button class="{{ class_prefix }}__button hb-secondary-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true">
+          <button class="{{ class_prefix }}__button hb-secondary-toggler" aria-controls="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-expanded="true">
             Toggle {{ item.title }}
           </button>
-          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}">
+          <div class="{{ class_prefix }}__menu-container" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ randomInt }}" aria-hidden="false">
             {{ menus.secondary_nav_menu(item.below, menu_level + 1, class_prefix, item) }}
           </div>
         {% endif %}

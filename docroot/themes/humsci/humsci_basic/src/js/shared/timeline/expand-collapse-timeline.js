@@ -19,45 +19,10 @@
         items.forEach((item) => {
           item.removeAttribute('open');
         });
-
-        // Find the summary element and update the aria attribute values
-        const summaries = timeline.querySelectorAll(
-          '.hb-timeline-item__summary',
-        );
-
-        summaries.forEach((summary) => {
-          summary.setAttribute('aria-expanded', 'false');
-          summary.setAttribute('aria-pressed', 'false');
-        });
       });
 
-      // When a user clicks on a timeline, update the aria properties accordingly
+      // When a user clicks on a timeline, set open property accordingly
       const timelineItems = once('timeline-item', '.hb-timeline-item', context);
-
-      if (timelineItems) {
-        timelineItems.forEach((timelineItem) => {
-          const summary = timelineItem.querySelector(
-            '.hb-timeline-item__summary',
-          );
-
-          // Find the value of aria-expanded for a timeline item summary
-          let ariaExpanded = summary.getAttribute('aria-expanded');
-
-          // Update aria values!
-          summary.addEventListener(('keypress', 'click'), () => {
-            if (ariaExpanded === 'true') {
-              summary.setAttribute('aria-expanded', 'false');
-              summary.setAttribute('aria-pressed', 'false');
-            } else {
-              summary.setAttribute('aria-expanded', 'true');
-              summary.setAttribute('aria-pressed', 'true');
-            }
-
-            // Retain updated value for the aria-expanded attribute
-            ariaExpanded = summary.getAttribute('aria-expanded');
-          });
-        });
-      }
 
       const searchQuery = new URLSearchParams(window.location.search);
       const params = Object.fromEntries(searchQuery.entries());
@@ -67,10 +32,7 @@
 
         timelineItems.forEach((timeline) => {
           if (timeline.textContent.toLowerCase().includes(searchTerm)) {
-            const summary = timeline.querySelector('summary');
             timeline.setAttribute('open', '');
-            summary.setAttribute('aria-expanded', 'true');
-            summary.setAttribute('aria-pressed', 'true');
           }
         });
       }

@@ -31,6 +31,9 @@
  * @ingroup themeable
  */
 #}
+
+{{ attach_library(active_theme() ~ '/pattern-view-field') }}
+
 {%- set has_content = field.content|render|striptags('<span><div>')|trim -%}
 {{ field.separator }}
 {%- if field.wrapper_element -%}

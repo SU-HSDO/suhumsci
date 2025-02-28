@@ -32,6 +32,12 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   /**
    * Constructs a new ViewsBasicManager object.
    *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -61,14 +67,20 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     );
   }
 
-  function getTableHeaders(): array {
+  /**
+   * {@inheritDoc}
+   */
+  public function getTableHeaders(): array {
     return [
       $this->t('Importer (migration) name'),
       $this->t('Org Code and Workgroup'),
     ];
   }
 
-  function getTableRows(): array {
+  /**
+   * {@inheritDoc}
+   */
+  public function getTableRows(): array {
     $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
     $table_rows = [];
 
@@ -84,6 +96,9 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     return $table_rows;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public function getTableSuffix(): TranslatableMarkup {
     $orphan_action = $this->t('Do nothing');
 

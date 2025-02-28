@@ -32,15 +32,15 @@ interface ImporterInfoInterface extends PluginInspectionInterface {
    * @return Drupal\Core\StringTranslation\TranslatableMarkup
    *   A table suffix.
    */
-  public function getTableSuffix(): TranslatableMarkup;
+  public function getTableSuffix(): ?TranslatableMarkup;
 
   /**
    * Gets the caption for the importer.
    *
-   * @return Drupal\Core\StringTranslation\TranslatableMarkup
-   *   A caption.
+   * @return Drupal\Core\StringTranslation\TranslatableMarkup | null
+   *   A caption or null.
    */
-  public function getCaption(): TranslatableMarkup;
+  public function getCaption(): TranslatableMarkup | null;
 
   /**
    * Gets the no data caption for the importer.

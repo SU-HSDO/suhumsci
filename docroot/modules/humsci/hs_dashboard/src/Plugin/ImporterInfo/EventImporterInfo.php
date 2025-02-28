@@ -14,7 +14,6 @@ use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 /**
  * Event importer info.
  *
@@ -66,6 +65,12 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   /**
    * Constructs a new ViewsBasicManager object.
    *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Field\WidgetPluginManager $widget_manager
@@ -320,6 +325,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The field name.
    *
    * @return void
+   *   No return value.
    */
   private function generateEventFilters($field_name) {
     if (!$this->localistConfigPages) {
@@ -359,6 +365,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The field name.
    *
    * @return void
+   *  No return value.
    */
   private function generateEventBookmarks($field_name) {
     if (!$this->localistConfigPages) {

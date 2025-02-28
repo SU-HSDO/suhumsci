@@ -9,6 +9,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Base class for Importer Info plugins.
+ */
 abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
@@ -23,10 +26,14 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
   /**
    * Constructs a new ViewsBasicManager object.
    *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory interface.
    */
   public function __construct(
     array $configuration,
@@ -67,8 +74,8 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
   /**
    * {@inheritdoc}
    */
-  public function getTableSuffix(): TranslatableMarkup {
-    return $this->t('');
+  public function getTableSuffix(): ?TranslatableMarkup {
+    return NULL;
   }
 
   /**
@@ -84,4 +91,5 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
   public function getNoDataCaption(): TranslatableMarkup {
     return $this->t('<em>No import data available.</em>');
   }
+
 }

@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\WidgetPluginManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\stanford_migrate\EventSubscriber\EventsSubscriber;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
@@ -23,18 +16,6 @@ class ImporterInfoManager extends DefaultPluginManager {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a new ViewsBasicManager object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory interface.
-   * @param \Drupal\Core\Field\WidgetPluginManager $widget_manager
-   *   The widget manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   */
   /**
    * Constructs a new ImporterInfoManager object.
    *
@@ -62,16 +43,22 @@ class ImporterInfoManager extends DefaultPluginManager {
     $this->setCacheBackend($cache_backend, 'hs_dashboard_importer_info_plugins');
   }
 
+  /**
+   * Gets all Importer instances.
+   */
   public function getImporterInstances(): array {
-  $instances = [];
+    $instances = [];
 
-  foreach ($this->getDefinitions() as $plugin_id => $definition) {
-    $instances[$plugin_id] = $this->createInstance($plugin_id);
+    foreach ($this->getDefinitions() as $plugin_id => $definition) {
+      $instances[$plugin_id] = $this->createInstance($plugin_id);
+    }
+
+    return $instances;
   }
 
-  return $instances;
-}
-
+  /**
+   * Generates tables for all Importers.
+   */
   public function generateTables(): array {
     $tables = [];
 
@@ -99,9 +86,10 @@ class ImporterInfoManager extends DefaultPluginManager {
         ];
       }
 
-
     }
 
-    return $tables; // Return an array of table render arrays
+    return $tables;
+
   }
+
 }

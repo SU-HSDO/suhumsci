@@ -2,30 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hs_dashboard;
+namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\stanford_migrate\EventSubscriber\EventsSubscriber;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
+use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+
 /**
- * Class to handle Import information for block tables.
+ * Event importer info.
+ *
+ * @ImporterInfo(
+ *   id = "event_importer_info",
+ *   label = @Translation("Event Importers"),
+ *   description = @Translation("Retrieves event importer information from Localist."),
+ * )
  */
-class ImportsInfoManager implements ContainerInjectionInterface {
+class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
 
   /**
    * Configuration Factory.
@@ -67,21 +68,21 @@ class ImportsInfoManager implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory interface.
    * @param \Drupal\Core\Field\WidgetPluginManager $widget_manager
    *   The widget manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
   public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
     EntityTypeManagerInterface $entity_type_manager,
-    ConfigFactoryInterface $config_factory,
     WidgetPluginManager $widget_manager,
     EntityFieldManagerInterface $entity_field_manager,
   ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
     $this->entityTypeManager = $entity_type_manager;
-    $this->capxConfig = $config_factory->getEditable('hs_capx.settings');
     $this->widgetManager = $widget_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->localistConfigPages = $this->entityTypeManager->getStorage('config_pages')->load('localist_events');
@@ -91,10 +92,12 @@ class ImportsInfoManager implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('config.factory'),
       $container->get('plugin.manager.field.widget'),
       $container->get('entity_field.manager'),
     );
@@ -112,58 +115,19 @@ class ImportsInfoManager implements ContainerInjectionInterface {
   }
 
   /**
-   * Generates a table with people import information.
+   * {@inheritdoc}
    */
-  public function generatePeopleTable(): array {
-    $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
-    if (!$capx_importers) {
-      return [
-        '#theme' => 'table',
-        '#caption' => $this->t('<p>People Importers</p><em>There are no people importers configured.</em>'),
-      ];
-    }
-
-    $table_rows = [];
-    $orphan_action = $this->t('Do nothing');
-
-    if ($orphan_setting = $this->capxConfig->get('orphan_action')) {
-      $orphan_labels = [
-        EventsSubscriber::ORPHAN_DELETE => $this->t('Delete'),
-        EventsSubscriber::ORPHAN_UNPUBLISH => $this->t('Unpublish'),
-      ];
-
-      $orphan_action = $orphan_labels[$orphan_setting];
-    }
-
-    foreach ($capx_importers as $importer) {
-      /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
-      $table_rows[] = [
-        'data' => [
-          ['data' => $importer->label()],
-          ['data' => $importer->getWorkgroups(TRUE)],
-        ],
-      ];
-    }
-
+  public function getTableHeaders(): array {
     return [
-      '#theme' => 'table',
-      '#caption' => $this->t('People Importers'),
-      '#header' => [
-        ['data' => $this->t('Importer (migration) name')],
-        ['data' => $this->t('Org Code and Workgroup')],
-      ],
-      '#rows' => $table_rows,
-      '#suffix' => $this->t(
-        '<p>People importer orphan action: @action</p>',
-        ['@action' => $orphan_action]
-      ),
+      $this->t('Filters'),
+      $this->t('Recurring event treatment'),
     ];
   }
 
   /**
-   * Generates a table with event import information.
+   * {@inheritdoc}
    */
-  public function generateEventTable(): array {
+  public function getTableRows(): array {
 
     $filters_to_create = [
       'field_url_individ' => 'filter',
@@ -185,22 +149,14 @@ class ImportsInfoManager implements ContainerInjectionInterface {
       }
     }
 
-    if (!$this->eventTableRows) {
-      return [
-        '#theme' => 'table',
-        '#caption' => $this->t('<p>Events Importers</p><em>There are no events importers configured.</em>'),
-      ];
-    }
+    return $this->eventTableRows;
+  }
 
-    return [
-      '#theme' => 'table',
-      '#caption' => $this->t('Events Importers'),
-      '#header' => [
-        ['data' => $this->t('Filters')],
-        ['data' => $this->t('Recurring event treatment')],
-      ],
-      '#rows' => $this->eventTableRows,
-    ];
+  /**
+   * {@inheritDoc}
+   */
+  public function getNoDataCaption(): TranslatableMarkup {
+    return $this->t('<em>There are no Localist importers configured.</em>');
   }
 
   /**

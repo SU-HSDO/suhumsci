@@ -1344,7 +1344,10 @@ function su_humsci_profile_update_9726(&$sandbox) {
         if ($cleanPermissions !== $nodePermissions) {
           $changed = TRUE;
           $nodePermissions = $cleanPermissions;
-          $sandbox['results'][] = t('Cleaned %operation on nid %nid.', ['%operation' => $nodeOperation, '%nid' => $node->id()]);
+          $sandbox['results'][] = t('Cleaned %operation on nid %nid.', [
+            '%operation' => $nodeOperation,
+            '%nid' => $node->id(),
+          ]);
         }
       }
       if ($changed) {

@@ -365,7 +365,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The field name.
    *
    * @return void
-   *  No return value.
+   *   No return value.
    */
   private function generateEventBookmarks($field_name) {
     if (!$this->localistConfigPages) {

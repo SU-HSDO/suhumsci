@@ -37,7 +37,7 @@ interface ImporterInfoInterface extends PluginInspectionInterface {
   /**
    * Gets the caption for the importer.
    *
-   * @return Drupal\Core\StringTranslation\TranslatableMarkup | null
+   * @return Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   A caption or null.
    */
   public function getCaption(): TranslatableMarkup | null;

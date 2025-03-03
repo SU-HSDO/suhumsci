@@ -24,8 +24,7 @@ function hs_editorial_node_access(NodeInterface $node, $op, AccountInterface $ac
   // not differentiate between published and unpublished nodes.
   if ($op === 'update'
     && $node->isPublished()
-    && in_array('preparer', $account->getRoles())
-    && !$account->hasPermission('edit any ' . $node->bundle() . ' content')) {
+    && in_array('preparer', $account->getRoles())) {
     return AccessResult::forbidden()->addCacheableDependency($node);
   }
   // Default response should return neutral, letting other access checks decide.

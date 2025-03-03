@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class HsUniversityPoliciesBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
   /**
    * {@inheritdoc}
    */

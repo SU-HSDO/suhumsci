@@ -1,12 +1,19 @@
 <?php
 
 /**
+ * @file
+ * Install, update and uninstall functions for the hs_editorial module.
+ */
+
+use Drupal\user\Entity\Role;
+
+/**
  * Implements hook_uninstall().
  */
 function hs_editorial_uninstall() {
   // Remove the preparer role on module uninstall. Site admins will also want to
   // rebuild configuration to clean up related configuration dependencies.
-  $role = \Drupal\user\Entity\Role::load('preparer');
+  $role = Role::load('preparer');
   if ($role) {
     $role->delete();
   }

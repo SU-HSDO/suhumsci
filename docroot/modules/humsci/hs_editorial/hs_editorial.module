@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * hs_editorial.module
+ */
+
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
@@ -7,7 +12,7 @@ use Drupal\node\NodeInterface;
 /**
  * Implements hook_node_presave().
  */
-function hs_editorial_node_presave(Drupal\node\NodeInterface $node) {
+function hs_editorial_node_presave(NodeInterface $node) {
   // Users with the 'Preparer' role are not allowed to publish new content.
   // Override the default publishing status set within the content types.
   if ($node->isNew() && in_array('preparer', \Drupal::currentUser()->getRoles())) {

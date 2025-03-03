@@ -1280,9 +1280,9 @@ function su_humsci_profile_update_9724() {
 }
 
 /**
- * Clean-up possible duplicates from su_humsci_profile_update_9723().
+ * Clean-up possible bundle settings dupes from su_humsci_profile_update_9723().
  */
-function su_humsci_profile_update_9725(&$sandbox) {
+function su_humsci_profile_update_9725() {
   $node_type = 'hs_private_page';
   $results = [];
   // Remove any dupes from bundle settings.
@@ -1292,9 +1292,9 @@ function su_humsci_profile_update_9725(&$sandbox) {
       // This isn't actually an array of perms, this is another setting.
       continue;
     }
-    $cleanPermissions = array_unique($permissions);
-    if ($cleanPermissions !== $permissions) {
-      $permissions = $cleanPermissions;
+    $clean_permissions = array_unique($permissions);
+    if ($clean_permissions !== $permissions) {
+      $permissions = $clean_permissions;
       $results[] = t('Cleaned %operation.', ['%operation' => $operation]);
     }
   }
@@ -1317,7 +1317,7 @@ function su_humsci_profile_update_9725(&$sandbox) {
 }
 
 /**
- * Clean-up possible duplicates from su_humsci_profile_update_9723().
+ * Clean-up possible node settings dupes from su_humsci_profile_update_9723().
  */
 function su_humsci_profile_update_9726(&$sandbox) {
   $node_type = 'hs_private_page';
@@ -1336,22 +1336,22 @@ function su_humsci_profile_update_9726(&$sandbox) {
   /** @var \Drupal\node\NodeInterface $node */
   foreach ($node_storage->loadMultiple($nids) as $node) {
     // Remove any dupes from per-node settings.
-    $nodeSettings = content_access_get_per_node_settings($node);
+    $node_settings = content_access_get_per_node_settings($node);
     $changed = FALSE;
-    if ($nodeSettings) {
-      foreach ($nodeSettings as $nodeOperation => &$nodePermissions) {
-        $cleanPermissions = array_unique($nodePermissions);
-        if ($cleanPermissions !== $nodePermissions) {
+    if ($node_settings) {
+      foreach ($node_settings as $node_operation => &$node_permissions) {
+        $clean_permissions = array_unique($node_permissions);
+        if ($clean_permissions !== $node_permissions) {
           $changed = TRUE;
-          $nodePermissions = $cleanPermissions;
+          $node_permissions = $clean_permissions;
           $sandbox['results'][] = t('Cleaned %operation on nid %nid.', [
-            '%operation' => $nodeOperation,
+            '%operation' => $node_operation,
             '%nid' => $node->id(),
           ]);
         }
       }
       if ($changed) {
-        content_access_save_per_node_settings($node, $nodeSettings);
+        content_access_save_per_node_settings($node, $node_settings);
       }
     }
     unset($sandbox['ids'][$node->id()]);

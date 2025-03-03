@@ -16,21 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class HsUniversityPoliciesBlock extends BlockBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * Constructs a new HsUniversityPoliciesBlock instance.
-   *
-   * @param array $configuration
-   *   A configuration array containing plugin settings.
-   * @param string $plugin_id
-   *   The plugin ID for the block.
-   * @param mixed $plugin_definition
-   *   The plugin definition.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
   /**
    * {@inheritdoc}
    */
@@ -67,4 +52,5 @@ class HsUniversityPoliciesBlock extends BlockBase implements ContainerFactoryPlu
       '#prefix' => '<p>' . $this->t('All site content must comply with the University Policies.') . '</p>',
     ];
   }
+
 }

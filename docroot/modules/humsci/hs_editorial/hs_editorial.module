@@ -11,7 +11,7 @@ function hs_editorial_node_presave(Drupal\node\NodeInterface $node) {
   // Users with the 'Preparer' role are not allowed to publish new content.
   // Override the default publishing status set within the content types.
   if ($node->isNew() && in_array('preparer', \Drupal::currentUser()->getRoles())) {
-    $node->setPublished(FALSE);
+    $node->setUnpublished();
   }
 }
 

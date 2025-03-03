@@ -1,0 +1,33 @@
+<?php
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_node_presave().
+ */
+function hs_editorial_node_presave(Drupal\node\NodeInterface $node) {
+  // Users with the 'Preparer' role are not allowed to publish new content.
+  // Override the default publishing status set within the content types.
+  if ($node->isNew() && in_array('preparer', \Drupal::currentUser()->getRoles())) {
+    $node->setPublished(FALSE);
+  }
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function hs_editorial_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  // Users with the 'Preparer' role are not allowed to edit published content.
+  // This closes a gap with the currently available permissions where edit does
+  // not differentiate between published and unpublished nodes.
+  if ($op === 'update'
+    && $node->isPublished()
+    && in_array('preparer', $account->getRoles())
+    && !$account->hasPermission('edit any ' . $node->bundle() . ' content')) {
+    return AccessResult::forbidden()->addCacheableDependency($node);
+  }
+  // Default response should return neutral, letting other access checks decide.
+  return AccessResult::neutral();
+}

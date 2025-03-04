@@ -35,7 +35,7 @@
           acts as the button to toggle the nested navigation.
         #}
         {% set link_attributes = link_attributes.addClass('hb-secondary-toggler') %}
-        {% set unique_id = item.title|clean_class|clean_unique_id %}
+        {% set unique_id = item.title|clean_unique_id %}
         <a{{ link_attributes }} aria-controls="{{ unique_id }}" aria-expanded="true" role="button">{{ item.title }}</a>
 
         {% if item.below %}
@@ -52,7 +52,7 @@
         {{ link(item.title, item.url, link_attributes) }}
 
         {% if item.below %}
-          {% set unique_id = item.title|clean_class|clean_unique_id %}
+          {% set unique_id = item.title|clean_unique_id %}
           <button class="{{ class_prefix }}__button hb-secondary-toggler" aria-controls="{{ unique_id }}" aria-expanded="true">
             Toggle {{ item.title }}
           </button>

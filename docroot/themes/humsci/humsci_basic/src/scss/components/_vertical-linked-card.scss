@@ -12,7 +12,11 @@
     // overlap issues.
     // The margin-left matches the negative margin-left on the title to prevent
     // overlap issues.
-    margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
+    &:has(.hb-vertical-linked-card__img):has(.hb-vertical-linked-card__title),
+    &:has(.hb-vertical-linked-card__title) {
+      margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
+    }
+
     padding-bottom: hb-calculate-rems(28px);
     color: var(--palette--white);
 
@@ -68,6 +72,11 @@
       padding: hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
       background-color: var(--palette--secondary);
+
+       // Update padding when card is in 4 columns.
+      .field-hs-collection-items.item-per-row--4 & {
+        padding: hb-calculate-rems(18px);
+      }
 
       @include grid-media-min('sm') {
         margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0
@@ -154,6 +163,11 @@
 
     @include hb-themes(('airy', 'colorful')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+
+      // Update padding when card is in 4 columns.
+      .field-hs-collection-items.item-per-row--4 & {
+        padding: hb-calculate-rems(18px) hb-calculate-rems(18px) 0;
+      }
     }
 
     @include hb-traditional {

@@ -119,13 +119,19 @@
       .hb-raised-cards & {
         padding: hb-calculate-rems(32px) hb-calculate-rems(36px);
       }
+
+      // Update padding when card is in 4 columns.
+      .field-hs-collection-items.item-per-row--4 & {
+        padding: hb-calculate-rems(18px);
+      }
     }
 
     &:has(.hb-card__graphics) {
       .hb-card__content {
         padding-top: hb-calculate-rems(62px);
 
-        .hb-raised-cards & {
+        .hb-raised-cards &,
+        .field-hs-collection-items.item-per-row--4 & {
           padding-top: hb-calculate-rems(62px);
         }
       }

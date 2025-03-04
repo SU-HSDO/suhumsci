@@ -9,7 +9,6 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\Core\Utility\UpdateException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\hs_entities\Entity\HsEntityType;
@@ -1319,13 +1318,6 @@ function su_humsci_profile_update_9725() {
 
 /**
  * Clean-up possible node settings dupes from su_humsci_profile_update_9723().
- *
- * @param array $sandbox
- *
- * @return string
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
- * @throws \Drupal\Core\Utility\UpdateException
  */
 function su_humsci_profile_update_9726(&$sandbox) {
   $node_type = 'hs_private_page';
@@ -1349,7 +1341,9 @@ function su_humsci_profile_update_9726(&$sandbox) {
     if ($node_settings) {
       foreach ($node_settings as $node_operation => &$node_permissions) {
         if (!is_array($node_permissions)) {
-          throw new UpdateException('Error on node ' . $node->id() . "where operation $node_operation is not an array.");
+          // Oddly enough, we can get a "per_node" operation here. That might be
+          // a bug with the module.
+          continue;
         }
         $clean_permissions = array_unique($node_permissions);
         if ($clean_permissions !== $node_permissions) {

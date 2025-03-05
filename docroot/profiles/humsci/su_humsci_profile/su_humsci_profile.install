@@ -1331,7 +1331,7 @@ function su_humsci_profile_update_9726(&$sandbox) {
     $sandbox['ids'] = array_combine($ids, $ids);
     $sandbox['total'] = count($sandbox['ids']);
   }
-  $nids = array_slice($sandbox['ids'], 0, 50);
+  $nids = array_slice($sandbox['ids'], 0, 100);
 
   /** @var \Drupal\node\NodeInterface $node */
   foreach ($node_storage->loadMultiple($nids) as $node) {
@@ -1340,6 +1340,11 @@ function su_humsci_profile_update_9726(&$sandbox) {
     $changed = FALSE;
     if ($node_settings) {
       foreach ($node_settings as $node_operation => &$node_permissions) {
+        if (!is_array($node_permissions)) {
+          // Oddly enough, we can get a "per_node" operation here. That might be
+          // a bug with the module.
+          continue;
+        }
         $clean_permissions = array_unique($node_permissions);
         if ($clean_permissions !== $node_permissions) {
           $changed = TRUE;
@@ -1359,4 +1364,16 @@ function su_humsci_profile_update_9726(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
   return implode('  <br />', $sandbox['results']);
+}
+
+/**
+ * Update config ignore settings for content_access_simple.
+ */
+function su_humsci_profile_update_9727() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $ignored_config_entities = $config->get('ignored_config_entities');
+  $ignored_config_entities[] = 'core.extension:module.content_access_simple';
+  $ignored_config_entities[] = 'content_access_simple.settings';
+  $config->set('ignored_config_entities', $ignored_config_entities);
+  $config->save();
 }

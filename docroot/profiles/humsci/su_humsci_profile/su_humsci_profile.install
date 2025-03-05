@@ -1263,3 +1263,117 @@ function su_humsci_profile_update_9723(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
+
+/**
+ * Allow hs_private_page nodes to be exported via single_content_sync.
+ */
+function su_humsci_profile_update_9724() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('single_content_sync.settings');
+  $allowed_entity_types = $config->get('allowed_entity_types.node');
+
+  array_push($allowed_entity_types, 'hs_private_page');
+  asort($allowed_entity_types);
+  $allowed_entity_types = array_unique($allowed_entity_types);
+
+  $config->set('allowed_entity_types.node', $allowed_entity_types)->save();
+}
+
+/**
+ * Clean-up possible bundle settings dupes from su_humsci_profile_update_9723().
+ */
+function su_humsci_profile_update_9725() {
+  $node_type = 'hs_private_page';
+  $results = [];
+  // Remove any dupes from bundle settings.
+  $settings = content_access_get_settings('all', $node_type);
+  foreach ($settings as $operation => &$permissions) {
+    if (!is_array($permissions)) {
+      // This isn't actually an array of perms, this is another setting.
+      continue;
+    }
+    $clean_permissions = array_unique($permissions);
+    if ($clean_permissions !== $permissions) {
+      $permissions = $clean_permissions;
+      $results[] = t('Cleaned %operation.', ['%operation' => $operation]);
+    }
+  }
+  // Without enforcing per-node settings we got lots of dupes in the
+  // node_access table due to a clash between the manual items set in
+  // su_humsci_profile_update_9723(), plus the automatic entries that Content
+  // Access was trying to add (when per-node was not enabled).  Those dupes
+  // caused fatal exceptions.
+  if (empty($settings['per_node'])) {
+    $settings['per_node'] = TRUE;
+    $results[] = t('Enforced per-node Content Access.');
+  }
+  if ($results) {
+    content_access_set_settings($settings, $node_type);
+    $results[] = t('Saved Content Access settings for Private Pages.');
+    node_access_rebuild(TRUE);
+    $results[] = t('Rebuilt node access.');
+    return implode('  <br />', $results);
+  }
+}
+
+/**
+ * Clean-up possible node settings dupes from su_humsci_profile_update_9723().
+ */
+function su_humsci_profile_update_9726(&$sandbox) {
+  $node_type = 'hs_private_page';
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  if (empty($sandbox['ids'])) {
+    $sandbox['results'] = [];
+    $ids = $node_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $node_type)
+      ->execute();
+    $sandbox['ids'] = array_combine($ids, $ids);
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+  $nids = array_slice($sandbox['ids'], 0, 100);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($node_storage->loadMultiple($nids) as $node) {
+    // Remove any dupes from per-node settings.
+    $node_settings = content_access_get_per_node_settings($node);
+    $changed = FALSE;
+    if ($node_settings) {
+      foreach ($node_settings as $node_operation => &$node_permissions) {
+        if (!is_array($node_permissions)) {
+          // Oddly enough, we can get a "per_node" operation here. That might be
+          // a bug with the module.
+          continue;
+        }
+        $clean_permissions = array_unique($node_permissions);
+        if ($clean_permissions !== $node_permissions) {
+          $changed = TRUE;
+          $node_permissions = $clean_permissions;
+          $sandbox['results'][] = t('Cleaned %operation on nid %nid.', [
+            '%operation' => $node_operation,
+            '%nid' => $node->id(),
+          ]);
+        }
+      }
+      if ($changed) {
+        content_access_save_per_node_settings($node, $node_settings);
+      }
+    }
+    unset($sandbox['ids'][$node->id()]);
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+  return implode('  <br />', $sandbox['results']);
+}
+
+/**
+ * Update config ignore settings for content_access_simple.
+ */
+function su_humsci_profile_update_9727() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $ignored_config_entities = $config->get('ignored_config_entities');
+  $ignored_config_entities[] = 'core.extension:module.content_access_simple';
+  $ignored_config_entities[] = 'content_access_simple.settings';
+  $config->set('ignored_config_entities', $ignored_config_entities);
+  $config->save();
+}

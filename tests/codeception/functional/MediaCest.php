@@ -70,6 +70,7 @@ class MediaCest {
     $I->canSee('1 error has been found');
     $I->fillField('Video URL', 'https://www.youtube.com/watch?v=-DYSucV1_9w');
     $I->click('Save');
+    $I->waitForText('Media');
     $I->canSee('Test Video has been created.');
   }
 }

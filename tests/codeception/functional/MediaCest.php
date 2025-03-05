@@ -69,6 +69,7 @@ class MediaCest {
     $I->fillField('Name', 'Test Video');
     $I->fillField('Video URL', 'http://google.com');
     $I->click('Save');
+    $I->waitForText('Name');
     $I->canSee('1 error has been found');
     $I->fillField('Video URL', 'https://www.youtube.com/watch?v=-DYSucV1_9w');
     $I->click('Save');

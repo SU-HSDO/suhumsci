@@ -22,6 +22,7 @@ class MediaCest {
     $I->waitForText('Name');
     $I->fillField('Name', 'Demo Text File');
     $I->click('Save');
+    $I->waitForText('Media');
     $I->canSee('Saved 1 Media Items');
     $I->canSeeInCurrentUrl('/admin/content/media');
     $I->canSee('Demo Text File');
@@ -52,6 +53,7 @@ class MediaCest {
     $I->uncheckOption('Decorative Image');
     $I->fillField('Alternative text', 'Stanford Logo');
     $I->click('Save');
+    $I->waitForText('Media');
     $I->canSee('Saved 1 Media Items');
     $I->canSeeInCurrentUrl('/admin/content/media');
     $I->canSee('Logo File');

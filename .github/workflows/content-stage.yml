@@ -18,10 +18,6 @@ jobs:
             docroot/libraries
             docroot/modules/contrib
           key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-            1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-
-            1.0-${{ hashFiles('blt/blt.yml') }}-
       - name: Copy databases
         env:
           SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}

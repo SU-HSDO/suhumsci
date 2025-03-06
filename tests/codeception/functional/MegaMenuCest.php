@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\Core\Url;
 use Faker\Factory;
 
 /**
@@ -46,6 +45,7 @@ class MegaMenuCest {
       $I->checkOption('Enable New Mega Menu');
       $I->click('Save');
       $I->runDrush('cache:rebuild');
+      $I->waitForText('Site Options');
     }
 
     $topLevelTitle = $this->faker->words(3, TRUE);
@@ -63,6 +63,8 @@ class MegaMenuCest {
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
 
+    $I->waitForText($topLevelTitle . ' has been updated');
+
     $second_level = $I->createEntity([
       'title' => $secondLevelTitle,
       'type' => 'hs_basic_page',
@@ -76,6 +78,8 @@ class MegaMenuCest {
     $I->waitForAjaxToFinish();
     $I->scrollTo(['css' => '.form-submit']);
     $I->click('Save');
+
+    $I->waitForText($secondLevelTitle . ' has been updated');
 
     $I->amOnPage('/admin/structure/menu/manage/main');
     $I->see($topLevelTitle);

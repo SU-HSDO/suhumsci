@@ -30,7 +30,8 @@ class VideoEmbedCest {
     // Login and add flexible page.
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
-    $I->fillField('Title', $this->faker->words(3, TRUE));
+    $page_title = $this->faker->words(3, TRUE);
+    $I->fillField('Title', $page_title);
 
     // Add text field.
     $I->click('#field-hs-page-components-values tr:last-child .paragraphs-features__add-in-between__button');
@@ -60,6 +61,7 @@ class VideoEmbedCest {
     $I->click('Save');
 
     // Verify figure and figcaption.
+    $I->waitForText($page_title);
     $I->seeElement('figure');
     $I->seeElement('figcaption');
     $I->scrollTo('figcaption');

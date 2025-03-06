@@ -7,6 +7,9 @@ dependencies:
     - field.field.media.video.field_media_oembed_video
     - media.type.video
   module:
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
     - media
 _core:
   default_config_hash: vqVUNXW5VQkzMmWbWehC_qWBkReYPc_i-In_6nmtn8o
@@ -22,8 +25,14 @@ content:
       max_width: 0
       max_height: 0
       loading:
-        attribute: eager
-    third_party_settings: {  }
+        attribute: lazy
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
     weight: 0
     region: content
 hidden:

@@ -83,8 +83,8 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $table_rows[] = [
         'data' => [
           ['data' => $tag->label()],
-          ['data' => $this->buildCourseLink('Explore courses', 'catalog', $tag->label())],
-          ['data' => $this->buildCourseLink('XML', 'xml-20200810', $tag->label())],
+          ['data' => $this->buildCourseLink($this->t('Explore courses'), 'catalog', $tag->label())],
+          ['data' => $this->buildCourseLink($this->t('XML'), 'xml-20200810', $tag->label())],
         ],
       ];
     }
@@ -99,7 +99,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   }
 
   /**
-   * Create a course link to display in the dashboard
+   * Create a course link to display in the dashboard.
    *
    * @param string $text
    *   The link text to display.
@@ -114,8 +114,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   protected function buildCourseLink($text, $format, $course_tag) {
     $tag = htmlspecialchars($course_tag, ENT_QUOTES, 'UTF-8');
     $uri = "https://explorecourses.stanford.edu/search?view={$format}&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q={$tag}&collapse=";
-    $url = Url::fromUri($uri);
-    return Link::fromTextAndUrl($this->t($text), $url)->toString();
+    return Link::fromTextAndUrl($text, Url::fromUri($uri))->toString();
   }
 
 }

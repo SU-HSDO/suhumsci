@@ -1,0 +1,44 @@
+uuid: def4e908-9111-45fd-99d6-2a09175dd9b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_banner.field_hs_banner_height
+    - field.field.paragraph.hs_banner.field_hs_banner_image
+    - paragraphs.paragraphs_type.hs_banner
+  module:
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - stanford_media
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.hs_banner.preview
+targetEntityType: paragraph
+bundle: hs_banner
+mode: preview
+content:
+  field_hs_banner_image:
+    type: media_responsive_image_formatter
+    label: hidden
+    settings:
+      view_mode: caption_credit
+      link: false
+      image_style: hero_no_text
+      remove_alt: 0
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: content
+hidden:
+  field_hs_banner_height: true
+  search_api_excerpt: true

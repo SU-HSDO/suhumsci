@@ -36,6 +36,7 @@ class InstallStateCest {
     $I->checkOption('Provide a menu link');
     $I->fillField('Menu link title', $parent_page->label());
     $I->click('Save');
+    $I->waitForText('has been updated');
     $I->canSee($parent_page->label(), 'h1');
     $I->canSee($parent_page->label(), 'nav a[data-unpublished-node]');
 
@@ -53,6 +54,7 @@ class InstallStateCest {
     $I->waitForAjaxToFinish();
 
     $I->click('Save');
+    $I->waitForText('has been updated');
     $I->canSee($child_page->label(), 'h1');
     $I->canSee($child_page->label(), 'nav a[data-unpublished-node]');
 

@@ -111,6 +111,7 @@ class FlexiblePageCest {
     $I->fillField('URL', 'http://google.com');
     $I->fillField('Link text', 'Google CTA');
     $I->click('Save');
+    $I->waitForText('Demo Basic Page');
     $I->canSeeNumberOfElements('.field-hs-page-components img', 1);
     $I->canSee('Overlay Title');
     $I->canSee('Google CTA', 'a');
@@ -152,6 +153,7 @@ class FlexiblePageCest {
     $I->waitForText('Display Mode');
     $I->click('Save');
 
+    $I->waitForText('Demo Basic Page');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Photo Album Headline', 'h2');
     $I->canSeeNumberOfElements('.su-gallery-images img', 1);
@@ -164,6 +166,7 @@ class FlexiblePageCest {
     $I->selectOption('Style', 'Slideshow');
     $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
+
     $I->waitForText('Demo Basic Page');
     $I->canSeeNumberOfElements('.slick img', 1);
   }
@@ -218,6 +221,7 @@ class FlexiblePageCest {
     $I->amOnPage('node/add/hs_basic_page');
     $I->fillField('Title', 'Demo Basic Page');
     $I->click('Save');
+    $I->waitForText('Demo Basic Page');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->click('.hb-main-nav__toggle');
     $I->seeElement('.hb-main-nav__menu');
@@ -231,8 +235,9 @@ class FlexiblePageCest {
   public function testSpotlightSlider(FunctionalTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('node/add/hs_basic_page');
+    $page_title = $this->faker->words(3, TRUE);
     $node = $I->createEntity([
-      'title' => $this->faker->words(3, TRUE),
+      'title' => $page_title,
       'type' => 'hs_basic_page',
     ]);
     $I->amOnPage($node->toUrl('edit-form')->toString());
@@ -243,6 +248,7 @@ class FlexiblePageCest {
     $I->waitForText('No media items are selected');
     $I->scrollTo('.paragraph-type--hs-sptlght-slder');
     $I->click('Save');
+    $I->waitForText($page_title);
     // Populating spotlight #1.
     $I->amOnPage($node->toUrl('edit-form')->toString());
     $I->click('field_hs_page_components_0_edit');
@@ -291,6 +297,7 @@ class FlexiblePageCest {
     $I->waitForText('The maximum number of media items have been selected');
     $I->click('Save');
     // Check spotlight 2.
+    $I->waitForText($page_title);
     $I->click('.slick-next');
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
@@ -303,10 +310,12 @@ class FlexiblePageCest {
 
   /**
    * I can find appropriate aria attributes on a timeline item.
+   * @group vertical_timeline
    */
   public function testVerticalTimeline(FunctionalTester $I) {
     $I->logInWithRole('administrator');
     $I->amOnPage('node/add/hs_basic_page');
+
     $I->fillField('Title', $this->faker->words(3, TRUE));
     $I->click('#field-hs-page-components-values tr:last-child .paragraphs-features__add-in-between__button');
     $I->waitForText('Add Component');
@@ -318,30 +327,24 @@ class FlexiblePageCest {
     $I->click('.ck-source-editing-button.ck-off ');
     $I->fillField('.ck-source-editing-area textarea', '<p>Timeline item #1 description.</p>');
     $I->click('Add Timeline Item');
-    $I->wait(1);
+    $I->waitForElement('.form-item--field-hs-page-components-1-subform-field-hs-timeline-1-subform-field-hs-timeline-item-summary-0-value');
     $I->fillField('field_hs_page_components[1][subform][field_hs_timeline][1][subform][field_hs_timeline_item_summary][0][value]', 'Timeline Item #2 Title');
     $I->click('Save');
     $I->waitForText('Timeline Item #1 Title');
     $I->waitForText('Timeline Item #2 Title');
 
     // Check aria attributes for first item.
-    $this->firstItemAriaPressed = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-pressed');
-    $I->assertFalse(filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be false in the first item.');
-    $this->firstItemAriaExpanded = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-expanded');
-    $I->assertFalse(filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL), 'arria-expanded should be false in the first item');
+    $first_timeline_open = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item', 'open');
+    $I->assertNull($first_timeline_open, 'The open attribute should not be present in the first item');
 
     // Check aria attributes for second item.
-    $this->secondItemAriaPressed = $I->grabAttributeFrom('.ptype-hs-timeline-item:last-child .hb-timeline-item__summary', 'aria-pressed');
-    $I->assertFalse(filter_var($this->secondItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be false in the second item.');
-    $this->secondItemAriaExpanded = $I->grabAttributeFrom('.ptype-hs-timeline-item:last-child .hb-timeline-item__summary', 'aria-expanded');
-    $I->assertFalse(filter_var($this->secondItemAriaExpanded, FILTER_VALIDATE_BOOL), 'Aria-expanded should be false in the second item.');
+    $second_timeline_open = $I->grabAttributeFrom('.ptype-hs-timeline-item:last-child .hb-timeline-item', 'open');
+    $I->assertNull($second_timeline_open, 'The open attribute should not be present in the second item');
 
     // Open first summary.
     $I->click('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary');
-    $this->firstItemAriaPressed = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-pressed');
-    $I->assertTrue(filter_var($this->firstItemAriaPressed, FILTER_VALIDATE_BOOL), 'Aria-pressed should be true in the first item.');
-    $this->firstItemAriaExpanded = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item__summary', 'aria-expanded');
-    $I->assertTrue(filter_var($this->firstItemAriaExpanded, FILTER_VALIDATE_BOOL), 'Aria-expanded should be true in the first item.');
+    $first_timeline_open = $I->grabAttributeFrom('.ptype-hs-timeline-item:first-child .hb-timeline-item', 'open');
+    $I->assertTrue(filter_var($first_timeline_open, FILTER_VALIDATE_BOOL), 'The open attribute should be present in the first item.');
     $I->waitForText('Timeline item #1 description.');
   }
 
@@ -363,9 +366,9 @@ class FlexiblePageCest {
     $I->fillField('Link text', 'Praesent egestas tristique nibh');
     $I->click('Save');
 
-    $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->waitForText('Nam at tortor in tellus');
     $I->waitForText('Maecenas vestibulum mollis diam.');
+    $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->seeElement(Locator::href('http://google.com'));
   }
 
@@ -384,6 +387,7 @@ class FlexiblePageCest {
     $I->fillField('Summary', 'Sed augue ipsum egestas nec');
     $I->fillField('.ck-editor__editable_inline', 'Vivamus in erat ut urna cursus vestibulum. Sed augue ipsum, egestas nec, vestibulum et, malesuada adipiscing, dui. Curabitur suscipit suscipit tellus. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Nullam vel sem.');
     $I->click('Save');
+    $I->waitForText('Demo Basic Page');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Sed augue ipsum egestas nec');
@@ -414,6 +418,7 @@ class FlexiblePageCest {
     $I->fillField('.ck-editor__editable_inline', $this->faker->paragraphs(10, TRUE));
     $I->click('Save');
 
+    $I->waitForText('Back To Top');
     $I->click('Layout', '.tabs');
     $I->scrollTo('.layout-builder__link--add');
     $I->canSee('Add Block', 'a');
@@ -457,6 +462,7 @@ class FlexiblePageCest {
     $I->fillField('.ck-editor__editable_inline', $paragraph);
     $I->click('Save');
 
+    $I->waitForText('Demo Basic Page');
     $I->canSeeInCurrentUrl('/demo-basic-page');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee($paragraph);
@@ -510,6 +516,7 @@ class FlexiblePageCest {
     // Save the node and verify the components are visible.
     $I->executeJS('window.scrollTo(0,0);');
     $I->click('Save');
+    $I->waitForText('Demo Basic Page');
     $I->canSee('Demo Basic Page', 'h1');
     $I->canSee('Foo Bar Baz', '.item-per-row--2');
     $I->canSee('Demo card title', '.item-per-row--2 h3');

@@ -70,7 +70,15 @@
   }
 
   // Add spacing for those list of links that are inside an unique paragraph <p> and there's a <br> after each anchor tag.
-  .body.text-with-summary p a:has(+ br) {
-    display: block;
+  .body.text-with-summary p {
+    a:has(+ br) {
+      display: block;
+      margin-bottom: hb-calculate-rems(16px);
+    }
+
+    a + br {
+      display: none;
+    }
   }
+  
 }

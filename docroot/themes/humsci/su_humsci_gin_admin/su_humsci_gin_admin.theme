@@ -78,3 +78,29 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/su_humsci_dashboard';
   }
 }
+
+/**
+ * Implements hook_preprocess_views_view_field__status().
+ */
+function su_humsci_gin_admin_preprocess_views_view_field__status(&$variables) {
+  // If there's already an output, don't override it
+  if($variables['output'] != null) {
+    return;
+  }
+
+  // Get the View ID
+  $view = $variables['view'];
+  $node = $variables['row']->_entity;
+
+  if (!$node) {
+    return;
+  }
+
+  // Special case for /admin/dashboard
+  if ($view->id() === 'my_latest_edits') {
+    $variables['output'] = $node->isPublished() ? '✔' : '✖';
+  } else {
+    // Default output for most cases (e.g., /admin/content)
+    $variables['output'] = $node->isPublished() ? t('Published') : t('Unpublished');
+  }
+}

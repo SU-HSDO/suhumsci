@@ -51,8 +51,6 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
     }
     $urls = [
       'field_news_xml' => $this->getConfigPageValue('hs_migrate_news', 'field_news_xml_feed'),
-      'field_people_xml' => $this->getConfigPageValue('d7_people', 'field_d7_people_xml_url'),
-      'field_publications_xml' => $this->getConfigPageValue('publications', 'field_xml_url'),
     ];
 
     $urls = array_filter($urls);
@@ -65,15 +63,13 @@ class ConfigEventsSubscriber implements EventSubscriberInterface {
     $field_storage = $this->entityTypeManager->getStorage('field_config');
     $fields = [
       'config_pages.hs_migrate_news.field_news_xml_feed',
-      'config_pages.d7_people.field_d7_people_xml_url',
-      'config_pages.publications.field_xml_url',
     ];
     foreach ($field_storage->loadMultiple($fields) as $field) {
       $field->delete();
     }
 
     $page_storage = $this->entityTypeManager->getStorage('config_pages_type');
-    $pages = ['hs_migrate_news', 'd7_people', 'publications'];
+    $pages = ['hs_migrate_news'];
     foreach ($page_storage->loadMultiple($pages) as $page) {
       $page->delete();
     }

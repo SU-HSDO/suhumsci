@@ -30,11 +30,11 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/migrate/hs_course_tag/{hs_course_tag}",
- *     "add-form" = "/admin/structure/migrate/hs_course_tag/add",
- *     "edit-form" = "/admin/structure/migrate/hs_course_tag/{hs_course_tag}/edit",
- *     "delete-form" = "/admin/structure/migrate/hs_course_tag/{hs_course_tag}/delete",
- *     "collection" = "/admin/structure/migrate/hs_course_tag"
+ *     "canonical" = "/admin/config/importers/course-tag/{hs_course_tag}",
+ *     "add-form" = "/admin/config/importers/course-tag/add",
+ *     "edit-form" = "/admin/config/importers/course-tag/{hs_course_tag}/edit",
+ *     "delete-form" = "/admin/config/importers/course-tag/{hs_course_tag}/delete",
+ *     "collection" = "/admin/config/importers/course-tag"
  *   },
  *   config_export = {
  *     "id",

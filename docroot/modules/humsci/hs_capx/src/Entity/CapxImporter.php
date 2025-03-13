@@ -31,11 +31,11 @@ use Drupal\hs_capx\Capx;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/migrate/capx/{capx_importer}",
- *     "add-form" = "/admin/structure/migrate/capx/add",
- *     "edit-form" = "/admin/structure/migrate/capx/{capx_importer}/edit",
- *     "delete-form" = "/admin/structure/migrate/capx/{capx_importer}/delete",
- *     "collection" = "/admin/structure/migrate/capx"
+ *     "canonical" = "/admin/config/importers/capx/{capx_importer}",
+ *     "add-form" = "/admin/config/importers/capx/add",
+ *     "edit-form" = "/admin/config/importers/capx/{capx_importer}/edit",
+ *     "delete-form" = "/admin/config/importers/capx/{capx_importer}/delete",
+ *     "collection" = "/admin/config/importers/capx"
  *   },
  *   config_export = {
  *     "id",

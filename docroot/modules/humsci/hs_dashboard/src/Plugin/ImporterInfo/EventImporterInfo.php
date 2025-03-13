@@ -124,8 +124,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    */
   public function getTableHeaders(): array {
     return [
-      $this->t('Filters'),
-      $this->t('Recurring event treatment'),
+      $this->t('Departments/Groups'),
     ];
   }
 
@@ -352,7 +351,6 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $this->eventTableRows[] = [
         'data' => [
           ['data' => implode(', ', array_filter($filters))],
-          ['data' => $this->getFieldLabel($field_name)],
         ],
       ];
     }
@@ -376,27 +374,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $this->eventTableRows[] = [
         'data' => [
           ['data' => $this->t('Bookmark <small>(@url)</small>', ['@url' => $bookmark['uri']])],
-          ['data' => $this->getFieldLabel($field_name)],
         ],
       ];
     }
-  }
-
-  /**
-   * Gets the field label from a field name for localist_events config_pages.
-   *
-   * @param string $field_name
-   *   The field name.
-   *
-   * @return string
-   *   The field label.
-   */
-  private function getFieldLabel($field_name) {
-    $field_definitions = $this->entityFieldManager->getFieldDefinitions('config_pages', 'localist_events');
-    if (isset($field_definitions[$field_name])) {
-      return $field_definitions[$field_name]->getLabel();
-    }
-    return '';
   }
 
 }

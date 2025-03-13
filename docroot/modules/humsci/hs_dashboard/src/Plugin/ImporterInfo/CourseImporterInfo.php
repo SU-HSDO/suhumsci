@@ -68,7 +68,6 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     return [
       $this->t('Course tag'),
       $this->t('Catalog'),
-      $this->t('XML data'),
     ];
   }
 
@@ -84,7 +83,6 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
         'data' => [
           ['data' => $tag->label()],
           ['data' => $this->buildCourseLink($this->t('Explore courses'), 'catalog', $tag->label())],
-          ['data' => $this->buildCourseLink($this->t('XML'), 'xml-20200810', $tag->label())],
         ],
       ];
     }

@@ -30,6 +30,10 @@
  * @ingroup themeable
  */
 #}
+{% if logged_in %}
+  {{ attach_library(active_theme() ~ '/admin') }}
+{% endif %}
+
 <!DOCTYPE html>
   <html{{ html_attributes.addClass('no-js') }}>
   <head>

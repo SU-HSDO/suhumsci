@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "51266700c560cee5173f4595473dd032",
+    "content-hash": "7db45f633d3c898f0b2059b9bd6eceaa",
     "packages": [
         {
             "name": "acquia/blt",
@@ -2823,6 +2823,54 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/block_content_permissions",
                 "issues": "https://www.drupal.org/project/issues/block_content_permissions"
+            }
+        },
+        {
+            "name": "drupal/book",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/book.git",
+                "reference": "1.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/book-1.0.0.zip",
+                "reference": "1.0.0",
+                "shasum": "8838e4a314e54dff2bc34a0ae4f0a85ac03b6fb8"
+            },
+            "require": {
+                "drupal/core": ">=10.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0",
+                    "datestamp": "1712238320",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "pwolanin",
+                    "homepage": "https://www.drupal.org/user/49851"
+                },
+                {
+                    "name": "smustgrave",
+                    "homepage": "https://www.drupal.org/user/3252890"
+                }
+            ],
+            "description": "Allows users to create and organize related content in an outline.",
+            "homepage": "https://www.drupal.org/project/book",
+            "support": {
+                "source": "https://git.drupalcode.org/project/book"
             }
         },
         {
@@ -15970,41 +16018,41 @@
         },
         {
             "name": "su-sws/stanford_fields",
-            "version": "8.4.1",
+            "version": "dev-SHS-6056",
             "source": {
                 "type": "git",
-                "url": "https://github.com/SU-SWS/stanford_fields.git",
-                "reference": "342c0f4ac214ad03a760906985dcf12aefe8bb31"
+                "url": "https://github.com/fourkitchens/stanford_fields.git",
+                "reference": "dd099aea711ede883caf50c2e0397122e9cc66f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SU-SWS/stanford_fields/zipball/342c0f4ac214ad03a760906985dcf12aefe8bb31",
-                "reference": "342c0f4ac214ad03a760906985dcf12aefe8bb31",
+                "url": "https://api.github.com/repos/fourkitchens/stanford_fields/zipball/dd099aea711ede883caf50c2e0397122e9cc66f8",
+                "reference": "dd099aea711ede883caf50c2e0397122e9cc66f8",
                 "shasum": ""
             },
             "require": {
+                "drupal/book": "^1.0",
                 "drupal/core": "^10.3 || ^11",
                 "drupal/ds": "~3.3 || ^5.0@alpha"
             },
-            "conflict": {
-                "drupal/book": "<2.0"
-            },
             "require-dev": {
-                "drupal/book": "^2.0",
                 "drupal/cshs": "^4.0"
             },
             "type": "drupal-custom-module",
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Drupal\\Tests\\stanford_fields\\": "./tests/src"
+                }
+            },
             "license": [
                 "GPL-2.0-or-later"
             ],
             "description": "Stanford Fields",
             "homepage": "https://github.com/SU-SWS/stanford_fields",
             "support": {
-                "issues": "https://github.com/SU-SWS/stanford_fields/issues",
-                "source": "https://github.com/SU-SWS/stanford_fields/tree/8.4.1"
+                "source": "https://github.com/fourkitchens/stanford_fields/tree/SHS-6056"
             },
-            "time": "2025-02-24T17:23:10+00:00"
+            "time": "2025-02-21T23:56:11+00:00"
         },
         {
             "name": "su-sws/stanford_media",
@@ -26491,6 +26539,7 @@
         "drupal/config_update": 15,
         "drupal/confirm_leave": 10,
         "drupal/content_access_simple": 10,
+        "drupal/dashboard": 15,
         "drupal/empty_fields": 10,
         "drupal/entity_reference_exposed_filters": 15,
         "drupal/hook_event_dispatcher": 15,
@@ -26507,7 +26556,8 @@
         "drupal/views_ical": 15,
         "onlyextart/colorbox": 20,
         "su-sws/blt-sws": 20,
-        "su-sws/stanford_basic": 20
+        "su-sws/stanford_basic": 20,
+        "su-sws/stanford_fields": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

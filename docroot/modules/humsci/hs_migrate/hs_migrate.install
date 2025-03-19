@@ -6,50 +6,10 @@
  */
 
 /**
- * Enable Ultimate Cron module.
+ * Implements hook_update_last_removed().
  */
-function hs_migrate_update_8001() {
-  \Drupal::service('module_installer')->install(['ultimate_cron']);
-}
-
-/**
- * Enable the config pages module.
- */
-function hs_migrate_update_8002() {
-  \Drupal::service('module_installer')->install(['config_pages']);
-}
-
-/**
- * Delete settings & configs no longer needed.
- */
-function hs_migrate_update_8003() {
-  \Drupal::configFactory()->getEditable('hs_migrate.settings')->delete();
-  $config_factory = \Drupal::configFactory();
-  foreach ($config_factory->listAll('ultimate_cron.job.hs_migrate') as $config_name) {
-    $config_factory->getEditable($config_name)->delete();
-  }
-}
-
-/**
- * Trigger all cache flush.
- */
-function hs_migrate_update_8004() {
-  drupal_flush_all_caches();
-}
-
-/**
- * Set orphan action on all migration configs.
- */
-function hs_migrate_update_8005() {
-  $config_factory = \Drupal::configFactory();
-  $config_names = $config_factory->listAll('migrate_plus.migration.');
-  foreach ($config_names as $config_name) {
-    $config = $config_factory->getEditable($config_name);
-    if (empty($config->get('source.orphan_action'))) {
-      $config->set('source.orphan_action', 'forget')
-        ->save();
-    }
-  }
+function hs_migrate_update_last_removed() {
+  return 8005;
 }
 
 /**

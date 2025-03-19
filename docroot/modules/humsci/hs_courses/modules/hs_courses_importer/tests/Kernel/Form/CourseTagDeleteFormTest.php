@@ -24,7 +24,7 @@ class CourseTagDeleteFormTest extends HsCoursesImporterTestBase {
     $this->assertEquals("Are you sure you want to delete {$this->courseTag->label()}?", strip_tags($form_object->getQuestion()
       ->render()));
 
-    $this->assertEquals('admin/structure/migrate/hs_course_tag', $form_object->getCancelUrl()
+    $this->assertEquals('admin/config/importers/course-tag', $form_object->getCancelUrl()
       ->getInternalPath());
     $this->assertEquals('Delete', $form_object->getConfirmText()->render());
     $form_state = new FormState();

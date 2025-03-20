@@ -158,6 +158,15 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
         break;
     }
   }
+
+  if (
+    $paragraph->hasField('field_summary_heading_level') &&
+    !$paragraph->get('field_summary_heading_level')->isEmpty() &&
+    isset($variables['title']['field_hs_accordion_summary'])) {
+      $heading_level = $paragraph->get('field_summary_heading_level')->getString();
+      dump($heading_level);
+      dump($variables['title']['field_hs_accordion_summary']);
+  }
 }
 
 /**

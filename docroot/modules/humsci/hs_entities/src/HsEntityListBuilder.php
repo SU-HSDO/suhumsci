@@ -86,8 +86,8 @@ class HsEntityListBuilder extends EntityListBuilder {
       '#theme' => 'username',
       '#account' => $entity->getOwner(),
     ];
-    $row['created'] = $this->dateFormatter->format($entity->get('created')->value);
-    $row['changed'] = $this->dateFormatter->format($entity->getChangedTime());
+    $row['created'] = $this->dateFormatter->format($entity->get('created')->value, 'with_year_time');
+    $row['changed'] = $this->dateFormatter->format($entity->getChangedTime(), 'with_year_time');
     return $row + parent::buildRow($entity);
   }
 

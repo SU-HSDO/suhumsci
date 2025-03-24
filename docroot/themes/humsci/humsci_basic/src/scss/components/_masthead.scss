@@ -15,13 +15,14 @@
 
   .su-lockup {
     @include responsive-spacing('margin', null null 0);
-    flex: calc(83.33% - #{hb-calculate-rems(16px)});
-    max-width: calc(83.33% - #{hb-calculate-rems(16px)});
     z-index: $hb-z-index-lockup;
 
     @include grid-media-max('md') {
       @include flex-column(10);
 
+      // Leave space for the mobile menu toggle button.
+      flex: 0 0 calc(100% - hb-calculate-rems(78px));
+      max-width: none;
       // On mobile, lockup needs a higher z-index than nav because the nav takes up 100% width including margin
       z-index: 10010;
     }

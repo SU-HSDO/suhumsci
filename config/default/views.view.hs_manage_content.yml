@@ -283,7 +283,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -295,6 +295,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1033,7 +1034,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -1045,6 +1046,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -1640,7 +1642,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -1652,6 +1654,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -2474,7 +2477,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -2486,6 +2489,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3076,7 +3080,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -3088,6 +3092,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -3216,25 +3221,26 @@ display:
           type: smartdate_custom
           settings:
             separator: '-'
-            date_format: 'F j Y g:i a'
-            join: ', '
-            time_format: 'g:ia'
-            time_hour_format: ga
-            allday_label: 'All day'
-            date_first: '1'
-            ampm_reduce: '1'
-            site_time_toggle: '1'
+            time_diff:
+              enabled: 0
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: '2'
+              refresh: '60'
+              description: ''
+            date_format: 'Y M j'
             custom_date_format: ''
             timezone: ''
             tooltip:
               date_format: ''
               custom_date_format: ''
-            time_diff:
-              enabled: false
-              future_format: '@interval hence'
-              past_format: '@interval ago'
-              granularity: 2
-              refresh: 60
+            join: ', '
+            time_format: 'g:i a'
+            time_hour_format: 'g:i a'
+            allday_label: 'All day'
+            date_first: '1'
+            ampm_reduce: 1
+            site_time_toggle: 1
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -4045,7 +4051,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -4057,6 +4063,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -4609,7 +4616,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -4621,6 +4628,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -4809,10 +4817,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_custom
+          type: datetime_default
           settings:
             timezone_override: ''
-            date_format: 'F j Y'
+            format_type: with_year_time
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -5390,7 +5398,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -5402,6 +5410,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -6143,7 +6152,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -6155,6 +6164,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -7268,7 +7278,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: custom
+            date_format: with_year_time
             custom_date_format: 'M j Y g:i a'
             timezone: ''
             tooltip:
@@ -7280,6 +7290,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true

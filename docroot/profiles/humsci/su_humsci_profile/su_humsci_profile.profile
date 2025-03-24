@@ -721,6 +721,9 @@ function su_humsci_profile_preprocess_pattern_alert(&$variables) {
  * Implements hook_node_access().
  */
 function su_humsci_profile_node_access(EntityInterface $node, $op, AccountInterface $account) {
+  if (!$node->id()) {
+    return AccessResult::neutral();
+  }
   if ($op == 'delete') {
     $site_config = \Drupal::config('system.site');
     $node_urls = [$node->toUrl()->toString(), "/node/{$node->id()}"];
@@ -793,6 +796,7 @@ function _su_humsci_profile_allowed_to_grant_role(AccountInterface $account) {
 function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (preg_match('/^node.*edit_form$/', $form_id)) {
     $node = $form_state->getBuildInfo()['callback_object']->getEntity();
+
     $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
     $form['status']['#access'] = !$access->isForbidden();
   }

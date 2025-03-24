@@ -1,0 +1,29 @@
+uuid: e781fb8f-97ba-4106-98ff-9d1000607b18
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_training_product
+    - node.type.hs_training
+    - taxonomy.vocabulary.hs_training_product
+id: node.hs_training.field_hs_training_product
+field_name: field_hs_training_product
+entity_type: node
+bundle: hs_training
+label: Product
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_training_product: hs_training_product
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

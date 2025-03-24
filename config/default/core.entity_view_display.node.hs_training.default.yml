@@ -1,0 +1,151 @@
+uuid: 18e940b8-9a87-4b0e-9bf3-727076e116d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_training.body
+    - field.field.node.hs_training.field_hs_training_audience
+    - field.field.node.hs_training.field_hs_training_contacts
+    - field.field.node.hs_training.field_hs_training_date_range
+    - field.field.node.hs_training.field_hs_training_deliverymethod
+    - field.field.node.hs_training.field_hs_training_location
+    - field.field.node.hs_training.field_hs_training_name
+    - field.field.node.hs_training.field_hs_training_nodate
+    - field.field.node.hs_training.field_hs_training_product
+    - field.field.node.hs_training.field_hs_training_provider
+    - field.field.node.hs_training.field_hs_training_resource_links
+    - field.field.node.hs_training.field_hs_training_sourcesite
+    - node.type.hs_training
+  module:
+    - link
+    - smart_date
+    - text
+    - user
+id: node.hs_training.default
+targetEntityType: node
+bundle: hs_training
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_hs_training_audience:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_hs_training_contacts:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_hs_training_date_range:
+    type: smartdate_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+      format: default
+      force_chronological: false
+      add_classes: false
+      time_wrapper: true
+      localize: false
+      parts:
+        - start
+        - end
+      duration:
+        separator: ' | '
+        unit: ''
+        decimals: 2
+        suffix: h
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_hs_training_deliverymethod:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 111
+    region: content
+  field_hs_training_location:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_hs_training_name:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_hs_training_nodate:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_hs_training_product:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_hs_training_provider:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 112
+    region: content
+  field_hs_training_resource_links:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_hs_training_sourcesite:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 113
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -418,7 +418,6 @@ function hs_paragraph_types_update_10012() {
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
   $field_storage_config = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
-  
   // Create the field storage.
   $storage_config = $config_directory->read('field.storage.paragraph.field_summary_heading_level');
   if (!FieldStorageConfig::loadByName($storage_config['entity_type'], $storage_config['field_name'])) {
@@ -451,7 +450,7 @@ function hs_paragraph_types_update_10013(&$sandbox) {
   // Set new field default for existing accordions paragraphs.
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-    if (!$paragraph->hasField('field_summary_heading_level') ) {
+    if (!$paragraph->hasField('field_summary_heading_level')) {
       continue;
     }
 

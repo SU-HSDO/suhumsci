@@ -112,7 +112,7 @@ class DisplayModeField extends ListItemBase {
    *   Complete form.
    */
   public function elementValidate(array $element, FormStateInterface $form_state, array $form) {
-    $modes = &$form_state->getValue(['settings', 'allowed_values']);
+    $modes = &$form_state->getValue($element['#parents']);
     foreach ($modes as $mode_id => &$mode) {
       if (!$mode['enabled']) {
         unset($modes[$mode_id]);

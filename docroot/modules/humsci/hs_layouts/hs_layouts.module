@@ -161,8 +161,7 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
 
   if (
     $paragraph->hasField('field_summary_heading_level') &&
-    !$paragraph->get('field_summary_heading_level')->isEmpty() &&
-    isset($variables['title']['field_hs_accordion_summary'])
+    !$paragraph->get('field_summary_heading_level')->isEmpty()
   ) {
     $variables['heading_level'] = $paragraph->get('field_summary_heading_level')->getString();
   }

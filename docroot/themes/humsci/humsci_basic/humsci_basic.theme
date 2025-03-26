@@ -10,6 +10,15 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
+ * Implements hook_preprocess().
+ */
+function humsci_basic_preprocess(&$variables) {
+  // Expose default theme name to all templates, so it can be used for attaching
+  // the right library.
+  $variables['default_theme'] = \Drupal::config('system.theme')->get('default');
+}
+
+/**
  * Implements hook_preprocess_hook().
  */
 function humsci_basic_preprocess_field__hs_entity__label(&$variables) {

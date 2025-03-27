@@ -159,12 +159,19 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_paragraph_types_field_widget_complete_options_select_form_alter(array &$field_widget_form, FormStateInterface &$form_state, array $context) {
-  // Change the default option label for field_accordion_style.
-  if (isset($context['items']) && $context['items']->getName() == 'field_accordion_style') {
-    $field_widget_form['widget']['#options']['_none'] = t('Default');
+  // Change the default "None" label for certain select fields.
+  if (!isset($context['items'])) {
+    return;
   }
-  // Change the default option label for field_spotlight_style.
-  if (isset($context['items']) && $context['items']->getName() == 'field_spotlight_style') {
-    $field_widget_form['widget']['#options']['_none'] = t('Classic');
+
+  $none_labels = [
+    'field_accordion_style' => t('Default'),
+    'field_spotlight_style' => t('Classic'),
+    'field_hs_banner_height' => t('Short'),
+  ];
+  $field_name = $context['items']->getName();
+
+  if (array_key_exists($field_name, $none_labels)) {
+    $field_widget_form['widget']['#options']['_none'] = $none_labels[$field_name];
   }
 }

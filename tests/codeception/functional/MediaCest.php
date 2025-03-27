@@ -5,6 +5,7 @@
  *
  * @group install
  * @group existingSite
+ * @group media
  */
 class MediaCest {
 
@@ -18,8 +19,10 @@ class MediaCest {
     $I->dropFileInDropzone(__DIR__ . '/test.txt');
     $I->wait(1);
     $I->click('Upload');
+    $I->waitForText('Name');
     $I->fillField('Name', 'Demo Text File');
     $I->click('Save');
+    $I->waitForText('Media');
     $I->canSee('Saved 1 Media Items');
     $I->canSeeInCurrentUrl('/admin/content/media');
     $I->canSee('Demo Text File');
@@ -45,10 +48,12 @@ class MediaCest {
     $I->click('Bulk Upload');
     $I->dropFileInDropzone(__DIR__ . '/logo.jpg');
     $I->click('Upload');
+    $I->waitForText('Name');
     $I->fillField('Name', 'Logo File');
     $I->uncheckOption('Decorative Image');
     $I->fillField('Alternative text', 'Stanford Logo');
     $I->click('Save');
+    $I->waitForText('Media');
     $I->canSee('Saved 1 Media Items');
     $I->canSeeInCurrentUrl('/admin/content/media');
     $I->canSee('Logo File');
@@ -64,9 +69,11 @@ class MediaCest {
     $I->fillField('Name', 'Test Video');
     $I->fillField('Video URL', 'http://google.com');
     $I->click('Save');
+    $I->waitForText('Name');
     $I->canSee('1 error has been found');
     $I->fillField('Video URL', 'https://www.youtube.com/watch?v=-DYSucV1_9w');
     $I->click('Save');
+    $I->waitForText('Media');
     $I->canSee('Test Video has been created.');
   }
 }

@@ -9,8 +9,8 @@ import togglerHandler from './toggler-handler';
       if (togglers) {
         for (let i = 0; i < togglers.length; i += 1) {
           const toggler = togglers[i];
-          const togglerID = toggler.getAttribute('id');
-          const togglerContent = document.querySelector('[aria-labelledby="'.concat(togglerID, '"]'));
+          const togglerID = toggler.getAttribute('aria-controls');
+          const togglerContent = document.querySelector(`[id="${togglerID}"]`);
           const togglerParent = toggler.parentNode;
           const activeTrail = togglerParent.classList.contains('hb-secondary-nav__item--active-trail');
 

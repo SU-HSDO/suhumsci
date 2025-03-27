@@ -273,8 +273,8 @@ function humsci_basic_preprocess_field(&$variables) {
   if ($variables['field_type'] == 'entity_reference_revisions') {
     foreach ($variables['items'] as $item) {
       if (isset($item['content']['#paragraph']) && $item['content']['#paragraph']->bundle() == 'hs_postcard') {
-        $active_theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
-        $variables['#attached']['library'][] = "$active_theme/postcard";
+        $default_theme = \Drupal::config('system.theme')->get('default');
+        $variables['#attached']['library'][] = "$default_theme/postcard";
         break;
       }
     }

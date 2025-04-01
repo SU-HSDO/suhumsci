@@ -286,8 +286,6 @@ class SiteImprove implements SiteImproveInterface {
         $site_identifier = str_replace('-' . $environment, '', $site_identifier);
       }
 
-      $site_identifier = 'west';
-
       $production_url = $site_identifier . '.stanford.edu';
 
     }

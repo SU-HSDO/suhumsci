@@ -218,7 +218,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   A formatted Drupal date.
    */
   private function formatDate(int $timestamp): string {
-    return $this->dateFormatter->format($timestamp, 'medium');
+    return $this->dateFormatter->format($timestamp, 'short_no_time');
   }
 
   /**

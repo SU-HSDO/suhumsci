@@ -1,0 +1,13 @@
+services:
+  hs_siteimprove.connector:
+    class: Drupal\hs_siteimprove\SiteImprove
+    arguments:
+      - '@config.factory'
+      - '@http_client'
+      - '@state'
+      - '@request_stack'
+      - '@logger.channel.hs_siteimprove'
+
+  logger.channel.hs_siteimprove:
+    parent: logger.channel_base
+    arguments: ['hs_siteimprove']

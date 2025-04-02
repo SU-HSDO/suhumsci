@@ -53,7 +53,7 @@ class ImporterInfoManager extends DefaultPluginManager {
       $instances[$plugin_id] = $this->createInstance($plugin_id);
     }
 
-    usort($instances, function($a, $b) {
+    usort($instances, function ($a, $b) {
       return $a->getWeight() - $b->getWeight();
     });
 

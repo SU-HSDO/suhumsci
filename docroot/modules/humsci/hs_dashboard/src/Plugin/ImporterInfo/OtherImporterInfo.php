@@ -26,7 +26,7 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   /**
    * A list of migration IDs already represented in other ImporterInfo blocks.
    */
-  CONST SKIP_IMPORTERS = [
+  const SKIP_IMPORTERS = [
     'hs_courses',
     'hs_localist_scheduled',
     'hs_capx',
@@ -35,14 +35,14 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   /**
    * KeyValueStore used to track the import times of each migration.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $lastImportedStore
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $lastImportedStore;
 
   /**
    * Migration plugin manager service.
    *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrationManager
+   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
    */
   protected $migrationManager;
 
@@ -57,8 +57,10 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory interface.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The KeyValue factory interface.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager interface.
    */
   public function __construct(
     array $configuration,
@@ -112,10 +114,10 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    * of the dashboard. Finally, it excludes any migrations that have not run in
    * the last 30 days.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if this site has at least one 'other' migration; otherwise, FALSE.
    */
-  protected function hasActiveMigration() {
+  protected function hasActiveMigration(): bool {
     $all_migrations = array_keys($this->migrationManager->getDefinitions());
     $other_migrations = array_diff($all_migrations, self::SKIP_IMPORTERS);
     foreach ($other_migrations as $id) {

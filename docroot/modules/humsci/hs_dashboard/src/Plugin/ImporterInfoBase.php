@@ -92,4 +92,18 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
     return $this->t('<em>No import data available.</em>');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight(): int {
+    return $this->getPluginDefinition()['weight'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function showImporter(): bool {
+    return TRUE;
+  }
+
 }

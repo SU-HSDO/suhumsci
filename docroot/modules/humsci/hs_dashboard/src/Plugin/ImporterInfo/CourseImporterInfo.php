@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "course_importer_info",
  *   label = @Translation("Course Importers"),
  *   description = @Translation("Retrieves event importer information from Localist."),
+ *   weight = 10,
  * )
  */
 class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {

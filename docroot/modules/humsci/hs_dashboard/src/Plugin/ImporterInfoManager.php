@@ -53,6 +53,10 @@ class ImporterInfoManager extends DefaultPluginManager {
       $instances[$plugin_id] = $this->createInstance($plugin_id);
     }
 
+    usort($instances, function($a, $b) {
+      return $a->getWeight() - $b->getWeight();
+    });
+
     return $instances;
   }
 
@@ -62,9 +66,15 @@ class ImporterInfoManager extends DefaultPluginManager {
   public function generateTables(): array {
     $tables = [];
 
+    /** @var \Drupal\hs_dashboard\Plugin\ImporterInfoInterface $importer */
     foreach ($this->getImporterInstances() as $plugin_id => $importer) {
       $caption = $importer->getCaption();
       $rows = $importer->getTableRows();
+
+      if (!$importer->showImporter()) {
+        // Skip the importer if its visibility is set to not display.
+        continue;
+      }
 
       if (empty($rows)) {
         $no_data_caption = $importer->getNoDataCaption();

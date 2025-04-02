@@ -75,8 +75,8 @@ else {
 }
 
 // Set the SiteImprove API key and username.
-$siteimprove_api_key == $_ENV['SITEIMPROVE_API_KEY'] ?? getenv('SITEIMPROVE_API_KEY');
-$siteimprove_username == $_ENV['SITEIMPROVE_USERNAME'] ?? getenv('SITEIMPROVE_USERNAME');
+$siteimprove_api_key = $_ENV['SITEIMPROVE_API_KEY'] ?? getenv('SITEIMPROVE_API_KEY');
+$siteimprove_username = $_ENV['SITEIMPROVE_USERNAME'] ?? getenv('SITEIMPROVE_USERNAME');
 
 if ($siteimprove_api_key && $siteimprove_username) {
   $config['hs_siteimprove.settings'] = [

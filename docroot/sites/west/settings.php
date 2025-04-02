@@ -788,3 +788,9 @@ require DRUPAL_ROOT . "/../vendor/acquia/blt/settings/blt.settings.php";
  *
  * @link https://docs.acquia.com/blt/
  */
+
+ // Set the SiteImprove API key and username.
+$config['hs_siteimprove.settings'] = [
+  'api_key' => getenv('SITEIMPROVE_API_KEY', true) ?: getenv('SITEIMPROVE_API_KEY'),
+  'username' => getenv('SITEIMPROVE_USERNAME', true) ?: getenv('SITEIMPROVE_USERNAME'),
+];

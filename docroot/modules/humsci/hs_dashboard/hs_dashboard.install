@@ -9,6 +9,14 @@
  * Implements hook_install().
  */
 function hs_dashboard_install() {
+  $config_name = 'dashboard.dashboard.dashboard';
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable($config_name);
+  if ($config->isNew()) {
+    $config_storage = \Drupal::service('config.storage.sync');
+    $reviewer_role_config = $config_storage->read($config_name);
+    $config->setData($reviewer_role_config)->save();
+  }
   $roles = ['site_manager', 'contributor'];
   foreach ($roles as $role) {
     user_role_grant_permissions($role, ['view dashboard dashboard']);

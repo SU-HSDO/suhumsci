@@ -74,8 +74,13 @@ else {
   $config['mail_safety.settings']['send_mail_to_dashboard'] = TRUE;
 }
 
-// Set the SiteImprove API key and username.
-$config['hs_siteimprove.settings'] = [
-  'api_key' => $_ENV['SITEIMPROVE_API_KEY'] ?: getenv('SITEIMPROVE_API_KEY', TRUE) ?: getenv('SITEIMPROVE_API_KEY'),
-  'username' => $_ENV['SITEIMPROVE_USERNAME'] ?: getenv('SITEIMPROVE_USERNAME', TRUE) ?: getenv('SITEIMPROVE_USERNAME'),
-];
+$siteimprove_api_key = getenv('SITEIMPROVE_API_KEY', TRUE) ?: getenv('SITEIMPROVE_API_KEY');
+$siteimprove_username = getenv('SITEIMPROVE_USERNAME', TRUE) ?: getenv('SITEIMPROVE_USERNAME');
+
+if ($siteimprove_api_key && $siteimprove_username) {
+  // Set the SiteImprove API key and username.
+  $config['hs_siteimprove.settings'] = [
+    'api_key' => $siteimprove_api_key,
+    'username' => $siteimprove_username,
+  ];
+}

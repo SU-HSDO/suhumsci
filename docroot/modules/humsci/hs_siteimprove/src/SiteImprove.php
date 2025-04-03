@@ -266,7 +266,7 @@ class SiteImprove implements SiteImproveInterface {
    *   The normalized production URL.
    */
   protected function getProductionUrl(): string {
-    $current_url = "https://hs-colorful-cgbxqmnu99lecjrrmzbkvv1egejcvznw.tugboatqa.com/";
+    $current_url = $this->request_stack->getCurrentRequest()->getSchemeAndHttpHost();
     $production_url = $this->getNormalizedUrl($current_url);
     $environment = getenv('AH_SITE_ENVIRONMENT');
 

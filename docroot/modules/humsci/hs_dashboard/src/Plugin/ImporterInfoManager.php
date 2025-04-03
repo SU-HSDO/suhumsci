@@ -89,8 +89,11 @@ class ImporterInfoManager extends DefaultPluginManager {
           '#theme' => 'table',
           '#caption' => $caption,
           '#header' => $importer->getTableHeaders(),
-          '#rows' => $rows,
-          '#footer' => [
+          '#rows' => $rows
+        ];
+
+        if (!empty($importer->getTableSuffix())) {
+          $tables[count($tables) - 1]['#footer'] = [
             [
               [
                 'data' => $importer->getTableSuffix(),
@@ -98,8 +101,8 @@ class ImporterInfoManager extends DefaultPluginManager {
                 'class' => ['importers-table-footer'],
               ],
             ],
-          ],
-        ];
+          ];
+        }
       }
 
     }

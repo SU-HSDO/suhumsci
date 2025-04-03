@@ -28,9 +28,11 @@ function hs_editorial_node_access(NodeInterface $node, $op, AccountInterface $ac
   // Users with the 'Preparer' role are not allowed to edit published content.
   // This closes a gap with the currently available permissions where edit does
   // not differentiate between published and unpublished nodes.
-  if ($op === 'update'
-    && $node->isPublished()
-    && in_array('preparer', $account->getRoles())) {
+  if (
+    $op === 'update' &&
+    $node->isPublished() &&
+    in_array('preparer', $account->getRoles())
+  ) {
     return AccessResult::forbidden()->addCacheableDependency($node);
   }
   // Default response should return neutral, letting other access checks decide.

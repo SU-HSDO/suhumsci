@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * hs_dashboard.install
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_dashboard_install() {
+  $roles = ['site_manager', 'contributor'];
+  foreach ($roles as $role) {
+    user_role_grant_permissions($role, ['view dashboard dashboard']);
+  }
+}

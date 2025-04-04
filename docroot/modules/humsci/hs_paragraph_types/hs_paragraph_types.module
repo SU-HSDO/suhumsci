@@ -174,4 +174,14 @@ function hs_paragraph_types_field_widget_complete_options_select_form_alter(arra
   if (array_key_exists($field_name, $none_labels)) {
     $field_widget_form['widget']['#options']['_none'] = $none_labels[$field_name];
   }
+
+  // Remove the "None" option for certain select fields.
+  $remove_none_fields = [
+    'field_hs_spotlight_image_align',
+    'field_hs_spotlight_height',
+  ];
+
+  if (in_array($field_name, $remove_none_fields)) {
+    unset($field_widget_form['widget']['#options']['_none']);
+  }
 }

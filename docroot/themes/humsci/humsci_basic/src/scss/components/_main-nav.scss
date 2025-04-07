@@ -7,7 +7,6 @@ $item-line-height-md: 128%;
 $item-line-height-lg: 110%;
 
 .hb-main-nav {
-  position: relative;
   font-size: hb-calculate-rems(18px);
 
   &__toggle {
@@ -16,7 +15,7 @@ $item-line-height-lg: 110%;
     cursor: pointer;
     position: absolute;
     right: 0;
-    top: hb-calculate-rems(-46.75px);
+    top: hb-calculate-rems(10px);
     font-weight: hb-theme-font-weight(bold);
     display: flex;
     align-items: center;
@@ -28,6 +27,10 @@ $item-line-height-lg: 110%;
     // toggle buttons are unnecessary.
     .no-js & {
       display: none;
+    }
+
+    @include grid-media-min('md') {
+      top: hb-calculate-rems(16px);
     }
 
     @include grid-media-min('lg') {
@@ -190,7 +193,7 @@ $item-line-height-lg: 110%;
 
     &:hover:not(.is-active) {
       color: var(--palette--black);
-      
+
       .hb-dark-pattern & {
         color: var(--palette--black);
 
@@ -242,7 +245,7 @@ $item-line-height-lg: 110%;
         &.is-active {
           color: var(--palette--black);
           background-color: var(--palette--secondary-highlight);
-          
+
           @include grid-media-min('lg') {
             color: var(--palette--white);
           }
@@ -602,13 +605,5 @@ $item-line-height-lg: 110%;
 
   .hb-main-nav__menu-container {
     display: none;
-  }
-}
-
-.su-site-search {
-  + nav {
-    .hb-main-nav__toggle {
-      top: hb-calculate-rems(-120px);
-    }
   }
 }

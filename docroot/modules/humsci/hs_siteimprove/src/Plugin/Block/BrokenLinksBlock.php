@@ -58,6 +58,14 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
   /**
    * {@inheritdoc}
    */
+  public function getCacheMaxAge() {
+    // 5 minutes in seconds
+    return 300;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $pages = $this->siteImprove->getPagesWithBrokenLinks();
     if (!$pages) {
@@ -85,10 +93,10 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
         '#title' => $this->t('View Full Broken Links Report'),
         '#url' => $this->getBrokenLinksReportUrl(),
         '#attributes' => [
-          'class' => ['siteimprove-full-report-link'],
+          'class' => ['button', 'button--primary'],
           'target' => '_blank',
         ],
-        '#prefix' => '<div class="siteimprove-full-report">',
+        '#prefix' => '<div class="more-link">',
         '#suffix' => '</div>',
       ],
     ];

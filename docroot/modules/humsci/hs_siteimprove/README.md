@@ -1,30 +1,21 @@
 ## INTRODUCTION
 
-The stanford_siteimprove module is a DESCRIBE_THE_MODULE_HERE.
+The HS SiteImprove module provides integration between Drupal and the SiteImprove API. This module serves as a foundation for various SiteImprove features within your Drupal site, making it easier for content editors to access SiteImprove data directly from the Drupal interface.
 
-The primary use case for this module is:
-
-- Use case #1
-- Use case #2
-- Use case #3
+Currently, the module provides:
+- A Broken Links block that displays pages with broken links directly in your Drupal administrative interface
 
 ## REQUIREMENTS
 
-DESCRIBE_MODULE_DEPENDENCIES_HERE
+This module requires the following:
 
-## INSTALLATION
-
-Install as you would normally install a contributed Drupal module.
-See: https://www.drupal.org/node/895232 for further information.
+- A SiteImprove API key and credentials
 
 ## CONFIGURATION
-- Configuration step #1
-- Configuration step #2
-- Configuration step #3
 
-## MAINTAINERS
-
-Current maintainers for Drupal 10:
-
-- FIRST_NAME LAST_NAME (NICKNAME) - https://www.drupal.org/u/NICKNAME
+1. Navigate to the SiteImprove configuration page (/admin/config/services/siteimprove)
+2. Enter your SiteImprove API credentials:
+   - API Username
+   - API Key
+3. Place the Broken Links block in your desired region through the Block Layout interface
 

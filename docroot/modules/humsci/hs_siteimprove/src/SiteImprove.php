@@ -2,8 +2,8 @@
 
 namespace Drupal\hs_siteimprove;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ImmutableConfig;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\State\StateInterface;
 use GuzzleHttp\ClientInterface;
@@ -27,13 +27,6 @@ class SiteImprove implements SiteImproveInterface {
   const CONNECT_TIMEOUT = 10;
 
   /**
-   * SiteImprove settings configuration.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected ImmutableConfig $config;
-
-  /**
    * The base API URL.
    *
    * @var string
@@ -53,16 +46,20 @@ class SiteImprove implements SiteImproveInterface {
    *   The request stack.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
    */
   public function __construct(
-    ConfigFactoryInterface $config_factory,
+    protected ConfigFactoryInterface $config_factory,
     protected ClientInterface $http_client,
     protected StateInterface $state,
     protected RequestStack $request_stack,
     protected LoggerInterface $logger,
+    protected CacheBackendInterface $cache,
   ) {
     $this->config = $config_factory->get('hs_siteimprove.settings');
     $this->baseUrl = $this->config->get('base_url') ?: 'https://api.siteimprove.com/v2';
+    $this->cache = $cache;
   }
 
   /**
@@ -76,9 +73,15 @@ class SiteImprove implements SiteImproveInterface {
    * {@inheritdoc}
    */
   public function getSites(): array {
+    $cid = 'hs_siteimprove:sites';
+    if ($cache = $this->cache->get($cid)) {
+      return $cache->data;
+    }
 
     try {
       $sites = $this->call('GET', '/sites', ['page_size' => 200]);
+      // Cache for 5 minutes.
+      $this->cache->set($cid, $sites->items, time() + 300);
       return $sites->items;
     }
     catch (SiteImproveException $e) {
@@ -121,6 +124,11 @@ class SiteImprove implements SiteImproveInterface {
       return NULL;
     }
 
+    $cid = "hs_siteimprove:broken_links:$site_id";
+    if ($cache = $this->cache->get($cid)) {
+      return $cache->data;
+    }
+
     try {
       $pages = [];
       $broken_links = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/broken_links", ['page_size' => 300]);
@@ -135,6 +143,8 @@ class SiteImprove implements SiteImproveInterface {
         }
       }
 
+      // Cache for 5 minutes.
+      $this->cache->set($cid, $pages, time() + 300);
       return $pages;
     }
     catch (SiteImproveException $e) {
@@ -285,6 +295,8 @@ class SiteImprove implements SiteImproveInterface {
       elseif (str_ends_with($site_identifier, $environment)) {
         $site_identifier = str_replace('-' . $environment, '', $site_identifier);
       }
+
+      $site_identifier = str_replace('https://', '', $site_identifier);
 
       $production_url = $site_identifier . '.stanford.edu';
 

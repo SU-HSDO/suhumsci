@@ -80,8 +80,8 @@ class SiteImprove implements SiteImproveInterface {
 
     try {
       $sites = $this->call('GET', '/sites', ['page_size' => 200]);
-      // Cache for 5 minutes.
-      $this->cache->set($cid, $sites->items, time() + 300);
+      // Cache permanently (will be cleared with cache rebuilds)
+      $this->cache->set($cid, $sites->items, CacheBackendInterface::CACHE_PERMANENT);
       return $sites->items;
     }
     catch (SiteImproveException $e) {

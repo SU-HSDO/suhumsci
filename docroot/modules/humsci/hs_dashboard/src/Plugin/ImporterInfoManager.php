@@ -74,14 +74,14 @@ class ImporterInfoManager extends DefaultPluginManager {
             '#markup' => $caption,
           ],
           '#rows' => [
-          [
             [
-              'data' => $no_data_caption,
-              'colspan' => count($importer->getTableHeaders()),
-              'class' => ['importers-no-data-message'],
+              [
+                'data' => $no_data_caption,
+                'colspan' => count($importer->getTableHeaders()),
+                'class' => ['importers-no-data-message'],
+              ],
             ],
           ],
-        ],
         ];
       }
       else {
@@ -89,7 +89,7 @@ class ImporterInfoManager extends DefaultPluginManager {
           '#theme' => 'table',
           '#caption' => $caption,
           '#header' => $importer->getTableHeaders(),
-          '#rows' => $rows
+          '#rows' => $rows,
         ];
 
         if (!empty($importer->getTableSuffix())) {

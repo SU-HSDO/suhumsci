@@ -104,15 +104,20 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   /**
    * Retrieves the CSV from Google Sheets.
    *
-   * @param string $url
-   *   The URL of the CSV file to retrieve.
-   *
    * @return array
    *   Returns a csv array - if one is not found, an empty array is returned.
    */
-  private function getCsvAnnouncements($url): array {
+  public function getCsvAnnouncements(): array {
+    $csv_url = $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
+    if (empty($csv_url) || !UrlHelper::isValid($csv_url, TRUE)) {
+      $this->logger->error('Invalid HSDP Announcements CSV URL: {url}', [
+        'url' => $csv_url,
+      ]);
+      throw new \Exception('Invalid HSDP Announcements CSV URL');
+    }
+
     try {
-      $response = $this->httpClient->request('GET', $url, [
+      $response = $this->httpClient->request('GET', $csv_url, [
         'headers' => [
           'Accept' => 'text/csv',
         ],
@@ -121,7 +126,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
 
       if ($response->getStatusCode() !== 200) {
         $this->logger->error('Invalid response status from {url} { message }: ', [
-          'url' => $url,
+          'url' => $csv_url,
           'message' => $response->getStatusCode(),
         ]);
         throw new \Exception('Invalid response status: ' . $response->getStatusCode());
@@ -133,7 +138,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     }
     catch (RequestException $e) {
       $this->logger->error('Error retrieving CSV from {url}: {message}', [
-        'url' => $url,
+        'url' => $csv_url,
         'message' => $e->getMessage(),
       ]);
       return [];
@@ -248,62 +253,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       return $converted_link->toString()->__toString();
     }, $text);
 
-  }
-
-  /**
-   * Returns table headers. These are statically set.
-   *
-   * @return array
-   *   An array of table headers.
-   */
-  public function getTableHeader(): array {
-
-    $tableHeader = [
-      [
-        'data' => $this->t('Date'),
-      ],
-      [
-        'data' => $this->t('Update'),
-      ],
-    ];
-
-    return $tableHeader;
-  }
-
-  /**
-   * Returns table rows based on the announcements found in csv.
-   *
-   * @return array
-   *   An array of table rows with announcement data.
-   */
-  public function getTableRows(): array {
-    $table_rows = [];
-
-    if ($cache = \Drupal::cache()->get('hs_dashboard_csv_announcements')) {
-      return $cache->data;
-    }
-
-    $csv_url = $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
-    if (empty($csv_url) || !UrlHelper::isValid($csv_url, TRUE)) {
-      $this->logger->error('Invalid HSDP Announcements CSV URL: {url}', [
-        'url' => $csv_url,
-      ]);
-      throw new \Exception('Invalid HSDP Announcements CSV URL');
-    }
-
-    $csv_data = $this->getCsvAnnouncements($csv_url);
-
-    foreach ($csv_data as $row) {
-      $table_rows[] = [
-        'data' => [
-          ['data' => $row[1]],
-          ['data' => ['#markup' => $row[3]]],
-        ],
-      ];
-    }
-
-    \Drupal::cache()->set('hs_dashboard_csv_announcements', $table_rows, time() + 120);
-    return $table_rows;
   }
 
 }

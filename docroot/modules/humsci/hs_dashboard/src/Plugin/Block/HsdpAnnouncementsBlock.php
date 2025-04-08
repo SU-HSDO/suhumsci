@@ -60,19 +60,67 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function build(): array {
-    $rows = $this->announcementsManager->getTableRows();
+    $csv_data = $this->announcementsManager->getCsvAnnouncements();
 
-    if (!$rows) {
-      $build['content']['#theme'] = 'markup';
-      $build['content']['#markup'] = $this->t('There were no announcements found.');
+    $build = [
+      '#cache' => [
+        'max-age' => 10 * 60,
+      ],
+    ];
+
+    if (empty($csv_data)) {
+      $build['#theme'] = 'markup';
+      $build['#markup'] = $this->t('There were no announcements found.');
     }
     else {
       $build['content']['#theme'] = 'table';
-      $build['content']['#header'] = $this->announcementsManager->getTableHeader();
-      $build['content']['#rows'] = $rows;
+      $build['content']['#header'] = $this->getTableHeader();
+      $build['content']['#rows'] = $this->getTableRows($csv_data);
     }
 
     return $build;
+  }
+
+  /**
+   * Returns table headers. These are statically set.
+   *
+   * @return array
+   *   An array of table headers.
+   */
+  private function getTableHeader(): array {
+
+    $tableHeader = [
+      [
+        'data' => $this->t('Date'),
+      ],
+      [
+        'data' => $this->t('Update'),
+      ],
+    ];
+
+    return $tableHeader;
+  }
+
+  /**
+   * Build and returns table rows from CSV data.
+   *
+   * @param array $csv_data
+   *   The CSV data.
+   *
+   * @return array
+   *   An array of table rows with announcement data.
+   */
+  private function getTableRows($csv_data): array {
+    foreach ($csv_data as $row) {
+      $table_rows[] = [
+        'data' => [
+          ['data' => $row[1]],
+          ['data' => ['#markup' => $row[3]]],
+        ],
+      ];
+    }
+
+    return $table_rows;
   }
 
 }

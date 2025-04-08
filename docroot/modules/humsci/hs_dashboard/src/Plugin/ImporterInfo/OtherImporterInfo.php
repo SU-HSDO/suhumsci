@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -33,13 +34,6 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   ];
 
   /**
-   * KeyValueStore used to track the import times of each migration.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $lastImportedStore;
-
-  /**
    * Migration plugin manager service.
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
@@ -59,6 +53,8 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The entity type manager.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The KeyValue factory interface.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The DateFormatter.
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
    *   The migration manager interface.
    */
@@ -68,10 +64,10 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
     $plugin_definition,
     EntityTypeManagerInterface $entity_type_manager,
     KeyValueFactoryInterface $key_value_factory,
+    DateFormatterInterface $date_formatter,
     MigrationPluginManagerInterface $migration_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
-    $this->lastImportedStore = $key_value_factory->get('migrate_last_imported');
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
     $this->migrationManager = $migration_manager;
   }
 
@@ -85,6 +81,7 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('keyvalue'),
+      $container->get('date.formatter'),
       $container->get('plugin.manager.migration')
     );
   }

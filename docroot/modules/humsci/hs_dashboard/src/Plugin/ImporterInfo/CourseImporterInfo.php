@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -39,14 +41,20 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The KeyValue factory.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The DateFormatter.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
     EntityTypeManagerInterface $entity_type_manager,
+    KeyValueFactoryInterface $key_value_factory,
+    DateFormatterInterface $date_formatter,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -59,6 +67,8 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
+      $container->get('keyvalue'),
+      $container->get('date.formatter'),
     );
   }
 
@@ -68,6 +78,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   public function getTableHeaders(): array {
     return [
       $this->t('Course tag'),
+      $this->t('Last Imported'),
       $this->t('Catalog'),
     ];
   }
@@ -83,6 +94,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $table_rows[] = [
         'data' => [
           ['data' => $tag->label()],
+          ['data' => $this->lastImportTime('hs_courses')],
           ['data' => $this->buildCourseLink($this->t('Explore courses'), 'catalog', $tag->label())],
         ],
       ];

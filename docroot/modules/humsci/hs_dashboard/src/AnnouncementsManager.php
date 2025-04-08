@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard;
 
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\File\FileExists;
@@ -22,11 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AnnouncementsManager implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * Announcement CSV location.
-   */
-  const ANNOUNCEMENTS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQzSuPudq048D1NadRBE9h_s_-w-o4YtcC6AHfCdcqn3gX52akZNOaF5KAG9SeXkCV6PvIVmRtQ0HR/pub?gid=1146337887&single=true&output=csv';
 
   /**
    * The HTTP client to fetch announcement data.
@@ -57,15 +54,24 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   protected DateFormatterInterface $dateFormatter;
 
   /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected ConfigFactoryInterface $configFactory;
+
+  /**
    * Constructs a new ViewsBasicManager object.
    *
-   * @param GuzzleHttp\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   The guzzle http client.
-   * @param Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger interface.
-   * @param Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The logger interface.
-   * @param Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter interface.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The date formatter interface.
    */
   public function __construct(
@@ -73,11 +79,13 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
     DateFormatterInterface $date_formatter,
+    ConfigFactoryInterface $config_factory,
   ) {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('hs_dashboard');
     $this->fileSystem = $file_system;
     $this->dateFormatter = $date_formatter;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -89,6 +97,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $container->get('logger.factory'),
       $container->get('file_system'),
       $container->get('date.formatter'),
+      $container->get('config.factory'),
     );
   }
 
@@ -273,7 +282,16 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     if ($cache = \Drupal::cache()->get('hs_dashboard_csv_announcements')) {
       return $cache->data;
     }
-    $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
+
+    $csv_url = $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
+    if (empty($csv_url) || !UrlHelper::isValid($csv_url, TRUE)) {
+      $this->logger->error('Invalid HSDP Announcements CSV URL: {url}', [
+        'url' => $csv_url,
+      ]);
+      throw new \Exception('Invalid HSDP Announcements CSV URL');
+    }
+
+    $csv_data = $this->getCsvAnnouncements($csv_url);
 
     foreach ($csv_data as $row) {
       $table_rows[] = [

@@ -465,20 +465,6 @@ function _su_humsci_clear_menu_cache_tags() {
 }
 
 /**
- * Implements hook_entity_operation_alter().
- */
-function su_humsci_profile_entity_operation_alter(array &$operations, EntityInterface $entity) {
-  $role_delegation = \Drupal::moduleHandler()->moduleExists('role_delegation');
-  if ($entity instanceof UserInterface && $role_delegation) {
-    $operations['roles'] = [
-      'title' => t('Manage Roles'),
-      'weight' => 11,
-      'url' => Url::fromRoute('role_delegation.edit_form', ['user' => $entity->id()]),
-    ];
-  }
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function su_humsci_profile_form_user_admin_permissions_alter(array &$form, FormStateInterface $form_state) {

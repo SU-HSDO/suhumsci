@@ -124,11 +124,6 @@ class SiteImprove implements SiteImproveInterface {
       return NULL;
     }
 
-    $cid = "hs_siteimprove:broken_links:$site_id";
-    if ($cache = $this->cache->get($cid)) {
-      return $cache->data;
-    }
-
     try {
       $pages = [];
       $broken_links = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/broken_links", ['page_size' => 300]);
@@ -143,8 +138,6 @@ class SiteImprove implements SiteImproveInterface {
         }
       }
 
-      // Cache for 5 minutes.
-      $this->cache->set($cid, $pages, time() + 300);
       return $pages;
     }
     catch (SiteImproveException $e) {

@@ -78,8 +78,8 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   public function getTableHeaders(): array {
     return [
       $this->t('Course tag'),
-      $this->t('Last Imported'),
       $this->t('Catalog'),
+      $this->t('Last Imported'),
     ];
   }
 
@@ -94,8 +94,8 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $table_rows[] = [
         'data' => [
           ['data' => $tag->label()],
-          ['data' => $this->lastImportTime('hs_courses')],
           ['data' => $this->buildCourseLink($this->t('Explore courses'), 'catalog', $tag->label())],
+          ['data' => $this->lastImportTime('hs_courses')],
         ],
       ];
     }

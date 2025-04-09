@@ -10,7 +10,7 @@ use Drupal\hs_dashboard\AnnouncementsManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a hsdp announcements block.
+ * Provides an HSDP announcements block.
  *
  * @Block(
  *   id = "hs_dashboard_hsdp_announcements",
@@ -59,14 +59,16 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
+  public function getCacheMaxAge() {
+    // 5 minutes in seconds
+    return 300;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(): array {
     $csv_data = $this->announcementsManager->getCsvAnnouncements();
-
-    $build = [
-      '#cache' => [
-        'max-age' => 10 * 60,
-      ],
-    ];
 
     if (empty($csv_data)) {
       $build['#theme'] = 'markup';

@@ -15,7 +15,7 @@ function hs_paragraph_types_deploy_update_spotlight_defaults(&$sandbox) {
   if (!isset($sandbox['total'])) {
     $sandbox['ids'] = $paragraph_storage->getQuery()
       ->accessCheck(FALSE)
-      ->condition('type', 'spotlight')
+      ->condition('type', 'hs_spotlight')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
     $sandbox['current'] = 0;

@@ -81,9 +81,17 @@ class ImporterInfoManager extends DefaultPluginManager {
         $tables[] = [
           '#theme' => 'table',
           '#caption' => [
-            '#markup' => "$caption<br>$no_data_caption",
+            '#markup' => $caption,
           ],
-
+          '#rows' => [
+            [
+              [
+                'data' => $no_data_caption,
+                'colspan' => count($importer->getTableHeaders()),
+                'class' => ['importers-no-data-message'],
+              ],
+            ],
+          ],
         ];
       }
       else {
@@ -92,8 +100,19 @@ class ImporterInfoManager extends DefaultPluginManager {
           '#caption' => $caption,
           '#header' => $importer->getTableHeaders(),
           '#rows' => $rows,
-          '#suffix' => $importer->getTableSuffix(),
         ];
+
+        if (!empty($importer->getTableSuffix())) {
+          $tables[count($tables) - 1]['#footer'] = [
+            [
+              [
+                'data' => $importer->getTableSuffix(),
+                'colspan' => count($importer->getTableHeaders()),
+                'class' => ['importers-table-footer'],
+              ],
+            ],
+          ];
+        }
       }
 
     }

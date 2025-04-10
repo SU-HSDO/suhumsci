@@ -137,8 +137,10 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
    * When was this importer last run.
    *
    * @param string $migration_id
+   *   The migration id.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+   *   The last import time.
    */
   protected function lastImportTime(string $migration_id) {
     if ($last_imported = $this->lastImportedStore->get($migration_id, FALSE)) {

@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "people_importer_info",
  *   label = @Translation("People Importers"),
  *   description = @Translation("Retrieves people importer information from capx_importer entities."),
+ *   weight = 30,
  * )
  */
 class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {

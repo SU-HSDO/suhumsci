@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\WidgetPluginManager;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -21,6 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "event_importer_info",
  *   label = @Translation("Event Importers"),
  *   description = @Translation("Retrieves event importer information from Localist."),
+ *   weight = 20,
  * )
  */
 class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
@@ -73,6 +76,10 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The KeyValue factory interface.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The DateFormatter.
    * @param \Drupal\Core\Field\WidgetPluginManager $widget_manager
    *   The widget manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
@@ -83,10 +90,12 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
     $plugin_id,
     $plugin_definition,
     EntityTypeManagerInterface $entity_type_manager,
+    KeyValueFactoryInterface $key_value_factory,
+    DateFormatterInterface $date_formatter,
     WidgetPluginManager $widget_manager,
     EntityFieldManagerInterface $entity_field_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
     $this->entityTypeManager = $entity_type_manager;
     $this->widgetManager = $widget_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -103,6 +112,8 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
+      $container->get('keyvalue'),
+      $container->get('date.formatter'),
       $container->get('plugin.manager.field.widget'),
       $container->get('entity_field.manager'),
     );
@@ -125,6 +136,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   public function getTableHeaders(): array {
     return [
       $this->t('Departments/Groups'),
+      $this->t('Last Imported'),
     ];
   }
 
@@ -351,6 +363,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $this->eventTableRows[] = [
         'data' => [
           ['data' => implode(', ', array_filter($filters))],
+          ['data' => $this->lastImportTime('hs_localist_scheduled')],
         ],
       ];
     }

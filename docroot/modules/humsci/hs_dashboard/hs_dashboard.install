@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\shortcut\Entity\Shortcut;
+
+/**
+ * Create the dashboard shortcut.
+ */
+function hs_dashboard_update_10000() {
+  $dashboard_shorcut = Shortcut::create([
+    'shortcut_set' => 'default',
+    'title' => 'Dashboard',
+    'link' => [
+      'uri' => 'internal:/admin/dashboard',
+    ],
+    'weight' => 0,
+  ]);
+  $dashboard_shorcut->save();
+
+  // Set the weight of the 'home' shortcut to -5.
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $home_shortcut = $entity_type_manager->getStorage('shortcut')->loadByProperties(['title' => 'Home']);
+  $home_shortcut = reset($home_shortcut);
+  $home_shortcut->setWeight(-5);
+  $home_shortcut->save();
+}

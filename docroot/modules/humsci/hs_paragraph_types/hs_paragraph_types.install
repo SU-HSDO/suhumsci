@@ -410,7 +410,33 @@ function hs_paragraph_types_update_10011() {
  * Updates spotlight paragraphs with new default values.
  */
 function hs_paragraph_types_update_10012(&$sandbox) {
-  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  // Load the configuration from the config/sync directory.
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Update field_spotlight_style field config.
+  $field_config = $entity_type_manager->getStorage('field_config');
+  $config_data = $config_directory->read('field.field.paragraph.hs_spotlight.field_spotlight_style');
+  $existing_config = $field_config->load($config_data['id']);
+  if ($existing_config) {
+    $existing_config = $field_config
+      ->updateFromStorageRecord($existing_config, $config_data);
+    $existing_config->save();
+  }
+
+  // Update field_spotlight_style field storage.
+  $field_storage_config = $entity_type_manager->getStorage('field_storage_config');
+  $config_data = $config_directory->read('field.storage.paragraph.field_spotlight_style');
+  $existing_config = $field_storage_config->load($config_data['id']);
+  if ($existing_config) {
+    $existing_config = $field_storage_config
+      ->updateFromStorageRecord($existing_config, $config_data);
+    $existing_config->save();
+  }
+
+  $paragraph_storage = $entity_type_manager->getStorage('paragraph');
 
   // Initialize the batch.
   if (!isset($sandbox['total'])) {

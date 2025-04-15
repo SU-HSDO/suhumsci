@@ -125,20 +125,8 @@ class SiteImprove implements SiteImproveInterface {
     }
 
     try {
-      $pages = [];
-      $broken_links = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/broken_links", ['page_size' => 300]);
-
-      if (!empty($broken_links->items)) {
-        foreach ($broken_links->items as $link) {
-          // Get the pages for the broken link.
-          $pages_response = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/broken_links/{$link->id}/pages", ['page_size' => 300]);
-          if (!empty($pages_response->items)) {
-            $pages = array_merge($pages, $pages_response->items);
-          }
-        }
-      }
-
-      return $pages;
+      $pages = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/pages_with_broken_links", ['page_size' => 5]);
+      return $pages->items;
     }
     catch (SiteImproveException $e) {
       $this->logger->error('Failed to fetch broken links: @message', ['@message' => $e->getMessage()]);

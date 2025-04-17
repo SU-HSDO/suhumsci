@@ -33,6 +33,8 @@ class ImporterInfoManager extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_default
+   *   The cache backend to use.
    */
   public function __construct(
     \Traversable $namespaces,

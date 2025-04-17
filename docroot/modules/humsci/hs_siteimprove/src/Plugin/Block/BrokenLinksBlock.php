@@ -7,7 +7,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\hs_siteimprove\SiteImprove;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Provides a block displaying SiteImprove details.
@@ -28,13 +27,6 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
   protected $siteImprove;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a new SiteImproveDetailsBlock instance.
    *
    * @param array $configuration
@@ -45,13 +37,10 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   The plugin implementation definition.
    * @param \Drupal\hs_siteimprove\SiteImprove $site_improve
    *   The SiteImprove service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SiteImprove $site_improve, CacheBackendInterface $cache) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SiteImprove $site_improve) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->siteImprove = $site_improve;
-    $this->cacheBackend = $cache;
   }
 
   /**
@@ -62,8 +51,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('hs_siteimprove.connector'),
-      $container->get('cache.default')
+      $container->get('hs_siteimprove.connector')
     );
   }
 
@@ -79,7 +67,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function build() {
-    $pages = $this->getPageData();
+    $pages = $this->siteImprove->getPagesWithBrokenLinks();
     if (!$pages) {
       return [
         '#markup' => $this->t('No broken links found'),
@@ -197,21 +185,6 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
   protected function getBrokenLinksReportUrl(): Url {
     $site_id = $this->siteImprove->getCurrentSiteId();
     return Url::fromUri("https://my2.siteimprove.com/QualityAssurance/{$site_id}/Links/Pages/1/UnsuccessfulClicks/Desc?pageSize=100");
-  }
-
-  /**
-   * Get the page data from the cache or the siteimprove api.
-   *
-   * @return array
-   *   The page data.
-   */
-  public function getPageData() {
-    if ($cache = $this->cacheBackend->get('hs_siteimprove_broken_links')) {
-      return $cache->data;
-    }
-    $pages = $this->siteImprove->getPagesWithBrokenLinks();
-    $this->cacheBackend->set('hs_siteimprove_broken_links', $pages, time() + 200);
-    return $pages;
   }
 
 }

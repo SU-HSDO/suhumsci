@@ -17,6 +17,13 @@ class ImporterInfoManager extends DefaultPluginManager {
   use StringTranslationTrait;
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected CacheBackendInterface $cache;
+
+  /**
    * Constructs a new ImporterInfoManager object.
    *
    * @param \Traversable $namespaces
@@ -41,6 +48,7 @@ class ImporterInfoManager extends DefaultPluginManager {
     );
     $this->alterInfo('hs_dashboard_importer_info_info');
     $this->setCacheBackend($cache_backend, 'hs_dashboard_importer_info_plugins');
+    $this->cache = $cache_backend;
   }
 
   /**
@@ -60,6 +68,11 @@ class ImporterInfoManager extends DefaultPluginManager {
    * Generates tables for all Importers.
    */
   public function generateTables(): array {
+
+    if ($cache = $this->cache->get('hs_dashboard_importer_info_tables')) {
+      return $cache->data;
+    }
+
     $tables = [];
 
     foreach ($this->getImporterInstances() as $plugin_id => $importer) {
@@ -88,6 +101,7 @@ class ImporterInfoManager extends DefaultPluginManager {
 
     }
 
+    $this->cache->set('hs_dashboard_importer_info_tables', $tables, time() + 300);
     return $tables;
 
   }

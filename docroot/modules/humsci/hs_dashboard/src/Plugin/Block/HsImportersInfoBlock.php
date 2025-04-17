@@ -59,6 +59,14 @@ class HsImportersInfoBlock extends BlockBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
+  public function getCacheMaxAge() {
+    // 5 minutes in seconds
+    return 300;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(): array {
     $build = [
       '#theme' => 'hs_importers_info',

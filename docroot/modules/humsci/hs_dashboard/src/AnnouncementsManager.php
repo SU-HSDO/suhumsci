@@ -29,6 +29,13 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   const ANNOUNCEMENTS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQzSuPudq048D1NadRBE9h_s_-w-o4YtcC6AHfCdcqn3gX52akZNOaF5KAG9SeXkCV6PvIVmRtQ0HR/pub?gid=1146337887&single=true&output=csv';
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected CacheBackendInterface $cache;
+
+  /**
    * The HTTP client to fetch announcement data.
    *
    * @var \GuzzleHttp\ClientInterface
@@ -73,11 +80,13 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
     DateFormatterInterface $date_formatter,
+    CacheBackendInterface $cache,
   ) {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('hs_dashboard');
     $this->fileSystem = $file_system;
     $this->dateFormatter = $date_formatter;
+    $this->cache = $cache;
   }
 
   /**
@@ -89,6 +98,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $container->get('logger.factory'),
       $container->get('file_system'),
       $container->get('date.formatter'),
+      $container->get('cache.default'),
     );
   }
 
@@ -270,7 +280,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   public function getTableRows(): array {
     $table_rows = [];
 
-    if ($cache = \Drupal::cache()->get('hs_dashboard_csv_announcements')) {
+    if ($cache = $this->cache->get('hs_dashboard_csv_announcements')) {
       return $cache->data;
     }
     $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
@@ -284,7 +294,8 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       ];
     }
 
-    \Drupal::cache()->set('hs_dashboard_csv_announcements', $table_rows, time() + 120);
+    // Cache for 2 minutes.
+    $this->cache->set('hs_dashboard_csv_announcements', $table_rows, time() + 120);
     return $table_rows;
   }
 

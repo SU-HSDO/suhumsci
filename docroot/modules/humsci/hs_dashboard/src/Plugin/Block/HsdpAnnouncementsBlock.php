@@ -59,6 +59,14 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
+  public function getCacheMaxAge() {
+    // 2 minutes in seconds
+    return 120;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(): array {
     $rows = $this->announcementsManager->getTableRows();
 

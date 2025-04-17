@@ -27,6 +27,13 @@ class SiteImprove implements SiteImproveInterface {
   const CONNECT_TIMEOUT = 10;
 
   /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected CacheBackendInterface $cache;
+
+  /**
    * The base API URL.
    *
    * @var string
@@ -119,6 +126,10 @@ class SiteImprove implements SiteImproveInterface {
    * {@inheritdoc}
    */
   public function getPagesWithBrokenLinks(): ?array {
+    if ($cache = $this->cache->get('hs_siteimprove_broken_links')) {
+      return $cache->data;
+    }
+
     $site_id = $this->getCurrentSiteId();
     if (!$site_id) {
       return NULL;
@@ -126,6 +137,8 @@ class SiteImprove implements SiteImproveInterface {
 
     try {
       $pages = $this->call('GET', "/sites/{$site_id}/quality_assurance/links/pages_with_broken_links", ['page_size' => 5]);
+      // Cache for 5 minutes.
+      $this->cache->set('hs_siteimprove_broken_links', $pages->items, time() + 300);
       return $pages->items;
     }
     catch (SiteImproveException $e) {

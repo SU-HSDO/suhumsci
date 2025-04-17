@@ -74,6 +74,8 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   The logger interface.
    * @param Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter interface.
+   * @param Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
    */
   public function __construct(
     ClientInterface $http_client,

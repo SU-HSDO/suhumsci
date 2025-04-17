@@ -17,14 +17,16 @@ function hs_admin_update_10000() {
     'link' => [
       'uri' => 'internal:/admin/dashboard',
     ],
-    'weight' => 0,
+    'weight' => -5,
   ]);
   $dashboard_shorcut->save();
 
-  // Set the weight of the 'home' shortcut to -5.
+  // Set the weight of the 'home' shortcut to -10.
   $entity_type_manager = \Drupal::entityTypeManager();
   $home_shortcut = $entity_type_manager->getStorage('shortcut')->loadByProperties(['title' => 'Home']);
-  $home_shortcut = reset($home_shortcut);
-  $home_shortcut->setWeight(-5);
-  $home_shortcut->save();
+  if (!empty($home_shortcut)) {
+    $home_shortcut = reset($home_shortcut);
+    $home_shortcut->setWeight(-10);
+    $home_shortcut->save();
+  }
 }

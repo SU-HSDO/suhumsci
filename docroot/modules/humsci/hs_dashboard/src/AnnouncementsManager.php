@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\File\FileExists;
@@ -33,7 +34,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected CacheBackendInterface $cache;
+  protected $cache;
 
   /**
    * The HTTP client to fetch announcement data.

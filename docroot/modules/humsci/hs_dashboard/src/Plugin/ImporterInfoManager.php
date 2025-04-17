@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin;
 
-use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Class to handle Import information for block tables.
@@ -38,6 +38,7 @@ class ImporterInfoManager extends DefaultPluginManager {
     \Traversable $namespaces,
     CacheBackendInterface $cache_backend,
     ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache_default,
   ) {
     parent::__construct(
       'Plugin/ImporterInfo',
@@ -48,7 +49,7 @@ class ImporterInfoManager extends DefaultPluginManager {
     );
     $this->alterInfo('hs_dashboard_importer_info_info');
     $this->setCacheBackend($cache_backend, 'hs_dashboard_importer_info_plugins');
-    $this->cache = $cache_backend;
+    $this->cache = $cache_default;
   }
 
   /**
@@ -68,7 +69,6 @@ class ImporterInfoManager extends DefaultPluginManager {
    * Generates tables for all Importers.
    */
   public function generateTables(): array {
-
     if ($cache = $this->cache->get('hs_dashboard_importer_info_tables')) {
       return $cache->data;
     }

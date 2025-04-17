@@ -27,13 +27,6 @@ class SiteImprove implements SiteImproveInterface {
   const CONNECT_TIMEOUT = 10;
 
   /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected CacheBackendInterface $cache;
-
-  /**
    * The base API URL.
    *
    * @var string
@@ -66,7 +59,6 @@ class SiteImprove implements SiteImproveInterface {
   ) {
     $this->config = $config_factory->get('hs_siteimprove.settings');
     $this->baseUrl = $this->config->get('base_url') ?: 'https://api.siteimprove.com/v2';
-    $this->cache = $cache;
   }
 
   /**

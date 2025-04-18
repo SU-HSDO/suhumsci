@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Contains hs_private_page.module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_help().
+ */
+function hs_private_page_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.hs_private_page':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a Private Page content type for Humanities & Sciences.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create_access().
+ */
+function hs_private_page_paragraph_create_access(AccountInterface $account, array $context, $entity_bundle) {
+  // Hide legacy components from picker, but allow editing existing components.
+  if (in_array($entity_bundle, ['hs_priv_text_area', 'hs_priv_collection'])) {
+    return AccessResult::forbidden();
+  }
+}

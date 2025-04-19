@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the hs_private_page module.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
+use Exception;
+
 /**
  * Implements hook_install().
  *
@@ -50,7 +53,7 @@ function hs_private_page_install() {
     $entity_type = 'node';
     $bundle = 'hs_private_page';
     $field_name = 'field_hs_priv_page_components';
-    $default_paragraph_type = 'hs_text_area';
+    $default_paragraph = 'hs_text_area';
 
     // Load the entity form display.
     $form_display = \Drupal::entityTypeManager()
@@ -58,7 +61,7 @@ function hs_private_page_install() {
       ->load("$entity_type.$bundle.default");
 
     if (!$form_display) {
-      throw new \Exception(t('Form display for @entity_type.@bundle.default not found.', [
+      throw new Exception(t('Form display for @entity_type.@bundle.default not found.', [
         '@entity_type' => $entity_type,
         '@bundle' => $bundle,
       ]));
@@ -68,13 +71,13 @@ function hs_private_page_install() {
     $component = $form_display->getComponent($field_name);
 
     if (!$component) {
-      throw new \Exception(t('Component @field not found in form display.', [
+      throw new Exception(t('Component @field not found in form display.', [
         '@field' => $field_name,
       ]));
     }
 
     // Set the default paragraph type.
-    $component['settings']['default_paragraph_type'] = $default_paragraph_type;
+    $component['settings']['default_paragraph_type'] = $default_paragraph;
 
     // Update the component.
     $form_display->setComponent($field_name, $component);
@@ -82,10 +85,10 @@ function hs_private_page_install() {
 
     \Drupal::messenger()->addStatus(t('Default paragraph type for @field has been set to @type.', [
       '@field' => $field_name,
-      '@type' => $default_paragraph_type,
+      '@type' => $default_paragraph,
     ]));
   }
-  catch (\Exception $e) {
+  catch (Exception $e) {
     \Drupal::messenger()->addError($e->getMessage());
     \Drupal::logger('hs_private_page')->error($e->getMessage());
   }

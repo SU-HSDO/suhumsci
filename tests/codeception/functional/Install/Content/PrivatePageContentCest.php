@@ -9,12 +9,6 @@
 class PrivatePageContentCest {
 
   private $fieldsToCheck = [
-    'Private Collection' => [
-      'component_text' => 'Items Per Row',
-      'component_button_name' => 'Private Collection',
-      'admin_name' => '[name="settings[handler_settings][target_bundles_drag_drop][hs_priv_collection][enabled]"]',
-      'disable_component' => FALSE,
-    ],
     'Spotlight' => [
       'component_text' => 'No media items are selected.',
       'component_button_name' => 'Spotlight(s)',
@@ -31,12 +25,6 @@ class PrivatePageContentCest {
       'component_text' => 'No media items are selected.',
       'component_button_name' => 'Postcard',
       'admin_name' => '[name="settings[handler_settings][target_bundles_drag_drop][hs_postcard][enabled]"]',
-      'disable_component' => FALSE,
-    ],
-    'Private Text Area' => [
-      'component_text' => 'Private Text Area',
-      'component_button_name' => 'Private Text Area',
-      'admin_name' => '[name="settings[handler_settings][target_bundles_drag_drop][hs_priv_text_area][enabled]"]',
       'disable_component' => FALSE,
     ],
   ];

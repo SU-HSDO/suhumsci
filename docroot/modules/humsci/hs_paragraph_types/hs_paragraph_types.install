@@ -419,17 +419,19 @@ function hs_paragraph_types_update_10012() {
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
   // Create field_storage if it does not exist.
+  $summary_heading_field_storage = $config_storage->read('field.storage.paragraph.field_summary_heading_level');
   if (
     empty($field_storage->load('paragraph.field_summary_heading_level') &&
-    $summary_heading_field_storage = $config_storage->read('field.storage.paragraph.field_summary_heading_level')
+    !empty($summary_heading_field_storage)
   )) {
     $field_storage->createFromStorageRecord($summary_heading_field_storage)->save();
   }
 
   // Create field_config if it does not exist.
+  $summary_heading_field_config = $config_storage->read('field.field.paragraph.hs_accordion.field_summary_heading_level');
   if (
     empty($field_config_storage->load('paragraph.hs_accordion.field_summary_heading_level')) &&
-    $summary_heading_field_config = $config_storage->read('field.field.paragraph.hs_accordion.field_summary_heading_level')
+    !empty($summary_heading_field_config)
   ) {
     $field_config_storage->create($summary_heading_field_config)->save();
   }

@@ -53,11 +53,19 @@
   color: var(--palette--tertiary);
 
   @include hb-themes(('colorful', 'airy')) {
-    // Ocean, canyon and mountain color pairing override when link is inside a hb-well.
+    // Ocean, canyon and mountain color pairings override when link is inside a well or a spotlight.
     .hc-pairing-ocean .hb-well &,
     .hc-pairing-canyon .hb-well &,
+    .hc-pairing-canyon .hs-paragraph-style--well &, 
+    .hc-pairing-canyon .hs-paragraph-style--well-full-width &,
+    .hc-pairing-canyon .hb-spotlight &,
     .hc-pairing-mountain .hb-well & {
       color: var(--palette--primary);
+
+      &:hover,
+      &:focus {
+        color: var(--palette--primary-darken-20);
+      }
     }
   }
 

@@ -173,6 +173,16 @@ function hs_layouts_preprocess_pattern_accordion(&$variables) {
         break;
     }
   }
+
+  // Set a fallback value just in case something happens to the field
+  // since this is being output directly as the html element.
+  $variables['heading_level'] = 'div';
+  if (
+    $paragraph->hasField('field_summary_heading_level') &&
+    !$paragraph->get('field_summary_heading_level')->isEmpty()
+  ) {
+    $variables['heading_level'] = $paragraph->get('field_summary_heading_level')->getString();
+  }
 }
 
 /**

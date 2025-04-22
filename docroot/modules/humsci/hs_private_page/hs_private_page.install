@@ -7,8 +7,45 @@
 
 /**
  * Implements hook_install().
+ *
+ * Sets up the hs_private_page content type with required paragraph types
+ * and default paragraph type configuration.
  */
 function hs_private_page_install() {
+  // Ensure the required function exists before using it.
+  if (!function_exists('_su_humsci_profile_enable_paragraph')) {
+    \Drupal::moduleHandler()->loadInclude('su_humsci_profile', 'php', 'su_humsci_profile.post_update');
+    if (!function_exists('_su_humsci_profile_enable_paragraph')) {
+      \Drupal::messenger()->addError(t('Unable to enable paragraph types: required function not found.'));
+      return;
+    }
+  }
+
+  // Enable paragraph types for the components field and set the correct order.
+  $paragraph_types = [
+    'hs_text_area',
+    'hs_accordion',
+    'hs_callout_box',
+    'hs_clr_bnd',
+    'hs_collection',
+    'hs_gradient_hero_slider',
+    'hs_carousel',
+    'hs_banner',
+    'hs_hero_image',
+    'stanford_gallery',
+    'hs_postcard',
+    'hs_sptlght_slder',
+    'hs_testimonial',
+    'hs_timeline',
+    'hs_view',
+  ];
+
+  $weight = 0;
+  foreach ($paragraph_types as $paragraph_type) {
+    _su_humsci_profile_enable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', $paragraph_type, $weight);
+    $weight++;
+  }
+
   // Set default paragraph type for field_hs_priv_page_components.
   $entity_type = 'node';
   $bundle = 'hs_private_page';

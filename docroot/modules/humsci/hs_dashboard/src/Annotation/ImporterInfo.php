@@ -39,4 +39,11 @@ class ImporterInfo extends Plugin {
    */
   public $description;
 
+  /**
+   * The default weight of plugin instances used for sorting.
+   *
+   * @var int
+   */
+  public $weight;
+
 }

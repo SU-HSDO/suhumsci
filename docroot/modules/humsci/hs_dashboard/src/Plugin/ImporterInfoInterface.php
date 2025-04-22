@@ -50,4 +50,20 @@ interface ImporterInfoInterface extends PluginInspectionInterface {
    */
   public function getNoDataCaption(): TranslatableMarkup;
 
+  /**
+   * Gets the default weight for the importer.
+   *
+   * @return int
+   *   A no data caption.
+   */
+  public function getWeight(): int;
+
+  /**
+   * Method for conditionally showing or hiding the importer.
+   *
+   * @return bool
+   *   TRUE if the importer should display; FALSE if it should hide.
+   */
+  public function showImporter(): bool;
+
 }

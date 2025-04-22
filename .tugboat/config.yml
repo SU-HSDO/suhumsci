@@ -97,8 +97,8 @@ services:
         - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=west
 
-        - drush @default cr
-        - drush @default eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - drush @default.local cr
+        - drush @default.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=default
 
         - npm run theme-build

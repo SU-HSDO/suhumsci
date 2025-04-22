@@ -20,7 +20,7 @@ services:
       # - english
       - history
       - west
-      - default
+      - hs_sandbox_3
 
     # A set of commands to run while building this service
     commands:
@@ -64,9 +64,9 @@ services:
 
         - blt drupal:sync:files --site=west
 
-        - blt drupal:sync:files --site=default
-        - drush @default user:create tugboat --password=pushcar || true
-        - drush @default user:role:add administrator tugboat || true
+        - blt drupal:sync:files --site=hs_sandbox_3
+        - drush @hs_sandbox_3 user:create tugboat --password=pushcar || true
+        - drush @hs_sandbox_3 user:role:add administrator tugboat || true
 
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
@@ -97,9 +97,9 @@ services:
         - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=west
 
-        - drush @default.local cr
-        - drush @default.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=default
+        - drush @hs_sandbox_3.local cr
+        - drush @hs_sandbox_3.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=hs_sandbox_3
 
         - npm run theme-build
 

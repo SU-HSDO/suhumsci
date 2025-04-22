@@ -7,6 +7,15 @@
   transition: hb-transition(text-decoration-color);
   text-decoration-color: var(--palette--gray-medium);
 
+  @include hb-themes(('colorful', 'airy')) {
+    // Canyon color pairings override when link is inside a well.
+    .hc-pairing-canyon .hb-well &,
+    .hc-pairing-canyon .hs-paragraph-style--well &, 
+    .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
+      color: var(--palette--black);
+    }
+  }
+
   &:hover,
   &:focus {
     color: var(--palette--black);
@@ -292,6 +301,15 @@
 
     &:hover,
     &:focus {
+      color: transparent;
+    }
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    // Canyon color pairings override when link is inside a well.
+    .hc-pairing-canyon .hb-well &,
+    .hc-pairing-canyon .hs-paragraph-style--well &, 
+    .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
       color: transparent;
     }
   }

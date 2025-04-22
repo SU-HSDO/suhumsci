@@ -136,7 +136,7 @@ services:
         # - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-english-humscigrydb423084-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/english.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-history-humscigrydb423116-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/history.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-west-humscigrydb423301-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/west.sql.gz
-        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_sandbox_3-humscigrydb768973-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_sandbox_3.sql.gz
+        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_sandbox_3-humscigrydb768974-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_sandbox_3.sql.gz
 
         # Import each database dump into the associated table.
         - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful

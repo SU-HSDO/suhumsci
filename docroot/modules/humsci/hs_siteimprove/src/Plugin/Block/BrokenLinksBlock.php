@@ -167,8 +167,8 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
         $actions,
       ];
 
-      // Limit the number of rows to 20.
-      if (count($rows) >= 20) {
+      // Limit the number of rows to 5.
+      if (count($rows) >= 5) {
         break;
       }
     }

@@ -18,6 +18,13 @@ summary:not(.hb-timeline-item__summary) {
   display: flex;
   align-items: center;
 
+  // Heading levels should keep same font size.
+  h2,
+  h3 {
+    font-size: hb-calculate-rems(18px);
+    margin: 0;
+  }
+
   // Visually removes the default arrow icon. We do need this element for screen
   // reader accessiblilty so we don't want to set display: none;
   &::-webkit-details-marker {

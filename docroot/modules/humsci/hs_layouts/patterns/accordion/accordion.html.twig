@@ -4,7 +4,11 @@
 
 <details{{ attributes }}>
   {%- if title -%}
-    <summary{{ summary_attributes.addClass(summary_classes) }}>{{ title }}</summary>
+    <summary{{ summary_attributes.addClass(summary_classes) }}>
+      <{{ heading_level}} class="field-hs-accordion-summary">
+        {{ title }}
+      </{{ heading_level}}>
+    </summary>
   {%- endif -%}
   <div class="revealed-details">
     <div class="description">

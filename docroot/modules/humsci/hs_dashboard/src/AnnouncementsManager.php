@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard;
 
-
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -122,7 +121,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   Returns a csv array - if one is not found, an empty array is returned.
    */
   public function getCsvAnnouncements(): array {
-    $csv_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR_8NJgahmuobmCZjxk15CrMUk-EQTRDIVApTNydz_T-VC1X67I_B4TmKZZLAFOr8BBtPWhiLA2dvD6/pub?gid=216898039&single=true&output=csv";// $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
+    $csv_url = $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
     if (empty($csv_url) || !UrlHelper::isValid($csv_url, TRUE)) {
       $this->logger->error('Invalid HSDP Announcements CSV URL: {url}', [
         'url' => $csv_url,

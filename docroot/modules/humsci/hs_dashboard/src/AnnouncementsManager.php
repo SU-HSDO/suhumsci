@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard;
 
+
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\File\FileExists;
@@ -23,11 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AnnouncementsManager implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * Announcement CSV location.
-   */
-  const ANNOUNCEMENTS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTQzSuPudq048D1NadRBE9h_s_-w-o4YtcC6AHfCdcqn3gX52akZNOaF5KAG9SeXkCV6PvIVmRtQ0HR/pub?gid=1146337887&single=true&output=csv';
 
   /**
    * The cache backend.
@@ -65,18 +63,27 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   protected DateFormatterInterface $dateFormatter;
 
   /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected ConfigFactoryInterface $configFactory;
+
+  /**
    * Constructs a new ViewsBasicManager object.
    *
-   * @param GuzzleHttp\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $http_client
    *   The guzzle http client.
-   * @param Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger interface.
-   * @param Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The logger interface.
-   * @param Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter interface.
    * @param Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The date formatter interface.
    */
   public function __construct(
     ClientInterface $http_client,
@@ -84,12 +91,14 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     FileSystemInterface $file_system,
     DateFormatterInterface $date_formatter,
     CacheBackendInterface $cache,
+    ConfigFactoryInterface $config_factory,
   ) {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('hs_dashboard');
     $this->fileSystem = $file_system;
     $this->dateFormatter = $date_formatter;
     $this->cache = $cache;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -102,21 +111,27 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $container->get('file_system'),
       $container->get('date.formatter'),
       $container->get('cache.default'),
+      $container->get('config.factory'),
     );
   }
 
   /**
    * Retrieves the CSV from Google Sheets.
    *
-   * @param string $url
-   *   The URL of the CSV file to retrieve.
-   *
    * @return array
    *   Returns a csv array - if one is not found, an empty array is returned.
    */
-  private function getCsvAnnouncements($url): array {
+  public function getCsvAnnouncements(): array {
+    $csv_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR_8NJgahmuobmCZjxk15CrMUk-EQTRDIVApTNydz_T-VC1X67I_B4TmKZZLAFOr8BBtPWhiLA2dvD6/pub?gid=216898039&single=true&output=csv";// $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
+    if (empty($csv_url) || !UrlHelper::isValid($csv_url, TRUE)) {
+      $this->logger->error('Invalid HSDP Announcements CSV URL: {url}', [
+        'url' => $csv_url,
+      ]);
+      throw new \Exception('Invalid HSDP Announcements CSV URL');
+    }
+
     try {
-      $response = $this->httpClient->request('GET', $url, [
+      $response = $this->httpClient->request('GET', $csv_url, [
         'headers' => [
           'Accept' => 'text/csv',
         ],
@@ -125,7 +140,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
 
       if ($response->getStatusCode() !== 200) {
         $this->logger->error('Invalid response status from {url} { message }: ', [
-          'url' => $url,
+          'url' => $csv_url,
           'message' => $response->getStatusCode(),
         ]);
         throw new \Exception('Invalid response status: ' . $response->getStatusCode());
@@ -137,7 +152,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     }
     catch (RequestException $e) {
       $this->logger->error('Error retrieving CSV from {url}: {message}', [
-        'url' => $url,
+        'url' => $csv_url,
         'message' => $e->getMessage(),
       ]);
       return [];
@@ -231,7 +246,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   A formatted Drupal date.
    */
   private function formatDate(int $timestamp): string {
-    return $this->dateFormatter->format($timestamp, 'medium');
+    return $this->dateFormatter->format($timestamp, 'short_no_time');
   }
 
   /**
@@ -252,54 +267,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       return $converted_link->toString()->__toString();
     }, $text);
 
-  }
-
-  /**
-   * Returns table headers. These are statically set.
-   *
-   * @return array
-   *   An array of table headers.
-   */
-  public function getTableHeader(): array {
-
-    $tableHeader = [
-      [
-        'data' => $this->t('Date'),
-      ],
-      [
-        'data' => $this->t('Update'),
-      ],
-    ];
-
-    return $tableHeader;
-  }
-
-  /**
-   * Returns table rows based on the announcements found in csv.
-   *
-   * @return array
-   *   An array of table rows with announcement data.
-   */
-  public function getTableRows(): array {
-    $table_rows = [];
-
-    if ($cache = $this->cache->get('hs_dashboard_csv_announcements')) {
-      return $cache->data;
-    }
-    $csv_data = $this->getCsvAnnouncements(static::ANNOUNCEMENTS_CSV);
-
-    foreach ($csv_data as $row) {
-      $table_rows[] = [
-        'data' => [
-          ['data' => $row[1]],
-          ['data' => ['#markup' => $row[3]]],
-        ],
-      ];
-    }
-
-    // Cache for 2 minutes.
-    $this->cache->set('hs_dashboard_csv_announcements', $table_rows, time() + 120);
-    return $table_rows;
   }
 
 }

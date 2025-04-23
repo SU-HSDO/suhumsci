@@ -3,7 +3,9 @@
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
@@ -18,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "people_importer_info",
  *   label = @Translation("People Importers"),
  *   description = @Translation("Retrieves people importer information from capx_importer entities."),
+ *   weight = 30,
  * )
  */
 class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
@@ -40,6 +43,10 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The KeyValue factory.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The DateFormatter.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.
    */
@@ -48,9 +55,11 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     $plugin_id,
     $plugin_definition,
     EntityTypeManagerInterface $entity_type_manager,
+    KeyValueFactoryInterface $key_value_factory,
+    DateFormatterInterface $date_formatter,
     ConfigFactoryInterface $config_factory,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
     $this->capxConfig = $config_factory->getEditable('hs_capx.settings');
   }
 
@@ -63,7 +72,9 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('config.factory')
+      $container->get('keyvalue'),
+      $container->get('date.formatter'),
+      $container->get('config.factory'),
     );
   }
 
@@ -74,6 +85,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     return [
       $this->t('Importer (migration) name'),
       $this->t('Org Code and Workgroup'),
+      $this->t('Last Imported'),
     ];
   }
 
@@ -90,6 +102,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
         'data' => [
           ['data' => $importer->label()],
           ['data' => $importer->getWorkgroups(TRUE)],
+          ['data' => $this->lastImportTime('hs_capx')],
         ],
       ];
     }

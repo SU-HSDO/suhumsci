@@ -6,9 +6,9 @@ dependencies:
     - views.view.duplicate_people
     - views.view.editoria11y_results
     - views.view.my_latest_edits
-    - views.view.new_default_image_alt_text
     - views.view.site_dashboard_active_site_editors
   module:
+    - hs_blocks
     - hs_dashboard
     - hs_siteimprove
     - layout_builder
@@ -19,15 +19,32 @@ label: Dashboard
 description: ''
 layout:
   -
-    layout_id: layout_twocol_section
+    layout_id: layout_onecol
     layout_settings:
-      label: 'My latest edits / Duplicate People'
+      label: 'HSDP Announcements Section'
       context_mapping: {  }
-      column_widths: 50-50
     components:
-      7a14ab89-4e5b-4cb6-92bf-a68bc5e1e51e:
-        uuid: 7a14ab89-4e5b-4cb6-92bf-a68bc5e1e51e
-        region: first
+      86810b80-24c7-4f51-83b7-8a6bfe1dc04e:
+        uuid: 86810b80-24c7-4f51-83b7-8a6bfe1dc04e
+        region: content
+        configuration:
+          id: hs_dashboard_hsdp_announcements
+          label: 'HSDP Announcements'
+          label_display: visible
+          provider: hs_dashboard
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'My Latest Edits Section'
+      context_mapping: {  }
+    components:
+      5271f7a7-d525-4063-a38e-e68c6c8eef26:
+        uuid: 5271f7a7-d525-4063-a38e-e68c6c8eef26
+        region: content
         configuration:
           id: 'views_block:my_latest_edits-block_1'
           label: ''
@@ -39,9 +56,55 @@ layout:
           exposed: {  }
         weight: 0
         additional: {  }
-      587e2cf4-9e8a-4824-9fbd-7cdecf13b91f:
-        uuid: 587e2cf4-9e8a-4824-9fbd-7cdecf13b91f
-        region: second
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'Pages with the most accessibility issues Section'
+      context_mapping: {  }
+    components:
+      4ec36b0a-20e8-4b96-b9d2-cf40f9438a27:
+        uuid: 4ec36b0a-20e8-4b96-b9d2-cf40f9438a27
+        region: content
+        configuration:
+          id: 'views_block:editoria11y_results-block_top_results'
+          label: ''
+          label_display: visible
+          provider: views
+          context_mapping: {  }
+          views_label: ''
+          items_per_page: none
+          exposed: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'SiteImprove Broken Links Section'
+      context_mapping: {  }
+    components:
+      c514cd45-fdf4-4bc6-9dd2-9b82541eed3b:
+        uuid: c514cd45-fdf4-4bc6-9dd2-9b82541eed3b
+        region: content
+        configuration:
+          id: hs_siteimprove_broken_links
+          label: 'SiteImprove Broken Links'
+          label_display: visible
+          provider: hs_siteimprove
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'Duplicate Profiles Section'
+      context_mapping: {  }
+    components:
+      11de9985-525e-4dd4-b5ce-c8789d008462:
+        uuid: 11de9985-525e-4dd4-b5ce-c8789d008462
+        region: content
         configuration:
           id: 'views_block:duplicate_people-block_1'
           label: ''
@@ -55,15 +118,53 @@ layout:
         additional: {  }
     third_party_settings: {  }
   -
-    layout_id: layout_twocol_section
+    layout_id: layout_onecol
     layout_settings:
-      label: 'University Policies'
+      label: 'Active Site Editors Section'
       context_mapping: {  }
-      column_widths: 50-50
     components:
-      80cb5a9e-3a39-46c8-a0bb-a980aec29dfe:
-        uuid: 80cb5a9e-3a39-46c8-a0bb-a980aec29dfe
-        region: first
+      f9927c52-346e-4010-964b-4e368eeb9cc2:
+        uuid: f9927c52-346e-4010-964b-4e368eeb9cc2
+        region: content
+        configuration:
+          id: 'views_block:site_dashboard_active_site_editors-block_1'
+          label: ''
+          label_display: visible
+          provider: views
+          context_mapping: {  }
+          views_label: ''
+          items_per_page: none
+          exposed: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'Importers Section'
+      context_mapping: {  }
+    components:
+      fd1a16b1-6039-40c4-848f-c96aa72b84e0:
+        uuid: fd1a16b1-6039-40c4-848f-c96aa72b84e0
+        region: content
+        configuration:
+          id: hs_dashboard_importers
+          label: Importers
+          label_display: visible
+          provider: hs_dashboard
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'University Policies Section'
+      context_mapping: {  }
+    components:
+      699521ab-866a-4082-a866-fa122b54cc04:
+        uuid: 699521ab-866a-4082-a866-fa122b54cc04
+        region: content
         configuration:
           id: hs_university_policies_block
           label: 'University Policies'
@@ -76,83 +177,19 @@ layout:
   -
     layout_id: layout_onecol
     layout_settings:
-      label: 'Section one col'
+      label: 'Back to top container'
       context_mapping: {  }
     components:
-      fdff49bf-c002-4f14-a705-911da9e979a8:
-        uuid: fdff49bf-c002-4f14-a705-911da9e979a8
+      6e372def-5212-42b3-8ba2-10e5309a2972:
+        uuid: 6e372def-5212-42b3-8ba2-10e5309a2972
         region: content
         configuration:
-          id: 'views_block:editoria11y_results-block_top_results'
-          label: ''
-          label_display: visible
-          provider: views
+          id: hs_blocks_back_to_top_block
+          label: 'Back To Top Block'
+          label_display: '0'
+          provider: hs_blocks
           context_mapping: {  }
-          views_label: ''
-          items_per_page: none
-          exposed: {  }
-        weight: 6
-        additional: {  }
-      c2e96c4c-3687-40e8-baba-030bd9a7ea35:
-        uuid: c2e96c4c-3687-40e8-baba-030bd9a7ea35
-        region: content
-        configuration:
-          id: hs_dashboard_hsdp_announcements
-          label: 'HSDP Announcements'
-          label_display: visible
-          provider: hs_dashboard
-          context_mapping: {  }
-        weight: 7
-        additional: {  }
-      b393947f-61c3-4752-939e-6c084e51b70f:
-        uuid: b393947f-61c3-4752-939e-6c084e51b70f
-        region: content
-        configuration:
-          id: 'views_block:site_dashboard_active_site_editors-block_1'
-          label: ''
-          label_display: visible
-          provider: views
-          context_mapping: {  }
-          views_label: ''
-          items_per_page: none
-          exposed: {  }
-        weight: 3
-        additional: {  }
-      50ecf2ae-f119-4527-89bc-78bdb5a63e7b:
-        uuid: 50ecf2ae-f119-4527-89bc-78bdb5a63e7b
-        region: content
-        configuration:
-          id: 'views_block:new_default_image_alt_text-block_1'
-          label: ''
-          label_display: visible
-          provider: views
-          context_mapping: {  }
-          views_label: ''
-          items_per_page: none
-          exposed: {  }
-        weight: 5
-        additional: {  }
-      639187d0-99c0-40de-a51c-1adfcfc5a258:
-        uuid: 639187d0-99c0-40de-a51c-1adfcfc5a258
-        region: content
-        configuration:
-          id: hs_dashboard_importers
-          label: Importers
-          label_display: visible
-          provider: hs_dashboard
-          context_mapping: {  }
-        weight: 4
-        additional: {  }
-      fe9ea5a7-d825-4b3c-9365-815cff410858:
-        uuid: fe9ea5a7-d825-4b3c-9365-815cff410858
-        region: content
-        configuration:
-          id: hs_siteimprove_broken_links
-          label: 'SiteImprove Broken Links Report'
-          label_display: visible
-          provider: hs_siteimprove
-          context_mapping: {  }
-        weight: 2
+        weight: 0
         additional: {  }
     third_party_settings: {  }
 weight: 0

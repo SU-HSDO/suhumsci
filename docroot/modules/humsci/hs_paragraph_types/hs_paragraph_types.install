@@ -405,3 +405,64 @@ function hs_paragraph_types_update_10011() {
       ->save();
   }
 }
+
+/**
+ * Set new config for accordion summary heading level.
+ */
+function hs_paragraph_types_update_10012() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $summary_heading_field_storage = $config_storage->read('field.storage.paragraph.field_summary_heading_level');
+  if (
+    empty($field_storage->load('paragraph.field_summary_heading_level') &&
+    !empty($summary_heading_field_storage)
+  )) {
+    $field_storage->createFromStorageRecord($summary_heading_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $summary_heading_field_config = $config_storage->read('field.field.paragraph.hs_accordion.field_summary_heading_level');
+  if (
+    empty($field_config_storage->load('paragraph.hs_accordion.field_summary_heading_level')) &&
+    !empty($summary_heading_field_config)
+  ) {
+    $field_config_storage->create($summary_heading_field_config)->save();
+  }
+}
+
+/**
+ * Set default value for new heading level field in existing accordions.
+ */
+function hs_paragraph_types_update_10013(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Get list of accordion paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', ['hs_accordion'], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  // Set new field default for existing accordions paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    if (!$paragraph->hasField('field_summary_heading_level')) {
+      continue;
+    }
+
+    $paragraph->set('field_summary_heading_level', 'div');
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

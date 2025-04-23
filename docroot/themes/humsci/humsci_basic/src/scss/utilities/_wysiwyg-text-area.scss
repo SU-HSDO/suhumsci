@@ -444,3 +444,20 @@ a.hs-file-link {
     }
   }
 }
+
+// Canyon color pairing override when link is inside a hb-well and spotlight.
+.text-long a:not(.hs-button):not(.hs-button--big):not(.hs-secondary-button):not(.hs-more-link):not(.hs-private-link) {
+  @include hb-themes(('colorful', 'airy')) {
+    .hc-pairing-canyon .hb-well &,
+    .hc-pairing-canyon .hs-paragraph-style--well &, 
+    .hc-pairing-canyon .hs-paragraph-style--well-full-width &,
+    .hc-pairing-canyon .hb-spotlight & {
+      color: var(--palette--primary);
+
+      &:hover,
+      &:focus {
+        color: var(--palette--primary-darken-20);
+      }
+    }
+  }
+}

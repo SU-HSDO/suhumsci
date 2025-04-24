@@ -6,12 +6,9 @@
  */
 
 /**
- * Implements hook_install().
- *
- * Sets up the hs_private_page content type with required paragraph types
- * and default paragraph type configuration.
+ * Updates the default paragraph type for the components field.
  */
-function hs_private_page_install() {
+function hs_private_page_update_10001() {
   // Ensure the required function exists before using it.
   if (!function_exists('_su_humsci_profile_enable_paragraph')) {
     \Drupal::moduleHandler()->loadInclude('su_humsci_profile', 'php', 'su_humsci_profile.post_update');
@@ -41,12 +38,19 @@ function hs_private_page_install() {
   ];
 
   $weight = 0;
+  $entity_type = 'node';
+  $bundle = 'hs_private_page';
+  $field_name = 'field_hs_priv_page_components';
   foreach ($paragraph_types as $paragraph_type) {
-    _su_humsci_profile_enable_paragraph('node', 'hs_private_page', 'field_hs_priv_page_components', $paragraph_type, $weight);
+    _su_humsci_profile_enable_paragraph($entity_type, $bundle, $field_name, $paragraph_type, $weight);
     $weight++;
   }
+}
 
-  // Set default paragraph type for field_hs_priv_page_components.
+/**
+ * Updates the default paragraph type for the private page components field.
+ */
+function hs_private_page_update_10002() {
   $entity_type = 'node';
   $bundle = 'hs_private_page';
   $field_name = 'field_hs_priv_page_components';
@@ -77,8 +81,6 @@ function hs_private_page_install() {
 
   // Set the default paragraph type.
   $component['settings']['default_paragraph_type'] = $default_paragraph;
-
-  // Update the component.
   $form_display->setComponent($field_name, $component);
   $form_display->save();
 

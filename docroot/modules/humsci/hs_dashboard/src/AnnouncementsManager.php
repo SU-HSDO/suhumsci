@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\hs_dashboard;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -24,6 +25,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AnnouncementsManager implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cache;
 
   /**
    * The HTTP client to fetch announcement data.
@@ -71,6 +79,8 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   The logger interface.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter interface.
+   * @param Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The date formatter interface.
    */
@@ -79,12 +89,14 @@ class AnnouncementsManager implements ContainerInjectionInterface {
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
     DateFormatterInterface $date_formatter,
+    CacheBackendInterface $cache,
     ConfigFactoryInterface $config_factory,
   ) {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('hs_dashboard');
     $this->fileSystem = $file_system;
     $this->dateFormatter = $date_formatter;
+    $this->cache = $cache;
     $this->configFactory = $config_factory;
   }
 
@@ -97,6 +109,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $container->get('logger.factory'),
       $container->get('file_system'),
       $container->get('date.formatter'),
+      $container->get('cache.default'),
       $container->get('config.factory'),
     );
   }
@@ -108,6 +121,10 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   Returns a csv array - if one is not found, an empty array is returned.
    */
   public function getCsvAnnouncements(): array {
+    if ($cache = $this->cache->get('hs_dashboard_announcements')) {
+      return $cache->data ?? [];
+    }
+
     $csv_url = $this->configFactory->get('hs_dashboard.settings')->get('announcements.csv_url');
     if (empty($csv_url) || !UrlHelper::isValid($csv_url, TRUE)) {
       $this->logger->error('Invalid HSDP Announcements CSV URL: {url}', [
@@ -133,7 +150,9 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       }
 
       $csv_content = $response->getBody()->getContents();
-      return $this->parseCsv($csv_content);
+      $data = $this->parseCsv($csv_content);
+      $this->cache->set('hs_dashboard_announcements', $data, time() + 300);
+      return $data;
 
     }
     catch (RequestException $e) {

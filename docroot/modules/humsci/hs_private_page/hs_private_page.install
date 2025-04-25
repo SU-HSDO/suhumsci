@@ -72,7 +72,7 @@ function hs_private_page_update_10002() {
   // Get the component settings.
   $component = $form_display->getComponent($field_name);
 
-  if (!$component) {
+  if (empty($component)) {
     \Drupal::messenger()->addError(t('Component @field not found in form display.', [
       '@field' => $field_name,
     ]));

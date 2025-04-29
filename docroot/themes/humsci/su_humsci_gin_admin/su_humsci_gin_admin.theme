@@ -52,6 +52,10 @@ function su_humsci_gin_admin_preprocess(&$variables, $hook) {
 
   $variables['wrapper_attributes'] = new Attribute();
   $variables['wrapper_attributes']->addClass($classes);
+
+  // Expose default theme name to all templates, so it can be used for attaching
+  // the right library.
+  $variables['default_theme'] = $theme;
 }
 
 /**

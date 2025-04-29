@@ -234,8 +234,6 @@ function hs_views_helper_preprocess_views_view_field__status(&$variables) {
   $view = $variables['view'];
   if ($view->id() == 'my_latest_edits') {
     $row = $variables['row'];
-    if ($row->_entity->isPublished()) {
-      $variables['output'] = '✔';
-    }
+    $variables['output'] = $row->_entity->isPublished() ? '✔' : '✘';
   }
 }

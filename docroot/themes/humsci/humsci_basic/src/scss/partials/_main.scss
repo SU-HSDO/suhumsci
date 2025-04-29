@@ -1,0 +1,84 @@
+// Base styles for the HumSci Basic theme.
+// This file is loaded in all pages and contains common styles used accross the site.
+
+// Declare here variables that we might need to override when importing using 'meta.load-css'.
+$hb-current-theme: 'traditional' !default;
+
+// Here we add the path to Font Awesome to prevent console errors from Decanter
+$fa-font-path: "../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts";
+
+@import
+  // =====================================================================
+  // DECANTER (matching how they bring in their imports in decanter.scss)
+  // =====================================================================
+
+  // Normalize, Vendors
+  'decanter/core/src/scss/core/normalize',
+
+  // Grid
+  // Pulls in the flexbox based grid system
+  'decanter/core/src/scss/decanter-grid',
+
+  // Core elements
+  // Decanter font imports and sources
+  'decanter/core/src/scss/core/fonts',
+  'decanter/core/src/scss/core/base',
+  'decanter/core/src/scss/elements/image',
+
+  // Components
+  // Below here are Decanter specific components we probably want the styles for:
+  'decanter/core/src/scss/components/brand-bar',
+  'decanter/core/src/scss/components/lockup',
+  'decanter/core/src/scss/components/global-footer',
+  'decanter/core/src/scss/components/skiplinks',
+
+  // Base imports (Variables, functions, mixins).
+  'base-imports',
+
+  // =====================================================================
+  // Elements
+  // Styling for bare HTML elements (like H1, A, etc.). These come with
+  // default styling from the browser so we can redefine them here.
+  'elements/base',
+  'elements/forms',
+  'elements/tables',
+  'elements/details',
+
+  // =====================================================================
+  // Objects
+  // Class-based selectors which define undecorated design patterns,
+  // for example media object known from OOCSS.
+  'objects/layouts.general',
+  'objects/layouts.views',
+
+  // =====================================================================
+  // Components
+  // Specific UI components. This is where majority of our work takes place
+  // and our UI components are often composed of Objects and Components
+  'components/masthead',
+  'components/global-footer',
+  'components/site-search',
+  'components/local-footer',
+  'components/block-layout',
+  'components/not-layout-builder-main-content',
+  'components/buttons',
+  'components/unpublished',
+  'components/media',
+
+  // =====================================================================
+  // Utilities
+  // Utilities and helper classes with ability to override anything
+  // which goes before in the triangle, eg. hide helper class
+  'utilities/color-pairings',
+  'utilities/fonts',
+  'utilities/font-awesome',
+  'utilities/wysiwyg-text-area',
+  'utilities/general',
+  'utilities/lists',
+  'utilities/card-images',
+  'utilities/raised-cards',
+  'utilities/tables',
+  'utilities/display-more-link-text',
+  'utilities/dark-pattern',
+  'utilities/caption-credit',
+  'utilities/media-embeds';

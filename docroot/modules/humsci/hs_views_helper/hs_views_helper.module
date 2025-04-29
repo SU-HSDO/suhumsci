@@ -225,3 +225,17 @@ function hs_views_helper_views_pre_view(ViewExecutable $view, $display_id, array
     $default_options['cache'] = $cache;
   }
 }
+
+/**
+ * Implements hook_preprocess_views_view_field().
+ */
+function hs_views_helper_preprocess_views_view_field__status(&$variables) {
+  // Fixes the marker not displaying for the front page.
+  $view = $variables['view'];
+  if ($view->id() == 'my_latest_edits') {
+    $row = $variables['row'];
+    if ($row->_entity->isPublished()) {
+      $variables['output'] = '✔';
+    }
+  }
+}

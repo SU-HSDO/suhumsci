@@ -468,12 +468,12 @@ function hs_paragraph_types_update_10013(&$sandbox) {
 }
 
 /**
- * Imports config for field_spotlight_style.
+ * Update field configuration for field_spotlight_style.
  */
 function hs_paragraph_types_update_10014() {
 
   // Load the configuration from the config/sync directory.
-  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $config_directory = \Drupal::service('config.storage.sync');
 
   $entity_type_manager = \Drupal::entityTypeManager();
 
@@ -499,7 +499,7 @@ function hs_paragraph_types_update_10014() {
 }
 
 /**
- * Updates spotlight paragraphs with new default values.
+ * Update existing spotlight paragraphs fields with new default values.
  */
 function hs_paragraph_types_update_10015(&$sandbox) {
 
@@ -514,6 +514,7 @@ function hs_paragraph_types_update_10015(&$sandbox) {
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
     $sandbox['current'] = 0;
+    $sandbox['updated'] = 0;
 
     if (empty($sandbox['total'])) {
       $sandbox['#finished'] = 1;
@@ -556,6 +557,7 @@ function hs_paragraph_types_update_10015(&$sandbox) {
 
     if ($save_needed) {
       $paragraph->save();
+      $sandbox['updated']++;
     }
 
     $sandbox['current']++;
@@ -565,8 +567,9 @@ function hs_paragraph_types_update_10015(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['total']) ? 1 : ($sandbox['current'] / $sandbox['total']);
 
   if ($sandbox['#finished'] >= 1) {
-    return t('Updated @count spotlight paragraphs with new default values.', [
-      '@count' => $sandbox['total'],
+    return t('Processed @total spotlight paragraphs, updated @updated with new default values.', [
+      '@total' => $sandbox['total'],
+      '@updated' => $sandbox['updated'],
     ]);
   }
 }

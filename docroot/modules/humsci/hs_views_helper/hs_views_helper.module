@@ -225,12 +225,3 @@ function hs_views_helper_views_pre_view(ViewExecutable $view, $display_id, array
     $default_options['cache'] = $cache;
   }
 }
-
-/**
- * Implements hook_preprocess_views_view_field().
- */
-function hs_views_helper_preprocess_views_view_field__status(&$variables) {
-  // Fixes the marker not displaying for the front page.
-  $row = $variables['row'];
-  $variables['output'] = $row->_entity->isPublished() ? t('✔') : t('✘');
-}

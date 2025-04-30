@@ -1,5 +1,11 @@
+{#
+  This library is added in the field preprocess in the FE theme, but that's not
+  an option for the paragraph previews.
+#}
+{{ attach_library(default_theme ~ '/postcard') }}
+
 <div class="paragraph-admin-preview">
   <div{{wrapper_attributes.addClass('paragraph-item', 'ptype-hs-postcard')}}>
-    {% include '@hs_layouts/horizontal-card/horizontal-card.html.twig' %}
+    {% include '@humsci_basic/components/pattern-horizontal-card.html.twig' %}
   </div>
 </div>

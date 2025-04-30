@@ -1,0 +1,250 @@
+.hb-vertical-linked-card {
+  position: relative;
+  background-color: transparent;
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    // The margin-top matches the margin-top on both the title and image to prevent
+    // overlap issues.
+    // The margin-left matches the negative margin-left on the title to prevent
+    // overlap issues.
+    &:has(.hb-vertical-linked-card__img):has(.hb-vertical-linked-card__title),
+    &:has(.hb-vertical-linked-card__title) {
+      margin: hb-spacing-width('xs') 0 0 hb-calculate-rems(31px);
+    }
+
+    padding-bottom: hb-calculate-rems(28px);
+    color: var(--palette--white);
+
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      transparent hb-calculate-rems(20px),
+      var(--palette--primary-dark) hb-calculate-rems(20px)
+    );
+  }
+
+  .hb-stretch-vertical-linked-cards & {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+  }
+
+  &__img {
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: hb-transition(transform);
+
+      .hb-vertical-linked-card:hover &,
+      .hb-vertical-linked-card:focus &,
+      .hb-vertical-linked-card.is-focused & {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
+  }
+
+  .field-media-image {
+    margin: 0;
+  }
+
+  &__title {
+    // Without this the negative margins on the title cause it to lay under the
+    // image. Adding position relative makes sure everything is layered correctly.
+    position: relative;
+    font-size: hb-calculate-rems(18px);
+    hyphens: auto;
+    line-height: 118%;
+    word-break: break-word;
+    transition: hb-transition(background-color);
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(20px);
+      line-height: hb-calculate-rems(27.24px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(20px);
+      margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
+      background-color: var(--palette--secondary);
+
+       // Update padding when card is in 4 columns.
+      .field-hs-collection-items.item-per-row--4 & {
+        padding: hb-calculate-rems(18px);
+      }
+
+      @include grid-media-min('sm') {
+        margin: hb-calculate-rems(-24px) hb-calculate-rems(20px) 0
+          hb-calculate-rems(-31px);
+      }
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(16px);
+      color: var(--palette--white);
+      background-color: var(--palette--primary);
+      margin: 0;
+    }
+
+    .hb-vertical-linked-card:hover &,
+    .hb-vertical-linked-card:focus &,
+    .hb-vertical-linked-card.is-focused & {
+      @include hb-themes(('colorful', 'airy')) {
+        background-color: var(--palette--secondary-darken-12);
+      }
+
+      @include hb-traditional {
+        background-color: var(--palette--primary-dark);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__title__link {
+    &::after {
+      content: '';
+      display: inline-block;
+      position: relative;
+      height: hb-calculate-rems(14px);
+      @include hb-icon-link-arrow('white');
+
+      @include hb-themes(('airy', 'colorful')) {
+        width: hb-calculate-rems(27.5px);
+        background-size: 60%;
+      }
+
+      @include hb-traditional {
+        width: hb-calculate-rems(33px);
+        background-size: auto;
+      }
+
+      background-position: 6px;
+      transition: hb-transition(background-position);
+    }
+
+    .hb-vertical-linked-card:hover &::after,
+    .hb-vertical-linked-card:focus &::after,
+    .hb-vertical-linked-card.is-focused &::after {
+      background-position: 12px;
+    }
+  }
+
+  &__title__link,
+  &__title__link.ext {
+    color: var(--palette--white);
+    text-decoration: none;
+
+    // Warbler color pairing override.
+    .ht-pairing-warbler & {
+      color: var(--palette--white);
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--palette--white);
+      background-image: none;
+
+      // Warbler color pairing override.
+      .ht-pairing-warbler & {
+        color: var(--palette--white);
+      }
+    }
+  }
+
+  &__description {
+    @include hb-description;
+    word-break: break-word;
+    flex: 1 1 auto;
+
+    @include hb-themes(('airy', 'colorful')) {
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+
+      // Update padding when card is in 4 columns.
+      .field-hs-collection-items.item-per-row--4 & {
+        padding: hb-calculate-rems(18px) hb-calculate-rems(18px) 0;
+      }
+    }
+
+    @include hb-traditional {
+      background-color: var(--palette--tertiary-reversed);
+      padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
+        hb-calculate-rems(28px);
+    }
+
+    @include grid-media-min('sm') {
+      font-size: hb-calculate-rems(18px);
+    }
+
+    .field-hs-postcard-body {
+      margin-bottom: 0;
+    }
+
+    a,
+    a.hs-private-link,
+    a.hs-pdf-link,
+    a.hs-file-link {
+      @include hb-traditional {
+        color: var(--palette--black);
+
+        // Warbler color pairing override.
+        .ht-pairing-warbler & {
+          color: var(--palette--black);
+        }
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        color: var(--palette--white);
+        background-image: none;
+      }
+
+      &:hover,
+      &:focus {
+        background-image: none;
+
+        @include hb-traditional {
+          color: var(--palette--gray-dark);
+
+          // Warbler color pairing override.
+          .ht-pairing-warbler & {
+            color: var(--palette--gray-dark);
+          }
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          color: var(--palette--gray-medium);
+        }
+      }
+    }
+
+    .field-hs-postcard-body a.hs-private-link {
+      // Need extra nesting level for specificity.
+      &::before {
+        @include hb-traditional {
+          @include hb-icon-background('lock', 'black');
+        }
+
+        @include hb-colorful {
+          @include hb-icon-background('lock', 'white');
+        }
+      }
+
+      &:hover,
+      &:focus {
+        &::before {
+          @include hb-traditional {
+            @include hb-icon-background('lock', 'gray-dark');
+          }
+
+          @include hb-colorful {
+            @include hb-icon-background('lock', 'gray-medium');
+          }
+        }
+      }
+    }
+  }
+}

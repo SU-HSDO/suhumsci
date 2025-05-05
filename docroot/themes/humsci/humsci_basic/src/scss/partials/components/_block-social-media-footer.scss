@@ -50,7 +50,6 @@
   ul {
     display: grid;
     gap: hb-calculate-rems(16px);
-    grid-template-columns: repeat(auto-fit, minmax(hb-calculate-rems(30px), 1fr));
   }
 
   .social-media-link__label {
@@ -84,11 +83,19 @@
   .social-media-link {
     font-size: hb-calculate-rems(32px);
   }
+
+  .social-media-link__list {
+    grid-template-columns: repeat(auto-fit, minmax(hb-calculate-rems(24px), 1fr));
+  }
 }
 
 // Large icons.
 .block-social-media-footer--icons-large {
   .social-media-link {
     font-size: hb-calculate-rems(48px);
+  }
+
+  .social-media-link__list {
+    grid-template-columns: repeat(auto-fit, minmax(hb-calculate-rems(30px), 1fr));
   }
 }

@@ -50,12 +50,14 @@
     &-item {
       color: var(--palette--gray-dark);
       font-size: hb-calculate-rems(16px);
+
       @include grid-media-min('sm') {
         display: flex;
       }
 
       &:not(:last-child) {
         margin-bottom: hb-calculate-rems(4px);
+
         @include grid-media-min('sm') {
           margin-bottom: 0;
         }
@@ -158,7 +160,7 @@
 
     &--date {
       // only apply calendar icon when the label exists
-      [class*="views-label-field-hs-event-date"] + .field-content {
+      [class*="views-label-field-hs-event-date"]+.field-content {
         @include hb-icon-type($type: 'calendar', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -170,7 +172,7 @@
 
     &--location {
       // only apply location pin icon when the label exists
-      [class*="views-label-field-hs-event-location"] + .field-content {
+      [class*="views-label-field-hs-event-location"]+.field-content {
         @include hb-icon-type($type: 'location', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -182,7 +184,7 @@
 
     &--speaker {
       // only apply speaker icon when the label exists
-      [class*="views-label-field-hs-event-speaker"] + .field-content {
+      [class*="views-label-field-hs-event-speaker"]+.field-content {
         @include hb-icon-type($type: 'speaker', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -407,6 +409,7 @@
         // have to overwrite some Decanter things
         // to allow this to grow if no image present
         flex-grow: 1;
+
         @supports (max-width: 100%) {
           max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
         }
@@ -492,7 +495,9 @@
       // Warbler color pairing override.
       @include hb-traditional {
         .ht-pairing-warbler & {
-          &, &:hover, &:focus {
+          &,
+          &:hover,
+          &:focus {
             color: var(--palette--black);
           }
         }
@@ -512,6 +517,28 @@
     @include hb-themes(('airy', 'colorful')) {
       &:not(:last-child) {
         margin-bottom: hb-spacing-width('xs');
+      }
+
+      // Link color overrides for canyon color pairing.
+      .hc-pairing-canyon .hb-well &,
+      .hc-pairing-canyon .hs-paragraph-style--well &,
+      .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
+        a:not([class]),
+        a.mailto,
+        a[href*="mailto:"],
+        a.ext,
+        a.hs-external-link {
+          color: var(--palette--primary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--primary-darken-20);
+          }
+        }
+
+        a.hs-external-link::after {
+          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
+        }
       }
     }
 
@@ -537,7 +564,8 @@
       width: 100%;
     }
 
-    a { // added to keep hb-dark-pattern from using the :not(class) on these links
+    a {
+      // added to keep hb-dark-pattern from using the :not(class) on these links
       @include hb-themes(('colorful', 'airy')) {
         @include hb-card-arrow-link;
       }

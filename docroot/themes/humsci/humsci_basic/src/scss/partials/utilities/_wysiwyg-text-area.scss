@@ -104,6 +104,27 @@
     }
   }
 
+  // Override default link color for the Canyon color pairing.
+  @include hb-themes(('colorful', 'airy')) {
+    .hc-pairing-canyon .hb-well &,
+    .hc-pairing-canyon .hs-paragraph-style--well &,
+    .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
+      a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
+        color: var(--palette--primary);
+
+        &:hover,
+        &:focus {
+          color: var(--palette--tertiary-darken-20);
+        }
+      }
+
+      // Ensure that the external link icon color is correct.
+      a.hs-external-link::after {
+        background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
+      }
+    }
+  }
+
   // Only in the textarea, does the well get display: table for being floated
   .hs-well,
   .pullquote {
@@ -315,6 +336,11 @@ a[href*="//"].hs-external-link,
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {
       color: var(--palette--white);
+
+      &:hover,
+      &:focus {
+        color: var(--palette--gray-medium);
+      }
 
       &::after {
         @include hb-icon-background('ext-link', 'white');

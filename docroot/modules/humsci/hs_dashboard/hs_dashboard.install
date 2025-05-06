@@ -8,24 +8,17 @@
  * Grant permissions to site manager and contributor roles.
  */
 function hs_dashboard_update_10000() {
-  /** @var \Drupal\user\RoleStorageInterface $role_storage */
-  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
-
   // Grant permissions to site manager role.
-  $role = $role_storage->load('site_manager');
-  if ($role) {
-    $role->grantPermission('access user profiles');
-    $role->grantPermission('manage editoria11y results');
-    $role->save();
-  }
+  user_role_grant_permissions('site_manager', [
+    'access user profiles',
+    'manage editoria11y results',
+  ]);
 
   // Grant permissions to contributor role.
-  $role = $role_storage->load('contributor');
-  if ($role) {
-    $role->grantPermission('access user profiles');
-    $role->grantPermission('manage editoria11y results');
-    $role->grantPermission('view editoria11y checker');
-    $role->grantPermission('view user list');
-    $role->save();
-  }
+  user_role_grant_permissions('contributor', [
+    'access user profiles',
+    'manage editoria11y results',
+    'view editoria11y checker',
+    'view user list',
+  ]);
 }

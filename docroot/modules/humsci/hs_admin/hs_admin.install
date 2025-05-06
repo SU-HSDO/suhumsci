@@ -30,3 +30,22 @@ function hs_admin_update_10000() {
     $home_shortcut->save();
   }
 }
+
+/**
+ * Grant permissions to site manager and contributor roles.
+ */
+function hs_admin_update_10001() {
+  // Grant permissions to site manager role.
+  user_role_grant_permissions('site_manager', [
+    'access user profiles',
+    'manage editoria11y results',
+  ]);
+
+  // Grant permissions to contributor role.
+  user_role_grant_permissions('contributor', [
+    'access user profiles',
+    'manage editoria11y results',
+    'view editoria11y checker',
+    'view user list',
+  ]);
+}

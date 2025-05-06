@@ -8,3 +8,88 @@
     font-weight: hb-theme-font-weight(semibold);
   }
 }
+
+// Overrides for Decanter hardcoded rem values.
+// This is necessary because the Decanter theme uses a different base font size.
+.su-global-footer {
+  nav {
+    margin: 0 0 hb-calculate-rems(10px);
+
+    @include grid-media('sm') {
+      margin: 0 0 hb-calculate-rems(13px);
+    }
+  }
+}
+
+.su-global-footer__brand {
+  padding: hb-calculate-rems(5px) 0 0;
+
+  a {
+    font-size: hb-calculate-rems(34px);
+
+    @include grid-media-only('xs') {
+      font-size: hb-calculate-rems(32px);
+    }
+  }
+}
+
+.su-global-footer__content {
+  @include grid-media('lg') {
+    padding-left: hb-calculate-rems(45px);
+  }
+
+  @include grid-media('xl') {
+    padding-left: hb-calculate-rems(52px);
+  }
+}
+
+.su-global-footer__menu {
+  margin: 0 0 hb-calculate-rems(10px);
+  font-size: hb-calculate-rems(15px);
+
+  li {
+    @include grid-media-only('sm') {
+      margin: 0 hb-calculate-rems(10px) 0 0;
+    }
+
+    @include grid-media('md') {
+      margin: 0 hb-calculate-rems(20px) 0 0;
+    }
+
+    @include grid-media('lg') {
+      margin: 0 hb-calculate-rems(28px) 0 0;
+    }
+  }
+}
+
+.su-global-footer__menu--global {
+  @include grid-media-between('md', 'xl') {
+    font-size: hb-calculate-rems(17px);
+  }
+
+  @include grid-media('2xl') {
+    font-size: hb-calculate-rems(18px);
+  }
+}
+
+.su-global-footer__menu--policy {
+  @include grid-media-only('sm') {
+    font-size: hb-calculate-rems(14px);
+  }
+
+  @include grid-media-between('md', 'lg') {
+    font-size: hb-calculate-rems(15px);
+  }
+
+  @include grid-media('xl') {
+    font-size: hb-calculate-rems(16px);
+  }
+}
+
+.su-global-footer__copyright {
+  font-size: hb-calculate-rems(14px);
+
+  @include grid-media-only('xs') {
+    font-size: hb-calculate-rems(13.4px);
+  }
+}

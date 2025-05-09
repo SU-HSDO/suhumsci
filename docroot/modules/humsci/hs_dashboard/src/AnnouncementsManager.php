@@ -136,7 +136,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       return $this->parseCsv($csv_content);
 
     }
-    catch (RequestException $e) {
+    catch (\Exception $e) {
       $this->logger->error('Error retrieving CSV from {url}: {message}', [
         'url' => $csv_url,
         'message' => $e->getMessage(),

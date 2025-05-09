@@ -5,7 +5,7 @@ _[briefly summarize the changes here. TL;DR - what's this PR for?]_
 _[help a reviewer understand *why* this PR exists]_
 <!-- 
 Hopefully that's already documented in either
-* ClickUp ticket(s)
+* ClickUp, Jira, Asana, or other ticket(s)
   [SHS-NNNN](https://app.clickup.com/t/36718269/SHS-NNNN)
 * Other PRs
 * elsewhere

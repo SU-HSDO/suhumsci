@@ -588,6 +588,17 @@
               }
             }
           }
+
+          .hs-secondary-button a {
+            color: var(--palette--tertiary);
+            border-color: var(--palette--tertiary);
+
+            &:hover,
+            &:focus {
+              color: var(--palette--white);
+              border-color: var(--palette--secondary);
+            }
+          }
         }
       }
     }
@@ -616,6 +627,26 @@
 
       @include hb-traditional {
         @include hb-more-link;
+
+        // Override link color and icon color for the Firefinch color pairing.
+        .ht-pairing-firefinch .hb-well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
+          color: var(--palette--tertiary);
+
+          &::after {
+            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
+          }
+
+          &:hover,
+          &:focus {
+            color: var(--palette--tertiary-darken-20);
+
+            &::after {
+                background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
+              }
+          }
+        }
       }
     }
   }

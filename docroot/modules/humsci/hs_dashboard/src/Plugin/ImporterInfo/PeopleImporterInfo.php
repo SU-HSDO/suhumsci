@@ -84,7 +84,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   public function getTableHeaders(): array {
     return [
       $this->t('Importer (migration) name'),
-      $this->t('Org Code and Workgroup'),
+      $this->t('Org Code or Workgroup'),
       $this->t('Last Imported'),
     ];
   }
@@ -96,12 +96,18 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
     $table_rows = [];
 
+    /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
     foreach ($capx_importers as $importer) {
-      /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */
+      // In theory, an importer will only use organizations, or workgroups, but
+      // just in case, we support both.
+      $orgs_and_workgroups = array_filter([
+        $importer->getOrganizations(TRUE),
+        $importer->getWorkgroups(TRUE),
+      ]);
       $table_rows[] = [
         'data' => [
           ['data' => $importer->label()],
-          ['data' => $importer->getWorkgroups(TRUE)],
+          ['data' => implode(', ', $orgs_and_workgroups)],
           ['data' => $this->lastImportTime('hs_capx')],
         ],
       ];

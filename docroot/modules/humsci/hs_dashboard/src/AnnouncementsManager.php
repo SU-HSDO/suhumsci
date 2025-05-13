@@ -15,7 +15,6 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -136,7 +135,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       return $this->parseCsv($csv_content);
 
     }
-    catch (RequestException $e) {
+    catch (\Exception $e) {
       $this->logger->error('Error retrieving CSV from {url}: {message}', [
         'url' => $csv_url,
         'message' => $e->getMessage(),

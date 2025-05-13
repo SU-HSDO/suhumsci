@@ -65,7 +65,7 @@ class InstallStateCest {
   public function testContributorShortcuts(AcceptanceTester $I) {
     $I->logInWithRole('contributor');
     $I->amOnPage('/');
-    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 28);
+    $I->canSeeNumberOfElements('#toolbar-item-shortcuts-tray a', 29);
   }
 
   /**

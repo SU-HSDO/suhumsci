@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Util\Locator;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Faker\Factory;
 
 /**
@@ -173,8 +174,28 @@ class FlexiblePageCest {
 
   /**
    * Verify main menu links at mobile size.
+   * @group mobile_menu
    */
   public function testMobileMenu(FunctionalTester $I) {
+    // Create nested menu items for testing.
+    $parent_item = MenuLinkContent::create([
+      'title' => 'Parent',
+      'description' => 'Parent test link',
+      'link' => 'internal:/bar/foo',
+      'weight' => 0,
+      'menu_name' => 'main',
+    ]);
+    $parent_item->save();
+    $menu_item = MenuLinkContent::create([
+      'title' => 'Test link',
+      'description' => 'Test link',
+      'link' => 'internal:/foo/bar',
+      'weight' => 0,
+      'menu_name' => 'main',
+      'parent' => 'menu_link_content:' . $parent_item->uuid(),
+    ]);
+    $menu_item->save();
+
     // Check standard menu item links.
     $I->amOnPage('/');
     $I->resizeWindow(800, 1100);
@@ -226,6 +247,10 @@ class FlexiblePageCest {
     $I->click('.hb-main-nav__toggle');
     $I->seeElement('.hb-main-nav__menu');
     $I->click('.hb-main-nav__link');
+
+    // Delete menu items.
+    $parent_item->delete();
+    $menu_item->delete();
   }
 
   /**

@@ -151,7 +151,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
 
       $csv_content = $response->getBody()->getContents();
       $data = $this->parseCsv($csv_content);
-      $this->cache->set('hs_dashboard_announcements', $data, time() + 300);
+      $this->cache->set('hs_dashboard_announcements', $data, time() + 900);
       return $data;
 
     }

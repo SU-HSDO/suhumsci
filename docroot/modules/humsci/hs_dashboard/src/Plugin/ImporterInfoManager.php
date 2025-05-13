@@ -132,7 +132,7 @@ class ImporterInfoManager extends DefaultPluginManager {
 
     }
 
-    $this->cache->set('hs_dashboard_importer_info_tables', $tables, time() + 300);
+    $this->cache->set('hs_dashboard_importer_info_tables', $tables, time() + 900);
     return $tables;
 
   }

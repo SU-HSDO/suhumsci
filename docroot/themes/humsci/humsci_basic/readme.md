@@ -128,6 +128,39 @@ This theme aims to **partially** integrate [Decanter](https://github.com/SU-SWS/
 ## CSS / Sass
 The CSS is organized using [Harry Roberts’](https://csswizardry.com) [Inverted Triangle CSS](https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/) (ITCSS) organizational approach. This method is mixed with [Block Element Modifier](http://getbem.com/) (BEM) naming convention for class names throughout the Sass files.
 
+### Namespacing
+
+All classes, variables, and mixins that belong to the humsci_basic theme will
+be prefixed with `hb-` to prevent confusion between our theme and Decanter.
+Example classes: `.hb-card`, `.hb-card--horizontal`, `.hb-card__title`.
+
+### SCSS Structure
+
+Compiled CSS is split in multiple files, on a _per-component_ basis. This allows to define
+separate libraries and load them only when a component is displayed, to reduce CSS size and improve
+performance.
+
+Shared SCSS is located in the `src/scss/partials` folder, filenames prefixed with a `_` according to SASS
+convention. Those files can be imported into the SASS files that will generate the final CSS, located
+into the `src/scss/humsci_colorful`, `src/scss/humsci_traditional` and `src/scss/humsci_airy` folders.
+To indicate the SASS compiler to which theme belongs each file, it's necessary to define the
+`$hb-current-theme`at the top of the file:
+
+```scss
+$hb-current-theme: 'traditional';
+```
+
+Compiled CSS files are exposed to drual via libraries are defined in the `.libraries.yml` file of
+each subtheme and attached to the templates of each component (or a preprocess in some exeptional cases).
+
+The `src/scss/partials` files also contains some special files:
+
+- `_base-imports.scss`: variables, functions and mixins needed by most components.
+- `_main.scss`: base styles that will be available in all pages.
+- `ckeditor/_imports.scss`: styles for CKEditor.
+- `preview/_preview.scss`: base styles for the paragraph previews available in the admin theme.
+
+
 | Class References                                                                      |
 |---------------------------------------------------------------------------------------|
 | [Prefixing of Class Names](/docroot/themes/humsci/humsci_basic/docs/css-prefixing.md) |

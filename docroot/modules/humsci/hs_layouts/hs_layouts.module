@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\dashboard\Plugin\SectionStorage\DashboardSectionStorage;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -14,8 +15,22 @@ use Drupal\paragraphs\ParagraphInterface;
 function hs_layouts_plugin_filter_layout__layout_builder_alter(&$definitions, &$extra, &$consumer) {
   /** @var \Drupal\Core\Layout\LayoutDefinition $definition */
   foreach ($definitions as $id => $definition) {
-    if ($definition->getProvider() !== 'hs_layouts') {
-      unset($definitions[$id]);
+    $provider = $definition->getProvider();
+    if ($extra['section_storage'] instanceof DashboardSectionStorage) {
+      // Define providers to unset for the dashboard.
+      $providers_to_unset = [
+        'ui_patterns_library',
+        'hs_layouts',
+        'ds',
+      ];
+      if (in_array($provider, $providers_to_unset)) {
+        unset($definitions[$id]);
+      }
+    }
+    else {
+      if ($provider !== 'hs_layouts') {
+        unset($definitions[$id]);
+      }
     }
   }
 }

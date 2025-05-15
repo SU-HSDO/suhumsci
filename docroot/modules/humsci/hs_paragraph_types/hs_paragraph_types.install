@@ -405,3 +405,171 @@ function hs_paragraph_types_update_10011() {
       ->save();
   }
 }
+
+/**
+ * Set new config for accordion summary heading level.
+ */
+function hs_paragraph_types_update_10012() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $summary_heading_field_storage = $config_storage->read('field.storage.paragraph.field_summary_heading_level');
+  if (
+    empty($field_storage->load('paragraph.field_summary_heading_level') &&
+    !empty($summary_heading_field_storage)
+  )) {
+    $field_storage->createFromStorageRecord($summary_heading_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $summary_heading_field_config = $config_storage->read('field.field.paragraph.hs_accordion.field_summary_heading_level');
+  if (
+    empty($field_config_storage->load('paragraph.hs_accordion.field_summary_heading_level')) &&
+    !empty($summary_heading_field_config)
+  ) {
+    $field_config_storage->create($summary_heading_field_config)->save();
+  }
+}
+
+/**
+ * Set default value for new heading level field in existing accordions.
+ */
+function hs_paragraph_types_update_10013(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Get list of accordion paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', ['hs_accordion'], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  // Set new field default for existing accordions paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    if (!$paragraph->hasField('field_summary_heading_level')) {
+      continue;
+    }
+
+    $paragraph->set('field_summary_heading_level', 'div');
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Update field configuration for field_spotlight_style.
+ */
+function hs_paragraph_types_update_10014() {
+
+  // Load the configuration from the config/sync directory.
+  $config_directory = \Drupal::service('config.storage.sync');
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Update field_spotlight_style field config.
+  $field_config = $entity_type_manager->getStorage('field_config');
+  $config_data = $config_directory->read('field.field.paragraph.hs_spotlight.field_spotlight_style');
+  $existing_config = $field_config->load($config_data['id']);
+  if ($existing_config) {
+    $existing_config = $field_config
+      ->updateFromStorageRecord($existing_config, $config_data);
+    $existing_config->save();
+  }
+
+  // Update field_spotlight_style field storage.
+  $field_storage_config = $entity_type_manager->getStorage('field_storage_config');
+  $config_data = $config_directory->read('field.storage.paragraph.field_spotlight_style');
+  $existing_config = $field_storage_config->load($config_data['id']);
+  if ($existing_config) {
+    $existing_config = $field_storage_config
+      ->updateFromStorageRecord($existing_config, $config_data);
+    $existing_config->save();
+  }
+}
+
+/**
+ * Update existing spotlight paragraphs fields with new default values.
+ */
+function hs_paragraph_types_update_10015(&$sandbox) {
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $paragraph_storage = $entity_type_manager->getStorage('paragraph');
+
+  // Initialize the batch.
+  if (!isset($sandbox['total'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_spotlight')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['current'] = 0;
+    $sandbox['updated'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return t('No spotlight paragraphs found to update.');
+    }
+  }
+
+  // Process paragraphs in batches of 25.
+  $paragraph_ids = array_slice($sandbox['ids'], $sandbox['current'], 25);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    $save_needed = FALSE;
+
+    // Update field_hs_spotlight_height if _none or empty.
+    if ($paragraph->hasField('field_hs_spotlight_height')) {
+      $height_value = $paragraph->get('field_hs_spotlight_height')->value;
+      if (empty($height_value) || $height_value === '_none') {
+        $paragraph->set('field_hs_spotlight_height', 'default');
+        $save_needed = TRUE;
+      }
+    }
+
+    // Update field_hs_spotlight_image_align if _none or empty.
+    if ($paragraph->hasField('field_hs_spotlight_image_align')) {
+      $align_value = $paragraph->get('field_hs_spotlight_image_align')->value;
+      if (empty($align_value) || $align_value === '_none') {
+        $paragraph->set('field_hs_spotlight_image_align', 'image-right');
+        $save_needed = TRUE;
+      }
+    }
+
+    // Update field_spotlight_style if _none or empty.
+    if ($paragraph->hasField('field_spotlight_style')) {
+      $style_value = $paragraph->get('field_spotlight_style')->value;
+      if (empty($style_value) || $style_value === '_none') {
+        $paragraph->set('field_spotlight_style', 'classic');
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+
+    $sandbox['current']++;
+  }
+
+  // Update progress.
+  $sandbox['#finished'] = empty($sandbox['total']) ? 1 : ($sandbox['current'] / $sandbox['total']);
+
+  if ($sandbox['#finished'] >= 1) {
+    return t('Processed @total spotlight paragraphs, updated @updated with new default values.', [
+      '@total' => $sandbox['total'],
+      '@updated' => $sandbox['updated'],
+    ]);
+  }
+}

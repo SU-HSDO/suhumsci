@@ -87,6 +87,7 @@ class MegaMenuCest {
 
     // Desktop Testing
     $I->amOnPage('/user/logout');
+    $I->click('.user-logout-confirm #edit-submit');
     $I->amOnPage('/');
     $I->see($topLevelTitle, '.js-megamenu__toggle');
 
@@ -124,8 +125,6 @@ class MegaMenuCest {
     $I->click($secondLevelTitle);
 
     // Turn off MegaMenu
-    $I->amOnPage('/user/logout');
-    $I->click('.user-logout-confirm #edit-submit');
     $I->logInWithRole('administrator');
     $I->amOnPage('/admin/config/site-options');
     $I->see('Enable New Mega Menu');

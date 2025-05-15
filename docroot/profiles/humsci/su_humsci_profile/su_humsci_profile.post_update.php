@@ -354,7 +354,7 @@ function su_humsci_profile_post_update_9207() {
 /**
  * Enable paragraphs types for the private pages and set a new default type.
  */
-function su_humsci_profile_post_update_9209() {
+function su_humsci_profile_post_update_9208() {
   // Enable paragraph types for the components field and set the correct order.
   $paragraph_types = [
     'hs_accordion',

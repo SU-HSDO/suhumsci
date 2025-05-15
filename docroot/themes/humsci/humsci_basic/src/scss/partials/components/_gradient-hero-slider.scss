@@ -18,8 +18,25 @@
       bottom: hb-calculate-rems(-32px);
     }
 
-    li button {
-      padding: 0 hb-calculate-rems(10px);
+    li {
+      button {
+        padding: 0 hb-calculate-rems(10px);
+        background-color: transparent;
+        outline: 1px solid var(--palette--secondary);
+
+        &:hover {
+          @include hb-traditional {
+            background-color: var(--palette--secondary);
+          }
+        }
+      }
+
+      &.slick-active button {
+        @include hb-traditional {
+          background-color: var(--palette--secondary);
+        }
+      }
     }
+
   }
 }

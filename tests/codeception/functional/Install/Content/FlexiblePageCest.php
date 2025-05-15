@@ -305,7 +305,7 @@ class FlexiblePageCest {
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     $I->waitForText('Yahoo');
-    $I->canSee('Yahoo', 'a');
+    $I->seeElement('a', ['href' => 'http://yahoo.com']);
     $I->canSeeNumberOfElements('picture img', 1);
     // Uploaded spotlight image does not have alt text.
     $I->seeElement('picture img', ['alt' => '']);

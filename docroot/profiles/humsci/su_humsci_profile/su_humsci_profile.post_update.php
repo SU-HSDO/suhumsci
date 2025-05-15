@@ -357,21 +357,21 @@ function su_humsci_profile_post_update_9207() {
 function su_humsci_profile_post_update_9208() {
   // Enable paragraph types for the components field and set the correct order.
   $paragraph_types = [
+    'hs_text_area',
     'hs_accordion',
-    'hs_banner',
-    'hs_hero_image',
+    'hs_callout_box',
+    'hs_clr_bnd',
+    'hs_collection',
     'hs_gradient_hero_slider',
     'hs_carousel',
-    'hs_callout_box',
-    'hs_collection',
-    'hs_clr_bnd',
-    'hs_view',
+    'hs_banner',
+    'hs_hero_image',
     'stanford_gallery',
     'hs_postcard',
     'hs_sptlght_slder',
     'hs_testimonial',
-    'hs_text_area',
     'hs_timeline',
+    'hs_view',
   ];
 
   $weight = 0;

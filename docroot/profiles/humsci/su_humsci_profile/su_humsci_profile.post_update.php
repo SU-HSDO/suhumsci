@@ -352,6 +352,75 @@ function su_humsci_profile_post_update_9207() {
 }
 
 /**
+ * Enable paragraphs types for the private pages and set a new default type.
+ */
+function su_humsci_profile_post_update_9209() {
+  // Enable paragraph types for the components field and set the correct order.
+  $paragraph_types = [
+    'hs_accordion',
+    'hs_banner',
+    'hs_hero_image',
+    'hs_gradient_hero_slider',
+    'hs_carousel',
+    'hs_callout_box',
+    'hs_collection',
+    'hs_clr_bnd',
+    'hs_view',
+    'stanford_gallery',
+    'hs_postcard',
+    'hs_sptlght_slder',
+    'hs_testimonial',
+    'hs_text_area',
+    'hs_timeline',
+  ];
+
+  $weight = 0;
+  $entity_type = 'node';
+  $bundle = 'hs_private_page';
+  $field_name = 'field_hs_priv_page_components';
+  foreach ($paragraph_types as $paragraph_type) {
+    _su_humsci_profile_enable_paragraph($entity_type, $bundle, $field_name, $paragraph_type, $weight);
+    $weight++;
+  }
+
+  // Updates the default paragraph type for the private page components field.
+  $entity_type = 'node';
+  $bundle = 'hs_private_page';
+  $field_name = 'field_hs_priv_page_components';
+  $default_paragraph = 'hs_text_area';
+
+  // Load the entity form display.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load("$entity_type.$bundle.default");
+  if (!$form_display) {
+    \Drupal::messenger()->addError(t('Form display for @entity_type.@bundle.default not found.', [
+      '@entity_type' => $entity_type,
+      '@bundle' => $bundle,
+    ]));
+    return;
+  }
+
+  // Get the component settings.
+  $component = $form_display->getComponent($field_name);
+  if (empty($component)) {
+    \Drupal::messenger()->addError(t('Component @field not found in form display.', [
+      '@field' => $field_name,
+    ]));
+    return;
+  }
+
+  // Set the default paragraph type.
+  $component['settings']['default_paragraph_type'] = $default_paragraph;
+  $form_display->setComponent($field_name, $component);
+  $form_display->save();
+  \Drupal::messenger()->addStatus(t('Default paragraph type for @field has been set to @type.', [
+    '@field' => $field_name,
+    '@type' => $default_paragraph,
+  ]));
+}
+
+/**
  * Remove dependency on key_encrypt module.
  */
 function su_humsci_profile_post_update_key_dependency_clean() {

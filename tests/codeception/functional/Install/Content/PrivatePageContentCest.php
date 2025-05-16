@@ -127,9 +127,10 @@ class PrivatePageContentCest {
     $I->amOnPage('/node/add/hs_private_page');
     $I->fillField('Title', 'Test Private Page');
     foreach ($this->fieldsToCheck as $component => $component_info) {
-      $I->scrollTo('table[id^="field-hs-priv-page-components-values"] tr:last-child .paragraphs-features__add-in-between__button');
-      $I->click('table[id^="field-hs-priv-page-components-values"] tr:last-child .paragraphs-features__add-in-between__button');
-      $I->waitForText('Add Component');
+      $add_button = 'table[id^="field-hs-priv-page-components-values"] tr:last-child .paragraphs-features__add-in-between__button';
+      $I->waitForElement($add_button);
+      $I->scrollTo($add_button);
+      $I->click($add_button);      $I->waitForText('Add Component');
       $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', $component);
       $I->click($component_info['component_button_name'], '.paragraphs-ee-add-dialog');
       $I->waitForText($component_info['component_text']);

@@ -1,0 +1,123 @@
+  // Photo Gallery Slideshow
+.hs-gallery-slideshow {
+  @include slick-container;
+  @include slick-arrows;
+
+  .slick__arrow button {
+    &.slick-prev {
+      bottom: hb-calculate-rems(98px);
+
+      @include grid-media-min('sm') {
+        bottom: hb-calculate-rems(198px);
+      }
+    }
+
+    &.slick-next {
+      bottom: hb-calculate-rems(5px);
+
+      @include grid-media-min('sm') {
+        bottom: hb-calculate-rems(105px);
+      }
+    }
+  }
+
+  // The photo album counter relies upon using the slideshow gallery slick-dots.
+  // Only the active slide and the last slide are displayed for all slides
+  // expect the last slide.
+  // Example: "1/4" is the active slide of 1 and the last slide.
+  // The last slide uses counter properties to display the total number of slides.
+  // Example: "4/4" is the active slide of 4 and the value of listCounter, which is also 4.
+
+  .field-media-image {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: calc(100% - 78px) 0 0; // match height of caption / credit background
+
+      @include hb-themes(('colorful', 'airy')) {
+        background: linear-gradient(
+          to top,
+          var(--palette--black),
+          transparent
+        );
+      }
+
+      @include hb-traditional {
+        background: linear-gradient(
+          to top,
+          var(--palette--black),
+          transparent
+        );
+      }
+    }
+  }
+
+  // prevent double overlay of background when there is a caption / credit
+  .field-media-image-caption {
+    background: transparent;
+  }
+
+  .slick-dots {
+    counter-reset: listCounter;
+
+    li {
+      display: block !important;
+      counter-increment: listCounter;
+    }
+
+    li button {
+      @include hb-unbuttonize;
+      color: var(--palette--white);
+      font-weight: hb-theme-font-weight(bold);
+      display: none;
+
+      @include grid-media-min('sm') {
+        display: block;
+        position: absolute;
+        bottom: hb-calculate-rems(16px);
+        cursor: default;
+      }
+    }
+
+    // counter for the last slide
+    li:last-of-type button {
+      @include grid-media-min('sm') {
+        left: hb-calculate-rems(48px);
+      }
+    }
+
+    li.slick-active:not(:last-of-type) button {
+      @include grid-media-min('sm') {
+        left: hb-calculate-rems(12px);
+        min-width: hb-calculate-rems(32px);
+        text-align: right;
+      }
+
+      &::after {
+        content: ' / ';
+      }
+    }
+
+    li.slick-active:last-of-type button {
+      @include grid-media-min('sm') {
+        left: hb-calculate-rems(19px);
+        min-width: hb-calculate-rems(45px);
+      }
+
+      @include grid-media-min('md') {
+        left: hb-calculate-rems(16px);
+        min-width: hb-calculate-rems(50px);
+      }
+
+      &::after {
+        content: " / " counter(listCounter);
+      }
+    }
+
+    li:not(:last-of-type):not(.slick-active) button {
+      display: none;
+    }
+  }
+}

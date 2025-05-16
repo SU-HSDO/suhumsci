@@ -29,7 +29,7 @@
     {# Set classes #}
     {% set menu_base_class = menu_base_class|default('megamenu') %}
     {% set menu_modifiers = menu_modifiers|default([]) %}
-    
+
     {# Set classes based on nested menu level #}
     {% if menu_level is same as(1) %}
       {% set menu_modifiers = menu_modifiers|merge(['list-sub', 'js-list-sub', 'list-sub--' ~ menu_level]) %}

@@ -1,0 +1,197 @@
+// styles for a single item in a timeline
+.ptype-hs-timeline-item,
+.views-view-pattern .hb-timeline-item {
+  @include clearfix;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: calc(100% - 20px);
+    width: 4px;
+    background-color: var(--palette--primary);
+    left: hb-calculate-rems(10px);
+    bottom: hb-calculate-rems(-2px);
+  }
+
+  &:last-of-type::before {
+    height: 0; // remove the vertical pipe that connects timeline items from the last item
+  }
+
+  &:last-of-type {
+    // when last item is open, show vertical pipe that connects timeline items
+    .hb-timeline-item[open] {
+      &::before {
+        content: '';
+        position: absolute;
+        height: calc(100% - 20px);
+        width: 4px;
+        background-color: var(--palette--primary);
+        left: hb-calculate-rems(10px);
+        bottom: hb-calculate-rems(-2px);
+      }
+
+      // last item has small filled circle or square endcap when open
+      &::after {
+        background-color: var(--palette--primary);
+        content: '';
+        position: absolute;
+        height: 12px;
+        width: 12px;
+        left: 6px;
+        bottom: -6px;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .field-hs-collection-items[class*="item-per-row--"] & {
+    margin-bottom: 0 !important;
+  }
+}
+
+.hb-timeline-item {
+  position: relative;
+  margin: 0;
+
+  &__summary {
+    padding: 0 0 hb-spacing-width('xs');
+    line-height: 133%;
+    list-style-type: none; // will hide the marker
+    list-style-image: none;
+
+    &::-webkit-details-marker { // hide the marker in Safari
+      display: none;
+    }
+
+    // this will only remove the outline on click
+    // the keyboard focus state remains!
+    &:focus:not(:focus-visible) {
+      outline: 0;
+    }
+
+    // add a custom focus state to improve design aesthetic, particularly
+    // in Safari where :focus-visible is not supported
+    &:focus {
+      outline: solid;
+      outline-color: var(--palette--secondary-highlight-darken);
+    }
+
+    // :only-child prevents timeline items without a description (revealed details) from having a pointer cursor
+    &:hover:not(:only-child) {
+      cursor: pointer;
+    }
+  }
+
+  &__revealed-details {
+    padding-bottom: hb-spacing-width('sm');
+
+    // only animate collapsed timeline items when they are opened
+    // timelines that are expanded by default should not animate
+    .hb-timeline-item[open] & {
+      .hb-timeline__collapsed & {
+        animation: timelineFadeInDown 350ms ease-in-out forwards;
+      }
+    }
+  }
+
+  &__heading {
+    color: var(--palette--primary);
+    font-size: hb-calculate-rems(18px);
+    font-weight: hb-theme-font-weight('bold');
+    padding: 0 hb-calculate-rems(32px);
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: hb-calculate-rems(13px);
+      height: hb-calculate-rems(13px);
+      top: hb-calculate-rems(1.2px);
+      left: hb-calculate-rems(1.2px);
+      border: 4px solid var(--palette--primary);
+      border-radius: 50%;
+      box-sizing: content-box;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      @include hb-icon-background('timeline-toggle', 'primary');
+      background-repeat: no-repeat;
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(12px);
+      top: hb-calculate-rems(12px);
+      right: 0;
+      transition: transform 150ms ease-in-out;
+    }
+
+    [open] & {
+      &::after {
+        transform: scaleY(-1);
+      }
+    }
+
+    // When a timeline item does not have a description, it no longer
+    // acts as an accordion and therefore is served a different
+    // template in the timeline item pattern. See
+    // humsci_basic/patterns/timeline-item/timeline-item.html.twig
+    // Target timeline items that are not wrapped in a summary tag
+    // to remove the arrow which toggles an accordion open / closed.
+    :is(div.hb-timeline-item__summary) & {
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  &__subheading {
+    font-size: hb-calculate-rems(16px);
+    font-style: italic;
+    padding: 0 hb-calculate-rems(32px);
+  }
+
+  &__description {
+    font-size: hb-calculate-rems(16px);
+    padding: 0 hb-calculate-rems(32px);
+
+    @include hb-themes(('colorful', 'airy')) {
+      line-height: 128%;
+
+      // Link color overrides for Canyon color pairing.
+      .hc-pairing-canyon .hb-well &,
+      .hc-pairing-canyon .hs-paragraph-style--well &,
+      .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
+        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
+          color: var(--palette--primary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--tertiary-darken-20);
+          }
+        }
+
+        a.hs-external-link::after {
+          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
+        }
+      }
+    }
+
+    @include hb-traditional {
+      line-height: 124%;
+    }
+  }
+}
+
+
+@keyframes timelineFadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

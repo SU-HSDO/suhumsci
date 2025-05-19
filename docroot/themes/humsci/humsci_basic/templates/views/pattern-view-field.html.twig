@@ -37,10 +37,10 @@
 {%- set has_content = field.content|render|striptags('<span><div>')|trim -%}
 {%- set is_heading = field.element_type != 'div' and field.element_type != 'span' -%}
 
-{# Condition to check for custom class in field wrapper #}
+{# Condition to check for custom, course or person class in field wrapper #}
 {%- set field_wrapper_has_hb_class = false -%}
 {%- for class in field.wrapper_attributes.class -%}
-  {%- if not field_wrapper_has_hb_class and (class starts with 'hb' or 'course' in class)-%}
+  {%- if not field_wrapper_has_hb_class and (class starts with 'hb' or 'course' in class or 'person' in class)-%}
     {%- set field_wrapper_has_hb_class = true -%}
   {%- endif -%}
 {%- endfor -%}

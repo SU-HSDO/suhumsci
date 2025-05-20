@@ -3,7 +3,12 @@
 namespace Drupal\hs_dashboard;
 
 /**
- * Animation status enum.
+ * Animation status enum for theme animation settings.
+ *
+ * This enum represents the possible states of animation settings for a theme:
+ * - Enabled: Animations are explicitly enabled.
+ * - Disabled: Animations are explicitly disabled.
+ * - NotSet: Animation setting is not configured.
  */
 enum AnimationStatus: string {
   case Enabled = 'enabled';
@@ -21,16 +26,11 @@ enum AnimationStatus: string {
    */
   public static function fromTheme(string $theme_name): self {
     $animation_setting = theme_get_setting('animation_toggle', $theme_name);
-
-    if ($animation_setting === NULL) {
-      return self::NotSet;
-    }
-    elseif ($animation_setting) {
-      return self::Enabled;
-    }
-    else {
-      return self::Disabled;
-    }
+    return match ($animation_setting) {
+      NULL => self::NotSet,
+      TRUE => self::Enabled,
+      FALSE => self::Disabled,
+    };
   }
 
 }

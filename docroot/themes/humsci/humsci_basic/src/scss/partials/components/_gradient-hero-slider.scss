@@ -14,7 +14,14 @@
   .slick-dots {
     // To make it fit in small viewports
     width: 100%;
-    bottom: 0;
+
+    @include hb-themes(('colorful', 'airy')) {
+      bottom: 0;
+    }
+
+    @include hb-traditional {
+      bottom: hb-calculate-rems(-16px);
+    }
 
     @include grid-media-min('md') {
       width: auto;

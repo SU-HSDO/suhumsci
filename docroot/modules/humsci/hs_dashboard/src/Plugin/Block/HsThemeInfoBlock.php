@@ -68,7 +68,6 @@ class HsThemeInfoBlock extends BlockBase implements ContainerFactoryPluginInterf
       '#color_pairing' => $colors,
       '#animation_enhancements' => AnimationStatus::fromTheme($name)->value,
       '#help_text' => $this->t('Contact H&S Web for changes.'),
-      '#settings_url' => Url::fromRoute('system.theme_settings_theme', ['theme' => $name])->toString(),
     ];
   }
 

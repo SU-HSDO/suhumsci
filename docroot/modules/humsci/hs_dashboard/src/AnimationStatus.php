@@ -28,8 +28,8 @@ enum AnimationStatus: string {
     $animation_setting = theme_get_setting('animation_toggle', $theme_name);
     return match ($animation_setting) {
       NULL => self::NotSet,
-      TRUE => self::Enabled,
-      FALSE => self::Disabled,
+      TRUE, 1 => self::Enabled,
+      FALSE, 0 => self::Disabled,
     };
   }
 

@@ -2,6 +2,16 @@
   // Override the hb-card styles so that they display correctly within paragraph postcard components.
   .hb-card {
     &__title {
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        @include hb-heading-3;
+        margin: 0;
+        overflow-wrap: break-word;
+      }
+
       @include hb-traditional {
         margin-bottom: hb-spacing-width('xxxs');
 
@@ -29,7 +39,16 @@
     }
 
     &__description {
+      @include hb-description;
       margin-bottom: 0;
+
+      @include hb-themes(('colorful', 'airy')) {
+        margin-bottom: hb-spacing-width('xs');
+      }
+
+      @include hb-traditional {
+        margin-bottom: hb-spacing-width('xxxs');
+      }
     }
 
     // For horizontal postcards, Content to Link (which is represented by
@@ -42,66 +61,36 @@
 
     &__subcontent-item {
       width: 100%;
+      position: relative;
+
+      a {
+        .fa-mailto {
+          display: none;
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          @include hb-card-arrow-link;
+        }
+
+        @include hb-traditional {
+          @include hb-more-link;
+        }
+      }
+
+      &.decanter-button {
+        @include hb-unbuttonize;
+
+        &:hover,
+        &:focus {
+          background-color: transparent;
+        }
+      }
     }
 
     &__decorative-link {
       &::before {
         display: none; // The decorative link for postcards is added via the field-hs-postcard-link class.
       }
-    }
-  }
-}
-
-.field-hs-postcard {
-  &-title {
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      @include hb-heading-3;
-      margin: 0;
-      overflow-wrap: break-word;
-    }
-  }
-
-  &-link {
-    position: relative;
-    width: 100%;
-
-    a {
-      .fa-mailto {
-        display: none;
-      }
-
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-card-arrow-link;
-      }
-
-      @include hb-traditional {
-        @include hb-more-link;
-      }
-    }
-
-    &.decanter-button {
-      @include hb-unbuttonize;
-
-      &:hover,
-      &:focus {
-        background-color: transparent;
-      }
-    }
-  }
-
-  &-body {
-    @include hb-description;
-
-    @include hb-themes(('colorful', 'airy')) {
-      margin-bottom: hb-spacing-width('xs');
-    }
-
-    @include hb-traditional {
-      margin-bottom: hb-spacing-width('xxxs');
     }
   }
 }

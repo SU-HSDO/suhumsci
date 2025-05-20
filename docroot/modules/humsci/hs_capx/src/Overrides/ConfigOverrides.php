@@ -2,12 +2,16 @@
 
 namespace Drupal\hs_capx\Overrides;
 
+use Acquia\Blt\Robo\Common\EnvironmentDetector;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\encrypt\Exception\EncryptException;
 use Drupal\key\Entity\Key;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * Configuration Overrides for the CapX importer.
@@ -15,6 +19,7 @@ use Drupal\key\Entity\Key;
  * @package Drupal\hs_capx\Overrides
  */
 class ConfigOverrides implements ConfigFactoryOverrideInterface {
+  use LoggerAwareTrait;
 
   /**
    * Config factory service.
@@ -55,6 +60,8 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    *
    * Override the CapX importer urls, add oauth credentials, and add field
    * tagging overrides to the importer.
+   *
+   * @throws \Drupal\encrypt\Exception\EncryptException
    */
   public function loadOverrides($names) {
     $overrides = [];
@@ -83,8 +90,18 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
 
     $config = $this->configFactory->get('hs_capx.settings');
     $password = '';
-    if ($key = Key::load($config->get('password') ?: '')) {
-      $password = $key->getKeyValue();
+    try {
+      if ($key = Key::load($config->get('password') ?: '')) {
+        $password = $key->getKeyValue();
+      }
+    }
+    catch (EncryptException $exception) {
+      if (EnvironmentDetector::isLocalEnv()) {
+        $this->getLogger()->notice('Encryption key not found for capx migrations. You will not be able to run these migrations without it.  Only needed if you are debugging these migrations.');
+      }
+      else {
+        throw $exception;
+      }
     }
 
     if (in_array('migrate_plus.migration_group.hs_capx', $names)) {
@@ -203,6 +220,19 @@ class ConfigOverrides implements ConfigFactoryOverrideInterface {
    */
   public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION) {
     return NULL;
+  }
+
+  /**
+   * Avoid circular dependency reference when using dependency injection.
+   *
+   * @return \Psr\Log\LoggerInterface
+   */
+  protected function getLogger(): LoggerInterface {
+    if (!isset($this->logger)) {
+      // @phpstan-ignore-next-line
+      $this->logger = \Drupal::logger('capx');
+    }
+    return $this->logger;
   }
 
 }

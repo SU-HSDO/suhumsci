@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_dashboard module.
+ */
+
+use Drupal\shortcut\Entity\Shortcut;
+
+/**
+ * Create the dashboard shortcut.
+ */
+function hs_admin_update_10000() {
+  $dashboard_shorcut = Shortcut::create([
+    'shortcut_set' => 'default',
+    'title' => 'Dashboard',
+    'link' => [
+      'uri' => 'internal:/admin/dashboard',
+    ],
+    'weight' => -5,
+  ]);
+  $dashboard_shorcut->save();
+
+  // Set the weight of the 'home' shortcut to -10.
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $home_shortcut = $entity_type_manager->getStorage('shortcut')->loadByProperties(['title' => 'Home']);
+  if (!empty($home_shortcut)) {
+    $home_shortcut = reset($home_shortcut);
+    $home_shortcut->setWeight(-10);
+    $home_shortcut->save();
+  }
+}
+
+/**
+ * Grant permissions to site manager and contributor roles.
+ */
+function hs_admin_update_10001() {
+  // Grant permissions to site manager role.
+  user_role_grant_permissions('site_manager', [
+    'access user profiles',
+    'manage editoria11y results',
+  ]);
+
+  // Grant permissions to contributor role.
+  user_role_grant_permissions('contributor', [
+    'access user profiles',
+    'manage editoria11y results',
+    'view editoria11y checker',
+    'view user list',
+  ]);
+}

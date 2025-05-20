@@ -1,0 +1,71 @@
+diff --git a/src/Plugin/Linkit/Matcher/AnchorMatcher.php b/src/Plugin/Linkit/Matcher/AnchorMatcher.php
+new file mode 100644
+index 0000000000000000000000000000000000000000..0f8230d94039a0eaa13289c414c8bf54e366f0e2
+--- /dev/null
++++ b/src/Plugin/Linkit/Matcher/AnchorMatcher.php
+@@ -0,0 +1,39 @@
++<?php
++
++namespace Drupal\linkit\Plugin\Linkit\Matcher;
++
++use Drupal\Component\Utility\Html;
++use Drupal\linkit\MatcherBase;
++use Drupal\linkit\Suggestion\DescriptionSuggestion;
++use Drupal\linkit\Suggestion\SuggestionCollection;
++
++/**
++ * Provides specific linkit matchers for anchors. Does not check anchor exists.
++ *
++ * @Matcher(
++ *   id = "anchor_basic",
++ *   label = @Translation("Anchor (basic)"),
++ * )
++ */
++class AnchorMatcher extends MatcherBase {
++
++  /**
++   * {@inheritdoc}
++   */
++  public function execute($string) {
++    $suggestions = new SuggestionCollection();
++
++    // Check for a # and tell people it's an anchor.
++    if (substr($string, 0, 1) == '#' && strlen($string) > 1) {
++      $suggestion = new DescriptionSuggestion();
++      $suggestion->setLabel($this->t('Anchor @anchor', ['@anchor' => $string]))
++        ->setPath(Html::escape($string))
++        ->setGroup($this->t('Anchor'))
++        ->setDescription($this->t('Links to an anchor named @anchor on the current page', ['@anchor' => $string]));
++
++      $suggestions->addSuggestion($suggestion);
++    }
++    return $suggestions;
++  }
++
++}
+diff --git a/tests/src/Kernel/LinkitAutocompleteTest.php b/tests/src/Kernel/LinkitAutocompleteTest.php
+index 5eae284162e2cf2ef562d3fd8f8131e1bca3a23a..5e1e7909515170cc98bcb1a7b7e1503bb00b8a4b 100644
+--- a/tests/src/Kernel/LinkitAutocompleteTest.php
++++ b/tests/src/Kernel/LinkitAutocompleteTest.php
+@@ -114,6 +114,21 @@ class LinkitAutocompleteTest extends LinkitKernelTestBase {
+     $this->assertSame('mailto:' . $email, $data[0]['path'], 'Autocomplete returned email suggestion with an mailto href.');
+   }
+
++  /**
++   * Tests the autocomplete with an anchor (basic).
++   */
++  public function testAutocompletionAnchorBasic() {
++    /** @var \Drupal\linkit\MatcherInterface $plugin */
++    $plugin = $this->matcherManager->createInstance('anchor_basic');
++    $this->linkitProfile->addMatcher($plugin->getConfiguration());
++    $this->linkitProfile->save();
++
++    $anchor = '#example';
++    $data = $this->getAutocompleteResult($anchor);
++    $this->assertSame((string) new FormattableMarkup('Anchor @anchor', ['@anchor' => $anchor]), $data[0]['label'], 'Autocomplete returned anchor suggestion.');
++    $this->assertSame($anchor, $data[0]['path'], 'Autocomplete returned anchor suggestion as entered.');
++  }
++
+   /**
+    * Tests autocompletion in general.
+    */

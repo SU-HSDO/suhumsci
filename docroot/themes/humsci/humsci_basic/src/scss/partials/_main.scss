@@ -8,6 +8,8 @@ $hb-current-theme: 'traditional' !default;
 $fa-font-path: "../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts";
 
 @import
+  // Decanter variable overrides (hard-coded rem values).
+  'settings/variables.decanter-overrides',
   // =====================================================================
   // DECANTER (matching how they bring in their imports in decanter.scss)
   // =====================================================================
@@ -62,23 +64,8 @@ $fa-font-path: "../../humsci_basic/node_modules/@fortawesome/fontawesome-free/we
   'components/block-layout',
   'components/not-layout-builder-main-content',
   'components/buttons',
+// Colorband is sometimes manually used in a view header or similar, should remain global.
+  'components/pattern.color-band',
+  'components/node',
   'components/unpublished',
-  'components/media',
-
-  // =====================================================================
-  // Utilities
-  // Utilities and helper classes with ability to override anything
-  // which goes before in the triangle, eg. hide helper class
-  'utilities/color-pairings',
-  'utilities/fonts',
-  'utilities/font-awesome',
-  'utilities/wysiwyg-text-area',
-  'utilities/general',
-  'utilities/lists',
-  'utilities/card-images',
-  'utilities/raised-cards',
-  'utilities/tables',
-  'utilities/display-more-link-text',
-  'utilities/dark-pattern',
-  'utilities/caption-credit',
-  'utilities/media-embeds';
+  'components/media';

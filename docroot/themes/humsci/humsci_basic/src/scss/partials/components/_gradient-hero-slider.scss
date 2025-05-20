@@ -14,6 +14,7 @@
   .slick-dots {
     // To make it fit in small viewports
     width: 100%;
+    bottom: 0;
 
     @include grid-media-min('md') {
       width: auto;
@@ -22,24 +23,43 @@
     :not(.hs-full-width).hb-three-column--no-sidebar &,
     .hb-three-column--one-sidebar &,
     .hb-three-column--two-sidebar & {
-      bottom: hb-calculate-rems(-32px);
+      bottom: hb-calculate-rems(-48px);
     }
 
     li {
       button {
-        padding: 0 hb-calculate-rems(10px);
+        width: hb-calculate-rems(24px);
+        height: hb-calculate-rems(24px);
+        padding: 0;
         background-color: transparent;
-        outline: 1px solid var(--palette--secondary);
 
-        &:hover {
-          @include hb-traditional {
+        &::before {
+          content: '';
+          display: block;
+          width: 100%;
+          height: hb-calculate-rems(4px);
+          background-color: transparent;
+          outline: 1px solid var(--palette--secondary);
+
+          @include hb-themes(('colorful', 'airy')) {
+            border-radius: hb-calculate-rems(5px);
+          }
+        }
+
+        &:hover,
+        &:focus {
+          background-color: transparent;
+
+          &::before {
             background-color: var(--palette--secondary);
           }
         }
       }
 
       &.slick-active button {
-        @include hb-traditional {
+        background-color: transparent;
+
+        &::before {
           background-color: var(--palette--secondary);
         }
       }

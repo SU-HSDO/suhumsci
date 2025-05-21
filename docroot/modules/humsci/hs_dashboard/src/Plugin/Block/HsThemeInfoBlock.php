@@ -4,7 +4,6 @@ namespace Drupal\hs_dashboard\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\hs_dashboard\AnimationStatus;
 use Symfony\Component\DependencyInjection\ContainerInterface;

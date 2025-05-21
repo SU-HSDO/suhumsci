@@ -43,6 +43,20 @@
           color: var(--palette--secondary-darken-12);
         }
       }
+
+      @include hb-traditional {
+        // Override link color and icon color for the Firefinch color pairing.
+        .ht-pairing-firefinch .hb-well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
+          color: var(--palette--tertiary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--tertiary-darken-20);
+          }
+        }
+      }
     }
   }
 }

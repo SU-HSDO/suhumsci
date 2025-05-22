@@ -13,8 +13,7 @@
 @function flex-column-ratio($columns, $grid-columns: $su-grid-columns) {
   @if length($columns) > 1 {
     @return calc(nth($columns, 1) / flex-parse-columns($columns));
-  }
-  @else if $columns {
+  } @else if $columns {
     @return calc($columns / $grid-columns);
   }
 }
@@ -39,8 +38,7 @@
 
   @if $gutter == 0 {
     @return unquote("#{percentage($_column-ratio)}");
-  }
-  @else {
+  } @else {
     $_gutter-affordance: (#{(1 - calc(nth($columns, 1) / $_total-columns)) * $gutter});
     @return unquote("#{percentage($_column-ratio)} - #{$_gutter-affordance}");
   }
@@ -58,8 +56,7 @@
   @if length($span) == 3 {
     $_total-columns: nth($span, 3);
     @return $_total-columns;
-  }
-  @else if (length($span) == 2) or (length($span) >= 3) {
+  } @else if length($span) == 2 or length($span) >= 3 {
     @error "`$column` should contain 2 values, seperated by an `of`";
   }
 }

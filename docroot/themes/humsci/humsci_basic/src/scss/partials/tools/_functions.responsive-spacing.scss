@@ -9,7 +9,7 @@
 ///
 @function get-responsive-spacing-value($step: 0, $device: 'desktop', $map: $su-responsive-spacing-map) {
   $value: map-deep-get($map, $step, $device);
-  @if ($step < -2 and $step > 10) {
+  @if $step < -2 and $step > 10 {
     @error 'Responsive spacing step value must be an integer between -2 and 10.';
   }
   @if $value == null {

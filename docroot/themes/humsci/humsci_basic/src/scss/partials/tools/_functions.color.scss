@@ -16,16 +16,13 @@
   @if $colormap == $su-core-colors {
     @if map-has-key($su-core-colors, $color) {
       $color: map-get($su-core-colors, $color);
-    }
-    @else {
+    } @else {
       @error "Color does not exist in color map $su-core-colors.";
     }
-  }
-  @else {
+  } @else {
     @if map-has-key($colormap, $color) {
       $color: map-get($colormap, $color);
-    }
-    @else {
+    } @else {
       @error "#{$color} color does not exist in color map";
     }
   }

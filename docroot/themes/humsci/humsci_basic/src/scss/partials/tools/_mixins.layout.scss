@@ -61,8 +61,7 @@
         $max-width: map-get($screens, $code);
         max-width: $max-width;
         width: calc(100% - #{$spacing * 2});
-      }
-      @else {
+      } @else {
         max-width: calc(100% - #{$spacing * 2});
         width: calc(100% - #{$spacing * 2});
       }
@@ -93,8 +92,7 @@
     @include grid-media-device($key) {
       @if length($steps) == 1 {
         #{$type}: get-responsive-spacing-value($steps, $key);
-      }
-      @else if length($steps) == 2 {
+      } @else if length($steps) == 2 {
         @if nth($steps, 1) != null {
           #{$type}-top: get-responsive-spacing-value(nth($steps, 1), $key);
           #{$type}-bottom: get-responsive-spacing-value(nth($steps, 1), $key);
@@ -104,8 +102,7 @@
           #{$type}-left: get-responsive-spacing-value(nth($steps, 2), $key);
           #{$type}-right: get-responsive-spacing-value(nth($steps, 2), $key);
         }
-      }
-      @else if length($steps) == 3 {
+      } @else if length($steps) == 3 {
         @if nth($steps, 1) != null {
           #{$type}-top: get-responsive-spacing-value(nth($steps, 1), $key);
         }
@@ -118,8 +115,7 @@
         @if nth($steps, 3) != null {
           #{$type}-bottom: get-responsive-spacing-value(nth($steps, 3), $key);
         }
-      }
-      @else if length($steps) == 4 {
+      } @else if length($steps) == 4 {
         @if nth($steps, 1) != null {
           #{$type}-top: get-responsive-spacing-value(nth($steps, 1), $key);
         }
@@ -135,8 +131,7 @@
         @if nth($steps, 4) != null {
           #{$type}-left: get-responsive-spacing-value(nth($steps, 4), $key);
         }
-      }
-      @else if length($steps) > 4 or length($steps) == 0 {
+      } @else if length($steps) > 4 or length($steps) == 0 {
         @error '$steps should have 1 to 4 values';
       }
     }

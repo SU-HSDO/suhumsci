@@ -901,7 +901,6 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
   $is_manager = in_array('site_manager', $roles);
   $is_admin_or_manager = $is_admin || $is_manager;
   $is_saml_user = $authmap->get($account->id(), 'samlauth');
-  $is_saml_user = TRUE;
 
   if ($is_saml_user) {
     // Changes to the user form for SAML users.

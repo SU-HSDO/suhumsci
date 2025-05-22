@@ -1,0 +1,65 @@
+///
+/// Determine the ratio of `$columns` to the total $grid-column count.
+///
+/// If `$columns` is more than one value, they are handed to
+/// `flex-parse-columns()` which will determine the total columns and use this
+/// value instead of `total-columns`.
+///
+/// @name flex-column-ratio
+///
+/// @param {String} $columns - The total number of columns in the grid. Default 12
+/// @param {String} $su-grid-columns - The number of columns for the item to span
+///
+@function flex-column-ratio($columns, $grid-columns: $su-grid-columns) {
+  @if length($columns) > 1 {
+    @return calc(nth($columns, 1) / flex-parse-columns($columns));
+  }
+  @else if $columns {
+    @return calc($columns / $grid-columns);
+  }
+}
+
+///
+/// Return a calulated column width that can then be passed in to a `calc()`.
+///
+/// @name flex-column-width
+///
+/// @param {Mixed} $columns - Number of columns either as integer or `x of y`
+/// @param {Unit} $gutter - The width of the gutter in a css unit
+/// @param {Integer} $su-grid-columns - The number of columns in the grid
+///
+@function flex-column-width($columns, $gutter: $su-gutter-xs, $grid-columns: $su-grid-columns) {
+  $_column-ratio: flex-column-ratio($columns, $grid-columns);
+
+  /// Make note here.
+  $_total-columns: $grid-columns;
+  @if length($columns) == 3 {
+    $_total-columns: flex-parse-columns($columns);
+  }
+
+  @if $gutter == 0 {
+    @return unquote("#{percentage($_column-ratio)}");
+  }
+  @else {
+    $_gutter-affordance: (#{(1 - calc(nth($columns, 1) / $_total-columns)) * $gutter});
+    @return unquote("#{percentage($_column-ratio)} - #{$_gutter-affordance}");
+  }
+}
+
+///
+/// Parse a column count like `3 of 5` and return the total column count.
+/// This is to allow a shorthand for custom grids without using a settings map.
+///
+/// @name flex-parse-columns
+///
+/// @param {List} $span - something like `2 of 12`
+///
+@function flex-parse-columns($span) {
+  @if length($span) == 3 {
+    $_total-columns: nth($span, 3);
+    @return $_total-columns;
+  }
+  @else if (length($span) == 2) or (length($span) >= 3) {
+    @error "`$column` should contain 2 values, seperated by an `of`";
+  }
+}

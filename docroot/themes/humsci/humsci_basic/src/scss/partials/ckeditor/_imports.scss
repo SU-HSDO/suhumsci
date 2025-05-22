@@ -2,41 +2,26 @@
 // the necessary styles for the WYSIWYG. In this file we import all
 // the dependencies and the files we need. See _main.scss and
 // _base.scss for reference.
-@charset 'UTF-8';
 @use 'sass:map';
-
-// Here we add the path to Font Awesome. This is copied from _main.scss
-// and necessary for icons in CKEditor styles.
-$fa-font-path: '../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts' !default;
-$px-only: true;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
-@import 'decanter/core/src/scss/core/normalize',
-  'decanter/core/src/scss/decanter-no-markup',
-  'decanter/core/src/scss/core/fonts', 'decanter/core/src/scss/core/helpers',
-  'decanter/core/src/scss/core/base', 'decanter/core/src/scss/elements/image',
-  'decanter/core/src/scss/elements/embed',
-  'decanter/core/src/scss/decanter-grid',
-  // utils
-  '../settings/variables.colorful-pairings',
-  '../settings/variables.traditional-pairings', '../settings/variables.general',
-  '../settings/variables.fonts', '../settings/variables.zindex',
-  '../settings/variables.fonts', '../settings/variables.forms',
-  '../tools/functions.fonts', '../tools/functions.general',
-  '../tools/functions.svg', '../tools/functions.icons',
-  '../tools/functions.animation', '../tools/mixins.general',
-  '../tools/mixins.themes', '../tools/mixins.decorative', '../tools/mixins.text',
-  '../tools/mixins.links', '../tools/mixins.layout', '../tools/mixins.forms',
-  '../tools/mixins.general', '../tools/mixins.buttons',
-  '../tools/mixins.menu-icons', '../tools/keyframes.hero',
-  '../tools/mixins.icons', '../tools/mixins.lists', '../tools/mixins.tables',
-  '../tools/mixins.heros', '../tools/mixins.slick', '../tools/keyframes.text',
-  '../utilities/color-pairings', '../utilities/fonts',
-  '../utilities/font-awesome', '../utilities/general', '../utilities/lists',
-  '../utilities/raised-cards', '../utilities/tables',
-  '../utilities/display-more-link-text', '../utilities/dark-pattern',
-  '../utilities/caption-credit', '../utilities/media-embeds',
+@import
+  '../base-imports',
+  '../fonts/fonts',
+  '../elements/normalize',
+  '../elements/base',
+  '../utilities/color-pairings',
+  '../utilities/fonts',
+  '../utilities/font-awesome',
+  '../utilities/general',
+  '../utilities/lists',
+  '../utilities/raised-cards',
+  '../utilities/tables',
+  '../utilities/display-more-link-text',
+  '../utilities/dark-pattern',
+  '../utilities/caption-credit',
+  '../utilities/media-embeds',
   // Here are the files we actually need for CKEditor
   '../admin/wysiwyg-editor',
   '../utilities/wysiwyg-text-area';

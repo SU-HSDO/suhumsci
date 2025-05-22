@@ -1,10 +1,20 @@
 html {
+  box-sizing: border-box;
   // Use Decanter's root font size
   font-size: $hb-root-font-size;
   overflow-x: hidden;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 body {
+  background-color: $su-color-white;
+  overflow-x: hidden;
+
   // Apply font smoothing for Mac OS when possible
   // Gives refined look to fonts with more clarity, crispness, and thinner lines.
   @include font-smoothing;
@@ -131,6 +141,19 @@ ul:not([class]) {
 
 ol:not([class]) {
   @include hb-ordered-list;
+}
+
+img {
+  margin: 0;
+  padding: 0;
+
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+figure {
+  margin: 0;
 }
 
 // This prevents the list item to float behind images that are floated to the left

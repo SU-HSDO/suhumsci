@@ -10,7 +10,7 @@
   {% set attributes = attributes.addClass(['hb-three-column-w-image--no-sidebar']) %}
 {% endif %}
 
-{% if content %}
+{% if content.left_sidebar or content.title or content.top or content.image or content.main_below or content.main_above or content.right_sidebar%}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
       <div{{ region_attributes.left_sidebar.addClass(['hb-three-column-w-image__sidebar-1', 'layout__region']) }}>

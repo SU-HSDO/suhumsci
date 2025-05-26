@@ -35,7 +35,7 @@
 {{ attach_library(default_theme ~ '/pattern-view-field') }}
 
 {%- set has_content = field.content|render|striptags('<span><div>')|trim -%}
-{%- set is_heading = field.element_type != 'div' and field.element_type != 'span' -%}
+{%- set field_element_is_heading = field.element_type != 'div' and field.element_type != 'span' and field.element_type != '' -%}
 
 {# Condition to check for custom, course or person class in field wrapper #}
 {%- set field_wrapper_has_hb_class = false -%}
@@ -54,7 +54,7 @@
 {%- endfor -%}
 
 {{ field.separator }}
-{# Add wrapper only when there's a custom class, e.g. hb-highlighted-label #}
+{# Add wrapper only when there's a class, this is needed for those scenarios where we need specific classes like hb-highlighted-label #}
 {%- if field_wrapper_has_hb_class -%}
   <{{ field.wrapper_element }}{{ field.wrapper_attributes }}>
 {%- endif %}
@@ -66,7 +66,7 @@
   {%- endif %}
 {%- endif %}
 {# Add wrapper only when element type is a heading tag or something different than div and span, or there's a custom class e.g. hb-highlighted-label #}
-{%- if is_heading or field_element_has_hb_class -%}
+{%- if field_element_is_heading or field_element_has_hb_class -%}
   <{{ field.element_type }}{{ field.element_attributes }}>{{ field.content }}</{{ field.element_type }}>
 {%- else -%}
   {{ field.content }}

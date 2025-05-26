@@ -110,18 +110,18 @@
           padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
         }
       }
+    }
 
-      &-spotlight-body {
-        // Link color overrides for Canyon color pairing.
-        @include hb-themes(('colorful', 'airy')) {
-          .hc-pairing-canyon & {
-            a:not([class]), a.mailto, a[href^="mailto:"], a.ext {
-              color: var(--palette--primary);
+    p {
+      // Link color overrides for Canyon color pairing.
+      @include hb-themes(('colorful', 'airy')) {
+        .hc-pairing-canyon & {
+          a:not([class]), a.mailto, a[href^="mailto:"], a.ext {
+            color: var(--palette--primary);
 
-              &:hover,
-              &:focus {
-                color: var(--palette--tertiary-darken-20);
-              }
+            &:hover,
+            &:focus {
+              color: var(--palette--tertiary-darken-20);
             }
           }
         }

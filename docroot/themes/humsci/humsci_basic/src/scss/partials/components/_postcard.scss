@@ -54,18 +54,38 @@
       position: relative;
 
       a {
-        .fa-mailto {
-          display: none;
-        }
+      .fa-mailto {
+        display: none;
+      }
 
-        @include hb-themes(('colorful', 'airy')) {
-          @include hb-card-arrow-link;
-        }
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-card-arrow-link;
+      }
 
-        @include hb-traditional {
-          @include hb-more-link;
+      @include hb-traditional {
+        @include hb-more-link;
+
+        // Override link color and link icon for the Firefinch color pairing.
+        .ht-pairing-firefinch .hb-well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
+          color: var(--palette--tertiary);
+
+          &::after {
+            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
+          }
+
+          &:hover,
+          &:focus {
+            color: var(--palette--tertiary-darken-20);
+
+            &::after {
+              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
+            }
+          }
         }
       }
+    }
 
       &.decanter-button {
         @include hb-unbuttonize;

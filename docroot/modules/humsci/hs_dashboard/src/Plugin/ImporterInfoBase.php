@@ -144,7 +144,7 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
    */
   protected function lastImportTime(string $migration_id) {
     if ($last_imported = $this->lastImportedStore->get($migration_id, FALSE)) {
-      return $this->dateFormatter->format($last_imported / 1000, 'short');
+      return $this->dateFormatter->format($last_imported / 1000, 'humsci_default');
     }
     return $this->t('Unknown');
   }

@@ -82,7 +82,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
       ],
       'full_report' => [
         '#type' => 'link',
-        '#title' => $this->t('View Full Broken Links Report'),
+        '#title' => $this->t('View full broken links report'),
         '#url' => $this->getBrokenLinksReportUrl(),
         '#attributes' => [
           'class' => ['button', 'button--primary'],

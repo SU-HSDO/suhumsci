@@ -7,7 +7,6 @@ namespace Drupal\hs_dashboard;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
@@ -16,7 +15,6 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -55,13 +53,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
   protected $fileSystem;
 
   /**
-   * Date formatter interface.
-   *
-   * @var Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected DateFormatterInterface $dateFormatter;
-
-  /**
    * The configuration factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -77,25 +68,21 @@ class AnnouncementsManager implements ContainerInjectionInterface {
    *   The logger interface.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The logger interface.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
-   *   The date formatter interface.
    * @param Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The date formatter interface.
+   *   The config factory interface.
    */
   public function __construct(
     ClientInterface $http_client,
     LoggerChannelFactoryInterface $logger_factory,
     FileSystemInterface $file_system,
-    DateFormatterInterface $date_formatter,
     CacheBackendInterface $cache,
     ConfigFactoryInterface $config_factory,
   ) {
     $this->httpClient = $http_client;
     $this->logger = $logger_factory->get('hs_dashboard');
     $this->fileSystem = $file_system;
-    $this->dateFormatter = $date_formatter;
     $this->cache = $cache;
     $this->configFactory = $config_factory;
   }
@@ -108,7 +95,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       $container->get('http_client'),
       $container->get('logger.factory'),
       $container->get('file_system'),
-      $container->get('date.formatter'),
       $container->get('cache.default'),
       $container->get('config.factory'),
     );
@@ -155,7 +141,7 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       return $data;
 
     }
-    catch (RequestException $e) {
+    catch (\Exception $e) {
       $this->logger->error('Error retrieving CSV from {url}: {message}', [
         'url' => $csv_url,
         'message' => $e->getMessage(),
@@ -216,11 +202,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
       return $b[1] <=> $a[1];
     });
 
-    // Convert dates.
-    foreach ($rows as &$row) {
-      $row[1] = $this->formatDate($row[1]);
-    }
-
     return $rows;
   }
 
@@ -239,19 +220,6 @@ class AnnouncementsManager implements ContainerInjectionInterface {
 
     return $date ? $date->getTimestamp() : 0;
 
-  }
-
-  /**
-   * Converts a Unix timestamp into a Drupal formatted date.
-   *
-   * @param int $timestamp
-   *   The Unix timestamp.
-   *
-   * @return string
-   *   A formatted Drupal date.
-   */
-  private function formatDate(int $timestamp): string {
-    return $this->dateFormatter->format($timestamp, 'short_no_time');
   }
 
   /**

@@ -1,0 +1,39 @@
+// We need to use this ID selector to match the specificity of the styles we are overriding.
+#layout-builder-modal {
+  summary {
+    color: var(--palette--white);
+
+    &:hover,
+    &:focus {
+      color: var(--palette--white);
+    }
+
+    &::after {
+      top: hb-calculate-rems(12px);
+    }
+  }
+
+  details {
+    .form-item {
+      margin: 0.75em; // Use ems, to match the other padding styles being applied to this element.
+    }
+
+    summary {
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// Provides variables for jQuery.UI dialog.
+:root {
+  --jui-dialog-close-button-size: calc(var(--gin-spacing-m) * 2);
+  --jui-dialog-close-button-border-radius: 50%;
+  --jui-dialog-close-button-reserved-space: calc(var(--gin-spacing-m) * 4);
+  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--gin-spacing-m) * 3);
+  --jui-dialog-border-radius: hb-calculate-rems(2.5px);
+  --jui-dialog-box-shadow: 0 0 var(--gin-spacing-m) calc(var(--gin-spacing-m) / -4) var(--gin-color-text);
+  --jui-dialog-z-index: 1260;
+  --jui-dialog-off-canvas-z-index: 501;
+}

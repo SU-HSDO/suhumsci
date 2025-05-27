@@ -906,7 +906,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
     // Changes to the user form for SAML users.
     $form['account']['name']['#description'] = t('By default this is the SUNet ID. You can change this to their real name to make the content logs easier to understand.');
     $form['account']['saml_notice'] = [
-      '#markup' => t('NOTE: E-mail address and password are controlled through your Stanford ID.'),
+      '#markup' => t('<div class="user-form__suid-note"><strong>NOTE:</strong> E-mail address and password are controlled through your Stanford ID.</div>'),
       '#weight' => -1,
     ];
     $form['account']['mail']['#disabled'] = !$is_admin;

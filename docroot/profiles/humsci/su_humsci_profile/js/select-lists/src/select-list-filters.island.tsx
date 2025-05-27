@@ -12,6 +12,10 @@ const FilterIsland = ({}) => {
     setOriginalSelect(ref.current.parentNode.querySelector('select'));
     setLabel(ref.current.parentNode.querySelector('label').textContent);
 
+    // Add the same min width of the selector to parent.
+    const parent = ref.current.parentNode;
+    parent.style.minWidth = '250px';
+
     // Use visibility because when display none, the field isn't updated
     // sometimes after ajax.
     const origSelect = ref.current.parentNode.querySelector('select');

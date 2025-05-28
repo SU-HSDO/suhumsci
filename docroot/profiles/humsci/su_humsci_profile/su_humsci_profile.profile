@@ -129,6 +129,19 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
       $form['manual']['#title'] = $manual_label;
     }
   }
+
+  $form['login_title'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'h1',
+    '#value' => t('Log in to view this page.'),
+    '#weight' => -999,
+  ];
+
+  $form['intro_text'] = [
+    '#type' => 'markup',
+    '#markup' => '<h4>Stanford Login</h4><p>Access this site with your Stanford ID.</p>',
+    '#weight' => -998,
+  ];
 }
 
 /**

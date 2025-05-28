@@ -40,7 +40,86 @@ input[type="radio"] {
   }
 }
 
+main:has(.user-login-form) {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: hb-calculate-rems(128px) 0;
+
+  .block--page-title {
+    display: none;
+  }
+
+  // TODO: Remove this background.
+  background-color: var(--palette--gray);
+
+  // &::before {
+  //   content: "";
+  //   background-image: url(../../../../user-login-background-image.png);
+  // }
+}
+
 .user-login-form {
+  @include hb-page-width;
+
+  background-color: var(--palette--white);
+  padding: hb-calculate-rems(24px) hb-calculate-rems(48px);
+  margin-bottom: 0 !important;
+
+  @include grid-media-min('md') {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: hb-calculate-rems(32px);
+    align-items: start;
+
+    > h1,
+    > h4,
+    > p,
+    > a.samlauth-login {
+      grid-column: 1;
+    }
+
+    > details.form-wrapper {
+      grid-column: 2;
+    }
+  }
+
+  h1 {
+    display: block !important;
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(28px);
+    line-height: hb-calculate-rems(38px);
+    margin: 0;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(30px);
+    }
+  }
+
+  h4 {
+    margin-top: hb-calculate-rems(24px);
+    margin-bottom: hb-calculate-rems(22px);
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(21px);
+    line-height: 127%;
+
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(22px);
+    }
+  }
+
+  a.samlauth-login {
+    @include hb-big-button;
+
+    max-width: hb-calculate-rems(197px);
+    margin-top: hb-calculate-rems(26px);
+    background-color: #8C1515;
+    border-color: #8C1515;
+
+    &::after {
+      content: none;
+    }
+  }
+
   details.form-wrapper {
     border: 1px solid var(--palette--secondary-darken-12);
 

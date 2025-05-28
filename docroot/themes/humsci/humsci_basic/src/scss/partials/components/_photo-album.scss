@@ -22,6 +22,52 @@
         }
       }
     }
+
+    // Override links color and links with icons for the Firefinch color pairing.
+    @include hb-traditional {
+      .hb-well &,
+      .hs-paragraph-style--well &,
+      .hs-paragraph-style--well-full-width &,
+      .hs-breakout-box {
+        .ht-pairing-firefinch & {
+          a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
+            color: var(--palette--tertiary);
+  
+            &:hover,
+            &:focus {
+              color: var(--palette--tertiary-darken-20);
+            }
+          }
+  
+          // Ensure that the private link icon color and more link icon color are correct.
+          a.hs-private-link {
+            &::before {
+              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
+            }
+  
+            &:hover,
+            &:focus {
+              &::before {
+                background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
+              }
+            }
+          }
+  
+          a.hs-more-link {
+            &::after {
+              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
+            }
+  
+            &:hover,
+            &:focus {
+              &::after {
+                background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   .su-gallery-button a {

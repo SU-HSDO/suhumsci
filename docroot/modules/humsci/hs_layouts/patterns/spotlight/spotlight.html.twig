@@ -9,7 +9,7 @@
 {% if overlay_text['field_hs_spotlight_title'] is defined and overlay_text['field_hs_spotlight_title'][0] is defined %}
   {% set text_content %}
     <{{ heading_tag }} class="hb-spotlight__title">
-      {{ overlay_text['field_hs_spotlight_title']|render|striptags }}
+      {{ overlay_text['field_hs_spotlight_title'] }}
     </{{ heading_tag }}>
     {{ overlay_text|without('field_hs_spotlight_title') }}
   {% endset %}

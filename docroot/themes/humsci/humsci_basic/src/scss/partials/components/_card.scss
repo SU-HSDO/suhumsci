@@ -144,30 +144,23 @@
       @include visually-hidden;
     }
 
-    display: block;
-    padding: 0 hb-calculate-rems(4px) 0 hb-calculate-rems(28px);
-    line-height: 127%; // keep icons from being cropped at smaller screen sizes
+    .field-content {
+      display: block;
+      padding: 0 hb-calculate-rems(4px) 0 hb-calculate-rems(28px);
+      line-height: 127%; // keep icons from being cropped at smaller screen sizes
 
-    &.hb-card__subcontent-detail {
-      padding-right: hb-calculate-rems(26px);
-    }
+      @include hb-themes(('colorful', 'airy')) {
+        font-size: hb-calculate-rems(16px);
+      }
 
-    @include hb-themes(('colorful', 'airy')) {
-      font-size: hb-calculate-rems(16px);
-    }
-
-    @include hb-traditional {
-      font-size: hb-calculate-rems(18px);
-    }
-
-    .hb-dark-pattern &,
-    .hb-dark-inversion .views-element-container & {
-      color: var(--palette--white);
+      @include hb-traditional {
+        font-size: hb-calculate-rems(18px);
+      }
     }
 
     &--date {
       // only apply calendar icon when the label exists
-      &:has([class*="views-label-field-hs-event-date"]) {
+      [class*="views-label-field-hs-event-date"]+.field-content {
         @include hb-icon-type($type: 'calendar', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -179,7 +172,7 @@
 
     &--location {
       // only apply location pin icon when the label exists
-      &:has([class*="views-label-field-hs-event-location"]) {
+      [class*="views-label-field-hs-event-location"]+.field-content {
         @include hb-icon-type($type: 'location', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -191,7 +184,7 @@
 
     &--speaker {
       // only apply speaker icon when the label exists
-      &:has([class*="views-label-field-hs-event-speaker"]) {
+      [class*="views-label-field-hs-event-speaker"]+.field-content {
         @include hb-icon-type($type: 'speaker', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -399,8 +392,8 @@
       font-size: hb-calculate-rems(36px);
       padding: hb-calculate-rems(10px) 0;
 
-      .views-element-container .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
+      .views-element-container .hb-dark-pattern & .field-content,
+      .hb-dark-inversion .views-element-container & .field-content {
         @include hb-traditional {
           color: var(--palette--primary);
         }
@@ -507,14 +500,6 @@
           &:focus {
             color: var(--palette--black);
           }
-        }
-      }
-
-    .hb-dark-pattern &,
-    .hb-dark-inversion .views-element-container & {
-      &:hover,
-      &:focus {
-        color: var(--palette--white);
         }
       }
     }
@@ -629,6 +614,10 @@
     align-items: center;
     width: 100%; // large area to click
     position: relative;
+
+    .views-field {
+      width: 100%;
+    }
 
     a {
       // added to keep hb-dark-pattern from using the :not(class) on these links

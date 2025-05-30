@@ -739,9 +739,6 @@ function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $
     return;
   }
 
-  // Grab the default display settings for use later.
-  $default_display = EntityViewDisplay::load("node.{$node->bundle()}.default");
-
   $imported_fields = _hs_field_helpers_get_imported_fields($node);
 
   if (!empty($imported_fields)) {
@@ -750,18 +747,8 @@ function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $
   }
 
   foreach ($imported_fields as $field_name) {
-    // If the default display is configured with some settings, let's use that
-    // for the best display on the entity form.
-    if ($display_component = $default_display->getComponent($field_name)) {
-      $component['settings']['formatter_type'] = $display_component['type'];
-      $component['settings']['formatter_settings'][$display_component['type']] = $display_component['settings'];
-      $component['settings']['formatter_third_party_settings'] = $display_component['third_party_settings'] ?? [];
-
-      // Add the empty fields module settings to display a message.
-      $component['settings']['formatter_third_party_settings']['empty_fields']['handler'] = 'text';
-      $component['settings']['formatter_third_party_settings']['empty_fields']['settings']['empty_text'] = '<em>' . t('No Data') . '</em>';
-      $component['settings']['formatter_third_party_settings']['stanford_migrate']['readonly'] = TRUE;
-    }
+    // Remove the readonly_field_widget type.
+    $component['type'] = NULL;
     $form_display->setComponent($field_name, $component);
   }
 }
@@ -772,8 +759,6 @@ function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $
 function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
 
   // Disables the field if it's imported.
-  // Code to determine if field is imported is from stanford_migrate.
-  // @see stanford_migrate_entity_form_display_alter.
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node && !$node instanceof NodeInterface) {
     return;
@@ -800,6 +785,8 @@ function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form
  */
 function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
 
+  // Code to determine if field is imported is from stanford_migrate.
+  // @see stanford_migrate_entity_form_display_alter.
   $imported_fields = [];
 
   $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);

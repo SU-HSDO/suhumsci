@@ -732,8 +732,8 @@ function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_
  * Implements hook_entity_form_display_alter().
  */
 function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
-  // We only care about nodes, but this could be expanded later if more entities
-  // are imported.
+  // In order to disable the fields rather than use readonly_field_widget
+  // we need to remove the readonly_field_widget type and disable the fields.
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($context['entity_type'] != 'node' || !$node) {
     return;

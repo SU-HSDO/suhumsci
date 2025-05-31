@@ -32,7 +32,7 @@ class MenuLinkTreeOverride implements MenuLinkTreeInterface {
    */
   public function build(array $tree) {
     $build = $this->menuTree->build($tree);
-    $build['#cache']['tags'][] = 'stanford_profile_helper:menu_links';
+    $build['#cache']['tags'][] = 'su_humsci_profile:menu_links';
     // Remove node cache tags since we'll use our own cache tag above.
     HumsciCleanup::removeCacheTags($build, [
       '^node:*',

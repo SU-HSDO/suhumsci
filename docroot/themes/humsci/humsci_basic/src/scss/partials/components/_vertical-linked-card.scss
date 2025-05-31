@@ -160,7 +160,6 @@
     @include hb-description;
     word-break: break-word;
     flex: 1 1 auto;
-    margin-bottom: 0;
 
     @include hb-themes(('airy', 'colorful')) {
       padding: hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
@@ -179,6 +178,10 @@
 
     @include grid-media-min('sm') {
       font-size: hb-calculate-rems(18px);
+    }
+
+    .field-hs-postcard-body {
+      margin-bottom: 0;
     }
 
     a,
@@ -218,7 +221,7 @@
       }
     }
 
-    a.hs-private-link {
+    .field-hs-postcard-body a.hs-private-link {
       // Need extra nesting level for specificity.
       &::before {
         @include hb-traditional {

@@ -234,7 +234,6 @@ const SelectList = ({
   });
 
   useEffect(() => {
-    if (!listboxVisible && value.length > 0) {
     if (!listboxVisible && value && value.length > 0) {
       listboxVisible && listboxRef.current?.focus();
     }
@@ -270,8 +269,8 @@ const SelectList = ({
         <div
           id={labelId}
           style={{
-            marginBottom: '1.2rem',
-            fontSize: '1.8rem',
+            marginBottom: '0.75rem',
+            fontSize: '1.125rem',
             fontWeight: '600',
           }}
         >

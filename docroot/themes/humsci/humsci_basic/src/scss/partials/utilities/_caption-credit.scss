@@ -1,5 +1,7 @@
-.field-media-image {
-  + .field-media-image-caption {
+.hb-caption-credit-image,
+.hb-media-image,
+article {
+  .field-media-image-caption {
     @include hb-caption-credit;
 
     h1,
@@ -57,8 +59,10 @@
 
 // Refine caption/credit styles for vertical linked postcards
 .hb-vertical-linked-card {
-  .field-media-image {
-    + .field-media-image-caption {
+  .hb-caption-credit-image,
+  .hb-media-image,
+  article {
+    .field-media-image-caption {
       @include hb-themes(('airy', 'colorful')) {
         @include grid-media-min('xs') {
           font-size: hb-calculate-rems(12px);

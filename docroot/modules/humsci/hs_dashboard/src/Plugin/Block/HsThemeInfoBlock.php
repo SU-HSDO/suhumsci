@@ -63,11 +63,30 @@ class HsThemeInfoBlock extends BlockBase implements ContainerFactoryPluginInterf
 
     return [
       '#theme' => 'hs_theme_info_block',
-      '#theme_name' => $name,
-      '#color_pairing' => $colors,
+      '#theme_name' => $this->getThemeName($name),
+      '#color_pairing' => ucfirst($colors),
       '#animation_enhancements' => AnimationStatus::fromTheme($name)->value,
-      '#help_text' => $this->t('Contact H&S Web for changes.'),
+      '#help_text' => $this->t('Visit the <a href=":colorful" target="_blank">Colorful theme reference website</a> or the <a href=":traditional" target="_blank">Traditional theme reference website</a> for inspiration and to see examples of the different color pairing options.', [
+        ':colorful' => 'https://hsweb-referencecolorful.stanford.edu/',
+        ':traditional' => 'https://hsweb-referencetraditional.stanford.edu/',
+      ]),
     ];
+  }
+
+  /**
+   * Returns the user friendly name of the theme from its machine name.
+   *
+   * @param string $machine_name
+   *   The machine name of the theme.
+   *
+   * @return string
+   */
+  protected function getThemeName($machine_name) {
+    $themes = [
+      'humsci_colorful' => 'Colorful',
+      'humsci_traditional' => 'Traditional',
+    ];
+    return $themes[$machine_name] ?? $machine_name;
   }
 
 }

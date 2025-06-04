@@ -4,7 +4,6 @@
  * Class MediaCest.
  *
  * @group install
- * @group existingSite
  * @group media
  */
 class MediaCest {

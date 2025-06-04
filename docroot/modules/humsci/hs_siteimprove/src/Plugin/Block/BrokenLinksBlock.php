@@ -72,7 +72,6 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
       return [
       '#type' => 'html_tag',
       '#tag' => 'div',
-      '#attributes' => ['class' => ['siteimprove-no-broken-links-wrapper']],
       '#value' => $this->t('No broken links found'),
     ];
     }

@@ -73,7 +73,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
         '#type' => 'html_tag',
         '#tag' => 'div',
         '#value' => $this->t('No broken links found'),
-    ];
+      ];
     }
 
     $build = [

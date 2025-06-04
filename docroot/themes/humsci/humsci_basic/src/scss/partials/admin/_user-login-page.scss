@@ -2,7 +2,7 @@ main:has(.user-login-form) {
   width: 100% !important;
   max-width: 100% !important;
   height: 100%;
-  min-height: 100vh; 
+  max-height: hb-calculate-rems(571px);
   padding: hb-calculate-rems(128px) 0;
   background-image: url("/themes/humsci/humsci_basic/images/user-login-background-image.png");
   background-position: center;
@@ -18,13 +18,11 @@ main:has(.user-login-form) {
   padding: hb-calculate-rems(24px);
   max-width: hb-calculate-rems(900px);
   width: auto;
-  margin: hb-calculate-rems(24px);
-  margin-bottom: hb-calculate-rems(24px) !important;
+  margin: hb-calculate-rems(24px) !important;
 
   @include grid-media-min('md') {
     width: fit-content;
-    margin: 0 auto;
-    margin-bottom: 0 !important;
+    margin: 0 auto !important;
     padding: hb-calculate-rems(24px) hb-calculate-rems(32px);
   }
 
@@ -33,7 +31,7 @@ main:has(.user-login-form) {
   }
 
   div[data-drupal-selector="edit-intro-text"] h1 {
-    display: block !important;
+    display: block;
     font-weight: hb-theme-font-weight(semibold);
     font-size: hb-calculate-rems(28px);
     line-height: hb-calculate-rems(38px);
@@ -76,8 +74,7 @@ main:has(.user-login-form) {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: start;
-      margin: hb-calculate-rems(24px);
-      margin-bottom: hb-calculate-rems(24px) !important;
+      margin: hb-calculate-rems(24px) !important;
 
       div[data-drupal-selector="edit-intro-text"],
       a.samlauth-login {
@@ -99,8 +96,7 @@ main:has(.user-login-form) {
     }
 
     @include grid-media-min('lg') {
-      margin: 0 auto;
-      margin-bottom: 0 !important;
+      margin: 0 auto !important;
     }
   }
 
@@ -126,6 +122,7 @@ main:has(.user-login-form) {
       padding: 0;
       border: none;
       cursor: none;
+      pointer-events: none;
       width: fit-content;
       margin-top: 0;
 

@@ -135,20 +135,20 @@ function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface
     '#tag' => 'div',
     '#weight' => -999,
     [
-        '#type' => 'html_tag',
-        '#tag' => 'h1',
-        '#value' => t('Log in to view this page.'),
+      '#type' => 'html_tag',
+      '#tag' => 'h1',
+      '#value' => t('Log in to view this page.'),
     ],
     [
-        '#type' => 'html_tag',
-        '#tag' => 'h4',
-        '#value' => t('Stanford Login'),
+      '#type' => 'html_tag',
+      '#tag' => 'h4',
+      '#value' => t('Stanford Login'),
     ],
     [
-        '#type' => 'html_tag',
-        '#tag' => 'p',
-        '#value' => t('Access this site with your Stanford ID'),
-    ]
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => t('Access this site with your Stanford ID'),
+    ],
   ];
 }
 

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - views.view.dashboard_entityqueue
     - views.view.duplicate_people
     - views.view.editoria11y_results
     - views.view.my_latest_edits
@@ -88,6 +89,27 @@ layout:
         region: content
         configuration:
           id: 'views_block:duplicate_people-block_1'
+          label: ''
+          label_display: visible
+          provider: views
+          context_mapping: {  }
+          views_label: ''
+          items_per_page: none
+          exposed: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'Content Sorting Section'
+      context_mapping: {  }
+    components:
+      36857474-0fa2-48b0-8b32-b129e92cefa6:
+        uuid: 36857474-0fa2-48b0-8b32-b129e92cefa6
+        region: content
+        configuration:
+          id: 'views_block:dashboard_entityqueue-block_sorting'
           label: ''
           label_display: visible
           provider: views

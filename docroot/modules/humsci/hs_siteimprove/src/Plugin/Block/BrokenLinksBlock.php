@@ -58,14 +58,6 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge() {
-    // 5 minutes in seconds
-    return 300;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build() {
     $pages = $this->siteImprove->getPagesWithBrokenLinks();
     if (!$pages) {

@@ -12,6 +12,13 @@
     }
   }
 
+  // slick dots do not display in mobile
+  .slick-dots {
+    @include grid-media-max('sm') {
+      @include visually-hidden;
+    }
+  }
+
   &:has(.hb-spotlight--expanded) {
     .slick-dots {
       bottom: 0;

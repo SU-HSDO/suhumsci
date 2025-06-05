@@ -67,6 +67,7 @@ class HsEntityTypeForm extends BundleEntityFormBase {
     $status = $entity_type->save();
 
     $t_args = ['%name' => $entity_type->label()];
+    $message = FALSE;
     if ($status == SAVED_UPDATED) {
       $message = $this->t('The HumSci entity type %name has been updated.', $t_args);
     }

@@ -67,6 +67,12 @@ main:has(.user-login-form) {
     &::after {
       content: none;
     }
+
+    &:hover,
+    &:focus {
+      background-color: darken(#8c1515, 12%);
+      border-color: darken(#8c1515, 12%);
+    }
   }
 
   &:has(details.form-wrapper) {
@@ -104,7 +110,7 @@ main:has(.user-login-form) {
   details[open].form-wrapper {
     margin: hb-calculate-rems(32px) hb-calculate-rems(-24px) hb-calculate-rems(-24px);
     padding: hb-calculate-rems(24px);
-    background-color: var(--palette--secondary-highlight);
+    background-color: #e8e9ea;
     
     @include grid-media-min('md') {
       margin: hb-calculate-rems(-24px) hb-calculate-rems(-32px) hb-calculate-rems(-24px) 0;
@@ -170,6 +176,17 @@ main:has(.user-login-form) {
           display: inline-block;
           margin-top: 0;
           width: auto;
+        }
+      }
+
+      .button {
+        background-color: #2b2e13;
+        border-color: #2b2e13;
+
+        &:hover,
+        &:focus {
+          background-color: var(--palette--black);
+          border-color: var(--palette--black)
         }
       }
     }

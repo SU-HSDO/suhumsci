@@ -1,4 +1,5 @@
 @use 'sass:math';
+@use '../settings/variables.general' as *;
 
 // Calculate rems based upon the root font size
 // of 10px which matches the root font size in
@@ -77,20 +78,6 @@
 ///
 @function is-integer($value) {
   @return is-number($value) and round($value) == $value;
-}
-
-///
-/// Validates whether something is a direction or an angle
-///
-/// @name is-direction-or-angle
-///
-/// @param {Integer} $value - the value to type check
-///
-@function is-direction-or-angle($value) {
-  $is-direction: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
-  $is-angle: type-of($value) == 'number' and index('deg' 'grad' 'turn' 'rad', unit($value));
-
-  @return $is-direction or $is-angle;
 }
 
 /// Map deep get

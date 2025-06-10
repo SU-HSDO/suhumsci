@@ -3,8 +3,8 @@
 namespace Drupal\hs_dashboard\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\hs_dashboard\AnimationStatus;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,11 +19,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HsThemeInfoBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The theme manager.
+   * The config factory.
    *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $themeManager;
+  protected $configFactory;
 
   /**
    * Constructs a new HsThemeInfoBlock instance.
@@ -34,12 +34,12 @@ class HsThemeInfoBlock extends BlockBase implements ContainerFactoryPluginInterf
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ThemeManagerInterface $theme_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->themeManager = $theme_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -50,7 +50,7 @@ class HsThemeInfoBlock extends BlockBase implements ContainerFactoryPluginInterf
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('theme.manager')
+      $container->get('config.factory')
     );
   }
 
@@ -58,7 +58,7 @@ class HsThemeInfoBlock extends BlockBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function build() {
-    $name = \Drupal::config('system.theme')->get('default');
+    $name = $this->configFactory->get('system.theme')->get('default');
     $colors = theme_get_setting('theme_color_pairing', $name) ?: 'not set';
 
     return [

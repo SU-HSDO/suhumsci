@@ -55,6 +55,16 @@ html .dashboard-content.user-logged-in {
   margin-block-end: 31px;
 }
 
+/* Equal height columns */
+.dashboard-content .layout .layout__region {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-content .layout .layout__region .block {
+  flex-grow: 1;
+}
+
 .dashboard-content .layout .layout__region .block a,
 .dashboard-content .layout .layout__region .block li::marker {
   color: var(--color-dashboard-brick-red);
@@ -262,4 +272,20 @@ html .dashboard-content.user-logged-in {
 .dashboard-content .layout .layout__region .block:not(.block-hs-dashboard-importers) .layer-wrapper.gin-layer-wrapper:has(table) {
   margin-inline: var(--space-s);
   margin-block-end: var(--space-s);
+}
+
+/* Theme info block */
+.dashboard-content .block-hs-theme-info-block dl div {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: var(--gin-spacing-xxs);
+}
+
+.dashboard-content .block-hs-theme-info-block dl div dt::after {
+  content: ":";
+  margin-inline-end: var(--gin-spacing-xxs);
+}
+
+.dashboard-content .block-hs-theme-info-block dl div dd {
+  margin: 0;
 }

@@ -226,6 +226,16 @@ body.gin--edit-form .views-exposed-form .select-preact button svg {
   display: table;
 }
 
+/* Role description styles */
+.user-form [id*="form-item--role"] .form-item__label,
+.user-form [class*="form-item--role"] .form-item__description {
+  display: inline-block;
+}
+
+.user-form [class*="form-item--role"] .form-item__description::before {
+  content: "—";
+}
+
 /* Imported nodes forms with disabled fields */
 main:has(form[data-has-imported-fields]) .messages-list .messages--warning {
   background: var(--gin-color-disabled-bg);

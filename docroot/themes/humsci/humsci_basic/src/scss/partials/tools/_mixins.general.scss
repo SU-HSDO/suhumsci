@@ -273,3 +273,40 @@
     z-index: $hb-z-index-small-1;
   }
 }
+
+///
+/// To be used for light text on a dark background only.
+///
+/// @name font-smoothing
+///
+@mixin font-smoothing($value: antialiased) {
+  @if $value == antialiased {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  } @else {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+///
+/// A mixin to create the Stanford logo with the ligature font.
+///
+/// @name logo
+///
+@mixin logo {
+  display: inline-block;
+  font-family: Stanford, 'Source Serif 4', 'Source Serif Pro', Georgia, Times, 'Times New Roman', serif;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  text-decoration: none;
+  line-height: 0.75;
+  transform: translateZ(0);
+  letter-spacing: 0;
+  font-feature-settings: "liga";
+  font-variant-ligatures: discretionary-ligatures;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -5,8 +5,6 @@ use Faker\Factory;
 
 /**
  * Class MenuItemsCest.
- *
- * @group existingSite
  */
 class MenuItemsCest {
 

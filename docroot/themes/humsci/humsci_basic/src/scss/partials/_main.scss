@@ -4,43 +4,18 @@
 // Declare here variables that we might need to override when importing using 'meta.load-css'.
 $hb-current-theme: 'traditional' !default;
 
-// Here we add the path to Font Awesome to prevent console errors from Decanter
-$fa-font-path: "../../humsci_basic/node_modules/@fortawesome/fontawesome-free/webfonts";
-
 @import
-  // Decanter variable overrides (hard-coded rem values).
-  'settings/variables.decanter-overrides',
-  // =====================================================================
-  // DECANTER (matching how they bring in their imports in decanter.scss)
-  // =====================================================================
-
-  // Normalize, Vendors
-  'decanter/core/src/scss/core/normalize',
-
-  // Grid
-  // Pulls in the flexbox based grid system
-  'decanter/core/src/scss/decanter-grid',
-
-  // Core elements
-  // Decanter font imports and sources
-  'decanter/core/src/scss/core/fonts',
-  'decanter/core/src/scss/core/base',
-  'decanter/core/src/scss/elements/image',
-
-  // Components
-  // Below here are Decanter specific components we probably want the styles for:
-  'decanter/core/src/scss/components/brand-bar',
-  'decanter/core/src/scss/components/lockup',
-  'decanter/core/src/scss/components/global-footer',
-  'decanter/core/src/scss/components/skiplinks',
-
   // Base imports (Variables, functions, mixins).
   'base-imports',
+
+  // Font definitions.
+  'fonts/fonts',
 
   // =====================================================================
   // Elements
   // Styling for bare HTML elements (like H1, A, etc.). These come with
   // default styling from the browser so we can redefine them here.
+  'elements/normalize',
   'elements/base',
   'elements/forms',
   'elements/tables',
@@ -50,6 +25,7 @@ $fa-font-path: "../../humsci_basic/node_modules/@fortawesome/fontawesome-free/we
   // Objects
   // Class-based selectors which define undecorated design patterns,
   // for example media object known from OOCSS.
+  'objects/layouts.flex-grid',
   'objects/layouts.general',
   'objects/layouts.views',
 
@@ -57,6 +33,9 @@ $fa-font-path: "../../humsci_basic/node_modules/@fortawesome/fontawesome-free/we
   // Components
   // Specific UI components. This is where majority of our work takes place
   // and our UI components are often composed of Objects and Components
+  'components/brand-bar',
+  'components/skiplinks',
+  'components/lockup',
   'components/masthead',
   'components/global-footer',
   'components/site-search',

@@ -108,9 +108,13 @@ html .dashboard-content.user-logged-in {
   background: var(--color-dashboard-ivory-sand);
   border-radius: 8px;
   margin: 0 0 var(--space-s);
-  padding: 0.5rem 1.5rem;
+  padding: var(--gin-spacing-xs) var(--gin-spacing-l);
   font-size: 1.25rem;
   font-weight: 500;
+}
+
+.dashboard-content .layout .layout__region .block .item-list ul {
+  margin-inline-start: 0;
 }
 
 .dashboard-content .layout .layout__region .block .views-field-operations .dropbutton {
@@ -257,6 +261,17 @@ html .dashboard-content.user-logged-in {
 .dashboard-content .layout .layout__region .block .pager__link.is-active,
 .dashboard-content .layout .layout__region .block .pager__link:hover {
   color: var(--color-dashboard-white);
+}
+
+.dashboard-content .layout .layout__region .block:not(.views-element-container) > *:not(.layer-wrapper) {
+  padding-left: var(--gin-spacing-l);
+  padding-right: var(--gin-spacing-l);
+}
+
+.dashboard-content .layout .layout__region .block:not(.block-hs-dashboard-importers) > div:has(table),
+.dashboard-content .layout .layout__region .block:not(.block-hs-dashboard-importers) .layer-wrapper.gin-layer-wrapper:has(table) {
+  margin-inline: var(--space-s);
+  margin-block-end: var(--space-s);
 }
 
 /* Theme info block */

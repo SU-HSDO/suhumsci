@@ -760,7 +760,7 @@ function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form
 
   // Disables the field if it's imported.
   $node = \Drupal::routeMatch()->getParameter('node');
-  if ($node && !$node instanceof NodeInterface) {
+  if (!$node || !$node instanceof NodeInterface) {
     return;
   }
 

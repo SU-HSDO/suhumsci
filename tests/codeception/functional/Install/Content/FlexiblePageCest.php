@@ -437,17 +437,16 @@ class FlexiblePageCest {
     $I->fillField('.js-layout-builder-filter', 'back to top');
     $I->waitForText('Back To Top Block');
     $I->click('Back To Top Block');
-    // Wait for the modal/dialog to be visible before waiting for text.
     $I->waitForText('Configure block', 30);
     $I->click('Add block');
     $I->waitForElementNotVisible('.ui-dialog-position-side');
-    $I->executeJS('window.scrollTo(0,0);');
-    // Wait for the Save layout button to be enabled instead of a fixed wait.
-    $I->click('Save layout');
+    $I->scrollTo('#header');
+    // Use a fixed wait to ensure the dialog has time to close.
+    $I->wait(1);
+    $I->click('#edit-submit');
     $I->waitForText('Back To Top');
     $I->executeJS('window.scrollTo(0,document.body.scrollHeight);');
     $I->waitForElement('.hs-back-to-top');
-    // Assert the Back To Top block is present and visible.
     $I->seeElement('.hs-back-to-top');
   }
 

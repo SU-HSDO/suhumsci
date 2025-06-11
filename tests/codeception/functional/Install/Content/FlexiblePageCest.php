@@ -439,7 +439,7 @@ class FlexiblePageCest {
     $I->click('Back To Top Block');
     // Wait for the modal/dialog to be visible before waiting for text.
     $I->waitForElementVisible('.ui-dialog', 15);
-    $I->canSee('Configure block');
+    $I->waitForText('Configure block');
     $I->click('Add block');
     $I->waitForElementNotVisible('.ui-dialog-position-side');
     $I->executeJS('window.scrollTo(0,0);');

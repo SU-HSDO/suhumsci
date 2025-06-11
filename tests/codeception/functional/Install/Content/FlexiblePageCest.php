@@ -443,11 +443,14 @@ class FlexiblePageCest {
     $I->click('Add block');
     $I->waitForElementNotVisible('.ui-dialog-position-side');
     $I->executeJS('window.scrollTo(0,0);');
-    $I->wait(1);
+    // Wait for the Save layout button to be enabled instead of a fixed wait.
+    $I->waitForElementClickable('Save layout');
     $I->click('Save layout');
     $I->waitForText('Back To Top');
     $I->executeJS('window.scrollTo(0,document.body.scrollHeight);');
     $I->waitForElement('.hs-back-to-top');
+    // Assert the Back To Top block is present and visible.
+    $I->seeElement('.hs-back-to-top');
   }
 
   /**

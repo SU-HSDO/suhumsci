@@ -172,7 +172,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    * {@inheritDoc}
    */
   public function getNoDataCaption(): TranslatableMarkup {
-    return $this->t('<em>There are no Localist importers configured.</em>');
+    return $this->t('<em>There are no Stanford Events importers configured.</em>');
   }
 
   /**

@@ -106,7 +106,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    * {@inheritDoc}
    */
   public function getNoDataCaption(): TranslatableMarkup {
-    return $this->t('<em>There are no course importers configured.</em>');
+    return $this->t('<em>There are no Stanford Courses importers configured.</em>');
   }
 
   /**

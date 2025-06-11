@@ -443,7 +443,6 @@ class FlexiblePageCest {
     $I->waitForElementNotVisible('.ui-dialog-position-side');
     $I->executeJS('window.scrollTo(0,0);');
     // Wait for the Save layout button to be enabled instead of a fixed wait.
-    $I->waitForElementClickable('Save layout');
     $I->click('Save layout');
     $I->waitForText('Back To Top');
     $I->executeJS('window.scrollTo(0,document.body.scrollHeight);');

@@ -175,6 +175,25 @@
           background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
         }
       }
+
+      // Link color overrides for Mountain color pairing.
+      .hc-pairing-mountain .hb-well &,
+      .hc-pairing-mountain & .hs-well,
+      .hc-pairing-mountain .hs-paragraph-style--well &,
+      .hc-pairing-mountain .hs-paragraph-style--well-full-width & {
+        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
+          color: var(--palette--primary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--tertiary-darken-20);
+          }
+        }
+
+        a.hs-external-link::after {
+          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'primary')));
+        }
+      }
     }
 
     @include hb-traditional {

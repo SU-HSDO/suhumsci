@@ -55,6 +55,20 @@
         }
       }
     }
+
+    // Link color overrides for Mountain color pairing.
+    a:not([class]), a.mailto, a[href^="mailto:"], a.ext {
+      @include hb-themes(('colorful', 'airy')) {
+        .hc-pairing-mountain & {
+          color: var(--palette--secondary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--secondary-darken-12);
+          }
+        }
+      }
+    }
   }
 
   &__heading {

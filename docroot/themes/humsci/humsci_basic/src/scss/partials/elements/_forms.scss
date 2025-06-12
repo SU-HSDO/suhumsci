@@ -1,0 +1,41 @@
+label {
+  display: block;
+  width: 100%;
+  margin-bottom: hb-calculate-rems(12px);
+  font-weight: hb-theme-font-weight(semibold);
+}
+
+input {
+  line-height: 1;
+  font-size: hb-calculate-rems(16px);
+
+  padding: $hb-input-padding;
+  min-height: $hb-input-min-height;
+  width: 100%;
+
+  @include hb-input-border;
+
+  &:focus {
+    @include hb-focus;
+  }
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  line-height: normal;
+  min-height: 0;
+  width: auto;
+
+  + label {
+    display: inline-block;
+    width: auto;
+    margin-bottom: 0;
+    margin-top: hb-calculate-rems(4px);
+  }
+}
+
+.form-item {
+  select {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,181 @@
+// Base pager styles use by both the mini and full pagers
+.js-pager__items {
+  margin: hb-spacing-width() 0;
+  padding: 0;
+  text-align: center;
+
+  li {
+    display: inline;
+    font-weight: hb-theme-font-weight(semibold);
+    margin: hb-calculate-rems(10px);
+  }
+
+  li:not(.pager__item),
+  .pager__item--first,
+  .pager__item--last,
+  .pager__item--next,
+  .pager__item--previous {
+    a {
+      color: var(--palette--secondary);
+      text-decoration: none;
+
+      &:focus,
+      &:hover {
+        color: var(--palette--secondary);
+        text-decoration: underline;
+        background-image: none;
+        background-color: transparent;
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          color: var(--palette--tertiary-highlight);
+        }
+      }
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border: none;
+        color: var(--palette--tertiary-reversed);
+      }
+
+      @include hb-colorful {
+        .hc-pairing-ocean & {
+          color: var(--palette--secondary-darken-12);
+        }
+      }
+
+      @include hb-traditional {
+        // Override link color and icon color for the Firefinch color pairing.
+        .ht-pairing-firefinch .hb-well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well &,
+        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
+          color: var(--palette--tertiary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--tertiary-darken-20);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Full pager classes
+// These styles are for the page numbers only shown in the full pager.
+.pager {
+  &__items {
+    list-style: none;
+    margin: hb-calculate-rems(6px) 0 0;
+  }
+
+  &__item {
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    a {
+      color: var(--palette--gray-dark);
+      display: inline-block;
+      padding: hb-calculate-rems(6px) hb-calculate-rems(9px);
+      border-radius: $hb-button-border-radius;
+      min-width: hb-calculate-rems(31px);
+      text-align: center;
+      text-decoration: none;
+      transition: hb-transition(background-color);
+      background-image: none;
+
+      // adjust padding for increase of font-size and line-height
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(6px) hb-calculate-rems(12px);
+      }
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border: $hb-thin-border;
+        border-color: transparent;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: var(--palette--gray-medium);
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          background-color: transparent;
+          border-color: var(--palette--tertiary-highlight);
+        }
+      }
+    }
+
+    &.is-active {
+      background-color: var(--palette--gray-dark);
+      display: inline-block;
+      border-radius: $hb-button-border-radius;
+
+      a {
+        color: var(--palette--white);
+
+        &:hover,
+        &:focus {
+          cursor: default;
+          background-color: transparent;
+        }
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          color: var(--palette--tertiary-highlight);
+        }
+      }
+    }
+
+    // Warbler color pairing override.
+    @include hb-traditional {
+      .ht-pairing-warbler & {
+        a {
+          color: var(--palette--gray-dark);
+
+          &:hover, &:focus {
+            color: var(--palette--tertiary-darken-20);
+          }
+
+        }
+
+        .hs-button, .hs-button a,
+        .hs-button--big, .hs-button--big a {
+          &, &:hover, &:focus {
+            color: var(--palette--white);
+          }
+        }
+
+        .hs-secondary-button, .hs-secondary-button a {
+          color: var(--palette--secondary);
+
+          &:hover, &:focus {
+            color: var(--palette--white);
+          }
+        }
+
+        &.is-active {
+          a {
+            &, &:hover, &:focus {
+              color: var(--palette--white);
+            }
+          }
+        }
+
+        &--first, &--last, &--next, &--previous {
+          a {
+            &, &:hover, &:focus {
+              color: var(--palette--secondary);
+            }
+          }
+        }
+      }
+    }
+  }
+}

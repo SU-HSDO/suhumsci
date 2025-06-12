@@ -16,7 +16,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\menu_position\Entity\MenuPositionRule;
 use Drupal\node\NodeInterface;
@@ -125,11 +124,32 @@ function su_humsci_profile_entity_type_alter(array &$entity_types) {
 function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
   if (isset($form['manual']['#open'])) {
     $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
+    $form['manual']['#open'] = TRUE;
     if ($manual_label) {
-      $form['manual']['#open'] = TRUE;
-      $form['manual']['#title'] = $manual_label;
+      $form['manual']['#title'] = $manual_label ?: t('Local Login');
     }
   }
+
+  $form['intro_text'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#weight' => -999,
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'h1',
+      '#value' => t('Log in to view this page.'),
+    ],
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'h4',
+      '#value' => t('Stanford Login'),
+    ],
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => t('Access this site with your Stanford ID'),
+    ],
+  ];
 }
 
 /**
@@ -462,20 +482,6 @@ function su_humsci_profile_menu_link_content_insert(MenuLinkContentInterface $en
  */
 function _su_humsci_clear_menu_cache_tags() {
   Cache::invalidateTags(['su_humsci_profile:menu_links']);
-}
-
-/**
- * Implements hook_entity_operation_alter().
- */
-function su_humsci_profile_entity_operation_alter(array &$operations, EntityInterface $entity) {
-  $role_delegation = \Drupal::moduleHandler()->moduleExists('role_delegation');
-  if ($entity instanceof UserInterface && $role_delegation) {
-    $operations['roles'] = [
-      'title' => t('Manage Roles'),
-      'weight' => 11,
-      'url' => Url::fromRoute('role_delegation.edit_form', ['user' => $entity->id()]),
-    ];
-  }
 }
 
 /**

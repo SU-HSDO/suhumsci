@@ -62,30 +62,28 @@
 .hb-well,
 .pullquote {
   @include hb-well;
-}
 
-// Override default link color for the Mountain color pairings.
-.pullquote {
+  // Override default link color for the Mountain color pairings.
   .hc-pairing-mountain & {
     a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
-      color: var(--palette--primary);
+      color: var(--palette--secondary);
 
       &:hover,
       &:focus {
-        color: var(--palette--tertiary-darken-20);
+        color: var(--palette--secondary-darken-12);
       }
     }
 
     // Ensure that the external link icon color is correct.
     a.hs-external-link {
       &::after {
-        background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'primary')));
+        background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary')));
       }
 
       &:hover,
       &:focus {
         &::after {
-          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'tertiary-darken-20')));
+          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary-darken-12')));
         }
       }
     }

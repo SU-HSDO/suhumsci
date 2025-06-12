@@ -1,6 +1,6 @@
 // Customization for specific node types.
 
-// Color overrides for links in wells in the Canyon color pairing.
+// Color overrides for links in wells in the Canyon and Mountain color pairing.
 @include hb-themes(('colorful', 'airy', )) {
   .hc-pairing-canyon {
     .node-event-full,
@@ -15,6 +15,35 @@
           &:hover,
           &:focus {
             color: var(--palette--tertiary-darken-20);
+          }
+        }
+
+        // Categories should always be black.
+        &.hb-categories {
+          a,
+          a:hover,
+          a:focus {
+            color: var(--palette--black);
+          }
+        }
+      }
+    }
+  }
+
+  .hc-pairing-mountain {
+    .node-event-full,
+    .node-person-full,
+    .node-news-item-full {
+      [class*="field-"] {
+        a:not([class]),
+        a.mailto,
+        a[href^="mailto"],
+        a.ext {
+          color: var(--palette--secondary);
+
+          &:hover,
+          &:focus {
+            color: var(--palette--secondary-darken-12);
           }
         }
 

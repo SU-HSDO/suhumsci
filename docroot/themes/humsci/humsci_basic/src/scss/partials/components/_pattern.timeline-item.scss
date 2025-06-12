@@ -178,7 +178,7 @@
 
       // Link color overrides for Mountain color pairing.
       .hc-pairing-mountain & {
-        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
+        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link, a[href*="//"].hs-external-link {
           color: var(--palette--secondary);
 
           &:hover,
@@ -187,8 +187,18 @@
           }
         }
 
-        a.hs-external-link::after {
-          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary')));
+        a.hs-external-link,
+        a[href*="//"].hs-external-link {
+          &::after {
+            background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary')));
+          }
+
+          &:hover,
+          &:focus {
+            &::after {
+              background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary-darken-12')));
+            }
+          }
         }
       }
     }

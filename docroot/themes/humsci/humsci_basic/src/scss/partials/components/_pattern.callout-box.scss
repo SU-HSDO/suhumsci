@@ -48,12 +48,27 @@
     }
 
     .hc-pairing-mountain & {
-      a:not([class]), a.mailto, a[href^='mailto:'], a.ext {
+      a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link, a[href*="//"].hs-external-link {
         color: var(--palette--secondary);
 
         &:hover,
         &:focus {
           color: var(--palette--secondary-darken-12);
+        }
+      }
+
+      // Ensure that the external link icon color is correct.
+      a.hs-external-link,
+      a[href*="//"].hs-external-link {
+        &::after {
+          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary')));
+        }
+
+        &:hover,
+        &:focus {
+          &::after {
+            background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'mountain'), 'secondary-darken-12')));
+          }
         }
       }
     }

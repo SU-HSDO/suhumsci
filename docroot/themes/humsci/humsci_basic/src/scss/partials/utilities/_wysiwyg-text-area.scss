@@ -111,7 +111,7 @@
     .hs-paragraph-style--well-full-width &,
     .hs-breakout-box {
       .hc-pairing-canyon & {
-        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
+        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link, a[href*="//"].hs-external-link {
           color: var(--palette--primary);
 
           &:hover,
@@ -121,7 +121,8 @@
         }
 
         // Ensure that the external link icon color is correct.
-        a.hs-external-link {
+        a.hs-external-link,
+        a[href*="//"].hs-external-link {
           &::after {
             background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
           }

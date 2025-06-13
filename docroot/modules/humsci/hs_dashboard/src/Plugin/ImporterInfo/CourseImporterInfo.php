@@ -87,9 +87,14 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    * {@inheritDoc}
    */
   public function getTableRows(): array {
+    $storage = $this->entityTypeManager->getStorage('hs_course_tag');
+    $query = $storage->getQuery();
+    $query->sort('label');
     /** @var \Drupal\hs_courses_importer\Entity\CourseTagInterface[] $tags */
-    $tags = $this->entityTypeManager->getStorage('hs_course_tag')->loadMultiple();
+    $tags = $storage->loadMultiple($query->execute());
+
     $table_rows = [];
+
     foreach ($tags as $tag) {
       $table_rows[] = [
         'data' => [

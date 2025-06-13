@@ -93,7 +93,11 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    * {@inheritDoc}
    */
   public function getTableRows(): array {
-    $capx_importers = $this->entityTypeManager->getStorage('capx_importer')->loadMultiple();
+    $storage = $this->entityTypeManager->getStorage('capx_importer');
+    $query = $storage->getQuery();
+    $query->sort('label');
+    $capx_importers = $storage->loadMultiple($query->execute());
+
     $table_rows = [];
 
     /** @var \Drupal\hs_capx\Entity\CapxImporterInterface $importer */

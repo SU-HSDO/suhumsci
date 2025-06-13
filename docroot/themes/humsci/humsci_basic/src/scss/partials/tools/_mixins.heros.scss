@@ -4,9 +4,7 @@
   // For all themes, if only the hero image is present (no overlay text) or hero wrapper,
   // make sure vertical margin is present on full width layout
   .hs-full-width & {
-    // Special negative margin for the Spotlight
-    // to get rid of the vertical padding on all basic pages
-    margin: calc(-1 * #{hb-spacing-width()}) 0 hb-spacing-width();
+    margin-bottom: 2rem;
   }
 
   // img element styles should only be applied to the gradient hero
@@ -49,7 +47,10 @@
   height: 100%;
   width: 100%;
   object-fit: cover;
-  @include hb-hero-full-width($background: true);
+
+  img {
+    width: 100%;
+  }
 
   &::before {
     content: "";
@@ -64,10 +65,6 @@
 
   @include hb-themes(('colorful', 'airy')) {
     z-index: $hb-z-index-hero1-overlay;
-  }
-
-  .hs-full-width & {
-    margin: 0;
   }
 
   // In order to have the hero image cover the entire size of the hero overlay,

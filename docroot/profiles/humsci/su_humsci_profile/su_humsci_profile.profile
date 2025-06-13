@@ -787,7 +787,7 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
     if (isset($form['per_role'])) {
       foreach ($form['per_role'] as $key => $element) {
         if (is_array($element) && isset($element['#options'])) {
-          $form['per_role'][$key]['#process'][] = 'su_humsci_profile_process_per_role_field';
+          $form['per_role'][$key]['#process'][] = '_su_humsci_profile_process_per_role_field';
         }
       }
     }
@@ -906,18 +906,36 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
   $roles = \Drupal::currentUser()->getRoles();
   $is_admin = in_array('administrator', $roles);
 
-  // Hide system roles that should not be manually assigned.
-  $hidden_roles = ['authenticated', 'search_indexer'];
-  foreach ($hidden_roles as $role) {
-    if (isset($form['account']['roles'][$role])) {
-      $form['account']['roles'][$role]['#access'] = FALSE;
-    }
-  }
-
   // Remove unnecessary URL alias fields from the user edit form for all users.
   $form['path']['#access'] = FALSE;
   // Remove Delete account button for all roles expect 'administrator'.
   $form['actions']['delete']['#access'] = $is_admin;
+
+  // Hide system roles that should not be manually assigned.
+  if (isset($form['account']['roles']['#options'])) {
+    $hidden_roles = ['authenticated', 'search_indexer'];
+    foreach ($hidden_roles as $role) {
+      if (isset($form['account']['roles']['#options'][$role])) {
+        unset($form['account']['roles']['#options'][$role]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_stanford_samlauth_add_user_alter(&$form, FormStateInterface $form_state) {
+  // Hide system roles that should not be manually assigned.
+  if (isset($form['roles']['#options'])) {
+    $form['roles']['#type'] = 'checkboxes';
+    $hidden_roles = ['authenticated', 'search_indexer'];
+    foreach ($hidden_roles as $role) {
+      if (isset($form['roles']['#options'][$role])) {
+        unset($form['roles']['#options'][$role]);
+      }
+    }
+  }
 }
 
 /**
@@ -933,7 +951,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
  * @return array
  *   The processed form element.
  */
-function su_humsci_profile_process_per_role_field(&$element, FormStateInterface $form_state, &$complete_form) {
+function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface $form_state, &$complete_form) {
   if (isset($element['search_indexer'])) {
     $element['search_indexer']['#access'] = FALSE;
   }

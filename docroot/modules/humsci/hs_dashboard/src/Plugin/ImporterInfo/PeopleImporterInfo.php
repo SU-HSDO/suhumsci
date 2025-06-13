@@ -140,7 +140,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    * {@inheritDoc}
    */
   public function getNoDataCaption(): TranslatableMarkup {
-    return $this->t('<em>There are no people importers configured.</em>');
+    return $this->t('<em>There are no Stanford Profiles importers configured.</em>');
   }
 
 }

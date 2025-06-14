@@ -1443,3 +1443,30 @@ function su_humsci_profile_update_9730(&$sandbox) {
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
   return implode('  <br />', $sandbox['results']);
 }
+
+/**
+ * Update hook to set weights for custom roles.
+ */
+function su_humsci_profile_update_9731() {
+  /** @var \Drupal\user\RoleStorageInterface $role_storage */
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  /** @var \Drupal\user\RoleInterface[] $roles */
+  $roles = $role_storage->loadMultiple();
+
+  foreach ($roles as $role) {
+    $id = $role->id();
+    $label = $role->label();
+
+    // Only operate on roles with machine name starting with 'custm'.
+    if (str_starts_with($id, 'custm')) {
+      if (str_starts_with($label, 'Stanford')) {
+        $role->set('weight', 5);
+      }
+      else {
+        $role->set('weight', -1);
+      }
+      $role->save();
+    }
+  }
+
+}

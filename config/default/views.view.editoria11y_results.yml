@@ -93,17 +93,7 @@ display:
       cache:
         type: none
         options: {  }
-      empty:
-        title:
-          id: title
-          table: views
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: title
-          empty: true
-          title: 'No known issues at this url'
+      empty: {  }
       sorts: {  }
       arguments: {  }
       filters: {  }
@@ -877,6 +867,20 @@ display:
         options:
           offset: 0
           items_per_page: 5
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<p>There are no pages with accessibility issues.</p>'
+            format: basic_html
+          tokenize: false
       sorts:
         page_result_count:
           id: page_result_count
@@ -935,6 +939,7 @@ display:
           separator: ''
           hide_empty: false
       defaults:
+        empty: false
         title: false
         pager: false
         use_more: false
@@ -952,7 +957,7 @@ display:
       group_by: true
       display_description: ''
       use_more: true
-      use_more_always: true
+      use_more_always: false
       use_more_text: 'View all pages with issues'
       header: {  }
       display_extenders: {  }

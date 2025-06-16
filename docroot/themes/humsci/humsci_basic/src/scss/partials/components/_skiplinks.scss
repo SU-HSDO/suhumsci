@@ -1,0 +1,68 @@
+
+//
+// Skiplinks
+//
+// For providing a link at the top of the page which jumps
+// the user down to an anchor or target at the beginning of the main content.
+//
+// Gives screen readers and keyboard users the same capability of going directly
+// to the main content as sighted, mouse users.
+// of the main content. Learn more at <a href="https://webaim.org/techniques/skipnav">https://webaim.org/techniques/skipnav</a>.
+//
+// To test this component's functionality, place your cursor on "Example" and click.
+// Then, press the tab key. The Skiplinks link will slide into view at the top
+// lefthand corner of the screen. Press the return key (or click on the link) to
+// skip to the targeted element.
+//
+// Markup: <header>
+//   <a href="#main-content" class="su-skiplinks">Skip to main content</a>
+// </header>
+//  <main>
+//   <h2 id="main-content" class="su-sr-only-element" tabindex="-1">Main Content</h2>
+// </main>
+//
+//
+.su-skiplinks {
+  @media print {
+    display: none;
+  }
+
+  padding: 0;
+  font-family: $su-font-sans;
+  background-color: color(su-bg-reverse);
+  color: color(su-link-reverse);
+  font-size: 0.75em;
+  font-weight: 400;
+  text-decoration: none;
+  min-height: 1px;
+  position: absolute;
+  top: -500px;
+  left: 0.8em;
+  transition-duration: 0.25s;
+  transition-property: top;
+  transition-timing-function: ease-in-out;
+
+  &,
+  &:hover,
+  &:visited {
+    width: 1px;
+    height: 1px;
+    color: color(su-link-reverse);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &:active,
+  &:focus {
+    padding: 0.4em 0.8em;
+    width: auto;
+    height: auto;
+    color: color(su-link-reverse);
+    border: 1px solid var(--palette--gray-dark);
+    border-radius: 3px;
+    position: fixed;
+    left: 0.8em;
+    top: 0.8em;
+    z-index: 11222;
+  }
+}

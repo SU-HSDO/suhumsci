@@ -124,11 +124,32 @@ function su_humsci_profile_entity_type_alter(array &$entity_types) {
 function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
   if (isset($form['manual']['#open'])) {
     $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
+    $form['manual']['#open'] = TRUE;
     if ($manual_label) {
-      $form['manual']['#open'] = TRUE;
-      $form['manual']['#title'] = $manual_label;
+      $form['manual']['#title'] = $manual_label ?: t('Local Login');
     }
   }
+
+  $form['intro_text'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#weight' => -999,
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'h1',
+      '#value' => t('Log in to view this page.'),
+    ],
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'h4',
+      '#value' => t('Stanford Login'),
+    ],
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => t('Access this site with your Stanford ID'),
+    ],
+  ];
 }
 
 /**

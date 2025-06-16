@@ -4,7 +4,7 @@
   border-bottom: $hb-thin-border;
   border-color: var(--palette--gray);
   position: relative;
-  background-color: color(bg);
+  background-color: color(su-bg);
   max-width: 100%;
 
   > section:last-of-type {
@@ -18,8 +18,6 @@
     z-index: $hb-z-index-lockup;
 
     @include grid-media-max('md') {
-      @include flex-column(10);
-
       // Leave space for the mobile menu toggle button.
       flex: 0 0 calc(100% - hb-calculate-rems(78px));
       max-width: none;
@@ -111,35 +109,10 @@
     }
 
     @include grid-media-min('lg') {
-      @include flex-column(4);
-
       order: -1;
       position: absolute;
       right: 0;
       max-width: $hb-input-max-width;
-    }
-
-    > form {
-      @include margin(null null null auto);
-      width: hb-calculate-rems(300px);
-      max-width: 100%;
-
-      @include grid-media-max("md") {
-        width: 100%;
-      }
-    }
-  }
-
-  @include grid-media-max('sm') {
-    .su-main-nav {
-      @include margin(-57px null null);
-    }
-  }
-
-  @include grid-media-only('md') {
-    .su-main-nav {
-      @include flex-column(2);
-      @include margin(auto null null);
     }
   }
 
@@ -147,47 +120,6 @@
     margin-top: 0;
     width: 100%;
 
-    @include grid-media-min('sm') {
-      flex: unset;
-      max-width: none;
-    }
-
-    @include grid-media-max('md') {
-      > ul {
-        @include box-shadow('medium', 0);
-      }
-
-      > ul,
-      > .su-site-search {
-        right: 0;
-      }
-    }
-
-    @include grid-media('lg') {
-      width: 100%;
-    }
-
-    > ul,
-    .su-main-nav__toggle[aria-expanded="true"] + .su-main-nav__menu-lv1 + .su-site-search {
-
-      @include grid-media-only('xs') {
-        transform: translateX(map-get($su-screen-margins, 'xs'));
-      }
-
-      @include grid-media-only('sm') {
-        transform: translateX(map-get($su-screen-margins, 'sm'));
-      }
-
-      @include grid-media-only('md') {
-        width: hb-calculate-rems(400px);
-        transform: translateX(map-get($su-screen-margins, 'md'));
-      }
-    }
-  }
-
-  .su-main-nav,
-  .su-main-nav > ul,
-  .su-main-nav .su-main-nav__toggle[aria-expanded="true"] + .su-main-nav__menu-lv1 + .su-site-search {
     @include grid-media-only('xs') {
       // We can't use 100vw for this because it doesn't work with OSX system preference to always show scrollbar
       width: calc(100% + #{map-get($su-screen-margins, 'xs') * 2});
@@ -195,6 +127,11 @@
 
     @include grid-media-only('sm') {
       width: calc(100% + #{map-get($su-screen-margins, 'sm') * 2});
+    }
+
+    @include grid-media-min('sm') {
+      flex: unset;
+      max-width: none;
     }
   }
 
@@ -231,18 +168,8 @@
   @include visually-hidden;
 }
 
-.su-masthead--center {
-  .su-main-nav {
-    @include grid-media-min("lg") {
-      > ul {
-        justify-content: center;
-      }
-    }
-  }
-}
-
 .su-masthead--dark {
-  background-color: color(bg--reverse);
+  background-color: color(su-bg-reverse);
 
   .su-lockup__wordmark,
   .su-lockup__line1,
@@ -250,20 +177,10 @@
   .su-lockup__line3,
   .su-lockup__line4,
   .su-lockup__line5 {
-    color: color(link--reverse);
+    color: color(su-link-reverse);
   }
 
   .su-lockup__cell2 {
-    border-color: color(link--reverse);
-  }
-}
-
-.su-masthead--right {
-  .su-main-nav {
-    @include grid-media-min("lg") {
-      > ul {
-        justify-content: flex-end;
-      }
-    }
+    border-color: color(su-link-reverse);
   }
 }

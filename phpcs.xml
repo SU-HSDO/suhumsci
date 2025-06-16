@@ -15,6 +15,15 @@
     <exclude name="Drupal.InfoFiles.AutoAddedKeys.Version"/>
   </rule>
 
+  <!-- Ignore the missing new line at end of multi-line configuration. For more
+  information, see:
+  - https://www.drupal.org/project/drupal/issues/3240104
+  - https://www.drupal.org/project/drupal/issues/3279043
+  -->
+  <rule ref="Generic.Files.EndFileNewline">
+    <exclude-pattern>config/default/user.mail.yml</exclude-pattern>
+  </rule>
+
   <file>docroot/profiles/humsci</file>
   <file>docroot/modules/humsci</file>
   <file>docroot/themes/humsci</file>

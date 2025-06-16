@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.hs_training.field_hs_training_provider
     - field.field.node.hs_training.field_hs_training_resource_links
     - field.field.node.hs_training.field_hs_training_sourcesite
+    - field.field.node.hs_training.field_hs_training_unit
     - node.type.hs_training
   module:
     - conditional_fields
@@ -39,7 +40,7 @@ content:
     third_party_settings: {  }
   created:
     type: datetime_timestamp
-    weight: 14
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -115,34 +116,7 @@ content:
             effect: show
             effect_options: {  }
             selector: ''
-  field_hs_training_deliverymethod:
-    type: text_textarea
-    weight: 10
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_hs_training_location:
-    type: string_textarea
-    weight: 6
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_hs_training_name:
-    type: entity_reference_autocomplete
-    weight: 1
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings:
-      conditional_fields:
-        46266cc4-0442-43e0-9d8a-c3d1c426f4d2:
+        d531dde0-bce2-4aef-9b9f-cd2dbb9d718b:
           entity_type: node
           bundle: hs_training
           dependee: field_hs_training_nodate
@@ -162,6 +136,33 @@ content:
                 value: ''
                 reset: 1
             selector: ''
+  field_hs_training_deliverymethod:
+    type: text_textarea
+    weight: 10
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_location:
+    type: text_textarea
+    weight: 6
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_hs_training_name:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings:
+      conditional_fields: {  }
   field_hs_training_nodate:
     type: boolean_checkbox
     weight: 4
@@ -193,37 +194,29 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_hs_training_sourcesite:
-    type: link_default
-    weight: 12
-    region: content
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
   path:
     type: path
-    weight: 17
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 15
+    weight: 14
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 19
+    weight: 18
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 16
+    weight: 15
     region: content
     settings:
       display_label: true
@@ -238,7 +231,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 13
+    weight: 12
     region: content
     settings:
       match_operator: CONTAINS
@@ -247,8 +240,10 @@ content:
       placeholder: ''
     third_party_settings: {  }
   url_redirects:
-    weight: 18
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  field_hs_training_sourcesite: true
+  field_hs_training_unit: true

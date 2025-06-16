@@ -1,16 +1,16 @@
-uuid: 7de7be33-821b-43bb-a760-a69d040b7868
+uuid: 02ad46b5-b391-4cfd-8eca-63ff24835b1d
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_hs_training_audience
+    - field.storage.node.field_hs_training_unit
     - node.type.hs_training
-    - taxonomy.vocabulary.hs_training_audience
-id: node.hs_training.field_hs_training_audience
-field_name: field_hs_training_audience
+    - taxonomy.vocabulary.hs_training_unit
+id: node.hs_training.field_hs_training_unit
+field_name: field_hs_training_unit
 entity_type: node
 bundle: hs_training
-label: Audience
+label: 'Training Unit'
 description: ''
 required: false
 translatable: false
@@ -20,10 +20,10 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      hs_training_audience: hs_training_audience
+      hs_training_unit: hs_training_unit
     sort:
       field: name
       direction: asc
-    auto_create: true
+    auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

@@ -1,10 +1,13 @@
-uuid: 22d15595-4781-46d1-a385-7d05d7df4a98
+uuid: fc49b5f9-eed3-42d6-82ed-a0c4848b9a1f
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_hs_training_location
+    - filter.format.basic_html
     - node.type.hs_training
+  module:
+    - text
 id: node.hs_training.field_hs_training_location
 field_name: field_hs_training_location
 entity_type: node
@@ -15,5 +18,7 @@ required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
-settings: {  }
-field_type: string_long
+settings:
+  allowed_formats:
+    - basic_html
+field_type: text_long

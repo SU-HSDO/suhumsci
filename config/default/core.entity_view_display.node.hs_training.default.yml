@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.hs_training.field_hs_training_provider
     - field.field.node.hs_training.field_hs_training_resource_links
     - field.field.node.hs_training.field_hs_training_sourcesite
+    - field.field.node.hs_training.field_hs_training_unit
     - node.type.hs_training
   module:
     - link
@@ -78,11 +79,11 @@ content:
     weight: 111
     region: content
   field_hs_training_location:
-    type: basic_string
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 106
+    weight: 114
     region: content
   field_hs_training_name:
     type: entity_reference_label
@@ -141,6 +142,14 @@ content:
       target: ''
     third_party_settings: {  }
     weight: 113
+    region: content
+  field_hs_training_unit:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 115
     region: content
   links:
     settings: {  }

@@ -84,7 +84,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
       ],
       'full_report' => [
         '#type' => 'link',
-        '#title' => $this->t('View full broken links report'),
+        '#title' => $this->t('View full broken links report in SiteImprove'),
         '#url' => $this->getBrokenLinksReportUrl(),
         '#attributes' => [
           'class' => ['button', 'button--primary'],

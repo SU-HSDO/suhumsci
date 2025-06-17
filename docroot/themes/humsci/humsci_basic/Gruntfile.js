@@ -6,9 +6,6 @@ module.exports = function (grunt) {
   function getIncludeFiles() {
     const patterns = [
       'src/**/*.scss',
-      // Decanter uses Bourbon imports relative to this path
-      'node_modules/bourbon/core',
-      'node_modules',
     ];
 
     const libraries = [];

@@ -17,8 +17,7 @@
 
 {% apply spaceless %}
   <div{{ attributes }}>
-    {% set image_field = image|keys|first %}
-    {% if image[image_field] and image[image_field][0] is defined %}
+    {% if image|render %}
       <div class="hb-gradient-hero__image-wrapper">
         {{ image }}
       </div>

@@ -19,7 +19,7 @@
           document.getElementById("toolbar-bar"),
           document.querySelector(".toolbar-tray.is-active"),
           document.querySelector("header.region-sticky"),
-          element?.parentElement?.parentElement?.querySelector("h2"),
+          element.closest('.block')?.querySelector('h2'),
         ];
 
         // Loop through elements and add height only if they exist
@@ -30,7 +30,7 @@
         });
 
         // Get padding top from the block element safely
-        const blockElement = element?.parentElement?.parentElement;
+        const blockElement = element.closest('.block');
         const computedStyle = blockElement
           ? getComputedStyle(blockElement)
           : null;
@@ -44,7 +44,7 @@
       }
 
       // Override the default Drupal Views AJAX scrolling behavior.
-      Drupal.AjaxCommands.prototype.scrollTop = function (ajax, response) {
+      Drupal.AjaxCommands.prototype.scrollTop = function (_, response) {
         // Prevent automatic scrolling by overriding the function.
         const selector = response.selector;
 
@@ -66,7 +66,7 @@
         const headerHeight = calculateStickyHeaderHeight(targetElement);
 
         // Subtracts a fixed height for the sticky header so the element isn't hidden behind it when scrolling.
-        const scrollPosition = offsetTop - headerHeight;
+        const scrollPosition = offsetTop - headerHeight - 20; // 20px is an additional buffer to make it more visually appealing.
 
         // Scroll only if the element is above the current scroll position
         if (scrollPosition < scrollTarget.scrollTop) {

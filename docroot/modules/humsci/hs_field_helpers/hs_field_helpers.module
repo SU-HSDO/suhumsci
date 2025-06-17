@@ -741,13 +741,15 @@ function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $
 
   $imported_fields = _hs_field_helpers_get_imported_fields($node);
 
-  if (!empty($imported_fields)) {
-    \Drupal::messenger()
-      ->addWarning(t('Some fields can not be edited since they contain imported & synced data.'));
+  if (empty($imported_fields)) {
+    return;
   }
 
+  \Drupal::messenger()
+    ->addWarning(t('Some fields can not be edited since they contain imported & synced data.'));
+
   foreach ($imported_fields as $field_name) {
-    // Remove the readonly_field_widget type.
+    $component = $form_display->getComponent($field_name) ?? [];
     $component['type'] = NULL;
     $form_display->setComponent($field_name, $component);
   }
@@ -766,9 +768,11 @@ function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form
 
   $imported_fields = _hs_field_helpers_get_imported_fields($node);
 
-  if (!empty($imported_fields)) {
-    $form['#attributes']['data-has-imported-fields'][] = 'true';
+  if (empty($imported_fields)) {
+    return;
   }
+
+  $form['#attributes']['data-has-imported-fields'][] = 'true';
 
   foreach ($imported_fields as $field_name) {
     if (isset($form[$field_name])) {
@@ -789,6 +793,14 @@ function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form
  */
 function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
 
+  // Static cache for imported fields by node ID.
+  static $imported_fields_cache = [];
+  $nid = $node->id();
+  // Return the cached imported fields if they exist.
+  if (isset($imported_fields_cache[$nid])) {
+    return $imported_fields_cache[$nid];
+  }
+
   // Code to determine if field is imported is from stanford_migrate.
   // @see stanford_migrate_entity_form_display_alter.
   $imported_fields = [];
@@ -797,11 +809,12 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
 
   // Check if the current node was imported.
   if (!$migration) {
+    $imported_fields_cache[$nid] = [];
     return [];
   }
 
-  $entityFieldManager = \Drupal::service('entity_field.manager');
-  $field_definitions = $entityFieldManager->getFieldDefinitions('node', $node->bundle());
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  $field_definitions = $entity_field_manager->getFieldDefinitions('node', $node->bundle());
 
   foreach ($field_definitions as $field_name => $field_definition) {
 
@@ -838,5 +851,6 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
     }
   }
 
+  $imported_fields_cache[$nid] = $imported_fields;
   return $imported_fields;
 }

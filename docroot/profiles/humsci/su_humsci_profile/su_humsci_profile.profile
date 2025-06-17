@@ -912,11 +912,42 @@ function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definition
  * Implements hook_form_FORM_ID_alter().
  */
 function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form_state) {
-  // Get current user roles and determine if has the 'administrator' role.
   $roles = \Drupal::currentUser()->getRoles();
+  /** @var \Drupal\user\Entity\User $account */
+  $account = $form_state->getBuildInfo()['callback_object']->getEntity();
+  /** @var \Drupal\externalauth\AuthmapInterface $authmap */
+  $authmap = \Drupal::service('externalauth.authmap');
+
   $is_admin = in_array('administrator', $roles);
-  // Remove unnecessary URL alias fields from the user edit form for all users.
-  $form['path']['#access'] = FALSE;
+  $is_manager = in_array('site_manager', $roles);
+  $is_admin_or_manager = $is_admin || $is_manager;
+  $is_saml_user = $authmap->get($account->id(), 'samlauth');
+
+  if ($is_saml_user) {
+    // Changes to the user form for SAML users.
+    $form['account']['name']['#description'] = t('By default this is the SUNet ID. You can change this to their real name to make the content logs easier to understand.');
+    $form['account']['saml_notice'] = [
+      '#markup' => t('<div class="user-form__suid-note"><strong>NOTE:</strong> E-mail address and password are controlled through your Stanford ID.</div>'),
+      '#weight' => -1,
+    ];
+    $form['account']['mail']['#disabled'] = !$is_admin;
+    $form['account']['name']['#access'] = $is_admin_or_manager;
+    $form['account']['roles']['#access'] = $is_admin_or_manager;
+    $form['account']['status']['#access'] = $is_admin_or_manager;
+    $form['account']['pass']['#access'] = FALSE;
+  }
+  else {
+    // Changes to the user form for Drupal login users.
+    $form['account']['mail']['#disabled'] = FALSE;
+    $form['account']['name']['#access'] = $is_admin_or_manager;
+    $form['account']['name']['#description'] = t('Warning: This person uses their username to log in.  Please notify them before changing.');
+    $form['account']['pass']['#description'] = t('Warning: This person uses their password to log in.  Please notify them before changing.');
+    $form['account']['pass']['#access'] = TRUE;
+    $form['account']['roles']['#access'] = $is_admin_or_manager;
+    $form['account']['status']['#access'] = $is_admin_or_manager;
+  }
+
   // Remove Delete account button for all roles expect 'administrator'.
   $form['actions']['delete']['#access'] = $is_admin;
+  $form['path']['#access'] = FALSE;
 }

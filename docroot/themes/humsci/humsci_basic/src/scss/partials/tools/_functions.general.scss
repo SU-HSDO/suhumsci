@@ -67,3 +67,41 @@
     @error "Couldn't find the sidebar width for this theme: #{$hb-current-theme}";
   }
 }
+
+///
+/// Validates wether something is an integer
+///
+/// @name is-integer($value)
+///
+/// @param {Integer} $value - the value to type check
+///
+@function is-integer($value) {
+  @return is-number($value) and round($value) == $value;
+}
+
+///
+/// Validates whether something is a direction or an angle
+///
+/// @name is-direction-or-angle
+///
+/// @param {Integer} $value - the value to type check
+///
+@function is-direction-or-angle($value) {
+  $is-direction: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+  $is-angle: type-of($value) == 'number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+
+  @return $is-direction or $is-angle;
+}
+
+/// Map deep get
+/// @author Hugo Giraudel
+/// @access public
+/// @param {Map} $map - Map
+/// @param {Arglist} $keys - Key chain
+/// @return {*} - Desired value
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}

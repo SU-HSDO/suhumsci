@@ -932,7 +932,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
   $is_admin = in_array('administrator', $roles);
   $is_manager = in_array('site_manager', $roles);
   $is_admin_or_manager = $is_admin || $is_manager;
-  $is_saml_user = $authmap->get($account->id(), 'samlauth');
+  $is_saml_user = !empty($account->id()) && $authmap->get($account->id(), 'samlauth');
 
   // Remove unnecessary URL alias fields from the user edit form for all users.
   $form['path']['#access'] = FALSE;

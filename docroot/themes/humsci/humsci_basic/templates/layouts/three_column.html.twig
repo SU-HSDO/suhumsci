@@ -11,7 +11,7 @@
   {% set attributes = attributes.addClass(['hb-three-column--no-sidebar']) %}
 {% endif %}
 
-{% if content %}
+{% if content.left_sidebar or content.main or content.right_sidebar %}
   <div{{ attributes }}>
     {% if content.left_sidebar %}
       <div{{ region_attributes.left_sidebar.addClass(['hb-three-column__sidebar-1', 'layout__region']) }}>

@@ -1468,5 +1468,31 @@ function su_humsci_profile_update_9731() {
       $role->save();
     }
   }
+}
 
+/**
+ * Update config ignore settings for content_access_simple.
+ */
+  function su_humsci_profile_update_9732() {
+    $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+    $ignored_config_entities = $config->get('ignored_config_entities');
+
+    // Remove the entries we want to stop ignoring.
+    $ignored_config_entities = array_diff($ignored_config_entities, [
+      'core.extension:module.content_access_simple',
+      'content_access_simple.settings'
+    ]);
+
+    $config->set('ignored_config_entities', $ignored_config_entities);
+    $config->save();
+  }
+
+/**
+ * Grants site managers access to the new content access simple module.
+ */
+function su_humsci_profile_update_9733() {
+  \Drupal::service('module_installer')->install(['content_access_simple']);
+  user_role_grant_permissions('site_manager', [
+    'grant content access simple',
+  ]);
 }

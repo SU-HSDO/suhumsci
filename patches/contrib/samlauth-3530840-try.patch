@@ -1,0 +1,20 @@
+diff --git a/src/Controller/SamlController.php b/src/Controller/SamlController.php
+index 8542af3..516ffb2 100644
+--- a/src/Controller/SamlController.php
++++ b/src/Controller/SamlController.php
+@@ -421,6 +421,15 @@ protected function getRedirectUrlAfterProcessing($after_acs = FALSE, $ignore_rel
+         // Check relay state URL; if it's unsafe (i.e. '' returned) then
+         // fall back to the default.
+         $url = $this->ensureSafeRelayState($relay_state, $after_acs);
++        if ($url) {
++          // If a destination parameter was set by other code in e.g. a login /
++          // logout hook, cancel it.
++          $request_query_parameters = $this->requestStack->getCurrentRequest()->query;
++          $destination = $request_query_parameters->get('destination');
++          if ($destination) {
++            $request_query_parameters->remove('destination');
++          }
++        }
+       }
+     }
+ 

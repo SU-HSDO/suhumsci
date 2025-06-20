@@ -3,7 +3,8 @@
 namespace Drupal\hs_dashboard\Plugin\views\relationship;
 
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
-use Drupal\views\Plugin\ViewsPluginManager;
+use Drupal\views\Annotation\ViewsRelationship;
+use Drupal\views\Plugin\ViewsHandlerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -16,7 +17,7 @@ class NodeFromEditoria11yResults extends RelationshipPluginBase {
   /**
    * The join plugin manager.
    *
-   * @var \Drupal\views\Plugin\ViewsPluginManager
+   * @var \Drupal\views\Plugin\ViewsHandlerManager
    */
   protected $joinManager;
 
@@ -29,10 +30,10 @@ class NodeFromEditoria11yResults extends RelationshipPluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\views\Plugin\ViewsPluginManager $join_manager
+   * @param \Drupal\views\Plugin\ViewsHandlerManager $join_manager
    *   The join plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewsPluginManager $join_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewsHandlerManager $join_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->joinManager = $join_manager;
   }

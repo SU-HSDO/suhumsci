@@ -3,7 +3,6 @@
 namespace Drupal\hs_dashboard\Plugin\views\relationship;
 
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
-use Drupal\views\Annotation\ViewsRelationship;
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

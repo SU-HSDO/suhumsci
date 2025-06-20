@@ -66,7 +66,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
    */
   public function blockForm($form, FormStateInterface $form_state): array {
     // If the form is being rendered for the first time, need to set the links
-    // in the form_state, because we'll used them to generate the form elements.
+    // in the form_state, because we'll use them to generate the form elements.
     if (is_null($form_state->get('links'))) {
       $links = $this->configuration['links'];
       // Add an empty item at the bottom, to make it easier for users to add
@@ -80,7 +80,26 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       $form_state->set('links', $links);
     }
 
-    $form['icon_size'] = [
+    $form['above'] = [
+      '#type' => 'details',
+      '#title' => t('Above'),
+      '#open' => FALSE,
+    ];
+    $form['above']['text_above'] = [
+      '#type' => 'text_format',
+      '#title' => 'This content will display above the icons',
+      '#format' => 'basic_html',
+      '#allowed_formats' => ['basic_html'],
+      '#base_type' => 'textarea',
+      '#rows' => 7,
+    ];
+
+    $form['icons'] = [
+      '#type' => 'details',
+      '#title' => t('Icons'),
+      '#open' => TRUE,
+    ];
+    $form['icons']['icon_size'] = [
       '#type' => 'select',
       '#title' => $this->t('Icon Size'),
       '#options' => [
@@ -91,7 +110,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#required' => TRUE,
     ];
 
-    $form['layout'] = [
+    $form['icons']['layout'] = [
       '#type' => 'select',
       '#title' => $this->t('Layout'),
       '#options' => [
@@ -102,7 +121,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#required' => TRUE,
     ];
 
-    $form['links'] = [
+    $form['icons']['links'] = [
       '#type' => 'container',
       '#field_name' => 'links',
       '#title' => $this->t('Links'),
@@ -124,7 +143,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     ];
 
     foreach ($form_state->get('links') as $key => $link) {
-      $form['links'][$key] = [
+      $form['icons']['links'][$key] = [
         '#type' => 'container',
         'link_url' => [
           '#type' => 'textfield',
@@ -151,16 +170,29 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       ];
     }
 
-    $form['links']['add_more'] = [
+    $form['icons']['links']['add_more'] = [
       '#type' => 'submit',
       '#name' => 'links_add_more',
-      '#value' => $form['links']['#add_more_label'],
+      '#value' => $form['icons']['links']['#add_more_label'],
       '#submit' => [[get_class($this), 'addMoreSubmit']],
       '#ajax' => [
         'callback' => [get_class($this), 'addMoreAjax'],
         'wrapper' => 'links-wrapper',
         'effect' => 'fade',
       ],
+    ];
+    $form['below'] = [
+      '#type' => 'details',
+      '#title' => t('Below'),
+      '#open' => FALSE,
+    ];
+    $form['below']['text_below'] = [
+      '#type' => 'text_format',
+      '#title' => 'This content will display below the icons',
+      '#format' => 'basic_html',
+      '#allowed_formats' => ['basic_html'],
+      '#base_type' => 'textarea',
+      '#rows' => 7,
     ];
 
     return $form;

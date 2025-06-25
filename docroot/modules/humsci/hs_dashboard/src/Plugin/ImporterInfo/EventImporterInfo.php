@@ -165,6 +165,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       }
     }
 
+    // Sort the table rows by the first column (departments/groups).
+    $this->sortTableRows();
+
     return $this->eventTableRows;
   }
 
@@ -172,7 +175,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    * {@inheritDoc}
    */
   public function getNoDataCaption(): TranslatableMarkup {
-    return $this->t('<em>There are no Stanford Events importers configured.</em>');
+    return $this->t('There are no Stanford Events importers configured.');
   }
 
   /**
@@ -390,6 +393,15 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
         ],
       ];
     }
+  }
+
+  /**
+   * Sort table rows data by the first column.
+   */
+  private function sortTableRows() {
+    usort($this->eventTableRows, function ($a, $b) {
+      return strcasecmp($a['data'][0]['data'], $b['data'][0]['data']);
+    });
   }
 
 }

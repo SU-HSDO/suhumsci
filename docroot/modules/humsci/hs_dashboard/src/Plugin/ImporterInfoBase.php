@@ -116,7 +116,7 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
    * {@inheritdoc}
    */
   public function getNoDataCaption(): TranslatableMarkup {
-    return $this->t('<em>No import data available.</em>');
+    return $this->t('No import data available.');
   }
 
   /**

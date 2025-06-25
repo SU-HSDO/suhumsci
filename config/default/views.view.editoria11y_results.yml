@@ -877,6 +877,20 @@ display:
         options:
           offset: 0
           items_per_page: 5
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'There are no pages with accessibility issues.'
+            format: basic_html
+          tokenize: false
       sorts:
         page_result_count:
           id: page_result_count
@@ -935,6 +949,7 @@ display:
           separator: ''
           hide_empty: false
       defaults:
+        empty: false
         title: false
         pager: false
         use_more: false

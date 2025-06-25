@@ -9,7 +9,6 @@ class ParagraphsCest {
    * Private collections should be disabled on most places.
    *
    * @group install
-   * @group existingSite
    */
   public function testPrivateCollectionParagraph(AcceptanceTester $I) {
     $I->logInWithRole('administrator');

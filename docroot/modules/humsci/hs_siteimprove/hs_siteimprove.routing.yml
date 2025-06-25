@@ -1,0 +1,17 @@
+hs_siteimprove.api_settings_form:
+  path: '/admin/config/services/siteimprove'
+  defaults:
+    _form: '\Drupal\hs_siteimprove\Form\SiteImproveSettingsForm'
+    _title: 'SiteImprove API Settings'
+  requirements:
+    _permission: 'administer siteimprove'
+  options:
+    _admin_route: TRUE
+
+hs_siteimprove.site_details:
+  path: '/admin/config/services/siteimprove/details'
+  defaults:
+    _controller: '\Drupal\hs_siteimprove\Controller\SiteImproveController::siteDetails'
+    _title: 'SiteImprove Site Details'
+  requirements:
+    _permission: 'administer siteimprove'

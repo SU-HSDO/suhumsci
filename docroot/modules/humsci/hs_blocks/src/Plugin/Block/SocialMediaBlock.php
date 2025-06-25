@@ -57,6 +57,8 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     return [
       'icon_size' => 'small',
       'layout' => 'grid',
+      'text_above' => '',
+      'text_below' => '',
       'links' => [],
     ];
   }
@@ -92,6 +94,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#allowed_formats' => ['basic_html'],
       '#base_type' => 'textarea',
       '#rows' => 7,
+      '#default_value' => $this->configuration['text_above']['value'] ?? '',
     ];
 
     $form['icons'] = [
@@ -193,6 +196,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
       '#allowed_formats' => ['basic_html'],
       '#base_type' => 'textarea',
       '#rows' => 7,
+      '#default_value' => $this->configuration['text_below']['value'] ?? '',
     ];
 
     return $form;
@@ -225,11 +229,13 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state): void {
-    $this->configuration['icon_size'] = $form_state->getValue('icon_size');
-    $this->configuration['layout'] = $form_state->getValue('layout');
+    $this->configuration['icon_size'] = $form_state->getValue(['icons', 'icon_size']);
+    $this->configuration['layout'] = $form_state->getValue(['icons', 'layout']);
+    $this->configuration['text_above'] = $form_state->getValue(['above', 'text_above']);
+    $this->configuration['text_below'] = $form_state->getValue(['below', 'text_below']);
 
     // Only save links if they're not empty.
-    $links = array_filter($form_state->getValue('links'), function ($link) {
+    $links = array_filter($form_state->getValue(['icons', 'links']), function ($link) {
       return !empty($link['link_url']);
     });
     $this->configuration['links'] = $links;
@@ -318,7 +324,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
    *   The form element to replace.
    */
   public static function addMoreAjax(array $form, FormStateInterface $form_state): array {
-    return $form['settings']['links'];
+    return $form['settings']['icons']['links'];
   }
 
   /**

@@ -37,13 +37,6 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
   protected $dateFormatter;
 
   /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Url
-   */
-  protected $urlGenerator;
-
-  /**
    * Constructs a new InlineBlock.
    *
    * @param array $configuration
@@ -56,14 +49,11 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
    *   The announcements manager.
    * @param Drupal\Core\Datetime\DateFormatter $date_formatter
    *   The date formatter.
-   * @param \Drupal\Core\Url $url_generator
-   *   The URL generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AnnouncementsManager $announcements_manager, DateFormatter $date_formatter, Url $url_generator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AnnouncementsManager $announcements_manager, DateFormatter $date_formatter) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->announcementsManager = $announcements_manager;
     $this->dateFormatter = $date_formatter;
-    $this->urlGenerator = $url_generator;
   }
 
   /**
@@ -76,7 +66,6 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
       $plugin_definition,
       $container->get('hs_dashboard.announcements_manager'),
       $container->get('date.formatter'),
-      $container->get('url_generator'),
     );
   }
 
@@ -103,7 +92,7 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
         'link' => [
           '#type' => 'link',
           '#title' => $this->t('View all HSDP announcements'),
-          '#url' => $this->urlGenerator->fromUri('https://hsweb.slite.page/p/jQxDNSkcYs6Zps/Newest-Updates-to-the-User-Guide'),
+          '#url' => Url::fromUri('https://hsweb.slite.page/p/jQxDNSkcYs6Zps/Newest-Updates-to-the-User-Guide'),
           '#attributes' => [
             'class' => ['button', 'button--primary'],
           ],

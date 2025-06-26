@@ -50,38 +50,11 @@
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline {
   // no font size by default
-  color: var(--palette--tertiary);
-
-  @include hb-themes(('colorful', 'airy')) {
-    // Ocean and mountain color pairing override when link is inside a hb-well.
-    .hc-pairing-ocean .hb-well &,
-    .hc-pairing-mountain .hb-well & {
-      color: var(--palette--primary);
-
-      &:hover,
-      &:focus {
-        color: var(--palette--tertiary-darken-20);
-      }
-    }
-  }
-
-  @include hb-traditional {
-    // Warbler color pairing override.
-    .ht-pairing-warbler & {
-      color: var(--palette--secondary);
-    }
-  }
+  color: var(--palette--link-base-color);
 
   &:hover,
   &:focus {
-    color: var(--palette--tertiary-darken-20);
-
-    @include hb-traditional {
-      // Warbler color pairing override.
-      .ht-pairing-warbler & {
-        color: var(--palette--tertiary);
-      }
-    }
+    color: var(--palette--link-base-hover-color);
   }
 
   .hb-local-footer & {

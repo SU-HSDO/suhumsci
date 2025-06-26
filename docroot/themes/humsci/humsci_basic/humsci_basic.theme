@@ -117,6 +117,12 @@ function humsci_basic_preprocess_page(&$vars) {
   $config = \Drupal::config('system.site');
   $vars['site_name'] = $config->get('name');
   $vars['site_slogan'] = $config->get('slogan');
+
+  // Attach library to update user login page only.
+  if ($route == 'user.login') {
+    $default_theme = \Drupal::config('system.theme')->get('default');
+    $vars['#attached']['library'][] = "$default_theme/user-login-page";
+  }
 }
 
 /**

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - views.view.dashboard_entityqueue
     - views.view.duplicate_people
     - views.view.editoria11y_results
     - views.view.my_latest_edits
@@ -10,6 +11,7 @@ dependencies:
   module:
     - hs_blocks
     - hs_dashboard
+    - hs_siteimprove
     - layout_builder
     - layout_discovery
     - views
@@ -80,6 +82,24 @@ layout:
   -
     layout_id: layout_onecol
     layout_settings:
+      label: 'SiteImprove Broken Links Section'
+      context_mapping: {  }
+    components:
+      5abbe598-4aa6-4f17-a593-45c27378f502:
+        uuid: 5abbe598-4aa6-4f17-a593-45c27378f502
+        region: content
+        configuration:
+          id: hs_siteimprove_broken_links
+          label: 'Pages with Broken Links'
+          label_display: visible
+          provider: hs_siteimprove
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
       label: 'Duplicate Profiles Section'
       context_mapping: {  }
     components:
@@ -88,6 +108,27 @@ layout:
         region: content
         configuration:
           id: 'views_block:duplicate_people-block_1'
+          label: ''
+          label_display: visible
+          provider: views
+          context_mapping: {  }
+          views_label: ''
+          items_per_page: none
+          exposed: {  }
+        weight: 0
+        additional: {  }
+    third_party_settings: {  }
+  -
+    layout_id: layout_onecol
+    layout_settings:
+      label: 'Content Sorting Section'
+      context_mapping: {  }
+    components:
+      36857474-0fa2-48b0-8b32-b129e92cefa6:
+        uuid: 36857474-0fa2-48b0-8b32-b129e92cefa6
+        region: content
+        configuration:
+          id: 'views_block:dashboard_entityqueue-block_sorting'
           label: ''
           label_display: visible
           provider: views
@@ -138,14 +179,26 @@ layout:
         additional: {  }
     third_party_settings: {  }
   -
-    layout_id: layout_onecol
+    layout_id: layout_twocol_section
     layout_settings:
-      label: 'University Policies Section'
+      label: 'Design Settings / University Policies Section'
       context_mapping: {  }
+      column_widths: 50-50
     components:
+      46cd51f6-1b04-4a22-9adf-3f487aa7c804:
+        uuid: 46cd51f6-1b04-4a22-9adf-3f487aa7c804
+        region: first
+        configuration:
+          id: hs_theme_info_block
+          label: 'Design Settings'
+          label_display: visible
+          provider: hs_dashboard
+          context_mapping: {  }
+        weight: 0
+        additional: {  }
       699521ab-866a-4082-a866-fa122b54cc04:
         uuid: 699521ab-866a-4082-a866-fa122b54cc04
-        region: content
+        region: second
         configuration:
           id: hs_university_policies_block
           label: 'University Policies'

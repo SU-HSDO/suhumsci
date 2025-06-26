@@ -72,7 +72,3 @@ be the wrapper around the codeception commands.
 
 * [GitHub](https://github.com/SU-HSDO/suhumsci)
 * [Acquia Cloud subscription](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a)
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/fa85d434c3928bbf8d80/maintainability)](https://codeclimate.com/github/SU-HSDO/suhumsci/maintainability)
-[![CircleCI](https://circleci.com/gh/SU-HSDO/suhumsci/tree/develop.svg?style=svg)](https://circleci.com/gh/SU-HSDO/suhumsci/tree/develop)
-

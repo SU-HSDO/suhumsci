@@ -16,12 +16,12 @@
   .pager__item--next,
   .pager__item--previous {
     a {
-      color: var(--palette--secondary);
+      color: var(--palette--link-base-color);
       text-decoration: none;
 
       &:focus,
       &:hover {
-        color: var(--palette--secondary);
+        color: var(--palette--link-base-hover-color);
         text-decoration: underline;
         background-image: none;
         background-color: transparent;
@@ -36,26 +36,6 @@
       .hb-dark-inversion .views-element-container & {
         border: none;
         color: var(--palette--tertiary-reversed);
-      }
-
-      @include hb-colorful {
-        .hc-pairing-ocean & {
-          color: var(--palette--secondary-darken-12);
-        }
-      }
-
-      @include hb-traditional {
-        // Override link color and icon color for the Firefinch color pairing.
-        .ht-pairing-firefinch .hb-well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-          color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
       }
     }
   }

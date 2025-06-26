@@ -116,96 +116,6 @@
     }
   }
 
-  // Override default link color for the Canyon color pairing.
-  @include hb-themes(('colorful', 'airy')) {
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .hc-pairing-canyon & {
-        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
-          color: var(--palette--primary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the external link icon color is correct.
-        a.hs-external-link {
-          &::after {
-            background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'tertiary-darken-20')));
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Override links color and links with icons for the Firefinch color pairing.
-  @include hb-traditional {
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .ht-pairing-firefinch & {
-        a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
-          color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the private link icon color and more link icon color are correct.
-        a.hs-private-link {
-          &::before {
-            background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::before {
-              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-more-link {
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-secondary-button {
-          color: var(--palette--tertiary);
-          border-color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--white);
-            border-color: var(--palette--secondary);
-          }
-        }
-      }
-    }
-  }
-
   // Only in the textarea, does the well get display: table for being floated
   .hs-well,
   .pullquote {
@@ -451,7 +361,6 @@ a.hs-private-link,
 a.private-link,
 .private-link a {
   @include hb-link--inline;
-  color: var(--palette--secondary);
 
   .hb-dark-pattern.hb-local-footer & {
     @include hb-colorful {

@@ -111,7 +111,7 @@
   border: none;
   background: none;
   padding: 0;
-  color: var(--palette--secondary);
+  color: var(--palette--link-base-color);
 
   @include hb-traditional {
     font-weight: hb-theme-font-weight(semibold);
@@ -129,7 +129,7 @@
   &::after {
     content: '';
     display: inline-block;
-    @include hb-icon-link-arrow('secondary');
+    @include hb-icon-link-arrow('link-base-color');
     margin-left: hb-calculate-rems(8px);
     background-size: 85%;
     transition: hb-transition(transform);
@@ -139,16 +139,6 @@
       height: hb-calculate-rems(19px);
       width: hb-calculate-rems(19px);
       margin-bottom: hb-calculate-rems(-4px);
-
-      .hc-pairing-ocean & {
-        @include hb-icon-link-arrow('primary');
-        background-size: 85%;
-      }
-
-      .hc-pairing-ocean .hb-well & {
-        @include hb-icon-link-arrow('secondary-darken-12');
-        background-size: 85%;
-      }
     }
 
     @include hb-traditional {
@@ -160,37 +150,20 @@
 
   &:hover,
   &:focus {
-    color: var(--palette--secondary-darken-12);
+    color: var(--palette--link-base-hover-color);
 
     background-image: none;
     background-color: transparent;
 
     &::after {
-      @include hb-icon-link-arrow('secondary-darken-12');
+      @include hb-icon-link-arrow('link-base-hover-color');
       background-size: 85%;
       transform: translateX(#{hb-calculate-rems(2.5px)});
-
-      @include hb-colorful {
-        .hc-pairing-ocean & {
-          @include hb-icon-link-arrow('primary-dark');
-          background-size: 85%;
-        }
-      }
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      .hc-pairing-ocean & {
-        color: var(--palette--primary-dark);
-      }
     }
 
     // Warbler color pairing override.
     @include hb-traditional {
       text-decoration: underline;
-
-      .ht-pairing-warbler & {
-        color: var(--palette--secondary-darken-12);
-      }
     }
   }
 
@@ -312,7 +285,6 @@
 
 @mixin hb-icon-link-inline($icon) {
   @include hb-link--inline;
-  color: var(--palette--secondary);
 
   &::before {
     /* stylelint-disable */
@@ -373,5 +345,4 @@
       }
     }
   }
-
 }

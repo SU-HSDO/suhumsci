@@ -1,0 +1,9 @@
+services:
+  hs_dashboard.importer_info_manager:
+    class: Drupal\hs_dashboard\Plugin\ImporterInfoManager
+    parent: default_plugin_manager
+    arguments: ['@cache.default']
+
+  hs_dashboard.announcements_manager:
+    class: Drupal\hs_dashboard\AnnouncementsManager
+    arguments: ['@http_client', '@logger.factory', '@file_system', '@cache.default', '@config.factory']

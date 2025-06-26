@@ -17,7 +17,11 @@ const addCardEvents = (card, mainLink) => {
   });
 
   // Calculate when the "click" ends.
-  card.addEventListener('mouseup', () => {
+  card.addEventListener('mouseup', (event) => {
+    // Prevent right-click issues in Windows.
+    if (event.button !== 0) {
+      return;
+    }
     // Ensure clicks on "Add to Calendar" container
     if (event.target.closest('.addtocal-container')) {
       return;

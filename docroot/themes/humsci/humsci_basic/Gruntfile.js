@@ -6,9 +6,6 @@ module.exports = function (grunt) {
   function getIncludeFiles() {
     const patterns = [
       'src/**/*.scss',
-      // Decanter uses Bourbon imports relative to this path
-      'node_modules/bourbon/core',
-      'node_modules',
     ];
 
     const libraries = [];
@@ -26,7 +23,7 @@ module.exports = function (grunt) {
     watch: {
       css: {
         files: ['src/**/*.{scss,sass}'],
-        tasks: ['dart-sass:dist', 'dart-sass:ckeditor', 'dart-sass:preview'],
+        tasks: ['dart-sass:dist'],
         options: {
           interrupt: true,
         },
@@ -68,48 +65,15 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: 'src',
-            src: ['scss/**/[a-z]*.scss', '!scss/ckeditor/[a-z]*.scss'],
+            src: 'scss/**/[a-z]*.scss',
             dest: '../',
             ext: '.css',
             extDot: 'last',
             rename(dest, src) {
-              const filenameRegularExpression = /\w+(?=\.)/;
-              const themeName = src.match(filenameRegularExpression)[0];
-              return `${dest}${themeName}/css/${themeName}.css`;
-            },
-          },
-        ],
-      },
-      ckeditor: {
-        files: [
-          {
-            expand: true,
-            cwd: 'src',
-            src: ['scss/ckeditor/[a-z]*.scss', '!scss/ckeditor/imports.scss'],
-            dest: '../',
-            ext: '.css',
-            extDot: 'last',
-            rename(dest, src) {
-              const filenameRegularExpression = /\w+(?=\.)/;
-              const themeName = src.match(filenameRegularExpression)[0];
-              return `${dest}${themeName}/css/${themeName}-ckeditor.css`;
-            },
-          },
-        ],
-      },
-      preview: {
-        files: [
-          {
-            expand: true,
-            cwd: 'src',
-            src: ['scss/preview/[a-z]*.scss'],
-            dest: '../',
-            ext: '.css',
-            extDot: 'last',
-            rename(dest, src) {
-              const filenameRegularExpression = /\w+(?=\.)/;
-              const themeName = src.match(filenameRegularExpression)[0];
-              return `${dest}${themeName}/css/${themeName}-preview.css`;
+              const path = src.split('/');
+              const filename = path.pop().split('.')[0];
+              const themeName = path.pop();
+              return `${dest}${themeName}/css/${filename}.css`;
             },
           },
         ],
@@ -123,6 +87,4 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-run');
 
   grunt.registerTask('compile', ['dart-sass:dist', 'postcss:dist']);
-  grunt.registerTask('ckeditor', ['dart-sass:ckeditor', 'postcss:dist']);
-  grunt.registerTask('preview', ['dart-sass:preview', 'postcss:dist']);
 };

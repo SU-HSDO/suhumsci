@@ -89,7 +89,7 @@
 
   &::after {
     content: '';
-    @include hb-icon-background('ext-link', 'tertiary');
+    @include hb-icon-background('ext-link', 'link-base-color');
     display: inline-block;
     position: relative;
     background-position: center right;
@@ -103,30 +103,7 @@
 
   &:hover::after,
   &:focus::after {
-    @include hb-icon-background('ext-link', 'tertiary-darken-20');
-  }
-
-  .hb-dark-pattern & {
-    &::after {
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-icon-background('ext-link', 'tertiary-reversed');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('ext-link', 'tertiary-highlight');
-      }
-    }
-
-    &:hover::after,
-    &:focus::after {
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-icon-background('ext-link', 'tertiary-highlight');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
-      }
-    }
+    @include hb-icon-background('ext-link', 'link-base-hover-color');
   }
 }
 

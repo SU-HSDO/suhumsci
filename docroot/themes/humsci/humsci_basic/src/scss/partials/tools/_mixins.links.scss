@@ -56,49 +56,6 @@
   &:focus {
     color: var(--palette--link-base-hover-color);
   }
-
-  .hb-local-footer & {
-    &:hover,
-    &:focus {
-      color: var(--palette--tertiary-darken-20);
-    }
-  }
-
-  .hb-local-footer.hb-dark-pattern & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-  }
-
-  .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
-    @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--tertiary-reversed);
-      border-bottom-color: var(--palette--tertiary-reversed);
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-    }
-
-    &:hover,
-    &:focus {
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-ext-icon-color('tertiary-highlight');
-
-        color: var(--palette--tertiary-highlight);
-        border-bottom-color: var(--palette--tertiary-highlight);
-        box-shadow: none;
-      }
-
-      @include hb-traditional {
-        @include hb-ext-icon-color('tertiary-highlight-darken-10');
-
-        color: var(--palette--tertiary-highlight-darken-10);
-        text-decoration-color: var(--palette--tertiary-highlight-darken-10);
-      }
-    }
-  }
 }
 
 // More Link Styles
@@ -120,10 +77,6 @@
 
   @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(bold);
-
-    .hc-pairing-ocean & {
-      color: var(--palette--secondary-darken-12);
-    }
   }
 
   &::after {
@@ -164,56 +117,6 @@
     // Warbler color pairing override.
     @include hb-traditional {
       text-decoration: underline;
-    }
-  }
-
-  .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
-    @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--tertiary-reversed);
-
-      &::after {
-        @include hb-icon-link-arrow('tertiary-reversed');
-        background-size: 85%;
-      }
-
-      &:hover,
-      &:focus {
-        color: var(--palette--secondary-highlight);
-
-        .hc-pairing-ocean & {
-          color: var(--palette--tertiary-highlight);
-        }
-
-        &::after {
-          @include hb-icon-link-arrow('secondary-highlight');
-          background-size: 85%;
-
-          .hc-pairing-ocean & {
-            @include hb-icon-link-arrow('tertiary-highlight');
-            background-size: 85%;
-          }
-        }
-      }
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-
-      &::after {
-        @include hb-icon-link-arrow('tertiary-highlight');
-        background-size: 85%;
-      }
-
-      &:hover,
-      &:focus {
-        color: var(--palette--tertiary-highlight-darken-10);
-
-        &::after {
-          @include hb-icon-link-arrow('tertiary-highlight-darken-10');
-          background-size: 85%;
-        }
-      }
     }
   }
 }
@@ -304,45 +207,6 @@
       content: '\f15b';
     } @else {
       @error 'Invalid icon type. Use "pdf" or "file".';
-    }
-  }
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-
-    &:hover {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-    }
-
-    &::before {
-      @include hb-colorful {
-        color: var(--palette--white);
-      }
-
-      @include hb-traditional {
-        color: var(--palette--tertiary-highlight);
-      }
-    }
-  }
-
-  .hb-dark-pattern &::before {
-    color: var(--palette--secondary-highlight);
-  }
-
-  &:hover,
-  &:focus {
-    .hb-local-footer.hb-dark-pattern &::before {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-
-      @include hb-traditional {
-        color: var(--palette--tertiary-highlight-darken-10);
-      }
     }
   }
 }

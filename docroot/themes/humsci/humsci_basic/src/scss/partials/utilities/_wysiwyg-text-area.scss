@@ -323,37 +323,6 @@ a[href*="//"].hs-external-link,
 .hs-external-link a[href*="//"] {
   @include hb-link--inline;
   @include hb-external-link-icon;
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-
-      &:hover,
-      &:focus {
-        color: var(--palette--gray-medium);
-      }
-
-      &::after {
-        @include hb-icon-background('ext-link', 'white');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'gray-medium');
-      }
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-
-      &::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
 }
 
 a.hs-private-link,
@@ -361,18 +330,6 @@ a.hs-private-link,
 a.private-link,
 .private-link a {
   @include hb-link--inline;
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-
-    &:hover {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-    }
-  }
 
   &::before {
     content: '';
@@ -382,33 +339,13 @@ a.private-link,
     margin-bottom: hb-calculate-rems(-2px);
     margin-right: hb-calculate-rems(2px);
 
-    @include hb-icon-background('lock', 'secondary');
+    @include hb-icon-background('lock', 'link-base-color');
     background-repeat: no-repeat;
     background-size: cover;
-
-    .hb-dark-pattern & {
-      @include hb-colorful {
-        @include hb-icon-background('lock', 'white');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('lock', 'tertiary-highlight');
-      }
-    }
   }
 
   &:hover::before {
-    @include hb-icon-background('lock', 'tertiary-darken-20');
-
-    .hb-dark-pattern & {
-      @include hb-colorful {
-        @include hb-icon-background('lock', 'gray-medium');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('lock', 'tertiary-highlight-darken-10');
-      }
-    }
+    @include hb-icon-background('lock', 'link-base-hover-color');
   }
 }
 

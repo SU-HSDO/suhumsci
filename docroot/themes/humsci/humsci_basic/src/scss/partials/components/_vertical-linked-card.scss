@@ -139,20 +139,10 @@
     color: var(--palette--white);
     text-decoration: none;
 
-    // Warbler color pairing override.
-    .ht-pairing-warbler & {
-      color: var(--palette--white);
-    }
-
     &:hover,
     &:focus {
       color: var(--palette--white);
       background-image: none;
-
-      // Warbler color pairing override.
-      .ht-pairing-warbler & {
-        color: var(--palette--white);
-      }
     }
   }
 
@@ -168,12 +158,28 @@
       .field-hs-collection-items.item-per-row--4 & {
         padding: hb-calculate-rems(18px) hb-calculate-rems(18px) 0;
       }
+
+      // For those scenarios that a breakout box style is being used in the WYSIWYG.
+      .hs-well {
+        color: var(--palette--black);
+      }
+
+      // Update the base link color only when there's a breakout box style.
+      p:not(.hs-well) {
+        --palette--link-base-color: var(--palette--white);
+        --palette--link-base-hover-color: var(--palette--gray-medium);
+      }
     }
 
     @include hb-traditional {
       background-color: var(--palette--tertiary-reversed);
       padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
         hb-calculate-rems(28px);
+
+        a {
+          --palette--link-base-color: var(--palette--black);
+          --palette--link-base-hover-color: var(--palette--gray-dark);
+        }
     }
 
     @include grid-media-min('sm') {
@@ -184,66 +190,10 @@
       margin-bottom: 0;
     }
 
-    a,
-    a.hs-private-link,
-    a.hs-pdf-link,
-    a.hs-file-link {
-      @include hb-traditional {
-        color: var(--palette--black);
-
-        // Warbler color pairing override.
-        .ht-pairing-warbler & {
-          color: var(--palette--black);
-        }
-      }
-
-      @include hb-themes(('colorful', 'airy')) {
-        color: var(--palette--white);
-        background-image: none;
-      }
-
+    a {
       &:hover,
       &:focus {
         background-image: none;
-
-        @include hb-traditional {
-          color: var(--palette--gray-dark);
-
-          // Warbler color pairing override.
-          .ht-pairing-warbler & {
-            color: var(--palette--gray-dark);
-          }
-        }
-
-        @include hb-themes(('colorful', 'airy')) {
-          color: var(--palette--gray-medium);
-        }
-      }
-    }
-
-    .field-hs-postcard-body a.hs-private-link {
-      // Need extra nesting level for specificity.
-      &::before {
-        @include hb-traditional {
-          @include hb-icon-background('lock', 'black');
-        }
-
-        @include hb-colorful {
-          @include hb-icon-background('lock', 'white');
-        }
-      }
-
-      &:hover,
-      &:focus {
-        &::before {
-          @include hb-traditional {
-            @include hb-icon-background('lock', 'gray-dark');
-          }
-
-          @include hb-colorful {
-            @include hb-icon-background('lock', 'gray-medium');
-          }
-        }
       }
     }
   }

@@ -1,4 +1,20 @@
 .hb-vertical-linked-card {
+  @include hb-traditional {
+    --link-base-current-color: var(--palette--black);
+    --link-base-hover-current-color: var(--palette--gray-dark);
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    --link-base-current-color: var(--palette--white);
+    --link-base-hover-current-color: var(--palette--gray-medium);
+  }
+
+  .hs-well,
+  .hs-breakout-box {
+    --link-base-current-color: var(--palette--link-base-color);
+    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+  }
+
   position: relative;
   background-color: transparent;
 
@@ -159,15 +175,10 @@
         padding: hb-calculate-rems(18px) hb-calculate-rems(18px) 0;
       }
 
-      // For those scenarios that a breakout box style is being used in the WYSIWYG.
-      .hs-well {
+      // For those scenarios that a breakout box or hs-well style is being used in a WYSIWYG.
+      .hs-well,
+      .hs-breakout-box {
         color: var(--palette--black);
-      }
-
-      // Update the base link color only when there's a breakout box style.
-      p:not(.hs-well) {
-        --palette--link-base-color: var(--palette--white);
-        --palette--link-base-hover-color: var(--palette--gray-medium);
       }
     }
 
@@ -175,11 +186,6 @@
       background-color: var(--palette--tertiary-reversed);
       padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
         hb-calculate-rems(28px);
-
-        a {
-          --palette--link-base-color: var(--palette--black);
-          --palette--link-base-hover-color: var(--palette--gray-dark);
-        }
     }
 
     @include grid-media-min('sm') {
@@ -191,8 +197,10 @@
     }
 
     a {
-      &:hover,
-      &:focus {
+      @include hb-traditional {
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
         background-image: none;
       }
     }

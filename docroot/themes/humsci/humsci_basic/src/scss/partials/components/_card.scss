@@ -492,14 +492,17 @@
     a {
       @include hb-link;
 
-      // Warbler color pairing override.
-      @include hb-traditional {
-        .ht-pairing-warbler & {
-          &,
-          &:hover,
-          &:focus {
-            color: var(--palette--black);
-          }
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--link-base-current-color);
+      }
+
+      &:hover,
+      &:focus {
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          color: var(--link-base-hover-current-color);
+          text-decoration-color: var(--link-base-hover-current-color);
         }
       }
     }

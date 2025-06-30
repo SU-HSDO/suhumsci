@@ -15,13 +15,14 @@
   .pager__item--last,
   .pager__item--next,
   .pager__item--previous {
+    --link-base-current-color: var(--palette--link-base-color);
+    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+
     a {
-      color: var(--link-base-current-color);
       text-decoration: none;
 
       &:focus,
       &:hover {
-        color: var(--link-base-hover-current-color);
         text-decoration: underline;
         background-image: none;
         background-color: transparent;
@@ -44,6 +45,8 @@
   }
 
   &__item {
+    --link-base-current-color: var(--palette--gray-dark);
+
     &:first-of-type {
       margin-left: 0;
     }
@@ -53,7 +56,6 @@
     }
 
     a {
-      color: var(--palette--gray-dark);
       display: inline-block;
       padding: hb-calculate-rems(6px) hb-calculate-rems(9px);
       border-radius: $hb-button-border-radius;
@@ -72,7 +74,6 @@
       .hb-dark-inversion .views-element-container & {
         border: $hb-thin-border;
         border-color: transparent;
-        color: var(--link-base-current-color);
       }
 
       &:hover,
@@ -82,30 +83,32 @@
         .hb-dark-pattern &,
         .hb-dark-inversion .views-element-container & {
           background-color: transparent;
-          border-color: var(--link-base-current-color);
+          border-color: var(--link-base-hover-current-color);
         }
       }
     }
 
     &.is-active {
+      --link-base-current-color: var(--palette--white);
+
       background-color: var(--palette--gray-dark);
       display: inline-block;
       border-radius: $hb-button-border-radius;
 
-      a {
-        color: var(--palette--white);
 
+      a {
         &:hover,
         &:focus {
           cursor: default;
           background-color: transparent;
         }
-
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          color: var(--link-base-current-color);
-        }
       }
+    }
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      --link-base-current-color: var(--palette--link-base-color-dark);
+      --link-base-hover-current-color: var(--palette--link-base-hover-color-dark);
     }
 
     // Warbler color pairing override.

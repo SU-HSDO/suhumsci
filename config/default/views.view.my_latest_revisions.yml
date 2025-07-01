@@ -370,11 +370,24 @@ display:
       access:
         type: perm
         options:
-          perm: 'view all revisions'
+          perm: 'access content'
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: '<em>You have not created or edited any content.</em>'
+            format: basic_html
+          tokenize: false
       sorts:
         changed:
           id: changed
@@ -484,7 +497,20 @@ display:
           required: false
       group_by: true
       header: {  }
-      footer: {  }
+      footer:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: false
+          content:
+            value: '<div class="more-link"><a href="/admin/content" class="button button--primary">View all content</a></div>'
+            format: basic_html
+          tokenize: false
       display_extenders: {  }
     cache_metadata:
       max-age: -1

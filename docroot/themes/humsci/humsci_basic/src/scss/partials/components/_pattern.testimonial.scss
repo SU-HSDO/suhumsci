@@ -187,18 +187,7 @@
         color: var(--palette--white);
 
         &::after {
-          @include hb-icon-link-arrow('white');
-          background-size: 85%;
-        }
-
-        &:hover,
-        &:focus {
-          color: var(--palette--white);
-
-          &::after {
-            @include hb-icon-link-arrow('white');
-            background-size: 85%;
-          }
+          background-color: var(--palette--white);
         }
       }
 
@@ -213,13 +202,11 @@
         }
 
         &::after {
-          @include hb-icon-link-arrow('secondary');
-          background-size: 85%;
+          background-color: var(--palette--secondary);
 
           @include hb-themes(('colorful', 'airy')) {
             .hc-pairing-ocean & {
-              @include hb-icon-link-arrow('secondary-darken-12');
-              background-size: 85%;
+              background-color: var(--palette--secondary-darken-12);
             }
           }
         }
@@ -237,13 +224,12 @@
           }
 
           &::after {
-            @include hb-icon-link-arrow('secondary-darken-12');
-            background-size: 85%;
+            background-color: var(--palette--secondary-darken-12);
+            mask-size: 85%;
 
             @include hb-colorful {
               .hc-pairing-ocean & {
-                @include hb-icon-link-arrow('primary-dark');
-                background-size: 85%;
+                background-color: var(--palette--primary-dark);
               }
             }
           }

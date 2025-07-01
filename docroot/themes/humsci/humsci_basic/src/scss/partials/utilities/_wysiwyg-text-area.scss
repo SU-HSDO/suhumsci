@@ -339,13 +339,14 @@ a.private-link,
     margin-bottom: hb-calculate-rems(-2px);
     margin-right: hb-calculate-rems(2px);
 
-    @include hb-icon-background('lock', 'link-base-color');
-    background-repeat: no-repeat;
-    background-size: cover;
+    @include hb-icon-background('lock', 'link-base-color', true);
+    mask-repeat: no-repeat;
+    mask-size: cover;
+    background-color: var(--link-base-current-color);
   }
 
   &:hover::before {
-    @include hb-icon-background('lock', 'link-base-hover-color');
+    background-color: var(--link-base-hover-current-color);
   }
 }
 

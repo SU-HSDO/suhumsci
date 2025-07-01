@@ -623,11 +623,22 @@
         &::before {
           content: '';
           display: inline-block;
-          @include hb-icon-link-arrow($color: 'gray-light', $box-shadow: true);
+          background-repeat: no-repeat;
+          background-position: left;
           background-size: 85%;
           height: hb-calculate-rems(25px);
           width: hb-calculate-rems(25px);
           transition: hb-transition(transform);
+
+          @include hb-themes(('airy', 'colorful')) {
+            @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
+            filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+          }
+
+          @include hb-traditional {
+            @include hb-icon-background('arrow-right-long-box-shadow', 'gray-light', true);
+            filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+          }
         }
 
         &:hover,

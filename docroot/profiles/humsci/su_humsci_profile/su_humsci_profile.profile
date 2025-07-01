@@ -921,7 +921,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
   $is_admin = in_array('administrator', $roles);
   $is_manager = in_array('site_manager', $roles);
   $is_admin_or_manager = $is_admin || $is_manager;
-  $is_saml_user = $authmap->get($account->id(), 'samlauth');
+  $is_saml_user = !empty($account->id()) && $authmap->get($account->id(), 'samlauth');
 
   if ($is_saml_user) {
     // Changes to the user form for SAML users.
@@ -932,7 +932,6 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
     ];
     $form['account']['mail']['#disabled'] = !$is_admin;
     $form['account']['name']['#access'] = $is_admin_or_manager;
-    $form['account']['roles']['#access'] = $is_admin_or_manager;
     $form['account']['status']['#access'] = $is_admin_or_manager;
     $form['account']['pass']['#access'] = FALSE;
   }
@@ -943,7 +942,6 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
     $form['account']['name']['#description'] = t('Warning: This person uses their username to log in.  Please notify them before changing.');
     $form['account']['pass']['#description'] = t('Warning: This person uses their password to log in.  Please notify them before changing.');
     $form['account']['pass']['#access'] = TRUE;
-    $form['account']['roles']['#access'] = $is_admin_or_manager;
     $form['account']['status']['#access'] = $is_admin_or_manager;
   }
 

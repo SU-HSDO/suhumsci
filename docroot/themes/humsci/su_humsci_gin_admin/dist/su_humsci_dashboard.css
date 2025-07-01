@@ -173,6 +173,11 @@ html .dashboard-content.user-logged-in {
   border-bottom: 1px solid #dbdbdb;
 }
 
+.dashboard-content .layout .block > .contextual-region {
+  margin-inline: 0;
+  margin-block-end: 0;
+}
+
 /* Remove table wrapper for all blocks except for importers */
 .dashboard-content .layout .layout__region .block:not(.block-hs-dashboard-importers) .gin-layer-wrapper {
   background: var(--color-dashboard-white);
@@ -288,4 +293,27 @@ html .dashboard-content.user-logged-in {
 
 .dashboard-content .block-hs-theme-info-block dl div dd {
   margin: 0;
+}
+
+/* 'No results' message */
+.dashboard-content .block .view-empty,
+.dashboard-content .block-hs-dashboard-importers .importers-no-data-message {
+  block-size: auto;
+  padding: var(--gin-spacing-m) var(--gin-spacing-l);
+  text-align: left;
+  font-size: var(--gin-font-size);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.dashboard-content .block .view-empty {
+  display: block;
+}
+
+.dashboard-content .block-hs-dashboard-importers .importers-no-data-message {
+  padding: var(--gin-spacing-m);
+}
+
+.dashboard-content .block-hs-siteimprove-broken-links .view-empty {
+  padding: var(--gin-spacing-m) 0;
 }

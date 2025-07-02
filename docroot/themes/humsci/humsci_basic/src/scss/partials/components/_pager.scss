@@ -112,24 +112,9 @@
       --link-base-hover-current-color: var(--palette--link-base-hover-color-dark);
     }
 
-    // Warbler color pairing override.
-    @include hb-traditional {
-      .ht-pairing-warbler & {
-        .hs-button, .hs-button a,
-        .hs-button--big, .hs-button--big a {
-          &, &:hover, &:focus {
-            color: var(--palette--white);
-          }
-        }
-
-        .hs-secondary-button, .hs-secondary-button a {
-          color: var(--palette--secondary);
-
-          &:hover, &:focus {
-            color: var(--palette--white);
-          }
-        }
-      }
+    // Buttons in infinite scroll pager.
+    a.hs-button {
+      @include hb-button;
     }
   }
 }

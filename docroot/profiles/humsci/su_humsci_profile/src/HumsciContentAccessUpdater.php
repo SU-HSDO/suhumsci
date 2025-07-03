@@ -10,10 +10,11 @@ use Drupal\node\NodeInterface;
  *
  * The content access module allows different permissions per content type. The
  * configuration (content_access.settings) is config ignored. This service will
- * update relevent access setting per bundle or per node without affecting any
+ * update relevant access setting per bundle or per node without affecting any
  * existing settings.
  */
 class HumsciContentAccessUpdater {
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -58,10 +59,11 @@ class HumsciContentAccessUpdater {
 
     foreach ($this->requiredRoles as $role => $operations) {
       foreach ($operations as $op) {
-        if (!isset($settings[$op]) || !in_array($role, $settings[$op])) {
-          $settings[$op][] = $role;
-          $results[] = t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
+        if (isset($settings[$op]) && in_array($role, $settings[$op])) {
+          continue;
         }
+        $settings[$op][] = $role;
+        $results[] = t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
       }
     }
 
@@ -97,11 +99,12 @@ class HumsciContentAccessUpdater {
     if ($node_settings) {
       foreach ($this->requiredRoles as $role => $operations) {
         foreach ($operations as $op) {
-          if (!isset($node_settings[$op]) || !in_array($role, $node_settings[$op])) {
-            $node_settings[$op][] = $role;
-            $results[] = t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
-            $changed = TRUE;
+          if (isset($node_settings[$op]) && in_array($role, $node_settings[$op])) {
+            continue;
           }
+          $node_settings[$op][] = $role;
+          $results[] = t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
+          $changed = TRUE;
         }
       }
 

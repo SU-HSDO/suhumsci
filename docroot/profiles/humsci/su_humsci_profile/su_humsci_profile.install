@@ -1418,10 +1418,11 @@ function su_humsci_profile_update_9729() {
 function su_humsci_profile_update_9730(&$sandbox) {
   $node_type = 'hs_private_page';
   $content_access_updater = \Drupal::service('su_humsci_profile.content_access_updater');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
   if (empty($sandbox['ids'])) {
     $sandbox['results'] = [];
-    $ids = \Drupal::entityTypeManager()->getStorage('node')
+    $ids = $node_storage
       ->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', $node_type)
@@ -1431,7 +1432,6 @@ function su_humsci_profile_update_9730(&$sandbox) {
   }
 
   $nids = array_slice($sandbox['ids'], 0, 100);
-  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
 
   /** @var \Drupal\node\NodeInterface $node */
   foreach ($node_storage->loadMultiple($nids) as $node) {

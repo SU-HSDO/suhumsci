@@ -945,9 +945,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
   $form['actions']['delete']['#access'] = $is_admin;
 
   // Hide system roles that should not be manually assigned.
-  if (isset($form['account']['roles']['#options']['search_indexer'])) {
-    unset($form['account']['roles']['#options']['search_indexer']);
-  }
+  unset($form['account']['roles']['#options']['search_indexer']);
 
   if ($is_saml_user) {
     // Changes to the user form for SAML users.

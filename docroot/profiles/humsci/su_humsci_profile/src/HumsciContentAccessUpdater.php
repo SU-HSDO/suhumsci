@@ -17,13 +17,6 @@ class HumsciContentAccessUpdater {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The required roles and their allowed operations.
    *
    * @var array
@@ -33,16 +26,6 @@ class HumsciContentAccessUpdater {
     'administrator' => ['view', 'view_own', 'update', 'update_own', 'delete', 'delete_own'],
     'site_manager' => ['view', 'view_own', 'update', 'update_own', 'delete', 'delete_own'],
   ];
-
-  /**
-   * Constructs a new HumsciContentAccessUpdater.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-  }
 
   /**
    * Updates bundle-level content access settings.

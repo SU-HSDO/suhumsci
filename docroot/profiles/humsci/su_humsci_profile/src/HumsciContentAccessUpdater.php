@@ -2,8 +2,8 @@
 
 namespace Drupal\su_humsci_profile;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Service for updating content access settings.
@@ -46,20 +46,20 @@ class HumsciContentAccessUpdater {
           continue;
         }
         $settings[$op][] = $role;
-        $results[] = t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
+        $results[] = $this->t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
       }
     }
 
     if (empty($settings['per_node'])) {
       $settings['per_node'] = TRUE;
-      $results[] = t('Enforced per-node Content Access.');
+      $results[] = $this->t('Enforced per-node Content Access.');
     }
 
     if ($results) {
       content_access_set_settings($settings, $bundle);
-      $results[] = t('Saved Content Access settings for %bundle.', ['%bundle' => $bundle]);
+      $results[] = $this->t('Saved Content Access settings for %bundle.', ['%bundle' => $bundle]);
       node_access_rebuild(TRUE);
-      $results[] = t('Rebuilt node access.');
+      $results[] = $this->t('Rebuilt node access.');
     }
 
     return $results;
@@ -86,7 +86,7 @@ class HumsciContentAccessUpdater {
             continue;
           }
           $node_settings[$op][] = $role;
-          $results[] = t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
+          $results[] = $this->t('Added %role to %op permissions.', ['%role' => $role, '%op' => $op]);
           $changed = TRUE;
         }
       }

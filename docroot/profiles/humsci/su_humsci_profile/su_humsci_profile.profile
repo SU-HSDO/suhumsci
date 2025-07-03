@@ -975,9 +975,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
  */
 function su_humsci_profile_form_stanford_samlauth_add_user_alter(&$form, FormStateInterface $form_state) {
   // Hide system roles that should not be manually assigned.
-  if (isset($form['roles']['#options']['search_indexer'])) {
-    unset($form['roles']['#options']['search_indexer']);
-  }
+  unset($form['roles']['#options']['search_indexer']);
 }
 
 /**

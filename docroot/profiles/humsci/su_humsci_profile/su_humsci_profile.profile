@@ -941,7 +941,7 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
 
   // Remove unnecessary URL alias fields from the user edit form for all users.
   $form['path']['#access'] = FALSE;
-  // Remove Delete account button for all roles expect 'administrator'.
+  // Remove Delete account button for all roles except 'administrator'.
   $form['actions']['delete']['#access'] = $is_admin;
 
   // Hide system roles that should not be manually assigned.

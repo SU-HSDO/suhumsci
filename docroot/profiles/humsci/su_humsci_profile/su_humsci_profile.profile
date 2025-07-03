@@ -802,17 +802,22 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
     $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
     $form['status']['#access'] = !$access->isForbidden();
   }
-  if ($form_id == 'content_access_page' || $form_id == 'content_access_admin_settings') {
-    // Modifies the content access control form to customize role permissions.
-    // See /admin/structure/types/manage/{bundle}/access and /node/{nid}/access.
-    if (isset($form['per_role'])) {
-      foreach ($form['per_role'] as $key => $element) {
-        if (is_array($element) && isset($element['#options'])) {
-          $form['per_role'][$key]['#process'][] = '_su_humsci_profile_process_per_role_field';
-        }
-      }
-    }
+if ($form_id != 'content_access_page' && $form_id != 'content_access_admin_settings') {
+  return;
+}
+
+// Modifies the content access control form to customize role permissions.
+// See /admin/structure/types/manage/{bundle}/access and /node/{nid}/access.
+if (empty($form['per_role'])) {
+  return;
+}
+
+foreach ($form['per_role'] as $key => $element) {
+  if (!is_array($element) || empty($element['#options'])) {
+    continue;
   }
+  $form['per_role'][$key]['#process'][] = '_su_humsci_profile_process_per_role_field';
+}
 }
 
 /**

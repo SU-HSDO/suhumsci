@@ -251,10 +251,18 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     $links = array_map([$this, 'linkWithIcon'], $this->configuration['links']);
     $placed_block_id = $this->configuration['placed_block_id'];
 
+    $text_above = $this->configuration['text_above'];
+    $text_below = $this->configuration['text_below'];
+
+    $text_above_value = is_array($text_above) ? $text_above['value'] : $text_above;
+    $text_below_value = is_array($text_below) ? $text_below['value'] : $text_below;
+
     $build = [
       '#theme' => 'hs_blocks_social_media',
       '#icon_size' => $this->configuration['icon_size'],
       '#layout' => $this->configuration['layout'],
+      '#text_above' => $text_above_value,
+      '#text_below' => $text_below_value,
       '#links' => $links,
       '#contextual_links' => [
         'social_media_block' => [

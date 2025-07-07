@@ -1402,3 +1402,34 @@ function su_humsci_profile_update_9728() {
     user_role_grant_permissions($role, ['view main_dashboard dashboard']);
   }
 }
+
+/**
+ * Add field_metatags to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9729() {
+  // Load the entity form display for hs_basic_page.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load('node.hs_basic_page.default');
+
+  if ($form_display) {
+    // Add the field_metatags component with the specified settings.
+    $form_display->setComponent('field_metatags', [
+      'type' => 'metatag_simple',
+      'weight' => 11,
+      'region' => 'content',
+      'settings' => [
+        'show_default_values' => 0,
+      ],
+      'third_party_settings' => [
+        'field_formatter_class' => [
+          'class' => '',
+        ],
+      ],
+    ])->save();
+
+    return t('Added field_metatags to hs_basic_page entity form display.');
+  }
+
+  return t('Could not load hs_basic_page entity form display.');
+}

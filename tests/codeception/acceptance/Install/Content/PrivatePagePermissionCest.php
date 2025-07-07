@@ -10,7 +10,6 @@ class PrivatePagePermissionCest{
   private $rolesWithAccess = [
     'site_manager',
     'administrator',
-    'contributor',
     'intranet_viewer',
   ];
 

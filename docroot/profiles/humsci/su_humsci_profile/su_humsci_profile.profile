@@ -802,6 +802,22 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
     $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
     $form['status']['#access'] = !$access->isForbidden();
   }
+  if ($form_id != 'content_access_page' && $form_id != 'content_access_admin_settings') {
+    return;
+  }
+
+  // Modifies the content access control form to customize role permissions.
+  // See /admin/structure/types/manage/{bundle}/access and /node/{nid}/access.
+  if (empty($form['per_role'])) {
+    return;
+  }
+
+  foreach ($form['per_role'] as $key => $element) {
+    if (!is_array($element) || empty($element['#options'])) {
+      continue;
+    }
+    $form['per_role'][$key]['#process'][] = '_su_humsci_profile_process_per_role_field';
+  }
 }
 
 /**
@@ -923,6 +939,14 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
   $is_admin_or_manager = $is_admin || $is_manager;
   $is_saml_user = !empty($account->id()) && $authmap->get($account->id(), 'samlauth');
 
+  // Remove unnecessary URL alias fields from the user edit form for all users.
+  $form['path']['#access'] = FALSE;
+  // Remove Delete account button for all roles except 'administrator'.
+  $form['actions']['delete']['#access'] = $is_admin;
+
+  // Hide system roles that should not be manually assigned.
+  unset($form['account']['roles']['#options']['search_indexer']);
+
   if ($is_saml_user) {
     // Changes to the user form for SAML users.
     $form['account']['name']['#description'] = t('By default this is the SUNet ID. You can change this to their real name to make the content logs easier to understand.');
@@ -944,8 +968,42 @@ function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form
     $form['account']['pass']['#access'] = TRUE;
     $form['account']['status']['#access'] = $is_admin_or_manager;
   }
+}
 
-  // Remove Delete account button for all roles expect 'administrator'.
-  $form['actions']['delete']['#access'] = $is_admin;
-  $form['path']['#access'] = FALSE;
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_stanford_samlauth_add_user_alter(&$form, FormStateInterface $form_state) {
+  // Hide system roles that should not be manually assigned.
+  unset($form['roles']['#options']['search_indexer']);
+}
+
+/**
+ * Process callback for role-based access control form elements.
+ *
+ * @param array &$element
+ *   The form element to process.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array &$complete_form
+ *   The complete form structure.
+ *
+ * @return array
+ *   The processed form element.
+ */
+function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface $form_state, &$complete_form) {
+  if (isset($element['search_indexer'])) {
+    $element['search_indexer']['#access'] = FALSE;
+  }
+  if (isset($element['anonymous'])) {
+    $element['anonymous']['#access'] = FALSE;
+  }
+  if (isset($element['authenticated'])) {
+    $element['authenticated']['#title'] = 'All logged in users';
+  }
+  if (isset($element['site_manager'])) {
+    $element['site_manager']['#default_value'] = 'site_manager';
+    $element['site_manager']['#disabled'] = TRUE;
+  }
+  return $element;
 }

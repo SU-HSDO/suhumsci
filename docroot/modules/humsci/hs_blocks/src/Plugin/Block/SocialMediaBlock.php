@@ -84,7 +84,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
 
     $form['above'] = [
       '#type' => 'details',
-      '#title' => t('Above'),
+      '#title' => t('Content Above Icons'),
       '#open' => FALSE,
     ];
     $form['above']['text_above'] = [
@@ -186,7 +186,7 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     ];
     $form['below'] = [
       '#type' => 'details',
-      '#title' => t('Below'),
+      '#title' => t('Content Below Icons'),
       '#open' => FALSE,
     ];
     $form['below']['text_below'] = [

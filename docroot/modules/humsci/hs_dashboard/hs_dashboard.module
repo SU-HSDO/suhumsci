@@ -62,6 +62,18 @@ function hs_dashboard_views_data_alter(array &$data) {
       'id' => 'hs_dashboard_source_field',
     ],
   ];
+  // Join node data to editoria11y_results.
+  $data['editoria11y_results']['node'] = [
+    'title' => t('Referenced node'),
+    'help' => t('Relate this result to its node.'),
+    'relationship' => [
+      'base' => 'node_field_data',
+      'base field' => 'nid',
+      'field' => 'entity_id',
+      'id' => 'editoria11y_results_node',
+      'label' => t('Node from editoria11y_results'),
+    ],
+  ];
 }
 
 /**

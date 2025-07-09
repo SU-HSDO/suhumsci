@@ -1402,3 +1402,98 @@ function su_humsci_profile_update_9728() {
     user_role_grant_permissions($role, ['view main_dashboard dashboard']);
   }
 }
+
+/**
+ * Set permissions for private pages at bundle level.
+ */
+function su_humsci_profile_update_9729() {
+  $node_type = 'hs_private_page';
+  $content_access_updater = \Drupal::service('su_humsci_profile.content_access_updater');
+  return $content_access_updater->updateBundleSettings($node_type);
+}
+
+/**
+ * Set any additional per-node permissions for private pages.
+ */
+function su_humsci_profile_update_9730(&$sandbox) {
+  $node_type = 'hs_private_page';
+  $content_access_updater = \Drupal::service('su_humsci_profile.content_access_updater');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['results'] = [];
+    $sandbox['updated'] = 0;
+    $ids = $node_storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $node_type)
+      ->execute();
+    $sandbox['ids'] = array_combine($ids, $ids);
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $nids = array_slice($sandbox['ids'], 0, 100);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($node_storage->loadMultiple($nids) as $node) {
+    $results = $content_access_updater->updateNodeSettings($node);
+    if (!empty($results)) {
+      $sandbox['updated']++;
+    }
+    unset($sandbox['ids'][$node->id()]);
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+  return t('Updated content access for @count nodes.', ['@count' => $sandbox['updated']]);
+}
+
+/**
+ * Update hook to set weights for custom roles.
+ */
+function su_humsci_profile_update_9731() {
+  /** @var \Drupal\user\RoleStorageInterface $role_storage */
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  /** @var \Drupal\user\RoleInterface[] $roles */
+  $roles = $role_storage->loadMultiple();
+
+  foreach ($roles as $role) {
+    $id = $role->id();
+    $label = $role->label();
+
+    // Only operate on roles with machine name starting with 'custm'.
+    if (!str_starts_with($id, 'custm')) {
+      continue;
+    }
+
+    $weight = str_starts_with($label, 'Stanford') ? 5 : -1;
+    $role->set('weight', $weight);
+    $role->save();
+  }
+}
+
+/**
+ * Update config ignore settings for content_access_simple.
+ */
+function su_humsci_profile_update_9732() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $ignored_config_entities = $config->get('ignored_config_entities');
+
+  // Remove the entries we want to stop ignoring.
+  $ignored_config_entities = array_diff($ignored_config_entities, [
+    'core.extension:module.content_access_simple',
+    'content_access_simple.settings',
+  ]);
+
+  $config->set('ignored_config_entities', $ignored_config_entities);
+  $config->save();
+}
+
+/**
+ * Grants site managers access to the new content access simple module.
+ */
+function su_humsci_profile_update_9733() {
+  \Drupal::service('module_installer')->install(['content_access_simple']);
+  user_role_grant_permissions('site_manager', [
+    'access content access simple',
+  ]);
+}

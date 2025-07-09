@@ -4,15 +4,33 @@ $hb-current-theme: 'traditional' !default;
 
 @import '../base-imports';
 
+// Font definitions.
+@import '../fonts/fonts';
+
 .paragraph-admin-preview {
-  @each $color, $value in $hc-colorful-globals {
-    --palette--#{$color}: #{$value};
+  @include hb-themes(('colorful', 'airy')) {
+    @each $color, $value in $hc-colorful-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+  @include hb-traditional {
+    @each $color, $value in $ht-traditional-globals {
+      --palette--#{$color}: #{$value};
+    }
   }
 
   // Load main stylesheet with current theme.
   // All styles will be prefixed with the `.paragraph-admin-preview` class.
   @include meta.load-css(
     '../main',
+    $with: (
+      'hb-current-theme': $hb-current-theme,
+    )
+  );
+
+  // Utility classes.
+  @include meta.load-css(
+    '../utilities/utilities',
     $with: (
       'hb-current-theme': $hb-current-theme,
     )

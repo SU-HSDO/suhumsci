@@ -1,0 +1,29 @@
+uuid: a710a6e3-4e6a-4802-a25f-16a82476e974
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_metatags_image
+    - media.type.image
+    - node.type.hs_basic_page
+id: node.hs_basic_page.field_metatags_image
+field_name: field_metatags_image
+entity_type: node
+bundle: hs_basic_page
+label: 'Meta Image'
+description: 'When this page is shared on social media, the image is automatically derived from the content.  Override that by choosing an image here.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

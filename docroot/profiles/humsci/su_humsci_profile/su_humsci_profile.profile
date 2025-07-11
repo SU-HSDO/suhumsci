@@ -203,47 +203,6 @@ function su_humsci_profile_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_metatags_alter().
- */
-function su_humsci_profile_metatags_alter(array &$metatags, array &$context) {
-  if ($context['entity'] instanceof NodeInterface && $context['entity']->bundle() == 'hs_basic_page') {
-    if ($context['entity']->hasField('field_hs_page_hero') && $context['entity']->get('field_hs_page_hero')->count()) {
-
-      /** @var \Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem $field_item */
-      $field_item = $context['entity']->get('field_hs_page_hero')->get(0);
-      $paragraph_id = $field_item->get('target_id')->getString();
-
-      $paragraph = \Drupal::entityTypeManager()
-        ->getStorage('paragraph')
-        ->load($paragraph_id);
-
-      if (!$paragraph) {
-        return;
-      }
-
-      switch ($paragraph->bundle()) {
-        case 'hs_gradient_hero_slider':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_gradient_hero_slides:entity:field_hs_gradient_hero_image$2', $metatags);
-          break;
-
-        case 'hs_carousel':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_carousel_slides:entity:field_hs_hero_image$2', $metatags);
-          break;
-
-        case 'hs_hero_image':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_hero_image$2', $metatags);
-          break;
-
-        case 'hs_sptlght_slder':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_sptlght_sldes:entity:field_hs_spotlight_image$2', $metatags);
-          break;
-
-      }
-    }
-  }
-}
-
-/**
  * Similar to `preg_replace`, but only on string values.
  *
  * @param mixed $search
@@ -817,6 +776,30 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
       continue;
     }
     $form['per_role'][$key]['#process'][] = '_su_humsci_profile_process_per_role_field';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for hs_basic_page add form.
+ */
+function su_humsci_profile_form_node_hs_basic_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _su_humsci_profile_move_metatag_image($form);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for hs_basic_page edit form.
+ */
+function su_humsci_profile_form_node_hs_basic_page_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _su_humsci_profile_move_metatag_image($form);
+}
+
+/**
+ * Move field_metatags_image into the metatag widget for unified editing.
+ */
+function _su_humsci_profile_move_metatag_image(array &$form) {
+  if (isset($form['field_metatags']['widget'][0], $form['field_metatags_image'])) {
+    $form['field_metatags']['widget'][0]['field_metatags_image'] = $form['field_metatags_image'];
+    unset($form['field_metatags_image']);
   }
 }
 

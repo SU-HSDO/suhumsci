@@ -1528,3 +1528,28 @@ function su_humsci_profile_update_9734() {
 
   return t('Could not load hs_basic_page entity form display.');
 }
+
+/**
+ * Add field_metatags_image to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9735() {
+  // Load the entity form display for hs_basic_page.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load('node.hs_basic_page.default');
+
+  if ($form_display) {
+    // Add the field_metatags_image component with the specified settings.
+    $form_display->setComponent('field_metatags_image', [
+      'type' => 'media_library_widget',
+      'weight' => 13,
+      'region' => 'content',
+      'settings' => [
+        'media_types' => [],
+      ],
+      'third_party_settings' => [],
+    ])->save();
+    return t('Added field_metatags_image to hs_basic_page entity form display.');
+  }
+  return t('Could not load hs_basic_page entity form display.');
+}

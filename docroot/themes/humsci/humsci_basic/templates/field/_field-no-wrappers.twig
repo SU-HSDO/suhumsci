@@ -36,6 +36,25 @@
  * @see template_preprocess_field()
  */
 #}
-
-{% include '@humsci_basic/field/_field-no-wrappers.twig' %}
-
+{% if label_hidden %}
+  {% if multiple %}
+    {% for item in items %}
+      {{ item.content }}
+    {% endfor %}
+  {% else %}
+    {% for item in items %}
+      {{ item.content }}
+    {% endfor %}
+  {% endif %}
+{% else %}
+  <div{{ title_attributes }}>{{ label }}</div>
+  {% if multiple %}
+    <div>
+  {% endif %}
+  {% for item in items %}
+    {{ item.content }}
+  {% endfor %}
+  {% if multiple %}
+    </div>
+  {% endif %}
+{% endif %}

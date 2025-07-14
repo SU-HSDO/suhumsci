@@ -54,29 +54,15 @@
 
   @include hb-themes(('airy', 'colorful')) {
     color: var(--palette--black);
-
-    &:hover,
-    &:focus {
-      border-color: var(--palette--black);
-    }
   }
 
   @include hb-traditional {
     color: var(--palette--gray-dark);
+  }
 
-    &:hover,
-    &:focus {
-      border-color: var(--palette--primary);
-    }
-
-    // Warbler color pairing override.
-    .ht-pairing-warbler & {
-      color: var(--palette--gray-dark);
-
-      &:hover, &:focus {
-        color: var(--palette--black);
-      }
-    }
+  &:hover,
+  &:focus {
+    color: var(--palette--black);
   }
 
   .hb-dark-pattern &,
@@ -85,10 +71,6 @@
     border-color: transparent;
   }
 
-  &:hover,
-  &:focus {
-    color: var(--palette--black);
-  }
 }
 
 @mixin hb-pill($link: true) {

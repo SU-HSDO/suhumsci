@@ -492,14 +492,17 @@
     a {
       @include hb-link;
 
-      // Warbler color pairing override.
-      @include hb-traditional {
-        .ht-pairing-warbler & {
-          &,
-          &:hover,
-          &:focus {
-            color: var(--palette--black);
-          }
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--link-base-current-color);
+      }
+
+      &:hover,
+      &:focus {
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          color: var(--link-base-hover-current-color);
+          text-decoration-color: var(--link-base-hover-current-color);
         }
       }
     }
@@ -518,88 +521,11 @@
       &:not(:last-child) {
         margin-bottom: hb-spacing-width('xs');
       }
-
-      // Link color overrides for canyon color pairing.
-      .hc-pairing-canyon .hb-well &,
-      .hc-pairing-canyon .hs-paragraph-style--well &,
-      .hc-pairing-canyon .hs-paragraph-style--well-full-width & {
-        a:not([class]),
-        a.mailto,
-        a[href*="mailto:"],
-        a.ext,
-        a.hs-external-link {
-          color: var(--palette--primary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--primary-darken-20);
-          }
-        }
-
-        a.hs-external-link::after {
-          background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
-        }
-      }
     }
 
     @include hb-traditional {
       &:not(:last-child) {
         margin-bottom: hb-calculate-rems(10px);
-      }
-
-      // Override links color and links with icons for the Firefinch color pairing.
-      .hb-well &,
-      .hs-paragraph-style--well &,
-      .hs-paragraph-style--well-full-width &,
-      .hs-breakout-box {
-        .ht-pairing-firefinch & {
-          a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
-            color: var(--palette--tertiary);
-
-            &:hover,
-            &:focus {
-              color: var(--palette--tertiary-darken-20);
-            }
-          }
-
-          // Ensure that the private link icon color and more link icon color are correct.
-          a.hs-private-link {
-            &::before {
-              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-            }
-
-            &:hover,
-            &:focus {
-              &::before {
-                background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-              }
-            }
-          }
-
-          a.hs-more-link {
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-            }
-
-            &:hover,
-            &:focus {
-              &::after {
-                background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-              }
-            }
-          }
-
-          .hs-secondary-button a {
-            color: var(--palette--tertiary);
-            border-color: var(--palette--tertiary);
-
-            &:hover,
-            &:focus {
-              color: var(--palette--white);
-              border-color: var(--palette--secondary);
-            }
-          }
-        }
       }
     }
 
@@ -627,26 +553,6 @@
 
       @include hb-traditional {
         @include hb-more-link;
-
-        // Override link color and icon color for the Firefinch color pairing.
-        .ht-pairing-firefinch .hb-well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-          color: var(--palette--tertiary);
-
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-
-            &::after {
-                background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-              }
-          }
-        }
       }
     }
   }

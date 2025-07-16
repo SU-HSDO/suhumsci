@@ -203,6 +203,49 @@ function su_humsci_profile_entity_presave(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_metatags_alter().
+ */
+function su_humsci_profile_metatags_alter(array &$metatags, array &$context) {
+  $entity = $context['entity'];
+
+  if ($entity instanceof NodeInterface
+      && $entity->bundle() == 'hs_basic_page'
+      && $entity->hasField('field_metatags_image')
+      && $entity->get('field_metatags_image')->isEmpty()
+      && $entity->hasField('field_hs_page_hero')
+      && $entity->get('field_hs_page_hero')->count()) {
+
+    /** @var \Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem $field_item */
+    $field_item = $entity->get('field_hs_page_hero')->get(0);
+    $paragraph_id = $field_item->get('target_id')->getString();
+
+    $paragraph = \Drupal::entityTypeManager()
+      ->getStorage('paragraph')
+      ->load($paragraph_id);
+
+    if ($paragraph) {
+      switch ($paragraph->bundle()) {
+        case 'hs_gradient_hero_slider':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_gradient_hero_slides:entity:field_hs_gradient_hero_image$2', $metatags);
+          break;
+
+        case 'hs_carousel':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_carousel_slides:entity:field_hs_hero_image$2', $metatags);
+          break;
+
+        case 'hs_hero_image':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_hero_image$2', $metatags);
+          break;
+
+        case 'hs_sptlght_slder':
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_sptlght_sldes:entity:field_hs_spotlight_image$2', $metatags);
+          break;
+      }
+    }
+  }
+}
+
+/**
  * Similar to `preg_replace`, but only on string values.
  *
  * @param mixed $search

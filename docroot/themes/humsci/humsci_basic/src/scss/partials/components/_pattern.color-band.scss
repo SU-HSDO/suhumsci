@@ -73,47 +73,12 @@
     .hb-color-band--link.hs-more-link button {
       color: var(--palette--black);
 
-      @include hb-colorful {
-        .hc-pairing-ocean & {
-          color: var(--palette--black);
-        }
-      }
-
-      // Warbler color pairing override.
-      @include hb-traditional {
-        .ht-pairing-warbler & {
-          color: var(--palette--black);
-        }
-      }
-
       &:hover,
       &:focus {
         color: var(--palette--black);
 
-        @include hb-colorful {
-          .hc-pairing-ocean & {
-            color: var(--palette--black);
-          }
-        }
-
-        // Warbler color pairing override.
-        @include hb-traditional {
-          .ht-pairing-warbler & {
-            color: var(--palette--black);
-          }
-        }
-
         &::after {
-          @include hb-icon-link-arrow('black');
-
-          background-size: 85%;
-
-          *[class*='hc-pairing-'] &,
-          *[class*='ht-pairing-'] & {
-            @include hb-icon-link-arrow('black');
-
-            background-size: 85%;
-          }
+          background-color: var(--palette--black);
         }
       }
     }
@@ -122,16 +87,7 @@
     .hb-color-band--link.hs-more-link a::after,
     .hb-color-band--link .hs-more-link button::after,
     .hb-color-band--link.hs-more-link button::after {
-      @include hb-icon-link-arrow('black');
-
-      background-size: 85%;
-
-      *[class*='hc-pairing-'] &,
-      *[class*='ht-pairing-'] & {
-        @include hb-icon-link-arrow('black');
-
-        background-size: 85%;
-      }
+      background-color: var(--palette--black);
     }
   }
 
@@ -168,48 +124,13 @@
     display: inline-block;
     margin-bottom: hb-calculate-rems(12px);
 
-    @include hb-colorful {
-      .hc-pairing-ocean & {
-        color: var(--palette--white);
-      }
-    }
-
-    // Warbler color pairing override.
-    @include hb-traditional {
-      .ht-pairing-warbler & {
-        color: var(--palette--white);
-      }
-    }
-
     &:hover,
     &:focus {
       color: var(--palette--white);
       text-decoration: underline;
 
-      @include hb-colorful {
-        .hc-pairing-ocean & {
-          color: var(--palette--white);
-        }
-      }
-
-      // Warbler color pairing override.
-      @include hb-traditional {
-        .ht-pairing-warbler & {
-          color: var(--palette--white);
-        }
-      }
-
       &::after {
-        @include hb-icon-link-arrow('white');
-
-        background-size: 85%;
-
-        [class*='hc-pairing-'] &,
-        [class*='ht-pairing-'] & {
-          @include hb-icon-link-arrow('white');
-
-          background-size: 85%;
-        }
+        background-color: var(--palette--white);
       }
     }
   }
@@ -218,16 +139,8 @@
   &--link.hs-more-link a::after,
   &--link .hs-more-link button::after,
   &--link.hs-more-link button::after {
-    @include hb-icon-link-arrow('white');
-
-    background-size: 85%;
-
-    [class*='hc-pairing-'] &,
-    [class*='ht-pairing-'] & {
-      @include hb-icon-link-arrow('white');
-
-      background-size: 85%;
-    }
+    background-color: var(--palette--white);
+    mask-size: 85%;
   }
 
   hr {

@@ -83,6 +83,7 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
       127.0.0.1 islamicstudies.suhumsci.loc
       127.0.0.1 it-humsci.suhumsci.loc
       127.0.0.1 jewishstudies.suhumsci.loc
+      127.0.0.1 jrbp2025.suhumsci.loc
       127.0.0.1 language.suhumsci.loc
       127.0.0.1 linguistics.suhumsci.loc
       127.0.0.1 lowe.suhumsci.loc

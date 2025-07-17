@@ -1,0 +1,15 @@
+services:
+  hs_person.person_authorship:
+    class: Drupal\hs_person\Service\PersonAuthorship
+    arguments:
+      - '@entity_type.manager'
+      - '@logger.factory'
+      - '@messenger'
+      - '@database'
+
+  hs_person.user_login_event_subscriber:
+    class: Drupal\hs_person\EventSubscriber\UserLoginEventSubscriber
+    arguments:
+      - '@hs_person.person_authorship'
+    tags:
+      - { name: event_subscriber }

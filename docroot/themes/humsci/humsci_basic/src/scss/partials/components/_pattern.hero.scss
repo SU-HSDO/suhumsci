@@ -1,13 +1,5 @@
 // Note: this scss is the base of the hero, AND the carousel patterns
 // If you change something here, you will likely need to change it and override it in the carousel.scss
-.field-hs-hero-image {
-  @include hb-hero-image-field;
-
-  &::before {
-    background-color: var(--palette--primary-hero-overlay);
-  }
-}
-
 .hb-hero-overlay {
   @include hb-hero-component;
 
@@ -23,6 +15,10 @@
 
   &__image-wrapper {
     @include hb-hero-image-wrapper;
+
+    &::before {
+      background-color: var(--palette--primary-hero-overlay);
+    }
   }
 
   &__text {

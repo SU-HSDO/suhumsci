@@ -37,35 +37,5 @@
  */
 #}
 
-{%
-  set classes = [
-    'field',
-    'field--name-' ~ field_name|clean_class,
-    'field--type-' ~ field_type|clean_class,
-    'field--label-' ~ label_display,
-  ]
-%}
-{%
-  set title_classes = [
-    'field__label',
-    label_display == 'visually_hidden' ? 'visually-hidden',
-  ]
-%}
-
-{% if label_hidden %}
-  {% if multiple %}
-    {% for item in items %}
-      {{ item.content }}
-    {% endfor %}
-  {% else %}
-    {% for item in items %}
-      {{ item.content }}
-    {% endfor %}
-  {% endif %}
-{% else %}
-  {{ label }}
-  {% for item in items %}
-    {{ item.content }}
-  {% endfor %}
-{% endif %}
+{% include '@humsci_basic/field/_field-no-wrappers.twig' %}
 

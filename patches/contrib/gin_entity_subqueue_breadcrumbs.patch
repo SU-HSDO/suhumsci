@@ -1,0 +1,12 @@
+diff --git a/includes/breadcrumb.theme b/includes/breadcrumb.theme
+index 6e21804..f2b4a5a 100644
+--- a/includes/breadcrumb.theme
++++ b/includes/breadcrumb.theme
+@@ -47,7 +47,7 @@ function gin_preprocess_breadcrumb(&$variables) {
+
+     // Custom block handling (a custom block cannot be viewed standalone).
+-    if ($entity_type_id === 'block_content') {
++    if ($entity_type_id === 'block_content' || $entity_type_id === 'entity_subqueue') {
+       $url = Url::fromRoute('<front>');
+     }
+   }

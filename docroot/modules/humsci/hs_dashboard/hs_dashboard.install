@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Update functions for hs_dashboard module.
+ */
+
+/**
+ * Remove "my_latest_edits" view.
+ */
+function hs_dashboard_update_10000() {
+  $view = \Drupal::entityTypeManager()->getStorage('view')->load('my_latest_edits');
+  if ($view) {
+    $view->delete();
+  }
+}

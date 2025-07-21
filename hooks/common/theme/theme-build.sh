@@ -1,9 +1,9 @@
 #!/bin/bash
 
 NPM_CMD="npm"
-# Run scripts via lando if available
-if [ -e .lando.yml ] && command -v lando &> /dev/null; then
-  NPM_CMD="lando npm"
+# Run scripts via ddev if available
+if [ -e .ddev/config.yaml ] && command -v ddev &> /dev/null; then
+  NPM_CMD="ddev npm"
 fi
 
 cd docroot/themes/humsci/humsci_basic

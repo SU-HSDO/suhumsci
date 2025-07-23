@@ -87,7 +87,7 @@ index 5b54c2b..00b8871 100644
  
 -  foreach ($options['pattern_mapping'] as $mapping) {
 -    $field_name = $mapping['source'];
--    if (!isset($view->field[$field_name])) {
+-    if (empty($view->field[$field_name])) {
 -      continue;
 -    }
 -    $field = $view->field[$field_name];

@@ -5,6 +5,11 @@
   .hb-card__title a,
   .hb-card__title a > div > * {
     @include hb-link;
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      color: var(--link-base-current-color);
+    }
   }
 
   // Needed to make the styles work when the anchor is the wrapper.
@@ -27,6 +32,12 @@
     .hb-card__title a > div > * {
       color: var(--palette--black);
       text-decoration-color: var(--palette--primary);
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--link-base-hover-current-color);
+        text-decoration-color: var(--link-base-hover-current-color);
+      }
     }
   }
 
@@ -47,7 +58,7 @@
     }
   }
 
-  .field-media-image {
+  .hb-media-image {
     margin: 0;
   }
 }

@@ -53,18 +53,6 @@
 }
 
 .field-hs-postcard {
-  &-title {
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      @include hb-heading-3;
-      margin: 0;
-      overflow-wrap: break-word;
-    }
-  }
-
   &-link {
     position: relative;
     width: 100%;
@@ -80,26 +68,6 @@
 
       @include hb-traditional {
         @include hb-more-link;
-
-        // Override link color and link icon for the Firefinch color pairing.
-        .ht-pairing-firefinch .hb-well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-          color: var(--palette--tertiary);
-
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
       }
     }
 

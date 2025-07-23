@@ -11,7 +11,7 @@ Note the following properties of this project:
 * Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
 * Development branching convention: branch off the current release branch
-* Local environment: DDEV or DrupalVM
+* Local environment: DDEV, Lando or DrupalVM
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
@@ -20,10 +20,11 @@ Note the following properties of this project:
 Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
 
 ### Local setup and installation
-You can either run the site on DDEV or bare metal.
+You can either run the site on DDEV, Lando or bare metal.
 
-#### Setup on DDEV
-[Follow the DDEV instructions](.ddev/DDEV-README.md).
+#### Setup on DDEV or Lando
+* [Follow the DDEV instructions](.ddev/DDEV-README.md).
+* [Follow the Lando legacy instructions](lando/README.md).
 
 #### Or setup on bare metal
 1. Clone the repository and check out the develop branch.

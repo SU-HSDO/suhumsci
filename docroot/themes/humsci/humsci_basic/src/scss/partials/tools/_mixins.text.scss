@@ -18,11 +18,7 @@
 @mixin hb-heading-1 {
   font-weight: hb-theme-font-weight(semibold);
   line-height: 120%;
-  font-size: clamp(
-    hb-calculate-rems(35px),
-    5vw,
-    hb-calculate-rems(47px)
-  );
+  font-size: clamp(hb-calculate-rems(35px), calc(35px + (47 - 35) * ((100vw - 576px) / (1200 - 576))), hb-calculate-rems(47px));
 
   @include hb-traditional {
     font-family: $hb-traditional-font--serif;
@@ -37,11 +33,7 @@
 @mixin hb-heading-2 {
   font-weight: hb-theme-font-weight(semibold);
   line-height: 120%;
-  font-size: clamp(
-    hb-calculate-rems(29px),
-    4vw,
-    hb-calculate-rems(35px)
-  );
+  font-size: clamp(hb-calculate-rems(29px), calc(29px + (35 - 29) * ((100vw - 576px) / (1200 - 576))), hb-calculate-rems(35px));
 
   @include hb-traditional {
     font-family: $hb-traditional-font--serif;
@@ -55,11 +47,7 @@
 @mixin hb-heading-3 {
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  font-size: clamp(
-    hb-calculate-rems(24px),
-    3vw,
-    hb-calculate-rems(26px)
-  );
+  font-size: clamp(hb-calculate-rems(24px), calc(24px + (26 - 24) * ((100vw - 576px) / (1200 - 576))), hb-calculate-rems(26px));
 
   @include hb-traditional {
     font-family: $hb-traditional-font--serif;
@@ -73,32 +61,20 @@
 @mixin hb-heading-4 {
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  font-size: clamp(
-    hb-calculate-rems(20px),
-    2.5vw,
-    hb-calculate-rems(21px)
-  );
+  font-size: clamp(hb-calculate-rems(20px), calc(20px + (21 - 20) * ((100vw - 576px) / (1200 - 576))), hb-calculate-rems(21px));
 }
 
 @mixin hb-heading-5 {
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  font-size: clamp(
-    hb-calculate-rems(17px),
-    2vw,
-    hb-calculate-rems(18px)
-  );
+  font-size: clamp(hb-calculate-rems(17px), calc(17px + (18 - 17) * ((100vw - 576px) / (1200 - 576))), hb-calculate-rems(18px));
 }
 
 @mixin hb-heading-6 {
   text-transform: uppercase;
   font-weight: hb-theme-font-weight(semibold);
   line-height: 127%;
-  font-size: clamp(
-    hb-calculate-rems(15px),
-    2vw,
-    hb-calculate-rems(16px)
-  );
+  font-size: clamp(hb-calculate-rems(15px), calc(15px + (16 - 15) * ((100vw - 576px) / (1200 - 576))), hb-calculate-rems(16px));
 }
 
 @mixin hb-body--small {

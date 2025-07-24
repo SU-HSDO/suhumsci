@@ -108,7 +108,7 @@ class PersonAuthorship {
       return 0;
     }
 
-    $matching_nodes = $this->findMatchingPersonNodes($user_email, $authname);
+    $matching_nodes = $this->findMatchingPersonNodes($user_email, $authname, $account->id());
     if (empty($matching_nodes)) {
       return 0;
     }
@@ -143,15 +143,18 @@ class PersonAuthorship {
    *   The email address to search for.
    * @param string|null $authname
    *   The user's authname (SUNet ID) to search for.
+   * @param int $user_id
+   *   The current user's ID to exclude nodes they already own.
    *
    * @return array
    *   Array of node entities that match the email or SUNet ID.
    */
-  protected function findMatchingPersonNodes(string $user_email, ?string $authname = NULL): array {
+  protected function findMatchingPersonNodes(string $user_email, ?string $authname = NULL, int $user_id = 0): array {
     $node_storage = $this->entityTypeManager->getStorage('node');
     $query = $node_storage->getQuery()
       ->accessCheck(FALSE)
-      ->condition('type', 'hs_person');
+      ->condition('type', 'hs_person')
+      ->condition('uid', $user_id, '<>');
 
     // Create an OR condition group for email or SUNet ID matching.
     $or_group = $query->orConditionGroup();

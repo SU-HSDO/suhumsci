@@ -1497,3 +1497,19 @@ function su_humsci_profile_update_9733() {
     'access content access simple',
   ]);
 }
+
+/**
+ * Uninstall unused stanford_basic and su_humsci_admin themes.
+ */
+function su_humsci_profile_update_9734() {
+  $installed_themes = \Drupal::service('extension.list.theme')
+    ->getAllInstalledInfo();
+  $unused_themes = [
+    'stanford_basic',
+    'su_humsci_admin',
+  ];
+
+  // Get list of themes to uninstall.
+  $themes_to_uninstall = array_intersect($unused_themes, array_keys($installed_themes));
+  \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
+}

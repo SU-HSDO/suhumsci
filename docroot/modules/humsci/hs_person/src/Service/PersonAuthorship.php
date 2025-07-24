@@ -36,11 +36,6 @@ class PersonAuthorship {
   private const AUTHNAME_PATTERN = '/^[a-zA-Z0-9_-]+$/';
 
   /**
-   * Anonymous user ID.
-   */
-  private const ANONYMOUS_UID = 0;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -107,20 +102,22 @@ class PersonAuthorship {
     }
 
     $user_email = $this->getUserEmail($account);
-    if (empty($user_email)) {
+    $authname = $this->getUserAuthname($account);
+
+    if (empty($user_email) && empty($authname)) {
       return 0;
     }
 
-    $matching_nodes = $this->findMatchingPersonNodes($user_email);
+    $matching_nodes = $this->findMatchingPersonNodes($user_email, $authname);
     if (empty($matching_nodes)) {
       return 0;
     }
 
-    $updated_nodes = $this->assignNodesToUser($matching_nodes, $account, $user_email);
+    $updated_nodes = $this->assignNodesToUser($matching_nodes, $account, $user_email, $authname);
 
     if ($updated_nodes > 0) {
-      $this->logAssignment($updated_nodes, $account, $user_email);
-      $this->notifyUser($matching_nodes, $user_email);
+      $this->logAssignment($updated_nodes, $account, $user_email, $authname);
+      $this->notifyUser($matching_nodes, $user_email, $authname);
     }
 
     return $updated_nodes;
@@ -140,29 +137,43 @@ class PersonAuthorship {
   }
 
   /**
-   * Find anonymous-authored hs_person nodes with matching email.
+   * Find hs_person nodes with matching SUNet IDs or email.
    *
    * @param string $user_email
    *   The email address to search for.
+   * @param string|null $authname
+   *   The user's authname (SUNet ID) to search for.
    *
    * @return array
-   *   Array of node entities that match the email.
+   *   Array of node entities that match the email or SUNet ID.
    */
-  protected function findMatchingPersonNodes(string $user_email): array {
+  protected function findMatchingPersonNodes(string $user_email, ?string $authname = NULL): array {
     $node_storage = $this->entityTypeManager->getStorage('node');
     $query = $node_storage->getQuery()
       ->accessCheck(FALSE)
-      ->condition('type', 'hs_person')
-      ->condition('uid', self::ANONYMOUS_UID)
-      ->condition('status', 1)
-      ->condition('field_hs_person_email', $user_email)
-      ->execute();
+      ->condition('type', 'hs_person');
 
-    if (empty($query)) {
+    // Create an OR condition group for email or SUNet ID matching.
+    $or_group = $query->orConditionGroup();
+
+    // Add email condition only if email is not empty.
+    if (!empty($user_email)) {
+      $or_group->condition('field_hs_person_email', $user_email);
+    }
+
+    // Add SUNet ID condition if authname is available.
+    if (!empty($authname)) {
+      $or_group->condition('field_hs_person_sunet_id', $authname);
+    }
+
+    $query->condition($or_group);
+    $result = $query->execute();
+
+    if (empty($result)) {
       return [];
     }
 
-    return $node_storage->loadMultiple($query);
+    return $node_storage->loadMultiple($result);
   }
 
   /**
@@ -174,15 +185,17 @@ class PersonAuthorship {
    *   The user account.
    * @param string $user_email
    *   The email address used for matching.
+   * @param string|null $authname
+   *   The user's authname (SUNet ID) used for matching.
    *
    * @return int
    *   The number of nodes that were successfully assigned.
    */
-  protected function assignNodesToUser(array $nodes, AccountInterface $account, string $user_email): int {
+  protected function assignNodesToUser(array $nodes, AccountInterface $account, string $user_email, ?string $authname = NULL): int {
     $updated_count = 0;
 
     foreach ($nodes as $node) {
-      if ($this->isNodeEmailMatch($node, $user_email)) {
+      if ($this->isNodeMatch($node, $user_email, $authname)) {
         $this->ensureUserHasRequiredRole($account);
         $this->assignNodeToUser($node, $account);
         $updated_count++;
@@ -193,19 +206,34 @@ class PersonAuthorship {
   }
 
   /**
-   * Check if a node's email field matches the user email.
+   * Check if a node's email field or SUNet ID field matches the user.
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node to check.
    * @param string $user_email
    *   The email address to match against.
+   * @param string|null $authname
+   *   The authname (SUNet ID) to match against.
    *
    * @return bool
-   *   TRUE if the email matches, FALSE otherwise.
+   *   TRUE if either the email or SUNet ID matches, FALSE otherwise.
    */
-  protected function isNodeEmailMatch($node, string $user_email): bool {
-    $email_field = $node->get('field_hs_person_email');
-    return !$email_field->isEmpty() && $email_field->value === $user_email;
+  protected function isNodeMatch($node, string $user_email, ?string $authname = NULL): bool {
+    // Check email match only if email is not empty.
+    $email_match = FALSE;
+    if (!empty($user_email)) {
+      $email_field = $node->get('field_hs_person_email');
+      $email_match = !$email_field->isEmpty() && $email_field->value === $user_email;
+    }
+
+    // Check SUNet ID match if authname is available.
+    $sunet_match = FALSE;
+    if (!empty($authname)) {
+      $sunet_field = $node->get('field_hs_person_sunet_id');
+      $sunet_match = !$sunet_field->isEmpty() && $sunet_field->value === $authname;
+    }
+
+    return $email_match || $sunet_match;
   }
 
   /**
@@ -230,14 +258,25 @@ class PersonAuthorship {
    *   The user account.
    * @param string $user_email
    *   The email address used for matching.
+   * @param string|null $authname
+   *   The user's authname (SUNet ID) used for matching.
    */
-  protected function logAssignment(int $count, AccountInterface $account, string $user_email): void {
+  protected function logAssignment(int $count, AccountInterface $account, string $user_email, ?string $authname = NULL): void {
+    $match_info = [];
+    if (!empty($user_email)) {
+      $match_info[] = "email: $user_email";
+    }
+    if (!empty($authname)) {
+      $match_info[] = "SUNet ID: $authname";
+    }
+    $match_string = implode(', ', $match_info);
+
     $this->loggerFactory->get('hs_person')->info(
-      'Updated @count anonymous-authored person node(s) to be owned by user @user_id (@email)',
+      'Updated @count anonymous-authored person node(s) to be owned by user @user_id (@match_info)',
       [
         '@count' => $count,
         '@user_id' => $account->id(),
-        '@email' => $user_email,
+        '@match_info' => $match_string,
       ]
     );
   }
@@ -249,10 +288,12 @@ class PersonAuthorship {
    *   Array of node entities that were assigned.
    * @param string $user_email
    *   The email address used for matching.
+   * @param string|null $authname
+   *   The user's authname (SUNet ID) used for matching.
    */
-  protected function notifyUser(array $nodes, string $user_email): void {
+  protected function notifyUser(array $nodes, string $user_email, ?string $authname = NULL): void {
     foreach ($nodes as $node) {
-      if ($this->isNodeEmailMatch($node, $user_email)) {
+      if ($this->isNodeMatch($node, $user_email, $authname)) {
         $this->addNodeNotification($node);
       }
     }
@@ -285,10 +326,10 @@ class PersonAuthorship {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account.
    *
-   * @return string|null
-   *   The email address or null if none found.
+   * @return string
+   *   The email address or empty string if none found.
    */
-  protected function getUserEmail(AccountInterface $account) {
+  protected function getUserEmail(AccountInterface $account): string {
     // First, check if this is an SSO user by looking up authmap.
     $authname = $this->database->select('authmap', 'a')
       ->fields('a', ['authname'])
@@ -308,6 +349,31 @@ class PersonAuthorship {
     }
 
     // No email found.
+    return '';
+  }
+
+  /**
+   * Get the authname (SUNet ID) for a user account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
+   *
+   * @return string|null
+   *   The authname or null if none found.
+   */
+  protected function getUserAuthname(AccountInterface $account) {
+    // First, check if this is an SSO user by looking up authmap.
+    $authname = $this->database->select('authmap', 'a')
+      ->fields('a', ['authname'])
+      ->condition('uid', $account->id())
+      ->execute()
+      ->fetchField();
+
+    if ($authname && $this->isValidAuthname($authname)) {
+      return $authname;
+    }
+
+    // No authname found.
     return NULL;
   }
 

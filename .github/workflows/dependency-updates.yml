@@ -1,14 +1,13 @@
 # .github/workflows/dependency-updates.yml
-# Automate dependency updates for the latest release branch.
+# Automate dependency updates using the latest release branch.
+# Runs composer update, database updates, exports configurations, generates a
+# composer.lock diff, and creates a pull request.
 name: Automated Dependency Updates
 
 on:
   schedule:
     - cron: '0 14 * * 5'
   workflow_dispatch:
-  push:
-    branches:
-      - '**'
 
 jobs:
   update-dependencies:

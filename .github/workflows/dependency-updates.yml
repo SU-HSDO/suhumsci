@@ -42,15 +42,17 @@ jobs:
         run: git config --system --add safe.directory '*'
       - name: Fetch all branches
         run: git fetch --all
-      - name: Find latest release branch
-        id: find_release
-        run: |
-          LATEST=$(git branch -r | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-release' | sort -V | tail -n1)
-          echo "Latest release branch: $LATEST"
-          echo "branch=${LATEST}" >> $GITHUB_OUTPUT
-      - name: Checkout latest release branch
-        run: |
-          git checkout ${{ steps.find_release.outputs.branch }}
+      # - name: Find latest release branch
+      #   id: find_release
+      #   run: |
+      #     LATEST=$(git branch -r | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-release' | sort -V | tail -n1)
+      #     echo "Latest release branch: $LATEST"
+      #     echo "branch=${LATEST}" >> $GITHUB_OUTPUT
+      # - name: Checkout latest release branch
+      #   run: |
+      #     git checkout ${{ steps.find_release.outputs.branch }}
+      - name: Checkout develop branch (for testing)
+        run: git checkout develop
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -95,7 +97,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Automated Dependency Updates $(date +'%Y-%m-%d')"
           branch: ${{ steps.branch.outputs.branch }}
-          base: ${{ steps.find_release.outputs.branch }}
+          # base: ${{ steps.find_release.outputs.branch }}
+          base: develop
           title: "Automated Dependency Updates $(date +'%Y-%m-%d')"
           body: |
             This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.

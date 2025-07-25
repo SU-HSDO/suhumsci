@@ -42,17 +42,15 @@ jobs:
         run: git config --system --add safe.directory '*'
       - name: Fetch all branches
         run: git fetch --all
-      # - name: Find latest release branch
-      #   id: find_release
-      #   run: |
-      #     LATEST=$(git branch -r | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-release' | sort -V | tail -n1)
-      #     echo "Latest release branch: $LATEST"
-      #     echo "branch=${LATEST}" >> $GITHUB_OUTPUT
-      # - name: Checkout latest release branch
-      #   run: |
-      #     git checkout ${{ steps.find_release.outputs.branch }}
-      - name: Checkout develop branch (for testing)
-        run: git checkout develop
+      - name: Find latest release branch
+        id: find_release
+        run: |
+          LATEST=$(git branch -r | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-release' | sort -V | tail -n1)
+          echo "Latest release branch: $LATEST"
+          echo "branch=${LATEST}" >> $GITHUB_OUTPUT
+      - name: Checkout latest release branch
+        run: |
+          git checkout ${{ steps.find_release.outputs.branch }}
       - name: Set date variable
         id: date
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
@@ -86,7 +84,7 @@ jobs:
       - name: Generate composer.lock diff (markdown)
         id: lockdiff
         run: |
-          vendor/bin/composer-lock-diff --md --from origin/develop:composer.lock --to composer.lock > composer-lock-diff.md
+          vendor/bin/composer-lock-diff --md --from origin/${{ steps.find_release.outputs.branch }}:composer.lock --to composer.lock > composer-lock-diff.md
           echo "diff<<EOF" >> $GITHUB_OUTPUT
           cat composer-lock-diff.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -97,8 +95,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
           branch: automated/dependency-update-${{ steps.date.outputs.date }}-${{ github.run_id }}
-          base: develop
-          # base: ${{ steps.find_release.outputs.branch }}
+          base: ${{ steps.find_release.outputs.branch }}
           title: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
           body: |
             This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.

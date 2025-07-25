@@ -80,23 +80,12 @@ jobs:
         run: drush updatedb -y
       - name: Export configuration
         run: drush config:export -y
-      - name: Create update branch
-        id: branch
-        run: |
-          BRANCH=automated/dependency-update-$(date +'%Y%m%d')-${GITHUB_RUN_NUMBER}
-          git checkout -b "$BRANCH"
-          git add .
-          git config user.email "sws-developers@lists.stanford.edu"
-          git config user.name "Github Actions"
-          git commit -am "Automated Dependency Updates $(date +'%Y-%m-%d')" || echo "No changes to commit."
-          git push origin "$BRANCH"
-          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Automated Dependency Updates $(date +'%Y-%m-%d')"
-          branch: ${{ steps.branch.outputs.branch }}
+          branch: automated/dependency-update-$(date +'%Y%m%d')-${{ github.run_id }}
           # base: ${{ steps.find_release.outputs.branch }}
           base: develop
           title: "Automated Dependency Updates $(date +'%Y-%m-%d')"

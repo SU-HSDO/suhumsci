@@ -83,6 +83,14 @@ jobs:
         run: drush updatedb -y
       - name: Export configuration
         run: drush config:export -y
+      - name: Generate composer.lock diff (markdown)
+        id: lockdiff
+        run: |
+          vendor/bin/composer-lock-diff --md --from origin/develop:composer.lock --to composer.lock > composer-lock-diff.md
+          echo "diff<<EOF" >> $GITHUB_OUTPUT
+          cat composer-lock-diff.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          rm composer-lock-diff.md
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
@@ -94,4 +102,7 @@ jobs:
           title: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
           body: |
             This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.
+            
+            ## Composer Dependency Changes
+            ${{ steps.lockdiff.outputs.diff }}
           assignees: ${{ secrets.PR_ASSIGNEE || 'joegl' }}

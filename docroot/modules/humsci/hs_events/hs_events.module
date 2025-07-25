@@ -19,3 +19,13 @@ function hs_events_hs_entity_view_alter(array &$build, HsEntityInterface $entity
     unset($build['label']);
   }
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function hs_events_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Move the auto-unpublish field to the options group.
+  if (in_array($form_id, ['node_hs_event_form', 'node_hs_event_edit_form'])) {
+    $form['field_auto_unpublish']['#group'] = 'options';
+  }
+}

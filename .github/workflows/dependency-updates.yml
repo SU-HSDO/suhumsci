@@ -1,0 +1,99 @@
+# .github/workflows/dependency-updates.yml
+# Automate dependency updates for the latest release branch.
+name: Automated Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 14 * * 5'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Composer Dependencies
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:php8.3
+      options: '--network-alias drupal8ci'
+    env:
+      DRUPAL_DATABASE_NAME: drupal
+      DRUPAL_DATABASE_USERNAME: drupal
+      DRUPAL_DATABASE_PASSWORD: drupal
+      DRUPAL_DATABASE_HOST: mysql
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch all branches
+        run: git fetch --all
+      - name: Find latest release branch
+        id: find_release
+        run: |
+          LATEST=$(git branch -r | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-release' | sort -V | tail -n1)
+          echo "Latest release branch: $LATEST"
+          echo "branch=${LATEST}" >> $GITHUB_OUTPUT
+      - name: Checkout latest release branch
+        run: |
+          git checkout ${{ steps.find_release.outputs.branch }}
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+      - name: Set git safe directory
+        run: git config --system --add safe.directory '*'
+      - name: Install dependencies
+        run: composer install -n
+      - name: Install Drupal site
+        run: |
+          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;'
+          rm -rf /var/www/html
+          ln -snf $GITHUB_WORKSPACE /var/www/html
+          mkdir -p docroot/sites/default/files
+          chmod -R 777 docroot/sites/default/files/
+          blt drupal:install -n
+      - name: Import configuration
+        run: drush cim -y
+      - name: Update Composer dependencies
+        run: composer update -W -n
+      - name: Update database
+        run: drush updatedb -y
+      - name: Export configuration
+        run: drush config:export -y
+      - name: Create update branch
+        id: branch
+        run: |
+          BRANCH=automated/dependency-update-$(date +'%Y%m%d')-${GITHUB_RUN_NUMBER}
+          git checkout -b "$BRANCH"
+          git add .
+          git config user.email "sws-developers@lists.stanford.edu"
+          git config user.name "Github Actions"
+          git commit -am "Automated Dependency Updates $(date +'%Y-%m-%d')" || echo "No changes to commit."
+          git push origin "$BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Automated Dependency Updates $(date +'%Y-%m-%d')"
+          branch: ${{ steps.branch.outputs.branch }}
+          base: ${{ steps.find_release.outputs.branch }}
+          title: "Automated Dependency Updates $(date +'%Y-%m-%d')"
+          body: |
+            This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.
+          assignees: ${{ secrets.PR_ASSIGNEE || 'joegl' }}

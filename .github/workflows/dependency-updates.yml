@@ -53,6 +53,9 @@ jobs:
       #     git checkout ${{ steps.find_release.outputs.branch }}
       - name: Checkout develop branch (for testing)
         run: git checkout develop
+      - name: Set date variable
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -84,11 +87,11 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Automated Dependency Updates $(date +'%Y-%m-%d')"
-          branch: automated/dependency-update-$(date +'%Y%m%d')-${{ github.run_id }}
-          # base: ${{ steps.find_release.outputs.branch }}
+          commit-message: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
+          branch: automated/dependency-update-${{ steps.date.outputs.date }}-${{ github.run_id }}
           base: develop
-          title: "Automated Dependency Updates $(date +'%Y-%m-%d')"
+          # base: ${{ steps.find_release.outputs.branch }}
+          title: "Automated Dependency Updates ${{ steps.date.outputs.date }}"
           body: |
             This PR was created automatically by a scheduled GitHub Actions workflow to update Composer dependencies and export Drupal configuration.
           assignees: ${{ secrets.PR_ASSIGNEE || 'joegl' }}

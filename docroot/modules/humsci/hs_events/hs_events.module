@@ -5,8 +5,9 @@
  * hs_events.module
  */
 
-use Drupal\hs_entities\HsEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\hs_entities\HsEntityInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_view_alter().
@@ -23,9 +24,18 @@ function hs_events_hs_entity_view_alter(array &$build, HsEntityInterface $entity
 /**
  * Implements hook_form_alter().
  */
-function hs_events_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function hs_events_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Move the auto-unpublish field to the options group.
   if (in_array($form_id, ['node_hs_event_form', 'node_hs_event_edit_form'])) {
     $form['field_auto_unpublish']['#group'] = 'options';
   }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function hs_events_cron() {
+  // Use the auto-unpublish service to handle past events.
+  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish');
+  $auto_unpublish_service->unpublishPastEvents();
 }

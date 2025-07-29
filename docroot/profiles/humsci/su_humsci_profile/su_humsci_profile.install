@@ -1513,3 +1513,61 @@ function su_humsci_profile_update_9734() {
   $themes_to_uninstall = array_intersect($unused_themes, array_keys($installed_themes));
   \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
 }
+
+/**
+ * Update node page display image styles.
+ */
+function su_humsci_profile_update_9735() {
+  $to_update = [
+    'hs_event' => [
+      'field' => 'field_hs_event_image',
+      'image_style' => 'medium_scaled',
+    ],
+    'hs_news' => [
+      'field' => 'field_hs_news_image',
+      'image_style' => 'medium_scaled',
+    ],
+    'hs_event_series' => [
+      'field' => 'field_hs_event_series_image',
+      'image_style' => 'medium_scaled',
+    ],
+    'hs_publications' => [
+      'field' => 'field_hs_publication_image',
+      'image_style' => 'medium_scaled',
+    ],
+    'hs_person' => [
+      'field' => 'field_hs_person_square_img',
+      'image_style' => 'medium_square',
+    ],
+  ];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  foreach ($to_update as $bundle => $data) {
+    /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $display */
+    $display = $entity_type_manager->getStorage('entity_view_display')
+      ->load("node.{$bundle}.default");
+
+    if (!$display) {
+      continue;
+    }
+
+    $sections = $display->getSections();
+
+    foreach ($sections as $section) {
+      $components = $section->getComponents();
+
+      foreach ($components as $component) {
+        if ($component->getPluginId() === "field_block:node:{$bundle}:{$data['field']}") {
+          // Set the updated image style settings.
+          $configuration = $component->get('configuration');
+          $configuration['formatter']['type'] = 'media_responsive_image_formatter';
+          $configuration['formatter']['settings']['image_style'] = $data['image_style'];
+          $component->setConfiguration($configuration);
+        }
+      }
+    }
+
+    $display->save();
+  }
+}

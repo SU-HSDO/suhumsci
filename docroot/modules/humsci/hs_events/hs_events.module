@@ -22,13 +22,20 @@ function hs_events_hs_entity_view_alter(array &$build, HsEntityInterface $entity
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter().
  */
-function hs_events_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Move the auto-unpublish field to the options group.
-  if (in_array($form_id, ['node_hs_event_form', 'node_hs_event_edit_form'])) {
-    $form['field_auto_unpublish']['#group'] = 'options';
-  }
+function hs_events_form_node_hs_event_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish');
+  $auto_unpublish_service->moveAutoUnpublishFieldToOptions($form);
+  $auto_unpublish_service->setAutoUnpublishDefaultValue($form);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_events_form_node_hs_event_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish');
+  $auto_unpublish_service->moveAutoUnpublishFieldToOptions($form);
 }
 
 /**

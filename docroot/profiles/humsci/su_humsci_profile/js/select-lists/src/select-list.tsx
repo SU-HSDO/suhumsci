@@ -268,7 +268,7 @@ const SelectList = ({
       {label && (
         <div
           id={labelId}
-          class="preact-label"
+          class="select-preact__label"
         >
           {label}
         </div>

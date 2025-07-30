@@ -210,16 +210,15 @@
 }
 
 @mixin hb-description {
+  line-height: var(--normal-line-height);
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(18px);
+
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-body--small;
 
-    @include grid-media-min('lg') {
-      @include hb-body--medium;
+    @include grid-media-max('lg') {
+      font-size: hb-calculate-rems(16px);
     }
-  }
-
-  @include hb-traditional {
-    @include hb-body--medium;
   }
 }
 

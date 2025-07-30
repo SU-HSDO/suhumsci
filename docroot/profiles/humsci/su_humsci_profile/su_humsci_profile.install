@@ -1521,23 +1521,28 @@ function su_humsci_profile_update_9735() {
   $to_update = [
     'hs_event' => [
       'field' => 'field_hs_event_image',
-      'image_style' => 'medium_scaled',
+      'old_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
     ],
     'hs_news' => [
       'field' => 'field_hs_news_image',
-      'image_style' => 'medium_scaled',
+      'old_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
     ],
     'hs_event_series' => [
       'field' => 'field_hs_event_series_image',
-      'image_style' => 'medium_scaled',
+      'old_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
     ],
     'hs_publications' => [
       'field' => 'field_hs_publication_image',
-      'image_style' => 'medium_scaled',
+      'old_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
     ],
     'hs_person' => [
       'field' => 'field_hs_person_square_img',
-      'image_style' => 'medium_square',
+      'old_image_style' => 'hs_medium_square_360x360',
+      'new_image_style' => 'medium_square',
     ],
   ];
 
@@ -1552,6 +1557,7 @@ function su_humsci_profile_update_9735() {
       continue;
     }
 
+    $view_changed = FALSE;
     $sections = $display->getSections();
 
     foreach ($sections as $section) {
@@ -1559,15 +1565,23 @@ function su_humsci_profile_update_9735() {
 
       foreach ($components as $component) {
         if ($component->getPluginId() === "field_block:node:{$bundle}:{$data['field']}") {
-          // Set the updated image style settings.
           $configuration = $component->get('configuration');
+          // Skip cases where the default image styles have been overridden.
+          if ($configuration['formatter']['settings']['image_style'] !== $data['old_image_style']) {
+            continue;
+          }
+          // Set the updated image style settings.
           $configuration['formatter']['type'] = 'media_responsive_image_formatter';
-          $configuration['formatter']['settings']['image_style'] = $data['image_style'];
+          $configuration['formatter']['settings']['image_style'] = $data['new_image_style'];
           $component->setConfiguration($configuration);
+          $view_changed = TRUE;
         }
       }
     }
 
-    $display->save();
+    // Save the view only if changes were made.
+    if ($view_changed) {
+      $display->save();
+    }
   }
 }

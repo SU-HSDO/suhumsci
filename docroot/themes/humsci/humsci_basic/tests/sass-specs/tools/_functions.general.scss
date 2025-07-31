@@ -1,0 +1,51 @@
+@include describe('HB Spacing Width Function') {
+
+  @include describe('When given a valid key value,') {
+    $hb-current-theme: 'colorful' !global;
+
+    @include describe('the hb-spacing-width() function') {
+      @include it('returns the medium pixel value for the Colorful theme.') {
+        $test: hb-spacing-width('md');
+        $expect: '3.2rem';
+
+        @include assert-equal($test, $expect, 'The medium value either does not match or does not exist.');
+      }
+    }
+  }
+
+  @include describe('When given a valid key value,') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include describe('the hb-spacing-width() function') {
+      @include it('returns the medium pixel value for the Traditional theme.') {
+        $test: hb-spacing-width('md');
+        $expect: '2.8rem';
+
+        @include assert-equal($test, $expect, 'The medium value either does not match or does not exist.');
+      }
+    }
+  }
+}
+
+@include describe('HB Sidebar Width Function') {
+
+  @include describe('the hb-sidebar-width() function') {
+    $hb-current-theme: 'colorful' !global;
+    @include it('returns the sidebar width for the Colorful theme.') {
+      $test: hb-sidebar-width();
+      $expect: 22.5%;
+
+      @include assert-equal($test, $expect, 'The sidebar width either does not match or does not exist.');
+    }
+  }
+
+  @include describe('the hb-sidebar-width() function') {
+    $hb-current-theme: 'traditional' !global;
+    @include it('returns the sidebar width for the Traditional theme.') {
+      $test: hb-sidebar-width();
+      $expect: 18%;
+
+      @include assert-equal($test, $expect, 'The sidebar width either does not match or does not exist.');
+    }
+  }
+}

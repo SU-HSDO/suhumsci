@@ -1,0 +1,186 @@
+.su-masthead {
+  box-shadow: none;
+  z-index: $hb-z-index-masthead;
+  border-bottom: $hb-thin-border;
+  border-color: var(--palette--gray);
+  position: relative;
+  background-color: color(su-bg);
+  max-width: 100%;
+
+  > section:last-of-type {
+    @include flex-container;
+    @include centered-column;
+    @include responsive-spacing('padding', 1 null null);
+  }
+
+  .su-lockup {
+    @include responsive-spacing('margin', null null 0);
+    z-index: $hb-z-index-lockup;
+
+    @include grid-media-max('md') {
+      // Leave space for the mobile menu toggle button.
+      flex: 0 0 calc(100% - hb-calculate-rems(78px));
+      max-width: none;
+
+      // On mobile, lockup needs a higher z-index than nav because the nav takes up 100% width including margin
+      z-index: 10010;
+    }
+
+    @include grid-media-min('lg') {
+      flex: 0 0 calc(calc(2 / 3 * 100%) - 6.67px);
+      max-width: calc(calc(2 / 3 * 100%) - 6.67px);
+    }
+
+    &__line1,
+    &__line2,
+    &__line3,
+    &__line4 {
+      line-height: 1em;
+    }
+
+    &__wordmark,
+    &__line1,
+    &__line2,
+    &__line3,
+    &__line4 {
+      margin-bottom: hb-calculate-rems(8px);
+
+      @include grid-media-min('md') {
+        margin-bottom: 0;
+      }
+    }
+
+    &__line1,
+    &__line2 {
+      font-size: hb-calculate-rems(24px);
+      font-weight: hb-theme-font-weight(semibold);
+    }
+
+    &__line3 {
+      font-size: hb-calculate-rems(19px);
+      font-weight: 500;
+      margin-top: hb-calculate-rems(5px);
+    }
+
+    &__line5 {
+      font-size: hb-calculate-rems(17.8px);
+      text-transform: uppercase;
+      font-weight: hb-theme-font-weight(semibold);
+
+      /* Horizontal pipe on tablet and mobile */
+      @media (max-width: 767px) {
+        &::before {
+          margin-top: hb-calculate-rems(5px);
+          margin-bottom: hb-calculate-rems(7.5px);
+          border-bottom: $hb-thin-border;
+          border-color: #2e2d29;
+          content: "";
+          display: block;
+          width: hb-calculate-rems(120px);
+
+          .hb-dark-pattern & {
+            border-color: var(--palette--white);
+          }
+        }
+      }
+    }
+
+    &__cell1 {
+      /* Hide logo on mobile */
+      @media only screen and (max-width: 480px) {
+        display: none;
+        border: none;
+        text-align: left;
+      }
+
+      border-right: none;
+    }
+  }
+
+  .su-site-search {
+    display: block;
+    padding-top: hb-calculate-rems(11px);
+    padding-bottom: hb-calculate-rems(28px);
+    z-index: $hb-z-index-search;
+    width: 100%;
+
+    @include grid-media-min('sm') {
+      width: 60%;
+    }
+
+    @include grid-media-min('lg') {
+      order: -1;
+      position: absolute;
+      right: 0;
+      max-width: $hb-input-max-width;
+    }
+  }
+
+  .su-main-nav {
+    margin-top: 0;
+    width: 100%;
+
+    @include grid-media-only('xs') {
+      // We can't use 100vw for this because it doesn't work with OSX system preference to always show scrollbar
+      width: calc(100% + #{map-get($su-screen-margins, 'xs') * 2});
+    }
+
+    @include grid-media-only('sm') {
+      width: calc(100% + #{map-get($su-screen-margins, 'sm') * 2});
+    }
+
+    @include grid-media-min('sm') {
+      flex: unset;
+      max-width: none;
+    }
+  }
+
+  // Dark mode masthead lockup
+  &.hb-dark-pattern {
+    .su-lockup {
+      &__wordmark,
+      &__line1,
+      &__line2,
+      &__line3,
+      &__line4,
+      &__line5 {
+        color: var(--palette--white);
+      }
+
+      // Dark mode masthead lockup vertical pipe
+      &__cell1,
+      &__cell2,
+      &__line4::after,
+      &__line5::before {
+        border-color: var(--palette--white);
+      }
+    }
+  }
+}
+
+.su-lockup {
+  &__line1 {
+    margin-bottom: hb-calculate-rems(2px);
+  }
+}
+
+.masthead__site-title {
+  @include visually-hidden;
+}
+
+.su-masthead--dark {
+  background-color: color(su-bg-reverse);
+
+  .su-lockup__wordmark,
+  .su-lockup__line1,
+  .su-lockup__line2,
+  .su-lockup__line3,
+  .su-lockup__line4,
+  .su-lockup__line5 {
+    color: color(su-link-reverse);
+  }
+
+  .su-lockup__cell2 {
+    border-color: color(su-link-reverse);
+  }
+}

@@ -1,0 +1,98 @@
+.block-layout-builder {
+  &:not(:last-child) {
+    margin-bottom: hb-calculate-rems(20px);
+  }
+
+  // Trigger change in fa-ext icon color when hovering over it's associated link text.
+  .link a {
+    &:hover,
+    &:focus {
+      @include hb-ext-icon-color('tertiary-darken-20');
+    }
+  }
+}
+
+.block-hs-blocks,
+.hb-sidebar-block {
+  @include hb-sidebar-block;
+}
+
+.block__title {
+  @include hb-block-heading;
+  margin-top: 0;
+  margin-bottom: hb-calculate-rems(20px);
+  width: 100%;
+}
+
+.field-label,
+.views-label {
+  @include hb-field-label;
+}
+
+.label-inline {
+  display: flex;
+
+  .field-label {
+    margin-right: hb-calculate-rems(6px);
+  }
+}
+
+.title {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+  }
+}
+
+.email {
+  word-break: break-all;
+
+  a {
+    @include hb-link--inline;
+  }
+
+  [class^="fa-"] {
+    display: none;
+  }
+
+  // Removing break-all from the email label only, to avoid contact column titles from wrapping unintentionally.
+  & .field-label {
+    word-break: normal;
+  }
+}
+
+.datetime {
+  line-height: 1.4;
+  color: var(--palette--gray-dark);
+}
+
+.address {
+  margin: 0;
+  font-style: italic;
+  color: var(--palette--gray-dark);
+}
+
+.given-name,
+.family-name {
+  font-weight: hb-theme-font-weight(semibold);
+  font-style: normal;
+}
+
+.string {
+  // Adds spacing between lines of text
+  div div {
+    margin-bottom: hb-calculate-rems(6px);
+  }
+}
+
+// Improve readability of the Drupal admin interface
+.layout-builder-form,
+.ui-dialog-off-canvas,
+.block-categories,
+.layout-builder-discard-changes {
+  font-size: hb-calculate-rems(16px);
+}

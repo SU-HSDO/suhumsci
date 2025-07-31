@@ -1,0 +1,365 @@
+// In CKEditor5, we need to create a unique CSS file that *only* contains
+// the necessary styles for the WYSIWYG. In this file we import all
+// the dependencies and the files we need. See _main.scss and
+// _base.scss for reference.
+@use 'sass:map';
+
+// Here we import all the various variables, mixins, and dependecies that may
+// potentially be used in one of the CKeditor files.
+@import
+  '../base-imports',
+  '../fonts/fonts',
+  '../base/color-pairings',
+  '../utilities/utilities',
+  // CKEditor UI customizations.
+  'ckeditor-ui';
+
+// See _base.scss in basic theme. We only need the below for CKEditor.
+// Otherwise styles affect the entire admin UI.
+:root {
+  @include hb-themes(('colorful', 'airy')) {
+    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default)
+    {
+      --palette--#{$color}: #{$value};
+    }
+    @each $color, $value in $hc-colorful-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+
+  @include hb-traditional {
+    @each $color,
+      $value in map.get($ht-traditional-pairings, $hb-traditional-default)
+    {
+      --palette--#{$color}: #{$value};
+    }
+    @each $color, $value in $ht-traditional-globals {
+      --palette--#{$color}: #{$value};
+    }
+  }
+}
+
+.ck-editor__main {
+  @include font-smoothing;
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-family: $hb-colorful-font--sans;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
+  }
+
+  // Link current color variables.
+  --link-base-current-color: var(--palette--link-base-color);
+  --link-base-hover-current-color: var(--palette--link-base-hover-color);
+
+  // Addresses small media previews in CK5
+  .hb-media-video {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .field-media-oembed-video {
+    position: relative;
+    aspect-ratio: 16/9;
+  }
+
+  .drupal-media,
+  .field-media-oembed-video,
+  .media-oembed-content {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// REM to PX overrides.
+// Because the :root font size is set by the admin theme, all HumSci Basic
+// classes for the WYSIWYG need to be converted to px to ensure accurate
+// rendering.
+.ck.ck-content {
+  @include hb-themes(('colorful', 'airy')) {
+    font-size: 16px;
+
+    @include grid-media-min('lg') {
+      font-size: 18px;
+    }
+  }
+
+  @include hb-traditional {
+    font-size: 18px;
+  }
+
+  .hs-font-lead,
+  .summary {
+    font-size: 20px;
+
+    @include grid-media-min('lg') {
+      font-size: 22px;
+    }
+  }
+
+  .hs-font-splash {
+    @include grid-media-min('md') {
+      margin: 48px 0 16px;
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      font-size: 36px;
+
+      @include grid-media-min('md') {
+        font-size: 46px;
+      }
+    }
+
+    @include hb-traditional {
+      font-size: 34px;
+
+      @include grid-media-min('md') {
+        font-size: 42px;
+      }
+    }
+  }
+
+  .hs-breakout-box {
+    padding: 20px 18px;
+    display: inline-block;
+  }
+
+  .hs-caption,
+  .hs-credits {
+    font-size: 14px;
+  }
+
+  a {
+    color: var(--link-base-current-color);
+    text-decoration: underline;
+  }
+
+  .hs-more-link {
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-decoration: none;
+
+    &::after {
+      height: 19px;
+      width: 19px;
+      margin-bottom: -4px;
+      margin-left: 8px;
+    }
+  }
+
+  a[href*="//"].hs-external-link,
+  .hs-external-link a[href*="//"]
+  {
+    &::after {
+      margin-bottom: -5px;
+      padding-left: 15px;
+      width: 11px;
+      height: 20px;
+      background-size: 11px;
+    }
+  }
+
+  .hs-file-link,
+  .hs-pdf-link,
+  .hs-private-link {
+    margin-right: 5px;
+  }
+
+  .hs-private-link {
+    &::before {
+      margin-bottom: -2px;
+      margin-right: 2px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .hs-button {
+    @include hb-button;
+  }
+
+  .hs-secondary-button {
+    @include hb-secondary-button;
+  }
+
+  .hs-button,
+  .hs-button--big,
+  .hs-secondary-button {
+    font-size: 16px;
+    border-width: 2px;
+
+    @include hb-themes(('colorful', 'airy')) {
+      padding: 4px 20px;
+    }
+
+    @include hb-traditional {
+      padding: 6px 26px;
+    }
+  }
+
+  .hs-button--big {
+    @include hb-button;
+    font-size: 18px;
+    border-width: 3px;
+
+    @include hb-themes(('colorful', 'airy')) {
+      padding: 8px 20px;
+    }
+
+    @include hb-traditional {
+      padding: 8px 35px;
+    }
+  }
+
+  table {
+    @include table;
+
+    width: 100%;
+    font-size: 13px;
+    table-layout: fixed;
+
+    @include grid-media-min('sm') {
+      font-size: 16px;
+    }
+
+    th,
+    td {
+      @include table-data;
+
+      padding: 16px;
+    }
+
+    thead th {
+      @include table-heading;
+      color: var(--palette--white);
+    }
+
+    thead tr {
+      @include table-head-row;
+    }
+
+    tr:nth-child(even) {
+      @include table-row;
+    }
+  }
+
+  blockquote:nth-child(n) {
+    @include hb-blockquote;
+    overflow: visible;
+    font-size: 24px;
+    font-style: normal;
+
+    @include grid-media-min('lg') {
+      font-size: 28px;
+    }
+
+    padding: 40px 36px !important;
+
+    &::before,
+    &::after {
+      background-color: transparent;
+      width: 36px !important;
+      height: 31px !important;
+    }
+
+    &::before {
+      left: -12px !important;
+      top: 14px !important;
+    }
+  }
+
+  // Paragraphs.
+  p:not([class]) {
+    margin-top: 0;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  // Lists.
+  ul {
+    @include hb-unordered-list;
+    margin: 0 0 32px;
+    padding-left: 22px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 18px;
+
+      &::before {
+        height: 6px;
+        top: 8px;
+        width: 6px;
+      }
+    }
+  }
+
+  ol {
+    @include hb-ordered-list;
+    margin: 0 0 32px;
+    padding-left: 8px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 38px;
+
+      &::before {
+        font-size: 16px;
+        min-width: 30px;
+      }
+    }
+  }
+
+  // This prevents the list item to float behind images that are floated to the left
+  figure.drupal-media-style-align-left ~ ul:not([class]),
+  figure.drupal-media-style-align-left ~ ol:not([class]) {
+    li {
+      overflow: hidden;
+    }
+  }
+
+  // Override CK styles
+  .table table {
+    td,
+    th {
+      padding: 16px;
+    }
+
+    &.hs-table--borderless {
+      td,
+      th {
+        border-left: 0;
+        border-right: 0;
+      }
+    }
+  }
+
+  // Fix Video preview in CKeditor for "Align center and break text" option
+  .drupal-media-style-align-center {
+    max-width: none;
+
+    article:not(.hb-media-video) {
+      max-width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hb-media-video {
+      max-width: 100%;
+    }
+  }
+}
+
+// Media embeds previews shouldn't be clickable.
+.ck .drupal-media [data-drupal-media-preview] {
+  pointer-events: none;
+}
+
+/* Temporarily hide gallery tabs */
+.paragraph-type--stanford-gallery .hs-paragraphs-tabs.tabs {
+  display: none;
+}

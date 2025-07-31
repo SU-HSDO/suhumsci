@@ -1,0 +1,155 @@
+.hb-text-reset {
+  // Reset text styles to default using this class
+  @include hb-text-reset;
+}
+
+.hb-heading-1 {
+  @include hb-heading-1;
+}
+
+.hb-heading-2 {
+  @include hb-heading-2;
+}
+
+.hb-heading-3 {
+  @include hb-heading-3;
+}
+
+.hb-heading-4 {
+  @include hb-heading-4;
+}
+
+.hb-heading-5 {
+  @include hb-heading-5;
+}
+
+.hb-heading-6 {
+  @include hb-heading-6;
+}
+
+.hb-body-small {
+  @include hb-body--small;
+}
+
+.hb-body-medium {
+  @include hb-body--medium;
+}
+
+.hb-link,
+.hb-link.ext {
+  @include hb-link;
+}
+
+.hb-link-inline {
+  @include hb-link--inline;
+}
+
+.hb-highlighted-label .field-label {
+  @include hb-field-label--featured;
+}
+
+// hb-highlighted-label styling applied to Views fields with reset
+.views-row .hb-highlighted-label,
+.views-row .hb-highlighted-label a {
+  @include hb-text-reset;
+  @include hb-field-label;
+  @include hb-field-label--featured;
+}
+
+.hb-subtitle {
+  @include hb-subtitle;
+}
+
+.hb-descriptor,
+.descriptor {
+  @include hb-descriptor;
+}
+
+// hb-descriptor styling applied to Views fields with reset
+.views-row .hb-descriptor,
+.views-row .hb-descriptor a,
+.views-row .descriptor,
+.views-row .descriptor a {
+  @include hb-text-reset;
+  @include hb-descriptor;
+}
+
+.hb-pill {
+  @include hb-pill($link: false);
+}
+
+a.hb-pill {
+  @include hb-pill;
+}
+
+// blockquote and D7 import class map and loop
+$blockquotes: (
+  hb-blockquote,
+  highlight-block-left,
+  highlight-block-right,
+);
+
+@each $blockquote in $blockquotes {
+  .#{$blockquote} {
+    @include hb-blockquote;
+
+    .views-row #{$blockquote},
+    .views-row #{$blockquote} a {
+      @include hb-text-reset;
+      @include hb-blockquote;
+
+      > p::before,
+      > p::after,
+      > div::before,
+      > div::after {
+        content: none;
+      }
+    }
+  }
+}
+
+.hb-title {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @include hb-heading-1;
+    margin: 0;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    &::before {
+      border-bottom: solid hb-calculate-rems(4px);
+      border-color: var(--palette--secondary);
+      content: '';
+      display: block;
+      vertical-align: middle;
+      width: hb-calculate-rems(55px);
+      margin-right: hb-calculate-rems(10px);
+    }
+  }
+}
+
+// Apply serif font to Traditional Theme
+.hb-serif {
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+    font-weight: hb-theme-font-weight(regular);
+  }
+}
+
+.hb-text-align {
+  &-left {
+    text-align: left;
+  }
+
+  &-center {
+    text-align: center;
+  }
+
+  &-right {
+    text-align: right;
+  }
+}

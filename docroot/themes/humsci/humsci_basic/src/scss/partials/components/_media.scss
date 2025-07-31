@@ -1,0 +1,37 @@
+.field-media-oembed-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.google-form {
+  border: none;
+  width: 100%;
+  min-height: hb-calculate-rems(300px);
+  margin-bottom: hb-spacing-width();
+}
+
+// Hotfix for caption/credit positioning bug with the media image field
+.field-hs-event-image,
+.field-hs-news-image,
+.field-hs-event-series-image,
+.field-hs-person-square-img,
+.field-hs-publication-image,
+.field-hs-accordion-image, // This still goes full width of the accordion, but keeps it contained to the image area.
+.hb-spotlight__image-wrapper,
+.hb-hero-overlay__image-wrapper,
+.vertical-link-card__img,
+.hb-card__img {
+  article {
+    position: relative;
+  }
+}
+
+// This adds caption/credit positioning for the caption credit media template.
+.hb-caption-credit-image {
+  position: relative;
+}

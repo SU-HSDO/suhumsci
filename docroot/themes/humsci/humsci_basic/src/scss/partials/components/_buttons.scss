@@ -1,0 +1,95 @@
+.button,
+a.button {
+  @include hb-button;
+  font-size: hb-calculate-rems(18px);
+
+  // This is our only option for targeting the exposed filters reset button
+  &[data-drupal-selector="edit-reset"] {
+    @include hb-reset-button;
+  }
+}
+
+// hs-button and D7 import class map and loop
+$buttons: (
+  hs-button,
+  btn,
+);
+
+@each $button in $buttons {
+  a.#{$button},
+  button.#{$button},
+  .#{$button} a,
+  .#{$button} button,
+  .#{$button} a:not([class]),
+  .#{$button} button:not([class]) {
+    @include hb-button;
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      color: var(--palette--white);
+    }
+  }
+}
+
+
+
+a.hs-button--big,
+button.hs-button--big,
+.hs-button--big a,
+.hs-button--big button,
+.hs-button--big a:not([class]),
+.hs-button--big button:not([class]) {
+  @include hb-big-button;
+
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    color: var(--palette--white);
+  }
+}
+
+a.hs-secondary-button,
+button.hs-secondary-button,
+.hs-secondary-button a,
+.hs-secondary-button button,
+.hs-secondary-button a:not([class]),
+.hs-secondary-button button:not([class]),
+a.more-link,
+button.more-link,
+.more-link a,
+.more-link button,
+.more-link a:not([class]),
+.more-link button:not([class]) {
+  @include hb-secondary-button;
+
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    color: var(--palette--white);
+  }
+}
+
+// This adds margin to the top of more link which is needed for hb-grid views
+.more-link {
+  .views-element-container & {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    margin-top: hb-calculate-rems(24px);
+
+
+    @include grid-media-min('md') {
+      margin-top: hb-calculate-rems(48px);
+    }
+  }
+}
+
+// List of buttons on a node detail page
+.hs-button,
+.hs-button--big,
+.hs-secondary-button {
+  div:not([class]) > div:not([class]),
+  &.label-hidden > div:not([class]),
+  li:nth-child(n) {
+    display: inline-block;
+    margin: 0 hb-calculate-rems(5px) hb-calculate-rems(13px) 0;
+  }
+}

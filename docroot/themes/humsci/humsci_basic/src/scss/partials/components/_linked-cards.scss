@@ -1,0 +1,64 @@
+.hb-vertical-card,
+.hb-card--date-stacked,
+.hb-card--structured {
+  // Needed to make the styles work when the anchor is the wrapper.
+  .hb-card__title a,
+  .hb-card__title a > div > * {
+    @include hb-link;
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      color: var(--link-base-current-color);
+    }
+  }
+
+  // Needed to make the styles work when the anchor is the wrapper.
+  .hb-card__title a > div > * {
+    display: inline;
+  }
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+
+    @include hb-colorful {
+      .hb-raised-cards & {
+        text-decoration-color: var(--palette--secondary-darken-12);
+      }
+    }
+
+    // Needed to make the styles work when the anchor is the wrapper.
+    .hb-card__title a,
+    .hb-card__title a > div > * {
+      color: var(--palette--black);
+      text-decoration-color: var(--palette--primary);
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--link-base-hover-current-color);
+        text-decoration-color: var(--link-base-hover-current-color);
+      }
+    }
+  }
+
+  &:hover,
+  &:focus,
+  &.is-focused {
+    .hb-card__img img {
+      transform: scale($hb-image-hover-scale);
+    }
+  }
+
+  .hb-card__img {
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      transition: hb-transition(transform);
+    }
+  }
+
+  .hb-media-image {
+    margin: 0;
+  }
+}

@@ -1,0 +1,47 @@
+// Mixin to apply styles to Airy theme
+@mixin hb-airy() {
+  @if $hb-current-theme == 'airy' {
+    @content;
+  }
+}
+
+// Mixin to apply styles to Colorful theme
+@mixin hb-colorful() {
+  @if $hb-current-theme == 'colorful' {
+    @content;
+  }
+}
+
+// Mixin to apply styles to Traditional theme
+@mixin hb-traditional() {
+  @if $hb-current-theme == 'traditional' {
+    @content;
+  }
+}
+
+// Mixin to apply styles to multiple themes
+// Params: (array), e.g. @themes(('airy', 'colorful'))
+// Will error if no array passed as params, but empty array will just return
+@mixin hb-themes($theme-list) {
+  @each $theme in $theme-list {
+    @if index($hb-global-theme-list, $theme) != null {
+      @if $theme == 'airy' {
+        @include hb-airy {
+          @content;
+        }
+      }
+
+      @if $theme == 'colorful' {
+        @include hb-colorful {
+          @content;
+        }
+      }
+
+      @if $theme == 'traditional' {
+        @include hb-traditional {
+          @content;
+        }
+      }
+    }
+  }
+}

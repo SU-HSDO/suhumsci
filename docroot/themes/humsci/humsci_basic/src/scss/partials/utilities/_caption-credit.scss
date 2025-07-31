@@ -1,0 +1,101 @@
+.hb-media-image {
+  .field-media-image-caption {
+    @include hb-caption-credit;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    blockquote,
+    cite,
+    code,
+    li,
+    dd,
+    dt,
+    span,
+    strong,
+    em,
+    p,
+    .hs-button,
+    .hs-button--big,
+    .hs-secondary-button,
+    .hs-more-link,
+    .hs-external-link,
+    .hs-file-link,
+    .hs-pdf-link,
+    .hs-private-link {
+      display: inline;
+      margin-right: hb-calculate-rems(1.5px); // Adds spacing to elements for readability with spacing between inline text elements
+    }
+
+    code,
+    h1,
+    h2,
+    h3,
+    .hs-font-splash {
+      font-family: $hb-colorful-font--sans;
+    }
+
+    blockquote {
+      font-family: $hb-colorful-font--sans;
+
+      &:nth-child(n)::before,
+      &:nth-child(n)::after,
+      &:nth-child(n) > *::before,
+      &:nth-child(n) > *::after {
+        display: none;
+      }
+    }
+
+    hr {
+      display: none !important;
+    }
+  }
+}
+
+// Refine caption/credit styles for vertical linked postcards
+.hb-vertical-linked-card {
+  .hb-media-image {
+    .field-media-image-caption {
+      @include hb-themes(('airy', 'colorful')) {
+        @include grid-media-min('xs') {
+          font-size: hb-calculate-rems(12px);
+        }
+
+        @include grid-media-min('sm') {
+          padding-bottom: hb-calculate-rems(36px);
+          padding-left: hb-calculate-rems(12px);
+          font-size: hb-calculate-rems(11px);
+          z-index: 0;
+        }
+      }
+    }
+  }
+}
+
+// Caption/credit styles for images placed within the body section text area on node detail pages and for WYSIWYG (text area) images
+.node {
+  figure {
+    position: relative;
+    z-index: $hb-z-index-figure;
+    box-sizing: border-box;
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('sm');
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xs');
+    }
+
+    article:not(.hb-media-video):not(.hb-media-embed) {
+      position: relative;
+
+      + figcaption {
+        @include hb-caption-credit;
+      }
+    }
+  }
+}

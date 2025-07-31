@@ -1,0 +1,234 @@
+.hb-raised-cards {
+  // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
+  &--uniform-height .hs-paragraph-style .ptype-hs-postcard,
+  &--uniform-height .hs-paragraph-style .hb-grid__item,
+  &--uniform-height .hb-grid .hb-grid__item,
+  &--uniform-height .field-hs-collection-items .ptype-hs-postcard {
+    display: flex;
+
+    & div:only-child:not(.hb-card__date-tile, .hb-pill) {
+      width: 100%;
+    }
+  }
+
+  &--uniform-height .hs-paragraph-style .paragraph-item .hb-card,
+  &--uniform-height .hs-paragraph-style .paragraph-item .hb-vertical-linked-card,
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-vertical-linked-card,
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-card,
+  &--uniform-height .hb-timeline,
+  &--uniform-height .hb-timeline .hb-timelime__wrapper {
+    height: 100%;
+  }
+
+  // Raised cards uniform height styles for Testimonial & Timeline
+  &--uniform-height .field-hs-collection-items .ptype-hs-testimonial,
+  &--uniform-height .field-hs-collection-items .ptype-hs-timeline {
+    & div:not([class]):only-child:not(.hb-card__date-tile, .hb-pill), // necessary for logged out state
+    & div.contextual-region { // necessary for logged in state
+      height: 100%;
+    }
+  }
+
+  &--uniform-height .field-hs-collection-items .paragraph-item .hb-testimonial {
+    display: flex;
+    height: inherit;
+
+    &__wrapper {
+      width: 100%;
+    }
+  }
+
+  .hb-card {
+    background-color: var(--palette--white);
+    flex-grow: 1;
+
+    @include hb-traditional {
+      padding: hb-spacing-width('xs');
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px) hb-calculate-rems(17px) var(--palette--gray-medium);
+    }
+
+    @include hb-themes(('airy', 'colorful')) {
+      box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px) hb-calculate-rems(35px) color-mix(in srgb, var(--palette--black) 12%, transparent);
+
+      @supports (object-fit: cover) {
+        align-items: stretch;
+
+        &__graphics {
+          margin: 0;
+
+          img {
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        &__img {
+          height: 100%;
+        }
+
+        &.hb-card--horizontal {
+          .hb-card__img *:not(.field-media-image-caption) {
+            height: 100%;
+          }
+
+          .hb-caption-credit-image > [data-once="contextual-render"] {
+            position: absolute;
+          }
+        }
+      }
+
+      &__content {
+        padding: hb-spacing-width('xs');
+      }
+
+      &.hb-card--horizontal-date-stacked.hb-card--no-image {
+        .hb-card__graphics--has-date {
+          .hb-card__date-tile {
+            top: hb-calculate-rems(22px);
+            left: hb-calculate-rems(-14px);
+          }
+
+          + .hb-card__content {
+            padding-left: 0;
+          }
+        }
+      }
+
+      &.hb-card--date-stacked.hb-card--no-image {
+        .hb-card__date-tile {
+          top: hb-calculate-rems(22px);
+          left: hb-calculate-rems(-14px);
+        }
+      }
+
+      &__title:only-child {
+        margin: 0;
+      }
+    }
+  }
+
+  .hb-testimonial,
+  .hb-timelime__wrapper {
+    background-color: var(--palette--white);
+    @include hb-raised-cards-shadow;
+    padding: hb-spacing-width('md') hb-spacing-width('xs');
+    margin-top: 0;
+  }
+
+  .hb-testimonial {
+    padding: 0;
+  }
+
+  .hb-vertical-button-card {
+    box-shadow: none;
+
+    @include hb-traditional {
+      padding: 0;
+    }
+
+    @include hb-themes(('airy', 'colorful')) {
+      background-color: transparent;
+    }
+  }
+
+  .hb-vertical-card,
+  .hb-card--date-stacked {
+    @include hb-colorful {
+      border-bottom: 3px solid;
+      border-color: var(--palette--secondary);
+    }
+  }
+}
+
+// Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied
+.hb-raised-cards .hb-dark-pattern .hb-card,
+.hb-dark-inversion .hb-raised-cards .views-element-container .hb-card {
+  color: var(--palette--black);
+
+  .field-content,
+  .views-label {
+    color: var(--palette--black);
+  }
+
+  a {
+    color: var(--palette--tertiary);
+
+    &:hover,
+    &:focus {
+      color: var(--palette--tertiary-darken-20);
+    }
+  }
+
+  &__date-tile {
+    .field-content {
+      @include hb-themes(('airy', 'colorful')) {
+        color: var(--palette--white);
+      }
+    }
+
+    &-month .field-content {
+      @include hb-traditional {
+        color: var(--palette--white);
+      }
+    }
+
+    &-day .field-content {
+      @include hb-traditional {
+        color: var(--palette--primary);
+      }
+    }
+  }
+
+  &__title a {
+    @include hb-themes(('airy', 'colorful')) {
+      border-bottom-color: var(--palette--tertiary);
+
+      &:hover,
+      &:focus {
+        border-bottom-color: var(--palette--tertiary-darken-20) !important;
+      }
+    }
+
+    @include hb-traditional {
+      color: var(--palette--black);
+      text-decoration-color: var(--palette--black);
+
+      &:hover,
+      &:focus {
+        text-decoration-color: var(--palette--tertiary-darken-20);
+      }
+    }
+  }
+
+  &__decorative-link a {
+    @include hb-themes(('airy', 'colorful')) {
+      color: transparent;
+
+      &:hover,
+      &:focus {
+        color: transparent;
+      }
+    }
+
+    @include hb-traditional {
+      &::after {
+        @include hb-icon-link-arrow('tertiary');
+        mask-size: 85%;
+      }
+
+      &:hover,
+      &:focus {
+        &::after {
+          background-color: var(--palette--tertiary-darken-20);
+        }
+      }
+    }
+  }
+}
+
+// Update padding when vertical card is in 4 columns.
+.hb-raised-cards .field-hs-collection-items.item-per-row--4 .hb-vertical-card .hb-card__content {
+  @include hb-colorful {
+    padding: hb-calculate-rems(18px);
+  }
+}

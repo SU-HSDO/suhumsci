@@ -1,0 +1,34 @@
+name: HumSci Basic
+type: theme
+description: A base for visually distinctive HumSci themes.
+package: 'Humanities & Sciences'
+core_version_requirement: ^9.4 || ^10
+'base theme': stable9
+dependencies:
+  - hs_layouts:hs_layouts
+  - fontawesome:fontawesome
+libraries:
+  - humsci_basic/main-content-fallback
+  - humsci_basic/editoria11y
+
+regions:
+  page_top: 'Page top'
+  global_message: Global Message
+  header: Header
+  search: Search
+  menu: Menu
+  help: Help
+  highlighted: Highlighted
+  content: Content
+  footer: Footer
+  page_bottom: 'Page bottom'
+
+components:
+  namespaces:
+    humsci_basic: templates
+
+libraries-override:
+  hs_layouts/three_column_w_image:
+    css:
+      layout:
+        css/three-column-w-image.css: false

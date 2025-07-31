@@ -1,0 +1,295 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the HumSci Basic theme.
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\node\Entity\Node;
+use Drupal\paragraphs\ParagraphInterface;
+
+/**
+ * Implements hook_preprocess().
+ */
+function humsci_basic_preprocess(&$variables) {
+  // Expose default theme name to all templates, so it can be used for attaching
+  // the right library.
+  $variables['default_theme'] = \Drupal::config('system.theme')->get('default');
+}
+
+/**
+ * Implements hook_preprocess_hook().
+ */
+function humsci_basic_preprocess_field__hs_entity__label(&$variables) {
+  // Add the title class to match the eck title classes.
+  $variables['attributes']['class'][] = 'title';
+}
+
+/**
+ * Implements hook_preprocess_block().
+ *
+ * The following code block (lines 16 - 30) is an adaptation of the code found
+ * within the su_humsci theme preprocess block.
+ * `docroot/themes/humsci/su_humsci_theme/su_humsci_theme.theme`.
+ */
+function humsci_basic_preprocess_block(&$vars) {
+  $block_ids = ['local_tasks_block'];
+
+  if (in_array($vars['elements']['#plugin_id'], $block_ids)) {
+    $vars['attributes']['class'][] = 'decanter-grid';
+  }
+
+  // The default permissions for the block label only allow developers to change
+  // the block title. In order to allow site owners to change the block label,
+  // it must be updated to block description.
+  // Change the block label to the block description so that users (such as site
+  // owners) can change the block label without needing the permission to
+  // administer blocks.
+  // The role would only need the "Edit any block content" permission.
+  if ($vars['base_plugin_id'] == 'block_content' && !empty($vars['content']['#block_content'])) {
+    /** @var \Drupal\block_content\Entity\BlockContent $block */
+    $block = $vars['content']['#block_content'];
+    $description = $block->get('info')->get(0)->getValue();
+    $vars['label'] = reset($description) ?: $vars['label'];
+  }
+}
+
+/**
+ * Prepares variables for the html.html.twig template.
+ */
+function humsci_basic_preprocess_html(&$vars) {
+
+  // Animation enhancements setting.
+  $animation_enhancement = theme_get_setting('animation_toggle');
+  if ($animation_enhancement) {
+    // Set html_attributes for html DOM element.
+    $vars['html_attributes']->addClass('hb-has-animation-enhancements');
+  }
+
+  // Experimental Features setting.
+  $experimental_feature = theme_get_setting('experimental_toggle');
+  if ($experimental_feature) {
+    // Set html_attributes for html DOM element.
+    $vars['html_attributes']->addClass('hb-experimental');
+  }
+
+  // Mega Menu hides standard menu on desktop setting.
+  $use_megamenu = theme_get_setting('megamenu_toggle');
+  if ($use_megamenu) {
+    // Set html_attributes for html DOM element.
+    $vars['html_attributes']->addClass('hb-use-megamenu');
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function humsci_basic_preprocess_page(&$vars) {
+  // Variant setting for the brand bar.
+  $bbv = theme_get_setting('brand_bar_variant_classname');
+  if ($bbv) {
+    $vars['brand_bar_variant_classname'] = 'su-brand-bar--' . $bbv;
+  }
+
+  // Variant setting for the global footer.
+  $gfv = theme_get_setting('global_footer_variant_classname');
+  if ($gfv) {
+    $vars['global_footer_variant_classname'] = 'su-global-footer--' . $gfv;
+  }
+
+  // Variant setting for the local footer to be used in children themes.
+  $vars['local_footer_variant_classname'] = '';
+
+  // Node pages are configured with layout builder so we dont need to set these
+  // classes.
+  $route = \Drupal::routeMatch()->getRouteName();
+  $layout_routes = [
+    'layout_builder.overrides.node.view',
+    'layout_builder.defaults.node.view',
+  ];
+
+  if (!isset($vars['node']) && !in_array($route, $layout_routes)) {
+    $vars['main_class'] = 'hb-page-width hb-not-layout-builder-main-content';
+  }
+
+  // Load the site name out of configuration.
+  $config = \Drupal::config('system.site');
+  $vars['site_name'] = $config->get('name');
+  $vars['site_slogan'] = $config->get('slogan');
+
+  // Attach library to update user login page only.
+  if ($route == 'user.login') {
+    $default_theme = \Drupal::config('system.theme')->get('default');
+    $vars['#attached']['library'][] = "$default_theme/user-login-page";
+  }
+}
+
+/**
+ * Implements hook_preprocess_block__system_branding_block().
+ */
+function humsci_basic_preprocess_block__system_branding_block(&$vars) {
+  // Variant setting for the global lockup.
+  $vars['lockup'] = theme_get_setting('lockup');
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ *
+ * All menus will get this hook run on them, including:
+ * main menus, devel menus, custom menus, admin menus, and shortcut menus.
+ */
+function humsci_basic_preprocess_menu(&$vars) {
+  if (isset($vars['items'])) {
+    _humsci_basic_check_link_access($vars['items']);
+  }
+}
+
+/**
+ * Marks menu items that point to unpublished nodes and private pages.
+ *
+ * Unpublished nodes menu items still show in the main menu and the menu block
+ * in the side navigation. We will target the attribute with css to give a
+ * visual indicator that something is different with that menu item.
+ *
+ * Menu items for pages with a content type of hs_private_page will show in
+ * any menu block with the class hb-private-page-link which adds a
+ * lock icon to the left of the link text.
+ *
+ * @param array $link_items
+ *   Keyed array of menu items.
+ */
+function _humsci_basic_check_link_access(array &$link_items) {
+  foreach ($link_items as &$link_item) {
+    $url = $link_item['url'];
+
+    if ($url->isRouted() && $url->getRouteName() == 'entity.node.canonical') {
+
+      $parameters = $url->getRouteParameters();
+      $nid = $parameters['node'];
+      $node = Node::load($nid);
+
+      if (!isset($link_item['attributes'])) {
+        $link_item['attributes'] = new Attribute();
+      }
+
+      if ($node) {
+        if (!$node->isPublished()) {
+          $link_item['attributes']->setAttribute('data-unpublished-node', 'true');
+        }
+
+        $type = $node->bundle();
+        if ($type == 'hs_private_page') {
+          $link_item['attributes']->addClass('hb-private-page-link');
+        }
+      }
+    }
+
+    if (!empty($link_item['below'])) {
+      _humsci_basic_check_link_access($link_item['below']);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for we_megamenu li.
+ */
+function humsci_basic_preprocess_we_megamenu_li(&$vars) {
+  if (empty($vars['href'])) {
+    return;
+  }
+  $host = \Drupal::request()->getSchemeAndHttpHost();
+  $url = $vars['href'];
+  $alias = str_replace($host, '', $url);
+  if (substr($alias, 0, 1) != '/') {
+    return;
+  }
+  $path = \Drupal::service('path_alias.manager')->getPathByAlias($alias);
+  if (substr($path, 0, 6) != '/node/') {
+    return;
+  }
+
+  [, $nid] = explode('/', trim($path, '/'));
+  $node = Node::load($nid);
+  if ($node && $node->bundle() == 'hs_private_page') {
+    $vars['attributes']['class'][] = 'hb-private-page-link';
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for we_megamenu backend.
+ */
+function humsci_basic_preprocess_we_megamenu_backend(array &$vars) {
+  $vars['attributes']['data-action'] = 'clicked';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for we_megamenu frontend.
+ */
+function humsci_basic_preprocess_we_megamenu_frontend(&$vars) {
+  $vars['attributes']['data-action'] = 'clicked';
+  $vars['attributes']['class'][] = 'click-action';
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function humsci_basic_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+  switch ($view->id()) {
+    case 'hs_default_search':
+      $variables['#attached']['library'][] = 'humsci_basic/search';
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_basic_preprocess_paragraph(&$variables) {
+  $paragraph = $variables['paragraph'];
+  if ($paragraph->bundle() != 'hs_view') {
+    return NULL;
+  }
+  // Get the parent entity of hs_view paragraphs.
+  $parent = $paragraph->getParentEntity();
+  // Test if the paragraph is within a collection.
+  if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
+    return NULL;
+  }
+  $heading_tag = 'h2';
+  if ($parent->get('field_title_settings')->value !== 'collection_title_none') {
+    // If the collection title is set to anything other than 'None',
+    // set the heading tag to h3.
+    $heading_tag = 'h3';
+  }
+  $variables['content']['field_hs_view'][0]['#heading_tag'] = $heading_tag;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function humsci_basic_preprocess_field(&$variables) {
+  $wysiwyg_types = ['text_long', 'text_with_summary'];
+  if (in_array($variables['field_type'], $wysiwyg_types)) {
+    $variables['#attached']['library'][] = 'humsci_basic/table-wrap';
+    $variables['#attached']['library'][] = 'humsci_basic/table-scope';
+    $variables['#attached']['library'][] = 'humsci_basic/page-scroll-animations';
+  }
+  if ($variables['field_type'] == 'entity_reference_revisions') {
+    foreach ($variables['items'] as $item) {
+      if (isset($item['content']['#paragraph']) && $item['content']['#paragraph']->bundle() == 'hs_postcard') {
+        $default_theme = \Drupal::config('system.theme')->get('default');
+        $variables['#attached']['library'][] = "$default_theme/postcard";
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_ENTITY__BUNDLE().
+ */
+function humsci_basic_preprocess_node__hs_event(&$variables) {
+  $variables['#attached']['library'][] = 'humsci_basic/addtocal';
+}

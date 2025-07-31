@@ -1,0 +1,74 @@
+{#
+/**
+ * Macro for creating nested menus in the main navigation.
+ */
+#}
+{% macro nav_menu(items, menu_level, class_prefix, parents) %}
+  {% import _self as menus %}
+  <ul class="{{ class_prefix }}__menu {{ class_prefix }}__menu-lv{{ menu_level }}">
+  {% for item in items %}
+
+    {# Link Attribtues #}
+    {% set link_attributes = item.attributes %}
+    {% set button_active_trail_class = '' %}
+    {% set link_attributes = link_attributes.addClass(class_prefix ~ "__link") %}
+    {% if item.in_active_trail == true %}
+      {% set link_attributes = link_attributes.addClass(class_prefix ~ "__link--active-trail") %}
+      {% set button_active_trail_class = class_prefix ~ "__link--active-trail" %}
+    {% endif %}
+    {#
+      If there isn't a URL we want to set the href to #0 to prevent a page refresh
+      when it is clicked.
+    #}
+    {% if item.url.toString() is empty %}
+      {% set link_attributes = link_attributes.setAttribute('href', '#0') %}
+    {% else %}
+      {% set link_attributes = link_attributes.setAttribute('href', item.url|render) %}
+    {% endif %}
+
+    {# Item Attributes #}
+    {% set list_attributes = create_attribute() %}
+    {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item") %}
+    {% if item.below is not empty %}
+      {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--parent") %}
+    {% endif %}
+    {% if item.in_active_trail == true %}
+      {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--active-trail") %}
+    {% endif %}
+    {% if item.is_active == true %}
+      {% set list_attributes = list_attributes.addClass(class_prefix ~ "__item--current") %}
+    {% endif %}
+
+    <li{{ list_attributes }}>
+      {# This check whether or not there is a URL #}
+      {% if item.url.toString() is empty %}
+        {#
+          If there is no URL (<nolink>) then we need the toggler classes. 
+        #}
+        <button class="{{ class_prefix }}__link {{ button_active_trail_class }} hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}" {% if item.below %}aria-haspopup="true" aria-expanded="true"{% endif %}>{{ item.title }}</button>
+
+        {% if item.below %}
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}">
+            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix, parents|merge([loop.index])) }}
+          </div>
+        {% endif %}
+      {% else %}
+        {#
+          If there is a URL then we use a separate button element to toggle the
+          nested navigation and the anchor tag will just act as a link.
+        #}
+        {{ link(item.title, item.url, link_attributes) }}
+
+        {% if item.below %}
+          <button class="{{ class_prefix }}__button hb-nested-toggler" id="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}" aria-haspopup="true" aria-expanded="true">
+            Toggle {{ item.title }}
+          </button>
+          <div class="{{ class_prefix }}__menu-container" aria-labelledby="{{ item.title|replace({' ': ''}) }}{{ menu_level }}{{ parents|join('-')|clean_id }}">
+            {{ menus.nav_menu(item.below, menu_level + 1, class_prefix, parents|merge([loop.index])) }}
+          </div>
+        {% endif %}
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+{% endmacro %}

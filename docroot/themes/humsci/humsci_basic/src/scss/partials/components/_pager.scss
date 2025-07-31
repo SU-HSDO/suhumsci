@@ -1,0 +1,120 @@
+// Base pager styles use by both the mini and full pagers
+.js-pager__items {
+  margin: hb-spacing-width() 0;
+  padding: 0;
+  text-align: center;
+
+  li {
+    display: inline;
+    font-weight: hb-theme-font-weight(semibold);
+    margin: hb-calculate-rems(10px);
+  }
+
+  li:not(.pager__item),
+  .pager__item--first,
+  .pager__item--last,
+  .pager__item--next,
+  .pager__item--previous {
+    --link-base-current-color: var(--palette--link-base-color);
+    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+
+    a {
+      text-decoration: none;
+
+      &:focus,
+      &:hover {
+        text-decoration: underline;
+        background-image: none;
+        background-color: transparent;
+      }
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border: none;
+      }
+    }
+  }
+}
+
+// Full pager classes
+// These styles are for the page numbers only shown in the full pager.
+.pager {
+  &__items {
+    list-style: none;
+    margin: hb-calculate-rems(6px) 0 0;
+  }
+
+  &__item {
+    --link-base-current-color: var(--palette--gray-dark);
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    a {
+      display: inline-block;
+      padding: hb-calculate-rems(6px) hb-calculate-rems(9px);
+      border-radius: $hb-button-border-radius;
+      min-width: hb-calculate-rems(31px);
+      text-align: center;
+      text-decoration: none;
+      transition: hb-transition(background-color);
+      background-image: none;
+
+      // adjust padding for increase of font-size and line-height
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(6px) hb-calculate-rems(12px);
+      }
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        border: $hb-thin-border;
+        border-color: transparent;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: var(--palette--gray-medium);
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          background-color: transparent;
+          border-color: var(--link-base-hover-current-color);
+        }
+      }
+    }
+
+    &.is-active {
+      --link-base-current-color: var(--palette--white);
+      --link-base-hover-current-color: var(--palette--white);
+
+      background-color: var(--palette--gray-dark);
+      display: inline-block;
+      border-radius: $hb-button-border-radius;
+
+
+      a {
+        &:hover,
+        &:focus {
+          cursor: default;
+          background-color: transparent;
+        }
+      }
+    }
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      --link-base-current-color: var(--palette--link-base-color-dark);
+      --link-base-hover-current-color: var(--palette--link-base-hover-color-dark);
+    }
+
+    // Buttons in infinite scroll pager.
+    a.hs-button {
+      @include hb-button;
+    }
+  }
+}

@@ -1,0 +1,57 @@
+@include describe('HB Animation Function') {
+
+  // Colorful
+  @include describe('the hb-transition() function used with Colorful') {
+    $hb-current-theme: 'colorful' !global;
+
+    @include it('returns the theme variable values for the transition-duration and transition-timing-function properties') {
+      @include assert {
+        @include output {
+          @include hb-colorful {
+            transition: hb-transition(color);
+          }
+        }
+        @include contains {
+          transition: color 150ms ease-in-out;
+        }
+      }
+    }
+  }
+
+  // Traditional
+  @include describe('the hb-transition() function used with Traditional') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include it('returns the theme variable values for the transition-duration and transition-timing-function properties') {
+      @include assert {
+        @include output {
+          @include hb-traditional {
+            transition: hb-transition(color);
+          }
+        }
+        @include contains {
+          transition: color 300ms ease-in-out;
+        }
+      }
+    }
+  }
+
+  // Airy
+  @include describe('the hb-transition() function used with Airy') {
+    $hb-current-theme: 'airy' !global;
+
+    @include it('returns the theme variable values for the transition-duration and transition-timing-function properties') {
+      @include assert {
+        @include output {
+          @include hb-airy {
+            transition: hb-transition(color);
+          }
+        }
+        @include contains {
+          transition: color 150ms ease-in-out;
+        }
+      }
+    }
+  }
+
+}

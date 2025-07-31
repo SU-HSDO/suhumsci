@@ -1,0 +1,42 @@
+// Style the inline Drupal admin local tasks
+// View / Edit / Publish / Manage Display / Layout / Revisions / Devel
+// located within page content
+
+.block--local-tasks {
+  @include hb-page-width;
+  margin-bottom: hb-calculate-rems(40px);
+  border-bottom: 2px solid $hb-color--drupal-dark;
+
+  .tabs {
+    margin: hb-calculate-rems(40px) 0 0;
+    padding: 0;
+
+    .tabs__tab {
+      display: inline-block;
+      background-color: mix(white, $hb-color--drupal-light, 88%);
+      list-style-type: none;
+      padding: hb-calculate-rems(8px) hb-calculate-rems(12px);
+      margin-top: hb-calculate-rems(4px);
+      font-size: hb-calculate-rems(15px);
+      transition: hb-transition(background-color);
+
+      a, a:hover, a:focus {
+        color: $hb-color--drupal-black;
+        text-decoration: none;
+        background-image: none;
+      }
+
+      &--active {
+        background-color: $hb-color--drupal-dark;
+
+        a {
+          color: $hb-color--drupal-white;
+        }
+      }
+
+      &:hover:not(.tabs__tab--active) {
+        background-color: mix(white, $hb-color--drupal-light, 73%);
+      }
+    }
+  }
+}

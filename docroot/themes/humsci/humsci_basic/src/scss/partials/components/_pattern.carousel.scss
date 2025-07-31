@@ -1,0 +1,794 @@
+.paragraph--type--hs-carousel {
+  .hb-hero-overlay__image-wrapper::before {
+    display: none;
+  }
+
+  @include hb-hero-full-width;
+
+  .hb-hero-overlay {
+    display: block;
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include clearfix;
+      padding: hb-spacing-width() 0 hb-spacing-width() 8%;
+      min-height: auto;
+
+      @include grid-media-min('md') {
+        padding: 0;
+        display: grid;
+        grid-template-columns: 8% 7% 45% 20% 20%; // 5 cols, position 1-6
+        grid-template-rows: 60px 1fr 1fr auto auto 60px; // 6 rows, position 1-7
+        min-height: 60vh;
+      }
+
+      @include grid-media-min('xl') {
+        grid-template-columns: 8% 7% 35% 30% 20%; // 5 cols, position 1-6
+      }
+
+      // Offset background color pseudo element
+      &::before {
+        background-color: var(--palette--gray-light);
+        z-index: $hb-z-index-hero1-background;
+
+        @include grid-media-min('md') {
+          position: unset;
+          padding: hb-spacing-width() 0 hb-spacing-width() 10%;
+          grid-column: 1 / 5;
+          grid-row: 1 / 6;
+        }
+      }
+
+      // Secondary color block pseudo element that shows up in the grid
+      &::after {
+        content: '';
+        display: block;
+        height: 100%;
+        z-index: $hb-z-index-hero1-overlay;
+        background-color: var(--palette--secondary);
+
+        @include grid-media-min('md') {
+          grid-column: 1 / 2;
+          grid-row: 3 / 4;
+        }
+      }
+    }
+
+    @include hb-traditional { // hb-hero-overlay
+      display: flex;
+      min-height: hb-calculate-rems(320px);
+
+      &::before {
+        animation: traditionalCarouselOverlay;
+      }
+
+      @include grid-media-min('md') {
+        min-height: hb-calculate-rems(420px);
+      }
+    }
+
+    &__image-wrapper {
+      @include hb-themes(('colorful', 'airy')) {
+        position: relative;
+
+        @include grid-media-min('md') {
+          // This will make sure that the image fills the entire area
+          display: flex;
+          margin-top: 0;
+          grid-column: 3 / 6;
+          grid-row: 2 / 5;
+          padding-top: 0;
+        }
+
+        // On mobile, make the secondary color box out of pseudo element,
+        // then on 'md' breakpoint, it becomes part of the grid
+        &::before {
+          @include pseudo-background-box('secondary', 50%, 8.75%);
+
+          display: block;
+          bottom: 0;
+          left: -8.75%;
+          top: initial;
+          opacity: 1;
+
+          @include grid-media-min('md') {
+            display: none;
+          }
+        }
+
+        img {
+          min-height: 35vh;
+          max-height: 35vh;
+          object-fit: cover;
+
+          @include grid-media-min('md') {
+            max-height: 55vh;
+            min-height: 55vh;
+          }
+
+          &.animate {
+            /* stylelint-disable max-nesting-depth */
+            .hb-has-animation-enhancements & {
+              animation-name: colorfulCarouselImage;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+      }
+    }
+
+    &__text {
+      @include hb-themes(('colorful', 'airy')) {
+        background-color: var(--palette--primary-hero-overlay);
+        padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
+        position: relative;
+        width: auto !important;
+        margin: 0 !important;
+        transform: none;
+        top: 0;
+        left: 0;
+
+        @include grid-media-min('md') {
+          grid-column: 2 / 4;
+          grid-row: 4 / 7;
+          padding: hb-calculate-rems(64px) hb-spacing-width() hb-spacing-width();
+          width: auto !important;
+        }
+
+        @include grid-media-min('lg') {
+          width: auto !important;
+        }
+
+        // Line decoration pseudo element
+        &::after {
+          top: hb-calculate-rems(24px);
+          @include hb-colorful-text-bar('tertiary-reversed');
+
+          @include grid-media-min('md') {
+            top: hb-calculate-rems(56px);
+          }
+        }
+
+        &.animate {
+          .hb-has-animation-enhancements.js & {
+            opacity: 1;
+            animation-name: colorfulCarouselText;
+          }
+        }
+
+        h2 {
+          @include hb-heading-4;
+          margin: hb-spacing-width('xs') 0;
+
+          @include grid-media-min('lg') {
+            @include hb-heading-3;
+            margin: hb-spacing-width('sm') 0;
+          }
+        }
+
+        h2,
+        .field-hs-hero-body {
+          width: auto;
+
+          @include grid-media-min('sm') {
+            width: auto;
+          }
+
+          @include grid-media-min('md') {
+            width: auto;
+          }
+
+          @include grid-media-min('lg') {
+            width: auto;
+          }
+        }
+
+        p {
+          margin-top: hb-spacing-width('xs');
+
+          @include grid-media-min('lg') {
+            margin-top: hb-spacing-width('sm');
+          }
+        }
+      }
+
+      @include hb-traditional {
+        background-color: var(--palette--primary-hero-overlay);
+        position: relative;
+        margin: hb-spacing-width() 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        align-self: stretch;
+        text-align: left;
+        left: hb-spacing-width('md');
+        transform: translateX(0) translateY(0);
+
+        @include grid-media-min('sm') {
+          bottom: 25%;
+        }
+
+        @include grid-media-min('md') {
+          padding: hb-calculate-rems(50px) 0;
+          left: hb-spacing-width();
+          width: 50% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        @include grid-media-min('lg') {
+          width: 43% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+
+          .hb-three-column--two-sidebar & {
+            width: calc(100% - (2 * #{hb-calculate-rems(hb-spacing-width('default', false))})) !important;
+          }
+        }
+
+        @include grid-media-min('xl') {
+          width: 48% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+          margin: hb-calculate-rems(52px) 0 !important;
+        }
+
+        @include grid-media-min('2xl') {
+          width: hb-calculate-rems(650px) !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+        }
+
+        &.animate {
+          opacity: 1;
+
+          .hb-has-animation-enhancements & {
+            animation-name: traditionalCarouselText;
+          }
+        }
+
+        h2 {
+          width: auto;
+          margin: 0 hb-spacing-width();
+
+          @include grid-media-min('lg') {
+            margin: 0 hb-calculate-rems(50px);
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              margin: 0 hb-spacing-width();
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        .field-hs-hero-body {
+          margin: hb-spacing-width('xxs') hb-spacing-width() 0;
+          width: auto;
+
+          @include grid-media-min('md') {
+            width: calc(100% - #{hb-calculate-rems(100px)});
+            margin: hb-spacing-width('sm') hb-spacing-width() 0;
+          }
+
+          @include grid-media-min('lg') {
+            margin: hb-spacing-width('sm') hb-calculate-rems(50px) 0;
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              margin: hb-spacing-width('sm') hb-spacing-width() 0;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        .field-hs-hero-link {
+          margin: 0 hb-spacing-width();
+
+          @include grid-media-min('md') {
+            width: calc(90% - #{hb-calculate-rems(64px)});
+          }
+
+          @include grid-media-min('lg') {
+            margin: 0 hb-calculate-rems(50px);
+            width: calc(85% - #{hb-calculate-rems(140px)});
+          }
+
+          @include grid-media-min('xl') {
+            width: calc(80% - #{hb-calculate-rems(140px)});
+          }
+
+          .hb-three-column--one-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              width: calc(95% - #{hb-calculate-rems(140px)});
+            }
+
+            @include grid-media-min('xl') {
+              width: calc(90% - #{hb-calculate-rems(140px)});
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+
+          .hb-three-column--two-sidebar & {
+            /* stylelint-disable max-nesting-depth */
+            @include grid-media-min('lg') {
+              width: calc(100% - #{hb-calculate-rems(64px)});
+              margin: 0 hb-spacing-width();
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        .field-hs-hero-link a {
+          max-width: unset;
+        }
+      }
+    }
+  }
+
+  // Position carousel controls
+  .slick {
+    position: relative;
+
+    .hb-hero-overlay__text {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-bottom: hb-calculate-rems(60px);
+
+        @include grid-media-min('md') {
+          padding-bottom: hb-calculate-rems(65px);
+        }
+      }
+
+      @include hb-traditional {
+        padding-bottom: hb-calculate-rems(75px);
+
+        @include grid-media-min('md') {
+          padding-bottom: hb-calculate-rems(80px);
+        }
+      }
+    }
+
+    .slick-dots {
+      @include visually-hidden;
+
+      @include hb-themes(('airy', 'colorful')) {
+        @include grid-media-min('md') {
+          bottom: hb-spacing-width();
+          margin: 0 0 hb-calculate-rems(10px);
+          right: calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: 0;
+          }
+        }
+
+        // slick dots do not display until this breakpoint
+        @media (min-width: 890px) {
+          display: inline-block;
+          clip: inherit;
+          height: auto;
+          width: auto;
+          list-style-type: none;
+          position: absolute;
+          overflow: visible;
+        }
+
+        @include grid-media-min('lg') {
+          .hb-three-column--two-sidebar & {
+            @include visually-hidden;
+          }
+        }
+
+        @include grid-media-min('xl') {
+          right: calc(50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+        }
+      }
+
+      @include hb-traditional {
+        // slick dots do not display until the medium breakpoint
+        // default positioning styles are applied to the full width hero
+        // main content styles are applied by targeting the sidebar classes
+        // even though the sidebars do not display until the next breakpoint,
+        // the classes exist for styling
+        @include grid-media-min('md') {
+          display: inline-block;
+          clip: inherit;
+          height: auto;
+          width: auto;
+          list-style-type: none;
+          position: absolute;
+          overflow: visible;
+
+          right: calc(50% + #{hb-calculate-rems(77px)}); // move it past the slick-next arrow
+          bottom: hb-calculate-rems(53px);
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(23px);
+          }
+        }
+
+        // the sidebar(s) appear at this breakpoint
+        @include grid-media-min('lg') {
+          right: calc(57% + #{hb-calculate-rems(80px)}); // move it past the slick arrows
+
+          .hb-three-column--one-sidebar & {
+            right: calc(57% + #{hb-calculate-rems(84px)});
+          }
+
+          .hb-three-column--two-sidebar & {
+            right: hb-calculate-rems(130px); // move it past the slick arrows
+          }
+        }
+
+        @include grid-media-min('xl') {
+          right: calc(63% - #{hb-calculate-rems(60px)});
+          bottom: hb-calculate-rems(77px);
+
+          .hb-three-column--one-sidebar & {
+            right: calc(57% + #{hb-calculate-rems(36px)});
+            bottom: hb-calculate-rems(48px);
+          }
+
+          .hb-three-column--two-sidebar & {
+            right: hb-calculate-rems(130px);
+            bottom: hb-calculate-rems(48px);
+          }
+        }
+
+        @include grid-media-min('2xl') {
+          right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)});
+
+          .hb-three-column--one-sidebar & {
+            right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)});
+            bottom: hb-calculate-rems(48px);
+          }
+        }
+      }
+
+      li {
+        display: inline-block;
+      }
+
+      .slick-active {
+        button {
+          &::before {
+            @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
+            font-size: hb-calculate-rems(40px);
+          }
+        }
+      }
+
+      button {
+        @include hb-unbuttonize;
+        font-size: 0;
+        padding-top: hb-calculate-rems(5px);
+
+        &::before {
+          color: var(--palette--white);
+          content: '';
+          @include hb-icon-type($type: 'ellipse-border', $color: 'gray-light');
+          height: hb-calculate-rems(11px);
+          width: hb-calculate-rems(11px);
+          display: block;
+          margin: 0 hb-calculate-rems(10px);
+          border-radius: 50%;
+
+          // Use box shadow property to improve visual accessibiity of slick dots.
+          @include hb-themes(('airy', 'colorful')) {
+            $light-shadow: var(--palette--gray-light);
+            $dark-shadow: var(--palette--black);
+
+            // For modern browsers
+            $accent-shadow: var(--palette--secondary);
+
+            box-shadow: inset hb-calculate-rems(-2px) 0 $light-shadow, 0 hb-calculate-rems(-2px) 0 $accent-shadow, 0 0 0 hb-calculate-rems(2px) $dark-shadow;
+          }
+
+          @include hb-traditional {
+            $light-shadow: var(--palette--gray-light);
+            $dark-shadow: var(--palette--black);
+
+            // For modern browsers
+            $accent-shadow: var(--palette--secondary);
+
+            box-shadow: inset hb-calculate-rems(-2px) 0 $light-shadow, 0 hb-calculate-rems(-2px) 0 $accent-shadow, 0 0 0 hb-calculate-rems(2px) $dark-shadow;
+          }
+        }
+
+        &:hover::before,
+        &:focus::before {
+          @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
+        }
+      }
+    }
+
+    // There was some css being added by a js library that was also causing the issue of the arrows position.
+    .slick-list {
+      height: 100% !important;
+    }
+
+    &__arrow {
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      right: 0;
+      bottom: 0%;
+      font-size: 0;
+
+      @include hb-colorful {
+        @include grid-media-min('md') {
+          right: 40%;
+        }
+
+        @include grid-media-min('xl') {
+          right: 50%;
+        }
+      }
+
+      @include hb-traditional {
+        @include grid-media-min('md') {
+          right: 46%;
+        }
+
+        // the sidebar(s) appear at this breakpoint
+        @include grid-media-min('lg') {
+          right: 55%;
+        }
+
+        @include grid-media-min('xl') {
+          right: 50%;
+        }
+
+        @include grid-media-min('2xl') {
+          right: 100%;
+        }
+      }
+
+
+      .slick-prev,
+      .slick-next {
+        @include hb-unbuttonize;
+        position: absolute;
+
+        @include hb-themes(('airy')) {
+          bottom: calc(#{hb-spacing-width()} * 2);
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(48px);
+          }
+
+          @include grid-media-min('md') {
+            bottom: hb-spacing-width();
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              bottom: 0;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        @include hb-colorful {
+          bottom: hb-calculate-rems(60px);
+
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: hb-calculate-rems(48px);
+          }
+
+          @include grid-media-min('md') {
+            bottom: hb-calculate-rems(47px);
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--one-sidebar &,
+            .hb-three-column--two-sidebar & {
+              bottom: 0;
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+
+          .hs-full-width & {
+            bottom: hb-calculate-rems(110px);
+
+            @include grid-media-min('md') {
+              bottom: hb-calculate-rems(47px);
+            }
+          }
+        }
+
+        @include hb-traditional {
+          bottom: hb-calculate-rems(30px);
+
+          @include grid-media-min('md') {
+            margin: hb-calculate-rems(18px) 0;
+            bottom: hb-calculate-rems(54px);
+          }
+
+          @include grid-media-min('xl') {
+            bottom: hb-calculate-rems(78px);
+          }
+
+          .hs-full-width & {
+            bottom: hb-calculate-rems(78px);
+
+            @include grid-media-min('md') {
+              bottom: hb-calculate-rems(54px);
+            }
+
+            @include grid-media-min('xl') {
+              bottom: hb-calculate-rems(78px);
+            }
+          }
+        }
+
+        &::before {
+          content: '';
+          display: inline-block;
+          background-repeat: no-repeat;
+          background-position: left;
+          background-size: 85%;
+          height: hb-calculate-rems(25px);
+          width: hb-calculate-rems(25px);
+          transition: hb-transition(transform);
+
+          @include hb-themes(('airy', 'colorful')) {
+            @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
+            filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+          }
+
+          @include hb-traditional {
+            mask-repeat: no-repeat;
+            @include hb-icon-background('arrow-right-long-box-shadow', 'gray-light', true);
+            filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+          }
+        }
+
+        &:hover,
+        &:focus {
+          cursor: pointer;
+        }
+      }
+
+      .slick-prev {
+        transform: rotate(180deg);
+        transform: scaleX(-1);
+
+        @include hb-themes(('airy', 'colorful')) {
+          margin-bottom: hb-calculate-rems(15px);
+          right: calc(#{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)});// move it past the slick-next arrow
+
+          @include grid-media-min('md') {
+            right: calc(40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)});// move it past the slick-next arrow
+          }
+
+          @include grid-media-min('xl') {
+            right: calc(50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
+          }
+        }
+
+        @include hb-traditional {
+          right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
+
+          @include grid-media-min('md') {
+            right: auto;
+            left: calc(53% - #{hb-calculate-rems(85px)}); // move it past the slick-next arrow
+          }
+
+          @include grid-media-min('lg') {
+            left: calc(45% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--two-sidebar & {
+              left: inherit;
+              right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick arrows
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+
+          @include grid-media-min('xl') {
+            left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+          }
+
+          @include grid-media-min('2xl') {
+            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}); // move it past the slick arrows
+
+            .field-hs-collection-items.item-per-row--2 & {
+              left: calc(100% - #{hb-calculate-rems(88px)});
+            }
+          }
+        }
+      }
+
+      .slick-next {
+
+        @include hb-themes(('airy', 'colorful')) {
+          margin-bottom: hb-calculate-rems(15.5px);
+          right: 25px;
+
+          @include grid-media-min('md') {
+            right: calc(40% + #{hb-calculate-rems(25px)});
+          }
+
+          @include grid-media-min('xl') {
+            right: calc(50% + 25px);
+          }
+        }
+
+        @include hb-traditional {
+          right: hb-calculate-rems(40px);
+
+          @include grid-media-min('md') {
+            right: auto;
+            left: calc(53% - #{hb-calculate-rems(40px)});
+          }
+
+          @include grid-media-min('lg') {
+            left: calc(45% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+
+            /* stylelint-disable max-nesting-depth */
+            .hb-three-column--two-sidebar & {
+              left: inherit;
+              right: hb-calculate-rems(50px); // move it past the slick arrows
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+
+          @include grid-media-min('xl') {
+            left: calc(50% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+          }
+
+          @include grid-media-min('2xl') {
+            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}); // move it past the slick arrows
+
+            .field-hs-collection-items.item-per-row--2 & {
+              left: calc(100% - #{hb-calculate-rems(43px)});
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// The placeholder / hero override comments in the keyframes
+// below prevent the hero animations from displaying on carousels
+// and set the foundation for future carousel animations.
+
+// Colorful Carousel Animations
+@keyframes colorfulCarouselText {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes colorfulCarouselImage {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+// Traditional Carousel Animations
+@keyframes traditionalCarouselText {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}
+
+@keyframes traditionalCarouselOverlay {
+  0% {
+    // Placeholder / Hero Override
+  }
+
+  100% {
+    // Placeholder / Hero Override
+  }
+}

@@ -1,0 +1,240 @@
+// Note: This code should be refactored to match styles in the _main-nav.scss
+.hb-secondary-nav {
+  background-color: transparent;
+  display: none;
+
+  @include grid-media-min('lg') {
+    display: block;
+  }
+
+  &__heading {
+    font-weight: hb-theme-font-weight(semibold);
+    font-size: hb-calculate-rems(24px);
+    line-height: 116%;
+
+    @include hb-traditional {
+      margin: 0 0 hb-spacing-width();
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin: 0 0 hb-spacing-width('md');
+    }
+
+    a {
+      @include hb-link;
+    }
+  }
+
+  &__menu-container {
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  &__menu {
+    background-color: transparent;
+    list-style-type: none;
+    padding-left: hb-calculate-rems(16px);
+
+    .hb-dark-inversion & {
+      background-color: var(--palette--primary-dark);
+    }
+  }
+
+  &__menu-lv1 {
+    padding-left: 0;
+    border-top: $hb-thin-border;
+    border-color: var(--palette--gray-medium);
+  }
+
+  &__menu-lv1 > &__item > &__link {
+    font-weight: hb-theme-font-weight(semibold);
+  }
+
+  &__item,
+  &__link {
+    font-size: hb-calculate-rems(16px);
+    color: var(--palette--black);
+
+    .hb-dark-inversion & {
+      color: var(--palette--white);
+
+      &:hover,
+      &:focus,
+      &.is-active {
+        color: var(--palette--black);
+      }
+    }
+  }
+
+  // make sure external links within the secondary nav receive the same styles as other links
+  &__link.ext {
+    color: var(--palette--black);
+
+    .hb-dark-inversion & {
+      color: var(--palette--white);
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--palette--black);
+
+      @include hb-themes(('airy', 'colorful')) {
+        background-image: none;
+      }
+    }
+  }
+
+  &__item {
+    position: relative;
+
+    &--active-trail > .hb-secondary-nav__link {
+      position: relative;
+      font-weight: hb-theme-font-weight(semibold);
+
+      &::before {
+        content: '';
+        display: block;
+        background-color: var(--palette--gray-dark);
+
+        position: absolute;
+        height: 100%;
+        width: hb-calculate-rems(5px);
+        top: 0;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    &--parent {
+      .hb-secondary-nav__link {
+        &::after {
+          content: '';
+          display: block;
+        }
+      }
+    }
+  }
+
+  &__link {
+    display: block;
+    padding: hb-calculate-rems(16px) hb-calculate-rems(48px) hb-calculate-rems(16px) hb-calculate-rems(18px);
+    text-decoration: none;
+    border-bottom: $hb-thin-border;
+    border-color: var(--palette--gray-medium);
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+
+      &:not(.is-active) {
+        .hb-dark-inversion & {
+          + .hb-secondary-nav__button {
+            @include hb-icon-background('plus', 'black');
+
+            /* stylelint-disable max-nesting-depth */
+            &[aria-expanded="true"] {
+              @include hb-icon-background('minus', 'black');
+            }
+            /* stylelint-enable max-nesting-depth */
+          }
+        }
+
+        @include hb-themes(('airy', 'colorful')) {
+          background-color: var(--palette--gray-light);
+        }
+
+        @include hb-traditional {
+          background-color: var(--palette--tertiary-highlight);
+        }
+      }
+    }
+
+    .hb-dark-inversion & {
+      + .hb-secondary-nav__button {
+        @include hb-icon-background('plus', 'white');
+
+        &[aria-expanded="true"] {
+          @include hb-icon-background('minus', 'white');
+        }
+      }
+
+      &::before {
+        background-color: var(--palette--tertiary-reversed);
+      }
+
+      &:hover,
+      &:focus {
+        &::before {
+          background-color: var(--palette--secondary);
+        }
+      }
+    }
+
+    &.is-active {
+      font-weight: hb-theme-font-weight(semibold);
+      background-color: var(--palette--secondary-highlight);
+
+      &::before {
+        background-color: var(--palette--secondary);
+      }
+
+      .hb-dark-inversion & {
+        + .hb-secondary-nav__button {
+          @include hb-icon-background('plus', 'black');
+
+          &[aria-expanded="true"] {
+            @include hb-icon-background('minus', 'black');
+          }
+        }
+      }
+    }
+
+    // when a nolink item behaves as a toggle button, add button toggle icon
+    &.hb-secondary-toggler {
+      position: relative;
+      cursor: pointer;
+
+      &::after {
+        @include hb-menu-icon-wrapper(48px, 48px);
+        @include hb-menu-plus-icon;
+        position: absolute;
+        top: hb-calculate-rems(3px);
+        right: 0;
+
+        // If there is no JS then the navigation is automatically expanded and
+        // toggle buttons are unnecessary.
+        .no-js & {
+          display: none;
+        }
+      }
+
+      &[aria-expanded="true"] {
+        &::after {
+          @include hb-menu-minus-icon;
+        }
+      }
+    }
+  }
+
+  &__button {
+    @include hb-unbuttonize;
+    @include hb-menu-icon-wrapper(48px, 48px);
+    @include hb-menu-plus-icon;
+    cursor: pointer;
+
+    position: absolute;
+    top: hb-calculate-rems(3px);
+    right: 0;
+
+    // If there is no JS then the navigation is automatically expanded and
+    // toggle buttons are unnecessary.
+    .no-js & {
+      display: none;
+    }
+
+    &[aria-expanded="true"] {
+      @include hb-menu-minus-icon;
+    }
+  }
+}

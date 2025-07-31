@@ -1,0 +1,131 @@
+// Describe what you're testing
+@include describe('Theme-specific mixins') {
+
+  // Colorful
+  @include describe('hb-colorful() mixin') {
+    $hb-current-theme: 'colorful' !global; // need to override default setting
+
+    @include it('returns some properties specific to Colorful') {
+      @include assert {
+        @include output {
+          @include hb-colorful {
+            color: green;
+          }
+        }
+        @include contains {
+          color: green;
+        }
+      }
+    }
+
+    @include it('does not return styles because the mixin does not match the $hb-current-theme') {
+      @include assert {
+        @include output {
+          @include hb-airy {
+            color: yellow;
+          }
+        }
+        @include expect { }
+      }
+    }
+  }
+
+  // Airy
+  @include describe('hb-airy() mixin') {
+    $hb-current-theme: 'airy' !global;
+
+    @include it('returns some properties specific to Airy') {
+      @include assert {
+        @include output {
+          @include hb-airy {
+            color: yellow;
+          }
+        }
+        @include contains {
+          color: yellow;
+        }
+      }
+    }
+
+    @include it('does not return styles because the mixin does not match the $hb-current-theme') {
+      @include assert {
+        @include output {
+          @include hb-traditional {
+            color: purple;
+          }
+        }
+        @include expect { }
+      }
+    }
+  }
+
+  // Traditional
+  @include describe('hb-traditional() mixin') {
+    $hb-current-theme: 'traditional' !global;
+
+    @include it('returns some properties specific to Traditional') {
+      @include assert {
+        @include output {
+          @include hb-traditional {
+            color: purple;
+          }
+        }
+        @include contains {
+          color: purple;
+        }
+      }
+    }
+
+    @include it('does not return styles because the mixin does not match the $hb-current-theme') {
+      @include assert {
+        @include output {
+          @include hb-colorful {
+            color: green;
+          }
+        }
+        @include expect { }
+      }
+    }
+  }
+
+  // Multi-theme
+  @include describe('Multi-theme hb-themes() mixin') {
+    $hb-current-theme: 'colorful' !global;
+
+    @include it('returns some properties specific to Colorful') {
+      @include assert {
+        @include output {
+          @include hb-themes(('colorful', 'traditional')) {
+            color: brown;
+          }
+        }
+        @include contains {
+          color: brown;
+        }
+      }
+    }
+
+    @include it('does not return styles because the mixin does not include a reference to the $hb-current-theme') {
+      @include assert {
+        @include output {
+          @include hb-themes(('airy', 'traditional')) {
+            color: orchid;
+          }
+        }
+        @include expect { }
+      }
+    }
+
+    @include it('does not return styles when empty array passed') {
+      // the mixin just returns since the array is empty
+      @include assert {
+        @include output {
+          @include hb-themes(()) {
+            color: papayawhip;
+          }
+        }
+        @include expect { }
+      }
+    }
+  }
+}

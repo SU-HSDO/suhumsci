@@ -147,8 +147,7 @@ hooks:
     - exec: find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'db'/g" {}
     - exec: find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'password' => 'password'/'password' => 'db'/g" {}
     - exec: find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'host' => 'localhost'/'host' => 'db'/g" {}
-    - exec: find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'database' => 'drupal'/'database' => 'db'/g" {}
-    - exec: find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/\$db_name = 'suhumsci_' . basename(dirname(__FILE__, 2));/\$db_name = 'db';/g" {}
+    - exec: find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/\$db_name = 'suhumsci_' . basename(dirname(__FILE__, 2));/\$db_name = 'db_' . basename(dirname(__FILE__, 2));/g" {}
 
 # Key features of DDEV's config.yaml:
 

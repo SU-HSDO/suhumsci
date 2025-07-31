@@ -7,7 +7,8 @@ If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, h
 2. Trust the DDEV root certificate authority. [Trusting the CA](https://ddev.com/blog/ddev-local-trusted-https-certificates/)
 3. Run `ddev blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
 4. Run `ddev drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `ddev drush @music.local uli`).
-5. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
+5. Visit your site at `https://[site-name].ddev.site` (Example: `https://ethicsinsociety.ddev.site`)
+6. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
 
 ## Common commands
 

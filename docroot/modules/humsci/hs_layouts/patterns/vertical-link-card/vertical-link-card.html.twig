@@ -9,9 +9,9 @@
 
   {% if title and href %}
     {% if title|render matches '/<\\/h\\d>/' %}
-      <a href="{{ href }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
+      <a href="{{ href }}" class="hb-vertical-linked-card__title__link hb-heading-4">{{ title }}</a>
     {% else %}
-      <{{ heading_tag }} class="hb-vertical-linked-card__title">
+      <{{ heading_tag }} class="hb-vertical-linked-card__title hb-heading-4">
         <a href="{{ href }}" class="hb-vertical-linked-card__title__link">{{ title }}</a>
       </{{ heading_tag }}>
     {% endif %}
@@ -19,7 +19,7 @@
     {% if title|render matches '/<h\\d>/' %}
       {{ title }}
     {% else %}
-      <h2 class="hb-vertical-linked-card__title">{{ title }}</h2>
+      <h2 class="hb-vertical-linked-card__title hb-heading-4">{{ title }}</h2>
     {% endif %}
   {% endif %}
 

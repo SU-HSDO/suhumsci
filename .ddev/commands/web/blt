@@ -4,4 +4,17 @@
 ## Usage: blt [command] [options]
 ## Example: "ddev blt drupal:sync --site=ethicsinsociety"
 
+# Check if database exists (based on provided site name), create if not.
+if [[ "$*" == *"--site="* ]]; then
+  SITE_NAME=$(echo "$*" | grep -o -- "--site=[^ ]*" | cut -d'=' -f2)
+  if [ ! -z "$SITE_NAME" ]; then
+    DB_NAME="suhumsci_${SITE_NAME}"
+    if ! mysql -u root -proot -e "USE ${DB_NAME};" 2>/dev/null; then
+      echo "🔧 Creating database: ${DB_NAME}"
+      mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+    fi
+  fi
+fi
+
+# Run the original BLT command
 /var/www/html/vendor/bin/blt "$@"

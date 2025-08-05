@@ -251,21 +251,23 @@
   text-align: right;
   line-height: var(--condensed-line-height);
   height: auto;
-  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px) 15%; // Using a percentage to the left to control the width of the captions
+  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px)
+    15%; // Using a percentage to the left to control the width of the captions
 
   @include grid-media-min('sm') {
     // the right side calculation is lower to adjust for the margin-right on the child elements
-    padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 15%;
+    padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+      hb-calculate-rems(16px) 15%;
   }
 
   @include hb-themes(('colorful', 'airy')) {
     background: linear-gradient(to top, var(--palette--black), transparent);
 
     .paragraph--type--hs-carousel & {
-
       // the percentage on this left side is larger to prevent the caption from running under carousel overlay
       @include grid-media-min('md') {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) 58%;
+        padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+          hb-calculate-rems(16px) 58%;
       }
     }
   }
@@ -277,7 +279,8 @@
   .hb-card__graphics--has-date & {
     @include grid-media-min('sm') {
       // the right side calculation is lower to adjust for the margin-right on the child elements
-      padding: hb-calculate-rems(24px) hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(100px);
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+        hb-calculate-rems(16px) hb-calculate-rems(100px);
     }
   }
 
@@ -358,7 +361,8 @@
   @include hb-traditional {
     @include hasAnimationEnhancements(ease-in-out,
       1700ms,
-      traditionalSplashFont);
+      traditionalSplashFont
+    );
   }
 
   @include hb-themes(('colorful', 'airy')) {

@@ -179,6 +179,8 @@
 // hero body
 @mixin hb-hero-body-field {
   @include hb-description;
+  text-wrap: balance;
+
   @include hb-traditional {
     margin-top: hb-spacing-width('xxs');
 
@@ -207,22 +209,11 @@
 
 // hero title
 @mixin hb-hero-title {
-  font-size: hb-calculate-rems(27px);
-  line-height: 117%;
+  @include hb-heading-2;
   margin: 0 0 hb-spacing-width('md');
 
   @include grid-media-min('md') {
-    @include hb-heading-2;
     margin: 0 0 hb-spacing-width();
-  }
-
-  @include hb-themes(('airy', 'colorful')) {
-    font-weight: hb-theme-font-weight(semibold);
-  }
-
-  @include hb-traditional {
-    font-weight: hb-theme-font-weight(regular);
-    line-height: 112%;
   }
 }
 

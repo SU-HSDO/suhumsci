@@ -1,7 +1,5 @@
 name: Unit, Acceptance and Functional Tests
-on:
-  pull_request:
-    types: [opened, reopened, ready_for_review, converted_to_draft, synchronize]
+on: push
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

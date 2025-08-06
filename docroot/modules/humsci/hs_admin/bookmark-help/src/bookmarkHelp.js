@@ -46,6 +46,13 @@ export default class BookmarkHelp extends Plugin {
       bookmarkFormView.children.clear();
       bookmarkFormView.children.add(formElements);
 
+      // Get the input field.
+      const input = formElements.template.children[1]?.template.children[0]['_items'][0]?.fieldView;
+
+      if (!input) {
+        return;
+      }
+
       // Add the help text.
       const helpText = new View();
       helpText.setTemplate({
@@ -57,34 +64,26 @@ export default class BookmarkHelp extends Plugin {
               {
                 tag: 'strong',
                 children: [
-                  'To link to this anchor from within the current page: ',
+                  'To link to this bookmark: ',
                 ],
               },
-              'Don’t use the full URL. Instead use a number sign followed by the name of the anchor.',
             ],
           },
-          // {
-          //   tag: 'p',
-          //   children: [
-          //     {
-          //       tag: 'button',
-          //       attributes: {
-          //         type: 'button',
-          //         id: 'copy-anchor-name',
-          //         title: 'Copy',
-          //       },
-          //       children: ['Copy'],
-          //     },
-          //   ],
-          // },
           {
-            tag: 'p',
+            tag: 'ul',
             children: [
               {
-                tag: 'strong',
-                children: ['From another page: '],
+                tag: 'li',
+                children: [
+                  "From within the current page: Don't use the full URL. Instead use a number sign followed by the name of the anchor.",
+                ],
               },
-              'Use the full URL of this page followed by a number sign and the name of the anchor.',
+              {
+                tag: 'li',
+                children: [
+                  "From another page: Use the full URL of this page followed by a number sign and the name of the anchor.",
+                ],
+              },
             ],
           },
         ],
@@ -96,11 +95,11 @@ export default class BookmarkHelp extends Plugin {
       bookmarkFormView.children.add(helpText);
 
       // Add the copy button to the anchor name.
-      // const copyButton = helpText.element.querySelector('#copy-anchor-name');
+      const copyButton = helpText.element.querySelector('#copy-bookmar-name');
 
-      // if (!copyButton) {
-      //   return;
-      // }
+      if (!copyButton) {
+        return;
+      }
 
       // copyButton.addEventListener('click', () => {
       //   const anchorName = anchorFormView.element.querySelector(

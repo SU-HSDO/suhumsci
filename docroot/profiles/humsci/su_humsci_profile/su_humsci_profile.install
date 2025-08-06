@@ -1497,3 +1497,59 @@ function su_humsci_profile_update_9733() {
     'access content access simple',
   ]);
 }
+
+/**
+ * Uninstall unused stanford_basic and su_humsci_admin themes.
+ */
+function su_humsci_profile_update_9734() {
+  $installed_themes = \Drupal::service('extension.list.theme')
+    ->getAllInstalledInfo();
+  $unused_themes = [
+    'stanford_basic',
+    'su_humsci_admin',
+  ];
+
+  // Get list of themes to uninstall.
+  $themes_to_uninstall = array_intersect($unused_themes, array_keys($installed_themes));
+  \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
+}
+
+/**
+ * Update usernames for testing users to be more descriptive.
+ */
+function su_humsci_profile_update_9735() {
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $updated_count = 0;
+
+  // Update user 'Howard' and 'Lindsey' using their UUIDs.
+  $uuid_mapping = [
+    'c16e4962-d975-475d-89e6-1c0b3c9cfef0' => 'IT Contributor',
+    'b8a1e80e-1b53-42b8-b475-889aa43905f3' => 'IT Site Manager',
+  ];
+
+  foreach ($uuid_mapping as $uuid => $new_username) {
+    $users = $user_storage->loadByProperties(['uuid' => $uuid]);
+    foreach ($users as $user) {
+      if (
+        $user->getAccountName() !== $new_username &&
+        !$user_storage->loadByProperties(['name' => $new_username])
+      ) {
+        $user->setUsername($new_username);
+        $user->save();
+        $updated_count++;
+      }
+    }
+  }
+
+  return t('Updated @count user usernames for testing clarity.', ['@count' => $updated_count]);
+}
+
+/**
+ * Set dashboard permissions.
+ */
+function su_humsci_profile_update_9736() {
+  $roles = ['site_manager', 'contributor'];
+  foreach ($roles as $role) {
+    user_role_grant_permissions($role, ['view main_dashboard dashboard']);
+  }
+}

@@ -268,11 +268,7 @@ const SelectList = ({
       {label && (
         <div
           id={labelId}
-          style={{
-            marginBottom: '0.75rem',
-            fontSize: '1.125rem',
-            fontWeight: '600',
-          }}
+          class="select-preact__label"
         >
           {label}
         </div>

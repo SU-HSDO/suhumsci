@@ -1515,9 +1515,49 @@ function su_humsci_profile_update_9734() {
 }
 
 /**
- * Add field_metatags to hs_basic_page entity form display.
+ * Update usernames for testing users to be more descriptive.
  */
 function su_humsci_profile_update_9735() {
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $updated_count = 0;
+
+  // Update user 'Howard' and 'Lindsey' using their UUIDs.
+  $uuid_mapping = [
+    'c16e4962-d975-475d-89e6-1c0b3c9cfef0' => 'IT Contributor',
+    'b8a1e80e-1b53-42b8-b475-889aa43905f3' => 'IT Site Manager',
+  ];
+
+  foreach ($uuid_mapping as $uuid => $new_username) {
+    $users = $user_storage->loadByProperties(['uuid' => $uuid]);
+    foreach ($users as $user) {
+      if (
+        $user->getAccountName() !== $new_username &&
+        !$user_storage->loadByProperties(['name' => $new_username])
+      ) {
+        $user->setUsername($new_username);
+        $user->save();
+        $updated_count++;
+      }
+    }
+  }
+
+  return t('Updated @count user usernames for testing clarity.', ['@count' => $updated_count]);
+}
+
+/**
+ * Set dashboard permissions.
+ */
+function su_humsci_profile_update_9736() {
+  $roles = ['site_manager', 'contributor'];
+  foreach ($roles as $role) {
+    user_role_grant_permissions($role, ['view main_dashboard dashboard']);
+  }
+}
+
+/**
+ * Add field_metatags to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9737() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
@@ -1574,7 +1614,7 @@ function su_humsci_profile_update_9735() {
 /**
  * Add field_metatags_image to hs_basic_page entity form display.
  */
-function su_humsci_profile_update_9736() {
+function su_humsci_profile_update_9738() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\field\FieldConfigInterface $field_config_storage */

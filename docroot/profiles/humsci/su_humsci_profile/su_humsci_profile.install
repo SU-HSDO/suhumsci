@@ -1499,9 +1499,51 @@ function su_humsci_profile_update_9733() {
 }
 
 /**
- * Add field_metatags to hs_basic_page entity form display.
+ * Uninstall unused stanford_basic and su_humsci_admin themes.
  */
 function su_humsci_profile_update_9734() {
+  $installed_themes = \Drupal::service('extension.list.theme')
+    ->getAllInstalledInfo();
+  $unused_themes = [
+    'stanford_basic',
+    'su_humsci_admin',
+  ];
+
+  // Get list of themes to uninstall.
+  $themes_to_uninstall = array_intersect($unused_themes, array_keys($installed_themes));
+  \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
+}
+
+/**
+ * Add field_metatags to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9735() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $metatags_field_storage = $config_storage->read('field.storage.node.field_metatags');
+  if (
+    empty($field_storage->load('node.field_metatags')) &&
+    !empty($metatags_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($metatags_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $metatags_field_config = $config_storage->read('field.field.node.hs_basic_page.field_metatags');
+  if (
+    empty($field_config_storage->load('node.hs_basic_page.field_metatags')) &&
+    !empty($metatags_field_config)
+  ) {
+    $field_config_storage->create($metatags_field_config)->save();
+  }
+
   // Load the entity form display for hs_basic_page.
   $form_display = \Drupal::entityTypeManager()
     ->getStorage('entity_form_display')
@@ -1532,7 +1574,33 @@ function su_humsci_profile_update_9734() {
 /**
  * Add field_metatags_image to hs_basic_page entity form display.
  */
-function su_humsci_profile_update_9735() {
+function su_humsci_profile_update_9736() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $metatags_image_field_storage = $config_storage->read('field.storage.node.field_metatags_image');
+  if (
+    empty($field_storage->load('node.field_metatags_image')) &&
+    !empty($metatags_image_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($metatags_image_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $metatags_image_field_config = $config_storage->read('field.field.node.hs_basic_page.field_metatags_image');
+  if (
+    empty($field_config_storage->load('node.hs_basic_page.field_metatags_image')) &&
+    !empty($metatags_image_field_config)
+  ) {
+    $field_config_storage->create($metatags_image_field_config)->save();
+  }
+
   // Load the entity form display for hs_basic_page.
   $form_display = \Drupal::entityTypeManager()
     ->getStorage('entity_form_display')

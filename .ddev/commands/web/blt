@@ -49,6 +49,10 @@ if [[ "$*" == *"drupal:sync"* ]]; then
     DB_NAME="suhumsci_${SITE_NAME}"
     echo "Detected site: $SITE_NAME, target database: $DB_NAME"
     
+    # Ensure the target database exists
+    echo "Ensuring target database exists..."
+    mysql -u db -pdb -h db -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+    
     # Run the original BLT command
     /var/www/html/vendor/bin/blt "$@"
     

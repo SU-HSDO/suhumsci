@@ -1,3 +1,3 @@
-import AnchorLinkHelp from './anchorLinkHelp';
+import BookmarkHelp from './bookmarkHelp';
 
-export default { AnchorLinkHelp };
+export default { BookmarkHelp };

@@ -27,8 +27,8 @@ const bc = {
   },
   output: {
     path: path.resolve(__dirname, "./build"),
-    filename: "anchor-link-help.js",
-    library: ["CKEditor5", "anchorLinkHelp"],
+    filename: "bookmark-help.js",
+    library: ["CKEditor5", "bookmarkHelp"],
     libraryTarget: "umd",
     libraryExport: "default",
   },

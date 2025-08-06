@@ -4,17 +4,67 @@
 ## Usage: blt [command] [options]
 ## Example: "ddev blt drupal:sync --site=ethicsinsociety"
 
-# Check if database exists (based on provided site name), create if not.
-if [[ "$*" == *"--site="* ]]; then
-  SITE_NAME=$(echo "$*" | grep -o -- "--site=[^ ]*" | cut -d'=' -f2)
-  if [ ! -z "$SITE_NAME" ]; then
-    DB_NAME="suhumsci_${SITE_NAME}"
-    if ! mysql -u root -proot -e "USE ${DB_NAME};" 2>/dev/null; then
-      echo "🔧 Creating database: ${DB_NAME}"
-      mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
-    fi
-  fi
-fi
+# =============================================================================
+# MULTISITE BLT SYNC WORKAROUND FOR DDEV
+# =============================================================================
+# 
+# This code exists to address known issues with BLT multisite sync in DDEV
+# environments. While BLT works perfectly in Lando, DDEV handles multisite
+# database targeting differently, causing syncs to target the wrong database.
+# 
+# BACKGROUND:
+# - BLT is no longer actively maintained, so these DDEV-specific issues won't
+#   be resolved upstream
+# - Lando and DDEV use different approaches for multisite database configuration:
+#   * Lando: Uses hardcoded database names in settings files
+#   * DDEV: Uses dynamic database name calculation that can be overridden
+# - The sync process targets suhumsci_default instead of site-specific databases
+#   like suhumsci_hs_traditional
+# 
+# SOLUTION:
+# - Intercept drupal:sync commands and detect the target site
+# - Run the normal BLT sync (which goes to suhumsci_default)
+# - Automatically copy the synced data to the correct site-specific database
+# - This maintains compatibility with existing BLT workflows
+# 
+# This is a pragmatic workaround that allows developers to use the same
+# BLT commands they're familiar with, while ensuring data lands in the
+# correct database for each multisite.
+# =============================================================================
 
-# Run the original BLT command
-/var/www/html/vendor/bin/blt "$@"
+# Check if this is a drupal:sync command
+if [[ "$*" == *"drupal:sync"* ]]; then
+  echo "Intercepting BLT sync command to fix database target..."
+  
+  # Extract the site name from the command
+  SITE_NAME=""
+  for arg in "$@"; do
+    if [[ "$arg" == "--site="* ]]; then
+      SITE_NAME="${arg#--site=}"
+      break
+    fi
+  done
+  
+  if [ -n "$SITE_NAME" ]; then
+    DB_NAME="suhumsci_${SITE_NAME}"
+    echo "Detected site: $SITE_NAME, target database: $DB_NAME"
+    
+    # Run the original BLT command
+    /var/www/html/vendor/bin/blt "$@"
+    
+    # If the sync was successful, copy data to correct database
+    if [ $? -eq 0 ]; then
+      echo "Sync completed successfully. Copying data to correct database..."
+      mysqldump -u db -pdb -h db suhumsci_default | mysql -u db -pdb -h db $DB_NAME
+      echo "Database sync fixed for $SITE_NAME"
+    else
+      echo "Sync failed, not copying data"
+    fi
+  else
+    # No site specified, run original command
+    /var/www/html/vendor/bin/blt "$@"
+  fi
+else
+  # Not a sync command, run original BLT
+  /var/www/html/vendor/bin/blt "$@"
+fi

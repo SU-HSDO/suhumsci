@@ -52,8 +52,8 @@ class InstallStateCest {
     $I->canSee('Add content');
     $I->canSee('Home Page');
     $I->amOnPage('/admin/users');
-    $I->canSee('Howard');
-    $I->canSee('Lindsey');
+    $I->canSee('IT Contributor');
+    $I->canSee('IT Site Manager');
   }
 
   /**

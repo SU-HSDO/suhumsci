@@ -32,6 +32,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
     - field.field.node.hs_person.field_hs_person_student_type
+    - field.field.node.hs_person.field_hs_person_sunet_id
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -43,6 +44,7 @@ dependencies:
     - link
     - media_library
     - path
+    - readonly_field_widget
     - telephone
     - text
 third_party_settings:
@@ -191,7 +193,7 @@ content:
       show_summary: false
     third_party_settings: {  }
   content_access_simple:
-    weight: 50
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -297,7 +299,7 @@ content:
     third_party_settings: {  }
   field_hs_person_image:
     type: entityqueue_dragtable
-    weight: 9
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -418,6 +420,17 @@ content:
     weight: 53
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_hs_person_sunet_id:
+    type: readonly_field_widget
+    weight: 10
+    region: content
+    settings:
+      label: above
+      formatter_type: null
+      formatter_settings: {  }
+      formatter_third_party_settings: {  }
+      show_description: false
     third_party_settings: {  }
   field_hs_person_telephone:
     type: telephone_default

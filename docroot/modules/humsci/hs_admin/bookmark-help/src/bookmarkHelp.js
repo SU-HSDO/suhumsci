@@ -159,8 +159,10 @@ export default class BookmarkHelp extends Plugin {
         ).textContent;
         navigator.clipboard.writeText(bookmarkName);
         copyButton.setAttribute('disabled', true);
+
         const message = document.createElement('span');
-        message.textContent = 'Copied!';
+        message.classList.add('copy-bookmark-message');
+        message.textContent = 'Copied to the clipboard!';
         copyButton.parentElement.appendChild(message);
         setTimeout(() => {
           message.remove();

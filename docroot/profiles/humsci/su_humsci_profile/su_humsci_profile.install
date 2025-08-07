@@ -1561,27 +1561,27 @@ function su_humsci_profile_update_9737() {
   $to_update = [
     'hs_event' => [
       'field' => 'field_hs_event_image',
-      'old_image_style' => 'hs_medium_scaled_360px',
+      'default_image_style' => 'hs_medium_scaled_360px',
       'new_image_style' => 'medium_scaled',
     ],
     'hs_news' => [
       'field' => 'field_hs_news_image',
-      'old_image_style' => 'hs_medium_scaled_360px',
+      'default_image_style' => 'hs_medium_scaled_360px',
       'new_image_style' => 'medium_scaled',
     ],
     'hs_event_series' => [
       'field' => 'field_hs_event_series_image',
-      'old_image_style' => 'hs_medium_scaled_360px',
+      'default_image_style' => 'hs_medium_scaled_360px',
       'new_image_style' => 'medium_scaled',
     ],
     'hs_publications' => [
       'field' => 'field_hs_publication_image',
-      'old_image_style' => 'hs_medium_scaled_360px',
+      'default_image_style' => 'hs_medium_scaled_360px',
       'new_image_style' => 'medium_scaled',
     ],
     'hs_person' => [
       'field' => 'field_hs_person_square_img',
-      'old_image_style' => 'hs_medium_square_360x360',
+      'default_image_style' => 'hs_medium_square_360x360',
       'new_image_style' => 'medium_square',
     ],
   ];
@@ -1607,7 +1607,7 @@ function su_humsci_profile_update_9737() {
         if ($component->getPluginId() === "field_block:node:{$bundle}:{$data['field']}") {
           $configuration = $component->get('configuration');
           // Skip cases where the default image styles have been overridden.
-          if ($configuration['formatter']['settings']['image_style'] !== $data['old_image_style']) {
+          if ($configuration['formatter']['settings']['image_style'] !== $data['default_image_style']) {
             continue;
           }
           // Set the updated image style settings.

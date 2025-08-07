@@ -20,7 +20,7 @@ export default class BookmarkHelp extends Plugin {
     const { editor } = this;
     const balloon = editor.plugins.get('ContextualBalloon');
 
-    balloon.on('change:visibleView', () => {
+    balloon.on('set:visibleView', () => {
       const bookmarkUI = editor.plugins.get('BookmarkUI');
       const bookmarkFormView = bookmarkUI?.formView;
 
@@ -28,6 +28,7 @@ export default class BookmarkHelp extends Plugin {
         return;
       }
 
+      // Check if there's already a wrapper class for the form to avoid adding another one.
       const alreadyWrapped = bookmarkFormView.children.get(0)?.template?.attributes?.class?.includes('ck-bookmark-form_inner');
 
       if (alreadyWrapped) return;
@@ -46,12 +47,63 @@ export default class BookmarkHelp extends Plugin {
       bookmarkFormView.children.clear();
       bookmarkFormView.children.add(formElements);
 
-      // Get the input field.
-      const input = formElements.template.children[1]?.template.children[0]['_items'][0]?.fieldView;
+      // Get the input field wrapper.
+      const inputWrapper = formElements.template.children[1]?.template.children[0]['_items'];
 
-      if (!input) {
+      if (!inputWrapper) {
         return;
       }
+
+      // Remove the status text
+      inputWrapper[0]['_statusText'] = '';
+
+      // Add a copy functionality into the form
+      const copyView = new View();
+      copyView.setTemplate({
+        tag: 'div',
+        attributes: {
+          class: 'ck-bookmark-form__wrapper',
+        },
+        children: [
+          ...inputWrapper[0].fieldWrapperChildren,
+          {
+              tag: 'span',
+              attributes: {
+                id: 'bookmark-name-placeholder',
+                class: 'ck-bookmark-name-placeholder',
+                'aria-hidden': 'true',
+              },
+              children: ['bookmark-name'],
+            },
+          {
+            tag: 'button',
+            attributes: {
+              type: 'button',
+              id: 'copy-bookmark-name',
+              title: 'Copy',
+            },
+            children: ['Copy'],
+          },
+        ],
+      });
+
+      inputWrapper[0].fieldWrapperChildren.clear();
+      inputWrapper[0].fieldWrapperChildren.add(copyView);
+
+      // Get the input
+      const input = inputWrapper[0]?.fieldView;
+
+      // Copy the bookmark name placeholder when the input changes.
+      input.on('input', (event) => {
+        const bookmarkName = event.source.element.value;
+        const placeholder = bookmarkFormView.element.querySelector(
+          '#bookmark-name-placeholder',
+        );
+        placeholder.textContent = `${bookmarkName || 'bookmark-name'}`;
+        if (bookmarkName) {
+          placeholder.dataset.bookmarkNameSet = '';
+        }
+      });
 
       // Add the help text.
       const helpText = new View();
@@ -95,26 +147,26 @@ export default class BookmarkHelp extends Plugin {
       bookmarkFormView.children.add(helpText);
 
       // Add the copy button to the anchor name.
-      const copyButton = helpText.element.querySelector('#copy-bookmar-name');
+      const copyButton = copyView.element.querySelector('#copy-bookmark-name');
 
       if (!copyButton) {
         return;
       }
 
-      // copyButton.addEventListener('click', () => {
-      //   const anchorName = anchorFormView.element.querySelector(
-      //     '#anchor-name-placeholder',
-      //   ).textContent;
-      //   navigator.clipboard.writeText(anchorName);
-      //   copyButton.setAttribute('disabled', true);
-      //   const message = document.createElement('span');
-      //   message.textContent = 'Copied!';
-      //   copyButton.parentElement.appendChild(message);
-      //   setTimeout(() => {
-      //     message.remove();
-      //     copyButton.removeAttribute('disabled');
-      //   }, 3000);
-      // });
+      copyButton.addEventListener('click', () => {
+        const bookmarkName = bookmarkFormView.element.querySelector(
+          '#bookmark-name-placeholder',
+        ).textContent;
+        navigator.clipboard.writeText(bookmarkName);
+        copyButton.setAttribute('disabled', true);
+        const message = document.createElement('span');
+        message.textContent = 'Copied!';
+        copyButton.parentElement.appendChild(message);
+        setTimeout(() => {
+          message.remove();
+          copyButton.removeAttribute('disabled');
+        }, 3000);
+      });
     });
   }
 }

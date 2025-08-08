@@ -162,19 +162,6 @@ hooks:
     - exec: |
         # Fix database prefix in local settings files to use 'db_' instead of 'suhumsci_'
         find /var/www/html/docroot/sites/ -name local.settings.php -exec sed -i 's/suhumsci_/db_/g' {} \;
-    - exec: |
-        # Fix database names for sites with underscores
-        for site_dir in /var/www/html/docroot/sites/*/; do
-          if [ -d "$site_dir" ]; then
-            site_name=$(basename "$site_dir")
-            if [[ "$site_name" == *"_"* ]] && [ "$site_name" != "default" ] && [ "$site_name" != "all" ] && [ "$site_name" != "example.sites.php" ]; then
-              echo "Fixing database for site with underscore: $site_name"
-              mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS \`$site_name\`;"
-              mysql -u root -proot -e "GRANT ALL PRIVILEGES ON \`$site_name\`.* TO \"db\"@\"%\";"
-              mysql -u root -proot -e "DROP DATABASE IF EXISTS \`db_$site_name\`;"
-            fi
-          fi
-        done
 
 # Key features of DDEV's config.yaml:
 

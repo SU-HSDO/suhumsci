@@ -21,6 +21,9 @@ foreach ($site_dirs as $site_dir) {
   
   // Map to DDEV domain format
   $sites["$domain.ddev.site"] = $site_name;
+
+  // Optional: support both underscore and hyphen variants if needed
+  $sites["$site_name.ddev.site"] = $site_name;
 }
 
 // Default site mapping

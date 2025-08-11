@@ -319,13 +319,9 @@ process:
       include_source: true
       process:
         instructor_id:
-          plugin: concat
-          delimiter: '|'
-          source:
-            - name
-            - source/course_id
-            - source/code
-            - source/guid
+          plugin: callback
+          callable: strtolower
+          source: sunet
         target_id:
           plugin: entity_generate
           entity_type: hs_entity

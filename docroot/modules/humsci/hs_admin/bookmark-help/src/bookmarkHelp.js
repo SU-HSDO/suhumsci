@@ -67,15 +67,6 @@ export default class BookmarkHelp extends Plugin {
         children: [
           ...inputWrapper[0].fieldWrapperChildren,
           {
-              tag: 'span',
-              attributes: {
-                id: 'bookmark-name-placeholder',
-                class: 'ck-bookmark-name-placeholder',
-                'aria-hidden': 'true',
-              },
-              children: ['bookmark-name'],
-            },
-          {
             tag: 'button',
             attributes: {
               type: 'button',
@@ -92,18 +83,6 @@ export default class BookmarkHelp extends Plugin {
 
       // Get the input
       const input = inputWrapper[0]?.fieldView;
-
-      // Copy the bookmark name placeholder when the input changes.
-      input.on('input', (event) => {
-        const bookmarkName = event.source.element.value;
-        const placeholder = bookmarkFormView.element.querySelector(
-          '#bookmark-name-placeholder',
-        );
-        placeholder.textContent = `${bookmarkName || 'bookmark-name'}`;
-        if (bookmarkName) {
-          placeholder.dataset.bookmarkNameSet = '';
-        }
-      });
 
       // Add the help text.
       const helpText = new View();
@@ -154,9 +133,7 @@ export default class BookmarkHelp extends Plugin {
       }
 
       copyButton.addEventListener('click', () => {
-        const bookmarkName = bookmarkFormView.element.querySelector(
-          '#bookmark-name-placeholder',
-        ).textContent;
+        const bookmarkName = input.element.value.trim();
         navigator.clipboard.writeText(bookmarkName);
         copyButton.setAttribute('disabled', true);
 

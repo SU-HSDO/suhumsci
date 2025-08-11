@@ -10,6 +10,7 @@ dependencies:
     - node.type.hs_basic_page
     - system.menu.main
   module:
+    - hs_blocks
     - hs_layouts
     - layout_builder
     - menu_block
@@ -60,18 +61,21 @@ third_party_settings:
             configuration:
               id: 'field_block:node:hs_basic_page:field_hs_page_components'
               label: Components
-              label_display: '0'
+              label_display: ''
               provider: layout_builder
               context_mapping:
                 entity: layout_builder.entity
+                view_mode: view_mode
               formatter:
                 type: entity_reference_revisions_entity_view
                 label: hidden
                 settings:
                   view_mode: default
                 third_party_settings:
-                  ds:
-                    ds_limit: ''
+                  field_formatter_class:
+                    class: ''
+                  hs_field_helpers:
+                    inline_contents: 0
             weight: 2
             additional: {  }
           3b1a10ed-5309-47bf-acff-654a1d64f7f0:
@@ -112,13 +116,24 @@ third_party_settings:
               suggestion: menu_block__main
             weight: 0
             additional: {  }
-          de89d1f0-3be8-41be-8930-0c45a6f5cecc:
-            uuid: de89d1f0-3be8-41be-8930-0c45a6f5cecc
+          379db769-29da-4c3f-964a-fc3508e011df:
+            uuid: 379db769-29da-4c3f-964a-fc3508e011df
+            region: main
+            configuration:
+              id: hs_blocks_back_to_top_block
+              label: 'Back To Top Block'
+              label_display: '0'
+              provider: hs_blocks
+              context_mapping: {  }
+            weight: 3
+            additional: {  }
+          9faffe80-0c12-4a93-8924-1a9d59e35f11:
+            uuid: 9faffe80-0c12-4a93-8924-1a9d59e35f11
             region: main
             configuration:
               id: hs_layouts_skipnav_main_anchor
               label: 'Main content anchor target'
-              label_display: visible
+              label_display: hidden
               provider: hs_layouts
               context_mapping: {  }
             weight: 0

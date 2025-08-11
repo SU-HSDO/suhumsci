@@ -86,26 +86,25 @@
 @mixin hb-body--small {
   font-weight: hb-theme-font-weight(regular);
   font-size: hb-calculate-rems(16px);
-  line-height: 122%;
+  line-height: var(--normal-line-height);
 }
 
 @mixin hb-body--medium {
   font-weight: hb-theme-font-weight(regular);
   font-size: hb-calculate-rems(18px);
-  line-height: 127%;
+  line-height: var(--normal-line-height);
 }
 
 @mixin hb-description {
+  line-height: var(--normal-line-height);
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(18px);
+
   @include hb-themes(('colorful', 'airy')) {
-    @include hb-body--small;
 
-    @include grid-media-min('lg') {
-      @include hb-body--medium;
+    @include grid-media-max('lg') {
+      font-size: hb-calculate-rems(16px);
     }
-  }
-
-  @include hb-traditional {
-    @include hb-body--medium;
   }
 }
 
@@ -113,7 +112,6 @@
   color: var(--palette--primary);
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
-  line-height: 1.27;
 
   @include grid-media-min('lg') {
     font-size: hb-calculate-rems(28px);
@@ -251,7 +249,7 @@
   width: 100%;
   z-index: $hb-z-index-small-5;
   text-align: right;
-  line-height: 120%;
+  line-height: var(--condensed-line-height);
   height: auto;
   padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px)
     15%; // Using a percentage to the left to control the width of the captions

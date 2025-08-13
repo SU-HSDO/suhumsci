@@ -1555,12 +1555,17 @@ function su_humsci_profile_update_9736() {
 }
 
 /**
- * Add field_metatags to hs_basic_page entity form display.
+ * Install metatag_simple_widget module.
  */
 function su_humsci_profile_update_9737() {
   // Install required module.
   \Drupal::service('module_installer')->install(['metatag_simple_widget']);
+}
 
+/**
+ * Add field_metatags to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9738() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
@@ -1617,7 +1622,7 @@ function su_humsci_profile_update_9737() {
 /**
  * Add field_metatags_image to hs_basic_page entity form display.
  */
-function su_humsci_profile_update_9738() {
+function su_humsci_profile_update_9739() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\field\FieldConfigInterface $field_config_storage */

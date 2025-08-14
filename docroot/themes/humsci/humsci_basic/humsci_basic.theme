@@ -59,7 +59,6 @@ function humsci_basic_preprocess_block(&$vars) {
  * Prepares variables for the html.html.twig template.
  */
 function humsci_basic_preprocess_html(&$vars) {
-
   // Animation enhancements setting.
   $animation_enhancement = theme_get_setting('animation_toggle');
   if ($animation_enhancement) {
@@ -80,6 +79,35 @@ function humsci_basic_preprocess_html(&$vars) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-use-megamenu');
   }
+
+  // Preload full width region banner images (LCP)
+  $route_match = \Drupal::routeMatch();
+
+  $node = $route_match->getParameter('node');
+  if (!isset($node) && !$node->hasField('field_hs_page_hero')) return;
+
+  if ($node->get('field_hs_page_hero')->isEmpty()) return;
+
+  $paragraph = $node->get('field_hs_page_hero')->entity;
+
+  if ($paragraph->bundle() != 'hs_gradient_hero_slider') return;
+
+  // Get the first referenced slide entity.
+  $first_slide = $paragraph->get('field_hs_gradient_hero_slides')->first()->entity;
+
+  if ($first_slide->get('field_hs_gradient_hero_image')->isEmpty()) return;
+
+  // Get the referenced image
+  $image_referenced = $first_slide->get('field_hs_gradient_hero_image')->entity;
+
+  // Get the media image field.
+  $image_field = $image_referenced->get('field_media_image');
+
+  if ($image_field->isEmpty()) return;
+
+  $file = $image_field->entity;
+
+  dump($file->getFileUri());
 }
 
 /**

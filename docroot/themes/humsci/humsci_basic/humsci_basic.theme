@@ -96,30 +96,29 @@ function humsci_basic_preprocess_html(&$vars) {
     'hs_gradient_hero_slider' => [
       'field' => 'field_hs_gradient_hero_slides',
       'image_field' => 'field_hs_gradient_hero_image',
-      'style' => 'hero_with_text_large'
+      'style' => 'hero_with_text_large',
     ],
     'hs_carousel' => [
       'field' => 'field_hs_carousel_slides',
       'image_field' => 'field_hs_hero_image',
-      'style' => 'hero_with_text_large'
+      'style' => 'hero_with_text_large',
     ],
     'hs_banner' => [
       'field' => 'field_hs_banner_image',
       'image_field' => '',
-      'style' => 'hero_no_text_3000px_'
+      'style' => 'hero_no_text_3000px_',
     ],
     'hs_hero_image' => [
       'field' => 'field_hs_hero_image',
       'image_field' => '',
-      'style' => 'hero_with_text_large'
+      'style' => 'hero_with_text_large',
     ],
     'hs_sptlght_slder' => [
       'field' => 'field_hs_sptlght_sldes',
       'image_field' => 'field_hs_spotlight_image',
-      'style' => ''  // dynamic style
+      'style' => '',
     ],
   ];
-
 
   $bundle = $paragraph->bundle();
 
@@ -138,9 +137,13 @@ function humsci_basic_preprocess_html(&$vars) {
 
   // If it’s a multi-value field (like slides), get the first referenced entity.
   $entity = $paragraph->get($field_name)->first()->entity ?? '';
-  if (!$entity) return;
 
-  // Handle special case (spotlight image style dynamic based on height (tall or short)).
+  if (!$entity) {
+    return;
+  }
+
+  // Handle special case (spotlight image style dynamic
+  // based on height (tall or short)).
   if ($bundle === 'hs_sptlght_slder') {
     $image_referenced = $entity->get($image_field)->entity ?? '';
     if ($image_referenced) {
@@ -174,6 +177,7 @@ function humsci_basic_preload_full_width_image($image_referenced, $style_name, a
   }
 
   $file = $image_referenced->get('field_media_image')->entity;
+
   if (!$file) {
     return;
   }

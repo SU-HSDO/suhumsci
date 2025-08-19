@@ -25,24 +25,29 @@ function hs_events_hs_entity_view_alter(array &$build, HsEntityInterface $entity
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_events_form_node_hs_event_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish');
-  $auto_unpublish_service->moveAutoUnpublishFieldToOptions($form);
-  $auto_unpublish_service->setAutoUnpublishDefaultValue($form);
+  // Add the auto-unpublish field with default value to the advanced options
+  // to organize this field with other publishing options in the sidebar.
+  $form_modifier = \Drupal::service('hs_events.event_form_modifier');
+  $form_modifier->moveAutoUnpublishFieldToOptions($form);
+  $form_modifier->setAutoUnpublishDefaultValue($form);
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_events_form_node_hs_event_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish');
-  $auto_unpublish_service->moveAutoUnpublishFieldToOptions($form);
+  // Add the auto-unpublish field to the advanced options to organize this field
+  // with other publishing options in the sidebar.
+  $form_modifier = \Drupal::service('hs_events.event_form_modifier');
+  $form_modifier->moveAutoUnpublishFieldToOptions($form);
 }
 
 /**
  * Implements hook_cron().
  */
 function hs_events_cron() {
-  // Use the auto-unpublish service to handle past events.
-  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish');
+  // Use the auto-unpublish service to identify past events that are slated to
+  // be auto-unpublished and then unpublish them.
+  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish_events');
   $auto_unpublish_service->unpublishPastEvents();
 }

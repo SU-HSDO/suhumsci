@@ -27,14 +27,15 @@
   </section>
 </header>
 
-{% if page.help or page.highlighted %}
-  <div id="help-region" class="hb-page-width">
-    {{ page.help }}
-    {{ page.highlighted }}
-  </div>
-{% endif %}
 
 <main class="{{ main_class }}" {% if not node %}id="main-content"{% endif %}>
+  {% if page.help or page.highlighted %}
+    <div id="help-region" class="hb-page-width">
+      {{ page.help }}
+      {{ page.highlighted }}
+    </div>
+  {% endif %}
+
   {{ page.content }}
 </main>
 

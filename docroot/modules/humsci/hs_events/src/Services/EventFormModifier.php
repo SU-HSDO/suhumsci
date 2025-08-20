@@ -7,7 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 /**
- * Service for modifying event forms and handling form-related auto-unpublish logic.
+ * Service for modifying event forms and handling form auto-unpublish logic.
  */
 class EventFormModifier {
 

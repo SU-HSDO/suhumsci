@@ -1555,9 +1555,125 @@ function su_humsci_profile_update_9736() {
 }
 
 /**
- * Update node page display image styles.
+ * Install metatag_simple_widget module.
  */
 function su_humsci_profile_update_9737() {
+  // Install required module.
+  \Drupal::service('module_installer')->install(['metatag_simple_widget']);
+}
+
+/**
+ * Add field_metatags to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9738() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $metatags_field_storage = $config_storage->read('field.storage.node.field_metatags');
+  if (
+    empty($field_storage->load('node.field_metatags')) &&
+    !empty($metatags_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($metatags_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $metatags_field_config = $config_storage->read('field.field.node.hs_basic_page.field_metatags');
+  if (
+    empty($field_config_storage->load('node.hs_basic_page.field_metatags')) &&
+    !empty($metatags_field_config)
+  ) {
+    $field_config_storage->create($metatags_field_config)->save();
+  }
+
+  // Load the entity form display for hs_basic_page.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load('node.hs_basic_page.default');
+
+  if ($form_display) {
+    // Add the field_metatags component with the specified settings.
+    $form_display->setComponent('field_metatags', [
+      'type' => 'metatag_simple',
+      'weight' => 11,
+      'region' => 'content',
+      'settings' => [
+        'show_default_values' => 0,
+      ],
+      'third_party_settings' => [
+        'field_formatter_class' => [
+          'class' => '',
+        ],
+      ],
+    ])->save();
+
+    return t('Added field_metatags to hs_basic_page entity form display.');
+  }
+
+  return t('Could not load hs_basic_page entity form display.');
+}
+
+/**
+ * Add field_metatags_image to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9739() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $metatags_image_field_storage = $config_storage->read('field.storage.node.field_metatags_image');
+  if (
+    empty($field_storage->load('node.field_metatags_image')) &&
+    !empty($metatags_image_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($metatags_image_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $metatags_image_field_config = $config_storage->read('field.field.node.hs_basic_page.field_metatags_image');
+  if (
+    empty($field_config_storage->load('node.hs_basic_page.field_metatags_image')) &&
+    !empty($metatags_image_field_config)
+  ) {
+    $field_config_storage->create($metatags_image_field_config)->save();
+  }
+
+  // Load the entity form display for hs_basic_page.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load('node.hs_basic_page.default');
+
+  if ($form_display) {
+    // Add the field_metatags_image component with the specified settings.
+    $form_display->setComponent('field_metatags_image', [
+      'type' => 'media_library_widget',
+      'weight' => 13,
+      'region' => 'content',
+      'settings' => [
+        'media_types' => [],
+      ],
+      'third_party_settings' => [],
+    ])->save();
+    return t('Added field_metatags_image to hs_basic_page entity form display.');
+  }
+  return t('Could not load hs_basic_page entity form display.');
+}
+
+/**
+ * Update node page display image styles.
+ */
+function su_humsci_profile_update_9740() {
   $to_update = [
     'hs_event' => [
       'field' => 'field_hs_event_image',

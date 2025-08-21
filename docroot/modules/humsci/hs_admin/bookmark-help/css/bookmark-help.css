@@ -1,0 +1,72 @@
+/* Adding .ck-reset_all:not(.ck-reset_all-excluded *) in all selector to avoid using !important */
+
+.ck-reset_all:not(.ck-reset_all-excluded *) .ck-bookmark-form_help-text {
+  position: relative;
+  max-width: 18.125rem;
+  padding: var(--ck-spacing-small) var(--ck-spacing-large);
+}
+
+.ck-reset_all:not(.ck-reset_all-excluded *) .ck-bookmark-form_help-text p,
+.ck-reset_all:not(.ck-reset_all-excluded *) .ck-bookmark-form_help-text li {
+  white-space: normal;
+  font-size: 0.75rem;
+}
+
+.ck-reset_all:not(.ck-reset_all-excluded *) .ck-bookmark-form_help-text ul {
+  padding: var(--ck-spacing-small) var(--ck-spacing-large);
+}
+
+.ck-reset_all:not(.ck-reset_all-excluded *) .ck-bookmark-form_help-text strong {
+  font-size: 0.75rem;
+  font-weight: bold;
+  white-space: normal;
+}
+
+.ck-bookmark-form__wrapper .ck-label {
+  visibility: hidden;
+}
+
+.ck-bookmark-form .ck.ck-button:not(.ck-disabled):hover {
+  color: #ffff;
+}
+
+#copy-bookmark-name {
+  width: 14px;
+  height: 18px;
+  margin-left: 0.5rem;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background-image: url('../assets/copy.svg');
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  position: relative;
+}
+
+#copy-name-placeholder:not([data-bookmark-name-set])+#copy-bookmark-name {
+  display: none;
+}
+
+#copy-bookmark-name+.copy-bookmark-message {
+  background-color: #999;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 35px;
+  right: -10px;
+}
+
+#copy-bookmark-name+.copy-bookmark-message::after {
+  content: "";
+  position: absolute;
+  bottom: 33px;
+  right: 12px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #999 transparent;
+}

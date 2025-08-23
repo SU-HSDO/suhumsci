@@ -6,13 +6,14 @@ dependencies:
     - core.entity_view_mode.media.stanford_image_medium_square
     - field.field.media.image.field_media_image
     - field.field.media.image.field_media_image_caption
-    - image.style.hs_medium_square_360x360
     - media.type.image
+    - responsive_image.styles.medium_square
   module:
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
-    - image
     - layout_builder
+    - responsive_image
 third_party_settings:
   layout_builder:
     enabled: false
@@ -25,14 +26,16 @@ bundle: image
 mode: stanford_image_medium_square
 content:
   field_media_image:
-    type: image
+    type: responsive_image
     label: hidden
     settings:
+      responsive_image_style: medium_square
       image_link: ''
-      image_style: hs_medium_square_360x360
       image_loading:
         attribute: lazy
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
       hs_field_helpers:

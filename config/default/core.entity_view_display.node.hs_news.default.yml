@@ -166,13 +166,16 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
               formatter:
-                type: media_image_formatter
+                type: media_responsive_image_formatter
                 label: hidden
                 settings:
                   view_mode: caption_credit
                   link: false
-                  image_style: hs_medium_scaled_360px
+                  image_style: medium_scaled
+                  remove_alt: 0
                 third_party_settings:
+                  empty_fields:
+                    handler: ''
                   field_formatter_class:
                     class: hb-main-body-detail-image
                   hs_field_helpers:

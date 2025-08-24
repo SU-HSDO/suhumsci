@@ -155,13 +155,10 @@ hooks:
             site_name=$(basename "$site_dir")
             if [ "$site_name" != "default" ] && [ "$site_name" != "all" ] && [ "$site_name" != "example.sites.php" ]; then
               echo "Creating database for site: $site_name"
-              mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS db_$site_name;"
+              mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS suhumsci_$site_name;"
             fi
           fi
         done
-    - exec: |
-        # Fix database prefix in local settings files to use 'db_' instead of 'suhumsci_'
-        find /var/www/html/docroot/sites/ -name local.settings.php -exec sed -i 's/suhumsci_/db_/g' {} \;
 
 # Key features of DDEV's config.yaml:
 

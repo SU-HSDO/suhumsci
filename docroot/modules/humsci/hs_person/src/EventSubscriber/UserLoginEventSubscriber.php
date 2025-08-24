@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_person\EventSubscriber;
 
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\hs_person\Service\PersonAuthorship;
 use Drupal\user_event_dispatcher\Event\User\UserLoginEvent;
 use Drupal\user_event_dispatcher\UserHookEvents;
@@ -20,13 +21,23 @@ class UserLoginEventSubscriber implements EventSubscriberInterface {
   protected $personAuthorship;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructs a new UserLoginEventSubscriber object.
    *
    * @param \Drupal\hs_person\Service\PersonAuthorship $person_authorship
    *   The person authorship service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger factory.
    */
-  public function __construct(PersonAuthorship $person_authorship) {
+  public function __construct(PersonAuthorship $person_authorship, LoggerChannelFactoryInterface $logger_factory) {
     $this->personAuthorship = $person_authorship;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -49,7 +60,16 @@ class UserLoginEventSubscriber implements EventSubscriberInterface {
    */
   public function onUserLogin(UserLoginEvent $event) {
     $account = $event->getAccount();
-    $this->personAuthorship->processPersonAuthorship($account);
+
+    try {
+      $this->personAuthorship->processPersonAuthorship($account);
+    }
+    catch (\Exception $e) {
+      $this->loggerFactory->get('hs_person')->error('Error processing person authorship for user @username: @message', [
+        '@username' => $account->getAccountName(),
+        '@message' => $e->getMessage(),
+      ]);
+    }
   }
 
 }

@@ -11,5 +11,6 @@ services:
     class: Drupal\hs_person\EventSubscriber\UserLoginEventSubscriber
     arguments:
       - '@hs_person.person_authorship'
+      - '@logger.factory'
     tags:
       - { name: event_subscriber }

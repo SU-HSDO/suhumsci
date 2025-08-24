@@ -3,6 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
+    - image.style.full_responsive_lg_2x
+    - image.style.full_responsive_md_2x
+    - image.style.full_responsive_sm_2x
+    - image.style.full_responsive_xs_2x
     - image.style.responsive_default_576_
     - image.style.responsive_large
     - image.style.responsive_medium
@@ -14,11 +18,6 @@ _core:
 id: full_responsive
 label: 'Full Responsive'
 image_style_mappings:
-  -
-    image_mapping_type: image_style
-    image_mapping: responsive_large
-    breakpoint_id: stanford_media.xl
-    multiplier: 1x
   -
     image_mapping_type: image_style
     image_mapping: responsive_large
@@ -39,5 +38,25 @@ image_style_mappings:
     image_mapping: responsive_default_576_
     breakpoint_id: stanford_media.xs
     multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: full_responsive_lg_2x
+    breakpoint_id: stanford_media.lg
+    multiplier: 2x
+  -
+    image_mapping_type: image_style
+    image_mapping: full_responsive_md_2x
+    breakpoint_id: stanford_media.md
+    multiplier: 2x
+  -
+    image_mapping_type: image_style
+    image_mapping: full_responsive_sm_2x
+    breakpoint_id: stanford_media.sm
+    multiplier: 2x
+  -
+    image_mapping_type: image_style
+    image_mapping: full_responsive_xs_2x
+    breakpoint_id: stanford_media.xs
+    multiplier: 2x
 breakpoint_group: stanford_media
 fallback_image_style: responsive_large

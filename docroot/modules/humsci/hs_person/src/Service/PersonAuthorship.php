@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -324,7 +325,7 @@ class PersonAuthorship {
 
     $node_count = count($matching_nodes);
     $node_links = array_map(function ($node) {
-      return '<a href="' . $node->toUrl()->toString() . '">' . $node->getTitle() . '</a>';
+      return Markup::create('<a href="' . $node->toUrl()->toString() . '">' . $node->getTitle() . '</a>');
     }, $matching_nodes);
 
     if ($node_count === 1) {
@@ -338,7 +339,7 @@ class PersonAuthorship {
       $this->messenger->addStatus(
         t('@count matching person profiles were found. You now have permission to edit: @node_links', [
           '@count' => $node_count,
-          '@node_links' => implode(', ', $node_links),
+          '@node_links' => Markup::create(implode(', ', $node_links)),
         ])
       );
     }

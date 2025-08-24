@@ -133,7 +133,8 @@ class PersonAuthorship {
    *   TRUE if processing should be skipped, FALSE otherwise.
    */
   protected function shouldSkipProcessing(AccountInterface $account): bool {
-    return $account->isAnonymous();
+    $skip_roles = ['anonymous', 'site_manager', 'administrator'];
+    return !empty(array_intersect($skip_roles, $account->getRoles()));
   }
 
   /**
@@ -145,11 +146,13 @@ class PersonAuthorship {
    *   The user's authname (SUNet ID) to search for.
    * @param int $user_id
    *   The current user's ID to exclude nodes they already own.
+   * @param int $limit
+   *   Maximum number of nodes to return (default: 10).
    *
    * @return array
    *   Array of node entities that match the email or SUNet ID.
    */
-  protected function findMatchingPersonNodes(?string $user_email, ?string $authname = NULL, int $user_id = 0): array {
+  protected function findMatchingPersonNodes(?string $user_email, ?string $authname = NULL, int $user_id = 0, int $limit = 10): array {
     $node_storage = $this->entityTypeManager->getStorage('node');
     $query = $node_storage->getQuery()
       ->accessCheck(FALSE)
@@ -174,6 +177,22 @@ class PersonAuthorship {
 
     if (empty($result)) {
       return [];
+    }
+
+    // Safety limit: only process the first N matching nodes.
+    $total_matches = count($result);
+    if ($total_matches > $limit) {
+      $result = array_slice($result, 0, $limit);
+      $this->loggerFactory->get('hs_person')->warning(
+        'Found @total matches for user email "@email" authname "@authname", but limited processing to first @limit nodes. @skipped nodes were not processed.',
+        [
+          '@total' => $total_matches,
+          '@email' => $user_email ?? 'none',
+          '@authname' => $authname ?? 'none',
+          '@limit' => $limit,
+          '@skipped' => $total_matches - $limit,
+        ]
+      );
     }
 
     return $node_storage->loadMultiple($result);
@@ -295,7 +314,7 @@ class PersonAuthorship {
    *   The user's authname (SUNet ID) used for matching.
    */
   protected function notifyUser(array $nodes, ?string $user_email, ?string $authname = NULL): void {
-    $matching_nodes = array_filter($nodes, function($node) use ($user_email, $authname) {
+    $matching_nodes = array_filter($nodes, function ($node) use ($user_email, $authname) {
       return $this->isNodeMatch($node, $user_email, $authname);
     });
 
@@ -304,7 +323,7 @@ class PersonAuthorship {
     }
 
     $node_count = count($matching_nodes);
-    $node_links = array_map(function($node) {
+    $node_links = array_map(function ($node) {
       return '<a href="' . $node->toUrl()->toString() . '">' . $node->getTitle() . '</a>';
     }, $matching_nodes);
 

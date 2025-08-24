@@ -59,6 +59,13 @@ class UserLoginEventSubscriber implements EventSubscriberInterface {
    *   The user login event.
    */
   public function onUserLogin(UserLoginEvent $event) {
+    // Check if auto-connect persons is enabled (/admin/config/site-options).
+    $config_pages = \Drupal::service('config_pages.loader');
+    $auto_connect_enabled = (bool) $config_pages->getValue('hs_site_options', 'field_site_autoconnect_persons', 0, 'value');
+    if (!$auto_connect_enabled) {
+      return;
+    }
+
     $account = $event->getAccount();
 
     try {

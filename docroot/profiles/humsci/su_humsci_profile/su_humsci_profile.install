@@ -1751,3 +1751,50 @@ function su_humsci_profile_update_9741() {
     'assign reviewer role',
   ]);
 }
+
+/**
+ * Add field_auto_unpublish field to bottom of the event form display.
+ */
+function su_humsci_profile_update_9742() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $auto_unpublish_field_storage = $config_storage->read('field.storage.node.field_auto_unpublish');
+  if (
+    empty($field_storage->load('node.field_auto_unpublish')) &&
+    !empty($auto_unpublish_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($auto_unpublish_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $auto_unpublish_field_config = $config_storage->read('field.field.node.hs_event.field_auto_unpublish');
+  if (
+    empty($field_config_storage->load('node.hs_event.field_auto_unpublish')) &&
+    !empty($auto_unpublish_field_config)
+  ) {
+    $field_config_storage->create($auto_unpublish_field_config)->save();
+  }
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Add the field to the form display for the event content type.
+  $form_display = $entity_type_manager->getStorage('entity_form_display')
+    ->load('node.hs_event.default');
+  if ($form_display) {
+    $weight = max(array_column($form_display->getComponents(), 'weight') ?: [0]);
+    $form_display->setComponent('field_auto_unpublish', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+      'weight' => $weight + 1,
+    ])->save();
+  }
+}

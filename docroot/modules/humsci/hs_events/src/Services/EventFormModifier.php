@@ -2,7 +2,6 @@
 
 namespace Drupal\hs_events\Services;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
@@ -26,13 +25,6 @@ class EventFormModifier {
   protected $loggerFactory;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Field name for auto-unpublish setting.
    */
   const AUTO_UNPUBLISH_FIELD = 'field_auto_unpublish';
@@ -54,17 +46,13 @@ class EventFormModifier {
    *   The entity type manager.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     LoggerChannelFactoryInterface $logger_factory,
-    ConfigFactoryInterface $config_factory,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->loggerFactory = $logger_factory;
-    $this->configFactory = $config_factory;
   }
 
   /**

@@ -1669,3 +1669,85 @@ function su_humsci_profile_update_9739() {
   }
   return t('Could not load hs_basic_page entity form display.');
 }
+
+/**
+ * Update node page display image styles.
+ */
+function su_humsci_profile_update_9740() {
+  $to_update = [
+    'hs_event' => [
+      'field' => 'field_hs_event_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_news' => [
+      'field' => 'field_hs_news_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_event_series' => [
+      'field' => 'field_hs_event_series_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_publications' => [
+      'field' => 'field_hs_publication_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_person' => [
+      'field' => 'field_hs_person_square_img',
+      'default_image_style' => 'hs_medium_square_360x360',
+      'new_image_style' => 'medium_square',
+    ],
+  ];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  foreach ($to_update as $bundle => $data) {
+    /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $display */
+    $display = $entity_type_manager->getStorage('entity_view_display')
+      ->load("node.{$bundle}.default");
+
+    if (!$display) {
+      continue;
+    }
+
+    $view_changed = FALSE;
+    $sections = $display->getSections();
+
+    foreach ($sections as $section) {
+      $components = $section->getComponents();
+
+      foreach ($components as $component) {
+        if ($component->getPluginId() === "field_block:node:{$bundle}:{$data['field']}") {
+          $configuration = $component->get('configuration');
+          // Skip cases where the default image styles have been overridden.
+          if ($configuration['formatter']['settings']['image_style'] !== $data['default_image_style']) {
+            continue;
+          }
+          // Set the updated image style settings.
+          $configuration['formatter']['type'] = 'media_responsive_image_formatter';
+          $configuration['formatter']['settings']['image_style'] = $data['new_image_style'];
+          $component->setConfiguration($configuration);
+          $view_changed = TRUE;
+        }
+      }
+    }
+
+    // Save the view only if changes were made.
+    if ($view_changed) {
+      $display->save();
+    }
+  }
+}
+
+/**
+ * Update Site Manager user role grant permissions.
+ */
+function su_humsci_profile_update_9741() {
+  user_role_grant_permissions('site_manager', [
+    'assign preparer role',
+    'assign reviewer role',
+  ]);
+}

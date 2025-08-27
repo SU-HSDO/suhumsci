@@ -1,14 +1,25 @@
+uuid: 52dfbca1-0d28-4576-bbda-637a9bb9ae3b
 langcode: en
 status: true
 dependencies:
   module:
-    - node
-third_party_settings: { }
-name: 'Project'
-type: hs_project
-description: 'Use for publishing academic, research, or student projects.'
-help: ''
+    - menu_ui
+    - node_revision_delete
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  node_revision_delete:
+    amount:
+      status: true
+      settings:
+        amount: 5
+_core:
+  default_config_hash: placeholder
+name: Projects
+type: hs_projects
+description: 'A Project is used for publishing academic, research, or student projects.'
+help: null
 new_revision: true
 preview_mode: 1
 display_submitted: false
-translatable: true

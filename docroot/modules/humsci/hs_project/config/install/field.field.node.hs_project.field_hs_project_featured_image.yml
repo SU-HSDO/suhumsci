@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hs_project_featured_image
+    - node.type.hs_project
+  module:
+    - media
+id: node.hs_project.field_hs_project_featured_image
+field_name: field_hs_project_featured_image
+entity_type: node
+bundle: hs_project
+label: 'Featured Image'
+description: 'Upload a single image that best represents the project. Displayed prominently near the top of the page.'
+required: false
+translatable: true
+default_value: { }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

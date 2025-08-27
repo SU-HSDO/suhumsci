@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * hs_publications.module
+ */
+
+use Drupal\hs_entities\HsEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function hs_publications_hs_entity_view_alter(array &$build, HsEntityInterface $entity, EntityViewDisplayInterface $display) {
+  if ($entity->bundle() != 'publications_collections__public') {
+    return;
+  }
+
+  if (
+    $entity->hasField('field_hs_publication_author') &&
+    $entity->get('field_hs_publication_author')->count()
+  ) {
+    unset($build['label']);
+  }
+}

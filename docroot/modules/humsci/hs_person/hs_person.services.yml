@@ -6,11 +6,13 @@ services:
       - '@logger.factory'
       - '@messenger'
       - '@database'
+      - '@externalauth.authmap'
 
   hs_person.user_login_event_subscriber:
     class: Drupal\hs_person\EventSubscriber\UserLoginEventSubscriber
     arguments:
       - '@hs_person.person_authorship'
       - '@logger.factory'
+      - '@config_pages.loader'
     tags:
       - { name: event_subscriber }

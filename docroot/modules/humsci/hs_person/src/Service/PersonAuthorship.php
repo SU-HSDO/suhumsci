@@ -8,6 +8,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\externalauth\AuthmapInterface;
 
 /**
  * Service for handling person node authorship assignment.
@@ -30,11 +31,6 @@ class PersonAuthorship {
    * SSO email domain suffix.
    */
   private const SSO_DOMAIN = '@stanford.edu';
-
-  /**
-   * Regular expression pattern for valid authname characters.
-   */
-  private const AUTHNAME_PATTERN = '/^[a-zA-Z0-9_-]+$/';
 
   /**
    * The entity type manager.
@@ -65,6 +61,13 @@ class PersonAuthorship {
   protected $database;
 
   /**
+   * The authmap service.
+   *
+   * @var \Drupal\externalauth\AuthmapInterface
+   */
+  protected $authmap;
+
+  /**
    * Constructs a new PersonAuthorship object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -75,17 +78,21 @@ class PersonAuthorship {
    *   The messenger service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
+   * @param \Drupal\externalauth\AuthmapInterface $authmap
+   *   The authmap service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     LoggerChannelFactoryInterface $logger_factory,
     MessengerInterface $messenger,
     Connection $database,
+    AuthmapInterface $authmap,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->loggerFactory = $logger_factory;
     $this->messenger = $messenger;
     $this->database = $database;
+    $this->authmap = $authmap;
   }
 
   /**
@@ -103,7 +110,7 @@ class PersonAuthorship {
     }
 
     $user_email = $this->getUserEmail($account);
-    $authname = $this->getUserAuthname($account);
+    $authname = $this->authmap->get($account->id(), 'samlauth');
 
     if (empty($user_email) && empty($authname)) {
       return 0;
@@ -359,7 +366,7 @@ class PersonAuthorship {
    */
   protected function getUserEmail(AccountInterface $account): ?string {
     // First, check if this is an SSO user by getting their authname.
-    $authname = $this->getUserAuthname($account);
+    $authname = $this->authmap->get($account->id(), 'samlauth');
     if ($authname) {
       $sso_email = $authname . self::SSO_DOMAIN;
       return $sso_email;
@@ -372,34 +379,6 @@ class PersonAuthorship {
     }
 
     // No email found.
-    return NULL;
-  }
-
-  /**
-   * Get the authname (SUNet ID) for a user account.
-   *
-   * @todo Update this method to use a service from stanford_samlauth when one
-   *   becomes available, instead of directly querying the authmap table.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account.
-   *
-   * @return string|null
-   *   The authname or null if none found.
-   */
-  protected function getUserAuthname(AccountInterface $account) {
-    // First, check if this is an SSO user by looking up authmap.
-    $authname = $this->database->select('authmap', 'a')
-      ->fields('a', ['authname'])
-      ->condition('uid', $account->id())
-      ->execute()
-      ->fetchField();
-
-    if ($authname && $this->isValidAuthname($authname)) {
-      return $authname;
-    }
-
-    // No authname found.
     return NULL;
   }
 
@@ -425,21 +404,6 @@ class PersonAuthorship {
       $user->addRole('author');
       $user->save();
     }
-  }
-
-  /**
-   * Check if the authname contains only valid characters.
-   *
-   * Valid characters are: alphanumeric, hyphens (-), and underscores (_).
-   *
-   * @param string $authname
-   *   The authname to validate.
-   *
-   * @return bool
-   *   TRUE if the authname is valid, FALSE otherwise.
-   */
-  protected function isValidAuthname(string $authname): bool {
-    return preg_match(self::AUTHNAME_PATTERN, $authname);
   }
 
   /**

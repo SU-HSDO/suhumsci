@@ -19,11 +19,13 @@ foreach ($site_dirs as $site_dir) {
   // Replace underscores with hyphens and double underscores with dots
   $domain = str_replace("_", "-", str_replace("__", ".", $site_name));
   
-  // Map to DDEV domain format
+  // Map to DDEV domain format.
+  // Example: hs-traditional.ddev.site => hs_traditional.
   $sites["$domain.ddev.site"] = $site_name;
 
-  // Optional: support both underscore and hyphen variants if needed
-  $sites["$site_name.ddev.site"] = $site_name;
+  // Create an internal mapping for drush commands.
+  // Example: hs-traditional => hs_traditional.
+  $sites[$domain] = $site_name;
 }
 
 // Default site mapping

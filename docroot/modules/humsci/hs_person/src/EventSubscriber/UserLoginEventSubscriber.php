@@ -2,7 +2,7 @@
 
 namespace Drupal\hs_person\EventSubscriber;
 
-use Drupal\config_pages\ConfigPagesLoaderInterface;
+use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\hs_person\Service\PersonAuthorship;
 use Drupal\user_event_dispatcher\Event\User\UserLoginEvent;
@@ -31,7 +31,7 @@ class UserLoginEventSubscriber implements EventSubscriberInterface {
   /**
    * The config pages loader.
    *
-   * @var \Drupal\config_pages\ConfigPagesLoaderInterface
+   * @var \Drupal\config_pages\ConfigPagesLoaderServiceInterface
    */
   protected $configPagesLoader;
 
@@ -42,10 +42,10 @@ class UserLoginEventSubscriber implements EventSubscriberInterface {
    *   The person authorship service.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory.
-   * @param \Drupal\config_pages\ConfigPagesLoaderInterface $config_pages_loader
+   * @param \Drupal\config_pages\ConfigPagesLoaderServiceInterface $config_pages_loader
    *   The config pages loader service.
    */
-  public function __construct(PersonAuthorship $person_authorship, LoggerChannelFactoryInterface $logger_factory, ConfigPagesLoaderInterface $config_pages_loader) {
+  public function __construct(PersonAuthorship $person_authorship, LoggerChannelFactoryInterface $logger_factory, ConfigPagesLoaderServiceInterface $config_pages_loader) {
     $this->personAuthorship = $person_authorship;
     $this->loggerFactory = $logger_factory;
     $this->configPagesLoader = $config_pages_loader;

@@ -29,112 +29,110 @@ third_party_settings:
         layout_settings:
           column_widths: 25-75
         components:
-          # LEFT SIDEBAR (first): Main navigation
-          11111111-aaaa-4aaa-8aaa-111111111111:
-            uuid: 11111111-aaaa-4aaa-8aaa-111111111111
+          5bf21d49-6870-496b-a3b8-fb5e2b4e4711:
+            uuid: 5bf21d49-6870-496b-a3b8-fb5e2b4e4711
             region: first
             configuration:
               id: 'system_menu_block:main'
               label: 'Main navigation'
               label_display: '0'
               provider: system
-              context_mapping: { }
+              context_mapping: {  }
               level: 1
               depth: 0
               expand_all_items: false
             weight: 0
-
-          # MAIN REGION (second)
-          # Title (H1)
-          22222222-bbbb-4bbb-8bbb-222222222222:
-            uuid: 22222222-bbbb-4bbb-8bbb-222222222222
+          b9cb9d2f-b67b-4cfa-98e2-29b56e24f264:
+            uuid: b9cb9d2f-b67b-4cfa-98e2-29b56e24f264
             region: second
             configuration:
               id: 'field_block:node:hs_project:title'
               label: 'Title'
               label_display: '0'
               provider: layout_builder
-              context_mapping: { entity: layout_builder.entity }
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
                 type: string
                 label: hidden
-                settings: { link_to_entity: false }
+                settings:
+                  link_to_entity: false
             weight: -10
-
-          # Featured Image
-          33333333-cccc-4ccc-8ccc-333333333333:
-            uuid: 33333333-cccc-4ccc-8ccc-333333333333
+          9e9ce147-27a9-406d-b611-8f8762f25677:
+            uuid: 9e9ce147-27a9-406d-b611-8f8762f25677
             region: second
             configuration:
               id: 'field_block:node:hs_project:field_hs_project_featured_image'
               label: 'Featured Image'
               label_display: '0'
               provider: layout_builder
-              context_mapping: { entity: layout_builder.entity }
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
                 type: entity_reference_entity_view
                 label: hidden
-                settings: { view_mode: default, link: false }
+                settings:
+                  view_mode: default
+                  link: false
             weight: -9
-
-          # Project Category (the only field with a label)
-          44444444-dddd-4ddd-8ddd-444444444444:
-            uuid: 44444444-dddd-4ddd-8ddd-444444444444
+          4061f460-b335-479d-a460-8e4f4ae14629:
+            uuid: 4061f460-b335-479d-a460-8e4f4ae14629
             region: second
             configuration:
               id: 'field_block:node:hs_project:field_hs_project_category'
               label: 'Project Category'
               label_display: '1'
               provider: layout_builder
-              context_mapping: { entity: layout_builder.entity }
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
                 type: entity_reference_label
                 label: above
-                settings: { link: false }
+                settings:
+                  link: false
             weight: -8
-
-          # Description (Body)
-          55555555-eeee-4eee-8eee-555555555555:
-            uuid: 55555555-eeee-4eee-8eee-555555555555
+          6a527506-134c-4b02-903c-94645e096d2a:
+            uuid: 6a527506-134c-4b02-903c-94645e096d2a
             region: second
             configuration:
               id: 'field_block:node:hs_project:field_hs_project_description'
               label: 'Body'
               label_display: '0'
               provider: layout_builder
-              context_mapping: { entity: layout_builder.entity }
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
                 type: text_default
                 label: hidden
-                settings: { }
+                settings: {  }
             weight: -7
-
-          # Additional Media
-          66666666-ffff-4fff-8fff-666666666666:
-            uuid: 66666666-ffff-4fff-8fff-666666666666
+          3011cc65-7931-4565-bc9c-846976dfef58:
+            uuid: 3011cc65-7931-4565-bc9c-846976dfef58
             region: second
             configuration:
               id: 'field_block:node:hs_project:field_hs_project_media'
               label: 'Media'
               label_display: '0'
               provider: layout_builder
-              context_mapping: { entity: layout_builder.entity }
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
                 type: entity_reference_entity_view
                 label: hidden
-                settings: { view_mode: default, link: false }
+                settings:
+                  view_mode: default
+                  link: false
             weight: -6
-
-          # External Links
-          77777777-1111-4111-8111-777777777777:
-            uuid: 77777777-1111-4111-8111-777777777777
+          96359479-60df-4434-bf74-47c40edd6dcc:
+            uuid: 96359479-60df-4434-bf74-47c40edd6dcc
             region: second
             configuration:
               id: 'field_block:node:hs_project:field_hs_project_external_links'
               label: 'External Links'
               label_display: '0'
               provider: layout_builder
-              context_mapping: { entity: layout_builder.entity }
+              context_mapping:
+                entity: layout_builder.entity
               formatter:
                 type: link
                 label: hidden
@@ -145,12 +143,10 @@ third_party_settings:
                   rel: ''
                   target: ''
             weight: -5
-        third_party_settings: { }
-content: { }
+        third_party_settings: {  }
+content: {  }
 hidden:
-  # Keep Active/Past hidden in render
   field_hs_project_is_active: true
-  # Hide editorial/meta fields
   uid: true
   created: true
   promote: true

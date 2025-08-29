@@ -9,6 +9,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 
@@ -238,7 +239,7 @@ function hs_admin_field_widget_complete_menu_link_default_form_alter(array &$fie
 /**
  * Implements hook_help().
  */
-function hs_admin_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+function hs_admin_help($route_name, RouteMatchInterface $route_match) {
   if ($route_name === 'csv_importer.form') {
     $output = '';
     $output .= '<h2>' . t('Tips') . '</h2>';
@@ -248,10 +249,12 @@ function hs_admin_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $ro
     $output .= '<dd>' . t('There is little validation of the CSV content before importing.  Errors can happen without any feedback.') . '</dd>';
     $output .= '<dt>' . t('First test the import in a non-live environment') . '</dt>';
     $output .= '<dd>' . t('By testing in a dev/test environment you can refine your CSV file before running the import on the live site.') . '</dd>';
+    $output .= '<dt>' . t('Search for errors') . '</dt>';
+    $output .= '<dd>' . t('Review the imported content for problems, and look for errors in <a href=":dblog" target="_blank">the logs</a> (only available on non-live sites).', [':dblog' => Url::fromRoute('dblog.overview')->toString()]) . '</dd>';
     $output .= '<dt>' . t('Use bulk delete to clean up errors') . '</dt>';
-    $output .= '<dd>' . t('If something goes wrong you can bulk delete content from the <a href=":admin-content">Content Administration</a> pages.  Just be careful to only delete imported content, and not something that someone else is working on at the same time.', [':admin-content' => Url::fromRoute('system.admin_content')->toString()]) . '</dd>';
+    $output .= '<dd>' . t('If something goes wrong you can bulk delete content from the <a href=":admin-content" target="_blank">Content Administration</a> pages.  Just be careful to only delete imported content, and not something that someone else is working on at the same time.', [':admin-content' => Url::fromRoute('system.admin_content')->toString()]) . '</dd>';
     $output .= '<dt>' . t('CSV formatting tips') . '</dt>';
-    $output .= '<dd>' . t('The CSV file should have a header row corresponding to the machine names of the fields that you are importing.<br />E.g. <code>title, body, field_hs_publication_type</code><br />See more <a href=":csv-formatting-tips">CSV formatting tips</a> on Drupal.org.', [':csv-formatting-tips' => 'https://www.drupal.org/docs/contributed-modules/csv-importer/examples']) . '</dd>';
+    $output .= '<dd>' . t('The CSV file should have a header row corresponding to the machine names of the fields that you are importing.<br />E.g. <code>title, body, field_hs_publication_type</code><br />See more <a href=":csv-formatting-tips" target="_blank">CSV formatting tips</a> on Drupal.org.', [':csv-formatting-tips' => 'https://www.drupal.org/docs/contributed-modules/csv-importer/examples']) . '</dd>';
     $output .= '</dl>';
     return $output;
   }

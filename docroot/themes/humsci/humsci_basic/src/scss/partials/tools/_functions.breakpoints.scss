@@ -59,7 +59,7 @@
 ///
 @function breakpoint-min($name, $breakpoints: $su-grid-screens) {
   $min: map-get($breakpoints, $name);
-  @return if($min != 0, $min, null);
+  @return if($min !=0, $min, null);
 }
 
 ///
@@ -75,9 +75,12 @@
 ///
 @function breakpoint-next($name, $breakpoints: map-keys($su-grid-screens)) {
   $n: index($breakpoints, $name);
+
   @if is-integer($n) {
     @return if($n < length($breakpoints), nth($breakpoints, $n + 1), null);
-  } @else {
+  }
+
+  @else {
     @error "Could not find breakpoint shortcode in breakpoint-next mixin";
   }
 }
@@ -95,9 +98,12 @@
 ///
 @function breakpoint-previous($name, $breakpoints: map-keys($su-grid-screens)) {
   $n: index($breakpoints, $name);
-  @if is-integer($n) and $n > 1 {
-    @return if($n <= length($breakpoints), nth($breakpoints, $n - 1), null);
-  } @else {
+
+  @if is-integer($n) and $n >1 {
+    @return if($n <=length($breakpoints), nth($breakpoints, $n - 1), null);
+  }
+
+  @else {
     @return null;
   }
 }

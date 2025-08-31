@@ -124,11 +124,32 @@ function su_humsci_profile_entity_type_alter(array &$entity_types) {
 function su_humsci_profile_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
   if (isset($form['manual']['#open'])) {
     $manual_label = \Drupal::state()->get('stanford_ssp.manual_label', FALSE);
+    $form['manual']['#open'] = TRUE;
     if ($manual_label) {
-      $form['manual']['#open'] = TRUE;
-      $form['manual']['#title'] = $manual_label;
+      $form['manual']['#title'] = $manual_label ?: t('Local Login');
     }
   }
+
+  $form['intro_text'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#weight' => -999,
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'h1',
+      '#value' => t('Log in to view this page.'),
+    ],
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'h4',
+      '#value' => t('Stanford Login'),
+    ],
+    [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => t('Access this site with your Stanford ID'),
+    ],
+  ];
 }
 
 /**
@@ -185,38 +206,40 @@ function su_humsci_profile_entity_presave(EntityInterface $entity) {
  * Implements hook_metatags_alter().
  */
 function su_humsci_profile_metatags_alter(array &$metatags, array &$context) {
-  if ($context['entity'] instanceof NodeInterface && $context['entity']->bundle() == 'hs_basic_page') {
-    if ($context['entity']->hasField('field_hs_page_hero') && $context['entity']->get('field_hs_page_hero')->count()) {
+  $entity = $context['entity'];
 
-      /** @var \Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem $field_item */
-      $field_item = $context['entity']->get('field_hs_page_hero')->get(0);
-      $paragraph_id = $field_item->get('target_id')->getString();
+  if ($entity instanceof NodeInterface
+      && $entity->bundle() == 'hs_basic_page'
+      && $entity->hasField('field_metatags_image')
+      && $entity->get('field_metatags_image')->isEmpty()
+      && $entity->hasField('field_hs_page_hero')
+      && $entity->get('field_hs_page_hero')->count()) {
 
-      $paragraph = \Drupal::entityTypeManager()
-        ->getStorage('paragraph')
-        ->load($paragraph_id);
+    /** @var \Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem $field_item */
+    $field_item = $entity->get('field_hs_page_hero')->get(0);
+    $paragraph_id = $field_item->get('target_id')->getString();
 
-      if (!$paragraph) {
-        return;
-      }
+    $paragraph = \Drupal::entityTypeManager()
+      ->getStorage('paragraph')
+      ->load($paragraph_id);
 
+    if ($paragraph) {
       switch ($paragraph->bundle()) {
         case 'hs_gradient_hero_slider':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_gradient_hero_slides:entity:field_hs_gradient_hero_image$2', $metatags);
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_gradient_hero_slides:entity:field_hs_gradient_hero_image$2', $metatags);
           break;
 
         case 'hs_carousel':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_carousel_slides:entity:field_hs_hero_image$2', $metatags);
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_carousel_slides:entity:field_hs_hero_image$2', $metatags);
           break;
 
         case 'hs_hero_image':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_hero_image$2', $metatags);
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_hero_image$2', $metatags);
           break;
 
         case 'hs_sptlght_slder':
-          $metatags = su_humsci_profile_preg_replace("/(.*)field_hs_banner_image(.*)/", '$1field_hs_sptlght_sldes:entity:field_hs_spotlight_image$2', $metatags);
+          $metatags = su_humsci_profile_preg_replace("/(.*)field_metatags_image(.*)/", '$1field_hs_page_hero:entity:field_hs_sptlght_sldes:entity:field_hs_spotlight_image$2', $metatags);
           break;
-
       }
     }
   }
@@ -781,6 +804,46 @@ function su_humsci_profile_form_alter(&$form, FormStateInterface $form_state, $f
     $access = su_humsci_profile_node_access($node, 'delete', \Drupal::currentUser());
     $form['status']['#access'] = !$access->isForbidden();
   }
+  if ($form_id != 'content_access_page' && $form_id != 'content_access_admin_settings') {
+    return;
+  }
+
+  // Modifies the content access control form to customize role permissions.
+  // See /admin/structure/types/manage/{bundle}/access and /node/{nid}/access.
+  if (empty($form['per_role'])) {
+    return;
+  }
+
+  foreach ($form['per_role'] as $key => $element) {
+    if (!is_array($element) || empty($element['#options'])) {
+      continue;
+    }
+    $form['per_role'][$key]['#process'][] = '_su_humsci_profile_process_per_role_field';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for hs_basic_page add form.
+ */
+function su_humsci_profile_form_node_hs_basic_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _su_humsci_profile_move_metatag_image($form);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for hs_basic_page edit form.
+ */
+function su_humsci_profile_form_node_hs_basic_page_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  _su_humsci_profile_move_metatag_image($form);
+}
+
+/**
+ * Move field_metatags_image into the metatag widget for unified editing.
+ */
+function _su_humsci_profile_move_metatag_image(array &$form) {
+  if (isset($form['field_metatags']['widget'][0], $form['field_metatags_image'])) {
+    $form['field_metatags']['widget'][0]['field_metatags_image'] = $form['field_metatags_image'];
+    unset($form['field_metatags_image']);
+  }
 }
 
 /**
@@ -891,11 +954,82 @@ function su_humsci_profile_ckeditor5_plugin_info_alter(array &$plugin_definition
  * Implements hook_form_FORM_ID_alter().
  */
 function su_humsci_profile_form_user_form_alter(&$form, FormStateInterface $form_state) {
-  // Get current user roles and determine if has the 'administrator' role.
   $roles = \Drupal::currentUser()->getRoles();
+  /** @var \Drupal\user\Entity\User $account */
+  $account = $form_state->getBuildInfo()['callback_object']->getEntity();
+  /** @var \Drupal\externalauth\AuthmapInterface $authmap */
+  $authmap = \Drupal::service('externalauth.authmap');
+
   $is_admin = in_array('administrator', $roles);
+  $is_manager = in_array('site_manager', $roles);
+  $is_admin_or_manager = $is_admin || $is_manager;
+  $is_saml_user = !empty($account->id()) && $authmap->get($account->id(), 'samlauth');
+
   // Remove unnecessary URL alias fields from the user edit form for all users.
   $form['path']['#access'] = FALSE;
-  // Remove Delete account button for all roles expect 'administrator'.
+  // Remove Delete account button for all roles except 'administrator'.
   $form['actions']['delete']['#access'] = $is_admin;
+
+  // Hide system roles that should not be manually assigned.
+  unset($form['account']['roles']['#options']['search_indexer']);
+
+  if ($is_saml_user) {
+    // Changes to the user form for SAML users.
+    $form['account']['name']['#description'] = t('By default this is the SUNet ID. You can change this to their real name to make the content logs easier to understand.');
+    $form['account']['saml_notice'] = [
+      '#markup' => t('<div class="user-form__suid-note"><strong>NOTE:</strong> E-mail address and password are controlled through your Stanford ID.</div>'),
+      '#weight' => -1,
+    ];
+    $form['account']['mail']['#disabled'] = !$is_admin;
+    $form['account']['name']['#access'] = $is_admin_or_manager;
+    $form['account']['status']['#access'] = $is_admin_or_manager;
+    $form['account']['pass']['#access'] = FALSE;
+  }
+  else {
+    // Changes to the user form for Drupal login users.
+    $form['account']['mail']['#disabled'] = FALSE;
+    $form['account']['name']['#access'] = $is_admin_or_manager;
+    $form['account']['name']['#description'] = t('Warning: This person uses their username to log in.  Please notify them before changing.');
+    $form['account']['pass']['#description'] = t('Warning: This person uses their password to log in.  Please notify them before changing.');
+    $form['account']['pass']['#access'] = TRUE;
+    $form['account']['status']['#access'] = $is_admin_or_manager;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function su_humsci_profile_form_stanford_samlauth_add_user_alter(&$form, FormStateInterface $form_state) {
+  // Hide system roles that should not be manually assigned.
+  unset($form['roles']['#options']['search_indexer']);
+}
+
+/**
+ * Process callback for role-based access control form elements.
+ *
+ * @param array &$element
+ *   The form element to process.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array &$complete_form
+ *   The complete form structure.
+ *
+ * @return array
+ *   The processed form element.
+ */
+function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface $form_state, &$complete_form) {
+  if (isset($element['search_indexer'])) {
+    $element['search_indexer']['#access'] = FALSE;
+  }
+  if (isset($element['anonymous'])) {
+    $element['anonymous']['#access'] = FALSE;
+  }
+  if (isset($element['authenticated'])) {
+    $element['authenticated']['#title'] = 'All logged in users';
+  }
+  if (isset($element['site_manager'])) {
+    $element['site_manager']['#default_value'] = 'site_manager';
+    $element['site_manager']['#disabled'] = TRUE;
+  }
+  return $element;
 }

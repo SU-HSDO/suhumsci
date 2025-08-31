@@ -13,20 +13,10 @@
 @import
   '../base-imports',
   '../fonts/fonts',
-  '../utilities/color-pairings',
-  '../utilities/fonts',
-  '../utilities/font-awesome',
-  '../utilities/general',
-  '../utilities/lists',
-  '../utilities/raised-cards',
-  '../utilities/tables',
-  '../utilities/display-more-link-text',
-  '../utilities/dark-pattern',
-  '../utilities/caption-credit',
-  '../utilities/media-embeds',
-  // Here are the files we actually need for CKEditor
-  '../admin/wysiwyg-editor',
-  '../utilities/wysiwyg-text-area';
+  '../base/color-pairings',
+  '../utilities/utilities',
+  // CKEditor UI customizations.
+  'ckeditor-ui';
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
@@ -63,6 +53,10 @@
   @include hb-traditional {
     font-family: $hb-traditional-font--sans;
   }
+
+  // Link current color variables.
+  --link-base-current-color: var(--palette--link-base-color);
+  --link-base-hover-current-color: var(--palette--link-base-hover-color);
 
   // Addresses small media previews in CK5
   .hb-media-video {
@@ -143,6 +137,7 @@
   }
 
   a {
+    color: var(--link-base-current-color);
     text-decoration: underline;
   }
 

@@ -140,56 +140,42 @@
 // dots aka bars for carousel slider
 @mixin slick-dots {
   .slick-dots {
-    @include visually-hidden;
+    display: inline-block;
+    clip: inherit;
+    height: auto;
+    width: auto;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 
-    @include grid-media-min('md') {
+    @include hb-themes(('colorful', 'airy')) {
+      bottom: hb-calculate-rems(16px);
+    }
+
+    li {
       display: inline-block;
-      clip: inherit;
-      height: auto;
-      width: auto;
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
+      line-height: 25%;
 
-      @include hb-themes(('colorful', 'airy')) {
-        bottom: hb-calculate-rems(16px);
-      }
+      button {
+        @include hb-unbuttonize;
+        background-color: var(--palette--gray);
+        padding: 0 hb-calculate-rems(22px);
+        margin: 0 hb-calculate-rems(8px);
+        font-size: 0; // hide text
+        transition: hb-transition(transform);
 
-      li {
-        display: inline-block;
-        line-height: 25%;
-
-        button {
-          @include hb-unbuttonize;
-          background-color: var(--palette--gray);
-          padding: 0 hb-calculate-rems(22px);
-          margin: 0 hb-calculate-rems(8px);
-          font-size: 0; // hide text
-          transition: hb-transition(transform);
-
-          @include hb-themes(('colorful', 'airy')) {
-            border-radius: hb-calculate-rems(5px);
-          }
-
-          &:hover {
-            transform: scale(0.9);
-
-            @include hb-traditional {
-              background-color: var(--palette--black);
-            }
-
-            @include hb-themes(('colorful', 'airy')) {
-              background-color: var(--palette--secondary);
-            }
-          }
+        @include hb-themes(('colorful', 'airy')) {
+          border-radius: hb-calculate-rems(5px);
         }
 
-        // active button representing the slide currently on display
-        &.slick-active button {
+        &:hover {
+          transform: scale(0.9);
+
           @include hb-traditional {
             background-color: var(--palette--black);
           }
@@ -197,10 +183,21 @@
           @include hb-themes(('colorful', 'airy')) {
             background-color: var(--palette--secondary);
           }
+        }
+      }
 
-          &:hover {
-            transform: none;
-          }
+      // active button representing the slide currently on display
+      &.slick-active button {
+        @include hb-traditional {
+          background-color: var(--palette--black);
+        }
+
+        @include hb-themes(('colorful', 'airy')) {
+          background-color: var(--palette--secondary);
+        }
+
+        &:hover {
+          transform: none;
         }
       }
     }

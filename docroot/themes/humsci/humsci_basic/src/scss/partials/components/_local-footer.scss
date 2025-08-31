@@ -39,10 +39,9 @@
 
   .block__title,
   .hb-secondary-nav__heading {
-    font-size: hb-calculate-rems(14px);
-    font-weight: hb-theme-font-weight(bold);
+    @include hb-heading-6;
+
     margin: 0 0 hb-calculate-rems(20px);
-    text-transform: uppercase;
 
     @include hb-traditional {
       font-family: $hb-traditional-font--sans;
@@ -54,23 +53,6 @@
 
     .menu-item {
       margin-bottom: hb-calculate-rems(14px);
-    }
-  }
-
-  // Warbler color pairing override.
-  @include hb-traditional {
-    .ht-pairing-warbler &:not(.hb-dark-pattern) {
-      a:not([class]),
-      a.mailto,
-      a[href^='mailto:'],
-      a.ext {
-        color: var(--palette--tertiary);
-
-        &:hover,
-        &:focus {
-          color: var(--palette--tertiary-darken-20);
-        }
-      }
     }
   }
 }

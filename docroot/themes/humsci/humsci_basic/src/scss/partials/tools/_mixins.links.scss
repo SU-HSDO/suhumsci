@@ -53,81 +53,11 @@
 // The default $icon-width is set for the width of external link icons
 @mixin hb-link--inline {
   // no font size by default
-  color: var(--palette--tertiary);
-
-  @include hb-themes(('colorful', 'airy')) {
-    // Ocean and mountain color pairing override when link is inside a hb-well.
-    .hc-pairing-ocean .hb-well &,
-    .hc-pairing-mountain .hb-well & {
-      color: var(--palette--primary);
-
-      &:hover,
-      &:focus {
-        color: var(--palette--tertiary-darken-20);
-      }
-    }
-  }
-
-  @include hb-traditional {
-    // Warbler color pairing override.
-    .ht-pairing-warbler & {
-      color: var(--palette--secondary);
-    }
-  }
+  color: var(--link-base-current-color);
 
   &:hover,
   &:focus {
-    color: var(--palette--tertiary-darken-20);
-
-    @include hb-traditional {
-      // Warbler color pairing override.
-      .ht-pairing-warbler & {
-        color: var(--palette--tertiary);
-      }
-    }
-  }
-
-  .hb-local-footer & {
-    &:hover,
-    &:focus {
-      color: var(--palette--tertiary-darken-20);
-    }
-  }
-
-  .hb-local-footer.hb-dark-pattern & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-  }
-
-  .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
-    @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--tertiary-reversed);
-      border-bottom-color: var(--palette--tertiary-reversed);
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-    }
-
-    &:hover,
-    &:focus {
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-ext-icon-color('tertiary-highlight');
-
-        color: var(--palette--tertiary-highlight);
-        border-bottom-color: var(--palette--tertiary-highlight);
-        box-shadow: none;
-      }
-
-      @include hb-traditional {
-        @include hb-ext-icon-color('tertiary-highlight-darken-10');
-
-        color: var(--palette--tertiary-highlight-darken-10);
-        text-decoration-color: var(--palette--tertiary-highlight-darken-10);
-      }
-    }
+    color: var(--link-base-hover-current-color);
   }
 }
 
@@ -141,7 +71,7 @@
   border: none;
   background: none;
   padding: 0;
-  color: var(--palette--secondary);
+  color: var(--link-base-current-color);
 
   @include hb-traditional {
     font-weight: hb-theme-font-weight(semibold);
@@ -150,18 +80,15 @@
 
   @include hb-themes(('colorful', 'airy')) {
     font-weight: hb-theme-font-weight(bold);
-
-    .hc-pairing-ocean & {
-      color: var(--palette--secondary-darken-12);
-    }
   }
 
   &::after {
     content: '';
     display: inline-block;
-    @include hb-icon-link-arrow('secondary');
+    @include hb-icon-link-arrow('link-base-color');
+    background-color: var(--link-base-current-color);
     margin-left: hb-calculate-rems(8px);
-    background-size: 85%;
+    mask-size: 85%;
     transition: hb-transition(transform);
     will-change: contents;
 
@@ -169,16 +96,6 @@
       height: hb-calculate-rems(19px);
       width: hb-calculate-rems(19px);
       margin-bottom: hb-calculate-rems(-4px);
-
-      .hc-pairing-ocean & {
-        @include hb-icon-link-arrow('primary');
-        background-size: 85%;
-      }
-
-      .hc-pairing-ocean .hb-well & {
-        @include hb-icon-link-arrow('secondary-darken-12');
-        background-size: 85%;
-      }
     }
 
     @include hb-traditional {
@@ -190,87 +107,19 @@
 
   &:hover,
   &:focus {
-    color: var(--palette--secondary-darken-12);
+    color: var(--link-base-hover-current-color);
 
     background-image: none;
     background-color: transparent;
 
     &::after {
-      @include hb-icon-link-arrow('secondary-darken-12');
-      background-size: 85%;
+      background-color: var(--link-base-hover-current-color);
       transform: translateX(#{hb-calculate-rems(2.5px)});
-
-      @include hb-colorful {
-        .hc-pairing-ocean & {
-          @include hb-icon-link-arrow('primary-dark');
-          background-size: 85%;
-        }
-      }
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      .hc-pairing-ocean & {
-        color: var(--palette--primary-dark);
-      }
     }
 
     // Warbler color pairing override.
     @include hb-traditional {
       text-decoration: underline;
-
-      .ht-pairing-warbler & {
-        color: var(--palette--secondary-darken-12);
-      }
-    }
-  }
-
-  .hb-dark-pattern &,
-  .hb-dark-inversion .views-element-container & {
-    @include hb-themes(('colorful', 'airy')) {
-      color: var(--palette--tertiary-reversed);
-
-      &::after {
-        @include hb-icon-link-arrow('tertiary-reversed');
-        background-size: 85%;
-      }
-
-      &:hover,
-      &:focus {
-        color: var(--palette--secondary-highlight);
-
-        .hc-pairing-ocean & {
-          color: var(--palette--tertiary-highlight);
-        }
-
-        &::after {
-          @include hb-icon-link-arrow('secondary-highlight');
-          background-size: 85%;
-
-          .hc-pairing-ocean & {
-            @include hb-icon-link-arrow('tertiary-highlight');
-            background-size: 85%;
-          }
-        }
-      }
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-
-      &::after {
-        @include hb-icon-link-arrow('tertiary-highlight');
-        background-size: 85%;
-      }
-
-      &:hover,
-      &:focus {
-        color: var(--palette--tertiary-highlight-darken-10);
-
-        &::after {
-          @include hb-icon-link-arrow('tertiary-highlight-darken-10');
-          background-size: 85%;
-        }
-      }
     }
   }
 }
@@ -302,16 +151,16 @@
 
     &::before {
       transform: translateX(#{hb-calculate-rems(6.25px)});
-      @include hb-icon-link-arrow('secondary-darken-12');
+      background-color: var(--palette--secondary-darken-12);
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        @include hb-icon-link-arrow('gray-medium');
+        background-color: var(--palette--gray-medium);
       }
 
       .hb-raised-cards .hb-dark-pattern &,
       .hb-dark-inversion .hb-raised-cards .views-element-container & {
-        @include hb-icon-link-arrow('secondary-darken-12');
+        background-color: var(--palette--secondary-darken-12);
       }
     }
   }
@@ -330,19 +179,18 @@
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      @include hb-icon-link-arrow('white');
+      background-color: var(--palette--white);
     }
 
     .hb-raised-cards .hb-dark-pattern &,
     .hb-dark-inversion .hb-raised-cards .views-element-container & {
-      @include hb-icon-link-arrow('secondary');
+      background-color: var(--palette--secondary);
     }
   }
 }
 
 @mixin hb-icon-link-inline($icon) {
   @include hb-link--inline;
-  color: var(--palette--secondary);
 
   &::before {
     /* stylelint-disable */
@@ -364,44 +212,4 @@
       @error 'Invalid icon type. Use "pdf" or "file".';
     }
   }
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-
-    &:hover {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-    }
-
-    &::before {
-      @include hb-colorful {
-        color: var(--palette--white);
-      }
-
-      @include hb-traditional {
-        color: var(--palette--tertiary-highlight);
-      }
-    }
-  }
-
-  .hb-dark-pattern &::before {
-    color: var(--palette--secondary-highlight);
-  }
-
-  &:hover,
-  &:focus {
-    .hb-local-footer.hb-dark-pattern &::before {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-
-      @include hb-traditional {
-        color: var(--palette--tertiary-highlight-darken-10);
-      }
-    }
-  }
-
 }

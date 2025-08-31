@@ -6,6 +6,33 @@
 @use '../tools/functions.fonts' as *;
 @use '../tools/functions.general' as *;
 
+// General WYSIWYG styles (all fields).
+.text-long,
+.text-with-summary,
+.views-field-body,
+.hb-card__description {
+  *:not([class]):last-child {
+    margin-bottom: 0;
+  }
+}
+
+.text-long,
+.text-with-summary,
+.views-field-body {
+  line-height: var(--normal-line-height);
+}
+
+.hb-card__description .views-field-body,
+.hb-vertical-linked-card__description .views-field-body,
+.hb-callout-box .text-long,
+.hb-table-wrap tbody,
+.hb-table-wrap .hb-table-pattern__body,
+.text-with-summary blockquote,
+.text-long blockquote {
+  line-height: var(--condensed-line-height);
+}
+
+// Flexible and private page text areas.
 .field-hs-text-area,
 .field-hs-priv-text-area {
   @include clearfix;
@@ -111,96 +138,6 @@
     }
   }
 
-  // Override default link color for the Canyon color pairing.
-  @include hb-themes(('colorful', 'airy')) {
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .hc-pairing-canyon & {
-        a:not([class]), a.mailto, a[href^='mailto:'], a.ext, a.hs-external-link {
-          color: var(--palette--primary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the external link icon color is correct.
-        a.hs-external-link {
-          &::after {
-            background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'primary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('ext-link', map-get(map-get($hc-colorful-pairings, 'canyon'), 'tertiary-darken-20')));
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Override links color and links with icons for the Firefinch color pairing.
-  @include hb-traditional {
-    .hb-well &,
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width &,
-    .hs-breakout-box {
-      .ht-pairing-firefinch & {
-        a.hs-more-link, a.hs-private-link, a.hs-pdf-link, a.hs-file-link {
-          color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-          }
-        }
-
-        // Ensure that the private link icon color and more link icon color are correct.
-        a.hs-private-link {
-          &::before {
-            background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::before {
-              background-image: svg(hc-get-icons('lock', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-more-link {
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
-
-        a.hs-secondary-button {
-          color: var(--palette--tertiary);
-          border-color: var(--palette--tertiary);
-
-          &:hover,
-          &:focus {
-            color: var(--palette--white);
-            border-color: var(--palette--secondary);
-          }
-        }
-      }
-    }
-  }
-
   // Only in the textarea, does the well get display: table for being floated
   .hs-well,
   .pullquote {
@@ -210,9 +147,13 @@
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 // hs-caption and D7 import utility class map and loop
-$captions: (hs-caption, caption);
+$captions: (
+  hs-caption,
+  caption
+);
 
 @each $caption in $captions {
+
   .#{$caption},
   .views-row #{$caption},
   .views-row #{$caption} a {
@@ -220,9 +161,13 @@ $captions: (hs-caption, caption);
   }
 }
 
-$credits: (hs-credits, credits);
+$credits: (
+  hs-credits,
+  credits
+);
 
 @each $credit in $credits {
+
   .#{$credit},
   .views-row #{$credit},
   .views-row #{$credit} a {
@@ -265,7 +210,7 @@ $credits: (hs-credits, credits);
   @include hb-font-splash-animation;
 
   @include hb-traditional {
-    ~ .hs-font-lead {
+    ~.hs-font-lead {
       animation-duration: 1450ms !important;
       animation-delay: 250ms;
 
@@ -408,37 +353,6 @@ a[href*="//"].hs-external-link,
 .hs-external-link a[href*="//"] {
   @include hb-link--inline;
   @include hb-external-link-icon;
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-
-      &:hover,
-      &:focus {
-        color: var(--palette--gray-medium);
-      }
-
-      &::after {
-        @include hb-icon-background('ext-link', 'white');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'gray-medium');
-      }
-    }
-
-    @include hb-traditional {
-      color: var(--palette--tertiary-highlight);
-
-      &::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight');
-      }
-
-      &:hover::after {
-        @include hb-icon-background('ext-link', 'tertiary-highlight-darken-10');
-      }
-    }
-  }
 }
 
 a.hs-private-link,
@@ -446,19 +360,6 @@ a.hs-private-link,
 a.private-link,
 .private-link a {
   @include hb-link--inline;
-  color: var(--palette--secondary);
-
-  .hb-dark-pattern.hb-local-footer & {
-    @include hb-colorful {
-      color: var(--palette--white);
-    }
-
-    &:hover {
-      @include hb-colorful {
-        color: var(--palette--gray-medium);
-      }
-    }
-  }
 
   &::before {
     content: '';
@@ -468,33 +369,14 @@ a.private-link,
     margin-bottom: hb-calculate-rems(-2px);
     margin-right: hb-calculate-rems(2px);
 
-    @include hb-icon-background('lock', 'secondary');
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    .hb-dark-pattern & {
-      @include hb-colorful {
-        @include hb-icon-background('lock', 'white');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('lock', 'tertiary-highlight');
-      }
-    }
+    @include hb-icon-background('lock', 'link-base-color', true);
+    mask-repeat: no-repeat;
+    mask-size: cover;
+    background-color: var(--link-base-current-color);
   }
 
   &:hover::before {
-    @include hb-icon-background('lock', 'tertiary-darken-20');
-
-    .hb-dark-pattern & {
-      @include hb-colorful {
-        @include hb-icon-background('lock', 'gray-medium');
-      }
-
-      @include hb-traditional {
-        @include hb-icon-background('lock', 'tertiary-highlight-darken-10');
-      }
-    }
+    background-color: var(--link-base-hover-current-color);
   }
 }
 
@@ -509,9 +391,12 @@ a.hs-mailto-link {
 }
 
 // hs-more-link and D7 import utility class map and loop
-$more-links: (hs-more-link);
+$more-links: (
+  hs-more-link
+);
 
 @each $more-link in $more-links {
+
   a.#{$more-link},
   button.#{$more-link},
   .#{$more-link} a,
@@ -545,4 +430,21 @@ a.hs-file-link {
       font-weight: 400;
     }
   }
+}
+
+// Breakout Box
+// Adds a breakout box with background color to CKeditor font styles
+.hs-breakout-box {
+  @include hb-themes(('colorful', 'airy')) {
+    background-color: var(--palette--spotlight);
+  }
+
+  @include hb-traditional {
+    background-color: var(--palette--spotlight);
+  }
+
+  padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
+  border: 0 none;
+  width: 100%;
+  box-sizing: border-box;
 }

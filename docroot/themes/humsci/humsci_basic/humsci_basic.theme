@@ -7,6 +7,7 @@
 
 use Drupal\Core\Template\Attribute;
 use Drupal\node\Entity\Node;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\ParagraphInterface;
 
 /**
@@ -59,7 +60,6 @@ function humsci_basic_preprocess_block(&$vars) {
  * Prepares variables for the html.html.twig template.
  */
 function humsci_basic_preprocess_html(&$vars) {
-
   // Animation enhancements setting.
   $animation_enhancement = theme_get_setting('animation_toggle');
   if ($animation_enhancement) {
@@ -79,6 +79,128 @@ function humsci_basic_preprocess_html(&$vars) {
   if ($use_megamenu) {
     // Set html_attributes for html DOM element.
     $vars['html_attributes']->addClass('hb-use-megamenu');
+  }
+
+  // Preload full width region banner images (LCP)
+  $route_match = \Drupal::routeMatch();
+
+  $node = $route_match->getParameter('node');
+
+  if (!$node || !$node->hasField('field_hs_page_hero') || $node->get('field_hs_page_hero')->isEmpty()) {
+    return;
+  }
+
+  $paragraph = $node->get('field_hs_page_hero')->entity;
+
+  $paragraphs_map = [
+    'hs_gradient_hero_slider' => [
+      'field' => 'field_hs_gradient_hero_slides',
+      'image_field' => 'field_hs_gradient_hero_image',
+      'style' => 'hero_with_text_large',
+    ],
+    'hs_carousel' => [
+      'field' => 'field_hs_carousel_slides',
+      'image_field' => 'field_hs_hero_image',
+      'style' => 'hero_with_text_large',
+    ],
+    'hs_banner' => [
+      'field' => 'field_hs_banner_image',
+      'image_field' => '',
+      'style' => 'hero_no_text_3000px_',
+    ],
+    'hs_hero_image' => [
+      'field' => 'field_hs_hero_image',
+      'image_field' => '',
+      'style' => 'hero_with_text_large',
+    ],
+    'hs_sptlght_slder' => [
+      'field' => 'field_hs_sptlght_sldes',
+      'image_field' => 'field_hs_spotlight_image',
+      'style' => '',
+    ],
+  ];
+
+  $bundle = $paragraph->bundle();
+
+  if (!isset($paragraphs_map[$bundle])) {
+    return;
+  }
+
+  $map = $paragraphs_map[$bundle];
+  $field_name = $map['field'];
+  $image_field = $map['image_field'];
+  $style_name = $map['style'];
+
+  if (!$paragraph->hasField($field_name) || $paragraph->get($field_name)->isEmpty()) {
+    return;
+  }
+
+  // If it’s a multi-value field (like slides), get the first referenced entity.
+  $entity = $paragraph->get($field_name)->first()->entity ?? '';
+
+  if (!$entity) {
+    return;
+  }
+
+  // Handle special case (spotlight image style dynamic
+  // based on height (tall or short)).
+  if ($bundle === 'hs_sptlght_slder') {
+    $image_referenced = $entity->get($image_field)->entity ?? '';
+    if ($image_referenced) {
+      $style_name = $entity->get('field_hs_spotlight_height')->value === 'default'
+        ? 'spotlight_624px_'
+        : 'spotlight_short_624px_';
+      humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
+    }
+  }
+  else {
+    $image_referenced = $image_field ? ($entity->get($image_field)->entity ?? '') : $entity;
+    if ($image_referenced) {
+      humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
+    }
+  }
+}
+
+/**
+ * Attach a hero image preload tag.
+ *
+ * @param \Drupal\media\Entity\Media $image_referenced
+ *   The media image entity.
+ * @param string $style_name
+ *   The machine name of the image style.
+ * @param array $vars
+ *   The preprocess variables array (passed by reference).
+ */
+function humsci_basic_preload_full_width_image($image_referenced, $style_name, array &$vars) {
+  if (!$image_referenced->hasField('field_media_image') || $image_referenced->get('field_media_image')->isEmpty()) {
+    return;
+  }
+
+  $file = $image_referenced->get('field_media_image')->entity;
+
+  if (!$file) {
+    return;
+  }
+
+  $uri = $file->getFileUri();
+  $style = ImageStyle::load($style_name);
+
+  if ($style) {
+    $url = $style->buildUrl($uri);
+
+    $vars['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'preload',
+          'as' => 'image',
+          'fetchpriority' => 'high',
+          'href' => $url,
+          'type' => 'image/webp',
+        ],
+      ],
+      'preload_' . $style_name,
+    ];
   }
 }
 
@@ -117,6 +239,12 @@ function humsci_basic_preprocess_page(&$vars) {
   $config = \Drupal::config('system.site');
   $vars['site_name'] = $config->get('name');
   $vars['site_slogan'] = $config->get('slogan');
+
+  // Attach library to update user login page only.
+  if ($route == 'user.login') {
+    $default_theme = \Drupal::config('system.theme')->get('default');
+    $vars['#attached']['library'][] = "$default_theme/user-login-page";
+  }
 }
 
 /**

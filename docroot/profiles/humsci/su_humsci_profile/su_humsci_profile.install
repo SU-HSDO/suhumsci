@@ -1402,3 +1402,399 @@ function su_humsci_profile_update_9728() {
     user_role_grant_permissions($role, ['view main_dashboard dashboard']);
   }
 }
+
+/**
+ * Set permissions for private pages at bundle level.
+ */
+function su_humsci_profile_update_9729() {
+  $node_type = 'hs_private_page';
+  $content_access_updater = \Drupal::service('su_humsci_profile.content_access_updater');
+  return $content_access_updater->updateBundleSettings($node_type);
+}
+
+/**
+ * Set any additional per-node permissions for private pages.
+ */
+function su_humsci_profile_update_9730(&$sandbox) {
+  $node_type = 'hs_private_page';
+  $content_access_updater = \Drupal::service('su_humsci_profile.content_access_updater');
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['results'] = [];
+    $sandbox['updated'] = 0;
+    $ids = $node_storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', $node_type)
+      ->execute();
+    $sandbox['ids'] = array_combine($ids, $ids);
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $nids = array_slice($sandbox['ids'], 0, 100);
+
+  /** @var \Drupal\node\NodeInterface $node */
+  foreach ($node_storage->loadMultiple($nids) as $node) {
+    $results = $content_access_updater->updateNodeSettings($node);
+    if (!empty($results)) {
+      $sandbox['updated']++;
+    }
+    unset($sandbox['ids'][$node->id()]);
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+  return t('Updated content access for @count nodes.', ['@count' => $sandbox['updated']]);
+}
+
+/**
+ * Update hook to set weights for custom roles.
+ */
+function su_humsci_profile_update_9731() {
+  /** @var \Drupal\user\RoleStorageInterface $role_storage */
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  /** @var \Drupal\user\RoleInterface[] $roles */
+  $roles = $role_storage->loadMultiple();
+
+  foreach ($roles as $role) {
+    $id = $role->id();
+    $label = $role->label();
+
+    // Only operate on roles with machine name starting with 'custm'.
+    if (!str_starts_with($id, 'custm')) {
+      continue;
+    }
+
+    $weight = str_starts_with($label, 'Stanford') ? 5 : -1;
+    $role->set('weight', $weight);
+    $role->save();
+  }
+}
+
+/**
+ * Update config ignore settings for content_access_simple.
+ */
+function su_humsci_profile_update_9732() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $ignored_config_entities = $config->get('ignored_config_entities');
+
+  // Remove the entries we want to stop ignoring.
+  $ignored_config_entities = array_diff($ignored_config_entities, [
+    'core.extension:module.content_access_simple',
+    'content_access_simple.settings',
+  ]);
+
+  $config->set('ignored_config_entities', $ignored_config_entities);
+  $config->save();
+}
+
+/**
+ * Grants site managers access to the new content access simple module.
+ */
+function su_humsci_profile_update_9733() {
+  \Drupal::service('module_installer')->install(['content_access_simple']);
+  user_role_grant_permissions('site_manager', [
+    'access content access simple',
+  ]);
+}
+
+/**
+ * Uninstall unused stanford_basic and su_humsci_admin themes.
+ */
+function su_humsci_profile_update_9734() {
+  $installed_themes = \Drupal::service('extension.list.theme')
+    ->getAllInstalledInfo();
+  $unused_themes = [
+    'stanford_basic',
+    'su_humsci_admin',
+  ];
+
+  // Get list of themes to uninstall.
+  $themes_to_uninstall = array_intersect($unused_themes, array_keys($installed_themes));
+  \Drupal::service('theme_installer')->uninstall($themes_to_uninstall);
+}
+
+/**
+ * Update usernames for testing users to be more descriptive.
+ */
+function su_humsci_profile_update_9735() {
+  $user_storage = \Drupal::entityTypeManager()->getStorage('user');
+  $updated_count = 0;
+
+  // Update user 'Howard' and 'Lindsey' using their UUIDs.
+  $uuid_mapping = [
+    'c16e4962-d975-475d-89e6-1c0b3c9cfef0' => 'IT Contributor',
+    'b8a1e80e-1b53-42b8-b475-889aa43905f3' => 'IT Site Manager',
+  ];
+
+  foreach ($uuid_mapping as $uuid => $new_username) {
+    $users = $user_storage->loadByProperties(['uuid' => $uuid]);
+    foreach ($users as $user) {
+      if (
+        $user->getAccountName() !== $new_username &&
+        !$user_storage->loadByProperties(['name' => $new_username])
+      ) {
+        $user->setUsername($new_username);
+        $user->save();
+        $updated_count++;
+      }
+    }
+  }
+
+  return t('Updated @count user usernames for testing clarity.', ['@count' => $updated_count]);
+}
+
+/**
+ * Set dashboard permissions.
+ */
+function su_humsci_profile_update_9736() {
+  $roles = ['site_manager', 'contributor'];
+  foreach ($roles as $role) {
+    user_role_grant_permissions($role, ['view main_dashboard dashboard']);
+  }
+}
+
+/**
+ * Install metatag_simple_widget module.
+ */
+function su_humsci_profile_update_9737() {
+  // Install required module.
+  \Drupal::service('module_installer')->install(['metatag_simple_widget']);
+}
+
+/**
+ * Add field_metatags to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9738() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $metatags_field_storage = $config_storage->read('field.storage.node.field_metatags');
+  if (
+    empty($field_storage->load('node.field_metatags')) &&
+    !empty($metatags_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($metatags_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $metatags_field_config = $config_storage->read('field.field.node.hs_basic_page.field_metatags');
+  if (
+    empty($field_config_storage->load('node.hs_basic_page.field_metatags')) &&
+    !empty($metatags_field_config)
+  ) {
+    $field_config_storage->create($metatags_field_config)->save();
+  }
+
+  // Load the entity form display for hs_basic_page.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load('node.hs_basic_page.default');
+
+  if ($form_display) {
+    // Add the field_metatags component with the specified settings.
+    $form_display->setComponent('field_metatags', [
+      'type' => 'metatag_simple',
+      'weight' => 11,
+      'region' => 'content',
+      'settings' => [
+        'show_default_values' => 0,
+      ],
+      'third_party_settings' => [
+        'field_formatter_class' => [
+          'class' => '',
+        ],
+      ],
+    ])->save();
+
+    return t('Added field_metatags to hs_basic_page entity form display.');
+  }
+
+  return t('Could not load hs_basic_page entity form display.');
+}
+
+/**
+ * Add field_metatags_image to hs_basic_page entity form display.
+ */
+function su_humsci_profile_update_9739() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $metatags_image_field_storage = $config_storage->read('field.storage.node.field_metatags_image');
+  if (
+    empty($field_storage->load('node.field_metatags_image')) &&
+    !empty($metatags_image_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($metatags_image_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $metatags_image_field_config = $config_storage->read('field.field.node.hs_basic_page.field_metatags_image');
+  if (
+    empty($field_config_storage->load('node.hs_basic_page.field_metatags_image')) &&
+    !empty($metatags_image_field_config)
+  ) {
+    $field_config_storage->create($metatags_image_field_config)->save();
+  }
+
+  // Load the entity form display for hs_basic_page.
+  $form_display = \Drupal::entityTypeManager()
+    ->getStorage('entity_form_display')
+    ->load('node.hs_basic_page.default');
+
+  if ($form_display) {
+    // Add the field_metatags_image component with the specified settings.
+    $form_display->setComponent('field_metatags_image', [
+      'type' => 'media_library_widget',
+      'weight' => 13,
+      'region' => 'content',
+      'settings' => [
+        'media_types' => [],
+      ],
+      'third_party_settings' => [],
+    ])->save();
+    return t('Added field_metatags_image to hs_basic_page entity form display.');
+  }
+  return t('Could not load hs_basic_page entity form display.');
+}
+
+/**
+ * Update node page display image styles.
+ */
+function su_humsci_profile_update_9740() {
+  $to_update = [
+    'hs_event' => [
+      'field' => 'field_hs_event_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_news' => [
+      'field' => 'field_hs_news_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_event_series' => [
+      'field' => 'field_hs_event_series_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_publications' => [
+      'field' => 'field_hs_publication_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_person' => [
+      'field' => 'field_hs_person_square_img',
+      'default_image_style' => 'hs_medium_square_360x360',
+      'new_image_style' => 'medium_square',
+    ],
+  ];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  foreach ($to_update as $bundle => $data) {
+    /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $display */
+    $display = $entity_type_manager->getStorage('entity_view_display')
+      ->load("node.{$bundle}.default");
+
+    if (!$display) {
+      continue;
+    }
+
+    $view_changed = FALSE;
+    $sections = $display->getSections();
+
+    foreach ($sections as $section) {
+      $components = $section->getComponents();
+
+      foreach ($components as $component) {
+        if ($component->getPluginId() === "field_block:node:{$bundle}:{$data['field']}") {
+          $configuration = $component->get('configuration');
+          // Skip cases where the default image styles have been overridden.
+          if ($configuration['formatter']['settings']['image_style'] !== $data['default_image_style']) {
+            continue;
+          }
+          // Set the updated image style settings.
+          $configuration['formatter']['type'] = 'media_responsive_image_formatter';
+          $configuration['formatter']['settings']['image_style'] = $data['new_image_style'];
+          $component->setConfiguration($configuration);
+          $view_changed = TRUE;
+        }
+      }
+    }
+
+    // Save the view only if changes were made.
+    if ($view_changed) {
+      $display->save();
+    }
+  }
+}
+
+/**
+ * Update Site Manager user role grant permissions.
+ */
+function su_humsci_profile_update_9741() {
+  user_role_grant_permissions('site_manager', [
+    'assign preparer role',
+    'assign reviewer role',
+  ]);
+}
+
+/**
+ * Add field_auto_unpublish field to bottom of the event form display.
+ */
+function su_humsci_profile_update_9742() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $auto_unpublish_field_storage = $config_storage->read('field.storage.node.field_auto_unpublish');
+  if (
+    empty($field_storage->load('node.field_auto_unpublish')) &&
+    !empty($auto_unpublish_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($auto_unpublish_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $auto_unpublish_field_config = $config_storage->read('field.field.node.hs_event.field_auto_unpublish');
+  if (
+    empty($field_config_storage->load('node.hs_event.field_auto_unpublish')) &&
+    !empty($auto_unpublish_field_config)
+  ) {
+    $field_config_storage->create($auto_unpublish_field_config)->save();
+  }
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Add the field to the form display for the event content type.
+  $form_display = $entity_type_manager->getStorage('entity_form_display')
+    ->load('node.hs_event.default');
+  if ($form_display) {
+    $weight = max(array_column($form_display->getComponents(), 'weight') ?: [0]);
+    $form_display->setComponent('field_auto_unpublish', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+      'weight' => $weight + 1,
+    ])->save();
+  }
+}

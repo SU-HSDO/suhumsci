@@ -15,6 +15,7 @@ Note the following properties of this project:
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
+
 ### Prerequisites
 
 Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
@@ -32,6 +33,7 @@ You can either run the site on Lando or bare metal.
 4. If you would like a clean installation run `blt drupal:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
 5. A full sync from a site should be accomplished with `blt drupal:sync --site=[sitename]`
 
+
 ## Builds
 
 CSS assets are built using the Grunt task runner, but are run using npm scripts as shortcuts.
@@ -39,6 +41,7 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 - `npm run theme-build` - Compile Sass for production for all themes based on `humsci_basic`.
 - `npm run theme-watch` - Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
 - `npm run theme-visreg` - Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
+
 
 ## Testing
 
@@ -61,18 +64,29 @@ be the wrapper around the codeception commands.
 ### SASS
 - `npm test` - Run tests for all Sass in the project (including humsci_basic).
 
-## Other documentation
-* [Code Deployment Process](docs/CodeDeploy.md)
-* [Configuration Management Information](docs/Config.md)
-* [Launch Processes](docs/Launch.md)
-* [SSL Certificate Information](docs/LetsEncrypt.md)
-* [New Site](docs/NewSite.md)
+
+## Architecture Decision Records (ADRs)
+
+Architecture Decision Records (ADRs) are used to document important architectural decisions made in this project. The ADR process and format are explained in [0000-record-architecture-decisions.md](docs/architecture/decisions/0000-record-architecture-decisions.md). All new significant architectural decisions should be documented as a new ADR in the `docs/architecture/decisions/` directory.
+
+## Documentation
+
+- [Patching and patch management instructions](patches/README.md)
+- [Codeception Tests](docs/Codeception.md)
+- [Code Deployment Process](docs/CodeDeploy.md)
+- [Configuration Management](docs/Config.md)
+- [Config & Content Update](docs/ConfigContentUpdate.md)
+- [Humsci Basic PR Checklist](docs/HumsciBasicPRChecklist.md)
+- [Launch Process](docs/Launch.md)
+- [LetsEncrypt Certificate on Acquia Cloud](docs/LetsEncrypt.md)
+- [Provisioning a New Site](docs/NewSite.md)
+- [Patching Documentation](docs/patching.md)
+
+> **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
+
+> **Note:** In addition to the documents listed here, there are various documentation and README files throughout the project (in subdirectories) that may be specific to certain features, modules, or workflows. Be sure to check those locations for more detailed or context-specific information.
 
 ## Resources
 
 * [GitHub](https://github.com/SU-HSDO/suhumsci)
 * [Acquia Cloud subscription](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a)
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/fa85d434c3928bbf8d80/maintainability)](https://codeclimate.com/github/SU-HSDO/suhumsci/maintainability)
-[![CircleCI](https://circleci.com/gh/SU-HSDO/suhumsci/tree/develop.svg?style=svg)](https://circleci.com/gh/SU-HSDO/suhumsci/tree/develop)
-

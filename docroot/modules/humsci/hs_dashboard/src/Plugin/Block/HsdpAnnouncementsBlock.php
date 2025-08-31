@@ -7,6 +7,7 @@ namespace Drupal\hs_dashboard\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\hs_dashboard\AnnouncementsManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -71,14 +72,6 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge() {
-    // 5 minutes in seconds
-    return 300;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function build(): array {
     $csv_data = $this->announcementsManager->getCsvAnnouncements();
 
@@ -90,6 +83,21 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
       $build['content']['#theme'] = 'table';
       $build['content']['#header'] = $this->getTableHeader();
       $build['content']['#rows'] = $this->getTableRows($csv_data);
+      $build['more_link'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => [
+          'class' => ['more-link'],
+        ],
+        'link' => [
+          '#type' => 'link',
+          '#title' => $this->t('View all HSDP announcements'),
+          '#url' => Url::fromUri('https://hsweb.slite.page/p/jQxDNSkcYs6Zps/Newest-Updates-to-the-User-Guide'),
+          '#attributes' => [
+            'class' => ['button', 'button--primary'],
+          ],
+        ],
+      ];
     }
 
     return $build;

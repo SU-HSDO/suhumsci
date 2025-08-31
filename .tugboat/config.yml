@@ -1,8 +1,6 @@
 services:
-
   # What to call the service hosting the site.
   suhumsci:
-
     # Use PHP 8 with Apache
     image: pookmish/drupal8ci:tugboat
 
@@ -17,13 +15,12 @@ services:
     aliases:
       - hs-colorful
       - hs-traditional
-      # - english
+      - english
       - history
       - west
 
     # A set of commands to run while building this service
     commands:
-
       # Commands that set up the basic preview infrastructure
       init:
         # Add nodeJS to build theme assets after composer install
@@ -57,12 +54,11 @@ services:
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
         # Sync to english, history, and west database & files, does not create a user.
-        # - blt drupal:sync:files --site=english
+        - blt drupal:sync:files --site=english
 
         - blt drupal:sync:files --site=history
 
         - blt drupal:sync:files --site=west
-
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
@@ -80,9 +76,9 @@ services:
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
 
-        # - drush @english.local cr
-        # - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        # - blt drupal:update --site=english
+        - drush @english.local cr
+        - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=english
 
         - drush @history.local cr
         - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
@@ -107,6 +103,7 @@ services:
         - /components/hero-images-main-region/banner-images-partial-overlay-and-text
         - /components/hero-images-main-region/banner-images-text-box
         - /components/hero-images-full-width-region-and-main-region/tall-spotlights-classic
+        - /components/text-area-typography
       hs-traditional:
         - /
         - /mixed-pages/mixed-page-raised-cards
@@ -118,10 +115,10 @@ services:
         - /components/hero-images-main-region/banner-images-partial-overlay-and-text
         - /components/hero-images-main-region/banner-images-text-box
         - /components/hero-images-full-width-region-and-main-region/tall-spotlights-classic
+        - /components/text-area-typography
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
   mysql:
-
     # Use the latest available 5.x version of MySQL
     image: tugboatqa/mysql:5
     commands:
@@ -130,7 +127,7 @@ services:
         # Delete and recreate the database for each site.
         - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
         - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"
-        # - mysql -e "DROP DATABASE IF EXISTS english; CREATE DATABASE english;"
+        - mysql -e "DROP DATABASE IF EXISTS english; CREATE DATABASE english;"
         - mysql -e "DROP DATABASE IF EXISTS history; CREATE DATABASE history;"
         - mysql -e "DROP DATABASE IF EXISTS west; CREATE DATABASE west;"
 
@@ -140,14 +137,14 @@ services:
         # Download each database dump.
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_colorful-humscigrydb423120-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_colorful.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-hs_traditional-humscigrydb423132-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/hs_traditional.sql.gz
-        # - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-english-humscigrydb423084-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/english.sql.gz
+        - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-english-humscigrydb423084-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/english.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-history-humscigrydb423116-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/history.sql.gz
         - scp humscigryphon.prod@web-42199.prod.hosting.acquia.com:/mnt/gfs/humscigryphon.prod/backups/prod-west-humscigrydb423301-`date -d '8 hours ago' +%Y-%m-%d`.sql.gz /tmp/west.sql.gz
 
         # Import each database dump into the associated table.
         - zcat /tmp/hs_colorful.sql.gz | mysql hs_colorful
         - zcat /tmp/hs_traditional.sql.gz | mysql hs_traditional
-        # - zcat /tmp/english.sql.gz | mysql english
+        - zcat /tmp/english.sql.gz | mysql english
         - zcat /tmp/history.sql.gz | mysql history
         - zcat /tmp/west.sql.gz | mysql west
 

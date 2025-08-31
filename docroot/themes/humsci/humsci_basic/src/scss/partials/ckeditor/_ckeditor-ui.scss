@@ -1,0 +1,101 @@
+@use '../settings/variables.zindex' as *;
+@use '../tools/functions.general' as *;
+
+// Prevent humsci_basic link styles from applying to editor inputs
+// Most properties are overridden by default, but box-shadow isn't.
+li.cke_panel_listItem a:hover,
+li.cke_panel_listItem a:focus {
+  box-shadow: initial;
+}
+
+body.cke_editable {
+  margin: hb-calculate-rems(8px);
+}
+
+// Makes sure that all images in the WYSIWYG editor are a level above the other
+// content and can be selected to edit.
+/* stylelint-disable */
+drupal-media {
+  position: relative;
+  z-index: $hb-z-index-figure;
+
+  figure,
+  article {
+    display: block;
+    width: 100%;
+  }
+
+  &[data-align=right] {
+    float: none;
+  }
+
+  .media-library-item__edit {
+    right: auto;
+  }
+
+  .hb-media-image.align,
+  .caption.align {
+    &-right,
+    &-center {
+      margin: initial;
+    }
+
+    &-right {
+      width: auto;
+
+      @include hb-themes(('colorful', 'airy')) {
+        padding: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
+      }
+
+      @include hb-traditional {
+        padding: 0 0 hb-spacing-width('xs') hb-spacing-width('xs');
+      }
+    }
+
+    &-left {
+      width: auto;
+      margin: initial;
+
+      @include hb-themes(('colorful', 'airy')) {
+        padding: 0 hb-spacing-width('sm') hb-spacing-width('sm') 0;
+      }
+
+      @include hb-traditional {
+        padding: 0 hb-spacing-width('xs') hb-spacing-width('xs') 0;
+      }
+    }
+  }
+}
+
+/* stylelint-enable */
+
+// The media edit button should always lay on top of the drupal-media content
+.media-library-item__edit {
+  z-index: $hb-z-index-ckedit-button;
+}
+
+// CK5 bugfix. Conflict between paragraphs and tabledrag styles
+.js .field--widget-paragraphs .tabledrag-handle .handle {
+  width: calc(100% + 2px);
+}
+
+// CK5 bugfix. When too many buttons are included in the wysiwyg
+// it causes overflow into the next column
+.ck-editor .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+  flex-wrap: wrap;
+}
+
+/* Match styles of external link in the WYSIWYG style's dropdown preview with the original design */
+.ck-style-grid__button__preview a.hs-external-link {
+  @include hb-link--inline;
+  @include hb-external-link-icon;
+
+  /* Resize the icon, using px instead of rem, because when using rem the icon looks way bigger */
+  &::after {
+    width: 18px;
+    height: 11px;
+    margin-bottom: 0;
+    background-size: 11px;
+    padding-left: 0;
+  }
+}

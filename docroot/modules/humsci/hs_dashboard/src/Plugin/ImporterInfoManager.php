@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin;
 
-use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Class to handle Import information for block tables.
@@ -15,6 +15,13 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class ImporterInfoManager extends DefaultPluginManager {
 
   use StringTranslationTrait;
+
+  /**
+   * The cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected CacheBackendInterface $cache;
 
   /**
    * Constructs a new ImporterInfoManager object.
@@ -26,11 +33,14 @@ class ImporterInfoManager extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_default
+   *   The cache backend to use.
    */
   public function __construct(
     \Traversable $namespaces,
     CacheBackendInterface $cache_backend,
     ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache_default,
   ) {
     parent::__construct(
       'Plugin/ImporterInfo',
@@ -41,6 +51,7 @@ class ImporterInfoManager extends DefaultPluginManager {
     );
     $this->alterInfo('hs_dashboard_importer_info_info');
     $this->setCacheBackend($cache_backend, 'hs_dashboard_importer_info_plugins');
+    $this->cache = $cache_default;
   }
 
   /**
@@ -64,6 +75,10 @@ class ImporterInfoManager extends DefaultPluginManager {
    * Generates tables for all Importers.
    */
   public function generateTables(): array {
+    if ($cache = $this->cache->get('hs_dashboard_importer_info_tables')) {
+      return $cache->data;
+    }
+
     $tables = [];
 
     /** @var \Drupal\hs_dashboard\Plugin\ImporterInfoInterface $importer */
@@ -117,6 +132,7 @@ class ImporterInfoManager extends DefaultPluginManager {
 
     }
 
+    $this->cache->set('hs_dashboard_importer_info_tables', $tables, time() + 900);
     return $tables;
 
   }

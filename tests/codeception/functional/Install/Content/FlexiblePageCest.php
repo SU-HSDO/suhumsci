@@ -437,15 +437,17 @@ class FlexiblePageCest {
     $I->fillField('.js-layout-builder-filter', 'back to top');
     $I->waitForText('Back To Top Block');
     $I->click('Back To Top Block');
-    $I->waitForText('Configure block');
+    $I->waitForText('Configure block', 30);
     $I->click('Add block');
     $I->waitForElementNotVisible('.ui-dialog-position-side');
-    $I->executeJS('window.scrollTo(0,0);');
+    $I->scrollTo('#header');
+    // Use a fixed wait to ensure the dialog has time to close.
     $I->wait(1);
-    $I->click('Save layout');
+    $I->click('#edit-submit');
     $I->waitForText('Back To Top');
     $I->executeJS('window.scrollTo(0,document.body.scrollHeight);');
     $I->waitForElement('.hs-back-to-top');
+    $I->seeElement('.hs-back-to-top');
   }
 
   /**

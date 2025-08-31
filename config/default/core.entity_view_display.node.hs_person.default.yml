@@ -33,6 +33,7 @@ dependencies:
     - field.field.node.hs_person.field_hs_person_student_dissert
     - field.field.node.hs_person.field_hs_person_student_grad
     - field.field.node.hs_person.field_hs_person_student_type
+    - field.field.node.hs_person.field_hs_person_sunet_id
     - field.field.node.hs_person.field_hs_person_telephone
     - field.field.node.hs_person.field_hs_person_title
     - node.type.hs_person
@@ -371,13 +372,16 @@ third_party_settings:
                 entity: layout_builder.entity
                 view_mode: view_mode
               formatter:
-                type: media_image_formatter
+                type: media_responsive_image_formatter
                 label: hidden
                 settings:
                   view_mode: caption_credit
                   link: false
-                  image_style: hs_medium_square_360x360
+                  image_style: medium_square
+                  remove_alt: 0
                 third_party_settings:
+                  empty_fields:
+                    handler: ''
                   field_formatter_class:
                     class: ''
                   hs_field_helpers:
@@ -695,6 +699,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 103
+    region: main_above
+  field_hs_person_sunet_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 105
     region: main_above
   links:
     settings: {  }

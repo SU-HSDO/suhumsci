@@ -61,6 +61,7 @@
         "drupal/block_content_permissions": "^1.10",
         "drupal/cancel_button": "^1.1",
         "drupal/chosen": "^4.0",
+        "drupal/ckeditor5_plugin_pack": "^1.4",
         "drupal/color": "^1.0",
         "drupal/color_field": "^3.0",
         "drupal/colorbox": "^2.0",
@@ -75,9 +76,9 @@
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
         "drupal/content_access_simple": "^1.0@beta",
-        "drupal/core": "~10.3.0",
-        "drupal/core-composer-scaffold": "~10.3.0",
-        "drupal/core-recommended": "~10.3.0",
+        "drupal/core": "~10.4.0",
+        "drupal/core-composer-scaffold": "~10.4.0",
+        "drupal/core-recommended": "~10.4.0",
         "drupal/cshs": "^4.0",
         "drupal/dashboard": "^2.0",
         "drupal/default_content": "^2.0",
@@ -134,6 +135,7 @@
         "drupal/menu_link_weight": "^2.0",
         "drupal/menu_position": "^1.0@beta",
         "drupal/metatag": "^2.0",
+        "drupal/metatag_simple_widget": "^1.0",
         "drupal/migrate_source_csv": "^3.4",
         "drupal/mysql56": "^1.1",
         "drupal/nobots": "^1.0",
@@ -148,7 +150,7 @@
         "drupal/rabbit_hole": "^1.0-beta4",
         "drupal/readonly_field_widget": "^1.4",
         "drupal/real_aes": "^2.3",
-        "drupal/redirect": "^1.6",
+        "drupal/redirect": "1.11",
         "drupal/role_delegation": "^1.1",
         "drupal/role_watchdog": "^2.1",
         "drupal/search_api": "^1.18",
@@ -165,7 +167,7 @@
         "drupal/term_condition": "^2.0",
         "drupal/token_or": "^2.2",
         "drupal/transliterate_filenames": "^2.0",
-        "drupal/ui_patterns": "^1.2",
+        "drupal/ui_patterns": "^1.10",
         "drupal/ui_patterns_field_variants": "1.x-dev",
         "drupal/video_embed_field": "^2.4",
         "drupal/view_unpublished": "^1.0",
@@ -189,14 +191,13 @@
         "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
         "su-sws/ckeditor5_plugins": "^1.0",
-        "su-sws/stanford_basic": "dev-8.x-2.x#9d6391431de1aefa93c4dfe671e309cef1496d81",
         "su-sws/stanford_fields": "^8.1",
         "su-sws/stanford_media": "^11.0",
         "su-sws/stanford_migrate": "^8.4",
         "su-sws/stanford_samlauth": "^1.0"
     },
     "require-dev": {
-        "drupal/core-dev": "~10.3.0",
+        "drupal/core-dev": "~10.4.0",
         "drupal/upgrade_status": "^4.0",
         "phpspec/prophecy-phpunit": "^2.0",
         "su-sws/blt-sws": "dev-main",
@@ -227,6 +228,7 @@
     },
     "extra": {
         "enable-patching": true,
+        "composer-exit-on-patch-failure": true,
         "patches": {
             "drupal/block_class": {
                 "Click JavaScript to close details causes modals to scroll unnecessarily https://www.drupal.org/project/block_class/issues/3497768": "patches/contrib/block_class/60.patch"
@@ -249,9 +251,15 @@
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"
             },
+            "drupal/field_formatter_class": {
+                "https://www.drupal.org/project/field_formatter_class/issues/3473891": "patches/contrib/field_formatter_class-3473891-mr-10.patch"
+            },
             "drupal/field_group": {
                 "https://www.drupal.org/project/field_group/issues/2969051": "https://www.drupal.org/files/issues/2024-09-13/2969051-166.patch",
                 "https://www.drupal.org/project/field_group/issues/2787179": "https://www.drupal.org/files/issues/2024-08-05/2787179-highlight-html5-validation-101.patch"
+            },
+            "drupal/gin": {
+                "Override entity_subqueue breadcrumb handling": "patches/contrib/gin_entity_subqueue_breadcrumbs.patch"
             },
             "drupal/hook_event_dispatcher": {
                 "https://www.drupal.org/project/hook_event_dispatcher/issues/3354751": "https://git.drupalcode.org/project/hook_event_dispatcher/-/merge_requests/133.patch"
@@ -289,6 +297,9 @@
                 "https://www.drupal.org/project/redirect/issues/3057250": "https://www.drupal.org/files/issues/2024-08-11/redirect--2024-08-11--3057250-79.patch",
                 "https://www.drupal.org/project/redirect/issues/3018897": "https://www.drupal.org/files/issues/2024-08-12/redirect-3018897-28.patch"
             },
+            "drupal/samlauth": {
+                "https://www.drupal.org/project/samlauth/issues/3530840: Set destination parameter as part of login": "patches/contrib/samlauth-3530840-try.patch"
+            },
             "drupal/shield": {
                 "https://www.drupal.org/project/shield/issues/3479117": "patches/shield-undefined_array_key_explode-3479117.patch"
             },
@@ -304,9 +315,6 @@
             },
             "drupal/views_taxonomy_term_name_depth": {
                 "https://www.drupal.org/project/views_taxonomy_term_name_depth/issues/2877249": "https://git.drupalcode.org/project/views_taxonomy_term_name_depth/-/merge_requests/2.diff"
-            },
-            "su-sws/stanford_basic": {
-                "D9/10 Update": "patches/contrib/stanford_basic.patch"
             },
             "su-sws/stanford_fields": {
                 "Make Localist API Public": "patches/contrib/stanford_fields-localist-api-public.patch"

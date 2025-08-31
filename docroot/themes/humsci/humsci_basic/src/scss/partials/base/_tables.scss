@@ -1,0 +1,49 @@
+.hb-table-wrap {
+  margin: auto;
+  overflow-x: auto;
+  box-sizing: border-box;
+
+  &:not(:last-child) {
+    margin-bottom: hb-spacing-width();
+  }
+
+  details {
+    display: none;
+  }
+
+  .hb-dark-pattern &,
+  .views-element-container .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    background-color: var(--palette--white);
+
+    --link-base-current-color: var(--palette--tertiary);
+    --link-base-hover-current-color: var(--palette--tertiary-darken-20);
+
+    .views-label,
+    .field-content,
+    td {
+      color: var(--palette--black);
+    }
+  }
+}
+
+table {
+  @include table;
+
+  th,
+  td {
+    @include table-data;
+  }
+
+  thead th {
+    @include table-heading;
+  }
+
+  thead tr {
+    @include table-head-row;
+  }
+
+  tr:nth-child(even) {
+    @include table-row;
+  }
+}

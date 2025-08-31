@@ -1,3 +1,9 @@
+{% if text_above %}
+  <div class="social-media-link__text-above text-long">
+    {{ text_above }}
+  </div>
+{% endif %}
+
 {% if links %}
   <ul{{ attributes.addClass('social-media-link__list') }}>
     {% for link in links %}
@@ -9,4 +15,10 @@
       </li>
     {% endfor %}
   </ul>
+{% endif %}
+
+{% if text_below %}
+  <div class="social-media-link__text-below text-long">
+    {{ text_below }}
+  </div>
 {% endif %}

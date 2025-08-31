@@ -1,63 +1,88 @@
+
 # Patches
 
-All modifications to contributed projects and most modifications to Drupal core must be performed via patches.
+All modifications to contributed projects and most modifications to Drupal core must be performed via patches. To ensure patch stability and reproducibility, all patches must be downloaded and stored locally in the repository. Only rarely should they be referenced by URL in `composer.json`.
 
-## Applying patches
+## Patch Storage and Naming Conventions
 
-Patches can be applied by referencing them in `composer.json` in the format below. BLT then uses [cweagans/composer-patches](https://github.com/cweagans/composer-patches) to apply the patches on any subsequent site builds.
+- Store all patches in either `patches/core/` (for Drupal core) or `patches/contrib/` (for contributed modules/themes).
+- **Naming conventions:**
 
-Patch information should be specified in the JSON array in accordance with the following schema:
+  - For Drupal patches from merge requests: `project-[issue-number]-mr-[merge-request-number]-[YYYYMMDD].patch`
+    - Example: `core-3202896-mr-9357-20250410.patch`
+  - For Drupal patches from issues: `project-[issue-number]-[comment-number]-[YYYYMMDD].patch`
+    - Example: `project-1234567-12-20250724.patch`
+  - For manually created patches not tied to an issue: `project-[short-description]-[YYYYMMDD].patch`
+    - Example: `core-fix-cache-bug-20250724.patch`
+  - For non-Drupal patches: `project-[short-description]-[YYYYMMDD].patch` (same as manually created patches)
+    - Example: `somevendor-fix-compatibility-20250724.patch`
 
-    "extra": {
-      "patches": {
-        "drupal/core": {
-          "Ignore front end vendor folders to improve directory search performance": "https://www.drupal.org/files/issues/ignore_front_end_vendor-2329453-116.patch",
-          "My custom local patch": "./patches/drupal/some_patch-1234-1.patch"
-        }
-      }
-    },
+*If a patch does not fit any of the above scenarios, use your best judgment for naming and documentation.*
 
-Note that when a package is patched, it's advisable to pin it to a specific version to avoid downloading an updated version that could introduce a patch conflict.
+## Downloading and Adding a Patch
 
-After modifying `composer.json`, run `composer update VENDOR_NAME/PACKAGE_NAME`, replacing `VENDOR_NAME/PACKAGE_NAME` with the name of the patched dependency. E.g.,
+1. **Find the patch or diff URL** (from a drupal.org issue or GitLab merge request):
 
-    composer update drupal/core
+   - Start at the relevant drupal.org issue page.
+   - If there is a merge request, click through to the [Drupal GitLab](https://git.drupalcode.org/) merge request page.
+     - On the merge request page, click the **Code** button to open the dropdown menu.
+     - You will see options to download a `.patch` or `.diff` file. **Do not click to download**. Instead, right-click the desired option and copy the link address. This URL can be used with `wget`.
+     - **Always use the `.diff` file** for Composer patching. The `.patch` file includes all commits and metadata, which can cause issues or unexpected results. The `.diff` file contains only the final changes, making it more reliable and easier to apply.
+   - If there is no merge request, look for a patch file attached directly to the drupal.org issue. Download the patch file directly.
+2. **Download the patch** to the appropriate directory:
 
-This will apply the patch and update `composer.lock`. Commit the modified `composer.json` and `composer.lock` files.
+   ```sh
+   cd patches/core/   # or patches/contrib/
+   wget <patch-or-diff-URL>
+   mv <downloaded-file> <final-patch-name>.patch
+   ```
+   Example:
+   ```sh
+   cd patches/core/
+   wget https://git.drupalcode.org/project/drupal/-/merge_requests/9357.diff
+   mv 9357.diff core-3202896-mr-9357-20250410.patch
+   ```
+3. **Update `composer.json`** to reference the local patch. Use the following format for the patch entry:
 
-_Alternatively the patch can be applied by running `composer update`. This, however, will update all of the project's dependencies, which may not be desired._
+   ```json
+   "<issue link>: <brief description>": "patches/core/core-3202896-mr-9357-20250410.patch"
+   ```
+   Example:
+   ```json
+   "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch"
+   ```
+4. **Apply the patch:**
+   - Run `composer install` to apply the patch.
+   - Run `composer update --lock` to ensure `composer.lock` is in sync with `composer.json` after patch changes.
+   - Commit the modified `composer.json`, `composer.lock`, and the new patch file.
 
-## Storing patches
+## Updating or Replacing a Patch
 
-Patches that can be contributed on Drupal.org should be contributed there. Please follow [Drupal.org's patch naming conventions](https://www.drupal.org/node/1054616#naming-conventions) when creating patches.
+When a patch needs to be updated (e.g., a new version is released or the issue is fixed differently):
 
-Patches that cannot be contributed publicly are extremely rare. In the unlikely event that such a change must be committed, all project-specific patches should reside in this directory. This ensures one consistent place for patches and avoids accidental patch deletion.
+1. Download the new patch as above, using the current date in the filename.
+2. Update the reference in `composer.json` to point to the new patch file.
+3. Remove the old patch file from the repository.
+4. Run `composer install` and then `composer update --lock`, then commit the changes.
 
-Patches should be stored in sub-directories based on project name being patched.
+## Removing a Patch
 
-Examples:
+When a patch is no longer needed (e.g., the fix is included upstream):
 
-- /patches/drupal/some_patch-1234-1.patch
-- /patches/ctools/another_patch_name-9876-12.patch
+1. Remove the patch entry from `composer.json`.
+2. Delete the patch file from the repository.
+3. Run `composer install` and then `composer update --lock`, then commit the changes.
+
+## Manually Created Patches
+
+If you create a patch manually (not from an existing issue or merge request):
+
+- If possible, open an issue in the relevant Drupal.org issue queue and follow the standard process above.
+- If not, document the reason for the patch in the `composer.json` entry and keep the description clear and concise.
+
+Refer to the [Patch Storage and Naming Conventions](#patch-storage-and-naming-conventions) section above for the correct naming format.
 
 ## Gotchas
 
-Note that Composer can only patch files that are distributed with Composer packages. This means that certain files (such as the Drupal core `.htaccess` and `robots.txt`) cannot be easily patched via Composer. These files are not included in the Drupal core Composer package (in fact Drupal Scaffold individually creates these files on updates).
-
-In order to modify `.htaccess` and other unpatchable root files, simply modify the file in place, commit it to Git, and make the following change in `composer.json`:
-
-    "extra": {
-      "drupal-scaffold": {
-        "excludes": [
-          ".htaccess"
-        ]
-      }
-    },
-
-The downside here is that you will need to apply drupal core udpates to these excluded files on your own.
-
-Alternatively, you could leverage the `post-drupal-scaffold-cmd` script hook to apply patches after Drupal Scaffold is finished. See [this cweagens/composer-patches issue](https://github.com/acquia/blt/issues/1135#issuecomment-285404408) for more details.
-
-
-
-Also note that there’s currently a quirk in the Drupal packaging system that makes it difficult to patch module and theme `.info.yml` files. If you have trouble applying a patch that modifies an info file, see this issue for a description and workaround: https://www.drupal.org/node/2858245
+- Composer can only patch files that are distributed with Composer packages. Some files (like Drupal core `.htaccess` and `robots.txt`) cannot be patched this way.
+- There is a known quirk in the Drupal packaging system that makes it difficult to patch module and theme `.info.yml` files. If you have trouble applying a patch that modifies an info file, see this issue for a description and workaround: https://www.drupal.org/node/2858245

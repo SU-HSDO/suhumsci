@@ -184,26 +184,6 @@
         &::after {
           height: hb-calculate-rems(22.5px);
         }
-
-        // Override link color and link icon for the Firefinch color pairing.
-        .ht-pairing-firefinch .hb-well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well &,
-        .ht-pairing-firefinch .hs-paragraph-style--well-full-width & {
-          color: var(--palette--tertiary);
-
-          &::after {
-            background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary')));
-          }
-
-          &:hover,
-          &:focus {
-            color: var(--palette--tertiary-darken-20);
-
-            &::after {
-              background-image: svg(hc-get-icons('arrow-right-long', map-get(map-get($ht-traditional-pairings, 'firefinch'), 'tertiary-darken-20')));
-            }
-          }
-        }
       }
 
       [class*='-pairing-'] .hb-dark-pattern &,
@@ -212,18 +192,7 @@
         color: var(--palette--white);
 
         &::after {
-          @include hb-icon-link-arrow('white');
-          background-size: 85%;
-        }
-
-        &:hover,
-        &:focus {
-          color: var(--palette--white);
-
-          &::after {
-            @include hb-icon-link-arrow('white');
-            background-size: 85%;
-          }
+          background-color: var(--palette--white);
         }
       }
 
@@ -238,13 +207,11 @@
         }
 
         &::after {
-          @include hb-icon-link-arrow('secondary');
-          background-size: 85%;
+          background-color: var(--palette--secondary);
 
           @include hb-themes(('colorful', 'airy')) {
             .hc-pairing-ocean & {
-              @include hb-icon-link-arrow('secondary-darken-12');
-              background-size: 85%;
+              background-color: var(--palette--secondary-darken-12);
             }
           }
         }
@@ -257,18 +224,13 @@
             color: var(--palette--primary-dark);
           }
 
-          .ht-pairing-warbler & {
-            color: var(--palette--secondary-darken-12);
-          }
-
           &::after {
-            @include hb-icon-link-arrow('secondary-darken-12');
-            background-size: 85%;
+            background-color: var(--palette--secondary-darken-12);
+            mask-size: 85%;
 
             @include hb-colorful {
               .hc-pairing-ocean & {
-                @include hb-icon-link-arrow('primary-dark');
-                background-size: 85%;
+                background-color: var(--palette--primary-dark);
               }
             }
           }
@@ -292,8 +254,9 @@
     width: 100%;
     margin: 0;
     font-size: hb-calculate-rems(20px);
-    line-height: hb-calculate-rems(28.4px);
+    line-height: var(--condensed-line-height);
     color: var(--palette--black);
+    text-wrap: balance;
 
     .hb-dark-pattern .hs-paragraph-style--well &,
     .hb-dark-pattern .hs-paragraph-style--well-full-width & {

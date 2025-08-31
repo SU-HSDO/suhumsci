@@ -31,6 +31,11 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   float: none;
 }
 
+/* Hide shortcut toggle control (star icon) on all admin pages */
+.shortcut-action {
+  display: none !important;
+}
+
 /* Match styles of shortcuts toolbar with manage toolbar */
 #toolbar-item-shortcuts-tray li>ul {
   margin: 0;
@@ -38,12 +43,12 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.3333);
 }
 
-#toolbar-item-shortcuts-tray li > ul ul {
+#toolbar-item-shortcuts-tray li>ul ul {
   right: unset;
   left: 100%;
 }
 
-#toolbar-item-shortcuts-tray li > ul li:has(.menu) > a::after {
+#toolbar-item-shortcuts-tray li>ul li:has(.menu)>a::after {
   content: '';
   width: 16px;
   height: 16px;
@@ -58,7 +63,7 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   right: var(--gin-spacing-s);
 }
 
-#toolbar-item-shortcuts-tray li > ul li:has(.menu):hover > a::after {
+#toolbar-item-shortcuts-tray li>ul li:has(.menu):hover>a::after {
   background-color: var(--gin-color-primary-hover);
 }
 
@@ -159,12 +164,12 @@ html:not(.gin--dark-mode) .user-logged-in[data-gin-accent="custom"] {
   margin: 8px 0 0;
 }
 
-body.gin--edit-form .views-exposed-form .select-preact div > div {
-    min-width: 0 !important;
-    max-width: 240px;
-  }
+body.gin--edit-form .views-exposed-form .select-preact div>div {
+  min-width: 0 !important;
+  max-width: 240px;
+}
 
-body.gin--edit-form .views-exposed-form .select-preact div > div > div:first-of-type {
+body.gin--edit-form .views-exposed-form .select-preact div>div>div:first-of-type {
   font-size: var(--gin-font-size-s) !important;
   font-weight: var(--gin-font-weight-semibold) !important;
   line-height: var(--line-height-form-label) !important;
@@ -190,7 +195,7 @@ body.gin--edit-form .views-exposed-form .select-preact button:hover {
   box-shadow: inset 0 0 0 1px var(--gin-color-text) !important;
 }
 
-body.gin--edit-form .views-exposed-form .select-preact button span > span:first-of-type {
+body.gin--edit-form .views-exposed-form .select-preact button span>span:first-of-type {
   max-width: fit-content !important;
   padding: 0 !important;
 }
@@ -218,10 +223,39 @@ body.gin--edit-form .views-exposed-form .select-preact button svg {
   z-index: 1000 !important;
 }
 
-.gin--edit-form .paragraphs-tabs-wrapper .field-multiple-table > tbody {
+.gin--edit-form .paragraphs-tabs-wrapper .field-multiple-table>tbody {
   display: table-row-group;
 }
 
 .gin--edit-form .field--widget-paragraphs .field-multiple-table {
   display: table;
+}
+
+.user-form__suid-note {
+  margin-block-end: var(--space-l);
+}
+
+/* Role description styles */
+.user-form [id*="form-item--role"] .form-item__label,
+.user-form [class*="form-item--role"] .form-item__description {
+  display: inline-block;
+}
+
+.user-form [class*="form-item--role"] .form-item__description::before {
+  content: "—";
+}
+
+/* Imported nodes forms with disabled fields */
+main:has(form[data-has-imported-fields]) .messages-list .messages--warning {
+  background: var(--gin-color-disabled-bg);
+  border: 1px solid var(--gin-color-disabled-border);
+}
+
+main:has(form[data-has-imported-fields]) .messages-list .messages--warning .button--dismiss {
+  display: none;
+}
+
+form[data-has-imported-fields] .ck.ck-editor__main>.ck-read-only {
+  background: var(--gin-color-disabled-bg);
+  cursor: not-allowed;
 }

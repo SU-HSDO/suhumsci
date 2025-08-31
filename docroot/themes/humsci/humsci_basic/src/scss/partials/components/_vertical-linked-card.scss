@@ -2,6 +2,22 @@
 @use '../tools/functions.general' as *;
 
 .hb-vertical-linked-card {
+  @include hb-traditional {
+    --link-base-current-color: var(--palette--black);
+    --link-base-hover-current-color: var(--palette--gray-dark);
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    --link-base-current-color: var(--palette--white);
+    --link-base-hover-current-color: var(--palette--gray-medium);
+  }
+
+  .hs-well,
+  .hs-breakout-box {
+    --link-base-current-color: var(--palette--link-base-color);
+    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+  }
+
   position: relative;
   background-color: transparent;
 
@@ -52,7 +68,7 @@
     }
   }
 
-  .field-media-image {
+  .hb-media-image {
     margin: 0;
   }
 
@@ -60,16 +76,9 @@
     // Without this the negative margins on the title cause it to lay under the
     // image. Adding position relative makes sure everything is layered correctly.
     position: relative;
-    font-size: hb-calculate-rems(18px);
     hyphens: auto;
-    line-height: 118%;
     word-break: break-word;
     transition: hb-transition(background-color);
-
-    @include grid-media-min('md') {
-      font-size: hb-calculate-rems(20px);
-      line-height: hb-calculate-rems(27.24px);
-    }
 
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px);
@@ -118,22 +127,22 @@
 
       @include hb-themes(('airy', 'colorful')) {
         width: hb-calculate-rems(27.5px);
-        background-size: 60%;
+        mask-size: 60%;
       }
 
       @include hb-traditional {
         width: hb-calculate-rems(33px);
-        background-size: auto;
+        mask-size: auto;
       }
 
-      background-position: 6px;
-      transition: hb-transition(background-position);
+      mask-position: 6px;
+      transition: hb-transition(mask-position);
     }
 
     .hb-vertical-linked-card:hover &::after,
     .hb-vertical-linked-card:focus &::after,
     .hb-vertical-linked-card.is-focused &::after {
-      background-position: 12px;
+      mask-position: 12px;
     }
   }
 
@@ -142,20 +151,10 @@
     color: var(--palette--white);
     text-decoration: none;
 
-    // Warbler color pairing override.
-    .ht-pairing-warbler & {
-      color: var(--palette--white);
-    }
-
     &:hover,
     &:focus {
       color: var(--palette--white);
       background-image: none;
-
-      // Warbler color pairing override.
-      .ht-pairing-warbler & {
-        color: var(--palette--white);
-      }
     }
   }
 
@@ -170,6 +169,12 @@
       // Update padding when card is in 4 columns.
       .field-hs-collection-items.item-per-row--4 & {
         padding: hb-calculate-rems(18px) hb-calculate-rems(18px) 0;
+      }
+
+      // For those scenarios that a breakout box or hs-well style is being used in a WYSIWYG.
+      .hs-well,
+      .hs-breakout-box {
+        color: var(--palette--black);
       }
     }
 
@@ -187,66 +192,9 @@
       margin-bottom: 0;
     }
 
-    a,
-    a.hs-private-link,
-    a.hs-pdf-link,
-    a.hs-file-link {
-      @include hb-traditional {
-        color: var(--palette--black);
-
-        // Warbler color pairing override.
-        .ht-pairing-warbler & {
-          color: var(--palette--black);
-        }
-      }
-
+    a {
       @include hb-themes(('colorful', 'airy')) {
-        color: var(--palette--white);
         background-image: none;
-      }
-
-      &:hover,
-      &:focus {
-        background-image: none;
-
-        @include hb-traditional {
-          color: var(--palette--gray-dark);
-
-          // Warbler color pairing override.
-          .ht-pairing-warbler & {
-            color: var(--palette--gray-dark);
-          }
-        }
-
-        @include hb-themes(('colorful', 'airy')) {
-          color: var(--palette--gray-medium);
-        }
-      }
-    }
-
-    .field-hs-postcard-body a.hs-private-link {
-      // Need extra nesting level for specificity.
-      &::before {
-        @include hb-traditional {
-          @include hb-icon-background('lock', 'black');
-        }
-
-        @include hb-colorful {
-          @include hb-icon-background('lock', 'white');
-        }
-      }
-
-      &:hover,
-      &:focus {
-        &::before {
-          @include hb-traditional {
-            @include hb-icon-background('lock', 'gray-dark');
-          }
-
-          @include hb-colorful {
-            @include hb-icon-background('lock', 'gray-medium');
-          }
-        }
       }
     }
   }

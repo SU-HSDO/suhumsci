@@ -60,6 +60,32 @@ function humsci_basic_preprocess_block(&$vars) {
  * Prepares variables for the html.html.twig template.
  */
 function humsci_basic_preprocess_html(&$vars) {
+  // Theme
+  $theme = \Drupal::config('system.theme')->get('default');
+
+  // Map theme names to Google Fonts URLs.
+  $theme_fonts = [
+    'humsci_colorful' => 'https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap',
+    'humsci_traditional' => 'https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap',
+  ];
+
+  // Get the font URL for the active theme, fallback to a default if not mapped.
+  $font_url = $theme_fonts[$theme] ?? 'https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap';
+
+  // Attach the font <link> to the head.
+  if (!empty($font_url)) {
+    $vars['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'stylesheet',
+          'href' => $font_url,
+        ],
+      ],
+      'humsci_google_fonts',
+    ];
+  }
+
   // Animation enhancements setting.
   $animation_enhancement = theme_get_setting('animation_toggle');
   if ($animation_enhancement) {

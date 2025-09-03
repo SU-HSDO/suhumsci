@@ -41,6 +41,20 @@ function su_humsci_profile_final_task() {
 }
 
 /**
+ * Implements hook_update_dependencies().
+ */
+function su_humsci_profile_update_dependencies() {
+  return [
+    // Ensure VBO update runs after views_bulk_operations_update_8036.
+    'su_humsci_profile' => [
+      9743 => [
+        'views_bulk_operations' => 8036,
+      ],
+    ],
+  ];
+}
+
+/**
  * Implements hook_update_last_removed().
  */
 function su_humsci_profile_update_last_removed() {
@@ -713,7 +727,7 @@ function su_humsci_profile_update_9742() {
 /**
  * Update all Views to set VBO bulk form field options.
  */
-function su_humsci_profile_update_9745(&$sandbox) {
+function su_humsci_profile_update_9743(&$sandbox) {
   $views_storage = \Drupal::service('entity_type.manager')
     ->getStorage('view');
 

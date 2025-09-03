@@ -1798,3 +1798,12 @@ function su_humsci_profile_update_9742() {
     ])->save();
   }
 }
+
+/**
+ * Remove testimonial responsive image style and related dependencies.
+ */
+function su_humsci_profile_update_9743() {
+  $config_factory = \Drupal::configFactory();
+  $responsive_image = \Drupal::configFactory()->getEditable('responsive_image.styles.testimonial');
+  $responsive_image->delete();
+}

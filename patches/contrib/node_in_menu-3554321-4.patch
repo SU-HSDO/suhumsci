@@ -1,0 +1,345 @@
+diff --git a/src/Plugin/views/filter/NodeInMenu.php b/src/Plugin/views/filter/NodeInMenu.php
+index 82d22d2..680f2cb 100644
+--- a/src/Plugin/views/filter/NodeInMenu.php
++++ b/src/Plugin/views/filter/NodeInMenu.php
+@@ -47,21 +47,30 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+    */
+   public function query() {
+     $menu = $this->value;
+-    $this->query->addWhereExpression(
+-      $this->options['group'],
+-      "EXISTS (
+-        SELECT 1 FROM {menu_link_content_data} mlc
+-        LEFT JOIN {path_alias} ua ON ua.path = CONCAT('/node/', node_field_data.nid)
+-        WHERE (
+-          mlc.link__uri = CONCAT('internal:/node/', node_field_data.nid)
+-          OR mlc.link__uri = CONCAT('entity:node/', node_field_data.nid)
+-          OR (ua.alias IS NOT NULL AND mlc.link__uri = CONCAT('internal:', ua.alias))
+-        )
+-        AND mlc.menu_name = :menu_name
+-        AND mlc.enabled = 1
+-      )",
+-      [':menu_name' => $menu]
+-    );
++    $n = $this->ensureMyTable();
++  
++    $expr = "
++      EXISTS (
++        SELECT 1
++        FROM {menu_link_content_data} mlc
++        WHERE mlc.menu_name = :menu_name
++          AND mlc.enabled = 1
++          AND (
++            mlc.link__uri = CONCAT('internal:/node/',   .nid)
++            OR mlc.link__uri = CONCAT('entity:node/', $n.nid)
++            OR EXISTS (
++                SELECT 1
++                FROM {path_alias} ua
++                WHERE ua.path = CONCAT('/node/', $n.nid)
++                  AND mlc.link__uri = CONCAT('internal:', ua.alias)
++            )
++          )
++      )
++    ";
++  
++    $this->query->addWhereExpression($this->options['group'], $expr, [
++      ':menu_name' => $menu,
++    ]);
+   }
+ 
+   /**
+-- 
+GitLab
+
+
+From a21317bae29f364410637c71a795f95bfc3b55d3 Mon Sep 17 00:00:00 2001
+From: Jim Vomero <jamesvomero@gmail.com>
+Date: Wed, 3 Sep 2025 11:56:35 -0400
+Subject: [PATCH 2/4] Issue #3543908 by njim: Support Menu Link Content Fields
+
+---
+ src/Plugin/views/filter/NodeInMenu.php | 139 ++++++++++++++++++++-----
+ 1 file changed, 115 insertions(+), 24 deletions(-)
+
+diff --git a/src/Plugin/views/filter/NodeInMenu.php b/src/Plugin/views/filter/NodeInMenu.php
+index 680f2cb..c442d21 100644
+--- a/src/Plugin/views/filter/NodeInMenu.php
++++ b/src/Plugin/views/filter/NodeInMenu.php
+@@ -47,36 +47,127 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+    */
+   public function query() {
+     $menu = $this->value;
+-    $n = $this->ensureMyTable();
+-  
+-    $expr = "
+-      EXISTS (
+-        SELECT 1
+-        FROM {menu_link_content_data} mlc
+-        WHERE mlc.menu_name = :menu_name
+-          AND mlc.enabled = 1
+-          AND (
+-            mlc.link__uri = CONCAT('internal:/node/',   .nid)
+-            OR mlc.link__uri = CONCAT('entity:node/', $n.nid)
+-            OR EXISTS (
+-                SELECT 1
+-                FROM {path_alias} ua
+-                WHERE ua.path = CONCAT('/node/', $n.nid)
+-                  AND mlc.link__uri = CONCAT('internal:', ua.alias)
+-            )
+-          )
+-      )
+-    ";
+-  
+-    $this->query->addWhereExpression($this->options['group'], $expr, [
+-      ':menu_name' => $menu,
+-    ]);
++    $operator = $this->operator;
++    
++    // Start with content-based menu links.
++    $expression = $this->getContentBasedMenuCondition();
++    
++    // Add field-based menu links if the table exists.
++    if ($this->menuTreeTableExists()) {
++      $field_based_part = $this->getFieldBasedMenuCondition();
++      $expression = "($expression OR $field_based_part)";
++    }
++    
++    // If operator is 'not in', negate the condition.
++    if ($operator === 'not in') {
++      $expression = "NOT ($expression)";
++    }
++    
++    $this->query->addWhereExpression(
++      $this->options['group'],
++      $expression,
++      [':menu_name' => $menu]
++    );
++  }
++
++  /**
++   * Gets the SQL condition for content-based menu links.
++   *
++   * This method detects nodes that are manually added to menus through the
++   * admin interface (not through node fields). These menu items are stored in
++   * the menu_link_content_data table with URIs like 'internal:/node/123' or
++   * 'entity:node/456'.
++   *
++   * The query works by:
++   * 1. Finding menu links in the specified menu that are enabled
++   * 2. Filtering for only node-related URIs (internal:/node/ or entity:node/)
++   * 3. Extracting the node ID from the URI using SUBSTRING_INDEX
++   * 4. Converting the extracted string to an unsigned integer
++   * 5. Checking if the current node's ID is in that list
++   *
++   * Example URIs and extracted IDs:
++   * - 'internal:/node/123' → extracts '123' → node ID 123
++   * - 'entity:node/456' → extracts '456' → node ID 456
++   * - 'internal:/taxonomy/term/789' → filtered out (not a node)
++   *
++   * @return string
++   *   The SQL condition for content-based menu links.
++   */
++  protected function getContentBasedMenuCondition() {
++    return "node_field_data.nid IN (
++      SELECT CAST(SUBSTRING_INDEX(mlc.link__uri, '/', -1) AS UNSIGNED)
++      FROM {menu_link_content_data} mlc
++      WHERE mlc.menu_name = :menu_name
++        AND mlc.enabled = 1
++        AND (mlc.link__uri LIKE 'internal:/node/%' OR mlc.link__uri LIKE 'entity:node/%')
++    )";
++  }
++
++  /**
++   * Gets the SQL condition for field-based menu links.
++   *
++   * This method detects nodes that are added to menus through their menu link
++   * field (e.g., a "Menu link" field on the node edit form). These menu items
++   * are stored in the menu_tree table with route_name 'entity.node.canonical'
++   * and serialized route parameters.
++   *
++   * The query works by:
++   * 1. Finding menu items in the specified menu that are enabled
++   * 2. Filtering for only node canonical routes (entity.node.canonical)
++   * 3. Checking if the route parameters contain the current node's ID
++   * 4. Using EXISTS for performance (stops searching once a match is found)
++   *
++   * Route parameters format:
++   * The route_parameters field contains serialized PHP data like:
++   * 'a:1:{s:4:"node";s:5:"19086";}'.'
++   *
++   * The LIKE pattern '%\"19086\"%' searches for the quoted node ID within
++   * the serialized data, ensuring we find the exact node ID match.
++   *
++   * @return string
++   *   The SQL condition for field-based menu links.
++   */
++  protected function getFieldBasedMenuCondition() {
++    return "EXISTS (
++      SELECT 1 FROM {menu_tree} mt
++      WHERE mt.menu_name = :menu_name
++        AND mt.enabled = 1
++        AND mt.route_name = 'entity.node.canonical'
++        AND mt.route_parameters LIKE CONCAT('%\"', node_field_data.nid, '\"%')
++    )";
++  }
++
++  /**
++   * Checks if the menu_tree table exists in the database.
++   *
++   * @return bool
++   *   TRUE if the menu_tree table exists, FALSE otherwise.
++   */
++  protected function menuTreeTableExists() {
++    try {
++      $connection = $this->query->getConnection();
++      $schema = $connection->schema();
++      return $schema->tableExists('menu_tree');
++    }
++    catch (\Exception $e) {
++      return FALSE;
++    }
+   }
+ 
+   /**
+    * {@inheritdoc}
+    */
+   public function valueForm(&$form, FormStateInterface $form_state) {
++    $form['operator'] = [
++      '#type' => 'select',
++      '#title' => $this->t('Operator'),
++      '#options' => [
++        'in' => $this->t('is in'),
++        'not in' => $this->t('is not in'),
++      ],
++      '#default_value' => $this->operator,
++    ];
++    
+     $form['value'] = [
+       '#type' => 'select',
+       '#title' => $this->t('Menu'),
+-- 
+GitLab
+
+
+From dd91f6b7a7da9dc60d4e9534965117d4be2ab41f Mon Sep 17 00:00:00 2001
+From: Jim Vomero <jamesvomero@gmail.com>
+Date: Wed, 3 Sep 2025 12:05:53 -0400
+Subject: [PATCH 3/4] Issue #3543908 by njim: Lint fix
+
+---
+ src/Plugin/views/filter/NodeInMenu.php | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/Plugin/views/filter/NodeInMenu.php b/src/Plugin/views/filter/NodeInMenu.php
+index c442d21..38604fb 100644
+--- a/src/Plugin/views/filter/NodeInMenu.php
++++ b/src/Plugin/views/filter/NodeInMenu.php
+@@ -48,21 +48,21 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+   public function query() {
+     $menu = $this->value;
+     $operator = $this->operator;
+-    
++
+     // Start with content-based menu links.
+     $expression = $this->getContentBasedMenuCondition();
+-    
++
+     // Add field-based menu links if the table exists.
+     if ($this->menuTreeTableExists()) {
+       $field_based_part = $this->getFieldBasedMenuCondition();
+       $expression = "($expression OR $field_based_part)";
+     }
+-    
++
+     // If operator is 'not in', negate the condition.
+     if ($operator === 'not in') {
+       $expression = "NOT ($expression)";
+     }
+-    
++
+     $this->query->addWhereExpression(
+       $this->options['group'],
+       $expression,
+@@ -167,7 +167,7 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+       ],
+       '#default_value' => $this->operator,
+     ];
+-    
++
+     $form['value'] = [
+       '#type' => 'select',
+       '#title' => $this->t('Menu'),
+-- 
+GitLab
+
+
+From ad98cf8b0f191a04462debb126a089b103806c3c Mon Sep 17 00:00:00 2001
+From: Jim Vomero <jamesvomero@gmail.com>
+Date: Wed, 3 Sep 2025 14:40:33 -0400
+Subject: [PATCH 4/4] Issue #3554321: Use ensureMyTable() in custom Views
+ filter to avoid missing alias error.
+
+---
+ src/Plugin/views/filter/NodeInMenu.php | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/src/Plugin/views/filter/NodeInMenu.php b/src/Plugin/views/filter/NodeInMenu.php
+index 38604fb..08643a9 100644
+--- a/src/Plugin/views/filter/NodeInMenu.php
++++ b/src/Plugin/views/filter/NodeInMenu.php
+@@ -49,12 +49,15 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+     $menu = $this->value;
+     $operator = $this->operator;
+ 
++    // Ensure the base table is joined and get its alias.
++    $table_alias = $this->ensureMyTable();
++
+     // Start with content-based menu links.
+-    $expression = $this->getContentBasedMenuCondition();
++    $expression = $this->getContentBasedMenuCondition($table_alias);
+ 
+     // Add field-based menu links if the table exists.
+     if ($this->menuTreeTableExists()) {
+-      $field_based_part = $this->getFieldBasedMenuCondition();
++      $field_based_part = $this->getFieldBasedMenuCondition($table_alias);
+       $expression = "($expression OR $field_based_part)";
+     }
+ 
+@@ -90,11 +93,14 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+    * - 'entity:node/456' → extracts '456' → node ID 456
+    * - 'internal:/taxonomy/term/789' → filtered out (not a node)
+    *
++   * @param string $table_alias
++   *   The alias for the base table (e.g., 'node_field_data').
++   *
+    * @return string
+    *   The SQL condition for content-based menu links.
+    */
+-  protected function getContentBasedMenuCondition() {
+-    return "node_field_data.nid IN (
++  protected function getContentBasedMenuCondition($table_alias) {
++    return "$table_alias.nid IN (
+       SELECT CAST(SUBSTRING_INDEX(mlc.link__uri, '/', -1) AS UNSIGNED)
+       FROM {menu_link_content_data} mlc
+       WHERE mlc.menu_name = :menu_name
+@@ -124,16 +130,19 @@ class NodeInMenu extends FilterPluginBase implements ContainerFactoryPluginInter
+    * The LIKE pattern '%\"19086\"%' searches for the quoted node ID within
+    * the serialized data, ensuring we find the exact node ID match.
+    *
++   * @param string $table_alias
++   *   The alias for the base table (e.g., 'node_field_data').
++   *
+    * @return string
+    *   The SQL condition for field-based menu links.
+    */
+-  protected function getFieldBasedMenuCondition() {
++  protected function getFieldBasedMenuCondition($table_alias) {
+     return "EXISTS (
+       SELECT 1 FROM {menu_tree} mt
+       WHERE mt.menu_name = :menu_name
+         AND mt.enabled = 1
+         AND mt.route_name = 'entity.node.canonical'
+-        AND mt.route_parameters LIKE CONCAT('%\"', node_field_data.nid, '\"%')
++        AND mt.route_parameters LIKE CONCAT('%\"', CAST($table_alias.nid AS CHAR), '\"%')
+     )";
+   }

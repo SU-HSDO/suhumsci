@@ -1669,3 +1669,132 @@ function su_humsci_profile_update_9739() {
   }
   return t('Could not load hs_basic_page entity form display.');
 }
+
+/**
+ * Update node page display image styles.
+ */
+function su_humsci_profile_update_9740() {
+  $to_update = [
+    'hs_event' => [
+      'field' => 'field_hs_event_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_news' => [
+      'field' => 'field_hs_news_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_event_series' => [
+      'field' => 'field_hs_event_series_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_publications' => [
+      'field' => 'field_hs_publication_image',
+      'default_image_style' => 'hs_medium_scaled_360px',
+      'new_image_style' => 'medium_scaled',
+    ],
+    'hs_person' => [
+      'field' => 'field_hs_person_square_img',
+      'default_image_style' => 'hs_medium_square_360x360',
+      'new_image_style' => 'medium_square',
+    ],
+  ];
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  foreach ($to_update as $bundle => $data) {
+    /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $display */
+    $display = $entity_type_manager->getStorage('entity_view_display')
+      ->load("node.{$bundle}.default");
+
+    if (!$display) {
+      continue;
+    }
+
+    $view_changed = FALSE;
+    $sections = $display->getSections();
+
+    foreach ($sections as $section) {
+      $components = $section->getComponents();
+
+      foreach ($components as $component) {
+        if ($component->getPluginId() === "field_block:node:{$bundle}:{$data['field']}") {
+          $configuration = $component->get('configuration');
+          // Skip cases where the default image styles have been overridden.
+          if ($configuration['formatter']['settings']['image_style'] !== $data['default_image_style']) {
+            continue;
+          }
+          // Set the updated image style settings.
+          $configuration['formatter']['type'] = 'media_responsive_image_formatter';
+          $configuration['formatter']['settings']['image_style'] = $data['new_image_style'];
+          $component->setConfiguration($configuration);
+          $view_changed = TRUE;
+        }
+      }
+    }
+
+    // Save the view only if changes were made.
+    if ($view_changed) {
+      $display->save();
+    }
+  }
+}
+
+/**
+ * Update Site Manager user role grant permissions.
+ */
+function su_humsci_profile_update_9741() {
+  user_role_grant_permissions('site_manager', [
+    'assign preparer role',
+    'assign reviewer role',
+  ]);
+}
+
+/**
+ * Add field_auto_unpublish field to bottom of the event form display.
+ */
+function su_humsci_profile_update_9742() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field_storage if it does not exist.
+  $auto_unpublish_field_storage = $config_storage->read('field.storage.node.field_auto_unpublish');
+  if (
+    empty($field_storage->load('node.field_auto_unpublish')) &&
+    !empty($auto_unpublish_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($auto_unpublish_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $auto_unpublish_field_config = $config_storage->read('field.field.node.hs_event.field_auto_unpublish');
+  if (
+    empty($field_config_storage->load('node.hs_event.field_auto_unpublish')) &&
+    !empty($auto_unpublish_field_config)
+  ) {
+    $field_config_storage->create($auto_unpublish_field_config)->save();
+  }
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Add the field to the form display for the event content type.
+  $form_display = $entity_type_manager->getStorage('entity_form_display')
+    ->load('node.hs_event.default');
+  if ($form_display) {
+    $weight = max(array_column($form_display->getComponents(), 'weight') ?: [0]);
+    $form_display->setComponent('field_auto_unpublish', [
+      'type' => 'boolean_checkbox',
+      'settings' => [
+        'display_label' => TRUE,
+      ],
+      'weight' => $weight + 1,
+    ])->save();
+  }
+}

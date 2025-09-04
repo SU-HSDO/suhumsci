@@ -762,16 +762,24 @@ function su_humsci_profile_update_9743(&$sandbox) {
               if (!isset($field['clear_on_exposed']) || $field['clear_on_exposed'] !== TRUE) {
                 $field['clear_on_exposed'] = TRUE;
                 $changed = TRUE;
-              } else {
+              }
+              else {
                 $skipped = TRUE;
-                \Drupal::logger('su_humsci_profile')->warning('VBO field clear_on_exposed not set in view @view display @display.', ['@view' => $view_id, '@display' => $display_id]);
+                \Drupal::logger('su_humsci_profile')->warning('VBO field clear_on_exposed not set in view @view display @display.', [
+                  '@view' => $view_id,
+                  '@display' => $display_id,
+                ]);
               }
               if (!isset($field['show_select_all']) || $field['show_select_all'] !== 'always_hide') {
                 $field['show_select_all'] = 'always_hide';
                 $changed = TRUE;
-              } else {
+              }
+              else {
                 $skipped = TRUE;
-                \Drupal::logger('su_humsci_profile')->warning('VBO field show_select_all not set in view @view display @display.', ['@view' => $view_id, '@display' => $display_id]);
+                \Drupal::logger('su_humsci_profile')->warning('VBO field show_select_all not set in view @view display @display.', [
+                  '@view' => $view_id,
+                  '@display' => $display_id,
+                ]);
               }
               if ($changed) {
                 $sandbox['changed']++;
@@ -788,8 +796,9 @@ function su_humsci_profile_update_9743(&$sandbox) {
         $view->set('display', $displays);
         try {
           $view->save();
-        } catch (\Exception $e) {
-          $$sandbox['errors']++;
+        }
+        catch (\Exception $e) {
+          $sandbox['errors']++;
           \Drupal::logger('su_humsci_profile')->error('Failed to save view @view: @error', [
             '@view' => $view_id,
             '@error' => $e->getMessage(),
@@ -803,7 +812,11 @@ function su_humsci_profile_update_9743(&$sandbox) {
 
   if ($sandbox['#finished'] >= 1) {
     if ($sandbox['changed']) {
-      \Drupal::logger('su_humsci_profile')->notice('VBO field update: @updated fields updated, @skipped fields skipped, @errors save errors.', ['@updated' => $sandbox['changed'], '@skipped' => $sandbox['skipped'], '@errors' => $sandbox['errors']]);
+      \Drupal::logger('su_humsci_profile')->notice('VBO field update: @updated fields updated, @skipped fields skipped, @errors save errors.', [
+        '@updated' => $sandbox['changed'],
+        '@skipped' => $sandbox['skipped'],
+        '@errors' => $sandbox['errors'],
+      ]);
     }
     else {
       \Drupal::logger('su_humsci_profile')->notice('VBO field update: No VBO view displays were changed.');

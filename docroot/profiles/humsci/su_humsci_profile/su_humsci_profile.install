@@ -725,7 +725,7 @@ function su_humsci_profile_update_9742() {
 }
 
 /**
- * Update all Views to set VBO bulk form field options.
+ * Update VBO Views to hide show_select_all behavior by default.
  */
 function su_humsci_profile_update_9743(&$sandbox) {
   $views_storage = \Drupal::service('entity_type.manager')
@@ -739,13 +739,14 @@ function su_humsci_profile_update_9743(&$sandbox) {
       ->execute();
     $sandbox['current'] = 0;
     $sandbox['changed'] = 0;
+    $sandbox['skipped'] = 0;
+    $sandbox['errors'] = 0;
   }
 
   $query = $views_storage
     ->getQuery()
     ->accessCheck(FALSE);
 
-  // Process 10 view configs at a time.
   $query->range($sandbox['current'], 10);
   $results = $query->execute();
   if (!empty($results)) {
@@ -753,21 +754,30 @@ function su_humsci_profile_update_9743(&$sandbox) {
       $view = $views_storage->load($view_id);
       $displays = $view->get('display');
       $changed = FALSE;
-
-      foreach ($displays as &$display) {
+      $skipped = FALSE;
+      foreach ($displays as $display_id => &$display) {
         if (!empty($display['display_options']['fields'])) {
           foreach ($display['display_options']['fields'] as &$field) {
             if (isset($field['plugin_id']) && $field['plugin_id'] === 'views_bulk_operations_bulk_form') {
               if (!isset($field['clear_on_exposed']) || $field['clear_on_exposed'] !== TRUE) {
                 $field['clear_on_exposed'] = TRUE;
                 $changed = TRUE;
+              } else {
+                $skipped = TRUE;
+                \Drupal::logger('su_humsci_profile')->warning('VBO field clear_on_exposed not set in view @view display @display.', ['@view' => $view_id, '@display' => $display_id]);
               }
               if (!isset($field['show_select_all']) || $field['show_select_all'] !== 'always_hide') {
                 $field['show_select_all'] = 'always_hide';
                 $changed = TRUE;
+              } else {
+                $skipped = TRUE;
+                \Drupal::logger('su_humsci_profile')->warning('VBO field show_select_all not set in view @view display @display.', ['@view' => $view_id, '@display' => $display_id]);
               }
               if ($changed) {
                 $sandbox['changed']++;
+              }
+              if ($skipped) {
+                $sandbox['skipped']++;
               }
             }
           }
@@ -776,7 +786,15 @@ function su_humsci_profile_update_9743(&$sandbox) {
 
       if ($changed) {
         $view->set('display', $displays);
-        $view->save();
+        try {
+          $view->save();
+        } catch (\Exception $e) {
+          $$sandbox['errors']++;
+          \Drupal::logger('su_humsci_profile')->error('Failed to save view @view: @error', [
+            '@view' => $view_id,
+            '@error' => $e->getMessage(),
+          ]);
+        }
       }
       $sandbox['current']++;
       $sandbox['#finished'] = $sandbox['current'] / $sandbox['total'];
@@ -785,12 +803,10 @@ function su_humsci_profile_update_9743(&$sandbox) {
 
   if ($sandbox['#finished'] >= 1) {
     if ($sandbox['changed']) {
-      return t('@count VBO view displays changed.', ['@count' => $sandbox['changed']]);
+      \Drupal::logger('su_humsci_profile')->notice('VBO field update: @updated fields updated, @skipped fields skipped, @errors save errors.', ['@updated' => $sandbox['changed'], '@skipped' => $sandbox['skipped'], '@errors' => $sandbox['errors']]);
     }
     else {
-      return t('No VBO view displays were changed.');
+      \Drupal::logger('su_humsci_profile')->notice('VBO field update: No VBO view displays were changed.');
     }
   }
-
-  return NULL;
 }

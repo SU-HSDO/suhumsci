@@ -5,8 +5,9 @@
  * hs_events.module
  */
 
-use Drupal\hs_entities\HsEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\hs_entities\HsEntityInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_view_alter().
@@ -18,4 +19,75 @@ function hs_events_hs_entity_view_alter(array &$build, HsEntityInterface $entity
   if (!empty($build['field_speaker_person']['#items'])) {
     unset($build['label']);
   }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_events_form_node_hs_event_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add the auto-unpublish field with default value to the advanced options
+  // to organize this field with other publishing options in the sidebar.
+  $form_modifier = \Drupal::service('hs_events.event_form_modifier');
+  $form_modifier->moveAutoUnpublishFieldToOptions($form);
+  $form_modifier->setAutoUnpublishDefaultValue($form);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_events_form_node_hs_event_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add the auto-unpublish field to the advanced options to organize this field
+  // with other publishing options in the sidebar.
+  $form_modifier = \Drupal::service('hs_events.event_form_modifier');
+  $form_modifier->moveAutoUnpublishFieldToOptions($form);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_events_form_config_pages_hs_site_options_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add validation handler to check for auto-unpublish field changes.
+  $form['#validate'][] = 'hs_events_site_options_form_validate';
+
+  // Store original values for comparison on validation.
+  if (!$form_state->has('original_values')) {
+    $original_values = [];
+    if (isset($form['field_site_auto_unpublish']['widget']["#default_value"][0])) {
+      $original_values['field_site_auto_unpublish'] = $form['field_site_auto_unpublish']['widget']["#default_value"][0];
+    }
+    $form_state->set('original_values', $original_values);
+  }
+}
+
+/**
+ * Validation handler for the site options form.
+ *
+ * Checks if the auto-unpublish field value has changed and displays a warning
+ * message to inform users that changing the default setting does not affect
+ * existing events.
+ *
+ * @param array $form
+ *   The form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state object.
+ */
+function hs_events_site_options_form_validate($form, FormStateInterface $form_state) {
+  // Check if the auto-unpublish field value has changed.
+  $original_value = $form_state->get('original_values')['field_site_auto_unpublish'] ?? NULL;
+  $new_value = $form_state->getValue(['field_site_auto_unpublish', 0, 'value']);
+
+  if ($original_value !== $new_value) {
+    $message = t('Changing the default for "Auto-unpublish events once past" does not impact existing events. Visit <a href="/admin/content/manage/event">the list of all events</a>, select the events that you want to change, and use the "Modify field values" bulk action to set the "Auto-unpublish when event is past" field to "On" or "Off".');
+    \Drupal::messenger()->addWarning($message);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function hs_events_cron() {
+  // Use the auto-unpublish service to identify past events that are slated to
+  // be auto-unpublished and then unpublish them.
+  $auto_unpublish_service = \Drupal::service('hs_events.auto_unpublish_events');
+  $auto_unpublish_service->unpublishPastEvents();
 }

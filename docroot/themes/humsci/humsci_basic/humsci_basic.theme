@@ -74,6 +74,31 @@ function humsci_basic_preprocess_html(&$vars) {
 
   // Attach the font <link> to the head.
   if (!empty($font_url)) {
+    // Preconnect to Google Fonts domains.
+    $vars['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'preconnect',
+          'href' => 'https://fonts.googleapis.com',
+        ],
+      ],
+      'humsci_google_fonts_preconnect_1',
+    ];
+
+    $vars['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#attributes' => [
+          'rel' => 'preconnect',
+          'href' => 'https://fonts.gstatic.com',
+          'crossorigin' => 'anonymous',
+        ],
+      ],
+      'humsci_google_fonts_preconnect_2',
+    ];
+
+
     $vars['#attached']['html_head'][] = [
       [
         '#tag' => 'link',

@@ -1,102 +1,69 @@
 #!/bin/bash
 
-# DDEV command for setting up a fresh test environment for Codeception
-# This mimics the CI environment with a fresh Drupal installation
+# DDEV command for setting up a fresh test environment using BLT (like GitHub)
+# This mimics the CI environment exactly using BLT commands
 # Usage: ddev setup-tests
 
 set -e
 
-echo "🧪 Setting up fresh test environment for Codeception..."
+echo "🧪 Setting up fresh test environment using BLT..."
 
-# Create a fresh test database
-TEST_DB_NAME="drupal_test"
-echo "🗄️  Creating fresh test database: $TEST_DB_NAME"
+# Create a fresh database
+DB_NAME="drupal_default"
+echo "🗄️  Creating fresh database: $DB_NAME"
 
-mysql -h db -u root -proot -e "DROP DATABASE IF EXISTS $TEST_DB_NAME; CREATE DATABASE $TEST_DB_NAME; GRANT ALL PRIVILEGES ON $TEST_DB_NAME.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+mysql -h db -u root -proot -e "DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'db'@'%'; FLUSH PRIVILEGES;"
 
-echo "✅ Test database created successfully"
+echo "✅ Database created successfully"
 
 # Clear any existing settings and localhost directory
 echo "🧹 Clearing existing settings..."
-rm -f docroot/sites/default/settings.php
-rm -f docroot/sites/default/settings/local.settings.php
+sudo rm -f docroot/sites/default/settings.php
+sudo rm -f docroot/sites/default/settings/local.settings.php
+sudo rm -f docroot/sites/default/settings.local.php
 sudo rm -rf docroot/sites/localhost/
 
-# Install fresh Drupal to the default site
-echo "🚀 Installing fresh Drupal to sites/default..."
+# Temporarily move local BLT config
+echo "🔧 Temporarily moving local BLT config..."
+if [ -f "blt/local.blt.yml" ]; then
+    mv blt/local.blt.yml blt/local.blt.yml.backup
+    echo "✅ Moved blt/local.blt.yml to blt/local.blt.yml.backup"
+fi
 
-# Create settings file with the correct database configuration
-cat > /tmp/test_settings.php << 'EOF'
-<?php
+# Temporarily modify CI config for DDEV networking
+echo "🔧 Temporarily modifying CI config for DDEV..."
+if [ -f "blt/ci.blt.yml" ]; then
+    cp blt/ci.blt.yml blt/ci.blt.yml.backup
+    sed -i 's/host: mysql/host: db/g' blt/ci.blt.yml
+    sed -i 's/username: drupal/username: db/g' blt/ci.blt.yml
+    sed -i 's/password: drupal/password: db/g' blt/ci.blt.yml
+    sed -i 's/database: drupal/database: drupal_default/g' blt/ci.blt.yml
+    echo "✅ Modified blt/ci.blt.yml for DDEV networking"
+fi
 
-$databases = [
-  'default' => [
-    'default' => [
-      'database' => 'drupal_test',
-      'username' => 'db',
-      'password' => 'db',
-      'host' => 'db',
-      'port' => '3306',
-      'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-      'driver' => 'mysql',
-      'prefix' => '',
-    ],
-  ],
-];
+# Generate settings using BLT with CI environment
+echo "⚙️  Generating settings files with BLT..."
+vendor/bin/blt blt:telemetry:disable --no-interaction
+vendor/bin/blt settings --environment=ci
 
-$settings['hash_salt'] = 'test-salt-for-codeception';
+# Create files directory and set permissions (like GitHub does)
+echo "📁 Creating files directory..."
+mkdir -p docroot/sites/default/files
+chmod -R 777 docroot/sites/default/files/
 
-// Use development service parameters
-$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
-$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/blt.development.services.yml';
-
-// Allow access to update.php
-$settings['update_free_access'] = TRUE;
-
-// Show all error messages
-$config['system.logging']['error_level'] = 'verbose';
-
-// Disable CSS and JS aggregation
-$config['system.performance']['css']['preprocess'] = FALSE;
-$config['system.performance']['js']['preprocess'] = FALSE;
-
-// Disable the render cache
-$config['system.performance']['cache']['page']['max_age'] = 0;
-EOF
-
-# Copy settings file to the default site
-sudo cp /tmp/test_settings.php docroot/sites/default/settings.php
-sudo chown www-data:www-data docroot/sites/default/settings.php
-sudo chmod 666 docroot/sites/default/settings.php
-rm -f /tmp/test_settings.php
-
-# Install Drupal using Drush directly (matching CI behavior)
-echo "🔧 Installing Drupal with su_humsci_profile to sites/default..."
-# Temporarily remove any existing local.drush.yml to avoid URI detection
-mv docroot/sites/default/local.drush.yml docroot/sites/default/local.drush.yml.bak 2>/dev/null || true
-
-vendor/bin/drush site:install su_humsci_profile \
-  --db-url="mysql://db:db@db:3306/$TEST_DB_NAME" \
-  --site-name="Stanford Humanities and Sciences Test" \
-  --site-mail="test@example.com" \
-  --account-name="admin" \
-  --account-mail="admin@example.com" \
-  --locale=en \
-  --no-interaction \
-  --root=/var/www/html/docroot
-
-# Restore the drush config
-mv docroot/sites/default/local.drush.yml.bak docroot/sites/default/local.drush.yml 2>/dev/null || true
+# Install Drupal using BLT with CI environment
+echo "🚀 Installing Drupal with su_humsci_profile using BLT..."
+vendor/bin/blt drupal:install -n --environment=ci
 
 echo "✅ Fresh Drupal installation complete"
 
-# Use the standard Codeception configuration (same as CI)
+# Setup Codeception configuration
 echo "⚙️  Setting up Codeception configuration..."
 
 # Copy the standard configuration and resolve environment variables
 cp tests/codeception.dist.yml tests/codeception.yml
 
-# Replace environment variables with actual values for DDEV (matching CI structure)
+# Replace environment variables with actual values for DDEV
 sed -i "s|\${docroot}|/var/www/html/docroot|g" tests/codeception.yml
 sed -i "s|\${project.local.hostname}|localhost|g" tests/codeception.yml
 sed -i "s|\${project.local.protocol}|http|g" tests/codeception.yml
@@ -104,86 +71,33 @@ sed -i "s|\${repo.root}|/var/www/html|g" tests/codeception.yml
 
 echo "✅ Codeception configuration updated"
 
-# Create Drush configuration for the default site
-cat > /tmp/default_drush.yml << EOF
-options:
-  uri: 'localhost'
-  root: '/var/www/html/docroot'
-EOF
-sudo cp /tmp/default_drush.yml docroot/sites/default/local.drush.yml
-sudo chown www-data:www-data docroot/sites/default/local.drush.yml
-rm -f /tmp/default_drush.yml
 
-echo "✅ Drush configuration created"
 
-# Set up functional tests to work with the fresh installation
-echo "⚙️  Setting up functional tests..."
+# Restore local BLT config
+echo "🔧 Restoring local BLT config..."
+if [ -f "blt/local.blt.yml.backup" ]; then
+    mv blt/local.blt.yml.backup blt/local.blt.yml
+    echo "✅ Restored blt/local.blt.yml"
+fi
 
-# Create functional suite configuration that matches CI
-cat > tests/codeception/functional.suite.yml << 'EOF'
-# Codeception Test Suite Configuration
-#
-# Suite for functional tests
-# Emulate web requests and make application process them
-# Include one of framework modules (Symfony2, Yii2, Laravel5, Phalcon4) to use it
-# Remove this suite if you don't use frameworks
-
-actor: FunctionalTester
-modules:
-  enabled:
-    - WebDriver:
-        browser: chrome
-        url: 'http://web/'
-        host: selenium
-        port: 4444
-        window_size: maximize
-        capabilities:
-          unexpectedAlertBehaviour: 'accept'
-          handlesAlerts: true
-    - \Helper\Functional
-    - Codeception\Module\Asserts
-    - StanfordCaravan\Codeception\Drupal\DrupalBootstrap:
-        root: '/var/www/html/docroot'
-        server:
-          HTTP_HOST: 'localhost'
-    - StanfordCaravan\Codeception\Drupal\DrupalDrush:
-        drush: '/var/www/html/vendor/bin/drush'
-        options:
-          uri: 'localhost'
-    - StanfordCaravan\Codeception\Drupal\DrupalEntity:
-        cleanup_test: true
-        cleanup_failed: false
-        cleanup_suite: true
-        route_entities:
-          - node
-          - taxonomy_term
-          - media
-    - StanfordCaravan\Codeception\Drupal\DrupalUser:
-        drush: '/var/www/html/vendor/bin/drush'
-        default_role: 'authenticated'
-        driver: 'WebDriver'
-        cleanup_entities:
-          - node
-          - media
-          - file
-        cleanup_test: true
-        cleanup_failed: false
-        cleanup_suite: true
-  disabled:
-    - PhpBrowser
-  step_decorators: ~
-EOF
-
-echo "✅ Functional tests configured"
+# Restore CI BLT config
+echo "🔧 Restoring CI BLT config..."
+if [ -f "blt/ci.blt.yml.backup" ]; then
+    mv blt/ci.blt.yml.backup blt/ci.blt.yml
+    echo "✅ Restored blt/ci.blt.yml"
+fi
 
 echo "🎉 Test environment setup complete!"
 echo ""
 echo "The fresh test environment is now ready with:"
 echo "- Fresh Drupal installation in sites/default"
-echo "- Test database: $TEST_DB_NAME"
+echo "- Database: $DB_NAME"
 echo "- Codeception configured for localhost"
-echo "- Functional tests configured to work with fresh installation"
 echo ""
-echo "To run tests:"
+echo "To run tests using BLT:"
+echo "  ddev blt codeception --group=install --suite=acceptance"
+echo "  ddev blt codeception --group=install --suite=functional"
+echo ""
+echo "Or using the direct commands:"
 echo "  ddev codeception run acceptance --group=install"
 echo "  ddev codeception run functional --group=install"

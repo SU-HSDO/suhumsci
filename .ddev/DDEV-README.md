@@ -54,21 +54,32 @@ In order to sync from a staging or dev site, you will have to do the following:
 
 ## Codeception Testing
 
-This setup provides a fresh test environment that matches the CI pipeline, ensuring tests run against a clean Drupal installation.
+This setup provides a fresh test environment that matches the CI pipeline exactly, using BLT commands just like GitHub Actions.
+
+**Developer-Friendly**: Temporarily modifies BLT configuration during testing, so it doesn't affect other developers using Lando, MAMP, or other systems. No additional configuration files needed.
 
 ### Quick Setup
 
-1. **Setup fresh test environment:**
+1. **Setup fresh test environment (BLT-based, like GitHub):**
    ```bash
    ddev setup-tests
    ```
    This command:
-   - Creates a fresh `drupal_test` database
+   - Creates a fresh `drupal_default` database
+   - Temporarily moves `blt/local.blt.yml` to avoid conflicts
+   - Temporarily modifies `blt/ci.blt.yml` for DDEV networking (host: db, username: db, etc.)
+   - Uses BLT with CI environment to generate settings and install Drupal
    - Installs Drupal with `su_humsci_profile` to `sites/default`
    - Configures Codeception for localhost
-   - Sets up Drush configuration
+   - Restores all BLT configuration files
 
-2. **Run Codeception tests:**
+2. **Run Codeception tests using BLT:**
+   ```bash
+   ddev blt codeception --group=install --suite=acceptance
+   ddev blt codeception --group=install --suite=functional
+   ```
+
+3. **Alternative: Run tests directly:**
    ```bash
    ddev codeception run acceptance --group=install
    ddev codeception run functional --group=install

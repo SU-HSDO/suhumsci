@@ -158,15 +158,15 @@ display:
           format_plural_string: !!binary MSBpdGVtA0Bjb3VudCBpdGVtcw==
           prefix: ''
           suffix: ''
-        operations:
-          id: operations
+        edit_entity_subqueue:
+          id: edit_entity_subqueue
           table: entity_subqueue
-          field: operations
+          field: edit_entity_subqueue
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: entity_subqueue
-          plugin_id: entity_operations
+          plugin_id: entity_link_edit
           label: Operations
           exclude: false
           alter:
@@ -208,7 +208,9 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          destination: false
+          text: 'Reorder items'
+          output_url_as_text: false
+          absolute: false
       pager:
         type: full
         options:

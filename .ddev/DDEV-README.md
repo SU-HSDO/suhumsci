@@ -52,7 +52,43 @@ In order to sync from a staging or dev site, you will have to do the following:
 1. In `suhumsci/docroot/sites/SITENAME/blt.yml` (`SITENAME` being the site you are working with), change line 10 for remote to: `remote: hs_colorful.stage` or `remote: hs_colorful.dev`.
 2. Sync the database as you normally would: `ddev blt drupal:sync --site=SITENAME`.
 
+## Codeception Testing
+
+This setup provides a fresh test environment that matches the CI pipeline, ensuring tests run against a clean Drupal installation.
+
+### Quick Setup
+
+1. **Setup fresh test environment:**
+   ```bash
+   ddev setup-tests
+   ```
+   This command:
+   - Creates a fresh `drupal_test` database
+   - Installs Drupal with `su_humsci_profile` to `sites/default`
+   - Configures Codeception for localhost
+   - Sets up Drush configuration
+
+2. **Run Codeception tests:**
+   ```bash
+   ddev codeception run acceptance --group=install
+   ddev codeception run functional --group=install
+   ```
+
+### Available Commands
+
+- **Setup fresh environment:** `ddev setup-tests`
+- **Run all acceptance tests:** `ddev codeception run acceptance`
+- **Run specific group:** `ddev codeception run acceptance --group=install`
+- **Run with fail-fast:** `ddev codeception run acceptance --group=install --fail-fast`
+- **Run functional tests:** `ddev codeception run functional`
+- **Run with debug output:** `ddev codeception run acceptance --debug`
+
+### Test Groups
+
+- `install` - Tests that verify the site installation state
+- `permissions` - Tests for user role permissions
+- `content` - Tests for content-related functionality
+
 ## Areas that need work
 
-- Setup for local Codeception testing
 - Enabling local SimpleSAML authentication

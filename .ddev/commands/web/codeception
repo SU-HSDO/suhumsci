@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# DDEV command for running Codeception tests
+# Usage: ddev codeception [codeception-options]
+# Examples:
+#   ddev codeception run acceptance --group=install
+#   ddev codeception run acceptance --fail-fast
+#   ddev codeception run functional
+
+# Check if Codeception is configured
+if [ ! -f "tests/codeception.yml" ]; then
+    echo "❌ Codeception is not configured."
+    echo "Please run: ddev setup-tests"
+    echo "This will set up a fresh test environment."
+    exit 1
+fi
+
+# Run Codeception with the provided arguments
+echo "🏃 Running Codeception tests..."
+vendor/bin/codecept -c tests/codeception.yml "$@"

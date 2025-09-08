@@ -1,0 +1,15 @@
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    platform: linux/amd64
+    container_name: ddev-suhumsci-selenium
+    ports:
+      - "4444:4444"
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+    volumes:
+      - /dev/shm:/dev/shm
+    restart: "no"
+    networks:
+      - ddev_default

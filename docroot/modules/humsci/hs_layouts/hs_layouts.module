@@ -105,6 +105,52 @@ function hs_layouts_preprocess(&$variables, $hook) {
     // set to anything other than 'None', set the heading tag to h3.
     $variables['heading_tag'] = 'h3';
   }
+
+  // Switch image style for vertical cards depending on collection column count.
+  if (!in_array($hook, [
+    'pattern_vertical_card',
+    'pattern_vertical_link_card',
+    'pattern_vertical_button_card',
+  ])) {
+    return;
+  }
+  if ($parent->hasField('field_hs_collection_per_row') && !$parent->get('field_hs_collection_per_row')->isEmpty()) {
+    $col_count = (int) $parent->get('field_hs_collection_per_row')->value;
+
+    // Decide which responsive image style to use.
+    $style = NULL;
+    switch ($col_count) {
+      case 2:
+        $style = 'hp_2_across_landscape';
+        break;
+
+      case 3:
+        $style = 'hp_3_across_events';
+        break;
+
+      case 4:
+        $style = 'hp_4_across';
+        break;
+    }
+
+    if ($style && $paragraph->hasField('field_hs_postcard_image') && !$paragraph->get('field_hs_postcard_image')->isEmpty()) {
+      $media = $paragraph->get('field_hs_postcard_image')->entity;
+
+      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
+        $image_field = $media->get('field_media_image');
+
+        // Render it with the responsive image formatter.
+        $variables['image']['field_hs_postcard_image'] = $image_field->view([
+          'type' => 'responsive_image',
+          'settings' => [
+            'responsive_image_style' => $style,
+          ],
+          'label' => 'hidden',
+        ]);
+      }
+    }
+
+  }
 }
 
 /**

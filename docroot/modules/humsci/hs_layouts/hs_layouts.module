@@ -97,7 +97,7 @@ function hs_layouts_preprocess(&$variables, $hook) {
     // need to go a level depeer.
     $parent = $parent->getParentEntity();
   }
-  if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
+  if (!($parent instanceof ParagraphInterface) || !in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection'])) {
     return;
   }
   if ($parent->get('field_title_settings')->value !== 'collection_title_none') {

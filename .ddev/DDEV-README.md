@@ -56,34 +56,22 @@ In order to sync from a staging or dev site, you will have to do the following:
 
 This setup provides a fresh test environment that matches the CI pipeline exactly, using BLT commands just like GitHub Actions.
 
-**Developer-Friendly**: Temporarily modifies BLT configuration during testing, so it doesn't affect other developers using Lando, MAMP, or other systems. No additional configuration files needed.
-
 ### Quick Setup
 
-1. **Setup fresh test environment (BLT-based, like GitHub):**
-   ```bash
-   ddev setup-tests
-   ```
-   This command:
-   - Creates a fresh `drupal_default` database
-   - Temporarily moves `blt/local.blt.yml` to avoid conflicts
-   - Temporarily modifies `blt/ci.blt.yml` for DDEV networking (host: db, username: db, etc.)
-   - Uses BLT with CI environment to generate settings and install Drupal
-   - Installs Drupal with `su_humsci_profile` to `sites/default`
-   - Configures Codeception for localhost
-   - Restores all BLT configuration files
+A DDEV script will set up a test environment with a fresh install of the su_humsci_profile profile. This requires temporarily moving and modifying BLT-related files to correctly connect to the DDEV-managed services. 
 
-2. **Run Codeception tests using BLT:**
-   ```bash
-   ddev blt codeception --group=install --suite=acceptance
-   ddev blt codeception --group=install --suite=functional
-   ```
+```bash
+# Setup fresh test environment
+ddev setup-tests
 
-3. **Alternative: Run tests directly:**
-   ```bash
-   ddev codeception run acceptance --group=install
-   ddev codeception run functional --group=install
-   ```
+# Run Codeception tests using BLT:
+ddev blt codeception --group=install --suite=acceptance
+ddev blt codeception --group=install --suite=functional
+
+# Alternative: Run tests directly:
+ddev codeception run acceptance --group=install
+ddev codeception run functional --group=install
+```
 
 ### Available Commands
 
@@ -102,4 +90,5 @@ This setup provides a fresh test environment that matches the CI pipeline exactl
 
 ## Areas that need work
 
+- Better support for automated testing and resetting of local testing environments
 - Enabling local SimpleSAML authentication

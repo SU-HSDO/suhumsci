@@ -1,14 +1,17 @@
 @use 'sass:meta';
-@use '../settings/variables.colorful-pairings' as *;
-@use '../settings/variables.fonts' as *;
-@use '../tools/functions.general' as *;
+@use '../variables/colorful-pairings' as *;
+@use '../variables/traditional-pairings' as *;
+@use '../variables/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/text' as *;
 
 $hb-current-theme: 'traditional' !default;
 
-@import '../base-imports';
+// @import '../base-imports';
 
 // Font definitions.
-@import '../fonts/fonts';
+@use '../fonts/fonts';
 
 .paragraph-admin-preview {
   @include hb-themes(('colorful', 'airy')) {

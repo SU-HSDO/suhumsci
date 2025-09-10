@@ -1,0 +1,417 @@
+@use '../variables/fonts' as *;
+@use '../variables/zindex' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use 'theme' as *;
+@use 'breakpoints' as *;
+@use 'icons' as *;
+
+@mixin hb-text-reset {
+  background: initial;
+  border: initial;
+  color: initial;
+  font-size: inherit;
+  font-style: initial;
+  font-weight: initial;
+  line-height: inherit;
+  margin: initial;
+  padding: initial;
+  position: initial;
+  quotes: initial;
+  text-decoration: initial;
+  text-transform: initial;
+  transition: none;
+}
+
+@mixin hb-heading-1 {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 120%;
+  font-size: clamp(hb-calculate-rems(35px), calc(#{hb-calculate-rems(35px)} + (47 - 35) * ((100vw - #{hb-calculate-rems(576px)}) / (1200 - 576))), hb-calculate-rems(47px));
+  text-wrap: balance;
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+
+    .hb-font-sans-serif & {
+      font-family: $hb-traditional-font--sans;
+    }
+
+  }
+}
+
+@mixin hb-heading-2 {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 120%;
+  font-size: clamp(hb-calculate-rems(29px), calc(#{hb-calculate-rems(29px)} + (35 - 29) * ((100vw - #{hb-calculate-rems(576px)}) / (1200 - 576))), hb-calculate-rems(35px));
+  text-wrap: balance;
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+
+    .hb-font-sans-serif & {
+      font-family: $hb-traditional-font--sans;
+    }
+  }
+}
+
+@mixin hb-heading-3 {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 127%;
+  font-size: clamp(hb-calculate-rems(24px), calc(#{hb-calculate-rems(24px)} + (26 - 24) * ((100vw - #{hb-calculate-rems(576px)}) / (1200 - 576))), hb-calculate-rems(26px));
+  text-wrap: balance;
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+
+    .hb-font-sans-serif & {
+      font-family: $hb-traditional-font--sans;
+    }
+  }
+}
+
+@mixin hb-heading-4 {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 127%;
+  font-size: clamp(hb-calculate-rems(20px), calc(#{hb-calculate-rems(20px)} + (21 - 20) * ((100vw - #{hb-calculate-rems(576px)}) / (1200 - 576))), hb-calculate-rems(21px));
+  text-wrap: balance;
+}
+
+@mixin hb-heading-5 {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 127%;
+  font-size: clamp(hb-calculate-rems(17px), calc(#{hb-calculate-rems(17px)} + (18 - 17) * ((100vw - #{hb-calculate-rems(576px)}) / (1200 - 576))), hb-calculate-rems(18px));
+  text-wrap: balance;
+}
+
+@mixin hb-heading-6 {
+  text-transform: uppercase;
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 127%;
+  font-size: clamp(hb-calculate-rems(15px), calc(#{hb-calculate-rems(15px)} + (16 - 15) * ((100vw - #{hb-calculate-rems(576px)}) / (1200 - 576))), hb-calculate-rems(16px));
+  text-wrap: balance;
+}
+
+@mixin hb-body--small {
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(16px);
+  line-height: var(--normal-line-height);
+}
+
+@mixin hb-body--medium {
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(18px);
+  line-height: var(--normal-line-height);
+}
+
+@mixin hb-description {
+  line-height: var(--normal-line-height);
+  font-weight: hb-theme-font-weight(regular);
+  font-size: hb-calculate-rems(18px);
+
+  @include hb-themes(('colorful', 'airy')) {
+
+    @include grid-media-max('lg') {
+      font-size: hb-calculate-rems(16px);
+    }
+  }
+}
+
+@mixin hb-blockquote {
+  color: var(--palette--primary);
+  font-size: hb-calculate-rems(24px);
+  font-weight: hb-theme-font-weight(regular);
+
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(28px);
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--serif;
+  }
+
+  // A utility class that can be applied via layout builder to override the text color to black
+  .hb-blockquote-black-text & {
+    color: var(--palette--black);
+  }
+
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container &,
+  .hb-dark-pattern.hb-local-footer & {
+    color: var(--palette--white);
+  }
+
+  &:not(.hb-testimonial__quote) {
+    position: relative;
+    padding: hb-calculate-rems(40px) hb-calculate-rems(36px);
+
+    &::before,
+    &::after {
+      @include hb-icon-background('close-quote-mark', 'tertiary');
+
+      content: '';
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      width: hb-calculate-rems(36px);
+      height: hb-calculate-rems(31px);
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-background('close-quote-mark', 'white');
+      }
+
+      .hb-dark-pattern.hb-local-footer & {
+        @include hb-icon-background('close-quote-mark', 'tertiary');
+      }
+    }
+
+    &::before {
+      left: hb-calculate-rems(-36px);
+      top: hb-calculate-rems(14px);
+      transform: rotate(180deg);
+      transform-origin: center;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+}
+
+@mixin hb-field-label {
+  @include hb-heading-6;
+
+  color: var(--palette--black);
+
+  @include hb-themes(('colorful', 'airy')) {
+    margin-bottom: hb-calculate-rems(4px);
+  }
+
+  @include hb-traditional {
+    margin-bottom: 0;
+  }
+}
+
+@mixin hb-field-label--featured {
+  @include hb-heading-6;
+
+  text-transform: inherit;
+  color: var(--palette--secondary);
+
+  .hb-well {
+    color: var(--palette--secondary-darken-12) !important;
+  }
+
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      color: var(--palette--secondary-darken-12);
+    }
+  }
+}
+
+@mixin hb-descriptor {
+  color: var(--palette--gray-dark);
+  font-size: hb-calculate-rems(16px);
+
+  @include grid-media-min('lg') {
+    font-size: hb-calculate-rems(18px);
+  }
+}
+
+// Styles for WYSIWYG / text captions
+@mixin hb-caption($italic: false) {
+  @include hb-text-reset;
+  color: var(--palette--gray-dark);
+
+  @if $italic {
+    font-style: italic;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-size: hb-calculate-rems(14px);
+  }
+
+  @include hb-traditional {
+    font-size: hb-calculate-rems(16px);
+  }
+
+  .hb-dark-pattern & {
+    @include hb-themes(('colorful', 'airy')) {
+      color: var(--palette--white);
+    }
+
+    @include hb-traditional {
+      color: var(--palette--gray-light);
+    }
+  }
+}
+
+// Styles for captions and credits
+@mixin hb-caption-credit {
+  color: var(--palette--white);
+  font-style: italic;
+  font-size: hb-calculate-rems(12px);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: $hb-z-index-small-5;
+  text-align: right;
+  line-height: var(--condensed-line-height);
+  height: auto;
+  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px)
+    15%; // Using a percentage to the left to control the width of the captions
+
+  @include grid-media-min('sm') {
+    // the right side calculation is lower to adjust for the margin-right on the child elements
+    padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+      hb-calculate-rems(16px) 15%;
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    background: linear-gradient(to top, var(--palette--black), transparent);
+
+    .paragraph--type--hs-carousel & {
+      // the percentage on this left side is larger to prevent the caption from running under carousel overlay
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+          hb-calculate-rems(16px) 58%;
+      }
+    }
+  }
+
+  @include hb-traditional {
+    background: linear-gradient(to top, var(--palette--black), transparent);
+  }
+
+  .hb-card__graphics--has-date & {
+    @include grid-media-min('sm') {
+      // the right side calculation is lower to adjust for the margin-right on the child elements
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+        hb-calculate-rems(16px) hb-calculate-rems(100px);
+    }
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  blockquote,
+  cite,
+  code,
+  li,
+  dd,
+  dt,
+  span,
+  strong,
+  em,
+  a,
+  .hs-button,
+  .hs-button--big,
+  .hs-secondary-button,
+  .hs-more-link,
+  .hs-external-link,
+  .hs-file-link,
+  .hs-pdf-link,
+  .hs-private-link {
+    @include hb-text-reset;
+    font-style: italic;
+    color: var(--palette--white);
+  }
+
+  h1 a,
+  h2 a,
+  h3 a,
+  h4 a,
+  h5 a,
+  h6 a,
+  a {
+    color: var(--palette--white);
+    text-decoration: underline !important;
+    display: inline;
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+
+    &:hover,
+    &:focus {
+      text-decoration: none !important;
+      box-shadow: none;
+    }
+  }
+
+  dl,
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+  }
+
+  li {
+    &::before {
+      display: none;
+    }
+  }
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+// Splash Font Animation
+@mixin hb-font-splash-animation {
+  @include hb-traditional {
+    @include hasAnimationEnhancements(
+      ease-in-out,
+      1700ms,
+      traditionalSplashFont
+    );
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hasAnimationEnhancements(ease-in-out, 2000ms, colorfulSplashFont);
+  }
+
+  @include reducedMotionPrefered;
+}
+
+// Lead Font Animation
+@mixin hb-font-lead-animation {
+  @include hb-traditional {
+    @include hasAnimationEnhancements(ease-in-out, 1700ms, traditionalLeadFont);
+  }
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include hasAnimationEnhancements(ease-in-out, 2000ms, colorfulLeadFont);
+  }
+
+  @include reducedMotionPrefered;
+}
+
+// Removes animation styles when Reduced Motion is enabled
+@mixin reducedMotionPrefered {
+  @media screen and (prefers-reduced-motion: reduce) {
+    &.animate {
+      .hb-has-animation-enhancements & {
+        animation: none;
+      }
+    }
+  }
+}
+
+@mixin hasAnimationEnhancements($timingFunction, $duration, $animationName) {
+  &.animate {
+    .hb-has-animation-enhancements & {
+      animation-timing-function: $timingFunction;
+      animation-duration: $duration;
+      animation-fill-mode: forwards;
+      animation-name: $animationName;
+    }
+  }
+}

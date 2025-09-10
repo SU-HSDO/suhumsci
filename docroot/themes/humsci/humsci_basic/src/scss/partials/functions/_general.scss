@@ -1,0 +1,111 @@
+@use 'sass:math';
+@use 'sass:map';
+@use 'sass:list';
+@use '../variables/theme' as *;
+@use '../variables/general' as *;
+
+// Calculate rems based upon the root font size
+// of 10px which matches the root font size in
+// Decanter ($su-root-font-size)
+// set in /humsci_basic/src/scss/settings/_variables.general.scss
+@function hb-calculate-rems($size-in-pixels) {
+  $size-in-rems: math.div($size-in-pixels, $hb-root-font-size);
+  @return #{$size-in-rems}rem;
+}
+
+// Checks that a theme is set and finds if there a theme associated with the
+// $requested-array passed in. This can be used with many different theme arrays, such as:
+// animations, spacing, and sidebar width.
+@function get-theme-array-list($requested-array) {
+  $is-valid-theme: false;
+
+  @each $theme in $hb-global-theme-list {
+    @if $theme == $hb-current-theme {
+      $is-valid-theme: true;
+    }
+  }
+
+  @if $is-valid-theme {
+    @return map.get($requested-array, $hb-current-theme);
+  } @else {
+    @return null;
+  }
+}
+
+// Returns the proper spacing based on the theme.
+// Filters through $hb-spacing-list array to find the relevant
+// spacing $size for the theme.
+// Additionally, this function allows for a $convert-to-rem parameter
+// to get passed in to convert the result to rem or not.
+// By default, we'll convert to rem, but every once in a while, you'll want to
+// pass `false` to get pixel values for doing math with the grid, columns, etc.
+@function hb-spacing-width($size: 'default', $convert-to-rem: true) {
+  $theme-spacing-list: get-theme-array-list($hb-spacing-list);
+  $result: map.get($theme-spacing-list, $size);
+
+  @if $result {
+    // Return spacing value if it exists
+    @if $convert-to-rem {
+      // use hb-calculate-rems and then return rem value
+      @return hb-calculate-rems($result);
+    } @else {
+      // return pixel value
+      @return $result;
+    }
+  } @else {
+    // Error if value doesn't exist
+    @error "Couldn't find a value for this spacing size: #{$size}";
+  }
+}
+
+// Returns the proper sidebar width based on the theme.
+// Filters through $hb-sidebar-list array to find the relevant
+// sidebar width for the theme.
+@function hb-sidebar-width() {
+  $result: get-theme-array-list($hb-sidebar-list);
+
+  @if $result {
+    @return $result;
+  } @else {
+    // Error if value doesn't exist
+    @error "Couldn't find the sidebar width for this theme: #{$hb-current-theme}";
+  }
+}
+
+///
+/// Validates wether something is an integer
+///
+/// @name is-integer($value)
+///
+/// @param {Integer} $value - the value to type check
+///
+@function is-integer($value) {
+  @return is-number($value) and round($value) == $value;
+}
+
+///
+/// Validates whether something is a direction or an angle
+///
+/// @name is-direction-or-angle
+///
+/// @param {Integer} $value - the value to type check
+///
+@function is-direction-or-angle($value) {
+  $is-direction: list.index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+  $is-angle: type-of($value) == 'number' and list.index('deg' 'grad' 'turn' 'rad', unit($value));
+
+  @return $is-direction or $is-angle;
+}
+
+/// Map deep get
+/// @author Hugo Giraudel
+/// @access public
+/// @param {Map} $map - Map
+/// @param {Arglist} $keys - Key chain
+/// @return {*} - Desired value
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map.get($map, $key);
+  }
+  @return $map;
+}

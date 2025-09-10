@@ -1,4 +1,6 @@
-@use '../tools/functions.general' as *;
+@use 'sass:color';
+@use '../functions/general' as *;
+@use '../mixins/layout' as *;
 
 $unpublished-color: rgba(234, 171, 0, 0.6);
 
@@ -17,7 +19,7 @@ $unpublished-color: rgba(234, 171, 0, 0.6);
     background-color: $unpublished-color;
 
     &:hover {
-      background-color: darken($unpublished-color, 10%);
+      background-color: color.adjust($unpublished-color, $lightness: -10%);
     }
   }
 }
@@ -28,6 +30,6 @@ $unpublished-color: rgba(234, 171, 0, 0.6);
   background-color: $unpublished-color;
 
   &:hover {
-    background-color: darken($unpublished-color, 10%);
+    background-color: color.adjust($unpublished-color, $lightness: -10%);
   }
 }

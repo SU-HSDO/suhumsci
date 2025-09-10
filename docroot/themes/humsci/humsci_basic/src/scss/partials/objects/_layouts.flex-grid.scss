@@ -2,13 +2,18 @@
 // Flex Grid
 //
 
-@use '../settings/variables.flex-grid' as *;
+@use 'sass:map';
+@use 'sass:list';
+@use '../variables/flex-grid' as *;
+@use '../functions/breakpoints' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/flex-grid' as *;
 
 // Set some variables to use later.
 // We get the keys and assume they are in order from smallest breakpoint to
 // the largest breakpoint.
-$_codes: map-keys($su-grid-media);
-$_codes-collapse: map-keys(map-remove($su-grid-media, nth($_codes, 1)));
+$_codes: map.keys($su-grid-media);
+$_codes-collapse: map.keys(map.remove($su-grid-media, list.nth($_codes, 1)));
 
 // The container helper.
 .flex-container {
@@ -30,13 +35,13 @@ $_codes-collapse: map-keys(map-remove($su-grid-media, nth($_codes, 1)));
   &--row-gap {
     > * {
       // No media query for the small breakpoint.
-      margin: 0 0 map-get($su-grid-gutters, nth($_codes, 1));
+      margin: 0 0 map.get($su-grid-gutters, list.nth($_codes, 1));
 
       // Loop through each fo the breakpoints starting from the second smallest.
-      $_codes-gap: map-keys(map-remove($su-grid-media, nth($_codes, 1)));
+      $_codes-gap: map.keys(map.remove($su-grid-media, list.nth($_codes, 1)));
       @each $shortcode in $_codes-gap {
         @include grid-media($shortcode) {
-          margin: 0 0 map-get($su-grid-gutters, $shortcode);
+          margin: 0 0 map.get($su-grid-gutters, $shortcode);
         }
       }
     }
@@ -94,7 +99,7 @@ $_codes-collapse: map-keys(map-remove($su-grid-media, nth($_codes, 1)));
     $cols: $n of $su-grid-columns;
 
     // Start from the second to smallest breakpoint and go up.
-    $_flex-grid: map-remove($su-grid-media, nth($_codes, 1));
+    $_flex-grid: map.remove($su-grid-media, list.nth($_codes, 1));
 
     // Responsive column for everything that is not 100% width.
     @if $n != $su-grid-columns {
@@ -103,7 +108,7 @@ $_codes-collapse: map-keys(map-remove($su-grid-media, nth($_codes, 1)));
 
     // One breakpoint only needed for 100% width items.
     @else {
-      @include grid-media(nth($_codes, 1)) {
+      @include grid-media(list.nth($_codes, 1)) {
         @include flex-column(12 of 12);
       }
     }
@@ -117,12 +122,12 @@ $_codes-collapse: map-keys(map-remove($su-grid-media, nth($_codes, 1)));
   // We want to generate styles for all breakpoints that are larger
   // than the defined option so we remove the smaller ones and pass
   // the work to the responsive-flex-column mixin.
-  $_grid-up: map-remove($su-grid-media, nth($_codes, 1));
+  $_grid-up: map.remove($su-grid-media, list.nth($_codes, 1));
   $_prev: $_code;
 
   @while $_prev != null {
     $_prev: breakpoint-previous($_prev);
-    $_grid-up: map-remove($_grid-up, $_prev);
+    $_grid-up: map.remove($_grid-up, $_prev);
   }
 
   @for $n from 1 through $su-grid-columns {

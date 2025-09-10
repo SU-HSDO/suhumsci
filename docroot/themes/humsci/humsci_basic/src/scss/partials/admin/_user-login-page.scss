@@ -1,3 +1,9 @@
+@use 'sass:color';
+@use '../functions/general' as *;
+@use '../functions/fonts' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/buttons' as *;
+
 main:has(.user-login-form) {
   width: 100% !important;
   max-width: 100% !important;
@@ -71,8 +77,8 @@ main:has(.user-login-form) {
 
     &:hover,
     &:focus {
-      background-color: darken(#8c1515, 12%) !important;
-      border-color: darken(#8c1515, 12%) !important;
+      background-color: color.adjust(#8c1515, $lightness: -12%) !important;
+      border-color: color.adjust(#8c1515, $lightness: -12%) !important;
     }
   }
 
@@ -112,7 +118,7 @@ main:has(.user-login-form) {
     margin: hb-calculate-rems(32px) hb-calculate-rems(-24px) hb-calculate-rems(-24px);
     padding: hb-calculate-rems(24px);
     background-color: #e8e9ea;
-    
+
     @include grid-media-min('md') {
       margin: hb-calculate-rems(-24px) hb-calculate-rems(-32px) hb-calculate-rems(-24px) 0;
       padding-right: hb-calculate-rems(32px);
@@ -160,7 +166,7 @@ main:has(.user-login-form) {
       input {
         width: 100%;
         max-width: hb-calculate-rems(147px);
-        
+
         @include grid-media-min('md') {
           margin-right: hb-calculate-rems(24px);
         }

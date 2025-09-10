@@ -2,8 +2,11 @@
 // View / Edit / Publish / Manage Display / Layout / Revisions / Devel
 // located within page content
 
-@use '../settings/variables.general' as *;
-@use '../tools/functions.general' as *;
+@use 'sass:color';
+@use '../variables/general' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../mixins/layout' as *;
 
 .block--local-tasks {
   @include hb-page-width;
@@ -16,7 +19,7 @@
 
     .tabs__tab {
       display: inline-block;
-      background-color: mix(white, $hb-color--drupal-light, 88%);
+      background-color: color.mix(white, $hb-color--drupal-light, 88%);
       list-style-type: none;
       padding: hb-calculate-rems(8px) hb-calculate-rems(12px);
       margin-top: hb-calculate-rems(4px);
@@ -38,7 +41,7 @@
       }
 
       &:hover:not(.tabs__tab--active) {
-        background-color: mix(white, $hb-color--drupal-light, 73%);
+        background-color: color.mix(white, $hb-color--drupal-light, 73%);
       }
     }
   }

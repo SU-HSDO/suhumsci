@@ -69,7 +69,6 @@ $su-alert-colors: (
   }
 
   &--text-light {
-
     .hb-dark-pattern & a,
     a:not([class]),
     a.mailto,
@@ -87,7 +86,6 @@ $su-alert-colors: (
 
     .su-alert__text {
       a {
-
         &:hover,
         &:focus {
           background-color: $su-color-white;
@@ -219,7 +217,9 @@ $su-alert-colors: (
     a {
       color: $su-color-black;
       text-decoration: underline;
-      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+      transition:
+        background-color 0.3s ease-in-out,
+        color 0.3s ease-in-out;
 
       &:hover,
       &:focus {
@@ -278,7 +278,6 @@ $su-alert-colors: (
       }
 
       &.su-text-black {
-
         &:hover,
         &:focus {
           background-color: transparent;
@@ -331,11 +330,11 @@ $su-alert-colors: (
   }
 }
 
-.su-alert__text+.su-alert__footer {
+.su-alert__text + .su-alert__footer {
   @include responsive-spacing('margin', 0 null null null);
 }
 
-.su-alert__dismiss~.su-alert__body {
+.su-alert__dismiss ~ .su-alert__body {
   @include grid-media-max('sm') {
     margin-bottom: 1em;
   }

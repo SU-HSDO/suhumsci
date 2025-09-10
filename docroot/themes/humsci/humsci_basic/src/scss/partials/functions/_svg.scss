@@ -4,9 +4,18 @@
 //  Helper function to replace characters in a string
 @function str-replace($string, $search, $replace: '') {
   $index: string.index($string, $search);
-  @return if($index, string.slice($string, 1, $index - 1) + $replace + str-replace(string.slice($string, $index + string.length($search)), $search, $replace), $string);
-}
 
+  @return if(
+    $index,
+    string.slice($string, 1, $index - 1) + $replace +
+      str-replace(
+        string.slice($string, $index + string.length($search)),
+        $search,
+        $replace
+      ),
+    $string
+  );
+}
 
 // SVG URL fixer Icons by Taylor Hunt
 // http://codepen.io/tigt/post/optimizing-svgs-in-data-uris
@@ -23,6 +32,7 @@
   $slice: 2000;
   $index: 0;
   $loops: math.ceil(math.div(string.length($svg), $slice));
+
   @for $i from 1 through $loops {
     $chunk: string.slice($svg, $index, $index + $slice - 1);
 
@@ -52,5 +62,6 @@
     $encoded: #{$encoded}#{$chunk};
     $index: $index + $slice;
   }
-  @return url("data:image/svg+xml,#{$encoded}");
+
+  @return url('data:image/svg+xml,#{$encoded}');
 }

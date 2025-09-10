@@ -23,7 +23,7 @@
 /// Returns "-sm"
 ///
 @function breakpoint-insert($name, $breakpoints: $su-grid-screens) {
-  @return "-#{$name}";
+  @return '-#{$name}';
 }
 
 ///
@@ -45,6 +45,7 @@
 ///
 @function breakpoint-max($name, $breakpoints: $su-grid-screens) {
   $next: breakpoint-next($name, map.keys($breakpoints));
+
   @return if($next, breakpoint-min($next, $breakpoints) - 1px, null);
 }
 
@@ -61,7 +62,8 @@
 ///
 @function breakpoint-min($name, $breakpoints: $su-grid-screens) {
   $min: map.get($breakpoints, $name);
-  @return if($min !=0, $min, null);
+
+  @return if($min != 0, $min, null);
 }
 
 ///
@@ -79,10 +81,12 @@
   $n: list.index($breakpoints, $name);
 
   @if is-integer($n) {
-    @return if($n < list.length($breakpoints), list.nth($breakpoints, $n + 1), null);
-  }
-
-  @else {
+    @return if(
+      $n < list.length($breakpoints),
+      list.nth($breakpoints, $n + 1),
+      null
+    );
+  } @else {
     @error "Could not find breakpoint shortcode in breakpoint-next mixin";
   }
 }
@@ -101,11 +105,13 @@
 @function breakpoint-previous($name, $breakpoints: map.keys($su-grid-screens)) {
   $n: list.index($breakpoints, $name);
 
-  @if is-integer($n) and $n >1 {
-    @return if($n <= list.length($breakpoints), list.nth($breakpoints, $n - 1), null);
-  }
-
-  @else {
+  @if is-integer($n) and $n > 1 {
+    @return if(
+      $n <= list.length($breakpoints),
+      list.nth($breakpoints, $n - 1),
+      null
+    );
+  } @else {
     @return null;
   }
 }

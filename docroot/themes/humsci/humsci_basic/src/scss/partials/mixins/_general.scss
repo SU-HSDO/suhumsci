@@ -13,7 +13,7 @@
   }
 }
 
-@mixin visually-hidden($status:null) {
+@mixin visually-hidden($status: null) {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);
   padding: 0;
@@ -49,8 +49,13 @@
 // Applies a colorful bar above text to a pseudo element
 // You can choose the color and width
 // Remember to add position: relative to the parent element
-@mixin hb-colorful-text-bar($color, $height: hb-calculate-rems(4px), $width: hb-calculate-rems(65px)) {
+@mixin hb-colorful-text-bar(
+  $color,
+  $height: hb-calculate-rems(4px),
+  $width: hb-calculate-rems(65px)
+) {
   display: block;
+
   @include pseudo-background-box($color, $height, $width);
 }
 
@@ -58,7 +63,8 @@
 @mixin hb-nested-list-styles {
   // Unordered nested lists
   // second level
-  li ul > li { // hollow circle
+  li ul > li {
+    // hollow circle
     &:first-of-type {
       margin-top: hb-calculate-rems(10px);
     }
@@ -80,7 +86,8 @@
   }
 
   // third level
-  li li ul > li { // solid square
+  li li ul > li {
+    // solid square
     &::before {
       border-radius: 0;
       border: 0;
@@ -92,7 +99,8 @@
 
   // Ordered nested lists
   // second level
-  li ol > li { // lower alpha
+  li ol > li {
+    // lower alpha
     &:first-of-type {
       margin-top: hb-calculate-rems(10px);
     }
@@ -109,7 +117,8 @@
   }
 
   // third level
-  li li ol > li { // lower roman
+  li li ol > li {
+    // lower roman
     &::before {
       content: counter(li, lower-roman) '.';
     }
@@ -171,7 +180,9 @@
     position: relative;
     line-height: 122%;
     margin-bottom: hb-calculate-rems(10px);
-    padding-left: hb-calculate-rems(38px); // should only be 18px when on a UL // was 28
+    padding-left: hb-calculate-rems(
+      38px
+    ); // should only be 18px when on a UL // was 28
 
     &::before {
       content: counter(li) '.';
@@ -186,7 +197,9 @@
       text-align: right;
 
       @include grid-media-min('lg') {
-        top: hb-calculate-rems(1px); // improves alignment of markers at larger screen sizes
+        top: hb-calculate-rems(
+          1px
+        ); // improves alignment of markers at larger screen sizes
       }
 
       .hb-dark-pattern & {
@@ -303,7 +316,9 @@
 ///
 @mixin logo {
   display: inline-block;
-  font-family: Stanford, 'Source Serif 4', 'Source Serif Pro', Georgia, Times, 'Times New Roman', serif;
+  font-family:
+    Stanford, 'Source Serif 4', 'Source Serif Pro', Georgia, Times,
+    'Times New Roman', serif;
   font-style: normal;
   font-weight: 400;
   font-variant: normal;
@@ -312,7 +327,7 @@
   line-height: 0.75;
   transform: translateZ(0);
   letter-spacing: 0;
-  font-feature-settings: "liga";
+  font-feature-settings: 'liga';
   font-variant-ligatures: discretionary-ligatures;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

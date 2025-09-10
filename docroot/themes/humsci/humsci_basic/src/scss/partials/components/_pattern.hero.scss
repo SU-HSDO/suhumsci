@@ -30,6 +30,7 @@
 
   &__text {
     @include hb-hero-text;
+
     @include hb-traditional {
       text-align: center;
     }
@@ -70,17 +71,19 @@
 .paragraph--type--hs-hero-image.paragraph--view-mode--default,
 .paragraph--type--hs-hero-image.paragraph--view-mode--slideshow-slide {
   position: relative;
+
   @include hb-hero-full-width($background: true);
 }
 
 // Only the default view mode has an colored overlay.
 .paragraph--type--hs-hero-image.paragraph--view-mode--default {
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     display: block;
     inset: 0;
     z-index: $hb-z-index-hero1-overlay;
+
     @include hb-hero-overlay-animation;
     background-color: var(--palette--primary-hero-overlay);
   }

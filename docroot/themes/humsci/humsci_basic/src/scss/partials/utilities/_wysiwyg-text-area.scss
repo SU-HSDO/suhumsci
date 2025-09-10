@@ -154,13 +154,9 @@
 
 // Utility classes used in Content Type WYSIWYGs and in Text Area WYSIWYG components
 // hs-caption and D7 import utility class map and loop
-$captions: (
-  hs-caption,
-  caption
-);
+$captions: (hs-caption, caption);
 
 @each $caption in $captions {
-
   .#{$caption},
   .views-row #{$caption},
   .views-row #{$caption} a {
@@ -168,13 +164,9 @@ $captions: (
   }
 }
 
-$credits: (
-  hs-credits,
-  credits
-);
+$credits: (hs-credits, credits);
 
 @each $credit in $credits {
-
   .#{$credit},
   .views-row #{$credit},
   .views-row #{$credit} a {
@@ -217,7 +209,7 @@ $credits: (
   @include hb-font-splash-animation;
 
   @include hb-traditional {
-    ~.hs-font-lead {
+    ~ .hs-font-lead {
       animation-duration: 1450ms !important;
       animation-delay: 250ms;
 
@@ -357,7 +349,8 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"] {
+.hs-external-link a[href*="//"]
+{
   @include hb-link--inline;
   @include hb-external-link-icon;
 }
@@ -398,17 +391,15 @@ a.hs-mailto-link {
 }
 
 // hs-more-link and D7 import utility class map and loop
-$more-links: (
-  hs-more-link
-);
+$more-links: (hs-more-link);
 
 @each $more-link in $more-links {
-
   a.#{$more-link},
   button.#{$more-link},
   .#{$more-link} a,
   .#{$more-link} button {
     margin-bottom: hb-calculate-rems(20px);
+
     @include hb-more-link;
   }
 }

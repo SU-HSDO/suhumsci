@@ -26,13 +26,13 @@
 .hb-inline-pipe {
   margin-bottom: hb-calculate-rems(20px);
 
-  @include grid-media-min("sm") {
+  @include grid-media-min('sm') {
     display: flex;
     flex-wrap: wrap;
   }
 
   > div {
-    margin-bottom: hb-spacing-width("xxs");
+    margin-bottom: hb-spacing-width('xxs');
     padding-right: hb-calculate-rems(20px);
   }
 }
@@ -41,14 +41,14 @@
   > div {
     padding-right: 0;
 
-    @include grid-media-min("sm") {
+    @include grid-media-min('sm') {
       display: flex;
     }
 
     &::after {
-      @include grid-media-min("sm") {
+      @include grid-media-min('sm') {
         margin: 0 hb-calculate-rems(10px);
-        content: "|";
+        content: '|';
         color: var(--palette--gray-dark);
       }
     }
@@ -56,12 +56,12 @@
     &:last-child {
       margin-bottom: hb-calculate-rems(20px);
 
-      @include grid-media-min("sm") {
+      @include grid-media-min('sm') {
         margin-bottom: initial;
       }
 
       &::after {
-        content: "";
+        content: '';
       }
     }
   }
@@ -97,10 +97,10 @@
 // in layout builder, this class can be applied.
 .hb-main-body-detail-image {
   .hb-three-column-w-image & {
-    @include grid-media-min("md") {
+    @include grid-media-min('md') {
       @include clearfix;
       float: right;
-      margin: 0 0 hb-spacing-width("sm") hb-spacing-width("sm");
+      margin: 0 0 hb-spacing-width('sm') hb-spacing-width('sm');
     }
   }
 }
@@ -129,7 +129,7 @@
   @include hb-link;
   cursor: pointer;
   float: right;
-  margin-bottom: hb-spacing-width("xxs");
+  margin-bottom: hb-spacing-width('xxs');
 }
 
 // Vertical timeline headings - change circle icons to squares
@@ -176,14 +176,14 @@ details.hb-accordion-secondary {
     background-color: transparent;
 
     &::after {
-      @include hb-menu-plus-icon("black");
+      @include hb-menu-plus-icon('black');
     }
 
     &:hover {
       color: var(--palette--secondary);
 
       &::after {
-        @include hb-menu-minus-icon("secondary");
+        @include hb-menu-minus-icon('secondary');
       }
     }
   }
@@ -198,7 +198,7 @@ details.hb-accordion-secondary {
       border-bottom: none;
 
       &::after {
-        @include hb-menu-minus-icon("black");
+        @include hb-menu-minus-icon('black');
       }
     }
 
@@ -237,11 +237,11 @@ details.hb-accordion-light {
 
     &::after {
       @include hb-colorful {
-        @include hb-menu-plus-icon("secondary");
+        @include hb-menu-plus-icon('secondary');
       }
 
       @include hb-traditional {
-        @include hb-menu-plus-icon("primary");
+        @include hb-menu-plus-icon('primary');
       }
     }
 
@@ -258,10 +258,11 @@ details.hb-accordion-light {
 
       &::after {
         @include hb-colorful {
-          @include hb-menu-minus-icon("secondary");
+          @include hb-menu-minus-icon('secondary');
         }
+
         @include hb-traditional {
-          @include hb-menu-minus-icon("primary");
+          @include hb-menu-minus-icon('primary');
         }
       }
     }

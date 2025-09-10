@@ -2,8 +2,6 @@
 @use '../variables/theme' as *;
 @use '../variables/general' as *;
 
-@debug $hb-current-theme;
-
 // Mixin to apply styles to Airy theme
 @mixin hb-airy() {
   @if $hb-current-theme == 'airy' {
@@ -30,7 +28,7 @@
 // Will error if no array passed as params, but empty array will just return
 @mixin hb-themes($theme-list) {
   @each $theme in $theme-list {
-    @if list.index($hb-global-theme-list, $theme) != null {
+    @if list.index($hb-global-theme-list, $theme) {
       @if $theme == 'airy' {
         @include hb-airy {
           @content;

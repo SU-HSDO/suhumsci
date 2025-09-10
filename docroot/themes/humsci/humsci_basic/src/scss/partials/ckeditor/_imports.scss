@@ -16,11 +16,11 @@
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
-  // '../base-imports',
 @use '../fonts/fonts';
 @use '../base/color-pairings';
 @use '../utilities/utilities';
-  // CKEditor UI customizations.
+
+// CKEditor UI customizations.
 @use 'ckeditor-ui';
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
@@ -31,6 +31,7 @@
     {
       --palette--#{$color}: #{$value};
     }
+
     @each $color, $value in $hc-colorful-globals {
       --palette--#{$color}: #{$value};
     }
@@ -42,6 +43,7 @@
     {
       --palette--#{$color}: #{$value};
     }
+
     @each $color, $value in $ht-traditional-globals {
       --palette--#{$color}: #{$value};
     }

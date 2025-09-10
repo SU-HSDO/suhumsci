@@ -1,6 +1,7 @@
 @use 'sass:math';
 @use 'sass:map';
 @use 'sass:list';
+@use 'sass:meta';
 @use '../variables/theme' as *;
 @use '../variables/general' as *;
 
@@ -10,6 +11,7 @@
 // set in /humsci_basic/src/scss/settings/_variables.general.scss
 @function hb-calculate-rems($size-in-pixels) {
   $size-in-rems: math.div($size-in-pixels, $hb-root-font-size);
+
   @return #{$size-in-rems}rem;
 }
 
@@ -65,7 +67,7 @@
   $result: get-theme-array-list($hb-sidebar-list);
 
   @if $result {
-    @return $result;
+    @return if(meta.type-of($result) == 'list', list.nth($result, 1), $result);
   } @else {
     // Error if value doesn't exist
     @error "Couldn't find the sidebar width for this theme: #{$hb-current-theme}";
@@ -91,8 +93,25 @@
 /// @param {Integer} $value - the value to type check
 ///
 @function is-direction-or-angle($value) {
-  $is-direction: list.index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
-  $is-angle: type-of($value) == 'number' and list.index('deg' 'grad' 'turn' 'rad', unit($value));
+  $is-direction: list.index(
+    (
+      to top,
+      to top right,
+      to right top,
+      to right,
+      to bottom right,
+      to right bottom,
+      to bottom,
+      to bottom left,
+      to left bottom,
+      to left,
+      to left top,
+      to top left
+    ),
+    $value
+  );
+  $is-angle: meta.type-of($value) == 'number' and
+    list.index('deg' 'grad' 'turn' 'rad', math.unit($value));
 
   @return $is-direction or $is-angle;
 }
@@ -107,5 +126,6 @@
   @each $key in $keys {
     $map: map.get($map, $key);
   }
+
   @return $map;
 }

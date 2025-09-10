@@ -1,14 +1,11 @@
 @use 'sass:meta';
+@use '../variables/theme' as *;
 @use '../variables/colorful-pairings' as *;
 @use '../variables/traditional-pairings' as *;
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
-
-$hb-current-theme: 'traditional' !default;
-
-// @import '../base-imports';
 
 // Font definitions.
 @use '../fonts/fonts';
@@ -19,6 +16,7 @@ $hb-current-theme: 'traditional' !default;
       --palette--#{$color}: #{$value};
     }
   }
+
   @include hb-traditional {
     @each $color, $value in $ht-traditional-globals {
       --palette--#{$color}: #{$value};
@@ -29,17 +27,13 @@ $hb-current-theme: 'traditional' !default;
   // All styles will be prefixed with the `.paragraph-admin-preview` class.
   @include meta.load-css(
     '../main',
-    $with: (
-      'hb-current-theme': $hb-current-theme,
-    )
+    $with: ('hb-current-theme': $hb-current-theme)
   );
 
   // Utility classes.
   @include meta.load-css(
     '../utilities/utilities',
-    $with: (
-      'hb-current-theme': $hb-current-theme,
-    )
+    $with: ('hb-current-theme': $hb-current-theme)
   );
 
   // Link current color variables.

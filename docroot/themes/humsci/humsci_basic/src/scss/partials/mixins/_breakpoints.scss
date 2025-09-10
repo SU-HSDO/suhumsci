@@ -11,7 +11,11 @@
 /// @param {key code} $upper - The upper breakpoint key code eg: 'xl'
 /// @param {map} $breakpoints - A map of each of the screen breakpoint sizes.
 ///
-@mixin grid-media-between($lower: 'xs', $upper: 'sm', $breakpoints: $su-grid-screens) {
+@mixin grid-media-between(
+  $lower: 'xs',
+  $upper: 'sm',
+  $breakpoints: $su-grid-screens
+) {
   $min: breakpoint-min($lower, $breakpoints);
   $max: breakpoint-max($upper, $breakpoints);
 
@@ -58,6 +62,7 @@
 ///
 @mixin grid-media-max($name: 'xs', $breakpoints: $su-grid-screens) {
   $max: breakpoint-max($name, $breakpoints);
+
   @if $max {
     @media (max-width: $max) {
       @content;
@@ -79,6 +84,7 @@
 ///
 @mixin grid-media-min($name, $breakpoints: $su-grid-screens) {
   $min: breakpoint-min($name, $breakpoints);
+
   @if $min {
     @media (min-width: $min) {
       @content;

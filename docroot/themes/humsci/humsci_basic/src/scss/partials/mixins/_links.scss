@@ -39,7 +39,9 @@
 
   @include hb-traditional {
     text-decoration-color: var(--palette--tertiary);
-    transition: hb-transition(all); // set the color and text-decoration-color to transition together on hover
+    transition: hb-transition(
+      all
+    ); // set the color and text-decoration-color to transition together on hover
 
     &:hover,
     &:focus {
@@ -78,7 +80,8 @@
 
   @include hb-traditional {
     font-weight: hb-theme-font-weight(semibold);
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -86,9 +89,10 @@
   }
 
   &::after {
+    @include hb-icon-link-arrow('link-base-color');
+
     content: '';
     display: inline-block;
-    @include hb-icon-link-arrow('link-base-color');
     background-color: var(--link-base-current-color);
     margin-left: hb-calculate-rems(8px);
     mask-size: 85%;
@@ -105,7 +109,7 @@
       height: hb-calculate-rems(25px);
       width: hb-calculate-rems(25px);
       margin-bottom: hb-calculate-rems(-7px);
-    };
+    }
   }
 
   &:hover,
@@ -170,12 +174,13 @@
 
   &::before {
     // postcard arrow
+    @include hb-icon-link-arrow('secondary');
+
     content: '';
     position: absolute;
     left: 0;
     height: hb-calculate-rems(44px); // WCAG AAA target size
     width: hb-calculate-rems(44px);
-    @include hb-icon-link-arrow('secondary');
     transform: translateX(0);
     transition: hb-transition(transform);
     will-change: contents;

@@ -61,13 +61,18 @@
 /// @param {map} $screens - A sass map of screen size breakpoint width values
 /// @param {map} $margin - A sass map of screen size breakpoint screen edge margin sizes
 ///
-@mixin centered-column($grid: $su-grid-media, $screens: $su-grid-screens, $margin: $su-screen-margins) {
+@mixin centered-column(
+  $grid: $su-grid-media,
+  $screens: $su-grid-screens,
+  $margin: $su-screen-margins
+) {
   margin: 0 auto;
+
   @each $code, $breakpoint in $grid {
     $spacing: map.get($margin, $code);
 
     @media #{$breakpoint} {
-      @if breakpoint-max($code, $grid) == null {
+      @if not breakpoint-max($code, $grid) {
         $max-width: map.get($screens, $code);
         max-width: $max-width;
         width: calc(100% - #{$spacing * 2});
@@ -103,43 +108,70 @@
       @if list.length($steps) == 1 {
         #{$type}: get-responsive-spacing-value($steps, $key);
       } @else if list.length($steps) == 2 {
-        @if list.nth($steps, 1) != null {
+        @if list.nth($steps, 1) {
           #{$type}-top: get-responsive-spacing-value(list.nth($steps, 1), $key);
-          #{$type}-bottom: get-responsive-spacing-value(list.nth($steps, 1), $key);
+          #{$type}-bottom: get-responsive-spacing-value(
+            list.nth($steps, 1),
+            $key
+          );
         }
 
-        @if list.nth($steps, 2) != null {
-          #{$type}-left: get-responsive-spacing-value(list.nth($steps, 2), $key);
-          #{$type}-right: get-responsive-spacing-value(list.nth($steps, 2), $key);
+        @if list.nth($steps, 2) {
+          #{$type}-left: get-responsive-spacing-value(
+            list.nth($steps, 2),
+            $key
+          );
+          #{$type}-right: get-responsive-spacing-value(
+            list.nth($steps, 2),
+            $key
+          );
         }
       } @else if list.length($steps) == 3 {
-        @if list.nth($steps, 1) != null {
+        @if list.nth($steps, 1) {
           #{$type}-top: get-responsive-spacing-value(list.nth($steps, 1), $key);
         }
 
-        @if list.nth($steps, 2) != null {
-          #{$type}-right: get-responsive-spacing-value(list.nth($steps, 2), $key);
-          #{$type}-left: get-responsive-spacing-value(list.nth($steps, 2), $key);
+        @if list.nth($steps, 2) {
+          #{$type}-right: get-responsive-spacing-value(
+            list.nth($steps, 2),
+            $key
+          );
+          #{$type}-left: get-responsive-spacing-value(
+            list.nth($steps, 2),
+            $key
+          );
         }
 
-        @if list.nth($steps, 3) != null {
-          #{$type}-bottom: get-responsive-spacing-value(list.nth($steps, 3), $key);
+        @if list.nth($steps, 3) {
+          #{$type}-bottom: get-responsive-spacing-value(
+            list.nth($steps, 3),
+            $key
+          );
         }
       } @else if list.length($steps) == 4 {
-        @if list.nth($steps, 1) != null {
+        @if list.nth($steps, 1) {
           #{$type}-top: get-responsive-spacing-value(list.nth($steps, 1), $key);
         }
 
-        @if list.nth($steps, 2) != null {
-          #{$type}-right: get-responsive-spacing-value(list.nth($steps, 2), $key);
+        @if list.nth($steps, 2) {
+          #{$type}-right: get-responsive-spacing-value(
+            list.nth($steps, 2),
+            $key
+          );
         }
 
-        @if list.nth($steps, 3) != null {
-          #{$type}-bottom: get-responsive-spacing-value(list.nth($steps, 3), $key);
+        @if list.nth($steps, 3) {
+          #{$type}-bottom: get-responsive-spacing-value(
+            list.nth($steps, 3),
+            $key
+          );
         }
 
-        @if list.nth($steps, 4) != null {
-          #{$type}-left: get-responsive-spacing-value(list.nth($steps, 4), $key);
+        @if list.nth($steps, 4) {
+          #{$type}-left: get-responsive-spacing-value(
+            list.nth($steps, 4),
+            $key
+          );
         }
       } @else if list.length($steps) > 4 or list.length($steps) == 0 {
         @error '$steps should have 1 to 4 values';

@@ -76,10 +76,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              '@babel/preset-env',
-              { exclude: ['@babel/plugin-transform-spread'] },
-            ],
+            presets: ['@babel/preset-env'],
           },
         },
       },

@@ -1,6 +1,8 @@
 services:
+
   # What to call the service hosting the site.
   suhumsci:
+
     # Use PHP 8 with Apache
     image: pookmish/drupal8ci:tugboat
 
@@ -21,6 +23,7 @@ services:
 
     # A set of commands to run while building this service
     commands:
+
       # Commands that set up the basic preview infrastructure
       init:
         # Add nodeJS to build theme assets after composer install
@@ -59,6 +62,7 @@ services:
         - blt drupal:sync:files --site=history
 
         - blt drupal:sync:files --site=west
+
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:
@@ -119,6 +123,7 @@ services:
   # What to call the service hosting MySQL. This name also acts as the
   # hostname to access the service by from the php service.
   mysql:
+
     # Use the latest available 5.x version of MySQL
     image: tugboatqa/mysql:5
     commands:

@@ -57,13 +57,23 @@ vendor/bin/blt drupal:install -n --environment=ci
 
 echo "✅ Fresh Drupal installation complete"
 
+# Compile theme assets (like GitHub Actions does)
+echo "🎨 Compiling theme assets..."
+cd docroot/themes/humsci/humsci_basic
+if [ -f "package.json" ]; then
+    npm install --silent
+    npm run build --silent
+    echo "✅ Theme assets compiled successfully"
+else
+    echo "⚠️  No package.json found in theme directory"
+fi
+cd /var/www/html
+
 # Setup Codeception configuration
 echo "⚙️  Setting up Codeception configuration..."
-
-# Use the DDEV-specific configuration instead of the template
 cp .ddev/default.codeception.yml tests/codeception.yml
 
-echo "✅ Codeception configuration updated"
+echo "✅ Codeception configuration updated to match CI"
 
 
 
@@ -86,6 +96,7 @@ echo ""
 echo "The fresh test environment is now ready with:"
 echo "- Fresh Drupal installation in sites/default"
 echo "- Database: $DB_NAME"
+echo "- Theme assets compiled"
 echo "- Codeception configured for localhost"
 echo ""
 echo "To run tests using BLT:"

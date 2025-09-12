@@ -60,14 +60,8 @@ echo "✅ Fresh Drupal installation complete"
 # Setup Codeception configuration
 echo "⚙️  Setting up Codeception configuration..."
 
-# Copy the standard configuration and resolve environment variables
-cp tests/codeception.dist.yml tests/codeception.yml
-
-# Replace environment variables with actual values for DDEV
-sed -i "s|\${docroot}|/var/www/html/docroot|g" tests/codeception.yml
-sed -i "s|\${project.local.hostname}|localhost|g" tests/codeception.yml
-sed -i "s|\${project.local.protocol}|http|g" tests/codeception.yml
-sed -i "s|\${repo.root}|/var/www/html|g" tests/codeception.yml
+# Use the DDEV-specific configuration instead of the template
+cp .ddev/default.codeception.yml tests/codeception.yml
 
 echo "✅ Codeception configuration updated"
 

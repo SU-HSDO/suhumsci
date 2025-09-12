@@ -26,18 +26,19 @@ modules:
     - WebDriver:
         browser: chrome
         url: 'http://web/'
+        host: selenium
+        port: 4444
         capabilities:
-          browser: "chrome"
-          version: "*"
-          extra_capabilities:
-            chromeOptions:
-              w3c: false
-              args:
-                - "--headless"
-                - "--no-sandbox"
-                - "--disable-dev-shm-usage"
-                - "--disable-gpu"
-                - "--window-size=1920,1080"
+          browserName: "chrome"
+          "goog:chromeOptions":
+            args:
+              - "--headless"
+              - "--no-sandbox"
+              - "--disable-dev-shm-usage"
+              - "--disable-gpu"
+              - "--window-size=1920,1080"
+          unexpectedAlertBehaviour: 'accept'
+          handlesAlerts: true
     - StanfordCaravan\Codeception\Drupal\DrupalEntity:
         cleanup_test: true
         cleanup_failed: false

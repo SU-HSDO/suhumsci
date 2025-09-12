@@ -1,4 +1,3 @@
-version: '3.6'
 services:
   selenium:
     image: selenium/standalone-chrome:latest
@@ -7,10 +6,12 @@ services:
     ports:
       - "4444:4444"
     environment:
-      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_MAX_SESSIONS=2
       - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
     volumes:
       - /dev/shm:/dev/shm
     restart: "no"
-    networks:
-      - ddev_default
+    shm_size: 2gb

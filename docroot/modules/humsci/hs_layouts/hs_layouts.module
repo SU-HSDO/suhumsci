@@ -133,23 +133,13 @@ function hs_layouts_preprocess(&$variables, $hook) {
         break;
     }
 
-    if ($style && $paragraph->hasField('field_hs_postcard_image') && !$paragraph->get('field_hs_postcard_image')->isEmpty()) {
-      $media = $paragraph->get('field_hs_postcard_image')->entity;
-
-      if ($media && $media->hasField('field_media_image') && !$media->get('field_media_image')->isEmpty()) {
-        $image_field = $media->get('field_media_image');
-
-        // Render it with the responsive image formatter.
-        $variables['image']['field_hs_postcard_image'] = $image_field->view([
-          'type' => 'responsive_image',
-          'settings' => [
-            'responsive_image_style' => $style,
-          ],
-          'label' => 'hidden',
-        ]);
-      }
+    if ($style && isset($variables['image']['field_hs_postcard_image'][0])) {
+      // Change image style based on column count.
+      $variables['image']['field_hs_postcard_image'][0]['#stanford_media_image_style'] = $style;
+      // Add extra cache key to prevent using a cached version with a different
+      // image style.
+      $variables['image']['field_hs_postcard_image'][0]['#cache']['keys'][] = 'image_style:' . $style;
     }
-
   }
 }
 

@@ -1,13 +1,14 @@
-uuid: e5476ddb-d5f4-4b92-ac9f-703e73c4178a
+uuid: 1326f3ad-13af-422f-8de3-01f156ed5f99
 langcode: en
 status: true
 dependencies:
   module:
     - entityqueue
-id: dashboard_entityqueue
-label: 'Dashboard entityqueue blocks'
+    - user
+id: manage_listings
+label: 'Manage Listings'
 module: views
-description: 'Lists of entity queues, for being used in the dashboard.'
+description: 'Overrides the entityqueue collection route.'
 tag: ''
 base_table: entity_subqueue_field_data
 base_field: name
@@ -128,7 +129,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -139,7 +140,7 @@ display:
           click_sort_column: target_id
           type: entity_reference_label
           settings:
-            link: true
+            link: false
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -157,15 +158,15 @@ display:
           format_plural_string: !!binary MSBpdGVtA0Bjb3VudCBpdGVtcw==
           prefix: ''
           suffix: ''
-        view_entity_subqueue:
-          id: view_entity_subqueue
+        edit_entity_subqueue:
+          id: edit_entity_subqueue
           table: entity_subqueue
-          field: view_entity_subqueue
+          field: edit_entity_subqueue
           relationship: none
           group_type: group
           admin_label: ''
           entity_type: entity_subqueue
-          plugin_id: entity_link
+          plugin_id: entity_link_edit
           label: Operations
           exclude: false
           alter:
@@ -211,10 +212,27 @@ display:
           output_url_as_text: false
           absolute: false
       pager:
-        type: none
+        type: full
         options:
           offset: 0
-          items_per_page: 0
+          pagination_heading_level: h4
+          items_per_page: 50
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
       exposed_form:
         type: basic
         options:
@@ -226,83 +244,20 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'manipulate entityqueues'
       cache:
         type: tag
         options: {  }
       empty: {  }
-      sorts:
-        title:
-          id: title
-          table: entity_subqueue_field_data
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: entity_subqueue
-          entity_field: title
-          plugin_id: standard
-          order: ASC
-          expose:
-            label: ''
-            field_identifier: ''
-          exposed: false
+      sorts: {  }
       arguments: {  }
-      filters:
-        status:
-          id: status
-          table: entity_subqueue_field_data
-          field: status
-          entity_type: entity_subqueue
-          entity_field: status
-          plugin_id: boolean
-          value: '1'
-          group: 1
-          expose:
-            operator: ''
+      filters: {  }
       style:
         type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          columns:
-            title: title
-            items_target_id: items_target_id
-            operations: operations
-          default: '-1'
-          info:
-            title:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            items_target_id:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            operations:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          override: true
-          sticky: false
-          summary: ''
-          empty_table: false
-          caption: ''
-          description: ''
       row:
         type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
       query:
         type: views_query
         options:
@@ -321,17 +276,22 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       tags: {  }
-  block_sorting:
-    id: block_sorting
-    display_title: Block
-    display_plugin: block
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
     position: 1
     display_options:
       display_extenders: {  }
+      path: admin/structure/entityqueue
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       tags: {  }

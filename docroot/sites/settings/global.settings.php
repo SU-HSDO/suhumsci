@@ -84,3 +84,12 @@ if ($siteimprove_api_key && $siteimprove_username) {
     'username' => $siteimprove_username,
   ];
 }
+
+// Translation overrides to replace Drupalisms with more user-friendly terms.
+$settings['locale_custom_strings_en'][''] = [
+  'Entityqueues' => 'Listing',
+  'Edit Entity Queue' => 'Edit listing',
+  'Edit subqueue %label' => 'Edit listing %label',
+  'The entity subqueue %label has been added.' => 'The listing %label has been added.',
+  'The entity subqueue %label has been updated.' => 'The listing %label has been updated.',
+];

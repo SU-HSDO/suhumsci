@@ -58,7 +58,7 @@ This setup provides a fresh test environment that matches the CI pipeline exactl
 
 ### Quick Setup
 
-A DDEV script will set up a test environment with a fresh install of the su_humsci_profile profile. This requires temporarily moving and modifying BLT-related files to correctly connect to the DDEV-managed services. 
+A DDEV script will set up a test environment with a fresh install of the su_humsci_profile profile. This requires temporarily moving and modifying BLT-related files to correctly connect to the DDEV-managed services.
 
 ```bash
 # Setup fresh test environment

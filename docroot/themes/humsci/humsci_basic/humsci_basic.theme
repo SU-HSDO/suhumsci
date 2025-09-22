@@ -191,10 +191,8 @@ function humsci_basic_page_attachments_alter(&$attachments) {
 
     foreach ($info['preload_fonts'] as $font) {
       $attachments['#attached']['html_head_link'][] = [[
-        'rel' => 'preload',
-        'as' => 'font',
+        'rel' => 'stylesheet',
         'href' => $font,
-        'type' => 'font/' . pathinfo($font, PATHINFO_EXTENSION),
         'crossorigin' => 'anonymous',
       ],
         FALSE,

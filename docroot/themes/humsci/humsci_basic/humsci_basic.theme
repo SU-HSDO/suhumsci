@@ -164,7 +164,7 @@ function humsci_basic_preprocess_html(&$vars) {
 /**
  * Implements hook_page_attachments_alter().
  *
- * Preload fonts based on what's in info.yml
+ * Preload fonts based on what's in info.yml.
  */
 function humsci_basic_page_attachments_alter(&$attachments) {
   $theme = \Drupal::theme()->getActiveTheme();
@@ -173,17 +173,21 @@ function humsci_basic_page_attachments_alter(&$attachments) {
   if (!empty($info['preload_fonts'])) {
     // Preconnects.
     $attachments['#attached']['html_head_link'][] = [[
-        'rel' => 'preconnect',
-        'as' => 'link',
-        'href' => 'https://fonts.googleapis.com',
-        'crossorigin' => 'anonymous',
-      ], FALSE];
+      'rel' => 'preconnect',
+      'as' => 'link',
+      'href' => 'https://fonts.googleapis.com',
+      'crossorigin' => 'anonymous',
+    ],
+      FALSE,
+    ];
     $attachments['#attached']['html_head_link'][] = [[
-        'rel' => 'preconnect',
-        'as' => 'link',
-        'href' => 'https://fonts.gstatic.com',
-        'crossorigin' => 'anonymous',
-      ], FALSE];
+      'rel' => 'preconnect',
+      'as' => 'link',
+      'href' => 'https://fonts.gstatic.com',
+      'crossorigin' => 'anonymous',
+    ],
+      FALSE,
+    ];
 
     foreach ($info['preload_fonts'] as $font) {
       $attachments['#attached']['html_head_link'][] = [[
@@ -192,9 +196,10 @@ function humsci_basic_page_attachments_alter(&$attachments) {
         'href' => $font,
         'type' => 'font/' . pathinfo($font, PATHINFO_EXTENSION),
         'crossorigin' => 'anonymous',
-      ], FALSE];
+      ],
+        FALSE,
+      ];
     }
-
   }
 }
 

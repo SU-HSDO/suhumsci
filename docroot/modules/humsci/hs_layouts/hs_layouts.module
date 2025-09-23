@@ -97,13 +97,49 @@ function hs_layouts_preprocess(&$variables, $hook) {
     // need to go a level depeer.
     $parent = $parent->getParentEntity();
   }
-  if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
+  if (!($parent instanceof ParagraphInterface) || !in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection'])) {
     return;
   }
   if ($parent->get('field_title_settings')->value !== 'collection_title_none') {
     // If the paragraph is within a collection and the collection title is
     // set to anything other than 'None', set the heading tag to h3.
     $variables['heading_tag'] = 'h3';
+  }
+
+  // Switch image style for vertical cards depending on collection column count.
+  if (!in_array($hook, [
+    'pattern_vertical_card',
+    'pattern_vertical_link_card',
+    'pattern_vertical_button_card',
+  ])) {
+    return;
+  }
+  if ($parent->hasField('field_hs_collection_per_row') && !$parent->get('field_hs_collection_per_row')->isEmpty()) {
+    $col_count = (int) $parent->get('field_hs_collection_per_row')->value;
+
+    // Decide which responsive image style to use.
+    $style = NULL;
+    switch ($col_count) {
+      case 2:
+        $style = 'hp_2_across_landscape';
+        break;
+
+      case 3:
+        $style = 'hp_3_across_events';
+        break;
+
+      case 4:
+        $style = 'hp_4_across';
+        break;
+    }
+
+    if ($style && isset($variables['image']['field_hs_postcard_image'][0])) {
+      // Change image style based on column count.
+      $variables['image']['field_hs_postcard_image'][0]['#stanford_media_image_style'] = $style;
+      // Add extra cache key to prevent using a cached version with a different
+      // image style.
+      $variables['image']['field_hs_postcard_image'][0]['#cache']['keys'][] = 'image_style:' . $style;
+    }
   }
 }
 

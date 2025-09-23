@@ -823,3 +823,11 @@ function su_humsci_profile_update_9743(&$sandbox) {
     }
   }
 }
+
+/**
+ * Remove testimonial responsive image style and related dependencies.
+ */
+function su_humsci_profile_update_9744() {
+  $responsive_image = \Drupal::configFactory()->getEditable('responsive_image.styles.testimonial');
+  $responsive_image->delete();
+}

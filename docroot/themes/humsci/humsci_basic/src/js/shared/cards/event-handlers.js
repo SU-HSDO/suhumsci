@@ -22,8 +22,9 @@ const addCardEvents = (card, mainLink) => {
     if (event.button !== 0) {
       return;
     }
-    // Ensure clicks on "Add to Calendar" container
-    if (event.target.closest('.addtocal-container')) {
+
+    // Ensure clicks on "Add to Calendar" container or an input
+    if (event.target.closest('.addtocal-container') || event.target.tagName === 'INPUT') {
       return;
     }
 

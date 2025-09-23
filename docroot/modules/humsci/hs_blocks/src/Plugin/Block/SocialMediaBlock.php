@@ -461,7 +461,6 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
           $link_title = $link_title ?: $provider['title'];
           break 2;
         }
-
       }
     }
 

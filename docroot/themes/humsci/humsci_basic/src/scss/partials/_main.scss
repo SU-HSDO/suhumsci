@@ -1,52 +1,48 @@
 // Base styles for the HumSci Basic theme.
 // This file is loaded in all pages and contains common styles used accross the site.
 
-// Declare here variables that we might need to override when importing using 'meta.load-css'.
 $hb-current-theme: 'traditional' !default;
 
-@import
-  // Base imports (Variables, functions, mixins).
-  'base-imports',
+// Font definitions.
+@use 'fonts/fonts';
 
-  // Font definitions.
-  'fonts/fonts',
+// =====================================================================
+// Elements
+// Styling for bare HTML elements (like H1, A, etc.). These come with
+// default styling from the browser so we can redefine them here.
+@use 'base/normalize';
+@use 'base/color-pairings';
+@use 'base/base';
+@use 'base/forms';
+@use 'base/tables';
+@use 'base/details';
 
-  // =====================================================================
-  // Elements
-  // Styling for bare HTML elements (like H1, A, etc.). These come with
-  // default styling from the browser so we can redefine them here.
-  'base/normalize',
-  'base/color-pairings',
-  'base/base',
-  'base/forms',
-  'base/tables',
-  'base/details',
+// =====================================================================
+// Objects
+// Class-based selectors which define undecorated design patterns,
+// for example media object known from OOCSS.
+@use 'objects/layouts.flex-grid' as *;
+@use 'objects/layouts.general' as *;
+@use 'objects/layouts.views' as *;
 
-  // =====================================================================
-  // Objects
-  // Class-based selectors which define undecorated design patterns,
-  // for example media object known from OOCSS.
-  'objects/layouts.flex-grid',
-  'objects/layouts.general',
-  'objects/layouts.views',
+// =====================================================================
+// Components
+// Specific UI components. This is where majority of our work takes place
+// and our UI components are often composed of Objects and Components
+@use 'components/brand-bar';
+@use 'components/skiplinks';
+@use 'components/lockup';
+@use 'components/masthead';
+@use 'components/global-footer';
+@use 'components/site-search';
+@use 'components/local-footer';
+@use 'components/block-layout';
+@use 'components/messages';
+@use 'components/not-layout-builder-main-content';
+@use 'components/buttons';
 
-  // =====================================================================
-  // Components
-  // Specific UI components. This is where majority of our work takes place
-  // and our UI components are often composed of Objects and Components
-  'components/brand-bar',
-  'components/skiplinks',
-  'components/lockup',
-  'components/masthead',
-  'components/global-footer',
-  'components/site-search',
-  'components/local-footer',
-  'components/block-layout',
-  'components/messages',
-  'components/not-layout-builder-main-content',
-  'components/buttons',
 // Colorband is sometimes manually used in a view header or similar, should remain global.
-  'components/pattern.color-band',
-  'components/node',
-  'components/unpublished',
-  'components/media';
+@use 'components/pattern.color-band';
+@use 'components/node';
+@use 'components/unpublished';
+@use 'components/media';

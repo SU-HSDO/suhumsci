@@ -14,13 +14,15 @@ const shared = {
   'equal-height-grid': 'shared/equal-height-grid/index.js',
   'linked-cards': 'shared/cards/linked-cards.js',
   'structured-card': 'shared/cards/structured-card.js',
-  'main-content-fallback': 'shared/main-content-fallback/main-content-fallback.js',
+  'main-content-fallback':
+    'shared/main-content-fallback/main-content-fallback.js',
   'video-with-caption': 'shared/media/video-with-caption.js',
   megamenu: 'shared/megamenu/index.js',
   'main-menu': 'shared/navigation/main-menu-index.js',
   'secondary-toggler': 'shared/navigation/secondary-toggler.js',
   colorbox: 'shared/photo-album/colorbox.js',
-  'prefered-reduced-motion': 'shared/prefered-reduced-motion/prefered-reduced-motion.js',
+  'prefered-reduced-motion':
+    'shared/prefered-reduced-motion/prefered-reduced-motion.js',
   search: 'shared/search/search-expand.js',
   'table-scope': 'shared/tables/scope.js',
   'table-pattern': 'shared/tables/table-pattern.js',

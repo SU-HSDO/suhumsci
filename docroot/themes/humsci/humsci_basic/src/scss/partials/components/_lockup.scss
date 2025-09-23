@@ -1,12 +1,18 @@
-//
 // Lockup
-//
+
 // A lockup with the Stanford wordmark logo and department/unit name. It is used
 // in the header of a website and links to the homepage of the department/unit.
 // When building a department lockup, besides the Stanford wordmark, the most
 // obvious element should be the most granular relevant department.
-//
-//
+
+@use '../variables/su-core-colors' as *;
+@use '../functions/fonts' as *;
+@use '../functions/color' as *;
+@use '../functions/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/flex-grid' as *;
+@use '../mixins/general' as *;
+
 .su-lockup,
 .su-lockup > a {
   @include grid-media('md') {
@@ -128,9 +134,7 @@
   }
 }
 
-//
 // Lockup option A: Multidisciplinary (or long school name)
-//
 .su-lockup--option-a {
   > a {
     @include grid-media-max('sm') {
@@ -190,9 +194,7 @@
   }
 }
 
-//
 // Lockup option B: Unit (2 lines, big/small)
-//
 .su-lockup--option-b {
   .su-lockup__line3,
   .su-lockup__line4,
@@ -225,9 +227,7 @@
   }
 }
 
-//
 // Lockup option C: Multidisciplinary + Unit (2 lines, big/small)
-//
 .su-lockup--option-c {
   > a {
     @include grid-media-max('sm') {
@@ -295,9 +295,7 @@
   }
 }
 
-//
 // Lockup option D: Unit + Level (1 line)
-//
 .su-lockup--option-d {
   .su-lockup__line2,
   .su-lockup__line4,
@@ -306,7 +304,7 @@
   }
 
   .su-lockup__line1 {
-    @include grid-media("sm") {
+    @include grid-media('sm') {
       margin-top: hb-calculate-rems(-7px);
     }
 
@@ -318,7 +316,6 @@
   }
 
   .su-lockup__line3 {
-
     @include grid-media('md') {
       font-size: hb-calculate-rems(18px);
       line-height: 0.7em;
@@ -326,9 +323,7 @@
   }
 }
 
-//
 // Lockup option E: Unit (2 lines) + Level
-//
 .su-lockup--option-e {
   .su-lockup__line4,
   .su-lockup__line5 {
@@ -336,8 +331,7 @@
   }
 
   .su-lockup__line1 {
-
-    @include grid-media("sm") {
+    @include grid-media('sm') {
       margin-top: hb-calculate-rems(-7px);
       font-size: hb-calculate-rems(26px);
     }
@@ -368,9 +362,7 @@
   }
 }
 
-//
 // Lockup option F: Unit (2 lines, big/super small)
-//
 .su-lockup--option-f {
   .su-lockup__line3,
   .su-lockup__line4,
@@ -403,9 +395,7 @@
   }
 }
 
-//
 // Lockup option G: Multidisciplinary + Unit (2 lines, big/super small)
-//
 .su-lockup--option-g {
   > a {
     @include grid-media-max('sm') {
@@ -476,9 +466,7 @@
   }
 }
 
-//
 // Lockup option H: School + Unit (2 lines)
-//
 .su-lockup--option-h {
   .su-lockup__line2,
   .su-lockup__line5 {
@@ -529,9 +517,7 @@
   }
 }
 
-//
 // Lockup option I: School + Unit + Level
-//
 .su-lockup--option-i {
   .su-lockup__line2,
   .su-lockup__line5 {
@@ -581,9 +567,7 @@
   }
 }
 
-//
 // Lockup option J: Multidisciplinary + Unit (2 lines)
-//
 .su-lockup--option-j {
   > a {
     @include grid-media-max('sm') {
@@ -649,9 +633,7 @@
   }
 }
 
-//
 // Lockup option K: Alt School + Unit (1 line)
-//
 .su-lockup--option-k {
   .su-lockup__line2,
   .su-lockup__line3,
@@ -690,9 +672,7 @@
   }
 }
 
-//
 // Lockup option L: School
-//
 .su-lockup--option-l {
   .su-lockup__line2,
   .su-lockup__line3,
@@ -717,9 +697,7 @@
   }
 }
 
-//
 // Lockup option M: Unit (2 lines)
-//
 .su-lockup--option-m {
   .su-lockup__line3,
   .su-lockup__line4,
@@ -750,9 +728,7 @@
   }
 }
 
-//
 // Lockup option N: Unit (1 line)
-//
 .su-lockup--option-n {
   .su-lockup__line2,
   .su-lockup__line3,
@@ -776,9 +752,7 @@
   }
 }
 
-//
 // Lockup option O: School (vertical)
-//
 .su-lockup--option-o {
   .su-lockup__cell2,
   .su-lockup__cell1 {
@@ -799,9 +773,7 @@
   }
 }
 
-//
 // Lockup option P: School + Unit (1 line)
-//
 .su-lockup--option-p {
   .su-lockup__line2,
   .su-lockup__line3,
@@ -845,9 +817,7 @@
   }
 }
 
-//
 // Lockup option Q: Multidisciplinary + Unit + Level
-//
 .su-lockup--option-q {
   > a {
     @include grid-media-max('sm') {
@@ -913,9 +883,7 @@
   }
 }
 
-//
 // Lockup option R: Unit (vertical)
-//
 .su-lockup--option-r {
   .su-lockup__cell2,
   .su-lockup__cell1 {
@@ -940,9 +908,7 @@
   }
 }
 
-//
 // Lockup option S: School + Unit (vertical)
-//
 .su-lockup--option-s {
   .su-lockup__wordmark {
     display: block;
@@ -992,9 +958,7 @@
   }
 }
 
-//
 // Lockup option T: School + Unit + Level (vertical)
-//
 .su-lockup--option-t {
   .su-lockup__wordmark {
     display: block;

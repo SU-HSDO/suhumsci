@@ -1,0 +1,20 @@
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    platform: linux/amd64
+    container_name: ddev-suhumsci-selenium
+    ports:
+      - "4444:4444"
+    environment:
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_SESSION_TIMEOUT=1200
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_NODE_IMPLICIT_WAIT=60
+      - SE_NODE_PAGE_LOAD_TIMEOUT=60
+      - SE_NODE_SCRIPT_TIMEOUT=60
+    volumes:
+      - /dev/shm:/dev/shm
+    restart: "no"
+    shm_size: 2gb

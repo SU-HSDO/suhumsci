@@ -1,4 +1,12 @@
 // This is a stylesheet for the Global Message banner
+
+@use '../variables/su-core-colors' as *;
+@use '../functions/fonts' as *;
+@use '../functions/color' as *;
+@use '../functions/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/layout' as *;
+
 $su-button-stroke: inset 0 0 0 2px;
 
 // Colors.
@@ -12,15 +20,15 @@ $su-color-bright-blue: $su-color-digital-blue; // GLOBAL MESSAGE
 $su-color-bright-red: $su-color-digital-red; // GLOBAL MESSAGE
 
 $su-alert-colors: (
-  default:      $su-color-foggy-light,
-  error:        $su-color-digital-red,
-  info:         $su-color-digital-blue-dark,
-  success:      $su-color-digital-green,
-  warning:      $su-color-illuminating-dark,
+  default: $su-color-foggy-light,
+  error: $su-color-digital-red,
+  info: $su-color-digital-blue-dark,
+  success: $su-color-digital-green,
+  warning: $su-color-illuminating-dark,
   warning-link: $su-color-cardinal-red,
-  dark-text:    $su-color-black,
-  light-text:   $su-color-white,
-  light-hover:  $su-color-foggy,
+  dark-text: $su-color-black,
+  light-text: $su-color-white,
+  light-hover: $su-color-foggy,
 );
 
 .su-alert {
@@ -209,7 +217,9 @@ $su-alert-colors: (
     a {
       color: $su-color-black;
       text-decoration: underline;
-      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+      transition:
+        background-color 0.3s ease-in-out,
+        color 0.3s ease-in-out;
 
       &:hover,
       &:focus {
@@ -320,11 +330,11 @@ $su-alert-colors: (
   }
 }
 
-.su-alert__text+.su-alert__footer {
+.su-alert__text + .su-alert__footer {
   @include responsive-spacing('margin', 0 null null null);
 }
 
-.su-alert__dismiss~.su-alert__body {
+.su-alert__dismiss ~ .su-alert__body {
   @include grid-media-max('sm') {
     margin-bottom: 1em;
   }

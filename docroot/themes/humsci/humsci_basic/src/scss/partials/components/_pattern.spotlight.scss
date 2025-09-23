@@ -1,3 +1,11 @@
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+@use '../mixins/heros' as *;
+@use '../mixins/layout' as *;
+@use '../mixins/buttons' as *;
+
 .hb-spotlight {
   background-color: var(--palette--spotlight);
 
@@ -61,6 +69,7 @@
 
         &::before {
           top: 0;
+
           @include hb-colorful-text-bar('secondary');
 
           // Add a unique secondary color for Ocean on Colorful.
@@ -185,7 +194,8 @@
     }
 
     .hb-spotlight__title {
-      &, h2 {
+      &,
+      h2 {
         margin-top: 0;
         margin-bottom: hb-calculate-rems(15px);
       }
@@ -217,8 +227,12 @@
   }
 }
 
-.hb-spotlight--expanded.hb-spotlight--image-default:has(.hb-spotlight__image-wrapper),
-.hb-spotlight--expanded.hb-spotlight--image-left:has(.hb-spotlight__image-wrapper) {
+.hb-spotlight--expanded.hb-spotlight--image-default:has(
+    .hb-spotlight__image-wrapper
+  ),
+.hb-spotlight--expanded.hb-spotlight--image-left:has(
+    .hb-spotlight__image-wrapper
+  ) {
   .hb-spotlight__text {
     min-height: fit-content !important;
 
@@ -228,7 +242,9 @@
   }
 }
 
-.hb-spotlight--expanded.hb-spotlight--image-default:has(.hb-spotlight__image-wrapper) {
+.hb-spotlight--expanded.hb-spotlight--image-default:has(
+    .hb-spotlight__image-wrapper
+  ) {
   .hb-spotlight__text {
     @include hb-themes(('colorful', 'airy')) {
       @include grid-media-min('md') {
@@ -238,7 +254,9 @@
   }
 }
 
-.hb-spotlight--expanded.hb-spotlight--image-left:has(.hb-spotlight__image-wrapper) {
+.hb-spotlight--expanded.hb-spotlight--image-left:has(
+    .hb-spotlight__image-wrapper
+  ) {
   .hb-spotlight__text {
     @include hb-themes(('colorful', 'airy')) {
       @include grid-media-min('md') {

@@ -1,3 +1,11 @@
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+@use '../mixins/lists' as *;
+
 .hb-text-reset {
   // Reset text styles to default using this class
   @include hb-text-reset;
@@ -45,7 +53,7 @@
 }
 
 .hb-highlighted-label {
-  align-items: baseline
+  align-items: baseline;
 }
 
 .hb-highlighted-label .field-label {
@@ -87,11 +95,7 @@ a.hb-pill {
 }
 
 // blockquote and D7 import class map and loop
-$blockquotes: (
-  hb-blockquote,
-  highlight-block-left,
-  highlight-block-right,
-);
+$blockquotes: (hb-blockquote, highlight-block-left, highlight-block-right);
 
 @each $blockquote in $blockquotes {
   .#{$blockquote} {

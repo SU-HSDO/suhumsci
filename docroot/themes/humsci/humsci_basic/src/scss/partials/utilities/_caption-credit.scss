@@ -1,3 +1,10 @@
+@use '../variables/fonts' as *;
+@use '../variables/zindex' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/text' as *;
+
 .hb-media-image {
   .field-media-image-caption {
     @include hb-caption-credit;
@@ -27,7 +34,9 @@
     .hs-pdf-link,
     .hs-private-link {
       display: inline;
-      margin-right: hb-calculate-rems(1.5px); // Adds spacing to elements for readability with spacing between inline text elements
+      margin-right: hb-calculate-rems(
+        1.5px
+      ); // Adds spacing to elements for readability with spacing between inline text elements
     }
 
     code,

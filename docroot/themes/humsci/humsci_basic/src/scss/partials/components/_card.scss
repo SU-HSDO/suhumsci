@@ -1,3 +1,17 @@
+@use '../variables/colorful-pairings' as *;
+@use '../variables/traditional-pairings' as *;
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/text' as *;
+@use '../mixins/flex-grid' as *;
+@use '../mixins/links' as *;
+
 .hb-card {
   display: flex;
   flex-direction: column;
@@ -160,7 +174,7 @@
 
     &--date {
       // only apply calendar icon when the label exists
-      [class*="views-label"]+.field-content {
+      [class*='views-label'] + .field-content {
         @include hb-icon-type($type: 'calendar', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -172,7 +186,7 @@
 
     &--location {
       // only apply location pin icon when the label exists
-      [class*="views-label"]+.field-content {
+      [class*='views-label'] + .field-content {
         @include hb-icon-type($type: 'location', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -184,7 +198,7 @@
 
     &--speaker {
       // only apply speaker icon when the label exists
-      [class*="views-label"]+.field-content {
+      [class*='views-label'] + .field-content {
         @include hb-icon-type($type: 'speaker', $color: 'secondary');
 
         .hb-dark-pattern &,
@@ -275,7 +289,7 @@
     // If there is not an image we always want the text to sit next to the date
     // tile. This is also the same when using hb-card-image-* utility classes.
     .hb-card--no-image &,
-    [class^="hb-card-image-"] .hb-card--no-image & {
+    [class^='hb-card-image-'] .hb-card--no-image & {
       flex: initial;
       max-width: initial;
       margin-right: 0;
@@ -325,7 +339,8 @@
       height: hb-calculate-rems(110px);
       background-color: var(--palette--secondary);
       color: var(--palette--white);
-      padding: hb-calculate-rems(12px) hb-calculate-rems(10px) hb-calculate-rems(8px);
+      padding: hb-calculate-rems(12px) hb-calculate-rems(10px)
+        hb-calculate-rems(8px);
       bottom: hb-calculate-rems(18px);
       left: hb-calculate-rems(-10px);
       z-index: 5;
@@ -439,6 +454,7 @@
     h6 {
       margin: 0;
       overflow-wrap: break-word;
+
       @include hb-heading-3;
 
       // If the heading is in a grid or collection,
@@ -479,7 +495,8 @@
 
   &__description {
     @include hb-description;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: anywhere;
 
     @include hb-themes(('airy', 'colorful')) {
       &:not(:last-child) {

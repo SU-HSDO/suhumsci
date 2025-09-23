@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# DDEV command for running Codeception tests
+# Usage: ddev codeception [codeception-options]
+# Examples:
+#   ddev codeception run acceptance --group=install
+#   ddev codeception run acceptance --fail-fast
+#   ddev codeception run functional
+
+# Check if Codeception is configured
+if [ ! -f "tests/codeception.yml" ]; then
+    echo "❌ Codeception is not configured."
+    echo "Please run: ddev setup-tests"
+    echo "This will set up a fresh test environment."
+    exit 1
+fi
+
+# Function to check if Selenium is accessible from the container
+check_selenium() {
+    curl -s http://selenium:4444/wd/hub/status > /dev/null 2>&1
+    return $?
+}
+
+# Function to start Selenium
+start_selenium() {
+    echo "🚀 Starting Selenium for functional tests..."
+    echo "Attempting to start Selenium container..."
+    
+    # Try to start Selenium using the host's docker-compose
+    echo "Please run the following command in a separate terminal to start Selenium:"
+    echo "  docker-compose -f .ddev/docker-compose.selenium.yaml -p ddev-suhumsci up -d selenium"
+    echo ""
+    echo "Or restart DDEV to ensure Selenium starts automatically:"
+    echo "  ddev restart"
+    echo ""
+    echo "Waiting for Selenium to become available..."
+    
+    # Wait for Selenium to be ready
+    for i in {1..30}; do
+        if check_selenium; then
+            echo "✅ Selenium is ready!"
+            return 0
+        fi
+        sleep 2
+    done
+    echo "❌ Selenium failed to start within 60 seconds"
+    return 1
+}
+
+# Check if we're running functional tests
+if [[ "$*" == *"functional"* ]]; then
+    echo "🔍 Detected functional test suite - checking Selenium..."
+    if ! check_selenium; then
+        echo "⚠️  Selenium is not running. Starting it now..."
+        if ! start_selenium; then
+            echo "❌ Failed to start Selenium. Functional tests require Selenium to be running."
+            echo "You can try starting it manually with:"
+            echo "  docker-compose -f .ddev/docker-compose.selenium.yaml -p ddev-suhumsci up -d selenium"
+            exit 1
+        fi
+    else
+        echo "✅ Selenium is already running"
+    fi
+fi
+
+# Run Codeception with the provided arguments
+echo "🏃 Running Codeception tests..."
+vendor/bin/codecept -c tests/codeception.yml "$@"

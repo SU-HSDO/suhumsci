@@ -1,4 +1,8 @@
-$unpublished-color: rgba(234, 171, 0, 0.6);
+@use 'sass:color';
+@use '../functions/general' as *;
+@use '../mixins/layout' as *;
+
+$unpublished-color: rgb(234 171 0 / 60%);
 
 .node--unpublished {
   @include hb-page-width;
@@ -11,21 +15,24 @@ $unpublished-color: rgba(234, 171, 0, 0.6);
 .hb-main-nav__menu,
 .hb-secondary-nav__menu,
 .megamenu {
-  a[data-unpublished-node="true"] {
+  a[data-unpublished-node='true'] {
     background-color: $unpublished-color;
 
     &:hover {
-      background-color: darken($unpublished-color, 10%);
+      background-color: color.adjust($unpublished-color, $lightness: -10%);
     }
   }
 }
 
 // We need extra specificity to override the background-colors set on the
 // top level of the main-nav at desktop widths (especially active and hover states).
-.js .hb-main-nav__menu-lv1 > li > .hb-main-nav__link[data-unpublished-node="true"] {
+.js
+  .hb-main-nav__menu-lv1
+  > li
+  > .hb-main-nav__link[data-unpublished-node='true'] {
   background-color: $unpublished-color;
 
   &:hover {
-    background-color: darken($unpublished-color, 10%);
+    background-color: color.adjust($unpublished-color, $lightness: -10%);
   }
 }

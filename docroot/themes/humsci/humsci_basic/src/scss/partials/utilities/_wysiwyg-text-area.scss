@@ -1,4 +1,17 @@
-// WYSIWYG text area styles.
+// WYSIWYG text area styles
+
+@use '../variables/colorful-pairings' as *;
+@use '../variables/traditional-pairings' as *;
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+@use '../mixins/icons' as *;
 
 // General WYSIWYG styles (all fields).
 .text-long,
@@ -336,7 +349,8 @@ blockquote:nth-child(n) {
 }
 
 a[href*="//"].hs-external-link,
-.hs-external-link a[href*="//"] {
+.hs-external-link a[href*="//"]
+{
   @include hb-link--inline;
   @include hb-external-link-icon;
 }
@@ -385,6 +399,7 @@ $more-links: (hs-more-link);
   .#{$more-link} a,
   .#{$more-link} button {
     margin-bottom: hb-calculate-rems(20px);
+
     @include hb-more-link;
   }
 }
@@ -421,6 +436,7 @@ a.hs-file-link {
   @include hb-themes(('colorful', 'airy')) {
     background-color: var(--palette--spotlight);
   }
+
   @include hb-traditional {
     background-color: var(--palette--spotlight);
   }

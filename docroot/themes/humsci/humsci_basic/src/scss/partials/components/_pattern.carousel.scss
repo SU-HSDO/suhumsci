@@ -70,7 +70,7 @@
       min-height: hb-calculate-rems(320px);
 
       &::before {
-        animation: traditionalCarouselOverlay;
+        animation: traditionalHeroOverlay;
       }
 
       @include grid-media-min('md') {
@@ -120,7 +120,7 @@
           &.animate {
             /* stylelint-disable max-nesting-depth */
             .hb-has-animation-enhancements & {
-              animation-name: colorfulCarouselImage;
+              animation-name: colorfulHeroImage;
             }
             /* stylelint-enable max-nesting-depth */
           }
@@ -165,7 +165,8 @@
         &.animate {
           .hb-has-animation-enhancements.js & {
             opacity: 1;
-            animation-name: colorfulCarouselText;
+            animation-duration: 2000ms;
+            animation-name: colorfulHeroText;
           }
         }
 
@@ -247,10 +248,10 @@
         }
 
         &.animate {
-          opacity: 1;
-
-          .hb-has-animation-enhancements & {
-            animation-name: traditionalCarouselText;
+          .hb-has-animation-enhancements.js & {
+            opacity: 1;
+            animation-duration: 1700ms;
+            animation-name: traditionalHeroText;
           }
         }
 
@@ -815,51 +816,5 @@
         }
       }
     }
-  }
-}
-
-// The placeholder / hero override comments in the keyframes
-// below prevent the hero animations from displaying on carousels
-// and set the foundation for future carousel animations.
-
-// Colorful Carousel Animations
-@keyframes colorfulCarouselText {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
-  }
-}
-
-@keyframes colorfulCarouselImage {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
-  }
-}
-
-// Traditional Carousel Animations
-@keyframes traditionalCarouselText {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
-  }
-}
-
-@keyframes traditionalCarouselOverlay {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
   }
 }

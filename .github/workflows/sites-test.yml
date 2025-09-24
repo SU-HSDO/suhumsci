@@ -86,7 +86,7 @@ jobs:
       DRUPAL_DATABASE_HOST: mysql
     services:
       selenium:
-        image: selenium/standalone-chrome:latest
+        image: selenium/standalone-chrome:130.0
         options: '--shm-size="2g"'
       mysql:
         image: mysql:5.7
@@ -153,7 +153,7 @@ jobs:
       DRUPAL_DATABASE_HOST: mysql
     services:
       selenium:
-        image: selenium/standalone-chrome:latest
+        image: selenium/standalone-chrome:130.0
         options: '--shm-size="2g"'
       mysql:
         image: mysql:5.7
@@ -246,7 +246,7 @@ jobs:
         run: |
           git config --global user.email "sws-developers@lists.stanford.edu" &&
           git config --global user.name "Github Actions" &&
-          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
           blt blt:telemetry:disable --no-interaction &&
           blt deploy -n

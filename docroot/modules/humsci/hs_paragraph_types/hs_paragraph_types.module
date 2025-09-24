@@ -62,6 +62,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
     'field_hs_carousel_slides',
     'field_hs_sptlght_sldes',
     'field_hs_page_components',
+    'field_hs_priv_page_components',
   ];
   // We need the field name to alter the correct element.
   if (
@@ -104,6 +105,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
       break;
 
     case 'field_hs_page_components':
+    case 'field_hs_priv_page_components':
       // There are multiple issues with setting and removing the required state
       // from paragraph fields when using the `conditional_fields` module, so
       // use form alter to use the states api instead.
@@ -117,7 +119,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         $element = $field_widget_form['widget'][$key];
         if (
           empty($element['#paragraph_type']) ||
-          $element['#paragraph_type'] != 'hs_collection' ||
+          !in_array($element['#paragraph_type'], ['hs_collection', 'hs_priv_collection']) ||
           empty($element['subform']['field_title']) ||
           empty($element['subform']['field_title_settings'])
         ) {

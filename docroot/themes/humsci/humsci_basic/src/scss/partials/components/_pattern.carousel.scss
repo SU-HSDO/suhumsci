@@ -1,3 +1,14 @@
+@use '../variables/zindex' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/text' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/buttons' as *;
+@use '../mixins/heros' as *;
+
 .paragraph--type--hs-carousel {
   .hb-hero-overlay__image-wrapper::before {
     display: none;
@@ -53,12 +64,13 @@
       }
     }
 
-    @include hb-traditional { // hb-hero-overlay
+    @include hb-traditional {
+      // hb-hero-overlay
       display: flex;
       min-height: hb-calculate-rems(320px);
 
       &::before {
-        animation: traditionalCarouselOverlay;
+        animation: traditionalHeroOverlay;
       }
 
       @include grid-media-min('md') {
@@ -108,7 +120,7 @@
           &.animate {
             /* stylelint-disable max-nesting-depth */
             .hb-has-animation-enhancements & {
-              animation-name: colorfulCarouselImage;
+              animation-name: colorfulHeroImage;
             }
             /* stylelint-enable max-nesting-depth */
           }
@@ -119,7 +131,8 @@
     &__text {
       @include hb-themes(('colorful', 'airy')) {
         background-color: var(--palette--primary-hero-overlay);
-        padding: calc(#{hb-calculate-rems(64px)} / 2) calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
+        padding: calc(#{hb-calculate-rems(64px)} / 2)
+          calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
         width: auto !important;
         margin: 0 !important;
@@ -141,6 +154,7 @@
         // Line decoration pseudo element
         &::after {
           top: hb-calculate-rems(24px);
+
           @include hb-colorful-text-bar('tertiary-reversed');
 
           @include grid-media-min('md') {
@@ -151,7 +165,8 @@
         &.animate {
           .hb-has-animation-enhancements.js & {
             opacity: 1;
-            animation-name: colorfulCarouselText;
+            animation-duration: 2000ms;
+            animation-name: colorfulHeroText;
           }
         }
 
@@ -214,7 +229,10 @@
           width: 43% !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
 
           .hb-three-column--two-sidebar & {
-            width: calc(100% - (2 * #{hb-calculate-rems(hb-spacing-width('default', false))})) !important;
+            width: calc(
+              100% -
+                (2 * #{hb-calculate-rems(hb-spacing-width('default', false))})
+            ) !important;
           }
         }
 
@@ -224,14 +242,16 @@
         }
 
         @include grid-media-min('2xl') {
-          width: hb-calculate-rems(650px) !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
+          width: hb-calculate-rems(
+            650px
+          ) !important; // override width set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         }
 
         &.animate {
-          opacity: 1;
-
-          .hb-has-animation-enhancements & {
-            animation-name: traditionalCarouselText;
+          .hb-has-animation-enhancements.js & {
+            opacity: 1;
+            animation-duration: 1700ms;
+            animation-name: traditionalHeroText;
           }
         }
 
@@ -348,7 +368,9 @@
         @include grid-media-min('md') {
           bottom: hb-spacing-width();
           margin: 0 0 hb-calculate-rems(10px);
-          right: calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+          right: calc(
+            40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
+          ); // move it past the slick arrows and their padding
 
           .hb-three-column--one-sidebar &,
           .hb-three-column--two-sidebar & {
@@ -374,7 +396,9 @@
         }
 
         @include grid-media-min('xl') {
-          right: calc(50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}); // move it past the slick arrows and their padding
+          right: calc(
+            50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
+          ); // move it past the slick arrows and their padding
         }
       }
 
@@ -393,7 +417,9 @@
           position: absolute;
           overflow: visible;
 
-          right: calc(50% + #{hb-calculate-rems(77px)}); // move it past the slick-next arrow
+          right: calc(
+            50% + #{hb-calculate-rems(77px)}
+          ); // move it past the slick-next arrow
           bottom: hb-calculate-rems(53px);
 
           .hb-three-column--one-sidebar &,
@@ -404,7 +430,9 @@
 
         // the sidebar(s) appear at this breakpoint
         @include grid-media-min('lg') {
-          right: calc(57% + #{hb-calculate-rems(80px)}); // move it past the slick arrows
+          right: calc(
+            57% + #{hb-calculate-rems(80px)}
+          ); // move it past the slick arrows
 
           .hb-three-column--one-sidebar & {
             right: calc(57% + #{hb-calculate-rems(84px)});
@@ -431,10 +459,14 @@
         }
 
         @include grid-media-min('2xl') {
-          right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)});
+          right: calc(
+            (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
+          );
 
           .hb-three-column--one-sidebar & {
-            right: calc((100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)});
+            right: calc(
+              (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
+            );
             bottom: hb-calculate-rems(48px);
           }
         }
@@ -461,6 +493,7 @@
         &::before {
           color: var(--palette--white);
           content: '';
+
           @include hb-icon-type($type: 'ellipse-border', $color: 'gray-light');
           height: hb-calculate-rems(11px);
           width: hb-calculate-rems(11px);
@@ -476,7 +509,10 @@
             // For modern browsers
             $accent-shadow: var(--palette--secondary);
 
-            box-shadow: inset hb-calculate-rems(-2px) 0 $light-shadow, 0 hb-calculate-rems(-2px) 0 $accent-shadow, 0 0 0 hb-calculate-rems(2px) $dark-shadow;
+            box-shadow:
+              inset hb-calculate-rems(-2px) 0 $light-shadow,
+              0 hb-calculate-rems(-2px) 0 $accent-shadow,
+              0 0 0 hb-calculate-rems(2px) $dark-shadow;
           }
 
           @include hb-traditional {
@@ -486,7 +522,10 @@
             // For modern browsers
             $accent-shadow: var(--palette--secondary);
 
-            box-shadow: inset hb-calculate-rems(-2px) 0 $light-shadow, 0 hb-calculate-rems(-2px) 0 $accent-shadow, 0 0 0 hb-calculate-rems(2px) $dark-shadow;
+            box-shadow:
+              inset hb-calculate-rems(-2px) 0 $light-shadow,
+              0 hb-calculate-rems(-2px) 0 $accent-shadow,
+              0 0 0 hb-calculate-rems(2px) $dark-shadow;
           }
         }
 
@@ -538,7 +577,6 @@
           right: 100%;
         }
       }
-
 
       .slick-prev,
       .slick-next {
@@ -630,13 +668,24 @@
 
           @include hb-themes(('airy', 'colorful')) {
             @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
-            filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+            filter: drop-shadow(
+              hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
+                var(--palette--black)
+            );
           }
 
           @include hb-traditional {
             mask-repeat: no-repeat;
-            @include hb-icon-background('arrow-right-long-box-shadow', 'gray-light', true);
-            filter: drop-shadow(hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0 var(--palette--black));
+
+            @include hb-icon-background(
+              'arrow-right-long-box-shadow',
+              'gray-light',
+              true
+            );
+            filter: drop-shadow(
+              hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
+                var(--palette--black)
+            );
           }
         }
 
@@ -652,42 +701,60 @@
 
         @include hb-themes(('airy', 'colorful')) {
           margin-bottom: hb-calculate-rems(15px);
-          right: calc(#{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)});// move it past the slick-next arrow
+          right: calc(
+            #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
+          ); // move it past the slick-next arrow
 
           @include grid-media-min('md') {
-            right: calc(40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)});// move it past the slick-next arrow
+            right: calc(
+              40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
+            ); // move it past the slick-next arrow
           }
 
           @include grid-media-min('xl') {
-            right: calc(50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
+            right: calc(
+              50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
+            ); // move it past the slick-next arrow
           }
         }
 
         @include hb-traditional {
-          right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick-next arrow
+          right: calc(
+            #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
+          ); // move it past the slick-next arrow
 
           @include grid-media-min('md') {
             right: auto;
-            left: calc(53% - #{hb-calculate-rems(85px)}); // move it past the slick-next arrow
+            left: calc(
+              53% - #{hb-calculate-rems(85px)}
+            ); // move it past the slick-next arrow
           }
 
           @include grid-media-min('lg') {
-            left: calc(45% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+            left: calc(
+              45% - #{hb-calculate-rems(85px)}
+            ); // move it past the slick arrows
 
             /* stylelint-disable max-nesting-depth */
             .hb-three-column--two-sidebar & {
               left: inherit;
-              right: calc(#{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}); // move it past the slick arrows
+              right: calc(
+                #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
+              ); // move it past the slick arrows
             }
             /* stylelint-enable max-nesting-depth */
           }
 
           @include grid-media-min('xl') {
-            left: calc(50% - #{hb-calculate-rems(85px)}); // move it past the slick arrows
+            left: calc(
+              50% - #{hb-calculate-rems(85px)}
+            ); // move it past the slick arrows
           }
 
           @include grid-media-min('2xl') {
-            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}); // move it past the slick arrows
+            left: calc(
+              #{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}
+            ); // move it past the slick arrows
 
             .field-hs-collection-items.item-per-row--2 & {
               left: calc(100% - #{hb-calculate-rems(88px)});
@@ -697,7 +764,6 @@
       }
 
       .slick-next {
-
         @include hb-themes(('airy', 'colorful')) {
           margin-bottom: hb-calculate-rems(15.5px);
           right: 25px;
@@ -720,7 +786,9 @@
           }
 
           @include grid-media-min('lg') {
-            left: calc(45% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+            left: calc(
+              45% - #{hb-calculate-rems(40px)}
+            ); // move it past the slick arrows
 
             /* stylelint-disable max-nesting-depth */
             .hb-three-column--two-sidebar & {
@@ -731,11 +799,15 @@
           }
 
           @include grid-media-min('xl') {
-            left: calc(50% - #{hb-calculate-rems(40px)}); // move it past the slick arrows
+            left: calc(
+              50% - #{hb-calculate-rems(40px)}
+            ); // move it past the slick arrows
           }
 
           @include grid-media-min('2xl') {
-            left: calc(#{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}); // move it past the slick arrows
+            left: calc(
+              #{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}
+            ); // move it past the slick arrows
 
             .field-hs-collection-items.item-per-row--2 & {
               left: calc(100% - #{hb-calculate-rems(43px)});
@@ -744,51 +816,5 @@
         }
       }
     }
-  }
-}
-
-// The placeholder / hero override comments in the keyframes
-// below prevent the hero animations from displaying on carousels
-// and set the foundation for future carousel animations.
-
-// Colorful Carousel Animations
-@keyframes colorfulCarouselText {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
-  }
-}
-
-@keyframes colorfulCarouselImage {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
-  }
-}
-
-// Traditional Carousel Animations
-@keyframes traditionalCarouselText {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
-  }
-}
-
-@keyframes traditionalCarouselOverlay {
-  0% {
-    // Placeholder / Hero Override
-  }
-
-  100% {
-    // Placeholder / Hero Override
   }
 }

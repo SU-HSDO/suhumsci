@@ -823,3 +823,46 @@ function su_humsci_profile_update_9743(&$sandbox) {
     }
   }
 }
+
+/**
+ * Remove testimonial responsive image style and related dependencies.
+ */
+function su_humsci_profile_update_9744() {
+  $responsive_image = \Drupal::configFactory()->getEditable('responsive_image.styles.testimonial');
+  $responsive_image->delete();
+}
+
+/**
+ * Import config_ignore settings.
+ */
+function su_humsci_profile_update_9745() {
+  // Re-import config_ignore.settings from the active config sync directory.
+  $config_storage = \Drupal::service('config.storage.sync');
+  $config_data = $config_storage->read('config_ignore.settings');
+  if ($config_data) {
+    \Drupal::service('config.factory')
+      ->getEditable('config_ignore.settings')
+      ->setData($config_data)
+      ->save();
+    \Drupal::logger('su_humsci_profile')->notice('Re-imported config_ignore.settings from active config sync directory.');
+  }
+}
+
+/**
+ * Enable the feeds module on Jasper Ridge and IT Humsci.
+ */
+function su_humsci_profile_update_9746() {
+  $site_path = \Drupal::getContainer()->getParameter('site.path');
+  $site_name = basename($site_path);
+  if (in_array($site_name, ['jrbp2025', 'it_humsci'])) {
+    \Drupal::service('module_installer')->install(['feeds']);
+    \Drupal::logger('su_humsci_profile')->notice('Installed the feeds module on @site.', [
+      '@site' => $site_name,
+    ]);
+  }
+  else {
+    \Drupal::logger('su_humsci_profile')->notice('Did not install the feeds module on @site.', [
+      '@site' => $site_name,
+    ]);
+  }
+}

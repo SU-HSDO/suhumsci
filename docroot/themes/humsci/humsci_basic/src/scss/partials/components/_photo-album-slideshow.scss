@@ -1,4 +1,12 @@
-  // Photo Gallery Slideshow
+// Photo Gallery Slideshow
+
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/slick' as *;
+@use '../mixins/buttons' as *;
+
 .hs-gallery-slideshow {
   @include slick-container;
   @include slick-arrows;
@@ -37,19 +45,11 @@
       inset: calc(100% - 78px) 0 0; // match height of caption / credit background
 
       @include hb-themes(('colorful', 'airy')) {
-        background: linear-gradient(
-          to top,
-          var(--palette--black),
-          transparent
-        );
+        background: linear-gradient(to top, var(--palette--black), transparent);
       }
 
       @include hb-traditional {
-        background: linear-gradient(
-          to top,
-          var(--palette--black),
-          transparent
-        );
+        background: linear-gradient(to top, var(--palette--black), transparent);
       }
     }
   }
@@ -112,7 +112,7 @@
       }
 
       &::after {
-        content: " / " counter(listCounter);
+        content: ' / ' counter(listCounter);
       }
     }
 

@@ -1,4 +1,13 @@
 // styles for a single item in a timeline
+
+@use '../variables/colorful-pairings' as *;
+@use '../variables/traditional-pairings' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/general' as *;
+@use '../mixins/text' as *;
+@use '../mixins/icons' as *;
+
 .ptype-hs-timeline-item,
 .views-view-pattern .hb-timeline-item {
   @include clearfix;
@@ -45,7 +54,7 @@
     }
   }
 
-  .field-hs-collection-items[class*="item-per-row--"] & {
+  .field-hs-collection-items[class*='item-per-row--'] & {
     margin-bottom: 0 !important;
   }
 }
@@ -59,7 +68,8 @@
     list-style-type: none; // will hide the marker
     list-style-image: none;
 
-    &::-webkit-details-marker { // hide the marker in Safari
+    &::-webkit-details-marker {
+      // hide the marker in Safari
       display: none;
     }
 
@@ -116,6 +126,7 @@
     &::after {
       content: '';
       position: absolute;
+
       @include hb-icon-background('timeline-toggle', 'primary');
       background-repeat: no-repeat;
       width: hb-calculate-rems(24px);
@@ -155,7 +166,6 @@
     padding: 0 hb-calculate-rems(32px);
   }
 }
-
 
 @keyframes timelineFadeInDown {
   0% {

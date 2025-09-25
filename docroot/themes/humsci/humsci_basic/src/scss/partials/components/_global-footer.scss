@@ -1,4 +1,13 @@
 // Global styles for the global footer.
+
+@use '../variables/zindex' as *;
+@use '../functions/fonts' as *;
+@use '../functions/color' as *;
+@use '../functions/general' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/layout' as *;
+
 .su-global-footer {
   @include font-smoothing;
   @include responsive-spacing('padding', 1 null);
@@ -46,6 +55,7 @@
 // The Logo.
 .su-global-footer__brand {
   padding-top: hb-calculate-rems(5px);
+
   @include responsive-spacing('margin', null null -2);
   text-align: center;
 

@@ -3,11 +3,12 @@
 If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, here are some basic steps for getting set up.
 
 1. [Install DDEV](https://ddev.readthedocs.io/) and a Docker provider such as OrbStack or Docker Desktop.
-2. Trust the DDEV root certificate authority. [Trusting the CA](https://ddev.com/blog/ddev-local-trusted-https-certificates/)
-3. Run `ddev blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
-4. Run `ddev drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `ddev drush @music.local uli`).
-5. Visit your site at `https://[site-name].ddev.site` (Example: `https://ethicsinsociety.ddev.site`)
-6. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
+1. Trust the DDEV root certificate authority. [Trusting the CA](https://ddev.com/blog/ddev-local-trusted-https-certificates/)
+1. Copy the `.ddev/default.config.yml` to `.ddev/config.yml`.
+1. Run `ddev blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
+1. Run `ddev drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `ddev drush @music.local uli`).
+1. Visit your site at `https://[site-name].ddev.site` (Example: `https://ethicsinsociety.ddev.site`)
+1. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
 
 ## Common commands
 
@@ -52,7 +53,43 @@ In order to sync from a staging or dev site, you will have to do the following:
 1. In `suhumsci/docroot/sites/SITENAME/blt.yml` (`SITENAME` being the site you are working with), change line 10 for remote to: `remote: hs_colorful.stage` or `remote: hs_colorful.dev`.
 2. Sync the database as you normally would: `ddev blt drupal:sync --site=SITENAME`.
 
+## Codeception Testing
+
+This setup provides a fresh test environment that matches the CI pipeline exactly, using BLT commands just like GitHub Actions.
+
+### Quick Setup
+
+A DDEV script will set up a test environment with a fresh install of the su_humsci_profile profile. This requires temporarily moving and modifying BLT-related files to correctly connect to the DDEV-managed services.
+
+```bash
+# Setup fresh test environment
+ddev setup-tests
+
+# Run Codeception tests using BLT:
+ddev blt codeception --group=install --suite=acceptance
+ddev blt codeception --group=install --suite=functional
+
+# Alternative: Run tests directly:
+ddev codeception run acceptance --group=install
+ddev codeception run functional --group=install
+```
+
+### Available Commands
+
+- **Setup fresh environment:** `ddev setup-tests`
+- **Run all acceptance tests:** `ddev codeception run acceptance`
+- **Run specific group:** `ddev codeception run acceptance --group=install`
+- **Run with fail-fast:** `ddev codeception run acceptance --group=install --fail-fast`
+- **Run functional tests:** `ddev codeception run functional`
+- **Run with debug output:** `ddev codeception run acceptance --debug`
+
+### Test Groups
+
+- `install` - Tests that verify the site installation state
+- `permissions` - Tests for user role permissions
+- `content` - Tests for content-related functionality
+
 ## Areas that need work
 
-- Setup for local Codeception testing
+- Better support for automated testing and resetting of local testing environments
 - Enabling local SimpleSAML authentication

@@ -9,10 +9,9 @@
   &--two-sidebar {
     @include grid-media-min('lg') {
       display: grid;
-      grid-template-columns: 18% 1fr 18%;
-      /* grid-template-rows: repeat(2, auto); */
+      grid-template-columns: hb-sidebar-width() 1fr hb-sidebar-width();
       grid-auto-rows: auto;
-      column-gap: hb-calculate-rems(32px);
+      column-gap: hb-spacing-width();
     }
   }
 
@@ -148,6 +147,16 @@
     .hb-three-column-w-image--no-sidebar & {
       @include grid-media-min('md') {
         margin-left: hb-calculate-rems(20px);
+      }
+    }
+
+    // Make sure that the text next to the image is wide enough to be
+    // readable when there are 2 sidebars.
+    .hb-three-column-w-image--two-sidebar & {
+      @include grid-media-min('md') {
+        max-width: calc(
+          100% - #{hb-calculate-rems(260px)} - #{hb-spacing-width('xxs')}
+        );
       }
     }
 

@@ -5,11 +5,41 @@
 @use '../mixins/layout' as *;
 
 .hb-three-column-w-image {
-  display: flex;
-  flex-wrap: wrap;
+  &--one-sidebar,
+  &--two-sidebar {
+    @include grid-media-min('lg') {
+      display: grid;
+      grid-template-columns: 18% 1fr 18%;
+      /* grid-template-rows: repeat(2, auto); */
+      grid-auto-rows: auto;
+      column-gap: hb-calculate-rems(32px);
+    }
+  }
 
-  @include grid-media-min('lg') {
-    flex-wrap: nowrap;
+  &--one-sidebar {
+    &:has(.hb-three-column-w-image__sidebar-1) {
+      @include grid-media-min('lg') {
+        grid-template-areas: 'sidebar-1 main main';
+      }
+    }
+
+    &:has(.hb-three-column-w-image__sidebar-2) {
+      @include grid-media-min('lg') {
+        grid-template-areas: 'main main sidebar-2';
+      }
+    }
+  }
+
+  &--two-sidebar {
+    @include grid-media-min('lg') {
+      grid-template-areas:
+        'sidebar-1 main main'
+        'sidebar-1 sidebar-2 sidebar-2';
+    }
+
+    @include grid-media-min('xl') {
+      grid-template-areas: 'sidebar-1 main sidebar-2';
+    }
   }
 
   // If this uses the "limited width" section width
@@ -27,33 +57,23 @@
   }
 
   &__sidebar-1 {
+    grid-area: sidebar-1;
+
     .block,
     .block-hs-blocks,
     .hb-sidebar-block {
       @include hb-sidebar;
     }
-
-    @include grid-media-min('lg') {
-      width: hb-sidebar-width();
-      margin-right: hb-spacing-width();
-    }
   }
 
   &__main {
-    width: 100%;
+    grid-area: main;
     margin-bottom: hb-spacing-width();
 
     @include grid-media-min('lg') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{hb-sidebar-width()} - #{hb-spacing-width()});
         margin-bottom: 0;
-      }
-
-      .hb-three-column-w-image--two-sidebar & {
-        width: calc(
-          100% - #{2 * hb-sidebar-width()} - 2 * #{hb-spacing-width()}
-        );
       }
     }
   }
@@ -147,6 +167,7 @@
   }
 
   &__sidebar-2 {
+    grid-area: sidebar-2;
     margin-left: 0;
 
     .block,
@@ -158,18 +179,6 @@
     @include hb-traditional {
       font-size: hb-calculate-rems(16px);
       line-height: 127%;
-    }
-
-    .hb-three-column-w-image--one-sidebar & {
-      @include grid-media-min('lg') {
-        width: hb-sidebar-width();
-        margin-left: hb-spacing-width();
-      }
-    }
-
-    @include grid-media-min('lg') {
-      width: hb-sidebar-width();
-      margin-left: hb-spacing-width();
     }
   }
 }

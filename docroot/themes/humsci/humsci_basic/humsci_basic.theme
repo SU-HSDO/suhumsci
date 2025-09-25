@@ -176,8 +176,8 @@ function humsci_basic_page_attachments_alter(&$attachments) {
   $fonts = $info['preload_fonts'];
 
   // Check if any of the font URLs are Google Fonts.
-  $has_google_fonts = array_filter($fonts, function ($font) {
-    return strpos($font, 'fonts.googleapis.com') !== FALSE;
+  $has_google_fonts = array_find($fonts, function ($font) {
+    return str_contains($font, 'fonts.googleapis.com');
   });
 
   // Attach preconnects only once if Google Fonts are present.

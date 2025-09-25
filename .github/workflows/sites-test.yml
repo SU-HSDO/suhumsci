@@ -1,6 +1,5 @@
 name: Unit, Acceptance and Functional Tests
 on:
-  push:
   pull_request:
     types: [opened, synchronize, reopened]
 concurrency:
@@ -87,7 +86,7 @@ jobs:
       DRUPAL_DATABASE_HOST: mysql
     services:
       selenium:
-        image: selenium/standalone-chrome:latest
+        image: selenium/standalone-chrome:130.0
         options: '--shm-size="2g"'
       mysql:
         image: mysql:5.7
@@ -154,7 +153,7 @@ jobs:
       DRUPAL_DATABASE_HOST: mysql
     services:
       selenium:
-        image: selenium/standalone-chrome:latest
+        image: selenium/standalone-chrome:130.0
         options: '--shm-size="2g"'
       mysql:
         image: mysql:5.7
@@ -219,6 +218,8 @@ jobs:
       options: '--network-alias drupal8ci'
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - name: Restore Cache
         uses: actions/cache@v4
         with:

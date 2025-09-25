@@ -1,0 +1,13 @@
+diff --git a/field_formatter_class.module b/field_formatter_class.module
+index c5b5256d053d2c5f0e9f2a0e595a13928a0b26b0..b99fe6128897f3b9cb1e4faa0942b7a3c6c3edc6 100644
+--- a/field_formatter_class.module
++++ b/field_formatter_class.module
+@@ -139,7 +139,7 @@ function field_formatter_class_field_widget_complete_form_alter(&$field_widget_c
+   }
+ 
+   $field_widget_complete_form['widget']['#third_party_settings']['field_formatter_class'] = $thirdPartySettings;
+-  $field_widget_complete_form['widget']['#object'] = $form_state->getBuildInfo()['callback_object']->getEntity();
++  $field_widget_complete_form['widget']['#object'] = $context['items']->getEntity();
+ }
+ 
+ /**

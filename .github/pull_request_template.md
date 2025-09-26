@@ -20,6 +20,3 @@ _['low', 'medium', 'high', etc.]_
 ## Steps to Test
 1. _[First testing step]_
 2. ...
-
-# Coding Standards
-Coding Standards are outlined for in the relevant documentation (docs/CodingStandards.md).

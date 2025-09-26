@@ -318,17 +318,13 @@ process:
       key: sunet
       include_source: true
       process:
-        instructor_id:
-          plugin: callback
-          callable: strtolower
-          source: sunet
         target_id:
           plugin: entity_generate
           entity_type: hs_entity
           bundle_key: bundle
           bundle: course_collections__instructor
           value_key: field_migration_id
-          source: '@instructor_id'
+          source: sunet
           values:
             label: name
             field_instructor_role: role

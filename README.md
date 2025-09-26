@@ -72,13 +72,11 @@ Architecture Decision Records (ADRs) are used to document important architectura
 - [Patching and patch management instructions](patches/README.md)
 - [Codeception Tests](docs/Codeception.md)
 - [Code Deployment Process](docs/CodeDeploy.md)
+- [Conding Standards](docs/CodingStandards.md)
 - [Configuration Management](docs/Config.md)
 - [Config & Content Update](docs/ConfigContentUpdate.md)
-- [Humsci Basic PR Checklist](docs/HumsciBasicPRChecklist.md)
 - [Launch Process](docs/Launch.md)
-- [LetsEncrypt Certificate on Acquia Cloud](docs/LetsEncrypt.md)
 - [Provisioning a New Site](docs/NewSite.md)
-- [Patching Documentation](docs/patching.md)
 
 > **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
 

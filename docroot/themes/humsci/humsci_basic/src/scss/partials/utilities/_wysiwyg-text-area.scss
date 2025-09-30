@@ -338,6 +338,45 @@ $credits: (hs-credits, credits);
   }
 }
 
+.drupal-media-style-align-right .align-right,
+.drupal-media-style-align-center .align-center,
+.drupal-media-style-align-left .align-left {
+  max-width: 100%;
+  margin: 0;
+  float: none;
+}
+
+.drupal-media:has(.hb-media-image) {
+  @include hb-themes(('colorful', 'airy')) {
+    margin-bottom: hb-spacing-width('sm');
+  }
+
+  @include hb-traditional {
+    margin-bottom: hb-spacing-width('xs');
+  }
+
+  figcaption {
+    font-style: italic;
+    font-size: 12px !important;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 5;
+    text-align: right;
+    line-height: 140%;
+    height: auto;
+    box-sizing: border-box;
+    color: var(--palette--white) !important;
+    border: none;
+    background: linear-gradient(to top, var(--palette--black), transparent) !important;
+
+    @include grid-media-min('sm') {
+      padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
+        hb-calculate-rems(16px) 15% !important;
+    }
+  }
+}
+
 // blockquotes
 // The text area blockquote content is placed inside of a paragraph tag.
 blockquote:nth-child(n) {

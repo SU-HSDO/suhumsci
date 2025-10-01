@@ -1,3 +1,7 @@
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+
 .hb-three-column__main .views-exposed-form,
 .hb-three-column__sidebar-1 .views-exposed-form {
   display: flex;
@@ -12,6 +16,7 @@
   .form-item {
     width: 100%;
     margin-bottom: hb-spacing-width('xs');
+
     @include grid-media-min('md') {
       width: calc(50% - #{hb-calculate-rems(18px)});
       margin-right: hb-calculate-rems(18px);

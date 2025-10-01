@@ -1,0 +1,15 @@
+#!/bin/bash
+
+## Description: Run BLT commands
+## Usage: blt [command] [options]
+## Example: "ddev blt drupal:sync --site=ethicsinsociety"
+
+# =============================================================================
+# BLT COMMAND WRAPPER FOR DDEV
+# =============================================================================
+# 
+# This script simply passes through BLT commands to the vendor/bin/blt executable.
+# The --site parameter is now properly handled by BLT itself.
+# =============================================================================
+
+/var/www/html/vendor/bin/blt "$@"

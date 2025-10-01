@@ -11,7 +11,7 @@ Note the following properties of this project:
 * Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
 * Development branching convention: branch off the current release branch
-* Local environment: Lando or DrupalVM
+* Local environment: DDEV, Lando or DrupalVM
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
@@ -21,10 +21,11 @@ Note the following properties of this project:
 Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
 
 ### Local setup and installation
-You can either run the site on Lando or bare metal.
+You can either run the site on DDEV, Lando or bare metal.
 
-#### Setup on Lando
-[Follow the Lando instructions](lando/README.md).
+#### Setup on DDEV or Lando
+* [Follow the DDEV instructions](.ddev/DDEV-README.md).
+* [Follow the Lando legacy instructions](lando/README.md).
 
 #### Or setup on bare metal
 1. Clone the repository and check out the develop branch.
@@ -49,9 +50,6 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is
 very good documentation on codeception testing steps and how that is structured.
 
-#### Codeception on Lando
-[Run Codeception on Lando](lando/README.md#setup-for-local-codeception-testing)
-
 #### Codeception on bare metal
 To run those tests locally, `blt` will
 be the wrapper around the codeception commands.
@@ -74,13 +72,11 @@ Architecture Decision Records (ADRs) are used to document important architectura
 - [Patching and patch management instructions](patches/README.md)
 - [Codeception Tests](docs/Codeception.md)
 - [Code Deployment Process](docs/CodeDeploy.md)
+- [Conding Standards](docs/CodingStandards.md)
 - [Configuration Management](docs/Config.md)
 - [Config & Content Update](docs/ConfigContentUpdate.md)
-- [Humsci Basic PR Checklist](docs/HumsciBasicPRChecklist.md)
 - [Launch Process](docs/Launch.md)
-- [LetsEncrypt Certificate on Acquia Cloud](docs/LetsEncrypt.md)
 - [Provisioning a New Site](docs/NewSite.md)
-- [Patching Documentation](docs/patching.md)
 
 > **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
 

@@ -1,5 +1,7 @@
 # Config & Content Update
 
+2025-09-26: This documentation should be reviewed and updated, and may be slightly outdated.
+
 Periodically the H&S team wants to make several changes to the default installation configurations & content. This often
 includes changes to the views, entity displays, entity forms, permissions, and some field settings. It also includes
 default content changes.

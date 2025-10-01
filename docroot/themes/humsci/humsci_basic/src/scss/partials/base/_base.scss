@@ -1,3 +1,14 @@
+@use '../variables/su-core-colors' as *;
+@use '../variables/general' as *;
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+@use '../mixins/forms' as *;
+
 // Define variable to be able to override the link color in some scenarios.
 :root {
   --link-base-current-color: var(--palette--link-base-color);
@@ -206,7 +217,9 @@ button:not([class]) {
 * See: https://github.com/mozdevs/cssremedy/issues/11
 */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation-delay: -1s !important;
     animation-duration: 1s !important;
     animation-iteration-count: 1 !important;

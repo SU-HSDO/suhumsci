@@ -338,6 +338,12 @@ $credits: (hs-credits, credits);
   }
 }
 
+.drupal-media-style-align-right,
+// .drupal-media-style-align-center,
+.drupal-media-style-align-left {
+  max-width: 100%;
+}
+
 .drupal-media-style-align-right .align-right,
 .drupal-media-style-align-center .align-center,
 .drupal-media-style-align-left .align-left {
@@ -346,7 +352,7 @@ $credits: (hs-credits, credits);
   float: none;
 }
 
-.drupal-media:has(.hb-media-image) {
+.drupal-media:has(article.hb-media-image) {
   @include hb-themes(('colorful', 'airy')) {
     margin-bottom: hb-spacing-width('sm');
   }
@@ -375,6 +381,16 @@ $credits: (hs-credits, credits);
         hb-calculate-rems(16px) 15% !important;
     }
   }
+}
+
+.drupal-media-style-align-center:has(.hb-media-image) figcaption {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// Override style coming from ckeditor5 module.
+.ck.ck-content .drupal-media-style-align-center article:not(.hb-media-video) {
+  max-width: 100% !important;
 }
 
 // blockquotes

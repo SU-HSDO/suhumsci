@@ -137,6 +137,28 @@
     background-color: transparent;
     font-weight: 400;
   }
+
+  figure.caption-drupal-media {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('sm');
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xs');
+    }
+
+    article:not(.hb-media-video):not(.hb-media-embed) {
+      position: relative;
+
+      + figcaption {
+        @include hb-caption-credit;
+      }
+    }
+  }
 }
 
 .hb-raised-cards--uniform-height

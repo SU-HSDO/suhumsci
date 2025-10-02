@@ -97,6 +97,11 @@
 // in layout builder, this class can be applied.
 .hb-main-body-detail-image {
   .hb-three-column-w-image & {
+    // Image wrapper shouldn't be wider than the image, use flex to prevent this.
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
     @include grid-media-min('md') {
       @include clearfix;
       float: right;

@@ -177,7 +177,7 @@ function humsci_basic_page_attachments_alter(&$attachments) {
 
   // Check if any of the font URLs are Google Fonts.
   $has_google_fonts = array_find($fonts, function ($font) {
-    return str_contains($font, 'fonts.googleapis.com');
+    return isset($font['url']) && str_contains($font['url'], 'fonts.googleapis.com');
   });
 
   // Attach preconnects only once if Google Fonts are present.
@@ -199,22 +199,29 @@ function humsci_basic_page_attachments_alter(&$attachments) {
 
   // Now attach preload + stylesheet for each font.
   foreach ($info['preload_fonts'] as $font) {
+    if (empty($font['url']) || empty($font['type'])) {
+      continue;
+    }
+
     // Preload first.
     $attachments['#attached']['html_head_link'][] = [[
       'rel' => 'preload',
-      'as' => 'style',
-      'href' => $font,
+      'as' => $font['type'],
+      'href' => $font['url'],
+      'crossorigin' => 'anonymous',
     ],
       FALSE,
     ];
 
-    // Then stylesheet.
-    $attachments['#attached']['html_head_link'][] = [[
-      'rel' => 'stylesheet',
-      'href' => $font,
-    ],
-      FALSE,
-    ];
+    // If type is style, add the stylesheet link.
+    if ($font['type'] == 'style') {
+      $attachments['#attached']['html_head_link'][] = [[
+        'rel' => 'stylesheet',
+        'href' => $font['url'],
+      ],
+        FALSE,
+      ];
+    }
   }
 }
 

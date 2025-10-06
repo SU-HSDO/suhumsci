@@ -1,12 +1,71 @@
+@use '../functions/animation' as *;
 @use '../functions/general' as *;
+@use '../mixins/icons' as *;
 
-.field-media-oembed-video {
+
+.field-media-oembed-video,
+.video-lazy {
   position: relative;
   aspect-ratio: 16 / 9;
 
   iframe {
     width: 100%;
     height: 100%;
+  }
+}
+
+.video-lazy {
+  img.video-thumb,
+  iframe.video-iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .video-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    background-color: var(--palette--white);
+    opacity: 0.5;
+    font-size: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    transition: hb-transition(opacity);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.6;
+    }
+
+    &:focus {
+      opacity: 1;
+    }
+
+    // additional focus styles for keyboard users only
+    // that compliments browser default styles
+    &:focus-visible {
+      opacity: 1;
+      outline: 5px auto -webkit-focus-ring-color; // Chrome only
+    }
+
+    &::before {
+      @include hb-icon-background('play', 'black');
+
+      content: '';
+      display: block;
+      position: relative;
+      height: hb-calculate-rems(50px);
+      width: hb-calculate-rems(50px);
+    }
   }
 }
 

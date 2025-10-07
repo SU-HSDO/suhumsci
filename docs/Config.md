@@ -1,5 +1,7 @@
 # Configuration Management
 
+2025-09-26: This documentation should be reviewed and updated, and may be slightly outdated. It will also change when the config_* module suites are upgraded (config_filter, config_ignore, config_readonly). The general set up reflected in this documentation however is still applicable.
+
 For this product, we want to keep track of several configurations, but we want to allow the addition of new
 configurations on a per site basis. We also don't want to restrict our users into some customizations. To do this we
 have implemented some customized workflows and configuration management techniques.

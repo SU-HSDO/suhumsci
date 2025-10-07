@@ -5,10 +5,37 @@
 
       videos.forEach((video) => {
         const provider = video.dataset.videoProvider;
-        const { videoId } = video.dataset;
-        const isPlaylist = video.dataset.isPlaylist === 'true';
+        const { videoId, isPlaylist, playlistId } = video.dataset;
 
-        // --- Vimeo: Fetch thumbnail immediately ---
+        // YouTube playlist: get first video thumbnail dynamically
+        if (provider === 'youtube' && isPlaylist) {
+          // Use a free CORS proxy to fetch the playlist HTML
+          const proxyUrl = `https://corsproxy.io/?https://www.youtube.com/playlist?list=${playlistId}`;
+
+          fetch(proxyUrl)
+            .then((res) => res.text())
+            .then((html) => {
+              const match = html.match(/"videoId":"(.*?)"/);
+              if (match) {
+                const tempVideoId = match[1];
+                video.dataset.videoId = tempVideoId;
+
+                // Build thumbnail
+                const thumbUrl = `https://img.youtube.com/vi/${tempVideoId}/hqdefault.jpg`;
+                const img = document.createElement('img');
+                img.src = thumbUrl;
+                img.className = 'video-thumb';
+                img.alt = 'Video thumbnail';
+                const playBtn = video.querySelector('.video-play');
+                const placeholder = video.querySelector('.video-thumb-placeholder');
+                if (placeholder) placeholder.replaceWith(img);
+                else video.insertBefore(img, playBtn);
+              }
+            })
+            .catch((err) => console.error('Playlist thumbnail fetch failed', err));
+        }
+
+        // Vimeo: Fetch thumbnail immediately
         if (provider === 'vimeo' && !video.querySelector('.video-thumb')) {
           fetch(`https://vimeo.com/api/v2/video/${videoId}.json`)
             .then((res) => res.json())
@@ -25,7 +52,7 @@
             .catch((err) => console.error('Vimeo thumbnail fetch failed', err));
         }
 
-        // --- Click to load iframe ---
+        // Click to load iframe
         const playButton = video.querySelector('.video-play');
         playButton.addEventListener('click', () => {
           let embedUrl = '';

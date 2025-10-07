@@ -189,8 +189,7 @@
   // Video variant specific styles.
   .hb-spotlight--video & {
     @include hb-traditional {
-      padding-block-start: hb-calculate-rems(24px);
-      padding-block-end: hb-calculate-rems(40px);
+      padding-block: hb-calculate-rems(24px) hb-calculate-rems(40px);
 
       @include grid-media-min('md') {
         padding-block-start: hb-calculate-rems(32px);
@@ -242,8 +241,9 @@
       padding-block-start: hb-calculate-rems(28px);
 
       &::before {
-        top: 0;
         @include hb-colorful-text-bar('secondary');
+
+        top: 0;
 
         // Add a unique secondary color for Ocean on Colorful.
         // Note this is an extraordinary use case.

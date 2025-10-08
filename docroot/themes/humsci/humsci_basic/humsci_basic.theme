@@ -398,64 +398,93 @@ function humsci_basic_preprocess_paragraph(&$variables) {
  * @param array $variables
  *   The preprocess variables array (passed by reference).
  */
-function humsci_basic_update_view_mode_full_width_image(&$variables) {
+function humsci_basic_update_view_mode_full_width_image(array &$variables) {
   $paragraph = $variables['element']['#object'];
-  if (
-    !($paragraph instanceof ParagraphInterface) ||
-    !in_array(
-    $paragraph->bundle(),
-    [
-      'hs_gradient_hero',
-      'hs_hero_image',
-      'hs_banner',
-    ])
-  ) {
+
+  if (!($paragraph instanceof ParagraphInterface)) {
     return;
   }
 
-  if (in_array(
-    $paragraph->bundle(),
-    [
-      'hs_hero_image',
-      'hs_banner',
-    ])) {
-    if (!$paragraph || !$paragraph->hasField('parent_field_name') && !$paragraph->get('parent_field_name')->isEmpty()) {
+  $bundle = $paragraph->bundle();
+
+  $valid_bundles = [
+    'hs_gradient_hero',
+    'hs_hero_image',
+    'hs_banner',
+  ];
+
+  if (!in_array($bundle, $valid_bundles)) {
+    return;
+  }
+
+  // Handle hero_image and banner directly
+  if (in_array($bundle, ['hs_hero_image', 'hs_banner'])) {
+    if (
+      !$paragraph->hasField('parent_field_name') ||
+      $paragraph->get('parent_field_name')->isEmpty()
+    ) {
       return;
     }
 
     $parent_field_name = $paragraph->get('parent_field_name')->value;
-    if ($parent_field_name != 'field_hs_page_hero') {
-      return;
+
+    if ($parent_field_name == 'field_hs_page_hero') {
+      $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+    } else {
+      humsci_basic_update_view_mode_slides_image($paragraph, $variables);
     }
-    $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
   } else {
-    $parent_paragraph = $paragraph->getParentEntity();
-    if (!$parent_paragraph || !$parent_paragraph->hasField('parent_field_name') && !$parent_paragraph->get('parent_field_name')->isEmpty()) {
-      return;
-    }
-
-    $parent_field_name = $parent_paragraph->get('parent_field_name')->value;
-    if ($parent_field_name != 'field_hs_page_hero') {
-      return;
-    }
-
-    $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
-    $slides = [];
-    foreach ($slide_fields as $field_name) {
-      if ($parent_paragraph->hasField($field_name) && !$parent_paragraph->get($field_name)->isEmpty()) {
-        $slides = $parent_paragraph->get($field_name)->referencedEntities();
-        break;
-      }
-    }
-    if (empty($slides)) {
-      return;
-    }
-    if ($slides[0]->id() !== $paragraph->id()) {
-      return;
-    }
-    $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+    humsci_basic_update_view_mode_slides_image($paragraph, $variables);
   }
+
 }
+
+/**
+ * Update view mode of image in slides to eager load.
+ *
+ * @param $paragraph
+ *   The preprocess paragraph array (passed by reference).
+ * @param array $variables
+ *   The preprocess variables array (passed by reference).
+ */
+function humsci_basic_update_view_mode_slides_image($paragraph, array &$variables) {
+  $parent_paragraph = $paragraph->getParentEntity();
+
+  if (
+    !$parent_paragraph instanceof ParagraphInterface ||
+    !$parent_paragraph->hasField('parent_field_name') ||
+    $parent_paragraph->get('parent_field_name')->isEmpty()
+  ) {
+    return;
+  }
+
+  $parent_field_name = $parent_paragraph->get('parent_field_name')->value;
+
+  if ($parent_field_name != 'field_hs_page_hero') {
+    return;
+  }
+
+  // Check if this paragraph is the first slide
+  $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
+  $slides = [];
+
+  foreach ($slide_fields as $field_name) {
+    if (
+      $parent_paragraph->hasField($field_name) &&
+      !$parent_paragraph->get($field_name)->isEmpty()
+    ) {
+      $slides = $parent_paragraph->get($field_name)->referencedEntities();
+      break;
+    }
+  }
+
+  if (empty($slides) || $slides[0]->id() !== $paragraph->id()) {
+    return;
+  }
+
+  $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+}
+
 
 /**
  * Implements hook_preprocess_HOOK().

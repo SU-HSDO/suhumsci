@@ -378,6 +378,7 @@ function humsci_basic_preprocess_paragraph(&$variables) {
 
   // Get the parent entity of hs_view paragraphs.
   $parent = $paragraph->getParentEntity();
+
   // Test if the paragraph is within a collection.
   if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
     return NULL;
@@ -391,118 +392,81 @@ function humsci_basic_preprocess_paragraph(&$variables) {
   $variables['content']['field_hs_view'][0]['#heading_tag'] = $heading_tag;
 }
 
+
 /**
  * Implements hook_preprocess_HOOK().
  */
-function humsci_basic_preprocess_responsive_image_formatter(&$variables) {
-  // The current responsive image item.
-  $image_item = $variables['item'];
+function humsci_basic_update_view_mode_full_width_image(&$variables) {
+  $paragraph = $variables['element']['#object'];
 
-  // Step up: field → media → paragraph (image wrapper).
-  $image_field = $image_item->getParent();
-  $media_entity = $image_field->getParent()->getEntity();
-  $media_ref_item = $media_entity->_referringItem ?? NULL;
-  $paragraph_entity = $media_ref_item ? $media_ref_item->getEntity() : NULL;
-
-  // Only act on hero paragraphs.
   if (
-    !$paragraph_entity ||
+    !($paragraph instanceof ParagraphInterface) ||
     !in_array(
-      $paragraph_entity->bundle(),
-      [
-        'hs_gradient_hero',
-        'hs_hero_image',
-        'hs_carousel',
-        'hs_banner',
-      ]
-    )
+    $paragraph->bundle(),
+    [
+      'hs_gradient_hero',
+      'hs_hero_image',
+      'hs_banner',
+    ])
   ) {
     return;
   }
 
-  // Step up: paragraph → parent field → parent entity (hero/slider container).
-  $paragraph_ref_item = $paragraph_entity->_referringItem ?? NULL;
-  if (!$paragraph_ref_item) {
-    return;
-  }
-
-  $parent_field = $paragraph_ref_item->getParent();
-  $parent_field_name = $parent_field->getName();
-
-  // Only target the full width hero field or the slider field in the node.
-  if (
-    !in_array(
-      $parent_field_name,
-      [
-        'field_hs_page_hero',
-        'field_hs_gradient_hero_slides',
-        'field_hs_carousel_slides',
-      ]
-    )
-  ) {
-    return;
-  }
-
-  // --- Case 1: Inside a slider ---
-  if (in_array($parent_field_name, ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'])) {
-    $slider_field = $parent_field->getParent();
-    if (!$slider_field) {
+  // For those paragraph that are not part of an slide.
+  if (in_array(
+    $paragraph->bundle(),
+    [
+      'hs_hero_image',
+      'hs_banner',
+    ])) {
+    if (!$paragraph || !$paragraph->hasField('parent_field_name') && !$paragraph->get('parent_field_name')->isEmpty()) {
       return;
     }
 
-    $slider_entity = $slider_field->getEntity();
-    if (!in_array($slider_entity->bundle(), ['hs_gradient_hero_slider', 'hs_hero_image', 'hs_carousel'])) {
+    $parent_field_name = $paragraph->get('parent_field_name')->value;
+
+    if ($parent_field_name != 'field_hs_page_hero') {
       return;
     }
 
-    // Step up: slider → parent page hero field.
-    $slider_ref_item = $slider_entity->_referringItem ?? NULL;
-    if (!$slider_ref_item) {
+    $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+  } else { // Paragraph in slides.
+    // Get the parent entity of slides paragraphs.
+    $parent_paragraph = $paragraph->getParentEntity();
+
+    if (!$parent_paragraph || !$parent_paragraph->hasField('parent_field_name') && !$parent_paragraph->get('parent_field_name')->isEmpty()) {
       return;
     }
 
-    $slider_parent_field = $slider_ref_item->getParent();
-    $slider_parent_field_name = $slider_parent_field->getName();
+    $parent_field_name = $parent_paragraph->get('parent_field_name')->value;
 
-    // Safety check: ensure this slider belongs to the page hero field.
-    if ($slider_parent_field_name != 'field_hs_page_hero') {
+    if ($parent_field_name != 'field_hs_page_hero') {
       return;
     }
 
-    // Possible slide fields for sliders.
-    $slide_field_names = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
+    // Possible slide field names.
+    $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
 
-    $first_slide = NULL;
-    foreach ($slide_field_names as $slide_field_name) {
-      if ($slider_entity->hasField($slide_field_name)) {
-        // Get the first slide from the slider.
-        $first_slide_item = $slider_entity->get($slide_field_name)->first();
+    $slides = [];
+
+    // Find which one exists and is not empty.
+    foreach ($slide_fields as $field_name) {
+      if ($parent_paragraph->hasField($field_name) && !$parent_paragraph->get($field_name)->isEmpty()) {
+        $slides = $parent_paragraph->get($field_name)->referencedEntities();
         break;
       }
     }
 
-    $first_slide = $first_slide_item ? $first_slide_item->entity : NULL;
-
-    // Only the first slide should be eager-loaded.
-    if (!$first_slide || $paragraph_entity->id() != $first_slide->id()) {
+    // If no valid slides field found or empty, stop.
+    if (empty($slides)) {
       return;
     }
 
-    $variables['responsive_image']['#attributes']['loading'] = 'eager';
-  }
-
-  // --- Case 2: Single hero image (field_hs_page_hero). ---
-  else {
-    // Get the first hero paragraph.
-    $first_hero_item = $parent_field->first();
-    $first_hero = $first_hero_item ? $first_hero_item->entity : NULL;
-
-    // Only the first hero should be eager-loaded.
-    if (!$first_hero || $paragraph_entity->id() != $first_hero->id()) {
+    if ($slides[0]->id() !== $paragraph->id()) {
       return;
     }
 
-    $variables['responsive_image']['#attributes']['loading'] = 'eager';
+    $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
   }
 }
 
@@ -510,6 +474,18 @@ function humsci_basic_preprocess_responsive_image_formatter(&$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function humsci_basic_preprocess_field(&$variables) {
+  // dump($variables['element']['#field_name']);
+  if (in_array(
+    $variables['element']['#field_name'],
+    [
+      'field_hs_gradient_hero_image',
+      'field_hs_hero_image',
+      'field_hs_banner_image'
+    ]
+  )) {
+    humsci_basic_update_view_mode_full_width_image($variables);
+  }
+
   $wysiwyg_types = ['text_long', 'text_with_summary'];
   if (in_array($variables['field_type'], $wysiwyg_types)) {
     $variables['#attached']['library'][] = 'humsci_basic/table-wrap';

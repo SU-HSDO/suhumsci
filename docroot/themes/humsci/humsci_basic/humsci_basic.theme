@@ -411,7 +411,6 @@ function humsci_basic_update_view_mode_full_width_image(&$variables) {
     return;
   }
 
-  // For those paragraph that are not part of an slide.
   if (in_array(
     $paragraph->bundle(),
     [
@@ -428,7 +427,6 @@ function humsci_basic_update_view_mode_full_width_image(&$variables) {
     }
     $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
   } else {
-    // Get the parent entity of slides paragraphs.
     $parent_paragraph = $paragraph->getParentEntity();
     if (!$parent_paragraph || !$parent_paragraph->hasField('parent_field_name') && !$parent_paragraph->get('parent_field_name')->isEmpty()) {
       return;
@@ -439,17 +437,14 @@ function humsci_basic_update_view_mode_full_width_image(&$variables) {
       return;
     }
 
-    // Possible slide field names.
     $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
     $slides = [];
-    // Find which one exists and is not empty.
     foreach ($slide_fields as $field_name) {
       if ($parent_paragraph->hasField($field_name) && !$parent_paragraph->get($field_name)->isEmpty()) {
         $slides = $parent_paragraph->get($field_name)->referencedEntities();
         break;
       }
     }
-    // If no valid slides field found or empty, stop.
     if (empty($slides)) {
       return;
     }

@@ -474,7 +474,7 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
     return;
   }
 
-  // Handle hero_image and banner directly
+  // Handle hero_image and banner directly.
   if (in_array($bundle, ['hs_hero_image', 'hs_banner'])) {
     if (
       !$paragraph->hasField('parent_field_name') ||
@@ -487,10 +487,12 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
 
     if ($parent_field_name == 'field_hs_page_hero') {
       $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
-    } else {
+    }
+    else {
       humsci_basic_update_view_mode_slides_image($paragraph, $variables);
     }
-  } else {
+  }
+  else {
     humsci_basic_update_view_mode_slides_image($paragraph, $variables);
   }
 
@@ -499,7 +501,7 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
 /**
  * Update view mode of image in slides to eager load.
  *
- * @param $paragraph
+ * @param array $paragraph
  *   The preprocess paragraph array (passed by reference).
  * @param array $variables
  *   The preprocess variables array (passed by reference).

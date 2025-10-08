@@ -398,7 +398,6 @@ function humsci_basic_preprocess_paragraph(&$variables) {
  */
 function humsci_basic_update_view_mode_full_width_image(&$variables) {
   $paragraph = $variables['element']['#object'];
-
   if (
     !($paragraph instanceof ParagraphInterface) ||
     !in_array(
@@ -424,32 +423,25 @@ function humsci_basic_update_view_mode_full_width_image(&$variables) {
     }
 
     $parent_field_name = $paragraph->get('parent_field_name')->value;
-
     if ($parent_field_name != 'field_hs_page_hero') {
       return;
     }
-
     $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
-  // Paragraph in slides.
   } else {
     // Get the parent entity of slides paragraphs.
     $parent_paragraph = $paragraph->getParentEntity();
-
     if (!$parent_paragraph || !$parent_paragraph->hasField('parent_field_name') && !$parent_paragraph->get('parent_field_name')->isEmpty()) {
       return;
     }
 
     $parent_field_name = $parent_paragraph->get('parent_field_name')->value;
-
     if ($parent_field_name != 'field_hs_page_hero') {
       return;
     }
 
     // Possible slide field names.
     $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
-
     $slides = [];
-
     // Find which one exists and is not empty.
     foreach ($slide_fields as $field_name) {
       if ($parent_paragraph->hasField($field_name) && !$parent_paragraph->get($field_name)->isEmpty()) {
@@ -457,16 +449,13 @@ function humsci_basic_update_view_mode_full_width_image(&$variables) {
         break;
       }
     }
-
     // If no valid slides field found or empty, stop.
     if (empty($slides)) {
       return;
     }
-
     if ($slides[0]->id() !== $paragraph->id()) {
       return;
     }
-
     $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
   }
 }
@@ -485,7 +474,6 @@ function humsci_basic_preprocess_field(&$variables) {
   )) {
     humsci_basic_update_view_mode_full_width_image($variables);
   }
-
   $wysiwyg_types = ['text_long', 'text_with_summary'];
   if (in_array($variables['field_type'], $wysiwyg_types)) {
     $variables['#attached']['library'][] = 'humsci_basic/table-wrap';

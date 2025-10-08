@@ -486,7 +486,10 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
     $parent_field_name = $paragraph->get('parent_field_name')->value;
 
     if ($parent_field_name == 'field_hs_page_hero') {
-      $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+      $entity = $variables['items'][0]['content']['#media'];
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+      $render_array = $view_builder->view($entity, 'caption_credit_eager');
+      $variables['items'][0]['content'] = $render_array;
     }
     else {
       humsci_basic_update_view_mode_slides_image($paragraph, $variables);
@@ -541,7 +544,10 @@ function humsci_basic_update_view_mode_slides_image($paragraph, array &$variable
     return;
   }
 
-  $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+  $entity = $variables['items'][0]['content']['#media'];
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+  $render_array = $view_builder->view($entity, 'caption_credit_eager');
+  $variables['items'][0]['content'] = $render_array;
 }
 
 /**

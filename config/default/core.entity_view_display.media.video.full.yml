@@ -6,10 +6,13 @@ dependencies:
     - core.entity_view_mode.media.full
     - field.field.media.video.field_media_oembed_video
     - media.type.video
+    - responsive_image.styles.full_responsive
   module:
     - empty_fields
     - field_formatter_class
     - hs_field_helpers
+    - media
+    - responsive_image
 _core:
   default_config_hash: vqVUNXW5VQkzMmWbWehC_qWBkReYPc_i-In_6nmtn8o
 id: media.video.full
@@ -18,10 +21,13 @@ bundle: video
 mode: full
 content:
   field_media_oembed_video:
-    type: string
+    type: oembed
     label: hidden
     settings:
-      link_to_entity: false
+      max_width: 0
+      max_height: 0
+      loading:
+        attribute: lazy
     third_party_settings:
       empty_fields:
         handler: ''
@@ -31,9 +37,25 @@ content:
         inline_contents: 0
     weight: 0
     region: content
+  thumbnail:
+    type: responsive_image
+    label: hidden
+    settings:
+      responsive_image_style: full_responsive
+      image_link: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: content
 hidden:
   created: true
   name: true
   search_api_excerpt: true
-  thumbnail: true
   uid: true

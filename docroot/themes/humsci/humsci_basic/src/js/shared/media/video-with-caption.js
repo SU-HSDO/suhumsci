@@ -7,7 +7,7 @@
     attach(context) {
       const videos = once(
         'video-with-caption',
-        '.field-media-oembed-video',
+        '.hb-video-lazy',
         context,
       );
 

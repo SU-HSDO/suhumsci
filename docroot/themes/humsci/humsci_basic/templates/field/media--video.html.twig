@@ -3,15 +3,25 @@
  * This Caption Credit template overrides the standard media.html.twig file in Stable theme.
  */
 #}
+{{ attach_library('humsci_basic/video-with-caption') }}
+{{ attach_library('humsci_basic/lazy-load-video') }}
+
 {%
   set classes = [
     'hb-media-video',
   ]
 %}
 
-<article{{ attributes.addClass(classes) }}>
-  {{ title_suffix.contextual_links }}
-  {% if content %}
-    {{ content }}
-  {% endif %}
+<article {{ attributes.addClass(classes) }}>
+    {{ title_suffix.contextual_links }}
+    {% if content %}
+      <div class="hb-video-lazy"  data-video="{{ content.field_media_oembed_video['#items'].0.value }}">
+        <div class="hb-video-lazy__thumb">
+          {{ content.thumbnail }}
+          <button class="hb-video-lazy__play" aria-label="Play video">
+            <span hidden>Play video</span>
+          </button>
+        </div>
+      </div>
+    {% endif %}
 </article>

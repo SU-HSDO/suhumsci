@@ -1,81 +1,60 @@
 (function (Drupal, once) {
   Drupal.behaviors.videoLazyBehavior = {
     attach(context) {
-      const videos = once('video-lazy', '.video-lazy', context);
+      const videos = once('video-lazy', '.hb-media-video', context);
 
       videos.forEach((video) => {
-        const provider = video.dataset.videoProvider;
-        const { videoId, isPlaylist, playlistId } = video.dataset;
-
-        // YouTube playlist: get first video thumbnail dynamically
-        if (provider === 'youtube' && isPlaylist) {
-          // Use a free CORS proxy to fetch the playlist HTML
-          const proxyUrl = `https://corsproxy.io/?https://www.youtube.com/playlist?list=${playlistId}`;
-
-          fetch(proxyUrl)
-            .then((res) => res.text())
-            .then((html) => {
-              const match = html.match(/"videoId":"(.*?)"/);
-              if (match) {
-                const tempVideoId = match[1];
-                video.dataset.videoId = tempVideoId;
-
-                // Build thumbnail
-                const thumbUrl = `https://img.youtube.com/vi/${tempVideoId}/hqdefault.jpg`;
-                const img = document.createElement('img');
-                img.src = thumbUrl;
-                img.className = 'video-thumb';
-                img.alt = 'Video thumbnail';
-                const playBtn = video.querySelector('.video-play');
-                const placeholder = video.querySelector('.video-thumb-placeholder');
-                if (placeholder) placeholder.replaceWith(img);
-                else video.insertBefore(img, playBtn);
-              }
-            })
-            .catch((err) => console.error('Playlist thumbnail fetch failed', err));
-        }
-
-        // Vimeo: Fetch thumbnail immediately
-        if (provider === 'vimeo' && !video.querySelector('.video-thumb')) {
-          fetch(`https://vimeo.com/api/v2/video/${videoId}.json`)
-            .then((res) => res.json())
-            .then((data) => {
-              if (data[0] && data[0].thumbnail_large) {
-                const img = document.createElement('img');
-                img.src = data[0].thumbnail_large;
-                img.className = 'video-thumb';
-                img.alt = 'Video thumbnail';
-                const playBtn = video.querySelector('.video-play');
-                video.insertBefore(img, playBtn);
-              }
-            })
-            .catch((err) => console.error('Vimeo thumbnail fetch failed', err));
-        }
+        const videoWrapper = video.querySelector('.hb-video-lazy');
+        const videoUrl = videoWrapper.dataset.video;
+        const thumb = video.querySelector('.hb-video-lazy__thumb');
 
         // Click to load iframe
-        const playButton = video.querySelector('.video-play');
+        const playButton = video.querySelector('.hb-video-lazy__play');
         playButton.addEventListener('click', () => {
           let embedUrl = '';
+          let videoId = '';
+          let provider = '';
+          let isPlaylist = false;
 
-          if (provider === 'youtube') {
-            if (isPlaylist) {
-              embedUrl = `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1`;
+          // --- Determine provider and video ID ---
+          if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+            provider = 'youtube';
+            if (videoUrl.includes('list=')) {
+              // Playlist
+              const listMatch = videoUrl.match(/[?&]list=([^&]+)/);
+              videoId = listMatch ? listMatch[1] : '';
+              isPlaylist = true;
             } else {
-              embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+              // Regular video
+              const idMatch = videoUrl.match(/(?:v=|youtu\.be\/)([^?&]+)/);
+              videoId = idMatch ? idMatch[1] : '';
             }
+          } else if (videoUrl.includes('vimeo.com')) {
+            provider = 'vimeo';
+            const idMatch = videoUrl.match(/vimeo\.com\/(\d+)/);
+            videoId = idMatch ? idMatch[1] : '';
+          }
+
+          // --- Build final embed URL ---
+          if (provider === 'youtube') {
+            embedUrl = isPlaylist
+              ? `https://www.youtube.com/embed/videoseries?list=${videoId}&autoplay=1`
+              : `https://www.youtube.com/embed/${videoId}?autoplay=1`;
           } else if (provider === 'vimeo') {
             embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
           }
 
+          if (!embedUrl) return;
+
+          // --- Replace image thumbnail with iframe ---
           const iframe = document.createElement('iframe');
           iframe.src = embedUrl;
-          iframe.setAttribute('frameborder', '0');
-          iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media');
-          iframe.setAttribute('allowfullscreen', 'true');
-          iframe.className = 'video-iframe';
+          iframe.frameBorder = '0';
+          iframe.allow = 'autoplay; fullscreen';
+          iframe.allowFullscreen = true;
+          iframe.classList.add('hb-video-lazy__iframe');
 
-          video.innerHTML = '';
-          video.appendChild(iframe);
+          thumb.replaceWith(iframe);
         });
       });
     },

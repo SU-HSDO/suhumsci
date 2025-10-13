@@ -63,10 +63,9 @@
           const video = videos[i];
           if (
             video.parentNode
-            && video.parentNode.parentNode
-            && video.parentNode.parentNode.nodeName === 'FIGURE'
+            && video.parentNode.nodeName === 'FIGURE'
           ) {
-            const figure = video.parentNode.parentNode;
+            const figure = video.parentNode;
 
             if (figure.classList.contains('caption')) {
               figure.style.width = '100%';

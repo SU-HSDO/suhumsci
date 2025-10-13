@@ -2,26 +2,21 @@
 @use '../functions/general' as *;
 @use '../mixins/icons' as *;
 
-
-.field-media-oembed-video,
-.hb-video-lazy__thumb,
-.hb-video-lazy:has(.hb-video-lazy__iframe) {
+.hb-video-lazy {
   position: relative;
+  width: 100%;
   aspect-ratio: 16 / 9;
 
-  iframe {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.hb-video-lazy {
   .hb-video-lazy__thumb img,
   .hb-video-lazy__iframe {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
+  }
+
+  .hb-video-lazy__thumb {
+    padding-inline: hb-calculate-rems(29px);
   }
 
   .hb-video-lazy__play {
@@ -31,7 +26,7 @@
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background-color: var(--palette--white);
-    opacity: 0.5;
+    opacity: 1;
     font-size: 0;
     padding: 0;
     border: none;
@@ -41,18 +36,15 @@
     justify-content: center;
     cursor: pointer;
 
-    &:hover {
-      opacity: 0.6;
-    }
-
-    &:focus {
-      opacity: 1;
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      opacity: 0.75;
     }
 
     // additional focus styles for keyboard users only
     // that compliments browser default styles
     &:focus-visible {
-      opacity: 1;
       outline: 5px auto -webkit-focus-ring-color; // Chrome only
     }
 
@@ -69,6 +61,10 @@
       width: hb-calculate-rems(50px);
     }
   }
+}
+
+.hb-media-video:has(.hb-video-lazy) + figcaption {
+  padding-inline: hb-calculate-rems(29px);
 }
 
 .google-form {

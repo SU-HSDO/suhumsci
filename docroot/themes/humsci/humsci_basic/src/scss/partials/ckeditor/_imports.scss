@@ -13,9 +13,6 @@
 @use '../mixins/buttons' as *;
 @use '../mixins/tables' as *;
 @use '../mixins/text' as *;
-@use '../mixins/icons' as *;
-@use '../functions/general' as *;
-
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
@@ -25,6 +22,10 @@
 
 // CKEditor UI customizations.
 @use 'ckeditor-ui';
+
+// For videos
+@use '../functions/animation' as *;
+@use '../mixins/icons' as *;
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
@@ -73,13 +74,17 @@
     margin: 0;
     width: 100%;
     max-width: none;
+    pointer-events: all;
   }
 
-  .field-media-oembed-video,
-  .hb-video-lazy__thumb,
-  .hb-video-lazy:has(.hb-video-lazy__iframe) {
+  .hb-media-video:has(.hb-video-lazy) + figcaption {
+    padding-inline: 29px;
+  }
+
+  .hb-video-lazy {
     position: relative;
-    aspect-ratio: 16/9;
+    width: 100%;
+    aspect-ratio: 16 / 9;
   }
 
   .drupal-media:not(:has(article.hb-media-image)),
@@ -98,6 +103,10 @@
       object-position: center;
     }
 
+    .hb-video-lazy__thumb {
+      padding-inline: 29px;
+    }
+
     .hb-video-lazy__play {
       position: absolute;
       left: 50%;
@@ -109,10 +118,17 @@
       font-size: 0;
       padding: 0;
       border: none;
+      transition: hb-transition(opacity);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        opacity: 0.75;
+      }
 
       // additional focus styles for keyboard users only
       // that compliments browser default styles
@@ -128,9 +144,9 @@
         position: relative;
         background-repeat: no-repeat;
         background-position: center;
-        background-size: hb-calculate-rems(35px);
-        height: hb-calculate-rems(50px);
-        width: hb-calculate-rems(50px);
+        background-size: 35px;
+        height: 50px;
+        width: 50px;
       }
     }
   }

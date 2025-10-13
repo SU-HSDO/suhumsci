@@ -5,8 +5,10 @@
  * hs_events.module
  */
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_entities\HsEntityInterface;
 
 /**
@@ -46,6 +48,14 @@ function hs_events_form_node_hs_event_edit_form_alter(&$form, FormStateInterface
  * Implements hook_form_FORM_ID_alter().
  */
 function hs_events_form_config_pages_hs_site_options_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (!isset($form['field_site_auto_unpublish'])) {
+    return;
+  }
+
+  $form['field_site_auto_unpublish']['widget']['#description'] = t("By default, should new events auto-unpublish once they've past?");
+  $form['field_site_auto_unpublish']['widget']['#description'] .= '<br/><br/>';
+  $form['field_site_auto_unpublish']['widget']['#description'] .= _hs_events_auto_unpublish_existing_events_message();
+
   // Add validation handler to check for auto-unpublish field changes.
   $form['#validate'][] = 'hs_events_site_options_form_validate';
 
@@ -77,9 +87,23 @@ function hs_events_site_options_form_validate($form, FormStateInterface $form_st
   $new_value = $form_state->getValue(['field_site_auto_unpublish', 0, 'value']);
 
   if ($original_value !== $new_value) {
-    $message = t('Changing the default for "Auto-unpublish events once past" does not impact existing events. Visit <a href="/admin/content/manage/event">the list of all events</a>, select the events that you want to change, and use the "Modify field values" bulk action to set the "Auto-unpublish when event is past" field to "On" or "Off".');
-    \Drupal::messenger()->addWarning($message);
+    \Drupal::messenger()->addWarning(_hs_events_auto_unpublish_existing_events_message());
   }
+}
+
+/**
+ * A help message about how to change existing events.
+ *
+ * @return \Drupal\Component\Render\FormattableMarkup|\Drupal\Core\StringTranslation\TranslatableMarkup
+ */
+function _hs_events_auto_unpublish_existing_events_message(): FormattableMarkup|TranslatableMarkup {
+  return t('Changing the default for "Auto-unpublish events once past" does not impact existing events. Visit <a href=":url" target="_blank">the list of all events</a>, select the events that you want to change, and use the %action bulk action to set the %field_name field to %on or %off.', [
+    ':url' => '/admin/content/manage/event',
+    '%action' => t('Modify field values'),
+    '%field_name' => t('Auto-unpublish when event is past'),
+    '%on' => t('On'),
+    '%off' => t('Off'),
+  ]);
 }
 
 /**

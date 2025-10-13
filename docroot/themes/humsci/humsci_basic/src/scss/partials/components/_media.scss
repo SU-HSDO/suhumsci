@@ -3,15 +3,18 @@
 @use '../mixins/icons' as *;
 
 .hb-video-lazy {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-
   .hb-video-lazy__thumb {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
     width: 100%;
     height: 100%;
     position: relative;
+
+    .views-field & {
+      aspect-ratio: auto;
+    }
   }
 
   .hb-video-lazy__thumb img,
@@ -24,7 +27,13 @@
   }
 
   &:has(.hb-video-lazy__iframe) {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+
     .views-field & {
+      aspect-ratio: auto;
       padding-bottom: 76%;
     }
   }
@@ -33,10 +42,7 @@
     .views-field & {
       position: absolute;
       z-index: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       min-height: 1px;

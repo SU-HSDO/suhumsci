@@ -1,20 +1,19 @@
-var path = require('path');
-var sassTrue = require('sass-true');
-// Docs: https://github.com/oddbird/true
+const path = require('node:path');
+const sassTrue = require('sass-true');
 
 const sassFile = path.join(__dirname, './sass-specs/sass-tests.scss');
+
 sassTrue.runSass(
   {
-    file: sassFile,
-    includePaths: [
-      // Decanter uses Bourbon imports relative to this path
+    describe,
+    it,
+    sass: require('sass'),
+  },
+  sassFile,
+  {
+    loadPaths: [
       'node_modules/bourbon/core',
       'node_modules',
     ],
-  },
-  {
-    sass: require('sass'),
-    describe,
-    it,
   }
 );

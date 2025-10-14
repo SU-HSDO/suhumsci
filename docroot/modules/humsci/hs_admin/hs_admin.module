@@ -30,10 +30,11 @@ function hs_admin_page_attachments(array &$variables) {
     // Load your admin-only libraries.
     $variables['#attached']['library'][] = 'hs_admin/hs_admin';
   }
-}
 
-  // Show shortcuts toolbar when user is logged in.
-  $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+  if ($user->isAuthenticated()) {
+    // Show shortcuts toolbar when user is logged in.
+    $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+  }
 }
 
 /**

@@ -77,6 +77,7 @@ Architecture Decision Records (ADRs) are used to document important architectura
 - [Config & Content Update](docs/ConfigContentUpdate.md)
 - [Launch Process](docs/Launch.md)
 - [Provisioning a New Site](docs/NewSite.md)
+- [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 
 > **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
 

@@ -90,6 +90,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     $storage = $this->entityTypeManager->getStorage('hs_course_tag');
     $query = $storage->getQuery();
     $query->sort('label');
+    $query->accessCheck(TRUE);
     /** @var \Drupal\hs_courses_importer\Entity\CourseTagInterface[] $tags */
     $tags = $storage->loadMultiple($query->execute());
 

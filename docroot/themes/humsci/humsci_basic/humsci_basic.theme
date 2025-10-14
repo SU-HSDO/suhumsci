@@ -492,11 +492,11 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
       $variables['items'][0]['content'] = $render_array;
     }
     else {
-      humsci_basic_update_view_mode_slides_image($paragraph, $variables);
+      _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
     }
   }
   else {
-    humsci_basic_update_view_mode_slides_image($paragraph, $variables);
+    _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
   }
 
 }
@@ -509,7 +509,7 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
  * @param array $variables
  *   The preprocess variables array (passed by reference).
  */
-function humsci_basic_update_view_mode_slides_image($paragraph, array &$variables) {
+function _humsci_basic_update_view_mode_slides_image($paragraph, array &$variables) {
   $parent_paragraph = $paragraph->getParentEntity();
 
   if (

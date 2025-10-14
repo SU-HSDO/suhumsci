@@ -77,10 +77,6 @@ class RouteSubscriber extends RouteSubscriberBase implements ContainerInjectionI
 
     $collection->get('entity.user.collection')->setDefault('_title', 'Users');
 
-    if ($route = $collection->get('stanford_ssp.create_user')) {
-      $route->setRequirement('_permission', 'add saml user');
-    }
-
     if ($route = $collection->get('publishcontent.settings')) {
       $route->setRequirement('_permission', 'administer content types');
     }

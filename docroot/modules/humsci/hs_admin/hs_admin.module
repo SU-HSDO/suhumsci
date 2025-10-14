@@ -18,9 +18,9 @@ function hs_admin_page_attachments(array &$variables) {
   $user = \Drupal::currentUser();
 
   // Determine if the active theme is the configured admin theme.
-  $theme_manager = \Drupal::service('theme.manager');
-  $active_theme  = $theme_manager->getActiveTheme()->getName();
-  $admin_theme   = \Drupal::config('system.theme')->get('admin');
+  $theme_manager  = \Drupal::service('theme.manager');
+  $active_theme   = $theme_manager->getActiveTheme()->getName();
+  $admin_theme    = \Drupal::config('system.theme')->get('admin');
   $is_admin_theme = ($active_theme === $admin_theme);
 
   // Determine if current route is an "admin" route.

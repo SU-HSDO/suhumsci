@@ -94,3 +94,60 @@ function su_humsci_gin_admin_preprocess_block(&$variables) {
   }
 
 }
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function su_humsci_gin_admin_page_attachments_alter(&$attachments) {
+  // Preload fonts based on what's in info.yml.
+  $theme = \Drupal::theme()->getActiveTheme();
+  $info = $theme->getExtension()->info;
+
+  if (empty($info['preload_fonts'])) {
+    return;
+  }
+
+  $fonts = $info['preload_fonts'];
+
+  // Check if any of the font URLs are Google Fonts.
+  $has_google_fonts = array_find($fonts, function ($font) {
+    return str_contains($font, 'fonts.googleapis.com');
+  });
+
+  // Attach preconnects only once if Google Fonts are present.
+  if (!empty($has_google_fonts)) {
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'preconnect',
+      'href' => 'https://fonts.googleapis.com',
+    ],
+      FALSE,
+    ];
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'preconnect',
+      'href' => 'https://fonts.gstatic.com',
+      'crossorigin' => 'anonymous',
+    ],
+      FALSE,
+    ];
+  }
+
+  // Now attach preload + stylesheet for each font.
+  foreach ($info['preload_fonts'] as $font) {
+    // Preload first.
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'preload',
+      'as' => 'style',
+      'href' => $font,
+    ],
+      FALSE,
+    ];
+
+    // Then stylesheet.
+    $attachments['#attached']['html_head_link'][] = [[
+      'rel' => 'stylesheet',
+      'href' => $font,
+    ],
+      FALSE,
+    ];
+  }
+}

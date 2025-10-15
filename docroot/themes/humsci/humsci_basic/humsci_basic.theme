@@ -504,12 +504,12 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
 /**
  * Update view mode of image in slides to eager load.
  *
- * @param array $paragraph
- *   The preprocess paragraph array (passed by reference).
+ * @param ParagraphInterface $paragraph
+ *   The Paragraph entity being inspected.
  * @param array $variables
  *   The preprocess variables array (passed by reference).
  */
-function _humsci_basic_update_view_mode_slides_image($paragraph, array &$variables) {
+function _humsci_basic_update_view_mode_slides_image(ParagraphInterface $paragraph, array &$variables): void {
   $parent_paragraph = $paragraph->getParentEntity();
 
   if (

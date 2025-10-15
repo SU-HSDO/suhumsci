@@ -404,7 +404,8 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
         'title' => 'Telegram',
       ],
       [
-        'domains' => ['mailto:'],
+        'domains' => ['mailto:', 'forms.gle', 'docs.google.com/forms', 'connect', 'contact', 'newsletter', 'subscribe'],
+        'keywords' => ['connect', 'contact', 'newsletter', 'subscribe'],
         'icon_classes' => 'fa-solid fa-square-envelope',
         'title' => 'Email',
       ],
@@ -442,6 +443,18 @@ final class SocialMediaBlock extends BlockBase implements ContainerFactoryPlugin
     $link_title = $link['link_title'] ?: '';
 
     foreach ($this->getProviders() as $provider) {
+      // 1. Check keywords (if defined).
+      if (!empty($provider['keywords'])) {
+        foreach ($provider['keywords'] as $keyword) {
+          if (str_contains(strtolower($link_title), strtolower($keyword))) {
+            $icon_classes = $provider['icon_classes'];
+            $link_title = $link_title ?: $provider['title'];
+            break 2;
+          }
+        }
+      }
+
+      // 2. Check domains.
       foreach ($provider['domains'] as $domain) {
         if (strpos($url, $domain) !== FALSE) {
           $icon_classes = $provider['icon_classes'];

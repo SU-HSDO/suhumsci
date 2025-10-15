@@ -5,11 +5,40 @@
 @use '../mixins/layout' as *;
 
 .hb-three-column-w-image {
-  display: flex;
-  flex-wrap: wrap;
+  &--one-sidebar,
+  &--two-sidebar {
+    @include grid-media-min('lg') {
+      display: grid;
+      grid-template-columns: hb-sidebar-width() 1fr hb-sidebar-width();
+      grid-auto-rows: auto;
+      column-gap: hb-spacing-width();
+    }
+  }
 
-  @include grid-media-min('lg') {
-    flex-wrap: nowrap;
+  &--one-sidebar {
+    &:has(.hb-three-column-w-image__sidebar-1) {
+      @include grid-media-min('lg') {
+        grid-template-areas: 'sidebar-1 main main';
+      }
+    }
+
+    &:has(.hb-three-column-w-image__sidebar-2) {
+      @include grid-media-min('lg') {
+        grid-template-areas: 'main main sidebar-2';
+      }
+    }
+  }
+
+  &--two-sidebar {
+    @include grid-media-min('lg') {
+      grid-template-areas:
+        'sidebar-1 main main'
+        'sidebar-1 sidebar-2 sidebar-2';
+    }
+
+    @include grid-media-min('xl') {
+      grid-template-areas: 'sidebar-1 main sidebar-2';
+    }
   }
 
   // If this uses the "limited width" section width
@@ -27,33 +56,23 @@
   }
 
   &__sidebar-1 {
+    grid-area: sidebar-1;
+
     .block,
     .block-hs-blocks,
     .hb-sidebar-block {
       @include hb-sidebar;
     }
-
-    @include grid-media-min('lg') {
-      width: hb-sidebar-width();
-      margin-right: hb-spacing-width();
-    }
   }
 
   &__main {
-    width: 100%;
+    grid-area: main;
     margin-bottom: hb-spacing-width();
 
     @include grid-media-min('lg') {
       .hb-three-column-w-image--one-sidebar &,
       .hb-three-column-w-image--two-sidebar & {
-        width: calc(100% - #{hb-sidebar-width()} - #{hb-spacing-width()});
         margin-bottom: 0;
-      }
-
-      .hb-three-column-w-image--two-sidebar & {
-        width: calc(
-          100% - #{2 * hb-sidebar-width()} - 2 * #{hb-spacing-width()}
-        );
       }
     }
   }
@@ -131,6 +150,16 @@
       }
     }
 
+    // Make sure that the text next to the image is wide enough to be
+    // readable when there are 2 sidebars.
+    .hb-three-column-w-image--two-sidebar & {
+      @include grid-media-min('md') {
+        max-width: calc(
+          100% - #{hb-calculate-rems(260px)} - #{hb-spacing-width('xxs')}
+        );
+      }
+    }
+
     img {
       display: block;
     }
@@ -147,6 +176,7 @@
   }
 
   &__sidebar-2 {
+    grid-area: sidebar-2;
     margin-left: 0;
 
     .block,
@@ -158,18 +188,6 @@
     @include hb-traditional {
       font-size: hb-calculate-rems(16px);
       line-height: 127%;
-    }
-
-    .hb-three-column-w-image--one-sidebar & {
-      @include grid-media-min('lg') {
-        width: hb-sidebar-width();
-        margin-left: hb-spacing-width();
-      }
-    }
-
-    @include grid-media-min('lg') {
-      width: hb-sidebar-width();
-      margin-left: hb-spacing-width();
     }
   }
 }

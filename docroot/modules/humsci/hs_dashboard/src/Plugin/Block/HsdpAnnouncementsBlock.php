@@ -133,6 +133,7 @@ class HsdpAnnouncementsBlock extends BlockBase implements ContainerFactoryPlugin
    *   An array of table rows with announcement data.
    */
   private function getTableRows($csv_data): array {
+    $table_rows = [];
     foreach ($csv_data as $row) {
       $formatted_date = $this->dateFormatter->format($row[1], 'humsci_with_year');
       $table_rows[] = [

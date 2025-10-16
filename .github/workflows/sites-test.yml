@@ -75,8 +75,7 @@ jobs:
         with:
           path: ${{ env.themePath }}/node_modules
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
-      - name: Install theme node_modules
-        if: steps.cache-theme-node-modules.outputs.cache-hit != 'true'
+      - name: Install theme dependencies
         run: npm install --prefix $themePath
       - name: Lint Theme
         run: npm run lint --prefix $themePath
@@ -138,6 +137,8 @@ jobs:
         with:
           path: ${{ env.themePath }}/node_modules
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+      - name: Install theme dependencies
+        run: npm install --prefix $themePath
       - name: Compile theme assets
         run: npm run build --prefix $themePath
       - name: Codeception Functional Tests
@@ -209,6 +210,8 @@ jobs:
         with:
           path: ${{ env.themePath }}/node_modules
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+      - name: Install theme dependencies
+        run: npm install --prefix $themePath
       - name: Compile theme assets
         run: npm run build --prefix $themePath
       - name: Codeception Acceptance Tests
@@ -262,6 +265,8 @@ jobs:
         with:
           path: ${{ env.themePath }}/node_modules
           key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+      - name: Install theme dependencies
+        run: npm install --prefix $themePath
       - name: Deploy Branch
         run: |
           git config --global user.email "sws-developers@lists.stanford.edu" &&

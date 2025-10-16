@@ -866,3 +866,63 @@ function su_humsci_profile_update_9746() {
     ]);
   }
 }
+
+/**
+ * Remove block_content_permissions permissions and dependencies from roles.
+ */
+function su_humsci_profile_update_9747(): string {
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $roles = $role_storage->loadMultiple();
+  $removed_permissions = [];
+  $removed_dependencies = [];
+
+  // Get all block content types to build the dynamic permission names.
+  $block_content_types = \Drupal::entityTypeManager()->getStorage('block_content_type')->loadMultiple();
+  $permission_patterns = [];
+  foreach ($block_content_types as $type_id => $type) {
+    $permission_patterns[] = "create {$type_id} block content";
+    $permission_patterns[] = "delete any {$type_id} block content";
+    $permission_patterns[] = "update any {$type_id} block content";
+  }
+
+  // Remove permissions from all roles.
+  foreach ($roles as $role) {
+    /** @var \Drupal\user\Entity\Role $role */
+    $role_permissions = $role->getPermissions();
+    $to_remove = array_intersect($role_permissions, $permission_patterns);
+    if (!empty($to_remove)) {
+      foreach ($to_remove as $perm) {
+        $role->revokePermission($perm);
+      }
+      $role->save();
+      $removed_permissions[$role->id()] = $to_remove;
+    }
+
+    // Remove block_content_permissions from config dependencies if present.
+    $config = \Drupal::configFactory()->getEditable('user.role.' . $role->id());
+    $dependencies = (array) ($config->get('dependencies.module') ?: []);
+    if (($key = array_search('block_content_permissions', $dependencies)) !== FALSE) {
+      unset($dependencies[$key]);
+      $config->set('dependencies.module', array_values($dependencies));
+      $config->save();
+      $removed_dependencies[] = $role->id();
+    }
+  }
+
+  return t('Removed block_content_permissions permissions from roles: @roles. Removed config dependency from roles: @deps.', [
+    '@roles' => implode(', ', array_keys($removed_permissions)),
+    '@deps' => implode(', ', $removed_dependencies),
+  ]);
+}
+
+/**
+ * Uninstall the block_content_permissions module.
+ */
+function su_humsci_profile_update_9748(): string {
+  $module = 'block_content_permissions';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the block_content_permissions module.');
+  }
+  return t('block_content_permissions module was already uninstalled.');
+}

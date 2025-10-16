@@ -107,6 +107,7 @@ class MegaMenuCest {
 
     // Mobile Testing
     $I->resizeWindow(800, 600);
+    $I->waitForElementVisible('.js-megamenu__mobile-btn');
     $I->click('Menu', '.js-megamenu');
     $I->waitForText($topLevelTitle);
 

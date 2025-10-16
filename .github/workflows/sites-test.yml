@@ -69,14 +69,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: Cache theme node_modules
-        id: cache-theme-node-modules
+      - name: Cache npm packages
+        id: cache-npm-packages
         uses: actions/cache@v4
         with:
-          path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+          path: ~/.npm
+          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
-        run: npm install --prefix $themePath
+        run: npm ci --prefix $themePath
       - name: Lint Theme
         run: npm run lint --prefix $themePath
   test_functional:
@@ -132,13 +132,13 @@ jobs:
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           blt drupal:install -n
-      - name: Restore theme node_modules
+      - name: Restore npm packages
         uses: actions/cache@v4
         with:
-          path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+          path: ~/.npm
+          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
-        run: npm install --prefix $themePath
+        run: npm ci --prefix $themePath
       - name: Compile theme assets
         run: npm run build --prefix $themePath
       - name: Codeception Functional Tests
@@ -205,13 +205,13 @@ jobs:
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           blt drupal:install -n
-      - name: Restore theme node_modules
+      - name: Restore npm packages
         uses: actions/cache@v4
         with:
-          path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+          path: ~/.npm
+          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
-        run: npm install --prefix $themePath
+        run: npm ci --prefix $themePath
       - name: Compile theme assets
         run: npm run build --prefix $themePath
       - name: Codeception Acceptance Tests
@@ -260,13 +260,13 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - run: git config --system --add safe.directory '*'
-      - name: Restore theme node_modules
+      - name: Restore npm packages
         uses: actions/cache@v4
         with:
-          path: ${{ env.themePath }}/node_modules
-          key: ${{ runner.os }}-${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+          path: ~/.npm
+          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
-        run: npm install --prefix $themePath
+        run: npm ci --prefix $themePath
       - name: Deploy Branch
         run: |
           git config --global user.email "sws-developers@lists.stanford.edu" &&

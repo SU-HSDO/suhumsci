@@ -36,6 +36,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -69,12 +71,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-      - name: Cache npm packages
-        id: cache-npm-packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Lint Theme
@@ -111,6 +109,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -132,11 +132,6 @@ jobs:
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           blt drupal:install -n
-      - name: Restore npm packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -184,6 +179,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -205,11 +202,6 @@ jobs:
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           blt drupal:install -n
-      - name: Restore npm packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -243,6 +235,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -260,11 +254,6 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
           if_key_exists: fail
       - run: git config --system --add safe.directory '*'
-      - name: Restore npm packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ hashFiles(format('{0}/package-lock.json', env.themePath)) }}
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Deploy Branch

@@ -933,3 +933,15 @@ function su_humsci_profile_update_9748(): string {
   }
   return t('block_content_permissions module was already uninstalled.');
 }
+
+/**
+ * Uninstall the domain_registration module.
+ */
+function su_humsci_profile_update_9749(): string {
+  $module = 'domain_registration';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the domain_registration module.');
+  }
+  return t('domain_registration module was already uninstalled.');
+}

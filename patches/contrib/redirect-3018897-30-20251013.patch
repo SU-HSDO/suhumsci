@@ -1,0 +1,180 @@
+diff --git a/redirect.services.yml b/redirect.services.yml
+index 0f8518a..ce8f3af 100644
+--- a/redirect.services.yml
++++ b/redirect.services.yml
+@@ -3,7 +3,7 @@ parameters:
+ services:
+   redirect.repository:
+     class: Drupal\redirect\RedirectRepository
+-    arguments: ['@entity_type.manager', '@database', '@config.factory', '@request_stack']
++    arguments: ['@entity_type.manager', '@database', '@config.factory', '@logger.factory', '@request_stack']
+     tags:
+       - { name: backend_overridable }
+   Drupal\redirect\RedirectRepository: '@redirect.repository'
+diff --git a/src/EventSubscriber/RedirectRequestSubscriber.php b/src/EventSubscriber/RedirectRequestSubscriber.php
+index 4447953..b351fe3 100644
+--- a/src/EventSubscriber/RedirectRequestSubscriber.php
++++ b/src/EventSubscriber/RedirectRequestSubscriber.php
+@@ -148,7 +148,7 @@ class RedirectRequestSubscriber implements EventSubscriberInterface {
+     $cacheable_metadata = new CacheableMetadata();
+
+     try {
+-      $redirect = $this->redirectRepository->findMatchingRedirect($path, $request_query, $this->languageManager->getCurrentLanguage()->getId(), $cacheable_metadata);
++      $redirect = $this->redirectRepository->findMatchingRedirect($path, $request_query, $this->languageManager->getCurrentLanguage()->getId(), [], $cacheable_metadata);
+     }
+     catch (RedirectLoopException $e) {
+       \Drupal::logger('redirect')->warning('Redirect loop identified at %path for redirect %rid', ['%path' => $e->getPath(), '%rid' => $e->getRedirectId()]);
+diff --git a/src/RedirectRepository.php b/src/RedirectRepository.php
+index 3c5ba7a..52d7a95 100644
+--- a/src/RedirectRepository.php
++++ b/src/RedirectRepository.php
+@@ -7,9 +7,11 @@ use Drupal\Core\Config\ConfigFactoryInterface;
+ use Drupal\Core\Database\Connection;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\Language\Language;
++use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+ use Drupal\redirect\Entity\Redirect;
+ use Drupal\redirect\Exception\RedirectLoopException;
+ use Symfony\Component\HttpFoundation\RequestStack;
++use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+ /**
+  * The redirect repository.
+@@ -32,11 +34,11 @@ class RedirectRepository {
+   protected $config;
+
+   /**
+-   * An array of found redirect IDs to avoid recursion.
++   * Logger service.
+    *
+-   * @var array
++   * @var \Drupal\Core\Logger\LoggerChannelInterface
+    */
+-  protected $foundRedirects = [];
++  protected $logger;
+
+   /**
+    * The request stack.
+@@ -52,13 +54,16 @@ class RedirectRepository {
+    *   The database connection.
+    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+    *   The config factory.
++   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
++   *    Logger factory service.
+    * @param \Symfony\Component\HttpFoundation\RequestStack|null $request_stack
+    *   The request stack.
+    */
+-  public function __construct(EntityTypeManagerInterface $manager, Connection $connection, ConfigFactoryInterface $config_factory, ?RequestStack $request_stack = NULL) {
++  public function __construct(EntityTypeManagerInterface $manager, Connection $connection, ConfigFactoryInterface $config_factory, LoggerChannelFactoryInterface $logger_factory, ?RequestStack $request_stack = NULL) {
+     $this->manager = $manager;
+     $this->connection = $connection;
+     $this->config = $config_factory->get('redirect.settings');
++    $this->logger = $logger_factory->get('redirect');
+     if (!$request_stack) {
+       @trigger_error('Calling ' . __METHOD__ . ' without the $request_stack argument is deprecated in redirect:1.11.0 and it will be required in redirect:2.0.0. See https://www.drupal.org/project/redirect/issues/3451531', E_USER_DEPRECATED);
+       // @phpstan-ignore globalDrupalDependencyInjection.useDependencyInjection
+@@ -76,6 +81,8 @@ class RedirectRepository {
+    *   The redirect source path query.
+    * @param string $language
+    *   The language for which is the redirect.
++   * @param array $found_redirects
++   *    The list of redirects found
+    * @param \Drupal\Core\Cache\CacheableMetadata|null $cacheable_metadata
+    *   The cacheable metadata for all the redirects involved.
+    *
+@@ -84,7 +91,7 @@ class RedirectRepository {
+    *
+    * @throws \Drupal\redirect\Exception\RedirectLoopException
+    */
+-  public function findMatchingRedirect($source_path, array $query = [], $language = Language::LANGCODE_NOT_SPECIFIED, ?CacheableMetadata $cacheable_metadata = NULL) {
++  public function findMatchingRedirect($source_path, array $query = [], $language = Language::LANGCODE_NOT_SPECIFIED, array $found_redirects = [], ?CacheableMetadata $cacheable_metadata = NULL) {
+     $source_path = ltrim($source_path, '/');
+     $hashes = [Redirect::generateHash($source_path, $query, $language)];
+     if ($language != Language::LANGCODE_NOT_SPECIFIED) {
+@@ -111,10 +118,11 @@ class RedirectRepository {
+
+     if (!empty($rid)) {
+       // Check if this is a loop.
+-      if (in_array($rid, $this->foundRedirects)) {
+-        throw new RedirectLoopException('/' . $source_path, $rid);
++      if (in_array($rid, $found_redirects)) {
++        $this->logger->error('Redirect loop identified at %path for redirect %rid', ['%path' => $source_path, '%rid' => $rid]);
++        throw new NotFoundHttpException();
+       }
+-      $this->foundRedirects[] = $rid;
++      $found_redirects[] = $rid;
+
+       $redirect = $this->load($rid);
+       if ($cacheable_metadata) {
+@@ -122,17 +130,13 @@ class RedirectRepository {
+       }
+
+       // Find chained redirects.
+-      if ($recursive = $this->findByRedirect($redirect, $language, $cacheable_metadata)) {
+-        // Reset found redirects.
+-        $this->foundRedirects = [];
++      if ($recursive = $this->findByRedirect($redirect, $language, $found_redirects)) {
+         return $recursive;
+       }
+
+       return $redirect;
+     }
+
+-    // Reset found redirects.
+-    $this->foundRedirects = [];
+     return NULL;
+   }
+
+@@ -143,16 +147,18 @@ class RedirectRepository {
+    *   The redirect object.
+    * @param string $language
+    *   The language to use.
++   * @param array $found_redirects
++   *    The list of found redirects.
+    * @param \Drupal\Core\Cache\CacheableMetadata|null $cacheable_metadata
+    *   The cacheable metadata for all the redirects involved.
+    */
+-  protected function findByRedirect(Redirect $redirect, $language, ?CacheableMetadata $cacheable_metadata = NULL) {
++  protected function findByRedirect(Redirect $redirect, $language, array $found_redirects = [], ?CacheableMetadata $cacheable_metadata = NULL) {
+     $uri = $redirect->getRedirectUrl();
+     $base_url = $this->requestStack->getCurrentRequest()->getBaseUrl();
+     $generated_url = $uri->toString(TRUE);
+     $path = ltrim(substr($generated_url->getGeneratedUrl(), strlen($base_url)), '/');
+     $query = $uri->getOption('query') ?: [];
+-    $return_value = $this->findMatchingRedirect($path, $query, $language, $cacheable_metadata);
++    $return_value = $this->findMatchingRedirect($path, $query, $language, $found_redirects, $cacheable_metadata);
+     return $return_value ? $return_value->addCacheableDependency($generated_url) : $return_value;
+   }
+
+diff --git a/tests/src/Kernel/RedirectAPITest.php b/tests/src/Kernel/RedirectAPITest.php
+index 9d1fa4e..d26339c 100644
+--- a/tests/src/Kernel/RedirectAPITest.php
++++ b/tests/src/Kernel/RedirectAPITest.php
+@@ -7,7 +7,6 @@ namespace Drupal\Tests\redirect\Kernel;
+ use Drupal\language\Entity\ConfigurableLanguage;
+ use Drupal\redirect\Entity\Redirect;
+ use Drupal\Core\Language\Language;
+-use Drupal\redirect\Exception\RedirectLoopException;
+ use Drupal\KernelTests\KernelTestBase;
+
+ /**
+@@ -291,11 +290,15 @@ class RedirectAPITest extends KernelTestBase {
+     // Create a loop.
+     $one->setRedirect('third-path');
+     $one->save();
+-    try {
+-      $repository->findMatchingRedirect('third-path');
+-      $this->fail('Failed to detect a redirect loop.');
++    // This is counter-intuitive but since #3018897 this is better behaviour
++    // than throwing a RedirectLoopException.
++    $found = $repository->findMatchingRedirect('third-path');
++    if (!empty($found)) {
++      $this->assertEquals($found->getRedirectUrl()->toString(), '/node',
++        'Redirect loop "properly" resolved in findMatchingRedirect without looping.');
+     }
+-    catch (RedirectLoopException) {
++    else {
++      $this->fail('Failed to resolve a redirect loop.');
+     }
+   }
+

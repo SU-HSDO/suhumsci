@@ -82,7 +82,7 @@ class CloneNode extends ViewsBulkOperationsActionBase implements PluginFormInter
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration(): array {
+  public function defaultConfiguration() {
     return [
       'clone_count' => 1,
       'field_clone' => [],

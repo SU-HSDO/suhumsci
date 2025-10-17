@@ -12,7 +12,7 @@
        */
       function wrapElement(element) {
         // Create a new div with a special class name
-        const wrapper = context.createElement('div');
+        const wrapper = document.createElement('div');
         wrapper.className = 'hb-table-wrap';
 
         element.parentNode.insertBefore(wrapper, element);

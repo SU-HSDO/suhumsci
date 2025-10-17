@@ -434,11 +434,15 @@ function humsci_basic_preprocess_views_view(&$variables) {
  */
 function humsci_basic_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
-  if ($paragraph->bundle() != 'hs_view') {
+  $bundle = $paragraph->bundle();
+
+  if ($bundle != 'hs_view') {
     return NULL;
   }
+
   // Get the parent entity of hs_view paragraphs.
   $parent = $paragraph->getParentEntity();
+
   // Test if the paragraph is within a collection.
   if (!($parent instanceof ParagraphInterface) || $parent->bundle() != 'hs_collection') {
     return NULL;
@@ -453,9 +457,120 @@ function humsci_basic_preprocess_paragraph(&$variables) {
 }
 
 /**
+ * Update view mode of full width image to eager load.
+ *
+ * @param array $variables
+ *   The preprocess variables array (passed by reference).
+ */
+function humsci_basic_update_view_mode_full_width_image(array &$variables) {
+  $paragraph = $variables['element']['#object'];
+
+  if (!($paragraph instanceof ParagraphInterface)) {
+    return;
+  }
+
+  $bundle = $paragraph->bundle();
+
+  $valid_bundles = [
+    'hs_gradient_hero',
+    'hs_hero_image',
+    'hs_banner',
+  ];
+
+  if (!in_array($bundle, $valid_bundles)) {
+    return;
+  }
+
+  // Handle hero_image and banner directly.
+  if (in_array($bundle, ['hs_hero_image', 'hs_banner'])) {
+    if (
+      !$paragraph->hasField('parent_field_name') ||
+      $paragraph->get('parent_field_name')->isEmpty()
+    ) {
+      return;
+    }
+
+    $parent_field_name = $paragraph->get('parent_field_name')->value;
+
+    if ($parent_field_name == 'field_hs_page_hero') {
+      $entity = $variables['items'][0]['content']['#media'];
+      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+      $render_array = $view_builder->view($entity, 'caption_credit_eager');
+      $variables['items'][0]['content'] = $render_array;
+    }
+    else {
+      _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
+    }
+  }
+  else {
+    _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
+  }
+
+}
+
+/**
+ * Update view mode of image in slides to eager load.
+ *
+ * @param \Drupal\paragraphs\ParagraphInterface $paragraph
+ *   The Paragraph entity being inspected.
+ * @param array $variables
+ *   The preprocess variables array (passed by reference).
+ */
+function _humsci_basic_update_view_mode_slides_image(ParagraphInterface $paragraph, array &$variables): void {
+  $parent_paragraph = $paragraph->getParentEntity();
+
+  if (
+    !$parent_paragraph instanceof ParagraphInterface ||
+    !$parent_paragraph->hasField('parent_field_name') ||
+    $parent_paragraph->get('parent_field_name')->isEmpty()
+  ) {
+    return;
+  }
+
+  $parent_field_name = $parent_paragraph->get('parent_field_name')->value;
+
+  if ($parent_field_name != 'field_hs_page_hero') {
+    return;
+  }
+
+  // Check if this paragraph is the first slide.
+  $slide_fields = ['field_hs_gradient_hero_slides', 'field_hs_carousel_slides'];
+  $slides = [];
+
+  foreach ($slide_fields as $field_name) {
+    if (
+      $parent_paragraph->hasField($field_name) &&
+      !$parent_paragraph->get($field_name)->isEmpty()
+    ) {
+      $slides = $parent_paragraph->get($field_name)->referencedEntities();
+      break;
+    }
+  }
+
+  if (empty($slides) || $slides[0]->id() !== $paragraph->id()) {
+    return;
+  }
+
+  $entity = $variables['items'][0]['content']['#media'];
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
+  $render_array = $view_builder->view($entity, 'caption_credit_eager');
+  $variables['items'][0]['content'] = $render_array;
+}
+
+/**
  * Implements hook_preprocess_HOOK().
  */
 function humsci_basic_preprocess_field(&$variables) {
+  if (in_array(
+    $variables['element']['#field_name'],
+    [
+      'field_hs_gradient_hero_image',
+      'field_hs_hero_image',
+      'field_hs_banner_image',
+    ]
+  )) {
+    humsci_basic_update_view_mode_full_width_image($variables);
+  }
   $wysiwyg_types = ['text_long', 'text_with_summary'];
   if (in_array($variables['field_type'], $wysiwyg_types)) {
     $variables['#attached']['library'][] = 'humsci_basic/table-wrap';
@@ -471,6 +586,7 @@ function humsci_basic_preprocess_field(&$variables) {
       }
     }
   }
+
 }
 
 /**

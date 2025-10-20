@@ -34,6 +34,13 @@ class SiteImprove implements SiteImproveInterface {
   protected string $baseUrl;
 
   /**
+   * The SiteImprove config object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
    * Constructor for SiteImprove.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory

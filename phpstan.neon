@@ -1,5 +1,8 @@
 parameters:
-    level: 1
-    paths:
-        - docroot/modules/humsci
-        - docroot/profiles/humsci
+  level: 1
+  paths:
+    - docroot/modules/humsci
+    - docroot/profiles/humsci
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"

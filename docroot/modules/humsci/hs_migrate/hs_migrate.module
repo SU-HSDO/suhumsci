@@ -117,6 +117,7 @@ function _hs_migrate_media_imported($media_id) {
     $results = $query->execute();
 
     if ($results) {
+      $migration = NULL;
       $nodes = Node::loadMultiple($results);
       foreach ($nodes as $node) {
         $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);

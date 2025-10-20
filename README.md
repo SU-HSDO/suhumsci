@@ -11,16 +11,32 @@ Note the following properties of this project:
 * Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
 * Development branching convention: branch off the current release branch
-* Local environment: DDEV, Lando or DrupalVM
+* Local environment: DDEV, Lando or bare metal LAMP
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
+## Documentation
 
-### Prerequisites
+- [Patching and patch management instructions](patches/README.md)
+- [Codeception Tests](docs/Codeception.md)
+- [Development Requirements](docs/DevelopmentRequirements.md)
+- [Release and Code Deployment Process](docs/CodeDeploy.md)
+- [Conding Standards](docs/CodingStandards.md)
+- [Configuration Management](docs/Config.md)
+- [Config & Content Update](docs/ConfigContentUpdate.md)
+- [Launch Process](docs/Launch.md)
+- [Provisioning a New Site](docs/NewSite.md)
+- [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 
-Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
+> **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
 
-### Local setup and installation
+> **Note:** In addition to the documents listed here, there are various documentation and README files throughout the project (in subdirectories) that may be specific to certain features, modules, or workflows. Be sure to check those locations for more detailed or context-specific information.
+
+## Development Requirements
+
+See: [Development Requirements](docs/DevelopmentRequirements.md)
+
+## Local setup and installation
 You can either run the site on DDEV, Lando or bare metal.
 
 #### Setup on DDEV or Lando
@@ -66,21 +82,6 @@ be the wrapper around the codeception commands.
 ## Architecture Decision Records (ADRs)
 
 Architecture Decision Records (ADRs) are used to document important architectural decisions made in this project. The ADR process and format are explained in [0000-record-architecture-decisions.md](docs/architecture/decisions/0000-record-architecture-decisions.md). All new significant architectural decisions should be documented as a new ADR in the `docs/architecture/decisions/` directory.
-
-## Documentation
-
-- [Patching and patch management instructions](patches/README.md)
-- [Codeception Tests](docs/Codeception.md)
-- [Code Deployment Process](docs/CodeDeploy.md)
-- [Conding Standards](docs/CodingStandards.md)
-- [Configuration Management](docs/Config.md)
-- [Config & Content Update](docs/ConfigContentUpdate.md)
-- [Launch Process](docs/Launch.md)
-- [Provisioning a New Site](docs/NewSite.md)
-
-> **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
-
-> **Note:** In addition to the documents listed here, there are various documentation and README files throughout the project (in subdirectories) that may be specific to certain features, modules, or workflows. Be sure to check those locations for more detailed or context-specific information.
 
 ## Resources
 

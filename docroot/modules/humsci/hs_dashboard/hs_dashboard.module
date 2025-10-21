@@ -130,8 +130,7 @@ function hs_dashboard_user_login(UserInterface $account) {
     }
   }
   // All other roles get the default shortcuts.
-  $set = $shortcut_set_storage->load('default');
-  $shortcut_set_storage->assignUser($set, $account);
+  $shortcut_set_storage->unassignUser($account);
 }
 
 /**

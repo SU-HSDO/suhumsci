@@ -1,3 +1,5 @@
+'use strict';
+
 Drupal.behaviors.defaultShortcuts = {
   attach: function (context, settings) {
     if (!settings.user.uid) {
@@ -13,11 +15,15 @@ Drupal.behaviors.defaultShortcuts = {
     if (
       !window.localStorage.getItem('Drupal.toolbar.activeTabID')
       && shortcutsItem
-      && !shortcutsItem.classList.contains('is-active')
     ) {
       // If the tab ID is not set and the shortcuts toolbar button exists, click it.
       window.addEventListener('load', () => {
-        shortcutsItem.click();
+        // Click to open the shortcuts (unless something else got to it first).
+        // Alternatively use:
+        // window.localStorage.getItem('Drupal.toolbar.activeTabID');
+        if (!shortcutsItem.classList.contains('is-active')) {
+          shortcutsItem.click();
+        }
       });
     }
   },

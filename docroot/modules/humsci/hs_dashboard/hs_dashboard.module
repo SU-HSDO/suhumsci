@@ -7,8 +7,14 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\shortcut\Entity\Shortcut;
+use Drupal\user\UserInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
+
+// These roles don't get a full dashboard, instead they get just a "My Content"
+// page, and a limited set of shortcuts.
+const HS_DASHBOARD_LOW_LEVEL_ROLES = ['author', 'preparer'];
 
 /**
  * Implements hook_theme().
@@ -89,4 +95,59 @@ function hs_dashboard_entity_operation(EntityInterface $entity) {
     ];
   }
   return $operations;
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function hs_dashboard_user_login(UserInterface $account) {
+  $shortcut_set_storage = Drupal::entityTypeManager()->getStorage('shortcut_set');
+  foreach (HS_DASHBOARD_LOW_LEVEL_ROLES as $role) {
+    if ($account->hasRole($role)) {
+      // These roles get the limited shortcuts.
+      // @see hs_dashboard_shortcut_set_insert()
+      $set = $shortcut_set_storage->load('low-level-roles');
+      $shortcut_set_storage->assignUser($set, $account);
+
+      // Go to the list of /my-content rather than the Drupal default of /user,
+      // unless they're already on their way to some other destination.
+      if (!\Drupal::request()->query->has('destination')) {
+        \Drupal::request()->query->set('destination', '/my-content');
+      }
+      return;
+    }
+  }
+  // All other roles get the default shortcuts.
+  $set = $shortcut_set_storage->load('default');
+  $shortcut_set_storage->assignUser($set, $account);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function hs_dashboard_shortcut_set_insert(EntityInterface $entity) {
+  // The Shortcut Set is configuration, but the shortcuts within it are content.
+  // Create the shortcuts for low-level roles.
+  if ($entity->id() === 'low-level-roles') {
+    $links = [
+      [
+        'title' => 'Home',
+        'uri' => 'internal:/',
+      ],
+      [
+        'title' => 'My Content',
+        'uri' => 'internal:/my-content',
+      ],
+    ];
+    foreach ($links as $link) {
+      $shortcut = Shortcut::create([
+        'shortcut_set' => 'low-level-roles',
+        'title' => $link['title'],
+        'link' => [
+          'uri' => $link['uri'],
+        ],
+      ]);
+      $shortcut->save();
+    }
+  }
 }

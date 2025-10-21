@@ -4,6 +4,7 @@
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/text' as *;
+@use '../mixins/icons' as *;
 
 .hb-media-image {
   .field-media-image-caption {
@@ -60,6 +61,58 @@
 
     hr {
       display: none !important;
+    }
+
+    &.toggle-caption__wrapper {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      background: none;
+      padding: 0 hb-calculate-rems(6px) hb-calculate-rems(6px);
+
+      .toggle-caption__toggle,
+      .toggle-caption__close {
+        float: left;
+        background: none;
+        border: none;
+        position: absolute;
+      }
+
+      .toggle-caption__toggle {
+        &::before {
+          @include hb-icon-background('info', 'white');
+
+          content: '';
+          display: block;
+          width: hb-calculate-rems(25px);
+          height: hb-calculate-rems(25px);
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+
+      .toggle-caption__close {
+        width: 22px;
+        height: 22px;
+        text-align: center;
+        background-color: var(--palette--black);
+
+        &::before {
+          @include hb-icon-background('close', 'white');
+
+          content: '';
+          display: block;
+          width: hb-calculate-rems(14px);
+          height: hb-calculate-rems(14px);
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+
+      .toggle-caption__content {
+        background-color: var(--palette--black);
+        padding: hb-calculate-rems(4px);
+      }
     }
   }
 }

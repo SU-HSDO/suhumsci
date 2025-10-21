@@ -14,3 +14,11 @@ function hs_dashboard_update_10000() {
     $view->delete();
   }
 }
+
+/**
+ * Give Authors permission to see the toolbar.
+ */
+function hs_dashboard_update_10001(&$sandbox) {
+  user_role_grant_permissions('author', ['access toolbar']);
+  // No need to also do preparers.  They already have the permission.
+}

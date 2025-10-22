@@ -3,6 +3,7 @@
 namespace Drupal\hs_migrate\Plugin\Tamper;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -66,6 +67,13 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
   protected LoggerChannelFactoryInterface $loggerFactory;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected ModuleHandlerInterface $moduleHandler;
+
+  /**
    * Constructs a UrlToMedia tamper plugin.
    *
    * @param array $configuration
@@ -84,13 +92,16 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
    *   The HTTP client.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourceDefinitionInterface $source_definition, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, ClientInterface $http_client, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourceDefinitionInterface $source_definition, EntityTypeManagerInterface $entity_type_manager, FileSystemInterface $file_system, ClientInterface $http_client, LoggerChannelFactoryInterface $logger_factory, ModuleHandlerInterface $module_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $source_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->fileSystem = $file_system;
     $this->httpClient = $http_client;
     $this->loggerFactory = $logger_factory;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -105,7 +116,8 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
       $container->get('entity_type.manager'),
       $container->get('file_system'),
       $container->get('http_client'),
-      $container->get('logger.factory')
+      $container->get('logger.factory'),
+      $container->get('module_handler')
     );
   }
 
@@ -124,6 +136,12 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
    *   The media entity ID on success, NULL on failure.
    */
   public function tamper($data, ?TamperableItemInterface $item = NULL) {
+    // Known issue: only can run tamper when module is disabled.
+    if ($this->moduleHandler->moduleExists('media_duplicate_validation')) {
+      $this->loggerFactory->get('hs_migrate')->error('UrlToMedia tamper plugin cannot run with media_duplicate_validation module enabled. Please disable the module before running migrations.');
+      return NULL;
+    }
+
     if (empty($data) || !is_string($data) || !filter_var($data, FILTER_VALIDATE_URL)) {
       return NULL;
     }

@@ -885,6 +885,13 @@ function su_humsci_profile_update_9747(): string {
     $permission_patterns[] = "update any {$type_id} block content";
   }
 
+  // Add static permissions from block_content_permissions.permissions.yml.
+  $static_permissions = [
+    'administer block content types',
+    'view restricted block content',
+  ];
+  $permission_patterns = array_merge($permission_patterns, $static_permissions);
+
   // Remove permissions from all roles.
   foreach ($roles as $role) {
     /** @var \Drupal\user\Entity\Role $role */
@@ -925,4 +932,16 @@ function su_humsci_profile_update_9748(): string {
     return t('Uninstalled the block_content_permissions module.');
   }
   return t('block_content_permissions module was already uninstalled.');
+}
+
+/**
+ * Uninstall the domain_registration module.
+ */
+function su_humsci_profile_update_9749(): string {
+  $module = 'domain_registration';
+  if (\Drupal::moduleHandler()->moduleExists($module)) {
+    \Drupal::service('module_installer')->uninstall([$module]);
+    return t('Uninstalled the domain_registration module.');
+  }
+  return t('domain_registration module was already uninstalled.');
 }

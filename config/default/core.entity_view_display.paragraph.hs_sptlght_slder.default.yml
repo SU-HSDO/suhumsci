@@ -3,18 +3,27 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_sptlght_slder.field_bg_color_width
     - field.field.paragraph.hs_sptlght_slder.field_hs_sptlght_sldes
     - paragraphs.paragraphs_type.hs_sptlght_slder
   module:
     - ds
     - field_formatter_class
     - hs_field_helpers
+    - options
     - slick_paragraphs
 id: paragraph.hs_sptlght_slder.default
 targetEntityType: paragraph
 bundle: hs_sptlght_slder
 mode: default
 content:
+  field_bg_color_width:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
   field_hs_sptlght_sldes:
     type: slick_paragraphs_vanilla
     label: hidden

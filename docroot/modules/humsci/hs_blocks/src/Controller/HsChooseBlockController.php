@@ -162,6 +162,7 @@ class HsChooseBlockController extends ChooseBlockController {
    */
   protected function arrayShove(array $array, $selected_key, $direction) {
     $new_array = [];
+    $last = [];
 
     foreach ($array as $key => $value) {
       if ($key !== $selected_key) {
@@ -198,6 +199,7 @@ class HsChooseBlockController extends ChooseBlockController {
         return $new_array + $array;
       }
     }
+    return $array;
   }
 
 }

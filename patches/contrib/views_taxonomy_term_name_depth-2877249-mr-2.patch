@@ -1,0 +1,140 @@
+diff --git a/src/Plugin/views/argument/IndexNameDepth.php b/src/Plugin/views/argument/IndexNameDepth.php
+index ef92cdc7d85d974767225d861fbd89b5093176a5..9e5f938d9338aa3d80feedc9096a16ce84fff5e5 100644
+--- a/src/Plugin/views/argument/IndexNameDepth.php
++++ b/src/Plugin/views/argument/IndexNameDepth.php
+@@ -165,77 +165,23 @@ class IndexNameDepth extends ArgumentPluginBase {
+         return FALSE;
+       }
+ 
+-      $operator = (count($break->value) > 1) ? 'IN' : '=';
+-      if (count($break->value) > 1) {
+-        $operator = 'IN';
+-      }
+-      else {
+-        $operator = '=';
+-        $break->value = reset($break->value);
+-      }
+       $tids = $break->value;
+-      // To pass argument value to check name.(I create a another variable for
+-      // above same value because i need to make an array of $tids.).
+-      $args = $break->value;
+     }
+     else {
+-      $operator = "IN";
+       $tids = $this->argument;
+-      // To pass argument value to check name.(I create a another variable for
+-      // above same value because i need to make an array of $tids.).
+-      $args = $this->argument;
+     }
+ 
+-    // Now build the subqueries.
+-    if (is_string($tids)) {
+-      if ($this->moduleHandler->moduleExists('pathauto')) {
+-        $query = $this->database->select('taxonomy_term_field_data', 't')
+-          ->fields('t', ['tid', 'name']);
+-
+-        // Filter by vocabulary ID if one or more are provided.
+-        if (!empty($this->options['vocabularies'])) {
+-          $query->condition('t.vid', $this->options['vocabularies'], 'IN');
+-        }
+-
+-        $results = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
+-
+-        $tids = [];
+-        // Iterate results.
+-        foreach ($results as $row) {
+-          if ($this->pathautoAliasCleaner->cleanString($row->name) == $this->pathautoAliasCleaner->cleanString($args)) {
+-            $tids[] = $row->tid;
+-          }
+-        }
+-      }
+-      else {
+-        // Replaces "-" with space if exist.
+-        $argument = str_replace('-', ' ', $tids);
+-        $query = $this->database->select('taxonomy_term_field_data', 't')
+-          ->fields('t', ['tid', 'name']);
+-
+-        // Filter by vocabulary ID if one or more are provided.
+-        if (!empty($this->options['vocabularies'])) {
+-          $query->condition('t.vid', $this->options['vocabularies'], 'IN');
+-        }
+-
+-        $query->condition('t.name', $argument, '=');
+-
+-        $results = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
+-        $tids = [];
+-        // Iterate results.
+-        foreach ($results as $row) {
+-          $tids[] = $row->tid;
+-        }
+-      }
+-    }
+-    // Condition to avoid error when $tids is empty because we cannot return an
+-    // empty value due to (IN) clause.
++    $tids = $this->getTidsFromNames(is_string($tids) ? [$tids] : $tids);
+     if (empty($tids)) {
+-      $tids = $args;
++      return FALSE;
+     }
++    $operator = count($tids) > 1 ? 'IN' : '=';
++    $tids = $operator == '=' ? reset($tids) : $tids;
++
+     // Now build the subqueries.
+     $subquery = $this->database->select('taxonomy_index', 'tn');
+     $subquery->addField('tn', 'nid');
++    $subquery->addField('tn', 'nid');
+     $where = (new Condition('OR'))->condition('tn.tid', $tids, $operator);
+     $last = "tn";
+ 
+@@ -258,7 +204,50 @@ class IndexNameDepth extends ArgumentPluginBase {
+     }
+ 
+     $subquery->condition($where);
+-    $this->query->addWhere(0, "$this->tableAlias.$this->realField", $subquery, 'IN');
++    $ids = array_keys($subquery->execute()->fetchAllKeyed());
++    if (empty($ids)) {
++      return $this->query->addWhere(0, "$this->tableAlias.$this->realField", [-1], 'IN');
++    }
++    return $this->query->addWhere(0, "$this->tableAlias.$this->realField", $ids, 'IN');
++  }
++
++  /**
++   * Get the taxonomy term ids from the names.
++   *
++   * @param array $names
++   *   Array of taxonomy names.
++   *
++   * @return array
++   *   Array of entity ids.
++   */
++  protected function getTidsFromNames(array $names) {
++
++    $query = $this->termStorage->getQuery()->accessCheck();
++    // Filter by vocabulary ID if one or more are provided.
++    if (!empty($this->options['vocabularies'])) {
++      $query->condition('vid', $this->options['vocabularies'], 'IN');
++    }
++
++    $alias_cleaner = NULL;
++    if (\Drupal::service('module_handler')->moduleExists('pathauto')) {
++      // Service container for alias cleaner.
++      $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
++    }
++
++    $tids = [];
++    foreach ($this->termStorage->loadMultiple($query->execute()) as $term) {
++      foreach ($names as $name) {
++        if (
++          ($alias_cleaner && $alias_cleaner->cleanString($term->label()) == $alias_cleaner->cleanString($name)) ||
++          (!$alias_cleaner && $term->label() == str_replace('-', ' ', $name))
++        ) {
++          $tids[] = $term->id();
++          break;
++        }
++      }
++    }
++
++    return $tids;
+   }
+ 
+   /**

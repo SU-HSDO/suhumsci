@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.hs_basic_block
     - dashboard.dashboard.main_dashboard
     - entityqueue.entity_queue.hs_person
     - filter.format.basic_html
@@ -35,7 +36,7 @@ dependencies:
     - taxonomy.vocabulary.hs_person_student_type
     - taxonomy.vocabulary.hs_publication_type
   module:
-    - block_content_permissions
+    - block_content
     - content_access_simple
     - contextual
     - dashboard
@@ -90,7 +91,6 @@ permissions:
   - 'assign site_manager role'
   - 'create embeddable media'
   - 'create file media'
-  - 'create hs_basic_block block content'
   - 'create hs_basic_page content'
   - 'create hs_course content'
   - 'create hs_event content'
@@ -157,6 +157,7 @@ permissions:
   - 'delete terms in hs_publication_type'
   - 'dropzone upload files'
   - 'edit any file media'
+  - 'edit any hs_basic_block block content'
   - 'edit any hs_basic_page content'
   - 'edit any hs_course content'
   - 'edit any hs_event content'
@@ -218,7 +219,6 @@ permissions:
   - 'revert hs_research revisions'
   - 'unpublish any content'
   - 'unpublish editable content'
-  - 'update any hs_basic_block block content'
   - 'update any media'
   - 'update hs_person entityqueue'
   - 'update media'
@@ -241,6 +241,5 @@ permissions:
   - 'view main_dashboard dashboard'
   - 'view own unpublished content'
   - 'view own unpublished media'
-  - 'view restricted block content'
   - 'view the administration theme'
   - 'view user list'

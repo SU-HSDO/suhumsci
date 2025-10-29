@@ -52,12 +52,6 @@
     );
   }
 
-  .hb-stretch-vertical-linked-cards & {
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100%;
-  }
-
   &__img {
     overflow: hidden;
 
@@ -204,6 +198,24 @@
       @include hb-themes(('colorful', 'airy')) {
         background-image: none;
       }
+    }
+  }
+}
+
+// .hb-stretch-vertical-linked-cards helper class.
+.hb-stretch-vertical-linked-cards {
+  .hb-vertical-linked-card {
+    display: flex;
+    flex-flow: column nowrap;
+  }
+
+  .hb-grid__item {
+    display: flex;
+    align-items: flex-start;
+
+    .hb-vertical-linked-card {
+      align-self: stretch;
+      width: 100%;
     }
   }
 }

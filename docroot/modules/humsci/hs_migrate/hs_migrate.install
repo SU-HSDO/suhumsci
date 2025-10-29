@@ -124,6 +124,7 @@ function _hs_migrate_remove_importers(string|array $input): void {
     }
 
     // Initialize logger and schema for the first importer found.
+    $schema = NULL;
     if (!isset($logger)) {
       $logger = \Drupal::logger('hs_migrate');
       $schema = \Drupal::database()->schema();
@@ -138,7 +139,7 @@ function _hs_migrate_remove_importers(string|array $input): void {
 
     // Drop migration database tables.
     $migrate_map_table = 'migrate_map_' . $importer;
-    if ($schema->tableExists($migrate_map_table)) {
+    if ($schema && $schema->tableExists($migrate_map_table)) {
       $schema->dropTable($migrate_map_table);
       $message = t('Dropped table @table', [
         '@table' => $migrate_map_table,
@@ -146,7 +147,7 @@ function _hs_migrate_remove_importers(string|array $input): void {
       $logger->notice($message);
     }
     $migrate_message_table = 'migrate_message_' . $importer;
-    if ($schema->tableExists($migrate_message_table)) {
+    if ($schema && $schema->tableExists($migrate_message_table)) {
       $schema->dropTable($migrate_message_table);
       $message = t('Dropped table @table', [
         '@table' => $migrate_message_table,

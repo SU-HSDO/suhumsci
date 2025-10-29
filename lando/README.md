@@ -96,7 +96,6 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
       127.0.0.1 mrc2021.suhumsci.loc
       127.0.0.1 mtl.suhumsci.loc
       127.0.0.1 music.suhumsci.loc
-      127.0.0.1 oconnell.suhumsci.loc
       127.0.0.1 philit.suhumsci.loc
       127.0.0.1 philosophy.suhumsci.loc
       127.0.0.1 physics.suhumsci.loc

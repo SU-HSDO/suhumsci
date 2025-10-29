@@ -1,17 +1,13 @@
-uuid: 8d24344d-866a-48e5-a666-6612026fc072
+uuid: 022be0f9-378b-465e-bdb4-3e9b1fffb99c
 langcode: en
 status: true
 dependencies:
   module:
     - blazy
-    - linkit
     - slick
-    - spamspan
-_core:
-  default_config_hash: 1C_ItV7LmneSy9KmMLlZWReGB5pqxvUcDUM35qjPVyU
-name: 'Minimal HTML'
-format: minimal_html
-weight: -7
+name: 'Links only'
+format: links_only
+weight: -5
 filters:
   blazy_filter:
     id: blazy_filter
@@ -34,37 +30,9 @@ filters:
     status: true
     weight: -10
     settings:
-      allowed_html: '<br> <p id class> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <blockquote cite> <span class> <table class> <ul type class id> <ol type class id start> <a hreflang href title data-entity-type data-entity-uuid data-entity-substitution> <strong> <em> <li> <hr>'
+      allowed_html: '<br> <p> <a href>'
       filter_html_help: true
       filter_html_nofollow: false
-  filter_htmlcorrector:
-    id: filter_htmlcorrector
-    provider: filter
-    status: true
-    weight: 10
-    settings: {  }
-  filter_spamspan:
-    id: filter_spamspan
-    provider: spamspan
-    status: true
-    weight: 0
-    settings:
-      spamspan_at: ' [at] '
-      spamspan_use_graphic: false
-      spamspan_dot_enable: false
-      spamspan_dot: ' [dot] '
-      spamspan_use_form: false
-      spamspan_form_pattern: '<a href="%url?goto=%email">%displaytext</a>'
-      spamspan_form_default_url: contact
-      spamspan_form_default_displaytext: 'contact form'
-  linkit:
-    id: linkit
-    provider: linkit
-    status: true
-    weight: 0
-    settings:
-      title: false
-      media_substitution: metadata
   slick_filter:
     id: slick_filter
     provider: slick

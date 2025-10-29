@@ -1,0 +1,33 @@
+uuid: 01f6b8e1-3d18-4fa6-ac75-f4398b6fe39a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.curriculum_requirement_type.field_course_color
+    - taxonomy.vocabulary.curriculum_requirement_type
+  module:
+    - style_selector
+    - text
+id: taxonomy_term.curriculum_requirement_type.default
+targetEntityType: taxonomy_term
+bundle: curriculum_requirement_type
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_course_color:
+    type: style_selector_css_color_formatter
+    label: above
+    settings:
+      extra_classes: ''
+      css_property: background
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

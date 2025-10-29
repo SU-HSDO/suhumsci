@@ -1,0 +1,53 @@
+uuid: 6ab93d4b-cd5a-46de-84fc-a4a7db957779
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_cmap.field_cmap_title
+    - field.field.paragraph.hs_cmap.field_hs_cmap_columns_layout
+    - field.field.paragraph.hs_cmap.field_hs_cmap_year_title
+    - paragraphs.paragraphs_type.hs_cmap
+  module:
+    - empty_fields
+    - entity_reference_revisions
+    - field_formatter_class
+    - hs_field_helpers
+    - options
+id: paragraph.hs_cmap.default
+targetEntityType: paragraph
+bundle: hs_cmap
+mode: default
+content:
+  field_cmap_title:
+    type: entity_title_heading
+    label: hidden
+    settings:
+      tag: h2
+      linked: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_hs_cmap_columns_layout:
+    type: list_key
+    label: hidden
+    settings: {  }
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
+    region: content
+  field_hs_cmap_year_title:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

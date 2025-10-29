@@ -493,10 +493,12 @@ function humsci_basic_update_view_mode_full_width_image(array &$variables) {
     $parent_field_name = $paragraph->get('parent_field_name')->value;
 
     if ($parent_field_name == 'field_hs_page_hero') {
-      $entity = $variables['items'][0]['content']['#media'];
-      $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
-      $render_array = $view_builder->view($entity, 'caption_credit_eager');
-      $variables['items'][0]['content'] = $render_array;
+      $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+      // Update cache key to reflect new view mode.
+      $view_mode_cache_key = array_search('caption_credit', $variables['items'][0]['content']['#cache']['keys']);
+      if ($view_mode_cache_key !== FALSE) {
+        $variables['items'][0]['content']['#cache']['keys'][$view_mode_cache_key] = 'caption_credit_eager';
+      }
     }
     else {
       _humsci_basic_update_view_mode_slides_image($paragraph, $variables);
@@ -551,10 +553,12 @@ function _humsci_basic_update_view_mode_slides_image(ParagraphInterface $paragra
     return;
   }
 
-  $entity = $variables['items'][0]['content']['#media'];
-  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('media');
-  $render_array = $view_builder->view($entity, 'caption_credit_eager');
-  $variables['items'][0]['content'] = $render_array;
+  $variables['items'][0]['content']['#view_mode'] = 'caption_credit_eager';
+  // Update cache key to reflect new view mode.
+  $view_mode_cache_key = array_search('caption_credit', $variables['items'][0]['content']['#cache']['keys']);
+  if ($view_mode_cache_key !== FALSE) {
+    $variables['items'][0]['content']['#cache']['keys'][$view_mode_cache_key] = 'caption_credit_eager';
+  }
 }
 
 /**

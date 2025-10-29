@@ -68,9 +68,10 @@ function hs_cmap_taxonomy_vocabulary_insert(EntityInterface $vocabulary) {
  * Create a taxonomy term.
  *
  * @param array $data
- *  As required by Drupal\taxonomy\Entity\Term::create().
+ *   As required by Drupal\taxonomy\Entity\Term::create().
  *
  * @return void
+ *
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function _hs_cmap_save_taxonomy_term(array $data): void {
@@ -82,9 +83,9 @@ function _hs_cmap_save_taxonomy_term(array $data): void {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state) {
-  /** @var Term $term */
+  /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $form_state->getFormObject()->getEntity();
-  if($term->bundle() !== 'hs_curriculum_requirement_type') {
+  if ($term->bundle() !== 'hs_curriculum_requirement_type') {
     return;
   }
   // Hide the standard taxonomy things that don't make sense for this bundle.

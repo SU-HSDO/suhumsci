@@ -4,6 +4,7 @@
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/text' as *;
+@use '../mixins/icons' as *;
 
 .hb-media-image {
   .field-media-image-caption {
@@ -60,6 +61,64 @@
 
     hr {
       display: none !important;
+    }
+
+    &.toggle-caption__wrapper {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      background: none;
+      padding: 0 hb-calculate-rems(6px) hb-calculate-rems(6px);
+
+      .toggle-caption__toggle,
+      .toggle-caption__close {
+        background: none;
+        border: none;
+        float: left;
+      }
+
+      .toggle-caption__toggle {
+        position: absolute;
+        padding: 0;
+        bottom: hb-calculate-rems(6px);
+
+        &::before {
+          @include hb-icon-background('info', 'white');
+
+          content: '';
+          display: block;
+          width: hb-calculate-rems(25px);
+          height: hb-calculate-rems(25px);
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+
+      .toggle-caption__close {
+        position: relative;
+        text-align: center;
+        background-color: var(--palette--black);
+        margin-top: hb-calculate-rems(-26px);
+        margin-left: hb-calculate-rems(-4px);
+
+        &::before {
+          @include hb-icon-background('close', 'white');
+
+          content: '';
+          display: block;
+          width: hb-calculate-rems(18px);
+          height: hb-calculate-rems(22px);
+          background-size:  hb-calculate-rems(14px) hb-calculate-rems(14px);
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+
+      .toggle-caption__content {
+        position: relative;
+        background-color: var(--palette--black);
+        padding: hb-calculate-rems(2px) hb-calculate-rems(4px);
+      }
     }
   }
 }

@@ -159,24 +159,46 @@ function hs_layouts_preprocess_container(&$variables) {
 function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   $context = $variables['context'];
   $paragraph = $context->getProperty('entity');
+
   if ($context->isOfType('views_row')) {
     $variables['attributes']->addClass('hb-spotlight--classic');
   }
+
+  if (!($paragraph instanceof ParagraphInterface)) {
+    return;
+  }
+
   if (
-    $paragraph instanceof ParagraphInterface &&
     $paragraph->hasField('field_hs_spotlight_bg') &&
     $paragraph->get('field_hs_spotlight_bg')->count()
   ) {
     $bgValue = $paragraph->get('field_hs_spotlight_bg')->getString();
     $variables['attributes']->addClass(Html::cleanCssIdentifier($bgValue));
   }
-  if (
-    $paragraph instanceof ParagraphInterface &&
-    $paragraph->hasField('field_spotlight_style')
-  ) {
-    $className = $paragraph->get('field_spotlight_style')->isEmpty() ? 'classic' : $paragraph->get('field_spotlight_style')->getString();
-    $variables['attributes']->addClass(Html::cleanCssIdentifier('hb-spotlight--' . $className));
+
+  $spotlight_type = NULL;
+  if ($paragraph->hasField('field_spotlight_style')) {
+    $spotlight_type = $paragraph->get('field_spotlight_style')->isEmpty() ? 'classic' : $paragraph->get('field_spotlight_style')->getString();
   }
+
+  if ($paragraph->hasField('field_hs_spotlight_image')) {
+    if ($paragraph->get('field_hs_spotlight_image')->isEmpty()) {
+      $variables['attributes']->addClass('hb-spotlight--no-media');
+    }
+    else {
+      $media = $paragraph->get('field_hs_spotlight_image')->entity;
+      if ($media->bundle() == 'video') {
+        $spotlight_type = 'video';
+      }
+      elseif ($media->bundle() == 'image' && $spotlight_type == 'classic') {
+        $view_mode = $context->getProperty('view_mode');
+        $image_style = $view_mode == 'default' ? 'spotlight_framed_tall' : 'spotlight_framed_short';
+        $variables['image']['field_hs_spotlight_image'][0]['#stanford_media_image_style'] = $image_style;
+        $variables['image']['field_hs_spotlight_image'][0]['#cache']['keys'][] = 'image_style:' . $image_style;
+      }
+    }
+  }
+  $variables['attributes']->addClass(Html::cleanCssIdentifier('hb-spotlight--' . $spotlight_type ?? 'classic'));
 }
 
 /**

@@ -1,3 +1,4 @@
+@use '../variables/general' as *;
 @use '../functions/general' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
@@ -23,245 +24,438 @@
   .hc-pairing-lake & {
     background-color: var(--palette--secondary-highlight);
   }
+}
 
-  &--classic {
-    @include hb-hero-full-width;
+.hb-spotlight__wrapper {
+  max-width: hb-calculate-rems($hb-layout-max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, auto);
 
-    padding: hb-spacing-width('md') 0;
+  @include grid-media-min('lg') {
+    grid-template-rows: auto;
+  }
 
-    @include grid-media-min('md') {
-      padding: hb-spacing-width() 0;
+  // Framed variant ("classic").
+  .hb-spotlight--classic & {
+    grid-template-areas:
+      'text'
+      'media';
+
+    @include grid-media-min('lg') {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-areas: 'text text media';
     }
   }
 
-  &__wrapper {
-    @include hb-page-width;
-    display: block;
+  // Framed variant ("classic") - Media left.
+  .hb-spotlight--classic.hb-spotlight--image-left & {
+    @include grid-media-min('lg') {
+      grid-template-areas: 'media text text';
+    }
+  }
 
-    @include grid-media-min('md') {
+  // Expanded variant.
+  .hb-spotlight--expanded & {
+    grid-template-areas:
+      'media'
+      'text';
+
+    @include grid-media-min('lg') {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas: 'text media';
+    }
+  }
+
+  // Expanded variant - Media left.
+  .hb-spotlight--expanded.hb-spotlight--image-left & {
+    @include grid-media-min('lg') {
+      grid-template-areas: 'media text';
+    }
+  }
+
+  // Spotlight with video.
+  .hb-spotlight--video & {
+    grid-template-areas:
+      'media'
+      'text';
+
+    @include grid-media-min('lg') {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-areas: 'text media';
+    }
+  }
+
+  // Spotlight with video - Media left.
+  .hb-spotlight--video.hb-spotlight--image-left & {
+    @include grid-media-min('lg') {
+      grid-template-areas: 'media text';
+    }
+  }
+
+  // Spotlight - No media.
+  .hb-spotlight--no-media &,
+  .hb-spotlight--no-media.hb-spotlight--image-left & {
+    grid-template-rows: auto;
+    grid-template-areas: 'text';
+
+    @include grid-media-min('lg') {
+      grid-template-columns: auto;
+      grid-template-areas: 'text';
+    }
+  }
+}
+
+.hb-spotlight__text {
+  grid-area: text;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  // Framed ("classic") and video variants.
+  .hb-spotlight--classic &,
+  .hb-spotlight--video & {
+    @include hb-traditional {
+      padding: hb-calculate-rems(32px) hb-calculate-rems(32px)
+        hb-calculate-rems(48px);
+
+      &:only-child {
+        padding: hb-calculate-rems(32px);
+      }
+
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(64px) hb-calculate-rems(64px)
+          hb-calculate-rems(48px);
+
+        &:only-child {
+          padding: hb-calculate-rems(64px);
+        }
+      }
+
+      @include grid-media-min('lg') {
+        padding: hb-calculate-rems(64px);
+      }
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(32px);
+
+      &:not(:only-child) {
+        padding-block-end: hb-calculate-rems(40px);
+      }
+
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(80px) hb-calculate-rems(64px);
+
+        &:not(:only-child) {
+          padding-block-end: hb-calculate-rems(48px);
+        }
+      }
+
+      @include grid-media-min('lg') {
+        &:not(:only-child) {
+          padding-block-end: hb-calculate-rems(80px);
+        }
+      }
+    }
+  }
+
+  // Expanded variant.
+  .hb-spotlight--expanded & {
+    @include hb-traditional {
+      padding-inline: hb-calculate-rems(32px);
+      padding-block: hb-calculate-rems(24px) hb-calculate-rems(40px);
+
+      &:only-child {
+        padding-block: hb-calculate-rems(32px);
+      }
+
+      @include grid-media-min('md') {
+        padding-inline: hb-calculate-rems(64px);
+        padding-block: hb-calculate-rems(32px) hb-calculate-rems(40px);
+
+        &:only-child {
+          padding-block: hb-calculate-rems(64px);
+        }
+      }
+
+      @include grid-media-min('lg') {
+        padding-block: hb-calculate-rems(64px);
+      }
+    }
+  }
+
+  // Video variant specific styles.
+  .hb-spotlight--video & {
+    @include hb-traditional {
+      padding-block: hb-calculate-rems(24px) hb-calculate-rems(40px);
+
+      @include grid-media-min('md') {
+        padding-block-start: hb-calculate-rems(32px);
+      }
+
+      @include grid-media-min('lg') {
+        padding: hb-calculate-rems(64px);
+      }
+    }
+  }
+
+  // Adjustments for full width spotlights.
+  .hs-full-width & {
+    @include grid-media-min('xl') {
+      padding-inline-start: 0;
+    }
+  }
+
+  .hs-full-width .hb-spotlight--image-left & {
+    @include grid-media-min('xl') {
+      padding-inline-end: 0;
+    }
+  }
+
+  .field-hs-spotlight-link {
+    margin-top: hb-spacing-width('xs');
+
+    a,
+    button {
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-secondary-button;
+      }
+
+      @include hb-traditional {
+        @include hb-button;
+      }
+
+      padding: hb-calculate-rems(4px) hb-calculate-rems(24px);
+    }
+  }
+}
+
+.hb-spotlight__text-inner {
+  // Framed ("classic") and video variants.
+  .hb-spotlight--classic &,
+  .hb-spotlight--video & {
+    @include hb-themes(('colorful', 'airy')) {
+      position: relative;
+      padding-block-start: hb-calculate-rems(28px);
+
+      &::before {
+        @include hb-colorful-text-bar('secondary');
+
+        top: 0;
+
+        // Add a unique secondary color for Ocean on Colorful.
+        // Note this is an extraordinary use case.
+        // Targeting styles per color pairing should not become standard practice.
+        .hc-pairing-ocean & {
+          @include hb-colorful-text-bar('secondary-darken-12');
+        }
+      }
+    }
+  }
+
+  // Expanded variant.
+  .hb-spotlight--expanded & {
+    @include hb-themes(('colorful', 'airy')) {
+      background-color: var(--palette--white);
+      padding: hb-calculate-rems(16px) hb-calculate-rems(20px)
+        hb-calculate-rems(20px);
+      margin: hb-calculate-rems(-48px) hb-calculate-rems(32px)
+        hb-calculate-rems(32px);
+      z-index: 10;
+
+      @include grid-media-min('md') {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(32px);
+      }
+
+      @include grid-media-min('lg') {
+        width: 100%;
+        margin: 0 hb-calculate-rems(-32px) 0 hb-calculate-rems(32px);
+      }
+    }
+  }
+
+  // Expanded variant - Full width.
+  .hs-full-width .hb-spotlight--expanded & {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min(xl) {
+        width: calc(100% + #{hb-calculate-rems(32px)});
+        margin: 0;
+      }
+    }
+  }
+
+  .hb-spotlight--expanded.hb-spotlight--image-left & {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('lg') {
+        margin: 0 hb-calculate-rems(32px) 0 hb-calculate-rems(-32px);
+      }
+    }
+  }
+
+  // Spotlight - No media.
+  .hb-spotlight--no-media &,
+  .hb-spotlight--no-media.hb-spotlight--image-left & {
+    max-width: hb-calculate-rems(725px);
+    margin: 0 auto;
+
+    @include grid-media-min('lg') {
+      margin: 0 auto;
+    }
+  }
+}
+
+.hb-spotlight__title {
+  @include hb-hero-title;
+  margin: 0 0 hb-spacing-width('xxxs');
+
+  @include grid-media-min('md') {
+    margin: 0 0 hb-spacing-width('xxxs');
+  }
+}
+
+.hb-spotlight__image-wrapper {
+  grid-area: media;
+
+  // Framed ("classic") and video variants.
+  .hb-spotlight--classic &,
+  .hb-spotlight--video & {
+    padding-block: 0 hb-calculate-rems(40px);
+
+    @include grid-media-min('lg') {
       display: flex;
       align-items: center;
+      padding-inline: 0 hb-calculate-rems(64px);
+    }
 
-      .hb-spotlight--image-default & {
-        flex-direction: row-reverse;
+    @include hb-traditional {
+      @include grid-media-min('md') {
+        padding-block: 0 hb-calculate-rems(64px);
       }
 
-      .hb-spotlight--image-left & {
-        flex-direction: row;
+      @include grid-media-min('lg') {
+        padding-block: hb-calculate-rems(64px);
       }
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('md') {
+        padding-block: 0 hb-calculate-rems(80px);
+      }
+
+      @include grid-media-min('lg') {
+        padding-block: hb-calculate-rems(80px);
+      }
+    }
+
+    article.hb-media-image {
+      max-width: hb-calculate-rems(400px);
+      margin: 0 auto;
     }
   }
 
-  &__title {
-    @include hb-hero-title;
-    margin: 0 0 hb-spacing-width('xs');
-
-    @include grid-media-min('md') {
-      margin: 0 0 hb-spacing-width('xs');
+  // Video variant specific styles.
+  .hb-spotlight--video & {
+    @include grid-media-max('md') {
+      padding: hb-calculate-rems(20px);
+      padding-block-end: 0;
     }
   }
 
-  &__text {
-    .hb-spotlight--classic & {
+  // Framed ("classic") and video variants - Media left.
+  .hb-spotlight--classic.hb-spotlight--image-left &,
+  .hb-spotlight--video.hb-spotlight--image-left & {
+    @include grid-media-min('lg') {
+      padding-inline: hb-calculate-rems(64px) 0;
+    }
+  }
+
+  // Expanded variant
+  .hb-spotlight--expanded & {
+    article.hb-media-image {
+      @include grid-media-min('lg') {
+        height: 100%;
+      }
+
       @include hb-themes(('colorful', 'airy')) {
-        position: relative;
-        padding-top: hb-spacing-width('md');
-
-        &::before {
-          top: 0;
-
-          @include hb-colorful-text-bar('secondary');
-
-          // Add a unique secondary color for Ocean on Colorful.
-          // Note this is an extraordinary use case.
-          // Targeting styles per color pairing should not become standard practice.
-          .hc-pairing-ocean & {
-            @include hb-colorful-text-bar('secondary-darken-12');
-          }
+        @include grid-media-min('lg') {
+          width: 102%;
+          margin-inline: -2% 0;
         }
-      }
-
-      @include grid-media-min('md') {
-        flex-basis: 55%;
-        flex-grow: 1;
-        max-width: 75%;
-      }
-    }
-
-    .field-hs {
-      &-spotlight-link {
-        margin-top: hb-spacing-width('md');
-
-        a,
-        button {
-          @include hb-themes(('colorful', 'airy')) {
-            @include hb-secondary-button;
-
-            // Add a unique secondary color for Ocean on Colorful.
-            // Note this is an extraordinary use case.
-            // Targeting styles per color pairing should not become standard practice.
-            .hc-pairing-ocean & {
-              color: var(--palette--secondary-darken-12);
-              border-color: var(--palette--secondary-darken-12);
-
-              &:hover {
-                background-color: var(--palette--secondary-darken-12);
-                border-color: var(--palette--secondary-darken-12);
-                color: var(--palette--white);
-              }
-            }
-          }
-
-          @include hb-traditional {
-            @include hb-button;
-          }
-
-          padding: hb-calculate-rems(4px) hb-calculate-rems(20px);
-        }
-      }
-    }
-  }
-
-  &__image-wrapper {
-    .hb-spotlight--classic & {
-      margin-bottom: hb-spacing-width('md');
-
-      @include grid-media-min('md') {
-        width: 45%;
-        margin-bottom: 0;
-      }
-    }
-
-    .hb-spotlight--classic.hb-spotlight--image-default & {
-      @include grid-media-min('md') {
-        margin-left: hb-spacing-width();
-      }
-    }
-
-    .hb-spotlight--classic.hb-spotlight--image-left & {
-      @include grid-media-min('md') {
-        margin-right: hb-spacing-width();
       }
     }
 
     img {
-      width: 100%;
+      @include grid-media-min('lg') {
+        height: 100%;
+        object-fit: cover;
+      }
     }
+  }
+
+  // Expanded variant - Media left.
+  .hb-spotlight--expanded.hb-spotlight--image-left & {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('lg') {
+        margin-inline: 0 -2%;
+      }
+    }
+  }
+
+  // Adjustments for full width spotlights.
+  .hs-full-width & {
+    @include grid-media-min('xl') {
+      padding-inline-end: 0;
+    }
+  }
+
+  .hs-full-width .hb-spotlight--image-left & {
+    @include grid-media-min('xl') {
+      padding-inline-start: 0;
+    }
+  }
+
+  article.hb-media-image,
+  article.hb-media-video,
+  img {
+    width: 100%;
   }
 }
 
 .hb-spotlight--expanded {
-  position: relative;
+  .hb-media-image .field-media-image-caption.toggle-caption__wrapper {
+    padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
 
-  @include hb-traditional {
-    .hs-paragraph-style--well &,
-    .hs-paragraph-style--well-full-width & {
-      background-color: var(--palette--white);
-    }
-  }
-
-  .hb-spotlight__wrapper {
-    position: relative;
-    width: 100% !important;
-  }
-
-  .hb-spotlight__text {
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px);
-      margin: hb-calculate-rems(20px);
-      background: var(--palette--white);
+      bottom: hb-calculate-rems(48px);
 
-      @include grid-media-min('md') {
-        padding: hb-calculate-rems(30px) hb-calculate-rems(40px);
-        margin: 0;
-        flex-basis: 55%;
-        flex-grow: 1;
-        max-width: 75%;
+      .toggle-caption__toggle {
+        bottom: hb-calculate-rems(21px);
+      }
+
+      @include grid-media-min('lg') {
+        bottom: 0;
+        padding: 0 hb-calculate-rems(16px) hb-calculate-rems(48px) hb-calculate-rems(56px);
+
+        .toggle-caption__content {
+          margin-bottom: hb-calculate-rems(-32px);
+        }
       }
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(40px);
-
-      @include grid-media-min('md') {
-        flex-basis: 60%;
-        flex-grow: 1;
-      }
-    }
-
-    .field-hs-spotlight-link {
-      margin-top: hb-calculate-rems(20px);
-    }
-
-    .hb-spotlight__title {
-      &,
-      h2 {
-        margin-top: 0;
-        margin-bottom: hb-calculate-rems(15px);
+      .toggle-caption__toggle {
+        bottom: hb-calculate-rems(16px);
       }
 
-      @include hb-themes(('colorful', 'airy')) {
-        color: var(--palette--primary);
-      }
-    }
-  }
+       @include grid-media-min('lg') {
+        padding: 0;
 
-  .hb-spotlight__image-wrapper {
-    @include hb-traditional {
-      @include grid-media-min('md') {
-        flex-basis: 40%;
-        max-width: 500px;
-      }
-    }
-
-    @include hb-themes(('colorful', 'airy')) {
-      .hb-caption-credit-image .field-media-image-caption {
-        z-index: 0;
-      }
-
-      @include grid-media-min('md') {
-        width: 45%;
-        max-width: 500px;
-      }
-    }
-  }
-}
-
-.hb-spotlight--expanded.hb-spotlight--image-default:has(
-    .hb-spotlight__image-wrapper
-  ),
-.hb-spotlight--expanded.hb-spotlight--image-left:has(
-    .hb-spotlight__image-wrapper
-  ) {
-  .hb-spotlight__text {
-    min-height: fit-content !important;
-
-    @include hb-themes(('colorful', 'airy')) {
-      transform: translate(0%, -15%);
-    }
-  }
-}
-
-.hb-spotlight--expanded.hb-spotlight--image-default:has(
-    .hb-spotlight__image-wrapper
-  ) {
-  .hb-spotlight__text {
-    @include hb-themes(('colorful', 'airy')) {
-      @include grid-media-min('md') {
-        transform: translate(14%, 0%);
-      }
-    }
-  }
-}
-
-.hb-spotlight--expanded.hb-spotlight--image-left:has(
-    .hb-spotlight__image-wrapper
-  ) {
-  .hb-spotlight__text {
-    @include hb-themes(('colorful', 'airy')) {
-      @include grid-media-min('md') {
-        transform: translate(-14%, 0%);
-      }
+        .toggle-caption__toggle {
+          bottom: hb-calculate-rems(6px);
+        }
+       }
     }
   }
 }

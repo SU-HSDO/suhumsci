@@ -1,16 +1,16 @@
-uuid: 01f6b8e1-3d18-4fa6-ac75-f4398b6fe39a
+uuid: 6d904529-534a-41ac-8093-7f36923fb19a
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.curriculum_requirement_type.field_course_color
-    - taxonomy.vocabulary.curriculum_requirement_type
+    - field.field.taxonomy_term.hs_curriculum_requirement_type.field_hs_curriculum_course_color
+    - taxonomy.vocabulary.hs_curriculum_requirement_type
   module:
     - style_selector
     - text
-id: taxonomy_term.curriculum_requirement_type.default
+id: taxonomy_term.hs_curriculum_requirement_type.default
 targetEntityType: taxonomy_term
-bundle: curriculum_requirement_type
+bundle: hs_curriculum_requirement_type
 mode: default
 content:
   description:
@@ -20,12 +20,11 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-  field_course_color:
-    type: style_selector_css_color_formatter
+  field_hs_curriculum_course_color:
+    type: style_selector_css_class_formatter
     label: above
     settings:
       extra_classes: ''
-      css_property: background
     third_party_settings: {  }
     weight: 1
     region: content

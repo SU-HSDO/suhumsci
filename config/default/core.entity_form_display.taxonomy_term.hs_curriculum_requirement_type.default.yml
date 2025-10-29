@@ -1,31 +1,30 @@
-uuid: d65c7e93-6721-4e43-9da1-c57b2a94dc6d
+uuid: a0c03696-2ce2-42ea-8da3-52a77fec5152
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.curriculum_requirement_type.field_course_color
-    - taxonomy.vocabulary.curriculum_requirement_type
+    - field.field.taxonomy_term.hs_curriculum_requirement_type.field_hs_curriculum_course_color
+    - taxonomy.vocabulary.hs_curriculum_requirement_type
   module:
     - field_formatter_class
     - style_selector
-id: taxonomy_term.curriculum_requirement_type.default
+id: taxonomy_term.hs_curriculum_requirement_type.default
 targetEntityType: taxonomy_term
-bundle: curriculum_requirement_type
+bundle: hs_curriculum_requirement_type
 mode: default
 content:
-  field_course_color:
+  field_hs_curriculum_course_color:
     type: style_selector_compact_widget
-    weight: 26
+    weight: 1
     region: content
     settings:
       type: square
-      size: default
+      size: large
       advanced:
-        color_prop: background-color
         extra_classes: ''
         empty_option: None
         ui_settings:
-          alpha_grid: true
+          alpha_grid: false
           check_icon: true
           empty_icon: true
           text_icon: false

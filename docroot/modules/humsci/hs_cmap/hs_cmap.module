@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for H&S Curriculum Map module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function hs_cmap_vocabulary_insert(EntityInterface $vocabulary) {
+  // Vocabularies are config, but taxonomy terms are content.
+  // So when the vocabulary is created, add our default terms.
+  if ($vocabulary->id() !== 'hs_curriculum_requirement_type') {
+    return;
+  }
+  $requirement_types = [
+    [
+      'name' => 'Core',
+      'field_hs_curriculum_course_color' => 'lagunita-light',
+    ],
+    [
+      'name' => 'Elective',
+      'field_hs_curriculum_course_color' => 'digital-red',
+    ],
+    [
+      'name' => 'Concentration',
+      'field_hs_curriculum_course_color' => 'plum',
+    ],
+    [
+      'name' => 'Honors',
+      'field_hs_curriculum_course_color' => 'poppy-light',
+    ],
+    [
+      'name' => 'Upper-Division',
+      'field_hs_curriculum_course_color' => 'olive-dark',
+    ],
+    [
+      'name' => 'Thesis',
+      'field_hs_curriculum_course_color' => 'brick-dark',
+    ],
+    [
+      'name' => 'Other',
+      'field_hs_curriculum_course_color' => 'grey-500',
+    ],
+  ];
+  foreach ($requirement_types as $type) {
+    $term = new Term([
+      'vid' => 'hs_curriculum_requirement_type',
+      'name' => $type['name'],
+      'field_hs_curriculum_course_color' => $type['field_hs_curriculum_course_color'],
+    ], 'taxonomy_term');
+    $term->save();
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state) {
+  /** @var Term $term */
+  $term = $form_state->getFormObject()->getEntity();
+  if($term->bundle() !== 'hs_curriculum_requirement_type') {
+    return;
+  }
+  // Hide the standard taxonomy things that don't make sense for this bundle.
+  $form['revision_information']['#access'] = FALSE;
+  $form['relations']['#access'] = FALSE;
+}

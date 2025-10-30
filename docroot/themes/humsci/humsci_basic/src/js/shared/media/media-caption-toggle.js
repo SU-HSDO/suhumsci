@@ -1,103 +1,53 @@
-(function (Drupal) {
+(function (Drupal, once) {
   Drupal.behaviors.mediaCaptionToggle = {
     attach(context) {
-      const processCaptions = () => {
-        const captions = context.querySelectorAll('.field-media-image-caption');
+      const mobileView = window.matchMedia('(max-width: 991px)');
+      const captions = once('media-caption-toggle', '.field-media-image-caption', context);
 
-        captions.forEach((caption) => {
-          const parentSpotlight = caption.closest('.hb-spotlight--expanded');
-          const viewportWidth = window.innerWidth;
-          const actualHeight = caption.offsetHeight;
+      captions.forEach((caption) => {
+        const toggleButton = caption.querySelector('.toggle-caption__toggle');
+        const content = caption.querySelector('.toggle-caption__content');
+        const spotlight = caption.closest('.hb-spotlight--expanded');
 
-          const captionText = Array.from(caption.children).filter(
-            (el) => !el.classList.contains('toggle-caption__toggle')
-              && !el.classList.contains('toggle-caption__content')
-              && el.textContent
-              && el.textContent.trim().length > 0,
-          );
+        if (!content || !toggleButton) return;
 
-          // Check if toggle structure already exists
-          const existingWrapper = caption.querySelector('.toggle-caption__content');
+        // Function to determine if this caption should be collapsible
+        const isCollapsible = () => content.offsetHeight >= 28 || (spotlight && mobileView.matches);
 
-          // Condition to add toggle
-          const addToggle = actualHeight >= 38 || (parentSpotlight && viewportWidth <= 991);
-
-          // Condition to remove toggle
-          const removeToggle = !addToggle;
-
-          // Add toggle structure
-          if (addToggle && !existingWrapper) {
-            caption.classList.add('toggle-caption__wrapper');
-
-            // Create wrapper
-            const textWrapper = document.createElement('div');
-            textWrapper.className = 'toggle-caption__content';
-            textWrapper.style.visibility = 'hidden';
-            caption.appendChild(textWrapper);
-
-            // Create close button (inside wrapper, before text)
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'toggle-caption__close';
-            closeBtn.setAttribute('aria-hidden', 'true');
-            closeBtn.style.visibility = 'hidden';
-            textWrapper.appendChild(closeBtn);
-
-            // Move text inside wrapper
-            captionText.forEach((el) => textWrapper.appendChild(el));
-
-            // Create toggle button (outside wrapper)
-            const toggle = document.createElement('button');
-            toggle.className = 'toggle-caption__toggle';
-            toggle.setAttribute('aria-hidden', 'true');
-            caption.insertBefore(toggle, textWrapper);
-
-            // Toggle behavior
-            toggle.addEventListener('click', () => {
-              toggle.style.display = 'none';
-              textWrapper.style.visibility = 'visible';
-              closeBtn.style.visibility = 'visible';
-            });
-
-            closeBtn.addEventListener('click', () => {
-              textWrapper.style.visibility = 'hidden';
-              closeBtn.style.visibility = 'hidden';
-              toggle.style.display = 'block';
-            });
+        const updateCaptionState = () => {
+          if (!isCollapsible()) {
+            caption.classList.remove('collapsible-caption');
+            content.classList.remove('visually-hidden');
+            toggleButton.classList.remove('is-open');
+          } else {
+            caption.classList.add('collapsible-caption');
+            if (!toggleButton.classList.contains('is-open')) {
+              content.classList.add('visually-hidden');
+            }
           }
+        };
 
-          // Remove toggle structure
-          if (removeToggle && existingWrapper) {
-            caption.classList.remove('toggle-caption__wrapper');
+        // Initial setup
+        updateCaptionState();
 
-            const toggleBtn = caption.querySelector('.toggle-caption__toggle');
-            const closeBtn = caption.querySelector('.toggle-caption__close');
-            const textWrapper = caption.querySelector('.toggle-caption__content');
-
-            // Move caption text elements back to main caption
-            const innerElements = Array.from(textWrapper.children).filter(
-              (el) => !el.classList.contains('toggle-caption__close'),
-            );
-            innerElements.forEach((el) => caption.appendChild(el));
-
-            // Remove created buttons and wrapper
-            if (toggleBtn) toggleBtn.remove();
-            if (closeBtn) closeBtn.remove();
-            if (textWrapper) textWrapper.remove();
-          }
+        // Toggle open/close behavior
+        toggleButton.addEventListener('click', () => {
+          const isOpen = toggleButton.classList.toggle('is-open');
+          content.classList.toggle('visually-hidden', !isOpen);
         });
-      };
 
-      // Initial run
-      processCaptions();
+        // Run again on viewport resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            updateCaptionState();
+          }, 250); // Debounce
+        });
 
-      // Run again on viewport resize
-      let resizeTimeout;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          processCaptions();
-        }, 250); // Debounce
+        // Watch viewport changes
+        mobileView.addEventListener('change', updateCaptionState);
       });
     },
   };
-}(Drupal));
+}(Drupal, once));

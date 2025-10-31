@@ -32,7 +32,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Tamper(
  * id = "url_to_media",
  * label = @Translation("URL to Image Media Entity"),
- * description = @Translation("Downloads an image from a URL and creates an image media entity."),
+ * description = @Translation("Downloads an image from a URL and creates an image media entity.  To include alt text use the format <code>https://example.com/my-image.jpg|This is my alternative description of the image.</code>"),
  * category = "Media"
  * )
  */
@@ -134,34 +134,42 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
    *
    * @return int|null
    *   The media entity ID on success, NULL on failure.
+   *
+   * @throws \Drupal\tamper\Exception\TamperException
    */
   public function tamper($data, ?TamperableItemInterface $item = NULL) {
     // Known issue: only can run tamper when module is disabled.
     if ($this->moduleHandler->moduleExists('media_duplicate_validation')) {
-      $this->loggerFactory->get('hs_migrate')->error('UrlToMedia tamper plugin cannot run with media_duplicate_validation module enabled. Please disable the module before running migrations.');
+      $message = 'UrlToMedia tamper plugin cannot run with media_duplicate_validation module enabled. Please disable the module before running migrations.';
+      $this->loggerFactory->get('hs_migrate')->error($message);
+      throw new TamperException($message);
+    }
+
+    if (empty($data) || !is_string($data)) {
       return NULL;
     }
 
-    if (empty($data) || !is_string($data) || !filter_var($data, FILTER_VALIDATE_URL)) {
-      return NULL;
-    }
-
-    // Skip if URL doesn't appear to be an image.
-    if (!preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $data)) {
-      return NULL;
-    }
+    // There may be multiple parts for URL and alt text.
+    $parts = explode('|', $data);
+    $parts = array_map('trim', $parts);
+    $image = $parts[0];
+    $alt_text = $parts[1] ?? '';
 
     try {
-      $file = $this->downloadFile($data);
-      $media = $this->createMediaEntity($file);
-      return $media ? $media->id() : NULL;
+      // Skip if URL doesn't appear to be an image.
+      if (!filter_var($image, FILTER_VALIDATE_URL) || !preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $image)) {
+        throw new TamperException('Image URL is either not a valid URL, or not a URL to a file with a common image extension.');
+      }
+
+      $file = $this->downloadFile($image);
+      return $this->createMediaEntity($file, $alt_text)?->id();
     }
     catch (\Exception $e) {
       $this->loggerFactory->get('hs_migrate')->error('Error processing URL to media for @url: @message', [
         '@url' => $data,
         '@message' => $e->getMessage(),
       ]);
-      return NULL;
+      throw new TamperException($e->getMessage(), $e->getCode(), $e);
     }
   }
 
@@ -171,10 +179,13 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
    * @param string $url
    *   The URL to download from.
    *
-   * @return \Drupal\file\Entity\File|null
-   *   The created permanent file entity or NULL on failure.
+   * @return \Drupal\file\Entity\File
+   *   The created permanent file entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\tamper\Exception\TamperException
    */
-  protected function downloadFile(string $url): ?File {
+  protected function downloadFile(string $url): File {
     try {
       $response = $this->httpClient->get($url, ['timeout' => 60]);
       if ($response->getStatusCode() !== 200) {
@@ -208,7 +219,7 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
         '@url' => $url,
         '@message' => $e->getMessage(),
       ]);
-      return NULL;
+      throw $e;
     }
   }
 
@@ -220,12 +231,19 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
    *
    * @param \Drupal\file\Entity\File $file
    *   The file entity to create media from.
+   * @param string $alt_text
+   *   The alt text describing the image.
    *
    * @return \Drupal\media\Entity\Media|null
    *   The created media entity or NULL on failure.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createMediaEntity(File $file): ?Media {
+  protected function createMediaEntity(File $file, string $alt_text): ?Media {
     try {
+      /** @var \Drupal\media\Entity\MediaType $media_type */
       $media_type = $this->entityTypeManager->getStorage('media_type')->load('image');
       $source_field_name = $media_type->getSource()->getSourceFieldDefinition($media_type)->getName();
       $media = Media::create([
@@ -233,7 +251,10 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
         'name' => $file->getFilename(),
         'status' => 1,
         'uid' => 1,
-        $source_field_name => ['target_id' => $file->id()],
+        $source_field_name => [
+          'target_id' => $file->id(),
+          'alt' => $alt_text,
+        ],
       ]);
       $media->save();
       return $media;
@@ -242,7 +263,7 @@ class UrlToMedia extends TamperBase implements ContainerFactoryPluginInterface {
       $this->loggerFactory->get('hs_migrate')->error('Failed to create media entity: @message', [
         '@message' => $e->getMessage(),
       ]);
-      return NULL;
+      throw $e;
     }
   }
 

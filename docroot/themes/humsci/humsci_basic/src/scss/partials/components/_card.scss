@@ -18,8 +18,11 @@
 
   &--horizontal {
     @include grid-media-min($hb-horizontal-card-breakpoint) {
-      flex-direction: row;
-      align-items: flex-start;
+      .item-per-row--1 &,
+      .views-row & {
+        flex-direction: row;
+        align-items: flex-start;
+      }
     }
   }
 
@@ -268,9 +271,12 @@
 
     .hb-card--horizontal & {
       @include grid-media-min('md') {
-        @include flex-column(5);
-        margin-right: hb-spacing-width();
-        margin-bottom: 0;
+        .item-per-row--1 &,
+        .views-row & {
+          @include flex-column(5);
+          margin-right: hb-spacing-width();
+          margin-bottom: 0;
+        }
       }
     }
 
@@ -419,14 +425,17 @@
   &__content {
     .hb-card--horizontal & {
       @include grid-media-min('md') {
-        @include flex-column(6);
+        .item-per-row--1 &,
+        .views-row & {
+          @include flex-column(6);
 
-        // have to overwrite some Decanter things
-        // to allow this to grow if no image present
-        flex-grow: 1;
+          // have to overwrite some Decanter things
+          // to allow this to grow if no image present
+          flex-grow: 1;
 
-        @supports (max-width: 100%) {
-          max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
+          @supports (max-width: 100%) {
+            max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
+          }
         }
       }
     }

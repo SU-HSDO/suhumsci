@@ -58,6 +58,24 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
+  // Hide the 'Background Color Width' field for Spotlight Slider paragraphs
+  // in the full width region.
+  if (
+    !empty($field_widget_form['widget']['#field_name']) &&
+    $field_widget_form['widget']['#field_name'] == 'field_hs_page_hero'
+  ) {
+    foreach (Element::children($field_widget_form['widget']) as $key) {
+      if (!is_int($key)) {
+        continue;
+      }
+      if (
+        $field_widget_form['widget'][$key]['#paragraph_type'] == 'hs_sptlght_slder' &&
+        isset($field_widget_form['widget'][$key]['subform']['field_bg_color_width'])
+      ) {
+        $field_widget_form['widget'][$key]['subform']['field_bg_color_width']['#access'] = FALSE;
+      }
+    }
+  }
   $elements_to_change = [
     'field_hs_carousel_slides',
     'field_hs_sptlght_sldes',

@@ -138,3 +138,13 @@
     }
   }
 }
+
+// Special title spacing for collections with an accordion as first child.
+.paragraph--type--hs-collection
+  > h2:has(+ .field-hs-collection-items > .ptype-hs-accordion:first-child),
+.paragraph--type--hs-collection
+  > h2:has(
+    + .contextual + .field-hs-collection-items > .ptype-hs-accordion:first-child
+  ) {
+  margin-block-end: hb-calculate-rems(16px);
+}

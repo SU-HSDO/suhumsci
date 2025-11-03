@@ -2,6 +2,8 @@
   Drupal.behaviors.mediaCaptionToggle = {
     attach(context) {
       const captions = once('media-caption-toggle', '.field-media-image-caption', context);
+      const html = document.documentElement;
+      const isColorful = Array.from(html.classList).some((cls) => cls.startsWith('hc-pairing-'));
 
       captions.forEach((caption) => {
         const toggleButton = caption.querySelector('.toggle-caption__toggle');
@@ -21,7 +23,8 @@
           // - It's long enough.
           // - Or it's inside a spotlight on a mobile viewport.
           // Determine if this caption should be collapsible
-          const collapsible = content.offsetHeight >= 18 || (spotlight && mobileView.matches);
+          const collapsible = content.offsetHeight >= 18
+          || (spotlight && mobileView.matches && isColorful);
 
           // Add collapsible classes only if needed
           if (collapsible) {

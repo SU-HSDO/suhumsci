@@ -17,28 +17,36 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $bundle = $paragraph->bundle();
 
-  // Exit early if it's not a relevant bundle.
-  if (!in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    return;
+  if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
+    $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+    $variables['attributes']['class'][] = 'hs-paragraph-style';
+
+    if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
+      return;
+    }
+
+    // Replace underscores with hyphens in the bg_color value.
+    $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
+
+    // Append "-well" to the bg_color.
+    $bg_width = $paragraph->get('field_bg_color_width')->getString();
+    if (!empty($bg_color)) {
+      $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
+      $bg_color .= '-well';
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+    }
   }
+  elseif ($bundle == 'hs_sptlght_slder') {
+    if (!$paragraph->hasField('field_bg_color_width')) {
+      return;
+    }
 
-  $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
-  $variables['attributes']['class'][] = 'hs-paragraph-style';
+    $bg_width = $paragraph->get('field_bg_color_width')->getString();
+    if ($bg_width == 'full_width') {
+      $variables['attributes']['class'][] = 'paragraph--style--full-width';
+    }
 
-  if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
-    return;
-  }
-
-  // Replace underscores with hyphens in the bg_color value.
-  $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
-
-  // Append "-well" to the bg_color.
-  $bg_width = $paragraph->get('field_bg_color_width')->getString();
-  if (!empty($bg_color)) {
-    $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-    $bg_color .= '-well';
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
   }
 }
 

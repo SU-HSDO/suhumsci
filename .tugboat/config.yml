@@ -26,10 +26,10 @@ services:
 
       # Commands that set up the basic preview infrastructure
       init:
-        # Install nvm (Node Version Manager)
-        - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-        # Load nvm and install Node.js version from repo root .nvmrc
-        - export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm install && nvm use
+        # Install Node.js system-wide based on .nvmrc major version for consistent builds
+        - export NODE_VERSION=$(cat .nvmrc | cut -d. -f1) && \
+          curl -fsSL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - && \
+          apt-get install -y nodejs
         # Symlink the tugboat directory to the docker image expected path.
         - rm -rf /var/www/localhost
         - ln -snf ${TUGBOAT_ROOT} /var/www/localhost

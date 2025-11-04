@@ -6,6 +6,8 @@
   ]
 %}
 
+{% set video_type = content.field_media_oembed_video['#items'].0.value matches '/vimeo/' ? 'Vimeo' : 'YouTube' %}
+
 <article {{ attributes.addClass(classes) }}>
   {{ title_suffix.contextual_links }}
   {% if content %}
@@ -15,6 +17,19 @@
         <button class="hb-video-lazy__play" aria-label="Play video" type="button" role="button">
           <span hidden>Play video</span>
         </button>
+
+        {# No-JS fallback as a styled link/button #}
+        <noscript>
+          <a class="hb-video-lazy__play hb-video-lazy__play--no-js"
+            href="{{ content.field_media_oembed_video['#items'].0.value }}"
+            target="_blank"
+            rel="noopener"
+            role="button"
+            title="Play video directly on {{ video_type }}"
+            aria-label="Play video directly on {{ video_type }}">
+            <span hidden>Play video directly on {{ video_type }}</span>
+          </a>
+        </noscript>
       </div>
     </div>
   {% endif %}

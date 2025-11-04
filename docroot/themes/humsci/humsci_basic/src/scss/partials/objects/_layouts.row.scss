@@ -92,10 +92,12 @@
 
   &.counted-items-1,
   &.item-per-row--1,
-  &:has(.ptype-hs-gradient-hero-slider),
-  &:has(.ptype-hs-spotlight),
-  &:has(.ptype-hs-banner),
-  &:has(.ptype-hs-hero-image) {
+  &:has(
+    .ptype-hs-gradient-hero-slider,
+    .ptype-hs-spotlight,
+    .ptype-hs-banner,
+    .ptype-hs-hero-image
+  ) {
     display: block;
   }
 
@@ -119,6 +121,7 @@
         @include grid-media-min('md') {
           grid-template-columns: repeat(3, minmax(0, 1fr));
 
+          // Up to 3 text boxes
           &:has(.ptype-hs-text-area + .ptype-hs-text-area + .ptype-hs-text-area) {
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           }
@@ -129,7 +132,9 @@
         @include grid-media-min('lg') {
           grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
 
-          &:has(.ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard) {
+          // Up to 4 Postcards and Developer's catalog items.
+          &:has(.ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard),
+          &:has(.ptype-hs-view + .ptype-hs-view + .ptype-hs-view + .ptype-hs-view) {
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
           }
         }
@@ -143,6 +148,7 @@
         }
       }
 
+      // Up to 2 accordions, timelines, and testimonials per row.
       &:has(.ptype-hs-timeline + .ptype-hs-timeline),
       &:has(.ptype-hs-timeline + .ptype-hs-accordion),
       &:has(.ptype-hs-accordion + .ptype-hs-accordion),
@@ -152,6 +158,7 @@
         grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
       }
 
+      // Up to testimonials per row followed by testimonial, accordion or timeline.
       &:has(.ptype-hs-testimonial + .ptype-hs-testimonial),
       &:has(.ptype-hs-testimonial + .ptype-hs-accordion),
       &:has(.ptype-hs-testimonial + .ptype-hs-timeline) {

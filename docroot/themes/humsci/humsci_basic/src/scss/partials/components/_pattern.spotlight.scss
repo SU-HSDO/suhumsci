@@ -202,13 +202,20 @@
   }
 
   // Adjustments for full width spotlights.
-  .hs-full-width & {
+  .hs-full-width &,
+  .hb-three-column--no-sidebar
+    .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
+    & {
     @include grid-media-min('xl') {
       padding-inline-start: 0;
     }
   }
 
-  .hs-full-width .hb-spotlight--image-left & {
+  .hs-full-width .hb-spotlight--image-left &,
+  .hb-three-column--no-sidebar
+    .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
+    .hb-splotlight--image-left
+    & {
     @include grid-media-min('xl') {
       padding-inline-end: 0;
     }
@@ -277,7 +284,11 @@
   }
 
   // Expanded variant - Full width.
-  .hs-full-width .hb-spotlight--expanded & {
+  .hs-full-width .hb-spotlight--expanded &,
+  .hb-three-column--no-sidebar
+    .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
+    .hb-spotlight--expanded
+    & {
     @include hb-themes(('colorful', 'airy')) {
       @include grid-media-min(xl) {
         width: calc(100% + #{hb-calculate-rems(32px)});
@@ -404,13 +415,20 @@
   }
 
   // Adjustments for full width spotlights.
-  .hs-full-width & {
+  .hs-full-width &,
+  .hb-three-column--no-sidebar
+    .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
+    & {
     @include grid-media-min('xl') {
       padding-inline-end: 0;
     }
   }
 
-  .hs-full-width .hb-spotlight--image-left & {
+  .hs-full-width .hb-spotlight--image-left &,
+  .hb-three-column--no-sidebar
+    .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
+    .hb-spotlight--image-left
+    & {
     @include grid-media-min('xl') {
       padding-inline-start: 0;
     }
@@ -432,14 +450,15 @@
 
       @include grid-media-min('lg') {
         bottom: 0;
-        padding: 0 hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(48px);
+        padding: 0 hb-calculate-rems(16px) hb-calculate-rems(16px)
+          hb-calculate-rems(48px);
       }
     }
 
     @include hb-traditional {
-       @include grid-media-min('lg') {
+      @include grid-media-min('lg') {
         padding: 0;
-       }
+      }
     }
   }
 }

@@ -13,26 +13,41 @@
 
         if (!content || !toggleButton) return;
 
+        // Debounce helper
+        const debounce = (func, delay = 150) => {
+          let timeout;
+          return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func(...args), delay);
+          };
+        };
+
+        // Update state for a single caption
         const updateCaptionState = () => {
           // Temporarily remove classes to get the “natural” rendered height
           caption.classList.remove('collapsible-caption');
           content.classList.remove('visually-hidden');
           toggleButton.classList.remove('is-open');
 
-          // Determine if this caption should be collapsible:
-          // - It's long enough.
-          // - Or it's inside a spotlight on a mobile viewport.
-          // Determine if this caption should be collapsible
-          const collapsible = content.offsetHeight >= 18
-          || (spotlight && mobileView.matches && isColorful);
+          // Double requestAnimationFrame ensures layout is fully updated
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              const height = content.offsetHeight;
 
-          // Add collapsible classes only if needed
-          if (collapsible) {
-            caption.classList.add('collapsible-caption');
-            if (!toggleButton.classList.contains('is-open')) {
-              content.classList.add('visually-hidden');
-            }
-          }
+              // Determine if this caption should be collapsible:
+              // 1. It's long enough.
+              // 2. Or it's inside a spotlight on a mobile viewport.
+              const collapsible = height >= 28
+                || (spotlight && mobileView.matches && isColorful);
+
+              if (collapsible) {
+                caption.classList.add('collapsible-caption');
+                if (!toggleButton.classList.contains('is-open')) {
+                  content.classList.add('visually-hidden');
+                }
+              }
+            });
+          });
         };
 
         // Initial setup.
@@ -44,8 +59,10 @@
           content.classList.toggle('visually-hidden', !isOpen);
         });
 
-        // Update on window resize.
-        window.addEventListener('resize', updateCaptionState);
+        // Debounced resize listener
+        // Default delay (150ms) is reasonable for UX.
+        const debouncedResize = debounce(updateCaptionState, 150);
+        window.addEventListener('resize', debouncedResize);
       });
     },
   };

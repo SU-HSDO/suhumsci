@@ -118,12 +118,20 @@
       @if $i > 2 {
         @include grid-media-min('md') {
           grid-template-columns: repeat(3, minmax(0, 1fr));
+
+          &:has(.ptype-hs-text-area + .ptype-hs-text-area + .ptype-hs-text-area) {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          }
         }
       }
 
       @if $i > 3 {
         @include grid-media-min('lg') {
           grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
+
+          &:has(.ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard) {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          }
         }
       }
 

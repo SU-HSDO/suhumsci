@@ -96,6 +96,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     $storage = $this->entityTypeManager->getStorage('capx_importer');
     $query = $storage->getQuery();
     $query->sort('label');
+    $query->accessCheck(TRUE);
     $capx_importers = $storage->loadMultiple($query->execute());
 
     $table_rows = [];

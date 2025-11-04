@@ -14,15 +14,27 @@ use Drupal\user\Entity\User;
 /**
  * Implements hook_preprocess_node_edit_form().
  */
-function hs_admin_page_attachments(&$variables) {
-  $logged_in = \Drupal::currentUser()->isAuthenticated();
+function hs_admin_page_attachments(array &$variables): void {
+  $user = \Drupal::currentUser();
 
-  if ($logged_in) {
+  // Determine if the active theme is the configured admin theme.
+  $theme_manager = \Drupal::service('theme.manager');
+  $active_theme = $theme_manager->getActiveTheme()->getName();
+  $admin_theme = \Drupal::config('system.theme')->get('admin');
+  $is_admin_theme = ($active_theme === $admin_theme);
+
+  // Determine if current route is an "admin" route.
+  $is_admin_route = \Drupal::service('router.admin_context')->isAdminRoute();
+
+  if ($user->isAuthenticated() && ($is_admin_theme || $is_admin_route)) {
+    // Load your admin-only libraries.
     $variables['#attached']['library'][] = 'hs_admin/hs_admin';
   }
 
-  // Show shortcuts toolbar when user is logged in.
-  $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+  if ($user->isAuthenticated()) {
+    // Show shortcuts toolbar when user is logged in.
+    $variables['#attached']['library'][] = 'hs_admin/default_shortcuts';
+  }
 }
 
 /**

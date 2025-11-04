@@ -1,0 +1,81 @@
+uuid: b7307f3a-8c8b-4836-b6bd-7300fbdd730b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.caption_credit_eager
+    - field.field.media.image.field_media_image
+    - field.field.media.image.field_media_image_caption
+    - media.type.image
+    - responsive_image.styles.hero_with_text
+  module:
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
+    - layout_builder
+    - responsive_image
+    - smart_trim
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: UHOBG3TcAwserLclcHcEOGnkPaJlP9n_tSpy7TmELFQ
+id: media.image.caption_credit_eager
+targetEntityType: media
+bundle: image
+mode: caption_credit_eager
+content:
+  field_media_image:
+    type: responsive_image
+    label: hidden
+    settings:
+      responsive_image_style: hero_with_text
+      image_link: ''
+      image_loading:
+        attribute: eager
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: content
+  field_media_image_caption:
+    type: smart_trim
+    label: hidden
+    settings:
+      trim_length: 160
+      trim_type: chars
+      trim_suffix: ''
+      wrap_output: false
+      wrap_class: trimmed
+      more:
+        display_link: false
+        target_blank: false
+        link_trim_only: false
+        class: more-link
+        text: More
+        aria_label: 'Read more about [node:title]'
+      summary_handler: full
+      trim_options:
+        text: false
+        trim_zero: false
+        replace_tokens: false
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: content
+hidden:
+  created: true
+  name: true
+  search_api_excerpt: true
+  thumbnail: true
+  uid: true

@@ -31,22 +31,20 @@
 
           // Double requestAnimationFrame ensures layout is fully updated
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              const height = content.offsetHeight;
+            const height = content.offsetHeight;
 
-              // Determine if this caption should be collapsible:
-              // 1. It's long enough.
-              // 2. Or it's inside a spotlight on a mobile viewport.
-              const collapsible = height >= 28
-                || (spotlight && mobileView.matches && isColorful);
+            // Determine if this caption should be collapsible:
+            // 1. It's long enough.
+            // 2. Or it's inside a spotlight on a mobile viewport.
+            const collapsible = height >= 28
+              || (spotlight && mobileView.matches && isColorful);
 
-              if (collapsible) {
-                caption.classList.add('collapsible-caption');
-                if (!toggleButton.classList.contains('is-open')) {
-                  content.classList.add('visually-hidden');
-                }
+            if (collapsible) {
+              caption.classList.add('collapsible-caption');
+              if (!toggleButton.classList.contains('is-open')) {
+                content.classList.add('visually-hidden');
               }
-            });
+            }
           });
         };
 

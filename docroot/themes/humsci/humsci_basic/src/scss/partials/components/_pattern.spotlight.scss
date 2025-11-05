@@ -266,6 +266,7 @@
   }
 }
 
+// Image caption adjustments for expanded spotlights.
 .hb-spotlight--expanded {
   .hb-media-image .field-media-image-caption.collapsible-caption {
     padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
@@ -275,14 +276,26 @@
 
       @include grid-media-min('lg') {
         bottom: 0;
-        padding: 0 hb-calculate-rems(16px) hb-calculate-rems(16px) hb-calculate-rems(48px);
+        padding: 0 hb-calculate-rems(16px) hb-calculate-rems(16px)
+          hb-calculate-rems(48px);
       }
     }
 
     @include hb-traditional {
-       @include grid-media-min('lg') {
+      @include grid-media-min('lg') {
         padding: 0 hb-calculate-rems(6px) hb-calculate-rems(6px);
-       }
+      }
+    }
+  }
+}
+
+.hb-spotlight--expanded.hb-spotlight--image-left {
+  .hb-media-image .field-media-image-caption.collapsible-caption {
+    @include hb-themes(('colorful', 'airy')) {
+      @include grid-media-min('lg') {
+        padding: 0 hb-calculate-rems(48px) hb-calculate-rems(16px)
+          hb-calculate-rems(16px);
+      }
     }
   }
 }

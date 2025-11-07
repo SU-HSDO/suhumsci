@@ -87,17 +87,12 @@
   // When there is more than one item in a row it uses grid
   @include grid-media-min('sm') {
     display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: hb-spacing-width();
   }
 
   &.counted-items-1,
-  &.item-per-row--1,
-  &:has(
-    .ptype-hs-gradient-hero-slider,
-    .ptype-hs-spotlight,
-    .ptype-hs-banner,
-    .ptype-hs-hero-image
-  ) {
+  &.item-per-row--1 {
     display: block;
   }
 
@@ -113,56 +108,20 @@
   @for $i from 2 through $hb-counted-items-count {
     &.counted-items-#{$i},
     &.item-per-row--#{$i} {
-      @include grid-media-min('sm') {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      @if $i > 2 {
-        @include grid-media-min('md') {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-
-          // Up to 3 text boxes
-          &:has(.ptype-hs-text-area + .ptype-hs-text-area + .ptype-hs-text-area) {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          }
-        }
-      }
-
-      @if $i > 3 {
-        @include grid-media-min('lg') {
-          grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-
-          // Up to 4 Postcards and Developer's catalog items.
-          &:has(.ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard + .ptype-hs-postcard),
-          &:has(.ptype-hs-view + .ptype-hs-view + .ptype-hs-view + .ptype-hs-view) {
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          }
-        }
-      }
-
       .paragraph-item {
-        &:not(.ptype-hs-gradient-hero-slider):not(.ptype-hs-spotlight):not(.ptype-hs-banner):not(.ptype-hs-hero-image) {
-          @include grid-media-min('sm') {
+        grid-column: span 12;
+
+        @include grid-media-min('sm') {
+          grid-column: span #{ceil(12 / min($i, 2))};
+
+          &:not(.ptype-hs-gradient-hero-slider):not(.ptype-hs-spotlight):not(.ptype-hs-banner):not(.ptype-hs-hero-image) {
             margin: 0 !important;
           }
         }
-      }
 
-      // Up to 2 accordions, timelines, and testimonials per row.
-      &:has(.ptype-hs-timeline + .ptype-hs-timeline),
-      &:has(.ptype-hs-timeline + .ptype-hs-accordion),
-      &:has(.ptype-hs-accordion + .ptype-hs-accordion),
-      &:has(.ptype-hs-accordion + .ptype-hs-timeline),
-      &:has(.ptype-hs-timeline + .ptype-hs-testimonial),
-      &:has(.ptype-hs-accordion + .ptype-hs-testimonial) {
-        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-      }
-
-      // Up to testimonials per row followed by testimonial, accordion or timeline.
-      &:has(.ptype-hs-testimonial + .ptype-hs-testimonial),
-      &:has(.ptype-hs-testimonial + .ptype-hs-accordion),
-      &:has(.ptype-hs-testimonial + .ptype-hs-timeline) {
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        @include grid-media-min('md') {
+          grid-column: span #{ceil(12 / $i)};
+        }
       }
 
       .hs-paragraph-style--well &,

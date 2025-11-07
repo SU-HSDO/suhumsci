@@ -3,10 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.hs_cmap.field_cmap_title
+    - field.field.paragraph.hs_cmap.field_hs_cmap_title
     - field.field.paragraph.hs_cmap.field_hs_cmap_columns_layout
     - field.field.paragraph.hs_cmap.field_hs_cmap_help
-    - field.field.paragraph.hs_cmap.field_hs_cmap_year_title
+    - field.field.paragraph.hs_cmap.field_hs_cmap_years
     - paragraphs.paragraphs_type.hs_cmap
   module:
     - field_formatter_class
@@ -35,9 +35,9 @@ third_party_settings:
         required_fields: false
     group_hs_cmap_content:
       children:
-        - field_cmap_title
+        - field_hs_cmap_title
         - field_hs_cmap_columns_layout
-        - field_hs_cmap_year_title
+        - field_hs_cmap_years
       label: Content
       region: content
       parent_name: group_hs_cmap
@@ -72,7 +72,7 @@ targetEntityType: paragraph
 bundle: hs_cmap
 mode: default
 content:
-  field_cmap_title:
+  field_hs_cmap_title:
     type: string_textfield
     weight: 1
     region: content
@@ -92,7 +92,7 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_hs_cmap_year_title:
+  field_hs_cmap_years:
     type: paragraphs
     weight: 3
     region: content

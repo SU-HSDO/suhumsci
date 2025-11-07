@@ -570,3 +570,25 @@ function hs_paragraph_types_update_10015(&$sandbox) {
     ]);
   }
 }
+
+/**
+ * Disable some of our new paragraphs from the field_hs_page_components field.
+ */
+function hs_paragraph_types_update_10016(&$sandbox) {
+  // This field is ignored from config so that some sites can add custom
+  // components. So we need to update here rather than in config.
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $instance_config = $config_directory->read('field.field.node.hs_basic_page.field_hs_page_components');
+  $instance = FieldConfig::loadByName($instance_config['entity_type'], $instance_config['bundle'], $instance_config['field_name']);
+  $settings = $instance->getSettings();
+  if (isset($settings['handler_settings']['target_bundles_drag_drop'])) {
+    foreach (['hs_cmap_qtr', 'hs_cmap_qtr_crs', 'hs_cmap_year'] as $field) {
+      // This field hides the selected paragraph bundles.  That's why the
+      // logic looks backwards.
+      $settings['handler_settings']['target_bundles_drag_drop'][$field]['enabled'] = TRUE;
+      $settings['handler_settings']['target_bundles'][$field] = $field;
+    }
+    $instance->set('settings', $settings);
+    $instance->save();
+  }
+}

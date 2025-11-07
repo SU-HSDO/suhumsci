@@ -23,6 +23,7 @@ const shared = {
   'main-content-fallback':
     'shared/main-content-fallback/main-content-fallback.js',
   'video-with-caption': 'shared/media/video-with-caption.js',
+  'lazy-load-video': 'shared/media/lazy-load-video.js',
   megamenu: 'shared/megamenu/index.js',
   'main-menu': 'shared/navigation/main-menu-index.js',
   'secondary-toggler': 'shared/navigation/secondary-toggler.js',

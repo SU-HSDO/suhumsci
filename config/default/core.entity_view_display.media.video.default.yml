@@ -5,11 +5,12 @@ dependencies:
   config:
     - field.field.media.video.field_media_oembed_video
     - media.type.video
+    - responsive_image.styles.full_responsive
   module:
     - empty_fields
     - field_formatter_class
     - hs_field_helpers
-    - media
+    - responsive_image
 _core:
   default_config_hash: SA9uz81dFqmz2BtJAYpPPY4xZkWskBQpJZf8KMC9c3A
 id: media.video.default
@@ -18,13 +19,10 @@ bundle: video
 mode: default
 content:
   field_media_oembed_video:
-    type: oembed
+    type: string
     label: hidden
     settings:
-      max_width: 0
-      max_height: 0
-      loading:
-        attribute: lazy
+      link_to_entity: false
     third_party_settings:
       empty_fields:
         handler: ''
@@ -34,9 +32,25 @@ content:
         inline_contents: 0
     weight: 0
     region: content
+  thumbnail:
+    type: responsive_image
+    label: hidden
+    settings:
+      responsive_image_style: full_responsive
+      image_link: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: content
 hidden:
   created: true
   name: true
   search_api_excerpt: true
-  thumbnail: true
   uid: true

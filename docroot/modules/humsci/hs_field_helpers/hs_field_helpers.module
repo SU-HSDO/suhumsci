@@ -855,14 +855,18 @@ function hs_field_helpers_paragraphs_widget_actions_alter(&$widget_actions, &$co
   $paragraph = $context['paragraphs_entity'];
 
   $button = [
-    '#type' => 'button',
+    '#type' => 'html_tag',
+    '#tag' => 'button',
     '#value' => t('Copy Bookmark'),
-    '#weight' => 503,
     '#attributes' => [
-      'class' => ['copy-bookmark-button'],
       'type' => 'button',
+      'class' => ['copy-bookmark-button', 'button'],
+      'data-paragraph-id' => $paragraph->id(),
+      'title' => t('Copy Bookmark'),
+      'id' => 'copy-bookmark-' . $paragraph->id(),
     ],
-  ];
+    '#weight' => 503,
+    ];
 
   if ($paragraph->id()) {
     $button['#attributes']['title'] = t('Copy Bookmark');

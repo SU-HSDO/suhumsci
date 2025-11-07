@@ -12,7 +12,7 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function hs_cmap_taxonomy_vocabulary_insert(EntityInterface $vocabulary) {
+function hs_cmap_taxonomy_vocabulary_insert(EntityInterface $vocabulary): void {
   // Vocabularies are config, but taxonomy terms are content.
   // So when the vocabulary is created, add our default terms.
   if ($vocabulary->id() !== 'hs_curriculum_requirement_type') {
@@ -28,20 +28,36 @@ function hs_cmap_taxonomy_vocabulary_insert(EntityInterface $vocabulary) {
       'field_hs_curriculum_course_color' => 'digital-red',
     ],
     [
+      'name' => 'Capstone',
+      'field_hs_curriculum_course_color' => 'sky-dark',
+    ],
+    [
       'name' => 'Concentration',
       'field_hs_curriculum_course_color' => 'plum',
+    ],
+    [
+      'name' => 'Foundation',
+      'field_hs_curriculum_course_color' => 'spirited',
     ],
     [
       'name' => 'Honors',
       'field_hs_curriculum_course_color' => 'poppy-light',
     ],
     [
-      'name' => 'Upper-Division',
-      'field_hs_curriculum_course_color' => 'olive-dark',
+      'name' => 'Independent Study',
+      'field_hs_curriculum_course_color' => 'bay-dark',
     ],
     [
       'name' => 'Thesis',
       'field_hs_curriculum_course_color' => 'brick-dark',
+    ],
+    [
+      'name' => 'Upper-Division',
+      'field_hs_curriculum_course_color' => 'olive-dark',
+    ],
+    [
+      'name' => 'WIM (Writing in the Major)',
+      'field_hs_curriculum_course_color' => 'plum',
     ],
     [
       'name' => 'Other',
@@ -82,7 +98,7 @@ function _hs_cmap_save_taxonomy_term(array $data): void {
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state) {
+function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state): void {
   /** @var \Drupal\taxonomy\Entity\Term $term */
   $term = $form_state->getFormObject()->getEntity();
   if ($term->bundle() !== 'hs_curriculum_requirement_type') {

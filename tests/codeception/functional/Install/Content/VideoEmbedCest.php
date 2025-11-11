@@ -51,7 +51,7 @@ class VideoEmbedCest {
     $I->click('Save and select', '.ui-dialog-buttonpane');
     $I->waitForText('Insert selected');
     $I->click('Insert selected', '.ui-dialog-buttonpane');
-    $I->waitForElement('.hb-video-lazy');
+    $I->waitForElement('figure.drupal-media iframe');
 
     // Enable caption.
     $I->clickWithLeftButton('figure.drupal-media');

@@ -950,37 +950,59 @@ function su_humsci_profile_update_9749(): string {
  * Grant hs_basic_block edit permission to contributor and site_manager roles.
  */
 function su_humsci_profile_update_9750(): string {
-  $permission = 'edit any hs_basic_block block content';
-  $roles = ['contributor', 'site_manager'];
-  $granted = [];
+  // Define a role => permissions map so each role is loaded once and only
+  // receives the specific permissions intended for that role.
+  $role_permissions = [
+    'contributor' => [
+      'edit any hs_basic_block block content',
+    ],
+    'site_manager' => [
+      'edit any hs_basic_block block content',
+      'create hs_basic_block block content',
+    ],
+  ];
 
   /** @var \Drupal\user\RoleStorageInterface $role_storage */
   $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
 
-  foreach ($roles as $rid) {
+  $changed = [];
+
+  foreach ($role_permissions as $rid => $perms) {
     /** @var \Drupal\user\Entity\Role|null $role */
     $role = $role_storage->load($rid);
     if (!$role) {
-      // Skip silently; roles can vary by site.
       continue;
     }
-    if (!$role->hasPermission($permission)) {
-      $role->grantPermission($permission);
+
+    $granted_for_role = [];
+    foreach ($perms as $perm) {
+      if (!$role->hasPermission($perm)) {
+        $role->grantPermission($perm);
+        $granted_for_role[] = $perm;
+      }
+    }
+
+    if ($granted_for_role) {
       $role->save();
-      $granted[] = $rid;
+      $changed[$rid] = $granted_for_role;
     }
   }
 
-  if ($granted) {
-    \Drupal::logger('su_humsci_profile')->notice('Granted @perm to roles: @roles.', [
-      '@perm' => $permission,
-      '@roles' => implode(', ', $granted),
+  if ($changed) {
+    // Log a compact summary for auditing without spamming individual lines.
+    $summaries = [];
+    foreach ($changed as $rid => $perms) {
+      $summaries[] = $rid . ': ' . implode(', ', $perms);
+    }
+    \Drupal::logger('su_humsci_profile')->notice('Granted hs_basic_block permissions => @summary', [
+      '@summary' => implode(' | ', $summaries),
     ]);
-    return t('Granted @perm to: @roles.', [
-      '@perm' => $permission,
-      '@roles' => implode(', ', $granted),
+    return t('Granted hs_basic_block permissions for: @summary', [
+      '@summary' => implode(' | ', $summaries),
     ]);
   }
 
-  return t('No changes: roles already had @perm or were missing.', ['@perm' => $permission]);
+  return t('No changes: roles already had the required hs_basic_block permissions or were missing.');
 }
+
+

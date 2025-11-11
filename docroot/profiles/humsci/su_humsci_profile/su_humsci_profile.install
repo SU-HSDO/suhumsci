@@ -945,3 +945,42 @@ function su_humsci_profile_update_9749(): string {
   }
   return t('domain_registration module was already uninstalled.');
 }
+
+/**
+ * Grant hs_basic_block edit permission to contributor and site_manager roles.
+ */
+function su_humsci_profile_update_9750(): string {
+  $permission = 'edit any hs_basic_block block content';
+  $roles = ['contributor', 'site_manager'];
+  $granted = [];
+
+  /** @var \Drupal\user\RoleStorageInterface $role_storage */
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  foreach ($roles as $rid) {
+    /** @var \Drupal\user\Entity\Role|null $role */
+    $role = $role_storage->load($rid);
+    if (!$role) {
+      // Skip silently; roles can vary by site.
+      continue;
+    }
+    if (!$role->hasPermission($permission)) {
+      $role->grantPermission($permission);
+      $role->save();
+      $granted[] = $rid;
+    }
+  }
+
+  if ($granted) {
+    \Drupal::logger('su_humsci_profile')->notice('Granted @perm to roles: @roles.', [
+      '@perm' => $permission,
+      '@roles' => implode(', ', $granted),
+    ]);
+    return t('Granted @perm to: @roles.', [
+      '@perm' => $permission,
+      '@roles' => implode(', ', $granted),
+    ]);
+  }
+
+  return t('No changes: roles already had @perm or were missing.', ['@perm' => $permission]);
+}

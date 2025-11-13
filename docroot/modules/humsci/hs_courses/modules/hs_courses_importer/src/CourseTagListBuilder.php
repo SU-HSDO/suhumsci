@@ -16,7 +16,6 @@ class CourseTagListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Explore Courses Tag');
-    $header['id'] = $this->t('Machine name');
     $header['tag'] = $this->t('Translated Tag');
     return $header + parent::buildHeader();
   }
@@ -26,7 +25,6 @@ class CourseTagListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
-    $row['id'] = $entity->id();
     $row['tag'] = '';
     if ($entity instanceof CourseTagInterface) {
       $row['tag'] = $entity->tag();

@@ -45,6 +45,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
       - name: Set up Node.js from .nvmrc
+        if: ${{ steps.tag.outputs.tag }}
         uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
@@ -61,6 +62,7 @@ jobs:
             docroot/modules/contrib
           key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Install theme dependencies
+        if: ${{ steps.tag.outputs.tag }}
         run: npm ci --prefix docroot/themes/humsci/humsci_basic
       - name: Deploy Tag
         if: ${{ steps.tag.outputs.tag }}

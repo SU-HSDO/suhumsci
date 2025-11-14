@@ -40,7 +40,7 @@ class CourseTagListBuilderTest extends EntityKernelTestBase {
   public function testListBuilder() {
     $header = $this->listBuilder->buildHeader();
     $this->assertArrayHasKey('label', $header);
-    $this->assertArrayHasKey('id', $header);
+    $this->assertArrayHasKey('tag', $header);
     $entity = $this->entityTypeManager->createInstance('hs_course_tag', [
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
@@ -50,7 +50,7 @@ class CourseTagListBuilderTest extends EntityKernelTestBase {
 
     $row = $this->listBuilder->buildRow($entity);
     $this->assertArrayHasKey('label', $row);
-    $this->assertArrayHasKey('id', $row);
+    $this->assertArrayHasKey('tag', $row);
   }
 
 }

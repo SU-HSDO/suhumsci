@@ -26,7 +26,7 @@
           copyButton.setAttribute('disabled', true);
 
           const message = document.createElement('span');
-          message.classList.add('copy-bookmark-message');
+          message.classList.add('paragraph-copy-bookmark-message');
           message.textContent = 'Copied to the clipboard!';
           copyButton.insertAdjacentElement('afterend', message);
 

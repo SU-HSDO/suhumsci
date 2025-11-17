@@ -747,6 +747,7 @@ function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $
  * Implements hook_entity_form_FORM_ID_alter().
  */
 function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+
   // Disables the field if it's imported.
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!$node || !$node instanceof NodeInterface) {

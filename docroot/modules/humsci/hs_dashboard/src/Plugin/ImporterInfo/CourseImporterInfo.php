@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
+use Drupal\Core\GeneratedLink;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
-use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   weight = 10,
  * )
  */
-class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterface, ContainerFactoryPluginInterface {
+class CourseImporterInfo extends ImporterInfoBase {
 
   use StringTranslationTrait;
 
@@ -45,6 +45,8 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    *   The KeyValue factory.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The DateFormatter.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager interface.
    */
   public function __construct(
     array $configuration,
@@ -53,8 +55,9 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     EntityTypeManagerInterface $entity_type_manager,
     KeyValueFactoryInterface $key_value_factory,
     DateFormatterInterface $date_formatter,
+    MigrationPluginManagerInterface $migration_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter, $migration_manager);
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -69,6 +72,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $container->get('entity_type.manager'),
       $container->get('keyvalue'),
       $container->get('date.formatter'),
+      $container->get('plugin.manager.migration'),
     );
   }
 
@@ -77,8 +81,7 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    */
   public function getTableHeaders(): array {
     return [
-      $this->t('Course tag'),
-      $this->t('Catalog'),
+      $this->t('Courses'),
       $this->t('Last Imported'),
     ];
   }
@@ -87,20 +90,15 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    * {@inheritDoc}
    */
   public function getTableRows(): array {
-    $storage = $this->entityTypeManager->getStorage('hs_course_tag');
-    $query = $storage->getQuery();
-    $query->sort('label');
-    $query->accessCheck(TRUE);
-    /** @var \Drupal\hs_courses_importer\Entity\CourseTagInterface[] $tags */
-    $tags = $storage->loadMultiple($query->execute());
+    $course_importer = $this->migrationManager->getDefinition('hs_courses');
+    $urls = $course_importer['source']['urls'] ?? [];
 
     $table_rows = [];
 
-    foreach ($tags as $tag) {
+    foreach ($urls as $url) {
       $table_rows[] = [
         'data' => [
-          ['data' => $tag->label()],
-          ['data' => $this->buildCourseLink($this->t('Explore courses'), 'catalog', $tag->label())],
+          ['data' => $this->buildCourseLink($url)],
           ['data' => $this->lastImportTime('hs_courses')],
         ],
       ];
@@ -118,20 +116,18 @@ class CourseImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
   /**
    * Create a course link to display in the dashboard.
    *
-   * @param string $text
-   *   The link text to display.
-   * @param string $format
-   *   The display format as 'catalog' or 'xml-20200810'.
-   * @param string $course_tag
-   *   The course tag.
+   * @param string $url
+   *   The https://explorecourses.stanford.edu XML feed that we're importing.
    *
-   * @return string
+   * @return \Drupal\Core\GeneratedLink
    *   A renderable course link.
    */
-  protected function buildCourseLink($text, $format, $course_tag) {
-    $tag = htmlspecialchars($course_tag, ENT_QUOTES, 'UTF-8');
-    $uri = "https://explorecourses.stanford.edu/search?view={$format}&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q={$tag}&collapse=";
-    return Link::fromTextAndUrl($text, Url::fromUri($uri))->toString();
+  protected function buildCourseLink(string $url): GeneratedLink {
+    $query = parse_url($url, PHP_URL_QUERY);
+    parse_str($query, $params);
+    $query = $params['q'] ?? 'unknown';
+    $human_url = str_replace('view=xml-', 'view=', $url);
+    return Link::fromTextAndUrl($query, Url::fromUri($human_url))->toString();
   }
 
 }

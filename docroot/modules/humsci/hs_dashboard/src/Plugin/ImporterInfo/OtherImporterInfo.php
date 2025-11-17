@@ -34,13 +34,6 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
   ];
 
   /**
-   * Migration plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   */
-  protected $migrationManager;
-
-  /**
    * Constructs a new OtherImporterInfo object.
    *
    * @param array $configuration
@@ -67,8 +60,7 @@ class OtherImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
     DateFormatterInterface $date_formatter,
     MigrationPluginManagerInterface $migration_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
-    $this->migrationManager = $migration_manager;
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter, $migration_manager);
   }
 
   /**

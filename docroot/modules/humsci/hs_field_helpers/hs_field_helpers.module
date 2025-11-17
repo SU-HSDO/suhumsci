@@ -747,9 +747,6 @@ function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $
  * Implements hook_entity_form_FORM_ID_alter().
  */
 function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
-  // Attach the JS library.
-  $form['#attached']['library'][] = 'hs_field_helpers/bookmark_helper';
-
   // Disables the field if it's imported.
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!$node || !$node instanceof NodeInterface) {
@@ -843,40 +840,4 @@ function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
 
   $imported_fields_cache[$nid] = $imported_fields;
   return $imported_fields;
-}
-
-/**
- * Implements hook_paragraphs_widget_actions_alter().
- */
-function hs_field_helpers_paragraphs_widget_actions_alter(&$widget_actions, &$context) {
-  if (empty($context['paragraphs_entity'])) {
-    return;
-  }
-  $paragraph = $context['paragraphs_entity'];
-
-  $button = [
-    '#type' => 'html_tag',
-    '#tag' => 'button',
-    '#value' => t('Copy Bookmark'),
-    '#attributes' => [
-      'type' => 'button',
-      'class' => ['copy-bookmark-button', 'button'],
-      'data-paragraph-id' => $paragraph->id(),
-      'title' => t('Copy Bookmark'),
-      'id' => 'copy-bookmark-' . $paragraph->id(),
-    ],
-    '#weight' => 503,
-  ];
-
-  if ($paragraph->id()) {
-    $button['#attributes']['title'] = t('Copy Bookmark');
-    $button['#attributes']['data-paragraph-id'] = $paragraph->id();
-    $button['#attributes']['id'] = 'copy-bookmark-' . $paragraph->id();
-  }
-  else {
-    $button['#value'] = t('Copy Bookmark (first save the page to get a bookmark)');
-    $button['#attributes']['title'] = t('Copy Bookmark (first save the page to get a bookmark)');
-    $button['#attributes']['disabled'] = 'disabled';
-  }
-  $widget_actions['dropdown_actions']['copy_bookmark_button'] = $button;
 }

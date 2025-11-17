@@ -21,3 +21,68 @@
 .role-administrator .text-full .form-wrapper.filter-wrapper {
   display: block;
 }
+
+/* Paragraph Bookmark Button */
+.copy-bookmark-button {
+  position: relative;
+}
+
+.copy-bookmark-button::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin-left: 0.5rem;
+
+  mask-image: url("../../bookmark-help/assets/copy.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 14px;
+
+  background-color: var(--gin-color-primary);
+}
+
+.copy-bookmark-button:hover::after,
+.copy-bookmark-button:focus::after {
+  background-color: white;
+}
+
+/* Adding this selector like this to avoid another override happening in the css of the gin theme */
+.button.button.copy-bookmark-button:disabled,
+.button.button.copy-bookmark-button:disabled:hover,
+.button.button.copy-bookmark-button:disabled:focus {
+  border: none !important;
+}
+
+.copy-bookmark-button:disabled:after {
+  background-color: var(--gin-color-disabled);
+}
+
+.copy-bookmark-button:hover,
+.copy-bookmark-button:focus {
+  outline: none;
+}
+
+.copy-bookmark-message {
+  font-size: 0.75rem;
+  background-color: #999;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  bottom: 32px;
+}
+
+.copy-bookmark-message::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 18px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #999 transparent transparent transparent;
+}

@@ -11,9 +11,6 @@ sassTrue.runSass(
   },
   sassFile,
   {
-    loadPaths: [
-      'node_modules/bourbon/core',
-      'node_modules',
-    ],
-  }
+    loadPaths: ['node_modules'],
+  },
 );

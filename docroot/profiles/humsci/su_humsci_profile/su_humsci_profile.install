@@ -1043,7 +1043,6 @@ function su_humsci_profile_update_9751() {
   $deleted = 0;
   $failed = 0;
 
-
   // Remove dependent responsive image styles first.
   $responsive_storage = $entity_type_manager->getStorage('responsive_image_style');
   foreach ($responsive_styles_to_remove as $responsive_id) {
@@ -1062,7 +1061,6 @@ function su_humsci_profile_update_9751() {
     }
   }
 
-
   // Then remove the actual image styles.
   $image_style_storage = $entity_type_manager->getStorage('image_style');
   foreach ($image_styles_to_remove as $style_id) {
@@ -1080,7 +1078,6 @@ function su_humsci_profile_update_9751() {
       ]);
     }
   }
-
 
   // Final summary log.
   if ($deleted || $failed) {

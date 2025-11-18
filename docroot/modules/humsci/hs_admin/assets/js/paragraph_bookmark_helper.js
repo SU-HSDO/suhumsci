@@ -16,19 +16,15 @@
           // Close Gin dropdown cleanly
           copyButton.blur();
 
-          const overlay = document.createElement('div');
-          overlay.classList.add('paragraph-copy-bookmark-message__overlay');
-
           const message = document.createElement('span');
           message.classList.add('paragraph-copy-bookmark-message');
           message.textContent = 'Copied to the clipboard!';
-          overlay.appendChild(message);
 
-          document.body.appendChild(overlay);
+          document.body.appendChild(message);
 
           setTimeout(() => {
-            overlay.remove();
-          }, 5000);
+            message.remove();
+          }, 2000);
         }
 
         copyButton.addEventListener('click', handleClickCapture);

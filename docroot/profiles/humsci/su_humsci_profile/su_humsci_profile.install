@@ -969,7 +969,6 @@ function su_humsci_profile_update_9750() {
     'postcard_vertical_linked_465px_',
     'postcard_vertical_linked_658px_',
     'postcard_vertical_linked_850px_',
-
   ];
 
   // List of responsive image styles that depend on those.
@@ -980,23 +979,56 @@ function su_humsci_profile_update_9750() {
     'slideshow_responsive',
   ];
 
+  $logger = \Drupal::logger('su_humsci_profile');
   $entity_type_manager = \Drupal::entityTypeManager();
+
+  $deleted = 0;
+  $failed = 0;
 
   // Remove dependent responsive image styles first.
   $responsive_storage = $entity_type_manager->getStorage('responsive_image_style');
   foreach ($responsive_styles_to_remove as $responsive_id) {
-    $responsive = $responsive_storage->load($responsive_id);
-    if ($responsive) {
-      $responsive->delete();
+    try {
+      if ($responsive = $responsive_storage->load($responsive_id)) {
+        $responsive->delete();
+        $deleted++;
+      }
+    }
+    catch (\Exception $e) {
+      $failed++;
+      $logger->error('Failed to delete responsive image style "@id": @error', [
+        '@id' => $responsive_id,
+        '@error' => $e->getMessage(),
+      ]);
     }
   }
 
   // Then remove the actual image styles.
   $image_style_storage = $entity_type_manager->getStorage('image_style');
   foreach ($image_styles_to_remove as $style_id) {
-    $style = $image_style_storage->load($style_id);
-    if ($style) {
-      $style->delete();
+    try {
+      if ($style = $image_style_storage->load($style_id)) {
+        $style->delete();
+        $deleted++;
+      }
     }
+    catch (\Exception $e) {
+      $failed++;
+      $logger->error('Failed to delete image style "@id": @error', [
+        '@id' => $style_id,
+        '@error' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  // Final summary log.
+  if ($deleted || $failed) {
+    $logger->notice('Image style cleanup completed. @deleted styles deleted, @failed failures.', [
+      '@deleted' => $deleted,
+      '@failed' => $failed,
+    ]);
+  }
+  else {
+    $logger->notice('Image style cleanup: No styles found to delete.');
   }
 }

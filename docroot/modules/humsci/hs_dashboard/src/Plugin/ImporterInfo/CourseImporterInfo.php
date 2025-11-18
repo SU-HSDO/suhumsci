@@ -91,6 +91,9 @@ class CourseImporterInfo extends ImporterInfoBase {
    */
   public function getTableRows(): array {
     $course_importer = $this->migrationManager->getDefinition('hs_courses');
+
+    // This list of URLs is controlled at:
+    // @url /admin/config/importers/courses-importer
     $urls = $course_importer['source']['urls'] ?? [];
 
     $table_rows = [];
@@ -125,9 +128,14 @@ class CourseImporterInfo extends ImporterInfoBase {
   protected function buildCourseLink(string $url): GeneratedLink {
     $query = parse_url($url, PHP_URL_QUERY);
     parse_str($query, $params);
-    $query = $params['q'] ?? 'unknown';
+    $text = $params['q'] ?? 'unknown';
+    // Oddly, there are some non-printable characters in many of these URLs.
+    $text = preg_replace('/[^[:print:]]/', '', $text);
+    // There is a query param that controls the output format.  Something like:
+    // `view=xml-20200810`
+    // We just need to remove the 'xml-' portion.
     $human_url = str_replace('view=xml-', 'view=', $url);
-    return Link::fromTextAndUrl($query, Url::fromUri($human_url))->toString();
+    return Link::fromTextAndUrl($text, Url::fromUri($human_url))->toString();
   }
 
 }

@@ -4,7 +4,6 @@ namespace Drupal\hs_dashboard\Plugin\ImporterInfo;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides information about other importers.
@@ -21,26 +20,11 @@ class OtherImporterInfo extends ImporterInfoBase {
   /**
    * A list of migration IDs already represented in other ImporterInfo blocks.
    */
-  const SKIP_IMPORTERS = [
+  private const SKIP_IMPORTERS = [
     'hs_courses',
     'hs_localist_scheduled',
     'hs_capx',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('keyvalue'),
-      $container->get('date.formatter'),
-      $container->get('plugin.manager.migration')
-    );
-  }
 
   /**
    * {@inheritDoc}

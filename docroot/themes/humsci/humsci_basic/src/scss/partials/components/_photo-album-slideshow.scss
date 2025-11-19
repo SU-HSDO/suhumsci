@@ -83,6 +83,10 @@
 
     // counter for the last slide
     li:last-of-type button {
+      &::before {
+        content: counter(listCounter);
+      }
+
       @include grid-media-min('sm') {
         left: hb-calculate-rems(48px);
       }
@@ -93,6 +97,10 @@
         left: hb-calculate-rems(12px);
         min-width: hb-calculate-rems(32px);
         text-align: right;
+      }
+
+      &::before {
+        content: counter(listCounter);
       }
 
       &::after {
@@ -118,6 +126,21 @@
 
     li:not(:last-of-type):not(.slick-active) button {
       display: none;
+    }
+
+    // Screen reader only content.
+    .slick-sr-only {
+      border: 0 !important;
+      clip: rect(1px, 1px, 1px, 1px) !important;
+      -webkit-clip-path: inset(50%) !important;
+      clip-path: inset(50%) !important;
+      height: 1px !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      position: absolute !important;
+      width: 1px !important;
+      white-space: nowrap !important;
     }
   }
 }

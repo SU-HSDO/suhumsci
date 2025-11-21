@@ -84,10 +84,15 @@
     height: 100%;
   }
 
+  .hb-media-video:has(.hb-video-lazy) {
+    position: relative;
+    // Margin to give enough space between the play button and the text.
+    margin-bottom: hb-calculate-rems(32px);
+  }
+
   .hb-video-lazy {
     &:has(.hb-video-lazy__iframe),
     .hb-video-lazy__thumb {
-      position: relative;
       aspect-ratio: 16 / 9;
       overflow: hidden;
       width: 100%;
@@ -110,44 +115,48 @@
 
     .hb-video-lazy__play {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background-color: var(--palette--white);
-      opacity: 1;
+      left: hb-calculate-rems(16px);
+      bottom: hb-calculate-rems(-16px);
+      border: $hb-thin-border;
+      border-color: var(--palette--white);
+      background-color: var(--palette--secondary);
       font-size: 0;
       padding: 0;
-      border: none;
-      transition: hb-transition(opacity);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
 
-      &:hover,
-      &:focus,
-      &:focus-visible {
-        opacity: 0.75;
+      @include hb-themes(('colorful', 'airy')) {
+        border-radius: 50%;
       }
 
-      // additional focus styles for keyboard users only
-      // that compliments browser default styles
-      &:focus-visible {
-        outline: 5px auto -webkit-focus-ring-color; // Chrome only
+      &:not(.hb-video-lazy__play--no-js) {
+        .no-js & {
+          display: none;
+        }
+      }
+
+      &:hover {
+        background-color: var(--palette--secondary-darken-12);
+      }
+
+      &:active,
+      &:focus {
+        background-color: var(--palette--secondary);
       }
 
       &::before {
-        @include hb-icon-background('play', 'black');
+        @include hb-icon-background('play', 'white');
 
         content: '';
         display: block;
         position: relative;
         background-repeat: no-repeat;
         background-position: center;
-        background-size: 35px;
-        height: 50px;
-        width: 50px;
+        background-size: hb-calculate-rems(35px);
+        height: hb-calculate-rems(50px);
+        width: hb-calculate-rems(50px);
       }
     }
   }

@@ -1,10 +1,22 @@
+@use '../variables/general' as *;
 @use '../functions/animation' as *;
 @use '../functions/general' as *;
 @use '../mixins/icons' as *;
+@use '../mixins/theme' as *;
+
+.hb-media-video:has(.hb-video-lazy) {
+  position: relative;
+  // Margin to give enough space between the play button and the text.
+  margin-bottom: hb-calculate-rems(16px);
+
+  // Needs more space if it's followed by text.
+  &:has(+ p) {
+    margin-bottom: hb-calculate-rems(32px);
+  }
+}
 
 .hb-video-lazy {
   .hb-video-lazy__thumb {
-    position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
     width: 100%;
@@ -55,20 +67,21 @@
 
   .hb-video-lazy__play {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background-color: var(--palette--white);
-    opacity: 1;
+    left: hb-calculate-rems(16px);
+    bottom: hb-calculate-rems(-16px);
+    border: $hb-thin-border;
+    border-color: var(--palette--white);
+    background-color: var(--palette--secondary);
     font-size: 0;
     padding: 0;
-    border: none;
-    transition: hb-transition(opacity);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
+    @include hb-themes(('colorful', 'airy')) {
+      border-radius: 50%;
+    }
 
     &:not(.hb-video-lazy__play--no-js) {
       .no-js & {
@@ -76,20 +89,17 @@
       }
     }
 
-    &:hover,
-    &:focus,
-    &:focus-visible {
-      opacity: 0.75;
+    &:hover {
+      background-color: var(--palette--secondary-darken-12);
     }
 
-    // additional focus styles for keyboard users only
-    // that compliments browser default styles
-    &:focus-visible {
-      outline: 5px auto -webkit-focus-ring-color; // Chrome only
+    &:active,
+    &:focus {
+      background-color: var(--palette--secondary);
     }
 
     &::before {
-      @include hb-icon-background('play', 'black');
+      @include hb-icon-background('play', 'white');
 
       content: '';
       display: block;

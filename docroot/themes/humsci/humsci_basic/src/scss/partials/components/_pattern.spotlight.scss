@@ -32,6 +32,23 @@
     @include grid-media-min('md') {
       padding: hb-spacing-width() 0;
     }
+
+    // Styles for lazy load videos to make it work with new design.
+    &:has(.hb-video-lazy) {
+      .hb-spotlight__text {
+        @include grid-media-between('xs', 'md') {
+          padding-inline: hb-calculate-rems(16px);
+        }
+      }
+
+      // Styles to have the same width of the border decoration on small screen sizes.
+      .hb-video-lazy__play::before {
+        @include grid-media-between('xs', 'sm') {
+          width: hb-calculate-rems(60px);
+          height: hb-calculate-rems(60px);
+        }
+      }
+    }
   }
 
   &__wrapper {
@@ -225,6 +242,41 @@
       }
     }
   }
+
+  // Styles for lazy load videos to make it work with new design.
+  &:has(.hb-video-lazy) {
+    .hb-spotlight__text {
+      @include grid-media-between('xs', 'md') {
+        padding-top: hb-calculate-rems(32px);
+      }
+    }
+  }
+
+  .hb-media-video:has(.hb-video-lazy) {
+    margin-bottom: 0;
+  }
+
+  .hb-video-lazy__play {
+    bottom: hb-calculate-rems(8px);
+
+    @include grid-media-between('xs', 'md') {
+      left: hb-calculate-rems(32px);
+      z-index: 3;
+    }
+
+    @include grid-media-min('md') {
+      bottom: hb-calculate-rems(16px);
+    }
+  }
+
+  @include grid-media-min('md') {
+    @include hb-themes(('colorful', 'airy')) {
+      &.hb-spotlight--image-default .hb-video-lazy__play {
+        left: unset;
+        right: hb-calculate-rems(16px);
+      }
+    }
+  }
 }
 
 .hb-spotlight--expanded.hb-spotlight--image-default:has(
@@ -266,49 +318,3 @@
   }
 }
 
-// Styles for lazy load videos to make it work with new design.
-.hb-spotlight--expanded {
-  &:has(.hb-video-lazy) {
-    .hb-spotlight__text {
-      @include grid-media-between('xs', 'md') {
-        padding-top: hb-calculate-rems(32px);
-      }
-    }
-  }
-
-  .hb-media-video:has(.hb-video-lazy) {
-    margin-bottom: 0;
-  }
-
-  .hb-video-lazy__play {
-    bottom: hb-calculate-rems(8px);
-
-    @include grid-media-between('xs', 'md') {
-      left: hb-calculate-rems(32px);
-      z-index: 3;
-    }
-
-    @include grid-media-min('md') {
-      bottom: hb-calculate-rems(16px);
-    }
-  }
-
-  @include grid-media-min('md') {
-    @include hb-themes(('colorful', 'airy')) {
-      &.hb-spotlight--image-default .hb-video-lazy__play {
-        left: unset;
-        right: hb-calculate-rems(16px);
-      }
-    }
-  }
-}
-
-.hb-spotlight--classic {
-  &:has(.hb-video-lazy) {
-    .hb-spotlight__text {
-      @include grid-media-between('xs', 'md') {
-        padding-inline: hb-calculate-rems(16px);
-      }
-    }
-  }
-}

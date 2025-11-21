@@ -1,0 +1,17 @@
+uuid: 2633c23a-5cda-4e56-a44a-61b63c5512e5
+langcode: en
+status: true
+dependencies:
+  module:
+    - mail_safety
+title: 'Default cron handler'
+id: mail_safety_cron
+weight: 0
+module: mail_safety
+callback: 'mail_safety#cron'
+scheduler:
+  id: simple
+launcher:
+  id: serial
+logger:
+  id: database

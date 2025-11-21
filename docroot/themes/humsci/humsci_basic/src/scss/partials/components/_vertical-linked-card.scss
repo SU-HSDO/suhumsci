@@ -52,6 +52,17 @@
     );
   }
 
+  // Update position of button to avoid an overlap in the title.
+  @include hb-traditional {
+    .hb-media-video:has(.hb-video-lazy) {
+      margin-bottom: 0;
+    }
+
+    .hb-video-lazy__play {
+      bottom: hb-calculate-rems(16px);
+    }
+  }
+
   &__img {
     overflow: hidden;
 

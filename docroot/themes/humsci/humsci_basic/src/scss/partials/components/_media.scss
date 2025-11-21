@@ -3,6 +3,7 @@
 @use '../functions/general' as *;
 @use '../mixins/icons' as *;
 @use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
 
 .hb-media-video:has(.hb-video-lazy) {
   position: relative;
@@ -84,6 +85,12 @@
       border-radius: 50%;
     }
 
+    .hs-full-width & {
+      @include grid-media-min('md') {
+        left: 10%;
+      }
+    }
+
     &:not(.hb-video-lazy__play--no-js) {
       .no-js & {
         display: none;
@@ -110,6 +117,14 @@
       background-size: hb-calculate-rems(35px);
       height: hb-calculate-rems(50px);
       width: hb-calculate-rems(50px);
+
+      .hs-full-width & {
+        @include grid-media-min('md') {
+          background-size: hb-calculate-rems(50px);
+          height: hb-calculate-rems(84px);
+          width: hb-calculate-rems(84px);
+        }
+      }
     }
   }
 }

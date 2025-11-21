@@ -23,6 +23,15 @@
     }
   }
 
+  // Update styles when there's a lazy load video on it.
+  &.hb-vertical-card {
+    &:has(.hb-video-lazy) {
+      .hb-card__content {
+        padding-inline: hb-calculate-rems(16px);
+      }
+    }
+  }
+
   &__subcontent {
     width: 100%;
 
@@ -538,3 +547,4 @@
     }
   }
 }
+

@@ -16,8 +16,21 @@ function hs_dashboard_update_10000() {
 }
 
 /**
- * Give Authors permission to see the toolbar.
+ * Give Authors new permissions.
  */
 function hs_dashboard_update_10001(&$sandbox) {
   user_role_grant_permissions('author', ['access toolbar']);
+
+  // Discussed with the H&S team — we want authors to be able to edit any
+  // content that they are the author of.
+  $types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $types = array_keys($types);
+  $permissions = array_map(function($type) {
+    return "edit own $type content";
+  }, $types);
+  user_role_grant_permissions('author', $permissions);
+
+  return 'Gave authors permission to edit their own content in ' . implode(', ', $types);
 }

@@ -5,11 +5,38 @@
  * Primary module hooks for H&S Curriculum Map module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function hs_cmap_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle): void {
+  if ($bundle === 'hs_curriculum_requirement_type' && $entity_type->id() === 'taxonomy_term') {
+    // Add a unique constraint to the colour field.
+    if (isset($fields['field_hs_curriculum_course_color'])) {
+      $fields['field_hs_curriculum_course_color']->addConstraint('UniqueRequirementType');
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function hs_cmap_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type): void {
+  if ($entity_type->id() === 'taxonomy_term') {
+    // Add a unique constraint to the name field for requirement type terms.
+    if (isset($fields['name'])) {
+      $fields['name']->addConstraint('UniqueRequirementType');
+    }
+  }
+}
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -114,7 +141,7 @@ function hs_cmap_field_widget_single_element_form_alter(&$element, FormStateInte
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $widgetState['paragraphs'][$delta]['entity'];
 
-  // Set default year label, incrementing on the previous.
+  // Set the default year label, incrementing on the previous.
   if (
     $paragraph_bundle === 'hs_cmap_year'
     && empty($element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'])

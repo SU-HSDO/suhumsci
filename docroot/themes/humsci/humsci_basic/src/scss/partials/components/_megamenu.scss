@@ -136,7 +136,7 @@ $hb-link-bar-link: 100%;
 
     // If there is no JS then the navigation is automatically expanded and
     // toggle buttons are unnecessary.
-    .no-js & {
+    html:not(.js) & {
       display: none;
     }
 
@@ -205,7 +205,7 @@ $hb-link-bar-link: 100%;
     }
 
     &.is-active,
-    .no-js & {
+    html:not(.js) & {
       display: block;
     }
 
@@ -334,7 +334,7 @@ $hb-link-bar-link: 100%;
         }
       }
 
-      .no-js & {
+      html:not(.js) & {
         @include hb-icon-background('minus', 'gray-dark');
       }
 
@@ -345,7 +345,7 @@ $hb-link-bar-link: 100%;
           @include hb-icon-background('chevron', 'white');
         }
 
-        .no-js & {
+        html:not(.js) & {
           @include hb-icon-background('minus', 'white');
         }
       }
@@ -370,7 +370,7 @@ $hb-link-bar-link: 100%;
             @include hb-icon-background('chevron', 'white');
           }
 
-          .no-js & {
+          html:not(.js) & {
             @include hb-icon-background('minus', 'gray-dark');
           }
         }
@@ -495,7 +495,7 @@ $hb-link-bar-link: 100%;
     display: none;
 
     &.is-expanded,
-    .no-js & {
+    html:not(.js) & {
       display: block;
     }
 
@@ -546,7 +546,7 @@ $hb-link-bar-link: 100%;
         color: var(--palette--black);
 
         display: flex;
-        grid-gap: 0 hb-calculate-rems(52px);
+        gap: 0 hb-calculate-rems(52px);
         margin: 0 auto;
         padding: 0;
         max-width: hb-calculate-rems($hb-three-column-main-width);
@@ -688,7 +688,7 @@ $hb-link-bar-link: 100%;
       }
     }
 
-    .no-js & {
+    html:not(.js) & {
       display: block;
     }
   }

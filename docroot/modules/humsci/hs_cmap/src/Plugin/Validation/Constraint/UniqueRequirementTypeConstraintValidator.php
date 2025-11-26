@@ -20,7 +20,7 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected EntityTypeManagerInterface $entity_type_manager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * Constructs a UniqueRequirementTypeConstraintValidator object.
@@ -29,7 +29,7 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
    *   The entity type manager.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entity_type_manager = $entity_type_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -65,7 +65,7 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
       && !empty($value)
       && $this->isDuplicate($field_name, $value, $term_id)
     ) {
-      $this->context->addViolation($constraint->duplicate_colour);
+      $this->context->addViolation($constraint->duplicateColour);
     }
 
     // Check for duplicate name.
@@ -74,15 +74,15 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
       && !empty($value)
       && $this->isDuplicate($field_name, $value, $term_id)
     ) {
-      $this->context->addViolation($constraint->duplicate_name);
+      $this->context->addViolation($constraint->duplicateName);
     }
   }
 
   /**
-   * Find other terms in this vocabulary with the same value for the given field.
+   * Find terms in this vocabulary with dupes for the given field.
    *
    * @param string $field_name
-   * @param $value
+   * @param mixed $value
    * @param string|null $exclude_term_id
    *
    * @return bool
@@ -90,8 +90,8 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  private function isDuplicate(string $field_name, $value, ?string $exclude_term_id): bool {
-    $query = $this->entity_type_manager->getStorage('taxonomy_term')
+  private function isDuplicate(string $field_name, mixed $value, ?string $exclude_term_id): bool {
+    $query = $this->entityTypeManager->getStorage('taxonomy_term')
       ->getQuery()
       ->accessCheck(FALSE)
       ->condition('vid', 'hs_curriculum_requirement_type')

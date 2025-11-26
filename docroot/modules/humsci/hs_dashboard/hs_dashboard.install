@@ -27,7 +27,7 @@ function hs_dashboard_update_10001(&$sandbox) {
     ->getStorage('node_type')
     ->loadMultiple();
   $types = array_keys($types);
-  $permissions = array_map(function($type) {
+  $permissions = array_map(function ($type) {
     return "edit own $type content";
   }, $types);
   user_role_grant_permissions('author', $permissions);

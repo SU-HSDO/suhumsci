@@ -2,23 +2,27 @@
 @use '../variables/theme' as *;
 @use '../variables/colorful-pairings' as *;
 @use '../variables/traditional-pairings' as *;
+@use '../variables/su-core-colors' as *;
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
 
 // Font definitions.
 @use '../fonts/fonts';
 
 .paragraph-admin-preview {
+  @include generate-css-vars($humsci-su-core-colors);
+
   @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in $hc-colorful-globals {
+    @each $color, $value in $humsci-colorful-globals {
       --palette--#{$color}: #{$value};
     }
   }
 
   @include hb-traditional {
-    @each $color, $value in $ht-traditional-globals {
+    @each $color, $value in $humsci-traditional-globals {
       --palette--#{$color}: #{$value};
     }
   }

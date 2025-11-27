@@ -1,5 +1,7 @@
 @use 'sass:map';
 @use '../variables/su-core-colors' as *;
+@use '../variables/traditional-pairings' as *;
+@use '../variables/colorful-pairings' as *;
 
 ///
 /// Return a color from a color map. If only a color is specified, then it
@@ -14,10 +16,10 @@
 /// @example
 /// color: color($color, $su-core-colors);
 ///
-@function color($color, $colormap: $su-core-colors) {
-  @if $colormap == $su-core-colors {
-    @if map.has-key($su-core-colors, $color) {
-      $color: map.get($su-core-colors, $color);
+@function color($color, $colormap: $humsci-su-core-colors) {
+  @if $colormap == $humsci-su-core-colors {
+    @if map.has-key($humsci-su-core-colors, $color) {
+      $color: map.get($humsci-su-core-colors, $color);
     } @else {
       @error "Color does not exist in color map $su-core-colors.";
     }

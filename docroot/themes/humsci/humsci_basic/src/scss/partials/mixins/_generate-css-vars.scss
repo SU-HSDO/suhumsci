@@ -1,0 +1,21 @@
+@use 'sass:map';
+///
+/// Generate CSS variables from any Sass map.
+/// Works with flat or nested maps.
+///
+/// @param {Map}    $map       The Sass map of colors.
+///
+/// Example output:
+///   --palette--cardinal-red: #8c1515;
+///
+@mixin generate-css-vars($map) {
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' {
+      // Recursively call the mixin if nested maps exist
+      @include generate-css-vars($value);
+    } @else {
+      --palette--#{$key}: #{$value};
+    }
+  }
+}
+

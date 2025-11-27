@@ -6,6 +6,7 @@
 @use 'sass:map';
 @use '../variables/colorful-pairings' as *;
 @use '../variables/traditional-pairings' as *;
+@use '../variables/su-core-colors' as *;
 @use '../variables/fonts' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
@@ -13,6 +14,7 @@
 @use '../mixins/buttons' as *;
 @use '../mixins/tables' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
@@ -26,27 +28,16 @@
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
 :root {
-  @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default)
-    {
-      --palette--#{$color}: #{$value};
-    }
+  @include generate-css-vars($humsci-su-core-colors);
 
-    @each $color, $value in $hc-colorful-globals {
-      --palette--#{$color}: #{$value};
-    }
+  @include hb-themes(('colorful', 'airy')) {
+    @include generate-css-vars(map.get($humsci-colorful-pairings, $hb-colorful-default));
+    @include generate-css-vars($humsci-colorful-globals);
   }
 
   @include hb-traditional {
-    @each $color,
-      $value in map.get($ht-traditional-pairings, $hb-traditional-default)
-    {
-      --palette--#{$color}: #{$value};
-    }
-
-    @each $color, $value in $ht-traditional-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars(map.get($humsci-traditional-pairings, $hb-traditional-default));
+    @include generate-css-vars($humsci-traditional-globals);
   }
 }
 

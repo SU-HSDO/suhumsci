@@ -1,35 +1,33 @@
 @use '../variables/colorful-pairings' as *;
 @use '../variables/traditional-pairings' as *;
+@use '../variables/su-core-colors' as *;
 @use '../mixins/theme' as *;
+@use '../mixins/generate-css-vars' as *;
+
+:root {
+  @include generate-css-vars($humsci-su-core-colors);
+}
 
 @include hb-themes(('colorful', 'airy')) {
-  @each $pairing, $colors in $hc-colorful-pairings {
+  @each $pairing, $colors in $humsci-colorful-pairings {
     .hc-pairing-#{$pairing} {
-      @each $color, $value in $colors {
-        --palette--#{$color}: #{$value};
-      }
+      @include generate-css-vars($colors);
     }
   }
 
   :root {
-    @each $color, $value in $hc-colorful-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars($humsci-colorful-globals);
   }
 }
 
 @include hb-traditional {
-  @each $pairing, $colors in $ht-traditional-pairings {
+  @each $pairing, $colors in $humsci-traditional-pairings {
     .ht-pairing-#{$pairing} {
-      @each $color, $value in $colors {
-        --palette--#{$color}: #{$value};
-      }
+      @include generate-css-vars($colors);
     }
   }
 
   :root {
-    @each $color, $value in $ht-traditional-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars($humsci-traditional-globals);
   }
 }

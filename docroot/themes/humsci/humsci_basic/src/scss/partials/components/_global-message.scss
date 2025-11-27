@@ -6,6 +6,7 @@
 @use '../functions/general' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/layout' as *;
+@use '../mixins/generate-css-vars' as *;
 
 $su-button-stroke: inset 0 0 0 2px;
 
@@ -31,7 +32,21 @@ $su-alert-colors: (
   light-hover: $su-color-foggy,
 );
 
+$humsci-su-alert-colors: (
+  'alert-default': #f4f4f4,
+  'alert-error': #b1040e,
+  'alert-info': #00548f,
+  'alert-success': #008566,
+  'alert-warning': #fec51d,
+  'alert-warning-link': #8c1515,
+  'alert-dark-text': #2e2d29,
+  'alert-light-text': #fff,
+  'alert-light-hover': #dad7cb,
+);
+
 .su-alert {
+  @include generate-css-vars($humsci-su-alert-colors);
+
   background-color: #f4f4f4;
   color: $su-color-black;
   padding: 0;

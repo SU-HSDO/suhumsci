@@ -8,9 +8,12 @@
 @use '../mixins/text' as *;
 @use '../mixins/links' as *;
 @use '../mixins/forms' as *;
+@use '../mixins/generate-css-vars' as *;
 
 // Define variable to be able to override the link color in some scenarios.
 :root {
+  @include generate-css-vars($humsci-su-core-colors);
+
   --link-base-current-color: var(--palette--link-base-color);
   --link-base-hover-current-color: var(--palette--link-base-hover-color);
 

@@ -1,12 +1,7 @@
 @use '../variables/colorful-pairings' as *;
 @use '../variables/traditional-pairings' as *;
-@use '../variables/su-core-colors' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/generate-css-vars' as *;
-
-:root {
-  @include generate-css-vars($humsci-su-core-colors);
-}
 
 @include hb-themes(('colorful', 'airy')) {
   @each $pairing, $colors in $humsci-colorful-pairings {

@@ -10,28 +10,6 @@
 
 $su-button-stroke: inset 0 0 0 2px;
 
-// Colors.
-$su-color-digital-blue-light: #6fc3ff; // GLOBAL MESSAGE
-$su-color-digital-blue-dark: #00548f; // GLOBAL MESSAGE
-$su-color-digital-green: #008566; // GLOBAL MESSAGE
-$su-color-illuminating-dark: #fec51d; // GLOBAL MESSAGE
-$su-color-foggy: #dad7cb; // GLOBAL MESSAGE
-$su-color-foggy-light: #f4f4f4; // GLOBAL MESSAGE
-$su-color-bright-blue: $su-color-digital-blue; // GLOBAL MESSAGE
-$su-color-bright-red: $su-color-digital-red; // GLOBAL MESSAGE
-
-$su-alert-colors: (
-  default: $su-color-foggy-light,
-  error: $su-color-digital-red,
-  info: $su-color-digital-blue-dark,
-  success: $su-color-digital-green,
-  warning: $su-color-illuminating-dark,
-  warning-link: $su-color-cardinal-red,
-  dark-text: $su-color-black,
-  light-text: $su-color-white,
-  light-hover: $su-color-foggy,
-);
-
 $humsci-su-alert-colors: (
   'alert-default': #f4f4f4,
   'alert-error': #b1040e,
@@ -45,10 +23,20 @@ $humsci-su-alert-colors: (
 );
 
 .su-alert {
+  // Colors.
+  --palette--su-color-digital-blue-light: #6fc3ff; // GLOBAL MESSAGE
+  --palette--su-color-digital-blue-dark: #00548f; // GLOBAL MESSAGE
+  --palette--su-color-digital-green: #008566; // GLOBAL MESSAGE
+  --palette--su-color-illuminating-dark: #fec51d; // GLOBAL MESSAGE
+  --palette--su-color-foggy: #dad7cb; // GLOBAL MESSAGE
+  --palette--su-color-foggy-light: #f4f4f4; // GLOBAL MESSAGE
+  --palette--su-color-bright-blue: var(--palette--su-color-digital-blue); // GLOBAL MESSAGE
+  --palette--su-color-bright-red: var(--palette--su-color-digital-red); // GLOBAL MESSAGE
+
   @include generate-css-vars($humsci-su-alert-colors);
 
   background-color: #f4f4f4;
-  color: $su-color-black;
+  color: var(--palette--su-color-black);
   padding: 0;
 
   & .fa,
@@ -57,12 +45,12 @@ $humsci-su-alert-colors: (
   .hb-dark-pattern & .fas,
   .hb-dark-pattern & ol:not([class]) li::before,
   & ol:not([class]) li::before {
-    color: $su-color-black;
+    color: var(--palette--su-color-black);
   }
 
   .hb-dark-pattern & ul:not([class]) li::before,
   & ul:not([class]) li::before {
-    background-color: $su-color-black;
+    background-color: var(--palette--su-color-black);
   }
 
   .hb-dark-pattern & a,
@@ -71,7 +59,7 @@ $humsci-su-alert-colors: (
   a[href^='mailto:'],
   a.ext,
   a {
-    color: $su-color-black;
+    color: var(--palette--su-color-black);
     border-bottom: 0;
     background-image: none;
     font-weight: hb-theme-font-weight(semibold);
@@ -103,8 +91,8 @@ $humsci-su-alert-colors: (
       a {
         &:hover,
         &:focus {
-          background-color: $su-color-white;
-          color: $su-color-black;
+          background-color: var(--palette--su-color-white);
+          color: var(--palette--su-color-black);
         }
       }
     }
@@ -112,18 +100,18 @@ $humsci-su-alert-colors: (
     .su-alert__footer {
       .su-link {
         &::after {
-          background: $su-color-white;
+          background: var(--palette--su-color-white);
         }
       }
     }
 
     .su-alert__dismiss-button {
-      color: color(light-text, $su-alert-colors);
+      color: color('alert-light-text', $humsci-su-alert-colors);
 
       &:hover,
       &:focus {
         background-color: transparent;
-        color: $su-color-white;
+        color: var(--palette--su-color-white);
       }
     }
   }
@@ -148,11 +136,11 @@ $humsci-su-alert-colors: (
   }
 
   &--error {
-    background-color: $su-color-bright-red;
-    color: color(light-text, $su-alert-colors);
+    background-color: var(--palette--su-color-bright-red);
+    color: color('alert-light-text', $humsci-su-alert-colors);
 
     a {
-      color: color(light-text, $su-alert-colors);
+      color: color('alert-light-text', $humsci-su-alert-colors);
 
       &:hover,
       &:focus {
@@ -169,18 +157,18 @@ $humsci-su-alert-colors: (
     background-color: #eaab00;
 
     a {
-      color: $su-color-black;
+      color: var(--palette--su-color-black);
 
       &:hover,
       &:focus {
-        color: $su-color-black;
+        color: var(--palette--su-color-black);
         text-decoration: underline;
       }
     }
   }
 
   &--info {
-    background-color: $su-color-bright-blue;
+    background-color: var(--palette--su-color-bright-blue);
   }
 
   &__header {
@@ -230,7 +218,7 @@ $humsci-su-alert-colors: (
     margin-bottom: 0;
 
     a {
-      color: $su-color-black;
+      color: var(--palette--su-color-black);
       text-decoration: underline;
       transition:
         background-color 0.3s ease-in-out,
@@ -238,8 +226,8 @@ $humsci-su-alert-colors: (
 
       &:hover,
       &:focus {
-        color: $su-color-black;
-        background-color: $su-color-digital-blue-light;
+        color: var(--palette--su-color-black);
+        background-color: var(--palette--su-color-digital-blue-light);
         text-decoration: underline;
       }
     }
@@ -274,7 +262,7 @@ $humsci-su-alert-colors: (
       background-color: transparent;
       text-transform: uppercase;
       font-weight: hb-theme-font-weight(semibold);
-      color: color(dark-text, $su-alert-colors);
+      color: color('alert-dark-text', $humsci-su-alert-colors);
       font-size: hb-calculate-rems(17px);
       letter-spacing: 0.1em;
 
@@ -296,7 +284,7 @@ $humsci-su-alert-colors: (
         &:hover,
         &:focus {
           background-color: transparent;
-          color: $su-color-black;
+          color: var(--palette--su-color-black);
         }
       }
     }
@@ -319,19 +307,19 @@ $humsci-su-alert-colors: (
 // -----------------------------------------------------------------------------
 .su-alert__footer {
   a {
-    color: color(dark-text, $su-alert-colors);
+    color: color('alert-dark-text', $humsci-su-alert-colors);
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: color(dark-text, $su-alert-colors);
+      color: color('alert-dark-text', $humsci-su-alert-colors);
       text-decoration: underline;
     }
   }
 
   .su-link {
     &::after {
-      background: color(dark-text, $su-alert-colors);
+      background: color('alert-dark-text', $humsci-su-alert-colors);
     }
 
     &:hover,
@@ -339,7 +327,7 @@ $humsci-su-alert-colors: (
       text-decoration: underline;
 
       &::after {
-        background: color(dark-text, $su-alert-colors);
+        background: color('alert-dark-text', $humsci-su-alert-colors);
       }
     }
   }

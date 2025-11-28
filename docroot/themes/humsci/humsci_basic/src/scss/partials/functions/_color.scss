@@ -11,24 +11,35 @@
 /// @name color
 ///
 /// @param {String} $color The named key in the color map.
-/// @param {Map} $colormap [$su-core-colors] The color map
+/// @param {Map} $colormap [$humsci-su-core-colors] The color map
 ///
 /// @example
-/// color: color($color, $su-core-colors);
+/// color: color($color, $humsci-su-core-colors);
 ///
+// @function color($color, $colormap: $humsci-su-core-colors) {
+//   @if $colormap == $humsci-su-core-colors {
+//     @if map.has-key($humsci-su-core-colors, $color) {
+//       $color: map.get($humsci-su-core-colors, $color);
+//     } @else {
+//       @error "Color does not exist in color map $su-core-colors.";
+//     }
+//   } @else {
+//     @if map.has-key($colormap, $color) {
+//       $color: map.get($colormap, $color);
+//     } @else {
+//       @error "#{$color} color does not exist in color map";
+//     }
+//   }
+
+//   @return $color;
+// }
+
 @function color($color, $colormap: $humsci-su-core-colors) {
-  @if $colormap == $humsci-su-core-colors {
-    @if map.has-key($humsci-su-core-colors, $color) {
-      $color: map.get($humsci-su-core-colors, $color);
-    } @else {
-      @error "Color does not exist in color map $su-core-colors.";
-    }
+  // Check that key exists
+  @if map.has-key($colormap, $color) {
+    $color: var(--palette--#{$color});
   } @else {
-    @if map.has-key($colormap, $color) {
-      $color: map.get($colormap, $color);
-    } @else {
-      @error "#{$color} color does not exist in color map";
-    }
+    @error "Color `#{$color}` does not exist in the provided color map.";
   }
 
   @return $color;

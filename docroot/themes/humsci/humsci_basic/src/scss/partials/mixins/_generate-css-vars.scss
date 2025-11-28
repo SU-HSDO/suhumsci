@@ -1,4 +1,5 @@
 @use 'sass:map';
+
 ///
 /// Generate CSS variables from any Sass map.
 /// Works with flat or nested maps.
@@ -10,7 +11,7 @@
 ///
 @mixin generate-css-vars($map) {
   @each $key, $value in $map {
-    @if type-of($value) == 'map' {
+    @if meta.type-of($value) == 'map' {
       // Recursively call the mixin if nested maps exist
       @include generate-css-vars($value);
     } @else {

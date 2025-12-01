@@ -10,6 +10,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\stanford_migrate\EventSubscriber\EventsSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,6 +50,8 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
    *   The DateFormatter.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager interface.
    */
   public function __construct(
     array $configuration,
@@ -58,8 +61,9 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
     KeyValueFactoryInterface $key_value_factory,
     DateFormatterInterface $date_formatter,
     ConfigFactoryInterface $config_factory,
+    MigrationPluginManagerInterface $migration_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter, $migration_manager);
     $this->capxConfig = $config_factory->getEditable('hs_capx.settings');
   }
 
@@ -75,6 +79,7 @@ class PeopleImporterInfo extends ImporterInfoBase implements ImporterInfoInterfa
       $container->get('keyvalue'),
       $container->get('date.formatter'),
       $container->get('config.factory'),
+      $container->get('plugin.manager.migration'),
     );
   }
 

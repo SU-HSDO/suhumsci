@@ -132,7 +132,24 @@ class ImporterInfoManager extends DefaultPluginManager {
 
     }
 
-    $this->cache->set('hs_dashboard_importer_info_tables', $tables, time() + 900);
+    // There's some caching issues.  If the underlying data in these tables
+    // changes, you need to do a full cache clear in order to see the change.
+    // The code below _should_ cover it, but it's being cached somewhere higher
+    // in the stack. We'll create a ticket in ClickUp to investigate further.
+    //
+    // Collect cache tags for all migrations.
+    $cache_tags = [
+      'config:migrate_plus.migration_list',
+      'config:migrate.migration_list',
+    ];
+    $migration_storage = \Drupal::entityTypeManager()->getStorage('migration');
+    foreach ($migration_storage->loadMultiple() as $migration) {
+      $cache_tags[] = 'config:' . $migration->getConfigDependencyName();
+    }
+
+    $this->cache->set('hs_dashboard_importer_info_tables', $tables, time() + 900, $cache_tags);
+    $tables['#cache']['tags'] = $cache_tags;
+
     return $tables;
 
   }

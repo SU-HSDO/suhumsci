@@ -109,6 +109,9 @@ function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_
   // Hide the standard taxonomy things that don't make sense for this bundle.
   $form['revision_information']['#access'] = FALSE;
   $form['relations']['#access'] = FALSE;
+
+  // Attach library to style color selector options.
+  $form['#attached']['library'][] = 'hs_cmap/hs-cmap';
 }
 
 /**

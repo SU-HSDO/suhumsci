@@ -1,0 +1,120 @@
+// Curriculum map component styles.
+
+@use '../functions/general' as *;
+@use '../mixins/text' as *;
+
+// Curriculum map component.
+.paragraph--type--hs-cmap {
+  border: 1px solid var(--palette--gray-800);
+  padding: hb-calculate-rems(32px) hb-calculate-rems(32px) 0;
+
+  > h2 {
+    margin-block: 0 hb-calculate-rems(24px);
+  }
+}
+
+// Curriculum map Year component.
+.paragraph--type--hs-cmap-year {
+  padding-block: hb-calculate-rems(12px) hb-calculate-rems(60px);
+
+  > h3 {
+    margin-block: 0 hb-calculate-rems(20px);
+  }
+
+  // Quarter grid.
+  .field-hs-cmap-year-qtr {
+    --grid-layout-gap: #{hb-calculate-rems(32px)};
+    --grid-column-count: 3;
+    --grid-item--min-width: #{hb-calculate-rems(140px)};
+    --gap-count: calc(var(--grid-column-count) - 1);
+    --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+    --grid-item--max-width: calc(
+      (100% - var(--total-gap-width)) / var(--grid-column-count)
+    );
+
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr)
+    );
+    gap: var(--grid-layout-gap);
+  }
+
+  .field-hs-cmap-year-qtr--cols-4 {
+    --grid-column-count: 4;
+  }
+}
+
+// Curriculum map quarter component.
+.paragraph--type--hs-cmap-qtr {
+  display: flex;
+  flex-direction: column;
+  gap: hb-calculate-rems(16px);
+
+  .field-hs-cmap-qtr-quarter {
+    margin: 0;
+    padding: hb-calculate-rems(12px) hb-calculate-rems(16px);
+    color: var(--palette--white);
+    background-color: var(--palette--gray-800);
+  }
+}
+
+// Curriculum map required courses component.
+.paragraph--type--hs-cmap-qtr-crs {
+  padding: hb-calculate-rems(12px) hb-calculate-rems(10px);
+  background-color: var(--palette--white);
+  box-shadow: 0 hb-calculate-rems(4px) hb-calculate-rems(17px) 0
+    color-mix(in srgb, var(--palette--black) 14%, transparent);
+  border-bottom: 3px solid var(--color-cmap-requirement-type, transparent);
+
+  .field-hs-cmap-crs-requirement {
+    display: inline-block;
+    padding: hb-calculate-rems(2px) hb-calculate-rems(6px);
+    margin-block-end: hb-calculate-rems(8px);
+    font-size: hb-calculate-rems(14px);
+    line-height: 1.4;
+    text-transform: uppercase;
+    background-color: var(--palette--gray-100);
+  }
+
+  // Course type colors.
+  &.paragraph--color--grey-500 {
+    --color-cmap-requirement-type: var(--palette--gray-500);
+  }
+
+  &.paragraph--color--brick-dark {
+    --color-cmap-requirement-type: #42081b;
+  }
+
+  &.paragraph--color--plum {
+    --color-cmap-requirement-type: #620059;
+  }
+
+  &.paragraph--color--digital-red {
+    --color-cmap-requirement-type: #b1040e;
+  }
+
+  &.paragraph--color--spirited {
+    --color-cmap-requirement-type: #e04f39;
+  }
+
+  &.paragraph--color--poppy-light {
+    --color-cmap-requirement-type: #f9a44a;
+  }
+
+  &.paragraph--color--olive-dark {
+    --color-cmap-requirement-type: #7a863b;
+  }
+
+  &.paragraph--color--bay-dark {
+    --color-cmap-requirement-type: #417865;
+  }
+
+  &.paragraph--color--sky-dark {
+    --color-cmap-requirement-type: #009ab4;
+  }
+
+  &.paragraph--color--lagunita-light {
+    --color-cmap-requirement-type: #016895;
+  }
+}

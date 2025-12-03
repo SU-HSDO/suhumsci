@@ -577,12 +577,12 @@ function hs_paragraph_types_update_10015(&$sandbox) {
 function hs_paragraph_types_update_10016(&$sandbox) {
   $bundles_to_hide = ['hs_cmap_qtr', 'hs_cmap_qtr_crs', 'hs_cmap_year'];
   _hs_paragraph_types_exclude_bundles_from_field('node', 'hs_basic_page', 'field_hs_page_components', $bundles_to_hide);
-  $result = t('Excluded bundles from field_hs_page_components: @bundles. ', ['@bundles' => implode(', ', $bundles_to_hide)]);
+  $result = t('Excluded bundles from field_hs_page_components: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
 
   // Hide all cmap bundles from collections.
   $bundles_to_hide[] = 'hs_cmap';
   _hs_paragraph_types_exclude_bundles_from_field('paragraph', 'hs_collection', 'field_hs_collection_items', $bundles_to_hide);
-  $result .= t('Excluded bundles from field_hs_collection_items: @bundles. ', ['@bundles' => implode(', ', $bundles_to_hide)]);
+  $result .= t('Excluded bundles from field_hs_collection_items: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
   return $result;
 }
 

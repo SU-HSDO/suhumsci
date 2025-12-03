@@ -23,13 +23,13 @@ class UniqueRequirementTypeConstraint extends Constraint {
    *
    * @var string
    */
-  public string $duplicateColour = 'This colour is already used by another requirement type. Each requirement type must have a unique colour.';
+  public string $duplicateColour = 'This colour is already used by another requirement type. Choose a unique colour.';
 
   /**
    * Message for duplicate name.
    *
    * @var string
    */
-  public string $duplicateName = 'This name is already used by another requirement type. Each requirement type must have a unique name.';
+  public string $duplicateName = 'This name is already used by another requirement type. Choose a unique name.';
 
 }

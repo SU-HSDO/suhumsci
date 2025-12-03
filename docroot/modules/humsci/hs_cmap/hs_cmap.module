@@ -182,3 +182,58 @@ function hs_cmap_field_widget_single_element_form_alter(&$element, FormStateInte
   }
 
 }
+
+/**
+ * Implements hook_form_taxonomy_overview_terms_alter().
+ */
+function hs_cmap_form_taxonomy_overview_terms_alter(array &$form, FormStateInterface $form_state): void {
+  $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
+  if (!$vocabulary || $vocabulary->id() !== 'hs_curriculum_requirement_type') {
+    return;
+  }
+
+  // Add a new column to the table for 'Color'.
+  $new_column_header = ['color' => t('Color')];
+  $insert_after_column = 0;
+  _hs_cmap_insert_into_array_after_element($form['terms']['#header'], $insert_after_column, $new_column_header);
+
+  $field_manager = \Drupal::service('entity_field.manager');
+  $field_definition = $field_manager->getFieldDefinitions('taxonomy_term', $vocabulary->id())['field_hs_curriculum_course_color'];
+  $options = $field_definition->getSettings()['allowed_values'];
+
+  foreach (Element::children($form['terms']) as $key) {
+    /** @var \Drupal\taxonomy\Entity\Term $term */
+    $term = $form['terms'][$key]['#term'];
+    $color = '';
+    if ($term->hasField('field_hs_curriculum_course_color') && !$term->get('field_hs_curriculum_course_color')->isEmpty()) {
+      $value = $term->get('field_hs_curriculum_course_color')->value;
+      $color = $options[$value] ?? $value;
+    }
+    $new_element['color'] = [
+      '#markup' => $color,
+    ];
+    _hs_cmap_insert_into_array_after_element($form['terms'][$key], $insert_after_column, $new_element);
+  }
+}
+
+/**
+ * Inserts a new element into an associative array after a specified position.
+ *
+ * @param array &$array
+ *   The array to modify.
+ * @param int $after_position
+ *   The position after which the new element will be inserted.
+ *   E.g., 3 will insert the new element after the fourth element (zero-based).
+ * @param array $new_element
+ *   The new element to insert into the array.  Should have a key.
+ *
+ * @return void
+ *   This method does not return a value as it modifies the array by reference.
+ */
+function _hs_cmap_insert_into_array_after_element(array &$array, int $after_position, array $new_element): void {
+  $array = array_merge(
+    array_slice($array, 0, $after_position + 1, TRUE),
+    $new_element,
+    array_slice($array, $after_position + 1, NULL, TRUE)
+  );
+}

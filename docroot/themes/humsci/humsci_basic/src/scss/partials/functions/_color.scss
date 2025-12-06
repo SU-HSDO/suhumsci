@@ -1,7 +1,7 @@
 @use 'sass:map';
-@use '../variables/su-core-colors' as *;
-@use '../variables/traditional-pairings' as *;
-@use '../variables/colorful-pairings' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
 
 ///
 /// Return a color from a color map. If only a color is specified, then it
@@ -11,15 +11,15 @@
 /// @name color
 ///
 /// @param {String} $color The named key in the color map.
-/// @param {Map} $colormap [$humsci-su-core-colors] The color map
+/// @param {Map} $colormap [$su-core-colors] The color map
 ///
 /// @example
-/// color: color($color, $humsci-su-core-colors);
+/// color: color($color, $su-core-colors);
 ///
-// @function color($color, $colormap: $humsci-su-core-colors) {
-//   @if $colormap == $humsci-su-core-colors {
-//     @if map.has-key($humsci-su-core-colors, $color) {
-//       $color: map.get($humsci-su-core-colors, $color);
+// @function color($color, $colormap: $su-core-colors) {
+//   @if $colormap == $su-core-colors {
+//     @if map.has-key($su-core-colors, $color) {
+//       $color: map.get($su-core-colors, $color);
 //     } @else {
 //       @error "Color does not exist in color map $su-core-colors.";
 //     }
@@ -34,7 +34,7 @@
 //   @return $color;
 // }
 
-@function color($color, $colormap: $humsci-su-core-colors) {
+@function color($color, $colormap: $su-core-colors) {
   // Check that key exists
   @if map.has-key($colormap, $color) {
     $color: var(--palette--#{$color});

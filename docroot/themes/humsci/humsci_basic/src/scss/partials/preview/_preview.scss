@@ -1,8 +1,8 @@
 @use 'sass:meta';
 @use '../variables/theme' as *;
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
-@use '../variables/su-core-colors' as *;
+@use '../variables/colors.colorful' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.su-core' as *;
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
 @use '../mixins/theme' as *;
@@ -13,16 +13,16 @@
 @use '../fonts/fonts';
 
 .paragraph-admin-preview {
-  @include generate-css-vars($humsci-su-core-colors);
+  @include generate-css-vars($su-core-colors);
 
   @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in $humsci-colorful-globals {
+    @each $color, $value in $colorful-global-colors {
       --palette--#{$color}: #{$value};
     }
   }
 
   @include hb-traditional {
-    @each $color, $value in $humsci-traditional-globals {
+    @each $color, $value in $traditional-global-colors {
       --palette--#{$color}: #{$value};
     }
   }

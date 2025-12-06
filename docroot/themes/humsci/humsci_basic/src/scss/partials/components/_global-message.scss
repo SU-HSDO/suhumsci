@@ -1,6 +1,6 @@
 // This is a stylesheet for the Global Message banner
 
-@use '../variables/su-core-colors' as *;
+@use '../variables/colors.su-core' as *;
 @use '../functions/fonts' as *;
 @use '../functions/color' as *;
 @use '../functions/general' as *;
@@ -9,30 +9,27 @@
 @use '../mixins/generate-css-vars' as *;
 
 $su-button-stroke: inset 0 0 0 2px;
-$humsci-su-alert-colors: (
-  'alert-default': #f4f4f4,
-  'alert-error': #b1040e,
-  'alert-info': #00548f,
-  'alert-success': #008566,
-  'alert-warning': #fec51d,
-  'alert-warning-link': #8c1515,
-  'alert-dark-text': #2e2d29,
-  'alert-light-text': #fff,
-  'alert-light-hover': #dad7cb,
+
+$su-alert-colors: (
+  'default': #f4f4f4,
+  'error': #b1040e,
+  'info': #00548f,
+  'success': #008566,
+  'warning': #fec51d,
+  'warning-link': #8c1515,
+  'dark-text': #2e2d29,
+  'light-text': #fff,
+  'light-hover': #dad7cb,
+  'digital-blue-light': #6fc3ff,
+  'digital-blue-dark': #00548f,
+  'digital-green': #008566,
+  'illuminating-dark': #fec51d,
+  'foggy': #dad7cb,
+  'foggy-light': #f4f4f4,
 );
 
 .su-alert {
-  // Colors.
-  --palette--su-color-digital-blue-light: #6fc3ff; // GLOBAL MESSAGE
-  --palette--su-color-digital-blue-dark: #00548f; // GLOBAL MESSAGE
-  --palette--su-color-digital-green: #008566; // GLOBAL MESSAGE
-  --palette--su-color-illuminating-dark: #fec51d; // GLOBAL MESSAGE
-  --palette--su-color-foggy: #dad7cb; // GLOBAL MESSAGE
-  --palette--su-color-foggy-light: #f4f4f4; // GLOBAL MESSAGE
-  --palette--su-color-bright-blue: var(--palette--su-color-digital-blue); // GLOBAL MESSAGE
-  --palette--su-color-bright-red: var(--palette--su-color-digital-red); // GLOBAL MESSAGE
-
-  @include generate-css-vars($humsci-su-alert-colors);
+  @include generate-css-vars($su-alert-colors);
 
   background-color: #f4f4f4;
   color: var(--palette--su-color-black);
@@ -105,7 +102,7 @@ $humsci-su-alert-colors: (
     }
 
     .su-alert__dismiss-button {
-      color: color('alert-light-text', $humsci-su-alert-colors);
+      color: color('alert-light-text', $su-alert-colors);
 
       &:hover,
       &:focus {
@@ -135,11 +132,11 @@ $humsci-su-alert-colors: (
   }
 
   &--error {
-    background-color: var(--palette--su-color-bright-red);
-    color: color('alert-light-text', $humsci-su-alert-colors);
+    background-color: var(--palette--su-color-digital-red);
+    color: color('alert-light-text', $su-alert-colors);
 
     a {
-      color: color('alert-light-text', $humsci-su-alert-colors);
+      color: color('alert-light-text', $su-alert-colors);
 
       &:hover,
       &:focus {
@@ -167,7 +164,7 @@ $humsci-su-alert-colors: (
   }
 
   &--info {
-    background-color: var(--palette--su-color-bright-blue);
+    background-color: var(--palette--su-color-digital-blue);
   }
 
   &__header {
@@ -261,7 +258,7 @@ $humsci-su-alert-colors: (
       background-color: transparent;
       text-transform: uppercase;
       font-weight: hb-theme-font-weight(semibold);
-      color: color('alert-dark-text', $humsci-su-alert-colors);
+      color: color('alert-dark-text', $su-alert-colors);
       font-size: hb-calculate-rems(17px);
       letter-spacing: 0.1em;
 
@@ -306,19 +303,19 @@ $humsci-su-alert-colors: (
 // -----------------------------------------------------------------------------
 .su-alert__footer {
   a {
-    color: color('alert-dark-text', $humsci-su-alert-colors);
+    color: color('alert-dark-text', $su-alert-colors);
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: color('alert-dark-text', $humsci-su-alert-colors);
+      color: color('alert-dark-text', $su-alert-colors);
       text-decoration: underline;
     }
   }
 
   .su-link {
     &::after {
-      background: color('alert-dark-text', $humsci-su-alert-colors);
+      background: color('alert-dark-text', $su-alert-colors);
     }
 
     &:hover,
@@ -326,7 +323,7 @@ $humsci-su-alert-colors: (
       text-decoration: underline;
 
       &::after {
-        background: color('alert-dark-text', $humsci-su-alert-colors);
+        background: color('alert-dark-text', $su-alert-colors);
       }
     }
   }

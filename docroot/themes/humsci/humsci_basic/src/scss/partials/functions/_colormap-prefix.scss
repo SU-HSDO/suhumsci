@@ -1,0 +1,33 @@
+@use 'sass:map';
+
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
+
+$colormap-registry: (
+  'su-core': $su-core-colors,
+  'colorful-pairing': $colorful-pairings-colors,
+  'traditional-pairing': $traditional-pairings-colors,
+  'colorful-global': $colorful-global-colors,
+  'traditional-global': $traditional-global-colors,
+);
+
+///
+/// Generate prefix according to the registry of Sass map.
+/// Instead of having variables with the "colors" word from the map,
+/// it's better to have without it.
+///
+/// @param {Map}    $map       The Sass map of colors.
+///
+/// Example output:
+///  $prefix: 'colorful-pairings';
+///
+@function colormap-prefix($map) {
+  @each $prefix, $registered in $colormap-registry {
+    @if $registered == $map {
+      @return $prefix;
+    }
+  }
+
+  @error "Unknown color map.";
+}

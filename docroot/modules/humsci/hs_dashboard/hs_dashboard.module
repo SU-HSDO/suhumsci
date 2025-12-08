@@ -116,17 +116,6 @@ function hs_dashboard_user_login(UserInterface $account) {
       if ($set) {
         $shortcut_set_storage->assignUser($set, $account);
       }
-
-      // Go to the list of /my-content rather than the Drupal default of /user,
-      // unless they're already on their way to some other destination.
-      $request = \Drupal::request();
-      if (
-        !$request->query->has('destination')
-        && \Drupal::routeMatch()->getRouteName() !== 'user.reset.login'
-      ) {
-        $request->query->set('destination', '/my-content');
-      }
-      return;
     }
   }
   // All other roles get the default shortcuts.

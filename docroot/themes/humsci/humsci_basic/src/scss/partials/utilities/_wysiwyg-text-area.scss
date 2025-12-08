@@ -251,6 +251,12 @@ $credits: (hs-credits, credits);
   max-width: hb-calculate-rems(700px);
 }
 
+// When short line length is applied and the text is also centered, we need to
+// center the container itself within the text area.
+.hs-short-line-length.text-align-center {
+  margin-inline: auto;
+}
+
 .hs-table--borderless {
   thead {
     th {
@@ -367,7 +373,11 @@ $credits: (hs-credits, credits);
     box-sizing: border-box;
     color: var(--palette--white) !important;
     border: none;
-    background: linear-gradient(to top, var(--palette--black), transparent) !important;
+    background: linear-gradient(
+      to top,
+      var(--palette--black),
+      transparent
+    ) !important;
     z-index: 1;
   }
 }

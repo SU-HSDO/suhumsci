@@ -5,6 +5,7 @@
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'layout' as *;
@@ -42,7 +43,7 @@
   @include hb-hero-full-width;
 
   &::before {
-    background-color: var(--palette--primary-hero-overlay);
+    background-color: color('primary-hero-overlay');
     content: '';
     position: absolute;
     top: 0;
@@ -109,7 +110,7 @@
   align-self: center;
   padding: hb-calculate-rems(54px) 0;
   z-index: $hb-z-index-hero1-overlay;
-  color: var(--palette--white);
+  color: color('white', 'global');
 
   @include hb-page-width;
 
@@ -121,7 +122,7 @@
   ul {
     li {
       &::before {
-        background-color: var(--palette--secondary);
+        background-color: color('secondary');
       }
     }
   }
@@ -129,7 +130,7 @@
   ol {
     li {
       &::before {
-        color: var(--palette--secondary-active);
+        color: color('secondary-active');
       }
     }
   }
@@ -232,12 +233,12 @@
 // hero link
 @mixin hb-hero-anchor-link {
   @include hb-description;
-  color: var(--palette--tertiary-reversed);
+  color: color('tertiary-reversed');
   background-image: none;
 
   &:hover,
   &:focus {
-    color: var(--palette--tertiary-highlight);
+    color: color('tertiary-highlight');
   }
 }
 
@@ -270,32 +271,32 @@
   @include hb-themes(('colorful', 'airy')) {
     background-color: transparent;
     border-radius: hb-calculate-rems(42px);
-    color: var(--palette--#{$button-color});
-    border-color: var(--palette--#{$button-color});
+    color: color($button-color);
+    border-color: color($button-color);
 
     &:hover,
     &:focus {
-      border-color: var(--palette--#{$button-color-hover});
-      color: var(--palette--#{$button-color-hover});
+      border-color: color($button-color-hover);
+      color: color($button-color-hover);
     }
   }
 
   @include hb-traditional {
-    background-color: var(--palette--#{$button-color});
-    color: var(--palette--white);
+    background-color: color($button-color);
+    color: color('white', 'global');
     border-color: transparent;
 
     &:hover,
     &:focus {
       background-color: transparent;
-      border-color: var(--palette--#{$button-color});
-      color: var(--palette--white);
+      border-color: color($button-color);
+      color: color('white', 'global');
     }
 
     &:focus {
       outline: hb-calculate-rems(2px) solid;
-      outline-color: var(--palette--white);
-      box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--primary);
+      outline-color: color('white', 'global');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) color('primary');
     }
   }
 }

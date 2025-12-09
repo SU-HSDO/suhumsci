@@ -29,7 +29,12 @@
 :root {
   @include generate-css-vars('su-core');
 
-  @include hb-themes(('colorful', 'airy')) {
+  @include hb-themes(('airy')) {
+    @include generate-css-vars('airy-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
+    @include generate-css-vars('airy-global');
+  }
+
+  @include hb-themes(('colorful')) {
     @include generate-css-vars('colorful-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
     @include generate-css-vars('colorful-global');
   }

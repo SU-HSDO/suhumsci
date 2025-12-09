@@ -1,43 +1,48 @@
 @use 'sass:map';
-@use '../variables/colors.su-core' as *;
-@use '../variables/colors.traditional' as *;
-@use '../variables/colors.colorful' as *;
+@use 'sass:list';
+
+@use '../variables/colormap-registry' as *;
+@use '../variables/general' as *;
+@use '../variables/theme' as *;
+@use '../functions/general' as *;
 
 ///
-/// Return a color from a color map. If only a color is specified, then it
-/// returns a color from $su-core-colors. If a color and a color map are specified,
-/// then it returns a color from the particular color map.
+/// Return a color css variable from a color map.
 ///
 /// @name color
 ///
 /// @param {String} $color The named key in the color map.
-/// @param {Map} $colormap [$su-core-colors] The color map
+/// @param {String} $colormap-id The color map id (it can be the map name or just 'pairings' or 'global' for theme maps.
 ///
 /// @example
-/// color: color($color, $su-core-colors);
+/// color: color($color, 'su-core');
 ///
-// @function color($color, $colormap: $su-core-colors) {
-//   @if $colormap == $su-core-colors {
-//     @if map.has-key($su-core-colors, $color) {
-//       $color: map.get($su-core-colors, $color);
-//     } @else {
-//       @error "Color does not exist in color map $su-core-colors.";
-//     }
-//   } @else {
-//     @if map.has-key($colormap, $color) {
-//       $color: map.get($colormap, $color);
-//     } @else {
-//       @error "#{$color} color does not exist in color map";
-//     }
-//   }
+@function color($color, $colormap-id: 'pairings') {
+  $colormap: null;
+  $colormap-prefix: null;
 
-//   @return $color;
-// }
+  @if $colormap-id == 'pairings' or $colormap-id == 'global' {
+    $colormap-prefix: #{$hb-current-theme}-#{$colormap-id};
+    $theme-map: get-theme-array-list($colormap-registry, $colormap-prefix);
 
-@function color($color, $colormap: $su-core-colors) {
+    @if $theme-map == null {
+      @error "Theme color map was not found in colormap-registry.";
+    }
+
+    @if $colormap-id == 'global' {
+      $colormap: $theme-map;
+    } @else {
+      $first-key: list.nth(map.keys($theme-map), 1);
+      $colormap: map.get($theme-map, $first-key);
+    }
+  } @else {
+    $colormap-prefix: $colormap-id;
+    $colormap: map.get($colormap-registry, $colormap-prefix);
+  }
+
   // Check that key exists
   @if map.has-key($colormap, $color) {
-    $color: var(--color--#{$color});
+    $color: var(--color--#{$colormap-prefix}--#{$color});
   } @else {
     @error "Color `#{$color}` does not exist in the provided color map.";
   }

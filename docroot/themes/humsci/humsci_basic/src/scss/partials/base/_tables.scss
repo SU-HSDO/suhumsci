@@ -1,4 +1,5 @@
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/tables' as *;
 
 .hb-table-wrap {
@@ -17,15 +18,15 @@
   .hb-dark-pattern &,
   .views-element-container .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    background-color: var(--palette--white);
+    background-color: color('white', 'global');
 
-    --link-base-current-color: var(--palette--tertiary);
-    --link-base-hover-current-color: var(--palette--tertiary-darken-20);
+    --link-base-current-color: color('tertiary');
+    --link-base-hover-current-color: color('tertiary-darken-20');
 
     .views-label,
     .field-content,
     td {
-      color: var(--palette--black);
+      color: color('black', 'global');
     }
   }
 }

@@ -14,6 +14,7 @@
 @use '../mixins/tables' as *;
 @use '../mixins/text' as *;
 @use '../mixins/generate-css-vars' as *;
+@use '../functions/color' as *;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
@@ -57,8 +58,8 @@
   }
 
   // Link current color variables.
-  --link-base-current-color: var(--palette--link-base-color);
-  --link-base-hover-current-color: var(--palette--link-base-hover-color);
+  --link-base-current-color: color('link-base');
+  --link-base-hover-current-color: color('link-base-hover');
 
   // Addresses small media previews in CK5
   .hb-media-video {

@@ -1,6 +1,7 @@
 @use 'sass:color';
 @use '../functions/general' as *;
 @use '../functions/fonts' as *;
+@use '../functions/color' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/buttons' as *;
 
@@ -21,7 +22,7 @@ main:has(.user-login-form) {
 }
 
 .user-login-form {
-  background-color: var(--palette--white);
+  background-color: color('white', 'global');
   padding: hb-calculate-rems(24px);
   max-width: hb-calculate-rems(900px);
   width: auto;
@@ -67,8 +68,8 @@ main:has(.user-login-form) {
 
     max-width: hb-calculate-rems(197px);
     margin-top: hb-calculate-rems(26px);
-    background-color: var(--palette--cardinal) !important;
-    border-color: var(--palette--cardinal) !important;
+    background-color: color('cardinal', 'global') !important;
+    border-color: color('cardinal', 'global') !important;
     border-radius: 30px;
 
     &::after {
@@ -134,7 +135,7 @@ main:has(.user-login-form) {
 
     summary {
       background-color: transparent;
-      color: var(--palette--black);
+      color: color('black', global);
       padding: 0;
       border: none;
       cursor: none;
@@ -178,7 +179,7 @@ main:has(.user-login-form) {
         width: 100%;
         display: block;
         margin-top: hb-calculate-rems(16px);
-        color: var(--palette--gray-dark);
+        color: color('gray-dark', 'global');
         font-weight: hb-theme-font-weight(semibold);
 
         @include grid-media-min('lg') {
@@ -195,8 +196,8 @@ main:has(.user-login-form) {
 
         &:hover,
         &:focus {
-          background-color: var(--palette--black);
-          border-color: var(--palette--black);
+          background-color: color('black', 'global');
+          border-color: color('black', 'global');
         }
       }
     }

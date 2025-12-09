@@ -6,7 +6,6 @@
 @use 'sass:map';
 @use '../variables/colors.colorful' as *;
 @use '../variables/colors.traditional' as *;
-@use '../variables/colors.su-core' as *;
 @use '../variables/fonts' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
@@ -28,16 +27,16 @@
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
 :root {
-  @include generate-css-vars($su-core-colors);
+  @include generate-css-vars('su-core');
 
   @include hb-themes(('colorful', 'airy')) {
-    @include generate-css-vars(map.get($colorful-pairings-colors, $hb-colorful-default));
-    @include generate-css-vars($colorful-global-colors);
+    @include generate-css-vars('colorful-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
+    @include generate-css-vars('colorful-global');
   }
 
   @include hb-traditional {
-    @include generate-css-vars(map.get($traditional-pairings-colors, $hb-traditional-default));
-    @include generate-css-vars($traditional-global-colors);
+    @include generate-css-vars('traditional-pairings', map.get($traditional-pairings-colors, $hb-traditional-default));
+    @include generate-css-vars('traditional-global');
   }
 }
 

@@ -13,18 +13,14 @@
 @use '../fonts/fonts';
 
 .paragraph-admin-preview {
-  @include generate-css-vars($su-core-colors);
+  @include generate-css-vars('su-core');
 
   @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in $colorful-global-colors {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars('colorful-global');
   }
 
   @include hb-traditional {
-    @each $color, $value in $traditional-global-colors {
-      --palette--#{$color}: #{$value};
-    }
+   @include generate-css-vars('traditional-global');
   }
 
   // Load main stylesheet with current theme.

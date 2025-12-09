@@ -6,23 +6,23 @@
 @include hb-themes(('colorful', 'airy')) {
   @each $pairing, $colors in $colorful-pairings-colors {
     .hc-pairing-#{$pairing} {
-      @include generate-css-vars($colors);
+      @include generate-css-vars('colorful-pairings', $colors);
     }
   }
 
   :root {
-    @include generate-css-vars($colorful-global-colors);
+    @include generate-css-vars('colorful-global');
   }
 }
 
 @include hb-traditional {
   @each $pairing, $colors in $traditional-pairings-colors {
     .ht-pairing-#{$pairing} {
-      @include generate-css-vars($colors);
+      @include generate-css-vars('traditional-pairings', $colors);
     }
   }
 
   :root {
-    @include generate-css-vars($traditional-global-colors);
+    @include generate-css-vars('traditional-global');
   }
 }

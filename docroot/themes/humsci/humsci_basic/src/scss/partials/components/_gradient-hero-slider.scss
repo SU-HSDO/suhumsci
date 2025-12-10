@@ -1,6 +1,7 @@
 // Gradient Hero Slider styles.
 
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/heros' as *;
@@ -52,7 +53,7 @@
           width: 100%;
           height: hb-calculate-rems(4px);
           background-color: transparent;
-          outline: 1px solid var(--palette--secondary);
+          outline: 1px solid color(secondary);
 
           @include hb-themes(('colorful', 'airy')) {
             border-radius: hb-calculate-rems(5px);
@@ -66,7 +67,7 @@
 
           &::before {
             transform: scale(0.9);
-            background-color: var(--palette--secondary);
+            background-color: color(secondary);
           }
         }
       }
@@ -75,7 +76,7 @@
         background-color: transparent;
 
         &::before {
-          background-color: var(--palette--secondary);
+          background-color: color(secondary);
         }
       }
     }

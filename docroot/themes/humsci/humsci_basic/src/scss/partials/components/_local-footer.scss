@@ -2,6 +2,7 @@
 @use '../variables/fonts' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/icons' as *;
@@ -11,7 +12,7 @@
   font-size: hb-calculate-rems(16px);
   padding: hb-calculate-rems(48px) 0;
   border-top: $hb-thin-border;
-  border-color: var(--palette--gray);
+  border-color: color('gray', global);
 
   .hb-secondary-nav {
     // overwrite default secondary nav styles for menu items
@@ -36,7 +37,7 @@
     a {
       &:hover,
       &:focus {
-        @include hb-ext-icon-color('tertiary-darken-20');
+        @include hb-ext-icon-color(tertiary-darken-20);
       }
     }
   }

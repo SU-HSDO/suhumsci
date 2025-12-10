@@ -1,6 +1,7 @@
 @use '../variables/general' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/buttons' as *;
@@ -55,7 +56,7 @@ $item-line-height-lg: 110%;
       .hb-dark-pattern &,
       .hb-dark-pattern &::after,
       .hb-dark-pattern &::before {
-        background-color: var(--palette--white);
+        background-color: color('white', global);
       }
     }
 
@@ -81,7 +82,7 @@ $item-line-height-lg: 110%;
       font-weight: hb-theme-font-weight(semibold);
       font-size: hb-calculate-rems(20px);
       border-bottom: $hb-thin-border;
-      border-color: var(--palette--gray);
+      border-color: color('gray', global);
 
       &[aria-hidden='false'] {
         margin-bottom: hb-calculate-rems(28px);
@@ -138,7 +139,7 @@ $item-line-height-lg: 110%;
 
     .hb-main-nav__menu-lv1 > & {
       border-top: $hb-thin-border;
-      border-color: var(--palette--gray);
+      border-color: color('gray', global);
 
       @include grid-media-min('lg') {
         .js & {
@@ -150,7 +151,7 @@ $item-line-height-lg: 110%;
 
     .hb-main-nav__menu-lv2 &:not(:last-child) {
       border-bottom: $hb-thin-border;
-      border-color: var(--palette--gray);
+      border-color: color('gray', global);
 
       @include grid-media-min('lg') {
         .js & {
@@ -168,11 +169,11 @@ $item-line-height-lg: 110%;
     line-height: $item-line-height-sm;
 
     @include hb-themes(('airy', 'colorful')) {
-      color: var(--palette--black);
+      color: color('black', global);
     }
 
     @include hb-traditional {
-      color: var(--palette--gray-dark);
+      color: color(gray-dark, global);
     }
 
     @include grid-media-min('md') {
@@ -199,10 +200,10 @@ $item-line-height-lg: 110%;
     }
 
     &:hover:not(.is-active) {
-      color: var(--palette--black);
+      color: color('black', global);
 
       .hb-dark-pattern & {
-        color: var(--palette--black);
+        color: color('black', global);
 
         & + .hb-main-nav__button,
         &.hb-nested-toggler::after {
@@ -215,10 +216,10 @@ $item-line-height-lg: 110%;
         }
 
         @include grid-media-min('lg') {
-          color: var(--palette--white);
+          color: color('white', global);
 
           html:not(.js) & {
-            color: var(--palette--black);
+            color: color('black', global);
           }
 
           & + .hb-main-nav__button,
@@ -234,27 +235,27 @@ $item-line-height-lg: 110%;
       }
 
       @include hb-themes(('airy', 'colorful')) {
-        background-color: var(--palette--gray-light);
+        background-color: color(gray-light, global);
       }
 
       @include hb-traditional {
-        background-color: var(--palette--tertiary-highlight);
+        background-color: color(tertiary-highlight);
       }
     }
 
     // Targeting only the first level of navigation on desktop
     .hb-main-nav__menu-lv1 > li > & {
-      color: var(--palette--black);
+      color: color('black', global);
 
       .hb-dark-pattern & {
-        color: var(--palette--white);
+        color: color('white', global);
 
         &.is-active {
-          color: var(--palette--black);
-          background-color: var(--palette--secondary-highlight);
+          color: color('black', global);
+          background-color: color(secondary-highlight);
 
           @include grid-media-min('lg') {
-            color: var(--palette--white);
+            color: color('white', global);
           }
         }
 
@@ -262,16 +263,16 @@ $item-line-height-lg: 110%;
           &.hb-main-nav__link--active-trail {
             /* stylelint-disable max-nesting-depth */
             &::before {
-              background-color: var(--palette--tertiary-reversed);
+              background-color: color(tertiary-reversed);
             }
 
             &:hover,
             &:focus {
               &::before {
-                background-color: var(--palette--secondary);
+                background-color: color(secondary);
 
                 @include grid-media-min('lg') {
-                  background-color: var(--palette--tertiary-reversed);
+                  background-color: color(tertiary-reversed);
                 }
               }
             }
@@ -298,14 +299,14 @@ $item-line-height-lg: 110%;
         }
 
         .js &.hb-main-nav__link--active-trail::before {
-          background-color: var(--palette--secondary);
+          background-color: color(secondary);
         }
 
         .js &:hover {
           background-color: transparent;
 
           &:not(.is-active):not(.hb-main-nav__link--active-trail)::before {
-            background-color: var(--palette--gray);
+            background-color: color('gray', global);
           }
         }
       }
@@ -321,18 +322,18 @@ $item-line-height-lg: 110%;
 
       &:focus,
       &:hover:not(.is-active) {
-        color: var(--palette--black);
+        color: color('black', global);
 
         @include hb-themes(('colorful', 'airy')) {
-          background-color: var(--palette--gray-light);
+          background-color: color(gray-light, global);
         }
 
         @include hb-traditional {
-          background-color: var(--palette--tertiary-highlight);
+          background-color: color(tertiary-highlight);
         }
 
         .hb-dark-pattern & {
-          color: var(--palette--black);
+          color: color('black', global);
 
           & + .hb-nested-toggler,
           &::after {
@@ -350,39 +351,39 @@ $item-line-height-lg: 110%;
         @include grid-media-min('lg') {
           &:hover,
           &:focus {
-            color: var(--palette--white);
-            background-color: var(--palette--primary-dark);
+            color: color('white', global);
+            background-color: color(primary-dark);
           }
         }
       }
 
       .hb-dark-pattern & {
-        color: var(--palette--white);
+        color: color('white', global);
 
         &.is-active {
-          color: var(--palette--black);
-          background-color: var(--palette--secondary-highlight);
+          color: color('black', global);
+          background-color: color(secondary-highlight);
 
           &::before {
-            background-color: var(--palette--secondary);
+            background-color: color(secondary);
           }
         }
 
         @include grid-media-min('lg') {
           html:not(.js) & {
-            color: var(--palette--white);
+            color: color('white', global);
           }
 
           &,
           &:hover:not(.is-active),
           &.is-active {
-            color: var(--palette--black);
+            color: color('black', global);
           }
 
           .hb-dark-inversion & {
             /* stylelint-disable max-nesting-depth */
             &:hover:not(.is-active) {
-              color: var(--palette--white);
+              color: color('white', global);
             }
             /* stylelint-enable max-nesting-depth */
           }
@@ -400,15 +401,15 @@ $item-line-height-lg: 110%;
         top: 0;
         bottom: 0;
         left: 0;
-        background-color: var(--palette--secondary);
+        background-color: color(secondary);
       }
 
       &.is-active {
-        background-color: var(--palette--secondary-highlight);
-        color: var(--palette--black);
+        background-color: color(secondary-highlight);
+        color: color('black', global);
 
         &::before {
-          background-color: var(--palette--secondary);
+          background-color: color(secondary);
         }
       }
     }
@@ -572,7 +573,7 @@ $item-line-height-lg: 110%;
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
     border-top: $hb-thin-border;
-    border-color: var(--palette--gray);
+    border-color: color('gray', global);
 
     &[aria-hidden='true'] {
       display: none;
@@ -586,8 +587,8 @@ $item-line-height-lg: 110%;
         width: 100%;
         padding: 0;
         border: $hb-thin-border;
-        border-color: var(--palette--gray);
-        background-color: var(--palette--white);
+        border-color: color('gray', global);
+        background-color: color('white', global);
       }
 
       // Prevents the last dropdown from hanging off the edge of the screen if

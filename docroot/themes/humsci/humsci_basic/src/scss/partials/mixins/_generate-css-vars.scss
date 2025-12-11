@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:meta';
-
 @use '../variables/colormap-registry' as *;
 
 ///
@@ -14,8 +13,7 @@
 ///   --color--colorful-pairings--cardinal-red: #8c1515;
 ///
 @mixin generate-css-vars($map-id, $map: null) {
-
-  @if $map == null {
+  @if not $map {
     $map: map.get($colormap-registry, $map-id);
   }
 

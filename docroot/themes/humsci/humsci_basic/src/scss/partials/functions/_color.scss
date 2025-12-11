@@ -1,6 +1,5 @@
 @use 'sass:map';
 @use 'sass:list';
-
 @use '../variables/colormap-registry' as *;
 @use '../variables/general' as *;
 @use '../variables/theme' as *;
@@ -25,7 +24,7 @@
     $colormap-prefix: #{$hb-current-theme}-#{$colormap-id};
     $theme-map: get-theme-array-list($colormap-registry, $colormap-prefix);
 
-    @if $theme-map == null {
+    @if not $theme-map {
       @error "Theme color map was not found in colormap-registry.";
     }
 

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+drush="/var/www/html/vendor/bin/drush"
+
+# If the first argument starts with "@", then we can turn it into a domain
+# and use it as the --uri parameter.
+if [[ $1 == @* ]]; then
+  alias="${1:1}"
+  IFS='.' read -r site _ <<< "$alias"
+  domain="$site.ddev.site"
+  domain="${domain//_/-}"
+  $drush --uri="$domain" ${@:1}
+else
+  $drush ${@:1}
+fi

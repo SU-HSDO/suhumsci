@@ -1,5 +1,6 @@
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use 'icons' as *;
 
 // ICON CONTAINER
@@ -59,7 +60,7 @@
   position: relative;
   height: hb-calculate-rems(3px);
   width: hb-calculate-rems(16px);
-  background-color: var(--palette--black);
+  background-color: color('black', global);
 
   &::before,
   &::after {
@@ -67,7 +68,7 @@
     display: block;
     height: hb-calculate-rems(3px);
     width: hb-calculate-rems(16px);
-    background-color: var(--palette--black);
+    background-color: color('black', global);
     position: absolute;
     left: 0;
 

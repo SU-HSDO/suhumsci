@@ -6,6 +6,7 @@
 
 @use '../mixins/links' as *;
 @use '../mixins/icons' as *;
+@use '../functions/color' as *;
 
 .hb-display-more-link-text {
   .hb-card__decorative-link a, // cards in views
@@ -22,7 +23,7 @@
   .hb-dark-pattern .field-hs-postcard-link a,
   .hb-dark-inversion & .views-element-container .hb-card__decorative-link a,
   .hb-dark-inversion & .views-element-container.field-hs-postcard-link a {
-    color: var(--palette--white);
+    color: color('white', global);
 
     &::after {
       @include hb-icon-link-arrow('white');
@@ -31,10 +32,10 @@
 
     &:hover,
     &:focus {
-      color: var(--palette--gray-medium);
+      color: color(gray-medium, global);
 
       &::after {
-        background-color: var(--palette--gray-medium);
+        background-color: color(gray-medium, global);
       }
     }
   }

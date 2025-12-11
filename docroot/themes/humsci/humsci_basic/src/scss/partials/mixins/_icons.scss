@@ -2,6 +2,7 @@
 @use '../variables/colors.colorful' as *;
 @use '../variables/colors.traditional' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../functions/svg' as *;
 @use '../functions/icons' as *;
 @use 'theme' as *;
@@ -110,7 +111,11 @@
   }
 
   @if $mask {
-    background-color: var(--palette--#{$color});
+    @if map.has-key($colorful-global-colors, $color) or map.has-key($traditional-global-colors, $color) {
+      background-color: color($color, global);
+    } @else {
+      background-color: color($color);
+    }
   }
 }
 
@@ -180,7 +185,7 @@
     margin-left: hb-calculate-rems(4px);
 
     span.fa-envelope {
-      color: var(--palette--tertiary);
+      color: color(tertiary);
     }
   }
 
@@ -188,7 +193,7 @@
   &:focus {
     span.fa-mailto {
       span.fa-envelope {
-        color: var(--palette--tertiary-darken-20);
+        color: color(tertiary-darken-20);
       }
     }
   }

@@ -1,6 +1,7 @@
 @use '../variables/fonts' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
 @use '../mixins/links' as *;
@@ -130,7 +131,7 @@ $blockquotes: (hb-blockquote, highlight-block-left, highlight-block-right);
   @include hb-themes(('colorful', 'airy')) {
     &::before {
       border-bottom: solid hb-calculate-rems(4px);
-      border-color: var(--palette--secondary);
+      border-color: color(secondary);
       content: '';
       display: block;
       vertical-align: middle;

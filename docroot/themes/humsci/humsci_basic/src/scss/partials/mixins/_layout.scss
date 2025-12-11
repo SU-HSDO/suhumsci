@@ -7,6 +7,7 @@
 @use '../functions/general' as *;
 @use '../functions/breakpoints' as *;
 @use '../functions/responsive-spacing' as *;
+@use '../functions/color' as *;
 @use 'breakpoints' as *;
 @use 'general' as *;
 
@@ -26,7 +27,7 @@
   width: 100%;
   z-index: $hb-z-index-small-1;
   position: relative;
-  background-color: var(--palette--white);
+  background-color: color('white', global);
 
   // The override below changes the sidebar styling to default within the layout builder admin area.
   .layout-builder & {
@@ -45,7 +46,7 @@
 @mixin hb-sidebar-block {
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);
   border: $hb-thin-border;
-  border-color: var(--palette--gray);
+  border-color: color('gray', global);
 
   &:not(:last-child) {
     margin-bottom: hb-calculate-rems(18px);

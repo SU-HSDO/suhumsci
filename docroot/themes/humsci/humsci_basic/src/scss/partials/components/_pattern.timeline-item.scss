@@ -1,9 +1,8 @@
 // styles for a single item in a timeline
 
-@use '../variables/colors.colorful' as *;
-@use '../variables/colors.traditional' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/general' as *;
 @use '../mixins/text' as *;
 @use '../mixins/icons' as *;
@@ -18,7 +17,7 @@
     position: absolute;
     height: calc(100% - 20px);
     width: 4px;
-    background-color: var(--palette--primary);
+    background-color: color(primary);
     left: hb-calculate-rems(10px);
     bottom: hb-calculate-rems(-2px);
   }
@@ -35,14 +34,14 @@
         position: absolute;
         height: calc(100% - 20px);
         width: 4px;
-        background-color: var(--palette--primary);
+        background-color: color(primary);
         left: hb-calculate-rems(10px);
         bottom: hb-calculate-rems(-2px);
       }
 
       // last item has small filled circle or square endcap when open
       &::after {
-        background-color: var(--palette--primary);
+        background-color: color(primary);
         content: '';
         position: absolute;
         height: 12px;
@@ -83,7 +82,7 @@
     // in Safari where :focus-visible is not supported
     &:focus {
       outline: solid;
-      outline-color: var(--palette--secondary-highlight-darken);
+      outline-color: color(secondary-highlight-darken);
     }
 
     // :only-child prevents timeline items without a description (revealed details) from having a pointer cursor
@@ -107,7 +106,7 @@
   &__heading {
     @include hb-heading-5;
 
-    color: var(--palette--primary);
+    color: color(primary);
     padding: 0 hb-calculate-rems(32px);
     position: relative;
 
@@ -118,7 +117,7 @@
       height: hb-calculate-rems(13px);
       top: hb-calculate-rems(1.2px);
       left: hb-calculate-rems(1.2px);
-      border: 4px solid var(--palette--primary);
+      border: 4px solid color(primary);
       border-radius: 50%;
       box-sizing: content-box;
     }

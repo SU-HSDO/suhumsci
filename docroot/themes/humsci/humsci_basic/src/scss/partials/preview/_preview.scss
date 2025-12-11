@@ -1,10 +1,8 @@
 @use 'sass:meta';
 @use '../variables/theme' as *;
-@use '../variables/colors.colorful' as *;
-@use '../variables/colors.traditional' as *;
-@use '../variables/colors.su-core' as *;
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
 @use '../mixins/generate-css-vars' as *;
@@ -42,8 +40,8 @@
 
   // Link current color variables.
   .paragraph-item {
-    --link-base-current-color: var(--palette--link-base-color);
-    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+    --link-base-current-color: #{color(link-base)};
+    --link-base-hover-current-color: #{color(link-base-hover)};
   }
 
   // Style fixes for specific elements.
@@ -165,8 +163,8 @@
   }
 
   .hb-vertical-linked-card__title__link.ext {
-    --link-base-current-color: var(--palette--white);
-    --link-base-hover-current-color: var(--palette--white);
+    --link-base-current-color: #{color('white', global)};
+    --link-base-hover-current-color: #{color('white', global)};
   }
 }
 

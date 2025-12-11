@@ -9,6 +9,7 @@
 // https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
 
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 
 .fa,
 .fab,
@@ -17,10 +18,10 @@
 .fas,
 // Fix color of X icon in all color pairings.
 a .fa-x-twitter {
-  color: var(--palette--secondary);
+  color: color(secondary);
 
   .hb-dark-pattern & {
-    color: var(--palette--secondary-highlight);
+    color: color(secondary-highlight);
   }
 }
 
@@ -45,12 +46,12 @@ a {
 
     &:hover,
     &:focus {
-      color: var(--palette--secondary-darken-12);
+      color: color(secondary-darken-12);
     }
 
     .hb-dark-pattern &:hover,
     .hb-dark-pattern &:focus {
-      color: var(--palette--tertiary-highlight-darken-10) !important;
+      color: color(tertiary-highlight-darken-10) !important;
     }
   }
 }

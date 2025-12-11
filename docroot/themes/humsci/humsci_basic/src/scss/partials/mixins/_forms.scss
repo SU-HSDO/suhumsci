@@ -1,10 +1,11 @@
 @use '../variables/general' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use 'theme' as *;
 
 @mixin hb-input-border {
   border: $hb-thin-border;
-  border-color: var(--palette--gray);
+  border-color: color('gray', global);
 
   @include hb-themes(('colorful', 'airy')) {
     border-radius: $hb-border-radius;
@@ -17,6 +18,6 @@
 }
 
 @mixin hb-focus {
-  outline: var(--palette--primary) solid hb-calculate-rems(3px);
+  outline: color(primary) solid hb-calculate-rems(3px);
   outline-offset: hb-calculate-rems(1px);
 }

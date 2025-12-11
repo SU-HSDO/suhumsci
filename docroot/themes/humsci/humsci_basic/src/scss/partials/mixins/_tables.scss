@@ -1,6 +1,7 @@
 @use '../variables/general' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'icons' as *;
@@ -15,11 +16,11 @@
   font-size: hb-calculate-rems(13px);
   text-align: left;
   border: $hb-thin-border;
-  border-color: var(--palette--gray-medium);
+  border-color: color(gray-medium, global);
 
   .hb-dark-pattern & {
-    color: var(--palette--black);
-    background-color: var(--palette--white);
+    color: color('black', global);
+    background-color: color('white', global);
   }
 
   @include grid-media-min('sm') {
@@ -31,16 +32,16 @@
 @mixin table-heading {
   position: sticky;
   top: 0;
-  border-color: var(--palette--white);
+  border-color: color('white', global);
 
   a,
   a:not([class]) {
-    color: var(--palette--white);
+    color: color('white', global);
     background-image: none;
 
     &:hover,
     &:focus {
-      color: var(--palette--secondary-highlight);
+      color: color(secondary-highlight);
       box-shadow: none;
     }
   }
@@ -51,17 +52,17 @@
   text-transform: uppercase;
 
   // set themed color for header background color table variable
-  background-color: var(--palette--primary);
-  color: var(--palette--white);
+  background-color: color(primary);
+  color: color('white', global);
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
     @include hb-themes(('colorful', 'airy')) {
-      background-color: var(--palette--secondary-darken-12);
+      background-color: color(secondary-darken-12);
     }
 
     @include hb-traditional {
-      background-color: var(--palette--primary);
+      background-color: color(primary);
     }
   }
 
@@ -75,7 +76,7 @@
 }
 
 @mixin table-row {
-  background-color: var(--palette--gray-light);
+  background-color: color(gray-light, global);
 }
 
 // Table Data
@@ -83,7 +84,7 @@
   padding: hb-calculate-rems(16px);
   vertical-align: top;
   border: $hb-thin-border;
-  border-color: var(--palette--gray-medium);
+  border-color: color(gray-medium, global);
 
   a {
     &:hover,

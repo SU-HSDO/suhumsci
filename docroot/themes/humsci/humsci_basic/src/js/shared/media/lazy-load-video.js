@@ -9,8 +9,8 @@
         const thumb = video.querySelector('.hb-video-lazy__thumb');
 
         // Click to load iframe
-        const playButton = video.querySelector('.hb-video-lazy__play');
-        playButton.addEventListener('click', () => {
+        // const playButton = video.querySelector('.hb-video-lazy__play');
+        thumb.addEventListener('click', () => {
           let embedUrl = '';
           let videoId = '';
           let provider = '';

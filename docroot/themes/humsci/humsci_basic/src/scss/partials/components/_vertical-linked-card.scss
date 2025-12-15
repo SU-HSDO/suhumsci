@@ -127,9 +127,9 @@
       margin: 0;
     }
 
-    .hb-vertical-linked-card:hover &,
-    .hb-vertical-linked-card:focus &,
-    .hb-vertical-linked-card.is-focused & {
+    .hb-vertical-linked-card:hover:not(:has(.hb-video-lazy:hover)) &,
+    .hb-vertical-linked-card:focus:not(:has(.hb-video-lazy:focus-within)) &,
+    .hb-vertical-linked-card.is-focused:not(:has(.hb-video-lazy:focus-within)) & {
       @include hb-themes(('colorful', 'airy')) {
         background-color: var(--palette--secondary-darken-12);
       }
@@ -164,9 +164,9 @@
       transition: hb-transition(mask-position);
     }
 
-    .hb-vertical-linked-card:hover &::after,
-    .hb-vertical-linked-card:focus &::after,
-    .hb-vertical-linked-card.is-focused &::after {
+    .hb-vertical-linked-card:hover:not(:has(.hb-video-lazy:hover)) &::after,
+    .hb-vertical-linked-card:focus:not(:has(.hb-video-lazy:focus-within)) &::after,
+    .hb-vertical-linked-card.is-focused:not(:has(.hb-video-lazy:focus-within)) &::after {
       mask-position: 12px;
     }
   }

@@ -41,12 +41,30 @@
         }
       }
 
-      // Styles to have the same width of the border decoration on small screen sizes.
-      .hb-video-lazy__play::before {
+      .hb-video-lazy__play {
+        // Styles to have the same width of the border decoration on small screen sizes.
         @include grid-media-between('xs', 'sm') {
           width: hb-calculate-rems(60px);
           height: hb-calculate-rems(60px);
+
+          &::before {
+            background-size: hb-calculate-rems(50px);
+          }
         }
+      }
+
+    }
+  }
+
+  .hb-video-lazy__play {
+    bottom: hb-calculate-rems(-12px);
+
+    @include grid-media-min('md') {
+      width: hb-calculate-rems(74px);
+      height: hb-calculate-rems(70px);
+
+      &::before {
+        background-size: hb-calculate-rems(60px);
       }
     }
   }

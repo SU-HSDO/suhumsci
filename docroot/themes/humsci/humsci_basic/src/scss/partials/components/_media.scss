@@ -9,11 +9,11 @@
   position: relative;
 
   // Margin to give enough space between the play button and the text.
-  margin-bottom: hb-calculate-rems(16px);
+  margin-bottom: hb-calculate-rems(6px);
 
   // Needs more space if it's followed by text.
   &:has(+ p) {
-    margin-bottom: hb-calculate-rems(32px);
+    margin-bottom: hb-calculate-rems(16px);
   }
 }
 
@@ -23,6 +23,16 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
+    cursor: pointer;
+
+    // Trigger play button hover styles
+    &:hover .hb-video-lazy__play {
+      background-color: var(--palette--secondary-darken-12);
+    }
+
+    &:focus-within .hb-video-lazy__play {
+      background-color: var(--palette--secondary);
+    }
 
     .views-field & {
       aspect-ratio: auto;
@@ -70,15 +80,18 @@
   .hb-video-lazy__play {
     position: absolute;
     left: hb-calculate-rems(16px);
-    bottom: hb-calculate-rems(-16px);
+    bottom: hb-calculate-rems(-6px);
     border: $hb-thin-border;
     border-color: var(--palette--white);
     background-color: var(--palette--secondary);
     font-size: 0;
     padding: 0;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    width: hb-calculate-rems(54px);
+    height: hb-calculate-rems(49px);
+    padding-left: hb-calculate-rems(2px);
     cursor: pointer;
 
     @include hb-themes(('colorful', 'airy')) {
@@ -88,6 +101,8 @@
     .hs-full-width & {
       @include grid-media-min('md') {
         left: 10%;
+        width: hb-calculate-rems(80px);
+        height: hb-calculate-rems(84px);
       }
     }
 
@@ -114,15 +129,13 @@
       position: relative;
       background-repeat: no-repeat;
       background-position: center;
-      background-size: hb-calculate-rems(30px);
-      height: hb-calculate-rems(40px);
-      width: hb-calculate-rems(40px);
+      background-size: hb-calculate-rems(40px);
+      width: 100%;
+      height: 100%;
 
       .hs-full-width & {
         @include grid-media-min('md') {
-          background-size: hb-calculate-rems(50px);
-          height: hb-calculate-rems(80px);
-          width: hb-calculate-rems(80px);
+          background-size: hb-calculate-rems(70px);
         }
       }
     }

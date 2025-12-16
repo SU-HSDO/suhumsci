@@ -64,7 +64,13 @@
       height: hb-calculate-rems(70px);
 
       &::before {
-        background-size: hb-calculate-rems(60px);
+        @include hb-themes(('colorful', 'airy')) {
+          background-size: hb-calculate-rems(55px);
+        }
+
+        @include hb-traditional {
+          background-size: hb-calculate-rems(60px);
+        }
       }
     }
   }

@@ -9,7 +9,13 @@
   position: relative;
 
   // Margin to give enough space between the play button and the text.
-  margin-bottom: hb-calculate-rems(6px);
+  @include hb-themes(('colorful', 'airy')) {
+    margin-bottom: hb-calculate-rems(8px);
+  }
+
+  @include hb-traditional {
+    margin-bottom: hb-calculate-rems(6px);
+  }
 
   // Needs more space if it's followed by text.
   &:has(+ p) {
@@ -80,7 +86,6 @@
   .hb-video-lazy__play {
     position: absolute;
     left: hb-calculate-rems(16px);
-    bottom: hb-calculate-rems(-6px);
     border: $hb-thin-border;
     border-color: var(--palette--white);
     background-color: var(--palette--secondary);
@@ -89,18 +94,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: hb-calculate-rems(54px);
-    height: hb-calculate-rems(49px);
     padding-left: hb-calculate-rems(2px);
+    width: hb-calculate-rems(54px);
     cursor: pointer;
 
     @include hb-themes(('colorful', 'airy')) {
       border-radius: 50%;
+      bottom: hb-calculate-rems(-8px);
+      height: hb-calculate-rems(51px);
+    }
+
+    @include hb-traditional {
+      bottom: hb-calculate-rems(-6px);
+      height: hb-calculate-rems(49px);
     }
 
     .hs-full-width & {
       @include grid-media-min('md') {
         left: 10%;
+        bottom: hb-calculate-rems(-16px);
         width: hb-calculate-rems(80px);
         height: hb-calculate-rems(84px);
       }
@@ -129,13 +141,27 @@
       position: relative;
       background-repeat: no-repeat;
       background-position: center;
-      background-size: hb-calculate-rems(40px);
       width: 100%;
       height: 100%;
 
+      @include hb-themes(('colorful', 'airy')) {
+        background-size: hb-calculate-rems(35px);
+      }
+
+      @include hb-traditional {
+        background-size: hb-calculate-rems(40px);
+      }
+
       .hs-full-width & {
         @include grid-media-min('md') {
-          background-size: hb-calculate-rems(70px);
+
+          @include hb-themes(('colorful', 'airy')) {
+            background-size: hb-calculate-rems(50px);
+          }
+
+          @include hb-traditional {
+            background-size: hb-calculate-rems(70px);
+          }
         }
       }
     }

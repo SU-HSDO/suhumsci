@@ -1,0 +1,62 @@
+uuid: 717d74d0-6bf4-4111-bab9-dad6c2ef3811
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.stanford_image_large_square
+    - field.field.media.video.field_media_oembed_video
+    - image.style.hs_large_square_480x480
+    - media.type.video
+  module:
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
+    - image
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: SA9uz81dFqmz2BtJAYpPPY4xZkWskBQpJZf8KMC9c3A
+id: media.video.stanford_image_large_square
+targetEntityType: media
+bundle: video
+mode: stanford_image_large_square
+content:
+  field_media_oembed_video:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 0
+    region: content
+  thumbnail:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: hs_large_square_480x480
+      image_loading:
+        attribute: lazy
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: content
+hidden:
+  created: true
+  name: true
+  search_api_excerpt: true
+  uid: true

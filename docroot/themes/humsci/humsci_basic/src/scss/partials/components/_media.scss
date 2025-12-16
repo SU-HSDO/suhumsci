@@ -65,7 +65,8 @@
     aspect-ratio: 16 / 9;
     overflow: hidden;
 
-    .views-field & {
+    .views-field &,
+    .text-long & {
       aspect-ratio: auto;
       padding-bottom: 76%;
     }
@@ -118,6 +119,17 @@
       }
     }
 
+    // Styles when view modes are selected on a WYSYWIG or thumbnail is on a Spotlight.
+    .full &,
+    .stanford_image_xl &,
+    .stanford_image_xl_square &,
+    .hb-spotlight & {
+      @include grid-media-min('md') {
+        width: hb-calculate-rems(74px);
+        height: hb-calculate-rems(70px);
+      }
+    }
+
     &:not(.hb-video-lazy__play--no-js) {
       .no-js & {
         display: none;
@@ -160,6 +172,22 @@
 
           @include hb-traditional {
             background-size: hb-calculate-rems(70px);
+          }
+        }
+      }
+
+      // Styles when view modes are selected on a WYSYWIG or thumbnail is on a Spotlight.
+      .full &,
+      .stanford_image_xl &,
+      .stanford_image_xl_square &,
+      .hb-spotlight & {
+        @include grid-media-min('md') {
+          @include hb-themes(('colorful', 'airy')) {
+            background-size: hb-calculate-rems(55px);
+          }
+
+          @include hb-traditional {
+            background-size: hb-calculate-rems(60px);
           }
         }
       }

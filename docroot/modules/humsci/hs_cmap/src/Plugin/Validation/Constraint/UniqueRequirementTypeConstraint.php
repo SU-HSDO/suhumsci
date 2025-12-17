@@ -7,7 +7,7 @@ namespace Drupal\hs_cmap\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Ensures the Requirement Type taxonomy terms have unique colour and name.
+ * Ensures the Requirement Type taxonomy terms have unique color and name.
  *
  * This prevents a11y issues.
  *
@@ -19,11 +19,11 @@ use Symfony\Component\Validator\Constraint;
 class UniqueRequirementTypeConstraint extends Constraint {
 
   /**
-   * Message for duplicate colour.
+   * Message for duplicate color.
    *
    * @var string
    */
-  public string $duplicateColour = 'This colour is already used by another requirement type. Choose a unique colour.';
+  public string $duplicateColor = 'This color is already used by another requirement type. Choose a unique color.';
 
   /**
    * Message for duplicate name.

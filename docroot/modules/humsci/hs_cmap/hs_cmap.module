@@ -19,7 +19,7 @@ use Drupal\taxonomy\Entity\Term;
  */
 function hs_cmap_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle): void {
   if ($bundle === 'hs_curriculum_requirement_type' && $entity_type->id() === 'taxonomy_term') {
-    // Add a unique constraint to the colour field.
+    // Add a unique constraint to the color field.
     if (isset($fields['field_hs_curriculum_course_color'])) {
       $fields['field_hs_curriculum_course_color']->addConstraint('UniqueRequirementType');
     }

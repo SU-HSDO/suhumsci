@@ -59,13 +59,13 @@ class UniqueRequirementTypeConstraintValidator extends ConstraintValidator imple
     $value = $item->value;
     $term_id = $term->id();
 
-    // Check for duplicate colour.
+    // Check for duplicate color.
     if (
       $field_name === 'field_hs_curriculum_course_color'
       && !empty($value)
       && $this->isDuplicate($field_name, $value, $term_id)
     ) {
-      $this->context->addViolation($constraint->duplicateColour);
+      $this->context->addViolation($constraint->duplicateColor);
     }
 
     // Check for duplicate name.

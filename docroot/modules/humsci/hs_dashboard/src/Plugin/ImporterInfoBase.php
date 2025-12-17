@@ -10,6 +10,7 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,6 +42,13 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
   protected DateFormatterInterface $dateFormatter;
 
   /**
+   * Migration plugin manager service.
+   *
+   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
+   */
+  protected MigrationPluginManagerInterface $migrationManager;
+
+  /**
    * Constructs a new ViewsBasicManager object.
    *
    * @param array $configuration
@@ -55,6 +63,8 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
    *   The KeyValue factory.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The DateFormatter.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager interface.
    */
   public function __construct(
     array $configuration,
@@ -63,11 +73,13 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
     EntityTypeManagerInterface $entity_type_manager,
     KeyValueFactoryInterface $key_value_factory,
     DateFormatterInterface $date_formatter,
+    MigrationPluginManagerInterface $migration_manager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->lastImportedStore = $key_value_factory->get('migrate_last_imported');
     $this->dateFormatter = $date_formatter;
+    $this->migrationManager = $migration_manager;
   }
 
   /**
@@ -81,6 +93,7 @@ abstract class ImporterInfoBase extends PluginBase implements ImporterInfoInterf
       $container->get('entity_type.manager'),
       $container->get('keyvalue'),
       $container->get('date.formatter'),
+      $container->get('plugin.manager.migration'),
     );
   }
 

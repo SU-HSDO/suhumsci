@@ -25,7 +25,6 @@
   .hb-hero-overlay {
     display: block;
 
-
     @include hb-themes(('colorful', 'airy')) {
       @include clearfix;
       padding: hb-spacing-width() 0 hb-spacing-width() 8%;
@@ -377,7 +376,7 @@
           margin: 0 0 hb-calculate-rems(10px);
           right: calc(
             40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-          ); // move it past the slick arrows and their padding
+          ); // move it past the swiper pagination and their padding
           left: auto;
           top: auto;
 
@@ -387,7 +386,7 @@
           }
         }
 
-        // slick dots do not display until this breakpoint
+        // swiper pagination do not display until this breakpoint
         @media (min-width: 890px) {
           display: flex;
           clip-path: inherit;
@@ -406,12 +405,12 @@
         @include grid-media-min('xl') {
           right: calc(
             50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-          ); // move it past the slick arrows and their padding
+          ); // move it past the swiper arrows and their padding
         }
       }
 
       @include hb-traditional {
-        // slick dots do not display until the medium breakpoint
+        // swiper pagination do not display until the medium breakpoint
         // default positioning styles are applied to the full width hero
         // main content styles are applied by targeting the sidebar classes
         // even though the sidebars do not display until the next breakpoint,
@@ -427,7 +426,7 @@
 
           right: calc(
             50% + #{hb-calculate-rems(77px)}
-          ); // move it past the slick-next arrow
+          ); // move it past the swiper next arrow
           bottom: hb-calculate-rems(61px);
 
           .hb-three-column--one-sidebar &,
@@ -440,14 +439,14 @@
         @include grid-media-min('lg') {
           right: calc(
             57% + #{hb-calculate-rems(80px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
 
           .hb-three-column--one-sidebar & {
             right: calc(57% + #{hb-calculate-rems(84px)});
           }
 
           .hb-three-column--two-sidebar & {
-            right: hb-calculate-rems(130px); // move it past the slick arrows
+            right: hb-calculate-rems(130px); // move it past the swiper arrows
           }
         }
 
@@ -501,7 +500,7 @@
           margin: 0 hb-calculate-rems(10px);
           border-radius: 50%;
 
-          // Use box shadow property to improve visual accessibiity of slick dots.
+          // Use box shadow property to improve visual accessibiity of swiper pagination.
           @include hb-themes(('airy', 'colorful')) {
             $light-shadow: var(--palette--gray-light);
             $dark-shadow: var(--palette--black);
@@ -541,11 +540,14 @@
     .swiper-button-next {
       position: absolute;
       width: hb-calculate-rems(25px);
-      display: block;
       height: hb-calculate-rems(40px);
 
       svg {
         display: none;
+      }
+
+      &:not(.swiper-button-lock) {
+        display: block;
       }
 
       @include hb-themes(('airy')) {
@@ -670,44 +672,44 @@
         margin-block: 0 hb-calculate-rems(15px);
         right: calc(
           #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-        ); // move it past the slick-next arrow
+        ); // move it past the swiper next arrow
 
         @include grid-media-min('md') {
           right: calc(
             40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-          ); // move it past the slick-next arrow
+          ); // move it past the swiper next arrow
         }
 
         @include grid-media-min('xl') {
           right: calc(
             50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-          ); // move it past the slick-next arrow
+          ); // move it past the swiper next arrow
         }
       }
 
       @include hb-traditional {
         right: calc(
           #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-        ); // move it past the slick-next arrow
+        ); // move it past the swiper next arrow
 
         @include grid-media-min('md') {
           right: auto;
           left: calc(
             53% - #{hb-calculate-rems(85px)}
-          ); // move it past the slick-next arrow
+          ); // move it past the swiper next arrow
         }
 
         @include grid-media-min('lg') {
           left: calc(
             45% - #{hb-calculate-rems(85px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
 
           /* stylelint-disable max-nesting-depth */
           .hb-three-column--two-sidebar & {
             left: inherit;
             right: calc(
               #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-            ); // move it past the slick arrows
+            ); // move it past the swiper arrows
           }
           /* stylelint-enable max-nesting-depth */
         }
@@ -715,13 +717,13 @@
         @include grid-media-min('xl') {
           left: calc(
             50% - #{hb-calculate-rems(85px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
         }
 
         @include grid-media-min('2xl') {
           left: calc(
             #{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
 
           .field-hs-collection-items.item-per-row--2 & {
             left: calc(100% - #{hb-calculate-rems(88px)});
@@ -758,12 +760,12 @@
         @include grid-media-min('lg') {
           left: calc(
             45% - #{hb-calculate-rems(40px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
 
           /* stylelint-disable max-nesting-depth */
           .hb-three-column--two-sidebar & {
             left: inherit;
-            right: hb-calculate-rems(50px); // move it past the slick arrows
+            right: hb-calculate-rems(50px); // move it past the swiper arrows
           }
           /* stylelint-enable max-nesting-depth */
         }
@@ -771,13 +773,13 @@
         @include grid-media-min('xl') {
           left: calc(
             50% - #{hb-calculate-rems(40px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
         }
 
         @include grid-media-min('2xl') {
           left: calc(
             #{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
 
           .field-hs-collection-items.item-per-row--2 & {
             left: calc(100% - #{hb-calculate-rems(43px)});

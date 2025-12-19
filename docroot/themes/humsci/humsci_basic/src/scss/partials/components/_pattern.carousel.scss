@@ -372,13 +372,10 @@
 
       @include hb-themes(('airy', 'colorful')) {
         @include grid-media-min('md') {
-          bottom: hb-spacing-width();
+          inset: auto
+            calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)})
+            hb-spacing-width() auto;
           margin: 0 0 hb-calculate-rems(10px);
-          right: calc(
-            40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-          ); // move it past the swiper pagination and their padding
-          left: auto;
-          top: auto;
 
           .hb-three-column--one-sidebar &,
           .hb-three-column--two-sidebar & {
@@ -421,13 +418,8 @@
           width: auto;
           position: absolute;
           overflow: visible;
-          left: auto;
-          top: auto;
-
-          right: calc(
-            50% + #{hb-calculate-rems(77px)}
-          ); // move it past the swiper next arrow
-          bottom: hb-calculate-rems(61px);
+          inset: auto calc(50% + #{hb-calculate-rems(77px)})
+            hb-calculate-rems(61px) auto;
 
           .hb-three-column--one-sidebar &,
           .hb-three-column--two-sidebar & {
@@ -456,12 +448,12 @@
 
           .hb-three-column--one-sidebar & {
             right: calc(57% + #{hb-calculate-rems(36px)});
-            bottom: hb-calculate-rems(56px);
+            bottom: hb-calculate-rems(53px);
           }
 
           .hb-three-column--two-sidebar & {
             right: hb-calculate-rems(130px);
-            bottom: hb-calculate-rems(56px);
+            bottom: hb-calculate-rems(53px);
           }
         }
 
@@ -474,7 +466,7 @@
             right: calc(
               (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
             );
-            bottom: hb-calculate-rems(56px);
+            bottom: hb-calculate-rems(53px);
           }
         }
       }
@@ -603,11 +595,11 @@
 
         @include grid-media-min('md') {
           margin: hb-calculate-rems(18px) 0;
-          bottom: hb-calculate-rems(54px);
+          bottom: hb-calculate-rems(25px);
         }
 
         @include grid-media-min('xl') {
-          bottom: hb-calculate-rems(78px);
+          bottom: hb-calculate-rems(46px);
         }
 
         .hs-full-width & {

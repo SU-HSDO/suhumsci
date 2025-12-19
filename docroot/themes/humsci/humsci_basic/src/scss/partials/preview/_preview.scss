@@ -4,6 +4,7 @@
 @use '../variables/traditional-pairings' as *;
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
+@use '../mixins/breakpoints' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
 
@@ -48,8 +49,14 @@
   }
 
   .paragraph--type--hs-gradient-hero-slider {
-    .slick-dots {
-      bottom: -2rem;
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+
+  .paragraph--type--hs-carousel .hb-hero-overlay__text {
+    @include grid-media-min('2xl') {
+      width: 48% !important;
     }
   }
 

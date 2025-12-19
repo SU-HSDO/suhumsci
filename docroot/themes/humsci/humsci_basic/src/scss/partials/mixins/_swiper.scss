@@ -29,59 +29,6 @@
 
 // arrows
 @mixin swiper-arrows {
-  .swiper-button-prev,
-  .swiper-button-next {
-    background-color: var(--palette--white);
-    position: absolute;
-    opacity: 0.5;
-    top: unset;
-
-    width: hb-calculate-rems(44px);
-    height: hb-calculate-rems(88px);
-    padding: 0;
-    font-size: 0;
-    border: none;
-    cursor: pointer;
-    transition: hb-transition(opacity);
-
-    svg {
-      display: none;
-    }
-
-    &:hover {
-      opacity: 0.6;
-    }
-
-    &:focus {
-      opacity: 1;
-    }
-
-    // additional focus styles for keyboard users only
-    // that compliments browser default styles
-    &:focus-visible {
-      opacity: 1;
-      outline: 5px auto -webkit-focus-ring-color; // Chrome only
-    }
-
-    // shared arrow properties
-    &::before {
-      @include hb-traditional {
-        @include hb-icon-background('slider-caret', 'black');
-      }
-
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-icon-background('slider-caret', 'primary');
-      }
-
-      content: '';
-      height: hb-calculate-rems(30px);
-      width: hb-calculate-rems(17px);
-      position: absolute;
-      top: hb-calculate-rems(29px);
-      transition: hb-transition(transform);
-    }
-  }
-
   .swiper-button-prev {
     right: 0;
     left: unset;
@@ -141,6 +88,19 @@
 
   .swiper-button-prev,
   .swiper-button-next {
+    background-color: var(--palette--white);
+    position: absolute;
+    opacity: 0.5;
+    top: unset;
+
+    width: hb-calculate-rems(44px);
+    height: hb-calculate-rems(88px);
+    padding: 0;
+    font-size: 0;
+    border: none;
+    cursor: pointer;
+    transition: hb-transition(opacity);
+
     @include grid-media-min('md') {
       @include hb-traditional {
         bottom: calc(50% - #{hb-calculate-rems(30px)});
@@ -157,6 +117,43 @@
       .hb-three-column--two-sidebar & {
         bottom: calc(50% - #{hb-calculate-rems(46px)});
       }
+    }
+
+    svg {
+      display: none;
+    }
+
+    &:hover {
+      opacity: 0.6;
+    }
+
+    &:focus {
+      opacity: 1;
+    }
+
+    // additional focus styles for keyboard users only
+    // that compliments browser default styles
+    &:focus-visible {
+      opacity: 1;
+      outline: 5px auto -webkit-focus-ring-color; // Chrome only
+    }
+
+    // shared arrow properties
+    &::before {
+      @include hb-traditional {
+        @include hb-icon-background('slider-caret', 'black');
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        @include hb-icon-background('slider-caret', 'primary');
+      }
+
+      content: '';
+      height: hb-calculate-rems(30px);
+      width: hb-calculate-rems(17px);
+      position: absolute;
+      top: hb-calculate-rems(29px);
+      transition: hb-transition(transform);
     }
   }
 }

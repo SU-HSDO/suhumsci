@@ -89,9 +89,22 @@ function hs_cmap_taxonomy_vocabulary_insert(EntityInterface $vocabulary): void {
  *
  * @return void
  *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function _hs_cmap_save_taxonomy_term(array $data): void {
+  $exists = Drupal::entityTypeManager()->getStorage('taxonomy_term')
+    ->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'hs_curriculum_requirement_type')
+    ->condition('name', $data['name'], '=')
+    ->execute();
+
+  if ($exists) {
+    return;
+  }
+
   $term = Term::create($data);
   $term->save();
 }

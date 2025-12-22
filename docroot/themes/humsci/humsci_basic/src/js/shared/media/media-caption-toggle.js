@@ -36,7 +36,7 @@
             // Determine if this caption should be collapsible:
             // 1. It's long enough.
             // 2. Or it's inside a spotlight on a mobile viewport.
-            const collapsible = height >= 28
+            const collapsible = height >= (isColorful ? 28 : 27)
               || (spotlight && mobileView.matches && isColorful);
 
             if (collapsible) {

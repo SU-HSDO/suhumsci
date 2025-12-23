@@ -1089,3 +1089,20 @@ function su_humsci_profile_update_9751() {
     $logger->notice('Image style cleanup: No styles found to delete.');
   }
 }
+
+/**
+ * Users with role 'author' can only edit their own media.
+ */
+function su_humsci_profile_update_9752() {
+  // Add permissions to edit own media and revoke 'any media' edit permissions.
+  user_role_grant_permissions('author', [
+    'edit own file media',
+    'edit own image media',
+    'edit own video media',
+  ]);
+  user_role_revoke_permissions('author', [
+    'edit any file media',
+    'edit any image media',
+    'edit any video media',
+  ]);
+}

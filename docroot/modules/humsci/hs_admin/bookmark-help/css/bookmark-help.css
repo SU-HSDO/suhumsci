@@ -22,8 +22,19 @@
   white-space: normal;
 }
 
+/* Adding this position relative so the copy to clipboard message stays in the correct position */
+.ck-bookmark-form__wrapper {
+  position: relative !important;
+}
+
 .ck-bookmark-form__wrapper .ck-label {
   visibility: hidden;
+}
+
+/* There's a width auto and a min-width of 100% coming from the gin theme that is breaking the width of this input, it makes the input look smaller than expected */
+.ck.ck-form .ck-bookmark-form__wrapper .ck-input.ck-input-text {
+  min-width: unset !important;
+  width: calc(100% - 22px);
 }
 
 .ck-bookmark-form .ck.ck-button:not(.ck-disabled):hover {

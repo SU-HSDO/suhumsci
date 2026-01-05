@@ -25,11 +25,11 @@
 
 .hb-video-lazy {
   .hb-video-lazy__thumb {
-    aspect-ratio: 16 / 9;
     overflow: hidden;
     width: 100%;
     height: 100%;
     cursor: pointer;
+    aspect-ratio: 16 / 9;
 
     // Trigger play button hover styles
     &:hover .hb-video-lazy__play {
@@ -42,7 +42,7 @@
 
     .views-field &,
     .text-long & {
-      aspect-ratio: auto;
+      aspect-ratio: unset;
     }
   }
 
@@ -63,26 +63,7 @@
   &:has(.hb-video-lazy__iframe) {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 9;
     overflow: hidden;
-
-    .views-field &,
-    .text-long & {
-      aspect-ratio: auto;
-      padding-bottom: 76%;
-    }
-  }
-
-  .hb-video-lazy__iframe {
-    .views-field & {
-      position: absolute;
-      z-index: 0;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      min-height: 1px;
-      object-fit: cover;
-    }
   }
 
   .hb-video-lazy__play {
@@ -103,7 +84,7 @@
     @include hb-themes(('colorful', 'airy')) {
       border-radius: 50%;
       bottom: hb-calculate-rems(-8px);
-      height: hb-calculate-rems(51px);
+      height: hb-calculate-rems(54px);
     }
 
     @include hb-traditional {
@@ -116,7 +97,14 @@
         left: 10%;
         bottom: hb-calculate-rems(-16px);
         width: hb-calculate-rems(80px);
-        height: hb-calculate-rems(84px);
+
+        @include hb-themes(('colorful', 'airy')) {
+          height: hb-calculate-rems(80px);
+        }
+
+        @include hb-traditional {
+          height: hb-calculate-rems(84px);
+        }
       }
     }
 
@@ -127,7 +115,14 @@
     .hb-spotlight & {
       @include grid-media-min('md') {
         width: hb-calculate-rems(74px);
-        height: hb-calculate-rems(70px);
+
+        @include hb-themes(('colorful', 'airy')) {
+          height: hb-calculate-rems(74px);
+        }
+
+        @include hb-traditional {
+          height: hb-calculate-rems(70px);
+        }
       }
     }
 

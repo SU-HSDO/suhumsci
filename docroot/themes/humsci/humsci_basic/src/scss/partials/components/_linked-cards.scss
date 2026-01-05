@@ -22,8 +22,8 @@
     display: inline;
   }
 
-  &:hover:not(:has(.hb-video-lazy:hover)),
-  &:focus:not(:has(.hb-video-lazy:focus-within)) {
+  &:hover,
+  &:focus {
     cursor: pointer;
 
     @include hb-colorful {
@@ -42,6 +42,28 @@
       .hb-dark-inversion .views-element-container & {
         color: var(--link-base-hover-current-color);
         text-decoration-color: var(--link-base-hover-current-color);
+      }
+    }
+  }
+
+  // Styles when there's a video on a card.
+  &:has(.hb-video-lazy:hover),
+  &:has(.hb-video-lazy:focus-within) {
+    @include hb-colorful {
+      .hb-raised-cards & {
+        text-decoration-color: var(--palette--gray-medium);
+      }
+    }
+
+    .hb-card__title a,
+    .hb-card__title a > div > * {
+      color: var(--palette--black);
+      text-decoration-color: var(--palette--gray-medium);
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--palette--black);
+        text-decoration-color: var(--palette--gray-medium);
       }
     }
   }

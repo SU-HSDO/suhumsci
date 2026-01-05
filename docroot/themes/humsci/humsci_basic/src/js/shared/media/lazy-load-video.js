@@ -9,8 +9,9 @@
         const thumb = video.querySelector('.hb-video-lazy__thumb');
 
         // Click to load iframe
-        // const playButton = video.querySelector('.hb-video-lazy__play');
-        thumb.addEventListener('click', () => {
+        thumb.addEventListener('click', (event) => {
+          event.preventDefault();
+
           let embedUrl = '';
           let videoId = '';
           let provider = '';
@@ -53,6 +54,16 @@
           iframe.allow = 'autoplay; fullscreen';
           iframe.allowFullscreen = true;
           iframe.classList.add('hb-video-lazy__iframe');
+
+          if (video.closest('.text-long')) {
+            // Measure the thumbnail size BEFORE replacement
+            const rect = thumb.getBoundingClientRect();
+            const ratio = rect.height / rect.width;
+
+            // Lock the container to the same ratio
+            videoWrapper.style.aspectRatio = `${rect.width} / ${rect.height}`;
+            videoWrapper.style.height = `${rect.width * ratio}px`;
+          }
 
           thumb.replaceWith(iframe);
         });

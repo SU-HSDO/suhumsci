@@ -26,7 +26,7 @@ const addCardEvents = (card, mainLink) => {
     // Ensure clicks on "Add to Calendar" container, lazy video container, an input or a button
     const addToCal = event.target.closest('.addtocal-container');
     const lazyVideo = event.target.closest('.hb-video-lazy');
-    const clickableTagNames = ['INPUT', 'BUTTON', 'SPAN'];
+    const clickableTagNames = ['INPUT', 'BUTTON'];
 
     if (addToCal || lazyVideo || clickableTagNames.includes(event.target.tagName)) {
       return;

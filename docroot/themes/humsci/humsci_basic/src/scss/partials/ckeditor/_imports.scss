@@ -109,7 +109,6 @@
       width: 100%;
       height: 100%;
       cursor: pointer;
-      aspect-ratio: 16 / 9;
 
       // Trigger play button hover styles
       &:hover .hb-video-lazy__play {
@@ -120,9 +119,12 @@
         background-color: var(--palette--secondary);
       }
 
-      .views-field &,
-      .text-long & {
-        aspect-ratio: unset;
+      .align-center.stanford_image_small_square &,
+      .align-center.stanford_image_small &,
+      .align-center.stanford_image_medium &,
+      .align-center.stanford_image_medium_square & {
+        width: fit-content;
+        margin: 0 auto;
       }
     }
 
@@ -181,27 +183,23 @@
         height: hb-calculate-rems(49px);
       }
 
-      .hs-full-width & {
-        @include grid-media-min('md') {
-          left: 10%;
-          bottom: hb-calculate-rems(-16px);
-          width: hb-calculate-rems(80px);
+      // Styles when view modes are selected on a WYSYWIG.
+      .stanford_image_small_square &,
+      .stanford_image_small & {
+        @include hb-themes(('colorful', 'airy')) {
+          width: hb-calculate-rems(44px);
+          height: hb-calculate-rems(44px);
+        }
 
-          @include hb-themes(('colorful', 'airy')) {
-            height: hb-calculate-rems(80px);
-          }
-
-          @include hb-traditional {
-            height: hb-calculate-rems(84px);
-          }
+        @include hb-traditional {
+          width: hb-calculate-rems(44px);
+          height: hb-calculate-rems(39px);
         }
       }
 
-      // Styles when view modes are selected on a WYSYWIG or thumbnail is on a Spotlight.
       .full &,
       .stanford_image_xl &,
-      .stanford_image_xl_square &,
-      .hb-spotlight & {
+      .stanford_image_xl_square & {
         @include grid-media-min('md') {
           width: hb-calculate-rems(74px);
 
@@ -219,16 +217,8 @@
       .align-center.stanford_image_small &,
       .align-center.stanford_image_medium &,
       .align-center.stanford_image_medium_square & {
-        position: absolute;
-        left: 25%;
-
-        @include grid-media-min('sm') {
-          left: 32%;
-        }
-
-        @include grid-media-min('md') {
-          left: 40%;
-        }
+        left: unset;
+        margin-left: hb-calculate-rems(16px);
       }
 
       &:not(.hb-video-lazy__play--no-js) {
@@ -277,11 +267,21 @@
           }
         }
 
-        // Styles when view modes are selected on a WYSYWIG or thumbnail is on a Spotlight.
+        // Styles when view modes are selected on a WYSYWIG.
+        .stanford_image_small_square &,
+        .stanford_image_small & {
+          @include hb-themes(('colorful', 'airy')) {
+            background-size: hb-calculate-rems(30px);
+          }
+
+          @include hb-traditional {
+            background-size: hb-calculate-rems(35px);
+          }
+        }
+
         .full &,
         .stanford_image_xl &,
-        .stanford_image_xl_square &,
-        .hb-spotlight & {
+        .stanford_image_xl_square & {
           @include grid-media-min('md') {
             @include hb-themes(('colorful', 'airy')) {
               background-size: hb-calculate-rems(55px);

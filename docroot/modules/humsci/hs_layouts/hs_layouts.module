@@ -181,6 +181,9 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
     $spotlight_type = $paragraph->get('field_spotlight_style')->isEmpty() ? 'classic' : $paragraph->get('field_spotlight_style')->getString();
   }
 
+  $image_style = $context->getProperty('view_mode') == 'default' ? 'tall' : 'short';
+  $variables['attributes']->addClass('hb-spotlight--view-mode-' . $image_style);
+
   if ($paragraph->hasField('field_hs_spotlight_image')) {
     if ($paragraph->get('field_hs_spotlight_image')->isEmpty()) {
       $variables['attributes']->addClass('hb-spotlight--no-media');

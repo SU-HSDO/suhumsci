@@ -3,18 +3,14 @@
     '.ptype-hs-gradient-hero-slider, .ptype-hs-carousel, .ptype-stanford-gallery, .ptype-hs-sptlght-slder';
 
   const resizeObserver = new ResizeObserver((entries) => {
-    const offset = {
-      'edit-field-hs-page-hero-wrapper': 128,
-      'edit-field-hs-page-components-wrapper': 90,
-      'edit-field-hs-priv-page-components-wrapper': 90,
-    };
     for (const entry of entries) {
       const containerWidth = entry.contentRect.width;
       const id = entry.target.id;
       const slideshows = entry.target.querySelectorAll(slideshowsSelector);
 
       for (const slideshow of slideshows) {
-        slideshow.style.width = containerWidth - offset[id] + 'px';
+        // Adjust slideshow width (with offset to match container width).
+        slideshow.style.width = containerWidth - 75 + 'px';
       }
     }
   });
@@ -30,6 +26,7 @@
 
       for (const field of fields) {
         const slideshows = field.querySelectorAll(slideshowsSelector);
+        console.log('Found slideshows:', slideshows.length);
         if (slideshows.length) {
           field.setAttribute('data-preview-slideshow-width', '');
           resizeObserver.observe(field);

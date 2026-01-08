@@ -43,18 +43,18 @@ services:
         - rm -rf vendor
         - composer install --no-ansi
         # Sync to hs_colorful, hs_colorful database & files and create user.
-        - blt drupal:sync --site=hs_colorful
+        - blt drupal:sync --site=hs_colorful -n
         - drush @hs_colorful.local user:create tugboat --password=pushcar || true
         - drush @hs_colorful.local user:role:add administrator tugboat || true
 
-        - blt drupal:sync --site=hs_traditional
+        - blt drupal:sync --site=hs_traditional -n
         - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
         # Sync to english, history, and west database & files, does not create a user.
-        - blt drupal:sync --site=english
-        - blt drupal:sync --site=history
-        - blt drupal:sync --site=west
+        - blt drupal:sync --site=english -n
+        - blt drupal:sync --site=history -n
+        - blt drupal:sync --site=west -n
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:

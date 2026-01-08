@@ -43,33 +43,33 @@ services:
         - rm -rf vendor
         - composer install --no-ansi
         # Sync to hs_colorful, hs_colorful database & files and create user.
-        - drush sql-sync @hs_colorful.stage @hs_colorful.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush sql-sync @hs_colorful.prod @hs_colorful.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_colorful.local sql-sanitize --no-interaction --ansi
-        - drush rsync @hs_colorful.stage:%files @hs_colorful.local:%files --ansi --no-interaction
+        - drush rsync @hs_colorful.prod:%files @hs_colorful.local:%files --ansi --no-interaction
         - drush @hs_colorful.local user:create tugboat --password=pushcar || true
         - drush @hs_colorful.local user:role:add administrator tugboat || true
 
         # Sync to hs_traditional, hs_traditional database & files and create user.
-        - drush sql-sync @hs_traditional.stage @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush sql-sync @hs_traditional.prod @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_traditional.local sql-sanitize --no-interaction --ansi
-        - drush rsync @hs_traditional.stage:%files @hs_traditional.local:%files --ansi --no-interaction
+        - drush rsync @hs_traditional.prod:%files @hs_traditional.local:%files --ansi --no-interaction
         - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
         # Sync to english, english database & files, does not create a user.
-        - drush sql-sync @english.stage @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @english.local sql-sanitize --no-interaction --ansi
-        - drush rsync @english.stage:%files @english.local:%files --ansi --no-interaction
+        - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
 
         # Sync to history, history database & files, does not create a user.
-        - drush sql-sync @history.stage @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @history.local sql-sanitize --no-interaction --ansi
-        - drush rsync @history.stage:%files @history.local:%files --ansi --no-interaction
+        - drush rsync @history.prod:%files @history.local:%files --ansi --no-interaction
 
         # Sync to west, west database & files, does not create a user.
-        - drush sql-sync @west.stage @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush sql-sync @west.prod @west.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @west.local sql-sanitize --no-interaction --ansi
-        - drush rsync @west.stage:%files @west.local:%files --ansi --no-interaction
+        - drush rsync @west.prod:%files @west.local:%files --ansi --no-interaction
 
         - chown -R www-data:www-data ${TUGBOAT_ROOT}/docroot/sites/*/files
       build:

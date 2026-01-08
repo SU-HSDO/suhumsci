@@ -96,6 +96,7 @@ services:
         - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=west
 
+        # Build frontend assets.
         - npm run theme-build
 
     # Collection of urls to compare visual results.
@@ -137,12 +138,5 @@ services:
         # Ensure this packet size persists even if MySQL restarts.
         - echo "max_allowed_packet=536870912" >> /etc/mysql/conf.d/tugboat.cnf
       update:
-        # Delete and recreate the database for each site.
-        # - mysql -e "DROP DATABASE IF EXISTS hs_colorful; CREATE DATABASE hs_colorful;"
-        # - mysql -e "DROP DATABASE IF EXISTS hs_traditional; CREATE DATABASE hs_traditional;"
-        # - mysql -e "DROP DATABASE IF EXISTS english; CREATE DATABASE english;"
-        # - mysql -e "DROP DATABASE IF EXISTS history; CREATE DATABASE history;"
-        # - mysql -e "DROP DATABASE IF EXISTS west; CREATE DATABASE west;"
-
         # Give the tugboat user access to the new databases.
         - mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'tugboat'; FLUSH PRIVILEGES;"

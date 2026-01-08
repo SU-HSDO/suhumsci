@@ -49,8 +49,6 @@ services:
         - drush @hs_colorful.local user:create tugboat --password=pushcar || true
         - drush @hs_colorful.local user:role:add administrator tugboat || true
 
-
-
         # Sync to hs_traditional, hs_traditional database & files and create user.
         - drush sql-sync @hs_traditional.stage @hs_traditional.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
         - drush @hs_traditional.local sql-sanitize --no-interaction --ansi
@@ -130,8 +128,8 @@ services:
   # hostname to access the service by from the php service.
   mysql:
 
-    # Use the latest available 5.x version of MySQL
-    image: tugboatqa/mysql:5
+    # Use the latest available 8.x version of MySQL
+    image: tugboatqa/mysql:8
     commands:
       init:
         # Increase the allowed packet size to 512MB.

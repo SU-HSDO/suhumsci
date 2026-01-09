@@ -19,7 +19,7 @@ function hs_cmap_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $e
   if ($bundle !== 'hs_curriculum_requirement_type' || $entity_type->id() !== 'taxonomy_term') {
     return;
   }
-  
+
   if (!isset($fields['field_hs_curriculum_course_color'])) {
     return;
   }
@@ -35,9 +35,9 @@ function hs_cmap_entity_base_field_info_alter(&$fields, EntityTypeInterface $ent
   if ($entity_type->id() !== 'taxonomy_term') {
     return;
   }
-  
+
   if (!isset($fields['name'])) {
-    return;  
+    return;
   }
 
   // Add a unique constraint to the name field for requirement type terms.

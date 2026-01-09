@@ -7,106 +7,41 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_entity_bundle_field_info_alter().
  */
 function hs_cmap_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle): void {
-  if ($bundle === 'hs_curriculum_requirement_type' && $entity_type->id() === 'taxonomy_term') {
-    // Add a unique constraint to the color field.
-    if (isset($fields['field_hs_curriculum_course_color'])) {
-      $fields['field_hs_curriculum_course_color']->addConstraint('UniqueRequirementType');
-    }
+  if ($bundle !== 'hs_curriculum_requirement_type' || $entity_type->id() !== 'taxonomy_term') {
+    return;
   }
+  
+  if (!isset($fields['field_hs_curriculum_course_color'])) {
+    return;
+  }
+
+  // Add a unique constraint to the color field.
+  $fields['field_hs_curriculum_course_color']->addConstraint('UniqueRequirementType');
 }
 
 /**
  * Implements hook_entity_base_field_info_alter().
  */
 function hs_cmap_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type): void {
-  if ($entity_type->id() === 'taxonomy_term') {
-    // Add a unique constraint to the name field for requirement type terms.
-    if (isset($fields['name'])) {
-      $fields['name']->addConstraint('UniqueRequirementType');
-    }
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert().
- */
-function hs_cmap_taxonomy_vocabulary_insert(EntityInterface $vocabulary): void {
-  // Vocabularies are config, but taxonomy terms are content.
-  // So when the vocabulary is created, add our default terms.
-  if ($vocabulary->id() !== 'hs_curriculum_requirement_type') {
+  if ($entity_type->id() !== 'taxonomy_term') {
     return;
   }
-  $requirement_types = [
-    [
-      'name' => 'Core',
-      'field_hs_curriculum_course_color' => 'lagunita-light',
-    ],
-    [
-      'name' => 'Elective',
-      'field_hs_curriculum_course_color' => 'digital-red',
-    ],
-    [
-      'name' => 'Concentration',
-      'field_hs_curriculum_course_color' => 'plum',
-    ],
-    [
-      'name' => 'Honors',
-      'field_hs_curriculum_course_color' => 'poppy-light',
-    ],
-  ];
-  foreach ($requirement_types as $weight => $type) {
-    $term = [
-      'vid' => 'hs_curriculum_requirement_type',
-      'name' => $type['name'],
-      'parent' => [],
-      'weight' => $weight,
-      'field_hs_curriculum_course_color' => [
-        'value' => $type['field_hs_curriculum_course_color'],
-      ],
-    ];
-    // During the insert hook we don't yet have custom fields.  So wait until
-    // later to save the term.
-    register_shutdown_function('_hs_cmap_save_taxonomy_term', $term);
-  }
-}
-
-/**
- * Create a taxonomy term.
- *
- * @param array $data
- *   As required by Drupal\taxonomy\Entity\Term::create().
- *
- * @return void
- *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
- * @throws \Drupal\Core\Entity\EntityStorageException
- */
-function _hs_cmap_save_taxonomy_term(array $data): void {
-  $exists = Drupal::entityTypeManager()->getStorage('taxonomy_term')
-    ->getQuery()
-    ->accessCheck(FALSE)
-    ->condition('vid', 'hs_curriculum_requirement_type')
-    ->condition('name', $data['name'], '=')
-    ->execute();
-
-  if ($exists) {
-    return;
+  
+  if (!isset($fields['name'])) {
+    return;  
   }
 
-  $term = Term::create($data);
-  $term->save();
+  // Add a unique constraint to the name field for requirement type terms.
+  $fields['name']->addConstraint('UniqueRequirementType');
 }
 
 /**
@@ -189,7 +124,8 @@ function hs_cmap_field_widget_single_element_form_alter(&$element, FormStateInte
       'vid' => 'hs_curriculum_requirement_type',
       'name' => 'Core',
     ]);
-    if ($core_tid = key($terms)) {
+    if (!empty($terms)) {
+      $core_tid = key($terms);
       $element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'] = [$core_tid];
     }
   }

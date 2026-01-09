@@ -15,6 +15,11 @@
     display: none;
   }
 
+  // Use border-box for all elements within the carousel.
+  * {
+    box-sizing: border-box;
+  }
+
   @include hb-hero-full-width;
 
   .hb-hero-overlay {
@@ -354,9 +359,9 @@
     }
   }
 
-  // Position carousel controls
-  .slick {
-    position: relative;
+  // Styles for swiper slider.
+  .swiper-container {
+    margin: 0;
 
     .hb-hero-overlay__text {
       @include hb-themes(('colorful', 'airy')) {
@@ -376,16 +381,15 @@
       }
     }
 
-    .slick-dots {
+    .swiper-pagination {
       @include visually-hidden;
 
       @include hb-themes(('airy', 'colorful')) {
         @include grid-media-min('md') {
-          bottom: hb-spacing-width();
+          inset: auto
+            calc(40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)})
+            hb-spacing-width() auto;
           margin: 0 0 hb-calculate-rems(10px);
-          right: calc(
-            40% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-          ); // move it past the slick arrows and their padding
 
           .hb-three-column--one-sidebar &,
           .hb-three-column--two-sidebar & {
@@ -393,13 +397,12 @@
           }
         }
 
-        // slick dots do not display until this breakpoint
+        // swiper pagination do not display until this breakpoint
         @media (min-width: 890px) {
-          display: inline-block;
+          display: flex;
           clip-path: inherit;
           height: auto;
           width: auto;
-          list-style-type: none;
           position: absolute;
           overflow: visible;
         }
@@ -413,33 +416,28 @@
         @include grid-media-min('xl') {
           right: calc(
             50% + #{hb-calculate-rems(90px)} + #{hb-calculate-rems(10px)}
-          ); // move it past the slick arrows and their padding
+          ); // move it past the swiper arrows and their padding
         }
       }
 
       @include hb-traditional {
-        // slick dots do not display until the medium breakpoint
+        // swiper pagination do not display until the medium breakpoint
         // default positioning styles are applied to the full width hero
         // main content styles are applied by targeting the sidebar classes
         // even though the sidebars do not display until the next breakpoint,
         // the classes exist for styling
         @include grid-media-min('md') {
-          display: inline-block;
           clip-path: inherit;
           height: auto;
           width: auto;
-          list-style-type: none;
           position: absolute;
           overflow: visible;
-
-          right: calc(
-            50% + #{hb-calculate-rems(77px)}
-          ); // move it past the slick-next arrow
-          bottom: hb-calculate-rems(53px);
+          inset: auto calc(50% + #{hb-calculate-rems(77px)})
+            hb-calculate-rems(61px) auto;
 
           .hb-three-column--one-sidebar &,
           .hb-three-column--two-sidebar & {
-            bottom: hb-calculate-rems(23px);
+            bottom: hb-calculate-rems(31px);
           }
         }
 
@@ -447,29 +445,29 @@
         @include grid-media-min('lg') {
           right: calc(
             57% + #{hb-calculate-rems(80px)}
-          ); // move it past the slick arrows
+          ); // move it past the swiper arrows
 
           .hb-three-column--one-sidebar & {
             right: calc(57% + #{hb-calculate-rems(84px)});
           }
 
           .hb-three-column--two-sidebar & {
-            right: hb-calculate-rems(130px); // move it past the slick arrows
+            right: hb-calculate-rems(130px); // move it past the swiper arrows
           }
         }
 
         @include grid-media-min('xl') {
           right: calc(63% - #{hb-calculate-rems(60px)});
-          bottom: hb-calculate-rems(77px);
+          bottom: hb-calculate-rems(85px);
 
           .hb-three-column--one-sidebar & {
             right: calc(57% + #{hb-calculate-rems(36px)});
-            bottom: hb-calculate-rems(48px);
+            bottom: hb-calculate-rems(53px);
           }
 
           .hb-three-column--two-sidebar & {
             right: hb-calculate-rems(130px);
-            bottom: hb-calculate-rems(48px);
+            bottom: hb-calculate-rems(53px);
           }
         }
 
@@ -482,28 +480,20 @@
             right: calc(
               (100% - #{hb-calculate-rems(650px)}) + #{hb-calculate-rems(80px)}
             );
-            bottom: hb-calculate-rems(48px);
+            bottom: hb-calculate-rems(53px);
           }
         }
       }
 
-      li {
-        display: inline-block;
-      }
-
-      .slick-active {
-        button {
-          &::before {
-            @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
-            font-size: hb-calculate-rems(40px);
-          }
-        }
-      }
-
-      button {
-        @include hb-unbuttonize;
+      .swiper-pagination-bullet {
         font-size: 0;
         padding-top: hb-calculate-rems(5px);
+        background: unset;
+        position: relative;
+        width: hb-calculate-rems(31px);
+        height: hb-calculate-rems(45.7px);
+        margin: 0;
+        opacity: 1;
 
         &::before {
           color: var(--palette--white);
@@ -516,7 +506,7 @@
           margin: 0 hb-calculate-rems(10px);
           border-radius: 50%;
 
-          // Use box shadow property to improve visual accessibiity of slick dots.
+          // Use box shadow property to improve visual accessibiity of swiper pagination.
           @include hb-themes(('airy', 'colorful')) {
             $light-shadow: var(--palette--gray-light);
             $dark-shadow: var(--palette--black);
@@ -545,288 +535,260 @@
         }
 
         &:hover::before,
-        &:focus::before {
+        &:focus::before,
+        &.swiper-pagination-bullet-active::before {
           @include hb-icon-type($type: 'ellipse', $color: 'gray-light');
         }
       }
     }
 
-    // There was some css being added by a js library that was also causing the issue of the arrows position.
-    .slick-list {
-      height: 100% !important;
-    }
-
-    &__arrow {
-      margin: 0;
-      padding: 0;
+    .swiper-button-prev,
+    .swiper-button-next {
       position: absolute;
-      right: 0;
-      bottom: 0%;
-      font-size: 0;
+      width: hb-calculate-rems(25px);
+      height: hb-calculate-rems(40px);
 
-      @include hb-colorful {
-        @include grid-media-min('md') {
-          right: 40%;
+      svg {
+        display: none;
+      }
+
+      &:not(.swiper-button-lock) {
+        display: block;
+      }
+
+      @include hb-themes(('airy')) {
+        bottom: calc(#{hb-spacing-width()} * 2);
+
+        .hb-three-column--one-sidebar &,
+        .hb-three-column--two-sidebar & {
+          bottom: hb-calculate-rems(48px);
         }
 
-        @include grid-media-min('xl') {
-          right: 50%;
+        @include grid-media-min('md') {
+          bottom: hb-spacing-width();
+
+          /* stylelint-disable max-nesting-depth */
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: 0;
+          }
+          /* stylelint-enable max-nesting-depth */
+        }
+      }
+
+      @include hb-colorful {
+        bottom: hb-calculate-rems(60px);
+
+        .hb-three-column--one-sidebar &,
+        .hb-three-column--two-sidebar & {
+          bottom: hb-calculate-rems(48px);
+        }
+
+        @include grid-media-min('md') {
+          bottom: hb-calculate-rems(47px);
+
+          /* stylelint-disable max-nesting-depth */
+          .hb-three-column--one-sidebar &,
+          .hb-three-column--two-sidebar & {
+            bottom: 0;
+          }
+          /* stylelint-enable max-nesting-depth */
+        }
+
+        .hs-full-width & {
+          bottom: hb-calculate-rems(110px);
+
+          @include grid-media-min('md') {
+            bottom: hb-calculate-rems(47px);
+          }
         }
       }
 
       @include hb-traditional {
-        @include grid-media-min('md') {
-          right: 46%;
-        }
+        bottom: hb-calculate-rems(30px);
 
-        // the sidebar(s) appear at this breakpoint
-        @include grid-media-min('lg') {
-          right: 55%;
+        @include grid-media-min('md') {
+          margin: hb-calculate-rems(18px) 0;
+          bottom: hb-calculate-rems(25px);
         }
 
         @include grid-media-min('xl') {
-          right: 50%;
+          bottom: hb-calculate-rems(46px);
         }
 
-        @include grid-media-min('2xl') {
-          right: 100%;
-        }
-      }
-
-      .slick-prev,
-      .slick-next {
-        @include hb-unbuttonize;
-        position: absolute;
-
-        @include hb-themes(('airy')) {
-          bottom: calc(#{hb-spacing-width()} * 2);
-
-          .hb-three-column--one-sidebar &,
-          .hb-three-column--two-sidebar & {
-            bottom: hb-calculate-rems(48px);
-          }
+        .hs-full-width & {
+          bottom: hb-calculate-rems(78px);
 
           @include grid-media-min('md') {
-            bottom: hb-spacing-width();
-
-            /* stylelint-disable max-nesting-depth */
-            .hb-three-column--one-sidebar &,
-            .hb-three-column--two-sidebar & {
-              bottom: 0;
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-        }
-
-        @include hb-colorful {
-          bottom: hb-calculate-rems(60px);
-
-          .hb-three-column--one-sidebar &,
-          .hb-three-column--two-sidebar & {
-            bottom: hb-calculate-rems(48px);
-          }
-
-          @include grid-media-min('md') {
-            bottom: hb-calculate-rems(47px);
-
-            /* stylelint-disable max-nesting-depth */
-            .hb-three-column--one-sidebar &,
-            .hb-three-column--two-sidebar & {
-              bottom: 0;
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-
-          .hs-full-width & {
-            bottom: hb-calculate-rems(110px);
-
-            @include grid-media-min('md') {
-              bottom: hb-calculate-rems(47px);
-            }
-          }
-        }
-
-        @include hb-traditional {
-          bottom: hb-calculate-rems(30px);
-
-          @include grid-media-min('md') {
-            margin: hb-calculate-rems(18px) 0;
             bottom: hb-calculate-rems(54px);
           }
 
           @include grid-media-min('xl') {
             bottom: hb-calculate-rems(78px);
           }
-
-          .hs-full-width & {
-            bottom: hb-calculate-rems(78px);
-
-            @include grid-media-min('md') {
-              bottom: hb-calculate-rems(54px);
-            }
-
-            @include grid-media-min('xl') {
-              bottom: hb-calculate-rems(78px);
-            }
-          }
-        }
-
-        &::before {
-          content: '';
-          display: inline-block;
-          background-repeat: no-repeat;
-          background-position: left;
-          background-size: 85%;
-          height: hb-calculate-rems(25px);
-          width: hb-calculate-rems(25px);
-          transition: hb-transition(transform);
-
-          @include hb-themes(('airy', 'colorful')) {
-            @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
-            filter: drop-shadow(
-              hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-                var(--palette--black)
-            );
-          }
-
-          @include hb-traditional {
-            mask-repeat: no-repeat;
-
-            @include hb-icon-background(
-              'arrow-right-long-box-shadow',
-              'gray-light',
-              true
-            );
-            filter: drop-shadow(
-              hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-                var(--palette--black)
-            );
-          }
-        }
-
-        &:hover,
-        &:focus {
-          cursor: pointer;
         }
       }
 
-      .slick-prev {
-        transform: rotate(180deg);
-        transform: scaleX(-1);
+      &::before {
+        content: '';
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-position: left;
+        background-size: 85%;
+        height: hb-calculate-rems(25px);
+        width: hb-calculate-rems(25px);
+        transition: hb-transition(transform);
 
         @include hb-themes(('airy', 'colorful')) {
-          margin-bottom: hb-calculate-rems(15px);
-          right: calc(
-            #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-          ); // move it past the slick-next arrow
-
-          @include grid-media-min('md') {
-            right: calc(
-              40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-            ); // move it past the slick-next arrow
-          }
-
-          @include grid-media-min('xl') {
-            right: calc(
-              50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
-            ); // move it past the slick-next arrow
-          }
+          @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
+          filter: drop-shadow(
+            hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
+              var(--palette--black)
+          );
         }
 
         @include hb-traditional {
-          right: calc(
-            #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-          ); // move it past the slick-next arrow
+          mask-repeat: no-repeat;
 
-          @include grid-media-min('md') {
-            right: auto;
-            left: calc(
-              53% - #{hb-calculate-rems(85px)}
-            ); // move it past the slick-next arrow
-          }
-
-          @include grid-media-min('lg') {
-            left: calc(
-              45% - #{hb-calculate-rems(85px)}
-            ); // move it past the slick arrows
-
-            /* stylelint-disable max-nesting-depth */
-            .hb-three-column--two-sidebar & {
-              left: inherit;
-              right: calc(
-                #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
-              ); // move it past the slick arrows
-            }
-            /* stylelint-enable max-nesting-depth */
-          }
-
-          @include grid-media-min('xl') {
-            left: calc(
-              50% - #{hb-calculate-rems(85px)}
-            ); // move it past the slick arrows
-          }
-
-          @include grid-media-min('2xl') {
-            left: calc(
-              #{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}
-            ); // move it past the slick arrows
-
-            .field-hs-collection-items.item-per-row--2 & {
-              left: calc(100% - #{hb-calculate-rems(88px)});
-            }
-          }
+          @include hb-icon-background(
+            'arrow-right-long-box-shadow',
+            'gray-light',
+            true
+          );
+          filter: drop-shadow(
+            hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
+              var(--palette--black)
+          );
         }
       }
 
-      .slick-next {
-        @include hb-themes(('airy', 'colorful')) {
-          margin-bottom: hb-calculate-rems(15.5px);
-          right: 25px;
+      &:hover,
+      &:focus {
+        cursor: pointer;
+      }
+    }
 
-          @include grid-media-min('md') {
-            right: calc(40% + #{hb-calculate-rems(25px)});
-          }
+    .swiper-button-prev {
+      transform: rotate(180deg);
+      transform: scaleX(-1);
+      left: auto;
+      top: auto;
 
-          @include grid-media-min('xl') {
-            right: calc(50% + 25px);
-          }
+      @include hb-themes(('airy', 'colorful')) {
+        margin-block: 0 hb-calculate-rems(15px);
+        right: calc(
+          #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
+        ); // move it past the swiper next arrow
+
+        @include grid-media-min('md') {
+          right: calc(
+            40% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
+          ); // move it past the swiper next arrow
         }
 
-        @include hb-traditional {
-          right: hb-calculate-rems(40px);
+        @include grid-media-min('xl') {
+          right: calc(
+            50% + #{hb-calculate-rems(25px)} + #{hb-calculate-rems(40px)}
+          ); // move it past the swiper next arrow
+        }
+      }
 
-          @include grid-media-min('md') {
-            right: auto;
-            left: calc(53% - #{hb-calculate-rems(40px)});
+      @include hb-traditional {
+        right: calc(
+          #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
+        ); // move it past the swiper next arrow
+
+        @include grid-media-min('md') {
+          right: auto;
+          left: calc(
+            53% - #{hb-calculate-rems(85px)}
+          ); // move it past the swiper next arrow
+        }
+
+        @include grid-media-min('lg') {
+          left: calc(
+            45% - #{hb-calculate-rems(85px)}
+          ); // move it past the swiper arrows
+
+          /* stylelint-disable max-nesting-depth */
+          .hb-three-column--two-sidebar & {
+            left: inherit;
+            right: calc(
+              #{hb-calculate-rems(50px)} + #{hb-calculate-rems(40px)}
+            ); // move it past the swiper arrows
           }
+          /* stylelint-enable max-nesting-depth */
+        }
 
-          @include grid-media-min('lg') {
-            left: calc(
-              45% - #{hb-calculate-rems(40px)}
-            ); // move it past the slick arrows
+        @include grid-media-min('xl') {
+          left: calc(
+            50% - #{hb-calculate-rems(85px)}
+          ); // move it past the swiper arrows
+        }
 
-            /* stylelint-disable max-nesting-depth */
-            .hb-three-column--two-sidebar & {
-              left: inherit;
-              right: hb-calculate-rems(50px); // move it past the slick arrows
-            }
-            /* stylelint-enable max-nesting-depth */
+        @include grid-media-min('2xl') {
+          left: calc(
+            #{hb-calculate-rems(650px)} - #{hb-calculate-rems(65px)}
+          ); // move it past the swiper arrows
+
+          .field-hs-collection-items.item-per-row--2 & {
+            left: calc(100% - #{hb-calculate-rems(88px)});
           }
+        }
+      }
+    }
 
-          @include grid-media-min('xl') {
-            left: calc(
-              50% - #{hb-calculate-rems(40px)}
-            ); // move it past the slick arrows
+    .swiper-button-next {
+      left: auto;
+      top: auto;
+
+      @include hb-themes(('airy', 'colorful')) {
+        margin-block: 0 hb-calculate-rems(15.5px);
+        right: 25px;
+
+        @include grid-media-min('md') {
+          right: calc(40% + #{hb-calculate-rems(25px)});
+        }
+
+        @include grid-media-min('xl') {
+          right: calc(50% + 25px);
+        }
+      }
+
+      @include hb-traditional {
+        right: hb-calculate-rems(40px);
+
+        @include grid-media-min('md') {
+          right: auto;
+          left: calc(53% - #{hb-calculate-rems(40px)});
+        }
+
+        @include grid-media-min('lg') {
+          left: calc(
+            45% - #{hb-calculate-rems(40px)}
+          ); // move it past the swiper arrows
+
+          /* stylelint-disable max-nesting-depth */
+          .hb-three-column--two-sidebar & {
+            left: inherit;
+            right: hb-calculate-rems(50px); // move it past the swiper arrows
           }
+          /* stylelint-enable max-nesting-depth */
+        }
 
-          @include grid-media-min('2xl') {
-            left: calc(
-              #{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}
-            ); // move it past the slick arrows
+        @include grid-media-min('xl') {
+          left: calc(
+            50% - #{hb-calculate-rems(40px)}
+          ); // move it past the swiper arrows
+        }
 
-            .field-hs-collection-items.item-per-row--2 & {
-              left: calc(100% - #{hb-calculate-rems(43px)});
-            }
+        @include grid-media-min('2xl') {
+          left: calc(
+            #{hb-calculate-rems(650px)} - #{hb-calculate-rems(20px)}
+          ); // move it past the swiper arrows
+
+          .field-hs-collection-items.item-per-row--2 & {
+            left: calc(100% - #{hb-calculate-rems(43px)});
           }
         }
       }

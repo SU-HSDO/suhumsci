@@ -1,46 +1,82 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use 'sass:list';
-@use '../variables/colormap-registry' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
 @use '../variables/general' as *;
 @use '../variables/theme' as *;
 @use '../functions/general' as *;
 
 ///
-/// Return a color css variable from a color map.
+/// Return a color value from a theme color map or a custom Sass map.
 ///
 /// @name color
 ///
-/// @param {String} $color The named key in the color map.
-/// @param {String} $colormap-id The color map id (it can be the map name or just 'pairings' or 'global' for theme maps.
+/// @param {String} $color
+///   The named key inside the color map (e.g. `primary`, `text`, `accent`).
 ///
-/// @example
-/// color: color($color, 'su-core');
+/// @param {String|Map} $colormap
+///   Either:
+///   - A string ID of a registered theme color map
+///     (e.g. `'su-core'`, `'pairings'`, `'global'`)
+///   - OR a Sass map of colors passed directly to the function.
+///     (e.g. $su-alert)
 ///
-@function color($color, $colormap-id: 'pairings') {
-  $colormap: null;
-  $colormap-prefix: null;
+/// @example scss - Using a registered theme map
+///   .button {
+///     color: color(primary, 'su-core');
+///   }
+///
+/// @example scss - Using a custom local map
+///   $su-alert: (
+///     primary: hotpink,
+///     secondary: rebeccapurple,
+///   );
+///
+///   .alert {
+///     background-color: color(primary, $su-alert);
+///   }
+///
+///
+@function color($color, $colormap: 'pairings', $colormap-prefix: '') {
+  $theme-map: null;
 
-  @if $colormap-id == 'pairings' or $colormap-id == 'global' {
-    $colormap-prefix: #{$hb-current-theme}-#{$colormap-id};
-    $theme-map: get-theme-array-list($colormap-registry, $colormap-prefix);
+  // Case 1: $colormap is a string.
+  @if meta.type-of($colormap) == 'string' {
+    @if $colormap == 'pairings' {
+      $colormap-prefix: #{$hb-current-theme}-#{$colormap};
+      @if $hb-current-theme == 'traditional'{
+        $theme-map: $traditional-pairings-colors;
+      } @else {
+        $theme-map: $colorful-pairings-colors;
+      }
 
-    @if not $theme-map {
-      @error "Theme color map was not found in colormap-registry.";
-    }
-
-    @if $colormap-id == 'global' {
-      $colormap: $theme-map;
-    } @else {
       $first-key: list.nth(map.keys($theme-map), 1);
-      $colormap: map.get($theme-map, $first-key);
+      $theme-map: map.get($theme-map, $first-key);
+    } @else if $colormap == 'global' {
+      $colormap-prefix: #{$hb-current-theme}-#{$colormap};
+
+      @if $hb-current-theme == 'traditional'{
+        $theme-map: $traditional-global-colors;
+      } @else {
+        $theme-map: $colorful-global-colors;
+      }
+    } @else {
+      $colormap-prefix: $colormap;
+      $theme-map: $su-core-colors;
     }
+  // Case 2: $colormap is a Sass map.
   } @else {
-    $colormap-prefix: $colormap-id;
-    $colormap: map.get($colormap-registry, $colormap-prefix);
+    $theme-map: $colormap;
+  }
+
+  @if not $theme-map {
+    @error "Theme color map was not found.";
   }
 
   // Check that key exists
-  @if map.has-key($colormap, $color) {
+  @if map.has-key($theme-map, $color) {
     $color: var(--color--#{$colormap-prefix}--#{$color});
   } @else {
     @error "Color `#{$color}` does not exist in the provided color map.";

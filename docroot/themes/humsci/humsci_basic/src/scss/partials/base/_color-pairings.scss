@@ -3,19 +3,7 @@
 @use '../mixins/theme' as *;
 @use '../mixins/generate-css-vars' as *;
 
-@include hb-themes(('airy')) {
-  @each $pairing, $colors in $colorful-pairings-colors {
-    .hc-pairing-#{$pairing} {
-      @include generate-css-vars('airy-pairings', $colors);
-    }
-  }
-
-  :root {
-    @include generate-css-vars('airy-global');
-  }
-}
-
-@include hb-themes(('colorful')) {
+@include hb-themes(('colorful', 'airy')) {
   @each $pairing, $colors in $colorful-pairings-colors {
     .hc-pairing-#{$pairing} {
       @include generate-css-vars('colorful-pairings', $colors);
@@ -23,7 +11,7 @@
   }
 
   :root {
-    @include generate-css-vars('colorful-global');
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 }
 
@@ -35,6 +23,6 @@
   }
 
   :root {
-    @include generate-css-vars('traditional-global');
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 }

@@ -10,8 +10,27 @@
 
 $su-button-stroke: inset 0 0 0 2px;
 
+// Global Message Colors mapping
+$su-alert-colors: (
+  'default': #f4f4f4,
+  'error': #b1040e,
+  'info': #00548f,
+  'success': #008566,
+  'warning': #fec51d,
+  'warning-link': #8c1515,
+  'dark-text': #2e2d29,
+  'light-text': #fff,
+  'light-hover': #dad7cb,
+  'digital-blue-light': #6fc3ff,
+  'digital-blue-dark': #00548f,
+  'digital-green': #008566,
+  'illuminating-dark': #fec51d,
+  'foggy': #dad7cb,
+  'foggy-light': #f4f4f4,
+);
+
 .su-alert {
-  @include generate-css-vars(su-alert);
+  @include generate-css-vars('su-alert', $su-alert-colors);
 
   background-color: #f4f4f4;
   color: color('black', 'su-core');
@@ -84,7 +103,7 @@ $su-button-stroke: inset 0 0 0 2px;
     }
 
     .su-alert__dismiss-button {
-      color: color('light-text', 'su-alert');
+      color: color('light-text', $su-alert-colors, 'su-alert');
 
       &:hover,
       &:focus {
@@ -115,10 +134,10 @@ $su-button-stroke: inset 0 0 0 2px;
 
   &--error {
     background-color: color('digital-red', 'su-core');
-    color: color('light-text', 'su-alert');
+    color: color('light-text', $su-alert-colors, 'su-alert');
 
     a {
-      color: color('light-text', 'su-alert');
+      color: color('light-text', $su-alert-colors, 'su-alert');
 
       &:hover,
       &:focus {
@@ -205,7 +224,7 @@ $su-button-stroke: inset 0 0 0 2px;
       &:hover,
       &:focus {
         color: color('black', 'su-core');
-        background-color: color('digital-blue-light', 'su-alert');
+        background-color: color('digital-blue-light', $su-alert-colors, 'su-alert');
         text-decoration: underline;
       }
     }
@@ -240,7 +259,7 @@ $su-button-stroke: inset 0 0 0 2px;
       background-color: transparent;
       text-transform: uppercase;
       font-weight: hb-theme-font-weight(semibold);
-      color: color('dark-text', 'su-alert');
+      color: color('dark-text', $su-alert-colors, 'su-alert');
       font-size: hb-calculate-rems(17px);
       letter-spacing: 0.1em;
 
@@ -285,19 +304,19 @@ $su-button-stroke: inset 0 0 0 2px;
 // -----------------------------------------------------------------------------
 .su-alert__footer {
   a {
-    color: color('dark-text', 'su-alert');
+    color: color('dark-text', $su-alert-colors, 'su-alert');
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: color('dark-text', 'su-alert');
+      color: color('dark-text', $su-alert-colors, 'su-alert');
       text-decoration: underline;
     }
   }
 
   .su-link {
     &::after {
-      background: color('dark-text', 'su-alert');
+      background: color('dark-text', $su-alert-colors, 'su-alert');
     }
 
     &:hover,
@@ -305,7 +324,7 @@ $su-button-stroke: inset 0 0 0 2px;
       text-decoration: underline;
 
       &::after {
-        background: color('dark-text', 'su-alert');
+        background: color('dark-text', $su-alert-colors, 'su-alert');
       }
     }
   }

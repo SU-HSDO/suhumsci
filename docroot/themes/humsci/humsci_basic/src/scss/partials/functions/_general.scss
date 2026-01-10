@@ -18,7 +18,7 @@
 // Checks that a theme is set and finds if there a theme associated with the
 // $requested-array passed in. This can be used with many different theme arrays, such as:
 // animations, spacing, and sidebar width.
-@function get-theme-array-list($requested-array, $type: '') {
+@function get-theme-array-list($requested-array) {
   $is-valid-theme: false;
 
   @each $theme in $hb-global-theme-list {
@@ -28,12 +28,7 @@
   }
 
   @if $is-valid-theme {
-    // If requested type exists under this theme, return it
-    @if $type != '' {
-      @return map.get($requested-array, $type);
-    } @else {
-      @return map.get($requested-array, $hb-current-theme);
-    }
+    @return map.get($requested-array, $hb-current-theme);
   } @else {
     @return null;
   }

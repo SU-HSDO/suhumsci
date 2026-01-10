@@ -15,6 +15,9 @@
 @use '../mixins/text' as *;
 @use '../mixins/generate-css-vars' as *;
 @use '../functions/color' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
@@ -28,21 +31,16 @@
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
 :root {
-  @include generate-css-vars('su-core');
+  @include generate-css-vars('su-core', $su-core-colors);
 
-  @include hb-themes(('airy')) {
-    @include generate-css-vars('airy-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
-    @include generate-css-vars('airy-global');
-  }
-
-  @include hb-themes(('colorful')) {
+  @include hb-themes(('colorful', 'airy')) {
     @include generate-css-vars('colorful-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
-    @include generate-css-vars('colorful-global');
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
     @include generate-css-vars('traditional-pairings', map.get($traditional-pairings-colors, $hb-traditional-default));
-    @include generate-css-vars('traditional-global');
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 }
 

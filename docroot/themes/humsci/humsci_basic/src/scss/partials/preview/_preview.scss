@@ -6,23 +6,22 @@
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
 @use '../mixins/generate-css-vars' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
 
 // Font definitions.
 @use '../fonts/fonts';
 
 .paragraph-admin-preview {
-  @include generate-css-vars('su-core');
+  @include generate-css-vars('su-core', $su-core-colors);
 
-  @include hb-themes(('colorful')) {
-    @include generate-css-vars('colorful-global');
-  }
-
-  @include hb-themes(('airy')) {
-    @include generate-css-vars('airy-global');
+  @include hb-themes(('colorful', 'airy')) {
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
-   @include generate-css-vars('traditional-global');
+   @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
   // Load main stylesheet with current theme.

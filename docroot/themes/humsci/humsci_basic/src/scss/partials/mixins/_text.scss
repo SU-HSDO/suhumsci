@@ -159,7 +159,7 @@
 }
 
 @mixin hb-blockquote {
-  color: color(primary);
+  color: color('primary');
   font-size: hb-calculate-rems(24px);
   font-weight: hb-theme-font-weight(regular);
 
@@ -173,13 +173,13 @@
 
   // A utility class that can be applied via layout builder to override the text color to black
   .hb-blockquote-black-text & {
-    color: color('black', global);
+    color: color('black', 'global');
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container &,
   .hb-dark-pattern.hb-local-footer & {
-    color: color('white', global);
+    color: color('white', 'global');
   }
 
   &:not(.hb-testimonial__quote) {
@@ -224,7 +224,7 @@
 @mixin hb-field-label {
   @include hb-heading-6;
 
-  color: color('black', global);
+  color: color('black', 'global');
 
   @include hb-themes(('colorful', 'airy')) {
     margin-bottom: hb-calculate-rems(4px);
@@ -239,21 +239,21 @@
   @include hb-heading-6;
 
   text-transform: inherit;
-  color: color(secondary);
+  color: color('secondary');
 
   .hb-well {
-    color: color(secondary-darken-12) !important;
+    color: color('secondary-darken-12') !important;
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      color: color(secondary-darken-12);
+      color: color('secondary-darken-12');
     }
   }
 }
 
 @mixin hb-descriptor {
-  color: color(gray-dark, global);
+  color: color('gray-dark', 'global');
   font-size: hb-calculate-rems(16px);
 
   @include grid-media-min('lg') {
@@ -264,7 +264,7 @@
 // Styles for WYSIWYG / text captions
 @mixin hb-caption($italic: false) {
   @include hb-text-reset;
-  color: color(gray-dark, global);
+  color: color('gray-dark', 'global');
 
   @if $italic {
     font-style: italic;
@@ -280,18 +280,18 @@
 
   .hb-dark-pattern & {
     @include hb-themes(('colorful', 'airy')) {
-      color: color('white', global);
+      color: color('white', 'global');
     }
 
     @include hb-traditional {
-      color: color(gray-light, global);
+      color: color('gray-light', 'global');
     }
   }
 }
 
 // Styles for captions and credits
 @mixin hb-caption-credit {
-  color: color('white', global);
+  color: color('white', 'global');
   font-style: italic;
   font-size: hb-calculate-rems(12px);
   position: absolute;
@@ -311,7 +311,7 @@
   }
 
   @include hb-themes(('colorful', 'airy')) {
-    background: linear-gradient(to top, color('black', global), transparent);
+    background: linear-gradient(to top, color('black', 'global'), transparent);
 
     .paragraph--type--hs-carousel & {
       // the percentage on this left side is larger to prevent the caption from running under carousel overlay
@@ -323,7 +323,7 @@
   }
 
   @include hb-traditional {
-    background: linear-gradient(to top, color('black', global), transparent);
+    background: linear-gradient(to top, color('black', 'global'), transparent);
   }
 
   .hb-card__graphics--has-date & {
@@ -361,7 +361,7 @@
   .hs-private-link {
     @include hb-text-reset;
     font-style: italic;
-    color: color('white', global);
+    color: color('white', 'global');
   }
 
   h1 a,
@@ -371,7 +371,7 @@
   h5 a,
   h6 a,
   a {
-    color: color('white', global);
+    color: color('white', 'global');
     text-decoration: underline !important;
     display: inline;
 

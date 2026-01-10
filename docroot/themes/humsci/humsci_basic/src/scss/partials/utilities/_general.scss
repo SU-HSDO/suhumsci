@@ -50,7 +50,7 @@
       @include grid-media-min('sm') {
         margin: 0 hb-calculate-rems(10px);
         content: '|';
-        color: color(gray-dark, global);
+        color: color('gray-dark', 'global');
       }
     }
 
@@ -175,8 +175,8 @@
 details.hb-accordion-secondary {
   // Overriding _details.scss
   summary:not(.hb-timeline-item__summary) {
-    border-color: color(primary);
-    color: color('black', global);
+    border-color: color('primary');
+    color: color('black', 'global');
 
     border-width: hb-calculate-rems(2px);
     background-color: transparent;
@@ -186,7 +186,7 @@ details.hb-accordion-secondary {
     }
 
     &:hover {
-      color: color(secondary);
+      color: color('secondary');
 
       &::after {
         @include hb-menu-minus-icon('secondary');
@@ -195,7 +195,7 @@ details.hb-accordion-secondary {
   }
 
   &[open] {
-    border-color: color(primary);
+    border-color: color('primary');
     border-width: hb-calculate-rems(2px);
     border-bottom: none;
 
@@ -209,7 +209,7 @@ details.hb-accordion-secondary {
     }
 
     .revealed-details {
-      border-color: color(primary);
+      border-color: color('primary');
       border-width: hb-calculate-rems(2px);
       border-top: none;
     }
@@ -221,11 +221,11 @@ details.hb-accordion-light {
   border: none;
 
   @include hb-colorful {
-    background-color: color(secondary-highlight);
+    background-color: color('secondary-highlight');
   }
 
   @include hb-traditional {
-    background-color: color(tertiary-highlight);
+    background-color: color('tertiary-highlight');
   }
 
   // Overriding _details.scss
@@ -233,9 +233,9 @@ details.hb-accordion-light {
     border: $hb-thin-border;
     background-color: transparent;
 
-    color: color('black', global);
+    color: color('black', 'global');
     border-color: transparent;
-    border-left-color: color(secondary);
+    border-left-color: color('secondary');
 
     @include hb-colorful {
       border-width: hb-calculate-rems(2px);
@@ -253,14 +253,14 @@ details.hb-accordion-light {
 
     &:hover,
     &:focus {
-      color: color(primary);
+      color: color('primary');
     }
   }
 
   &[open] {
     summary:not(.hb-timeline-item__summary) {
       background: transparent;
-      border-color: color(secondary);
+      border-color: color('secondary');
 
       &::after {
         @include hb-colorful {
@@ -275,18 +275,18 @@ details.hb-accordion-light {
 
     .revealed-details {
       @include hb-colorful {
-        background-color: color('white', global);
+        background-color: color('white', 'global');
         border: $hb-thin-border;
         border-width: hb-calculate-rems(2px);
-        border-color: color(secondary);
+        border-color: color('secondary');
         border-top: none;
       }
 
       @include hb-traditional {
-        background-color: color('white', global);
+        background-color: color('white', 'global');
         border: $hb-thin-border;
         border-top: none;
-        border-color: color(secondary);
+        border-color: color('secondary');
       }
     }
   }

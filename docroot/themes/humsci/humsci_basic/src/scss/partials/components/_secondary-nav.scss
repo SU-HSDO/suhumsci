@@ -48,14 +48,14 @@
     padding-left: hb-calculate-rems(16px);
 
     .hb-dark-inversion & {
-      background-color: color(primary-dark);
+      background-color: color('primary-dark');
     }
   }
 
   &__menu-lv1 {
     padding-left: 0;
     border-top: $hb-thin-border;
-    border-color: color(gray-medium, global);
+    border-color: color('gray-medium', 'global');
   }
 
   &__menu-lv1 > &__item > &__link {
@@ -65,30 +65,30 @@
   &__item,
   &__link {
     font-size: hb-calculate-rems(16px);
-    color: color('black', global);
+    color: color('black', 'global');
 
     .hb-dark-inversion & {
-      color: color('white', global);
+      color: color('white', 'global');
 
       &:hover,
       &:focus,
       &.is-active {
-        color: color('black', global);
+        color: color('black', 'global');
       }
     }
   }
 
   // make sure external links within the secondary nav receive the same styles as other links
   &__link.ext {
-    color: color('black', global);
+    color: color('black', 'global');
 
     .hb-dark-inversion & {
-      color: color('white', global);
+      color: color('white', 'global');
     }
 
     &:hover,
     &:focus {
-      color: color('black', global);
+      color: color('black', 'global');
 
       @include hb-themes(('airy', 'colorful')) {
         background-image: none;
@@ -106,7 +106,7 @@
       &::before {
         content: '';
         display: block;
-        background-color: color(gray-dark, global);
+        background-color: color('gray-dark', 'global');
 
         position: absolute;
         height: 100%;
@@ -133,7 +133,7 @@
       hb-calculate-rems(16px) hb-calculate-rems(18px);
     text-decoration: none;
     border-bottom: $hb-thin-border;
-    border-color: color(gray-medium, global);
+    border-color: color('gray-medium', 'global');
 
     &:hover,
     &:focus {
@@ -153,11 +153,11 @@
         }
 
         @include hb-themes(('airy', 'colorful')) {
-          background-color: color(gray-light, global);
+          background-color: color('gray-light', 'global');
         }
 
         @include hb-traditional {
-          background-color: color(tertiary-highlight);
+          background-color: color('tertiary-highlight');
         }
       }
     }
@@ -172,23 +172,23 @@
       }
 
       &::before {
-        background-color: color(tertiary-reversed);
+        background-color: color('tertiary-reversed');
       }
 
       &:hover,
       &:focus {
         &::before {
-          background-color: color(secondary);
+          background-color: color('secondary');
         }
       }
     }
 
     &.is-active {
       font-weight: hb-theme-font-weight(semibold);
-      background-color: color(secondary-highlight);
+      background-color: color('secondary-highlight');
 
       &::before {
-        background-color: color(secondary);
+        background-color: color('secondary');
       }
 
       .hb-dark-inversion & {

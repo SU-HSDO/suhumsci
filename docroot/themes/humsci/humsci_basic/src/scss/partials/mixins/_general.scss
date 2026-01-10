@@ -76,7 +76,7 @@
 
     &::before {
       background-color: transparent;
-      border-color: color(secondary);
+      border-color: color('secondary');
       border-width: 1px;
       border-style: solid;
       content: '';
@@ -92,7 +92,7 @@
     &::before {
       border-radius: 0;
       border: 0;
-      background-color: color(secondary);
+      background-color: color('secondary');
       top: hb-calculate-rems(8px);
       min-width: inherit;
     }
@@ -147,19 +147,19 @@
       height: hb-calculate-rems(6px);
       width: hb-calculate-rems(6px);
       border-radius: 50%;
-      background-color: color(secondary);
+      background-color: color('secondary');
       position: absolute;
       left: 0;
       top: hb-calculate-rems(8px);
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        background-color: color(secondary-highlight);
+        background-color: color('secondary-highlight');
       }
 
       .hb-raised-cards .hb-dark-pattern &,
       .hb-dark-inversion .hb-raised-cards .views-element-container & {
-        background-color: color(secondary);
+        background-color: color('secondary');
       }
     }
   }
@@ -190,7 +190,7 @@
       counter-increment: li;
       font-size: hb-calculate-rems(16px);
       font-weight: hb-theme-font-weight(semibold);
-      color: color(secondary);
+      color: color('secondary');
       position: absolute;
       left: 0;
       top: 0;
@@ -204,7 +204,7 @@
       }
 
       .hb-dark-pattern & {
-        color: color(secondary-highlight);
+        color: color('secondary-highlight');
       }
     }
   }
@@ -268,21 +268,21 @@
 @mixin hb-divider {
   width: 100%;
   border-bottom: $hb-thin-border;
-  border-color: color('gray', global);
+  border-color: color('gray', 'global');
 }
 
 @mixin hb-well {
   @include hb-themes(('colorful', 'airy')) {
-    background-color: color(gray-light, global);
+    background-color: color('gray-light', 'global');
   }
 
   @include hb-traditional {
-    background-color: color(tertiary-highlight);
+    background-color: color('tertiary-highlight');
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    color: color('black', global);
+    color: color('black', 'global');
   }
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);

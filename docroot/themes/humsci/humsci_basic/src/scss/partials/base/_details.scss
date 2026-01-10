@@ -17,8 +17,8 @@ summary:not(.hb-timeline-item__summary) {
   font-weight: hb-theme-font-weight('semibold');
   cursor: pointer;
   border: $hb-thin-border;
-  border-color: color(secondary);
-  background-color: color(secondary);
+  border-color: color('secondary');
+  background-color: color('secondary');
   color: color('white', global);
 
   // This is to position everything correctly in browsers that do not support the
@@ -65,8 +65,8 @@ summary:not(.hb-timeline-item__summary) {
 
   &:hover,
   details[open] & {
-    background-color: color(secondary-darken-12);
-    border-color: color(secondary-darken-12);
+    background-color: color('secondary-darken-12');
+    border-color: color('secondary-darken-12');
   }
 
   &:focus,
@@ -75,18 +75,18 @@ summary:not(.hb-timeline-item__summary) {
     border-color: color('white', global);
 
     @include hb-themes(('colorful', 'airy')) {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) color(secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
     }
 
     @include hb-traditional {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) color(secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
     }
 
-    box-shadow: 0 0 0 hb-calculate-rems(2px) color(secondary-active);
+    box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
   }
 
   .summary {
-    color: color('white', global);
+    color: color('white', 'global');
 
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight('semibold');
@@ -105,6 +105,6 @@ summary:not(.hb-timeline-item__summary) {
 .revealed-details {
   padding: hb-calculate-rems(20px) hb-calculate-rems(16px);
   border: $hb-thin-border;
-  border-color: color(gray-medium, global);
+  border-color: color('gray-medium', 'global');
   border-top: none;
 }

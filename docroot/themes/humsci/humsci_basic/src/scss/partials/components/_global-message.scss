@@ -14,7 +14,7 @@ $su-button-stroke: inset 0 0 0 2px;
   @include generate-css-vars(su-alert);
 
   background-color: #f4f4f4;
-  color: color('black', su-core);
+  color: color('black', 'su-core');
   padding: 0;
 
   & .fa,
@@ -23,12 +23,12 @@ $su-button-stroke: inset 0 0 0 2px;
   .hb-dark-pattern & .fas,
   .hb-dark-pattern & ol:not([class]) li::before,
   & ol:not([class]) li::before {
-    color: color('black', su-core);
+    color: color('black', 'su-core');
   }
 
   .hb-dark-pattern & ul:not([class]) li::before,
   & ul:not([class]) li::before {
-    background-color: color('black', su-core);
+    background-color: color('black', 'su-core');
   }
 
   .hb-dark-pattern & a,
@@ -37,7 +37,7 @@ $su-button-stroke: inset 0 0 0 2px;
   a[href^='mailto:'],
   a.ext,
   a {
-    color: color('black', su-core);
+    color: color('black', 'su-core');
     border-bottom: 0;
     background-image: none;
     font-weight: hb-theme-font-weight(semibold);
@@ -56,7 +56,7 @@ $su-button-stroke: inset 0 0 0 2px;
     a[href^='mailto:'],
     a.ext,
     a {
-      color: color('white', su-core);
+      color: color('white', 'su-core');
 
       &:hover,
       &:focus {
@@ -69,8 +69,8 @@ $su-button-stroke: inset 0 0 0 2px;
       a {
         &:hover,
         &:focus {
-          background-color: color('white', su-core);
-          color: color('black', su-core);
+          background-color: color('white', 'su-core');
+          color: color('black', 'su-core');
         }
       }
     }
@@ -78,18 +78,18 @@ $su-button-stroke: inset 0 0 0 2px;
     .su-alert__footer {
       .su-link {
         &::after {
-          background: color('white', su-core);
+          background: color('white', 'su-core');
         }
       }
     }
 
     .su-alert__dismiss-button {
-      color: color(light-text, su-alert);
+      color: color('light-text', 'su-alert');
 
       &:hover,
       &:focus {
         background-color: transparent;
-        color: color('white', su-core);
+        color: color('white', 'su-core');
       }
     }
   }
@@ -101,12 +101,12 @@ $su-button-stroke: inset 0 0 0 2px;
   .hb-dark-pattern &.su-alert--text-light .fas,
   .hb-dark-pattern &.su-alert--text-light ol:not([class]) li::before,
   &--text-light ol:not([class]) li::before {
-    color: color('white', su-core);
+    color: color('white', 'su-core');
   }
 
   .hb-dark-pattern &--text-light ul:not([class]) li::before,
   &--text-light ul:not([class]) li::before {
-    background-color: color('white', su-core);
+    background-color: color('white', 'su-core');
   }
 
   &--plain {
@@ -114,11 +114,11 @@ $su-button-stroke: inset 0 0 0 2px;
   }
 
   &--error {
-    background-color: color(digital-red, su-core);
-    color: color(light-text, su-alert);
+    background-color: color('digital-red', 'su-core');
+    color: color('light-text', 'su-alert');
 
     a {
-      color: color(light-text, su-alert);
+      color: color('light-text', 'su-alert');
 
       &:hover,
       &:focus {
@@ -135,18 +135,18 @@ $su-button-stroke: inset 0 0 0 2px;
     background-color: #eaab00;
 
     a {
-      color: color('black', su-core);
+      color: color('black', 'su-core');
 
       &:hover,
       &:focus {
-        color: color('black', su-core);
+        color: color('black', 'su-core');
         text-decoration: underline;
       }
     }
   }
 
   &--info {
-    background-color: color(digital-blue, su-core);
+    background-color: color('digital-blue', 'su-core');
   }
 
   &__header {
@@ -196,7 +196,7 @@ $su-button-stroke: inset 0 0 0 2px;
     margin-bottom: 0;
 
     a {
-      color: color('black', su-core);
+      color: color('black', 'su-core');
       text-decoration: underline;
       transition:
         background-color 0.3s ease-in-out,
@@ -204,8 +204,8 @@ $su-button-stroke: inset 0 0 0 2px;
 
       &:hover,
       &:focus {
-        color: color('black', su-core);
-        background-color: color(digital-blue-light, su-alert);
+        color: color('black', 'su-core');
+        background-color: color('digital-blue-light', 'su-alert');
         text-decoration: underline;
       }
     }
@@ -240,7 +240,7 @@ $su-button-stroke: inset 0 0 0 2px;
       background-color: transparent;
       text-transform: uppercase;
       font-weight: hb-theme-font-weight(semibold);
-      color: color(dark-text, su-alert);
+      color: color('dark-text', 'su-alert');
       font-size: hb-calculate-rems(17px);
       letter-spacing: 0.1em;
 
@@ -262,7 +262,7 @@ $su-button-stroke: inset 0 0 0 2px;
         &:hover,
         &:focus {
           background-color: transparent;
-          color: color('black', su-core);
+          color: color('black', 'su-core');
         }
       }
     }
@@ -285,19 +285,19 @@ $su-button-stroke: inset 0 0 0 2px;
 // -----------------------------------------------------------------------------
 .su-alert__footer {
   a {
-    color: color(dark-text, su-alert);
+    color: color('dark-text', 'su-alert');
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: color(dark-text, su-alert);
+      color: color('dark-text', 'su-alert');
       text-decoration: underline;
     }
   }
 
   .su-link {
     &::after {
-      background: color(dark-text, su-alert);
+      background: color('dark-text', 'su-alert');
     }
 
     &:hover,
@@ -305,7 +305,7 @@ $su-button-stroke: inset 0 0 0 2px;
       text-decoration: underline;
 
       &::after {
-        background: color(dark-text, su-alert);
+        background: color('dark-text', 'su-alert');
       }
     }
   }

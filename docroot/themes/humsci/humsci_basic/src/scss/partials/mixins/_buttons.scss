@@ -64,45 +64,45 @@
 
 @mixin hb-button {
   @include hb-button-base;
-  color: color('white', global);
-  background-color: color(secondary);
-  border-color: color(secondary);
+  color: color('white', 'global');
+  background-color: color('secondary');
+  border-color: color('secondary');
 
   &:hover {
-    background-color: color(secondary-darken-12);
-    border-color: color(secondary-darken-12);
-    color: color('white', global);
+    background-color: color('secondary-darken-12');
+    border-color: color('secondary-darken-12');
+    color: color('white', 'global');
   }
 
   &:active,
   &:focus {
-    background-color: color(secondary);
-    border-color: color('white', global);
-    color: color('white', global);
+    background-color: color('secondary');
+    border-color: color('white', 'global');
+    color: color('white', 'global');
   }
 
   @include hb-themes(('colorful', 'airy')) {
     &:active,
     &:focus {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) color(secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
     }
   }
 
   @include hb-traditional {
     &:active,
     &:focus {
-      box-shadow: 0 0 0 hb-calculate-rems(1px) color(secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(1px) color('secondary-active');
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      background-color: color(secondary-darken-12);
-      border-color: color(secondary-darken-12);
+      background-color: color('secondary-darken-12');
+      border-color: color('secondary-darken-12');
 
       &:hover {
-        background-color: color(primary-dark);
-        border-color: color(primary-dark);
+        background-color: color('primary-dark');
+        border-color: color('primary-dark');
       }
     }
   }
@@ -124,12 +124,12 @@
 
 @mixin hb-secondary-button {
   @include hb-button-base;
-  border-color: color(secondary);
-  color: color(secondary);
+  border-color: color('secondary');
+  color: color('secondary');
 
   &:hover {
-    color: color('white', global);
-    background-color: color(secondary);
+    color: color('white', 'global');
+    background-color: color('secondary');
 
     .hb-dark-pattern & {
       background-color: transparent;
@@ -138,11 +138,11 @@
 
   &:active,
   &:focus {
-    color: color(secondary);
+    color: color('secondary');
     background-color: transparent;
     box-shadow:
-      0 0 0 hb-calculate-rems(2px) color('white', global),
-      0 0 0 hb-calculate-rems(4px) color(secondary-active);
+      0 0 0 hb-calculate-rems(2px) color('white', 'global'),
+      0 0 0 hb-calculate-rems(4px) color('secondary-active');
 
     .hb-dark-pattern & {
       box-shadow: none;
@@ -155,39 +155,39 @@
     &:active,
     &:focus {
       outline: hb-calculate-rems(2px) solid;
-      outline-color: color('white', global);
-      box-shadow: 0 0 0 hb-calculate-rems(3px) color(secondary-active);
+      outline-color: color('white', 'global');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) color('secondary-active');
     }
 
     .hb-dark-pattern & {
-      color: color(tertiary-highlight);
-      border-color: color(tertiary-highlight);
+      color: color('tertiary-highlight');
+      border-color: color('tertiary-highlight');
 
       &:hover,
       &:active,
       &:focus {
-        color: color(tertiary-highlight-darken-10);
-        border-color: color(tertiary-highlight-darken-10);
+        color: color('tertiary-highlight-darken-10');
+        border-color: color('tertiary-highlight-darken-10');
       }
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      border-color: color(secondary-darken-12);
-      color: color(secondary-darken-12);
+      border-color: color('secondary-darken-12');
+      color: color('secondary-darken-12');
 
       &:hover {
-        color: color('white', global);
-        background-color: color(secondary-darken-12);
+        color: color('white', 'global');
+        background-color: color('secondary-darken-12');
       }
     }
   }
 
   @include hb-themes(('colorful', 'airy')) {
     .hb-dark-pattern & {
-      color: color(tertiary-reversed);
-      border-color: color(tertiary-reversed);
+      color: color('tertiary-reversed');
+      border-color: color('tertiary-reversed');
 
       &:hover,
       &:active,
@@ -205,20 +205,20 @@
   border-radius: 0;
   line-height: 1;
   min-height: auto;
-  color: color(secondary);
+  color: color('secondary');
   cursor: pointer;
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    color: color(tertiary-reversed);
+    color: color('tertiary-reversed');
   }
 
   &:hover {
-    color: color(secondary-darken-12);
+    color: color('secondary-darken-12');
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      color: color(tertiary-highlight);
+      color: color('tertiary-highlight');
     }
   }
 
@@ -229,19 +229,19 @@
   @include hb-themes(('colorful', 'airy')) {
     padding: hb-calculate-rems(4px) 0;
     border-bottom: $hb-thin-border;
-    border-bottom-color: color(secondary);
+    border-bottom-color: color('secondary');
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      border-bottom-color: color(tertiary-reversed);
+      border-bottom-color: color('tertiary-reversed');
     }
 
     &:hover {
-      border-bottom-color: color(secondary-darken-12);
+      border-bottom-color: color('secondary-darken-12');
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        border-bottom-color: color(tertiary-highlight);
+        border-bottom-color: color('tertiary-highlight');
       }
     }
   }
@@ -255,19 +255,19 @@
 
     &:focus,
     &:active {
-      border-color: color(secondary);
+      border-color: color('secondary');
       box-shadow: none;
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      color: color(secondary-darken-12);
-      border-bottom-color: color(secondary-darken-12);
+      color: color('secondary-darken-12');
+      border-bottom-color: color('secondary-darken-12');
 
       &:hover {
-        color: color(primary-dark);
-        border-color: transparent transparent color(primary-dark);
+        color: color('primary-dark');
+        border-color: transparent transparent color('primary-dark');
         background-color: transparent;
       }
     }

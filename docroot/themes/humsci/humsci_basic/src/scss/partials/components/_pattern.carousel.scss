@@ -40,7 +40,7 @@
 
       // Offset background color pseudo element
       &::before {
-        background-color: color(gray-light, global);
+        background-color: color('gray-light', 'global');
         z-index: $hb-z-index-hero1-background;
 
         @include grid-media-min('md') {
@@ -57,7 +57,7 @@
         display: block;
         height: 100%;
         z-index: $hb-z-index-hero1-overlay;
-        background-color: color(secondary);
+        background-color: color('secondary');
 
         @include grid-media-min('md') {
           grid-column: 1 / 2;
@@ -132,7 +132,7 @@
 
     &__text {
       @include hb-themes(('colorful', 'airy')) {
-        background-color: color(primary-hero-overlay);
+        background-color: color('primary-hero-overlay');
         padding: calc(#{hb-calculate-rems(64px)} / 2)
           calc(#{hb-spacing-width()} / 2) calc(#{hb-spacing-width()} / 2);
         position: relative;
@@ -209,7 +209,7 @@
       }
 
       @include hb-traditional {
-        background-color: color(primary-hero-overlay);
+        background-color: color('primary-hero-overlay');
         position: relative;
         margin: hb-spacing-width() 0 !important; // override margin set in hb-page-width mixin in the hero pattern hb-hero-overlay__text styles
         align-self: stretch;
@@ -493,7 +493,7 @@
         padding-top: hb-calculate-rems(5px);
 
         &::before {
-          color: color('white', global);
+          color: color('white', 'global');
           content: '';
 
           @include hb-icon-type($type: 'ellipse-border', $color: 'gray-light');
@@ -505,11 +505,11 @@
 
           // Use box shadow property to improve visual accessibiity of slick dots.
           @include hb-themes(('airy', 'colorful')) {
-            $light-shadow: color(gray-light, global);
-            $dark-shadow: color('black', global);
+            $light-shadow: color('gray-light', 'global');
+            $dark-shadow: color('black', 'global');
 
             // For modern browsers
-            $accent-shadow: color(secondary);
+            $accent-shadow: color('secondary');
 
             box-shadow:
               inset hb-calculate-rems(-2px) 0 $light-shadow,
@@ -518,11 +518,11 @@
           }
 
           @include hb-traditional {
-            $light-shadow: color(gray-light, global);
-            $dark-shadow: color('black', global);
+            $light-shadow: color('gray-light', 'global');
+            $dark-shadow: color('black', 'global');
 
             // For modern browsers
-            $accent-shadow: color(secondary);
+            $accent-shadow: color('secondary');
 
             box-shadow:
               inset hb-calculate-rems(-2px) 0 $light-shadow,
@@ -672,7 +672,7 @@
             @include hb-icon-background('arrow-right-box-shadow', 'gray-light');
             filter: drop-shadow(
               hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-                color('black', global)
+                color('black', 'global')
             );
           }
 
@@ -686,7 +686,7 @@
             );
             filter: drop-shadow(
               hb-calculate-rems(1.75px) hb-calculate-rems(2px) 0
-                color('black', global)
+                color('black', 'global')
             );
           }
         }

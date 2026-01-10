@@ -8,21 +8,21 @@
 @use '../mixins/buttons' as *;
 
 .hb-spotlight {
-  background-color: color(spotlight);
+  background-color: color('spotlight');
 
   @include grid-media-min('md') {
     margin: hb-spacing-width() 0;
   }
 
   &--background-gray {
-    background-color: color(gray-medium, global);
+    background-color: color('gray-medium', 'global');
   }
 
   // Add a unique background-color for Lake on Colorful.
   // Note this is an extraordinary use case.
   // Targeting styles per color pairing should not become standard practice.
   .hc-pairing-lake & {
-    background-color: color(secondary-highlight);
+    background-color: color('secondary-highlight');
   }
 
   &--classic {
@@ -102,13 +102,13 @@
             // Note this is an extraordinary use case.
             // Targeting styles per color pairing should not become standard practice.
             .hc-pairing-ocean & {
-              color: color(secondary-darken-12);
-              border-color: color(secondary-darken-12);
+              color: color('secondary-darken-12');
+              border-color: color('secondary-darken-12');
 
               &:hover {
-                background-color: color(secondary-darken-12);
-                border-color: color(secondary-darken-12);
-                color: color('white', global);
+                background-color: color('secondary-darken-12');
+                border-color: color('secondary-darken-12');
+                color: color('white', 'global');
               }
             }
           }
@@ -157,7 +157,7 @@
   @include hb-traditional {
     .hs-paragraph-style--well &,
     .hs-paragraph-style--well-full-width & {
-      background-color: color('white', global);
+      background-color: color('white', 'global');
     }
   }
 
@@ -170,7 +170,7 @@
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px);
       margin: hb-calculate-rems(20px);
-      background: color('white', global);
+      background: color('white', 'global');
 
       @include grid-media-min('md') {
         padding: hb-calculate-rems(30px) hb-calculate-rems(40px);
@@ -202,7 +202,7 @@
       }
 
       @include hb-themes(('colorful', 'airy')) {
-        color: color(primary);
+        color: color('primary');
       }
     }
   }

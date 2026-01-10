@@ -56,7 +56,7 @@ $item-line-height-lg: 110%;
       .hb-dark-pattern &,
       .hb-dark-pattern &::after,
       .hb-dark-pattern &::before {
-        background-color: color('white', global);
+        background-color: color('white', 'global');
       }
     }
 
@@ -82,7 +82,7 @@ $item-line-height-lg: 110%;
       font-weight: hb-theme-font-weight(semibold);
       font-size: hb-calculate-rems(20px);
       border-bottom: $hb-thin-border;
-      border-color: color('gray', global);
+      border-color: color('gray', 'global');
 
       &[aria-hidden='false'] {
         margin-bottom: hb-calculate-rems(28px);
@@ -139,7 +139,7 @@ $item-line-height-lg: 110%;
 
     .hb-main-nav__menu-lv1 > & {
       border-top: $hb-thin-border;
-      border-color: color('gray', global);
+      border-color: color('gray', 'global');
 
       @include grid-media-min('lg') {
         .js & {
@@ -151,7 +151,7 @@ $item-line-height-lg: 110%;
 
     .hb-main-nav__menu-lv2 &:not(:last-child) {
       border-bottom: $hb-thin-border;
-      border-color: color('gray', global);
+      border-color: color('gray', 'global');
 
       @include grid-media-min('lg') {
         .js & {
@@ -169,11 +169,11 @@ $item-line-height-lg: 110%;
     line-height: $item-line-height-sm;
 
     @include hb-themes(('airy', 'colorful')) {
-      color: color('black', global);
+      color: color('black', 'global');
     }
 
     @include hb-traditional {
-      color: color(gray-dark, global);
+      color: color('gray-dark', 'global');
     }
 
     @include grid-media-min('md') {
@@ -200,10 +200,10 @@ $item-line-height-lg: 110%;
     }
 
     &:hover:not(.is-active) {
-      color: color('black', global);
+      color: color('black', 'global');
 
       .hb-dark-pattern & {
-        color: color('black', global);
+        color: color('black', 'global');
 
         & + .hb-main-nav__button,
         &.hb-nested-toggler::after {
@@ -216,10 +216,10 @@ $item-line-height-lg: 110%;
         }
 
         @include grid-media-min('lg') {
-          color: color('white', global);
+          color: color('white', 'global');
 
           html:not(.js) & {
-            color: color('black', global);
+            color: color('black', 'global');
           }
 
           & + .hb-main-nav__button,
@@ -235,27 +235,27 @@ $item-line-height-lg: 110%;
       }
 
       @include hb-themes(('airy', 'colorful')) {
-        background-color: color(gray-light, global);
+        background-color: color('gray-light', 'global');
       }
 
       @include hb-traditional {
-        background-color: color(tertiary-highlight);
+        background-color: color('tertiary-highlight');
       }
     }
 
     // Targeting only the first level of navigation on desktop
     .hb-main-nav__menu-lv1 > li > & {
-      color: color('black', global);
+      color: color('black', 'global');
 
       .hb-dark-pattern & {
-        color: color('white', global);
+        color: color('white', 'global');
 
         &.is-active {
-          color: color('black', global);
-          background-color: color(secondary-highlight);
+          color: color('black', 'global');
+          background-color: color('secondary-highlight');
 
           @include grid-media-min('lg') {
-            color: color('white', global);
+            color: color('white', 'global');
           }
         }
 
@@ -263,16 +263,16 @@ $item-line-height-lg: 110%;
           &.hb-main-nav__link--active-trail {
             /* stylelint-disable max-nesting-depth */
             &::before {
-              background-color: color(tertiary-reversed);
+              background-color: color('tertiary-reversed');
             }
 
             &:hover,
             &:focus {
               &::before {
-                background-color: color(secondary);
+                background-color: color('secondary');
 
                 @include grid-media-min('lg') {
-                  background-color: color(tertiary-reversed);
+                  background-color: color('tertiary-reversed');
                 }
               }
             }
@@ -299,14 +299,14 @@ $item-line-height-lg: 110%;
         }
 
         .js &.hb-main-nav__link--active-trail::before {
-          background-color: color(secondary);
+          background-color: color('secondary');
         }
 
         .js &:hover {
           background-color: transparent;
 
           &:not(.is-active):not(.hb-main-nav__link--active-trail)::before {
-            background-color: color('gray', global);
+            background-color: color('gray', 'global');
           }
         }
       }
@@ -322,18 +322,18 @@ $item-line-height-lg: 110%;
 
       &:focus,
       &:hover:not(.is-active) {
-        color: color('black', global);
+        color: color('black', 'global');
 
         @include hb-themes(('colorful', 'airy')) {
-          background-color: color(gray-light, global);
+          background-color: color('gray-light', 'global');
         }
 
         @include hb-traditional {
-          background-color: color(tertiary-highlight);
+          background-color: color('tertiary-highlight');
         }
 
         .hb-dark-pattern & {
-          color: color('black', global);
+          color: color('black', 'global');
 
           & + .hb-nested-toggler,
           &::after {
@@ -351,39 +351,39 @@ $item-line-height-lg: 110%;
         @include grid-media-min('lg') {
           &:hover,
           &:focus {
-            color: color('white', global);
-            background-color: color(primary-dark);
+            color: color('white', 'global');
+            background-color: color('primary-dark');
           }
         }
       }
 
       .hb-dark-pattern & {
-        color: color('white', global);
+        color: color('white', 'global');
 
         &.is-active {
-          color: color('black', global);
-          background-color: color(secondary-highlight);
+          color: color('black', 'global');
+          background-color: color('secondary-highlight');
 
           &::before {
-            background-color: color(secondary);
+            background-color: color('secondary');
           }
         }
 
         @include grid-media-min('lg') {
           html:not(.js) & {
-            color: color('white', global);
+            color: color('white', 'global');
           }
 
           &,
           &:hover:not(.is-active),
           &.is-active {
-            color: color('black', global);
+            color: color('black', 'global');
           }
 
           .hb-dark-inversion & {
             /* stylelint-disable max-nesting-depth */
             &:hover:not(.is-active) {
-              color: color('white', global);
+              color: color('white', 'global');
             }
             /* stylelint-enable max-nesting-depth */
           }
@@ -401,15 +401,15 @@ $item-line-height-lg: 110%;
         top: 0;
         bottom: 0;
         left: 0;
-        background-color: color(secondary);
+        background-color: color('secondary');
       }
 
       &.is-active {
-        background-color: color(secondary-highlight);
+        background-color: color('secondary-highlight');
         color: color('black', global);
 
         &::before {
-          background-color: color(secondary);
+          background-color: color('secondary');
         }
       }
     }
@@ -573,7 +573,7 @@ $item-line-height-lg: 110%;
   &__menu-container {
     padding-left: hb-calculate-rems(20px);
     border-top: $hb-thin-border;
-    border-color: color('gray', global);
+    border-color: color('gray', 'global');
 
     &[aria-hidden='true'] {
       display: none;
@@ -587,8 +587,8 @@ $item-line-height-lg: 110%;
         width: 100%;
         padding: 0;
         border: $hb-thin-border;
-        border-color: color('gray', global);
-        background-color: color('white', global);
+        border-color: color('gray', 'global');
+        background-color: color('white', 'global');
       }
 
       // Prevents the last dropdown from hanging off the edge of the screen if

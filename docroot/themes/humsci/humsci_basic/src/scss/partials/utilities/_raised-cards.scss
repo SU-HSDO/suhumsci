@@ -52,19 +52,19 @@
   }
 
   .hb-card {
-    background-color: color('white', global);
+    background-color: color('white', 'global');
     flex-grow: 1;
 
     @include hb-traditional {
       padding: hb-spacing-width('xs');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px)
-        hb-calculate-rems(17px) color(gray-medium, global);
+        hb-calculate-rems(17px) color('gray-medium', 'global');
     }
 
     @include hb-themes(('airy', 'colorful')) {
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
-        color-mix(in srgb, color('black', global) 12%, transparent);
+        color-mix(in srgb, color('black', 'global') 12%, transparent);
 
       @supports (object-fit: cover) {
         align-items: stretch;
@@ -127,7 +127,7 @@
   .hb-timelime__wrapper {
     @include hb-raised-cards-shadow;
 
-    background-color: color('white', global);
+    background-color: color('white', 'global');
     padding: hb-spacing-width('md') hb-spacing-width('xs');
     margin-top: 0;
   }
@@ -152,7 +152,7 @@
   .hb-card--date-stacked {
     @include hb-colorful {
       border-bottom: 3px solid;
-      border-color: color(secondary);
+      border-color: color('secondary');
     }
   }
 }
@@ -160,59 +160,59 @@
 // Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied
 .hb-raised-cards .hb-dark-pattern .hb-card,
 .hb-dark-inversion .hb-raised-cards .views-element-container .hb-card {
-  color: color('black', global);
+  color: color('black', 'global');
 
   .field-content,
   .views-label {
-    color: color('black', global);
+    color: color('black', 'global');
   }
 
   a {
-    color: color(tertiary);
+    color: color('tertiary');
 
     &:hover,
     &:focus {
-      color: color(tertiary-darken-20);
+      color: color('tertiary-darken-20');
     }
   }
 
   &__date-tile {
     .field-content {
       @include hb-themes(('airy', 'colorful')) {
-        color: color('white', global);
+        color: color('white', 'global');
       }
     }
 
     &-month .field-content {
       @include hb-traditional {
-        color: color('white', global);
+        color: color('white', 'global');
       }
     }
 
     &-day .field-content {
       @include hb-traditional {
-        color: color(primary);
+        color: color('primary');
       }
     }
   }
 
   &__title a {
     @include hb-themes(('airy', 'colorful')) {
-      border-bottom-color: color(tertiary);
+      border-bottom-color: color('tertiary');
 
       &:hover,
       &:focus {
-        border-bottom-color: color(tertiary-darken-20) !important;
+        border-bottom-color: color('tertiary-darken-20') !important;
       }
     }
 
     @include hb-traditional {
-      color: color('black', global);
-      text-decoration-color: color('black', global);
+      color: color('black', 'global');
+      text-decoration-color: color('black', 'global');
 
       &:hover,
       &:focus {
-        text-decoration-color: color(tertiary-darken-20);
+        text-decoration-color: color('tertiary-darken-20');
       }
     }
   }
@@ -236,7 +236,7 @@
       &:hover,
       &:focus {
         &::after {
-          background-color: color(tertiary-darken-20);
+          background-color: color('tertiary-darken-20');
         }
       }
     }

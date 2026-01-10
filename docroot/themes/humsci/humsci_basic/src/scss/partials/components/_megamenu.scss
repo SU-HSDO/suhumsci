@@ -28,11 +28,11 @@ $nested-padding: hb-calculate-rems(22px);
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
-  color: color(tertiary);
+  color: color('tertiary');
 
   &:hover:not(.is-active),
   &:focus {
-    color: color(tertiary-darken-20);
+    color: color('tertiary-darken-20');
   }
 }
 
@@ -85,7 +85,7 @@ $hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
 $hb-link-bar-link: 100%;
 
 @mixin hb-link-bar($width: $hb-link-bar-link) {
-  background-color: color(secondary);
+  background-color: color('secondary');
 
   content: '';
   display: block;
@@ -101,7 +101,7 @@ $hb-link-bar-link: 100%;
 }
 
 @mixin hb-active-border {
-  border-color: color(secondary);
+  border-color: color('secondary');
 
   border-width: hb-calculate-rems(6px);
   border-style: solid;
@@ -163,7 +163,7 @@ $hb-link-bar-link: 100%;
     .hb-dark-pattern &,
     .hb-dark-pattern &::after,
     .hb-dark-pattern &::before {
-      background-color: color('white', global);
+      background-color: color('white', 'global');
     }
   }
 
@@ -184,7 +184,7 @@ $hb-link-bar-link: 100%;
     // You must include the mixin after the variable if
     // you want the color to apply.
     border-bottom: $hb-medium-border;
-    border-color: color('gray', global);
+    border-color: color('gray', 'global');
 
     display: none;
     margin-bottom: hb-calculate-rems(28px);
@@ -223,7 +223,7 @@ $hb-link-bar-link: 100%;
 
   .megamenu__item {
     border-top: $hb-medium-border;
-    border-color: color('gray', global);
+    border-color: color('gray', 'global');
 
     .hb-private-page-link {
       @include hb-lock-props;
@@ -272,14 +272,14 @@ $hb-link-bar-link: 100%;
     }
 
     &:hover {
-      color: color('black', global);
+      color: color('black', 'global');
 
       @include hb-themes(('airy', 'colorful')) {
-        background-color: color(gray-light, global);
+        background-color: color('gray-light', 'global');
       }
 
       @include hb-traditional {
-        background-color: color(tertiary-highlight);
+        background-color: color('tertiary-highlight');
       }
 
       @include grid-media-min('lg') {
@@ -289,7 +289,7 @@ $hb-link-bar-link: 100%;
 
         .hb-dark-pattern & {
           .js & {
-            color: color('white', global);
+            color: color('white', 'global');
           }
         }
       }
@@ -470,7 +470,7 @@ $hb-link-bar-link: 100%;
       @include hb-active-border;
 
       &:not(:has(+ .megamenu__list .megamenu__is-active)) {
-        background-color: color(gray-light, global);
+        background-color: color('gray-light', 'global');
 
         @include grid-media-min('lg') {
           background: none;
@@ -480,7 +480,7 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__is-active {
-    background-color: color(gray-light, global);
+    background-color: color('gray-light', 'global');
 
     @include grid-media-min('lg') {
       background: none;
@@ -504,13 +504,13 @@ $hb-link-bar-link: 100%;
       display: block;
 
       .js & {
-        background-color: color('white', global);
+        background-color: color('white', 'global');
 
         position: absolute;
         padding: hb-calculate-rems(44px) 0 hb-calculate-rems(89px);
         left: 50%;
         width: 200%;
-        color: color('black', global);
+        color: color('black', 'global');
         box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px)
           rgb(0 0 0 / 63%);
         opacity: 0;
@@ -528,14 +528,14 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub {
-    color: color(gray-dark, global);
+    color: color('gray-dark', 'global');
 
     padding-left: hb-calculate-rems(16px);
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight(semibold);
 
     .hb-dark-pattern & {
-      color: color('white', global);
+      color: color('white', 'global');
     }
 
     @include grid-media-min('md') {
@@ -544,7 +544,7 @@ $hb-link-bar-link: 100%;
 
     @include grid-media-min('lg') {
       .js & {
-        color: color('black', global);
+        color: color('black', 'global');
 
         display: flex;
         gap: 0 hb-calculate-rems(52px);
@@ -562,7 +562,7 @@ $hb-link-bar-link: 100%;
           &:hover {
             .js & {
               &::after {
-                background-color: color(gray-light, global);
+                background-color: color('gray-light', 'global');
 
                 content: '';
                 position: absolute;
@@ -580,7 +580,7 @@ $hb-link-bar-link: 100%;
 
     .megamenu__item {
       border-top: $hb-thin-border;
-      border-color: color('gray', global);
+      border-color: color('gray', 'global');
 
       display: block;
       width: 100%;
@@ -603,7 +603,7 @@ $hb-link-bar-link: 100%;
         @include grid-media-min('lg') {
           .js & {
             border-top: $hb-medium-border;
-            border-color: color(gray-medium, global);
+            border-color: color('gray-medium', 'global');
 
             margin-top: hb-calculate-rems(12px);
             padding-top: hb-calculate-rems(16px);
@@ -623,7 +623,7 @@ $hb-link-bar-link: 100%;
       &:hover {
         @include grid-media-min('lg') {
           .js & {
-            background-color: color(gray-light, global);
+            background-color: color('gray-light', 'global');
 
             &::before {
               display: none;
@@ -652,10 +652,10 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__no-link {
-      color: color(tertiary);
+      color: color('tertiary');
 
       &:hover {
-        color: color(tertiary);
+        color: color('tertiary');
 
         background: none;
 
@@ -682,7 +682,7 @@ $hb-link-bar-link: 100%;
         @include grid-media-min('lg') {
           .js & {
             &:hover {
-              color: color('black', global);
+              color: color('black', 'global');
             }
           }
         }

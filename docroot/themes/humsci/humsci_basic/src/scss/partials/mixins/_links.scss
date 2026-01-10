@@ -8,30 +8,30 @@
 // Link style for headings
 @mixin hb-link {
   // no font size by default
-  color: color('black', global);
+  color: color('black', 'global');
   font-weight: hb-theme-font-weight(semibold);
   text-decoration: underline;
   transition: hb-transition(text-decoration-color);
-  text-decoration-color: color('gray-medium', global);
+  text-decoration-color: color('gray-medium', 'global');
 
   &:hover,
   &:focus {
-    color: color('black', global);
-    text-decoration-color: color(primary);
+    color: color('black', 'global');
+    text-decoration-color: color('primary');
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      border-bottom-color: color(tertiary-highlight);
+      border-bottom-color: color('tertiary-highlight');
     }
   }
 }
 
 @mixin hb-heading-link-color {
-  color: color(tertiary);
+  color: color('tertiary');
 
   &:hover,
   &:focus {
-    color: color(tertiary-darken-20);
+    color: color('tertiary-darken-20');
   }
 
   @include hb-themes(('colorful', 'airy')) {
@@ -39,14 +39,14 @@
   }
 
   @include hb-traditional {
-    text-decoration-color: color(tertiary);
+    text-decoration-color: color('tertiary');
     transition: hb-transition(
       all
     ); // set the color and text-decoration-color to transition together on hover
 
     &:hover,
     &:focus {
-      text-decoration-color: color(tertiary-darken-20);
+      text-decoration-color: color('tertiary-darken-20');
     }
 
     .hb-dark-inversion & {
@@ -159,16 +159,16 @@
 
     &::before {
       transform: translateX(#{hb-calculate-rems(6.25px)});
-      background-color: color(secondary-darken-12);
+      background-color: color('secondary-darken-12');
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        background-color: color('gray-medium', global);
+        background-color: color('gray-medium', 'global');
       }
 
       .hb-raised-cards .hb-dark-pattern &,
       .hb-dark-inversion .hb-raised-cards .views-element-container & {
-        background-color: color(secondary-darken-12);
+        background-color: color('secondary-darken-12');
       }
     }
   }
@@ -188,12 +188,12 @@
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      background-color: color('white', global);
+      background-color: color('white', 'global');
     }
 
     .hb-raised-cards .hb-dark-pattern &,
     .hb-dark-inversion .hb-raised-cards .views-element-container & {
-      background-color: color(secondary);
+      background-color: color('secondary');
     }
   }
 }

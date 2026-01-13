@@ -159,57 +159,45 @@
 
     .hb-video-lazy__play {
       position: absolute;
-      left: hb-calculate-rems(16px);
       border: $hb-thin-border;
       border-color: var(--palette--white);
       background-color: var(--palette--secondary);
-      font-size: 0;
-      padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-left: hb-calculate-rems(2px);
-      width: hb-calculate-rems(54px);
       cursor: pointer;
+      padding: 0 0 0 hb-calculate-rems(2px);
+      left: hb-calculate-rems(16px);
+      width: hb-calculate-rems(44px);
+      height: hb-calculate-rems(44px);
+
+      @include grid-media-min('md') {
+        width: hb-calculate-rems(54px);
+        height: hb-calculate-rems(54px);
+      }
 
       @include hb-themes(('colorful', 'airy')) {
         border-radius: 50%;
         bottom: hb-calculate-rems(-8px);
-        height: hb-calculate-rems(54px);
       }
 
       @include hb-traditional {
         bottom: hb-calculate-rems(-6px);
-        height: hb-calculate-rems(49px);
       }
 
       // Styles when view modes are selected on a WYSYWIG.
       .stanford_image_small_square &,
       .stanford_image_small & {
-        @include hb-themes(('colorful', 'airy')) {
-          width: hb-calculate-rems(44px);
-          height: hb-calculate-rems(44px);
-        }
-
-        @include hb-traditional {
-          width: hb-calculate-rems(44px);
-          height: hb-calculate-rems(39px);
-        }
+        width: hb-calculate-rems(44px);
+        height: hb-calculate-rems(44px);
       }
 
-      .full &,
+      .full:not(.align-left):not(.align-right) &,
       .stanford_image_xl &,
       .stanford_image_xl_square & {
         @include grid-media-min('md') {
           width: hb-calculate-rems(74px);
-
-          @include hb-themes(('colorful', 'airy')) {
-            height: hb-calculate-rems(74px);
-          }
-
-          @include hb-traditional {
-            height: hb-calculate-rems(70px);
-          }
+          height: hb-calculate-rems(74px);
         }
       }
 
@@ -246,40 +234,15 @@
         background-position: center;
         width: 100%;
         height: 100%;
-
-        @include hb-themes(('colorful', 'airy')) {
-          background-size: hb-calculate-rems(35px);
-        }
-
-        @include hb-traditional {
-          background-size: hb-calculate-rems(40px);
-        }
-
-        .hs-full-width & {
-          @include grid-media-min('md') {
-            @include hb-themes(('colorful', 'airy')) {
-              background-size: hb-calculate-rems(50px);
-            }
-
-            @include hb-traditional {
-              background-size: hb-calculate-rems(70px);
-            }
-          }
-        }
+        background-size: hb-calculate-rems(40px);
 
         // Styles when view modes are selected on a WYSYWIG.
         .stanford_image_small_square &,
         .stanford_image_small & {
-          @include hb-themes(('colorful', 'airy')) {
-            background-size: hb-calculate-rems(30px);
-          }
-
-          @include hb-traditional {
-            background-size: hb-calculate-rems(35px);
-          }
+          background-size: hb-calculate-rems(30px);
         }
 
-        .full &,
+        .full:not(.align-left):not(.align-right) &,
         .stanford_image_xl &,
         .stanford_image_xl_square & {
           @include grid-media-min('md') {

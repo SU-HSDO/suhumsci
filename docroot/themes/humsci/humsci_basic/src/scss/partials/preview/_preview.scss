@@ -3,6 +3,7 @@
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
 @use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
 @use '../mixins/generate-css-vars' as *;
@@ -49,8 +50,17 @@
   }
 
   .paragraph--type--hs-gradient-hero-slider {
-    .slick-dots {
-      bottom: -2rem;
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+
+  .paragraph--type--hs-carousel .swiper-container {
+    .swiper-button-prev,
+    .swiper-button-next {
+      @include hb-traditional {
+        bottom: 4.76rem;
+      }
     }
   }
 

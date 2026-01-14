@@ -168,7 +168,7 @@ class FlexiblePageCest {
     $I->click('Save');
 
     $I->waitForText('Demo Basic Page');
-    $I->canSeeNumberOfElements('.slick img', 1);
+    $I->canSeeNumberOfElements('.swiper-container img', 1);
   }
 
   /**
@@ -199,7 +199,7 @@ class FlexiblePageCest {
       $I->click('.hb-main-nav__link');
     }
 
-    // As of 2025-05-13 there is no secondary level menu items to test on a 
+    // As of 2025-05-13 there is no secondary level menu items to test on a
     // newly provisioned site.
     // This try/catch keeps the toggle consistent between environment testing.
     // Check nested menu item links.
@@ -301,7 +301,7 @@ class FlexiblePageCest {
     $I->click('Save');
     // Check spotlight 2.
     $I->waitForText($page_title);
-    $I->click('.slick-next');
+    $I->click('.swiper-button-next');
     $I->waitForText('Spotlight #2 Title');
     $I->canSee('Aliquet porttitor lacus luctus accumsan tortor posuere ac.');
     // @todo Fix flaky canSee test.

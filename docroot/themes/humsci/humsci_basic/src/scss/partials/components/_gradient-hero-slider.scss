@@ -5,79 +5,112 @@
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/heros' as *;
-@use '../mixins/slick' as *;
+@use '../mixins/swiper' as *;
 
-// Slick JS carousel / slider controls
+// Swiper slideshow for Gradient Hero Slider.
 .paragraph--type--hs-gradient-hero-slider {
   @include hb-hero-full-width;
-  @include slick-container;
-  @include slick-dots;
-  @include slick-arrows;
+  @include swiper-container;
+  @include swiper-pagination;
+  @include swiper-arrows;
   position: relative;
 
+  .hb-gradient-hero {
+    margin-bottom: hb-calculate-rems(32px);
+  }
+
   // styles specific to the main content area are applied by targeting
-  // the sidebar classes. We can use these classes to move the slick dots.
-  .slick-dots {
-    // To make it fit in small viewports
-    width: 100%;
-
+  // the sidebar classes. We can use these classes to move the swiper pagination.
+  .swiper-pagination {
     @include hb-themes(('colorful', 'airy')) {
-      bottom: 0;
-    }
-
-    @include hb-traditional {
-      bottom: hb-calculate-rems(-16px);
-    }
-
-    @include grid-media-min('md') {
-      width: auto;
+      bottom: hb-calculate-rems(16px);
     }
 
     :not(.hs-full-width).hb-three-column--no-sidebar &,
     .hb-three-column--one-sidebar &,
     .hb-three-column--two-sidebar & {
-      bottom: hb-calculate-rems(-48px);
+      bottom: 0;
     }
 
     // Update size of the buttons to respect the minimum size required for accessibility (24px).
-    li {
-      button {
-        width: hb-calculate-rems(24px);
-        height: hb-calculate-rems(24px);
-        padding: 0;
+    .swiper-pagination-bullet {
+      width: hb-calculate-rems(24px);
+      height: hb-calculate-rems(24px);
+      padding: 0;
+      background-color: transparent;
+
+      &::before {
+        content: '';
+        display: block;
+        width: 100%;
+        height: hb-calculate-rems(4px);
         background-color: transparent;
+        outline: 1px solid var(--palette--secondary);
+        margin-top: hb-calculate-rems(10px);
 
-        &::before {
-          content: '';
-          display: block;
-          width: 100%;
-          height: hb-calculate-rems(4px);
-          background-color: transparent;
-          outline: 1px solid color('secondary');
-
-          @include hb-themes(('colorful', 'airy')) {
-            border-radius: hb-calculate-rems(5px);
-          }
-        }
-
-        &:hover,
-        &:focus {
-          background-color: transparent;
-          transform: none;
-
-          &::before {
-            transform: scale(0.9);
-            background-color: color('secondary');
-          }
+        @include hb-themes(('colorful', 'airy')) {
+          border-radius: hb-calculate-rems(5px);
         }
       }
 
-      &.slick-active button {
+      &:hover,
+      &:focus {
+        background-color: transparent;
+        transform: none;
+
+        &::before {
+          transform: scale(0.9);
+          background-color: var(--palette--secondary);
+        }
+      }
+
+      &.swiper-pagination-bullet-active {
         background-color: transparent;
 
         &::before {
           background-color: color('secondary');
         }
+      }
+    }
+  }
+
+  .swiper-button-prev {
+    @include hb-traditional {
+      bottom: hb-calculate-rems(220px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      bottom: hb-calculate-rems(236px);
+    }
+  }
+
+  .swiper-button-next {
+    @include hb-traditional {
+      bottom: hb-calculate-rems(116px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      bottom: hb-calculate-rems(132px);
+    }
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @include grid-media-min('md') {
+      @include hb-traditional {
+        bottom: calc(50% - #{hb-calculate-rems(30px)});
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        bottom: calc(50% - #{hb-calculate-rems(21px)});
+      }
+
+      // styles specific to the main content area are applied by targeting
+      // the sidebar classes. We can use these classes to move the swiper bullets.
+      :not(.hs-full-width).hb-three-column--no-sidebar &,
+      .hb-three-column--one-sidebar &,
+      .hb-three-column--two-sidebar & {
+        bottom: calc(50% - #{hb-calculate-rems(30px)});
       }
     }
   }

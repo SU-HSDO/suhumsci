@@ -17,7 +17,7 @@
 ///
 /// @return {Map}
 ///
-@function _hb-theme-map($traditional, $colorful) {
+@function hb-theme-map($traditional, $colorful) {
   @if $hb-current-theme == 'traditional' {
     @return $traditional;
   } @else {
@@ -33,7 +33,7 @@
 /// @param {String|Map} $map-id
 /// @return {String}
 ///
-@function _hb-prefix($map-id) {
+@function hb-prefix($map-id) {
   // Theme-aware maps
   @if $map-id == 'pairings' or $map-id == 'global' {
     @return "#{$hb-current-theme}-#{$map-id}";
@@ -49,7 +49,7 @@
 /// @param {Map} $map
 /// @return {Map}
 ///
-@function _hb-normalize-pairings($map) {
+@function hb-normalize-pairings($map) {
   $first-key: list.nth(map.keys($map), 1);
 
   // If the first value is itself a map, flatten it.
@@ -65,17 +65,17 @@
 /// @param {String} $colormap
 /// @return {Map}
 ///
-@function _hb-resolve-colormap($colormap) {
+@function hb-resolve-colormap($colormap) {
   // Theme-aware pairings
   @if $colormap == 'pairings' {
-    @return _hb-normalize-pairings(
-      _hb-theme-map($traditional-pairings-colors, $colorful-pairings-colors)
+    @return hb-normalize-pairings(
+      hb-theme-map($traditional-pairings-colors, $colorful-pairings-colors)
     );
   }
 
   // Theme-aware global colors
   @if $colormap == 'global' {
-    @return _hb-theme-map($traditional-global-colors, $colorful-global-colors);
+    @return hb-theme-map($traditional-global-colors, $colorful-global-colors);
   }
 
   // Fallback
@@ -94,13 +94,13 @@
 /// @return {Color}
 ///
 @function color($key, $colormap-id: 'pairings', $colormap: null) {
-  $prefix: _hb-prefix($colormap-id);
+  $prefix: hb-prefix($colormap-id);
   $map: null;
 
   @if $colormap {
     $map: $colormap;
   } @else {
-    $map: _hb-resolve-colormap($colormap-id);
+    $map: hb-resolve-colormap($colormap-id);
   }
 
   // Validate key

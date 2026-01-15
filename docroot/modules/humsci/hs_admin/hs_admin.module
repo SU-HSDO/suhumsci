@@ -142,6 +142,14 @@ function hs_admin_form_node_form_alter(&$form, FormStateInterface $form_state, $
 }
 
 /**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function hs_admin_form_media_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Hide revision related fields on media forms.
+  $form['revision_information']['#access'] = FALSE;
+}
+
+/**
  * After build callback for hs_admin_form_node_form_alter().
  *
  * @param array $form

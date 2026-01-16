@@ -1,0 +1,33 @@
+From 2430d138f69f73567ef624d6a367c56bb153add5 Mon Sep 17 00:00:00 2001
+From: Dave Hansen-Lange <9087-dalin@users.noreply.drupalcode.org>
+Date: Wed, 14 Jan 2026 21:20:36 +0000
+Subject: [PATCH] fix(#3567577): UX/PHP/caching issues caused by warning
+ message to content admins
+
+---
+ swiper_formatter.module | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/swiper_formatter.module b/swiper_formatter.module
+index fd50a1d..15c8681 100644
+--- a/swiper_formatter.module
++++ b/swiper_formatter.module
+@@ -229,14 +229,7 @@ function swiper_formatter_theme_suggestions_swiper_formatter_view_modes(array $v
+  */
+ function template_preprocess_swiper_formatter(array &$variables): void {
+   // Skip swiper format when number of slides less than two.
+-  // @see https://www.drupal.org/project/swiper_formatter/issues/3479245.
+-  if (count($variables['content']) < 2) {
+-    $current_user = \Drupal::service('current_user');
+-    $has_permission = \Drupal::service('permission_checker')->hasPermission('administer swiper_formatter', $current_user);
+-    if ($has_permission) {
+-      \Drupal::service('messenger')->addWarning(t('The number of slides is less than two, skipping Swiper formatting.'));
+-    }
+-    // Unset swiper initialization.
++  if (count($variables['content'] ?? []) < 2) {
+     $variables['drupalSettings']['swiper_formatter']['swipers'] = [];
+   }
+ }
+-- 
+GitLab
+

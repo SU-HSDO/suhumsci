@@ -4,7 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.media.video.field_media_oembed_video
+    - field.field.media.video.field_poster_image_override
+    - image.style.thumbnail
     - media.type.video
+  module:
+    - image
 _core:
   default_config_hash: 7asQaGZMyJ5EtC9GHpp-bYEGCmfCKgCZhEcDl4wsU6w
 id: media.video.default
@@ -26,6 +30,14 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_poster_image_override:
+    type: image_image
+    weight: 27
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
   name:
     type: string_textfield
     weight: 0
@@ -38,3 +50,4 @@ hidden:
   path: true
   status: true
   uid: true
+

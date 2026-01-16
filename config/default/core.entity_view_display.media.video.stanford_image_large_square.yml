@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.media.stanford_image_large_square
     - field.field.media.video.field_media_oembed_video
+    - field.field.media.video.field_poster_image_override
     - image.style.hs_large_square_480x480
     - media.type.video
   module:
@@ -38,6 +39,23 @@ content:
         inline_contents: 0
     weight: 0
     region: content
+  field_poster_image_override:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: hs_large_square_480x480
+      image_loading:
+        attribute: lazy
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
+    region: content
   thumbnail:
     type: image
     label: hidden
@@ -60,3 +78,4 @@ hidden:
   name: true
   search_api_excerpt: true
   uid: true
+

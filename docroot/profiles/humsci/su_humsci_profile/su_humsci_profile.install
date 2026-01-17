@@ -1089,3 +1089,13 @@ function su_humsci_profile_update_9751() {
     $logger->notice('Image style cleanup: No styles found to delete.');
   }
 }
+
+/**
+ * Remove slick_pargraphs and slick modules.
+ */
+function su_humsci_profile_update_9752() {
+  \Drupal::service('module_installer')->uninstall([
+    'slick_paragraphs',
+    'slick',
+  ]);
+}

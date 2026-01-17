@@ -1,0 +1,46 @@
+diff --git a/smart_trim.tokens.inc b/smart_trim.tokens.inc
+index a2a27e8fb8dbdad6359f021e9189e9d2e266f9c8..40389f90a87df85ae34f08513e2a89ca05cd397d 100644
+--- a/smart_trim.tokens.inc
++++ b/smart_trim.tokens.inc
+@@ -31,7 +31,7 @@ function smart_trim_token_info_alter(array &$info): void {
+     $fields = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
+     foreach ($fields as $field_name => $field) {
+       assert($field instanceof FieldStorageDefinitionInterface);
+-      $labels = _token_field_label($entity_type_id, $field_name);
++      $labels = _smart_trim_field_label($entity_type_id, $field_name);
+       $label = array_shift($labels);
+ 
+       if ($field->getType() === 'text_with_summary') {
+@@ -44,6 +44,32 @@ function smart_trim_token_info_alter(array &$info): void {
+   }
+ }
+ 
++/**
++ * Function copied from the token module.
++ *
++ * @see \Drupal\token\Hook\TokenTokenInfoHooks::tokenFieldLabel()
++ */
++function _smart_trim_field_label(string $entity_type_id, string $field_name): array {
++  $labels = [];
++  // Count the number of instances per label per field.
++  foreach (array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id)) as $bundle) {
++    $bundle_instances = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type_id, $bundle);
++    if (isset($bundle_instances[$field_name])) {
++      $instance = $bundle_instances[$field_name];
++      $label = (string) $instance->getLabel();
++      $labels[$label] = isset($labels[$label]) ? ++$labels[$label] : 1;
++    }
++  }
++
++  if (empty($labels)) {
++    return [$field_name];
++  }
++
++  // Sort the field labels by it most used label and return the labels.
++  arsort($labels);
++  return array_keys($labels);
++}
++
+ /**
+  * Implements hook_tokens().
+  */

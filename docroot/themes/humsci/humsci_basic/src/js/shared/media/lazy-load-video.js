@@ -55,16 +55,6 @@
           iframe.allowFullscreen = true;
           iframe.classList.add('hb-video-lazy__iframe');
 
-          if (video.closest('.text-long')) {
-            // Measure the thumbnail size BEFORE replacement
-            const rect = thumb.getBoundingClientRect();
-            const ratio = rect.height / rect.width;
-
-            // Lock the container to the same ratio
-            videoWrapper.style.aspectRatio = `${rect.width} / ${rect.height}`;
-            videoWrapper.style.height = `${rect.width * ratio}px`;
-          }
-
           thumb.replaceWith(iframe);
         });
       });

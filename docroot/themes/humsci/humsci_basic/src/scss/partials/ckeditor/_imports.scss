@@ -133,6 +133,10 @@
       // and ends up much narrower than expected.
       .align-left &,
       .align-right & {
+        @include grid-media-min('sm') {
+          max-width: hb-calculate-rems(295px);
+        }
+
         @include grid-media-min('md') {
           max-width: hb-calculate-rems(300px);
         }

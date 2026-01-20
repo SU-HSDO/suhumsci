@@ -24,6 +24,7 @@
 .hb-video-lazy {
   position: relative;
   aspect-ratio: 16 / 9;
+  cursor: pointer;
 
   .hb-video-lazy__thumb {
     // Trigger play button hover styles
@@ -100,12 +101,17 @@
       bottom: hb-calculate-rems(-6px);
     }
 
-    .hs-full-width & {
+    .hs-full-width .paragraph--type--hs-banner & {
+      left: 2rem;
+
       @include grid-media-min('md') {
-        left: 10%;
+        left: 3rem;
         bottom: hb-calculate-rems(-16px);
         width: hb-calculate-rems(80px);
         height: hb-calculate-rems(80px);
+      }
+      @media (min-width: 1296px) {
+        left: calc((100vw - 1200px) / 2);
       }
     }
 

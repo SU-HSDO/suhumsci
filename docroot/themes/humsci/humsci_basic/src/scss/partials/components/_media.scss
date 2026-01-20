@@ -6,8 +6,6 @@
 @use '../mixins/breakpoints' as *;
 
 .hb-media-video:has(.hb-video-lazy) {
-  position: relative;
-
   // Margin to give enough space between the play button and the text.
   @include hb-themes(('colorful', 'airy')) {
     margin-bottom: hb-calculate-rems(8px);
@@ -24,13 +22,11 @@
 }
 
 .hb-video-lazy {
-  .hb-video-lazy__thumb {
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    aspect-ratio: 16 / 9;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
 
+  .hb-video-lazy__thumb {
     // Trigger play button hover styles
     &:hover .hb-video-lazy__play {
       background-color: var(--palette--secondary-darken-12);
@@ -39,29 +35,32 @@
     &:focus-within .hb-video-lazy__play {
       background-color: var(--palette--secondary);
     }
-
-    .text-long & {
-      aspect-ratio: unset;
-    }
-
-    .stanford_image_small_square:not(.align-left):not(.align-right) &,
-    .stanford_image_small:not(.align-left):not(.align-right) &,
-    .stanford_image_medium:not(.align-left):not(.align-right) &,
-    .stanford_image_medium_square:not(.align-left):not(.align-right) &,
-    .stanford_image_large:not(.align-left):not(.align-right) &,
-    .stanford_image_large_square:not(.align-left):not(.align-right) & {
-      width: fit-content;
-      margin: 0 auto;
-      position: relative;
-      overflow: initial;
-    }
   }
 
   .hb-video-lazy__thumb img {
     margin: 0 auto;
+    height: 100%;
+    object-fit: cover;
 
     .full:not(.align-left):not(.align-right) & {
       width: 100%;
+    }
+
+    // Make lazy video thumbnails match the previous oEmbed video behavior
+    // when inserted via WYSIWYG with left/right alignment.
+    // Without this, the element correctly gets the 75% max-width
+    // BUT this isn't working as it should in the previous
+    // oEmbed video behavior... the float property shrink-wraps the container
+    // and ends up much narrower than expected.
+    .align-left &,
+    .align-right & {
+      @media (min-width: 390px) {
+        max-width: hb-calculate-rems(295px);
+      }
+
+      @include grid-media-min('md') {
+        max-width: hb-calculate-rems(300px);
+      }
     }
   }
 
@@ -71,19 +70,7 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-
-    .stanford_image_small_square:not(.align-left):not(.align-right) &,
-    .stanford_image_small:not(.align-left):not(.align-right) &,
-    .stanford_image_medium:not(.align-left):not(.align-right) &,
-    .stanford_image_medium_square:not(.align-left):not(.align-right) & {
-      margin: 0 auto;
-    }
-  }
-
-  &:has(.hb-video-lazy__iframe) {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
+    display: block;
   }
 
   .hb-video-lazy__play {
@@ -114,38 +101,27 @@
       bottom: hb-calculate-rems(-6px);
     }
 
-    // Styles when view modes are selected on a WYSYWIG, or thumbnail is on a Spotlight or full width.
-    .hs-full-width & {
+    .hs-full-width .paragraph--type--hs-banner & {
+      left: 2rem;
+
       @include grid-media-min('md') {
-        left: 10%;
+        left: 3rem;
         bottom: hb-calculate-rems(-16px);
         width: hb-calculate-rems(80px);
         height: hb-calculate-rems(80px);
       }
-    }
 
-    .stanford_image_small_square &,
-    .stanford_image_small & {
-      width: hb-calculate-rems(44px);
-      height: hb-calculate-rems(44px);
+      @media (min-width: 1296px) {
+        left: calc((100vw - #{hb-calculate-rems(1200px)}) / 2);
+      }
     }
 
     .full:not(.align-left):not(.align-right) &,
-    .stanford_image_xl &,
-    .stanford_image_xl_square &,
     .hb-spotlight & {
       @include grid-media-min('md') {
         width: hb-calculate-rems(74px);
         height: hb-calculate-rems(74px);
       }
-    }
-
-    .stanford_image_small_square:not(.align-left):not(.align-right) &,
-    .stanford_image_small:not(.align-left):not(.align-right) &,
-    .stanford_image_medium:not(.align-left):not(.align-right) &,
-    .stanford_image_medium_square:not(.align-left):not(.align-right) & {
-      left: unset;
-      margin-left: hb-calculate-rems(16px);
     }
 
     &:not(.hb-video-lazy__play--no-js) {
@@ -175,7 +151,6 @@
       height: 100%;
       background-size: hb-calculate-rems(40px);
 
-      // Styles when view modes are selected on a WYSYWIG, or thumbnail is on a Spotlight or Full Width.
       .hs-full-width & {
         @include grid-media-min('md') {
           @include hb-themes(('colorful', 'airy')) {
@@ -188,14 +163,7 @@
         }
       }
 
-      .stanford_image_small_square &,
-      .stanford_image_small & {
-        background-size: hb-calculate-rems(30px);
-      }
-
       .full:not(.align-left):not(.align-right) &,
-      .stanford_image_xl &,
-      .stanford_image_xl_square &,
       .hb-spotlight & {
         @include grid-media-min('md') {
           @include hb-themes(('colorful', 'airy')) {

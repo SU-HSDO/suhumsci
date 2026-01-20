@@ -11,10 +11,10 @@
 
 <article {{ attributes.addClass(classes) }}>
   {{ title_suffix.contextual_links }}
-  {% if content.thumbnail or content.field_poster_image_override %}
+  {% if content.thumbnail.0 or content.field_poster_image_override.0 %}
     <div class="hb-video-lazy" data-video="{{ content.field_media_oembed_video['#items'].0.value }}">
       <div class="hb-video-lazy__thumb">
-        {% if content.field_poster_image_override %}
+        {% if content.field_poster_image_override.0 %}
           {{ content.field_poster_image_override }}
         {% else %}
           {{ content.thumbnail }}

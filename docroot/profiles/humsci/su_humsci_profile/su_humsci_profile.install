@@ -1118,7 +1118,7 @@ function su_humsci_profile_update_9752() {
     empty($field_config_storage->load('media.video.field_poster_image_override')) &&
     !empty($poster_image_override_field_config)
   ) {
-    $field_config_storage->create($auto_unpublish_field_config)->save();
+    $field_config_storage->create($poster_image_override_field_config)->save();
   }
 
   $entity_type_manager = \Drupal::entityTypeManager();

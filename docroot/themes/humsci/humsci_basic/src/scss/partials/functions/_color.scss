@@ -78,8 +78,13 @@
     @return hb-theme-map($traditional-global-colors, $colorful-global-colors);
   }
 
-  // Fallback
-  @return $su-core-colors;
+  // SU Core colors
+  @if $colormap == 'su-core' {
+    @return $su-core-colors;
+  }
+
+  // Generate error if colormap name is not recognized.
+  @error "Unrecognized colormap: #{$colormap}";
 }
 
 /// Returns a CSS variable for a color from a theme or custom map.
@@ -110,4 +115,3 @@
 
   @return var(--color--#{$prefix}--#{$key});
 }
-

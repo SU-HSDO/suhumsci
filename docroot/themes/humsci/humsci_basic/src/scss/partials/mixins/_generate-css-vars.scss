@@ -17,10 +17,9 @@
 @mixin generate-css-vars($map-id, $map: null) {
   @each $key, $value in $map {
     @if meta.type-of($value) == 'map' {
-      @include generate-css-vars($value, $map-id);
+      @include generate-css-vars($map-id, $value);
     } @else {
       --color--#{$map-id}--#{$key}: #{$value};
     }
   }
 }
-

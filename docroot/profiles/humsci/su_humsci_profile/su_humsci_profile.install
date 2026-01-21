@@ -1104,7 +1104,6 @@ function su_humsci_profile_update_9752() {
 
   // Create field storage if it does not exist.
   $poster_image_override_field_storage = $config_storage->read('field.storage.media.field_poster_image_override');
-
   if (
     !$field_storage->load('media.field_poster_image_override') &&
     !empty($poster_image_override_field_storage)
@@ -1126,7 +1125,7 @@ function su_humsci_profile_update_9752() {
   // Add field to the media video form display.
   $form_display = $entity_type_manager
     ->getStorage('entity_form_display')
-    ->load('media.video.media_library');
+    ->load('media.video.default');
 
   if ($form_display) {
     $weight = max(array_column($form_display->getComponents(), 'weight') ?: [0]);

@@ -6,6 +6,9 @@ id: dev
 label: Dev
 description: 'Acquia Development Environment'
 weight: 0
+stackable: false
+no_patching: false
+storage: folder
 folder: ../config/envs/dev
 module:
   acquia_connector: 0
@@ -19,13 +22,11 @@ module:
   purge_ui: 0
   stage_file_proxy: 0
 theme: {  }
-blacklist:
+complete_list:
   - acquia_connector.settings
   - purge.logger_channels
   - purge.plugins
   - purge_queuer_coretags.settings
-graylist:
+partial_list:
   - field_ui.settings
   - system.performance
-graylist_dependents: true
-graylist_skip_equal: true

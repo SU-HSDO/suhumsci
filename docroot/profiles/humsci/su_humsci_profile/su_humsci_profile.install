@@ -1091,9 +1091,16 @@ function su_humsci_profile_update_9751() {
 }
 
 /**
- * Remove slick_pargraphs and slick modules.
+ * Install the tagify module.
  */
 function su_humsci_profile_update_9752() {
+  \Drupal::service('module_installer')->install(['tagify']);
+}
+
+/**
+ * Uninstall the slick_pargraphs and slick modules.
+ */
+function su_humsci_profile_update_9753() {
   \Drupal::service('module_installer')->uninstall([
     'slick_paragraphs',
     'slick',

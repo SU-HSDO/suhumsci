@@ -5,7 +5,6 @@ namespace Drupal\hs_config_readonly\EventSubscriber;
 use Drupal\config_readonly\ConfigReadonlyWhitelistTrait;
 use Drupal\Core\Config\StorageInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\config_filter\Plugin\ConfigFilterPluginManager;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -21,18 +20,11 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
   use ConfigReadonlyWhitelistTrait;
 
   /**
-   * Config filter storage service.
+   * Config storage service.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
-
-  /**
-   * Config filter plugin manager service.
-   *
-   * @var \Drupal\config_filter\Plugin\ConfigFilterPluginManager
-   */
-  protected $configFilterManager;
 
   /**
    * Entity type manager service.
@@ -81,10 +73,9 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
   /**
    * {@inheritdoc}
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, ConfigFilterPluginManager $filter_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, EntityTypeManagerInterface $entity_type_manager) {
     $this->moduleHandler = $module_handler;
     $this->configStorage = $config_storage;
-    $this->configFilterManager = $filter_manager;
     $config = $config_factory->get('hs_config_readonly.settings');
     $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;

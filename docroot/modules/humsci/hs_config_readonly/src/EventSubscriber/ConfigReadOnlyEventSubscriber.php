@@ -183,34 +183,17 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
    */
   protected function configIsLocked($config) {
     $config = is_array($config) ? $config : [$config];
-    $locked_config = $this->getLockedConfigs();
-    return !empty(array_intersect($config, $locked_config));
-  }
+    $config_ignore_settings = $this->configFactory->get('config_ignore.settings');
+    $config_ignore = ConfigIgnoreConfig::fromConfig($config_ignore_settings);
 
-  /**
-   * Get all configs provided by modules.
-   *
-   * @return array
-   *   Config names.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
-   */
-  protected function getLockedConfigs() {
-    $configs = $this->configStorage->listAll();
-    $config = $this->configFactory->get('config_ignore.settings');
-    $ignoreConfig = ConfigIgnoreConfig::fromConfig($config);
-    $locked = [];
-    foreach ($configs as $config_name) {
-      // If isIgnored returns TRUE, the config is ignored and should NOT be
-      // locked (i.e., should be editable).
+    foreach ($config as $config_name) {
       // If isIgnored returns FALSE, the config is NOT ignored and should be
-      // locked (readonly).
-      $is_ignored = $ignoreConfig->isIgnored('', $config_name, 'import', 'update');
-      if ($is_ignored === FALSE) {
-        $locked[] = $config_name;
+      // locked.
+      if ($config_ignore->isIgnored('', $config_name, 'import', 'update') === FALSE) {
+        return TRUE;
       }
     }
-    return $locked;
+    return FALSE;
   }
 
   /**

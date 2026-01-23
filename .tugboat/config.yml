@@ -17,7 +17,7 @@ services:
     aliases:
       - hs-colorful
       - hs-traditional
-      - ethicsinsociety
+      - english
       - history
       - west
 
@@ -56,10 +56,10 @@ services:
         - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
-        # Sync to ethicsinsociety, ethicsinsociety database & files, does not create a user.
-        - drush sql-sync @ethicsinsociety.prod @ethicsinsociety.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @eethicsinsociety.local sql-sanitize --no-interaction --ansi
-        - drush rsync @ethicsinsociety.prod:%files @ethicsinsociety.local:%files --ansi --no-interaction
+        # Sync to english, english database & files, does not create a user.
+        - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush @eenglish.local sql-sanitize --no-interaction --ansi
+        - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
 
         # Sync to history, history database & files, does not create a user.
         - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
@@ -84,9 +84,9 @@ services:
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
 
-        - drush @ethicsinsociety.local cr
-        - drush @ethicsinsociety.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=ethicsinsociety
+        - drush @english.local cr
+        - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=english
 
         - drush @history.local cr
         - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'

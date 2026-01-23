@@ -17,7 +17,7 @@ services:
     aliases:
       - hs-colorful
       - hs-traditional
-      - ethics
+      - ethicsinsociety
       - history
       - west
 
@@ -56,10 +56,10 @@ services:
         - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
-        # Sync to ethics, ethics database & files, does not create a user.
-        - drush sql-sync @ethics.prod @ethics.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @eethics.local sql-sanitize --no-interaction --ansi
-        - drush rsync @ethics.prod:%files @ethics.local:%files --ansi --no-interaction
+        # Sync to ethicsinsociety, ethicsinsociety database & files, does not create a user.
+        - drush sql-sync @ethicsinsociety.prod @ethicsinsociety.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush @eethicsinsociety.local sql-sanitize --no-interaction --ansi
+        - drush rsync @ethicsinsociety.prod:%files @ethicsinsociety.local:%files --ansi --no-interaction
 
         # Sync to history, history database & files, does not create a user.
         - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
@@ -84,9 +84,9 @@ services:
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
 
-        - drush @ethics.local cr
-        - drush @ethics.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=ethics
+        - drush @ethicsinsociety.local cr
+        - drush @ethicsinsociety.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=ethicsinsociety
 
         - drush @history.local cr
         - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'

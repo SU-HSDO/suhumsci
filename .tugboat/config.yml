@@ -58,7 +58,7 @@ services:
 
         # Sync to english, english database & files, does not create a user.
         - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @eenglish.local sql-sanitize --no-interaction --ansi
+        - drush @english.local sql-sanitize --no-interaction --ansi
         - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
 
         # Sync to history, history database & files, does not create a user.

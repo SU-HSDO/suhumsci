@@ -17,7 +17,7 @@ services:
     aliases:
       - hs-colorful
       - hs-traditional
-      - jrbp2025
+      - ethics
       - history
       - west
 
@@ -56,10 +56,10 @@ services:
         - drush @hs_traditional.local user:create tugboat --password=pushcar || true
         - drush @hs_traditional.local user:role:add administrator tugboat || true
 
-        # Sync to english, english database & files, does not create a user.
-        - drush sql-sync @english.prod @english.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
-        - drush @english.local sql-sanitize --no-interaction --ansi
-        - drush rsync @english.prod:%files @english.local:%files --ansi --no-interaction
+        # Sync to ethics, ethics database & files, does not create a user.
+        - drush sql-sync @ethics.prod @ethics.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
+        - drush @eethics.local sql-sanitize --no-interaction --ansi
+        - drush rsync @ethics.prod:%files @ethics.local:%files --ansi --no-interaction
 
         # Sync to history, history database & files, does not create a user.
         - drush sql-sync @history.prod @history.local --create-db --structure-tables-key=lightweight --no-interaction --ansi
@@ -84,9 +84,9 @@ services:
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
         - blt drupal:update --site=hs_traditional
 
-        - drush @jrbp2025.local cr
-        - drush @jrbp2025.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=jrbp2025
+        - drush @ethics.local cr
+        - drush @ethics.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
+        - blt drupal:update --site=ethics
 
         - drush @history.local cr
         - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'

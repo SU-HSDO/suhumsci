@@ -3,7 +3,6 @@
 namespace Drupal\hs_config_readonly\EventSubscriber;
 
 use Drupal\config_readonly\ConfigReadonlyWhitelistTrait;
-use Drupal\Core\Config\StorageInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\Core\Config\ConfigFactoryInterface;

@@ -87,4 +87,4 @@ Architecture Decision Records (ADRs) are used to document important architectura
 ## Resources
 
 * [GitHub](https://github.com/SU-HSDO/suhumsci)
-* [Acquia Cloud subscription](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a)
+* [Acquia Cloud subscription](https://cloud.acquia.com/a/applications/60ee2ebb-94f3-415d-a289-c23889ecec18)

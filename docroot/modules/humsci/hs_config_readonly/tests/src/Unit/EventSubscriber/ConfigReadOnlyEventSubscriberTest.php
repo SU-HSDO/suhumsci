@@ -2,9 +2,6 @@
 
 namespace Drupal\Tests\hs_config_readonly\Unit\EventSubscriber;
 
-use Drupal\config_filter\Config\FilteredStorageInterface;
-use Drupal\config_filter\Plugin\ConfigFilterPluginManager;
-use Drupal\config_ignore\Plugin\ConfigFilter\IgnoreFilter;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -48,20 +45,6 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     $config_factory->method('get')
       ->willReturn($config);
 
-    $config_storage = $this->createMock(FilteredStorageInterface::class);
-    $config_storage->method('listAll')->willReturn(['locked.config.test']);
-
-    $ignore_filter = $this->createMock(IgnoreFilter::class);
-    $ignore_filter->method('filterListAll')->willReturn([
-      'ignore.whole.config',
-      'ignore.wildcard.config.*',
-      'ignore.part.config:test',
-    ]);
-
-    $filter_manager = $this->createMock(ConfigFilterPluginManager::class);
-    $filter_manager->method('hasDefinition')->willReturn(TRUE);
-    $filter_manager->method('createInstance')->willReturn($ignore_filter);
-
     $wizard_config = $this->createMock(ConfigEntityInterface::class);
     $wizard_config->method('getConfigDependencyName')
       ->willReturn('locked.config.test');
@@ -72,7 +55,7 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->method('getStorage')->willReturn($entity_storage);
 
-    $event_subscriber = new ConfigReadOnlyEventSubscriber($module_handler, $config_factory, $config_storage, $filter_manager, $entity_type_manager);
+    $event_subscriber = new ConfigReadOnlyEventSubscriber($module_handler, $config_factory, $entity_type_manager);
 
     $this->eventSubscriber = $event_subscriber;
   }

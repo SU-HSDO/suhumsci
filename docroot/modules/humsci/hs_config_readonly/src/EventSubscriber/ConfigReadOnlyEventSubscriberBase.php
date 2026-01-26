@@ -20,13 +20,6 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
   use ConfigReadonlyWhitelistTrait;
 
   /**
-   * Config storage service.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
    * Entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -73,9 +66,8 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
   /**
    * {@inheritdoc}
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, StorageInterface $config_storage, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
     $this->moduleHandler = $module_handler;
-    $this->configStorage = $config_storage;
     $config = $config_factory->get('hs_config_readonly.settings');
     $this->excludedModules = $config->get('excluded_modules') ?: $this->excludedModules;
     $this->readOnlyFormIds = $config->get('form_ids') ?: $this->readOnlyFormIds;

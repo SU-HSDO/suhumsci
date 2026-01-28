@@ -186,3 +186,35 @@ function _hs_cmap_insert_into_array_after_element(array &$array, int $after_posi
     array_slice($array, $after_position + 1, NULL, TRUE)
   );
 }
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function hs_cmap_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
+  $elements_to_change = [
+    'field_hs_cmap_years',
+    'field_hs_cmap_year_qtr',
+    'field_hs_cmap_qtr_crs',
+  ];
+
+  // We need the field name to alter the correct element.
+  if (
+      empty($field_widget_form['widget']['#field_name']) ||
+      !in_array($field_widget_form['widget']['#field_name'], $elements_to_change)
+    ) {
+    return;
+  }
+
+  foreach (Element::children($field_widget_form['widget']) as $key) {
+    if (!is_int($key)) {
+      continue;
+    }
+    // Remove these elements from from display.
+    if (isset($field_widget_form['widget'][$key]['top']['type'])) {
+      unset($field_widget_form['widget'][$key]['top']['type']);
+    }
+    if (isset($field_widget_form['widget'][$key]['top']['icons'])) {
+      unset($field_widget_form['widget'][$key]['top']['icons']);
+    }
+  }
+}

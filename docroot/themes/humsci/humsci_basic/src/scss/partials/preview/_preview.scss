@@ -186,4 +186,23 @@
   & div:only-child:not(.hb-card__date-tile, .hb-pill) {
     width: 100%;
   }
+
+  // Vertical Linked cards.
+  .hb-vertical-button-card .hs-button {
+    @include hb-traditional {
+      background-color: transparent;
+      border-color: var(--palette--secondary);
+      color: var(--palette--secondary);
+      border-width: 0;
+      border-top-width: 2px;
+      margin-top: auto;
+      margin-left: hb-calculate-rems(-24px);
+      margin-right: hb-calculate-rems(-24px);
+
+      &:hover, &:focus {
+        color: var(--palette--white);
+        background-color: var(--palette--secondary);
+      }
+    }
+  }
 }

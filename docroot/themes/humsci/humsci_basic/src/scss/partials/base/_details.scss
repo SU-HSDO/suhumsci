@@ -1,6 +1,7 @@
 @use '../variables/general' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/menu-icons' as *;
 
@@ -16,9 +17,9 @@ summary:not(.hb-timeline-item__summary) {
   font-weight: hb-theme-font-weight('semibold');
   cursor: pointer;
   border: $hb-thin-border;
-  border-color: var(--palette--secondary);
-  background-color: var(--palette--secondary);
-  color: var(--palette--white);
+  border-color: color('secondary');
+  background-color: color('secondary');
+  color: color('white', global);
 
   // This is to position everything correctly in browsers that do not support the
   // -webkit-details-marker pseudo element
@@ -64,28 +65,28 @@ summary:not(.hb-timeline-item__summary) {
 
   &:hover,
   details[open] & {
-    background-color: var(--palette--secondary-darken-12);
-    border-color: var(--palette--secondary-darken-12);
+    background-color: color('secondary-darken-12');
+    border-color: color('secondary-darken-12');
   }
 
   &:focus,
   details[open] &:focus {
     outline: none;
-    border-color: var(--palette--white);
+    border-color: color('white', global);
 
     @include hb-themes(('colorful', 'airy')) {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
     }
 
     @include hb-traditional {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
     }
 
-    box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+    box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
   }
 
   .summary {
-    color: var(--palette--white);
+    color: color('white', 'global');
 
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight('semibold');
@@ -104,6 +105,6 @@ summary:not(.hb-timeline-item__summary) {
 .revealed-details {
   padding: hb-calculate-rems(20px) hb-calculate-rems(16px);
   border: $hb-thin-border;
-  border-color: var(--palette--gray-medium);
+  border-color: color('gray-medium', 'global');
   border-top: none;
 }

@@ -5,7 +5,7 @@
  * Local development override configuration feature.
  */
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 $db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 assert_options(ASSERT_EXCEPTION, TRUE);
 if (getenv('TUGBOAT_SERVICE')) {
   /**

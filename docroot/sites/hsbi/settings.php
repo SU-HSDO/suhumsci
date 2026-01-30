@@ -802,4 +802,4 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
  * Include sws-drush-commands sws.settings.php with required scaffolding for
  * Acquia projects.
  */
-require DRUPAL_ROOT . '../drush/Commands/contrib/sws-drush-commands/settings/sws.settings.php';
+require DRUPAL_ROOT . '/../drush/Commands/contrib/sws-drush-commands/settings/sws.settings.php';

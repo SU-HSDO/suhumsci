@@ -60,7 +60,8 @@ jobs:
           chmod -R 777 docroot/sites/default/files/
       - name: PHPUnit Tests
         run: |
-          blt tests:phpunit:coverage --no-interaction
+          drush sws:source:tests:phpunit --with-coverage
+          drush sws:tests:phpunit-coverage-check artifacts/phpunit/coverage/xml --clover-file=artifacts/phpunit/coverage/clover.xml --min-coverage=80 -n 
   lint_theme:
     runs-on: ubuntu-latest
     container:

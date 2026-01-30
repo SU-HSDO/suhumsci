@@ -141,7 +141,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          blt codeception --group=install --suite=functional
+          drush sws:codeception --suite=functional --group=install --site-domain=localhost
       - name: Save Functional Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -211,7 +211,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          blt codeception --group=install --suite=acceptance
+          drush sws:codeception --suite=acceptance --group=install --site-domain=localhost
       - name: Save Acceptance Test Results
         uses: actions/upload-artifact@v4
         if: always()

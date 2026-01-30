@@ -54,8 +54,6 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/
       - name: PHPUnit Tests
@@ -128,8 +126,6 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           drush sws:multisite:install -n -n
@@ -198,8 +194,6 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
           drush sws:multisite:install -n -n

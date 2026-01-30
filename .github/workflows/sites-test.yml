@@ -58,7 +58,7 @@ jobs:
           chmod -R 777 docroot/sites/default/files/
       - name: PHPUnit Tests
         run: |
-          drush sws:source:tests:phpunit --with-coverage
+          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage &&
           drush sws:tests:phpunit-coverage-check artifacts/phpunit/coverage/xml --clover-file=artifacts/phpunit/coverage/clover.xml --min-coverage=80 -n 
   lint_theme:
     runs-on: ubuntu-latest

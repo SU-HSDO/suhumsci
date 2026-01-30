@@ -25,4 +25,4 @@ jobs:
           ACQUIA_SECRET: ${{ secrets.ACQUIA_SECRET }}
         run: |
           composer install -n &&
-          blt stage --no-interaction
+          drush sws:drupal:sync-stage

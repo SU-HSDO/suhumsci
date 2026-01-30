@@ -71,7 +71,7 @@ jobs:
           ln -snf $GITHUB_WORKSPACE /var/www/html
           mkdir -p docroot/sites/default/files
           chmod -R 777 docroot/sites/default/files/
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Import configuration
         run: drush cim -y
       - name: Update Composer dependencies

@@ -132,7 +132,7 @@ jobs:
           blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -202,7 +202,7 @@ jobs:
           blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -263,5 +263,4 @@ jobs:
           git config --global user.name "Github Actions" &&
           ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt blt:telemetry:disable --no-interaction &&
-          blt deploy -n
+          drush sws:artifact:deploy -v -n

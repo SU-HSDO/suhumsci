@@ -27,7 +27,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Clean up backups and branches
         env:
           SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}

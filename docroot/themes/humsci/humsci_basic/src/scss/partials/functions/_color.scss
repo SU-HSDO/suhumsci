@@ -1,33 +1,117 @@
 @use 'sass:map';
-@use '../variables/su-core-colors' as *;
+@use 'sass:meta';
+@use 'sass:list';
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
+@use '../variables/general' as *;
+@use '../variables/theme' as *;
+@use '../functions/general' as *;
 
+/// Returns the correct map based on the current theme.
 ///
-/// Return a color from a color map. If only a color is specified, then it
-/// returns a color from $su-core-colors. If a color and a color map are specified,
-/// then it returns a color from the particular color map.
+/// @param {Map} $traditional
+///   The map used when $hb-current-theme == 'traditional'
+/// @param {Map} $colorful
+///   The map used for any other theme
 ///
-/// @name color
+/// @return {Map}
 ///
-/// @param {String} $color The named key in the color map.
-/// @param {Map} $colormap [$su-core-colors] The color map
-///
-/// @example
-/// color: color($color, $su-core-colors);
-///
-@function color($color, $colormap: $su-core-colors) {
-  @if $colormap == $su-core-colors {
-    @if map.has-key($su-core-colors, $color) {
-      $color: map.get($su-core-colors, $color);
-    } @else {
-      @error "Color does not exist in color map $su-core-colors.";
-    }
+@function hb-theme-map($traditional, $colorful) {
+  @if $hb-current-theme == 'traditional' {
+    @return $traditional;
   } @else {
-    @if map.has-key($colormap, $color) {
-      $color: map.get($colormap, $color);
-    } @else {
-      @error "#{$color} color does not exist in color map";
-    }
+    @return $colorful;
+  }
+}
+
+/// Builds the CSS variable prefix for a given colormap ID.
+///
+/// pairings + global are theme-aware and must include the theme name.
+/// All other map IDs use the raw string.
+///
+/// @param {String|Map} $map-id
+/// @return {String}
+///
+@function hb-prefix($map-id) {
+  // Theme-aware maps
+  @if $map-id == 'pairings' or $map-id == 'global' {
+    @return "#{$hb-current-theme}-#{$map-id}";
   }
 
-  @return $color;
+  // Fallback (su-core, alerts, etc)
+  @return $map-id;
+}
+
+/// Pairings maps contain multiple palettes.
+/// This function flattens them by selecting the first palette.
+///
+/// @param {Map} $map
+/// @return {Map}
+///
+@function hb-normalize-pairings($map) {
+  $first-key: list.nth(map.keys($map), 1);
+
+  // If the first value is itself a map, flatten it.
+  @if meta.type-of(map.get($map, $first-key)) == 'map' {
+    @return map.get($map, $first-key);
+  }
+
+  @return $map;
+}
+
+/// Resolves a colormap ID or custom Sass map into a usable map.
+///
+/// @param {String} $colormap
+/// @return {Map}
+///
+@function hb-resolve-colormap($colormap) {
+  // Theme-aware pairings
+  @if $colormap == 'pairings' {
+    @return hb-normalize-pairings(
+      hb-theme-map($traditional-pairings-colors, $colorful-pairings-colors)
+    );
+  }
+
+  // Theme-aware global colors
+  @if $colormap == 'global' {
+    @return hb-theme-map($traditional-global-colors, $colorful-global-colors);
+  }
+
+  // SU Core colors
+  @if $colormap == 'su-core' {
+    @return $su-core-colors;
+  }
+
+  // Generate error if colormap name is not recognized.
+  @error "Unrecognized colormap: #{$colormap}";
+}
+
+/// Returns a CSS variable for a color from a theme or custom map.
+///
+/// @param {String} $key
+///   Color name inside the colormap (e.g. `primary`, `text`)
+/// @param {String} $colormap-id
+///   Map ID (`pairings`, `global`, `su-core`)
+/// @param {Map} $colormap
+///   Optional custom Sass map ($su-alert-colors)
+///
+/// @return {Color}
+///
+@function color($key, $colormap-id: 'pairings', $colormap: null) {
+  $prefix: hb-prefix($colormap-id);
+  $map: null;
+
+  @if $colormap {
+    $map: $colormap;
+  } @else {
+    $map: hb-resolve-colormap($colormap-id);
+  }
+
+  // Validate key
+  @if not map.has-key($map, $key) {
+    @error "Color `#{$key}` does not exist in colormap `#{$prefix}`.";
+  }
+
+  @return var(--color--#{$prefix}--#{$key});
 }

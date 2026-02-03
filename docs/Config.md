@@ -1,61 +1,97 @@
 # Configuration Management
 
-2025-09-26: This documentation should be reviewed and updated, and may be slightly outdated. It will also change when the config_* module suites are upgraded (config_filter, config_ignore, config_readonly). The general set up reflected in this documentation however is still applicable.
+Our platform uses a combination of contributed and custom modules to manage configuration safely across 100+ sites, balancing global control with site-level flexibility.
 
-For this product, we want to keep track of several configurations, but we want to allow the addition of new
-configurations on a per site basis. We also don't want to restrict our users into some customizations. To do this we
-have implemented some customized workflows and configuration management techniques.
+## config_ignore
 
-## Config Ignore
-For our tracked content types, we want to allow for customization of form displays and view displays. To do this we have
-configured the config_ignore to ignore any configs for our content types that are prefixed with `hs_`. We also need to
-ignore specific settings which change for every site. Such as the home page, 404 page, google analytics and permissions.
-All of these have been added to be ignored by configuration management.
+- Prevents import and export of configuration that should be editable on individual sites, such as blocks, displays, and site-specific settings (homepage, 404, analytics, permissions).
+- If a config is ignored and needs to be changed across all sites, changes must be made directly on the site or via a database update hook.
+- Exception rules allow us to selectively import/export configs even if a broad ignore pattern is present.
 
-Also with the addition of [this patch](https://www.drupal.org/project/config_ignore/issues/2857247) we have enabled the
-ability to ignore particular config changes if the change is being ignored. For example, we are ignoring
-`system.theme:default` key. This allows for a site to change which theme it has set as default, giving us the ability to
-create subthemes for site specific templates/css. If the site has a different value in the `system.theme:default` value
-then config_ignore will ignore that value, and only export the `system.theme` file _if_ there are other changes to the
-configuration file.
+## config_split
 
-### Local Ignore
-For local development, we don't really need or want to keep all the custom configurations form the site which we are
-currently working on. Although there are a couple of configurations that we want to ignore like the site settings, and
-which theme is being used.
+- Manages environment-specific configuration and modules (dev, stage, prod, local, ci, etc.,).
+- Splits can be patch-based or complete splits in 2.x and use the config transformation pipeline for safe, granular config management.
+- Ensures modules like `acquia_connector`, `purge`, and `stage_file_proxy` are enabled/disabled per environment.
 
-The issue with changing the config ignore is that during a configuration import, the config ignore settings are still
-set to the original value such as production config ignore settings. So to get the correct config ignore settings on
-local, we have set overrides in the `docroot/sites/settings/common.settings.php` file. The override simply reads the
-config file and sets the override values. This allows for the config ignore to be set before the config import attempts
-to make any changes. Doing so ensures we get accurate import and syncing to code base. Any changes to the config file in
-`config/envs/local/config_ignore.settings.yml` will be instantly applied to the local environment without any need to
-do a config import. But a config import should still be executed if any changes are applied or the change should be
-completed in the UI as well, so that on the next config export the file will still contain the changes.
+## config_readonly & hs_config_readonly
 
-If you *do* want to pull down custom configurations for local development, you can use the sync command's `--partial`
-flag (eg: `blt drupal:sync --site=[my-multisite] --partial`).
+- `config_readonly` locks the majority of configuration editing via the UI, ideal for production.
+- `hs_config_readonly` allows dynamic unlocking of configs that are ignored, so site admins can edit only what’s intended.
 
-### Blocks
-With custom themes available to the user, custom blocks on those themes becomes and issue on local environments. When
-a user enables a new subtheme, the blocks are copied and applied to the new theme as new config files. Syncing to that
-site we want to retain those blocks so we have ignored them from the config management. But then on export, the block
-config files are then created. So to prevent them from being committed, we've ignored them from git as well. That allows
-us to make config changes on local environments quickly and safely without adding unwanted configs. We can still add
-new block configs, but we have to deliberately tell git to add that particular file.
+## hs_config_prefix
 
-## Config Read Only
-On the production environment we have implemented [config_readonly](https://www.drupal.org/project/config_readonly) module
-but we have done some customizations on the way that is locks the configurations. Originally the module locks every
-configuration from being created or edited. This doesn't work in our project because we want the users to be able to
-create custom views, fields, content types, etc. So we have build the hs_config_readonly module. This module changes
-the service that config_readonly provides. It will lock any config form _if_ the config lives in the repository _and_
-the config is not being ignored by config_ignore. This allows the user to clone a view, but not make changes to a view
-if it lives in our product.
+- Automatically prefixes new site-created config (fields, views, displays, etc.) with `custm_` to distinguish site-specific config from global product config.
+- Product-level config uses the `hs_` prefix.
 
-## Site specific config
-We have a custom module [HS Config Prefix](../docroot/modules/humsci/hs_config_prefix) which will prefix all config
-entities created through the UI. When developing new content types, or various entities for the product, we want the
-prefix to be `hs_`. This will namespace our entities for global use. For site building on the production environment,
-we have a config split which sets the prefix to be `custm_`. This will allow us to differentiate which entities are in
-the product and which ones are on a particular site.
+## Partial Config Imports & hs_config_partial
+
+- We use partial config imports to preserve custom site configuration.
+- Partial imports only create or update config, never delete, so customizations are safe.
+- If config needs to be deleted across all sites, a database update hook is required.
+- Previously, partial imports were run using the `--partial` flag with `drush config-import`. With config_split 2.x and config_ignore 3.x, the config transformation pipeline is used, and `--partial` does not respect these modules.
+- The custom `hs_config_partial` module implements safe partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
+
+## Best Practices
+
+- Always use standard config import/export commands unless you have a specific reason to bypass `config_ignore` or `config_split`.
+- Never use the `--partial` flag on environments with upgraded config modules and `hs_config_partial` enabled.
+- For site-specific config changes or deletions, use update hooks or direct site editing.
+- For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
+- Running `config-import` twice is a recommended approach. Certain configuration can require a fully configuration import before it is respected, especially with `config_split`.
+- Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these. 
+
+
+### Exporting config_split changes
+
+To safely export configuration changes for a config_split, follow these steps:
+
+1. **Disable all splits (including local):**
+	 - In `docroot/sites/settings/local.settings.php`, set:
+		 ```php
+		 $config['config_split.config_split.local']['status'] = FALSE;
+		 ```
+	 - Rebuild cache:
+		 ```sh
+		 drush cr
+		 ```
+	 - Import default configuration (run twice to ensure all changes are applied):
+		 ```sh
+		 drush ci -y && drush ci -y
+		 ```
+	 - This ensures you start from a clean default config state and avoid mixing settings from other splits.
+
+2. **Enable the desired split (e.g., dev):**
+	 - In `local.settings.php`, set:
+		 ```php
+		 $config['config_split.config_split.dev']['status'] = TRUE;
+		 ```
+	 - Rebuild cache:
+		 ```sh
+		 drush cr
+		 ```
+	 - Import configuration for the split (run twice):
+		 ```sh
+		 drush ci -y && drush ci -y
+		 ```
+
+3. **Make your changes:**
+	 - Apply the desired configuration changes in the UI or via code.
+
+4. **Export configuration:**
+	 - Export config:
+		 ```sh
+		 drush config-export -y
+		 ```
+	 - Note: Split-specific configuration is not shown in the export output. Use `git status` to verify exported changes in split directories.
+
+5. **Revert split overrides:**
+	 - In `local.settings.php`, comment out or remove the split status overrides. This prevents accidental imports/exports using the wrong split in future work.
+
+6. **Restore your environment:**
+	 - Import configuration, install a fresh site, or pull down a fresh site as needed. Always ensure the correct splits are enabled before making further changes locally.
+
+**Tips:**
+- Always disable all splits and import default config before enabling a new split for export.
+- Running config import twice helps ensure all config is fully applied, especially with config_split.
+- Use `git status` to confirm exported changes, as split config may not appear in the standard export output.

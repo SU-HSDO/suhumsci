@@ -101,7 +101,14 @@ class HsCommands extends BltTasks {
       $result = $this->taskDrush()
         ->drush('updb')
         ->drush('config:import')
-        ->option('partial')
+        // 2026-02-03: Use hs_config_partial module to prevent active
+        // configuration deletions after upgrading config_split and
+        // config_ignore.
+        // ->option('partial')
+        // Trigger config import again to ensure any dependent config changes
+        // are also imported. Some configuration imports depend on the previous
+        // configuration import being fully complete.
+        ->drush('config:import')
         ->run();
       file_put_contents(sys_get_temp_dir() . '/update-report.txt', $site_name . ($result->wasSuccessful() ? ':1' : ':0') . PHP_EOL, FILE_APPEND);
     }

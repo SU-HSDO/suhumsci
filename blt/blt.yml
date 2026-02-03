@@ -19,32 +19,6 @@ drush:
     ci: self
     prod: '${project.machine_name}.prod'
   default_alias: '${drush.aliases.local}'
-modules:
-  local:
-    enable: {  }
-    uninstall:
-      - acquia_connector
-      - purge
-  ci:
-    enable: {  }
-    uninstall:
-      - purge
-      - acquia_connector
-  dev:
-    enable:
-      - acquia_connector
-      - stage_file_proxy
-    uninstall: {  }
-  test:
-    enable:
-      - acquia_connector
-      - stage_file_proxy
-    uninstall: {  }
-  prod:
-    enable:
-      - acquia_connector
-    uninstall:
-      - stage_file_proxy
 multisites:
   - aaai
   - aaas

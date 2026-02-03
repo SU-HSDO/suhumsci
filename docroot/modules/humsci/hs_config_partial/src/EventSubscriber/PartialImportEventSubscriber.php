@@ -3,6 +3,7 @@
 namespace Drupal\hs_config_partial\EventSubscriber;
 
 use Drupal\Core\Config\ConfigEvents;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -10,6 +11,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Event subscriber to prevent config deletions during import.
  */
 class PartialImportEventSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The active config storage.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $activeStorage;
+
+  /**
+   * Constructs the event subscriber.
+   *
+   * @param \Drupal\Core\Config\StorageInterface $active_storage
+   *   The active config storage.
+   */
+  public function __construct(StorageInterface $active_storage) {
+    $this->activeStorage = $active_storage;
+  }
 
   /**
    * {@inheritdoc}
@@ -30,14 +48,14 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
    */
   public function onImportTransform(StorageTransformEvent $event) {
     $import_storage = $event->getStorage();
-    $active_storage = \Drupal::service('config.storage');
-
-    foreach ($active_storage->listAll() as $config_name) {
+    foreach ($this->activeStorage->listAll() as $config_name) {
       if (!$import_storage->exists($config_name)) {
-        // Prevent deletion by restoring the config in the import storage.
-        $import_storage->write($config_name, $active_storage->read($config_name));
+        // If the import storage is missing configuration that is in the active
+        // storage, it will delete the config from the active storage during
+        // the import process. To prevent that, we restore the config from the
+        // active storage back into the import storage.
+        $import_storage->write($config_name, $this->activeStorage->read($config_name));
       }
     }
   }
-
 }

@@ -1,6 +1,7 @@
 services:
   hs_config_partial.event_subscriber:
     class: Drupal\hs_config_partial\EventSubscriber\PartialImportEventSubscriber
-    arguments: []
+    arguments:
+      - '@config.storage'
     tags:
       - { name: event_subscriber }

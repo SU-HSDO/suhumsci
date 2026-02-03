@@ -1,6 +1,6 @@
 # Configuration Management
 
-Our platform uses a combination of contributed and custom modules to manage configuration safely across 100+ sites, balancing global control with site-level flexibility.
+The platform uses a combination of contributed and custom modules to manage configuration safely across 100+ sites, balancing global control with site-level flexibility.
 
 ## config_ignore
 

@@ -25,7 +25,6 @@ use Drupal\su_humsci_profile\HumsciCleanup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -920,20 +919,6 @@ function su_humsci_profile_preprocess_block(&$variables) {
       $variables['content']['logout']['#attributes']['class'] = $classes;
   }
 }
-
-/**
- * Implements hook_preprocess_HOOK().
-*/
-// function su_humsci_profile_preprocess_form_element(&$variables) {
-  // $variables['#attached']['library'][] = 'su_humsci_profile/tagify-select';
-  // if (
-  //   $variables['element']['#type'] == 'select' &&
-  //   !\Drupal::service('router.admin_context')->isAdminRoute()
-  // ) {
-  //   $variables['attributes']['class'][] = 'select-preact';
-  //   $variables['#attached']['library'][] = 'su_humsci_profile/select-preact';
-  // }
-// }
 
 /**
  * Implements hook_ckeditor5_plugin_info_alter().

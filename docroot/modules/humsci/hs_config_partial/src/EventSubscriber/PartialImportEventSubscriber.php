@@ -7,7 +7,8 @@ use Drupal\Core\Config\StorageTransformEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Event subscriber to prevent config deletions during import (partial import behavior).
+ * Event subscriber to prevent config deletions during import (partial import
+ * behavior).
  */
 class PartialImportEventSubscriber implements EventSubscriberInterface {
 
@@ -15,7 +16,8 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    // Priority -200: after config_ignore (-100) and config_split (default 0 or negative).
+    // Priority -200: after config_ignore (-100) and config_split (default 0 or
+    // negative).
     return [
       ConfigEvents::STORAGE_TRANSFORM_IMPORT => ['onImportTransform', -200],
     ];

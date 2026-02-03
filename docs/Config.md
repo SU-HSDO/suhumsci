@@ -7,6 +7,7 @@ Our platform uses a combination of contributed and custom modules to manage conf
 - Prevents import and export of configuration that should be editable on individual sites, such as blocks, displays, and site-specific settings (homepage, 404, analytics, permissions).
 - If a config is ignored and needs to be changed across all sites, changes must be made directly on the site or via a database update hook.
 - Exception rules allow us to selectively import/export configs even if a broad ignore pattern is present.
+- During config import, `config_ignore` uses the ignore rules from the codebase (`config_ignore.settings.yml` in your config export), not the current active config on the site.
 
 ## config_split
 

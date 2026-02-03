@@ -31,12 +31,14 @@ dependencies:
     - node.type.hs_course
   module:
     - datetime
+    - field_formatter_class
     - field_group
     - hs_field_helpers
     - inline_entity_form
     - link
     - media_library
     - path
+    - tagify
     - text
 third_party_settings:
   field_group:
@@ -242,11 +244,18 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_hs_course_section_quarter:
-    type: options_select
+    type: tagify_select_widget
     weight: 8
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 0
+      placeholder: ''
+      parent_selection: '1'
+      show_entity_id: 0
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_course_section_st_date:
     type: datetime_default
     weight: 16

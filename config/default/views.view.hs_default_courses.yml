@@ -15,6 +15,7 @@ dependencies:
     - node.type.hs_course
     - taxonomy.vocabulary.hs_course_tags
   module:
+    - better_exposed_filters
     - datetime
     - hs_entities
     - hs_field_helpers
@@ -363,7 +364,7 @@ display:
         options:
           offset: 0
       exposed_form:
-        type: basic
+        type: bef
         options:
           submit_button: Apply
           reset_button: true
@@ -372,6 +373,33 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: null
+          bef:
+            general:
+              autosubmit: false
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_textfield_minimum_length: 3
+              autosubmit_hide: false
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            sort:
+              plugin_id: default
+            filter:
+              title:
+                plugin_id: default
+              field_hs_course_section_quarter_value:
+                plugin_id: default
+              title_1:
+                plugin_id: default
+              field_hs_course_tags_target_id:
+                plugin_id: default
       access:
         type: perm
         options:
@@ -1448,6 +1476,99 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+      exposed_form:
+        type: bef
+        options:
+          submit_button: Apply
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+          text_input_required: 'Select any filter and click on Apply to see results'
+          text_input_required_format: basic_html
+          bef:
+            general:
+              autosubmit: false
+              auto_submit_sort_only: false
+              autosubmit_breakpoint: ''
+              autosubmit_exclude_textfield: false
+              autosubmit_textfield_delay: 500
+              autosubmit_textfield_minimum_length: 3
+              autosubmit_hide: false
+              input_required: false
+              allow_secondary: false
+              secondary_label: 'Advanced options'
+              secondary_open: false
+              reset_button_always_show: false
+            filter:
+              title:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                  sort_options_unsupported: ''
+                options_show_only_used: false
+                options_show_only_used_filtered: false
+                options_hide_when_empty: false
+                options_show_items_count: false
+              field_hs_course_section_quarter_value:
+                plugin_id: bef_tagify
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: ''
+                    filter_rewrite_values_key: false
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                  match_operator: CONTAINS
+                  max_items: '10'
+                  placeholder: ''
+              title_1:
+                plugin_id: default
+                advanced:
+                  placeholder_text: ''
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                  sort_options_unsupported: ''
+                options_show_only_used: false
+                options_show_only_used_filtered: false
+                options_hide_when_empty: false
+                options_show_items_count: false
+              field_hs_course_tags_target_id:
+                plugin_id: bef_tagify
+                advanced:
+                  sort_options: false
+                  sort_options_method: alphabetical_asc
+                  sort_options_natural: true
+                  rewrite:
+                    filter_rewrite_values: ''
+                    filter_rewrite_values_key: false
+                  collapsible: false
+                  collapsible_disable_automatic_open: false
+                  open_by_default: false
+                  is_secondary: false
+                  hide_label: false
+                  field_classes: ''
+                  match_operator: CONTAINS
+                  max_items: '10'
+                  placeholder: ''
       sorts:
         field_hs_course_subject_value:
           id: field_hs_course_subject_value
@@ -1661,7 +1782,7 @@ display:
           exposed: true
           expose:
             operator_id: field_hs_course_section_quarter_value_op
-            label: Quarter
+            label: 'Quarter (Select)'
             description: ''
             use_operator: false
             operator: field_hs_course_section_quarter_value_op
@@ -1670,27 +1791,37 @@ display:
             identifier: quarter
             required: false
             remember: false
-            multiple: true
+            multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
               administrator: '0'
-              contributor: '0'
               site_manager: '0'
-              seven_admin_theme_user: '0'
+              contributor: '0'
+              author: '0'
+              preparer: '0'
+              reviewer: '0'
+              intranet_viewer: '0'
+              search_indexer: '0'
+              stanford_faculty: '0'
+              stanford_staff: '0'
+              stanford_student: '0'
+              anonymous: '0'
             reduce: false
           is_grouped: false
           group_info:
-            label: ''
-            description: ''
-            identifier: ''
+            label: 'Quarter (field_hs_course_section_quarter)'
+            description: null
+            identifier: field_hs_course_section_quarter_value
             optional: true
             widget: select
             multiple: false
             remember: false
             default_group: All
             default_group_multiple: {  }
-            group_items: {  }
+            group_items:
+              1: {  }
+              2: {  }
+              3: {  }
           reduce_duplicates: false
         title_1:
           id: title_1
@@ -1752,7 +1883,7 @@ display:
           exposed: true
           expose:
             operator_id: field_hs_course_tags_target_id_op
-            label: 'Course Tags'
+            label: 'Course Tags (Tagify)'
             description: ''
             use_operator: false
             operator: field_hs_course_tags_target_id_op
@@ -1764,13 +1895,18 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
               administrator: '0'
-              contributor: '0'
               site_manager: '0'
+              contributor: '0'
+              author: '0'
+              preparer: '0'
+              reviewer: '0'
+              intranet_viewer: '0'
+              search_indexer: '0'
               stanford_faculty: '0'
               stanford_staff: '0'
               stanford_student: '0'
+              anonymous: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -1790,6 +1926,14 @@ display:
           hierarchy: false
           limit: true
           error_message: true
+          save_lineage: false
+          force_deepest: false
+          parent: null
+          level_labels: ''
+          hierarchy_depth: 0
+          required_depth: 0
+          none_label: '- Please select -'
+          allow_unpublished: false
       filter_groups:
         operator: AND
         groups:
@@ -1876,12 +2020,15 @@ display:
           query_tags: {  }
       defaults:
         query: false
+        use_ajax: false
+        exposed_form: false
         style: false
         row: false
         fields: false
         sorts: false
         filters: false
         filter_groups: false
+      use_ajax: false
       display_description: ''
       exposed_block: false
       display_extenders: {  }

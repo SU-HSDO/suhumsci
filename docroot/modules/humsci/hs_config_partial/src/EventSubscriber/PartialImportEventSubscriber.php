@@ -28,7 +28,6 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
    *   The config storage transform event.
    */
   public function onImportTransform(StorageTransformEvent $event) {
-    var_dump('test');
     $import_storage = $event->getStorage();
     $active_storage = \Drupal::service('config.storage');
 

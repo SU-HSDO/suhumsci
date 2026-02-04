@@ -3,6 +3,7 @@
 namespace Drupal\hs_config_partial\EventSubscriber;
 
 use Drupal\Core\Config\ConfigEvents;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -20,13 +21,21 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
   protected $activeStorage;
 
   /**
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs the event subscriber.
    *
    * @param \Drupal\Core\Config\StorageInterface $active_storage
    *   The active config storage.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
-  public function __construct(StorageInterface $active_storage) {
+  public function __construct(StorageInterface $active_storage, ConfigFactoryInterface $config_factory) {
     $this->activeStorage = $active_storage;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -47,6 +56,14 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
    *   The config storage transform event.
    */
   public function onImportTransform(StorageTransformEvent $event) {
+    // Only run if the feature flag is enabled.
+    $enabled = TRUE;
+    if ($this->configFactory) {
+      $enabled = (bool) $this->configFactory->get('hs_config_partial.settings')->get('enabled');
+    }
+    if (!$enabled) {
+      return;
+    }
     $import_storage = $event->getStorage();
     foreach ($this->activeStorage->listAll() as $config_name) {
       if (!$import_storage->exists($config_name)) {

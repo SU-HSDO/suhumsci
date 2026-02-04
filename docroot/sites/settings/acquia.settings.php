@@ -11,3 +11,6 @@ $settings['letsencrypt_challenge_directory'] = $settings['file_temp_path'];
 
 // Disables domain redirect on all environments except production.
 $config['domain_301_redirect.settings']['enabled'] = EnvironmentDetector::isProdEnv();
+
+// Always enable partial imports on Acquia environments.
+$config['hs_config_partial.settings']['enabled'] = TRUE;

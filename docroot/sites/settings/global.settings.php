@@ -6,8 +6,6 @@
  */
 
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
-use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Serialization\Yaml;
 
 // When the encryption environment variable is not provided (local/ci/etc),
 // fake the encryption string so that the site doesn't break.

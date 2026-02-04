@@ -32,6 +32,7 @@ The platform uses a combination of contributed and custom modules to manage conf
 - If config needs to be deleted across all sites, a database update hook is required.
 - Previously, partial imports were run using the `--partial` flag with `drush config-import`. With config_split 2.x and config_ignore 3.x, the config transformation pipeline is used, and `--partial` does not respect these modules.
 - The custom `hs_config_partial` module implements safe partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
+- The `acquia.settings.php` enables the `hs_config_partial` enabled setting on all Acquia environments, in addition to `config_split` to ensure this stays on.
 
 ## Best Practices
 

@@ -31,6 +31,3 @@ if (getenv('GITPOD_WORKSPACE_URL') || getenv('TUGBOAT_REPO')) {
 if (file_exists(DRUPAL_ROOT . '/../keys.secrets.settings.php')) {
   require DRUPAL_ROOT . '/../keys/secrets.settings.php';
 }
-
-// Disable partial imports on local.
-$config['hs_config_partial.settings']['enabled'] = FALSE;

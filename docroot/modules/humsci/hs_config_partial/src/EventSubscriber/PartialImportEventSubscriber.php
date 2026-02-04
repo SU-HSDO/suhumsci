@@ -42,10 +42,13 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    // Priority -200: after config_ignore (-100) and config_split (default 0 or
-    // negative).
+    // Priority -300: before config_ignore (-100) and config_split (default 0).
+    // We want to run before these modules because:
+    // - config_ignore does not add any deletions.
+    // - config split adds deletions but we want to preserve these environment
+    //   specific configs.
     return [
-      ConfigEvents::STORAGE_TRANSFORM_IMPORT => ['onImportTransform', -200],
+      ConfigEvents::STORAGE_TRANSFORM_IMPORT => ['onImportTransform', -300],
     ];
   }
 

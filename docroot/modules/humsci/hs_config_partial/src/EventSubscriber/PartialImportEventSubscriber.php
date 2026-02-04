@@ -48,7 +48,7 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
     // - config split adds deletions but we want to preserve these environment
     //   specific configs.
     return [
-      ConfigEvents::STORAGE_TRANSFORM_IMPORT => ['onImportTransform', -300],
+      ConfigEvents::STORAGE_TRANSFORM_IMPORT => ['onImportTransform', 100],
     ];
   }
 

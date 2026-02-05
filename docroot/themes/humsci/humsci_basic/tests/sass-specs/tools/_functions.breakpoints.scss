@@ -1,0 +1,78 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/functions/breakpoints' as b;
+
+@include describe('Breakpoint Functions') {
+  @include describe('breakpoint-min() function') {
+    @include it('returns the minimum width for the small breakpoint.') {
+      $test: b.breakpoint-min('sm');
+      $expect: 576px;
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'The sm min breakpoint did not match.'
+      );
+    }
+  }
+
+  @include describe('breakpoint-max() function') {
+    @include it('returns the maximum width for small breakpoint.') {
+      $test: b.breakpoint-max('sm');
+      $expect: 767px;
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'The sm max breakpoint did not match.'
+      );
+    }
+  }
+
+  @include describe('breakpoint-insert() function') {
+    @include it('returns the breakpoint token with a leading dash.') {
+      $test: b.breakpoint-insert('md');
+      $expect: '-md';
+
+      @include assert-equal($test, $expect, 'The insert token did not match.');
+    }
+  }
+
+  @include describe('breakpoint-next() function') {
+    @include it('returns the next breakpoint token for the small breakpoint.') {
+      $test: b.breakpoint-next('sm');
+      $expect: 'md';
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'The next breakpoint did not match.'
+      );
+    }
+  }
+
+  @include describe('breakpoint-previous() function') {
+    @include it(
+      'returns the previous breakpoint token for medium breakpoint.'
+    ) {
+      $test: b.breakpoint-previous('md');
+      $expect: 'sm';
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'The previous breakpoint did not match.'
+      );
+    }
+
+    @include it('returns null for the first breakpoint.') {
+      $test: b.breakpoint-previous('xs');
+      $expect: null;
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'The previous breakpoint for xs should be null.'
+      );
+    }
+  }
+}

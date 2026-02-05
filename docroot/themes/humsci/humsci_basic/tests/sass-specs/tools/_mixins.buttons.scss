@@ -1,0 +1,58 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/variables/theme';
+@use '../../../src/scss/partials/mixins/buttons' as b;
+
+@include describe('Button Mixins') {
+  @include describe('hb-button() mixin') {
+    theme.$hb-current-theme: 'colorful';
+
+    @include it('sets base colors and hover styles.') {
+      @include assert {
+        @include output {
+          .hb-test-button {
+            @include b.hb-button;
+          }
+        }
+
+        @include contains {
+          .hb-test-button {
+            color: var(--color--colorful-global--white);
+            background-color: var(--color--colorful-pairings--secondary);
+            border-color: var(--color--colorful-pairings--secondary);
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-button {
+            @include b.hb-button;
+          }
+        }
+
+        @include contains {
+          .hb-test-button:hover {
+            background-color: var(--color--colorful-pairings--secondary-darken-12);
+            border-color: var(--color--colorful-pairings--secondary-darken-12);
+            color: var(--color--colorful-global--white);
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-button {
+            @include b.hb-button;
+          }
+        }
+
+        @include contains {
+          .hb-test-button:active,
+          .hb-test-button:focus {
+            box-shadow: 0 0 0 0.125rem var(--color--colorful-pairings--secondary-active);
+          }
+        }
+      }
+    }
+  }
+}

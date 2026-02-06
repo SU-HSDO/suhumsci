@@ -101,13 +101,15 @@ class HsCommands extends BltTasks {
       $result = $this->taskDrush()
         ->drush('updb')
         ->drush('config:import')
-        // 2026-02-03: Use hs_config_partial module to prevent active
+        // 2026-02-03: Uses hs_config_partial module to prevent active
         // configuration deletions after upgrading config_split and
-        // config_ignore.
+        // config_ignore. The hs_config_partial setting is enabled on all 
+        // Acquia environments through the acquia.settings.php file.
         // ->option('partial')
         // Trigger config import again to ensure any dependent config changes
         // are also imported. Some configuration imports depend on the previous
-        // configuration import being fully complete.
+        // configuration import being fully complete, especially when using
+        // config splits.
         ->drush('config:import')
         ->run();
       file_put_contents(sys_get_temp_dir() . '/update-report.txt', $site_name . ($result->wasSuccessful() ? ':1' : ':0') . PHP_EOL, FILE_APPEND);

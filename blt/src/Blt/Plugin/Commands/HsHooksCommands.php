@@ -15,7 +15,7 @@ class HsHooksCommands extends BltTasks {
    */
   public function preSiteCopy() {
     $root = $this->getConfigValue('repo.root');
-    $this->taskExec("cp $root/config/default/config_ignore.settings.yml $root/config/envs/local/config_ignore.settings.yml")
+    $this->taskExec("rm $root/config/envs/local/config_split.patch.config_ignore.settings.yml")
       ->run();
   }
 
@@ -24,7 +24,7 @@ class HsHooksCommands extends BltTasks {
    */
   public function postSiteCopy() {
     $root = $this->getConfigValue('repo.root');
-    $this->taskExec("git checkout $root/config/envs/local/config_ignore.settings.yml")
+    $this->taskExec("git checkout $root/config/envs/local/config_split.patch.config_ignore.settings.yml")
       ->run();
   }
 

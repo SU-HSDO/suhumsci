@@ -8,6 +8,7 @@
 @use '../variables/colors.traditional' as *;
 @use '../variables/colors.su-core' as *;
 @use '../variables/fonts' as *;
+@use '../variables/general' as *;
 @use '../functions/general' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
@@ -102,11 +103,11 @@
     .hb-video-lazy__thumb {
       // Trigger play button hover styles
       &:hover .hb-video-lazy__play {
-        background-color: var(--palette--secondary-darken-12);
+        background-color: color('secondary-darken-12');
       }
 
       &:focus-within .hb-video-lazy__play {
-        background-color: var(--palette--secondary);
+        background-color: color('secondary');
       }
     }
 
@@ -144,16 +145,23 @@
       display: block;
     }
 
-    .hb-video-lazy__play {
+    .hb-video-lazy__play-wrapper {
       position: absolute;
-      border: $hb-thin-border;
-      border-color: var(--palette--white);
-      background-color: var(--palette--secondary);
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+      top: 0;
       cursor: pointer;
-      padding: 0 0 0 hb-calculate-rems(2px);
+    }
+
+    .hb-video-lazy__play {
+      position: relative;
+      border: $hb-thin-border;
+      border-color: color('white', 'global');;
+      background-color: color('secondary');
+      padding: 0 0 0 hb-calculate-rems(4px);
       left: hb-calculate-rems(16px);
       width: hb-calculate-rems(44px);
       height: hb-calculate-rems(44px);
@@ -165,17 +173,10 @@
 
       @include hb-themes(('colorful', 'airy')) {
         border-radius: 50%;
-        bottom: hb-calculate-rems(-8px);
-      }
-
-      @include hb-traditional {
-        bottom: hb-calculate-rems(-6px);
       }
 
       .hs-full-width & {
         @include grid-media-min('md') {
-          left: 10%;
-          bottom: hb-calculate-rems(-16px);
           width: hb-calculate-rems(80px);
           height: hb-calculate-rems(80px);
         }
@@ -196,12 +197,12 @@
       }
 
       &:hover {
-        background-color: var(--palette--secondary-darken-12);
+        background-color: color('secondary-darken-12');
       }
 
       &:active,
       &:focus {
-        background-color: var(--palette--secondary);
+        background-color: color('secondary');
       }
 
       &::before {

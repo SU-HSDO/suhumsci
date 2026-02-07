@@ -53,30 +53,6 @@
     );
   }
 
-  // Update position of button to avoid an overlap in the title.
-  @include hb-traditional {
-    .hb-media-video:has(.hb-video-lazy) {
-    margin-bottom: 0;
-    }
-
-    .hb-video-lazy__play {
-      bottom: hb-calculate-rems(16px);
-    }
-  }
-
-  // Specific styles when there's a title and it's on colorful.
-  &:has(.hb-vertical-linked-card__title) {
-    @include hb-themes(('colorful', 'airy')) {
-      .hb-media-video:has(.hb-video-lazy) {
-        margin-bottom: 0;
-      }
-
-      .hb-video-lazy__play {
-        bottom: hb-calculate-rems(32px);
-      }
-    }
-  }
-
   &__img {
     overflow: hidden;
 

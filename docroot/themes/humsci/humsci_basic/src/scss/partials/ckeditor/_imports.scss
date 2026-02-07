@@ -4,9 +4,9 @@
 // _base.scss for reference.
 
 @use 'sass:map';
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
-@use '../variables/general' as *;
+@use '../variables/colors.colorful' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.su-core' as *;
 @use '../variables/fonts' as *;
 @use '../functions/general' as *;
 @use '../mixins/theme' as *;
@@ -15,6 +15,8 @@
 @use '../mixins/buttons' as *;
 @use '../mixins/tables' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
+@use '../functions/color' as *;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
@@ -32,27 +34,16 @@
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
 :root {
-  @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default)
-    {
-      --palette--#{$color}: #{$value};
-    }
+  @include generate-css-vars('su-core', $su-core-colors);
 
-    @each $color, $value in $hc-colorful-globals {
-      --palette--#{$color}: #{$value};
-    }
+  @include hb-themes(('colorful', 'airy')) {
+    @include generate-css-vars('colorful-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
-    @each $color,
-      $value in map.get($ht-traditional-pairings, $hb-traditional-default)
-    {
-      --palette--#{$color}: #{$value};
-    }
-
-    @each $color, $value in $ht-traditional-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars('traditional-pairings', map.get($traditional-pairings-colors, $hb-traditional-default));
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 }
 
@@ -68,8 +59,8 @@
   }
 
   // Link current color variables.
-  --link-base-current-color: var(--palette--link-base-color);
-  --link-base-hover-current-color: var(--palette--link-base-hover-color);
+  --link-base-current-color: #{color('link-base')};
+  --link-base-hover-current-color: #{color('link-base-hover')};
 
   // Addresses small media previews in CK5
   .hb-media-video {
@@ -414,7 +405,7 @@
 
     thead th {
       @include table-heading;
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
 
     thead tr {

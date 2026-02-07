@@ -1,6 +1,7 @@
 // Curriculum map component styles.
 
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/text' as *;
 
 // Curriculum map component.
@@ -51,17 +52,17 @@
   .field-hs-cmap-qtr-quarter {
     margin: 0;
     padding: hb-calculate-rems(12px) hb-calculate-rems(16px);
-    color: var(--palette--white);
-    background-color: var(--palette--gray-800);
+    color: color('white', 'global');
+    background-color: color('gray-800', 'global');
   }
 }
 
 // Curriculum map required courses component.
 .paragraph--type--hs-cmap-qtr-crs {
   padding: hb-calculate-rems(12px) hb-calculate-rems(10px);
-  background-color: var(--palette--white);
+  background-color: color('white', 'global');
   box-shadow: 0 hb-calculate-rems(4px) hb-calculate-rems(17px) 0
-    color-mix(in srgb, var(--palette--black) 14%, transparent);
+    color-mix(in srgb, color('black', 'global') 14%, transparent);
   border-bottom: 3px solid var(--color-cmap-requirement-type, transparent);
 
   .field-hs-cmap-crs-requirement {
@@ -71,12 +72,12 @@
     font-size: hb-calculate-rems(14px);
     line-height: 1.4;
     text-transform: uppercase;
-    background-color: var(--palette--gray-100);
+    background-color: color('gray-100', 'global');
   }
 
   // Course type colors.
   &.paragraph--color--grey-500 {
-    --color-cmap-requirement-type: var(--palette--gray-500);
+    --color-cmap-requirement-type: color('gray-500', 'global');
   }
 
   &.paragraph--color--brick-dark {

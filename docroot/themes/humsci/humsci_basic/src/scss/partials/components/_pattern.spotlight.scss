@@ -1,4 +1,5 @@
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/general' as *;
@@ -7,21 +8,21 @@
 @use '../mixins/buttons' as *;
 
 .hb-spotlight {
-  background-color: var(--palette--spotlight);
+  background-color: color('spotlight');
 
   @include grid-media-min('md') {
     margin: hb-spacing-width() 0;
   }
 
   &--background-gray {
-    background-color: var(--palette--gray-medium);
+    background-color: color('gray-medium', 'global');
   }
 
   // Add a unique background-color for Lake on Colorful.
   // Note this is an extraordinary use case.
   // Targeting styles per color pairing should not become standard practice.
   .hc-pairing-lake & {
-    background-color: var(--palette--secondary-highlight);
+    background-color: color('secondary-highlight');
   }
 
   &--classic {
@@ -40,25 +41,10 @@
           padding-inline: hb-calculate-rems(16px);
         }
       }
-
-      .hb-video-lazy__play {
-        // Styles to have the same width of the border decoration on small screen sizes.
-        @include grid-media-between('xs', 'sm') {
-          width: hb-calculate-rems(60px);
-          height: hb-calculate-rems(60px);
-
-          &::before {
-            background-size: hb-calculate-rems(50px);
-          }
-        }
-      }
-
     }
   }
 
   .hb-video-lazy__play {
-    bottom: hb-calculate-rems(-12px);
-
     @include grid-media-min('md') {
       &::before {
         @include hb-themes(('colorful', 'airy')) {
@@ -114,7 +100,7 @@
           // Note this is an extraordinary use case.
           // Targeting styles per color pairing should not become standard practice.
           .hc-pairing-ocean & {
-            @include hb-colorful-text-bar('secondary-darken-12');
+            @include hb-colorful-text-bar(secondary-darken-12);
           }
         }
       }
@@ -139,13 +125,13 @@
             // Note this is an extraordinary use case.
             // Targeting styles per color pairing should not become standard practice.
             .hc-pairing-ocean & {
-              color: var(--palette--secondary-darken-12);
-              border-color: var(--palette--secondary-darken-12);
+              color: color('secondary-darken-12');
+              border-color: color('secondary-darken-12');
 
               &:hover {
-                background-color: var(--palette--secondary-darken-12);
-                border-color: var(--palette--secondary-darken-12);
-                color: var(--palette--white);
+                background-color: color('secondary-darken-12');
+                border-color: color('secondary-darken-12');
+                color: color('white', 'global');
               }
             }
           }
@@ -194,7 +180,7 @@
   @include hb-traditional {
     .hs-paragraph-style--well &,
     .hs-paragraph-style--well-full-width & {
-      background-color: var(--palette--white);
+      background-color: color('white', 'global');
     }
   }
 
@@ -207,7 +193,7 @@
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px);
       margin: hb-calculate-rems(20px);
-      background: var(--palette--white);
+      background: color('white', 'global');
 
       @include grid-media-min('md') {
         padding: hb-calculate-rems(30px) hb-calculate-rems(40px);
@@ -239,7 +225,7 @@
       }
 
       @include hb-themes(('colorful', 'airy')) {
-        color: var(--palette--primary);
+        color: color('primary');
       }
     }
   }
@@ -260,41 +246,6 @@
       @include grid-media-min('md') {
         width: 45%;
         max-width: 500px;
-      }
-    }
-  }
-
-  // Styles for lazy load videos to make it work with new design.
-  &:has(.hb-video-lazy) {
-    .hb-spotlight__text {
-      @include grid-media-between('xs', 'md') {
-        padding-top: hb-calculate-rems(32px);
-      }
-    }
-  }
-
-  .hb-media-video:has(.hb-video-lazy) {
-    margin-bottom: 0;
-  }
-
-  .hb-video-lazy__play {
-    bottom: hb-calculate-rems(8px);
-
-    @include grid-media-between('xs', 'md') {
-      left: hb-calculate-rems(32px);
-      z-index: 3;
-    }
-
-    @include grid-media-min('md') {
-      bottom: hb-calculate-rems(16px);
-    }
-  }
-
-  @include grid-media-min('md') {
-    @include hb-themes(('colorful', 'airy')) {
-      &.hb-spotlight--image-default .hb-video-lazy__play {
-        left: unset;
-        right: hb-calculate-rems(16px);
       }
     }
   }

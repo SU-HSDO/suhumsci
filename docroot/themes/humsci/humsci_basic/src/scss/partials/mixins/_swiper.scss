@@ -2,6 +2,7 @@
 
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 @use 'buttons' as *;
@@ -88,7 +89,7 @@
 
   .swiper-button-prev,
   .swiper-button-next {
-    background-color: var(--palette--white);
+    background-color: color('white', 'global');
     position: absolute;
     opacity: 0.5;
     top: unset;
@@ -176,7 +177,7 @@
       opacity: 1;
       background: unset;
 
-      background-color: var(--palette--gray);
+      background-color: color('gray', 'global');
       padding: 0 hb-calculate-rems(22px);
       margin: 0 hb-calculate-rems(8px);
       transition: hb-transition(transform);
@@ -190,22 +191,22 @@
         transform: scale(0.9);
 
         @include hb-traditional {
-          background-color: var(--palette--black);
+          background-color: color('black', 'global');
         }
 
         @include hb-themes(('colorful', 'airy')) {
-          background-color: var(--palette--secondary);
+          background-color: color('secondary');
         }
       }
 
       // active button representing the slide currently on display
       &.swiper-pagination-bullet-active {
         @include hb-traditional {
-          background-color: var(--palette--black);
+          background-color: color('black', 'global');
         }
 
         @include hb-themes(('colorful', 'airy')) {
-          background-color: var(--palette--secondary);
+          background-color: color('secondary');
         }
 
         &:hover {

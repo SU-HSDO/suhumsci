@@ -1,6 +1,7 @@
 @use '../variables/general' as *;
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/icons' as *;
@@ -8,19 +9,19 @@
 
 .hb-vertical-linked-card {
   @include hb-traditional {
-    --link-base-current-color: var(--palette--black);
-    --link-base-hover-current-color: var(--palette--gray-dark);
+    --link-base-current-color: color('black', 'global');
+    --link-base-hover-current-color: color('gray-dark', 'global');
   }
 
   @include hb-themes(('colorful', 'airy')) {
-    --link-base-current-color: var(--palette--white);
-    --link-base-hover-current-color: var(--palette--gray-medium);
+    --link-base-current-color: #{color('white', 'global')};
+    --link-base-hover-current-color: #{color('gray-medium', 'global')};
   }
 
   .hs-well,
   .hs-breakout-box {
-    --link-base-current-color: var(--palette--link-base-color);
-    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+    --link-base-current-color: #{color('link-base')};
+    --link-base-hover-current-color: #{color('link-base-hover')};
   }
 
   position: relative;
@@ -42,38 +43,14 @@
     }
 
     padding-bottom: hb-calculate-rems(28px);
-    color: var(--palette--white);
+    color: color('white', 'global');
 
     background-image: linear-gradient(
       to bottom,
       transparent,
       transparent hb-calculate-rems(20px),
-      var(--palette--primary-dark) hb-calculate-rems(20px)
+      color('primary-dark') hb-calculate-rems(20px)
     );
-  }
-
-  // Update position of button to avoid an overlap in the title.
-  @include hb-traditional {
-    .hb-media-video:has(.hb-video-lazy) {
-    margin-bottom: 0;
-    }
-
-    .hb-video-lazy__play {
-      bottom: hb-calculate-rems(16px);
-    }
-  }
-
-  // Specific styles when there's a title and it's on colorful.
-  &:has(.hb-vertical-linked-card__title) {
-    @include hb-themes(('colorful', 'airy')) {
-      .hb-media-video:has(.hb-video-lazy) {
-        margin-bottom: 0;
-      }
-
-      .hb-video-lazy__play {
-        bottom: hb-calculate-rems(32px);
-      }
-    }
   }
 
   &__img {
@@ -107,7 +84,7 @@
     @include hb-themes(('colorful', 'airy')) {
       padding: hb-calculate-rems(20px);
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
-      background-color: var(--palette--secondary);
+      background-color: color('secondary');
 
       // Update padding when card is in 4 columns.
       .field-hs-collection-items.item-per-row--4 & {
@@ -122,8 +99,8 @@
 
     @include hb-traditional {
       padding: hb-calculate-rems(16px);
-      color: var(--palette--white);
-      background-color: var(--palette--primary);
+      color: color('white', 'global');
+      background-color: color('primary');
       margin: 0;
     }
 
@@ -131,11 +108,11 @@
     .hb-vertical-linked-card:focus &,
     .hb-vertical-linked-card.is-focused & {
       @include hb-themes(('colorful', 'airy')) {
-        background-color: var(--palette--secondary-darken-12);
+        background-color: color('secondary-darken-12');
       }
 
       @include hb-traditional {
-        background-color: var(--palette--primary-dark);
+        background-color: color('primary-dark');
         text-decoration: underline;
       }
     }
@@ -176,11 +153,11 @@
   &:has(.hb-video-lazy:focus-within) {
     .hb-vertical-linked-card__title {
       @include hb-themes(('colorful', 'airy')) {
-        background-color: var(--palette--secondary);
+        background-color: color('secondary');
       }
 
       @include hb-traditional {
-        background-color: var(--palette--primary);
+        background-color: color('primary');
         text-decoration: none;
       }
     }
@@ -192,12 +169,12 @@
 
   &__title__link,
   &__title__link.ext {
-    color: var(--palette--white);
+    color: color('white', 'global');
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: var(--palette--white);
+      color: color('white', 'global');
       background-image: none;
     }
   }
@@ -219,12 +196,12 @@
       // For those scenarios that a breakout box or hs-well style is being used in a WYSIWYG.
       .hs-well,
       .hs-breakout-box {
-        color: var(--palette--black);
+        color: color('black', 'global');
       }
     }
 
     @include hb-traditional {
-      background-color: var(--palette--tertiary-reversed);
+      background-color: color('tertiary-reversed');
       padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
         hb-calculate-rems(28px);
     }

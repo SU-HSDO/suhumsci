@@ -3,6 +3,7 @@
 
 @use '../variables/zindex' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/heros' as *;
@@ -11,7 +12,7 @@
   @include hb-hero-component;
 
   .ptype-hs-hero-image & {
-    background-color: var(--palette--primary-hero-overlay);
+    background-color: color('primary-hero-overlay');
   }
 
   &::before {
@@ -24,7 +25,7 @@
     @include hb-hero-image-wrapper;
 
     &::before {
-      background-color: var(--palette--primary-hero-overlay);
+      background-color: color('primary-hero-overlay');
     }
   }
 
@@ -85,6 +86,6 @@
     z-index: $hb-z-index-hero1-overlay;
 
     @include hb-hero-overlay-animation;
-    background-color: var(--palette--primary-hero-overlay);
+    background-color: color('primary-hero-overlay');
   }
 }

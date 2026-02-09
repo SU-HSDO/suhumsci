@@ -1091,9 +1091,26 @@ function su_humsci_profile_update_9751() {
 }
 
 /**
- * Add field_poster_image_override to the media video form display.
+ * Install the tagify module.
  */
 function su_humsci_profile_update_9752() {
+  \Drupal::service('module_installer')->install(['tagify']);
+}
+
+/**
+ * Uninstall the slick_pargraphs and slick modules.
+ */
+function su_humsci_profile_update_9753() {
+  \Drupal::service('module_installer')->uninstall([
+    'slick_paragraphs',
+    'slick',
+  ]);
+}
+
+/**
+ * Add field_poster_image_override to the media video form display.
+ */
+function su_humsci_profile_update_9754() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\field\FieldConfigInterface $field_config_storage */

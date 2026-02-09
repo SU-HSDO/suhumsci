@@ -2,6 +2,7 @@
 @use '../variables/zindex' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use 'theme' as *;
 @use 'breakpoints' as *;
 
@@ -41,7 +42,7 @@
   width: $width;
 
   @include hb-colorful {
-    background-color: var(--palette--#{$color});
+    background-color: color(#{$color});
   }
 }
 
@@ -75,7 +76,7 @@
 
     &::before {
       background-color: transparent;
-      border-color: var(--palette--secondary);
+      border-color: color('secondary');
       border-width: 1px;
       border-style: solid;
       content: '';
@@ -91,7 +92,7 @@
     &::before {
       border-radius: 0;
       border: 0;
-      background-color: var(--palette--secondary);
+      background-color: color('secondary');
       top: hb-calculate-rems(8px);
       min-width: inherit;
     }
@@ -146,19 +147,19 @@
       height: hb-calculate-rems(6px);
       width: hb-calculate-rems(6px);
       border-radius: 50%;
-      background-color: var(--palette--secondary);
+      background-color: color('secondary');
       position: absolute;
       left: 0;
       top: hb-calculate-rems(8px);
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        background-color: var(--palette--secondary-highlight);
+        background-color: color('secondary-highlight');
       }
 
       .hb-raised-cards .hb-dark-pattern &,
       .hb-dark-inversion .hb-raised-cards .views-element-container & {
-        background-color: var(--palette--secondary);
+        background-color: color('secondary');
       }
     }
   }
@@ -189,7 +190,7 @@
       counter-increment: li;
       font-size: hb-calculate-rems(16px);
       font-weight: hb-theme-font-weight(semibold);
-      color: var(--palette--secondary);
+      color: color('secondary');
       position: absolute;
       left: 0;
       top: 0;
@@ -203,7 +204,7 @@
       }
 
       .hb-dark-pattern & {
-        color: var(--palette--secondary-highlight);
+        color: color('secondary-highlight');
       }
     }
   }
@@ -267,21 +268,21 @@
 @mixin hb-divider {
   width: 100%;
   border-bottom: $hb-thin-border;
-  border-color: var(--palette--gray);
+  border-color: color('gray', 'global');
 }
 
 @mixin hb-well {
   @include hb-themes(('colorful', 'airy')) {
-    background-color: var(--palette--gray-light);
+    background-color: color('gray-light', 'global');
   }
 
   @include hb-traditional {
-    background-color: var(--palette--tertiary-highlight);
+    background-color: color('tertiary-highlight');
   }
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    color: var(--palette--black);
+    color: color('black', 'global');
   }
 
   padding: hb-calculate-rems(20px) hb-calculate-rems(18px);

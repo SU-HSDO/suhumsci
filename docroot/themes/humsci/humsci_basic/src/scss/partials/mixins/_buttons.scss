@@ -3,6 +3,7 @@
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use 'theme' as *;
 
 // This removes styles added by default to button elements.
@@ -63,45 +64,45 @@
 
 @mixin hb-button {
   @include hb-button-base;
-  color: var(--palette--white);
-  background-color: var(--palette--secondary);
-  border-color: var(--palette--secondary);
+  color: color('white', 'global');
+  background-color: color('secondary');
+  border-color: color('secondary');
 
   &:hover {
-    background-color: var(--palette--secondary-darken-12);
-    border-color: var(--palette--secondary-darken-12);
-    color: var(--palette--white);
+    background-color: color('secondary-darken-12');
+    border-color: color('secondary-darken-12');
+    color: color('white', 'global');
   }
 
   &:active,
   &:focus {
-    background-color: var(--palette--secondary);
-    border-color: var(--palette--white);
-    color: var(--palette--white);
+    background-color: color('secondary');
+    border-color: color('white', 'global');
+    color: color('white', 'global');
   }
 
   @include hb-themes(('colorful', 'airy')) {
     &:active,
     &:focus {
-      box-shadow: 0 0 0 hb-calculate-rems(2px) var(--palette--secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(2px) color('secondary-active');
     }
   }
 
   @include hb-traditional {
     &:active,
     &:focus {
-      box-shadow: 0 0 0 hb-calculate-rems(1px) var(--palette--secondary-active);
+      box-shadow: 0 0 0 hb-calculate-rems(1px) color('secondary-active');
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      background-color: var(--palette--secondary-darken-12);
-      border-color: var(--palette--secondary-darken-12);
+      background-color: color('secondary-darken-12');
+      border-color: color('secondary-darken-12');
 
       &:hover {
-        background-color: var(--palette--primary-dark);
-        border-color: var(--palette--primary-dark);
+        background-color: color('primary-dark');
+        border-color: color('primary-dark');
       }
     }
   }
@@ -123,12 +124,12 @@
 
 @mixin hb-secondary-button {
   @include hb-button-base;
-  border-color: var(--palette--secondary);
-  color: var(--palette--secondary);
+  border-color: color('secondary');
+  color: color('secondary');
 
   &:hover {
-    color: var(--palette--white);
-    background-color: var(--palette--secondary);
+    color: color('white', 'global');
+    background-color: color('secondary');
 
     .hb-dark-pattern & {
       background-color: transparent;
@@ -137,11 +138,11 @@
 
   &:active,
   &:focus {
-    color: var(--palette--secondary);
+    color: color('secondary');
     background-color: transparent;
     box-shadow:
-      0 0 0 hb-calculate-rems(2px) var(--palette--white),
-      0 0 0 hb-calculate-rems(4px) var(--palette--secondary-active);
+      0 0 0 hb-calculate-rems(2px) color('white', 'global'),
+      0 0 0 hb-calculate-rems(4px) color('secondary-active');
 
     .hb-dark-pattern & {
       box-shadow: none;
@@ -154,45 +155,45 @@
     &:active,
     &:focus {
       outline: hb-calculate-rems(2px) solid;
-      outline-color: var(--palette--white);
-      box-shadow: 0 0 0 hb-calculate-rems(3px) var(--palette--secondary-active);
+      outline-color: color('white', 'global');
+      box-shadow: 0 0 0 hb-calculate-rems(3px) color('secondary-active');
     }
 
     .hb-dark-pattern & {
-      color: var(--palette--tertiary-highlight);
-      border-color: var(--palette--tertiary-highlight);
+      color: color('tertiary-highlight');
+      border-color: color('tertiary-highlight');
 
       &:hover,
       &:active,
       &:focus {
-        color: var(--palette--tertiary-highlight-darken-10);
-        border-color: var(--palette--tertiary-highlight-darken-10);
+        color: color('tertiary-highlight-darken-10');
+        border-color: color('tertiary-highlight-darken-10');
       }
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      border-color: var(--palette--secondary-darken-12);
-      color: var(--palette--secondary-darken-12);
+      border-color: color('secondary-darken-12');
+      color: color('secondary-darken-12');
 
       &:hover {
-        color: var(--palette--white);
-        background-color: var(--palette--secondary-darken-12);
+        color: color('white', 'global');
+        background-color: color('secondary-darken-12');
       }
     }
   }
 
   @include hb-themes(('colorful', 'airy')) {
     .hb-dark-pattern & {
-      color: var(--palette--tertiary-reversed);
-      border-color: var(--palette--tertiary-reversed);
+      color: color('tertiary-reversed');
+      border-color: color('tertiary-reversed');
 
       &:hover,
       &:active,
       &:focus {
-        color: var(--palette--secondary-highlight);
-        border-color: var(--palette--secondary-highlight);
+        color: color(secondary-highlight);
+        border-color: color(secondary-highlight);
       }
     }
   }
@@ -204,20 +205,20 @@
   border-radius: 0;
   line-height: 1;
   min-height: auto;
-  color: var(--palette--secondary);
+  color: color('secondary');
   cursor: pointer;
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    color: var(--palette--tertiary-reversed);
+    color: color('tertiary-reversed');
   }
 
   &:hover {
-    color: var(--palette--secondary-darken-12);
+    color: color('secondary-darken-12');
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      color: var(--palette--tertiary-highlight);
+      color: color('tertiary-highlight');
     }
   }
 
@@ -228,19 +229,19 @@
   @include hb-themes(('colorful', 'airy')) {
     padding: hb-calculate-rems(4px) 0;
     border-bottom: $hb-thin-border;
-    border-bottom-color: var(--palette--secondary);
+    border-bottom-color: color('secondary');
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      border-bottom-color: var(--palette--tertiary-reversed);
+      border-bottom-color: color('tertiary-reversed');
     }
 
     &:hover {
-      border-bottom-color: var(--palette--secondary-darken-12);
+      border-bottom-color: color('secondary-darken-12');
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
-        border-bottom-color: var(--palette--tertiary-highlight);
+        border-bottom-color: color('tertiary-highlight');
       }
     }
   }
@@ -254,19 +255,19 @@
 
     &:focus,
     &:active {
-      border-color: var(--palette--secondary);
+      border-color: color('secondary');
       box-shadow: none;
     }
   }
 
   @include hb-colorful {
     .hc-pairing-ocean & {
-      color: var(--palette--secondary-darken-12);
-      border-bottom-color: var(--palette--secondary-darken-12);
+      color: color('secondary-darken-12');
+      border-bottom-color: color('secondary-darken-12');
 
       &:hover {
-        color: var(--palette--primary-dark);
-        border-color: transparent transparent var(--palette--primary-dark);
+        color: color('primary-dark');
+        border-color: transparent transparent color('primary-dark');
         background-color: transparent;
       }
     }

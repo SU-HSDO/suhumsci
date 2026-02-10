@@ -1,9 +1,27 @@
 // Spotlight Slider styles
+
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+@use '../mixins/heros' as *;
+@use '../mixins/swiper' as *;
+
+// .ptype-hs-sptlght-slder {
+//   @include hb-themes(('colorful', 'airy')) {
+//     margin-block: 3rem 0 !important;
+//   }
+
+//   @include hb-traditional {
+//     margin-block: 2rem 0 !important;
+//   }
+// }
+
 .paragraph--type--hs-sptlght-slder {
   @include hb-hero-full-width;
-  @include slick-container;
-  @include slick-dots;
-  @include slick-arrows;
+  @include swiper-container;
+  @include swiper-pagination;
+  @include swiper-arrows;
   position: relative;
 
   .hs-full-width & {
@@ -12,17 +30,29 @@
     }
   }
 
-  // slick dots do not display in mobile
-  .slick-dots {
+  // swiper pagination do not display in mobile
+  .swiper-pagination {
+    @include hb-themes(('colorful', 'airy')) {
+      bottom: hb-calculate-rems(38px);
+    }
+
+    @include hb-traditional {
+      bottom: hb-calculate-rems(20px);
+    }
+
     @include grid-media-max('sm') {
       @include visually-hidden;
     }
   }
 
   &:has(.hb-spotlight--expanded) {
-    .slick-dots {
-      bottom: 0;
+    .swiper-pagination {
+      bottom: hb-calculate-rems(21px);
     }
+  }
+
+  .swiper-pagination-bullet {
+    height: hb-calculate-rems(4.5px);
   }
 }
 
@@ -32,16 +62,7 @@
       height: 100%;
     }
 
-    .slick-track {
-      bottom: 0;
-      height: 100%;
-    }
-
-    .slick__slide > div:first-child {
-      height: 100%;
-    }
-
-    .slick-prev {
+    .swiper-button-prev {
       @include hb-traditional {
         bottom: 15% !important;
       }
@@ -51,7 +72,7 @@
       }
     }
 
-    .slick-next {
+    .swiper-button-next {
       @include hb-traditional {
         bottom: 55% !important;
       }

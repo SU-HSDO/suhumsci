@@ -1,0 +1,64 @@
+uuid: 3009fdd8-0162-4ee7-94ba-c1d52f20d1f4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_cmap_year.field_hs_cmap_year_qtr
+    - field.field.paragraph.hs_cmap_year.field_hs_cmap_year_year
+    - paragraphs.paragraphs_type.hs_cmap_year
+  module:
+    - field_formatter_class
+    - paragraphs
+    - paragraphs_ee
+    - paragraphs_features
+id: paragraph.hs_cmap_year.default
+targetEntityType: paragraph
+bundle: hs_cmap_year
+mode: default
+content:
+  field_hs_cmap_year_qtr:
+    type: paragraphs
+    weight: 1
+    region: content
+    settings:
+      title: Quarter
+      title_plural: Quarters
+      edit_mode: closed
+      closed_mode: preview
+      autocollapse: all
+      closed_mode_threshold: 2
+      add_mode: button
+      form_display_mode: default
+      default_paragraph_type: hs_cmap_qtr
+      features:
+        add_above: '0'
+        collapse_edit_all: collapse_edit_all
+        convert: '0'
+        duplicate: '0'
+      expose_drag_drop: 0
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+      paragraphs_features:
+        add_in_between: false
+        add_in_between_link_count: 3
+        delete_confirmation: false
+        show_drag_and_drop: false
+        show_collapse_all: true
+      paragraphs_ee:
+        paragraphs_ee:
+          dialog_off_canvas: false
+          dialog_style: tiles
+          drag_drop: false
+          sidebar_disabled: false
+  field_hs_cmap_year_year:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

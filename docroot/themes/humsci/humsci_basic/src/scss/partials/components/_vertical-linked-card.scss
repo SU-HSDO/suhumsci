@@ -1,3 +1,11 @@
+@use '../variables/general' as *;
+@use '../functions/general' as *;
+@use '../functions/animation' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/text' as *;
+
 .hb-vertical-linked-card {
   @include hb-traditional {
     --link-base-current-color: var(--palette--black);
@@ -44,12 +52,6 @@
     );
   }
 
-  .hb-stretch-vertical-linked-cards & {
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100%;
-  }
-
   &__img {
     overflow: hidden;
 
@@ -74,7 +76,8 @@
     // image. Adding position relative makes sure everything is layered correctly.
     position: relative;
     hyphens: auto;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: anywhere;
     transition: hb-transition(background-color);
 
     @include hb-themes(('colorful', 'airy')) {
@@ -82,7 +85,7 @@
       margin: 0 hb-calculate-rems(20px) 0 hb-calculate-rems(-31px);
       background-color: var(--palette--secondary);
 
-       // Update padding when card is in 4 columns.
+      // Update padding when card is in 4 columns.
       .field-hs-collection-items.item-per-row--4 & {
         padding: hb-calculate-rems(18px);
       }
@@ -120,6 +123,7 @@
       display: inline-block;
       position: relative;
       height: hb-calculate-rems(14px);
+
       @include hb-icon-link-arrow('white');
 
       @include hb-themes(('airy', 'colorful')) {
@@ -157,7 +161,8 @@
 
   &__description {
     @include hb-description;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: anywhere;
     flex: 1 1 auto;
 
     @include hb-themes(('airy', 'colorful')) {
@@ -193,6 +198,24 @@
       @include hb-themes(('colorful', 'airy')) {
         background-image: none;
       }
+    }
+  }
+}
+
+// .hb-stretch-vertical-linked-cards helper class.
+.hb-stretch-vertical-linked-cards {
+  .hb-vertical-linked-card {
+    display: flex;
+    flex-flow: column nowrap;
+  }
+
+  .hb-grid__item {
+    display: flex;
+    align-items: flex-start;
+
+    .hb-vertical-linked-card {
+      align-self: stretch;
+      width: 100%;
     }
   }
 }

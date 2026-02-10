@@ -1,3 +1,13 @@
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/links' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/menu-icons' as *;
+@use '../mixins/buttons' as *;
+
 // Note: This code should be refactored to match styles in the _main-nav.scss
 .hb-secondary-nav {
   background-color: transparent;
@@ -26,7 +36,7 @@
   }
 
   &__menu-container {
-    &[aria-hidden="true"] {
+    &[aria-hidden='true'] {
       display: none;
     }
   }
@@ -118,7 +128,8 @@
 
   &__link {
     display: block;
-    padding: hb-calculate-rems(16px) hb-calculate-rems(48px) hb-calculate-rems(16px) hb-calculate-rems(18px);
+    padding: hb-calculate-rems(16px) hb-calculate-rems(48px)
+      hb-calculate-rems(16px) hb-calculate-rems(18px);
     text-decoration: none;
     border-bottom: $hb-thin-border;
     border-color: var(--palette--gray-medium);
@@ -133,7 +144,7 @@
             @include hb-icon-background('plus', 'black');
 
             /* stylelint-disable max-nesting-depth */
-            &[aria-expanded="true"] {
+            &[aria-expanded='true'] {
               @include hb-icon-background('minus', 'black');
             }
             /* stylelint-enable max-nesting-depth */
@@ -154,7 +165,7 @@
       + .hb-secondary-nav__button {
         @include hb-icon-background('plus', 'white');
 
-        &[aria-expanded="true"] {
+        &[aria-expanded='true'] {
           @include hb-icon-background('minus', 'white');
         }
       }
@@ -183,7 +194,7 @@
         + .hb-secondary-nav__button {
           @include hb-icon-background('plus', 'black');
 
-          &[aria-expanded="true"] {
+          &[aria-expanded='true'] {
             @include hb-icon-background('minus', 'black');
           }
         }
@@ -204,12 +215,12 @@
 
         // If there is no JS then the navigation is automatically expanded and
         // toggle buttons are unnecessary.
-        .no-js & {
+        html:not(.js) & {
           display: none;
         }
       }
 
-      &[aria-expanded="true"] {
+      &[aria-expanded='true'] {
         &::after {
           @include hb-menu-minus-icon;
         }
@@ -229,11 +240,11 @@
 
     // If there is no JS then the navigation is automatically expanded and
     // toggle buttons are unnecessary.
-    .no-js & {
+    html:not(.js) & {
       display: none;
     }
 
-    &[aria-expanded="true"] {
+    &[aria-expanded='true'] {
       @include hb-menu-minus-icon;
     }
   }

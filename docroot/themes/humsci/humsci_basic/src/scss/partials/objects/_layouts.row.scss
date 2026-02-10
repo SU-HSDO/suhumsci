@@ -1,3 +1,10 @@
+@use '../variables/general' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/layout' as *;
+@use '../mixins/breakpoints' as *;
+
 // Collection Paragraph Styles
 .hs-paragraph-style {
   &--well,
@@ -130,4 +137,21 @@
       }
     }
   }
+}
+
+// Special title spacing for collections with an accordion as first child.
+.paragraph--type--hs-collection
+  > h2:has(+ .field-hs-collection-items > .ptype-hs-accordion:first-child),
+.paragraph--type--hs-collection
+  > h2:has(
+    + .contextual + .field-hs-collection-items > .ptype-hs-accordion:first-child
+  ) {
+  margin-block-end: hb-calculate-rems(16px);
+}
+
+.paragraph--type--hs-collection:has(> h2)
+  .field-hs-collection-items
+  > .ptype-hs-accordion
+  details {
+  margin-top: 0;
 }

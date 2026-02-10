@@ -1,0 +1,34 @@
+uuid: b5121ee3-b0e6-445b-a2ba-e8400e29ce19
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_cmap_qtr.field_hs_cmap_qtr_crs
+    - field.field.paragraph.hs_cmap_qtr.field_hs_cmap_qtr_quarter
+    - paragraphs.paragraphs_type.hs_cmap_qtr
+  module:
+    - entity_reference_revisions
+    - options
+id: paragraph.hs_cmap_qtr.default
+targetEntityType: paragraph
+bundle: hs_cmap_qtr
+mode: default
+content:
+  field_hs_cmap_qtr_crs:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_hs_cmap_qtr_quarter:
+    type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

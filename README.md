@@ -11,20 +11,38 @@ Note the following properties of this project:
 * Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
 * Four Kitchens secondary release branch naming convention: `fk-stnfd-sprint-[SPRINT_NUMBER]`
 * Development branching convention: branch off the current release branch
-* Local environment: Lando or DrupalVM
+* Local environment: DDEV, Lando or bare metal LAMP
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
+## Documentation
 
-### Prerequisites
+- [Patching and patch management instructions](patches/README.md)
+- [Codeception Tests](docs/Codeception.md)
+- [Development Requirements](docs/DevelopmentRequirements.md)
+- [Release and Code Deployment Process](docs/CodeDeploy.md)
+- [Conding Standards](docs/CodingStandards.md)
+- [Configuration Management](docs/Config.md)
+- [Config & Content Update](docs/ConfigContentUpdate.md)
+- [Launch Process](docs/Launch.md)
+- [Provisioning a New Site](docs/NewSite.md)
+- [Decommissioning and Deleting a Site](docs/DeleteSite.md)
+- [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 
-Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
+> **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
 
-### Local setup and installation
-You can either run the site on Lando or bare metal.
+> **Note:** In addition to the documents listed here, there are various documentation and README files throughout the project (in subdirectories) that may be specific to certain features, modules, or workflows. Be sure to check those locations for more detailed or context-specific information.
 
-#### Setup on Lando
-[Follow the Lando instructions](lando/README.md).
+## Development Requirements
+
+See: [Development Requirements](docs/DevelopmentRequirements.md)
+
+## Local setup and installation
+You can either run the site on DDEV, Lando or bare metal.
+
+#### Setup on DDEV or Lando
+* [Follow the DDEV instructions](.ddev/DDEV-README.md).
+* [Follow the Lando legacy instructions](lando/README.md).
 
 #### Or setup on bare metal
 1. Clone the repository and check out the develop branch.
@@ -49,9 +67,6 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 Acceptance testing and user testing id done use a testing framework [Codeception](https://codeception.com/). There is
 very good documentation on codeception testing steps and how that is structured.
 
-#### Codeception on Lando
-[Run Codeception on Lando](lando/README.md#setup-for-local-codeception-testing)
-
 #### Codeception on bare metal
 To run those tests locally, `blt` will
 be the wrapper around the codeception commands.
@@ -68,23 +83,6 @@ be the wrapper around the codeception commands.
 ## Architecture Decision Records (ADRs)
 
 Architecture Decision Records (ADRs) are used to document important architectural decisions made in this project. The ADR process and format are explained in [0000-record-architecture-decisions.md](docs/architecture/decisions/0000-record-architecture-decisions.md). All new significant architectural decisions should be documented as a new ADR in the `docs/architecture/decisions/` directory.
-
-## Documentation
-
-- [Patching and patch management instructions](patches/README.md)
-- [Codeception Tests](docs/Codeception.md)
-- [Code Deployment Process](docs/CodeDeploy.md)
-- [Configuration Management](docs/Config.md)
-- [Config & Content Update](docs/ConfigContentUpdate.md)
-- [Humsci Basic PR Checklist](docs/HumsciBasicPRChecklist.md)
-- [Launch Process](docs/Launch.md)
-- [LetsEncrypt Certificate on Acquia Cloud](docs/LetsEncrypt.md)
-- [Provisioning a New Site](docs/NewSite.md)
-- [Patching Documentation](docs/patching.md)
-
-> **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
-
-> **Note:** In addition to the documents listed here, there are various documentation and README files throughout the project (in subdirectories) that may be specific to certain features, modules, or workflows. Be sure to check those locations for more detailed or context-specific information.
 
 ## Resources
 

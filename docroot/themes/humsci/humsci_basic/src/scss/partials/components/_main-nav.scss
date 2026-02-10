@@ -1,3 +1,12 @@
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/buttons' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/menu-icons' as *;
+
 // Note: In the event that there is no JS enabled we want to show the mobile
 // navigation, with all links being visible, at all screen sizes. The desktop
 // styles require two things: 1) larger screen widths and 2) JS to be enabled.
@@ -25,7 +34,7 @@ $item-line-height-lg: 110%;
 
     // If there is no JS then the navigation is automatically expanded and
     // toggle buttons are unnecessary.
-    .no-js & {
+    html:not(.js) & {
       display: none;
     }
 
@@ -50,7 +59,7 @@ $item-line-height-lg: 110%;
       }
     }
 
-    &[aria-expanded="true"] .hb-main-nav__toggle-icon {
+    &[aria-expanded='true'] .hb-main-nav__toggle-icon {
       @include hb-menu-close-icon;
     }
   }
@@ -64,7 +73,7 @@ $item-line-height-lg: 110%;
       max-width: none;
     }
 
-    &[aria-hidden="true"] {
+    &[aria-hidden='true'] {
       display: none;
     }
 
@@ -74,7 +83,7 @@ $item-line-height-lg: 110%;
       border-bottom: $hb-thin-border;
       border-color: var(--palette--gray);
 
-      &[aria-hidden="false"] {
+      &[aria-hidden='false'] {
         margin-bottom: hb-calculate-rems(28px);
       }
 
@@ -90,7 +99,7 @@ $item-line-height-lg: 110%;
           align-items: flex-end;
           border: 0;
 
-          &[aria-hidden="false"] {
+          &[aria-hidden='false'] {
             margin: 0;
           }
         }
@@ -106,7 +115,7 @@ $item-line-height-lg: 110%;
       }
 
       @include grid-media-min('lg') {
-        box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 2px 16px 0 rgb(0 0 0 / 10%) !important;
 
         .js & {
           font-weight: hb-theme-font-weight(semibold);
@@ -178,11 +187,13 @@ $item-line-height-lg: 110%;
     }
 
     .hb-main-nav__item.hb-main-nav__item--parent > & {
-      padding: hb-calculate-rems(21px) hb-calculate-rems(48px) hb-calculate-rems(21px) hb-calculate-rems(17px);
+      padding: hb-calculate-rems(21px) hb-calculate-rems(48px)
+        hb-calculate-rems(21px) hb-calculate-rems(17px);
 
       @include grid-media-min('lg') {
         .js & {
-          padding: hb-calculate-rems(10px) hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+          padding: hb-calculate-rems(10px) hb-calculate-rems(20px)
+            hb-calculate-rems(20px) 0;
         }
       }
     }
@@ -198,15 +209,15 @@ $item-line-height-lg: 110%;
           @include hb-icon-background('plus', 'black');
         }
 
-        & + .hb-main-nav__button[aria-expanded="true"],
-        &.hb-nested-toggler[aria-expanded="true"]::after {
+        & + .hb-main-nav__button[aria-expanded='true'],
+        &.hb-nested-toggler[aria-expanded='true']::after {
           @include hb-icon-background('minus', 'black');
         }
 
         @include grid-media-min('lg') {
           color: var(--palette--white);
 
-          .no-js & {
+          html:not(.js) & {
             color: var(--palette--black);
           }
 
@@ -215,8 +226,8 @@ $item-line-height-lg: 110%;
             @include hb-icon-background('chevron', 'white');
           }
 
-          & + .hb-main-nav__button[aria-expanded="true"],
-          &.hb-nested-toggler[aria-expanded="true"]::after {
+          & + .hb-main-nav__button[aria-expanded='true'],
+          &.hb-nested-toggler[aria-expanded='true']::after {
             @include hb-icon-background('chevron', 'white');
           }
         }
@@ -328,8 +339,8 @@ $item-line-height-lg: 110%;
             @include hb-icon-background('plus', 'black');
           }
 
-          & + .hb-nested-toggler[aria-expanded="true"],
-          &[aria-expanded="true"]::after {
+          & + .hb-nested-toggler[aria-expanded='true'],
+          &[aria-expanded='true']::after {
             @include hb-icon-background('minus', 'black');
           }
         }
@@ -358,7 +369,7 @@ $item-line-height-lg: 110%;
         }
 
         @include grid-media-min('lg') {
-          .no-js & {
+          html:not(.js) & {
             color: var(--palette--white);
           }
 
@@ -380,7 +391,7 @@ $item-line-height-lg: 110%;
     }
 
     &--active-trail,
-    &[data-drupal-link-system-path="<front>"].is-active {
+    &[data-drupal-link-system-path='<front>'].is-active {
       &::before {
         content: '';
         display: block;
@@ -416,7 +427,8 @@ $item-line-height-lg: 110%;
       }
 
       @include grid-media-min('lg') {
-        padding: hb-calculate-rems(10px) hb-calculate-rems(20px) hb-calculate-rems(20px) 0;
+        padding: hb-calculate-rems(10px) hb-calculate-rems(20px)
+          hb-calculate-rems(20px) 0;
         width: auto;
 
         .js & {
@@ -436,7 +448,7 @@ $item-line-height-lg: 110%;
 
         // If there is no JS then the navigation is automatically expanded and
         // toggle buttons are unnecessary.
-        .no-js & {
+        html:not(.js) & {
           display: none;
         }
 
@@ -466,7 +478,7 @@ $item-line-height-lg: 110%;
       // The minus and arrow up icons representing the expanded state of a nav item
       // should only apply when item has the .hb-main-nav__item--parent class.
       // This class is only added when there are children in the nested toggler.
-      .hb-main-nav__item--parent &[aria-expanded="true"]::after {
+      .hb-main-nav__item--parent &[aria-expanded='true']::after {
         @include hb-menu-minus-icon;
 
         .hb-dark-pattern & {
@@ -498,7 +510,7 @@ $item-line-height-lg: 110%;
 
     // If there is no JS then the navigation is automatically expanded and
     // toggle buttons are unnecessary.
-    .no-js & {
+    html:not(.js) & {
       display: none;
     }
 
@@ -533,7 +545,7 @@ $item-line-height-lg: 110%;
       }
     }
 
-    &[aria-expanded="true"] {
+    &[aria-expanded='true'] {
       @include hb-menu-minus-icon;
 
       .hb-dark-pattern & {
@@ -562,7 +574,7 @@ $item-line-height-lg: 110%;
     border-top: $hb-thin-border;
     border-color: var(--palette--gray);
 
-    &[aria-hidden="true"] {
+    &[aria-hidden='true'] {
       display: none;
     }
 

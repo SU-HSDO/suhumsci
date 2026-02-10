@@ -2,17 +2,26 @@
 // the necessary styles for the WYSIWYG. In this file we import all
 // the dependencies and the files we need. See _main.scss and
 // _base.scss for reference.
+
 @use 'sass:map';
+@use '../variables/colorful-pairings' as *;
+@use '../variables/traditional-pairings' as *;
+@use '../variables/fonts' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/buttons' as *;
+@use '../mixins/tables' as *;
+@use '../mixins/text' as *;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
-@import
-  '../base-imports',
-  '../fonts/fonts',
-  '../base/color-pairings',
-  '../utilities/utilities',
-  // CKEditor UI customizations.
-  'ckeditor-ui';
+@use '../fonts/fonts';
+@use '../base/color-pairings';
+@use '../utilities/utilities';
+
+// CKEditor UI customizations.
+@use 'ckeditor-ui';
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
@@ -22,6 +31,7 @@
     {
       --palette--#{$color}: #{$value};
     }
+
     @each $color, $value in $hc-colorful-globals {
       --palette--#{$color}: #{$value};
     }
@@ -33,6 +43,7 @@
     {
       --palette--#{$color}: #{$value};
     }
+
     @each $color, $value in $ht-traditional-globals {
       --palette--#{$color}: #{$value};
     }
@@ -66,7 +77,7 @@
     aspect-ratio: 16/9;
   }
 
-  .drupal-media,
+  .drupal-media:not(:has(article.hb-media-image)),
   .field-media-oembed-video,
   .media-oembed-content {
     width: 100%;
@@ -102,7 +113,7 @@
 
   .hs-font-splash {
     @include grid-media-min('md') {
-      margin: 48px 0 16px;
+      margin-block: 48px 16px;
     }
 
     @include hb-themes(('colorful', 'airy')) {

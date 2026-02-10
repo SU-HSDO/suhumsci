@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# DDEV command for setting up a fresh test environment using BLT (like GitHub)
+# This mimics the CI environment exactly using BLT commands
+# Usage: ddev setup-tests
+
+set -e
+
+echo "🧪 Setting up fresh test environment using BLT..."
+
+# Create a fresh database
+DB_NAME="drupal_default"
+echo "🗄️  Creating fresh database: $DB_NAME"
+
+mysql -h db -u root -proot -e "DROP DATABASE IF EXISTS $DB_NAME; CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'db'@'%'; FLUSH PRIVILEGES;"
+
+echo "✅ Database created successfully"
+
+# Clear any existing settings and localhost directory
+echo "🧹 Clearing existing settings..."
+sudo rm -f docroot/sites/default/settings.php
+sudo rm -f docroot/sites/default/settings/local.settings.php
+sudo rm -f docroot/sites/default/settings.local.php
+sudo rm -rf docroot/sites/localhost/
+
+# Temporarily move local BLT config
+echo "🔧 Temporarily moving local BLT config..."
+if [ -f "blt/local.blt.yml" ]; then
+    mv blt/local.blt.yml blt/local.blt.yml.backup
+    echo "✅ Moved blt/local.blt.yml to blt/local.blt.yml.backup"
+fi
+
+# Temporarily modify CI config for DDEV networking
+echo "🔧 Temporarily modifying CI config for DDEV..."
+if [ -f "blt/ci.blt.yml" ]; then
+    cp blt/ci.blt.yml blt/ci.blt.yml.backup
+    sed -i 's/host: mysql/host: db/g' blt/ci.blt.yml
+    sed -i 's/username: drupal/username: db/g' blt/ci.blt.yml
+    sed -i 's/password: drupal/password: db/g' blt/ci.blt.yml
+    sed -i 's/database: drupal/database: drupal_default/g' blt/ci.blt.yml
+    echo "✅ Modified blt/ci.blt.yml for DDEV networking"
+fi
+
+# Generate settings using BLT with CI environment
+echo "⚙️  Generating settings files with BLT..."
+vendor/bin/blt blt:telemetry:disable --no-interaction
+vendor/bin/blt settings --environment=ci
+
+# Create files directory and set permissions (like GitHub does)
+echo "📁 Creating files directory..."
+mkdir -p docroot/sites/default/files
+chmod -R 777 docroot/sites/default/files/
+
+# Install Drupal using BLT with CI environment
+echo "🚀 Installing Drupal with su_humsci_profile using BLT..."
+vendor/bin/blt drupal:install -n --environment=ci
+
+echo "✅ Fresh Drupal installation complete"
+
+# Compile theme assets (like GitHub Actions does)
+echo "🎨 Compiling theme assets..."
+cd docroot/themes/humsci/humsci_basic
+if [ -f "package.json" ]; then
+    npm install --silent
+    npm run build --silent
+    echo "✅ Theme assets compiled successfully"
+else
+    echo "⚠️  No package.json found in theme directory"
+fi
+cd /var/www/html
+
+# Setup Codeception configuration
+echo "⚙️  Setting up Codeception configuration..."
+cp .ddev/default.codeception.yml tests/codeception.yml
+
+echo "✅ Codeception configuration updated to match CI"
+
+
+
+# Restore local BLT config
+echo "🔧 Restoring local BLT config..."
+if [ -f "blt/local.blt.yml.backup" ]; then
+    mv blt/local.blt.yml.backup blt/local.blt.yml
+    echo "✅ Restored blt/local.blt.yml"
+fi
+
+# Restore CI BLT config
+echo "🔧 Restoring CI BLT config..."
+if [ -f "blt/ci.blt.yml.backup" ]; then
+    mv blt/ci.blt.yml.backup blt/ci.blt.yml
+    echo "✅ Restored blt/ci.blt.yml"
+fi
+
+echo "🎉 Test environment setup complete!"
+echo ""
+echo "The fresh test environment is now ready with:"
+echo "- Fresh Drupal installation in sites/default"
+echo "- Database: $DB_NAME"
+echo "- Theme assets compiled"
+echo "- Codeception configured for localhost"
+echo ""
+echo "To run tests using BLT:"
+echo "  ddev blt codeception --group=install --suite=acceptance"
+echo "  ddev blt codeception --group=install --suite=functional"
+echo ""
+echo "Or using the direct commands:"
+echo "  ddev codeception run acceptance --group=install"
+echo "  ddev codeception run functional --group=install"

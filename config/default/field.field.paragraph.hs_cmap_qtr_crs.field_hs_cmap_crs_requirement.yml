@@ -1,0 +1,29 @@
+uuid: 3b47c738-7de0-4b6f-aa49-ed1c6ac7d499
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_hs_cmap_crs_requirement
+    - paragraphs.paragraphs_type.hs_cmap_qtr_crs
+    - taxonomy.vocabulary.hs_curriculum_requirement_type
+id: paragraph.hs_cmap_qtr_crs.field_hs_cmap_crs_requirement
+field_name: field_hs_cmap_crs_requirement
+entity_type: paragraph
+bundle: hs_cmap_qtr_crs
+label: 'Requirement Type'
+description: 'Site Managers can add/edit <a href="/admin/structure/taxonomy/manage/hs_curriculum_requirement_type/overview" target="_blank">requirement types</a>.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      hs_curriculum_requirement_type: hs_curriculum_requirement_type
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

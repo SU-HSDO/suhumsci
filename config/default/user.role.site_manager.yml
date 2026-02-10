@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - block_content.type.hs_basic_block
     - dashboard.dashboard.main_dashboard
     - entityqueue.entity_queue.hs_person
     - filter.format.basic_html
@@ -24,6 +25,7 @@ dependencies:
     - node.type.hs_research
     - taxonomy.vocabulary.hs_course_component
     - taxonomy.vocabulary.hs_course_tags
+    - taxonomy.vocabulary.hs_curriculum_requirement_type
     - taxonomy.vocabulary.hs_event_audience
     - taxonomy.vocabulary.hs_event_category
     - taxonomy.vocabulary.hs_event_status
@@ -37,7 +39,7 @@ dependencies:
     - taxonomy.vocabulary.hs_project_category
     - taxonomy.vocabulary.hs_publication_type
   module:
-    - block_content_permissions
+    - block_content
     - content_access_simple
     - contextual
     - dashboard
@@ -108,6 +110,7 @@ permissions:
   - 'create media'
   - 'create terms in hs_course_component'
   - 'create terms in hs_course_tags'
+  - 'create terms in hs_curriculum_requirement_type'
   - 'create terms in hs_event_audience'
   - 'create terms in hs_event_category'
   - 'create terms in hs_event_status'
@@ -148,8 +151,10 @@ permissions:
   - 'delete own hs_research content'
   - 'delete own image media'
   - 'delete own video media'
+  - 'delete term revisions in hs_curriculum_requirement_type'
   - 'delete terms in hs_course_component'
   - 'delete terms in hs_course_tags'
+  - 'delete terms in hs_curriculum_requirement_type'
   - 'delete terms in hs_event_audience'
   - 'delete terms in hs_event_category'
   - 'delete terms in hs_event_status'
@@ -164,6 +169,7 @@ permissions:
   - 'delete terms in hs_publication_type'
   - 'dropzone upload files'
   - 'edit any file media'
+  - 'edit any hs_basic_block block content'
   - 'edit any hs_basic_page content'
   - 'edit any hs_course content'
   - 'edit any hs_event content'
@@ -194,6 +200,7 @@ permissions:
   - 'edit social media block'
   - 'edit terms in hs_course_component'
   - 'edit terms in hs_course_tags'
+  - 'edit terms in hs_curriculum_requirement_type'
   - 'edit terms in hs_event_audience'
   - 'edit terms in hs_event_category'
   - 'edit terms in hs_event_status'
@@ -227,9 +234,9 @@ permissions:
   - 'revert hs_project revisions'
   - 'revert hs_publications revisions'
   - 'revert hs_research revisions'
+  - 'revert term revisions in hs_curriculum_requirement_type'
   - 'unpublish any content'
   - 'unpublish editable content'
-  - 'update any hs_basic_block block content'
   - 'update any media'
   - 'update hs_person entityqueue'
   - 'update media'
@@ -253,6 +260,6 @@ permissions:
   - 'view main_dashboard dashboard'
   - 'view own unpublished content'
   - 'view own unpublished media'
-  - 'view restricted block content'
+  - 'view term revisions in hs_curriculum_requirement_type'
   - 'view the administration theme'
   - 'view user list'

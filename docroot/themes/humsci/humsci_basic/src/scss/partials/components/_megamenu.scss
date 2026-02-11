@@ -12,6 +12,7 @@
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/general' as *;
@@ -27,11 +28,11 @@ $nested-padding: hb-calculate-rems(22px);
 // V1 menu and deprecated megamenu, we recreate styles here.
 // We also need to repeat styles due to the shared class name.
 @mixin hb-menu-color-pairing-l2 {
-  color: var(--palette--tertiary);
+  color: color('tertiary');
 
   &:hover:not(.is-active),
   &:focus {
-    color: var(--palette--tertiary-darken-20);
+    color: color('tertiary-darken-20');
   }
 }
 
@@ -84,7 +85,7 @@ $hb-link-bar-button: calc(100% + #{hb-calculate-rems(16px)});
 $hb-link-bar-link: 100%;
 
 @mixin hb-link-bar($width: $hb-link-bar-link) {
-  background-color: var(--palette--secondary);
+  background-color: color('secondary');
 
   content: '';
   display: block;
@@ -100,7 +101,7 @@ $hb-link-bar-link: 100%;
 }
 
 @mixin hb-active-border {
-  border-color: var(--palette--secondary);
+  border-color: color('secondary');
 
   border-width: hb-calculate-rems(6px);
   border-style: solid;
@@ -162,7 +163,7 @@ $hb-link-bar-link: 100%;
     .hb-dark-pattern &,
     .hb-dark-pattern &::after,
     .hb-dark-pattern &::before {
-      background-color: var(--palette--white);
+      background-color: color('white', 'global');
     }
   }
 
@@ -183,7 +184,7 @@ $hb-link-bar-link: 100%;
     // You must include the mixin after the variable if
     // you want the color to apply.
     border-bottom: $hb-medium-border;
-    border-color: var(--palette--gray);
+    border-color: color('gray', 'global');
 
     display: none;
     margin-bottom: hb-calculate-rems(28px);
@@ -222,7 +223,7 @@ $hb-link-bar-link: 100%;
 
   .megamenu__item {
     border-top: $hb-medium-border;
-    border-color: var(--palette--gray);
+    border-color: color('gray', 'global');
 
     .hb-private-page-link {
       @include hb-lock-props;
@@ -271,14 +272,14 @@ $hb-link-bar-link: 100%;
     }
 
     &:hover {
-      color: var(--palette--black);
+      color: color('black', 'global');
 
       @include hb-themes(('airy', 'colorful')) {
-        background-color: var(--palette--gray-light);
+        background-color: color('gray-light', 'global');
       }
 
       @include hb-traditional {
-        background-color: var(--palette--tertiary-highlight);
+        background-color: color('tertiary-highlight');
       }
 
       @include grid-media-min('lg') {
@@ -288,7 +289,7 @@ $hb-link-bar-link: 100%;
 
         .hb-dark-pattern & {
           .js & {
-            color: var(--palette--white);
+            color: color('white', 'global');
           }
         }
       }
@@ -469,7 +470,7 @@ $hb-link-bar-link: 100%;
       @include hb-active-border;
 
       &:not(:has(+ .megamenu__list .megamenu__is-active)) {
-        background-color: var(--palette--gray-light);
+        background-color: color('gray-light', 'global');
 
         @include grid-media-min('lg') {
           background: none;
@@ -479,7 +480,7 @@ $hb-link-bar-link: 100%;
   }
 
   .megamenu__is-active {
-    background-color: var(--palette--gray-light);
+    background-color: color('gray-light', 'global');
 
     @include grid-media-min('lg') {
       background: none;
@@ -503,13 +504,13 @@ $hb-link-bar-link: 100%;
       display: block;
 
       .js & {
-        background-color: var(--palette--white);
+        background-color: color('white', 'global');
 
         position: absolute;
         padding: hb-calculate-rems(44px) 0 hb-calculate-rems(89px);
         left: 50%;
         width: 200%;
-        color: var(--palette--black);
+        color: color('black', 'global');
         box-shadow: 0 hb-calculate-rems(10px) hb-calculate-rems(19px)
           rgb(0 0 0 / 63%);
         opacity: 0;
@@ -527,14 +528,14 @@ $hb-link-bar-link: 100%;
   }
 
   .list-sub {
-    color: var(--palette--gray-dark);
+    color: color('gray-dark', 'global');
 
     padding-left: hb-calculate-rems(16px);
     font-size: hb-calculate-rems(16px);
     font-weight: hb-theme-font-weight(semibold);
 
     .hb-dark-pattern & {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
 
     @include grid-media-min('md') {
@@ -543,7 +544,7 @@ $hb-link-bar-link: 100%;
 
     @include grid-media-min('lg') {
       .js & {
-        color: var(--palette--black);
+        color: color('black', 'global');
 
         display: flex;
         gap: 0 hb-calculate-rems(52px);
@@ -561,7 +562,7 @@ $hb-link-bar-link: 100%;
           &:hover {
             .js & {
               &::after {
-                background-color: var(--palette--gray-light);
+                background-color: color('gray-light', 'global');
 
                 content: '';
                 position: absolute;
@@ -579,7 +580,7 @@ $hb-link-bar-link: 100%;
 
     .megamenu__item {
       border-top: $hb-thin-border;
-      border-color: var(--palette--gray);
+      border-color: color('gray', 'global');
 
       display: block;
       width: 100%;
@@ -602,7 +603,7 @@ $hb-link-bar-link: 100%;
         @include grid-media-min('lg') {
           .js & {
             border-top: $hb-medium-border;
-            border-color: var(--palette--gray-medium);
+            border-color: color('gray-medium', 'global');
 
             margin-top: hb-calculate-rems(12px);
             padding-top: hb-calculate-rems(16px);
@@ -622,7 +623,7 @@ $hb-link-bar-link: 100%;
       &:hover {
         @include grid-media-min('lg') {
           .js & {
-            background-color: var(--palette--gray-light);
+            background-color: color('gray-light', 'global');
 
             &::before {
               display: none;
@@ -651,10 +652,10 @@ $hb-link-bar-link: 100%;
     }
 
     .megamenu__item .megamenu__no-link {
-      color: var(--palette--tertiary);
+      color: color('tertiary');
 
       &:hover {
-        color: var(--palette--tertiary);
+        color: color('tertiary');
 
         background: none;
 
@@ -681,7 +682,7 @@ $hb-link-bar-link: 100%;
         @include grid-media-min('lg') {
           .js & {
             &:hover {
-              color: var(--palette--black);
+              color: color('black', 'global');
             }
           }
         }

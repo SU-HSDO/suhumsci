@@ -1,27 +1,28 @@
 @use 'sass:meta';
 @use '../variables/theme' as *;
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
 @use '../variables/fonts' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
 
 // Font definitions.
 @use '../fonts/fonts';
 
 .paragraph-admin-preview {
+  @include generate-css-vars('su-core', $su-core-colors);
+
   @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in $hc-colorful-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
-    @each $color, $value in $ht-traditional-globals {
-      --palette--#{$color}: #{$value};
-    }
+   @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
   // Load main stylesheet with current theme.
@@ -39,8 +40,8 @@
 
   // Link current color variables.
   .paragraph-item {
-    --link-base-current-color: var(--palette--link-base-color);
-    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+    --link-base-current-color: #{color('link-base')};
+    --link-base-hover-current-color: #{color('link-base-hover')};
   }
 
   // Style fixes for specific elements.
@@ -113,6 +114,11 @@
 
   .field-hs-postcard-link a {
     color: transparent;
+
+    &:hover,
+    &:focus {
+      color: transparent;
+    }
   }
 
   .hb-timeline-item {
@@ -171,19 +177,8 @@
   }
 
   .hb-vertical-linked-card__title__link.ext {
-    --link-base-current-color: var(--palette--white);
-    --link-base-hover-current-color: var(--palette--white);
-  }
-}
-
-.hb-raised-cards--uniform-height
-  .field-hs-collection-items
-  .ptype-hs-postcard
-  .paragraph-admin-preview {
-  display: flex;
-
-  & div:only-child:not(.hb-card__date-tile, .hb-pill) {
-    width: 100%;
+    --link-base-current-color: #{color('white', 'global')};
+    --link-base-hover-current-color: #{color('white', 'global')};
   }
 
   // Vertical Linked cards.
@@ -203,5 +198,16 @@
         background-color: var(--palette--secondary);
       }
     }
+  }
+}
+
+.hb-raised-cards--uniform-height
+  .field-hs-collection-items
+  .ptype-hs-postcard
+  .paragraph-admin-preview {
+  display: flex;
+
+  & div:only-child:not(.hb-card__date-tile, .hb-pill) {
+    width: 100%;
   }
 }

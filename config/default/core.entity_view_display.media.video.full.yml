@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.media.full
     - field.field.media.video.field_media_oembed_video
+    - field.field.media.video.field_poster_image_override
     - media.type.video
     - responsive_image.styles.full_responsive
   module:
@@ -32,6 +33,23 @@ content:
       hs_field_helpers:
         inline_contents: 0
     weight: 0
+    region: content
+  field_poster_image_override:
+    type: responsive_image
+    label: hidden
+    settings:
+      responsive_image_style: full_responsive
+      image_link: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 2
     region: content
   thumbnail:
     type: responsive_image

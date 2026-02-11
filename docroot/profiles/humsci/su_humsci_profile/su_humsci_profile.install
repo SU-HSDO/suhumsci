@@ -1108,9 +1108,16 @@ function su_humsci_profile_update_9753() {
 }
 
 /**
- * Add field_poster_image_override to the media video form display.
+ * Install the purge_users module.
  */
 function su_humsci_profile_update_9754() {
+  \Drupal::service('module_installer')->install(['purge_users']);
+}
+
+/**
+ * Add field_poster_image_override to the media video form display.
+ */
+function su_humsci_profile_update_9755() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\field\FieldConfigInterface $field_config_storage */

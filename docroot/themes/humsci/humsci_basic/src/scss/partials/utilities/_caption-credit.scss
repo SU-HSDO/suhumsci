@@ -73,13 +73,8 @@
     }
 
     &.collapsible-caption {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: auto;
-      text-align: left;
-      background: none;
       padding: 0 hb-calculate-rems(6px) hb-calculate-rems(6px);
+      min-height: hb-calculate-rems(44px);
 
       .toggle-caption__toggle {
         display: block;
@@ -99,18 +94,22 @@
         }
       }
 
-      .toggle-caption__toggle.is-open {
-        background-color: var(--palette--black);
-        width: hb-calculate-rems(18px);
-        height: hb-calculate-rems(22px);
+      &.is-open {
+        background: linear-gradient(
+          to top, rgba(0, 0, 0, 0.7) 0%,
+          rgba(0, 0, 0, 0.6) 70%,
+          rgba(0, 0, 0, 0) 100%
+        );
+      }
 
+      .toggle-caption__toggle.is-open {
         &::before {
           @include hb-icon-background('close', 'white');
 
           content: '';
           display: block;
-          width: 100%;
-          height: 100%;
+          width: hb-calculate-rems(18px);
+          height: hb-calculate-rems(22px);
           background-size: hb-calculate-rems(14px) hb-calculate-rems(14px);
           background-repeat: no-repeat;
           background-position: center;
@@ -119,7 +118,6 @@
 
       .toggle-caption__content {
         position: relative;
-        background-color: var(--palette--black);
         padding: hb-calculate-rems(2px) hb-calculate-rems(4px);
       }
     }

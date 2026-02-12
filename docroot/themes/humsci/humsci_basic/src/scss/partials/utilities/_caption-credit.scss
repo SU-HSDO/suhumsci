@@ -6,7 +6,9 @@
 @use '../mixins/text' as *;
 @use '../mixins/icons' as *;
 
-.hb-media-image {
+.hb-media-image,
+.hb-caption-credit-image,
+.media--type-image {
   .field-media-image-caption {
     @include hb-caption-credit;
 
@@ -146,7 +148,7 @@
 
 // Caption/credit styles for images placed within the body section text area on node detail pages and for WYSIWYG (text area) images
 .node {
-  figure {
+  .hb-caption-credit-image {
     position: relative;
     z-index: $hb-z-index-figure;
     box-sizing: border-box;
@@ -159,10 +161,10 @@
       margin-bottom: hb-spacing-width('xs');
     }
 
-    article:not(.hb-media-video):not(.hb-media-embed) {
+    figure:not(.hb-media-video):not(.hb-media-embed) {
       position: relative;
 
-      + figcaption {
+      + .field-media-image-caption {
         @include hb-caption-credit;
       }
     }

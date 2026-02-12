@@ -1,0 +1,17 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/functions/icons' as icons;
+
+@include describe('Icon Functions') {
+  @include describe('hc-get-icons() function') {
+    @include it('returns a plus icon SVG string with the provided color.') {
+      $test: icons.hc-get-icons('plus', '#123456');
+      $expect: '<svg viewBox="0 0 18 18"><g stroke-width="2" stroke="#123456" stroke-linecap="round"><path d="M1,9 17,9" /><path d="M9,1 9,17" /></g></svg>';
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'The plus icon SVG does not match the expected output.'
+      );
+    }
+  }
+}

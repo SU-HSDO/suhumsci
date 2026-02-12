@@ -1147,11 +1147,11 @@ function su_humsci_profile_update_9755() {
   $entity_type_manager = \Drupal::entityTypeManager();
 
   // Add field to the media video form display.
-  $form_display = $entity_type_manager
+  $form_displays = $entity_type_manager
     ->getStorage('entity_form_display')
-    ->load('media.video.default');
+    ->loadMultiple(['media.video.default', 'media.video.media_library']);
 
-  if ($form_display) {
+  foreach ($form_displays as $form_display) {
     $weight = max(array_column($form_display->getComponents(), 'weight') ?: [0]);
 
     $form_display->setComponent('field_poster_image_override', [

@@ -127,18 +127,13 @@
 }
 
 // Refine caption/credit styles for vertical linked postcards
-.hb-vertical-linked-card {
+.hb-vertical-linked-card:has(.hb-vertical-linked-card__title) {
   .hb-media-image {
     .field-media-image-caption {
       @include hb-themes(('airy', 'colorful')) {
-        @include grid-media-min('xs') {
-          font-size: hb-calculate-rems(12px);
-        }
-
         @include grid-media-min('sm') {
           padding-bottom: hb-calculate-rems(36px);
           padding-left: hb-calculate-rems(12px);
-          font-size: hb-calculate-rems(11px);
           z-index: 0;
         }
       }
@@ -148,7 +143,7 @@
 
 // Caption/credit styles for images placed within the body section text area on node detail pages and for WYSIWYG (text area) images
 .node {
-  .hb-caption-credit-image {
+  .hb-caption-credit-image:not(.hb-media-image) {
     position: relative;
     z-index: $hb-z-index-figure;
     box-sizing: border-box;

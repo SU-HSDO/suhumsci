@@ -1,0 +1,48 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/mixins/general' as g;
+
+@include describe('General Mixins') {
+  @include describe('visually-hidden() mixin') {
+    @include it('hides content visually by default.') {
+      @include assert {
+        @include output {
+          .hb-test-hidden {
+            @include g.visually-hidden;
+          }
+        }
+
+        @include contains {
+          .hb-test-hidden {
+            position: absolute;
+            clip-path: rect(1px, 1px, 1px, 1px);
+            padding: 0;
+            border: 0;
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+
+    @include it('restores visibility when disabled.') {
+      @include assert {
+        @include output {
+          .hb-test-visible {
+            @include g.visually-hidden('disable');
+          }
+        }
+
+        @include contains {
+          .hb-test-visible {
+            position: static;
+            clip-path: auto;
+            height: auto;
+            width: auto;
+            overflow: visible;
+          }
+        }
+      }
+    }
+  }
+}

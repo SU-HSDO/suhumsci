@@ -1,0 +1,28 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/mixins/generate-css-vars' as g;
+
+@include describe('Generate CSS Vars Mixin') {
+  @include it('outputs variables for flat and nested maps.') {
+    $test-map: (
+      'alpha': #fff,
+      'beta': (
+        'gamma': #000,
+      ),
+    );
+
+    @include assert {
+      @include output(false) {
+        .hb-test-vars {
+          @include g.generate-css-vars('test', $test-map);
+        }
+      }
+
+      @include contains(false) {
+        .hb-test-vars {
+          --color--test--alpha: #fff;
+          --color--test--gamma: #000;
+        }
+      }
+    }
+  }
+}

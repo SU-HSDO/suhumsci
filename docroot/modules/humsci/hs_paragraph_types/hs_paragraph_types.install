@@ -678,12 +678,12 @@ function hs_paragraph_types_update_10018() {
 }
 
 /**
- * Set default value for new heading level field in existing accordions.
+ * Set a default value for the field_bg_color_width field on existing Spotlight Slider.
  */
 function hs_paragraph_types_update_10019(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
   if (empty($sandbox['ids'])) {
-    // Get list of accordion paragraphs.
+    // Get list of Spotlight Slider paragraphs.
     $sandbox['ids'] = $paragraph_storage->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', ['hs_sptlght_slder'], 'IN')
@@ -693,7 +693,7 @@ function hs_paragraph_types_update_10019(&$sandbox) {
 
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
-  // Set new field default for existing accordions paragraphs.
+  // Set new field default for existing Spotlight Slider paragraphs.
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
     if (!$paragraph->hasField('field_bg_color_width')) {

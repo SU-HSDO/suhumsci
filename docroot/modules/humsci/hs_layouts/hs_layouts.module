@@ -176,9 +176,9 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
     $variables['attributes']->addClass(Html::cleanCssIdentifier($bgValue));
   }
 
-  $spotlight_type = NULL;
-  if ($paragraph->hasField('field_spotlight_style')) {
-    $spotlight_type = $paragraph->get('field_spotlight_style')->isEmpty() ? 'classic' : $paragraph->get('field_spotlight_style')->getString();
+  $spotlight_type = 'classic';
+  if ($paragraph->hasField('field_spotlight_style') && !$paragraph->get('field_spotlight_style')->isEmpty()) {
+    $spotlight_type = $paragraph->get('field_spotlight_style')->getString();
   }
 
   $image_style = $context->getProperty('view_mode') == 'default' ? 'tall' : 'short';

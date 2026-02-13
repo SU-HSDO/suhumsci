@@ -1,5 +1,6 @@
 @use '../variables/general' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/general' as *;
@@ -16,21 +17,21 @@ $container-small: 576px;
 .hb-spotlight {
   container-name: spotlight;
   container-type: inline-size;
-  background-color: var(--palette--spotlight);
+  background-color: color('spotlight');
 
   @include grid-media-min('md') {
     margin: hb-spacing-width() 0;
   }
 
   &--background-gray {
-    background-color: var(--palette--gray-medium);
+    background-color: color('gray-medium', 'global');
   }
 
   // Add a unique background-color for Lake on Colorful.
   // Note this is an extraordinary use case.
   // Targeting styles per color pairing should not become standard practice.
   .hc-pairing-lake & {
-    background-color: var(--palette--secondary-highlight);
+    background-color: color('secondary-highlight');
   }
 }
 

@@ -1,9 +1,8 @@
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
 @use '../variables/general' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use '../mixins/general' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/theme' as *;
@@ -62,7 +61,7 @@
 
     // date stacked vertical UI pattern item
     &-item {
-      color: var(--palette--gray-dark);
+      color: color('gray-dark', 'global');
       font-size: hb-calculate-rems(16px);
 
       @include grid-media-min('sm') {
@@ -83,7 +82,7 @@
           content: '';
           margin: 0 hb-calculate-rems(8px);
           border-left: $hb-thin-border;
-          border-color: var(--palette--gray-dark);
+          border-color: color('gray-dark', 'global');
 
           // from grid--col 3 and above we won't display pipes
           .hb-grid--cols-10 &,
@@ -101,7 +100,7 @@
 
           .hb-dark-pattern &,
           .hb-dark-inversion .views-element-container & {
-            border-color: var(--palette--white);
+            border-color: color('white', 'global');
           }
         }
       }
@@ -210,7 +209,7 @@
   }
 
   &__location {
-    color: var(--palette--gray-dark);
+    color: color('gray-dark', 'global');
     font-size: hb-calculate-rems(14px);
     margin-bottom: hb-spacing-width('xxs');
 
@@ -220,7 +219,7 @@
   }
 
   &__highlighted {
-    color: var(--palette--gray-dark);
+    color: color('gray-dark', 'global');
 
     @include hb-themes(('colorful', 'airy')) {
       font-size: hb-calculate-rems(14px);
@@ -337,8 +336,8 @@
       justify-content: center;
       width: hb-calculate-rems(110px);
       height: hb-calculate-rems(110px);
-      background-color: var(--palette--secondary);
-      color: var(--palette--white);
+      background-color: color('secondary');
+      color: color('white', 'global');
       padding: hb-calculate-rems(12px) hb-calculate-rems(10px)
         hb-calculate-rems(8px);
       bottom: hb-calculate-rems(18px);
@@ -354,7 +353,7 @@
     @include hb-traditional {
       display: inline-block;
       min-width: hb-calculate-rems(100px);
-      background-color: var(--palette--white);
+      background-color: color('white', 'global');
       padding: 0;
       top: 0;
       left: 0;
@@ -362,7 +361,7 @@
 
     @include hb-colorful {
       .hc-pairing-ocean & {
-        background-color: var(--palette--secondary-darken-12);
+        background-color: color('secondary-darken-12');
       }
     }
 
@@ -383,8 +382,8 @@
     }
 
     @include hb-traditional {
-      background-color: var(--palette--primary);
-      color: var(--palette--white);
+      background-color: color('primary');
+      color: color('white', 'global');
       font-size: hb-calculate-rems(14px);
       padding: hb-calculate-rems(10px);
       width: 100%;
@@ -402,15 +401,15 @@
     @include hb-traditional {
       border: $hb-thin-border;
       border-top-width: 0;
-      border-color: var(--palette--gray-medium);
-      color: var(--palette--primary);
+      border-color: color('gray-medium', 'global');
+      color: color('primary');
       font-size: hb-calculate-rems(36px);
       padding: hb-calculate-rems(10px) 0;
 
       .views-element-container .hb-dark-pattern & .field-content,
       .hb-dark-inversion .views-element-container & .field-content {
         @include hb-traditional {
-          color: var(--palette--primary);
+          color: color('primary');
         }
       }
     }

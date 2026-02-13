@@ -2,6 +2,7 @@
 
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/swiper' as *;
@@ -43,11 +44,11 @@
       inset: calc(100% - 78px) 0 0; // match height of caption / credit background
 
       @include hb-themes(('colorful', 'airy')) {
-        background: linear-gradient(to top, var(--palette--black), transparent);
+        background: linear-gradient(to top, color('black', 'global'), transparent);
       }
 
       @include hb-traditional {
-        background: linear-gradient(to top, var(--palette--black), transparent);
+        background: linear-gradient(to top, color('black', 'global'), transparent);
       }
     }
   }
@@ -62,8 +63,9 @@
 
     @include grid-media-min('sm') {
       display: block;
+      width: auto;
       text-align: left;
-      color: var(--palette--white);
+      color: color('white', 'global');
       font-weight: hb-theme-font-weight(bold);
       bottom: hb-calculate-rems(17px);
       padding-inline-start: hb-calculate-rems(25px);

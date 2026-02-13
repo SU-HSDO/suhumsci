@@ -1,0 +1,24 @@
+@use 'true' as *;
+@use 'sass:string';
+@use '../../../src/scss/partials/functions/svg' as s;
+
+@include describe('SVG Functions') {
+  @include describe('svg() function') {
+    @include it('returns a data URI with encoded SVG content.') {
+      $result: s.svg('<svg viewBox="0 0 1 1"></svg>');
+
+      @include assert-true(
+        string.index($result, 'data:image/svg+xml,') != null,
+        'Expected data URI prefix.'
+      );
+      @include assert-true(
+        string.index($result, '%3Csvg') != null,
+        'Expected encoded svg tag.'
+      );
+      @include assert-true(
+        string.index($result, 'xmlns%3D') != null,
+        'Expected encoded xmlns attribute.'
+      );
+    }
+  }
+}

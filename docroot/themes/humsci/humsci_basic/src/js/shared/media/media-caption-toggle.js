@@ -26,6 +26,7 @@
         const updateCaptionState = () => {
           // Temporarily remove classes to get the “natural” rendered height
           caption.classList.remove('collapsible-caption');
+          caption.classList.remove('is-open');
           content.classList.remove('visually-hidden');
           toggleButton.classList.remove('is-open');
 
@@ -36,13 +37,15 @@
             // Determine if this caption should be collapsible:
             // 1. It's long enough.
             // 2. Or it's inside a spotlight on a mobile viewport.
-            const collapsible = height >= 28
+            const collapsible = height >= (isColorful ? 28 : 27)
               || (spotlight && mobileView.matches && isColorful);
 
             if (collapsible) {
               caption.classList.add('collapsible-caption');
               if (!toggleButton.classList.contains('is-open')) {
                 content.classList.add('visually-hidden');
+              } else {
+                caption.classList.add('is-open');
               }
             }
           });
@@ -54,6 +57,7 @@
         // Toggle open/close.
         toggleButton.addEventListener('click', () => {
           const isOpen = toggleButton.classList.toggle('is-open');
+          caption.classList.toggle('is-open', isOpen);
           content.classList.toggle('visually-hidden', !isOpen);
         });
 

@@ -6,7 +6,9 @@
 @use '../mixins/text' as *;
 @use '../mixins/icons' as *;
 
-.hb-media-image {
+.hb-media-image,
+.hb-caption-credit-image,
+.media--type-image {
   .field-media-image-caption {
     @include hb-caption-credit;
 
@@ -73,20 +75,14 @@
     }
 
     &.collapsible-caption {
-      display: flex;
-      flex-direction: column;
-      text-align: left;
-      background: none;
       padding: 0 hb-calculate-rems(6px) hb-calculate-rems(6px);
-
-      .toggle-caption__toggle,
-      .toggle-caption__close {
-        background: none;
-        border: none;
-      }
+      min-height: hb-calculate-rems(44px);
 
       .toggle-caption__toggle {
         display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
 
         &::before {
           @include hb-icon-background('info', 'white');
@@ -100,19 +96,24 @@
         }
       }
 
-      .toggle-caption__toggle.is-open {
-        background-color: var(--palette--black);
-        width: hb-calculate-rems(18px);
-        height: hb-calculate-rems(22px);
+      &.is-open {
+        background: linear-gradient(
+          to top,
+          rgb(0 0 0 / 70%) 0%,
+          rgb(0 0 0 / 60%) 70%,
+          rgb(0 0 0 / 0%) 100%
+        );
+      }
 
+      .toggle-caption__toggle.is-open {
         &::before {
           @include hb-icon-background('close', 'white');
 
           content: '';
           display: block;
-          width: 100%;
-          height: 100%;
-          background-size:  hb-calculate-rems(14px) hb-calculate-rems(14px);
+          width: hb-calculate-rems(18px);
+          height: hb-calculate-rems(22px);
+          background-size: hb-calculate-rems(14px) hb-calculate-rems(14px);
           background-repeat: no-repeat;
           background-position: center;
         }
@@ -120,7 +121,6 @@
 
       .toggle-caption__content {
         position: relative;
-        background-color: var(--palette--black);
         padding: hb-calculate-rems(2px) hb-calculate-rems(4px);
       }
     }
@@ -128,18 +128,13 @@
 }
 
 // Refine caption/credit styles for vertical linked postcards
-.hb-vertical-linked-card {
+.hb-vertical-linked-card:has(.hb-vertical-linked-card__title) {
   .hb-media-image {
     .field-media-image-caption {
       @include hb-themes(('airy', 'colorful')) {
-        @include grid-media-min('xs') {
-          font-size: hb-calculate-rems(12px);
-        }
-
         @include grid-media-min('sm') {
           padding-bottom: hb-calculate-rems(36px);
           padding-left: hb-calculate-rems(12px);
-          font-size: hb-calculate-rems(11px);
           z-index: 0;
         }
       }
@@ -149,7 +144,7 @@
 
 // Caption/credit styles for images placed within the body section text area on node detail pages and for WYSIWYG (text area) images
 .node {
-  figure {
+  .hb-caption-credit-image:not(.hb-media-image) {
     position: relative;
     z-index: $hb-z-index-figure;
     box-sizing: border-box;
@@ -162,10 +157,10 @@
       margin-bottom: hb-spacing-width('xs');
     }
 
-    article:not(.hb-media-video):not(.hb-media-embed) {
+    figure:not(.hb-media-video):not(.hb-media-embed) {
       position: relative;
 
-      + figcaption {
+      + .field-media-image-caption {
         @include hb-caption-credit;
       }
     }

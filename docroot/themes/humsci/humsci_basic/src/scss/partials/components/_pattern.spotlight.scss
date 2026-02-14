@@ -237,7 +237,7 @@ $container-small: 576px;
   // Expanded variant.
   .hb-spotlight--expanded & {
     @include hb-themes(('colorful', 'airy')) {
-      background-color: var(--palette--white);
+      background-color: color('white', 'global');
       padding: hb-calculate-rems(16px) hb-calculate-rems(20px)
         hb-calculate-rems(20px);
       margin-block: hb-calculate-rems(-48px) hb-calculate-rems(32px);
@@ -451,19 +451,29 @@ $container-small: 576px;
   }
 }
 
-// TODO: Review.
 // Image caption adjustments for expanded spotlights.
 .hb-spotlight--expanded {
   .hb-media-image .field-media-image-caption.collapsible-caption {
     padding: 0 hb-calculate-rems(32px) hb-calculate-rems(21px);
 
     @include hb-themes(('colorful', 'airy')) {
-      bottom: hb-calculate-rems(48px);
+      bottom: 0;
+      min-height: hb-calculate-rems(160px);
+
+      .toggle-caption__toggle,
+      .toggle-caption__content {
+        bottom: hb-calculate-rems(48px);
+      }
 
       @container spotlight (width > #{$container-sidebar}) {
-        bottom: 0;
         padding: 0 hb-calculate-rems(16px) hb-calculate-rems(16px)
           hb-calculate-rems(48px);
+        min-height: hb-calculate-rems(44px);
+
+        .toggle-caption__toggle,
+        .toggle-caption__content {
+          bottom: 0;
+        }
       }
     }
 

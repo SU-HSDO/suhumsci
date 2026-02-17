@@ -1,12 +1,16 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/variables/theme';
+@use '../../../src/scss/partials/functions/general' as g;
+
 @include describe('HB Spacing Width Function') {
 
   @include describe('When given a valid key value,') {
-    $hb-current-theme: 'colorful' !global;
+    theme.$hb-current-theme: 'colorful';
 
     @include describe('the hb-spacing-width() function') {
       @include it('returns the medium pixel value for the Colorful theme.') {
-        $test: hb-spacing-width('md');
-        $expect: '3.2rem';
+        $test: g.hb-spacing-width('md');
+        $expect: '2rem';
 
         @include assert-equal($test, $expect, 'The medium value either does not match or does not exist.');
       }
@@ -14,12 +18,12 @@
   }
 
   @include describe('When given a valid key value,') {
-    $hb-current-theme: 'traditional' !global;
+    theme.$hb-current-theme: 'traditional';
 
     @include describe('the hb-spacing-width() function') {
       @include it('returns the medium pixel value for the Traditional theme.') {
-        $test: hb-spacing-width('md');
-        $expect: '2.8rem';
+        $test: g.hb-spacing-width('md');
+        $expect: '1.75rem';
 
         @include assert-equal($test, $expect, 'The medium value either does not match or does not exist.');
       }
@@ -30,9 +34,10 @@
 @include describe('HB Sidebar Width Function') {
 
   @include describe('the hb-sidebar-width() function') {
-    $hb-current-theme: 'colorful' !global;
+    theme.$hb-current-theme: 'colorful';
+
     @include it('returns the sidebar width for the Colorful theme.') {
-      $test: hb-sidebar-width();
+      $test: g.hb-sidebar-width();
       $expect: 22.5%;
 
       @include assert-equal($test, $expect, 'The sidebar width either does not match or does not exist.');
@@ -40,12 +45,24 @@
   }
 
   @include describe('the hb-sidebar-width() function') {
-    $hb-current-theme: 'traditional' !global;
+    theme.$hb-current-theme: 'traditional';
+
     @include it('returns the sidebar width for the Traditional theme.') {
-      $test: hb-sidebar-width();
+      $test: g.hb-sidebar-width();
       $expect: 18%;
 
       @include assert-equal($test, $expect, 'The sidebar width either does not match or does not exist.');
+    }
+  }
+}
+
+@include describe('HB Calculate Rems Function') {
+  @include describe('the hb-calculate-rems() function') {
+    @include it('returns the rem value based on the root font size.') {
+      $test: g.hb-calculate-rems(16px);
+      $expect: '1rem';
+
+      @include assert-equal($test, $expect, 'The rem value either does not match or does not exist.');
     }
   }
 }

@@ -1,4 +1,5 @@
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/decorative' as *;
 @use '../mixins/icons' as *;
@@ -51,19 +52,19 @@
   }
 
   .hb-card {
-    background-color: var(--palette--white);
+    background-color: color('white', 'global');
     flex-grow: 1;
 
     @include hb-traditional {
       padding: hb-spacing-width('xs');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px)
-        hb-calculate-rems(17px) var(--palette--gray-medium);
+        hb-calculate-rems(17px) color('gray-medium', 'global');
     }
 
     @include hb-themes(('airy', 'colorful')) {
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(7.5px)
         hb-calculate-rems(35px)
-        color-mix(in srgb, var(--palette--black) 12%, transparent);
+        color-mix(in srgb, color('black', 'global') 12%, transparent);
 
       @supports (object-fit: cover) {
         align-items: stretch;
@@ -126,7 +127,7 @@
   .hb-timelime__wrapper {
     @include hb-raised-cards-shadow;
 
-    background-color: var(--palette--white);
+    background-color: color('white', 'global');
     padding: hb-spacing-width('md') hb-spacing-width('xs');
     margin-top: 0;
   }
@@ -151,7 +152,7 @@
   .hb-card--date-stacked {
     @include hb-colorful {
       border-bottom: 3px solid;
-      border-color: var(--palette--secondary);
+      border-color: color('secondary');
     }
   }
 }
@@ -159,59 +160,59 @@
 // Dark Pattern and Inversion settings for hb-card, placed here because of the order of the classes when applied
 .hb-raised-cards .hb-dark-pattern .hb-card,
 .hb-dark-inversion .hb-raised-cards .views-element-container .hb-card {
-  color: var(--palette--black);
+  color: color('black', 'global');
 
   .field-content,
   .views-label {
-    color: var(--palette--black);
+    color: color('black', 'global');
   }
 
   a {
-    color: var(--palette--tertiary);
+    color: color('tertiary');
 
     &:hover,
     &:focus {
-      color: var(--palette--tertiary-darken-20);
+      color: color('tertiary-darken-20');
     }
   }
 
   &__date-tile {
     .field-content {
       @include hb-themes(('airy', 'colorful')) {
-        color: var(--palette--white);
+        color: color('white', 'global');
       }
     }
 
     &-month .field-content {
       @include hb-traditional {
-        color: var(--palette--white);
+        color: color('white', 'global');
       }
     }
 
     &-day .field-content {
       @include hb-traditional {
-        color: var(--palette--primary);
+        color: color('primary');
       }
     }
   }
 
   &__title a {
     @include hb-themes(('airy', 'colorful')) {
-      border-bottom-color: var(--palette--tertiary);
+      border-bottom-color: color('tertiary');
 
       &:hover,
       &:focus {
-        border-bottom-color: var(--palette--tertiary-darken-20) !important;
+        border-bottom-color: color('tertiary-darken-20') !important;
       }
     }
 
     @include hb-traditional {
-      color: var(--palette--black);
-      text-decoration-color: var(--palette--black);
+      color: color('black', 'global');
+      text-decoration-color: color('black', 'global');
 
       &:hover,
       &:focus {
-        text-decoration-color: var(--palette--tertiary-darken-20);
+        text-decoration-color: color('tertiary-darken-20');
       }
     }
   }
@@ -235,7 +236,7 @@
       &:hover,
       &:focus {
         &::after {
-          background-color: var(--palette--tertiary-darken-20);
+          background-color: color('tertiary-darken-20');
         }
       }
     }

@@ -10,13 +10,14 @@ dependencies:
     - field.field.paragraph.stanford_gallery.su_gallery_headline
     - field.field.paragraph.stanford_gallery.su_gallery_images
     - paragraphs.paragraphs_type.stanford_gallery
+    - swiper_formatter.swiper_formatter.hs_slideshow_counter
   module:
-    - ds
+    - empty_fields
     - field_formatter_class
     - hs_field_helpers
     - layout_builder
     - linkit
-    - slick
+    - swiper_formatter
     - text
 third_party_settings:
   layout_builder:
@@ -61,72 +62,20 @@ content:
     weight: 0
     region: content
   su_gallery_images:
-    type: slick_media
+    type: swiper_formatter_entity
     label: hidden
     settings:
-      caption:
-        field_media_image_caption: '0'
-        title: '0'
-        alt: '0'
-      optionset: hs_slideshow
-      class: ''
-      image: ''
-      link: ''
-      overlay: ''
-      title: ''
-      vanilla: true
-      layout: ''
       view_mode: hs_photo_gallery_slideshow
-      cache: 0
-      background: false
-      box_caption: ''
-      box_caption_custom: ''
-      box_media_style: ''
-      responsive_image_style: ''
-      use_theme_field: false
-      box_style: ''
-      image_style: ''
-      media_switch: ''
-      ratio: ''
-      thumbnail_style: ''
-      grid: null
-      grid_medium: null
-      grid_small: null
-      style: ''
-      breakpoints: {  }
-      current_view_mode: hs_gallery_slideshow
-      fx: ''
-      grid_header: ''
-      icon: ''
-      id: ''
-      sizes: ''
-      _uri: ''
-      skin: ''
-      overridables:
-        arrows: '0'
-        autoplay: '0'
-        dots: '0'
-        draggable: '0'
-        infinite: '0'
-        mouseWheel: '0'
-        randomize: '0'
-        variableWidth: '0'
-      thumbnail: ''
-      optionset_thumbnail: ''
-      skin_thumbnail: ''
-      thumbnail_caption: ''
-      thumbnail_effect: ''
-      thumbnail_position: ''
-      override: false
-      skin_arrows: ''
-      skin_dots: ''
-      preserve_keys: false
-      visible_items: null
+      link: ''
+      template: hs_slideshow_counter
+      caption: null
+      destination: null
+      swiper_access: false
     third_party_settings:
+      empty_fields:
+        handler: ''
       field_formatter_class:
         class: ''
-      ds:
-        ds_limit: ''
       hs_field_helpers:
         inline_contents: 0
     weight: 2

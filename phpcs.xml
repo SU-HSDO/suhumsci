@@ -20,6 +20,19 @@
     <exclude name="Drupal.InfoFiles.AutoAddedKeys.Version"/>
   </rule>
 
+  <rule ref="Drupal.Files.EndFileNewline.NoneFound">
+    <!--
+      Multiline config exports like user.mail.yml do not end with a blank line.
+      This is not a functional issue, but PHPCS reports it and it is
+      time-consuming to fix after every config export. Until the upstream issue
+      is resolved, it is easier to ignore this rule for this file.
+      See:
+      * https://www.drupal.org/project/drupal/issues/3279043
+      * https://www.drupal.org/project/drupal/issues/3240104
+    -->
+    <exclude-pattern>*config/*/user.mail.yml</exclude-pattern>
+  </rule>
+
   <file>docroot/profiles/humsci</file>
   <file>docroot/modules/humsci</file>
   <file>docroot/themes/humsci</file>

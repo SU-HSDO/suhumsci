@@ -1,13 +1,14 @@
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 
 // We need to use this ID selector to match the specificity of the styles we are overriding.
 #layout-builder-modal {
   summary {
-    color: var(--palette--white);
+    color: color('white', 'global');
 
     &:hover,
     &:focus {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
 
     &::after {

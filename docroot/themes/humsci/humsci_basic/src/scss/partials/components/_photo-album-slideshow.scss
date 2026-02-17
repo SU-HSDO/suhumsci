@@ -2,39 +2,38 @@
 
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
-@use '../mixins/slick' as *;
+@use '../mixins/swiper' as *;
 @use '../mixins/buttons' as *;
 
 .hs-gallery-slideshow {
-  @include slick-container;
-  @include slick-arrows;
+  @include swiper-container;
+  @include swiper-arrows;
 
-  .slick__arrow button {
-    &.slick-prev {
-      bottom: hb-calculate-rems(98px);
-
-      @include grid-media-min('sm') {
-        bottom: hb-calculate-rems(198px);
-      }
-    }
-
-    &.slick-next {
-      bottom: hb-calculate-rems(5px);
-
-      @include grid-media-min('sm') {
-        bottom: hb-calculate-rems(105px);
-      }
+  .swiper-button-prev,
+  .swiper-button-next {
+    svg {
+      display: none;
     }
   }
 
-  // The photo album counter relies upon using the slideshow gallery slick-dots.
-  // Only the active slide and the last slide are displayed for all slides
-  // expect the last slide.
-  // Example: "1/4" is the active slide of 1 and the last slide.
-  // The last slide uses counter properties to display the total number of slides.
-  // Example: "4/4" is the active slide of 4 and the value of listCounter, which is also 4.
+  .swiper-button-prev {
+    bottom: hb-calculate-rems(98px);
+
+    @include grid-media-min('sm') {
+      bottom: hb-calculate-rems(198px);
+    }
+  }
+
+  .swiper-button-next {
+    bottom: hb-calculate-rems(5px);
+
+    @include grid-media-min('sm') {
+      bottom: hb-calculate-rems(105px);
+    }
+  }
 
   .hb-media-image {
     position: relative;
@@ -45,11 +44,11 @@
       inset: calc(100% - 78px) 0 0; // match height of caption / credit background
 
       @include hb-themes(('colorful', 'airy')) {
-        background: linear-gradient(to top, var(--palette--black), transparent);
+        background: linear-gradient(to top, color('black', 'global'), transparent);
       }
 
       @include hb-traditional {
-        background: linear-gradient(to top, var(--palette--black), transparent);
+        background: linear-gradient(to top, color('black', 'global'), transparent);
       }
     }
   }
@@ -59,65 +58,17 @@
     background: transparent;
   }
 
-  .slick-dots {
-    counter-reset: listCounter;
+  .swiper-pagination {
+    display: none;
 
-    li {
-      display: block !important;
-      counter-increment: listCounter;
-    }
-
-    li button {
-      @include hb-unbuttonize;
-      color: var(--palette--white);
+    @include grid-media-min('sm') {
+      display: block;
+      width: auto;
+      text-align: left;
+      color: color('white', 'global');
       font-weight: hb-theme-font-weight(bold);
-      display: none;
-
-      @include grid-media-min('sm') {
-        display: block;
-        position: absolute;
-        bottom: hb-calculate-rems(16px);
-        cursor: default;
-      }
-    }
-
-    // counter for the last slide
-    li:last-of-type button {
-      @include grid-media-min('sm') {
-        left: hb-calculate-rems(48px);
-      }
-    }
-
-    li.slick-active:not(:last-of-type) button {
-      @include grid-media-min('sm') {
-        left: hb-calculate-rems(12px);
-        min-width: hb-calculate-rems(32px);
-        text-align: right;
-      }
-
-      &::after {
-        content: ' / ';
-      }
-    }
-
-    li.slick-active:last-of-type button {
-      @include grid-media-min('sm') {
-        left: hb-calculate-rems(19px);
-        min-width: hb-calculate-rems(45px);
-      }
-
-      @include grid-media-min('md') {
-        left: hb-calculate-rems(16px);
-        min-width: hb-calculate-rems(50px);
-      }
-
-      &::after {
-        content: ' / ' counter(listCounter);
-      }
-    }
-
-    li:not(:last-of-type):not(.slick-active) button {
-      display: none;
+      bottom: hb-calculate-rems(17px);
+      padding-inline-start: hb-calculate-rems(25px);
     }
   }
 }

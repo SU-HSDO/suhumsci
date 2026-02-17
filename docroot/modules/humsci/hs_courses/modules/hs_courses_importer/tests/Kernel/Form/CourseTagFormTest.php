@@ -4,7 +4,6 @@ namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\hs_courses_importer\Entity\CourseTag;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
 
 /**

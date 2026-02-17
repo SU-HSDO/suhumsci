@@ -1,0 +1,34 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/mixins/layout' as l;
+
+@include describe('Responsive Spacing Mixin') {
+  @include describe('responsive-spacing() mixin') {
+    @include it('outputs device-specific padding for a single step.') {
+      @include assert {
+        @include output(false) {
+          .hb-test-spacing {
+            @include l.responsive-spacing('padding', 1);
+          }
+        }
+
+        @include expect(false) {
+          .hb-test-spacing {
+            padding: 1.25rem;
+          }
+
+          @media only screen and (min-width: 768px) {
+            .hb-test-spacing {
+              padding: 1.625rem;
+            }
+          }
+
+          @media only screen and (min-width: 1500px) {
+            .hb-test-spacing {
+              padding: 1.6875rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 @use '../variables/general' as *;
 @use '../functions/fonts' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/links' as *;
@@ -47,14 +48,14 @@
     padding-left: hb-calculate-rems(16px);
 
     .hb-dark-inversion & {
-      background-color: var(--palette--primary-dark);
+      background-color: color('primary-dark');
     }
   }
 
   &__menu-lv1 {
     padding-left: 0;
     border-top: $hb-thin-border;
-    border-color: var(--palette--gray-medium);
+    border-color: color('gray-medium', 'global');
   }
 
   &__menu-lv1 > &__item > &__link {
@@ -64,30 +65,30 @@
   &__item,
   &__link {
     font-size: hb-calculate-rems(16px);
-    color: var(--palette--black);
+    color: color('black', 'global');
 
     .hb-dark-inversion & {
-      color: var(--palette--white);
+      color: color('white', 'global');
 
       &:hover,
       &:focus,
       &.is-active {
-        color: var(--palette--black);
+        color: color('black', 'global');
       }
     }
   }
 
   // make sure external links within the secondary nav receive the same styles as other links
   &__link.ext {
-    color: var(--palette--black);
+    color: color('black', 'global');
 
     .hb-dark-inversion & {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
 
     &:hover,
     &:focus {
-      color: var(--palette--black);
+      color: color('black', 'global');
 
       @include hb-themes(('airy', 'colorful')) {
         background-image: none;
@@ -105,7 +106,7 @@
       &::before {
         content: '';
         display: block;
-        background-color: var(--palette--gray-dark);
+        background-color: color('gray-dark', 'global');
 
         position: absolute;
         height: 100%;
@@ -132,7 +133,7 @@
       hb-calculate-rems(16px) hb-calculate-rems(18px);
     text-decoration: none;
     border-bottom: $hb-thin-border;
-    border-color: var(--palette--gray-medium);
+    border-color: color('gray-medium', 'global');
 
     &:hover,
     &:focus {
@@ -152,11 +153,11 @@
         }
 
         @include hb-themes(('airy', 'colorful')) {
-          background-color: var(--palette--gray-light);
+          background-color: color('gray-light', 'global');
         }
 
         @include hb-traditional {
-          background-color: var(--palette--tertiary-highlight);
+          background-color: color('tertiary-highlight');
         }
       }
     }
@@ -171,23 +172,23 @@
       }
 
       &::before {
-        background-color: var(--palette--tertiary-reversed);
+        background-color: color('tertiary-reversed');
       }
 
       &:hover,
       &:focus {
         &::before {
-          background-color: var(--palette--secondary);
+          background-color: color('secondary');
         }
       }
     }
 
     &.is-active {
       font-weight: hb-theme-font-weight(semibold);
-      background-color: var(--palette--secondary-highlight);
+      background-color: color('secondary-highlight');
 
       &::before {
-        background-color: var(--palette--secondary);
+        background-color: color('secondary');
       }
 
       .hb-dark-inversion & {

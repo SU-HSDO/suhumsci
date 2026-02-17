@@ -945,3 +945,181 @@ function su_humsci_profile_update_9749(): string {
   }
   return t('domain_registration module was already uninstalled.');
 }
+
+/**
+ * Grant hs_basic_block edit permission to contributor and site_manager roles.
+ */
+function su_humsci_profile_update_9750(): string {
+  // Define a role => permissions map so each role is loaded once and only
+  // receives the specific permissions intended for that role.
+  $role_permissions = [
+    'contributor' => [
+      'edit any hs_basic_block block content',
+    ],
+    'site_manager' => [
+      'edit any hs_basic_block block content',
+      'create hs_basic_block block content',
+    ],
+  ];
+
+  /** @var \Drupal\user\RoleStorageInterface $role_storage */
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+
+  $changed = [];
+
+  foreach ($role_permissions as $rid => $perms) {
+    /** @var \Drupal\user\Entity\Role|null $role */
+    $role = $role_storage->load($rid);
+    if (!$role) {
+      continue;
+    }
+
+    $granted_for_role = [];
+    foreach ($perms as $perm) {
+      if (!$role->hasPermission($perm)) {
+        $role->grantPermission($perm);
+        $granted_for_role[] = $perm;
+      }
+    }
+
+    if ($granted_for_role) {
+      $role->save();
+      $changed[$rid] = $granted_for_role;
+    }
+  }
+
+  if ($changed) {
+    // Log a compact summary for auditing without spamming individual lines.
+    $summaries = [];
+    foreach ($changed as $rid => $perms) {
+      $summaries[] = $rid . ': ' . implode(', ', $perms);
+    }
+    \Drupal::logger('su_humsci_profile')->notice('Granted hs_basic_block permissions => @summary', [
+      '@summary' => implode(' | ', $summaries),
+    ]);
+    return t('Granted hs_basic_block permissions for: @summary', [
+      '@summary' => implode(' | ', $summaries),
+    ]);
+  }
+
+  return t('No changes: roles already had the required hs_basic_block permissions or were missing.');
+}
+
+/**
+ * Remove unused image styles and related responsive image styles.
+ */
+function su_humsci_profile_update_9751() {
+  // List of unused image styles to remove.
+  $image_styles_to_remove = [
+    'hero_banner',
+    'hero_large',
+    'hero_no_text_1500px_',
+    'hero_no_text_tall_1500px',
+    'hero_no_text_tall_3000px',
+    'hero_small',
+    'hs_slideshow_large_2000x1500',
+    'hs_slideshow_medium_1500x1125',
+    'hs_slideshow_small_1000x750',
+    'hs_slideshow_xsmall_800x600',
+    'large',
+    'postcard_vertical_linked_1057px_',
+    'postcard_vertical_linked_1169px_',
+    'postcard_vertical_linked_465px_',
+    'postcard_vertical_linked_658px_',
+    'postcard_vertical_linked_850px_',
+  ];
+
+  // List of responsive image styles that depend on those.
+  $responsive_styles_to_remove = [
+    'hero_image',
+    'portrait_rectangle',
+    'postcard_vertical_linked',
+    'slideshow_responsive',
+  ];
+
+  $logger = \Drupal::logger('su_humsci_profile');
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $deleted = 0;
+  $failed = 0;
+
+  // Remove dependent responsive image styles first.
+  $responsive_storage = $entity_type_manager->getStorage('responsive_image_style');
+  foreach ($responsive_styles_to_remove as $responsive_id) {
+    try {
+      if ($responsive = $responsive_storage->load($responsive_id)) {
+        $responsive->delete();
+        $deleted++;
+      }
+    }
+    catch (\Exception $e) {
+      $failed++;
+      $logger->error('Failed to delete responsive image style "@id": @error', [
+        '@id' => $responsive_id,
+        '@error' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  // Then remove the actual image styles.
+  $image_style_storage = $entity_type_manager->getStorage('image_style');
+  foreach ($image_styles_to_remove as $style_id) {
+    try {
+      if ($style = $image_style_storage->load($style_id)) {
+        $style->delete();
+        $deleted++;
+      }
+    }
+    catch (\Exception $e) {
+      $failed++;
+      $logger->error('Failed to delete image style "@id": @error', [
+        '@id' => $style_id,
+        '@error' => $e->getMessage(),
+      ]);
+    }
+  }
+
+  // Final summary log.
+  if ($deleted || $failed) {
+    $logger->notice('Image style cleanup completed. @deleted styles deleted, @failed failures.', [
+      '@deleted' => $deleted,
+      '@failed' => $failed,
+    ]);
+  }
+  else {
+    $logger->notice('Image style cleanup: No styles found to delete.');
+  }
+}
+
+/**
+ * Install the tagify module.
+ */
+function su_humsci_profile_update_9752() {
+  \Drupal::service('module_installer')->install(['tagify']);
+}
+
+/**
+ * Uninstall the slick_pargraphs and slick modules.
+ */
+function su_humsci_profile_update_9753() {
+  \Drupal::service('module_installer')->uninstall([
+    'slick_paragraphs',
+    'slick',
+  ]);
+}
+
+/**
+ * Install the purge_users module.
+ */
+function su_humsci_profile_update_9754() {
+  \Drupal::service('module_installer')->install(['purge_users']);
+}
+
+/**
+ * Uninstall the blazy_ui and blazy modules.
+ */
+function su_humsci_profile_update_9755() {
+  \Drupal::service('module_installer')->uninstall([
+    'blazy_ui',
+    'blazy',
+  ]);
+}

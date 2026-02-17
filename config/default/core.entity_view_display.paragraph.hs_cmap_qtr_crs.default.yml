@@ -1,0 +1,41 @@
+uuid: b09d4c56-52fc-4f47-a719-bf9a5161bf1d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.hs_cmap_qtr_crs.field_hs_cmap_crs_course
+    - field.field.paragraph.hs_cmap_qtr_crs.field_hs_cmap_crs_requirement
+    - paragraphs.paragraphs_type.hs_cmap_qtr_crs
+  module:
+    - empty_fields
+    - field_formatter_class
+    - hs_field_helpers
+    - text
+id: paragraph.hs_cmap_qtr_crs.default
+targetEntityType: paragraph
+bundle: hs_cmap_qtr_crs
+mode: default
+content:
+  field_hs_cmap_crs_course:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_hs_cmap_crs_requirement:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings:
+      empty_fields:
+        handler: ''
+      field_formatter_class:
+        class: ''
+      hs_field_helpers:
+        inline_contents: 0
+    weight: 1
+    region: content
+hidden:
+  search_api_excerpt: true

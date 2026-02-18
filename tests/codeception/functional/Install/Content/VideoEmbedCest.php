@@ -60,11 +60,11 @@ class VideoEmbedCest {
     // Save node.
     $I->click('Save');
 
-    // Verify figure and hb-caption-credit.
+    // Verify figure and figcaption.
     $I->waitForText($page_title);
     $I->seeElement('figure');
-    $I->seeElement('.hb-caption-credit');
-    $I->scrollTo('.hb-caption-credit');
+    $I->seeElement('figcaption');
+    $I->scrollTo('figcaption');
     $I->see("sore was I ere I saw eros");
   }
 

@@ -221,12 +221,10 @@
     },
     "scripts": {
         "build-theme": [
-            "[ -d \"$HOME/.nvm\" ] && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && command -v nvm  &> /dev/null && nvm install",
-            "npm run theme-build"
+            "hooks/common/theme/theme-build.sh"
         ],
         "test-theme": [
-            "[ -d \"$HOME/.nvm\" ] && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\" && command -v nvm  &> /dev/null && nvm install",
-            "npm run theme-test"
+            "hooks/common/theme/theme-test.sh"
         ],
         "post-drupal-scaffold-cmd": [
             "patch -p1 < patches/scaffold.patch"

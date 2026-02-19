@@ -315,7 +315,6 @@ class HsCommands extends BltTasks {
       ->drush('sql-sync')
       ->arg($remote_alias)
       ->arg($local_alias)
-      ->option('extra-dump', '--no-tablespaces --insert-ignore', '=')
       ->option('--target-dump', sys_get_temp_dir() . '/tmp.target.sql.gz')
       ->option('structure-tables-key', 'lightweight')
       ->option('create-db');

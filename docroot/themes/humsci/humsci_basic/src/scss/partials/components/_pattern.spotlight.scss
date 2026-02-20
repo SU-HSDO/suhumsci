@@ -33,6 +33,29 @@
     @include grid-media-min('md') {
       padding: hb-spacing-width() 0;
     }
+
+    // Styles for lazy load videos to make it work with new design.
+    &:has(.hb-video-lazy) {
+      .hb-spotlight__text {
+        @include grid-media-between('xs', 'md') {
+          padding-inline: hb-calculate-rems(16px);
+        }
+      }
+    }
+  }
+
+  .hb-video-lazy__play {
+    @include grid-media-min('md') {
+      &::before {
+        @include hb-themes(('colorful', 'airy')) {
+          background-size: hb-calculate-rems(55px);
+        }
+
+        @include hb-traditional {
+          background-size: hb-calculate-rems(60px);
+        }
+      }
+    }
   }
 
   &__wrapper {
@@ -266,3 +289,4 @@
     }
   }
 }
+

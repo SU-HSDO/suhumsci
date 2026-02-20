@@ -3,9 +3,8 @@
   an option for the paragraph previews.
 #}
 {{ attach_library(default_theme ~ '/postcard') }}
+{% set wrapper_attributes = wrapper_attributes.addClass('paragraph-admin-preview', 'paragraph-item', 'ptype-hs-postcard') %}
 
-<div class="paragraph-admin-preview">
-  <div{{wrapper_attributes.addClass('paragraph-item', 'ptype-hs-postcard')}}>
-    {% include '@humsci_basic/components/pattern-vertical-card.html.twig' %}
-  </div>
+<div{{wrapper_attributes}}>
+  {% include '@humsci_basic/components/pattern-vertical-card.html.twig' %}
 </div>

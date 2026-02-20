@@ -9,7 +9,7 @@
         const toggleButton = caption.querySelector('.toggle-caption__toggle');
         const content = caption.querySelector('.toggle-caption__content');
         const spotlight = caption.closest('.hb-spotlight--expanded');
-        const mobileView = window.matchMedia('(max-width: 991px)');
+        const mobileView = window.matchMedia('(max-width: 1293px)');
 
         if (!content || !toggleButton) return;
 

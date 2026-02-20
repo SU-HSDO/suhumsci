@@ -565,6 +565,10 @@ function _humsci_basic_update_view_mode_slides_image(ParagraphInterface $paragra
  * Implements hook_preprocess_HOOK().
  */
 function humsci_basic_preprocess_field(&$variables) {
+  if ($variables['element']['#field_name'] === 'field_media_image_caption') {
+    $variables['#attached']['library'][] = 'humsci_basic/media_caption_toggle';
+  }
+
   if (in_array(
     $variables['element']['#field_name'],
     [

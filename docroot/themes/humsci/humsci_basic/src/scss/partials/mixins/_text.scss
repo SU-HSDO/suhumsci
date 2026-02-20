@@ -291,39 +291,36 @@
 
 // Styles for captions and credits
 @mixin hb-caption-credit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: right;
   color: color('white', 'global');
-  font-style: italic;
+  font-style: normal;
   font-size: hb-calculate-rems(12px);
   position: absolute;
   bottom: 0;
   width: 100%;
   z-index: $hb-z-index-small-5;
-  text-align: right;
   line-height: var(--condensed-line-height);
   height: auto;
-  padding: hb-calculate-rems(16px) hb-calculate-rems(7px) hb-calculate-rems(8px)
+  padding: hb-calculate-rems(12px) hb-calculate-rems(16px) hb-calculate-rems(6px)
     15%; // Using a percentage to the left to control the width of the captions
-
-  @include grid-media-min('sm') {
-    // the right side calculation is lower to adjust for the margin-right on the child elements
-    padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
-      hb-calculate-rems(16px) 15%;
-  }
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 60%) 0%,
+    rgb(0 0 0 / 60%) 60%,
+    rgb(0 0 0 / 0%) 100%
+  );
 
   @include hb-themes(('colorful', 'airy')) {
-    background: linear-gradient(to top, color('black', 'global'), transparent);
-
     .paragraph--type--hs-carousel & {
       // the percentage on this left side is larger to prevent the caption from running under carousel overlay
       @include grid-media-min('md') {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(12px)
-          hb-calculate-rems(16px) 58%;
+        padding-left: 58%;
       }
     }
-  }
-
-  @include hb-traditional {
-    background: linear-gradient(to top, color('black', 'global'), transparent);
   }
 
   .hb-card__graphics--has-date & {
@@ -360,7 +357,7 @@
   .hs-pdf-link,
   .hs-private-link {
     @include hb-text-reset;
-    font-style: italic;
+    font-style: normal;
     color: color('white', 'global');
   }
 

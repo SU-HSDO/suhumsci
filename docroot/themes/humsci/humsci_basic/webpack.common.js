@@ -26,6 +26,7 @@ const shared = {
   'video-with-caption': 'shared/media/video-with-caption.js',
   megamenu: 'shared/megamenu/index.js',
   'main-menu': 'shared/navigation/main-menu-index.js',
+  'media-caption-toggle': 'shared/media/media-caption-toggle.js',
   'secondary-toggler': 'shared/navigation/secondary-toggler.js',
   colorbox: 'shared/photo-album/colorbox.js',
   search: 'shared/search/search-expand.js',

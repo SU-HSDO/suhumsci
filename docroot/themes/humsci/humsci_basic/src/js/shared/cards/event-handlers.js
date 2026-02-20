@@ -23,8 +23,11 @@ const addCardEvents = (card, mainLink) => {
       return;
     }
 
-    // Ensure clicks on "Add to Calendar" container or an input
-    if (event.target.closest('.addtocal-container') || event.target.tagName === 'INPUT') {
+    // Ensure clicks on "Add to Calendar" container, a caption toggle or a clickable element.
+    const addToCal = event.target.closest('.addtocal-container');
+    const captionToggle = event.target.closest('.toggle-caption__toggle');
+    const clickableTagNames = ['INPUT']; // Include others here when needed.
+    if (addToCal || captionToggle || clickableTagNames.includes(event.target.tagName)) {
       return;
     }
 

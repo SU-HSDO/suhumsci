@@ -1027,18 +1027,20 @@ function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface
   // type configured. Hiding the roles also prevented access from being restored
   // to these roles through the site UI, and required drush to delete or modify
   // the configuration directly. See HSD8-1815 for more details.
-  // if (isset($element['search_indexer'])) {
-  //   $element['search_indexer']['#access'] = FALSE;
-  // }
-  // if (isset($element['anonymous'])) {
-  //   $element['anonymous']['#access'] = FALSE;
-  // }
-  // if (isset($element['authenticated'])) {
-  //   $element['authenticated']['#title'] = 'All logged in users';
-  // }
-  // if (isset($element['site_manager'])) {
-  //   $element['site_manager']['#default_value'] = 'site_manager';
-  //   $element['site_manager']['#disabled'] = TRUE;
-  // }
+  /*
+  if (isset($element['search_indexer'])) {
+    $element['search_indexer']['#access'] = FALSE;
+  }
+  if (isset($element['anonymous'])) {
+    $element['anonymous']['#access'] = FALSE;
+  }
+  if (isset($element['authenticated'])) {
+    $element['authenticated']['#title'] = 'All logged in users';
+  }
+  if (isset($element['site_manager'])) {
+    $element['site_manager']['#default_value'] = 'site_manager';
+    $element['site_manager']['#disabled'] = TRUE;
+  }
+  */
   return $element;
 }

@@ -1019,18 +1019,26 @@ function su_humsci_profile_form_stanford_samlauth_add_user_alter(&$form, FormSta
  *   The processed form element.
  */
 function _su_humsci_profile_process_per_role_field(&$element, FormStateInterface $form_state, &$complete_form) {
-  if (isset($element['search_indexer'])) {
-    $element['search_indexer']['#access'] = FALSE;
-  }
-  if (isset($element['anonymous'])) {
-    $element['anonymous']['#access'] = FALSE;
-  }
-  if (isset($element['authenticated'])) {
-    $element['authenticated']['#title'] = 'All logged in users';
-  }
-  if (isset($element['site_manager'])) {
-    $element['site_manager']['#default_value'] = 'site_manager';
-    $element['site_manager']['#disabled'] = TRUE;
-  }
+  // 2026-02-23: Commenting this out for now. Hiding these roles from the
+  // content access control form using #access = FALSE resulted in the fields
+  // for these roles to not be rendered in the form. This caused all permissions
+  // to be set to FALSE for these roles when the form was saved. The largest
+  // consequence of this was anonymous users losing access to all content of the
+  // type configured. Hiding the roles also prevented access from being restored
+  // to these roles through the site UI, and required drush to delete or modify
+  // the configuration directly. See HSD8-1815 for more details.
+  // if (isset($element['search_indexer'])) {
+  //   $element['search_indexer']['#access'] = FALSE;
+  // }
+  // if (isset($element['anonymous'])) {
+  //   $element['anonymous']['#access'] = FALSE;
+  // }
+  // if (isset($element['authenticated'])) {
+  //   $element['authenticated']['#title'] = 'All logged in users';
+  // }
+  // if (isset($element['site_manager'])) {
+  //   $element['site_manager']['#default_value'] = 'site_manager';
+  //   $element['site_manager']['#disabled'] = TRUE;
+  // }
   return $element;
 }

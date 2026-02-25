@@ -405,7 +405,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    */
   private function sortTableRows() {
     usort($this->eventTableRows, function ($a, $b) {
-      return strcasecmp($a['data'][0]['data'], $b['data'][0]['data']);
+      // These may be string objects (with placeholders), so cast to a string to
+      // determine alphabetical order.
+      return strcasecmp((string) $a['data'][0]['data'], (string) $b['data'][0]['data']);
     });
   }
 

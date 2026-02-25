@@ -7,15 +7,7 @@
 @use '../mixins/heros' as *;
 @use '../mixins/swiper' as *;
 
-// .ptype-hs-sptlght-slder {
-//   @include hb-themes(('colorful', 'airy')) {
-//     margin-block: 3rem 0 !important;
-//   }
-
-//   @include hb-traditional {
-//     margin-block: 2rem 0 !important;
-//   }
-// }
+$container-sidebar: 880px;
 
 .paragraph--type--hs-sptlght-slder {
   @include hb-hero-full-width;
@@ -23,6 +15,8 @@
   @include swiper-pagination;
   @include swiper-arrows;
   position: relative;
+  container-name: spotlightslider;
+  container-type: inline-size;
 
   .hs-full-width & {
     .hb-spotlight {
@@ -54,6 +48,19 @@
   .swiper-pagination-bullet {
     height: hb-calculate-rems(4.5px);
   }
+
+  &:has(.hb-spotlight--expanded):has(.field-media-image-caption) {
+    @include grid-media-min('md') {
+      @include hb-themes(('colorful', 'airy')) {
+        @container spotlightslider (width < #{$container-sidebar}) {
+          .swiper-button-prev,
+          .swiper-button-next {
+            bottom: calc(60% - #{hb-calculate-rems(21px)});
+          }
+        }
+      }
+    }
+  }
 }
 
 .paragraph--type--hs-sptlght-slder.paragraph--type--hs-sptlght-slder--no-image {
@@ -82,4 +89,13 @@
       }
     }
   }
+}
+
+// Full Width Spotlight Sliders.
+// Only full width if no sidebars present in page layout.
+.hb-three-column--no-sidebar
+  .paragraph--type--hs-sptlght-slder.paragraph--style--full-width {
+  left: calc(-50vw + 50%);
+  position: relative;
+  width: 100vw;
 }

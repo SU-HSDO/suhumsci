@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -92,44 +93,119 @@ function hs_cmap_field_widget_single_element_form_alter(&$element, FormStateInte
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $widgetState['paragraphs'][$delta]['entity'];
 
+  switch ($paragraph_bundle) {
+    case 'hs_cmap_year':
+      hs_cmap_year_alter($element, $delta, $paragraph);
+      break;
+
+    case 'hs_cmap_qtr':
+      hs_cmap_qtr_alter($element, $delta, $paragraph);
+      break;
+
+    case 'hs_cmap_qtr_crs':
+      hs_cmap_qtr_crs_alter($element, $delta, $paragraph);
+      break;
+  }
+}
+
+/**
+ * Form alter for hs_cmap_year paragraph.
+ *
+ * @param array $element
+ *   Render array for the paragraph.
+ * @param int $delta
+ * @param \Drupal\paragraphs\Entity\Paragraph $paragraph
+ *
+ * @see hs_cmap_field_widget_single_element_form_alter()
+ *
+ * @return void
+ */
+function hs_cmap_year_alter(array &$element, int $delta, Paragraph $paragraph): void {
   // Set the default year label, incrementing on the previous.
-  if (
-    $paragraph_bundle === 'hs_cmap_year'
-    && empty($element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'])
-  ) {
-    $element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'] = 'Year ' . ($delta + 1);
+  if (!empty($element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'])) {
+    return;
   }
+  $element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'] = 'Year ' . ($delta + 1);
+}
 
+/**
+ * Form alter for hs_qtr_year paragraph.
+ *
+ * @param array $element
+ *   Render array for the paragraph.
+ * @param int $delta
+ * @param \Drupal\paragraphs\Entity\Paragraph $paragraph
+ *
+ * @see hs_cmap_field_widget_single_element_form_alter()
+ *
+ * @return void
+ */
+function hs_cmap_qtr_alter(array &$element, int $delta, Paragraph $paragraph): void {
   // Set default quarter, incrementing on the previous.
-  if (
-    $paragraph_bundle === 'hs_cmap_qtr'
-    && empty($element['subform']['field_hs_cmap_qtr_quarter']['widget']['#default_value'])
-  ) {
-    $options = $element['subform']['field_hs_cmap_qtr_quarter']['widget']['#options'];
-    if (isset($options['_none'])) {
-      unset($options['_none']);
-    }
-    $options = array_keys($options);
-    $default = $options[$delta % count($options)];
-    $element['subform']['field_hs_cmap_qtr_quarter']['widget']['#default_value'] = [$default];
+  if (!empty($element['subform']['field_hs_cmap_qtr_quarter']['widget']['#default_value'])) {
+    return;
   }
+  $options = $element['subform']['field_hs_cmap_qtr_quarter']['widget']['#options'];
+  if (isset($options['_none'])) {
+    unset($options['_none']);
+  }
+  $options = array_keys($options);
+  $default = $options[$delta % count($options)];
+  $element['subform']['field_hs_cmap_qtr_quarter']['widget']['#default_value'] = [$default];
+}
 
+/**
+ * Form alter for hs_qtr_crs_year paragraph.
+ *
+ * @param array $element
+ *   Render array for the paragraph.
+ * @param int $delta
+ * @param \Drupal\paragraphs\Entity\Paragraph $paragraph
+ *
+ * @see hs_cmap_field_widget_single_element_form_alter()
+ *
+ * @return void
+ */
+function hs_cmap_qtr_crs_alter(array &$element, int $delta, Paragraph $paragraph): void {
   // Set "Core" as the default Requirement Type.
-  if (
-    $paragraph_bundle === 'hs_cmap_qtr_crs'
-    && empty($element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'])
-  ) {
-    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-    $terms = $term_storage->loadByProperties([
-      'vid' => 'hs_curriculum_requirement_type',
-      'name' => 'Core',
-    ]);
-    if (!empty($terms)) {
-      $core_tid = key($terms);
-      $element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'] = [$core_tid];
-    }
+  if (!empty($element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'])) {
+    return;
+  }
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $terms = $term_storage->loadByProperties([
+    'vid' => 'hs_curriculum_requirement_type',
+    'name' => 'Core',
+  ]);
+  if (!empty($terms)) {
+    $core_tid = key($terms);
+    $element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'] = [$core_tid];
+    return;
   }
 
+  // Show a warning if there are no Requirement Types.
+  $hasRequirementTypes = $term_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('vid', 'hs_curriculum_requirement_type')
+    ->execute();
+  if (!$hasRequirementTypes) {
+    $text = 'There are not yet any Curriculum Requirement Types. Before you can use this component, ';
+    $canCreate = \Drupal::entityTypeManager()
+      ->getAccessControlHandler('taxonomy_term')
+      ->createAccess('hs_curriculum_requirement_type');
+    if ($canCreate) {
+      $text .= 'first <a href="/admin/structure/taxonomy/manage/hs_curriculum_requirement_type/overview" target="_blank">create a Curriculum Requirement Type</a>.';
+    }
+    else {
+      $text .= 'a Site Manager must first create one or more Curriculum Requirement Types.';
+    }
+    $element['subform']['warning'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['messages', 'messages--warning']],
+      'content' => [
+        '#markup' => $text,
+      ],
+    ];
+  }
 }
 
 /**
@@ -140,6 +216,21 @@ function hs_cmap_form_taxonomy_overview_terms_alter(array &$form, FormStateInter
   if (!$vocabulary || $vocabulary->id() !== 'hs_curriculum_requirement_type') {
     return;
   }
+
+  $form['help'] = [];
+  $form['help'][]['#markup'] = '<p><i>Curriculum Requirement Types</i> are used in the <i>Curriculum Map</i> component to label courses.</p><p>E.g. <i>Core</i>, or <i>Elective</i></p>';
+  $form['help'][] = [
+    '#theme' => 'item_list',
+    '#title' => 'Things to consider',
+    '#items' => [
+      'Each type must have a unique name and color.',
+      'These apply across the website.  If you change the color of a type, it will change all courses of that type.',
+      'Changing the order here does not change the appearance of Curriculum Map courses.',
+    ],
+  ];
+
+  // Prevent nesting.
+  unset($form['terms']['#tabledrag'], $form['terms']['#header']['weight']);
 
   // Add a new column to the table for 'Color'.
   $new_column_header = ['color' => t('Color')];
@@ -162,6 +253,9 @@ function hs_cmap_form_taxonomy_overview_terms_alter(array &$form, FormStateInter
       '#markup' => $color,
     ];
     _hs_cmap_insert_into_array_after_element($form['terms'][$key], $insert_after_column, $new_element);
+
+    // Prevent nesting.
+    unset($form['terms'][$key]['weight'], $form['terms'][$key]['operations']['#links']['add-child']);
   }
 }
 

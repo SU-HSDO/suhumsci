@@ -3,6 +3,18 @@
 @use '../functions/general' as *;
 @use '../functions/color' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
+
+$cmap-colors: (
+  'archway': #5d4b3c,
+  'brick-dark': #42081b,
+  'plum': #620059,
+  'poppy-muted': #ad5c06,
+  'olive-dark': #6e7835,
+  'bay-dark': #417865,
+  'lagunita': #007f94,
+  'sky-dark': #016895,
+ );
 
 // Curriculum map component.
 .paragraph--type--hs-cmap {
@@ -59,6 +71,8 @@
 
 // Curriculum map required courses component.
 .paragraph--type--hs-cmap-qtr-crs {
+  @include generate-css-vars('cmap', $cmap-colors);
+
   padding: hb-calculate-rems(12px) hb-calculate-rems(10px);
   background-color: color('white', 'global');
   box-shadow: 0 hb-calculate-rems(4px) hb-calculate-rems(17px) 0
@@ -72,47 +86,48 @@
     font-size: hb-calculate-rems(14px);
     line-height: 1.4;
     text-transform: uppercase;
-    background-color: color('gray-100', 'global');
+    background-color: var(--color-cmap-requirement-type, #{color('gray-800', global)});
+    color: color('white', 'global');
   }
 
   // Course type colors.
   &.paragraph--color--grey-500 {
-    --color-cmap-requirement-type: color('gray-500', 'global');
+    --color-cmap-requirement-type: #{color('gray-800', 'global')};
   }
 
   &.paragraph--color--brick-dark {
-    --color-cmap-requirement-type: #42081b;
+    --color-cmap-requirement-type: #{color('brick-dark', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--plum {
-    --color-cmap-requirement-type: #620059;
+    --color-cmap-requirement-type: #{color('plum', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--digital-red {
-    --color-cmap-requirement-type: #b1040e;
+    --color-cmap-requirement-type: #{color('digital-red', 'su-core')};
   }
 
   &.paragraph--color--spirited {
-    --color-cmap-requirement-type: #e04f39;
+    --color-cmap-requirement-type: #{color('archway', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--poppy-light {
-    --color-cmap-requirement-type: #f9a44a;
+    --color-cmap-requirement-type: #{color('poppy-muted', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--olive-dark {
-    --color-cmap-requirement-type: #7a863b;
+    --color-cmap-requirement-type: #{color('olive-dark', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--bay-dark {
-    --color-cmap-requirement-type: #417865;
+    --color-cmap-requirement-type: #{color('bay-dark', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--sky-dark {
-    --color-cmap-requirement-type: #009ab4;
+    --color-cmap-requirement-type: #{color('sky-dark', 'cmap', $cmap-colors)};
   }
 
   &.paragraph--color--lagunita-light {
-    --color-cmap-requirement-type: #016895;
+    --color-cmap-requirement-type: #{color('lagunita', 'cmap', $cmap-colors)};
   }
 }

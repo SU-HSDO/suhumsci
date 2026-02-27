@@ -1,12 +1,179 @@
+@use '../variables/general' as *;
+@use '../functions/animation' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
 
-.field-media-oembed-video {
+.hb-media-video:has(.hb-video-lazy) {
+  // Margin to give enough space between the play button and the text.
+  @include hb-themes(('colorful', 'airy')) {
+    margin-bottom: hb-calculate-rems(8px);
+  }
+
+  @include hb-traditional {
+    margin-bottom: hb-calculate-rems(6px);
+  }
+
+  // Needs more space if it's followed by text.
+  &:has(+ p) {
+    margin-bottom: hb-calculate-rems(16px);
+  }
+}
+
+.hb-video-lazy {
   position: relative;
   aspect-ratio: 16 / 9;
+  cursor: pointer;
 
-  iframe {
+  .hb-video-lazy__thumb {
+    aspect-ratio: inherit;
+
+    // Trigger play button hover styles
+    &:hover .hb-video-lazy__play {
+      background-color: color('secondary-darken-12');
+    }
+
+    &:focus-within .hb-video-lazy__play {
+      background-color: color('secondary');
+    }
+  }
+
+  .hb-video-lazy__thumb img {
+    margin: 0 auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+
+    .full:not(.align-left):not(.align-right) & {
+      width: 100%;
+    }
+
+    // Make lazy video thumbnails match the previous oEmbed video behavior
+    // when inserted via WYSIWYG with left/right alignment.
+    // Without this, the element correctly gets the 75% max-width
+    // BUT this isn't working as it should in the previous
+    // oEmbed video behavior... the float property shrink-wraps the container
+    // and ends up much narrower than expected.
+    .align-left &,
+    .align-right & {
+      @media (min-width: 390px) {
+        max-width: hb-calculate-rems(295px);
+      }
+
+      @include grid-media-min('md') {
+        max-width: hb-calculate-rems(300px);
+      }
+    }
+  }
+
+  .hb-video-lazy__iframe {
+    inset: 0;
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .hb-video-lazy__play-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    cursor: pointer;
+  }
+
+  .hb-video-lazy__play {
+    position: relative;
+    border: $hb-thin-border;
+    border-color: color('white', 'global');
+    background-color: color('secondary');
+    padding: 0 0 0 hb-calculate-rems(4px);
+    width: hb-calculate-rems(44px);
+    height: hb-calculate-rems(44px);
+    cursor: pointer;
+
+    @include grid-media-min('md') {
+      width: hb-calculate-rems(54px);
+      height: hb-calculate-rems(54px);
+    }
+
+    @include hb-themes(('colorful', 'airy')) {
+      border-radius: 50%;
+    }
+
+    .hs-full-width .paragraph--type--hs-banner & {
+      @include grid-media-min('md') {
+        width: hb-calculate-rems(80px);
+        height: hb-calculate-rems(80px);
+      }
+    }
+
+    .full:not(.align-left):not(.align-right) &,
+    .hb-spotlight & {
+      @include grid-media-min('md') {
+        width: hb-calculate-rems(74px);
+        height: hb-calculate-rems(74px);
+      }
+    }
+
+    &:not(.hb-video-lazy__play--no-js) {
+      .no-js & {
+        display: none;
+      }
+    }
+
+    &:hover {
+      background-color: color('secondary-darken-12');
+    }
+
+    &:active,
+    &:focus {
+      background-color: color('secondary');
+    }
+
+    &::before {
+      @include hb-icon-background('play', 'white');
+
+      content: '';
+      display: block;
+      position: relative;
+      background-repeat: no-repeat;
+      background-position: center;
+      width: 100%;
+      height: 100%;
+      background-size: hb-calculate-rems(40px);
+
+      .hs-full-width & {
+        @include grid-media-min('md') {
+          @include hb-themes(('colorful', 'airy')) {
+            background-size: hb-calculate-rems(50px);
+          }
+
+          @include hb-traditional {
+            background-size: hb-calculate-rems(70px);
+          }
+        }
+      }
+
+      .full:not(.align-left):not(.align-right) &,
+      .hb-spotlight & {
+        @include grid-media-min('md') {
+          @include hb-themes(('colorful', 'airy')) {
+            background-size: hb-calculate-rems(55px);
+          }
+
+          @include hb-traditional {
+            background-size: hb-calculate-rems(60px);
+          }
+        }
+      }
+    }
   }
 }
 

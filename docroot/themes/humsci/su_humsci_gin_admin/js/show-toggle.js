@@ -13,7 +13,7 @@
         const maxHeight = 550;
 
         // Only apply if taller than 550px
-        if (block.offsetHeight <= maxHeight) {
+        if (block.scrollHeight <= maxHeight) {
           continue;
         }
 
@@ -29,13 +29,34 @@
         block.appendChild(button);
 
         button.addEventListener('click', () => {
-          const isCollapsed = block.classList.toggle('is-collapsed');
+          const isCollapsed = block.classList.contains('is-collapsed');
 
-          button.textContent = isCollapsed ? 'Show More' : 'Show Less';
-          button.setAttribute('aria-expanded', !isCollapsed);
+          if (isCollapsed) {
+            // EXPAND
+            const fullHeight = block.scrollHeight;
+
+            block.style.maxHeight = fullHeight + 'px';
+            block.classList.remove('is-collapsed');
+
+            button.textContent = 'Show Less';
+            button.setAttribute('aria-expanded', 'true');
+
+          } else {
+            // COLLAPSE
+            const currentHeight = block.scrollHeight;
+
+            block.style.maxHeight = currentHeight + 'px';
+
+            requestAnimationFrame(() => {
+              block.style.maxHeight = '550px';
+            });
+
+            block.classList.add('is-collapsed');
+
+            button.textContent = 'Show More';
+            button.setAttribute('aria-expanded', 'false');
+          }
         });
-
-        button.setAttribute('aria-expanded', 'false');
       }
     },
   };

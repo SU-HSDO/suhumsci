@@ -1108,15 +1108,85 @@ function su_humsci_profile_update_9753() {
 }
 
 /**
- * Uninstall the shield module (for production environment).
+ * Install the purge_users module.
  */
 function su_humsci_profile_update_9754() {
+  \Drupal::service('module_installer')->install(['purge_users']);
+}
+
+/**
+ * Uninstall the blazy_ui and blazy modules.
+ */
+function su_humsci_profile_update_9755() {
+  \Drupal::service('module_installer')->uninstall([
+    'blazy_ui',
+    'blazy',
+  ]);
+}
+
+/**
+ * Add field_poster_image_override to the media video form display.
+ */
+function su_humsci_profile_update_9756() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  // Create field storage if it does not exist.
+  $poster_image_override_field_storage = $config_storage->read('field.storage.media.field_poster_image_override');
+  if (
+    !$field_storage->load('media.field_poster_image_override') &&
+    !empty($poster_image_override_field_storage)
+  ) {
+    $field_storage->createFromStorageRecord($poster_image_override_field_storage)->save();
+  }
+
+  // Create field_config if it does not exist.
+  $poster_image_override_field_config = $config_storage->read('field.field.media.video.field_poster_image_override');
+  if (
+    empty($field_config_storage->load('media.video.field_poster_image_override')) &&
+    !empty($poster_image_override_field_config)
+  ) {
+    $field_config_storage->create($poster_image_override_field_config)->save();
+  }
+
+  $entity_type_manager = \Drupal::entityTypeManager();
+
+  // Add field to the media video form display.
+  $form_displays = $entity_type_manager
+    ->getStorage('entity_form_display')
+    ->loadMultiple(['media.video.default', 'media.video.media_library']);
+
+  foreach ($form_displays as $form_display) {
+    $weight = max(array_column($form_display->getComponents(), 'weight') ?: [0]);
+
+    $form_display->setComponent('field_poster_image_override', [
+      'type' => 'image_image',
+      'region' => 'content',
+      'weight' => $weight + 1,
+      'settings' => [
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ],
+      'third_party_settings' => [],
+    ])->save();
+  }
+}
+
+/**
+ * Uninstall the shield module (for production environment).
+ */
+function su_humsci_profile_update_9757() {
   \Drupal::service('module_installer')->uninstall(['shield']);
 }
 
 /**
  * Install the hs_config_partial module.
  */
-function su_humsci_profile_update_9755() {
+function su_humsci_profile_update_9758() {
   \Drupal::service('module_installer')->install(['hs_config_partial']);
 }

@@ -150,6 +150,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/publishcontent": "^1.2",
         "drupal/purge": "^3.2",
+        "drupal/purge_users": "^5.0",
         "drupal/rabbit_hole": "^1.0-beta4",
         "drupal/readonly_field_widget": "^1.4",
         "drupal/real_aes": "^2.3",
@@ -220,12 +221,10 @@
     },
     "scripts": {
         "build-theme": [
-            "npm ci --prefix docroot/themes/humsci/humsci_basic",
-            "npm run build --prefix docroot/themes/humsci/humsci_basic"
+            "hooks/common/theme/theme-build.sh"
         ],
         "test-theme": [
-            "npm ci --prefix docroot/themes/humsci/humsci_basic",
-            "npm run test --prefix docroot/themes/humsci/humsci_basic"
+            "hooks/common/theme/theme-test.sh"
         ],
         "post-drupal-scaffold-cmd": [
             "patch -p1 < patches/scaffold.patch"
@@ -238,6 +237,9 @@
             "drupal/block_class": {
                 "Click JavaScript to close details causes modals to scroll unnecessarily https://www.drupal.org/project/block_class/issues/3497768": "patches/contrib/block_class/60.patch"
             },
+            "drupal/content_access_simple": {
+                "https://www.drupal.org/project/content_access_simple/issues/3575304: Check for permission changes before running any actions on node submit": "patches/contrib/content_access_simple-3575304-mr-1.patch"
+            },
             "drupal/core": {
                 "https://www.drupal.org/project/drupal/issues/2999491": "https://www.drupal.org/files/issues/2024-07-17/drupal-2999491-162.patch",
                 "https://www.drupal.org/project/drupal/issues/2981837": "https://www.drupal.org/files/issues/2019-05-22/findMigrationDependencies-null-process-value-2981837-5.patch",
@@ -247,7 +249,9 @@
                 "Allow media items to be edited in a modal when using the field widget https://www.drupal.org/project/drupal/issues/2985168": "https://www.drupal.org/files/issues/2023-12-18/2985168-172.patch",
                 "Cannot read properties of undefined (reading 'settings') with dialog.position.js https://www.drupal.org/project/drupal/issues/3356667": "patches/core/core-mr-8892.patch",
                 "https://www.drupal.org/project/drupal/issues/3207813: ModuleHandler skips all hook implementations when invoked before the module files have been loaded": "patches/core/core-mr-6976.patch",
-                "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch"
+                "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch",
+                "Fix oEmbed video thumbnail resolution https://www.drupal.org/project/drupal/issues/3447326": "patches/core/core-3447326-mr-9518-20251104.patch",
+                "Adds bulk operations action to media library that allows site admin to generate new thumbnails https://www.drupal.org/project/drupal/issues/2983456": "patches/core/core-2983456-168-20251104.patch"
             },
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"

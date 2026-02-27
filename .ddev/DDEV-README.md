@@ -3,12 +3,15 @@
 If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, here are some basic steps for getting set up.
 
 1. [Install DDEV](https://ddev.readthedocs.io/) and a Docker provider such as OrbStack or Docker Desktop.
+1. If you previously used Lando on this codebase, run `rm docroot/sites/*/settings/local.settings.php` to remove old configuration.
+1. `ddev start`
 1. Trust the DDEV root certificate authority. [Trusting the CA](https://ddev.com/blog/ddev-local-trusted-https-certificates/)
-1. Copy the `.ddev/default.config.yaml` to `.ddev/config.yaml`.
+1. DDEV needs to know about your SSH keys so that it can fetch a database `ddev auth ssh`
 1. Run `ddev blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database and files for the site you wish to work on (alternatively [pull a db from staging or dev](#syncing-from-staging)). The `SITE_ALIAS` is the site alias and can be found in the `multisites` section of `blt/blt.yml`. In most cases, it matches the name in the local domain, with dashes replaced with underscores (`hs-traditional` → `hs_traditional`).
 1. Run `ddev drush @[SITE_ALIAS].local uli` to log in as user:1 (Example: `ddev drush @music.local uli`).
 1. Visit your site at `https://[site-name].ddev.site` (Example: `https://ethicsinsociety.ddev.site`)
 1. Front-end engineers, return to the main documentation for [front-end build and watch commands](../README.md#builds).
+1. To change the ddev configuration for everyone (e.g. set a new version of PHP) edit `.ddev/config.yaml`.  To change ddev configuration only for yourself (e.g. experiment with integrating a new service), then create `.ddev/config.local.yaml`.
 
 ## Common commands
 
@@ -29,6 +32,10 @@ If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, h
 
 * **Command sql-sanitize was not found**: This error typically occurs when the target database is not properly bootstrapped or is empty. This commonly happens when: the database hasn't been synced yet or the database connection or drush aliases are misconfigured.
 * **Solution**: First, ensure you have a working database by running `ddev blt drupal:sync --site=SITE_ALIAS` to pull down a copy of the live database. Also verify drush aliases are set correctly with `ddev drush @SITE_ALIAS.local status`.
+
+
+* **Unknown MySQL server host 'database'**: When running ddev blt drupal:sync
+* **Solution**: You were probably running Lando on this codebase before you tried DDEV.  Follow the instruction near the top of the setup instructions.
 
 ### Starting Fresh
 

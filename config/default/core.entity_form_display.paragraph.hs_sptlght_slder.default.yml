@@ -3,9 +3,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.hs_sptlght_slder.field_bg_color_width
     - field.field.paragraph.hs_sptlght_slder.field_hs_sptlght_sldes
     - paragraphs.paragraphs_type.hs_sptlght_slder
   module:
+    - conditional_fields
     - paragraphs
     - paragraphs_ee
     - paragraphs_features
@@ -14,9 +16,34 @@ targetEntityType: paragraph
 bundle: hs_sptlght_slder
 mode: default
 content:
+  field_bg_color_width:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings:
+      conditional_fields:
+        6d910fc3-1e3b-4f69-86c7-679fa8dd308b:
+          entity_type: paragraph
+          bundle: hs_collection
+          dependee: field_bg_color
+          settings:
+            state: visible
+            reset: false
+            condition: value
+            grouping: AND
+            values_set: 5
+            value: ''
+            values: _none
+            value_form:
+              -
+                value: default
+            effect: show
+            effect_options: {  }
+            selector: ''
   field_hs_sptlght_sldes:
     type: paragraphs
-    weight: 0
+    weight: 1
     region: content
     settings:
       title: Spotlight
@@ -33,6 +60,7 @@ content:
         collapse_edit_all: collapse_edit_all
         convert: '0'
         duplicate: duplicate
+      expose_drag_drop: 0
     third_party_settings:
       paragraphs_features:
         add_in_between: false

@@ -148,6 +148,25 @@
     }
   }
 
+  // Styles when there's a video on a card.
+  &:has(.hb-video-lazy:hover),
+  &:has(.hb-video-lazy:focus-within) {
+    .hb-vertical-linked-card__title {
+      @include hb-themes(('colorful', 'airy')) {
+        background-color: color('secondary');
+      }
+
+      @include hb-traditional {
+        background-color: color('primary');
+        text-decoration: none;
+      }
+    }
+
+    .hb-vertical-linked-card__title__link::after {
+      mask-position: 6px;
+    }
+  }
+
   &__title__link,
   &__title__link.ext {
     color: color('white', 'global');

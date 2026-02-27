@@ -34,8 +34,10 @@
           if (isCollapsed) {
             // EXPAND
             const fullHeight = block.scrollHeight;
+            const buttonHeight = button.offsetHeight;
 
-            block.style.maxHeight = fullHeight + 'px';
+            block.style.maxHeight = fullHeight + buttonHeight + 'px';
+            block.style.height = fullHeight + buttonHeight + 'px';
             block.classList.remove('is-collapsed');
 
             button.textContent = 'Show Less';
@@ -43,9 +45,7 @@
 
           } else {
             // COLLAPSE
-            const currentHeight = block.scrollHeight;
-
-            block.style.maxHeight = currentHeight + 'px';
+            block.style.height = '100%';
 
             requestAnimationFrame(() => {
               block.style.maxHeight = '550px';

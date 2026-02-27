@@ -8,10 +8,8 @@ This Drupal module prevents configuration deletions during config import, effect
 - Controlled by a feature flag (`enabled`) in the module's configuration. The module and "enabled" setting must both be enabled.
 - No configuration form: enable/disable protection via configuration management, Drush, config splits, or settings.php overrides.
 
-## Event Order
-The partial import protection runs **before** config_ignore and config_split during the config import process. This means:
-- All configuration deletions are blocked before config_ignore and config_split process their own logic.
-- Any deletions introduced by config_split will still be processed after this module runs.
+## Combining with config_split
+The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. This means all module uninstalls need to take place before the config import step.
 
 ## Configuration
 

@@ -30,9 +30,10 @@ The platform uses a combination of contributed and custom modules to manage conf
 - We use partial config imports to preserve custom site configuration.
 - Partial imports only create or update config, never delete, so customizations are safe.
 - If config needs to be deleted across all sites, a database update hook is required.
-- Previously, partial imports were run using the `--partial` flag with `drush config-import`. With config_split 2.x and config_ignore 3.x, the config transformation pipeline is used, and `--partial` does not respect these modules.
-- The custom `hs_config_partial` module implements safe partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
+- Previously, partial imports were run using the `--partial` flag with `drush config-import`. With `config_split` 2.x and `config_ignore` 3.x, the config transformation pipeline is used, and `--partial` does not respect these modules.
+- The custom `hs_config_partial` module implements partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
 - The `acquia.settings.php` enables the `hs_config_partial` enabled setting on all Acquia environments, in addition to `config_split` to ensure this stays on.
+- The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. This means all module uninstalls need to take place before the config import step. We use custom `blt.yml` configuration and a ToggleModules command to uninstall modules based on the environment before the config import step.
 
 ## Best Practices
 

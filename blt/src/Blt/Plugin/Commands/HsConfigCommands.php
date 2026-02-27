@@ -46,10 +46,17 @@ class HsConfigCommands extends ConfigCommand {
       return;
     }
 
-    $task->drush('config-import')->option('partial');
-    // Runs a second import to ensure splits are
-    // both defined and imported.
-    $task->drush('config-import')->option('partial');
+    // 2026-02-06: Because config_split and config_ignore use config transform
+    // in their latest versions, and partial imports do not use config
+    // transform, we need to use our custom hs_config_partial module to
+    // run partial imports with the split and ignore functionality intact.
+    // Enable the partial import through the module setting before running a 
+    // regular config import.
+    $task->drush('cset')->arg('hs_config_partial.settings')->arg('enabled')->arg(1);
+    $task->drush('config-import');
+    // Runs a second import to ensure splits are both defined and imported.
+    $task->drush('cset')->arg('hs_config_partial.settings')->arg('enabled')->arg(1);
+    $task->drush('config-import');
   }
 
   /**

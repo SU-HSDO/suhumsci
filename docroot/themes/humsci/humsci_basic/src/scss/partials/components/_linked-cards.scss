@@ -47,6 +47,28 @@
     }
   }
 
+  // Styles when there's a video on a card.
+  &:has(.hb-video-lazy:hover),
+  &:has(.hb-video-lazy:focus-within) {
+    @include hb-colorful {
+      .hb-raised-cards & {
+        text-decoration-color: color('gray-medium', 'global');
+      }
+    }
+
+    .hb-card__title a,
+    .hb-card__title a > div > * {
+      color: color('black', 'global');
+      text-decoration-color: color('gray-medium', 'global');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: color('black', 'global');
+        text-decoration-color: color('gray-medium', 'global');
+      }
+    }
+  }
+
   &:hover,
   &:focus,
   &.is-focused {

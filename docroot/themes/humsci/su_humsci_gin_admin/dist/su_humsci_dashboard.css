@@ -130,10 +130,24 @@ html .dashboard-content.user-logged-in {
     transition:
       max-height 550ms ease-out;
     will-change: max-height;
+    height: 100%;
 
     &.is-collapsed {
       max-height: 34.375rem;
-      height: 100%;
+    }
+
+    /* When expanded */
+    &:not(.is-collapsed) {
+      max-height: 100%;
+
+      /* Add space at the bottom when there's a toggle to avoid the toggle hide any content or button */
+      &:has(.show-toggle) {
+        padding-bottom: 2.625rem;
+      }
+
+      .show-toggle::after {
+        transform: rotate(180deg);
+      }
     }
 
     /* Toggle button spacing */
@@ -171,11 +185,6 @@ html .dashboard-content.user-logged-in {
         background-color: #5D5656;
         color: #ffff;
       }
-    }
-
-    /* When expanded */
-    &:not(.is-collapsed) .show-toggle::after {
-      transform: rotate(180deg);
     }
   }
 }

@@ -1,8 +1,9 @@
-((Drupal) => {
+((Drupal, once) => {
   Drupal.behaviors.showToggle = {
     attach(context) {
-      const blocks = context.querySelectorAll(
-        '.dashboard--main-dashboard .block'
+      const blocks = once(
+        'show-toggle',
+        context.querySelectorAll('.dashboard--main-dashboard .block')
       );
 
       if (!blocks.length) {
@@ -17,47 +18,23 @@
           continue;
         }
 
-        block.setAttribute('data-show-more-processed', '');
         block.classList.add('is-collapsed');
 
-        // Create toggle button
         const button = document.createElement('button');
-        button.className = 'button button--secondary show-toggle';
+        button.className = 'show-toggle';
         button.type = 'button';
         button.textContent = 'Show More';
+        button.setAttribute('aria-expanded', 'false');
 
         block.appendChild(button);
 
         button.addEventListener('click', () => {
-          const isCollapsed = block.classList.contains('is-collapsed');
+          const isCollapsed = block.classList.toggle('is-collapsed');
 
-          if (isCollapsed) {
-            // EXPAND
-            const fullHeight = block.scrollHeight;
-            const buttonHeight = button.offsetHeight;
-
-            block.style.maxHeight = fullHeight + buttonHeight + 'px';
-            block.style.height = fullHeight + buttonHeight + 'px';
-            block.classList.remove('is-collapsed');
-
-            button.textContent = 'Show Less';
-            button.setAttribute('aria-expanded', 'true');
-
-          } else {
-            // COLLAPSE
-            block.style.height = '100%';
-
-            requestAnimationFrame(() => {
-              block.style.maxHeight = '550px';
-            });
-
-            block.classList.add('is-collapsed');
-
-            button.textContent = 'Show More';
-            button.setAttribute('aria-expanded', 'false');
-          }
+          button.textContent = isCollapsed ? 'Show More' : 'Show Less';
+          button.setAttribute('aria-expanded', String(!isCollapsed));
         });
       }
     },
   };
-})(Drupal);
+})(Drupal, once);

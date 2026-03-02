@@ -2,7 +2,12 @@
 
 DIR="$(dirname "$(realpath "$0")")"
 
-echo "HSDP_COMPILE_ENVIRONMENT: $HSDP_COMPILE_ENVIRONMENT" >&2
+if [ -n "$HSDP_COMPILE_ENVIRONMENT" ]; then
+  echo "HSDP_COMPILE_ENVIRONMENT: $HSDP_COMPILE_ENVIRONMENT" >&2
+else
+  echo "HSDP_COMPILE_ENVIRONMENT: <unset>" >&2
+fi
+
 if [ -n "$DDEV_PROJECT" ] || [ -n "$LANDO_PROJECT" ]; then
   echo "Compiling the theme using the npm within ddev/lando..." >&2
   NPM_CMD="npm"

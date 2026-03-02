@@ -49,3 +49,36 @@ function hs_admin_update_10001() {
     'view user list',
   ]);
 }
+
+/**
+ * Give Authors new permissions.
+ */
+function hs_admin_update_10002(&$sandbox) {
+  user_role_grant_permissions('author', ['access toolbar']);
+
+  // Discussed with the H&S team — we want authors to be able to edit any
+  // content that they are the author of.
+  $types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $types = array_keys($types);
+  $permissions = array_map(function ($type) {
+    return "edit own $type content";
+  }, $types);
+  user_role_grant_permissions('author', $permissions);
+
+  return 'Gave authors permission to edit their own content in ' . implode(', ', $types);
+}
+
+/**
+ * Revoke permission to use shortcuts for everyone except high roles.
+ */
+function hs_admin_update_10003(&$sandbox) {
+  $permissions = ['access shortcuts'];
+  user_role_revoke_permissions('authenticated', $permissions);
+  $high_roles = ['site_manager', 'contributor', 'preparer'];
+  foreach ($high_roles as $role) {
+    user_role_grant_permissions($role, $permissions);
+  }
+  return 'Revoked permission to use shortcuts for everyone except: ' . implode(', ', $high_roles);
+}

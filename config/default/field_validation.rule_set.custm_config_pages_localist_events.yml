@@ -1,0 +1,43 @@
+uuid: 948c14e7-2c3c-470b-aa77-f1c3286c7e6e
+langcode: en
+status: true
+dependencies: {  }
+name: custm_config_pages_localist_events
+label: 'config_pages localist_events validation'
+entity_type: config_pages
+bundle: localist_events
+field_validation_rules:
+  0b625d86-242d-4a81-8fe7-cae7bbb870d2:
+    id: regex_constraint_rule
+    title: 'Multiple Events Bookmark URL'
+    data:
+      validate_mode: default
+      pattern: '/https:\/\/events-legacy.stanford.edu\/bookmark\/feed.php\?slug=/'
+      message: 'Only bookmark URLs are supported.'
+    weight: 1
+    uuid: 0b625d86-242d-4a81-8fe7-cae7bbb870d2
+    field_name: field_url_book_i
+    column: uri
+    error_message: ''
+    roles: {  }
+    condition:
+      field: ''
+      operator: ''
+      value: ''
+  297ea6ea-17c8-44b2-8c3d-2aebdfedc42e:
+    id: regex_constraint_rule
+    title: 'Multiple Schedules Bookmark URL'
+    data:
+      validate_mode: default
+      pattern: '/https:\/\/events-legacy.stanford.edu\/bookmark\/feed.php\?slug=/'
+      message: 'Only bookmark URLs are supported.'
+    weight: 2
+    uuid: 297ea6ea-17c8-44b2-8c3d-2aebdfedc42e
+    field_name: field_url_book_s
+    column: uri
+    error_message: ''
+    roles: {  }
+    condition:
+      field: ''
+      operator: ''
+      value: ''

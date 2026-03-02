@@ -168,21 +168,8 @@ sync:
   commands:
     - 'blt:init:settings'
 tests:
-  phpunit:
-    -
-      path: '${docroot}'
-      config: '${docroot}/core/phpunit.xml'
-      directory: '${docroot}/modules/humsci'
-      bootstrap: '${docroot}/core/tests/bootstrap.php'
-      filter: /(Unit|Kernel)/
   reports:
     localDir: '${repo.root}/artifacts'
-  codeception:
-    su_humsci_profile:
-      suites:
-        - acceptance
-        - functional
-      directory: '${docroot}/profiles/humsci/su_humsci_profile/tests/codeception'
 keys_rsync:
   ssh: humscigryphon.prod@web-42199.prod.hosting.acquia.com
   files:

@@ -46,7 +46,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - run: git config --system --add safe.directory '*'
       - name: Install Dependencies
         run: |
@@ -54,13 +54,12 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/
       - name: PHPUnit Tests
         run: |
-          blt tests:phpunit:coverage --no-interaction
+          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage &&
+          drush sws:tests:phpunit-coverage-check artifacts/phpunit/coverage/xml --clover-file=artifacts/phpunit/coverage/clover.xml --min-coverage=80 -n 
   lint_theme:
     runs-on: ubuntu-latest
     container:
@@ -119,7 +118,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - run: git config --system --add safe.directory '*'
       - name: Install Site
         run: |
@@ -127,11 +126,9 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -140,7 +137,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          blt codeception --group=install --suite=functional
+          drush sws:codeception --suite=functional --group=install --site-domain=localhost
       - name: Save Functional Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -189,7 +186,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - run: git config --system --add safe.directory '*'
       - name: Install Site
         run: |
@@ -197,11 +194,9 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -210,7 +205,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          blt codeception --group=install --suite=acceptance
+          drush sws:codeception --suite=acceptance --group=install --site-domain=localhost
       - name: Save Acceptance Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -245,7 +240,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -262,5 +257,4 @@ jobs:
           git config --global user.name "Github Actions" &&
           ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt blt:telemetry:disable --no-interaction &&
-          blt deploy -n
+          drush sws:artifact:deploy -v -n

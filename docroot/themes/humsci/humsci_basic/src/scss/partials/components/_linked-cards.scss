@@ -1,4 +1,5 @@
 @use '../variables/general' as *;
+@use '../functions/general' as *;
 @use '../functions/animation' as *;
 @use '../functions/color' as *;
 @use '../mixins/theme' as *;
@@ -10,8 +11,6 @@
   // Needed to make the styles work when the anchor is the wrapper.
   .hb-card__title a,
   .hb-card__title a > div > * {
-    @include hb-link;
-
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
       color: var(--link-base-current-color);
@@ -23,26 +22,37 @@
     display: inline;
   }
 
-  &:hover,
-  &:focus {
-    cursor: pointer;
+  // Apply hover styles only to cards with a link.
+  &.hb-card--linked {
+    &:hover,
+    &:focus,
+    &.is-focused {
+      cursor: pointer;
 
-    @include hb-colorful {
-      .hb-raised-cards & {
-        text-decoration-color: color('secondary-darken-12');
+      @include hb-colorful {
+        .hb-raised-cards & {
+          text-decoration-color: color('secondary-darken-12');
+        }
       }
-    }
 
-    // Needed to make the styles work when the anchor is the wrapper.
-    .hb-card__title a,
-    .hb-card__title a > div > * {
-      color: color('black', 'global');
-      text-decoration-color: color('primary');
+      // Needed to make the styles work when the anchor is the wrapper.
+      .hb-card__title a,
+      .hb-card__title a > div > * {
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          color: var(--link-base-hover-current-color);
+          text-decoration-color: var(--link-base-hover-current-color);
+        }
+      }
 
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        color: var(--link-base-hover-current-color);
-        text-decoration-color: var(--link-base-hover-current-color);
+      // Arrow shift on hover.
+      .hb-card__title a::after,
+      .hb-vertical-linked-card__title a::after {
+        transform: translateX(#{hb-calculate-rems(2.5px)});
+      }
+
+      .hb-card__img img {
+        transform: scale($hb-image-hover-scale);
       }
     }
   }
@@ -66,14 +76,6 @@
         color: color('black', 'global');
         text-decoration-color: color('gray-medium', 'global');
       }
-    }
-  }
-
-  &:hover,
-  &:focus,
-  &.is-focused {
-    .hb-card__img img {
-      transform: scale($hb-image-hover-scale);
     }
   }
 

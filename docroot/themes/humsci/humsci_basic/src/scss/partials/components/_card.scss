@@ -11,16 +11,28 @@
 @use '../mixins/flex-grid' as *;
 @use '../mixins/links' as *;
 
+// Card shared styles.
+//
+// Styles for the following patterns:
+// - horizontal-card (views and postcard component).
+// - vertical-card (views and postcard component).
+// - vertical-button-card (views and postcard component).
+// - date-stacked-horizontal-card (views only).
+// - date-stacked-vertical-card (views only).
+
+$container-small: hb-calculate-rems(576px);
+$container-medium: hb-calculate-rems(768px);
+
+//
+// Base styles (views and postcard component).
+//
+
 .hb-card {
   display: flex;
   flex-direction: column;
-
-  &--horizontal {
-    @include grid-media-min($hb-horizontal-card-breakpoint) {
-      flex-direction: row;
-      align-items: flex-start;
-    }
-  }
+  container-type: inline-size;
+  container-name: card;
+  background-color: color('white', 'global');
 
   // Update styles when there's a lazy load video on it.
   &.hb-vertical-card {
@@ -31,519 +43,718 @@
     }
   }
 
-  &__subcontent {
-    width: 100%;
+  &.hb-vertical-card--accent {
+    border-bottom: hb-calculate-rems(4px) solid color('primary');
+  }
+}
 
-    .hb-card--horizontal-date-stacked & {
-      flex-wrap: wrap;
+.hb-card--horizontal:has(.hb-card__graphics) {
+  @include hb-themes(('colorful', 'airy')) {
+    padding: hb-calculate-rems(10px);
+  }
+
+  @include hb-traditional {
+    padding: hb-calculate-rems(10px);
+
+    @container card (width > #{$container-small}) {
+      padding: hb-calculate-rems(12px);
     }
 
-    @include grid-media-min('sm') {
-      display: flex;
+    @container card (width > #{$container-medium}) {
+      padding: hb-calculate-rems(16px);
+    }
+  }
 
-      // from grid--col 3 and above we'll display block
-      .hb-grid--cols-10 &,
-      .hb-grid--cols-11 &,
-      .hb-grid--cols-12 &,
-      .hb-grid--cols-3 &,
-      .hb-grid--cols-4 &,
-      .hb-grid--cols-5 &,
-      .hb-grid--cols-6 &,
-      .hb-grid--cols-7 &,
-      .hb-grid--cols-8 &,
-      .hb-grid--cols-9 & {
-        display: block;
+  .hb-card__wrapper {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'a'
+      'b';
+
+    @container card (width > #{$container-small}) {
+      align-items: center;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas: 'a a a a a a b b b b b b';
+    }
+  }
+}
+
+.hb-card--horizontal--right:has(.hb-card__graphics) {
+  .hb-card__wrapper {
+    @container card (width > #{$container-small}) {
+      grid-template-areas: 'b b b b b b a a a a a a';
+    }
+  }
+}
+
+.hb-card__graphics {
+  position: relative;
+
+  .hb-vertical-card &,
+  .hb-card--date-stacked & {
+    @include hb-traditional {
+      padding: hb-calculate-rems(10px) hb-calculate-rems(10px) 0;
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(16px) hb-calculate-rems(16px) 0;
       }
     }
+  }
 
-    @include hb-themes(('airy', 'colorful')) {
-      &:not(:last-child) {
-        margin-bottom: hb-spacing-width('xxs');
+  .hb-card--horizontal & {
+    grid-area: a;
+
+    @include hb-themes(('colorful', 'airy')) {
+      @container card (width > #{$container-small}) {
+        padding-inline: 0 hb-calculate-rems(20px);
+      }
+    }
+  }
+
+  .hb-card--horizontal--right & {
+    @include hb-themes(('colorful', 'airy')) {
+      @container card (width > #{$container-small}) {
+        padding-inline: hb-calculate-rems(20px) 0;
+      }
+    }
+  }
+
+  .hb-card--horizontal-date-stacked & {
+    @include grid-media-min('md') {
+      max-width: 100%;
+    }
+  }
+
+  &--has-date {
+    // This ensures there is always enough height for the date tile in case
+    // the images is too short (can happen with util classes)
+    min-height: hb-calculate-rems(130px);
+  }
+
+  // If there is not an image we always want the text to sit next to the date
+  // tile. This is also the same when using hb-card-image-* utility classes.
+  .hb-card--no-image &,
+  [class^='hb-card-image-'] .hb-card--no-image & {
+    flex: initial;
+    max-width: initial;
+    margin-right: 0;
+  }
+}
+
+.hb-card__img {
+  overflow: hidden;
+
+  // override default link styles that might go here
+  a {
+    display: block;
+    background-image: none;
+
+    &:focus,
+    &:hover {
+      border-bottom: 0 none;
+
+      img {
+        transform: scale($hb-image-hover-scale);
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    transform: scale(1);
+    transition: hb-transition(transform);
+  }
+
+  .hb-media-image {
+    margin: 0;
+  }
+}
+
+.hb-card__content {
+  .hb-vertical-card &,
+  .hb-card--date-stacked & {
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(20px) hb-calculate-rems(16px)
+        hb-calculate-rems(24px);
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+          hb-calculate-rems(32px);
       }
     }
 
     @include hb-traditional {
-      &:not(:last-child) {
-        margin-bottom: hb-spacing-width('xxxs');
+      padding: hb-calculate-rems(12px) hb-calculate-rems(14px)
+        hb-calculate-rems(22px);
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+          hb-calculate-rems(16px);
+      }
+    }
+  }
+
+  .hb-vertical-card.hb-card--no-image &,
+  .hb-card--date-stacked.hb-card--no-image & {
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
+        hb-calculate-rems(24px);
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(32px)
+          hb-calculate-rems(32px);
       }
     }
 
-    // date stacked vertical UI pattern item
-    &-item {
-      color: color('gray-dark', 'global');
-      font-size: hb-calculate-rems(16px);
+    @include hb-traditional {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+        hb-calculate-rems(20px);
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+          hb-calculate-rems(24px);
+      }
+    }
+  }
+
+  .hb-card.hb-vertical-card--accent & {
+    @include hb-traditional {
+      padding-block-end: hb-calculate-rems(24px);
+
+      @container card (width > #{$container-small}) {
+        padding-block-end: hb-calculate-rems(24px);
+      }
+    }
+  }
+
+  .hb-card.hb-vertical-card--accent.hb-card--no-image & {
+    @include hb-traditional {
+      padding-block-end: hb-calculate-rems(24px);
+
+      @container card (width > #{$container-small}) {
+        padding-block-end: hb-calculate-rems(32px);
+      }
+    }
+  }
+
+  .hb-card--horizontal & {
+    grid-area: b;
+
+    // Padding for horizontal cards without image.
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
+        hb-calculate-rems(24px);
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(24px) hb-calculate-rems(32px)
+          hb-calculate-rems(32px);
+      }
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+        hb-calculate-rems(20px);
+
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+          hb-calculate-rems(24px);
+      }
+    }
+  }
+
+  // Padding for horizontal cards with image.
+  .hb-card--horizontal:has(.hb-card__graphics) & {
+    @include hb-themes(('colorful', 'airy')) {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
+        hb-calculate-rems(24px);
+    }
+
+    @include hb-traditional {
+      padding: hb-calculate-rems(16px) hb-calculate-rems(4px)
+        hb-calculate-rems(12px);
+    }
+  }
+
+  .hb-card--horizontal--left:has(.hb-card__graphics) & {
+    @include hb-themes(('colorful', 'airy')) {
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+          hb-calculate-rems(20px) hb-calculate-rems(12px);
+      }
+
+      @container card (width > #{$container-medium}) {
+        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+          hb-calculate-rems(20px) hb-calculate-rems(20px);
+      }
+    }
+
+    @include hb-traditional {
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(10px) 0 hb-calculate-rems(10px)
+          hb-calculate-rems(20px);
+      }
+
+      @container card (width > #{$container-medium}) {
+        padding: hb-calculate-rems(8px) 0 hb-calculate-rems(8px)
+          hb-calculate-rems(32px);
+      }
+    }
+  }
+
+  .hb-card--horizontal--right:has(.hb-card__graphics) & {
+    @include hb-themes(('colorful', 'airy')) {
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(16px) hb-calculate-rems(12px)
+          hb-calculate-rems(20px) hb-calculate-rems(24px);
+      }
+
+      @container card (width > #{$container-medium}) {
+        padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
+          hb-calculate-rems(20px) hb-calculate-rems(32px);
+      }
+    }
+
+    @include hb-traditional {
+      @container card (width > #{$container-small}) {
+        padding: hb-calculate-rems(10px) hb-calculate-rems(20px)
+          hb-calculate-rems(10px) 0;
+      }
+
+      @container card (width > #{$container-medium}) {
+        padding: hb-calculate-rems(8px) hb-calculate-rems(32px)
+          hb-calculate-rems(8px) 0;
+      }
+    }
+  }
+}
+
+.hb-card__title {
+  margin-block: 0 hb-calculate-rems(6px);
+
+  &:only-child {
+    margin: 0;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    overflow-wrap: break-word;
+
+    @include hb-heading-3;
+
+    // If the heading is in a grid or collection,
+    // keep it smaller longer.
+    .hb-grid &,
+    .ptype-hs-collection & {
+      @include hb-heading-4;
+    }
+  }
+
+  h6 {
+    text-transform: initial;
+  }
+
+  a,
+  a:not([class]) {
+    @include hb-more-link;
+
+    font-size: unset;
+    text-decoration: none;
+    font-weight: hb-theme-font-weight(bold);
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    .hb-dark-pattern &,
+    .hb-dark-inversion .views-element-container & {
+      color: var(--link-base-current-color);
+    }
+
+    &:hover,
+    &:focus {
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: var(--link-base-hover-current-color);
+        text-decoration-color: var(--link-base-hover-current-color);
+      }
+    }
+  }
+}
+
+.hb-card__description {
+  @include hb-description;
+  word-break: normal;
+  overflow-wrap: anywhere;
+
+  &:not(:last-child) {
+    margin-block-end: hb-calculate-rems(6px);
+  }
+
+  // .views-field:not(:last-child) {
+  //   display: block;
+  //   margin-bottom: hb-spacing-width('xxs');
+  // }
+}
+
+.hb-card__decorative-link {
+  display: flex;
+  align-items: center;
+  width: 100%; // large area to click
+  position: relative;
+
+  .hb-card--horizontal & {
+    @include hb-themes(('colorful', 'airy')) {
+      padding-block-start: hb-calculate-rems(10px);
+    }
+
+    @include hb-traditional {
+      padding-block-start: hb-calculate-rems(6px);
+
+      @container card (width > #{$container-small}) {
+        padding-block-start: hb-calculate-rems(10px);
+      }
+    }
+  }
+
+  .views-field {
+    width: 100%;
+  }
+
+  a {
+    @include hb-more-link;
+  }
+}
+
+//
+// Styles for views only card elements.
+//
+
+.hb-card__subcontent {
+  width: 100%;
+
+  .hb-card--horizontal-date-stacked & {
+    flex-wrap: wrap;
+  }
+
+  @include grid-media-min('sm') {
+    display: flex;
+
+    // from grid--col 3 and above we'll display block
+    .hb-grid--cols-10 &,
+    .hb-grid--cols-11 &,
+    .hb-grid--cols-12 &,
+    .hb-grid--cols-3 &,
+    .hb-grid--cols-4 &,
+    .hb-grid--cols-5 &,
+    .hb-grid--cols-6 &,
+    .hb-grid--cols-7 &,
+    .hb-grid--cols-8 &,
+    .hb-grid--cols-9 & {
+      display: block;
+    }
+  }
+
+  @include hb-themes(('airy', 'colorful')) {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xxs');
+    }
+  }
+
+  @include hb-traditional {
+    &:not(:last-child) {
+      margin-bottom: hb-spacing-width('xxxs');
+    }
+  }
+
+  // date stacked vertical UI pattern item
+  &-item {
+    color: color('gray-dark', 'global');
+    font-size: hb-calculate-rems(16px);
+
+    @include grid-media-min('sm') {
+      display: flex;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: hb-calculate-rems(4px);
 
       @include grid-media-min('sm') {
-        display: flex;
+        margin-bottom: 0;
       }
+    }
 
-      &:not(:last-child) {
-        margin-bottom: hb-calculate-rems(4px);
+    // Adds a "pipe" after each field
+    &::after {
+      @include grid-media-min('sm') {
+        content: '';
+        margin: 0 hb-calculate-rems(8px);
+        border-left: $hb-thin-border;
+        border-color: color('gray-dark', 'global');
 
-        @include grid-media-min('sm') {
-          margin-bottom: 0;
+        // from grid--col 3 and above we won't display pipes
+        .hb-grid--cols-10 &,
+        .hb-grid--cols-11 &,
+        .hb-grid--cols-12 &,
+        .hb-grid--cols-3 &,
+        .hb-grid--cols-4 &,
+        .hb-grid--cols-5 &,
+        .hb-grid--cols-6 &,
+        .hb-grid--cols-7 &,
+        .hb-grid--cols-8 &,
+        .hb-grid--cols-9 & {
+          display: none;
+        }
+
+        .hb-dark-pattern &,
+        .hb-dark-inversion .views-element-container & {
+          border-color: color('white', 'global');
         }
       }
+    }
 
-      // Adds a "pipe" after each field
+    // Removes the pipe from the last field
+    &:last-of-type {
       &::after {
-        @include grid-media-min('sm') {
-          content: '';
-          margin: 0 hb-calculate-rems(8px);
-          border-left: $hb-thin-border;
-          border-color: color('gray-dark', 'global');
-
-          // from grid--col 3 and above we won't display pipes
-          .hb-grid--cols-10 &,
-          .hb-grid--cols-11 &,
-          .hb-grid--cols-12 &,
-          .hb-grid--cols-3 &,
-          .hb-grid--cols-4 &,
-          .hb-grid--cols-5 &,
-          .hb-grid--cols-6 &,
-          .hb-grid--cols-7 &,
-          .hb-grid--cols-8 &,
-          .hb-grid--cols-9 & {
-            display: none;
-          }
-
-          .hb-dark-pattern &,
-          .hb-dark-inversion .views-element-container & {
-            border-color: color('white', 'global');
-          }
-        }
-      }
-
-      // Removes the pipe from the last field
-      &:last-of-type {
-        &::after {
-          content: '';
-          margin: 0;
-          border: 0;
-        }
-      }
-
-      a {
-        font-weight: hb-theme-font-weight(semibold);
+        content: '';
+        margin: 0;
+        border: 0;
       }
     }
 
-    // Target subcontent container of date stacked horizontal cards which feature icons in place of labels.
-    &--with-icons {
-      @include hb-themes(('airy', 'colorful')) {
-        padding-top: hb-calculate-rems(6px);
-        margin-bottom: hb-calculate-rems(8px) !important;
+    a {
+      font-weight: hb-theme-font-weight(semibold);
+    }
+  }
 
-        @include grid-media-min('sm') {
-          padding-top: hb-calculate-rems(12px);
-        }
-      }
+  // Target subcontent container of date stacked horizontal cards which feature icons in place of labels.
+  &--with-icons {
+    @include hb-themes(('airy', 'colorful')) {
+      padding-top: hb-calculate-rems(6px);
+      margin-bottom: hb-calculate-rems(8px) !important;
 
-      @include hb-traditional {
-        padding-top: 0;
-        margin-bottom: 0 !important;
+      @include grid-media-min('sm') {
+        padding-top: hb-calculate-rems(12px);
       }
     }
 
-    // date stacked horizontal UI pattern item
-    &-detail {
-      padding-right: hb-calculate-rems(26px);
+    @include hb-traditional {
+      padding-top: 0;
+      margin-bottom: 0 !important;
+    }
+  }
 
-      @include hb-themes(('colorful', 'airy')) {
-        margin-bottom: hb-spacing-width('xxs');
-      }
+  // date stacked horizontal UI pattern item
+  &-detail {
+    padding-right: hb-calculate-rems(26px);
 
-      @include hb-traditional {
-        margin-bottom: hb-spacing-width('xxxs');
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('xxs');
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xxxs');
+    }
+  }
+}
+
+// date, time, location, and speaker icons
+// within the date stacked horizontal UI pattern
+.hb-card__icon {
+  .views-label {
+    @include visually-hidden;
+  }
+
+  .field-content {
+    display: block;
+    padding: 0 hb-calculate-rems(4px) 0 hb-calculate-rems(28px);
+    line-height: 127%; // keep icons from being cropped at smaller screen sizes
+
+    @include hb-themes(('colorful', 'airy')) {
+      font-size: hb-calculate-rems(16px);
+    }
+
+    @include hb-traditional {
+      font-size: hb-calculate-rems(18px);
+    }
+  }
+
+  &--date {
+    // only apply calendar icon when the label exists
+    [class*='views-label'] + .field-content {
+      @include hb-icon-type($type: 'calendar', $color: 'secondary');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-type($type: 'calendar', $color: 'white');
       }
     }
   }
 
-  // date, time, location, and speaker icons
-  // within the date stacked horizontal UI pattern
-  &__icon {
-    .views-label {
-      @include visually-hidden;
-    }
+  &--location {
+    // only apply location pin icon when the label exists
+    [class*='views-label'] + .field-content {
+      @include hb-icon-type($type: 'location', $color: 'secondary');
 
-    .field-content {
-      display: block;
-      padding: 0 hb-calculate-rems(4px) 0 hb-calculate-rems(28px);
-      line-height: 127%; // keep icons from being cropped at smaller screen sizes
-
-      @include hb-themes(('colorful', 'airy')) {
-        font-size: hb-calculate-rems(16px);
-      }
-
-      @include hb-traditional {
-        font-size: hb-calculate-rems(18px);
-      }
-    }
-
-    &--date {
-      // only apply calendar icon when the label exists
-      [class*='views-label'] + .field-content {
-        @include hb-icon-type($type: 'calendar', $color: 'secondary');
-
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          @include hb-icon-type($type: 'calendar', $color: 'white');
-        }
-      }
-    }
-
-    &--location {
-      // only apply location pin icon when the label exists
-      [class*='views-label'] + .field-content {
-        @include hb-icon-type($type: 'location', $color: 'secondary');
-
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          @include hb-icon-type($type: 'location', $color: 'white');
-        }
-      }
-    }
-
-    &--speaker {
-      // only apply speaker icon when the label exists
-      [class*='views-label'] + .field-content {
-        @include hb-icon-type($type: 'speaker', $color: 'secondary');
-
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          @include hb-icon-type($type: 'speaker', $color: 'white');
-        }
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-type($type: 'location', $color: 'white');
       }
     }
   }
 
-  &__location {
-    color: color('gray-dark', 'global');
+  &--speaker {
+    // only apply speaker icon when the label exists
+    [class*='views-label'] + .field-content {
+      @include hb-icon-type($type: 'speaker', $color: 'secondary');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        @include hb-icon-type($type: 'speaker', $color: 'white');
+      }
+    }
+  }
+}
+
+.hb-card__location {
+  color: color('gray-dark', 'global');
+  font-size: hb-calculate-rems(14px);
+  margin-bottom: hb-spacing-width('xxs');
+
+  @include grid-media-min('md') {
+    font-size: hb-calculate-rems(16px);
+  }
+}
+
+.hb-card__highlighted {
+  color: color('gray-dark', 'global');
+
+  @include hb-themes(('colorful', 'airy')) {
     font-size: hb-calculate-rems(14px);
-    margin-bottom: hb-spacing-width('xxs');
 
     @include grid-media-min('md') {
       font-size: hb-calculate-rems(16px);
     }
   }
 
-  &__highlighted {
-    color: color('gray-dark', 'global');
+  @include hb-traditional {
+    font-size: hb-calculate-rems(16px);
 
-    @include hb-themes(('colorful', 'airy')) {
-      font-size: hb-calculate-rems(14px);
-
-      @include grid-media-min('md') {
-        font-size: hb-calculate-rems(16px);
-      }
-    }
-
-    @include hb-traditional {
-      font-size: hb-calculate-rems(16px);
-
-      @include grid-media-min('md') {
-        font-size: hb-calculate-rems(18px);
-      }
-    }
-
-    &:not(:last-child) {
-      margin-bottom: hb-spacing-width('xxs');
-    }
-
-    .views-label {
-      @include hb-field-label--featured;
-      display: inline-block;
-      margin-right: hb-calculate-rems(6px);
+    @include grid-media-min('md') {
+      font-size: hb-calculate-rems(18px);
     }
   }
 
-  &__graphics {
-    position: relative;
-
-    @include hb-themes(('colorful', 'airy')) {
-      margin-bottom: hb-spacing-width('xs');
-    }
-
-    @include hb-traditional {
-      margin-bottom: hb-spacing-width('xxxs');
-
-      .hb-card--horizontal-date-stacked & {
-        @include grid-media-min('md') {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    .hb-card--horizontal & {
-      @include grid-media-min('md') {
-        @include flex-column(5);
-        margin-right: hb-spacing-width();
-        margin-bottom: 0;
-      }
-    }
-
-    .hb-card--horizontal-date-stacked & {
-      @include grid-media-min('md') {
-        max-width: 100%;
-      }
-    }
-
-    &--has-date {
-      // This ensures there is always enough height for the date tile in case
-      // the images is too short (can happen with util classes)
-      min-height: hb-calculate-rems(130px);
-    }
-
-    // If there is not an image we always want the text to sit next to the date
-    // tile. This is also the same when using hb-card-image-* utility classes.
-    .hb-card--no-image &,
-    [class^='hb-card-image-'] .hb-card--no-image & {
-      flex: initial;
-      max-width: initial;
-      margin-right: 0;
-    }
+  &:not(:last-child) {
+    margin-bottom: hb-spacing-width('xxs');
   }
 
-  &__img {
-    overflow: hidden;
-
-    // override default link styles that might go here
-    a {
-      display: block;
-      background-image: none;
-
-      &:focus,
-      &:hover {
-        border-bottom: 0 none;
-
-        img {
-          transform: scale($hb-image-hover-scale);
-        }
-      }
-    }
-
-    img {
-      width: 100%;
-      height: auto;
-      transform: scale(1);
-      transition: hb-transition(transform);
-    }
+  .views-label {
+    @include hb-field-label--featured;
+    display: inline-block;
+    margin-right: hb-calculate-rems(6px);
   }
+}
 
-  .hb-media-image {
-    margin: 0;
-  }
+.hb-card__date-tile {
+  text-align: center;
+  margin-right: hb-spacing-width();
+  position: absolute;
 
-  &__date-tile {
-    text-align: center;
-    margin-right: hb-spacing-width();
-    position: absolute;
-
-    @include hb-themes(('airy', 'colorful')) {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: hb-calculate-rems(110px);
-      height: hb-calculate-rems(110px);
-      background-color: color('secondary');
-      color: color('white', 'global');
-      padding: hb-calculate-rems(12px) hb-calculate-rems(10px)
-        hb-calculate-rems(8px);
-      bottom: hb-calculate-rems(18px);
-      left: hb-calculate-rems(-10px);
-      z-index: 5;
-
-      @include grid-media-min('sm') {
-        bottom: hb-calculate-rems(22px);
-        left: hb-calculate-rems(-14px);
-      }
-    }
-
-    @include hb-traditional {
-      display: inline-block;
-      min-width: hb-calculate-rems(100px);
-      background-color: color('white', 'global');
-      padding: 0;
-      top: 0;
-      left: 0;
-    }
-
-    @include hb-colorful {
-      .hc-pairing-ocean & {
-        background-color: color('secondary-darken-12');
-      }
-    }
-
-    &:only-child {
-      position: relative;
-      bottom: auto;
-      left: auto;
-    }
-  }
-
-  &__date-tile-month {
-    text-transform: uppercase;
-    font-weight: hb-theme-font-weight(semibold);
-
-    @include hb-themes(('airy', 'colorful')) {
-      font-size: hb-calculate-rems(16px);
-      line-height: 122%;
-    }
-
-    @include hb-traditional {
-      background-color: color('primary');
-      color: color('white', 'global');
-      font-size: hb-calculate-rems(14px);
-      padding: hb-calculate-rems(10px);
-      width: 100%;
-    }
-  }
-
-  &__date-tile-day {
-    font-weight: hb-theme-font-weight(semibold);
-    line-height: 100%;
-
-    @include hb-themes(('airy', 'colorful')) {
-      font-size: hb-calculate-rems(52px);
-    }
-
-    @include hb-traditional {
-      border: $hb-thin-border;
-      border-top-width: 0;
-      border-color: color('gray-medium', 'global');
-      color: color('primary');
-      font-size: hb-calculate-rems(36px);
-      padding: hb-calculate-rems(10px) 0;
-
-      .views-element-container .hb-dark-pattern & .field-content,
-      .hb-dark-inversion .views-element-container & .field-content {
-        @include hb-traditional {
-          color: color('primary');
-        }
-      }
-    }
-  }
-
-  &__content {
-    .hb-card--horizontal & {
-      @include grid-media-min('md') {
-        @include flex-column(6);
-
-        // have to overwrite some Decanter things
-        // to allow this to grow if no image present
-        flex-grow: 1;
-
-        @supports (max-width: 100%) {
-          max-width: 100%; // Apply max-width to all browsers except IE. This allows the fallback settings written in flex-column to work correctly.
-        }
-      }
-    }
-  }
-
-  &__title {
-    margin-top: 0;
-
-    @include hb-themes(('airy', 'colorful')) {
-      margin-bottom: hb-spacing-width('xs');
-
-      @include grid-media-min('md') {
-        margin-bottom: hb-spacing-width('sm');
-      }
-    }
-
-    @include hb-traditional {
-      margin-bottom: hb-spacing-width('xxs');
-    }
-
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      margin: 0;
-      overflow-wrap: break-word;
-
-      @include hb-heading-3;
-
-      // If the heading is in a grid or collection,
-      // keep it smaller longer.
-      .hb-grid &,
-      .ptype-hs-collection & {
-        @include hb-heading-4;
-      }
-    }
-
-    h6 {
-      text-transform: initial;
-    }
-
-    a {
-      @include hb-link;
-
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        color: var(--link-base-current-color);
-      }
-
-      &:hover,
-      &:focus {
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          color: var(--link-base-hover-current-color);
-          text-decoration-color: var(--link-base-hover-current-color);
-        }
-      }
-    }
-  }
-
-  &__author {
-    // vertical card, list spacing: "xxxs": 10px,
-    margin-bottom: hb-spacing-width('xxxs');
-  }
-
-  &__description {
-    @include hb-description;
-    word-break: normal;
-    overflow-wrap: anywhere;
-
-    @include hb-themes(('airy', 'colorful')) {
-      &:not(:last-child) {
-        margin-bottom: hb-spacing-width('xs');
-      }
-    }
-
-    @include hb-traditional {
-      &:not(:last-child) {
-        margin-bottom: hb-calculate-rems(10px);
-      }
-    }
-
-    .views-field:not(:last-child) {
-      display: block;
-      margin-bottom: hb-spacing-width('xxs');
-    }
-  }
-
-  &__decorative-link {
+  @include hb-themes(('airy', 'colorful')) {
     display: flex;
-    align-items: center;
-    width: 100%; // large area to click
-    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    width: hb-calculate-rems(110px);
+    height: hb-calculate-rems(110px);
+    background-color: color('secondary');
+    color: color('white', 'global');
+    padding: hb-calculate-rems(12px) hb-calculate-rems(10px)
+      hb-calculate-rems(8px);
+    bottom: hb-calculate-rems(18px);
+    left: hb-calculate-rems(-10px);
+    z-index: 5;
 
-    .views-field {
-      width: 100%;
+    @include grid-media-min('sm') {
+      bottom: hb-calculate-rems(22px);
+      left: hb-calculate-rems(-14px);
     }
+  }
 
-    a {
-      // added to keep hb-dark-pattern from using the :not(class) on these links
-      @include hb-themes(('colorful', 'airy')) {
-        @include hb-card-arrow-link;
-      }
+  @include hb-traditional {
+    display: inline-block;
+    min-width: hb-calculate-rems(100px);
+    background-color: color('white', 'global');
+    padding: 0;
+    top: 0;
+    left: 0;
+  }
 
+  @include hb-colorful {
+    .hc-pairing-ocean & {
+      background-color: color('secondary-darken-12');
+    }
+  }
+
+  &:only-child {
+    position: relative;
+    bottom: auto;
+    left: auto;
+  }
+}
+
+.hb-card__date-tile-month {
+  text-transform: uppercase;
+  font-weight: hb-theme-font-weight(semibold);
+
+  @include hb-themes(('airy', 'colorful')) {
+    font-size: hb-calculate-rems(16px);
+    line-height: 122%;
+  }
+
+  @include hb-traditional {
+    background-color: color('primary');
+    color: color('white', 'global');
+    font-size: hb-calculate-rems(14px);
+    padding: hb-calculate-rems(10px);
+    width: 100%;
+  }
+}
+
+.hb-card__date-tile-day {
+  font-weight: hb-theme-font-weight(semibold);
+  line-height: 100%;
+
+  @include hb-themes(('airy', 'colorful')) {
+    font-size: hb-calculate-rems(52px);
+  }
+
+  @include hb-traditional {
+    border: $hb-thin-border;
+    border-top-width: 0;
+    border-color: color('gray-medium', 'global');
+    color: color('primary');
+    font-size: hb-calculate-rems(36px);
+    padding: hb-calculate-rems(10px) 0;
+
+    .views-element-container .hb-dark-pattern & .field-content,
+    .hb-dark-inversion .views-element-container & .field-content {
       @include hb-traditional {
-        @include hb-more-link;
+        color: color('primary');
       }
     }
   }
 }
 
+.hb-card__author {
+  // vertical card, list spacing: "xxxs": 10px,
+  margin-bottom: hb-spacing-width('xxxs');
+}

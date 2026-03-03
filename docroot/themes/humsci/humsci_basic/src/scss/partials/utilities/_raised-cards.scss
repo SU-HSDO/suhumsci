@@ -32,6 +32,13 @@
     height: 100%;
   }
 
+  &--uniform-height .hb-vertical-linked-card {
+    .hb-vertical-linked-card__description {
+      flex-grow: 1;
+    }
+  }
+
+
   // Raised cards uniform height styles for Testimonial & Timeline
   &--uniform-height .field-hs-collection-items .ptype-hs-testimonial,
   &--uniform-height .field-hs-collection-items .ptype-hs-timeline {
@@ -52,11 +59,9 @@
   }
 
   .hb-card {
-    background-color: color('white', 'global');
     flex-grow: 1;
 
     @include hb-traditional {
-      padding: hb-spacing-width('xs');
       box-shadow: hb-calculate-rems(1px) hb-calculate-rems(3px)
         hb-calculate-rems(17px) color('gray-medium', 'global');
     }
@@ -93,10 +98,6 @@
         }
       }
 
-      &__content {
-        padding: hb-spacing-width('xs');
-      }
-
       &.hb-card--horizontal-date-stacked.hb-card--no-image {
         .hb-card__graphics--has-date {
           .hb-card__date-tile {
@@ -115,10 +116,6 @@
           top: hb-calculate-rems(22px);
           left: hb-calculate-rems(-14px);
         }
-      }
-
-      &__title:only-child {
-        margin: 0;
       }
     }
   }
@@ -145,14 +142,6 @@
 
     @include hb-themes(('airy', 'colorful')) {
       background-color: transparent;
-    }
-  }
-
-  .hb-vertical-card,
-  .hb-card--date-stacked {
-    @include hb-colorful {
-      border-bottom: 3px solid;
-      border-color: color('secondary');
     }
   }
 }
@@ -240,15 +229,5 @@
         }
       }
     }
-  }
-}
-
-// Update padding when vertical card is in 4 columns.
-.hb-raised-cards
-  .field-hs-collection-items.item-per-row--4
-  .hb-vertical-card
-  .hb-card__content {
-  @include hb-colorful {
-    padding: hb-calculate-rems(18px);
   }
 }

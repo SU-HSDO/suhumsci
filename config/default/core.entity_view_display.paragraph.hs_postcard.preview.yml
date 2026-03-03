@@ -4,11 +4,13 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.preview
+    - field.field.paragraph.hs_postcard.field_hs_postcard_alignment
     - field.field.paragraph.hs_postcard.field_hs_postcard_body
-    - field.field.paragraph.hs_postcard.field_hs_postcard_display
     - field.field.paragraph.hs_postcard.field_hs_postcard_image
+    - field.field.paragraph.hs_postcard.field_hs_postcard_layout
     - field.field.paragraph.hs_postcard.field_hs_postcard_link
     - field.field.paragraph.hs_postcard.field_hs_postcard_title
+    - field.field.paragraph.hs_postcard.field_hs_postcard_vertical_style
     - paragraphs.paragraphs_type.hs_postcard
   module:
     - ds
@@ -28,7 +30,11 @@ third_party_settings:
       settings:
         pattern:
           field_templates: default
-          variant_field: field_hs_postcard_body
+          variant: _field
+          variant_field: field_hs_postcard_alignment
+          variant_field_values:
+            left: left
+            right: right
     regions:
       title:
         - field_hs_postcard_title
@@ -91,5 +97,7 @@ content:
     weight: 0
     region: title
 hidden:
-  field_hs_postcard_display: true
+  field_hs_postcard_alignment: true
+  field_hs_postcard_layout: true
+  field_hs_postcard_vertical_style: true
   search_api_excerpt: true

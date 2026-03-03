@@ -14,6 +14,13 @@
 // Font definitions.
 @use '../fonts/fonts';
 
+// Files from main
+@use '../objects/layouts.flex-grid' as *;
+@use '../objects/layouts.general' as *;
+@use '../objects/layouts.views' as *;
+@use '../components/block-layout';
+@use '../components/media';
+
 .paragraph-admin-preview {
   @include generate-css-vars('su-core', $su-core-colors);
 
@@ -25,11 +32,34 @@
    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
-  // Load main stylesheet with current theme.
+  // Load some stylesheet.
   // All styles will be prefixed with the `.paragraph-admin-preview` class.
   @include meta.load-css(
-    '../main',
-    $with: ('hb-current-theme': $hb-current-theme)
+    '../base/normalize',
+  );
+
+  @include meta.load-css(
+    '../base/color-pairings',
+  );
+
+  @include meta.load-css(
+    '../base/base',
+  );
+
+  @include meta.load-css(
+    '../base/forms',
+  );
+
+  @include meta.load-css(
+    '../base/tables',
+  );
+
+  @include meta.load-css(
+    '../components/buttons',
+  );
+
+  @include meta.load-css(
+    '../components/pattern.color-band',
   );
 
   // Utility classes.
@@ -51,24 +81,26 @@
       display: none;
     }
   }
-  // .paragraph--type--hs-sptlght-slder.paragraph--view-mode--preview {
-  //   padding-right: 0;
-  // }
 
-  // .paragraph--type--hs-gradient-hero-slider {
-  //   .swiper-pagination {
-  //     bottom: 0;
-  //   }
-  // }
+  .paragraph--type--hs-sptlght-slder.paragraph--view-mode--preview,
+  .paragraph--type--hs-carousel.paragraph--view-mode--preview {
+    padding-right: 0;
+  }
 
-  // .paragraph--type--hs-carousel .swiper-container {
-  //   .swiper-button-prev,
-  //   .swiper-button-next {
-  //     @include hb-traditional {
-  //       bottom: 4.76rem;
-  //     }
-  //   }
-  // }
+  .paragraph--type--hs-gradient-hero-slider {
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+
+  .paragraph--type--hs-carousel .swiper-container {
+    .swiper-button-prev,
+    .swiper-button-next {
+      @include hb-traditional {
+        bottom: 4.76rem;
+      }
+    }
+  }
 
   // .ptype-hs-carousel .ptype-hs-hero-image,
   // .paragraph--type--hs-carousel.ptype-hs-hero-image {
@@ -96,11 +128,11 @@
   //   }
   // }
 
-  // .ptype-hs-timeline .ptype-hs-timeline-item:not(:last-child) {
-  //   .hb-timeline-item[open]::after {
-  //     content: none;
-  //   }
-  // }
+  .ptype-hs-timeline .ptype-hs-timeline-item:not(:last-child) {
+    .hb-timeline-item[open]::after {
+      content: none;
+    }
+  }
 
   // .ptype-hs-callout-box > p {
   //   margin: 0 0 1rem !important;
@@ -120,14 +152,6 @@
   //   }
   // }
 
-  // .hb-timeline-item {
-  //   margin: 0;
-  // }
-
-  // .field-hs-collection-items.item-per-row--2 .paragraph-item {
-  //   margin: 0 !important;
-  // }
-
   // Gin styles overrides.
   @include hb-description;
 
@@ -139,20 +163,20 @@
     text-decoration: unset;
   }
 
-  // div.link {
-  //   display: block;
-  //   text-decoration: none;
-  // }
+  div.link {
+    display: block;
+    text-decoration: none;
+  }
 
   // blockquote::before {
   //   content: none;
   //   background-color: transparent;
   // }
 
-  // details summary {
-  //   background-color: transparent;
-  //   font-weight: 400;
-  // }
+  details summary {
+    background-color: transparent;
+    font-weight: 400;
+  }
 
   // .hb-caption-credit-image.caption-drupal-media {
   //   position: relative;
@@ -201,13 +225,13 @@
   // }
 }
 
-// .hb-raised-cards--uniform-height
-//   .field-hs-collection-items
-//   .ptype-hs-postcard
-//   .paragraph-admin-preview {
-//   display: flex;
+.hb-raised-cards--uniform-height
+  .field-hs-collection-items
+  .ptype-hs-postcard
+  .paragraph-admin-preview {
+  display: flex;
 
-//   & div:only-child:not(.hb-card__date-tile, .hb-pill) {
-//     width: 100%;
-//   }
-// }
+  & div:only-child:not(.hb-card__date-tile, .hb-pill) {
+    width: 100%;
+  }
+}

@@ -1,10 +1,7 @@
 ((Drupal, once) => {
   Drupal.behaviors.showToggle = {
     attach(context) {
-      const blocks = once(
-        'show-toggle',
-        context.querySelectorAll('.dashboard--main-dashboard .block')
-      );
+      const blocks = once('show-toggle', '.dashboard--main-dashboard .block', context);
 
       if (!blocks.length) {
         return;
@@ -15,6 +12,7 @@
 
         // Only apply if taller than 550px
         if (block.scrollHeight <= maxHeight) {
+          block.classList.add('is-static');
           continue;
         }
 

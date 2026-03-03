@@ -61,10 +61,6 @@ html .dashboard-content.user-logged-in {
   flex-direction: column;
 }
 
-.dashboard-content .layout .layout__region .block {
-  flex-grow: 1;
-}
-
 .dashboard-content .layout .layout__region .block a,
 .dashboard-content .layout .layout__region .block li::marker {
   color: var(--color-dashboard-brick-red);
@@ -129,11 +125,13 @@ html .dashboard-content.user-logged-in {
     overflow: hidden;
     transition:
       max-height 550ms ease-out;
-    will-change: max-height;
-    height: 100%;
 
     &.is-collapsed {
       max-height: 34.375rem;
+    }
+
+    &.is-static {
+      height: 100%;
     }
 
     /* When expanded */

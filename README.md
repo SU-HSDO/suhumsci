@@ -60,6 +60,11 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 - `npm run theme-watch` - Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
 - `npm run theme-visreg` - Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
 
+The build process will automatically choose whether to run in/out of ddev/lando (if installed).  To override this behavior use one of the following commands:
+
+- `export HSDP_COMPILE_ENVIRONMENT=ddev`
+- `export HSDP_COMPILE_ENVIRONMENT=lando`
+- `export HSDP_COMPILE_ENVIRONMENT=baremetal`
 
 ## Testing
 

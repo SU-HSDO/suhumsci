@@ -12,24 +12,6 @@
         {
             "type": "package",
             "package": {
-                "name": "accessible360/accessible-slick",
-                "version": "1.0.1",
-                "type": "drupal-library",
-                "dist": {
-                    "url": "https://github.com/Accessible360/accessible-slick/archive/refs/tags/v1.0.1.zip",
-                    "type": "zip"
-                },
-                "require": {
-                    "composer/installers": "^1.2"
-                },
-                "extra": {
-                    "installer-name": "slick"
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
                 "name": "dinbror/blazy",
                 "version": "1.8.2",
                 "type": "drupal-library",
@@ -41,11 +23,25 @@
                     "composer/installers": "^1.2.0"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "nolimits4web/swiper",
+                "version": "12.0.3",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://registry.npmjs.org/swiper/-/swiper-12.0.3.tgz",
+                    "type": "tar"
+                },
+                "require": {
+                    "composer/installers": "^1.2.0"
+                }
+            }
         }
     ],
     "require": {
         "php": ">=8.3",
-        "accessible360/accessible-slick": "^1.0",
         "acquia/blt": "^13.5",
         "acquia/blt-multisite": "^1.0",
         "composer/installers": "^1.9",
@@ -61,20 +57,21 @@
         "drupal/auto_entitylabel": "^3.0@beta",
         "drupal/better_exposed_filters": "^7.0",
         "drupal/better_normalizers": "^2.0",
+        "drupal/blazy": "^2.27",
         "drupal/block_class": "^4.0",
         "drupal/cancel_button": "^1.1",
         "drupal/chosen": "^4.0",
         "drupal/ckeditor5_plugin_pack": "^1.4",
         "drupal/color": "^1.0",
         "drupal/color_field": "^3.0",
-        "drupal/colorbox": "^2.0",
+        "drupal/colorbox": "2.1.4",
         "drupal/components": "^3.0",
         "drupal/conditional_fields": "^4.0@alpha",
         "drupal/config_filter": "^1.0",
-        "drupal/config_ignore": "^2.2",
+        "drupal/config_ignore": "^3.0",
         "drupal/config_pages_overrides": "^2.0",
         "drupal/config_readonly": "^1.0",
-        "drupal/config_split": "^1.0",
+        "drupal/config_split": "^2.0",
         "drupal/config_update": "^2.0@alpha",
         "drupal/confirm_leave": "^1.0@beta",
         "drupal/content_access": "^2.0",
@@ -141,8 +138,8 @@
         "drupal/menu_position": "^1.0@beta",
         "drupal/metatag": "^2.0",
         "drupal/metatag_simple_widget": "^1.0",
+        "drupal/migrate_plus": "^6.0",
         "drupal/migrate_source_csv": "^3.4",
-        "drupal/mysql56": "^1.1",
         "drupal/nobots": "^1.0",
         "drupal/node_in_menu": "^1.0",
         "drupal/node_revision_delete": "^2.0",
@@ -153,6 +150,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/publishcontent": "^1.2",
         "drupal/purge": "^3.2",
+        "drupal/purge_users": "^5.0",
         "drupal/rabbit_hole": "^1.0-beta4",
         "drupal/readonly_field_widget": "^1.4",
         "drupal/real_aes": "^2.3",
@@ -165,18 +163,19 @@
         "drupal/shield": "^1.4",
         "drupal/shortcut_menu": "3.0.0-beta7",
         "drupal/single_content_sync": "^1.4",
-        "drupal/slick": "^2.11",
-        "drupal/slick_paragraphs": "^2.0",
         "drupal/smart_date": "^4.0",
         "drupal/smart_trim": "^2.0",
         "drupal/spamspan": "^3.0@beta",
         "drupal/stage_file_proxy": "^3.0",
+        "drupal/style_selector": "^2.0@beta",
+        "drupal/swiper_formatter": "^2.0",
+        "drupal/tagify": "^1.2",
         "drupal/term_condition": "^2.0",
         "drupal/token_or": "^2.2",
         "drupal/transliterate_filenames": "^2.0",
         "drupal/ui_patterns": "^1.10",
         "drupal/ui_patterns_field_variants": "1.x-dev",
-        "drupal/video_embed_field": "^2.4",
+        "drupal/video_embed_field": "^3.0",
         "drupal/view_unpublished": "^1.0",
         "drupal/viewfield": "^3.0@beta",
         "drupal/views_block_filter_block": "^2.0",
@@ -194,6 +193,7 @@
         "harvesthq/chosen": "^1.8",
         "leongersen/nouislider": "15.5.1",
         "mnsami/composer-custom-directory-installer": "^2.0",
+        "nolimits4web/swiper": "^12.0",
         "onlyextart/colorbox": "dev-master#e58476becbc89dc671093d1bcd9f99b2167fa8f7",
         "sainsburys/guzzle-oauth2-plugin": "^3.0",
         "su-sws/ckeditor5_plugins": "^1.0",
@@ -221,12 +221,10 @@
     },
     "scripts": {
         "build-theme": [
-            "npm ci --prefix docroot/themes/humsci/humsci_basic",
-            "npm run build --prefix docroot/themes/humsci/humsci_basic"
+            "hooks/common/theme/theme-build.sh"
         ],
         "test-theme": [
-            "npm ci --prefix docroot/themes/humsci/humsci_basic",
-            "npm run test --prefix docroot/themes/humsci/humsci_basic"
+            "hooks/common/theme/theme-test.sh"
         ],
         "post-drupal-scaffold-cmd": [
             "patch -p1 < patches/scaffold.patch"
@@ -239,9 +237,8 @@
             "drupal/block_class": {
                 "Click JavaScript to close details causes modals to scroll unnecessarily https://www.drupal.org/project/block_class/issues/3497768": "patches/contrib/block_class/60.patch"
             },
-            "drupal/config_ignore": {
-                "https://www.drupal.org/project/config_ignore/issues/2857247": "https://www.drupal.org/files/issues/2020-01-11/support-for-export-2857247-44.patch",
-                "https://www.drupal.org/project/config_ignore/issues/2865419": "https://www.drupal.org/files/issues/2020-07-20/config_ignore-wildcard_force_import.patch"
+            "drupal/content_access_simple": {
+                "https://www.drupal.org/project/content_access_simple/issues/3575304: Check for permission changes before running any actions on node submit": "patches/contrib/content_access_simple-3575304-mr-1.patch"
             },
             "drupal/core": {
                 "https://www.drupal.org/project/drupal/issues/2999491": "https://www.drupal.org/files/issues/2024-07-17/drupal-2999491-162.patch",
@@ -252,7 +249,9 @@
                 "Allow media items to be edited in a modal when using the field widget https://www.drupal.org/project/drupal/issues/2985168": "https://www.drupal.org/files/issues/2023-12-18/2985168-172.patch",
                 "Cannot read properties of undefined (reading 'settings') with dialog.position.js https://www.drupal.org/project/drupal/issues/3356667": "patches/core/core-mr-8892.patch",
                 "https://www.drupal.org/project/drupal/issues/3207813: ModuleHandler skips all hook implementations when invoked before the module files have been loaded": "patches/core/core-mr-6976.patch",
-                "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch"
+                "https://www.drupal.org/project/drupal/issues/3202896: Do not display oEmbed resource error to anonymous users": "patches/core/core-3202896-mr-9357-20250410.patch",
+                "Fix oEmbed video thumbnail resolution https://www.drupal.org/project/drupal/issues/3447326": "patches/core/core-3447326-mr-9518-20251104.patch",
+                "Adds bulk operations action to media library that allows site admin to generate new thumbnails https://www.drupal.org/project/drupal/issues/2983456": "patches/core/core-2983456-168-20251104.patch"
             },
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"
@@ -302,23 +301,14 @@
                 "https://www.drupal.org/project/redirect/issues/3057250": "patches/contrib/redirect-3057250-110-20251013.patch",
                 "https://www.drupal.org/project/redirect/issues/3018897": "patches/contrib/redirect-3018897-30-20251013.patch"
             },
-            "drupal/samlauth": {
-                "https://www.drupal.org/project/samlauth/issues/3530840: Set destination parameter as part of login": "patches/contrib/samlauth-3530840-try.patch"
-            },
             "drupal/shield": {
                 "https://www.drupal.org/project/shield/issues/3479117": "patches/shield-undefined_array_key_explode-3479117.patch"
-            },
-            "drupal/slick": {
-                "Support Accessible Slick": "patches/contrib/slick-support-accessible-slick-20251030.patch"
             },
             "drupal/ui_patterns": {
                 "Ui Patterns Views Preview": "patches/contrib/ui_patterns_views-preview.patch"
             },
             "drupal/views_bulk_operations": {
                 "Provide a way to disable select all on all page: https://www.drupal.org/project/views_bulk_operations/issues/3109367": "patches/contrib/views_bulk_operations-3109367-mr103.patch"
-            },
-            "drupal/video_embed_field": {
-                "https://www.drupal.org/project/video_embed_field/issues/2913925": "https://www.drupal.org/files/issues/2018-07-09/retrieve-title-2913925-5.patch"
             },
             "drupal/views_infinite_scroll": {
                 "https://www.drupal.org/project/views_infinite_scroll/issues/3094488": "https://www.drupal.org/files/issues/2020-04-14/3094488-2.patch",

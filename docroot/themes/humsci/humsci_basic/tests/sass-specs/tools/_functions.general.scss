@@ -55,3 +55,14 @@
     }
   }
 }
+
+@include describe('HB Calculate Rems Function') {
+  @include describe('the hb-calculate-rems() function') {
+    @include it('returns the rem value based on the root font size.') {
+      $test: g.hb-calculate-rems(16px);
+      $expect: '1rem';
+
+      @include assert-equal($test, $expect, 'The rem value either does not match or does not exist.');
+    }
+  }
+}

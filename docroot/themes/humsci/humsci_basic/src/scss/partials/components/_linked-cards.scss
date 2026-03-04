@@ -1,5 +1,6 @@
 @use '../variables/general' as *;
 @use '../functions/animation' as *;
+@use '../functions/color' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/links' as *;
 
@@ -28,20 +29,42 @@
 
     @include hb-colorful {
       .hb-raised-cards & {
-        text-decoration-color: var(--palette--secondary-darken-12);
+        text-decoration-color: color('secondary-darken-12');
       }
     }
 
     // Needed to make the styles work when the anchor is the wrapper.
     .hb-card__title a,
     .hb-card__title a > div > * {
-      color: var(--palette--black);
-      text-decoration-color: var(--palette--primary);
+      color: color('black', 'global');
+      text-decoration-color: color('primary');
 
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         color: var(--link-base-hover-current-color);
         text-decoration-color: var(--link-base-hover-current-color);
+      }
+    }
+  }
+
+  // Styles when there's a video on a card.
+  &:has(.hb-video-lazy:hover),
+  &:has(.hb-video-lazy:focus-within) {
+    @include hb-colorful {
+      .hb-raised-cards & {
+        text-decoration-color: color('gray-medium', 'global');
+      }
+    }
+
+    .hb-card__title a,
+    .hb-card__title a > div > * {
+      color: color('black', 'global');
+      text-decoration-color: color('gray-medium', 'global');
+
+      .hb-dark-pattern &,
+      .hb-dark-inversion .views-element-container & {
+        color: color('black', 'global');
+        text-decoration-color: color('gray-medium', 'global');
       }
     }
   }

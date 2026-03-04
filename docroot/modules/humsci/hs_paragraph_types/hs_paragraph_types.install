@@ -570,3 +570,139 @@ function hs_paragraph_types_update_10015(&$sandbox) {
     ]);
   }
 }
+
+/**
+ * Disable some of our new paragraphs from paragraph fields.
+ */
+function hs_paragraph_types_update_10016() {
+  $bundles_to_hide = ['hs_cmap_qtr', 'hs_cmap_qtr_crs', 'hs_cmap_year'];
+  _hs_paragraph_types_exclude_bundles_from_field('node', 'hs_basic_page', 'field_hs_page_components', $bundles_to_hide);
+  $result = t('Excluded bundles from field_hs_page_components: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
+
+  // Hide all cmap bundles from collections.
+  $bundles_to_hide[] = 'hs_cmap';
+  _hs_paragraph_types_exclude_bundles_from_field('paragraph', 'hs_collection', 'field_hs_collection_items', $bundles_to_hide);
+  $result .= t('Excluded bundles from field_hs_collection_items: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
+  return $result;
+}
+
+/**
+ * Excludes specific bundles from a field in a given entity type and bundle.
+ *
+ * This function modifies the field configuration to hide selected paragraph
+ * bundles for a specific field. It handles cases where fields are ignored
+ * from configuration exports.
+ *
+ * Assumes that the field is set up to list the bundles that are _hidden_.
+ *
+ * @param string $entity_type
+ *   The entity type that owns the field (e.g., 'paragraph', 'node').
+ * @param string $bundle
+ *   The bundle within the entity type, such as a content type or paragraph
+ *   type.
+ * @param string $field_name
+ *   The machine name of the field to be updated.
+ * @param array $bundles_to_exclude
+ *   An array of bundles to be excluded from the field.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ * @throws \RuntimeException
+ */
+function _hs_paragraph_types_exclude_bundles_from_field(string $entity_type, string $bundle, string $field_name, array $bundles_to_exclude): void {
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $config_file = 'field.field.' . $entity_type . '.' . $bundle . '.' . $field_name;
+  $instance_config = $config_directory->read($config_file);
+  if (empty($instance_config['field_name'])) {
+    throw new RuntimeException("Could not find config file $config_file.");
+  }
+  $instance = FieldConfig::loadByName($instance_config['entity_type'], $instance_config['bundle'], $instance_config['field_name']);
+  if (!$instance) {
+    throw new RuntimeException("Could not find field configuration for $config_file.");
+  }
+  $settings = $instance->getSettings();
+  if (isset($settings['handler_settings']['target_bundles_drag_drop'])) {
+    foreach ($bundles_to_exclude as $bundle_to_exclude) {
+      // These fields hide the selected paragraph bundles.  That's why the
+      // logic looks backwards.
+      $settings['handler_settings']['target_bundles_drag_drop'][$bundle_to_exclude]['enabled'] = TRUE;
+      $settings['handler_settings']['target_bundles'][$bundle_to_exclude] = $bundle_to_exclude;
+    }
+    $instance->set('settings', $settings);
+    if (!$instance->save()) {
+      throw new RuntimeException("Could not save instance of $config_file.");
+    }
+    return;
+  }
+  throw new RuntimeException("Could not find handler_settings in $config_file.");
+}
+
+/**
+ * Re-order the cmap paragraph to appear in the middle of the list.
+ */
+function hs_paragraph_types_update_10017() {
+  $config_directory = new FileStorage(Settings::get('config_sync_directory'));
+  $config_file = 'field.field.node.hs_basic_page.field_hs_page_components';
+  $instance_config = $config_directory->read($config_file);
+  if (empty($instance_config)) {
+    throw new \RuntimeException("Config file not found: $config_file");
+  }
+  $instance = FieldConfig::loadByName($instance_config['entity_type'], $instance_config['bundle'], $instance_config['field_name']);
+  if (!$instance) {
+    throw new \RuntimeException("FieldConfig not found for $config_file");
+  }
+  $settings = $instance->getSettings();
+  $settings['handler_settings']['target_bundles_drag_drop']['hs_cmap']['weight'] = -36;
+  $instance->set('settings', $settings);
+  $instance->save();
+  return t('Reordered cmap paragraph to appear in the middle of the list.');
+}
+
+/**
+ * Add field_bg_color_width to Spotlight Slider paragraphs.
+ */
+function hs_paragraph_types_update_10018() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  // Reusing an existing field, no need to create field storage.
+  // Create field_config if it does not exist.
+  $summary_heading_field_config = $config_storage->read('field.field.paragraph.hs_sptlght_slder.field_bg_color_width');
+  if (
+    empty($field_config_storage->load('paragraph.hs_sptlght_slder.field_bg_color_width')) &&
+    !empty($summary_heading_field_config)
+  ) {
+    $field_config_storage->create($summary_heading_field_config)->save();
+  }
+}
+
+/**
+ * Set default field_bg_color_width for Spotlight Slider paragraphs.
+ */
+function hs_paragraph_types_update_10019(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+  if (empty($sandbox['ids'])) {
+    // Get list of Spotlight Slider paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', ['hs_sptlght_slder'], 'IN')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  // Set new field default for existing Spotlight Slider paragraphs.
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+    if (!$paragraph->hasField('field_bg_color_width')) {
+      continue;
+    }
+
+    $paragraph->set('field_bg_color_width', 'limited_width');
+    $paragraph->save();
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}

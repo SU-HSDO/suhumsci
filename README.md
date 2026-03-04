@@ -26,6 +26,7 @@ Note the following properties of this project:
 - [Config & Content Update](docs/ConfigContentUpdate.md)
 - [Launch Process](docs/Launch.md)
 - [Provisioning a New Site](docs/NewSite.md)
+- [Decommissioning and Deleting a Site](docs/DeleteSite.md)
 - [Upgrading Drupal Core](docs/DrupalCoreUpgrades.md)
 
 > **Note:** Not all documentation may be fully up to date. Maintaining and updating documentation is an ongoing and important process. Contributions and corrections are always welcome.
@@ -59,6 +60,11 @@ CSS assets are built using the Grunt task runner, but are run using npm scripts 
 - `npm run theme-watch` - Compile a CSS build and watch for changes in the existing `.scss` files in all themes based on `humsci_basic`.
 - `npm run theme-visreg` - Run Percy VRT on `hs_colorful` and `hs_traditional` sites (see `docroot/themes/humsci/humsci_basic/README.md` for details.)
 
+The build process will automatically choose whether to run in/out of ddev/lando (if installed).  To override this behavior use one of the following commands:
+
+- `export HSDP_COMPILE_ENVIRONMENT=ddev`
+- `export HSDP_COMPILE_ENVIRONMENT=lando`
+- `export HSDP_COMPILE_ENVIRONMENT=baremetal`
 
 ## Testing
 
@@ -86,4 +92,4 @@ Architecture Decision Records (ADRs) are used to document important architectura
 ## Resources
 
 * [GitHub](https://github.com/SU-HSDO/suhumsci)
-* [Acquia Cloud subscription](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a)
+* [Acquia Cloud subscription](https://cloud.acquia.com/a/applications/60ee2ebb-94f3-415d-a289-c23889ecec18)

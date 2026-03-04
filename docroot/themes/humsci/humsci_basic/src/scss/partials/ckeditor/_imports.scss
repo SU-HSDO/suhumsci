@@ -4,15 +4,20 @@
 // _base.scss for reference.
 
 @use 'sass:map';
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
+@use '../variables/colors.colorful' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.su-core' as *;
 @use '../variables/fonts' as *;
+@use '../variables/general' as *;
+@use '../functions/general' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/general' as *;
 @use '../mixins/breakpoints' as *;
 @use '../mixins/buttons' as *;
 @use '../mixins/tables' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
+@use '../functions/color' as *;
 
 // Here we import all the various variables, mixins, and dependecies that may
 // potentially be used in one of the CKeditor files.
@@ -23,30 +28,23 @@
 // CKEditor UI customizations.
 @use 'ckeditor-ui';
 
+// For videos
+@use '../functions/animation' as *;
+@use '../mixins/icons' as *;
+
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
 :root {
-  @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in map.get($hc-colorful-pairings, $hb-colorful-default)
-    {
-      --palette--#{$color}: #{$value};
-    }
+  @include generate-css-vars('su-core', $su-core-colors);
 
-    @each $color, $value in $hc-colorful-globals {
-      --palette--#{$color}: #{$value};
-    }
+  @include hb-themes(('colorful', 'airy')) {
+    @include generate-css-vars('colorful-pairings', map.get($colorful-pairings-colors, $hb-colorful-default));
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
-    @each $color,
-      $value in map.get($ht-traditional-pairings, $hb-traditional-default)
-    {
-      --palette--#{$color}: #{$value};
-    }
-
-    @each $color, $value in $ht-traditional-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars('traditional-pairings', map.get($traditional-pairings-colors, $hb-traditional-default));
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 }
 
@@ -62,19 +60,15 @@
   }
 
   // Link current color variables.
-  --link-base-current-color: var(--palette--link-base-color);
-  --link-base-hover-current-color: var(--palette--link-base-hover-color);
+  --link-base-current-color: #{color('link-base')};
+  --link-base-hover-current-color: #{color('link-base-hover')};
 
   // Addresses small media previews in CK5
   .hb-media-video {
     margin: 0;
     width: 100%;
     max-width: none;
-  }
-
-  .field-media-oembed-video {
-    position: relative;
-    aspect-ratio: 16/9;
+    pointer-events: all;
   }
 
   .drupal-media:not(:has(article.hb-media-image)),
@@ -82,6 +76,174 @@
   .media-oembed-content {
     width: 100%;
     height: 100%;
+  }
+
+  .hb-media-video:has(.hb-video-lazy) {
+    position: relative;
+
+    // Margin to give enough space between the play button and the text.
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-calculate-rems(8px);
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-calculate-rems(6px);
+    }
+
+    // Needs more space if it's followed by text.
+    &:has(+ p) {
+      margin-bottom: hb-calculate-rems(16px);
+    }
+  }
+
+  .hb-video-lazy {
+    position: relative;
+    aspect-ratio: 16 / 9;
+
+    .hb-video-lazy__thumb {
+      // Trigger play button hover styles
+      &:hover .hb-video-lazy__play {
+        background-color: color('secondary-darken-12');
+      }
+
+      &:focus-within .hb-video-lazy__play {
+        background-color: color('secondary');
+      }
+    }
+
+    .hb-video-lazy__thumb img {
+      margin: 0 auto;
+
+      .full:not(.align-left):not(.align-right) & {
+        width: 100%;
+      }
+
+      // Make lazy video thumbnails match the previous oEmbed video behavior
+      // when inserted via WYSIWYG with left/right alignment.
+      // Without this, the element correctly gets the 75% max-width
+      // BUT this isn't working as it should in the previous
+      // oEmbed video behavior... the float property shrink-wraps the container
+      // and ends up much narrower than expected.
+      .align-left &,
+      .align-right & {
+        @include grid-media-min('sm') {
+          max-width: hb-calculate-rems(295px);
+        }
+
+        @include grid-media-min('md') {
+          max-width: hb-calculate-rems(300px);
+        }
+      }
+    }
+
+    .hb-video-lazy__iframe {
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .hb-video-lazy__play-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: 0;
+      cursor: pointer;
+    }
+
+    .hb-video-lazy__play {
+      position: relative;
+      border: $hb-thin-border;
+      border-color: color('white', 'global');;
+      background-color: color('secondary');
+      padding: 0 0 0 hb-calculate-rems(4px);
+      left: hb-calculate-rems(16px);
+      width: hb-calculate-rems(44px);
+      height: hb-calculate-rems(44px);
+      cursor: pointer;
+
+      @include grid-media-min('md') {
+        width: hb-calculate-rems(54px);
+        height: hb-calculate-rems(54px);
+      }
+
+      @include hb-themes(('colorful', 'airy')) {
+        border-radius: 50%;
+      }
+
+      .hs-full-width & {
+        @include grid-media-min('md') {
+          width: hb-calculate-rems(80px);
+          height: hb-calculate-rems(80px);
+        }
+      }
+
+      .full:not(.align-left):not(.align-right) &,
+      .hb-spotlight & {
+        @include grid-media-min('md') {
+          width: hb-calculate-rems(74px);
+          height: hb-calculate-rems(74px);
+        }
+      }
+
+      &:not(.hb-video-lazy__play--no-js) {
+        .no-js & {
+          display: none;
+        }
+      }
+
+      &:hover {
+        background-color: color('secondary-darken-12');
+      }
+
+      &:active,
+      &:focus {
+        background-color: color('secondary');
+      }
+
+      &::before {
+        @include hb-icon-background('play', 'white');
+
+        content: '';
+        display: block;
+        position: relative;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 100%;
+        height: 100%;
+        background-size: hb-calculate-rems(40px);
+
+        .hs-full-width & {
+          @include grid-media-min('md') {
+            @include hb-themes(('colorful', 'airy')) {
+              background-size: hb-calculate-rems(50px);
+            }
+
+            @include hb-traditional {
+              background-size: hb-calculate-rems(70px);
+            }
+          }
+        }
+
+        .full:not(.align-left):not(.align-right) &,
+        .hb-spotlight & {
+          @include grid-media-min('md') {
+            @include hb-themes(('colorful', 'airy')) {
+              background-size: hb-calculate-rems(55px);
+            }
+
+            @include hb-traditional {
+              background-size: hb-calculate-rems(60px);
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -113,7 +275,7 @@
 
   .hs-font-splash {
     @include grid-media-min('md') {
-      margin: 48px 0 16px;
+      margin-block: 48px 16px;
     }
 
     @include hb-themes(('colorful', 'airy')) {
@@ -245,7 +407,7 @@
 
     thead th {
       @include table-heading;
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
 
     thead tr {

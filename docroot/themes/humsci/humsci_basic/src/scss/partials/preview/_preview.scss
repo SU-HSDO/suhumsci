@@ -1,26 +1,28 @@
 @use 'sass:meta';
 @use '../variables/theme' as *;
-@use '../variables/colorful-pairings' as *;
-@use '../variables/traditional-pairings' as *;
 @use '../variables/fonts' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
 @use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
 
 // Font definitions.
 @use '../fonts/fonts';
 
 .paragraph-admin-preview {
+  @include generate-css-vars('su-core', $su-core-colors);
+
   @include hb-themes(('colorful', 'airy')) {
-    @each $color, $value in $hc-colorful-globals {
-      --palette--#{$color}: #{$value};
-    }
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
-    @each $color, $value in $ht-traditional-globals {
-      --palette--#{$color}: #{$value};
-    }
+   @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
   // Load main stylesheet with current theme.
@@ -38,8 +40,8 @@
 
   // Link current color variables.
   .paragraph-item {
-    --link-base-current-color: var(--palette--link-base-color);
-    --link-base-hover-current-color: var(--palette--link-base-hover-color);
+    --link-base-current-color: #{color('link-base')};
+    --link-base-hover-current-color: #{color('link-base-hover')};
   }
 
   // Style fixes for specific elements.
@@ -48,8 +50,17 @@
   }
 
   .paragraph--type--hs-gradient-hero-slider {
-    .slick-dots {
-      bottom: -2rem;
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+
+  .paragraph--type--hs-carousel .swiper-container {
+    .swiper-button-prev,
+    .swiper-button-next {
+      @include hb-traditional {
+        bottom: 4.76rem;
+      }
     }
   }
 
@@ -103,6 +114,11 @@
 
   .field-hs-postcard-link a {
     color: transparent;
+
+    &:hover,
+    &:focus {
+      color: transparent;
+    }
   }
 
   .hb-timeline-item {
@@ -138,7 +154,7 @@
     font-weight: 400;
   }
 
-  figure.caption-drupal-media {
+  .hb-caption-credit-image.caption-drupal-media {
     position: relative;
     z-index: 1;
     box-sizing: border-box;
@@ -151,18 +167,37 @@
       margin-bottom: hb-spacing-width('xs');
     }
 
-    article:not(.hb-media-video):not(.hb-media-embed) {
+    figure:not(.hb-media-video):not(.hb-media-embed) {
       position: relative;
 
-      + figcaption {
+      + .field-media-image-caption {
         @include hb-caption-credit;
       }
     }
   }
 
   .hb-vertical-linked-card__title__link.ext {
-    --link-base-current-color: var(--palette--white);
-    --link-base-hover-current-color: var(--palette--white);
+    --link-base-current-color: #{color('white', 'global')};
+    --link-base-hover-current-color: #{color('white', 'global')};
+  }
+
+  // Vertical Linked cards.
+  .hb-vertical-button-card .hs-button {
+    @include hb-traditional {
+      background-color: transparent;
+      border-color: var(--palette--secondary);
+      color: var(--palette--secondary);
+      border-width: 0;
+      border-top-width: 2px;
+      margin-top: auto;
+      margin-left: hb-calculate-rems(-24px);
+      margin-right: hb-calculate-rems(-24px);
+
+      &:hover, &:focus {
+        color: var(--palette--white);
+        background-color: var(--palette--secondary);
+      }
+    }
   }
 }
 

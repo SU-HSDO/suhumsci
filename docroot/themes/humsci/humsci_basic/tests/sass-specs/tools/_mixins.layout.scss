@@ -1,0 +1,33 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/variables/theme';
+@use '../../../src/scss/partials/mixins/layout' as l;
+
+@include describe('Layout Mixins') {
+  @include describe('hb-page-width() mixin') {
+    theme.$hb-current-theme: 'colorful';
+
+    @include it('sets max width and responsive widths.') {
+      @include assert {
+        @include output {
+          .hb-test-page-width {
+            @include l.hb-page-width;
+          }
+        }
+
+        @include expect {
+          .hb-test-page-width {
+            max-width: 75rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            width: calc(100% - #{'2 * 2rem'}) !important;
+          }
+          @media (min-width: 768px) {
+            .hb-test-page-width {
+              width: calc(100% - #{'2 * 3rem'}) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -135,7 +135,7 @@ composer install
 
 	```bash
 	drush @DRUSHALIAS.prod updatedb -y
-	drush @DRUSHALIAS.prod ci --partial -y
+	drush @DRUSHALIAS.prod ci
 	drush @DRUSHALIAS.prod cr
 	```
 - For major failures, coordinate with other developers. Consider a hotfix or rollback if necessary.

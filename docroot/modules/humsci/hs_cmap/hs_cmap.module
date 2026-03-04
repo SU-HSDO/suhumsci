@@ -1,0 +1,220 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for H&S Curriculum Map module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\WidgetBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function hs_cmap_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle): void {
+  if ($bundle !== 'hs_curriculum_requirement_type' || $entity_type->id() !== 'taxonomy_term') {
+    return;
+  }
+
+  if (!isset($fields['field_hs_curriculum_course_color'])) {
+    return;
+  }
+
+  // Add a unique constraint to the color field.
+  $fields['field_hs_curriculum_course_color']->addConstraint('UniqueRequirementType');
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function hs_cmap_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type): void {
+  if ($entity_type->id() !== 'taxonomy_term') {
+    return;
+  }
+
+  if (!isset($fields['name'])) {
+    return;
+  }
+
+  // Add a unique constraint to the name field for requirement type terms.
+  $fields['name']->addConstraint('UniqueRequirementType');
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function hs_cmap_form_taxonomy_term_form_alter(&$form, FormStateInterface $form_state): void {
+  /** @var \Drupal\taxonomy\Entity\Term $term */
+  $term = $form_state->getFormObject()->getEntity();
+  if ($term->bundle() !== 'hs_curriculum_requirement_type') {
+    return;
+  }
+
+  // Hide the standard taxonomy things that don't make sense for this bundle.
+  $form['revision_information']['#access'] = FALSE;
+  $form['relations']['#access'] = FALSE;
+
+  // Attach library to style color selector options.
+  $form['#attached']['library'][] = 'hs_cmap/hs-cmap';
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+function hs_cmap_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context): void {
+  if (!isset($element['#paragraph_type'])) {
+    return;
+  }
+  $delta = $context['delta'];
+  $paragraph_bundle = $element['#paragraph_type'];
+
+  /** @var \Drupal\field\Entity\FieldConfig $field_definition */
+  $field_definition = $context['items']->getFieldDefinition();
+  $content_field_name = $field_definition->getName();
+
+  // @see \Drupal\paragraphs\Plugin\Field\FieldWidget\ParagraphsWidget::formElement()
+  $widgetState = WidgetBase::getWidgetState($element['#field_parents'], $content_field_name, $form_state);
+
+  // If this is an empty paragraph, do nothing.
+  if (!isset($widgetState['paragraphs'][$delta])) {
+    return;
+  }
+
+  // Don't act on Paragraph previews.
+  if (!Element::children($element['subform'])) {
+    return;
+  }
+
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $widgetState['paragraphs'][$delta]['entity'];
+
+  // Set the default year label, incrementing on the previous.
+  if (
+    $paragraph_bundle === 'hs_cmap_year'
+    && empty($element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'])
+  ) {
+    $element['subform']['field_hs_cmap_year_year']['widget'][0]['value']['#default_value'] = 'Year ' . ($delta + 1);
+  }
+
+  // Set default quarter, incrementing on the previous.
+  if (
+    $paragraph_bundle === 'hs_cmap_qtr'
+    && empty($element['subform']['field_hs_cmap_qtr_quarter']['widget']['#default_value'])
+  ) {
+    $options = $element['subform']['field_hs_cmap_qtr_quarter']['widget']['#options'];
+    if (isset($options['_none'])) {
+      unset($options['_none']);
+    }
+    $options = array_keys($options);
+    $default = $options[$delta % count($options)];
+    $element['subform']['field_hs_cmap_qtr_quarter']['widget']['#default_value'] = [$default];
+  }
+
+  // Set "Core" as the default Requirement Type.
+  if (
+    $paragraph_bundle === 'hs_cmap_qtr_crs'
+    && empty($element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'])
+  ) {
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $terms = $term_storage->loadByProperties([
+      'vid' => 'hs_curriculum_requirement_type',
+      'name' => 'Core',
+    ]);
+    if (!empty($terms)) {
+      $core_tid = key($terms);
+      $element['subform']['field_hs_cmap_crs_requirement']['widget']['#default_value'] = [$core_tid];
+    }
+  }
+
+}
+
+/**
+ * Implements hook_form_taxonomy_overview_terms_alter().
+ */
+function hs_cmap_form_taxonomy_overview_terms_alter(array &$form, FormStateInterface $form_state): void {
+  $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
+  if (!$vocabulary || $vocabulary->id() !== 'hs_curriculum_requirement_type') {
+    return;
+  }
+
+  // Add a new column to the table for 'Color'.
+  $new_column_header = ['color' => t('Color')];
+  $insert_after_column = 0;
+  _hs_cmap_insert_into_array_after_element($form['terms']['#header'], $insert_after_column, $new_column_header);
+
+  $field_manager = \Drupal::service('entity_field.manager');
+  $field_definition = $field_manager->getFieldDefinitions('taxonomy_term', $vocabulary->id())['field_hs_curriculum_course_color'];
+  $options = $field_definition->getSettings()['allowed_values'];
+
+  foreach (Element::children($form['terms']) as $key) {
+    /** @var \Drupal\taxonomy\Entity\Term $term */
+    $term = $form['terms'][$key]['#term'];
+    $color = '';
+    if ($term->hasField('field_hs_curriculum_course_color') && !$term->get('field_hs_curriculum_course_color')->isEmpty()) {
+      $value = $term->get('field_hs_curriculum_course_color')->value;
+      $color = $options[$value] ?? $value;
+    }
+    $new_element['color'] = [
+      '#markup' => $color,
+    ];
+    _hs_cmap_insert_into_array_after_element($form['terms'][$key], $insert_after_column, $new_element);
+  }
+}
+
+/**
+ * Inserts a new element into an associative array after a specified position.
+ *
+ * @param array &$array
+ *   The array to modify.
+ * @param int $after_position
+ *   The position after which the new element will be inserted.
+ *   E.g., 3 will insert the new element after the fourth element (zero-based).
+ * @param array $new_element
+ *   The new element to insert into the array.  Should have a key.
+ *
+ * @return void
+ *   This method does not return a value as it modifies the array by reference.
+ */
+function _hs_cmap_insert_into_array_after_element(array &$array, int $after_position, array $new_element): void {
+  $array = array_merge(
+    array_slice($array, 0, $after_position + 1, TRUE),
+    $new_element,
+    array_slice($array, $after_position + 1, NULL, TRUE)
+  );
+}
+
+/**
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
+ */
+function hs_cmap_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
+  $elements_to_change = [
+    'field_hs_cmap_years',
+    'field_hs_cmap_year_qtr',
+    'field_hs_cmap_qtr_crs',
+  ];
+
+  // We need the field name to alter the correct element.
+  if (
+      empty($field_widget_form['widget']['#field_name']) ||
+      !in_array($field_widget_form['widget']['#field_name'], $elements_to_change)
+    ) {
+    return;
+  }
+
+  foreach (Element::children($field_widget_form['widget']) as $key) {
+    if (!is_int($key)) {
+      continue;
+    }
+    // Remove these elements from form display.
+    if (isset($field_widget_form['widget'][$key]['top']['type'])) {
+      unset($field_widget_form['widget'][$key]['top']['type']);
+    }
+    if (isset($field_widget_form['widget'][$key]['top']['icons'])) {
+      unset($field_widget_form['widget'][$key]['top']['icons']);
+    }
+  }
+}

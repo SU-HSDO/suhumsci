@@ -68,6 +68,10 @@ function su_humsci_gin_admin_preprocess_field(&$variables) {
     $variables['#attached']['library'][] = 'humsci_basic/table-scope';
     $variables['#attached']['library'][] = 'humsci_basic/video-with-caption';
   }
+
+  if ($variables['element']['#field_name'] === 'field_media_image_caption') {
+    $variables['#attached']['library'][] = 'humsci_basic/media_caption_toggle';
+  }
 }
 
 /**
@@ -81,6 +85,7 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
     $variables['attributes']['class'][] = 'dashboard-content';
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/su_humsci_dashboard';
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/ajax-scroll-fix';
+    $variables['#attached']['library'][] = 'su_humsci_gin_admin/show-toggle';
   }
 }
 

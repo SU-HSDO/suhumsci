@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a filter caption.
+ *
+ * Returns HTML for a captioned image, audio, video or other tag.
+ *
+ * Available variables
+ * - string node: The complete HTML tag whose contents are being captioned.
+ * - string tag: The name of the HTML tag whose contents are being captioned.
+ * - string caption: The caption text.
+ * - string classes: The classes of the captioned HTML tag.
+ */
+#}
+{{ attach_library('humsci_basic/media_caption_toggle') }}
+
+<figure class="{{ classes }} hb-caption-credit hb-position-relative">
+  {{ node }}
+  <div class="field-media-image-caption">
+    <button
+        type="button"
+        class="toggle-caption__toggle"
+        aria-hidden="true"
+    >
+    </button>
+    <figcaption class="toggle-caption__content">
+      {{ caption }}
+    </figcaption>
+  </div>
+</figure>

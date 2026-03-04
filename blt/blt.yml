@@ -8,7 +8,7 @@ project:
 git:
   default_branch: develop-build
   remotes:
-    - 'humscigryphon@svn-23450.prod.hosting.acquia.com:humscigryphon.git'
+    - 'humscigryphon@svn-2314.prod.hosting.acquia.com:humscigryphon.git'
 deploy:
   tag_source: false
   exclude_file: '${repo.root}/blt/deploy/rsync-exclude.txt'
@@ -25,26 +25,6 @@ modules:
     uninstall:
       - acquia_connector
       - purge
-  ci:
-    enable: {  }
-    uninstall:
-      - purge
-      - acquia_connector
-  dev:
-    enable:
-      - acquia_connector
-      - stage_file_proxy
-    uninstall: {  }
-  test:
-    enable:
-      - acquia_connector
-      - stage_file_proxy
-    uninstall: {  }
-  prod:
-    enable:
-      - acquia_connector
-    uninstall:
-      - stage_file_proxy
 multisites:
   - aaai
   - aaas
@@ -56,13 +36,16 @@ multisites:
   - archaeology
   - art
   - artexhibitions
+  - artgradguide
   - arthandbook
   - aviditacharya__humsci
   - bingschool
+  - biocapstoneshowcase
   - biology
   - biologyvirtualshowcase
   - bsurp
   - buddhiststudies
+  - buddhiststudies2026
   - cas
   - ccsre
   - ceas
@@ -87,6 +70,7 @@ multisites:
   - economics
   - em1060
   - english
+  - environmentalhumanities
   - ethicsinsociety
   - facultyaffairs_humsci
   - feminist
@@ -101,7 +85,6 @@ multisites:
   - hps
   - hs_colorful
   - hs_design
-  - hs_fcp
   - hs_fps
   - hs_sandbox
   - hs_sandbox_1
@@ -137,9 +120,9 @@ multisites:
   - middleeast
   - morrisoninstitute
   - mrc
+  - mrc2025
   - mtl
   - music
-  - oconnell
   - philit
   - philosophy
   - physics
@@ -158,7 +141,6 @@ multisites:
   - sitp
   - siw
   - sociology
-  - sociology2025
   - southasia
   - stanfordsciencefellows
   - statistics
@@ -168,6 +150,7 @@ multisites:
   - tessier_lavigne_lab
   - texttechnologies
   - urbanstudies
+  - vpnl
   - west
   - womensleadership
   - womensleadershipcp

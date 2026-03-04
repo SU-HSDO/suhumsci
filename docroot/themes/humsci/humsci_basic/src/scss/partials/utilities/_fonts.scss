@@ -1,3 +1,12 @@
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+@use '../mixins/lists' as *;
+
 .hb-text-reset {
   // Reset text styles to default using this class
   @include hb-text-reset;
@@ -44,6 +53,10 @@
   @include hb-link--inline;
 }
 
+.hb-highlighted-label {
+  align-items: baseline;
+}
+
 .hb-highlighted-label .field-label {
   @include hb-field-label--featured;
 }
@@ -57,7 +70,7 @@
 }
 
 .hb-subtitle {
-  @include hb-subtitle;
+  @include hb-heading-5;
 }
 
 .hb-descriptor,
@@ -83,11 +96,7 @@ a.hb-pill {
 }
 
 // blockquote and D7 import class map and loop
-$blockquotes: (
-  hb-blockquote,
-  highlight-block-left,
-  highlight-block-right,
-);
+$blockquotes: (hb-blockquote, highlight-block-left, highlight-block-right);
 
 @each $blockquote in $blockquotes {
   .#{$blockquote} {
@@ -122,7 +131,7 @@ $blockquotes: (
   @include hb-themes(('colorful', 'airy')) {
     &::before {
       border-bottom: solid hb-calculate-rems(4px);
-      border-color: var(--palette--secondary);
+      border-color: color('secondary');
       content: '';
       display: block;
       vertical-align: middle;

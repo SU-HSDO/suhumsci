@@ -1,3 +1,11 @@
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/layout' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+
 .block-layout-builder {
   &:not(:last-child) {
     margin-bottom: hb-calculate-rems(20px);
@@ -18,7 +26,8 @@
 }
 
 .block__title {
-  @include hb-block-heading;
+  @include hb-heading-3;
+
   margin-top: 0;
   margin-bottom: hb-calculate-rems(20px);
   width: 100%;
@@ -55,7 +64,7 @@
     @include hb-link--inline;
   }
 
-  [class^="fa-"] {
+  [class^='fa-'] {
     display: none;
   }
 
@@ -67,13 +76,13 @@
 
 .datetime {
   line-height: 1.4;
-  color: var(--palette--gray-dark);
+  color: color('gray-dark', 'global');
 }
 
 .address {
   margin: 0;
   font-style: italic;
-  color: var(--palette--gray-dark);
+  color: color('gray-dark', 'global');
 }
 
 .given-name,

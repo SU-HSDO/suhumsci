@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\hs_dashboard\Plugin\ImporterInfoBase;
 use Drupal\hs_dashboard\Plugin\ImporterInfoInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -84,6 +85,8 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    *   The widget manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager interface.
    */
   public function __construct(
     array $configuration,
@@ -94,8 +97,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
     DateFormatterInterface $date_formatter,
     WidgetPluginManager $widget_manager,
     EntityFieldManagerInterface $entity_field_manager,
+    MigrationPluginManagerInterface $migration_manager,
   ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $key_value_factory, $date_formatter, $migration_manager);
     $this->entityTypeManager = $entity_type_manager;
     $this->widgetManager = $widget_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -116,6 +120,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       $container->get('date.formatter'),
       $container->get('plugin.manager.field.widget'),
       $container->get('entity_field.manager'),
+      $container->get('plugin.manager.migration'),
     );
   }
 
@@ -165,6 +170,9 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
       }
     }
 
+    // Sort the table rows by the first column (departments/groups).
+    $this->sortTableRows();
+
     return $this->eventTableRows;
   }
 
@@ -172,7 +180,7 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
    * {@inheritDoc}
    */
   public function getNoDataCaption(): TranslatableMarkup {
-    return $this->t('<em>There are no Localist importers configured.</em>');
+    return $this->t('There are no Stanford Events importers configured.');
   }
 
   /**
@@ -390,6 +398,17 @@ class EventImporterInfo extends ImporterInfoBase implements ImporterInfoInterfac
         ],
       ];
     }
+  }
+
+  /**
+   * Sort table rows data by the first column.
+   */
+  private function sortTableRows() {
+    usort($this->eventTableRows, function ($a, $b) {
+      // These may be string objects (with placeholders), so cast to a string to
+      // determine alphabetical order.
+      return strcasecmp((string) $a['data'][0]['data'], (string) $b['data'][0]['data']);
+    });
   }
 
 }

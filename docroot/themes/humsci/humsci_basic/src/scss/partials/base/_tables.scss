@@ -1,0 +1,53 @@
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/tables' as *;
+
+.hb-table-wrap {
+  margin: auto;
+  overflow-x: auto;
+  box-sizing: border-box;
+
+  &:not(:last-child) {
+    margin-bottom: hb-spacing-width();
+  }
+
+  details {
+    display: none;
+  }
+
+  .hb-dark-pattern &,
+  .views-element-container .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    background-color: color('white', 'global');
+
+    --link-base-current-color: #{color('tertiary')};
+    --link-base-hover-current-color: #{color('tertiary-darken-20')};
+
+    .views-label,
+    .field-content,
+    td {
+      color: color('black', 'global');
+    }
+  }
+}
+
+table {
+  @include table;
+
+  th,
+  td {
+    @include table-data;
+  }
+
+  thead th {
+    @include table-heading;
+  }
+
+  thead tr {
+    @include table-head-row;
+  }
+
+  tr:nth-child(even) {
+    @include table-row;
+  }
+}

@@ -1,9 +1,16 @@
+@use '../functions/general' as *;
+@use '../mixins/layout' as *;
+
 .hb-page-width {
   @include hb-page-width;
 }
 
 .hb-vertical-page-padding {
-  margin: hb-spacing-width() auto !important;
+  margin: 0 auto hb-spacing-width();
+
+  &:not(:has(.hs-full-width)) {
+    margin-top: hb-spacing-width();
+  }
 }
 
 // If a component needs *any* additional styles, move the rule into /src/scss/components.
@@ -60,6 +67,7 @@
 .ptype-hs-spotlight,
 .ptype-hs-banner,
 .ptype-hs-carousel,
+.ptype-hs-cmap,
 .ptype-hs-sptlght-slder,
 .field-hs-page-hero,
 .ptype-hs-timeline,

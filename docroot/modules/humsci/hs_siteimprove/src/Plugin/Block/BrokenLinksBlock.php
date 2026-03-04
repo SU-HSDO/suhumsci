@@ -62,9 +62,13 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
     $pages = $this->siteImprove->getPagesWithBrokenLinks();
     if (!$pages) {
       return [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => $this->t('No broken links found'),
+        '#type' => 'container',
+        [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#attributes' => ['class' => ['view-empty']],
+          '#value' => $this->t('No broken links found.'),
+        ],
       ];
     }
 
@@ -84,7 +88,7 @@ class BrokenLinksBlock extends BlockBase implements ContainerFactoryPluginInterf
       ],
       'full_report' => [
         '#type' => 'link',
-        '#title' => $this->t('View full broken links report'),
+        '#title' => $this->t('View full broken links report in SiteImprove'),
         '#url' => $this->getBrokenLinksReportUrl(),
         '#attributes' => [
           'class' => ['button', 'button--primary'],

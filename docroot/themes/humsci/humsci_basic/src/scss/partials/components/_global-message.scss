@@ -1,31 +1,39 @@
 // This is a stylesheet for the Global Message banner
+
+@use '../variables/colors.su-core' as *;
+@use '../functions/fonts' as *;
+@use '../functions/color' as *;
+@use '../functions/general' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/layout' as *;
+@use '../mixins/generate-css-vars' as *;
+
 $su-button-stroke: inset 0 0 0 2px;
 
-// Colors.
-$su-color-digital-blue-light: #6fc3ff; // GLOBAL MESSAGE
-$su-color-digital-blue-dark: #00548f; // GLOBAL MESSAGE
-$su-color-digital-green: #008566; // GLOBAL MESSAGE
-$su-color-illuminating-dark: #fec51d; // GLOBAL MESSAGE
-$su-color-foggy: #dad7cb; // GLOBAL MESSAGE
-$su-color-foggy-light: #f4f4f4; // GLOBAL MESSAGE
-$su-color-bright-blue: $su-color-digital-blue; // GLOBAL MESSAGE
-$su-color-bright-red: $su-color-digital-red; // GLOBAL MESSAGE
-
+// Global Message Colors mapping
 $su-alert-colors: (
-  default:      $su-color-foggy-light,
-  error:        $su-color-digital-red,
-  info:         $su-color-digital-blue-dark,
-  success:      $su-color-digital-green,
-  warning:      $su-color-illuminating-dark,
-  warning-link: $su-color-cardinal-red,
-  dark-text:    $su-color-black,
-  light-text:   $su-color-white,
-  light-hover:  $su-color-foggy,
+  'default': #f4f4f4,
+  'error': #b1040e,
+  'info': #00548f,
+  'success': #008566,
+  'warning': #fec51d,
+  'warning-link': #8c1515,
+  'dark-text': #2e2d29,
+  'light-text': #fff,
+  'light-hover': #dad7cb,
+  'digital-blue-light': #6fc3ff,
+  'digital-blue-dark': #00548f,
+  'digital-green': #008566,
+  'illuminating-dark': #fec51d,
+  'foggy': #dad7cb,
+  'foggy-light': #f4f4f4,
 );
 
 .su-alert {
+  @include generate-css-vars('su-alert', $su-alert-colors);
+
   background-color: #f4f4f4;
-  color: $su-color-black;
+  color: color('black', 'su-core');
   padding: 0;
 
   & .fa,
@@ -34,12 +42,12 @@ $su-alert-colors: (
   .hb-dark-pattern & .fas,
   .hb-dark-pattern & ol:not([class]) li::before,
   & ol:not([class]) li::before {
-    color: $su-color-black;
+    color: color('black', 'su-core');
   }
 
   .hb-dark-pattern & ul:not([class]) li::before,
   & ul:not([class]) li::before {
-    background-color: $su-color-black;
+    background-color: color('black', 'su-core');
   }
 
   .hb-dark-pattern & a,
@@ -48,7 +56,7 @@ $su-alert-colors: (
   a[href^='mailto:'],
   a.ext,
   a {
-    color: $su-color-black;
+    color: color('black', 'su-core');
     border-bottom: 0;
     background-image: none;
     font-weight: hb-theme-font-weight(semibold);
@@ -67,7 +75,7 @@ $su-alert-colors: (
     a[href^='mailto:'],
     a.ext,
     a {
-      color: var(--palette--white);
+      color: color('white', 'su-core');
 
       &:hover,
       &:focus {
@@ -80,8 +88,8 @@ $su-alert-colors: (
       a {
         &:hover,
         &:focus {
-          background-color: $su-color-white;
-          color: $su-color-black;
+          background-color: color('white', 'su-core');
+          color: color('black', 'su-core');
         }
       }
     }
@@ -89,18 +97,18 @@ $su-alert-colors: (
     .su-alert__footer {
       .su-link {
         &::after {
-          background: $su-color-white;
+          background: color('white', 'su-core');
         }
       }
     }
 
     .su-alert__dismiss-button {
-      color: color(light-text, $su-alert-colors);
+      color: color('light-text', 'su-alert', $su-alert-colors);
 
       &:hover,
       &:focus {
         background-color: transparent;
-        color: $su-color-white;
+        color: color('white', 'su-core');
       }
     }
   }
@@ -112,12 +120,12 @@ $su-alert-colors: (
   .hb-dark-pattern &.su-alert--text-light .fas,
   .hb-dark-pattern &.su-alert--text-light ol:not([class]) li::before,
   &--text-light ol:not([class]) li::before {
-    color: var(--palette--white);
+    color: color('white', 'su-core');
   }
 
   .hb-dark-pattern &--text-light ul:not([class]) li::before,
   &--text-light ul:not([class]) li::before {
-    background-color: var(--palette--white);
+    background-color: color('white', 'su-core');
   }
 
   &--plain {
@@ -125,11 +133,11 @@ $su-alert-colors: (
   }
 
   &--error {
-    background-color: $su-color-bright-red;
-    color: color(light-text, $su-alert-colors);
+    background-color: color('digital-red', 'su-core');
+    color: color('light-text', 'su-alert', $su-alert-colors);
 
     a {
-      color: color(light-text, $su-alert-colors);
+      color: color('light-text', 'su-alert', $su-alert-colors);
 
       &:hover,
       &:focus {
@@ -146,18 +154,18 @@ $su-alert-colors: (
     background-color: #eaab00;
 
     a {
-      color: $su-color-black;
+      color: color('black', 'su-core');
 
       &:hover,
       &:focus {
-        color: $su-color-black;
+        color: color('black', 'su-core');
         text-decoration: underline;
       }
     }
   }
 
   &--info {
-    background-color: $su-color-bright-blue;
+    background-color: color('digital-blue', 'su-core');
   }
 
   &__header {
@@ -207,14 +215,16 @@ $su-alert-colors: (
     margin-bottom: 0;
 
     a {
-      color: $su-color-black;
+      color: color('black', 'su-core');
       text-decoration: underline;
-      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+      transition:
+        background-color 0.3s ease-in-out,
+        color 0.3s ease-in-out;
 
       &:hover,
       &:focus {
-        color: $su-color-black;
-        background-color: $su-color-digital-blue-light;
+        color: color('black', 'su-core');
+        background-color: color('digital-blue-light', 'su-alert', $su-alert-colors);
         text-decoration: underline;
       }
     }
@@ -249,7 +259,7 @@ $su-alert-colors: (
       background-color: transparent;
       text-transform: uppercase;
       font-weight: hb-theme-font-weight(semibold);
-      color: color(dark-text, $su-alert-colors);
+      color: color('dark-text', 'su-alert', $su-alert-colors);
       font-size: hb-calculate-rems(17px);
       letter-spacing: 0.1em;
 
@@ -271,7 +281,7 @@ $su-alert-colors: (
         &:hover,
         &:focus {
           background-color: transparent;
-          color: $su-color-black;
+          color: color('black', 'su-core');
         }
       }
     }
@@ -294,19 +304,19 @@ $su-alert-colors: (
 // -----------------------------------------------------------------------------
 .su-alert__footer {
   a {
-    color: color(dark-text, $su-alert-colors);
+    color: color('dark-text', 'su-alert', $su-alert-colors);
     text-decoration: none;
 
     &:hover,
     &:focus {
-      color: color(dark-text, $su-alert-colors);
+      color: color('dark-text', 'su-alert', $su-alert-colors);
       text-decoration: underline;
     }
   }
 
   .su-link {
     &::after {
-      background: color(dark-text, $su-alert-colors);
+      background: color('dark-text', 'su-alert', $su-alert-colors);
     }
 
     &:hover,
@@ -314,17 +324,17 @@ $su-alert-colors: (
       text-decoration: underline;
 
       &::after {
-        background: color(dark-text, $su-alert-colors);
+        background: color('dark-text', 'su-alert', $su-alert-colors);
       }
     }
   }
 }
 
-.su-alert__text+.su-alert__footer {
+.su-alert__text + .su-alert__footer {
   @include responsive-spacing('margin', 0 null null null);
 }
 
-.su-alert__dismiss~.su-alert__body {
+.su-alert__dismiss ~ .su-alert__body {
   @include grid-media-max('sm') {
     margin-bottom: 1em;
   }

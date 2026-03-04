@@ -1,0 +1,22 @@
+diff --git a/content_access_simple.module b/content_access_simple.module
+index 9c9ecdc2ef992e6c745f19808ca451196f1036ef..2bcfdcf44e76a269394327022ca2aa4d481ff53f 100644
+--- a/content_access_simple.module
++++ b/content_access_simple.module
+@@ -120,6 +120,17 @@ function content_access_simple_node_form_submit($form, FormStateInterface $form_
+     }
+   }
+ 
++  // Compare view settings, ignoring order and duplicates.
++  $origView = array_unique(array_diff($origSettings['view'], $hiddenRoles));
++  $newView = array_unique(array_diff($newViewSettings, $hiddenRoles));
++  sort($origView);
++  sort($newView);
++
++  // If view settings are unchanged, skip grant/cache update.
++  if ($origView === $newView) {
++    return;
++  }
++
+   $origSettings['view'] = $newViewSettings;
+ 
+   // Update Content Access settings.

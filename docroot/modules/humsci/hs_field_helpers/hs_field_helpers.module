@@ -8,7 +8,9 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterInterface;
@@ -514,10 +516,7 @@ function hs_field_helpers_preprocess_field(&$variables) {
       }
       $pitem['attributes']['class'][] = "paragraph-item";
       $pitem['attributes']['class'][] = $ptype;
-
-      if ($paragraph_type == 'hs_clr_bnd') {
-        $pitem['attributes']['id'] = 'component-' . $pitem['content']['#paragraph']->id();
-      }
+      $pitem['attributes']['id'] = 'component-' . $pitem['content']['#paragraph']->id();
     }
   }
 }
@@ -648,18 +647,6 @@ function hs_field_helpers_preprocess_ds_entity_view(&$variables) {
 }
 
 /**
- * Implements hook_form_alter().
- */
-function hs_field_helpers_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (strpos($form_id, 'views_form_') === 0) {
-    // Remove the select all since it selects every node, not just the ones
-    // from the active filters.
-    // @link https://www.drupal.org/project/views_bulk_operations/issues/3055770#comment-13116724
-    unset($form['header']['views_bulk_operations_bulk_form']['select_all']);
-  }
-}
-
-/**
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
@@ -724,4 +711,131 @@ function hs_field_helpers_field_widget_complete_link_default_form_alter(&$field_
     }
   }
 
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function hs_field_helpers_entity_form_display_alter(EntityFormDisplayInterface $form_display, array $context) {
+  // In order to disable the fields rather than use readonly_field_widget
+  // we need to remove the readonly_field_widget type and disable the fields.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($context['entity_type'] != 'node' || !$node) {
+    return;
+  }
+
+  $imported_fields = _hs_field_helpers_get_imported_fields($node);
+
+  if (empty($imported_fields)) {
+    return;
+  }
+
+  \Drupal::messenger()
+    ->addWarning(t('Some fields can not be edited since they contain imported & synced data.'));
+
+  foreach ($imported_fields as $field_name) {
+    $component = $form_display->getComponent($field_name) ?? [];
+    $component['type'] = NULL;
+    $form_display->setComponent($field_name, $component);
+  }
+}
+
+/**
+ * Implements hook_entity_form_FORM_ID_alter().
+ */
+function hs_field_helpers_form_node_form_alter(&$form, FormStateInterface &$form_state, $form_id) {
+
+  // Disables the field if it's imported.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node || !$node instanceof NodeInterface) {
+    return;
+  }
+
+  $imported_fields = _hs_field_helpers_get_imported_fields($node);
+
+  if (empty($imported_fields)) {
+    return;
+  }
+
+  $form['#attributes']['data-has-imported-fields'][] = 'true';
+
+  foreach ($imported_fields as $field_name) {
+    if (isset($form[$field_name])) {
+      // Set the field to disabled.
+      $form[$field_name]['#disabled'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Get the fields that are imported from the migration.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node to get the imported fields from.
+ *
+ * @return array
+ *   The fields that are imported from the migration.
+ */
+function _hs_field_helpers_get_imported_fields(NodeInterface $node) : array {
+
+  // Static cache for imported fields by node ID.
+  static $imported_fields_cache = [];
+  $nid = $node->id();
+  // Return the cached imported fields if they exist.
+  if (isset($imported_fields_cache[$nid])) {
+    return $imported_fields_cache[$nid];
+  }
+
+  // Code to determine if field is imported is from stanford_migrate.
+  // @see stanford_migrate_entity_form_display_alter.
+  $imported_fields = [];
+
+  $migration = \Drupal::service('stanford_migrate')->getNodesMigration($node);
+
+  // Check if the current node was imported.
+  if (!$migration) {
+    $imported_fields_cache[$nid] = [];
+    return [];
+  }
+
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  $field_definitions = $entity_field_manager->getFieldDefinitions('node', $node->bundle());
+
+  foreach ($field_definitions as $field_name => $field_definition) {
+
+    // When edit an existing node that was imported via migrate module, mark the
+    // fields that are mapped from migration as disabled.
+    $field_definition = $field_definitions[$field_name];
+    $columns = $field_definition->getFieldStorageDefinition()->getColumns();
+    $processing = !empty($migration->process[$field_name]) || !empty($migration->process["$field_name/0"]);
+
+    // This will check if a migrate process is mapped to a specific column on
+    // the field.
+    foreach (array_keys($columns) as $column) {
+      $processing = $processing ?: !empty($migration->process["$field_name/$column"]) || !empty($migration->process["$field_name/0/$column"]);
+    }
+
+    // If the migration destination has the `overwrite_properties` configured,
+    // those fields specifically should be locked, not the other fields that
+    // are not designated in the original process configuration.
+    if ($processing && !empty($migration->get('destination')['overwrite_properties'])) {
+      // If the current field doesn't exist in the overwrite_properties, it
+      // should not be considered to be processing since it's a one time only
+      // import.
+      $processing = FALSE;
+
+      foreach ($migration->get('destination')['overwrite_properties'] as $overwrite_property) {
+        // If any part of the field is set to overwrite, lock the whole field
+        // down.
+        $overwrite_property = strstr($overwrite_property, '/', TRUE) ?: $overwrite_property;
+        if ($field_name == $overwrite_property) {
+          $processing = TRUE;
+          $imported_fields[] = $field_name;
+        }
+      }
+    }
+  }
+
+  $imported_fields_cache[$nid] = $imported_fields;
+  return $imported_fields;
 }

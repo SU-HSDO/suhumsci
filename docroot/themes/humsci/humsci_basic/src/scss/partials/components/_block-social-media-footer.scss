@@ -1,7 +1,9 @@
-.block-social-media-footer {
-  ul {
-    @include hb-list-empty-styles;
-  }
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/general' as *;
+
+.social-media-link__list {
+  @include hb-list-empty-styles;
 
   li {
     display: flex;
@@ -19,10 +21,10 @@
 
       .social-media-link__icon,
       .social-media-link__label {
-        color: var(--palette--secondary-darken-12);
+        color: color('secondary-darken-12');
 
         .hb-dark-pattern & {
-          color: var(--palette--tertiary-highlight-darken-10);
+          color: color('tertiary-highlight-darken-10');
         }
       }
     }
@@ -31,10 +33,10 @@
   .social-media-link__icon {
     width: 1em;
     text-align: center;
-    color: var(--palette--secondary);
+    color: color('secondary');
 
     .hb-dark-pattern & {
-      color: var(--palette--secondary-highlight);
+      color: color('secondary-highlight');
     }
 
     // Override for Soundcloud icon (too wide).
@@ -47,7 +49,7 @@
 
 // Grid Layout.
 .block-social-media-footer--layout-grid {
-  ul {
+  .social-media-link__list {
     display: grid;
     gap: hb-calculate-rems(16px);
   }
@@ -59,7 +61,7 @@
 
 // Vertical List Layout.
 .block-social-media-footer--layout-vertical-list {
-  li {
+  .social-media-link__list li {
     margin-bottom: hb-calculate-rems(16px);
   }
 
@@ -70,10 +72,10 @@
   .social-media-link__label {
     font-size: hb-calculate-rems(16px);
     text-decoration: underline;
-    color: var(--palette--black);
+    color: color('black', 'global');
 
     .hb-dark-pattern & {
-      color: var(--palette--secondary-highlight);
+      color: color('secondary-highlight');
     }
   }
 }
@@ -85,7 +87,10 @@
   }
 
   .social-media-link__list {
-    grid-template-columns: repeat(auto-fit, minmax(hb-calculate-rems(24px), 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(hb-calculate-rems(32px), 1fr)
+    );
   }
 }
 
@@ -96,6 +101,25 @@
   }
 
   .social-media-link__list {
-    grid-template-columns: repeat(auto-fit, minmax(hb-calculate-rems(30px), 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(hb-calculate-rems(48px), 1fr)
+    );
+  }
+}
+
+.social-media-link__text-above {
+  margin-bottom: hb-calculate-rems(16px);
+}
+
+.social-media-link__text-below {
+  margin-top: hb-calculate-rems(16px);
+}
+
+// Add a max-width to the media image just in case a big image is being added there.
+.social-media-link__text-above,
+.social-media-link__text-below {
+  .hb-media-image {
+    max-width: hb-calculate-rems(200px);
   }
 }

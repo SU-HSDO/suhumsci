@@ -34,6 +34,13 @@ class SiteImprove implements SiteImproveInterface {
   protected string $baseUrl;
 
   /**
+   * The SiteImprove config object.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $config;
+
+  /**
    * Constructor for SiteImprove.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -266,30 +273,21 @@ class SiteImprove implements SiteImproveInterface {
     $current_url = $this->request_stack->getCurrentRequest()->getSchemeAndHttpHost();
     $production_url = $this->getNormalizedUrl($current_url);
     $environment = getenv('AH_SITE_ENVIRONMENT');
+    // 'stage' environment name is named 'test' internally in Acquia.
+    $environment = $environment === 'stage' ? 'test' : $environment;
 
-    // If the site is not in prod, construct the production URL.
-    if (empty($environment) || $environment !== 'prod') {
-      $site_identifier = $production_url;
+    $site_identifier = explode('.', $production_url)[0];
 
-      // Handle tugboat URLs.
-      if (str_contains($production_url, '.tugboatqa.com')) {
-        // Extract everything before .tugboatqa.com.
-        $site_identifier = explode('.tugboatqa.com', $production_url)[0];
-        // Remove everything after and including the last dash.
-        $site_identifier = preg_replace('/-[^-]*$/', '', $site_identifier);
-      }
+    if ($environment && str_ends_with($site_identifier, $environment)) {
       // Handle Acquia URLs.
-      elseif (str_ends_with($site_identifier, $environment)) {
-        $site_identifier = str_replace('-' . $environment, '', $site_identifier);
-      }
-
-      $site_identifier = str_replace('https://', '', $site_identifier);
-
-      $production_url = $site_identifier . '.stanford.edu';
-
+      $site_identifier = str_replace('-' . $environment, '', $site_identifier);
+    }
+    elseif (str_contains($production_url, '.tugboatqa.com')) {
+      // Handle tugboat URLs.
+      $site_identifier = preg_replace('/-[^-]*$/', '', $site_identifier);
     }
 
-    return $production_url;
+    return $site_identifier . '.stanford.edu';
   }
 
 }

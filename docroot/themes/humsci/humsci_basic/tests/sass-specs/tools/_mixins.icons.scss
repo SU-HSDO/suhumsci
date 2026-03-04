@@ -1,0 +1,123 @@
+@use 'true' as *;
+@use 'sass:map';
+@use '../../../src/scss/partials/variables/theme';
+@use '../../../src/scss/partials/variables/colors.colorful' as colorful;
+@use '../../../src/scss/partials/variables/colors.traditional' as traditional;
+@use '../../../src/scss/partials/functions/icons' as icons;
+@use '../../../src/scss/partials/functions/svg' as svg;
+@use '../../../src/scss/partials/functions/color' as color;
+@use '../../../src/scss/partials/mixins/icons' as i;
+
+@include describe('Icon Mixins') {
+  @include describe('hb-icon-background() mixin') {
+    theme.$hb-current-theme: 'colorful';
+
+    @include it('sets a background-image using a generated SVG data URI.') {
+      @include assert {
+        @include output {
+          .hb-test-icon {
+            @include i.hb-icon-background('plus', 'gray-dark');
+          }
+        }
+
+        $icon-color: map.get(colorful.$colorful-global-colors, 'gray-dark');
+        $expected-icon: svg.svg(icons.hc-get-icons('plus', $icon-color));
+
+        @include contains {
+          .hb-test-icon {
+            background-image: $expected-icon;
+          }
+        }
+      }
+    }
+
+    @include it('sets a mask-image and background-color when mask is true.') {
+      @include assert {
+        @include output {
+          .hb-test-icon-mask {
+            @include i.hb-icon-background('plus', 'gray-dark', true);
+          }
+        }
+
+        $icon-color: map.get(colorful.$colorful-global-colors, 'gray-dark');
+        $expected-icon: svg.svg(icons.hc-get-icons('plus', $icon-color));
+
+        @include contains {
+          .hb-test-icon-mask {
+            mask-image: $expected-icon;
+          }
+        }
+      }
+
+      @include assert {
+        @include output {
+          .hb-test-icon-mask {
+            @include i.hb-icon-background('plus', 'gray-dark', true);
+          }
+        }
+
+        @include contains {
+          .hb-test-icon-mask {
+            background-color: color.color('gray-dark', 'global');
+          }
+        }
+      }
+    }
+
+    @include it(
+      'uses the ocean pairing color when inside the colorful pairing class.'
+    ) {
+      @include assert {
+        @include output(false) {
+          .hb-test-icon-pairing {
+            @include i.hb-icon-background('plus', 'primary');
+          }
+        }
+
+        $icon-color: map.get(
+          map.get(colorful.$colorful-pairings-colors, 'ocean'),
+          'primary'
+        );
+        $expected-icon: svg.svg(icons.hc-get-icons('plus', $icon-color));
+
+        @include contains(false) {
+          .hc-pairing-ocean .hb-test-icon-pairing {
+            background-image: $expected-icon;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include describe('Icon Mixins with Traditional Pairings') {
+  @include describe('hb-icon-background() mixin') {
+    theme.$hb-current-theme: 'traditional';
+
+    @include it(
+      'uses the bluejay pairing color when inside the traditional pairing class.'
+    ) {
+      @include assert {
+        @include output {
+          .ht-pairing-bluejay {
+            .hb-test-icon-trad {
+              @include i.hb-icon-background('plus', 'primary');
+            }
+          }
+        }
+
+        $icon-color: map.get(
+          map.get(traditional.$traditional-pairings-colors, 'bluejay'),
+          'primary'
+        );
+        $expected-icon: svg.svg(icons.hc-get-icons('plus', $icon-color));
+
+        @include contains {
+          .ht-pairing-bluejay .hb-test-icon-trad {
+            background-image: $expected-icon;
+          }
+        }
+      }
+    }
+  }
+}

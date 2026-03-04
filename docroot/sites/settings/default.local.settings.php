@@ -23,8 +23,8 @@ if (file_exists(DRUPAL_ROOT . '/../keys/saml/cert/saml.crt')) {
   ];
 }
 
-// Saml login doesn't work on gitpod or tugboat, don't set config values.
-if (getenv('GITPOD_WORKSPACE_URL') || getenv('TUGBOAT_REPO')) {
+// Saml login doesn't work on tugboat, don't set config values.
+if (getenv('TUGBOAT_REPO')) {
   unset($config['samlauth.authentication'], $config['stanford_samlauth.settings']);
 }
 

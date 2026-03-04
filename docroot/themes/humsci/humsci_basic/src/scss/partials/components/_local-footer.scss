@@ -1,8 +1,18 @@
+@use '../variables/general' as *;
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/text' as *;
+
 .hb-local-footer {
   font-size: hb-calculate-rems(16px);
   padding: hb-calculate-rems(48px) 0;
   border-top: $hb-thin-border;
-  border-color: var(--palette--gray);
+  border-color: color('gray', 'global');
 
   .hb-secondary-nav {
     // overwrite default secondary nav styles for menu items
@@ -34,10 +44,9 @@
 
   .block__title,
   .hb-secondary-nav__heading {
-    font-size: hb-calculate-rems(14px);
-    font-weight: hb-theme-font-weight(bold);
+    @include hb-heading-6;
+
     margin: 0 0 hb-calculate-rems(20px);
-    text-transform: uppercase;
 
     @include hb-traditional {
       font-family: $hb-traditional-font--sans;
@@ -49,23 +58,6 @@
 
     .menu-item {
       margin-bottom: hb-calculate-rems(14px);
-    }
-  }
-
-  // Warbler color pairing override.
-  @include hb-traditional {
-    .ht-pairing-warbler &:not(.hb-dark-pattern) {
-      a:not([class]),
-      a.mailto,
-      a[href^='mailto:'],
-      a.ext {
-        color: var(--palette--tertiary);
-
-        &:hover,
-        &:focus {
-          color: var(--palette--tertiary-darken-20);
-        }
-      }
     }
   }
 }

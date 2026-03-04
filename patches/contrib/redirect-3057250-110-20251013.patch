@@ -1,0 +1,304 @@
+diff --git a/redirect.module b/redirect.module
+index 4cfb3cabe37b04e447e3218f3fe3c5ae7a92dfea..23ee04e5bb319dfd8788ca882c8efa5e1fb4859d 100644
+--- a/redirect.module
++++ b/redirect.module
+@@ -220,13 +220,6 @@ function locale_form_redirect_edit_form_alter(array &$form, FormStateInterface $
+   ];
+ }
+ 
+-/**
+- * Ajax callback for the redirect link widget.
+- */
+-function redirect_source_link_get_status_messages(array $form, FormStateInterface $form_state) {
+-  return $form['redirect_source']['widget'][0]['status_box'];
+-}
+-
+ /**
+  * Implements hook_entity_extra_field_info().
+  */
+diff --git a/src/Form/RedirectForm.php b/src/Form/RedirectForm.php
+index 38577e316d559679ca22490793beeb093349c9bd..91c0c2e9b67ac609859bfda57b9acd6467ed0e80 100644
+--- a/src/Form/RedirectForm.php
++++ b/src/Form/RedirectForm.php
+@@ -5,8 +5,12 @@ namespace Drupal\redirect\Form;
+ use Drupal\Core\Entity\ContentEntityForm;
+ use Drupal\Core\Language\Language;
+ use Drupal\Core\Language\LanguageInterface;
++use Drupal\Core\Routing\AccessAwareRouterInterface;
++use Drupal\Core\Routing\LocalAwareRedirectResponseTrait;
+ use Drupal\Core\Url;
+ use Drupal\Core\Form\FormStateInterface;
++use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
++use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+ 
+ /**
+@@ -14,6 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
+  */
+ class RedirectForm extends ContentEntityForm {
+ 
++  // Provide a way to test isLocal() for url strings.
++  use LocalAwareRedirectResponseTrait;
++
+   /**
+    * The language manager.
+    *
+@@ -21,12 +28,20 @@ class RedirectForm extends ContentEntityForm {
+    */
+   protected $languageManager;
+ 
++  /**
++   * The router.
++   *
++   * @var \Drupal\Core\Routing\AccessAwareRouterInterface
++   */
++  protected AccessAwareRouterInterface $router;
++
+   /**
+    * {@inheritdoc}
+    */
+   public static function create(ContainerInterface $container) {
+     $form = parent::create($container);
+     $form->languageManager = $container->get('language_manager');
++    $form->router = $container->get('router');
+     return $form;
+   }
+ 
+@@ -137,6 +152,34 @@ class RedirectForm extends ContentEntityForm {
+       // Do nothing, we want to only compare the resulting URLs.
+     }
+ 
++    // If creating a new Redirect and the source path is an existing path,
++    // recommend an alias instead.
++    if ($this->entity->isNew()
++        && $source['path']
++        && ($form_state->getStorage()['redirect_source_warning'] ?? NULL) !== $source['path']
++        && !$form_state->hasAnyErrors()
++        && isset($redirect_url)
++        && $this->isLocal($redirect_url->toString())
++    ) {
++      // Warning about creating a redirect from a valid path.
++      // @todo Exception driven logic. Find a better way to determine if we have
++      // a valid path.
++      try {
++        $this->router->match('/' . $source['path']);
++        $storage = $form_state->getStorage();
++        $storage['redirect_source_warning'] = $source['path'];
++        $form_state->setStorage($storage);
++        $form_state->setRebuild();
++        $this->messenger()->addWarning($this->t('The source path %path appears to be a valid path. It is preferred to <a href="@url-alias">create URL aliases</a> for existing paths rather than redirects.', [
++          '%path' => trim($source['path']),
++          '@url-alias' => Url::fromRoute('entity.path_alias.add_form')->toString(),
++        ]));
++      }
++      catch (ResourceNotFoundException | AccessDeniedHttpException) {
++        // Do nothing, expected behavior.
++      }
++    }
++
+     return $entity;
+   }
+ 
+diff --git a/src/Plugin/Field/FieldWidget/RedirectSourceWidget.php b/src/Plugin/Field/FieldWidget/RedirectSourceWidget.php
+index ef669e34a7d91d364e4de3180828aad76f864f11..db4fd2fd564ece0367c5aa2415d64834e741e80c 100644
+--- a/src/Plugin/Field/FieldWidget/RedirectSourceWidget.php
++++ b/src/Plugin/Field/FieldWidget/RedirectSourceWidget.php
+@@ -7,13 +7,10 @@ use Drupal\Core\Field\FieldDefinitionInterface;
+ use Drupal\Core\Field\FieldItemListInterface;
+ use Drupal\Core\Field\WidgetBase;
+ use Drupal\Core\Routing\AccessAwareRouterInterface;
+-use Drupal\Core\Url;
+ use Drupal\Core\Form\FormStateInterface;
+ use Drupal\redirect\RedirectRepository;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+ use Symfony\Component\HttpFoundation\RequestStack;
+-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+ 
+ /**
+  * Plugin implementation of the 'link' widget for the redirect module.
+@@ -84,56 +81,6 @@ class RedirectSourceWidget extends WidgetBase {
+       '#attributes' => ['data-disable-refocus' => 'true'],
+     ];
+ 
+-    // If creating new URL add checks.
+-    if ($items->getEntity()->isNew()) {
+-      $element['status_box'] = [
+-        '#prefix' => '<div id="redirect-link-status">',
+-        '#suffix' => '</div>',
+-      ];
+-
+-      $source_path = $form_state->getValue(['redirect_source', 0, 'path']);
+-      if ($source_path) {
+-        $source_path = trim($source_path);
+-
+-        // Warning about creating a redirect from a valid path.
+-        // @todo Hmm... exception driven logic. Find a better way how to
+-        //   determine if we have a valid path.
+-        try {
+-          $this->router->match('/' . $form_state->getValue(['redirect_source', 0, 'path']));
+-
+-          $url = Url::fromRoute('entity.path_alias.add_form');
+-          if ($url->access()) {
+-            $element['status_box'][]['#markup'] = '<div class="messages messages--warning">' . $this->t('The source path %path is likely a valid path. It is preferred to <a href="@url-alias">create URL aliases</a> for existing paths rather than redirects.', [
+-              '%path' => $source_path,
+-              '@url-alias' => $url->toString(),
+-            ]) . '</div>';
+-          }
+-        }
+-        catch (ResourceNotFoundException) {
+-          // Do nothing, expected behavior.
+-        }
+-        catch (AccessDeniedHttpException) {
+-          // @todo Source lookup results in an access denied, deny access?
+-        }
+-
+-        // Warning about the path being already redirected.
+-        $parsed_url = UrlHelper::parse($source_path);
+-        $path = $parsed_url['path'] ?? NULL;
+-        if (!empty($path)) {
+-          $redirects = $this->redirectRepository->findBySourcePath($path);
+-          if (!empty($redirects)) {
+-            $redirect = array_shift($redirects);
+-            $element['status_box'][]['#markup'] = '<div class="messages messages--warning">' . $this->t('The base source path %source is already being redirected. Do you want to <a href="@edit-page">edit the existing redirect</a>?', ['%source' => $source_path, '@edit-page' => $redirect->toUrl('edit-form')->toString()]) . '</div>';
+-          }
+-        }
+-      }
+-
+-      $element['path']['#ajax'] = [
+-        'callback' => 'redirect_source_link_get_status_messages',
+-        'wrapper' => 'redirect-link-status',
+-      ];
+-    }
+-
+     return $element;
+   }
+ 
+diff --git a/tests/src/FunctionalJavascript/RedirectJavascriptTest.php b/tests/src/FunctionalJavascript/RedirectJavascriptTest.php
+index b6898c73e9c730efa461344eeffc3ac386f2391b..9ecfdade8b7635c6ecb938f9cce94cff36fe0e99 100644
+--- a/tests/src/FunctionalJavascript/RedirectJavascriptTest.php
++++ b/tests/src/FunctionalJavascript/RedirectJavascriptTest.php
+@@ -93,8 +93,7 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $page = $this->getSession()->getPage();
+     $page->fillField('redirect_source[0][path]', 'non-existing');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+ 
+     // Try to find the redirect we just created.
+     $redirect = $this->repository->findMatchingRedirect('non-existing');
+@@ -132,33 +131,35 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $redirect = array_shift($redirects);
+     $this->assertEquals(Url::fromUri('base:non-existing', ['query' => ['key' => 'value']])->toString(), $redirect->getSourceUrl());
+ 
+-    // Test the source url hints.
+-    // The hint about an existing base path.
++    // Test validation.
++    // The hint about a valid path.
+     $this->drupalGet('admin/config/search/redirect/add');
+-    $page->fillField('redirect_source[0][path]', 'non-existing?key=value');
+-    $page->fillField('redirect_redirect[0][uri]', '');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
++    $this->submitForm([
++      'redirect_source[0][path]' => 'node',
++      'redirect_redirect[0][uri]' => '<front>',
++    ], 'Save');
+     $this->assertSession()->responseContains(
+-      'The base source path <em class="placeholder">non-existing?key=value</em> is already being redirected. Do you want to <a href="' . $redirect->toUrl('edit-form')->toString() . '">edit the existing redirect</a>?'
++      'The source path <em class="placeholder">node</em> appears to be a valid path. It is preferred to <a href="' . Url::fromRoute('entity.path_alias.add_form')->toString() . '">create URL aliases</a> for existing paths rather than redirects.',
+     );
+ 
+-    // The hint about a valid path.
+-    $this->drupalGet('admin/config/search/redirect/add');
+-    $page->fillField('redirect_source[0][path]', 'node');
+-    $page->fillField('redirect_redirect[0][uri]', '');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
++    // Change the path and ensure the warning still occurs.
++    $page->fillField('redirect_source[0][path]', 'node/add');
++    $this->submitForm([], 'Save');
+     $this->assertSession()->responseContains(
+-      'The source path <em class="placeholder">node</em> is likely a valid path. It is preferred to <a href="' . Url::fromRoute('entity.path_alias.add_form')->toString() . '">create URL aliases</a> for existing paths rather than redirects.'
++      'The source path <em class="placeholder">node/add</em> appears to be a valid path. It is preferred to <a href="' . Url::fromRoute('entity.path_alias.add_form')->toString() . '">create URL aliases</a> for existing paths rather than redirects.',
+     );
+ 
++    // Ensure you can click save again and create the redirect if you like.
++    $this->submitForm([], 'Save');
++    $this->assertSession()->pageTextContains('The redirect has been saved.');
++
+     // Test validation.
+     // Duplicate redirect.
+     $this->drupalGet('admin/config/search/redirect/add');
+     $page = $this->getSession()->getPage();
+     $page->fillField('redirect_source[0][path]', 'non-existing?key=value');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+     $this->assertSession()->responseContains(
+       'The source path <em class="placeholder">non-existing?key=value</em> is already being redirected. Do you want to <a href="' . $redirect->toUrl('edit-form')->toString() . '">edit the existing redirect</a>?'
+     );
+@@ -168,8 +169,7 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $page = $this->getSession()->getPage();
+     $page->fillField('redirect_source[0][path]', 'node');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+     $this->assertSession()->responseContains('You are attempting to redirect the page to itself. This will result in an infinite loop.');
+ 
+     // Redirecting the front page.
+@@ -177,8 +177,7 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $page = $this->getSession()->getPage();
+     $page->fillField('redirect_source[0][path]', '<front>');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+     $this->assertSession()->responseContains('It is not allowed to create a redirect from the front page.');
+ 
+     // Redirecting a url with fragment.
+@@ -186,8 +185,7 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $page = $this->getSession()->getPage();
+     $page->fillField('redirect_source[0][path]', 'page-to-redirect#content');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+     $this->assertSession()->responseContains('The anchor fragments are not allowed.');
+ 
+     // Adding path that starts with /.
+@@ -196,8 +194,7 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $page->fillField('redirect_source[0][path]', '/page-to-redirect');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+     // Wait on ajax is unpredictable, wait for one second.
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+     $this->assertSession()->responseContains('The url to redirect from should not start with a forward slash (/).');
+ 
+     // Test filters.
+@@ -206,8 +203,7 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+     $page = $this->getSession()->getPage();
+     $page->fillField('redirect_source[0][path]', 'test27');
+     $page->fillField('redirect_redirect[0][uri]', '/node');
+-    $this->assertSession()->assertWaitOnAjaxRequest();
+-    $page->pressButton('Save');
++    $this->submitForm([], 'Save');
+ 
+     // Filter with non existing value.
+     $this->drupalGet(
+@@ -278,9 +274,11 @@ class RedirectJavascriptTest extends WebDriverTestBase {
+ 
+     // Test the bulk delete action.
+     $this->getSession()->getPage()->selectFieldOption("action", "redirect_delete_action", TRUE);
+-    $this->submitForm(['redirect_bulk_form[0]' => TRUE], 'Apply to selected items');
+-    $this->assertSession()->pageTextContains('Are you sure you want to delete this redirect?');
++    $this->getSession()->getPage()->find('css', 'input.form-checkbox:nth-child(1)')->check();
++    $this->submitForm([], 'Apply to selected items');
++    $this->assertSession()->pageTextContains('Are you sure you want to delete these redirects');
+     $this->assertSession()->pageTextContains('test27');
++    $this->assertSession()->pageTextContains('node/add');
+     $this->submitForm([], 'Delete');
+ 
+     $this->assertSession()->pageTextContains('There is no redirect yet.');

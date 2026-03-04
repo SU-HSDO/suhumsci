@@ -1,22 +1,48 @@
 @use 'sass:meta';
+@use '../variables/theme' as *;
+@use '../variables/fonts' as *;
+@use '../variables/colors.su-core' as *;
+@use '../variables/colors.traditional' as *;
+@use '../variables/colors.colorful' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/text' as *;
+@use '../mixins/generate-css-vars' as *;
 
-$hb-current-theme: 'traditional' !default;
-
-@import '../base-imports';
+// Font definitions.
+@use '../fonts/fonts';
 
 .paragraph-admin-preview {
-  @each $color, $value in $hc-colorful-globals {
-    --palette--#{$color}: #{$value};
+  @include generate-css-vars('su-core', $su-core-colors);
+
+  @include hb-themes(('colorful', 'airy')) {
+    @include generate-css-vars('colorful-global', $colorful-global-colors);
+  }
+
+  @include hb-traditional {
+   @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
   // Load main stylesheet with current theme.
   // All styles will be prefixed with the `.paragraph-admin-preview` class.
   @include meta.load-css(
     '../main',
-    $with: (
-      'hb-current-theme': $hb-current-theme,
-    )
+    $with: ('hb-current-theme': $hb-current-theme)
   );
+
+  // Utility classes.
+  @include meta.load-css(
+    '../utilities/utilities',
+    $with: ('hb-current-theme': $hb-current-theme)
+  );
+
+  // Link current color variables.
+  .paragraph-item {
+    --link-base-current-color: #{color('link-base')};
+    --link-base-hover-current-color: #{color('link-base-hover')};
+  }
 
   // Style fixes for specific elements.
   .paragraph--type--hs-sptlght-slder.paragraph--view-mode--preview {
@@ -24,8 +50,17 @@ $hb-current-theme: 'traditional' !default;
   }
 
   .paragraph--type--hs-gradient-hero-slider {
-    .slick-dots {
-      bottom: -2rem;
+    .swiper-pagination {
+      bottom: 0;
+    }
+  }
+
+  .paragraph--type--hs-carousel .swiper-container {
+    .swiper-button-prev,
+    .swiper-button-next {
+      @include hb-traditional {
+        bottom: 4.76rem;
+      }
     }
   }
 
@@ -79,6 +114,11 @@ $hb-current-theme: 'traditional' !default;
 
   .field-hs-postcard-link a {
     color: transparent;
+
+    &:hover,
+    &:focus {
+      color: transparent;
+    }
   }
 
   .hb-timeline-item {
@@ -112,5 +152,62 @@ $hb-current-theme: 'traditional' !default;
   details summary {
     background-color: transparent;
     font-weight: 400;
+  }
+
+  .hb-caption-credit-image.caption-drupal-media {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+
+    @include hb-themes(('colorful', 'airy')) {
+      margin-bottom: hb-spacing-width('sm');
+    }
+
+    @include hb-traditional {
+      margin-bottom: hb-spacing-width('xs');
+    }
+
+    figure:not(.hb-media-video):not(.hb-media-embed) {
+      position: relative;
+
+      + .field-media-image-caption {
+        @include hb-caption-credit;
+      }
+    }
+  }
+
+  .hb-vertical-linked-card__title__link.ext {
+    --link-base-current-color: #{color('white', 'global')};
+    --link-base-hover-current-color: #{color('white', 'global')};
+  }
+
+  // Vertical Linked cards.
+  .hb-vertical-button-card .hs-button {
+    @include hb-traditional {
+      background-color: transparent;
+      border-color: var(--palette--secondary);
+      color: var(--palette--secondary);
+      border-width: 0;
+      border-top-width: 2px;
+      margin-top: auto;
+      margin-left: hb-calculate-rems(-24px);
+      margin-right: hb-calculate-rems(-24px);
+
+      &:hover, &:focus {
+        color: var(--palette--white);
+        background-color: var(--palette--secondary);
+      }
+    }
+  }
+}
+
+.hb-raised-cards--uniform-height
+  .field-hs-collection-items
+  .ptype-hs-postcard
+  .paragraph-admin-preview {
+  display: flex;
+
+  & div:only-child:not(.hb-card__date-tile, .hb-pill) {
+    width: 100%;
   }
 }

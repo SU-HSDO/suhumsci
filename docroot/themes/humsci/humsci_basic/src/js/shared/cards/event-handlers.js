@@ -22,8 +22,23 @@ const addCardEvents = (card, mainLink) => {
     if (event.button !== 0) {
       return;
     }
-    // Ensure clicks on "Add to Calendar" container
-    if (event.target.closest('.addtocal-container')) {
+
+    // Ensure clicks on:
+    // - "Add to Calendar" container
+    // - Lazy video container
+    // - Caption toggle
+    // - An input or a button
+    const addToCal = event.target.closest('.addtocal-container');
+    const lazyVideo = event.target.closest('.hb-video-lazy');
+    const captionToggle = event.target.closest('.toggle-caption__toggle');
+    const clickableTagNames = ['INPUT', 'BUTTON'];
+
+    if (
+      addToCal
+      || lazyVideo
+      || captionToggle
+      || clickableTagNames.includes(event.target.tagName)
+    ) {
       return;
     }
 

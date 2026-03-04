@@ -1,0 +1,234 @@
+@use '../variables/general' as *;
+@use '../variables/fonts' as *;
+@use '../variables/colors.su-core' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/general' as *;
+@use '../mixins/text' as *;
+@use '../mixins/links' as *;
+@use '../mixins/forms' as *;
+@use '../mixins/generate-css-vars' as *;
+
+// Define variable to be able to override the link color in some scenarios.
+:root {
+  @include generate-css-vars('su-core', $su-core-colors);
+
+  --link-base-current-color: #{color(link-base)};
+  --link-base-hover-current-color: #{color(link-base-hover)};
+
+  @include hb-themes(('colorful', 'airy')) {
+    --normal-line-height: 165%;
+    --condensed-line-height: 140%;
+  }
+
+  @include hb-traditional {
+    --normal-line-height: 155%;
+    --condensed-line-height: 135%;
+  }
+}
+
+html {
+  box-sizing: border-box;
+  font-size: $hb-root-font-size;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: color('white', 'su-core');
+  overflow-x: hidden;
+
+  // Apply font smoothing for Mac OS when possible
+  // Gives refined look to fonts with more clarity, crispness, and thinner lines.
+  @include font-smoothing;
+
+  @include hb-themes(('colorful', 'airy')) {
+    font-family: $hb-colorful-font--sans;
+  }
+
+  @include hb-traditional {
+    font-family: $hb-traditional-font--sans;
+  }
+
+  @include hb-description;
+}
+
+a:not([class]),
+a.mailto,
+a[href^='mailto:'],
+a.ext {
+  @include hb-link--inline;
+}
+
+h1 {
+  @include hb-heading-1;
+
+  a:not([class]) {
+    @include hb-link;
+
+    &:hover,
+    &:focus {
+      color: color('black', 'global');
+    }
+  }
+}
+
+h2 {
+  @include hb-heading-2;
+
+  a.is-active,
+  a:not([class]) {
+    @include hb-link;
+
+    &:hover,
+    &:focus {
+      color: color('black', 'global');
+    }
+  }
+}
+
+h3 {
+  @include hb-heading-3;
+
+  a:not([class]) {
+    @include hb-link;
+
+    &:hover,
+    &:focus {
+      color: color('black', 'global');
+    }
+  }
+}
+
+h4 {
+  @include hb-heading-4;
+
+  a:not([class]) {
+    @include hb-link;
+
+    &:hover,
+    &:focus {
+      color: color('black', 'global');
+    }
+  }
+}
+
+h5 {
+  @include hb-heading-5;
+
+  a:not([class]) {
+    @include hb-link;
+
+    &:hover,
+    &:focus {
+      color: color('black', 'global');
+    }
+  }
+}
+
+h6 {
+  @include hb-heading-6;
+
+  a:not([class]) {
+    @include hb-link;
+
+    &:hover,
+    &:focus {
+      color: color('black', 'global');
+    }
+  }
+}
+
+p:not([class]) {
+  margin-top: 0;
+}
+
+strong:not([class]) {
+  font-weight: hb-theme-font-weight(semibold);
+  font-size: inherit;
+}
+
+em:not([class]) {
+  font-style: italic;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+ul:not([class]) {
+  @include hb-unordered-list;
+}
+
+ol:not([class]) {
+  @include hb-ordered-list;
+}
+
+img {
+  margin: 0;
+  padding: 0;
+
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+figure {
+  margin: 0;
+}
+
+// This prevents the list item to float behind images that are floated to the left
+figure.align-left ~ ul:not([class]),
+.align-left.hb-media-image ~ ul:not([class]),
+figure.align-left ~ ol:not([class]),
+.align-left.hb-media-image ~ ol:not([class]) {
+  li {
+    overflow: hidden;
+  }
+}
+
+caption:not([class]) {
+  font-size: hb-calculate-rems(14px);
+
+  @include hb-colorful {
+    color: color('gray-dark', 'global');
+  }
+}
+
+button:not([class]) {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+*:focus:not(:focus-visible) {
+  /* Remove focus indication when a mouse is used */
+  outline: none;
+}
+
+*:focus-visible {
+  @include hb-focus;
+}
+
+/*
+* 1. Immediately jump any animation to the end point
+* 2. Remove transitions & fixed background attachment
+* See: https://github.com/mozdevs/cssremedy/issues/11
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: -1s !important;
+    animation-duration: 1s !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+  }
+}

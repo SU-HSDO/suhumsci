@@ -83,6 +83,7 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
       127.0.0.1 islamicstudies.suhumsci.loc
       127.0.0.1 it-humsci.suhumsci.loc
       127.0.0.1 jewishstudies.suhumsci.loc
+      127.0.0.1 jrbp2025.suhumsci.loc
       127.0.0.1 language.suhumsci.loc
       127.0.0.1 linguistics.suhumsci.loc
       127.0.0.1 lowe.suhumsci.loc
@@ -95,7 +96,6 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
       127.0.0.1 mrc2021.suhumsci.loc
       127.0.0.1 mtl.suhumsci.loc
       127.0.0.1 music.suhumsci.loc
-      127.0.0.1 oconnell.suhumsci.loc
       127.0.0.1 philit.suhumsci.loc
       127.0.0.1 philosophy.suhumsci.loc
       127.0.0.1 physics.suhumsci.loc
@@ -153,8 +153,7 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
 
 ### Importing Configuration
 
-* If you run into issues importing new config files try running the command with the partial flag: `lando drush config-import --partial`.
-* If the partial flag doesn't work, you may be missing a dependency. Re-sync your whole database, then run `lando composer install`.
+* You may be missing a dependency. Re-sync your whole database, then run `lando composer install`.
 * If you find yourself in a position where starting fresh is your best plan of action, `lando destroy` will completely clear your running lando instances for a clean start.
 * If running `lando composer install` results in a timeout while installing a dependency, the default composer timeout for lando can be increased by running `lando composer --global config process-timeout 2000`.
 

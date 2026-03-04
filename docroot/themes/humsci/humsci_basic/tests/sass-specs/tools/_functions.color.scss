@@ -1,0 +1,94 @@
+@use 'true' as *;
+@use '../../../src/scss/partials/variables/theme';
+@use '../../../src/scss/partials/functions/color' as c;
+
+// -----------------------------------------------------------------------------
+// Color Function
+// -----------------------------------------------------------------------------
+
+@include describe('Color Function') {
+
+  // ---------------------------------------------------------
+  // Pairings
+  // ---------------------------------------------------------
+
+  @include describe('When using pairings map') {
+
+    theme.$hb-current-theme: 'colorful';
+
+    @include it('returns the Colorful pairing CSS variable for primary.') {
+      $test: c.color('primary', 'pairings');
+      $expect: var(--color--colorful-pairings--primary);
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'Colorful pairing primary color did not resolve to the expected CSS variable.'
+      );
+    }
+
+    theme.$hb-current-theme: 'traditional';
+
+    @include it('returns the Traditional pairing CSS variable for secondary.') {
+      $test: c.color('secondary', 'pairings');
+      $expect: var(--color--traditional-pairings--secondary);
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'Traditional pairing secondary color did not resolve to the expected CSS variable.'
+      );
+    }
+  }
+
+  // ---------------------------------------------------------
+  // Global
+  // ---------------------------------------------------------
+
+  @include describe('When using global map') {
+
+    theme.$hb-current-theme: 'colorful';
+
+    @include it('returns the Colorful global CSS variable for gray-dark.') {
+      $test: c.color('gray-dark', 'global');
+      $expect: var(--color--colorful-global--gray-dark);
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'Colorful global gray-dark color did not resolve to the expected CSS variable.'
+      );
+    }
+
+    theme.$hb-current-theme: 'traditional';
+
+    @include it('returns the Traditional global CSS variable for gray.') {
+      $test: c.color('gray', 'global');
+      $expect: var(--color--traditional-global--gray);
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'Traditional global gray color did not resolve to the expected CSS variable.'
+      );
+    }
+  }
+
+  // ---------------------------------------------------------
+  // su-core
+  // ---------------------------------------------------------
+
+  @include describe('When using su-core map') {
+
+    @include it('returns the su-core CSS variable for text.') {
+      $test: c.color('text', 'su-core');
+      $expect: var(--color--su-core--text);
+
+      @include assert-equal(
+        $test,
+        $expect,
+        'su-core text color did not resolve to the expected CSS variable.'
+      );
+    }
+  }
+}

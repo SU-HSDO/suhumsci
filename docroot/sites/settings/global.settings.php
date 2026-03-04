@@ -6,8 +6,6 @@
  */
 
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
-use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Serialization\Yaml;
 
 // When the encryption environment variable is not provided (local/ci/etc),
 // fake the encryption string so that the site doesn't break.
@@ -48,12 +46,6 @@ foreach ($additionalSettingsFiles as $settingsFile) {
 // @see \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
 $settings['config_readonly_whitelist_patterns'] = ['*'];
 
-// Set the config_ignore settings so that config imports will function on local.
-if (EnvironmentDetector::isLocalEnv() && !InstallerKernel::installationAttempted()) {
-  $config_ignore = Yaml::decode(file_get_contents(DRUPAL_ROOT . '/../config/envs/local/config_ignore.settings.yml'));
-  $config['config_ignore.settings']['ignored_config_entities'] = $config_ignore['ignored_config_entities'] + array_fill(0, 50, 'foo.bar.baz');
-}
-
 // Don't lock config when using drush.
 if (PHP_SAPI !== 'cli' && EnvironmentDetector::isProdEnv()) {
   $settings['config_readonly'] = TRUE;
@@ -84,3 +76,12 @@ if ($siteimprove_api_key && $siteimprove_username) {
     'username' => $siteimprove_username,
   ];
 }
+
+// Translation overrides to replace Drupalisms with more user-friendly terms.
+$settings['locale_custom_strings_en'][''] = [
+  'Entityqueues' => 'Listing',
+  'Edit Entity Queue' => 'Edit listing',
+  'Edit subqueue %label' => 'Edit listing %label',
+  'The entity subqueue %label has been added.' => 'The listing %label has been added.',
+  'The entity subqueue %label has been updated.' => 'The listing %label has been updated.',
+];

@@ -1,19 +1,29 @@
+@use '../variables/theme' as *;
+@use '../variables/fonts' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/theme' as *;
+@use '../mixins/icons' as *;
+@use '../mixins/icons' as *;
+
 // Add a display inline block so the container doesn't take more width than the width of the button
 .addtocal-container {
   display: inline-block;
 }
 
 .addtocal-inner {
-  background-color: var(--palette--white);
+  background-color: color('white', 'global');
   position: relative;
   display: flex;
   margin-top: -(hb-calculate-rems(38px));
   margin-left: -(hb-calculate-rems(4px));
-  padding: hb-calculate-rems(11px) hb-calculate-rems(6px) hb-calculate-rems(8px) hb-calculate-rems(18px);
+  padding: hb-calculate-rems(11px) hb-calculate-rems(6px) hb-calculate-rems(8px)
+    hb-calculate-rems(18px);
   border: 2px solid;
   border-radius: hb-calculate-rems(12px);
 
-  border-color: var(--palette--tertiary-darken-20);
+  border-color: color('tertiary-darken-20');
 
   @include hb-traditional {
     margin-top: -(hb-calculate-rems(40px));
@@ -22,7 +32,7 @@
 }
 
 .addtocal-title {
-  color: var(--palette--secondary);
+  color: color('secondary');
 
   font-size: hb-calculate-rems(16px);
   margin: 0 hb-calculate-rems(6px);
@@ -47,7 +57,7 @@
   }
 
   a {
-    color: var(--palette--gray-dark);
+    color: color('gray-dark', 'global');
     display: flex;
     align-items: center;
     background-image: none;
@@ -55,7 +65,7 @@
 
     &:hover,
     &:focus {
-      color: var(--palette--secondary);
+      color: var('secondary');
       background-image: none;
 
       &::before {

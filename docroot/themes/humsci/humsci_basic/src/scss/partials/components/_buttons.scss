@@ -1,19 +1,21 @@
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/buttons' as *;
+
 .button,
 a.button {
   @include hb-button;
   font-size: hb-calculate-rems(18px);
 
   // This is our only option for targeting the exposed filters reset button
-  &[data-drupal-selector="edit-reset"] {
+  &[data-drupal-selector='edit-reset'] {
     @include hb-reset-button;
   }
 }
 
 // hs-button and D7 import class map and loop
-$buttons: (
-  hs-button,
-  btn,
-);
+$buttons: (hs-button, btn);
 
 @each $button in $buttons {
   a.#{$button},
@@ -26,12 +28,10 @@ $buttons: (
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
-      color: var(--palette--white);
+      color: color('white', 'global');
     }
   }
 }
-
-
 
 a.hs-button--big,
 button.hs-button--big,
@@ -43,7 +43,7 @@ button.hs-button--big,
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    color: var(--palette--white);
+    color: color('white', 'global');
   }
 }
 
@@ -63,7 +63,7 @@ button.more-link,
 
   .hb-dark-pattern &,
   .hb-dark-inversion .views-element-container & {
-    color: var(--palette--white);
+    color: color('white', 'global');
   }
 }
 
@@ -74,7 +74,6 @@ button.more-link,
     flex-flow: row nowrap;
     justify-content: flex-end;
     margin-top: hb-calculate-rems(24px);
-
 
     @include grid-media-min('md') {
       margin-top: hb-calculate-rems(48px);

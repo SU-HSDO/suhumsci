@@ -2,6 +2,11 @@
 <ruleset name="Stanford Project Standard" namespace="Stanford\project\CS\Standard">
   <config name="installed_paths" value="../../drupal/coder/coder_sniffer/,../../sirbrillig/phpcs-variable-analysis/,../../slevomat/coding-standard/" />
 
+  <!-- Use colors in output. -->
+  <arg name="colors"/>
+  <!-- Show progress. -->
+  <arg value="p"/>
+
   <arg name="ignore" value="*.css,*.md,*.txt,*.png,*.gif,*.jpeg,*.jpg,*.svg"/>
   <arg name="extensions" value="php,module,inc,install,test,profile,theme,info,yml"/>
 
@@ -15,13 +20,17 @@
     <exclude name="Drupal.InfoFiles.AutoAddedKeys.Version"/>
   </rule>
 
-  <!-- Ignore the missing new line at end of multi-line configuration. For more
-  information, see:
-  - https://www.drupal.org/project/drupal/issues/3240104
-  - https://www.drupal.org/project/drupal/issues/3279043
-  -->
   <rule ref="Drupal.Files.EndFileNewline.NoneFound">
-    <exclude-pattern>*config/sync/user.mail.yml</exclude-pattern>
+    <!--
+      Multiline config exports like user.mail.yml do not end with a blank line.
+      This is not a functional issue, but PHPCS reports it and it is
+      time-consuming to fix after every config export. Until the upstream issue
+      is resolved, it is easier to ignore this rule for this file.
+      See:
+      * https://www.drupal.org/project/drupal/issues/3279043
+      * https://www.drupal.org/project/drupal/issues/3240104
+    -->
+    <exclude-pattern>*config/*/user.mail.yml</exclude-pattern>
   </rule>
 
   <file>docroot/profiles/humsci</file>

@@ -44,6 +44,13 @@ jobs:
         if: ${{ steps.tag.outputs.tag }}
         with:
           ref: ${{ github.sha }}
+      - name: Set up Node.js from .nvmrc
+        if: ${{ steps.tag.outputs.tag }}
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: docroot/themes/humsci/humsci_basic/package-lock.json
       - name: Restore Cache
         if: ${{ steps.tag.outputs.tag }}
         uses: actions/cache@v4
@@ -54,13 +61,16 @@ jobs:
             docroot/libraries
             docroot/modules/contrib
           key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+      - name: Install theme dependencies
+        if: ${{ steps.tag.outputs.tag }}
+        run: npm ci --prefix docroot/themes/humsci/humsci_basic
       - name: Deploy Tag
         if: ${{ steps.tag.outputs.tag }}
         run: |
           git config --system --add safe.directory '*' &&
           git config --global user.email "sws-developers@lists.stanford.edu" &&
           git config --global user.name "Github Actions" &&
-          ssh-keyscan -t rsa svn-23450.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
           blt blt:telemetry:disable --no-interaction &&
           blt deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} --no-interaction

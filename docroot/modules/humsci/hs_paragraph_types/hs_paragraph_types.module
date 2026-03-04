@@ -17,28 +17,36 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $paragraph = $variables['paragraph'];
   $bundle = $paragraph->bundle();
 
-  // Exit early if it's not a relevant bundle.
-  if (!in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    return;
+  if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
+    $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
+    $variables['attributes']['class'][] = 'hs-paragraph-style';
+
+    if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
+      return;
+    }
+
+    // Replace underscores with hyphens in the bg_color value.
+    $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
+
+    // Append "-well" to the bg_color.
+    $bg_width = $paragraph->get('field_bg_color_width')->getString();
+    if (!empty($bg_color)) {
+      $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
+      $bg_color .= '-well';
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
+      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
+    }
   }
+  elseif ($bundle == 'hs_sptlght_slder') {
+    if (!$paragraph->hasField('field_bg_color_width')) {
+      return;
+    }
 
-  $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
-  $variables['attributes']['class'][] = 'hs-paragraph-style';
+    $bg_width = $paragraph->get('field_bg_color_width')->getString();
+    if ($bg_width == 'full_width') {
+      $variables['attributes']['class'][] = 'paragraph--style--full-width';
+    }
 
-  if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
-    return;
-  }
-
-  // Replace underscores with hyphens in the bg_color value.
-  $bg_color = Html::cleanCssIdentifier($paragraph->get('field_bg_color')->getString());
-
-  // Append "-well" to the bg_color.
-  $bg_width = $paragraph->get('field_bg_color_width')->getString();
-  if (!empty($bg_color)) {
-    $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
-    $bg_color .= '-well';
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
-    $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
   }
 }
 
@@ -58,10 +66,29 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
  * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
 function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$field_widget_form, FormStateInterface $form_state, array $context) {
+  // Hide the 'Background Color Width' field for Spotlight Slider paragraphs
+  // in the full width region.
+  if (
+    !empty($field_widget_form['widget']['#field_name']) &&
+    $field_widget_form['widget']['#field_name'] == 'field_hs_page_hero'
+  ) {
+    foreach (Element::children($field_widget_form['widget']) as $key) {
+      if (!is_int($key)) {
+        continue;
+      }
+      if (
+        $field_widget_form['widget'][$key]['#paragraph_type'] == 'hs_sptlght_slder' &&
+        isset($field_widget_form['widget'][$key]['subform']['field_bg_color_width'])
+      ) {
+        $field_widget_form['widget'][$key]['subform']['field_bg_color_width']['#access'] = FALSE;
+      }
+    }
+  }
   $elements_to_change = [
     'field_hs_carousel_slides',
     'field_hs_sptlght_sldes',
     'field_hs_page_components',
+    'field_hs_priv_page_components',
   ];
   // We need the field name to alter the correct element.
   if (
@@ -104,6 +131,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
       break;
 
     case 'field_hs_page_components':
+    case 'field_hs_priv_page_components':
       // There are multiple issues with setting and removing the required state
       // from paragraph fields when using the `conditional_fields` module, so
       // use form alter to use the states api instead.
@@ -117,7 +145,7 @@ function hs_paragraph_types_field_widget_complete_paragraphs_form_alter(array &$
         $element = $field_widget_form['widget'][$key];
         if (
           empty($element['#paragraph_type']) ||
-          $element['#paragraph_type'] != 'hs_collection' ||
+          !in_array($element['#paragraph_type'], ['hs_collection', 'hs_priv_collection']) ||
           empty($element['subform']['field_title']) ||
           empty($element['subform']['field_title_settings'])
         ) {

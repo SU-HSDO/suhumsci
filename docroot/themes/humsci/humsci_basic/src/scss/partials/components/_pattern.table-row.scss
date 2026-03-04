@@ -1,4 +1,13 @@
 // Table row styles specific to the Table UI Pattern
+
+@use '../variables/general' as *;
+@use '../functions/fonts' as *;
+@use '../functions/general' as *;
+@use '../functions/color' as *;
+@use '../mixins/breakpoints' as *;
+@use '../mixins/general' as *;
+@use '../mixins/tables' as *;
+
 .hb-table-row {
   padding-bottom: hb-calculate-rems(14px);
 
@@ -10,7 +19,7 @@
     content: '';
     display: block;
     height: hb-calculate-rems(11px);
-    background-color: var(--palette--primary);
+    background-color: color('primary');
 
     @include grid-media-min('md') {
       display: none;
@@ -37,7 +46,7 @@
 
       @include grid-media-min('md') {
         border: $hb-thin-border;
-        border-color: var(--palette--gray-medium);
+        border-color: color('gray-medium', 'global');
       }
     }
 

@@ -43,8 +43,7 @@ If you want to use [DDEV](https://ddev.readthedocs.io/) for local development, h
 
 ### Importing Configuration
 
-* If you run into issues importing new config files try running the command with the partial flag: `ddev drush config-import --partial`.
-* If the partial flag doesn't work, you may be missing a dependency. Re-sync your whole database, then run `ddev composer install`.
+* You may be missing a dependency. Re-sync your whole database, then run `ddev composer install`.
 * If you find yourself in a position where starting fresh is your best plan of action, `ddev delete` will completely clear your running instances for a clean start.
 * If running `ddev composer install` results in a timeout while installing a dependency, the default composer timeout can be increased by running `ddev composer --global config process-timeout 2000`.
 

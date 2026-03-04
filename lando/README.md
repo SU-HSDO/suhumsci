@@ -153,8 +153,7 @@ If you want to use [Lando](https://lando.dev/) for local development, here are s
 
 ### Importing Configuration
 
-* If you run into issues importing new config files try running the command with the partial flag: `lando drush config-import --partial`.
-* If the partial flag doesn't work, you may be missing a dependency. Re-sync your whole database, then run `lando composer install`.
+* You may be missing a dependency. Re-sync your whole database, then run `lando composer install`.
 * If you find yourself in a position where starting fresh is your best plan of action, `lando destroy` will completely clear your running lando instances for a clean start.
 * If running `lando composer install` results in a timeout while installing a dependency, the default composer timeout for lando can be increased by running `lando composer --global config process-timeout 2000`.
 

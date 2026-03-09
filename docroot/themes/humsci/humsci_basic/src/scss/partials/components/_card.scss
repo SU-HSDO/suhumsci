@@ -140,7 +140,7 @@ $container-medium: hb-calculate-rems(768px);
   [class^='hb-card-image-'] .hb-card--no-image & {
     flex: initial;
     max-width: initial;
-    margin-right: 0;
+    margin-inline-end: 0;
   }
 }
 
@@ -398,11 +398,6 @@ $container-medium: hb-calculate-rems(768px);
   &:not(:last-child) {
     margin-block-end: hb-calculate-rems(6px);
   }
-
-  // .views-field:not(:last-child) {
-  //   display: block;
-  //   margin-bottom: hb-spacing-width('xxs');
-  // }
 }
 
 .hb-card__decorative-link {
@@ -438,6 +433,12 @@ $container-medium: hb-calculate-rems(768px);
 // Styles for views only card elements.
 //
 
+.hb-card__description {
+  .views-field:not(:last-child) {
+    display: block;
+    margin-block-end: hb-calculate-rems(6px);
+  }
+}
 .hb-card__subcontent {
   width: 100%;
 
@@ -463,16 +464,12 @@ $container-medium: hb-calculate-rems(768px);
     }
   }
 
-  @include hb-themes(('airy', 'colorful')) {
-    &:not(:last-child) {
-      margin-bottom: hb-spacing-width('xxs');
-    }
+  &:not(:last-child) {
+    margin-block-end: hb-calculate-rems(6px);
   }
 
-  @include hb-traditional {
-    &:not(:last-child) {
-      margin-bottom: hb-spacing-width('xxxs');
-    }
+  .hb-card--date-stacked & {
+    margin-block: hb-calculate-rems(12px) hb-calculate-rems(10px);
   }
 
   // date stacked vertical UI pattern item
@@ -485,10 +482,10 @@ $container-medium: hb-calculate-rems(768px);
     }
 
     &:not(:last-child) {
-      margin-bottom: hb-calculate-rems(4px);
+      margin-block-end: hb-calculate-rems(4px);
 
-      @include grid-media-min('sm') {
-        margin-bottom: 0;
+      @container card (width > #{$container-small}) {
+        margin-block-end: 0;
       }
     }
 
@@ -537,32 +534,13 @@ $container-medium: hb-calculate-rems(768px);
 
   // Target subcontent container of date stacked horizontal cards which feature icons in place of labels.
   &--with-icons {
-    @include hb-themes(('airy', 'colorful')) {
-      padding-top: hb-calculate-rems(6px);
-      margin-bottom: hb-calculate-rems(8px) !important;
-
-      @include grid-media-min('sm') {
-        padding-top: hb-calculate-rems(12px);
-      }
-    }
-
-    @include hb-traditional {
-      padding-top: 0;
-      margin-bottom: 0 !important;
-    }
+    margin-block: hb-calculate-rems(12px);
   }
 
   // date stacked horizontal UI pattern item
   &-detail {
-    padding-right: hb-calculate-rems(26px);
-
-    @include hb-themes(('colorful', 'airy')) {
-      margin-bottom: hb-spacing-width('xxs');
-    }
-
-    @include hb-traditional {
-      margin-bottom: hb-spacing-width('xxxs');
-    }
+    padding-inline-end: hb-calculate-rems(26px);
+    margin-block-end: hb-calculate-rems(10px);
   }
 }
 
@@ -627,7 +605,10 @@ $container-medium: hb-calculate-rems(768px);
 .hb-card__location {
   color: color('gray-dark', 'global');
   font-size: hb-calculate-rems(14px);
-  margin-bottom: hb-spacing-width('xxs');
+
+  &:not(:last-child) {
+    margin-block-end: hb-calculate-rems(10px);
+  }
 
   @include grid-media-min('md') {
     font-size: hb-calculate-rems(16px);
@@ -654,19 +635,30 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   &:not(:last-child) {
-    margin-bottom: hb-spacing-width('xxs');
+    margin-block-end: hb-calculate-rems(10px);
   }
 
   .views-label {
     @include hb-field-label--featured;
     display: inline-block;
-    margin-right: hb-calculate-rems(6px);
+    margin-inline-end: hb-calculate-rems(6px);
   }
 }
 
+.hb-card__sbcontent,
+.hb-card__location,
+.hb-card__highlighted {
+  .hb-card--date-stacked & {
+    &:has(+ .hb-card__description) {
+      margin-block-end: hb-calculate-rems(12px);
+    }
+  }
+}
+
+
 .hb-card__date-tile {
   text-align: center;
-  margin-right: hb-spacing-width();
+  margin-inline-end: hb-spacing-width();
   position: absolute;
 
   @include hb-themes(('airy', 'colorful')) {
@@ -683,9 +675,13 @@ $container-medium: hb-calculate-rems(768px);
     left: hb-calculate-rems(-10px);
     z-index: 5;
 
-    @include grid-media-min('sm') {
+    @container card (width > #{$container-small}) {
       bottom: hb-calculate-rems(22px);
       left: hb-calculate-rems(-14px);
+    }
+
+    .hc-pairing-ocean & {
+      background-color: color('secondary-darken-12');
     }
   }
 
@@ -694,13 +690,12 @@ $container-medium: hb-calculate-rems(768px);
     min-width: hb-calculate-rems(100px);
     background-color: color('white', 'global');
     padding: 0;
-    top: 0;
-    left: 0;
-  }
+    top: hb-calculate-rems(10px);
+    left: hb-calculate-rems(10px);
 
-  @include hb-colorful {
-    .hc-pairing-ocean & {
-      background-color: color('secondary-darken-12');
+    @container card (width > #{$container-small}) {
+      top: hb-calculate-rems(16px);
+      left: hb-calculate-rems(16px);
     }
   }
 
@@ -708,6 +703,21 @@ $container-medium: hb-calculate-rems(768px);
     position: relative;
     bottom: auto;
     left: auto;
+  }
+
+  .hb-card--horizontal & {
+    @include hb-traditional {
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .hb-card--horizontal--right & {
+    @include hb-themes(('colorful', 'airy')) {
+      @container card (width > #{$container-small}) {
+        left: hb-calculate-rems(6px);
+      }
+    }
   }
 }
 
@@ -755,6 +765,5 @@ $container-medium: hb-calculate-rems(768px);
 }
 
 .hb-card__author {
-  // vertical card, list spacing: "xxxs": 10px,
-  margin-bottom: hb-spacing-width('xxxs');
+  margin-block-end: hb-calculate-rems(6px);
 }

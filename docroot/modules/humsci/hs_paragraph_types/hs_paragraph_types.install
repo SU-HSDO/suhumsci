@@ -776,7 +776,8 @@ function hs_paragraph_types_update_10021(&$sandbox) {
     switch ($display) {
       case 'default':
         $paragraph->set('field_hs_postcard_layout', 'vertical');
-        $paragraph->set('field_hs_postcard_vertical_style', 'plain');
+        $vertical_style = \Drupal::config('system.theme')->get('default') == 'humsci_colorful' ? 'accent' : 'plain';
+        $paragraph->set('field_hs_postcard_vertical_style', $vertical_style);
         $paragraph->set('field_hs_postcard_alignment', 'left');
         break;
 

@@ -77,7 +77,9 @@ $container-medium: hb-calculate-rems(768px);
       align-items: center;
       grid-template-columns: repeat(12, 1fr);
       grid-template-rows: auto;
-      grid-template-areas: 'a a a a a a b b b b b b';
+      // Use 5 cols for image by default (views). This is overriden for
+      // postcards to use 6 columns.
+      grid-template-areas: 'a a a a a b b b b b b b';
     }
   }
 }
@@ -85,7 +87,7 @@ $container-medium: hb-calculate-rems(768px);
 .hb-card--horizontal--right:has(.hb-card__graphics) {
   .hb-card__wrapper {
     @container card (width > #{$container-small}) {
-      grid-template-areas: 'b b b b b b a a a a a a';
+      grid-template-areas: 'b b b b b b b a a a a a';
     }
   }
 }

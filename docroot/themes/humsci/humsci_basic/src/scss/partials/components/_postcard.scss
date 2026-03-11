@@ -7,37 +7,52 @@
 $container-small: hb-calculate-rems(576px);
 
 .ptype-hs-postcard {
-  // Override the hb-card styles so that they display correctly within paragraph postcard components.
-  .hb-card {
-    &__img {
-      flex-shrink: 0; // prevent horizontal card image from collapsing
-    }
-
-    &__content {
-      display: flex;
-      flex-direction: column;
-    }
-
-    &__description {
-      margin-bottom: 0;
-    }
-
-    // For horizontal postcards, Content to Link (which is represented by
-    // the arrow link / decorative link style) is mapped to the Time field,
-    // this places the Content to Link within the subcontent.
-    &__subcontent {
-      order: 2; // Note: From an accessibility standpoint, this not recommended. It takes the content out of it's normal flow in the DOM.
-      margin-bottom: 0;
-    }
-
-    &__subcontent-item {
-      width: 100%;
-    }
-
-    &__decorative-link {
-      &::before {
-        display: none; // The decorative link for postcards is added via the field-hs-postcard-link class.
+  // Image in horizontal card spans to 6 cols (out of 12).
+  .hb-card--horizontal:has(.hb-card__graphics) {
+    .hb-card__wrapper {
+      @container card (width > #{$container-small}) {
+        grid-template-areas: 'a a a a a a b b b b b b';
       }
+    }
+  }
+
+  .hb-card--horizontal--right:has(.hb-card__graphics) {
+    .hb-card__wrapper {
+      @container card (width > #{$container-small}) {
+        grid-template-areas: 'b b b b b b a a a a a a';
+      }
+    }
+  }
+
+  // Override the hb-card styles so that they display correctly within paragraph postcard components.
+  .hb-card__img {
+    flex-shrink: 0; // prevent horizontal card image from collapsing
+  }
+
+  .hb-card__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hb-card__description {
+    margin-bottom: 0;
+  }
+
+  // For horizontal postcards, Content to Link (which is represented by
+  // the arrow link / decorative link style) is mapped to the Time field,
+  // this places the Content to Link within the subcontent.
+  .hb-card__subcontent {
+    order: 2; // Note: From an accessibility standpoint, this not recommended. It takes the content out of it's normal flow in the DOM.
+    margin-bottom: 0;
+  }
+
+  .hb-card__subcontent-item {
+    width: 100%;
+  }
+
+  .hb-card__decorative-link {
+    &::before {
+      display: none; // The decorative link for postcards is added via the field-hs-postcard-link class.
     }
   }
 }

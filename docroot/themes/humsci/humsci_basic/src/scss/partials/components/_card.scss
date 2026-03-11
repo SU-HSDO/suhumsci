@@ -61,17 +61,24 @@ $container-medium: hb-calculate-rems(768px);
 
   .hb-card__wrapper {
     display: grid;
-    grid-template:
-      'a' auto
-      'b' auto
-      / auto;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+
+    // stylelint-disable-next-line
+    grid-template-areas:
+      'a'
+      'b';
 
     @container card (width > #{$container-small}) {
       align-items: center;
 
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+
       // Use 5 cols for image by default (views). This is overriden for
       // postcards to use 6 columns.
-      grid-template: 'a a a a a b b b b b b b' auto / repeat(12, 1fr);
+      // stylelint-disable-next-line
+      grid-template-areas: 'a a a a a b b b b b b b';
     }
   }
 }

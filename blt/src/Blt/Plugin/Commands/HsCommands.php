@@ -127,7 +127,7 @@ class HsCommands extends BltTasks {
       $emails = $this->taskDrush()
         ->alias("$site.prod")
         ->drush('sqlq')
-        ->arg('SELECT d.mail FROM users_field_data d INNER JOIN user__roles r ON d.uid = r.entity_id WHERE r.roles_target_id = "' . $role . '" and d.mail NOT LIKE "%localhost%"')
+        ->arg('SELECT d.mail FROM users_field_data d INNER JOIN user__roles r ON d.uid = r.entity_id WHERE r.roles_target_id = "' . $role . '" and d.mail NOT LIKE "%localhost%" and d.status = 1')
         ->printOutput(FALSE)
         ->run()
         ->getMessage();

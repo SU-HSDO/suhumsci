@@ -12,7 +12,7 @@
 @use '../mixins/links' as *;
 
 // Card shared styles.
-//
+
 // Styles for the following patterns:
 // - horizontal-card (views and postcard component).
 // - vertical-card (views and postcard component).
@@ -23,9 +23,7 @@
 $container-small: hb-calculate-rems(576px);
 $container-medium: hb-calculate-rems(768px);
 
-//
 // Base styles (views and postcard component).
-//
 
 .hb-card {
   display: flex;
@@ -38,6 +36,7 @@ $container-medium: hb-calculate-rems(768px);
   .hb-dark-inversion .views-element-container & {
     background-color: color('primary-dark');
   }
+
   &.hb-vertical-card--accent {
     border-bottom: hb-calculate-rems(4px) solid color('primary');
   }
@@ -62,19 +61,17 @@ $container-medium: hb-calculate-rems(768px);
 
   .hb-card__wrapper {
     display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-      'a'
-      'b';
+    grid-template:
+      'a' auto
+      'b' auto
+      / auto;
 
     @container card (width > #{$container-small}) {
       align-items: center;
-      grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: auto;
+
       // Use 5 cols for image by default (views). This is overriden for
       // postcards to use 6 columns.
-      grid-template-areas: 'a a a a a b b b b b b b';
+      grid-template: 'a a a a a b b b b b b b' auto / repeat(12, 1fr);
     }
   }
 }
@@ -189,8 +186,7 @@ $container-medium: hb-calculate-rems(768px);
         hb-calculate-rems(22px);
 
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
-          hb-calculate-rems(16px);
+        padding: hb-calculate-rems(16px) hb-calculate-rems(24px);
       }
     }
   }
@@ -366,11 +362,6 @@ $container-medium: hb-calculate-rems(768px);
     text-decoration: none;
     font-weight: hb-theme-font-weight(bold);
 
-    &:hover,
-    &:focus {
-      text-decoration: none;
-    }
-
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
       color: var(--link-base-current-color);
@@ -425,16 +416,16 @@ $container-medium: hb-calculate-rems(768px);
   }
 }
 
-//
 // Styles for views only card elements.
-//
 
+// stylelint-disable-next-line no-duplicate-selectors
 .hb-card__description {
   .views-field:not(:last-child) {
     display: block;
     margin-block-end: hb-calculate-rems(6px);
   }
 }
+
 .hb-card__subcontent {
   width: 100%;
 

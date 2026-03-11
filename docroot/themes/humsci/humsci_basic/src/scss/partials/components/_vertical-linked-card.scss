@@ -131,24 +131,6 @@ $container-small: hb-calculate-rems(576px);
   font-size: unset;
 }
 
-// Styles when there's a video on a card.
-.hb-vertical-linked-card:has(.hb-video-lazy:hover),
-.hb-vertical-linked-card:has(.hb-video-lazy:focus-within) {
-  .hb-vertical-linked-card__title {
-    @include hb-themes(('colorful', 'airy')) {
-      background-color: color('secondary');
-    }
-
-    @include hb-traditional {
-      background-color: color('primary');
-      text-decoration: none;
-    }
-  }
-
-  .hb-vertical-linked-card__title__link::after {
-    mask-position: 6px;
-  }
-}
 
 .hb-vertical-linked-card__description {
   @include hb-description;
@@ -220,6 +202,24 @@ $container-small: hb-calculate-rems(576px);
     .hb-vertical-linked-card__img {
       img {
         transform: scale($hb-image-hover-scale);
+      }
+    }
+
+    // Styles when there's a video on a card.
+    &:has(.hb-video-lazy:hover),
+    &:has(.hb-video-lazy:focus-within) {
+      .hb-vertical-linked-card__title {
+        @include hb-themes(('colorful', 'airy')) {
+          background-color: color('secondary');
+        }
+
+        @include hb-traditional {
+          background-color: color('primary');
+        }
+      }
+
+      .hb-vertical-linked-card__title__link::after {
+        transform: translateX(0);
       }
     }
   }

@@ -29,25 +29,14 @@
     &.is-focused {
       cursor: pointer;
 
-      @include hb-colorful {
-        .hb-raised-cards & {
-          text-decoration-color: color('secondary-darken-12');
-        }
-      }
-
       // Needed to make the styles work when the anchor is the wrapper.
       .hb-card__title a,
       .hb-card__title a > div > * {
-        .hb-dark-pattern &,
-        .hb-dark-inversion .views-element-container & {
-          color: var(--link-base-hover-current-color);
-          text-decoration-color: var(--link-base-hover-current-color);
-        }
+        color: var(--link-base-hover-current-color);
       }
 
       // Arrow shift on hover.
-      .hb-card__title a::after,
-      .hb-vertical-linked-card__title a::after {
+      .hb-card__title a::after {
         transform: translateX(#{hb-calculate-rems(2.5px)});
       }
 
@@ -55,29 +44,21 @@
         transform: scale($hb-image-hover-scale);
       }
     }
-  }
 
-  // Styles when there's a video on a card.
-  &:has(.hb-video-lazy:hover),
-  &:has(.hb-video-lazy:focus-within) {
-    @include hb-colorful {
-      .hb-raised-cards & {
-        text-decoration-color: color('gray-medium', 'global');
+    // Styles when there's a video on a card.
+    &:has(.hb-video-lazy:hover),
+    &:has(.hb-video-lazy:focus-within) {
+      .hb-card__title a,
+      .hb-card__title a > div > * {
+        color: var(--link-base-current-color);
       }
-    }
 
-    .hb-card__title a,
-    .hb-card__title a > div > * {
-      color: color('black', 'global');
-      text-decoration-color: color('gray-medium', 'global');
-
-      .hb-dark-pattern &,
-      .hb-dark-inversion .views-element-container & {
-        color: color('black', 'global');
-        text-decoration-color: color('gray-medium', 'global');
+      .hb-card__title a::after {
+        transform: translateX(0);
       }
     }
   }
+
 
   .hb-card__img {
     overflow: hidden;

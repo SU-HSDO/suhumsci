@@ -34,15 +34,10 @@ $container-medium: hb-calculate-rems(768px);
   container-name: card;
   background-color: color('white', 'global');
 
-  // Update styles when there's a lazy load video on it.
-  &.hb-vertical-card {
-    &:has(.hb-video-lazy) {
-      .hb-card__content {
-        padding-inline: hb-calculate-rems(16px);
-      }
-    }
+  .hb-dark-pattern &,
+  .hb-dark-inversion .views-element-container & {
+    background-color: color('primary-dark');
   }
-
   &.hb-vertical-card--accent {
     border-bottom: hb-calculate-rems(4px) solid color('primary');
   }
@@ -386,7 +381,6 @@ $container-medium: hb-calculate-rems(768px);
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         color: var(--link-base-hover-current-color);
-        text-decoration-color: var(--link-base-hover-current-color);
       }
     }
   }

@@ -6,25 +6,28 @@ id: stage
 label: Stage
 description: 'Acquia Staging Environment'
 weight: 0
+stackable: false
+no_patching: false
+storage: folder
 folder: ../config/envs/stage
 module:
   acquia_connector: 0
   acquia_purge: 0
-  purge: 0
-  purge_drush: 0
-  purge_processor_cron: 0
-  purge_processor_lateruntime: 0
   purge_queuer_coretags: 0
+  purge_processor_lateruntime: 0
+  shield: 0
+  purge: 0
+  purge_processor_cron: 0
+  purge_drush: 0
   purge_ui: 0
   stage_file_proxy: 0
 theme: {  }
-blacklist:
+complete_list:
   - acquia_connector.settings
   - purge.logger_channels
   - purge.plugins
   - purge_queuer_coretags.settings
-graylist:
+partial_list:
   - field_ui.settings
+  - hs_config_partial.settings
   - system.performance
-graylist_dependents: true
-graylist_skip_equal: true

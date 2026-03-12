@@ -1098,7 +1098,7 @@ function su_humsci_profile_update_9752() {
 }
 
 /**
- * Uninstall the slick_pargraphs and slick modules.
+ * Uninstall the slick and slick_paragraphs modules.
  */
 function su_humsci_profile_update_9753() {
   \Drupal::service('module_installer')->uninstall([
@@ -1175,4 +1175,18 @@ function su_humsci_profile_update_9756() {
       'third_party_settings' => [],
     ])->save();
   }
+}
+
+/**
+ * Uninstall the shield module (for production environment).
+ */
+function su_humsci_profile_update_9757() {
+  \Drupal::service('module_installer')->uninstall(['shield']);
+}
+
+/**
+ * Install the hs_config_partial module.
+ */
+function su_humsci_profile_update_9758() {
+  \Drupal::service('module_installer')->install(['hs_config_partial']);
 }

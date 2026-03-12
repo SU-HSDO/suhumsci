@@ -77,17 +77,19 @@ class TaxonomyTermViewRedirectSubscriber implements EventSubscriberInterface {
     ])->toString();
 
     // Prepare the info message and, if the user has access, an edit link.
-    $parts = [];
-    $parts[] = (string) $this->t("You've been redirected to a list of all content with this taxonomy term.");
-    if ($term->access('update', $this->currentUser)) {
-      $edit_url = Url::fromRoute('entity.taxonomy_term.edit_form', ['taxonomy_term' => $term->id()])->toString();
-      $parts[] = (string) $this->t('Alternatively, <a href=":url">edit the taxonomy term</a>.', [
-        ':url' => $edit_url,
-      ]);
+    if ($this->currentUser->isAuthenticated()) {
+      $parts = [];
+      $parts[] = (string) $this->t("You've been redirected to a list of all content with this taxonomy term.");
+      if ($term->access('update', $this->currentUser)) {
+        $edit_url = Url::fromRoute('entity.taxonomy_term.edit_form', ['taxonomy_term' => $term->id()])
+          ->toString();
+        $parts[] = (string) $this->t('Alternatively, <a href=":url">edit the taxonomy term</a>.', [
+          ':url' => $edit_url,
+        ]);
+      }
+      $final_message = Markup::create(implode(' ', $parts));
+      $this->messenger->addMessage($final_message, MessengerInterface::TYPE_STATUS);
     }
-
-    $final_message = Markup::create(implode(' ', $parts));
-    $this->messenger->addMessage($final_message, MessengerInterface::TYPE_STATUS);
 
     $response = new RedirectResponse($url, 302);
     $event->setResponse($response);

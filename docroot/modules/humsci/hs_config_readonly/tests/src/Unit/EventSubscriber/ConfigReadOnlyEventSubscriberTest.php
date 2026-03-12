@@ -47,6 +47,10 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
       ->willReturn($config);
 
     $config_storage = $this->createMock(StorageInterface::class);
+    $config_storage->method('exists')
+      ->willReturnCallback(function ($name) {
+        return $name !== 'nonexistent.config';
+    });
 
     $wizard_config = $this->createMock(ConfigEntityInterface::class);
     $wizard_config->method('getConfigDependencyName')
@@ -147,6 +151,11 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     $event = new ReadOnlyFormEvent($form_state, $form);
     $this->eventSubscriber->onFormAlter($event);
     $this->assertFalse($event->isFormReadOnly());
+
+    $form_state->setBuildInfo(['callback_object' => new TestConfigFormCallbackObject('nonexistent.config')]);
+    $event = new ReadOnlyFormEvent($form_state, $form);
+    $this->eventSubscriber->onFormAlter($event);
+    $this->assertFalse($event->isFormReadOnly());    
   }
 
   /**

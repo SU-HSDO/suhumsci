@@ -69,7 +69,7 @@ class TaxonomyTermViewRedirectSubscriber implements EventSubscriberInterface {
 
     // Currently, we don't use _any_ full-page taxonomy displays.  If one day
     // that changes, we can exclude those vocabs here.
-
+    //
     $url = Url::fromUri('internal:/admin/content', [
       'query' => [
         'term-name' => $term->label(),

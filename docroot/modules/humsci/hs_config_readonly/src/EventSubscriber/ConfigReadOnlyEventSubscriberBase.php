@@ -34,10 +34,10 @@ abstract class ConfigReadOnlyEventSubscriberBase implements EventSubscriberInter
   protected $configFactory;
 
   /**
-  * Config filter storage service.
-  *
-  * @var \Drupal\Core\Config\StorageInterface
-  */
+   * Config filter storage service.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
   protected $configStorage;
 
   /**

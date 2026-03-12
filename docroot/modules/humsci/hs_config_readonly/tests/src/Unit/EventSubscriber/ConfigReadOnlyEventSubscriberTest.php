@@ -5,6 +5,7 @@ namespace Drupal\Tests\hs_config_readonly\Unit\EventSubscriber;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityStorageBase;
@@ -45,6 +46,8 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     $config_factory->method('get')
       ->willReturn($config);
 
+    $config_storage = $this->createMock(StorageInterface::class);
+
     $wizard_config = $this->createMock(ConfigEntityInterface::class);
     $wizard_config->method('getConfigDependencyName')
       ->willReturn('locked.config.test');
@@ -55,7 +58,7 @@ class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->method('getStorage')->willReturn($entity_storage);
 
-    $event_subscriber = new ConfigReadOnlyEventSubscriber($module_handler, $config_factory, $entity_type_manager);
+    $event_subscriber = new ConfigReadOnlyEventSubscriber($module_handler, $config_factory, $config_storage, $entity_type_manager);
 
     $this->eventSubscriber = $event_subscriber;
   }

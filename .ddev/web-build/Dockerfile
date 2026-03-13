@@ -3,7 +3,7 @@ ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Install Chromium for Codeception testing (works on ARM64)
-RUN apt-get update && apt-get install -y \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
     chromium \
     chromium-driver \
     && rm -rf /var/lib/apt/lists/*

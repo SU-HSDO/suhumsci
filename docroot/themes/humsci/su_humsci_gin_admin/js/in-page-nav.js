@@ -2,35 +2,41 @@
   Drupal.behaviors.dashboardNav = {
     attach(context) {
 
-      const dashboard = context.querySelector('.dashboard--main-dashboard');
-      if (!dashboard) return;
-
-      const stickyRegion = once(
-        'dashboard-nav',
-        context.querySelector('.region-sticky__items__inner')
+      const dashboard = once(
+        'dashboard',
+        context.querySelector('.dashboard--main-dashboard')
       )[0];
 
-      if (!stickyRegion) return;
+      if (!dashboard) return;
+
+      function getOffset() {
+        const selectors = [
+          '#toolbar-bar',
+          '.gin-secondary-toolbar',
+          '.region-sticky'
+        ];
+
+        return selectors.reduce((total, selector) => {
+          const el = document.querySelector(selector);
+          if (!el) return total;
+
+          const style = window.getComputedStyle(el);
+
+          // Only count elements that are fixed or sticky
+          if (style.position === 'fixed' || style.position === 'sticky') {
+            return total + el.offsetHeight;
+          }
+
+          return total;
+        }, 5); // 5px visual buffer
+      };
 
       const headings = dashboard.querySelectorAll('.block h2');
       if (!headings.length) return;
 
-      const nav = document.createElement('nav');
-      nav.className = 'dashboard-menu-panel';
-      nav.setAttribute('aria-label', 'Dashboard menu');
-
-      const toggle = document.createElement('button');
-      toggle.className = 'dashboard-menu-toggle';
-      toggle.setAttribute('aria-expanded', 'false');
-
-      toggle.innerHTML = `
-        Dashboard Menu
-        <span class="dashboard-menu-panel__toggle-icon"></span>
-      `;
-
-      const list = document.createElement('ul');
-      list.className = 'dashboard-menu-panel__menu';
-      list.setAttribute('aria-hidden', 'true');
+      const nav = context.querySelector('.dashboard-menu-panel');
+      const toggle = nav.querySelector('.dashboard-menu-toggle');
+      const list = nav.querySelector('.dashboard-menu-panel__menu');
 
       headings.forEach((heading, index) => {
         if (!heading.id) {
@@ -50,17 +56,6 @@
 
       });
 
-      nav.appendChild(toggle);
-      nav.appendChild(list);
-
-      // Replace the page title
-      const pageTitle = stickyRegion.querySelector('.page-title');
-      if (pageTitle) {
-        pageTitle.replaceWith(nav);
-      } else {
-        stickyRegion.prepend(nav);
-      }
-
       // Toggle behavior
       toggle.addEventListener('click', () => {
         const expanded = toggle.getAttribute('aria-expanded') === 'true';
@@ -69,9 +64,24 @@
         list.setAttribute('aria-hidden', expanded);
       });
 
-      // Close the menu after clicking a link
+      // Close the menu after clicking a link and scroll to the right position.
       list.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+
+          const id = link.getAttribute('href').replace('#', '');
+          const target = document.getElementById(id);
+          if (!target) return;
+
+          const offset = getOffset();
+
+          const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+          window.scrollTo({
+            top: y,
+            behavior: 'smooth'
+          });
+
           toggle.setAttribute('aria-expanded', 'false');
           list.setAttribute('aria-hidden', 'true');
         });

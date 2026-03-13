@@ -14,7 +14,7 @@
 
         const selectors = isMobile
           ? ['#toolbar-bar', '.region-sticky']
-          : ['#toolbar-bar', '.gin-secondary-toolbar', '.region-sticky'];
+          : ['#toolbar-bar', '.toolbar-tray-horizontal.is-active', '.region-sticky'];
 
         return selectors.reduce((total, selector) => {
           const el = document.querySelector(selector);
@@ -22,7 +22,7 @@
 
           return total + el.offsetHeight;
 
-        }, 5);
+        }, 22); // Include block padding + border + 5px buffer.
       };
 
       const headings = dashboard.querySelectorAll('.block h2');

@@ -183,17 +183,27 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
    */
   protected function configIsLocked($config) {
     $config = is_array($config) ? $config : [$config];
+
     $config_ignore_settings = $this->configFactory->get('config_ignore.settings');
     $config_ignore = ConfigIgnoreConfig::fromConfig($config_ignore_settings);
 
     foreach ($config as $config_name) {
-      // If isIgnored returns FALSE, the config is NOT ignored and should be
-      // locked.
-      if ($config_ignore->isIgnored('', $config_name, 'import', 'update') === FALSE) {
-        return TRUE;
+      // If the configuration does not exist in the config storage, do not lock
+      // the form. This allows configuration in the active storage, which only
+      // exists on the current site and has not been exported, to be edited. It
+      // also unlocks creation forms because no configuration exists yet in the
+      // storage.
+      if (!$this->configStorage->exists($config_name)) {
+        return FALSE;
+      }
+      // If the config is ignored it should be editable and not locked.
+      if ($config_ignore->isIgnored('', $config_name, 'import', 'update')) {
+        return FALSE;
       }
     }
-    return FALSE;
+    // If something is not unlocked deliberately with the conditions above, then
+    // lock it.
+    return TRUE;
   }
 
   /**

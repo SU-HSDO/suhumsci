@@ -10,25 +10,19 @@
       if (!dashboard) return;
 
       function getOffset() {
-        const selectors = [
-          '#toolbar-bar',
-          '.gin-secondary-toolbar',
-          '.region-sticky'
-        ];
+        const isMobile = window.matchMedia('(max-width: 700px)').matches;
+
+        const selectors = isMobile
+          ? ['#toolbar-bar', '.region-sticky']
+          : ['#toolbar-bar', '.gin-secondary-toolbar', '.region-sticky'];
 
         return selectors.reduce((total, selector) => {
           const el = document.querySelector(selector);
           if (!el) return total;
 
-          const style = window.getComputedStyle(el);
+          return total + el.offsetHeight;
 
-          // Only count elements that are fixed or sticky
-          if (style.position === 'fixed' || style.position === 'sticky') {
-            return total + el.offsetHeight;
-          }
-
-          return total;
-        }, 5); // 5px visual buffer
+        }, 5);
       };
 
       const headings = dashboard.querySelectorAll('.block h2');

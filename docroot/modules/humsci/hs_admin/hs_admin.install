@@ -49,3 +49,25 @@ function hs_admin_update_10001() {
     'view user list',
   ]);
 }
+
+/**
+ * Delete the "Page Not Found Report" shortcut.
+ */
+function hs_admin_update_10002() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $shortcut_storage = $entity_type_manager->getStorage('shortcut');
+  $shortcuts = $shortcut_storage->loadByProperties(['uuid' => 'c517453f-bbfb-472e-943e-6a2c49f43631']);
+  if (!empty($shortcuts)) {
+    $shortcut = reset($shortcuts);
+    $shortcut->delete();
+  }
+
+  // Target title too for extra robustness.
+  $shortcuts = $shortcut_storage->loadByProperties(['title' => 'Page Not Found Report']);
+  if (!empty($shortcuts)) {
+    $shortcut = reset($shortcuts);
+    $shortcut->delete();
+  }
+}
+
+

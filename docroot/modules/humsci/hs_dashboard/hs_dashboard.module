@@ -7,20 +7,8 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\shortcut\Entity\Shortcut;
-use Drupal\user\UserInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
-
-/**
- * These roles don't get a full dashboard.
- *
- * Instead, they just get a "My Content" page, and a limited set of shortcuts.
- *
- * @see hs_dashboard_shortcut_set_insert()
- * @see hs_dashboard_user_login()
- */
-const HS_DASHBOARD_LOW_LEVEL_ROLES = ['author'];
 
 /**
  * Implements hook_theme().
@@ -101,53 +89,4 @@ function hs_dashboard_entity_operation(EntityInterface $entity) {
     ];
   }
   return $operations;
-}
-
-/**
- * Implements hook_user_login().
- */
-function hs_dashboard_user_login(UserInterface $account) {
-  $shortcut_set_storage = Drupal::entityTypeManager()->getStorage('shortcut_set');
-  foreach (HS_DASHBOARD_LOW_LEVEL_ROLES as $role) {
-    if ($account->hasRole($role)) {
-      // These roles get the limited shortcuts.
-      // @see hs_dashboard_shortcut_set_insert()
-      $set = $shortcut_set_storage->load('low-level-roles');
-      if ($set) {
-        $shortcut_set_storage->assignUser($set, $account);
-      }
-    }
-  }
-  // All other roles get the default shortcuts.
-  $shortcut_set_storage->unassignUser($account);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert().
- */
-function hs_dashboard_shortcut_set_insert(EntityInterface $entity) {
-  // The Shortcut Set is configuration, but the shortcuts within it are content.
-  // Create the shortcuts for low-level roles.
-  if ($entity->id() === 'low-level-roles') {
-    $links = [
-      [
-        'title' => 'Home',
-        'uri' => 'internal:/',
-      ],
-      [
-        'title' => 'My Content',
-        'uri' => 'internal:/my-content',
-      ],
-    ];
-    foreach ($links as $link) {
-      $shortcut = Shortcut::create([
-        'shortcut_set' => 'low-level-roles',
-        'title' => $link['title'],
-        'link' => [
-          'uri' => $link['uri'],
-        ],
-      ]);
-      $shortcut->save();
-    }
-  }
 }

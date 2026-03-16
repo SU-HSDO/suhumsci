@@ -69,16 +69,3 @@ function hs_admin_update_10002(&$sandbox) {
 
   return 'Gave authors permission to edit their own content in ' . implode(', ', $types);
 }
-
-/**
- * Revoke permission to use shortcuts for everyone except high roles.
- */
-function hs_admin_update_10003(&$sandbox) {
-  $permissions = ['access shortcuts'];
-  user_role_revoke_permissions('authenticated', $permissions);
-  $high_roles = ['site_manager', 'contributor', 'preparer'];
-  foreach ($high_roles as $role) {
-    user_role_grant_permissions($role, $permissions);
-  }
-  return 'Revoked permission to use shortcuts for everyone except: ' . implode(', ', $high_roles);
-}

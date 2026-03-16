@@ -70,4 +70,35 @@ function hs_admin_update_10002() {
   }
 }
 
+/**
+ * Re-create the dashboard shortcut.
+ */
+function hs_admin_update_10004() {
+  // Delete any existing dashboard shortcut.
+  $shortcut_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+  $shortcuts = $shortcut_storage->loadByProperties(['title' => 'Dashboard']);
+  if (!empty($shortcuts)) {
+    $shortcut = reset($shortcuts);
+    $shortcut->delete();
+  }
 
+  // Re-create the dashboard shortcut.
+  $dashboard_shorcut = $shortcut_storage->create([
+    'shortcut_set' => 'default',
+    'title' => 'Dashboard',
+    'link' => [
+      'uri' => 'internal:/admin/dashboard',
+    ],
+    'weight' => -5,
+  ]);
+  $dashboard_shorcut->save();
+
+  // Set the weight of the 'home' shortcut to -10.
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $home_shortcut = $entity_type_manager->getStorage('shortcut')->loadByProperties(['title' => 'Home']);
+  if (!empty($home_shortcut)) {
+    $home_shortcut = reset($home_shortcut);
+    $home_shortcut->setWeight(-10);
+    $home_shortcut->save();
+  }
+}

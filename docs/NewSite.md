@@ -23,7 +23,7 @@ and the url appropriately.
 1. Confirm it worked by browsing to one of the new domains and verifying that it has a valid certificate and is directed to the default site.
 
 ## Site Directory and settings
-1. Create a new database in [Acquia dashboard](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265866-23a85077-2967-41a4-be22-a84c24e0f81a/databases). Adding a database to one environment adds one to all environments.
+1. Create a new database in the Acquia dashboard. Adding a database to one environment adds one to all environments.
    * Use the database name as defined above.
 1. Execute blt command `blt recipes:multisite:init` and answer questions as desired.
    * Machine name of the site should match the final vhost to be desired. Use the same name as the database above.

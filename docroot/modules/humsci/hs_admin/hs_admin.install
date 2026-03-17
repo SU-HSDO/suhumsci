@@ -127,3 +127,23 @@ function hs_admin_update_10003() {
     }
   }
 }
+
+/**
+ * Give Authors new permissions.
+ */
+function hs_admin_update_10004() {
+  // The author role should be able to edit their own content in all content
+  // types and access the toolbar.
+  $types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $types = array_keys($types);
+  $permissions = array_map(static function ($type) {
+    return "edit own $type content";
+  }, $types);
+  user_role_grant_permissions('author', $permissions);
+  user_role_grant_permissions('author', ['access toolbar']);
+
+  return 'Gave authors permission to access the toolbar and edit their own content in ' . implode(', ', $types);
+}
+

@@ -225,14 +225,16 @@ function hs_cmap_form_taxonomy_overview_terms_alter(array &$form, FormStateInter
   }
 
   $form['help'] = [];
-  $form['help'][]['#markup'] = '<p><i>Curriculum Requirement Types</i> are used in the <i>Curriculum Map</i> component to label courses.</p><p>E.g. <i>Core</i>, or <i>Elective</i></p>';
+  $slite_url = 'https://hsweb.slite.page/p/WMdYZKEPDR401n/Creating-Requirement-Types-for-Curriculum-Maps';
+  $form['help'][]['#markup'] = t('<p><i>Curriculum Requirement Types</i> are used in the <i>Curriculum Map</i> component to label courses. <a href=":slite_url">Learn more about creating Curriculum Requirement Type terms</a>.</p><p>E.g. <i>Core</i>, or <i>Elective</i>.  </p>', [':slite_url' => $slite_url]);
   $form['help'][] = [
     '#theme' => 'item_list',
-    '#title' => 'Things to consider',
+    '#title' => t('Things to consider'),
     '#items' => [
-      'Each type must have a unique name and color.',
-      'These apply across the website. If you change the color of a type, it will change all courses of that type.',
-      'Changing the order here does not change the appearance of Curriculum Map courses.',
+      t('Each type must have a unique name and color.'),
+      t('These apply across the website. If you change the color of a type, it will change all courses of that type.'),
+      t('Changing the order here does not change the appearance of Curriculum Map courses.'),
+      t('Deleting a Term will erase the term from all existing Curriculum Maps on your site.'),
     ],
   ];
 

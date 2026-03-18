@@ -1,0 +1,55 @@
+[mysqld]
+#
+# * Basic Settings
+#
+default-storage-engine = innodb
+
+#
+# * Fine Tuning
+#
+key_buffer_size    = 384M
+max_allowed_packet  = 32M
+thread_stack    = 400K
+thread_cache_size       = 8
+read_rnd_buffer_size = 8M
+myisam_sort_buffer_size = 64M
+table_open_cache = 512
+sort_buffer_size = 2M
+read_buffer_size = 2M
+
+#
+# * Logging and Replication
+#
+# MySQL 8.0 uses binlog_expire_logs_seconds instead of expire_logs_days
+binlog_expire_logs_seconds = 864000
+max_binlog_size = 100M
+
+#
+# * InnoDB
+#
+innodb_log_file_size = 101M
+innodb_flush_log_at_trx_commit = 0
+innodb_buffer_pool_size = 384M
+innodb_log_buffer_size  = 4M
+innodb_file_per_table   = 1
+innodb_open_files       = 256
+innodb_io_capacity      = 512
+innodb_flush_method     = O_DIRECT
+innodb_thread_concurrency = 8
+innodb_lock_wait_timeout = 121
+
+# MySQL 8.0 Authentication
+default_authentication_plugin = mysql_native_password
+
+[mysqldump]
+quick
+quote-names
+max_allowed_packet  = 32M
+
+[mysql]
+
+[isamchk]
+key_buffer_size = 384M
+sort_buffer_size = 256M
+read_buffer = 2M
+write_buffer = 2M

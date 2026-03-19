@@ -14,10 +14,11 @@ use Drupal\paragraphs\ParagraphInterface;
  */
 function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
   // Adds the fe theme admin-preview library on flexible and private page forms.
-  if (preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id)) {
+  if (preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id) || preg_match('/paragraph_\w+_entity_edit_form/', $form_id)) {
     $theme = \Drupal::config('system.theme')->get('default');
     $form['#attached']['library'][] = $theme . '/admin-preview';
     $form['#attached']['library'][] = $theme . '/admin-colors';
+    $form['#attached']['library'][] = 'su_humsci_gin_admin/style-selector-widgets';
   }
 }
 

@@ -16,7 +16,7 @@ You can find your API key and secret from SWS credentials document or you can cr
 
 ## Several days before
 1. Schedule the launch with the site owner including a content freeze the day of.
-1. Add the new domain to the [production environment](https://cloud.acquia.com/app/develop/applications/23a85077-2967-41a4-be22-a84c24e0f81a/environments/265865-23a85077-2967-41a4-be22-a84c24e0f81a/domains)
+1. Add the new domain to the production environment.
 1. Schedule the release of the domain with the appropriate people.
    * Check who owns vhost and that it can be changed by SWS or AS Central Infrastructure Applications (CIA) (using one of the following methods):
      1. `host foo.stanford.edu`

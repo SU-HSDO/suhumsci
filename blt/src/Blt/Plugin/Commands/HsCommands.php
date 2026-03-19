@@ -101,7 +101,16 @@ class HsCommands extends BltTasks {
       $result = $this->taskDrush()
         ->drush('updb')
         ->drush('config:import')
-        ->option('partial')
+        // 2026-02-03: Uses hs_config_partial module to prevent active
+        // configuration deletions after upgrading config_split and
+        // config_ignore. The hs_config_partial setting is enabled on all 
+        // Acquia environments through the acquia.settings.php file.
+        // ->option('partial')
+        // Trigger config import again to ensure any dependent config changes
+        // are also imported. Some configuration imports depend on the previous
+        // configuration import being fully complete, especially when using
+        // config splits.
+        ->drush('config:import')
         ->run();
       file_put_contents(sys_get_temp_dir() . '/update-report.txt', $site_name . ($result->wasSuccessful() ? ':1' : ':0') . PHP_EOL, FILE_APPEND);
     }
@@ -118,7 +127,7 @@ class HsCommands extends BltTasks {
       $emails = $this->taskDrush()
         ->alias("$site.prod")
         ->drush('sqlq')
-        ->arg('SELECT d.mail FROM users_field_data d INNER JOIN user__roles r ON d.uid = r.entity_id WHERE r.roles_target_id = "' . $role . '" and d.mail NOT LIKE "%localhost%"')
+        ->arg('SELECT d.mail FROM users_field_data d INNER JOIN user__roles r ON d.uid = r.entity_id WHERE r.roles_target_id = "' . $role . '" and d.mail NOT LIKE "%localhost%" and d.status = 1')
         ->printOutput(FALSE)
         ->run()
         ->getMessage();

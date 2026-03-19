@@ -34,7 +34,9 @@ If you want to use [Lando](https://lando.dev/) for local development, here are t
     lando sync archaeology
     ```
 
-    The site name matches the directory name under `docroot/sites/` and the entries in the `multisites` section of `blt/blt.yml`. Use `lando sites` to see all available sites.
+* You may be missing a dependency. Re-sync your whole database, then run `lando composer install`.
+* If you find yourself in a position where starting fresh is your best plan of action, `lando destroy` will completely clear your running lando instances for a clean start.
+* If running `lando composer install` results in a timeout while installing a dependency, the default composer timeout for lando can be increased by running `lando composer --global config process-timeout 2000`.
 
 4. Log in as admin:
 

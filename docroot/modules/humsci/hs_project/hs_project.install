@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * hs_project.install
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Mirrors the approach of other content type modules to enable a companion display submodule so
+ * the default form/view displays are applied on install.
+ */
+function hs_project_install() {
+  /** @var \Drupal\Core\Extension\ModuleInstaller $module_installer */
+  $module_installer = \Drupal::service('module_installer');
+  try {
+    $module_installer->install(['hs_project_display']);
+  }
+  catch (Exception $e) {
+    \Drupal::messenger()
+      ->addError(t('Unable to set initial display settings for Project.'));
+  }
+}
+

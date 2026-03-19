@@ -1,0 +1,156 @@
+uuid: b0a7129e-7cc9-4aa3-9f74-236f3c3d7f4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.hs_project.field_hs_project_category
+    - field.field.node.hs_project.field_hs_project_description
+    - field.field.node.hs_project.field_hs_project_external_links
+    - field.field.node.hs_project.field_hs_project_featured_image
+    - field.field.node.hs_project.field_hs_project_media
+    - node.type.hs_project
+  module:
+    - layout_builder
+    - media
+    - text
+    - link
+_core:
+  default_config_hash: REPLACE-ME
+id: node.hs_project.default
+targetEntityType: node
+bundle: hs_project
+mode: default
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: true
+    sections:
+      - layout_id: layout_twocol_section
+        layout_settings:
+          column_widths: 25-75
+        components:
+          5bf21d49-6870-496b-a3b8-fb5e2b4e4711:
+            uuid: 5bf21d49-6870-496b-a3b8-fb5e2b4e4711
+            region: first
+            configuration:
+              id: 'system_menu_block:main'
+              label: 'Main navigation'
+              label_display: '0'
+              provider: system
+              context_mapping: {  }
+              level: 1
+              depth: 0
+              expand_all_items: false
+            weight: 0
+          b9cb9d2f-b67b-4cfa-98e2-29b56e24f264:
+            uuid: b9cb9d2f-b67b-4cfa-98e2-29b56e24f264
+            region: second
+            configuration:
+              id: 'field_block:node:hs_project:title'
+              label: 'Title'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: hidden
+                settings:
+                  link_to_entity: false
+            weight: -10
+          9e9ce147-27a9-406d-b611-8f8762f25677:
+            uuid: 9e9ce147-27a9-406d-b611-8f8762f25677
+            region: second
+            configuration:
+              id: 'field_block:node:hs_project:field_hs_project_featured_image'
+              label: 'Featured Image'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                  link: false
+            weight: -9
+          4061f460-b335-479d-a460-8e4f4ae14629:
+            uuid: 4061f460-b335-479d-a460-8e4f4ae14629
+            region: second
+            configuration:
+              id: 'field_block:node:hs_project:field_hs_project_category'
+              label: 'Project Category'
+              label_display: '1'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: above
+                settings:
+                  link: false
+            weight: -8
+          6a527506-134c-4b02-903c-94645e096d2a:
+            uuid: 6a527506-134c-4b02-903c-94645e096d2a
+            region: second
+            configuration:
+              id: 'field_block:node:hs_project:field_hs_project_description'
+              label: 'Body'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+            weight: -7
+          3011cc65-7931-4565-bc9c-846976dfef58:
+            uuid: 3011cc65-7931-4565-bc9c-846976dfef58
+            region: second
+            configuration:
+              id: 'field_block:node:hs_project:field_hs_project_media'
+              label: 'Media'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                  link: false
+            weight: -6
+          96359479-60df-4434-bf74-47c40edd6dcc:
+            uuid: 96359479-60df-4434-bf74-47c40edd6dcc
+            region: second
+            configuration:
+              id: 'field_block:node:hs_project:field_hs_project_external_links'
+              label: 'External Links'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: link
+                label: hidden
+                settings:
+                  trim_length: 80
+                  url_only: false
+                  url_plain: false
+                  rel: ''
+                  target: ''
+            weight: -5
+        third_party_settings: {  }
+content: {  }
+hidden:
+  field_hs_project_is_active: true
+  uid: true
+  created: true
+  promote: true
+  sticky: true
+  status: true
+  path: true
+  url_redirects: true

@@ -6,7 +6,6 @@
  */
 
 use Acquia\Blt\Robo\Common\EnvironmentDetector;
-
 $db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
 
 /**
@@ -22,7 +21,7 @@ $databases = [
       'password' => '${drupal.db.password}',
       'host' => '${drupal.db.host}',
       'port' => '${drupal.db.port}',
-      'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
+      'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
       'driver' => 'mysql',
       'prefix' => '',
     ],

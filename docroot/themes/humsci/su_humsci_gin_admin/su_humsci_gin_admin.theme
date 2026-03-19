@@ -87,7 +87,6 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
     $variables['attributes']['class'][] = 'dashboard-content';
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/su_humsci_dashboard';
     $variables['#attached']['library'][] = 'su_humsci_gin_admin/ajax-scroll-fix';
-    $variables['#attached']['library'][] = 'su_humsci_gin_admin/show-toggle';
   }
 
   // Add classes for theme and color pairing (used by component previews and
@@ -111,6 +110,12 @@ function su_humsci_gin_admin_preprocess_block(&$variables) {
     $variables['content']['back_to_top']['#attributes']['href'] = ['#main-content'];
   }
 
+  if (
+    $variables['plugin_id'] === 'page_title_block' &&
+    \Drupal::routeMatch()->getRouteName() === 'dashboard'
+  ) {
+    $variables['is_dashboard'] = TRUE;
+  }
 }
 
 /**

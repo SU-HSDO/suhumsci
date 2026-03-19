@@ -20,6 +20,11 @@ drush:
     prod: '${project.machine_name}.prod'
   default_alias: '${drush.aliases.local}'
 modules:
+  ci:
+    enable: {  }
+    uninstall:
+      - purge
+      - acquia_connector
   local:
     enable: {  }
     uninstall:
@@ -153,6 +158,7 @@ multisites:
   - vpnl
   - west
   - womensleadership
+  - womensleadership2026
   - womensleadershipcp
 command-hooks:
   post-deploy-build:

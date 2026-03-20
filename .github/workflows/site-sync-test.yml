@@ -1,0 +1,77 @@
+name: Test Default Site Sync
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  themePath: docroot/themes/humsci/humsci_basic
+jobs:
+    lint_theme:
+    runs-on: ubuntu-latest
+    container:
+      image: pookmish/drupal8ci:php8.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js from .nvmrc
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
+      - name: Install theme dependencies
+        run: npm ci --prefix $themePath
+      - name: Lint Theme
+        run: npm run lint --prefix $themePath
+  test_site_sync:
+    runs-on: ubuntu-latest
+    needs: lint_theme
+    container:
+      image: pookmish/drupal8ci:php8.3
+      options: '--network-alias drupal8ci'
+    env:
+      REAL_AES_ENCRYPTION: ${{secrets.REAL_AES_ENCRYPTION}}
+      DRUPAL_DATABASE_NAME: drupal
+      DRUPAL_DATABASE_USERNAME: drupal
+      DRUPAL_DATABASE_PASSWORD: drupal
+      DRUPAL_DATABASE_HOST: mysql
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: drupal
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js from .nvmrc
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+          cache-dependency-path: ${{ env.themePath }}/package-lock.json
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            vendor
+            docroot/core
+            docroot/libraries
+            docroot/modules/contrib
+          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+      - run: git config --system --add safe.directory '*'
+      - name: Install Site
+        run: |
+          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
+          rm -rf /var/www/html &&
+          ln -snf $GITHUB_WORKSPACE /var/www/html &&
+          composer install -n &&
+          blt settings &&
+          mkdir -p docroot/sites/default/files &&
+          chmod -R 777 docroot/sites/default/files/ &&
+          blt drupal:sync --site=default -n

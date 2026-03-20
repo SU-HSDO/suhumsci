@@ -63,7 +63,7 @@ jobs:
           mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
-          ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
+          ssh-keyscan -t rsa humscigryphon.ssh.prod.acquia-sites.com >> /root/.ssh/known_hosts &&
           composer install -n &&
           blt settings &&
           mkdir -p docroot/sites/default/files &&

@@ -15,29 +15,36 @@
 @use '../fonts/fonts';
 
 // Files from main
-@use '../objects/layouts.flex-grid' as *;
 @use '../objects/layouts.general' as *;
-@use '../objects/layouts.views' as *;
 @use '../components/media';
 
 .paragraph-admin-preview {
   @include generate-css-vars('su-core', $su-core-colors);
 
   @include hb-themes(('colorful', 'airy')) {
+    @each $pairing, $colors in $colorful-pairings-colors {
+      .hc-pairing-#{$pairing} {
+        @include generate-css-vars('colorful-pairings', $colors);
+      }
+    }
+
     @include generate-css-vars('colorful-global', $colorful-global-colors);
   }
 
   @include hb-traditional {
-   @include generate-css-vars('traditional-global', $traditional-global-colors);
+    @each $pairing, $colors in $traditional-pairings-colors {
+      .ht-pairing-#{$pairing} {
+        @include generate-css-vars('traditional-pairings', $colors);
+      }
+    }
+
+    @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
 
   // Load some stylesheet.
   // All styles will be prefixed with the `.paragraph-admin-preview` class.
   @include meta.load-css(
     '../base/normalize',
-  );
-  @include meta.load-css(
-    '../base/color-pairings',
   );
   @include meta.load-css(
     '../base/base',
@@ -64,7 +71,6 @@
   // Utility classes.
   @include meta.load-css(
     '../utilities/utilities',
-    $with: ('hb-current-theme': $hb-current-theme)
   );
 
   // Link current color variables.
@@ -117,6 +123,23 @@
   .ptype-hs-view {
     h2 {
       font-size: 1.5rem;
+    }
+  }
+
+  // Remove margin on timeline items.
+  .hb-timeline-item {
+    margin: 0;
+  }
+
+
+  @include hb-themes(('colorful', 'airy')) {
+    .field-hs-postcard-link a {
+      color: transparent;
+
+      &:hover,
+      &:focus {
+        color: transparent;
+      }
     }
   }
 

@@ -18,7 +18,11 @@ if (!getenv('REAL_AES_ENCRYPTION')) {
   putenv("REAL_AES_ENCRYPTION=$randomString");
 }
 
+// Default config sync directory.
 $settings['config_sync_directory'] = EnvironmentDetector::getRepoRoot() . '/config/default';
+
+// Include services.yml file for all sites.
+$settings['container_yamls'][] = DRUPAL_ROOT . '/sites/services.yml';
 
 /**
  * Include settings files in docroot/sites/settings.

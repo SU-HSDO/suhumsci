@@ -69,7 +69,10 @@
 
 // More Link Styles
 // For Traditional Theme, this is used on cards in combination with a long arrow
-@mixin hb-more-link {
+@mixin hb-more-link(
+  $text-color: var(--link-base-current-color),
+  $hover-color: var(--link-base-hover-current-color)
+) {
   font-size: hb-calculate-rems(18px);
   text-decoration: none;
 
@@ -77,7 +80,7 @@
   border: none;
   background: none;
   padding: 0;
-  color: var(--link-base-current-color);
+  color: $text-color;
 
   @include hb-traditional {
     font-weight: hb-theme-font-weight(semibold);
@@ -115,17 +118,13 @@
 
   &:hover,
   &:focus {
-    color: var(--link-base-hover-current-color);
-
+    color: $hover-color;
     background-image: none;
     background-color: transparent;
+    text-decoration: underline;
 
     &::after {
       transform: translateX(#{hb-calculate-rems(2.5px)});
-    }
-
-    @include hb-traditional {
-      text-decoration: underline;
     }
   }
 }

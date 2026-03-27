@@ -39,8 +39,8 @@ $container-medium: hb-calculate-rems(768px);
 
   &.hb-vertical-card--accent {
     @include hb-themes(('colorful', 'airy')) {
-    border-bottom: hb-calculate-rems(4px) solid color('secondary');
-  }
+      border-bottom: hb-calculate-rems(4px) solid color('secondary');
+    }
 
     @include hb-traditional {
       border-bottom: hb-calculate-rems(2px) solid color('secondary');
@@ -369,8 +369,10 @@ $container-medium: hb-calculate-rems(768px);
 
   a,
   a:not([class]) {
+    @include hb-more-link($text-color: color('black', 'global'));
+
     font-size: unset;
-    text-decoration: none;
+    font-weight: hb-theme-font-weight(semibold);
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {

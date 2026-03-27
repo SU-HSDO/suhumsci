@@ -38,7 +38,13 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   &.hb-vertical-card--accent {
+    @include hb-themes(('colorful', 'airy')) {
     border-bottom: hb-calculate-rems(4px) solid color('secondary');
+  }
+
+    @include hb-traditional {
+      border-bottom: hb-calculate-rems(2px) solid color('secondary');
+    }
   }
 }
 

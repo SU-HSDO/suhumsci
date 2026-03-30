@@ -1,4 +1,5 @@
 import addCardEvents from './event-handlers';
+import addContextualImageLinkEvents from './image-link-handler';
 
 (function (Drupal, once) {
   Drupal.behaviors.linkedCardsBehavior = {
@@ -12,6 +13,20 @@ import addCardEvents from './event-handlers';
 
       // Loop through each card
       cards.forEach((card) => {
+        /**
+         * Handles click events on a card image link that contains a Drupal contextual
+         * region. Prevents the image anchor from navigating when interacting with
+         * contextual controls, while still allowing contextual links to work normally.
+         *
+         */
+        const cardImageLink = card.querySelector('.hb-card__img a');
+        if (cardImageLink) {
+          const contextualRegion = cardImageLink.querySelector('article.contextual-region');
+          if (!contextualRegion) return;
+
+          addContextualImageLinkEvents(cardImageLink);
+        }
+
         // Find the main link within each card
         let mainLink = '';
 

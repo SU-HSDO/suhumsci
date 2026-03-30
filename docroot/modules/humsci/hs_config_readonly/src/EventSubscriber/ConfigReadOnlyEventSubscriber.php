@@ -2,6 +2,7 @@
 
 namespace Drupal\hs_config_readonly\EventSubscriber;
 
+use Drupal\config_ignore\ConfigIgnoreConfig;
 use Drupal\config_readonly\ReadOnlyFormEvent;
 use Drupal\ctools\Wizard\EntityFormWizardBase;
 use Drupal\Core\Form\ConfigFormBase;
@@ -182,58 +183,26 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
    */
   protected function configIsLocked($config) {
     $config = is_array($config) ? $config : [$config];
-    $locked_config = $this->getLockedConfigs();
-    return !empty(array_intersect($config, $locked_config));
-  }
 
-  /**
-   * Get all configs provided by modules.
-   *
-   * @return array
-   *   Config names.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
-   */
-  protected function getLockedConfigs() {
-    $configs = $this->configStorage->listAll();
-    if (!$this->configFilterManager->hasDefinition('config_ignore')) {
-      return $configs;
-    }
+    $config_ignore_settings = $this->configFactory->get('config_ignore.settings');
+    $config_ignore = ConfigIgnoreConfig::fromConfig($config_ignore_settings);
 
-    /** @var \Drupal\config_ignore\Plugin\ConfigFilter\IgnoreFilter $plugin */
-    $plugin = $this->configFilterManager->createInstance('config_ignore');
-
-    $ignored_config = $plugin->filterListAll('', []);
-    $ignored_config = array_filter($ignored_config, [$this, 'isIgnoredConfig']);
-
-    foreach ($ignored_config as $ignored_config) {
-      $pos = array_search($ignored_config, $configs);
-      if ($pos !== FALSE) {
-        unset($configs[$pos]);
+    foreach ($config as $config_name) {
+      // If the configuration does not exist in the config storage, do not lock
+      // the form. This allows configuration in the active storage, which only
+      // exists on the current site and has not been exported, to be edited. It
+      // also unlocks creation forms because no configuration exists yet in the
+      // storage.
+      if (!$this->configStorage->exists($config_name)) {
+        return FALSE;
       }
-    }
-    return $configs;
-  }
-
-  /**
-   * Find out if a provided config entity name should be ignored.
-   *
-   * @param string $config_name
-   *   Config name to check if ignored.
-   *
-   * @return bool
-   *   If the given config should be ignored.
-   */
-  protected function isIgnoredConfig($config_name) {
-    $ignored_configs = $this->configFactory->get('config_ignore.settings')
-      ->get('ignored_config_entities');
-    foreach ($ignored_configs as $ignored_config) {
-      // Split the ignore settings so that we can ignore individual keys.
-      $ignore = explode(':', $ignored_config);
-      if (count($ignore) > 1 && self::wildcardMatch($ignore[0], $config_name)) {
+      // If the config is ignored it should be editable and not locked.
+      if ($config_ignore->isIgnored('', $config_name, 'import', 'update')) {
         return FALSE;
       }
     }
+    // If something is not unlocked deliberately with the conditions above, then
+    // lock it.
     return TRUE;
   }
 
@@ -264,26 +233,6 @@ class ConfigReadOnlyEventSubscriber extends ConfigReadOnlyEventSubscriberBase {
       }
     }
     return FALSE;
-  }
-
-  /**
-   * Check for wild cards. Added to replace fnmatch() function.
-   *
-   * Drupal\config_ignore\Plugin\ConfigFilter::wilcardMatch().
-   * https://www.drupal.org/project/config_ignore/issues/3182849.
-   *
-   * @param string $pattern
-   *   The pattern to match.
-   * @param string $string
-   *   The string to check.
-   *
-   * @return bool
-   *   Whether the pattern matches.
-   */
-  protected static function wildcardMatch(string $pattern, string $string): bool {
-    $pattern = '/^' . preg_quote($pattern, '/') . '$/';
-    $pattern = str_replace('\*', '.*', $pattern);
-    return (bool) preg_match($pattern, $string);
   }
 
 }

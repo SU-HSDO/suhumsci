@@ -20,6 +20,11 @@ drush:
     prod: '${project.machine_name}.prod'
   default_alias: '${drush.aliases.local}'
 modules:
+  ci:
+    enable: {  }
+    uninstall:
+      - purge
+      - acquia_connector
   local:
     enable: {  }
     uninstall:

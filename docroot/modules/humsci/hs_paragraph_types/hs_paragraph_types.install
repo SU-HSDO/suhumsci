@@ -706,3 +706,20 @@ function hs_paragraph_types_update_10019(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
+
+/**
+ * Disable Quarter, Course/Requirement, and Academic Year from collections and private collections.
+ */
+function hs_paragraph_types_update_10020() {
+  $bundles_to_hide = ['hs_cmap_qtr', 'hs_cmap_qtr_crs', 'hs_cmap_year'];
+
+  // Hide cmap quarter/year bundles from collections.
+  _hs_paragraph_types_exclude_bundles_from_field('paragraph', 'hs_collection', 'field_hs_collection_items', $bundles_to_hide);
+  $result = t('Excluded bundles from hs_collection field_hs_collection_items: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
+
+  // Hide cmap quarter/year bundles from private collections.
+  _hs_paragraph_types_exclude_bundles_from_field('paragraph', 'hs_priv_collection', 'field_hs_collection_items', $bundles_to_hide);
+  $result .= t('Excluded bundles from hs_priv_collection field_hs_collection_items: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
+
+  return $result;
+}

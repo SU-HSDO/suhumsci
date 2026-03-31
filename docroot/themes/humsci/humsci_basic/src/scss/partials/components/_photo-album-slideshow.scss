@@ -12,13 +12,6 @@
   @include swiper-container;
   @include swiper-arrows;
 
-  .swiper-button-prev,
-  .swiper-button-next {
-    svg {
-      display: none;
-    }
-  }
-
   .swiper-button-prev {
     bottom: hb-calculate-rems(98px);
 
@@ -32,6 +25,17 @@
 
     @include grid-media-min('sm') {
       bottom: hb-calculate-rems(105px);
+    }
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @include grid-media('md') {
+      bottom: calc(50% - #{hb-calculate-rems(46px)});
+    }
+
+    svg {
+      display: none;
     }
   }
 
@@ -50,6 +54,11 @@
       @include hb-traditional {
         background: linear-gradient(to top, color('black', 'global'), transparent);
       }
+    }
+
+    img,
+    picture {
+      width: 100%;
     }
   }
 

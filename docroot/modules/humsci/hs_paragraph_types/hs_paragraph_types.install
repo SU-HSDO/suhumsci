@@ -590,10 +590,15 @@ function hs_paragraph_types_update_10016() {
  * Excludes specific bundles from a field in a given entity type and bundle.
  *
  * This function modifies the field configuration to hide selected paragraph
- * bundles for a specific field. It handles cases where fields are ignored
+ * bundles for a specific field. Only to be used on fields that are ignored
  * from configuration exports.
  *
  * Assumes that the field is set up to list the bundles that are _hidden_.
+ *
+ * @todo Make this smarter so that it detects whether the field is configured to
+ *   hide or show bundles.
+ * @todo Make this smarter to detect when being called on a field that is _not_
+ *   ignored from config.
  *
  * @param string $entity_type
  *   The entity type that owns the field (e.g., 'paragraph', 'node').
@@ -705,23 +710,4 @@ function hs_paragraph_types_update_10019(&$sandbox) {
   }
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
-}
-
-/**
- * Disable Quarter, Course/Requirement, and Academic Year from collections.
- *
- * Also applies to private collections.
- */
-function hs_paragraph_types_update_10020() {
-  $bundles_to_hide = ['hs_cmap_qtr', 'hs_cmap_qtr_crs', 'hs_cmap_year'];
-
-  // Hide cmap quarter/year bundles from collections.
-  _hs_paragraph_types_exclude_bundles_from_field('paragraph', 'hs_collection', 'field_hs_collection_items', $bundles_to_hide);
-  $result = t('Excluded bundles from hs_collection field_hs_collection_items: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
-
-  // Hide cmap quarter/year bundles from private collections.
-  _hs_paragraph_types_exclude_bundles_from_field('paragraph', 'hs_priv_collection', 'field_hs_collection_items', $bundles_to_hide);
-  $result .= t('Excluded bundles from hs_priv_collection field_hs_collection_items: @bundles.', ['@bundles' => implode(', ', $bundles_to_hide)]);
-
-  return $result;
 }

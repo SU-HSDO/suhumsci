@@ -14,6 +14,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PartialImportEventSubscriber implements EventSubscriberInterface {
 
   /**
+   * List of config names allowed to be deleted on import.
+   *
+   * @var array
+   */
+  protected array $allowDelete = [
+    'acquia_connector.',
+    'purge.',
+    'purge_queuer_coretags.',
+    'ultimate_cron.job.',
+  ];
+
+  /**
    * The active config storage.
    *
    * @var \Drupal\Core\Config\StorageInterface
@@ -64,11 +76,22 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
     }
     $import_storage = $event->getStorage();
     foreach ($this->activeStorage->listAll() as $config_name) {
-      if (!$import_storage->exists($config_name)) {
-        // If the import storage is missing configuration that is in the active
-        // storage, it will delete the config from the active storage during
-        // the import process. To prevent that, we restore the config from the
-        // active storage back into the import storage.
+      // If the import storage is missing configuration that is in the active
+      // storage, it will delete the config from the active storage during
+      // the import process. To prevent that, we restore the config from the
+      // active storage back into the import storage.
+      // We do need to allow specific configuration to be deleted as part of the
+      // import process, especially when modules get uninstalled during a site
+      // sync. We don't need to preserve everything.
+      $allow_delete = FALSE;
+      foreach ($this->allowDelete as $prefix) {
+        if (strpos($config_name, $prefix) === 0) {
+          $allow_delete = TRUE;
+          break;
+        }
+      }
+      
+      if (!$allow_delete && !$import_storage->exists($config_name)) {
         $import_storage->write($config_name, $this->activeStorage->read($config_name));
       }
     }

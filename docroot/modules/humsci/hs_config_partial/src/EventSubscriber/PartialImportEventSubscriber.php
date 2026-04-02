@@ -90,7 +90,7 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
           break;
         }
       }
-      
+
       if (!$allow_delete && !$import_storage->exists($config_name)) {
         $import_storage->write($config_name, $this->activeStorage->read($config_name));
       }

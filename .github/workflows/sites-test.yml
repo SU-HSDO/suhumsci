@@ -9,16 +9,10 @@ env:
   themePath: docroot/themes/humsci/humsci_basic
 jobs:
   test_phpunit:
+    name: PHPUnit
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:php8.3
-      options: '--network-alias drupal8ci'
-    env:
-      REAL_AES_ENCRYPTION: ${{secrets.REAL_AES_ENCRYPTION}}
-      DRUPAL_DATABASE_NAME: drupal
-      DRUPAL_DATABASE_USERNAME: drupal
-      DRUPAL_DATABASE_PASSWORD: drupal
-      DRUPAL_DATABASE_HOST: mysql
     services:
       mysql:
         image: mysql:8.0
@@ -32,12 +26,6 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js from .nvmrc
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-          cache: 'npm'
-          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -47,19 +35,19 @@ jobs:
             docroot/libraries
             docroot/modules/contrib
           key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-      - run: git config --system --add safe.directory '*'
-      - name: Install Dependencies
+      - name: Run Unit Tests
         run: |
-          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
-          rm -rf /var/www/html &&
-          ln -snf $GITHUB_WORKSPACE /var/www/html &&
+          git config --system --add safe.directory '*' &&
           composer install -n &&
-          mkdir -p docroot/sites/default/files &&
-          chmod -R 777 docroot/sites/default/files/
-      - name: PHPUnit Tests
-        run: |
+          mkdir -p docroot/sites/simpletest &&
           drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage &&
-          drush sws:tests:phpunit-coverage-check artifacts/phpunit/coverage/xml --clover-file=artifacts/phpunit/coverage/clover.xml --min-coverage=80 -n 
+          drush sws:tests:phpunit-coverage-check artifacts/phpunit/coverage/xml --clover-file=artifacts/phpunit/coverage/clover.xml --min-coverage=80 -n
+      - name: Save Test Results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: unit-tests-results
+          path: $GITHUB_WORKSPACE/artifacts
   lint_theme:
     runs-on: ubuntu-latest
     container:

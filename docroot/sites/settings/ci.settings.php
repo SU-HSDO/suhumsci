@@ -39,6 +39,9 @@ if (getenv('TUGBOAT_SERVICE')) {
           ],
       ],
   ];
+  // Always enable partial imports in Tugboat to preserve custom site
+  // configuration.
+  $config['hs_config_partial.settings']['enabled'] = TRUE;
 }
 
 // Use development service parameters.

@@ -19,17 +19,6 @@ drush:
     ci: self
     prod: '${project.machine_name}.prod'
   default_alias: '${drush.aliases.local}'
-modules:
-  ci:
-    enable: {  }
-    uninstall:
-      - purge
-      - acquia_connector
-  local:
-    enable: {  }
-    uninstall:
-      - acquia_connector
-      - purge
 multisites:
   - aaai
   - aaas
@@ -161,25 +150,12 @@ multisites:
   - womensleadership2026
   - womensleadershipcp
 command-hooks:
-  post-deploy-build:
-    dir: '${deploy.dir}'
-    command: 'chmod +x blt/cleanup.sh; blt/cleanup.sh'
   frontend-reqs:
     dir: '${repo.root}'
     command: ./hooks/common/theme/theme-build.sh
-cm:
-  strategy: config-split
-  allow-overrides: true
 sync:
   commands:
     - 'blt:init:settings'
 tests:
   reports:
     localDir: '${repo.root}/artifacts'
-keys_rsync:
-  ssh: humscigryphon.prod@web-42199.prod.hosting.acquia.com
-  files:
-    - /mnt/gfs/humscigryphon.prod/nobackup/apikeys/
-    - /mnt/gfs/humscigryphon.prod/secrets.settings.php
-cloud:
-  appId: 60ee2ebb-94f3-415d-a289-c23889ecec18

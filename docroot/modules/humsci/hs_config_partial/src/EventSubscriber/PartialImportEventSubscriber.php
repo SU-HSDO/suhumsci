@@ -6,24 +6,13 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Event subscriber to prevent config deletions during import.
  */
 class PartialImportEventSubscriber implements EventSubscriberInterface {
-
-  /**
-   * List of config names allowed to be deleted on import.
-   *
-   * @var array
-   */
-  protected array $allowDelete = [
-    'acquia_connector.',
-    'purge.',
-    'purge_queuer_coretags.',
-    'ultimate_cron.job.',
-  ];
 
   /**
    * The active config storage.
@@ -75,6 +64,7 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
       return;
     }
     $import_storage = $event->getStorage();
+    $hs_config_partial_allow_delete = Settings::get('hs_config_partial_allow_delete', []);
     foreach ($this->activeStorage->listAll() as $config_name) {
       // If the import storage is missing configuration that is in the active
       // storage, it will delete the config from the active storage during
@@ -84,7 +74,7 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
       // import process, especially when modules get uninstalled during a site
       // sync. We don't need to preserve everything.
       $allow_delete = FALSE;
-      foreach ($this->allowDelete as $prefix) {
+      foreach ($hs_config_partial_allow_delete as $prefix) {
         if (strpos($config_name, $prefix) === 0) {
           $allow_delete = TRUE;
           break;

@@ -89,3 +89,15 @@ $settings['locale_custom_strings_en'][''] = [
   'The entity subqueue %label has been added.' => 'The listing %label has been added.',
   'The entity subqueue %label has been updated.' => 'The listing %label has been updated.',
 ];
+
+// During partial imports allow these configurations to be deleted. Currently
+// this is only a prefix string match with no wildcards and it will only match
+// the beginning of the config name. The primary use-case for this is to allow
+// configuration related to modules that are being uninstalled during a site
+// sync to be deleted during the import process.
+$settings['hs_config_partial_allow_delete'] = [
+  'acquia_connector.',
+  'purge.',
+  'purge_queuer_coretags.',
+  'ultimate_cron.job.',
+];

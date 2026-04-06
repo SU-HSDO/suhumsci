@@ -4,8 +4,6 @@ This codebase runs the Humanities and Sciences Drupal (or Digital) Platform a.k.
 
 ## Overview
 
-This project is based on [Acquia BLT](https://docs.acquia.com/acquia-cms/add-ons/blt) (Bacon Lettuce Tomato, or Build and Launch Tool), an open-source project template and tool that enables building, testing, and deploying Drupal installations following Acquia Professional Services best practices.
-
 Note the following properties of this project:
 * Stable branch: `develop`
 * Release branch naming convention: `[VERSION]-release` e.g. `11.2.3-release`
@@ -46,10 +44,11 @@ You can either run the site on DDEV, Lando or bare metal.
 
 #### Or setup on bare metal
 1. Clone the repository and check out the develop branch.
-2. Run a `composer install --prefer-source` answer yes to any questions during this step.
-3. Run `blt humsci:local:setup` and answer the questions to configure your database settings.
-4. If you would like a clean installation run `blt drupal:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
-5. A full sync from a site should be accomplished with `blt drupal:sync --site=[sitename]`
+2. Run `composer install`
+3. Run `drush sws:multisite:settings`
+4. Run `drush sws:keys`
+4. If you would like a clean installation run `drush sws:multisite:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
+5. A full sync from a site should be accomplished with `drush drupal:sync --site=[sitename]`
 
 
 ## Builds
@@ -73,11 +72,8 @@ Acceptance testing and user testing id done use a testing framework [Codeception
 very good documentation on codeception testing steps and how that is structured.
 
 #### Codeception on bare metal
-To run those tests locally, `blt` will
-be the wrapper around the codeception commands.
-- To run codeception first uninstall the SimpleSaml module `drush pmu simplesamlphp_auth -y`
-- `blt codeception` will run all acceptance tests.
-- `blt codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most
+- `drush sws:codeception` will run all acceptance tests.
+- `drush sws:codeception --group=[group-name]` will run tests that are annotated with the specified group. This is the most
   effective method to run a single test.
 - [List of current tests](/docs/Codeception.md)
 

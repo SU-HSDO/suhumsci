@@ -1,5 +1,7 @@
 # Provisioning a new site
 
+2026-04-26: This needs to be updated. SWS Developers refer to internal Confluence documentation.
+
 **SWS Developers**: Please refer to internal Confluence documentation for more up to date step-by-step instructions for Site Provisioning.
 
 ## Choose a final url and machine name
@@ -16,19 +18,14 @@ and the url appropriately.
 1. Ensure the Vhost points to Acquia by pinging the url. `ping newvhost.stanford.edu`
 
 ## Setup Domains and SSL Certs in Acquia
-1. Add the new domains to each of the Acquia environments (dev, stage, and prod). You can do this through the Acquia UI, or by using `blt humsci:add-domain`. For example:
-    * `blt humsci:add-domain dev [site-name]-dev.stanford.edu`
-    * `blt humsci:add-domain test [site-name]-stage.stanford.edu`
-    * `blt humsci:add-domain prod [site-name]-prod.stanford.edu`
-1. Confirm it worked by browsing to one of the new domains and verifying that it has a valid certificate and is directed to the default site.
+1. Add the new domains to each of the Acquia environments (dev, stage, and prod). You can do this through the Acquia UI, or by using ACLI.
 
 ## Site Directory and settings
 1. Create a new database in the Acquia dashboard. Adding a database to one environment adds one to all environments.
    * Use the database name as defined above.
-1. Execute blt command `blt recipes:multisite:init` and answer questions as desired.
+1. Execute drush command `drush sws:multisite:new-site` and answer questions as desired.
    * Machine name of the site should match the final vhost to be desired. Use the same name as the database above.
    * "remote drush alias" should be [machine_name].prod
-1. Add the machine name to the [blt settings](../blt/blt.yml) for the `multisites` array.
 1. Edit the new drush alias file in [drush/sites](../drush/sites) to add configuration for dev, test and prod environments.
    * Use the [default.yml](../drush/sites/default.site.yml) file as a template
 

@@ -44,11 +44,26 @@ You can either run the site on DDEV, Lando or bare metal.
 
 #### Or setup on bare metal
 1. Clone the repository and check out the develop branch.
-2. Run `composer install`
-3. Run `drush sws:multisite:settings`
-4. Run `drush sws:keys`
-4. If you would like a clean installation run `drush sws:multisite:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
-5. A full sync from a site should be accomplished with `drush drupal:sync --site=[sitename]`
+1. Run `composer install`
+1. Run `drush sws:multisite:settings`
+1. Run `drush sws:keys`
+1. **local.drush.yml**
+  - Create or modify the `drush/local.drush.yml`
+  - Add your local database settings and Acquia API key details. Your database details should still exist in `blt/local.blt.yml`. If used previously, your Acquia Key should be able to be found with `cat ~/.acquia/cloud_api.conf`. Otherwise login to Acquia to create a new one.
+  ```
+  command:
+  sws:
+    options:
+      db-port: '3306'
+      db-host: localhost
+      db-user: admin
+      db-pass: admin
+      db-name: suhumsci
+      app-key: <acquia-key>
+      app-secret: <acquia-secret>
+  ```
+1. If you would like a clean installation run `drush sws:multisite:install`. Optionally, you can add the option `--site=[sitename]` if you wish to install to one of the multisites.
+1. A full sync from a site should be accomplished with `drush drupal:sync --site=[sitename]`
 
 
 ## Builds

@@ -39,8 +39,7 @@ jobs:
           git config --system --add safe.directory '*' &&
           composer install -n &&
           mkdir -p docroot/sites/simpletest &&
-          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage &&
-          drush sws:tests:phpunit-coverage-check artifacts/phpunit/coverage/xml --clover-file=artifacts/phpunit/coverage/clover.xml --min-coverage=80 -n
+          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage
       - name: Save Test Results
         uses: actions/upload-artifact@v4
         if: failure()

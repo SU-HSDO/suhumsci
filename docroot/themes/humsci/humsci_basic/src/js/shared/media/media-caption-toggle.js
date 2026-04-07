@@ -42,11 +42,18 @@
 
             if (collapsible) {
               caption.classList.add('collapsible-caption');
+
+              // Keep the button focusable and accessible.
+              toggleButton.removeAttribute('tabindex');
+
               if (!toggleButton.classList.contains('is-open')) {
                 content.classList.add('visually-hidden');
               } else {
                 caption.classList.add('is-open');
               }
+            } else {
+              // Remove from keyboard navigation when not collapsible.
+              toggleButton.setAttribute('tabindex', '-1');
             }
           });
         };

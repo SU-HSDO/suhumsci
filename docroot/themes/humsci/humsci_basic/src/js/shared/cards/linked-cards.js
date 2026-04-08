@@ -1,7 +1,7 @@
 import addCardEvents from './event-handlers';
 import addContextualImageLinkEvents from './image-link-handler';
 
-(function (Drupal, once) {
+(function (Drupal, once, drupalSettings) {
   Drupal.behaviors.linkedCardsBehavior = {
     attach(context) {
       // find all hb-vertical-card elements
@@ -14,17 +14,32 @@ import addContextualImageLinkEvents from './image-link-handler';
       // Loop through each card
       cards.forEach((card) => {
         /**
-         * Handles click events on a card image link that contains a Drupal contextual
-         * region. Prevents the image anchor from navigating when interacting with
-         * contextual controls, while still allowing contextual links to work normally.
+         * Handles click behavior for image links inside cards that may contain:
+         * - Drupal contextual controls (for authenticated users)
+         * - Caption toggle UI (for all users)
          *
+         * When interactive elements exist inside the <a>, we need to prevent the link
+         * from navigating when those elements are clicked, while still allowing their
+         * own behavior (e.g. opening contextual menu or toggling caption).
          */
-        const cardImageLink = card.querySelector('.hb-card__img a');
+        const isAuthenticated = drupalSettings?.user?.uid > 0;
+
+        const cardImageLink = card.querySelector(
+          '.hb-card__img a, .hb-vertical-linked-card__img a',
+        );
+
         if (cardImageLink) {
           const contextualRegion = cardImageLink.querySelector('article.contextual-region');
-          if (!contextualRegion) return;
+          const caption = cardImageLink.querySelector('.field-media-image-caption');
 
-          addContextualImageLinkEvents(cardImageLink);
+          /**
+           * Run if:
+           * - Authenticated user with contextual UI
+           * - OR any user with caption toggle
+           */
+          if ((isAuthenticated && contextualRegion) || caption) {
+            addContextualImageLinkEvents(cardImageLink);
+          }
         }
 
         // Find the main link within each card
@@ -48,4 +63,5 @@ import addContextualImageLinkEvents from './image-link-handler';
       });
     },
   };
-}(Drupal, once));
+// eslint-disable-next-line no-undef
+}(Drupal, once, drupalSettings));

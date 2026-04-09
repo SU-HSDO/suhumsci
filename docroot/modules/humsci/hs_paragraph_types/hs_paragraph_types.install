@@ -713,7 +713,7 @@ function hs_paragraph_types_update_10019(&$sandbox) {
 }
 
 /**
- * Creates new fields for paragraph visual variants.
+ * Creates new fields for visual variants of the Spotlight paragraph.
  */
 function hs_paragraph_types_update_10020() {
   $config_storage = \Drupal::service('config.storage.sync');
@@ -829,15 +829,91 @@ function hs_paragraph_types_update_10021(&$sandbox) {
 }
 
 /**
- * Removes legacy paragraph fields.
+ * Creates new fields for visual variants of the Testimonial paragraph.
  */
 function hs_paragraph_types_update_10022() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storages_to_create = [
+    'field.storage.paragraph.field_hs_testimonial_align',
+  ];
+
+  foreach ($storages_to_create as $storage_name) {
+    $storage_config = $config_storage->read($storage_name);
+    if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+      $field_storage->createFromStorageRecord($storage_config)->save();
+    }
+  }
+
+  $fields_to_create = [
+    'field.field.paragraph.hs_testimonial.field_hs_testimonial_align',
+  ];
+
+  foreach ($fields_to_create as $field_name) {
+    $field_config = $config_storage->read($field_name);
+    if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_testimonial.' . $field_config['field_name']))) {
+      $field_config_storage->create($field_config)->save();
+    }
+  }
+}
+
+/**
+ * Migrate Testimonial paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10023(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_testimonial')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_testimonial_quote_align -> field_hs_testimonial_align.
+    if ($paragraph->hasField('field_hs_testimonial_quote_align') && $paragraph->hasField('field_hs_testimonial_align')) {
+      $value = $paragraph->get('field_hs_testimonial_quote_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_testimonial_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+    }
+  }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Removes legacy paragraph fields.
+ */
+function hs_paragraph_types_update_10024() {
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',
       'field_hs_spotlight_image_align',
       'field_hs_spotlight_height',
       'field_spotlight_style',
+    ],
+    'hs_testimonial' => [
+      'field_hs_testimonial_quote_align',
     ],
   ];
 

@@ -1,5 +1,5 @@
 import addCardEvents from './event-handlers';
-import addContextualImageLinkEvents from './image-link-handler';
+import addImageLinkEvents from './image-link-handler';
 
 (function (Drupal, once, drupalSettings) {
   Drupal.behaviors.linkedCardsBehavior = {
@@ -24,7 +24,7 @@ import addContextualImageLinkEvents from './image-link-handler';
 
         if (!cardImageLink) return;
 
-        addContextualImageLinkEvents(cardImageLink, drupalSettings);
+        addImageLinkEvents(cardImageLink, drupalSettings);
 
         // Find the main link within each card
         let mainLink = '';

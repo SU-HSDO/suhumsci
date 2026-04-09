@@ -26,7 +26,7 @@ const addCaptionEvents = (cardImageLink) => {
   });
 };
 
-const addContextualImageLinkEvents = (cardImageLink, drupalSettings) => {
+const addImageLinkEvents = (cardImageLink, drupalSettings) => {
   const isAuthenticated = drupalSettings?.user?.uid > 0;
 
   const contextualRegion = isAuthenticated
@@ -44,4 +44,4 @@ const addContextualImageLinkEvents = (cardImageLink, drupalSettings) => {
   }
 };
 
-export default addContextualImageLinkEvents;
+export default addImageLinkEvents;

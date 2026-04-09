@@ -152,7 +152,7 @@ function hs_admin_update_10004() {
  */
 function hs_admin_update_10005() {
   // Delete shortcuts: Add User, Accessibility Guide, Reference Site.
-  $delete_shortcuts = [ 
+  $delete_shortcuts = [
     'aec62668-8ea6-4143-beea-b5b11ef1734b',
     'd9760a43-a41d-4aab-925b-b3cdb6979111',
     'e19e66c4-9dda-450b-a643-4d573114aee2',
@@ -171,7 +171,7 @@ function hs_admin_update_10005() {
     'User Guide' => 'User Guide and Training Resources',
     'Google Analytics' => 'View Google Analytics',
   ];
-  // Move shortcuts: Add Global Message Banner
+  // Move shortcuts: Add Global Message Banner.
   $move_shortcuts = [
     '87cae7b2-943b-4f7e-b57f-a684bcb8fd55' => '3c769f63-f502-4f76-b4dd-85b7a584cd5b',
   ];
@@ -180,13 +180,13 @@ function hs_admin_update_10005() {
   ];
   // Change weights for shortcuts.
   $shortcut_weights = [
-    '0c69448d-c6fa-4fb8-9b2e-f93f3a955baf' => 28,    
-    '2502bdcb-e704-4660-86f3-bdff9b178907' => 16,    
+    '0c69448d-c6fa-4fb8-9b2e-f93f3a955baf' => 28,
+    '2502bdcb-e704-4660-86f3-bdff9b178907' => 16,
     '264204ed-bc7e-416b-a20e-31fb6f555f11' => 26,
-    '2fc25079-f676-4529-a0ef-2aead39bda38' => 29,        
-    '4a1ba363-4bfb-48df-98ab-722d70d045b3' => 15,    
-    '4af76520-ff7e-4e4d-a3ef-756fa1a008d1' => 18,    
-    '4f2cd363-97fd-4ace-bf32-0f5fbea7aa74' => 34,    
+    '2fc25079-f676-4529-a0ef-2aead39bda38' => 29,
+    '4a1ba363-4bfb-48df-98ab-722d70d045b3' => 15,
+    '4af76520-ff7e-4e4d-a3ef-756fa1a008d1' => 18,
+    '4f2cd363-97fd-4ace-bf32-0f5fbea7aa74' => 34,
     '5744f2de-74a1-448f-aac1-61983a136cdb' => 14,
     '757a3343-882e-4e11-9cda-cf72eff99d69' => 21,
     '7b558737-510d-4d83-84e2-de2d6c11d22a' => 35,
@@ -194,8 +194,8 @@ function hs_admin_update_10005() {
     '7f373d0e-d750-4372-a4e9-bc488533cbb8' => 17,
     '87cae7b2-943b-4f7e-b57f-a684bcb8fd55' => 13,
     '8819c42b-f9f9-44b5-b4dc-f4bee61c3b4a' => 31,
-    '908835fd-c2a8-44e8-9904-cdef5bf9b31a' => 20,    
-    'a044b262-23f6-4dea-9d8b-c3957a96206e' => 22,    
+    '908835fd-c2a8-44e8-9904-cdef5bf9b31a' => 20,
+    'a044b262-23f6-4dea-9d8b-c3957a96206e' => 22,
     'b54b0f26-8bd0-4d03-a050-d3359ce191e0' => 32,
     'be2afd3b-708e-41da-bbe8-08b37b8f8457' => 19,
     'd1f61cec-c768-47e0-87f7-b0d8e8a97999' => 23,
@@ -241,7 +241,7 @@ function hs_admin_update_10005() {
     $changed = FALSE;
     $uuid = $shortcut->uuid();
     $title = $shortcut->getTitle();
-  
+
     // Delete shortcuts.
     if (
       in_array($uuid, $delete_shortcuts) ||
@@ -257,7 +257,8 @@ function hs_admin_update_10005() {
       $shortcut->setTitle($rename_shortcuts[$uuid]);
       $shortcuts_renamed[$uuid] = $rename_shortcuts[$uuid];
       $changed = TRUE;
-    } elseif (isset($rename_shortcuts_bytitle[$title])) {
+    }
+    elseif (isset($rename_shortcuts_bytitle[$title])) {
       $shortcut->setTitle($rename_shortcuts_bytitle[$title]);
       $shortcuts_renamed[$uuid] = $rename_shortcuts_bytitle[$title];
       $changed = TRUE;
@@ -268,7 +269,8 @@ function hs_admin_update_10005() {
       $shortcut->set('parent', $move_shortcuts[$uuid]);
       $shortcuts_moved[$uuid] = $title;
       $changed = TRUE;
-    } elseif (isset($move_shortcuts_bytitle[$title])) {
+    }
+    elseif (isset($move_shortcuts_bytitle[$title])) {
       $shortcut->set('parent', $move_shortcuts_bytitle[$title]);
       $shortcuts_moved[$uuid] = $title;
       $changed = TRUE;
@@ -279,7 +281,8 @@ function hs_admin_update_10005() {
       $shortcut->setWeight($shortcut_weights[$uuid]);
       $shortcuts_weighted[$uuid] = $title;
       $changed = TRUE;
-    } elseif (isset($shortcut_weights_bytitle[$title])) {
+    }
+    elseif (isset($shortcut_weights_bytitle[$title])) {
       $shortcut->setWeight($shortcut_weights_bytitle[$title]);
       $shortcuts_weighted[$uuid] = $title;
       $changed = TRUE;
@@ -305,7 +308,7 @@ function hs_admin_update_10005() {
       $shortcut->save();
     }
   }
-  
+
   // Create shortcut: "Manage Alt Text".
   if ($create_manage_alt_text) {
     $manage_alt_text = $shortcut_storage->create([

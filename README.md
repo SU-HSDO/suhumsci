@@ -13,6 +13,9 @@ Note the following properties of this project:
 * Local drush alias: @[SITE_ALIAS].local
 * Local site URL: http://[SITE_ALIAS].suhumsci.loc
 
+## BLT to SWS Drush Commands (SWSDC) migration
+In April 2026 this repository moved from using BLT to SWS Drush Commands (SWSDC). If you are still using BLT and have not set up SWSDC, please read the [migration documentation](docs/BltToSWSDC.md).
+
 ## Documentation
 
 - [Patching and patch management instructions](patches/README.md)
@@ -49,7 +52,7 @@ You can either run the site on DDEV, Lando or bare metal.
 1. Run `drush sws:keys`
 1. **local.drush.yml**
   - Create or modify the `drush/local.drush.yml`
-  - Add your local database settings and Acquia API key details. Your database details should still exist in `blt/local.blt.yml`. If used previously, your Acquia Key should be able to be found with `cat ~/.acquia/cloud_api.conf`. Otherwise login to Acquia to create a new one.
+  - Add your local database settings and Acquia API key details. If used previously, your Acquia Key should be able to be found with `cat ~/.acquia/cloud_api.conf`. Otherwise login to Acquia to create a new one.
   ```
   command:
   sws:

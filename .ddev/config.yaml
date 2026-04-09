@@ -151,6 +151,6 @@ hooks:
   post-start:
     - exec-host: cp .ddev/ddev.sites.php docroot/sites/local.sites.php
     - exec: composer install
-    - exec: /var/www/html/vendor/bin/blt blt:init:settings
+    - exec: /var/www/html/vendor/bin/drush sws:multisite:settings
     - exec: /var/www/html/.ddev/scripts/configure-local-settings.sh
     - exec: /var/www/html/.ddev/scripts/create-local-databases.sh

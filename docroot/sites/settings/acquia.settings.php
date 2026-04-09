@@ -1,6 +1,6 @@
 <?php
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 
 $group = EnvironmentDetector::getAhGroup();
 $environment = EnvironmentDetector::getAhEnv();

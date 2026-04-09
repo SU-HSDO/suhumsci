@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Create site-specific databases for BLT multisite
+# Create site-specific databases for multisite
 # This script creates a separate database for each site directory found in docroot/sites/
 
-echo "Creating site-specific databases for BLT multisite..."
+echo "Creating site-specific databases for multisite..."
 
 for site_dir in /var/www/html/docroot/sites/*/; do
   if [ -d "$site_dir" ]; then

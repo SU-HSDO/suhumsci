@@ -6,14 +6,14 @@
  * Lando build script: patches local.settings.php files for Lando compatibility.
  *
  * Replaces the fragile sed-based approach that breaks on VirtioFS.
- * Run after `blt blt:init:settings` to update database credentials.
+ * Run after `drush sws:multisite:settings` to update database credentials.
  */
 
 $sites_dir = '/app/docroot/sites';
 $files = glob($sites_dir . '/*/settings/local.settings.php');
 
 if (empty($files)) {
-  echo "No local.settings.php files found. Ensure blt:init:settings has run.\n";
+  echo "No local.settings.php files found. Ensure drush sws:multisite:settings has run.\n";
   exit(0);
 }
 

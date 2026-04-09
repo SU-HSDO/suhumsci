@@ -1,22 +1,9 @@
 # Config & Content Update
 
+2026-04-06: This documentation needs to be updated. It is not recommended to follow these instructions -- leaving them here for reference when updates do take place.
 2025-09-26: This documentation should be reviewed and updated, and may be slightly outdated.
 
-Periodically the H&S team wants to make several changes to the default installation configurations & content. This often
-includes changes to the views, entity displays, entity forms, permissions, and some field settings. It also includes
-default content changes.
-
-## Preparation
-H&S has been using the site [HS Sandbox](https://hs-sandbox-stage.stanford.edu) for this purpose. It is best to install
-the site with a fresh installation and lock the staging environment to a tag to avoid any unwanted code deployments to
-the staging environment.
-1. `blt deploy --commit-msg="Defaults Update" --tag=DEFAULTS-[YYYY-MM-DD]`
-2. Deploy that tag to the staging environment in the ACE dashboard
-3. (recommended) Delete all files on the server for that site.
-   1. `drush @default.stage ssh`
-   2. `rm -rf /mnt/gfs/humscigryphon.test/sites/hs_sandbox/files/*`
-4. Install the site clean `drush @hs_sandbox.stage si su_humsci_profile -y`
-5. Notify H&S that the site is prepared and available for new defaults.
+Periodically the H&S team wants to make several changes to the default installation configurations & content. This often includes changes to the views, entity displays, entity forms, permissions, and some field settings. It also includes default content changes.
 
 ## Capturing Updates
 After H&S has notified that they are done making changes, they should produce a list of all the changes that were made.
@@ -26,7 +13,7 @@ After H&S has notified that they are done making changes, they should produce a 
    site, but several configs are specific to the staging site or acquia environments. Compare the changes and clean up
    anything that shouldn't be committed
 2. Pull the site to the local to capture content changes.
-   1. `blt drupal:sync --sites=hs_sandbox`
+   1. `drush drupal:sync --sites=hs_sandbox`
    2. rename the default content directory: `cd docroot/profiles/humsci/su_humsci_profile/modules/humsci_default_content && mv content old_content`
    3. enable the default content module: `drush @hs_sandbox.local en humsci_default_content -y`
    4. restore the content directory: `mv old_content content`

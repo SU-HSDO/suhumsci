@@ -7,7 +7,7 @@ echo "Configuring local.settings.php files for DDEV environment..."
 
 # Update database username from 'root' to 'db'
 echo "Updating database username..."
-find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'root'/'username' => 'db'/g" {}
+find /var/www/html/docroot/sites/ -name local.settings.php | xargs -I {} sed -i "s/'username' => 'user'/'username' => 'db'/g" {}
 
 # Update database password from 'password' to 'db'
 echo "Updating database password..."

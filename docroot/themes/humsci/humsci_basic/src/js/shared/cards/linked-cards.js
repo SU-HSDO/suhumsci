@@ -14,33 +14,17 @@ import addContextualImageLinkEvents from './image-link-handler';
       // Loop through each card
       cards.forEach((card) => {
         /**
-         * Handles click behavior for image links inside cards that may contain:
-         * - Drupal contextual controls (for authenticated users)
-         * - Caption toggle UI (for all users)
-         *
-         * When interactive elements exist inside the <a>, we need to prevent the link
-         * from navigating when those elements are clicked, while still allowing their
-         * own behavior (e.g. opening contextual menu or toggling caption).
+         * Target the card image link (if present) to enhance its behavior.
+         * This enables proper interaction with Drupal contextual controls
+         * and caption toggles without triggering unintended navigation.
          */
-        const isAuthenticated = drupalSettings?.user?.uid > 0;
-
         const cardImageLink = card.querySelector(
           '.hb-card__img a, .hb-vertical-linked-card__img a',
         );
 
-        if (cardImageLink) {
-          const contextualRegion = cardImageLink.querySelector('article.contextual-region');
-          const caption = cardImageLink.querySelector('.field-media-image-caption');
+        if (!cardImageLink) return;
 
-          /**
-           * Run if:
-           * - Authenticated user with contextual UI
-           * - OR any user with caption toggle
-           */
-          if ((isAuthenticated && contextualRegion) || caption) {
-            addContextualImageLinkEvents(cardImageLink);
-          }
-        }
+        addContextualImageLinkEvents(cardImageLink, drupalSettings);
 
         // Find the main link within each card
         let mainLink = '';

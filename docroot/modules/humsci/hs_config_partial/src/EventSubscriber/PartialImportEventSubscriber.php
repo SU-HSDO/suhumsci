@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -63,12 +64,24 @@ class PartialImportEventSubscriber implements EventSubscriberInterface {
       return;
     }
     $import_storage = $event->getStorage();
+    $hs_config_partial_allow_delete = Settings::get('hs_config_partial_allow_delete', []);
     foreach ($this->activeStorage->listAll() as $config_name) {
-      if (!$import_storage->exists($config_name)) {
-        // If the import storage is missing configuration that is in the active
-        // storage, it will delete the config from the active storage during
-        // the import process. To prevent that, we restore the config from the
-        // active storage back into the import storage.
+      // If the import storage is missing configuration that is in the active
+      // storage, it will delete the config from the active storage during
+      // the import process. To prevent that, we restore the config from the
+      // active storage back into the import storage.
+      // We do need to allow specific configuration to be deleted as part of the
+      // import process, especially when modules get uninstalled during a site
+      // sync. We don't need to preserve everything.
+      $allow_delete = FALSE;
+      foreach ($hs_config_partial_allow_delete as $prefix) {
+        if (strpos($config_name, $prefix) === 0) {
+          $allow_delete = TRUE;
+          break;
+        }
+      }
+
+      if (!$allow_delete && !$import_storage->exists($config_name)) {
         $import_storage->write($config_name, $this->activeStorage->read($config_name));
       }
     }

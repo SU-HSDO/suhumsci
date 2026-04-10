@@ -590,10 +590,15 @@ function hs_paragraph_types_update_10016() {
  * Excludes specific bundles from a field in a given entity type and bundle.
  *
  * This function modifies the field configuration to hide selected paragraph
- * bundles for a specific field. It handles cases where fields are ignored
+ * bundles for a specific field. Only to be used on fields that are ignored
  * from configuration exports.
  *
  * Assumes that the field is set up to list the bundles that are _hidden_.
+ *
+ * @todo Make this smarter so that it detects whether the field is configured to
+ *   hide or show bundles.
+ * @todo Make this smarter to detect when being called on a field that is _not_
+ *   ignored from config.
  *
  * @param string $entity_type
  *   The entity type that owns the field (e.g., 'paragraph', 'node').

@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# DDEV command for setting up a fresh test environment using BLT (like GitHub)
-# This mimics the CI environment exactly using BLT commands
+# DDEV command for setting up a fresh test environment using Drush (like GitHub)
+# This mimics the CI environment exactly
 # Usage: ddev setup-tests
 
 set -e
 
-echo "🧪 Setting up fresh test environment using BLT..."
+echo "🧪 Setting up fresh test environment..."
 
 # Create a fresh database
 DB_NAME="drupal_default"
@@ -23,37 +23,25 @@ sudo rm -f docroot/sites/default/settings/local.settings.php
 sudo rm -f docroot/sites/default/settings.local.php
 sudo rm -rf docroot/sites/localhost/
 
-# Temporarily move local BLT config
-echo "🔧 Temporarily moving local BLT config..."
-if [ -f "blt/local.blt.yml" ]; then
-    mv blt/local.blt.yml blt/local.blt.yml.backup
-    echo "✅ Moved blt/local.blt.yml to blt/local.blt.yml.backup"
+# Temporarily move local Drush config
+echo "🔧 Temporarily moving local Drush config..."
+if [ -f "drush/local.drush.yml" ]; then
+    mv drush/local.drush.yml drush/local.drush.yml.backup
+    echo "✅ Moved drush/local.drush.yml to drush/local.drush.yml.backup"
 fi
 
-# Temporarily modify CI config for DDEV networking
-echo "🔧 Temporarily modifying CI config for DDEV..."
-if [ -f "blt/ci.blt.yml" ]; then
-    cp blt/ci.blt.yml blt/ci.blt.yml.backup
-    sed -i 's/host: mysql/host: db/g' blt/ci.blt.yml
-    sed -i 's/username: drupal/username: db/g' blt/ci.blt.yml
-    sed -i 's/password: drupal/password: db/g' blt/ci.blt.yml
-    sed -i 's/database: drupal/database: drupal_default/g' blt/ci.blt.yml
-    echo "✅ Modified blt/ci.blt.yml for DDEV networking"
-fi
-
-# Generate settings using BLT with CI environment
-echo "⚙️  Generating settings files with BLT..."
-vendor/bin/blt blt:telemetry:disable --no-interaction
-vendor/bin/blt settings --environment=ci
+# Generate settings
+echo "⚙️  Generating settings files..."
+vendor/bin/drush sws:multisite:settings
 
 # Create files directory and set permissions (like GitHub does)
 echo "📁 Creating files directory..."
 mkdir -p docroot/sites/default/files
 chmod -R 777 docroot/sites/default/files/
 
-# Install Drupal using BLT with CI environment
-echo "🚀 Installing Drupal with su_humsci_profile using BLT..."
-vendor/bin/blt drupal:install -n --environment=ci
+# Install Drupal
+echo "🚀 Installing Drupal with su_humsci_profile..."
+vendor/bin/drush si su_humsci_profile -y
 
 echo "✅ Fresh Drupal installation complete"
 
@@ -77,18 +65,11 @@ echo "✅ Codeception configuration updated to match CI"
 
 
 
-# Restore local BLT config
-echo "🔧 Restoring local BLT config..."
-if [ -f "blt/local.blt.yml.backup" ]; then
-    mv blt/local.blt.yml.backup blt/local.blt.yml
-    echo "✅ Restored blt/local.blt.yml"
-fi
-
-# Restore CI BLT config
-echo "🔧 Restoring CI BLT config..."
-if [ -f "blt/ci.blt.yml.backup" ]; then
-    mv blt/ci.blt.yml.backup blt/ci.blt.yml
-    echo "✅ Restored blt/ci.blt.yml"
+# Restore local drush config
+echo "🔧 Restoring local drush config..."
+if [ -f "drush/local.drush.yml.backup" ]; then
+    mv drush/local.drush.yml.backup drush/local.drush.yml
+    echo "✅ Restored drush/local.drush.yml"
 fi
 
 echo "🎉 Test environment setup complete!"
@@ -99,9 +80,9 @@ echo "- Database: $DB_NAME"
 echo "- Theme assets compiled"
 echo "- Codeception configured for localhost"
 echo ""
-echo "To run tests using BLT:"
-echo "  ddev blt codeception --group=install --suite=acceptance"
-echo "  ddev blt codeception --group=install --suite=functional"
+echo "To run tests using Drush:"
+echo "  ddev drush sws:codeception --group=install --suite=acceptance"
+echo "  ddev drush sws:codeception --group=install --suite=functional"
 echo ""
 echo "Or using the direct commands:"
 echo "  ddev codeception run acceptance --group=install"

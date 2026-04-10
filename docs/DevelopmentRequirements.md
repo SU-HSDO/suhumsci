@@ -10,6 +10,3 @@ See the [README.md](../README.md) for more info on local setup.
 
 ## An SSH Key and API Key setup for your ACQUIA account.
 Make sure you have added your SSH key in [Acquia Cloud profile](https://accounts.acquia.com/account), and that it's saved in your `~/.ssh` folder.
-
-## The BLT tool.
-_Documentation needed_

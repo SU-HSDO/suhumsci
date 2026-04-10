@@ -194,21 +194,20 @@ $container-small: 576px;
 
   // Adjustments for expanded full width spotlights in traditional theme.
   @include hb-traditional {
-    .hs-full-width &,
+    .hs-full-width .hb-spotlight--expanded.hb-spotlight--image-default &,
     .hb-three-column--no-sidebar
       .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
-      .hb-spotlight--expanded
+      .hb-spotlight--expanded.hb-spotlight--image-default
       & {
       @container spotlight (width > #{$container-xlarge}) {
         padding-inline-start: 0;
       }
     }
 
-    .hs-full-width .hb-spotlight--image-left &,
+    .hs-full-width .hb-spotlight--expanded.hb-spotlight--image-left &,
     .hb-three-column--no-sidebar
       .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
-      .hb-splotlight--image-left
-      .hb-spotlight--expanded
+      .hb-spotlight--expanded.hb-spotlight--image-left
       & {
       @container spotlight (width > #{$container-xlarge}) {
         padding-inline-end: 0;
@@ -293,6 +292,17 @@ $container-small: 576px;
     @include hb-themes(('colorful', 'airy')) {
       @container spotlight (width > #{$container-xlarge}) {
         width: calc(100% + #{hb-calculate-rems(32px)});
+      }
+    }
+  }
+
+  .hs-full-width .hb-spotlight--expanded.hb-spotlight--image-default &,
+  .hb-three-column--no-sidebar
+    .paragraph--type--hs-sptlght-slder.paragraph--style--full-width
+    .hb-spotlight--expanded.hb-spotlight--image-default
+    & {
+    @include hb-themes(('colorful', 'airy')) {
+      @container spotlight (width > #{$container-xlarge}) {
         margin: 0;
       }
     }

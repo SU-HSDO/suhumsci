@@ -28,12 +28,15 @@ The platform uses a combination of contributed and custom modules to manage conf
 ## Partial Config Imports & hs_config_partial
 
 - We use partial config imports to preserve custom site configuration.
-- Partial imports only create or update config, never delete, so customizations are safe.
-- If config needs to be deleted across all sites, a database update hook is required.
+- Partial imports only create or update config, never delete, so customizations are safe **unless** the config is explicitly allowed to be deleted (see below).
+- If config needs to be deleted across all sites, a database update hook is required, or you may allow deletion by adding a prefix to the allow-list.
 - Previously, partial imports were run using the `--partial` flag with `drush config-import`. With `config_split` 2.x and `config_ignore` 3.x, the config transformation pipeline is used, and `--partial` does not respect these modules.
 - The custom `hs_config_partial` module implements partial import behavior using the transformation pipeline. The `--partial` flag is now deprecated and destructive. Do not use it.
 - The `acquia.settings.php` enables the `hs_config_partial` enabled setting on all Acquia environments, in addition to `config_split` to ensure this stays on.
-- The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. This means all module uninstalls need to take place before the config import step. We use custom `blt.yml` configuration and a ToggleModules command to uninstall modules based on the environment before the config import step.
+- The partial import also prevents any configuration that would be deleted by `config_split` when switching between different splits, including configuration attached to a module getting uninstalled. If a module is being uninstalled but associated configuration is blocked from deletion, the config import will fail. This means all module uninstalls need to take place before the config import step, **unless** the config is explicitly allowed to be deleted via the `hs_config_partial_allow_delete` setting.
+- We allow deletion of a configurations through the `hs_config_partial_allow_delete` setting in the `settings.php` file. Currently this is only used to allow deletion of configuration associated with modules being uninstalled when syncing from different environments.
+- For more information see the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
+
 
 ## Best Practices
 
@@ -42,7 +45,8 @@ The platform uses a combination of contributed and custom modules to manage conf
 - For site-specific config changes or deletions, use update hooks or direct site editing.
 - For local development, `config_ignore` and `config_split` can be overridden in settings files to match the local environment.
 - Running `config-import` twice is a recommended approach. Certain configuration can require a fully configuration import before it is respected, especially with `config_split`.
-- Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these. 
+- Use a database update hook to install or uninstall modules and do not rely on the config-import of the `core.extension.yml` to handle these.
+- If you need to allow deletion of specific config (e.g., for module uninstalls or legacy cleanup), add the appropriate prefix to the allow-list in `settings.php` as described in the [hs_config_partial module README](../docroot/modules/humsci/hs_config_partial/README.md).
 
 
 ### Exporting config_split changes

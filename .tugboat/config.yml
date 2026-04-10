@@ -38,7 +38,7 @@ services:
         - composer install --no-ansi
 
         # Init the settings files.
-        - blt blt:init:settings
+        - drush sws:multisite:settings
       update:
         - rm -rf vendor
         - composer install --no-ansi
@@ -78,23 +78,23 @@ services:
 
         - drush @hs_colorful.local cr
         - drush @hs_colorful.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=hs_colorful
+        - drush @hs_colorful.local deploy
 
         - drush @hs_traditional.local cr
         - drush @hs_traditional.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=hs_traditional
+        - drush @hs_traditional.local deploy
 
         - drush @english.local cr
         - drush @english.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=english
+        - drush @english.local deploy
 
         - drush @history.local cr
         - drush @history.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=history
+        - drush @history.local deploy
 
         - drush @west.local cr
         - drush @west.local eval '\Drupal::moduleHandler()->loadInclude("user", "install");user_update_10000();'
-        - blt drupal:update --site=west
+        - drush @west.local deploy
 
         # Build frontend assets.
         - npm run theme-build

@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\hs_admin\EventSubscriber;
+namespace Drupal\hs_taxonomy\EventSubscriber;
 
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\taxonomy\TermInterface;
@@ -29,9 +30,15 @@ class TaxonomyTermViewRedirectSubscriber implements EventSubscriberInterface {
    */
   protected AccountInterface $currentUser;
 
-  public function __construct(MessengerInterface $messenger, AccountInterface $current_user) {
+  /**
+   * State service.
+   */
+  protected StateInterface $state;
+
+  public function __construct(MessengerInterface $messenger, AccountInterface $current_user, StateInterface $state) {
     $this->messenger = $messenger;
     $this->currentUser = $current_user;
+    $this->state = $state;
   }
 
   /**
@@ -67,9 +74,14 @@ class TaxonomyTermViewRedirectSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Currently, we don't use _any_ full-page taxonomy displays.  If one day
-    // that changes, we can exclude those vocabs here.
-    //
+    // If this vocab is configured to redirect to /admin/content, then do it.
+    $mode = $this->state->get(
+      \HS_TAXONOMY_TERM_PAGE_MODE_STATE_KEY_PREFIX . $term->bundle(),
+      \HS_TAXONOMY_TERM_PAGE_MODE_REDIRECT
+    );
+    if ($mode !== \HS_TAXONOMY_TERM_PAGE_MODE_REDIRECT) {
+      return;
+    }
     $url = Url::fromUri('internal:/admin/content', [
       'query' => [
         'term-name' => $term->label(),
@@ -88,7 +100,7 @@ class TaxonomyTermViewRedirectSubscriber implements EventSubscriberInterface {
         ]);
       }
       $final_message = Markup::create(implode(' ', $parts));
-      $this->messenger->addMessage($final_message, MessengerInterface::TYPE_STATUS);
+      $this->messenger->addStatus($final_message);
     }
 
     $response = new RedirectResponse($url, 302);

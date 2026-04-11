@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Primary hooks for H&S Taxonomy.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+const HS_TAXONOMY_TERM_PAGE_MODE_STATE_KEY_PREFIX = 'hs_taxonomy.term_page_mode.';
+const HS_TAXONOMY_TERM_PAGE_MODE_BUILT_IN = 'built_in';
+const HS_TAXONOMY_TERM_PAGE_MODE_REDIRECT = 'redirect';
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function hs_taxonomy_form_taxonomy_vocabulary_form_alter(array &$form, FormStateInterface $form_state): void {
+  $vocabulary = $form_state->getFormObject()->getEntity();
+  if ($vocabulary->isNew()) {
+    return;
+  }
+
+  $state_key = HS_TAXONOMY_TERM_PAGE_MODE_STATE_KEY_PREFIX . $vocabulary->id();
+  $form['hs_taxonomy_term_page_mode'] = [
+    '#type' => 'radios',
+    '#title' => t('Taxonomy term page behavior'),
+    '#options' => [
+      HS_TAXONOMY_TERM_PAGE_MODE_BUILT_IN => t('Show a list of all content tagged with this taxonomy term.'),
+      HS_TAXONOMY_TERM_PAGE_MODE_REDIRECT => t("Don't show the taxonomy term page."),
+    ],
+    '#default_value' => \Drupal::state()->get($state_key, HS_TAXONOMY_TERM_PAGE_MODE_REDIRECT),
+    '#description' => t('The default list uses the <i>Horizontal Card</i> view-mode in the <a href=":default_view" target="_blank">Default Taxonomy Term</a> view.', [':default_view' => '/admin/structure/views/view/hs_default_taxonomy_term']),
+    '#weight' => 90,
+  ];
+
+  $form['#after_build'][] = 'hs_taxonomy_taxonomy_vocabulary_form_after_build';
+  $form['actions']['submit']['#submit'][] = 'hs_taxonomy_taxonomy_vocabulary_form_submit';
+}
+
+/**
+ * After-build handler for taxonomy vocabulary edit forms.
+ */
+function hs_taxonomy_taxonomy_vocabulary_form_after_build(array $form, FormStateInterface $form_state): array {
+  // We have our custom version of Rabbit Hole, so hide those settings.
+  if (isset($form['rabbit_hole'])) {
+    $form['rabbit_hole']['#access'] = FALSE;
+  }
+  return $form;
+}
+
+/**
+ * Submit handler for taxonomy vocabulary edit forms.
+ */
+function hs_taxonomy_taxonomy_vocabulary_form_submit(array &$form, FormStateInterface $form_state): void {
+  $vocabulary = $form_state->getFormObject()->getEntity();
+  $vocabulary_id = (string) $vocabulary->id();
+  if ($vocabulary_id === '') {
+    return;
+  }
+
+  $mode = (string) $form_state->getValue('hs_taxonomy_term_page_mode');
+  if ($mode !== HS_TAXONOMY_TERM_PAGE_MODE_BUILT_IN) {
+    $mode = HS_TAXONOMY_TERM_PAGE_MODE_REDIRECT;
+  }
+
+  \Drupal::state()->set(HS_TAXONOMY_TERM_PAGE_MODE_STATE_KEY_PREFIX . $vocabulary_id, $mode);
+}

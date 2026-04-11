@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for H&S Taxonomy.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function hs_taxonomy_install(): void {
+  // The vast majority of our vocabs shouldn't be visitor-accessible.  Show the
+  // listing page for those that need it.
+  \Drupal::state()->set(HS_TAXONOMY_TERM_PAGE_MODE_STATE_KEY_PREFIX . 'hs_news_categories', HS_TAXONOMY_TERM_PAGE_MODE_BUILT_IN);
+}

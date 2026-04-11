@@ -82,63 +82,6 @@
   }
 }
 
-// Decanter uses flexbox for row components. For modern browsers, let's use CSS Grid.
-// Collections items have been added to this group, base Collection styles here: docroot/modules/humsci/hs_paragraph_types/css/hs_collection.css
-// .field-hs-collection-items {
-//   // When there is more than one item in a row it uses grid
-//   @include grid-media-min('sm') {
-//     display: grid;
-//     gap: hb-spacing-width();
-//   }
-
-//   &.counted-items-1,
-//   &.item-per-row--1 {
-//     display: block;
-//   }
-
-//   // Update spacing between 4 columns to have a tighter spacing.
-//   &.item-per-row--4 {
-//     @include hb-colorful {
-//       @include grid-media-min('sm') {
-//         gap: hb-spacing-width('md');
-//       }
-//     }
-//   }
-
-//   @for $i from 2 through $hb-counted-items-count {
-//     &.counted-items-#{$i},
-//     &.item-per-row--#{$i} {
-//       @include grid-media-min('sm') {
-//         grid-template-columns: repeat(2, minmax(0, 1fr));
-//       }
-
-//       @if $i > 2 {
-//         @include grid-media-min('md') {
-//           grid-template-columns: repeat(3, minmax(0, 1fr));
-//         }
-//       }
-
-//       @if $i > 3 {
-//         @include grid-media-min('lg') {
-//           grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-//         }
-//       }
-
-//       .paragraph-item {
-//         @include grid-media-min('sm') {
-//           margin: 0 !important;
-//         }
-//       }
-
-//       .hs-paragraph-style--well &,
-//       .hs-paragraph-style--well-full-width & {
-//         @include grid-media-min('sm') {
-//           margin: hb-spacing-width() auto;
-//         }
-//       }
-//     }
-//   }
-// }
 .field-hs-collection-items {
   --gap: #{hb-calculate-rems(48px)};
   display: flex;
@@ -161,18 +104,29 @@
 
   &.item-per-row--4 {
     --columns: 4;
+
+    .ptype-hs-postcard {
+      flex-basis: max(#{hb-calculate-rems(240px)}, var(--max-width));
+    }
   }
 
   .paragraph-item {
     --gap-count: calc(var(--columns) - 1);
     --gap-space: calc(var(--gap-count) * var(--gap));
     --max-width: calc((100% - var(--gap-space)) /  var(--columns));
-    flex-basis: max(#{hb-calculate-rems(240px)}, var(--max-width));
     flex-grow: 0;
     flex-shrink: 0;
+    flex: 0 0 var(--max-width);
+
+    @include grid-media-min('sm') {
+      margin: 0 !important;
+    }
   }
 
-  .ptype-hs-spotlight {
+  .ptype-hs-spotlight,
+  .ptype-hs-gradient-hero-slider,
+  .ptype-hs-banner,
+  .ptype-hs-hero-image {
     flex-basis: 100%;
   }
 
@@ -185,6 +139,18 @@
   .ptype-hs-testimonial {
     --columns: 2;
     flex-basis: max(#{hb-calculate-rems(400px)}, var(--max-width));
+  }
+
+  .ptype-hs-text-area {
+    --columns: 3;
+    flex-basis: max(#{hb-calculate-rems(300px)}, var(--max-width));
+  }
+
+  .hs-paragraph-style--well &,
+  .hs-paragraph-style--well-full-width & {
+    @include grid-media-min('sm') {
+      margin: hb-spacing-width() auto;
+    }
   }
 }
 

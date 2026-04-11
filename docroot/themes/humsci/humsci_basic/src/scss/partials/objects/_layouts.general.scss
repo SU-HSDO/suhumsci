@@ -11,6 +11,25 @@
   &:not(:has(.hs-full-width:first-child)) {
     margin-top: hb-spacing-width();
   }
+
+  // Remove bottom margin when last item is a collection with full-bleed.
+  &:has(.field-hs-page-components > .ptype-hs-collection:last-child .hs-paragraph-style--well-full-width) {
+    margin-bottom: 0;
+
+    // Remove margin-bottom on the the LAST collection too.
+    .field-hs-page-components > .ptype-hs-collection:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  &:has(.field-hs-page-components > .ptype-hs-priv-collection:last-child .hs-paragraph-style--well-full-width) {
+    margin-bottom: 0;
+
+    // Remove margin-bottom on the the LAST priv collection too.
+    .field-hs-page-components > .ptype-hs-priv-collection:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
 }
 
 // If a component needs *any* additional styles, move the rule into /src/scss/components.
@@ -108,3 +127,16 @@
     padding-bottom: hb-calculate-rems(16px);
   }
 }
+
+// When 2 collections are added next to each other, there is not gap between the 2 BG colors.
+.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well-full-width),
+.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well),
+.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well),
+.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well-full-width),
+.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well-full-width),
+.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well),
+.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well),
+.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well-full-width) {
+  margin-bottom: 0 !important;
+}
+

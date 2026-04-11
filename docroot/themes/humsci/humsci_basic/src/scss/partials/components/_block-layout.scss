@@ -7,7 +7,7 @@
 @use '../mixins/links' as *;
 
 .block-layout-builder {
-  &:not(:last-child) {
+  &:not(:has(+ .block-back-to-top)):not(:last-child) {
     margin-bottom: hb-calculate-rems(20px);
   }
 

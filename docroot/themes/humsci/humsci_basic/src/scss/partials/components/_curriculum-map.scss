@@ -48,10 +48,20 @@ $cmap-colors: (
       minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr)
     );
     gap: var(--grid-layout-gap);
+    grid-auto-rows: auto;
+    column-gap: var(--grid-layout-gap);
+    row-gap: 0;
   }
 
   .field-hs-cmap-year-qtr--cols-4 {
     --grid-column-count: 4;
+  }
+
+  // Level 1: direct grid child — span and subgrid downward
+  .field-hs-cmap-year-qtr > .paragraph-item {
+    display: grid;
+    grid-row: span 100;
+    grid-template-rows: subgrid;
   }
 }
 
@@ -60,6 +70,11 @@ $cmap-colors: (
   display: flex;
   flex-direction: column;
   gap: hb-calculate-rems(16px);
+
+  // Level 2: pass subgrid tracks further down
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 100;
 
   .field-hs-cmap-qtr-quarter {
     margin: 0;

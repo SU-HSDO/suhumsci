@@ -840,26 +840,14 @@ function hs_paragraph_types_update_10022() {
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
-  $storages_to_create = [
-    'field.storage.paragraph.field_hs_testimonial_align',
-  ];
-
-  foreach ($storages_to_create as $storage_name) {
-    $storage_config = $config_storage->read($storage_name);
-    if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
-      $field_storage->createFromStorageRecord($storage_config)->save();
-    }
+  $storage_config = $config_storage->read('field.storage.paragraph.field_hs_testimonial_align');
+  if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+    $field_storage->createFromStorageRecord($storage_config)->save();
   }
 
-  $fields_to_create = [
-    'field.field.paragraph.hs_testimonial.field_hs_testimonial_align',
-  ];
-
-  foreach ($fields_to_create as $field_name) {
-    $field_config = $config_storage->read($field_name);
-    if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_testimonial.' . $field_config['field_name']))) {
-      $field_config_storage->create($field_config)->save();
-    }
+  $field_config = $config_storage->read('field.field.paragraph.hs_testimonial.field_hs_testimonial_align');
+  if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_testimonial.' . $field_config['field_name']))) {
+    $field_config_storage->create($field_config)->save();
   }
 }
 

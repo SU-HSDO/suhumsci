@@ -865,6 +865,11 @@ function hs_paragraph_types_update_10025(&$sandbox) {
     $sandbox['total'] = count($sandbox['ids']);
   }
 
+  $height_map = [
+    'default' => 'tall',
+    'preview' => 'short',
+  ];
+
   $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
@@ -875,8 +880,8 @@ function hs_paragraph_types_update_10025(&$sandbox) {
     // Migrate field_hs_banner_height -> field_hs_banner_image_height.
     if ($paragraph->hasField('field_hs_banner_height') && $paragraph->hasField('field_hs_banner_image_height')) {
       $value = $paragraph->get('field_hs_banner_height')->value;
-      if (!empty($value)) {
-        $paragraph->set('field_hs_banner_image_height', $value);
+      if (!empty($value) && isset($height_map[$value])) {
+        $paragraph->set('field_hs_banner_image_height', $height_map[$value]);
         $save_needed = TRUE;
       }
     }

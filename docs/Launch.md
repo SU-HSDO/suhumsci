@@ -1,17 +1,14 @@
 # Launch Process
 
+2026-04-26: This documentation needs to be updated. Steps are outdated. SWS developers refer to internal confluence documentation.
+
 **SWS Developers**: Please refer to internal Confluence documentation for more up to date step-by-step instructions for site launches.
 
 A "Launch" is any change to a domain that can impact visitors.
 
 Prerequisite:
-Set up `blt/local.blt.yml` to include the API key and secret so that you can connect to Acquia cloud API.
-Add the following snippet to `local.blt.yml`:
-```
-cloud:
-  key: [your-api-key]
-  secret: [your-api-secret
-```
+Set up `drush/local.drush.yml` to include the API key and secret so that you can connect to Acquia cloud API.
+
 You can find your API key and secret from SWS credentials document or you can create your own API key/secret in [your profile settings](https://cloud.acquia.com/a/profile/tokens)
 
 ## Several days before
@@ -33,8 +30,7 @@ You can find your API key and secret from SWS credentials document or you can cr
 1. Add the new Vhost to the [NetDB record](https://netdb.stanford.edu/node_info?name=swshumsci.stanford.edu&history=%252Fqsearch%253Fsearch_string%253Dswshumsci%2526search_type%253DNodes)
 1. Wait for the DNS Refresh. This occurs every half hour at :05 and :35 past the hour.
 1. Ensure the Vhost points to Acquia by pinging the url. `ping newvhost.stanford.edu`
-1. Execute the blt command `blt humsci:launch-site [site_machine_name]` and enter the new site domain. This command will
-configure necessary site configuration and clear caches.
+1. Execute the launch site command and enter the new site domain. This command will configure necessary site configuration and clear caches.
 1. Submit the site to Google for indexing: [steps to index](https://asconfluence.stanford.edu/confluence/display/SWS/Submit+sitemap+to+Google+Webmaster+tools)
   * During the verification for Google indexing, choose the "HTML Tag" option. Set the value of the tag as a metatag:
     * `drush @[sitename].prod cset metatag.metatag_defaults.global tags.google [tag_value]`

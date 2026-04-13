@@ -23,11 +23,12 @@ if (file_exists(DRUPAL_ROOT . '/../keys/saml/cert/saml.crt')) {
   ];
 }
 
+// Include a local services file if it exists.
+if (file_exists(DRUPAL_ROOT . '/sites/local.services.yml')) {
+  $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/local.services.yml';
+}
+
 // Saml login doesn't work on tugboat, don't set config values.
 if (getenv('TUGBOAT_REPO')) {
   unset($config['samlauth.authentication'], $config['stanford_samlauth.settings']);
-}
-
-if (file_exists(DRUPAL_ROOT . '/../keys.secrets.settings.php')) {
-  require DRUPAL_ROOT . '/../keys/secrets.settings.php';
 }

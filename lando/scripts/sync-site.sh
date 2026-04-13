@@ -10,4 +10,4 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-/app/vendor/bin/blt drupal:sync --site="$1"
+/app/vendor/bin/drush sws:site:sync --site="$1"

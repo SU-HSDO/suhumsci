@@ -114,7 +114,7 @@ This document outlines the recommended process for performing major and minor Dr
 ### 10. Site Sync and Additional QA
 
 - Sync a live site locally and review status/logs for upgrade issues:
-	- `blt drupal:sync --site=<site>`
+	- `drush drupal:sync --site=<site>`
 - Click through key pages, review logs, and validate site functionality.
 - Review log messages and test key content types, views, and admin pages.
 - Additional QA will take place once the upgrade is on the staging environment. This does not need to be a thorough QA process.

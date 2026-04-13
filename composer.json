@@ -27,10 +27,9 @@
     ],
     "require": {
         "php": ">=8.3",
-        "acquia/blt": "^13.5",
-        "acquia/blt-multisite": "^1.0",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
+        "davidrjonas/composer-lock-diff": "^1.0",
         "drupal/acquia_connector": "^4.0",
         "drupal/acquia_purge": "^1.2",
         "drupal/address": "^2.0",
@@ -103,6 +102,7 @@
         "drupal/jquery_ui_menu": "^2.0",
         "drupal/jquery_ui_slider": "^2.0",
         "drupal/jquery_ui_touch_punch": "^1.0",
+        "drupal/js_cookie": "^1.0",
         "drupal/jsonapi_extras": "^3.21",
         "drupal/key": "^1.14",
         "drupal/layout_builder_component_attributes": "^2.0",
@@ -183,13 +183,13 @@
         "su-sws/stanford_fields": "^8.1",
         "su-sws/stanford_media": "^11.0",
         "su-sws/stanford_migrate": "^8.4",
-        "su-sws/stanford_samlauth": "^1.0"
+        "su-sws/stanford_samlauth": "^1.0",
+        "su-sws/sws-drush-commands": "multisite-improvements-dev"
     },
     "require-dev": {
         "drupal/core-dev": "~10.5.0",
         "drupal/upgrade_status": "^4.0",
         "phpspec/prophecy-phpunit": "^2.0",
-        "su-sws/blt-sws": "dev-main",
         "su-sws/drupal-dev": "^10"
     },
     "conflict": {
@@ -238,9 +238,6 @@
             },
             "drupal/entity_reference_exposed_filters": {
                 "https://www.drupal.org/project/entity_reference_exposed_filters/issues/3189025": "https://www.drupal.org/files/issues/2023-10-17/entity_reference_exposed_filters-empty_target-3189025-4.patch"
-            },
-            "drupal/field_formatter_class": {
-                "https://www.drupal.org/project/field_formatter_class/issues/3473891": "patches/contrib/field_formatter_class-3473891-mr-10.patch"
             },
             "drupal/field_group": {
                 "https://www.drupal.org/project/field_group/issues/2969051": "https://www.drupal.org/files/issues/2024-09-13/2969051-166.patch"
@@ -353,11 +350,6 @@
             "docroot/libraries/{$name}/": [
                 "type:component"
             ]
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "Humsci\\": "blt/src/"
         }
     },
     "autoload-dev": {

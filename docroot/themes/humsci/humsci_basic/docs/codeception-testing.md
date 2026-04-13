@@ -11,7 +11,7 @@ To setup Codeception testing locally you will want to defer to the steps listed 
   * Acceptance tests, these tests run with a headless Chrome browser or Chromedriver and are designed to reproduce an acceptance tester’s actions in scenarios and run them automatically.
   * Functional tests, these tests run with Symfony BrowserKit to send requests to your app and doesn't make actual HTTP requests, these tests are intended to test functionality only and do not require a Chromedriver like Acceptance test do. These should run very fast in comparison.
 * This info is listed in the DDEV setup steps, but bears repeating for understanding here.
-  * To run codeception tests run `ddev blt codeception --group=install`. Or if you wish to run a single class/method add the annotation in the docblock `@group testme` and then run `ddev blt codeception --group=testme`.
+  * To run codeception tests run `ddev drush sws:codeception --group=install`. Or if you wish to run a single class/method add the annotation in the docblock `@group testme` and then run `ddev drush sws:codeception --group=testme`.
 
     ```php
     /**

@@ -1,17 +1,16 @@
-uuid: 8e26711b-5aa1-4c8d-b1af-ff36bcac453b
+uuid: aea6d9c0-4183-4291-b9a5-dfe2d8bdcccf
 langcode: en
-status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.hs_horizontal_card
   module:
     - node
     - taxonomy
     - user
 _core:
   default_config_hash: Gy5PaLdfFhtFSRqJxV-DBTF5AocKgNA2CsCNNEbvx4c
-id: taxonomy_term
-label: 'Taxonomy term'
+id: hs_default_taxonomy_term
+label: 'Default Taxonomy Term'
 module: taxonomy
 description: 'Content belonging to a certain taxonomy term.'
 tag: default
@@ -26,7 +25,7 @@ display:
     display_options:
       fields: {  }
       pager:
-        type: mini
+        type: full
         options:
           offset: 0
           pagination_heading_level: h4
@@ -36,6 +35,8 @@ display:
           tags:
             next: ››
             previous: ‹‹
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -44,6 +45,7 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
+          quantity: 9
       exposed_form:
         type: basic
         options:
@@ -212,17 +214,57 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+        status_1:
+          id: status_1
+          table: node_field_data
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       style:
         type: default
         options:
-          grouping: {  }
           row_class: ''
-          default_row_class: true
+          default_row_class: false
           uses_fields: false
       row:
         type: 'entity:node'
         options:
-          view_mode: teaser
+          relationship: none
+          view_mode: hs_horizontal_card
       query:
         type: views_query
         options:
@@ -265,6 +307,7 @@ display:
     display_plugin: feed
     position: 2
     display_options:
+      enabled: false
       pager:
         type: some
         options:
@@ -303,7 +346,7 @@ display:
     display_plugin: block
     position: 1
     display_options:
-      enabled: true
+      enabled: false
       query:
         type: views_query
         options: {  }
@@ -328,7 +371,7 @@ display:
     display_plugin: page
     position: 1
     display_options:
-      enabled: false
+      enabled: true
       query:
         type: views_query
         options: {  }

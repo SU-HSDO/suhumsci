@@ -5,9 +5,12 @@ dependencies:
   config:
     - field.field.paragraph.hs_banner.field_hs_banner_height
     - field.field.paragraph.hs_banner.field_hs_banner_image
+    - field.field.paragraph.hs_banner.field_hs_banner_image_height
     - paragraphs.paragraphs_type.hs_banner
   module:
+    - field_formatter_class
     - media_library
+    - style_selector
 id: paragraph.hs_banner.default
 targetEntityType: paragraph
 bundle: hs_banner
@@ -26,6 +29,23 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_hs_banner_image_height:
+    type: style_selector_tile_widget
+    weight: 2
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
 hidden:
   created: true
   status: true

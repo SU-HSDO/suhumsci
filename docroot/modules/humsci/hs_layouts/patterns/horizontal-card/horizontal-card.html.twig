@@ -26,10 +26,19 @@
 
       {% if title %}
         <div class="hb-card__title">
+          {% set title_content %}
+            {% if node_url %}
+              <a href="{{ node_url }}">{{ title }}</a>
+            {% elseif href %}
+              <a href="{{ href }}">{{ title }}</a>
+            {% else %}
+              {{ title }}
+            {% endif %}
+          {% endset %}
           {% if title|render matches '/<\\/h\\d>/' %}
-            {{ title }}
+            {{ title_content }}
           {% else %}
-            <{{ heading_tag }}>{{ title }}</{{ heading_tag }}>
+            <{{ heading_tag }}>{{ title_content }}</{{ heading_tag }}>
           {% endif %}
         </div>
       {% endif %}
@@ -58,7 +67,7 @@
         </div>
       {% endif %}
 
-      {% if button %}
+      {% if button and button['#row'] %}
         {% set node_url = button['#row'] ? url('entity.node.canonical', { 'node': button['#row']._entity.id }) %}
         <div class="hb-card__decorative-link">
           {% if node_url %}

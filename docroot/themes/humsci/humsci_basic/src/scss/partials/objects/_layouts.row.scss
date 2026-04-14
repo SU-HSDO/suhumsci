@@ -90,23 +90,88 @@
   container-type: inline-size;
   container-name: collection;
 
-  &.item-per-row--1 {
+  // Default for components like Curriculum Maps
+  .paragraph-item {
     --columns: 1;
   }
 
-  &.item-per-row--2 {
+  .ptype-hs-testimonial,
+  .ptype-hs-accordion,
+  .ptype-hs-timeline,
+  .ptype-hs-postcard,
+  .ptype-hs-view {
     --columns: 2;
   }
 
-  &.item-per-row--3 {
+  .ptype-hs-text-area {
     --columns: 3;
   }
 
-  &.item-per-row--4 {
-    --columns: 4;
+  &.item-per-row--1 {
+    .paragraph-item {
+      --columns: 1;
+    }
+  }
 
-    .ptype-hs-postcard {
-      flex-basis: max(#{hb-calculate-rems(240px)}, var(--max-width));
+  &.item-per-row--2 {
+    .ptype-hs-text-area {
+      --columns: 2;
+    }
+  }
+
+  &.item-per-row--3 {
+    .ptype-hs-postcard,
+    .ptype-hs-view {
+      --columns: 3;
+    }
+  }
+
+  &.item-per-row--4 {
+    .ptype-hs-postcard,
+    .ptype-hs-view {
+      --columns: 4;
+    }
+  }
+
+  // Component‑specific default columns.
+  .ptype-hs-spotlight,
+  .ptype-hs-gradient-hero-slider,
+  .ptype-hs-banner,
+  .ptype-hs-hero-image {
+    flex-basis: 100%;
+  }
+
+  // Responsive container queries (per component)
+  @container collection (width < 992px) {
+    &.item-per-row--4 .ptype-hs-postcard,
+    &.item-per-row--4 .ptype-hs-view {
+      --columns: 3;
+    }
+  }
+
+  @container collection (width < 768px) {
+    &:not(.item-per-row--1) {
+      .ptype-hs-testimonial,
+      .ptype-hs-accordion,
+      .ptype-hs-timeline {
+        --columns: 1;
+      }
+
+      .ptype-hs-text-area,
+      .ptype-hs-postcard,
+      .ptype-hs-view {
+        --columns: 2;
+      }
+    }
+  }
+
+  @container collection (width < 576px) {
+    &:not(.item-per-row--1) {
+      .ptype-hs-text-area,
+      .ptype-hs-postcard,
+      .ptype-hs-view {
+        --columns: 1;
+      }
     }
   }
 
@@ -116,34 +181,11 @@
     --max-width: calc((100% - var(--gap-space)) /  var(--columns));
     flex-grow: 0;
     flex-shrink: 0;
-    flex: 0 0 var(--max-width);
+    flex-basis: var(--max-width);
 
     @include grid-media-min('sm') {
       margin: 0 !important;
     }
-  }
-
-  .ptype-hs-spotlight,
-  .ptype-hs-gradient-hero-slider,
-  .ptype-hs-banner,
-  .ptype-hs-hero-image {
-    flex-basis: 100%;
-  }
-
-  .ptype-hs-accordion,
-  .ptype-hs-timeline {
-    --columns: 2;
-    flex-basis: max(#{hb-calculate-rems(500px)}, var(--max-width));
-  }
-
-  .ptype-hs-testimonial {
-    --columns: 2;
-    flex-basis: max(#{hb-calculate-rems(400px)}, var(--max-width));
-  }
-
-  .ptype-hs-text-area {
-    --columns: 3;
-    flex-basis: max(#{hb-calculate-rems(300px)}, var(--max-width));
   }
 
   .hs-paragraph-style--well &,

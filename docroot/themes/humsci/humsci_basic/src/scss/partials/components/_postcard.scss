@@ -1,4 +1,5 @@
 @use '../functions/general' as *;
+@use '../functions/fonts' as *;
 @use '../mixins/theme' as *;
 @use '../mixins/links' as *;
 @use '../mixins/buttons' as *;
@@ -48,39 +49,6 @@ $container-small: hb-calculate-rems(576px);
 
   .hb-card__subcontent-item {
     width: 100%;
-  }
-
-  .hb-card__decorative-link {
-    &::before {
-      display: none; // The decorative link for postcards is added via the field-hs-postcard-link class.
-    }
-  }
-}
-
-.field-hs-postcard-link {
-  position: relative;
-  width: 100%;
-
-  .hb-card--horizontal & {
-    @include hb-themes(('colorful', 'airy')) {
-      padding-block-start: hb-calculate-rems(10px);
-    }
-
-    @include hb-traditional {
-      padding-block-start: hb-calculate-rems(6px);
-
-      @container card (width > #{$container-small}) {
-        padding-block-start: hb-calculate-rems(10px);
-      }
-    }
-  }
-
-  a {
-    .fa-mailto {
-      display: none;
-    }
-
-    @include hb-more-link;
   }
 }
 

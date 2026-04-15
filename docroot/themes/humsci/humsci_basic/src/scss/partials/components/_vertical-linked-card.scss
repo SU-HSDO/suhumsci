@@ -104,7 +104,7 @@ $container-small: hb-calculate-rems(576px);
     }
 
     &:not(:has(+ .hb-vertical-linked-card__description))::after {
-      content: none;
+      height: calc(100% - #{hb-calculate-rems(8px)});
     }
 
     @container card (width > #{$container-small}) {
@@ -127,8 +127,7 @@ $container-small: hb-calculate-rems(576px);
 }
 
 .hb-vertical-linked-card__title__link {
-  @include hb-more-link;
-  font-size: unset;
+  color: var(--link-base-current-color);
 }
 
 
@@ -186,6 +185,8 @@ $container-small: hb-calculate-rems(576px);
     cursor: pointer;
 
     .hb-vertical-linked-card__title {
+      text-decoration: underline;
+
       @include hb-themes(('colorful', 'airy')) {
         background-color: color('secondary-darken-12');
       }

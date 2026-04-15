@@ -763,7 +763,7 @@ function hs_paragraph_types_update_10021(&$sandbox) {
     $sandbox['total'] = count($sandbox['ids']);
   }
 
-  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
@@ -781,7 +781,15 @@ function hs_paragraph_types_update_10021(&$sandbox) {
     switch ($display) {
       case 'default':
         $paragraph->set('field_hs_postcard_layout', 'vertical');
-        $vertical_style = \Drupal::config('system.theme')->get('default') == 'humsci_colorful' ? 'accent' : 'plain';
+        $vertical_style = 'plain';
+        if (\Drupal::config('system.theme')->get('default') == 'humsci_colorful') {
+          $parent = $paragraph->getParentEntity();
+          if ($parent && in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection'])) {
+            if ($parent->hasField('field_raised_cards') && $parent->get('field_raised_cards')->value) {
+              $vertical_style = 'accent';
+            }
+          }
+        }
         $paragraph->set('field_hs_postcard_vertical_style', $vertical_style);
         $paragraph->set('field_hs_postcard_alignment', 'left');
         break;

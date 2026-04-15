@@ -38,7 +38,13 @@ $container-medium: hb-calculate-rems(768px);
   }
 
   &.hb-vertical-card--accent {
-    border-bottom: hb-calculate-rems(4px) solid color('primary');
+    @include hb-themes(('colorful', 'airy')) {
+      border-bottom: hb-calculate-rems(4px) solid color('secondary');
+    }
+
+    @include hb-traditional {
+      border-bottom: hb-calculate-rems(2px) solid color('secondary');
+    }
   }
 }
 
@@ -179,21 +185,38 @@ $container-medium: hb-calculate-rems(768px);
   .hb-vertical-card &,
   .hb-card--date-stacked & {
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(16px)
+      padding: hb-calculate-rems(20px) 0
         hb-calculate-rems(24px);
 
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(16px);
+      }
+
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+        padding: hb-calculate-rems(20px) 0
           hb-calculate-rems(32px);
+
+        .hb-raised-cards & {
+          padding-inline: hb-calculate-rems(32px);
+        }
       }
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(12px) hb-calculate-rems(14px)
+      padding: hb-calculate-rems(12px) hb-calculate-rems(10px)
         hb-calculate-rems(22px);
 
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(14px);
+      }
+
+
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(16px) hb-calculate-rems(24px);
+        padding: hb-calculate-rems(16px);
+
+        .hb-raised-cards & {
+          padding-inline: hb-calculate-rems(24px);
+        }
       }
     }
   }
@@ -201,22 +224,38 @@ $container-medium: hb-calculate-rems(768px);
   .hb-vertical-card.hb-card--no-image &,
   .hb-card--date-stacked.hb-card--no-image & {
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
+      padding: hb-calculate-rems(20px) 0
         hb-calculate-rems(24px);
 
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(20px);
+      }
+
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(32px)
+        padding: hb-calculate-rems(24px) 0
           hb-calculate-rems(32px);
+
+        .hb-raised-cards & {
+          padding-inline: hb-calculate-rems(32px);
+        }
       }
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+      padding: hb-calculate-rems(16px) 0
         hb-calculate-rems(20px);
 
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(24px);
+      }
+
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+        padding: hb-calculate-rems(20px) 0
           hb-calculate-rems(24px);
+
+        .hb-raised-cards & {
+          padding-inline: hb-calculate-rems(32px);
+        }
       }
     }
   }
@@ -246,22 +285,38 @@ $container-medium: hb-calculate-rems(768px);
 
     // Padding for horizontal cards without image.
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(20px) hb-calculate-rems(20px)
+      padding: hb-calculate-rems(20px) 0
         hb-calculate-rems(24px);
 
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(20px);
+      }
+
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(24px) hb-calculate-rems(32px)
+        padding: hb-calculate-rems(24px) 0
           hb-calculate-rems(32px);
+
+        .hb-raised-cards & {
+          padding-inline: hb-calculate-rems(32px);
+        }
       }
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(24px)
+      padding: hb-calculate-rems(16px) 0
         hb-calculate-rems(20px);
 
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(24px);
+      }
+
       @container card (width > #{$container-small}) {
-        padding: hb-calculate-rems(20px) hb-calculate-rems(32px)
+        padding: hb-calculate-rems(20px) 0
           hb-calculate-rems(24px);
+
+        .hb-raised-cards & {
+          padding-inline: hb-calculate-rems(32px);
+        }
       }
     }
   }
@@ -269,13 +324,21 @@ $container-medium: hb-calculate-rems(768px);
   // Padding for horizontal cards with image.
   .hb-card--horizontal:has(.hb-card__graphics) & {
     @include hb-themes(('colorful', 'airy')) {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(16px)
+      padding: hb-calculate-rems(16px) 0
         hb-calculate-rems(24px);
+
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(16px);
+      }
     }
 
     @include hb-traditional {
-      padding: hb-calculate-rems(16px) hb-calculate-rems(4px)
+      padding: hb-calculate-rems(16px) 0
         hb-calculate-rems(12px);
+
+      .hb-raised-cards & {
+        padding-inline: hb-calculate-rems(4px);
+      }
     }
   }
 
@@ -363,11 +426,9 @@ $container-medium: hb-calculate-rems(768px);
 
   a,
   a:not([class]) {
-    @include hb-more-link;
-
     font-size: unset;
-    text-decoration: none;
-    font-weight: hb-theme-font-weight(bold);
+    font-weight: hb-theme-font-weight(semibold);
+    text-decoration-color: color('gray-600', 'global');
 
     .hb-dark-pattern &,
     .hb-dark-inversion .views-element-container & {
@@ -376,6 +437,8 @@ $container-medium: hb-calculate-rems(768px);
 
     &:hover,
     &:focus {
+      text-decoration-color: color('link-base');
+
       .hb-dark-pattern &,
       .hb-dark-inversion .views-element-container & {
         color: var(--link-base-hover-current-color);

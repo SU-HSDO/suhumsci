@@ -90,9 +90,16 @@
   container-type: inline-size;
   container-name: collection;
 
-  // Default for components like Curriculum Maps
   .paragraph-item {
-    --columns: 1;
+    --columns: 1; // Default for components like Curriculum Maps
+    --gap-count: calc(var(--columns) - 1);
+    --gap-space: calc(var(--gap-count) * var(--gap));
+    --max-width: calc((100% - var(--gap-space)) / var(--columns));
+    flex: 0 0 var(--max-width);
+
+    @include grid-media-min('sm') {
+      margin: 0 !important;
+    }
   }
 
   .ptype-hs-testimonial,
@@ -172,19 +179,6 @@
       .ptype-hs-view {
         --columns: 1;
       }
-    }
-  }
-
-  .paragraph-item {
-    --gap-count: calc(var(--columns) - 1);
-    --gap-space: calc(var(--gap-count) * var(--gap));
-    --max-width: calc((100% - var(--gap-space)) /  var(--columns));
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: var(--max-width);
-
-    @include grid-media-min('sm') {
-      margin: 0 !important;
     }
   }
 

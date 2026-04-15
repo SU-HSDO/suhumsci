@@ -48,6 +48,17 @@ $cmap-colors: (
       minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr)
     );
     gap: var(--grid-layout-gap);
+
+    .hb-raised-cards--uniform-height & {
+      grid-auto-rows: auto;
+      gap: 0 var(--grid-layout-gap);
+
+      & > .paragraph-item {
+        display: grid;
+        grid-row: span 100;
+        grid-template-rows: subgrid;
+      }
+    }
   }
 
   .field-hs-cmap-year-qtr--cols-4 {
@@ -60,6 +71,12 @@ $cmap-colors: (
   display: flex;
   flex-direction: column;
   gap: hb-calculate-rems(16px);
+
+  .hb-raised-cards--uniform-height & {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 100;
+  }
 
   .field-hs-cmap-qtr-quarter {
     margin: 0;

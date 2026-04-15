@@ -18,7 +18,6 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
   $bundle = $paragraph->bundle();
 
   if (in_array($bundle, ['hs_collection', 'hs_priv_collection'])) {
-    $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
     $variables['attributes']['class'][] = 'hs-paragraph-style';
 
     if (!$paragraph->hasField('field_bg_color') || !$paragraph->hasField('field_bg_color_width')) {
@@ -59,7 +58,6 @@ function hs_paragraph_types_preprocess_field__field_hs_collection_items(&$variab
   $items_per_row = (int) $paragraph->get('field_hs_collection_per_row')
     ->getString();
   $variables['attributes']['class'][] = "item-per-row--$items_per_row";
-  $variables['#attached']['library'][] = 'hs_paragraph_types/hs_collection';
 }
 
 /**

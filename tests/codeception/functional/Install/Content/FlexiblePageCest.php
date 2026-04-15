@@ -66,7 +66,7 @@ class FlexiblePageCest {
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Collection');
     $I->click('Collection', '.paragraphs-ee-add-dialog');
-    $I->waitForText('Items Per Row');
+    $I->waitForText('Maximum items per row');
     $I->click('Add Component', '.field--name-field-hs-collection-items');
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Postcard');
@@ -499,8 +499,8 @@ class FlexiblePageCest {
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Collection');
     $I->click('Collection', '.paragraphs-ee-add-dialog');
-    $I->waitForText('Items Per Row');
-    $I->selectOption('Items Per Row', 2);
+    $I->waitForText('Maximum items per row');
+    $I->selectOption('Maximum items per row', 2);
     $I->canSeeOptionIsSelected('Background Color', '- None -');
     // Add a Text Area component to the Collection.
     $I->selectOption('Title Settings', 'I do not want a heading for this Collection');
@@ -512,7 +512,7 @@ class FlexiblePageCest {
     $I->waitForText('Add Component');
     $I->fillField('.paragraphs-ee-add-dialog input[type="search"]', 'Text Area');
     $I->click('Text Area', '.paragraphs-ee-add-dialog');
-    $I->waitForText('Items Per Row');
+    $I->waitForText('Maximum items per row');
     $I->waitForText('Text format');
     $I->fillField('.ck-editor__editable_inline:nth-child(1)', 'Foo Bar Baz');
     // Add a Postcard to the Collection.

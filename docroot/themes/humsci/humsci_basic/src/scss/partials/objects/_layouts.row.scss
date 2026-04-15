@@ -196,6 +196,33 @@
   }
 }
 
+// Overrides for one sidebar (main content is narrower)
+// only when sidebar is visible
+@media (min-width: 992px) {
+  .hb-three-column--one-sidebar .field-hs-collection-items {
+    @container collection (width < 868px) {
+      &.item-per-row--4 .ptype-hs-postcard,
+      &.item-per-row--4 .ptype-hs-view {
+        --columns: 3;
+      }
+
+      &:not(.item-per-row--1) {
+        .ptype-hs-testimonial,
+        .ptype-hs-accordion,
+        .ptype-hs-timeline {
+          --columns: 1;
+        }
+
+        .ptype-hs-text-area,
+        .ptype-hs-postcard,
+        .ptype-hs-view {
+          --columns: 2;
+        }
+      }
+    }
+  }
+}
+
 // Special title spacing for collections with an accordion as first child.
 .paragraph--type--hs-collection
   > h2:has(+ .field-hs-collection-items > .ptype-hs-accordion:first-child),

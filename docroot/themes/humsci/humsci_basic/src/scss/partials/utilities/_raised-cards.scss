@@ -144,7 +144,13 @@
       background-color: transparent;
     }
   }
+}
 
+// Colorful: all vertical cards in views with a `.hb-raised-cards` parent
+// container will have the bottom accent line.
+// .hb-raised-cards can be on the view or outside, so we add both cases.
+.hb-raised-cards .views-element-container,
+.views-element-container .hb-raised-cards {
   .hb-vertical-card,
   .hb-card--date-stacked {
     @include hb-themes(('airy', 'colorful')) {

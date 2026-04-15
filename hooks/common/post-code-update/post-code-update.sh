@@ -27,6 +27,6 @@ repo_root="/var/www/html/$site.$target_env"
 export PATH=$repo_root/vendor/bin:$PATH
 cd $repo_root
 
-drush sws:multisite:update:parallel
+drush sws:multisite:update:parallel --show-output
 
 set +v

@@ -20,10 +20,14 @@
     <button
         type="button"
         class="toggle-caption__toggle"
-        aria-hidden="true"
+        aria-expanded="false"
+        aria-label="{{ 'Show image caption'|t }}"
+        data-show-label="{{ 'Show image caption'|t }}"
+        data-hide-label="{{ 'Hide image caption'|t }}"
     >
     </button>
     <figcaption class="toggle-caption__content">
+      <span class="visually-hidden">{{ 'Image caption:'|t }}</span>
       {{ caption }}
     </figcaption>
   </div>

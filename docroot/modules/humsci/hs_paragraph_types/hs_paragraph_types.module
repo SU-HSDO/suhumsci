@@ -209,11 +209,7 @@ function hs_paragraph_types_field_widget_complete_options_select_form_alter(arra
  * Implements hook_entity_view_mode_alter().
  */
 function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
-  $bundles = ['hs_spotlight'];
-  if (!(
-    $entity instanceof ParagraphInterface &&
-    in_array($entity->bundle(), $bundles)
-  )) {
+  if (!($entity instanceof ParagraphInterface)) {
     return;
   }
 

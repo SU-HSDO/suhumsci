@@ -14,7 +14,10 @@ use Drupal\paragraphs\ParagraphInterface;
  */
 function su_humsci_gin_admin_form_alter(&$form, $form_state, $form_id) {
   // Adds the fe theme admin-preview library on flexible and private page forms.
-  if (preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id) || preg_match('/paragraph_\w+_entity_edit_form/', $form_id)) {
+  if (
+    preg_match('/node_hs_(basic|private)_page(_edit)?_form/', $form_id) ||
+    preg_match('/paragraph_\w+_entity_edit_form/', $form_id)
+  ) {
     $theme = \Drupal::config('system.theme')->get('default');
     $form['#attached']['library'][] = $theme . '/admin-preview';
     $form['#attached']['library'][] = $theme . '/admin-colors';
@@ -97,7 +100,7 @@ function su_humsci_gin_admin_preprocess_html(&$variables, $hook) {
     'humsci_traditional' => 'ht',
     'humsci_colorful' => 'hc',
   ];
-  $variables['html_attributes']->addClass('theme-' . (explode('_', $theme)[1] ?? $theme));
+  $variables['html_attributes']->addClass(Html::cleanCssIdentifier('theme-' . $theme));
   $variables['html_attributes']->addClass($prefix[$theme] . '-pairing-' . $color_pairing);
 }
 

@@ -24,7 +24,7 @@ If you want to use [Lando](https://lando.dev/) for local development, here are t
 
     This will:
     - Install PHP 8.3, MySQL 8.0, Node.js 24
-    - Run `composer install` and initialize BLT settings
+    - Run `composer install` and initialize settings
     - Patch local settings files for Lando compatibility
     - Set up the multisite domain mapping
 
@@ -71,7 +71,6 @@ Where `SITENAME` is the site directory name with underscores replaced by dashes 
 | `lando sync SITE_NAME` | Sync a site's database and files from Acquia |
 | `lando create-db SITE_NAME` | Create a local database for a multisite |
 | `lando drush @SITE_NAME.local COMMAND` | Run a drush command against a specific site |
-| `lando blt COMMAND` | Run a BLT command |
 | `lando composer COMMAND` | Run composer commands |
 | `lando node` / `lando npm` | Run Node.js / npm commands |
 
@@ -134,34 +133,22 @@ docker rm -f landoproxyhyperion5000gandalfedition_proxy_1
 lando rebuild
 ```
 
-## Adding a New Site to Lando
-
-Because the wildcard proxy and dynamic `sites.php` mapping handle routing automatically, adding a new site is simple:
-
-1. Create the site directory under `docroot/sites/` with the appropriate settings files (copy from an existing site).
-2. Add the site to `blt/blt.yml` under `multisites`.
-3. Run `lando rebuild -y` to regenerate settings files.
-4. Sync the database: `lando sync NEW_SITE_NAME`
-
-No changes to `.lando.yml` or `/etc/hosts` are needed.
-
 ## Syncing from Staging or Dev
 
 To sync from staging or dev instead of production:
 
-1. In `docroot/sites/SITENAME/blt.yml`, change the `remote` value to: `SITE_NAME.stage` or `SITE_NAME.dev`.
+1. In `docroot/sites/SITENAME/sws.yml`, change the `remote` value to: `SITE_NAME.stage` or `SITE_NAME.dev`.
 2. Sync as usual: `lando sync SITENAME`.
+3. Do not commit changes to `sws.yml`
 
-## Configuration for local SimpleSAML authentication
+## Configuration for local SAML authentication
 
-To configure the SimpleSAML module for local SSO login:
+To configure the SAML module for local SSO login:
 
-1. Run `lando blt sws:keys`
-2. Run `lando blt sbsc`
-3. Edit `simplesamlphp/config/local.config.php` to match your database host/credentials.
-4. Run `lando blt sbsc` again, then clear cache: `lando drush @SITE_NAME.local cr`
+1. Run `lando drush sws:keys`
+2. Clear cache: `lando drush @SITE_NAME.local cr`
 
-**Note:** SimpleSAML may throw errors on the login page after login. Clearing browser cookies for that site resolves this.
+**Note:** SAML may throw errors on the login page after login. Clearing browser cookies for that site resolves this.
 
 ## Other Useful Links
 

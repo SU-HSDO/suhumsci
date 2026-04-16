@@ -5,8 +5,7 @@
  * Local development override configuration feature.
  */
 
-use Acquia\Blt\Robo\Common\EnvironmentDetector;
-
+use Drupal\SwsDrush\Helpers\EnvironmentDetector;
 $db_name = '${drupal.db.database}_' . basename(dirname(__FILE__, 2));
 
 /**
@@ -22,7 +21,7 @@ $databases = [
       'password' => '${drupal.db.password}',
       'host' => '${drupal.db.host}',
       'port' => '${drupal.db.port}',
-      'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
+      'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
       'driver' => 'mysql',
       'prefix' => '',
     ],
@@ -31,7 +30,6 @@ $databases = [
 
 // Use development service parameters.
 $settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/development.services.yml';
-$settings['container_yamls'][] = EnvironmentDetector::getRepoRoot() . '/docroot/sites/blt.development.services.yml';
 
 // Allow access to update.php.
 $settings['update_free_access'] = TRUE;

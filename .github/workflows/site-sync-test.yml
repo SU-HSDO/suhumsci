@@ -56,7 +56,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - run: git config --system --add safe.directory '*'
       - name: Sync Default Site
         run: |
@@ -65,7 +65,7 @@ jobs:
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           ssh-keyscan -t rsa humscigryphon.ssh.prod.acquia-sites.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt settings &&
+          drush sws:multisite:settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:sync --site=default -n
+          drush sws:site:sync --site=default -n

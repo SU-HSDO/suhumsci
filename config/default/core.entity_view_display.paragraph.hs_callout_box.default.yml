@@ -10,7 +10,6 @@ dependencies:
     - paragraphs.paragraphs_type.hs_callout_box
   module:
     - ds
-    - style_selector
     - text
 third_party_settings:
   ds:
@@ -35,14 +34,6 @@ targetEntityType: paragraph
 bundle: hs_callout_box
 mode: default
 content:
-  field_hs_callout_align:
-    type: style_selector_css_class_formatter
-    label: above
-    settings:
-      extra_classes: ''
-    third_party_settings: {  }
-    weight: 1
-    region: content
   field_hs_callout_box_body:
     type: text_default
     label: hidden
@@ -51,6 +42,7 @@ content:
     weight: 0
     region: callout
 hidden:
+  field_hs_callout_align: true
   field_hs_callout_box_align: true
   field_hs_callout_style: true
   search_api_excerpt: true

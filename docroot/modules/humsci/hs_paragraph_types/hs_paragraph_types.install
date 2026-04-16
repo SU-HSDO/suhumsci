@@ -859,11 +859,20 @@ function hs_paragraph_types_update_10022() {
   $storage_config = $config_storage->read('field.storage.paragraph.field_hs_testimonial_align');
   if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
     $field_storage->createFromStorageRecord($storage_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+      '%field_name' => $storage_config['field_name'],
+      '%entity_type' => $storage_config['entity_type'],
+    ]);
   }
 
   $field_config = $config_storage->read('field.field.paragraph.hs_testimonial.field_hs_testimonial_align');
   if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_testimonial.' . $field_config['field_name']))) {
     $field_config_storage->create($field_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+      '%field_name' => $field_config['field_name'],
+      '%entity_type' => $field_config['entity_type'],
+      '%bundle' => $field_config['bundle'],
+    ]);
   }
 }
 
@@ -879,6 +888,7 @@ function hs_paragraph_types_update_10023(&$sandbox) {
       ->condition('type', 'hs_testimonial')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
   }
 
   $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
@@ -899,8 +909,14 @@ function hs_paragraph_types_update_10023(&$sandbox) {
 
     if ($save_needed) {
       $paragraph->save();
+      $sandbox['updated']++;
     }
   }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_testimonial paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }

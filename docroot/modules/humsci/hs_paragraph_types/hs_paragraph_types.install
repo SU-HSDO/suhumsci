@@ -735,6 +735,10 @@ function hs_paragraph_types_update_10020() {
     $storage_config = $config_storage->read($storage_name);
     if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
       $field_storage->createFromStorageRecord($storage_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+        '%field_name' => $storage_config['field_name'],
+        '%entity_type' => $storage_config['entity_type'],
+      ]);
     }
   }
 
@@ -749,6 +753,11 @@ function hs_paragraph_types_update_10020() {
     $field_config = $config_storage->read($field_name);
     if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_spotlight.' . $field_config['field_name']))) {
       $field_config_storage->create($field_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+        '%field_name' => $field_config['field_name'],
+        '%entity_type' => $field_config['entity_type'],
+        '%bundle' => $field_config['bundle'],
+      ]);
     }
   }
 }
@@ -765,6 +774,7 @@ function hs_paragraph_types_update_10021(&$sandbox) {
       ->condition('type', 'hs_spotlight')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
   }
 
   $height_map = [
@@ -777,7 +787,7 @@ function hs_paragraph_types_update_10021(&$sandbox) {
     'expanded' => 'expanded',
   ];
 
-  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
@@ -822,8 +832,14 @@ function hs_paragraph_types_update_10021(&$sandbox) {
 
     if ($save_needed) {
       $paragraph->save();
+      $sandbox['updated']++;
     }
   }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_spotlight paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
@@ -843,11 +859,18 @@ function hs_paragraph_types_update_10022() {
 
   foreach ($fields_to_delete as $bundle => $fields) {
     foreach ($fields as $field) {
-      if ($display_field = FieldConfig::loadByName('paragraph', $bundle, $field)) {
-        $display_field->delete();
+      if ($field_config = FieldConfig::loadByName('paragraph', $bundle, $field)) {
+        $field_config->delete();
+        \Drupal::logger('hs_paragraph_types')->notice('Removed field instance %field_name from paragraph.%bundle.', [
+          '%field_name' => $field,
+          '%bundle' => $bundle,
+        ]);
       }
-      if ($display_storage = FieldStorageConfig::loadByName('paragraph', $field)) {
-        $display_storage->delete();
+      if ($field_storage = FieldStorageConfig::loadByName('paragraph', $field)) {
+        $field_storage->delete();
+        \Drupal::logger('hs_paragraph_types')->notice('Removed field storage %field_name from paragraph.', [
+          '%field_name' => $field,
+        ]);
       }
     }
   }

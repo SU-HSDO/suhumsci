@@ -177,12 +177,18 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
   }
 
   $spotlight_type = 'framed';
-  if ($paragraph->hasField('field_hs_spotlight_style') && !$paragraph->get('field_hs_spotlight_style')->isEmpty()) {
+  if (
+    $paragraph->hasField('field_hs_spotlight_style') &&
+    !$paragraph->get('field_hs_spotlight_style')->isEmpty()
+  ) {
     $spotlight_type = $paragraph->get('field_hs_spotlight_style')->value;
   }
 
   $image_height = 'tall';
-  if ($paragraph->hasField('field_hs_spotlight_image_height') && !$paragraph->get('field_hs_spotlight_image_height')->isEmpty()) {
+  if (
+    $paragraph->hasField('field_hs_spotlight_image_height') &&
+    !$paragraph->get('field_hs_spotlight_image_height')->isEmpty()
+  ) {
     $image_height = $paragraph->get('field_hs_spotlight_image_height')->value;
   }
   $variables['attributes']->addClass('hb-spotlight--view-mode-' . $image_height);

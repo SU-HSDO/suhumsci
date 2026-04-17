@@ -3,8 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.hs_priv_collection.field_bg_color
-    - field.field.paragraph.hs_priv_collection.field_bg_color_width
+    - field.field.paragraph.hs_priv_collection.field_hs_collection_background
+    - field.field.paragraph.hs_priv_collection.field_hs_collection_bg_width
     - field.field.paragraph.hs_priv_collection.field_hs_collection_items
     - field.field.paragraph.hs_priv_collection.field_hs_collection_per_row
     - field.field.paragraph.hs_priv_collection.field_hs_collection_uh
@@ -14,31 +14,55 @@ dependencies:
     - paragraphs.paragraphs_type.hs_priv_collection
   module:
     - conditional_fields
+    - field_formatter_class
     - paragraphs
     - paragraphs_ee
     - paragraphs_features
+    - style_selector
 id: paragraph.hs_priv_collection.default
 targetEntityType: paragraph
 bundle: hs_priv_collection
 mode: default
 content:
-  field_bg_color:
-    type: options_select
-    weight: 3
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_bg_color_width:
-    type: options_select
+  field_hs_collection_background:
+    type: style_selector_tile_widget
     weight: 4
     region: content
-    settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: color-widget
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
     third_party_settings:
+      field_formatter_class:
+        class: ''
+  field_hs_collection_bg_width:
+    type: style_selector_tile_widget
+    weight: 6
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
       conditional_fields:
-        6d910fc3-1e3b-4f69-86c7-679fa8dd308b:
+        243f6863-3ab6-46c8-9076-084fea25af79:
           entity_type: paragraph
-          bundle: hs_collection
-          dependee: field_bg_color
+          bundle: hs_priv_collection
+          dependee: field_hs_collection_background
           settings:
             state: visible
             reset: false
@@ -49,13 +73,13 @@ content:
             values: _none
             value_form:
               -
-                value: default
+                value: null
             effect: show
             effect_options: {  }
             selector: ''
   field_hs_collection_items:
     type: paragraphs
-    weight: 7
+    weight: 9
     region: content
     settings:
       title: Paragraph
@@ -92,7 +116,7 @@ content:
     third_party_settings: {  }
   field_hs_collection_uh:
     type: boolean_checkbox
-    weight: 6
+    weight: 8
     region: content
     settings:
       display_label: true
@@ -100,7 +124,7 @@ content:
       conditional_fields: {  }
   field_raised_cards:
     type: boolean_checkbox
-    weight: 5
+    weight: 7
     region: content
     settings:
       display_label: true

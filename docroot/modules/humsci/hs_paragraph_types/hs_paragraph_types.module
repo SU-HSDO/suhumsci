@@ -225,6 +225,7 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
       }
       $view_mode = $entity->get('field_hs_spotlight_image_height')->value == 'tall' ? 'default' : 'preview';
       break;
+
     case 'hs_callout_box':
       if (!$entity->hasField('field_hs_callout_background') || $entity->get('field_hs_callout_background')->isEmpty()) {
         break;

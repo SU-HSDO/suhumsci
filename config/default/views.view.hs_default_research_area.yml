@@ -163,40 +163,40 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 0
+          default_field_elements: false
           inline:
-            title: 0
-            body: 0
-            custm_image_research_area: 0
-            view_node: 0
+            title: '0'
+            body: '0'
+            custm_image_research_area: '0'
+            view_node: '0'
           separator: ''
-          hide_empty: 0
+          hide_empty: false
           pattern: horizontal_card
+          pattern_mapping:
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 0
+            'views_row:custm_image_research_area':
+              plugin: views_row
+              source: custm_image_research_area
+              destination: image
+              weight: 1
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 2
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 3
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:title':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: title
-            'views_row:custm_image_research_area':
-              destination: image
-              weight: 1
-              plugin: views_row
-              source: custm_image_research_area
-            'views_row:body':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: body
-            'views_row:view_node':
-              destination: button
-              weight: 3
-              plugin: views_row
-              source: view_node
       query:
         type: views_query
         options:
@@ -616,40 +616,40 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 0
+          default_field_elements: false
           inline:
-            title: 0
-            body: 0
-            custm_image_research_area: 0
-            view_node: 0
+            title: '0'
+            body: '0'
+            custm_image_research_area: '0'
+            view_node: '0'
           separator: ''
-          hide_empty: 0
+          hide_empty: false
           pattern: vertical_link_card
+          pattern_mapping:
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 0
+            'views_row:view_node':
+              plugin: views_row
+              source: view_node
+              destination: button
+              weight: 1
+            'views_row:body':
+              plugin: views_row
+              source: body
+              destination: description
+              weight: 2
+            'views_row:custm_image_research_area':
+              plugin: views_row
+              source: custm_image_research_area
+              destination: image
+              weight: 3
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:title':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: title
-            'views_row:view_node':
-              destination: button
-              weight: 1
-              plugin: views_row
-              source: view_node
-            'views_row:body':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: body
-            'views_row:custm_image_research_area':
-              destination: image
-              weight: 3
-              plugin: views_row
-              source: custm_image_research_area
       defaults:
         style: false
         row: false

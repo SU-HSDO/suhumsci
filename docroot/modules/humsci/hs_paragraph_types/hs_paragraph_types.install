@@ -907,6 +907,12 @@ function hs_paragraph_types_update_10023(&$sandbox) {
     $sandbox['total'] = count($sandbox['ids']);
   }
 
+  // Map old width machine names (underscores) to new ones (hyphens).
+  $width_map = [
+    'limited_width' => 'limited-width',
+    'full_width'    => 'full-width',
+  ];
+
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
@@ -915,6 +921,7 @@ function hs_paragraph_types_update_10023(&$sandbox) {
     $save_needed = FALSE;
 
     // Migrate field_bg_color -> field_hs_collection_background.
+    // Empty/null values become "none-background" in the new field.
     if ($paragraph->hasField('field_bg_color') && $paragraph->hasField('field_hs_collection_background')) {
       $value = $paragraph->get('field_bg_color')->value;
       if (!empty($value)) {
@@ -928,10 +935,11 @@ function hs_paragraph_types_update_10023(&$sandbox) {
     }
 
     // Migrate field_bg_color_width -> field_hs_collection_bg_width.
+    // Only migrate if a value exists and a mapping is defined.
     if ($paragraph->hasField('field_bg_color_width') && $paragraph->hasField('field_hs_collection_bg_width')) {
       $value = $paragraph->get('field_bg_color_width')->value;
-      if (!empty($value)) {
-        $paragraph->set('field_hs_collection_bg_width', $value);
+      if (!empty($value) && isset($width_map[$value])) {
+        $paragraph->set('field_hs_collection_bg_width', $width_map[$value]);
         $save_needed = TRUE;
       }
     }

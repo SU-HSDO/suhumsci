@@ -220,5 +220,12 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
       }
       $view_mode = $entity->get('field_hs_spotlight_image_height')->value == 'tall' ? 'default' : 'preview';
       break;
+
+    case 'hs_clr_bnd':
+      if (!$entity->hasField('field_hs_clr_bnd_width') || $entity->get('field_hs_clr_bnd_width')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_clr_bnd_width')->value == 'full-width' ? 'default' : 'preview';
+      break;
   }
 }

@@ -58,8 +58,8 @@ function ui_patterns_field_variants_ui_patterns_layouts_display_settings_form_al
     '#states' => [
       'visible' => [
         ':input[name="layout_configuration[pattern][variant]"]' => ['value' => '_field'],
-      ]
-    ]
+      ],
+    ],
   ];
 
   $form['variant_field_values'] = [
@@ -69,15 +69,15 @@ function ui_patterns_field_variants_ui_patterns_layouts_display_settings_form_al
     '#states' => [
       'visible' => [
         ':input[name="layout_configuration[pattern][variant]"]' => ['value' => '_field'],
-      ]
-    ]
+      ],
+    ],
   ];
 
   foreach ($form['variant']['#options'] as $key => $label) {
     if ($key == '_field') {
       continue;
     }
-    // TODO: find a way to render the field's form.
+    // @todo Find a way to render the field's form.
     $form['variant_field_values'][$key] = [
       '#type' => 'textfield',
       '#title' => t('Field value for @variant variant', ['@variant' => $label]),

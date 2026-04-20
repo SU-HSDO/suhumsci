@@ -33,7 +33,7 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     // Append "-well" to the bg_color.
     $bg_width = $paragraph->get('field_hs_collection_bg_width')->getString();
     if (!empty($bg_color) && $bg_color !== 'none-background') {
-      $bg_width_class = $bg_width == 'full_width' ? 'well-full-width' : 'well';
+      $bg_width_class = $bg_width == 'full-width' ? 'well-full-width' : 'well';
       $bg_color .= '-well';
       $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_width_class;
       $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;

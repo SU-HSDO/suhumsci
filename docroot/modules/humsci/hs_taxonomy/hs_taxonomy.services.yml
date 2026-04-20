@@ -1,0 +1,6 @@
+services:
+  hs_taxonomy.taxonomy_term_view_redirect_subscriber:
+    class: 'Drupal\hs_taxonomy\EventSubscriber\TaxonomyTermViewRedirectSubscriber'
+    arguments: ['@messenger', '@current_user', '@state']
+    tags:
+      - { name: event_subscriber }

@@ -1,4 +1,4 @@
-# Stanford School of Humanities And Sciences HSDP
+# Stanford School of Humanities And Sciences HSDP - SANDBOX
 
 This codebase runs the Humanities and Sciences Drupal (or Digital) Platform a.k.a. HSDP.  This platform runs 130+ sites for departments, programs, centers, councils, initiatives, etc. The platform is hosted on Acquia.
 

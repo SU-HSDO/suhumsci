@@ -920,6 +920,9 @@ function hs_paragraph_types_update_10023(&$sandbox) {
       if (!empty($value)) {
         $paragraph->set('field_hs_collection_background', $value);
         $save_needed = TRUE;
+      } else {
+        $paragraph->set('field_hs_collection_background', 'none-background');
+        $save_needed = TRUE;
       }
     }
 
@@ -927,7 +930,7 @@ function hs_paragraph_types_update_10023(&$sandbox) {
     if ($paragraph->hasField('field_bg_color_width') && $paragraph->hasField('field_hs_collection_bg_width')) {
       $value = $paragraph->get('field_bg_color_width')->value;
       if (!empty($value)) {
-        $paragraph->set('field_hs_collection_bg_width', $height_map[$value]);
+        $paragraph->set('field_hs_collection_bg_width', $value);
         $save_needed = TRUE;
       }
     }

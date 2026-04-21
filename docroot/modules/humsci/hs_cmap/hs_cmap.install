@@ -27,3 +27,38 @@ function hs_cmap_update_10001() {
     'use text format bold_italics_links',
   ]);
 }
+
+/**
+ * Update field_hs_cmap_crs_course to use minimal_text_formatting format.
+ */
+function hs_cmap_update_10002() {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $paragraph_storage = $entity_type_manager->getStorage('paragraph');
+
+  // Load all hs_cmap_qtr_crs paragraphs.
+  $ids = $paragraph_storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'hs_cmap_qtr_crs')
+    ->condition('field_hs_cmap_crs_course', NULL, 'IS NOT NULL')
+    ->execute();
+
+  if (empty($ids)) {
+    return;
+  }
+
+  $paragraphs = $paragraph_storage->loadMultiple($ids);
+
+  foreach ($paragraphs as $paragraph) {
+    if ($paragraph->get('field_hs_cmap_crs_course')->isEmpty()) {
+      continue;
+    }
+
+    $field_items = $paragraph->get('field_hs_cmap_crs_course');
+    foreach ($field_items as $item) {
+      $item->format = 'minimal_text_formatting';
+    }
+
+    $paragraph->setNewRevision(FALSE);
+    $paragraph->save();
+  }
+}

@@ -4,6 +4,9 @@
 @use '../mixins/decorative' as *;
 @use '../mixins/icons' as *;
 
+$container-small: hb-calculate-rems(576px);
+$container-medium: hb-calculate-rems(768px);
+
 .hb-raised-cards {
   // The uniform-height modifier adds the ability for cards to be consistent height regardless of content.
   &--uniform-height .hs-paragraph-style .ptype-hs-postcard,
@@ -116,6 +119,129 @@
         .hb-card__date-tile {
           top: hb-calculate-rems(22px);
           left: hb-calculate-rems(-14px);
+        }
+      }
+    }
+  }
+
+  // Card content padding adjustments for raised cards.
+  .hb-vertical-card,
+  .hb-card--date-stacked {
+    .hb-card__content {
+      @include hb-themes(('colorful', 'airy')) {
+        padding-inline: hb-calculate-rems(16px);
+
+        @container card (width > #{$container-small}) {
+          padding-inline: hb-calculate-rems(32px);
+        }
+      }
+
+      @include hb-traditional {
+        padding-inline: hb-calculate-rems(14px);
+
+        @container card (width > #{$container-small}) {
+          padding-inline: hb-calculate-rems(24px);
+        }
+      }
+    }
+
+    &.hb-card--no-image {
+      .hb-card__content {
+        @include hb-themes(('colorful', 'airy')) {
+          padding-inline: hb-calculate-rems(20px);
+
+          @container card (width > #{$container-small}) {
+            padding-inline: hb-calculate-rems(32px);
+          }
+        }
+
+        @include hb-traditional {
+          padding-inline: hb-calculate-rems(24px);
+
+          @container card (width > #{$container-small}) {
+            padding-inline: hb-calculate-rems(32px);
+          }
+        }
+      }
+    }
+  }
+
+  .hb-card--horizontal {
+    .hb-card__content {
+      // Padding for horizontal cards without image.
+      @include hb-themes(('colorful', 'airy')) {
+        padding-inline: hb-calculate-rems(20px);
+
+        @container card (width > #{$container-small}) {
+          padding-inline: hb-calculate-rems(32px);
+        }
+      }
+
+      @include hb-traditional {
+        padding-inline: hb-calculate-rems(24px);
+
+        @container card (width > #{$container-small}) {
+          padding-inline: hb-calculate-rems(32px);
+        }
+      }
+    }
+
+    &:has(.hb-card__graphics) {
+      .hb-card__content {
+        @include hb-themes(('colorful', 'airy')) {
+          padding-inline: hb-calculate-rems(16px);
+        }
+
+        @include hb-traditional {
+          padding-inline: hb-calculate-rems(4px);
+        }
+      }
+
+      &.hb-card--horizontal--left {
+        .hb-card__content {
+          @include hb-themes(('colorful', 'airy')) {
+            @container card (width > #{$container-small}) {
+              padding-inline: hb-calculate-rems(12px) hb-calculate-rems(24px);
+            }
+
+            @container card (width > #{$container-medium}) {
+              padding-inline: hb-calculate-rems(20px) hb-calculate-rems(32px);
+            }
+          }
+
+          @include hb-traditional {
+            @container card (width > #{$container-small}) {
+              padding-inline: hb-calculate-rems(20px) 0;
+            }
+
+            @container card (width > #{$container-medium}) {
+              padding-inline: hb-calculate-rems(32px) 0;
+            }
+          }
+        }
+      }
+
+      &.hb-card--horizontal--right {
+        .hb-card__content {
+          @include hb-themes(('colorful', 'airy')) {
+            @container card (width > #{$container-small}) {
+              padding-inline: hb-calculate-rems(24px) hb-calculate-rems(12px);
+            }
+
+            @container card (width > #{$container-medium}) {
+              padding-inline: hb-calculate-rems(32px) hb-calculate-rems(20px);
+            }
+          }
+
+          @include hb-traditional {
+            @container card (width > #{$container-small}) {
+              padding-inline: 0 hb-calculate-rems(20px);
+            }
+
+            @container card (width > #{$container-medium}) {
+              padding-inline: 0 hb-calculate-rems(32px);
+            }
+          }
         }
       }
     }

@@ -1,0 +1,39 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function hs_events_importer_form_config_pages_localist_events_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#validate'][] = 'hs_events_importer_localist_events_validate';
+}
+
+/**
+ * Custom validation handler for localist_events config page.
+ */
+function hs_events_importer_localist_events_validate($form, FormStateInterface $form_state) {
+  // Validate bookmark URL's.
+  $fields = [
+    'field_url_book_s' => 'Bookmark URL (S)',
+    'field_url_book_i' => 'Bookmark URL (I)',
+  ];
+  $pattern = '/^https:\/\/events-legacy\.stanford\.edu\/bookmark\/feed\.php\?slug=.+$/';
+
+  foreach ($fields as $field_name => $label) {
+    $values = $form_state->getValue($field_name);
+    if (!is_array($values)) {
+      continue;
+    }
+    foreach ($values as $delta => $item) {
+      // Only process numeric keys and arrays.
+      if (!is_int($delta) || !is_array($item)) {
+        continue;
+      }
+      $uri = $item['uri'] ?? '';
+      if (!empty($uri) && !preg_match($pattern, $uri)) {
+        $form_state->setErrorByName("{$field_name}][$delta][uri", t('Only bookmark URLs are supported. Example: https://events-legacy.stanford.edu/bookmark/feed.php?slug=your-slug'));
+      }
+    }
+  }
+}

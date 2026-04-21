@@ -1190,3 +1190,20 @@ function su_humsci_profile_update_9757() {
 function su_humsci_profile_update_9758() {
   \Drupal::service('module_installer')->install(['hs_config_partial']);
 }
+
+/**
+ * Delete field_validation ruleset.
+ */
+function su_humsci_profile_update_9759() {
+  $field_validation_rule = \Drupal::configFactory()->getEditable('field_validation.rule_set.config_pages_localist_events');
+  $field_validation_rule->delete();
+  return t('Deleted field_validation ruleset.');
+}
+
+/**
+ * Uninstall the field_validation module.
+ */
+function su_humsci_profile_update_9760() {
+  \Drupal::service('module_installer')->uninstall(['field_validation']);
+  return t('Uninstalled the field_validation module.');
+}

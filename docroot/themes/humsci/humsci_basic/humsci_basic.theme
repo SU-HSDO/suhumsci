@@ -147,16 +147,16 @@ function humsci_basic_preprocess_html(&$vars) {
   if ($bundle === 'hs_sptlght_slder') {
     $image_referenced = $entity->get($image_field)->entity ?? '';
     if ($image_referenced) {
-      $spotlight_style = $entity->get('field_spotlight_style')->value;
-      $spotlight_height = $entity->get('field_hs_spotlight_height')->value;
+      $spotlight_style = $entity->get('field_hs_spotlight_style')->value;
+      $spotlight_height = $entity->get('field_hs_spotlight_image_height')->value;
       $spotlight_image_styles = [
-        'classic' => [
-          'default' => 'spotlight_framed_tall_xs_2x',
-          'preview' => 'spotlight_framed_short_xs_2x',
+        'framed' => [
+          'tall' => 'spotlight_framed_tall_xs_2x',
+          'short' => 'spotlight_framed_short_xs_2x',
         ],
         'expanded' => [
-          'default' => 'spotlight_md_2x_892px',
-          'preview' => 'spotlight_short_md_2x_892px',
+          'tall' => 'spotlight_md_2x_892px',
+          'short' => 'spotlight_short_md_2x_892px',
         ],
       ];
       $style_name = $spotlight_image_styles[$spotlight_style][$spotlight_height];

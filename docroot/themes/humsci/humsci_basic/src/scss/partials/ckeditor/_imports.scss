@@ -34,7 +34,9 @@
 
 // See _base.scss in basic theme. We only need the below for CKEditor.
 // Otherwise styles affect the entire admin UI.
-:root {
+
+.ck-editor__main {
+  // Colors.
   @include generate-css-vars('su-core', $su-core-colors);
 
   @include hb-themes(('colorful', 'airy')) {
@@ -46,9 +48,7 @@
     @include generate-css-vars('traditional-pairings', map.get($traditional-pairings-colors, $hb-traditional-default));
     @include generate-css-vars('traditional-global', $traditional-global-colors);
   }
-}
 
-.ck-editor__main {
   @include font-smoothing;
 
   @include hb-themes(('colorful', 'airy')) {

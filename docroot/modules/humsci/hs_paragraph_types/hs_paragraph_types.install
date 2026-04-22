@@ -711,3 +711,167 @@ function hs_paragraph_types_update_10019(&$sandbox) {
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
 }
+
+/**
+ * Creates new fields for paragraph visual variants.
+ */
+function hs_paragraph_types_update_10020() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storages_to_create = [
+    'field.storage.paragraph.field_hs_spotlight_background',
+    'field.storage.paragraph.field_hs_spotlight_image_height',
+    'field.storage.paragraph.field_hs_spotlight_style',
+    'field.storage.paragraph.field_hs_spotlight_media_align',
+  ];
+
+  foreach ($storages_to_create as $storage_name) {
+    $storage_config = $config_storage->read($storage_name);
+    if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+      $field_storage->createFromStorageRecord($storage_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+        '%field_name' => $storage_config['field_name'],
+        '%entity_type' => $storage_config['entity_type'],
+      ]);
+    }
+  }
+
+  $fields_to_create = [
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_background',
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_image_height',
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_style',
+    'field.field.paragraph.hs_spotlight.field_hs_spotlight_media_align',
+  ];
+
+  foreach ($fields_to_create as $field_name) {
+    $field_config = $config_storage->read($field_name);
+    if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_spotlight.' . $field_config['field_name']))) {
+      $field_config_storage->create($field_config)->save();
+      \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+        '%field_name' => $field_config['field_name'],
+        '%entity_type' => $field_config['entity_type'],
+        '%bundle' => $field_config['bundle'],
+      ]);
+    }
+  }
+}
+
+/**
+ * Migrate Spotlight paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10021(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_spotlight')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $height_map = [
+    'default' => 'tall',
+    'preview' => 'short',
+  ];
+
+  $style_map = [
+    'classic' => 'framed',
+    'expanded' => 'expanded',
+  ];
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_spotlight_bg -> field_hs_spotlight_background.
+    if ($paragraph->hasField('field_hs_spotlight_bg') && $paragraph->hasField('field_hs_spotlight_background')) {
+      $value = $paragraph->get('field_hs_spotlight_bg')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_spotlight_background', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_spotlight_height -> field_hs_spotlight_image_height.
+    if ($paragraph->hasField('field_hs_spotlight_height') && $paragraph->hasField('field_hs_spotlight_image_height')) {
+      $value = $paragraph->get('field_hs_spotlight_height')->value;
+      if (!empty($value) && isset($height_map[$value])) {
+        $paragraph->set('field_hs_spotlight_image_height', $height_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_spotlight_style -> field_hs_spotlight_image_style.
+    if ($paragraph->hasField('field_spotlight_style') && $paragraph->hasField('field_hs_spotlight_style')) {
+      $value = $paragraph->get('field_spotlight_style')->value;
+      if (!empty($value) && isset($style_map[$value])) {
+        $paragraph->set('field_hs_spotlight_style', $style_map[$value]);
+        $save_needed = TRUE;
+      }
+    }
+
+    // Migrate field_hs_spotlight_image_align -> field_hs_spotlight_media_align.
+    if ($paragraph->hasField('field_hs_spotlight_image_align') && $paragraph->hasField('field_hs_spotlight_media_align')) {
+      $value = $paragraph->get('field_hs_spotlight_image_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_spotlight_media_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_spotlight paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Removes legacy paragraph fields.
+ */
+function hs_paragraph_types_update_10022() {
+  $fields_to_delete = [
+    'hs_spotlight' => [
+      'field_hs_spotlight_bg',
+      'field_hs_spotlight_image_align',
+      'field_hs_spotlight_height',
+      'field_spotlight_style',
+    ],
+  ];
+
+  foreach ($fields_to_delete as $bundle => $fields) {
+    foreach ($fields as $field) {
+      if ($field_config = FieldConfig::loadByName('paragraph', $bundle, $field)) {
+        $field_config->delete();
+        \Drupal::logger('hs_paragraph_types')->notice('Removed field instance %field_name from paragraph.%bundle.', [
+          '%field_name' => $field,
+          '%bundle' => $bundle,
+        ]);
+      }
+      if ($field_storage = FieldStorageConfig::loadByName('paragraph', $field)) {
+        $field_storage->delete();
+        \Drupal::logger('hs_paragraph_types')->notice('Removed field storage %field_name from paragraph.', [
+          '%field_name' => $field,
+        ]);
+      }
+    }
+  }
+}

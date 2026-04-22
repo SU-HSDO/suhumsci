@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_align
+    - field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_alignment
     - field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_body
     - field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_image
     - field.field.paragraph.hs_gradient_hero.field_hs_gradient_hero_link
@@ -11,9 +12,11 @@ dependencies:
     - paragraphs.paragraphs_type.hs_gradient_hero
   module:
     - allowed_formats
+    - field_formatter_class
     - linkit
     - maxlength
     - media_library
+    - style_selector
     - text
 id: paragraph.hs_gradient_hero.default
 targetEntityType: paragraph
@@ -26,6 +29,23 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_hs_gradient_hero_alignment:
+    type: style_selector_tile_widget
+    weight: 6
+    region: content
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_gradient_hero_body:
     type: text_textarea
     weight: 2
@@ -57,6 +77,7 @@ content:
       placeholder_url: ''
       placeholder_title: ''
       linkit_profile: default
+      linkit_auto_link_text: false
     third_party_settings:
       maxlength:
         maxlength_js: 80

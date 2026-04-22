@@ -191,7 +191,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          drush sws:codeception --suite=acceptance --group=install
+          drush sws:codeception --suite=acceptance --group=install -vv
       - name: Save Acceptance Test Results
         uses: actions/upload-artifact@v7
         if: always()

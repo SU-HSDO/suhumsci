@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\su_humsci_profile\Overrides;
+namespace Drupal\hs_config_overrides\Overrides;
 
 use Drupal\config_pages\ConfigPagesLoaderServiceInterface;
 use Drupal\Core\Cache\CacheableMetadata;

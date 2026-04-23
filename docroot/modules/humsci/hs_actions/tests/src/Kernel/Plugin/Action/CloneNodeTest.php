@@ -47,7 +47,6 @@ class CloneNodeTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('field_config');
     $this->installEntitySchema('field_storage_config');
 

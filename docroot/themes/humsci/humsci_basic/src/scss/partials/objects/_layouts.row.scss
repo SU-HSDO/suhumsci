@@ -6,6 +6,12 @@
 @use '../mixins/layout' as *;
 @use '../mixins/breakpoints' as *;
 
+// Container queries only accept SCSS variables.
+$container-lg-width: hb-calculate-rems(992px);
+$container-md-width: hb-calculate-rems(768px);
+$container-sm-width: hb-calculate-rems(576px);
+$container-with-sidebar-width: hb-calculate-rems(868px);
+
 // Collection Paragraph Styles
 .hs-paragraph-style {
   &--well,
@@ -84,6 +90,7 @@
 
 .field-hs-collection-items {
   --gap: #{hb-calculate-rems(48px)};
+
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap);
@@ -140,30 +147,24 @@
     }
   }
 
-  // Component‑specific default columns.
-  .ptype-hs-spotlight,
-  .ptype-hs-gradient-hero-slider,
-  .ptype-hs-banner,
-  .ptype-hs-hero-image {
-    flex-basis: 100%;
-  }
-
   // Responsive container queries (per component)
-  @container collection (width < 992px) {
+  @container collection (width < #{$container-lg-width}) {
     &.item-per-row--4 .ptype-hs-postcard,
     &.item-per-row--4 .ptype-hs-view {
       --columns: 3;
     }
   }
 
-  @container collection (width < 768px) {
-    &:not(.item-per-row--1) {
-      .ptype-hs-testimonial,
-      .ptype-hs-accordion,
-      .ptype-hs-timeline {
-        --columns: 1;
-      }
+  @container collection (width < #{$container-md-width}) {
+    .ptype-hs-testimonial,
+    .ptype-hs-accordion,
+    .ptype-hs-timeline {
+      --columns: 1;
+    }
 
+    // We don't want the following components to be 2 items
+    // per row when the collection is set to 1 column
+    &:not(.item-per-row--1) {
       .ptype-hs-text-area,
       .ptype-hs-postcard,
       .ptype-hs-view {
@@ -172,13 +173,11 @@
     }
   }
 
-  @container collection (width < 576px) {
-    &:not(.item-per-row--1) {
-      .ptype-hs-text-area,
-      .ptype-hs-postcard,
-      .ptype-hs-view {
-        --columns: 1;
-      }
+  @container collection (width < #{$container-sm-width}) {
+    .ptype-hs-text-area,
+    .ptype-hs-postcard,
+    .ptype-hs-view {
+      --columns: 1;
     }
   }
 
@@ -192,21 +191,21 @@
 
 // Overrides for one sidebar (main content is narrower)
 // only when sidebar is visible
-@media (min-width: 992px) {
+@include grid-media-min('lg') {
   .hb-three-column--one-sidebar .field-hs-collection-items {
-    @container collection (width < 868px) {
+    @container collection (width < #{$container-with-sidebar-width}) {
       &.item-per-row--4 .ptype-hs-postcard,
       &.item-per-row--4 .ptype-hs-view {
         --columns: 3;
       }
 
-      &:not(.item-per-row--1) {
-        .ptype-hs-testimonial,
-        .ptype-hs-accordion,
-        .ptype-hs-timeline {
-          --columns: 1;
-        }
+      .ptype-hs-testimonial,
+      .ptype-hs-accordion,
+      .ptype-hs-timeline {
+        --columns: 1;
+      }
 
+      &:not(.item-per-row--1) {
         .ptype-hs-text-area,
         .ptype-hs-postcard,
         .ptype-hs-view {

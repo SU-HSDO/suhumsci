@@ -48,7 +48,6 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     if ($bg_width == 'full_width') {
       $variables['attributes']['class'][] = 'paragraph--style--full-width';
     }
-
   }
 }
 
@@ -225,6 +224,13 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
         break;
       }
       $view_mode = $entity->get('field_hs_banner_image_height')->value == 'tall' ? 'preview' : 'default';
+      break;
+
+    case 'hs_callout_box':
+      if (!$entity->hasField('field_hs_callout_background') || $entity->get('field_hs_callout_background')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_callout_background')->value == 'light' ? 'hs_well' : 'default';
       break;
   }
 }

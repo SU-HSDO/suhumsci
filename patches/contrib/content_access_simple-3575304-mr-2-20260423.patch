@@ -1,0 +1,29 @@
+diff --git a/src/AccessManager.php b/src/AccessManager.php
+index 341e2a4317247b4a6ff64957bcda0a370ed6f3ec..51057bdec264c65c41f8724267079238f5cab5f7 100644
+--- a/src/AccessManager.php
++++ b/src/AccessManager.php
+@@ -17,6 +17,7 @@ use Drupal\node\Entity\Node;
+ use Drupal\node\NodeForm;
+ use Drupal\node\NodeInterface;
+ use Drupal\user\Entity\Role;
++use Drupal\content_access\Form\ContentAccessRoleBasedFormTrait;
+ 
+ /**
+  * Service to handle Content Access Simple functions.
+@@ -24,6 +25,7 @@ use Drupal\user\Entity\Role;
+ class AccessManager {
+ 
+   use StringTranslationTrait;
++  use ContentAccessRoleBasedFormTrait;
+ 
+   /**
+    * The account interface.
+@@ -231,7 +233,7 @@ class AccessManager {
+         'processCheckboxes',
+       ],
+       [
+-        '\Drupal\content_access\Form\ContentAccessRoleBasedFormTrait',
++        $this,
+         'disableCheckboxes',
+       ],
+       [

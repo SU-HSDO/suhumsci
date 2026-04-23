@@ -12,16 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: pookmish/drupal8ci:php8.3
-      options: '--network-alias drupal8ci'
-    env:
-      REAL_AES_ENCRYPTION: ${{secrets.REAL_AES_ENCRYPTION}}
-      DRUPAL_DATABASE_NAME: drupal
-      DRUPAL_DATABASE_USERNAME: drupal
-      DRUPAL_DATABASE_PASSWORD: drupal
-      DRUPAL_DATABASE_HOST: mysql
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_DATABASE: drupal
           MYSQL_USER: drupal
@@ -32,12 +25,6 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Node.js from .nvmrc
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .nvmrc
-          cache: 'npm'
-          cache-dependency-path: ${{ env.themePath }}/package-lock.json
       - name: Restore Cache
         uses: actions/cache@v4
         with:
@@ -46,21 +33,19 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
-      - run: git config --system --add safe.directory '*'
-      - name: Install Dependencies
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+      - name: Run Unit Tests
         run: |
-          mysql -h mysql -P 3306 -u root -pdrupal -e 'SET GLOBAL max_allowed_packet=67108864;' &&
-          rm -rf /var/www/html &&
-          ln -snf $GITHUB_WORKSPACE /var/www/html &&
+          git config --system --add safe.directory '*' &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
-          mkdir -p docroot/sites/default/files &&
-          chmod -R 777 docroot/sites/default/files/
-      - name: PHPUnit Tests
-        run: |
-          blt tests:phpunit:coverage --no-interaction
+          mkdir -p docroot/sites/simpletest &&
+          drush sws:source:tests:phpunit --db-host=mysql --db-pass=drupal --db-name=drupal --db-user=drupal --with-coverage
+      - name: Save Test Results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: unit-tests-results
+          path: $GITHUB_WORKSPACE/artifacts
   lint_theme:
     runs-on: ubuntu-latest
     container:
@@ -94,7 +79,7 @@ jobs:
         image: selenium/standalone-chrome:130.0
         options: '--shm-size="2g"'
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_DATABASE: drupal
           MYSQL_USER: drupal
@@ -119,7 +104,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - run: git config --system --add safe.directory '*'
       - name: Install Site
         run: |
@@ -127,11 +112,9 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -140,7 +123,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          blt codeception --group=install --suite=functional
+          drush sws:codeception --suite=functional --group=install --site-domain=localhost
       - name: Save Functional Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -164,7 +147,7 @@ jobs:
         image: selenium/standalone-chrome:130.0
         options: '--shm-size="2g"'
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_DATABASE: drupal
           MYSQL_USER: drupal
@@ -189,7 +172,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - run: git config --system --add safe.directory '*'
       - name: Install Site
         run: |
@@ -197,11 +180,9 @@ jobs:
           rm -rf /var/www/html &&
           ln -snf $GITHUB_WORKSPACE /var/www/html &&
           composer install -n &&
-          vendor/bin/blt blt:telemetry:disable --no-interaction &&
-          blt settings &&
           mkdir -p docroot/sites/default/files &&
           chmod -R 777 docroot/sites/default/files/ &&
-          blt drupal:install -n
+          drush sws:multisite:install -n -n
       - name: Install theme dependencies
         run: npm ci --prefix $themePath
       - name: Compile theme assets
@@ -210,7 +191,7 @@ jobs:
         run: |
           apachectl stop
           apachectl start
-          blt codeception --group=install --suite=acceptance
+          drush sws:codeception --suite=acceptance --group=install --site-domain=localhost
       - name: Save Acceptance Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -245,7 +226,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -262,5 +243,4 @@ jobs:
           git config --global user.name "Github Actions" &&
           ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt blt:telemetry:disable --no-interaction &&
-          blt deploy -n
+          drush sws:artifact:deploy -v -n

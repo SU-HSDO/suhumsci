@@ -713,7 +713,7 @@ function hs_paragraph_types_update_10019(&$sandbox) {
 }
 
 /**
- * Creates new fields for paragraph visual variants.
+ * Creates new fields for visual variants of the Spotlight paragraph.
  */
 function hs_paragraph_types_update_10020() {
   $config_storage = \Drupal::service('config.storage.sync');
@@ -845,9 +845,161 @@ function hs_paragraph_types_update_10021(&$sandbox) {
 }
 
 /**
- * Creates new fields for visual variants of the Callout Box paragraph.
+ * Creates new fields for visual variants of the Testimonial paragraph.
  */
 function hs_paragraph_types_update_10022() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storage_config = $config_storage->read('field.storage.paragraph.field_hs_testimonial_align');
+  if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+    $field_storage->createFromStorageRecord($storage_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+      '%field_name' => $storage_config['field_name'],
+      '%entity_type' => $storage_config['entity_type'],
+    ]);
+  }
+
+  $field_config = $config_storage->read('field.field.paragraph.hs_testimonial.field_hs_testimonial_align');
+  if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_testimonial.' . $field_config['field_name']))) {
+    $field_config_storage->create($field_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+      '%field_name' => $field_config['field_name'],
+      '%entity_type' => $field_config['entity_type'],
+      '%bundle' => $field_config['bundle'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Testimonial paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10023(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_testimonial')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_testimonial_quote_align -> field_hs_testimonial_align.
+    if ($paragraph->hasField('field_hs_testimonial_quote_align') && $paragraph->hasField('field_hs_testimonial_align')) {
+      $value = $paragraph->get('field_hs_testimonial_quote_align')->value;
+      if (!empty($value)) {
+        $paragraph->set('field_hs_testimonial_align', $value);
+        $save_needed = TRUE;
+      }
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_testimonial paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Creates new fields for visual variants of the Banner paragraph.
+ */
+function hs_paragraph_types_update_10024() {
+  $config_storage = \Drupal::service('config.storage.sync');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
+  $field_config_storage = \Drupal::service('entity_type.manager')->getStorage('field_config');
+
+  /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
+  $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
+
+  $storage_config = $config_storage->read('field.storage.paragraph.field_hs_banner_image_height');
+  if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
+    $field_storage->createFromStorageRecord($storage_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
+      '%field_name' => $storage_config['field_name'],
+      '%entity_type' => $storage_config['entity_type'],
+    ]);
+  }
+
+  $field_config = $config_storage->read('field.field.paragraph.hs_banner.field_hs_banner_image_height');
+  if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_banner.' . $field_config['field_name']))) {
+    $field_config_storage->create($field_config)->save();
+    \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
+      '%field_name' => $field_config['field_name'],
+      '%entity_type' => $field_config['entity_type'],
+      '%bundle' => $field_config['bundle'],
+    ]);
+  }
+}
+
+/**
+ * Migrate Banner paragraph data from old fields to new fields.
+ */
+function hs_paragraph_types_update_10025(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
+
+  if (empty($sandbox['ids'])) {
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_banner')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+  }
+
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
+
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+
+    $save_needed = FALSE;
+
+    // Migrate field_hs_banner_height -> field_hs_banner_image_height.
+    if ($paragraph->hasField('field_hs_banner_height') && $paragraph->hasField('field_hs_banner_image_height')) {
+      $value = $paragraph->get('field_hs_banner_height')->value;
+      $paragraph->set('field_hs_banner_image_height', $value == 'preview' ? 'tall' : 'short');
+      $save_needed = TRUE;
+    }
+
+    if ($save_needed) {
+      $paragraph->save();
+      $sandbox['updated']++;
+    }
+  }
+
+  \Drupal::logger('hs_paragraph_types')->notice('Updated %updated of %total hs_banner paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Creates new fields for visual variants of the Callout Box paragraph.
+ */
+function hs_paragraph_types_update_10026() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -893,7 +1045,7 @@ function hs_paragraph_types_update_10022() {
 /**
  * Migrate Callout Box paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10023(&$sandbox) {
+function hs_paragraph_types_update_10027(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -952,13 +1104,19 @@ function hs_paragraph_types_update_10023(&$sandbox) {
 /**
  * Removes legacy paragraph fields.
  */
-function hs_paragraph_types_update_10024() {
+function hs_paragraph_types_update_10028() {
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',
       'field_hs_spotlight_image_align',
       'field_hs_spotlight_height',
       'field_spotlight_style',
+    ],
+    'hs_testimonial' => [
+      'field_hs_testimonial_quote_align',
+    ],
+    'hs_banner' => [
+      'field_hs_banner_height',
     ],
     'hs_callout_box' => [
       'field_hs_callout_box_align',

@@ -201,7 +201,6 @@ function hs_paragraph_types_field_widget_complete_options_select_form_alter(arra
 
   $none_labels = [
     'field_accordion_style' => t('Default'),
-    'field_hs_banner_height' => t('Short'),
   ];
   $field_name = $context['items']->getName();
 
@@ -224,6 +223,13 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
         break;
       }
       $view_mode = $entity->get('field_hs_spotlight_image_height')->value == 'tall' ? 'default' : 'preview';
+      break;
+
+    case 'hs_banner':
+      if (!$entity->hasField('field_hs_banner_image_height') || $entity->get('field_hs_banner_image_height')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_banner_image_height')->value == 'tall' ? 'preview' : 'default';
       break;
 
     case 'hs_callout_box':

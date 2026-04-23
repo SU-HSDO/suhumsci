@@ -664,18 +664,49 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
             field_session_location: field_session_location
-            label: 0
-            field_session_date_and_time: 0
-            field_session_date_and_time_1: 0
-            field_session_information: 0
-            field_session_speakers: 0
-            field_session_date_and_time_value: 0
+            label: '0'
+            field_session_date_and_time: '0'
+            field_session_date_and_time_1: '0'
+            field_session_information: '0'
+            field_session_speakers: '0'
+            field_session_date_and_time_value: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_horizontal_card
+          pattern_mapping:
+            'views_row:label':
+              plugin: views_row
+              source: label
+              destination: title
+              weight: 0
+            'views_row:field_session_date_and_time':
+              plugin: views_row
+              source: field_session_date_and_time
+              destination: month
+              weight: 1
+            'views_row:field_session_date_and_time_1':
+              plugin: views_row
+              source: field_session_date_and_time_1
+              destination: month
+              weight: 2
+            'views_row:field_session_location':
+              plugin: views_row
+              source: field_session_location
+              destination: description
+              weight: 3
+            'views_row:field_session_information':
+              plugin: views_row
+              source: field_session_information
+              destination: description
+              weight: 4
+            'views_row:field_session_speakers':
+              plugin: views_row
+              source: field_session_speakers
+              destination: description
+              weight: 5
           variants:
             accordion: closed
             alert: default
@@ -688,37 +719,6 @@ display:
             testimonial: top
             timeline-item: closed
             timeline: expanded
-          pattern_mapping:
-            'views_row:label':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: label
-            'views_row:field_session_date_and_time':
-              destination: month
-              weight: 1
-              plugin: views_row
-              source: field_session_date_and_time
-            'views_row:field_session_date_and_time_1':
-              destination: month
-              weight: 2
-              plugin: views_row
-              source: field_session_date_and_time_1
-            'views_row:field_session_location':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_session_location
-            'views_row:field_session_information':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: field_session_information
-            'views_row:field_session_speakers':
-              destination: description
-              weight: 5
-              plugin: views_row
-              source: field_session_speakers
       defaults:
         title: false
         style: false
@@ -1283,19 +1283,40 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
             field_session_location: field_session_location
-            label: 0
-            field_session_date_and_time: 0
-            field_session_date_and_time_1: 0
-            field_session_information: 0
-            field_session_speakers: 0
-            field_session_date_and_time_value: 0
-            field_session_date_and_time_value_1: 0
+            label: '0'
+            field_session_date_and_time: '0'
+            field_session_date_and_time_1: '0'
+            field_session_information: '0'
+            field_session_speakers: '0'
+            field_session_date_and_time_value: '0'
+            field_session_date_and_time_value_1: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: date_stacked_horizontal_card
+          pattern_mapping:
+            'views_row:label':
+              plugin: views_row
+              source: label
+              destination: title
+              weight: 0
+            'views_row:field_session_location':
+              plugin: views_row
+              source: field_session_location
+              destination: description
+              weight: 1
+            'views_row:field_session_information':
+              plugin: views_row
+              source: field_session_information
+              destination: description
+              weight: 2
+            'views_row:field_session_speakers':
+              plugin: views_row
+              source: field_session_speakers
+              destination: description
+              weight: 3
           variants:
             accordion: closed
             alert: default
@@ -1308,27 +1329,6 @@ display:
             testimonial: top
             timeline-item: closed
             timeline: expanded
-          pattern_mapping:
-            'views_row:label':
-              destination: title
-              weight: 0
-              plugin: views_row
-              source: label
-            'views_row:field_session_location':
-              destination: description
-              weight: 1
-              plugin: views_row
-              source: field_session_location
-            'views_row:field_session_information':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_session_information
-            'views_row:field_session_speakers':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_session_speakers
       defaults:
         title: false
         style: false

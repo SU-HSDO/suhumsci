@@ -44,11 +44,14 @@
     <button
       type="button"
       class="toggle-caption__toggle"
-      aria-hidden="true"
-      tabindex="-1"
+      aria-expanded="false"
+      aria-label="{{ 'Show image caption'|t }}"
+      data-show-label="{{ 'Show image caption'|t }}"
+      data-hide-label="{{ 'Hide image caption'|t }}"
     >
     </button>
     <div class="toggle-caption__content">
+      <span class="visually-hidden">{{ 'Image caption:'|t }}</span>
       {{ item.content }}
     </div>
   </div>

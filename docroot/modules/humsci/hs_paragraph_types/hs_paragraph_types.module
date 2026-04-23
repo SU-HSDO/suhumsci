@@ -49,12 +49,6 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
       $variables['attributes']['class'][] = 'paragraph--style--full-width';
     }
   }
-  elseif ($bundle == 'hs_callout_box') {
-    if ($paragraph->hasField('field_hs_callout_background') && !$paragraph->get('field_hs_callout_background')->isEmpty()) {
-      $bg_color = Html::cleanCssIdentifier($paragraph->get('field_hs_callout_background')->getString());
-      $variables['attributes']['class'][] = 'hs-paragraph-style--' . $bg_color;
-    }
-  }
 }
 
 /**

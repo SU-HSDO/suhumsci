@@ -31,28 +31,22 @@ function hs_cmap_update_10001() {
 /**
  * Update field_hs_cmap_crs_course to use minimal_text_formatting format.
  */
-function hs_cmap_update_10002() {
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $paragraph_storage = $entity_type_manager->getStorage('paragraph');
+function hs_cmap_update_10002(&$sandbox) {
+  $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
-  // Load all hs_cmap_qtr_crs paragraphs.
-  $ids = $paragraph_storage->getQuery()
-    ->accessCheck(FALSE)
-    ->condition('type', 'hs_cmap_qtr_crs')
-    ->condition('field_hs_cmap_crs_course', NULL, 'IS NOT NULL')
-    ->execute();
-
-  if (empty($ids)) {
-    return;
+  if (empty($sandbox['ids'])) {
+    // Load all hs_cmap_qtr_crs paragraphs.
+    $sandbox['ids'] = $paragraph_storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'hs_cmap_qtr_crs')
+      ->condition('field_hs_cmap_crs_course', NULL, 'IS NOT NULL')
+      ->execute();
+    $sandbox['total'] = count($sandbox['ids']);
   }
 
-  $paragraphs = $paragraph_storage->loadMultiple($ids);
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
-  foreach ($paragraphs as $paragraph) {
-    if ($paragraph->get('field_hs_cmap_crs_course')->isEmpty()) {
-      continue;
-    }
-
+  foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
     $field_items = $paragraph->get('field_hs_cmap_crs_course');
     foreach ($field_items as $item) {
       $item->format = 'minimal_text_formatting';
@@ -61,4 +55,31 @@ function hs_cmap_update_10002() {
     $paragraph->setNewRevision(FALSE);
     $paragraph->save();
   }
+
+  $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+}
+
+/**
+ * Grant permissions to roles.
+ */
+function hs_cmap_update_10003() {
+  user_role_grant_permissions('site_manager', [
+    'use text format minimal_text_formatting',
+  ]);
+
+  user_role_grant_permissions('preparer', [
+    'use text format minimal_text_formatting',
+  ]);
+
+  user_role_grant_permissions('contributor', [
+    'use text format minimal_text_formatting',
+  ]);
+
+  user_role_grant_permissions('authenticated', [
+    'use text format minimal_text_formatting',
+  ]);
+
+  user_role_grant_permissions('administrator', [
+    'use text format minimal_text_formatting',
+  ]);
 }

@@ -18,7 +18,7 @@
 
     // Remove margin-bottom on the the LAST collection too.
     .field-hs-page-components > .ptype-hs-collection:last-child {
-      margin-bottom: 0 !important;
+      margin-bottom: 0;
     }
   }
 
@@ -27,7 +27,7 @@
 
     // Remove margin-bottom on the the LAST priv collection too.
     .field-hs-page-components > .ptype-hs-priv-collection:last-child {
-      margin-bottom: 0 !important;
+      margin-bottom: 0;
     }
   }
 }
@@ -91,8 +91,6 @@
 .field-hs-page-hero,
 .ptype-hs-timeline,
 .ptype-hs-view,
-.ptype-hs-collection,
-.ptype-hs-priv-collection,
 .ptype-hs-testimonial,
 .ptype-stanford-gallery {
   width: 100%;
@@ -128,15 +126,24 @@
   }
 }
 
+// Use it here because we don't want and need the !important rules anymore, but
+// remove it only for collections. Not sure what would cause to remove it in other components.
+.ptype-hs-collection,
+.ptype-hs-priv-collection {
+  width: 100%;
+  margin-bottom: hb-spacing-width();
+
+  .hs-paragraph-style--well &,
+  .hs-paragraph-style--well-full-width & {
+    margin-top: hb-spacing-width();
+  }
+}
+
 // When 2 collections are added next to each other, there is not gap between the 2 BG colors.
-.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well-full-width),
-.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well),
-.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well),
-.ptype-hs-collection:has(+ .ptype-hs-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well-full-width),
-.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well-full-width),
-.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well-full-width):has(.hs-paragraph-style--well),
-.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well),
-.ptype-hs-priv-collection:has(+ .ptype-hs-priv-collection .hs-paragraph-style--well):has(.hs-paragraph-style--well-full-width) {
-  margin-bottom: 0 !important;
+.ptype-hs-collection,
+.ptype-hs-priv-collection {
+  &:has(+ :is(.ptype-hs-collection, .ptype-hs-priv-collection) [class*="--well"]):has([class*="--well"]) {
+    margin-bottom: 0;
+  }
 }
 

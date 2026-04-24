@@ -1218,7 +1218,7 @@ function hs_paragraph_types_update_10030() {
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_storage */
   $field_storage = \Drupal::service('entity_type.manager')->getStorage('field_storage_config');
 
-  $storage_config = $config_storage->read('field.storage.paragraph.field_accordion_style_variant');
+  $storage_config = $config_storage->read('field.storage.paragraph.field_hs_accordion_style');
   if (!empty($storage_config) && empty($field_storage->load('paragraph.' . $storage_config['field_name']))) {
     $field_storage->createFromStorageRecord($storage_config)->save();
     \Drupal::logger('hs_paragraph_types')->notice('Created field storage %field_name for %entity_type.', [
@@ -1227,7 +1227,7 @@ function hs_paragraph_types_update_10030() {
     ]);
   }
 
-  $field_config = $config_storage->read('field.field.paragraph.hs_accordion.field_accordion_style_variant');
+  $field_config = $config_storage->read('field.field.paragraph.hs_accordion.field_hs_accordion_style');
   if (!empty($field_config) && empty($field_config_storage->load('paragraph.hs_accordion.' . $field_config['field_name']))) {
     $field_config_storage->create($field_config)->save();
     \Drupal::logger('hs_paragraph_types')->notice('Created field instance %field_name on %entity_type.%bundle.', [
@@ -1260,10 +1260,10 @@ function hs_paragraph_types_update_10031(&$sandbox) {
 
     $save_needed = FALSE;
 
-    // Migrate field_accordion_style -> field_accordion_style_variant.
-    if ($paragraph->hasField('field_accordion_style') && $paragraph->hasField('field_accordion_style_variant')) {
+    // Migrate field_accordion_style -> field_hs_accordion_style.
+    if ($paragraph->hasField('field_accordion_style') && $paragraph->hasField('field_hs_accordion_style')) {
       $value = $paragraph->get('field_accordion_style')->value;
-      $paragraph->set('field_accordion_style_variant', !empty($value) ? $value : 'default');
+      $paragraph->set('field_hs_accordion_style', !empty($value) ? $value : 'default');
       $save_needed = TRUE;
     }
 
@@ -1305,6 +1305,9 @@ function hs_paragraph_types_update_10032() {
     'hs_clr_bnd' => [
       'field_hs_clr_bnd_bgc',
       'field_hs_clr_bnd_wdth',
+    ],
+    'hs_accordion' => [
+      'field_accordion_style',
     ],
   ];
 

@@ -232,5 +232,12 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
       }
       $view_mode = $entity->get('field_hs_callout_background')->value == 'light' ? 'hs_well' : 'default';
       break;
+
+    case 'hs_clr_bnd':
+      if (!$entity->hasField('field_hs_clr_bnd_width') || $entity->get('field_hs_clr_bnd_width')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_clr_bnd_width')->value == 'full-width' ? 'default' : 'preview';
+      break;
   }
 }

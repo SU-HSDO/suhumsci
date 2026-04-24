@@ -250,4 +250,54 @@
       background-image: url(../images/style-selector-widget-icons/gradient-hero-content-right.svg);
     }
   }
+
+  /* Color Band fields */
+
+  &[data-drupal-selector*="field-hs-clr-bnd-width-style-selector"] {
+    .full-width input {
+      background-image: url(../images/style-selector-widget-icons/color-band-width-full.svg);
+    }
+
+    .limited-width input {
+      background-image: url(../images/style-selector-widget-icons/color-band-width-limited.svg);
+    }
+  }
+
+  &[data-drupal-selector*="field-hs-clr-bnd-bg-style-selector"] {
+    .theme-humsci-colorful & {
+      .default input {
+        background-color: var(--color--colorful-pairings--primary-hero-overlay);
+      }
+
+      .cardinal input {
+        background-color: var(--color--colorful-global--cardinal);
+      }
+
+      .gray input {
+        background-color: var(--color--colorful-global--gray-dark);
+      }
+
+      .light input {
+        background-color: var(--color--colorful-pairings--spotlight);
+      }
+    }
+
+    .theme-humsci-traditional & {
+      .default input {
+        background-color: var(--color--traditional-pairings--primary-hero-overlay);
+      }
+
+      .cardinal input {
+        background-color: var(--color--traditional-global--cardinal);
+      }
+
+      .gray input {
+        background-color: var(--color--traditional-global--gray-dark);
+      }
+
+      .light input {
+        background-color: var(--color--traditional-pairings--spotlight);
+      }
+    }
+  }
 }

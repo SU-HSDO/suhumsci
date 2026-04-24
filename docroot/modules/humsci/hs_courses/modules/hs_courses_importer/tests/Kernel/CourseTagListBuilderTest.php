@@ -2,6 +2,7 @@
 
 namespace Drupal\Test\hs_courses_importer\Kernel;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
@@ -41,7 +42,9 @@ class CourseTagListBuilderTest extends EntityKernelTestBase {
     $header = $this->listBuilder->buildHeader();
     $this->assertArrayHasKey('label', $header);
     $this->assertArrayHasKey('tag', $header);
+    $uuid = new Php();
     $entity = $this->entityTypeManager->createInstance('hs_course_tag', [
+      'uuid' => $uuid->generate(),
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
       'tag' => $this->randomString(),

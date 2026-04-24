@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
@@ -34,7 +35,9 @@ abstract class HsCoursesImporterTestBase extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $name = $this->randomMachineName();
+    $uuid = new Php();
     $this->courseTag = $this->entityTypeManager->createInstance('hs_course_tag', [
+      'uuid' => $uuid->generate(),
       'id' => strtolower($name),
       'label' => $name,
       'tag' => $this->randomString(),

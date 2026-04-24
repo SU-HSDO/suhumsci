@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Plugin\migrate\process;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -55,7 +56,9 @@ class TranslateCourseTagTest extends EntityKernelTestBase {
     $this->processManager = $this->container->get('plugin.manager.migrate.process');
 
     $name = $this->randomMachineName();
+    $uuid = new Php();
     $this->courseTag = $this->entityTypeManager->createInstance('hs_course_tag', [
+      'uuid' => $uuid->generate(),
       'id' => strtolower($name),
       'label' => $name,
       'tag' => $this->randomString(),

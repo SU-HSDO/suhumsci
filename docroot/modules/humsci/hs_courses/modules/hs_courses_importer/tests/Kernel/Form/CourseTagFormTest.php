@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\hs_courses_importer\Kernel\Form;
 
+use Drupal\Component\Uuid\Php;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Tests\hs_courses_importer\Kernel\HsCoursesImporterTestBase;
@@ -33,7 +34,9 @@ class CourseTagFormTest extends HsCoursesImporterTestBase {
     $this->assertArrayHasKey('id', $form);
     $this->assertArrayHasKey('tag', $form);
 
+    $uuid = new Php();
     $form_state->setValues([
+      'uuid' => $uuid->generate(),
       'label' => $name,
       'id' => $name,
       'tag' => $tag_value,

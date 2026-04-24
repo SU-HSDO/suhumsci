@@ -10,13 +10,14 @@ use Drupal\hs_actions\Plugin\Action\CloneNode;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class TestCloneNode.
- *
- * @coversDefaultClass \Drupal\hs_actions\Plugin\Action\CloneNode
- * @group hs_actions
  */
+#[CoversClass(CloneNode::class)]
+#[Group('hs_actions')]
 class CloneNodeTest extends KernelTestBase {
 
   /**
@@ -76,15 +77,6 @@ class CloneNodeTest extends KernelTestBase {
 
   /**
    * Test the action methods.
-   *
-   * @covers ::defaultConfiguration
-   * @covers ::buildFieldCloneForm
-   * @covers ::validateConfigurationForm
-   * @covers ::duplicateEntity
-   * @covers ::getReferenceFields
-   * @covers ::buildConfigurationForm
-   * @covers ::submitConfigurationForm
-   * @covers ::execute
    */
   public function testAction() {
     $this->assertEquals(1, $this->getNodeCount());
@@ -117,7 +109,7 @@ class CloneNodeTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::access
+   * Test access.
    */
   public function testAccess() {
     /** @var \Drupal\Core\Action\ActionManager $action_manager */

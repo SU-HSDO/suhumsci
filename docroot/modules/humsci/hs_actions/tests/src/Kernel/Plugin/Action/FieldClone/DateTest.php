@@ -14,13 +14,14 @@ use Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneBase;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Test the date field clone plugin functions correctly.
- *
- * @group hs_actions
- * @coversDefaultClass \Drupal\hs_actions\Plugin\Action\FieldClone\Date
  */
+#[CoversClass(Date::class)]
+#[Group('hs_actions')]
 class DateTest extends KernelTestBase {
 
   /**

@@ -4,12 +4,12 @@ namespace Drupal\Tests\hs_courses_importer\Kernel;
 
 use Drupal\Component\Uuid\Php;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class HsCoursesImporterTestBase.
- *
- * @group hs_courses_importer
  */
+#[Group('hs_courses_importer')]
 abstract class HsCoursesImporterTestBase extends EntityKernelTestBase {
 
   /**

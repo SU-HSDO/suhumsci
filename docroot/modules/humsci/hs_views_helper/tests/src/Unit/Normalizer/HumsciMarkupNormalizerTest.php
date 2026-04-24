@@ -2,25 +2,18 @@
 
 namespace Drupal\Tests\hs_views_helper\Unit\Plugin\Block;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormState;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
-use Drupal\Core\Session\UserSession;
-use Drupal\Core\StringTranslation\TranslationManager;
-use Drupal\hs_blocks\Plugin\Block\HsLoginBlock;
 use Drupal\hs_views_helper\Normalizer\HumsciMarkupNormalizer;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class NormalizerTest.
- *
- * @group hs_views_helper
- * @coversDefaultClass \Drupal\hs_views_helper\Normalizer\HumsciMarkupNormalizer
  */
+#[CoversClass(HumsciMarkupNormalizer::class)]
+#[Group('hs_views_helper')]
 class HumsciMarkupNormalizerTest extends UnitTestCase {
 
   /**

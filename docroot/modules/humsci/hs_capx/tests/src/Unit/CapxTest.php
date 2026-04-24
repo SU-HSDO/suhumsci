@@ -20,13 +20,14 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class CapxTest.
- *
- * @covers \Drupal\hs_capx\Capx
- * @group hs_capx
  */
+#[CoversClass(Capx::class)]
+#[Group('hs_capx')]
 class CapxTest extends UnitTestCase {
 
   /**
@@ -56,8 +57,8 @@ class CapxTest extends UnitTestCase {
     $this->cache = $this->createMock(CacheBackendInterface::class);
     $database = $this->createMock(DatabaseConnection::class);
     $merge = $this->createMock(Merge::class);
-    $merge->method('fields')->will($this->returnValue($merge));
-    $merge->method('key')->will($this->returnValue($merge));
+    $merge->method('fields')->willReturn($merge);
+    $merge->method('key')->willReturn($merge);
     $database->method('merge')->willReturn($merge);
 
     $config_object = $this->createMock(ImmutableConfig::class);
@@ -129,7 +130,7 @@ class CapxTest extends UnitTestCase {
   public function testOrgData() {
     $this->guzzle->method('request')
       ->withAnyParameters()
-      ->will($this->returnCallback([$this, 'guzzleRequestCallback']));
+      ->willReturnCallback([$this, 'guzzleRequestCallback']);
     $data = $this->capx->getOrgData();
 
     $this->assertArrayHasKey('name', $data);
@@ -141,7 +142,7 @@ class CapxTest extends UnitTestCase {
   public function testCachedOrgData() {
     $this->cache->method('GET')
       ->withAnyParameters()
-      ->will($this->returnCallback([$this, 'cacheGetCallback']));
+      ->willReturnCallback([$this, 'cacheGetCallback']);
     $this->testOrgData();
 
     $this->assertNotEmpty($this->capx->getAccessToken());
@@ -150,7 +151,7 @@ class CapxTest extends UnitTestCase {
   public function testSync() {
     $this->cache->method('GET')
       ->withAnyParameters()
-      ->will($this->returnCallback([$this, 'cacheGetCallback']));
+      ->willReturnCallback([$this, 'cacheGetCallback']);
 
     $this->assertNull($this->capx->syncOrganizations($this->capx->getOrgData()));
   }

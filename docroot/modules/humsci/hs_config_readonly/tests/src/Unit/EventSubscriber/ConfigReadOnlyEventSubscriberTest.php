@@ -16,13 +16,14 @@ use Drupal\Core\Form\FormState;
 use Drupal\ctools\Wizard\EntityFormWizardBase;
 use Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Class ConfigReadOnlyEventSubscriberTest
- *
- * @group hs_config_readonly
- * @coversDefaultClass \Drupal\hs_config_readonly\EventSubscriber\ConfigReadOnlyEventSubscriber
  */
+#[CoversClass(ConfigReadOnlyEventSubscriber::class)]
+#[Group('hs_config_readonly')]
 class ConfigReadOnlyEventSubscriberTest extends UnitTestCase {
 
   /**

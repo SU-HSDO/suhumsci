@@ -126,10 +126,10 @@
   }
 }
 
-// Use it here because we don't want and need the !important rules anymore, but
-// remove it only for collections. Not sure what would cause to remove it in other components.
 .ptype-hs-collection,
 .ptype-hs-priv-collection {
+  // Use it here because we don't want and need the !important rules anymore, but
+  // remove it only for collections. Not sure what would cause to remove it in other components.
   width: 100%;
   margin-bottom: hb-spacing-width();
 
@@ -137,11 +137,8 @@
   .hs-paragraph-style--well-full-width & {
     margin-top: hb-spacing-width();
   }
-}
 
-// When 2 collections are added next to each other, there is not gap between the 2 BG colors.
-.ptype-hs-collection,
-.ptype-hs-priv-collection {
+  // When 2 collections are added next to each other, there is not gap between the 2.
   &:has(+ :is(.ptype-hs-collection, .ptype-hs-priv-collection) [class*="--well"]):has([class*="--well"]) {
     margin-bottom: 0;
   }

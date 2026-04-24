@@ -5,7 +5,7 @@ namespace Drupal\hs_actions\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\hs_actions\Annotation\FieldClone;
+use Drupal\hs_actions\Attribute\FieldClone;
 use Drupal\hs_actions\Plugin\Action\FieldClone\FieldCloneInterface;
 
 /**

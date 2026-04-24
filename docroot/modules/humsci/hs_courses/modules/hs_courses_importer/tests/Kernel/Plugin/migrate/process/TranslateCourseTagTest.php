@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\hs_courses_importer\Kernel\Plugin\migrare\process;
+namespace Drupal\Tests\hs_courses_importer\Kernel\Plugin\migrate\process;
 
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;

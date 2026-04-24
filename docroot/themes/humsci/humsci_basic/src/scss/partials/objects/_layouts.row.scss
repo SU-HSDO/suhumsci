@@ -174,10 +174,14 @@ $container-with-sidebar-width: hb-calculate-rems(868px);
   }
 
   @container collection (width < #{$container-sm-width}) {
-    .ptype-hs-text-area,
-    .ptype-hs-postcard,
-    .ptype-hs-view {
-      --columns: 1;
+    // We need to add it here because if not it will ignored this
+    // container query and only use the above one
+    &:not(.item-per-row--1) {
+      .ptype-hs-text-area,
+      .ptype-hs-postcard,
+      .ptype-hs-view {
+        --columns: 1;
+      }
     }
   }
 

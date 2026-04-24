@@ -48,7 +48,6 @@ function hs_paragraph_types_preprocess_paragraph(&$variables) {
     if ($bg_width == 'full_width') {
       $variables['attributes']['class'][] = 'paragraph--style--full-width';
     }
-
   }
 }
 
@@ -196,7 +195,6 @@ function hs_paragraph_types_field_widget_complete_options_select_form_alter(arra
 
   $none_labels = [
     'field_accordion_style' => t('Default'),
-    'field_hs_banner_height' => t('Short'),
   ];
   $field_name = $context['items']->getName();
 
@@ -219,6 +217,27 @@ function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface 
         break;
       }
       $view_mode = $entity->get('field_hs_spotlight_image_height')->value == 'tall' ? 'default' : 'preview';
+      break;
+
+    case 'hs_banner':
+      if (!$entity->hasField('field_hs_banner_image_height') || $entity->get('field_hs_banner_image_height')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_banner_image_height')->value == 'tall' ? 'preview' : 'default';
+      break;
+
+    case 'hs_callout_box':
+      if (!$entity->hasField('field_hs_callout_background') || $entity->get('field_hs_callout_background')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_callout_background')->value == 'light' ? 'hs_well' : 'default';
+      break;
+
+    case 'hs_clr_bnd':
+      if (!$entity->hasField('field_hs_clr_bnd_width') || $entity->get('field_hs_clr_bnd_width')->isEmpty()) {
+        break;
+      }
+      $view_mode = $entity->get('field_hs_clr_bnd_width')->value == 'full-width' ? 'default' : 'preview';
       break;
   }
 }

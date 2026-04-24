@@ -625,48 +625,48 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_author: 0
-            field_hs_publication_year: 0
-            nid: 0
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            title: '0'
+            field_hs_publication_author: '0'
+            field_hs_publication_year: '0'
+            nid: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: masonry_item
           pattern_mapping:
             'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
               plugin: views_row
               source: field_hs_publication_image
+              destination: image
+              weight: 0
             'views_row:nid':
-              destination: body
-              weight: 1
               plugin: views_row
               source: nid
-            'views_row:field_hs_publication_type':
               destination: body
-              weight: 2
+              weight: 1
+            'views_row:field_hs_publication_type':
               plugin: views_row
               source: field_hs_publication_type
-            'views_row:title':
               destination: body
-              weight: 3
+              weight: 2
+            'views_row:title':
               plugin: views_row
               source: title
-            'views_row:field_hs_publication_author':
               destination: body
-              weight: 4
+              weight: 3
+            'views_row:field_hs_publication_author':
               plugin: views_row
               source: field_hs_publication_author
-            'views_row:field_hs_publication_year':
               destination: body
-              weight: 5
+              weight: 4
+            'views_row:field_hs_publication_year':
               plugin: views_row
               source: field_hs_publication_year
+              destination: body
+              weight: 5
       query:
         type: views_query
         options:
@@ -1107,35 +1107,35 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            title: '0'
+            field_hs_publication_year: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              plugin: views_row
+              source: field_hs_publication_image
+              destination: image
+              weight: 0
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 1
+            'views_row:field_hs_publication_year':
+              plugin: views_row
+              source: field_hs_publication_year
+              destination: description
+              weight: 2
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:title':
-              destination: title
-              weight: 1
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 2
-              plugin: views_row
-              source: field_hs_publication_year
       defaults:
         empty: false
         title: false
@@ -1829,56 +1829,56 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_media_file: 0
-            field_hs_publication_link: 0
-            title: 0
-            field_hs_publication_author: 0
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            field_hs_publication_year: 0
-            nothing: 0
-            field_hs_publication_citation: 0
+            field_media_file: '0'
+            field_hs_publication_link: '0'
+            title: '0'
+            field_hs_publication_author: '0'
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            field_hs_publication_year: '0'
+            nothing: '0'
+            field_hs_publication_citation: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: horizontal_card
+          pattern_mapping:
+            'views_row:field_media_file':
+              plugin: views_row
+              source: field_media_file
+              destination: description
+              weight: 0
+            'views_row:field_hs_publication_author':
+              plugin: views_row
+              source: field_hs_publication_author
+              destination: description
+              weight: 1
+            'views_row:field_hs_publication_image':
+              plugin: views_row
+              source: field_hs_publication_image
+              destination: image
+              weight: 2
+            'views_row:field_hs_publication_citation':
+              plugin: views_row
+              source: field_hs_publication_citation
+              destination: description
+              weight: 3
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: description
+              weight: 4
+            'views_row:field_hs_publication_year':
+              plugin: views_row
+              source: field_hs_publication_year
+              destination: description
+              weight: 5
           variants:
             spotlight: default
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_media_file':
-              destination: description
-              weight: 0
-              plugin: views_row
-              source: field_media_file
-            'views_row:field_hs_publication_author':
-              destination: description
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_author
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 2
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_citation':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_citation
-            'views_row:title':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 5
-              plugin: views_row
-              source: field_hs_publication_year
       defaults:
         empty: false
         title: false
@@ -2353,17 +2353,38 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
-            field_hs_publication_author: 0
-            title_1: 0
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            title: '0'
+            field_hs_publication_year: '0'
+            field_hs_publication_author: '0'
+            title_1: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              plugin: views_row
+              source: field_hs_publication_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_publication_year':
+              plugin: views_row
+              source: field_hs_publication_year
+              destination: year
+              weight: 1
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 2
+            'views_row:field_hs_publication_author':
+              plugin: views_row
+              source: field_hs_publication_author
+              destination: author
+              weight: 3
           variants:
             accordion: closed
             alert: default
@@ -2376,27 +2397,6 @@ display:
             testimonial: top
             timeline-item: closed
             timeline: expanded
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_year':
-              destination: year
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_year
-            'views_row:title':
-              destination: title
-              weight: 2
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_author':
-              destination: author
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_author
       defaults:
         pager: false
         group_by: true
@@ -3002,41 +3002,41 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
-            field_hs_publication_author: 0
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            title: '0'
+            field_hs_publication_year: '0'
+            field_hs_publication_author: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              plugin: views_row
+              source: field_hs_publication_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_publication_year':
+              plugin: views_row
+              source: field_hs_publication_year
+              destination: description
+              weight: 1
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 2
+            'views_row:field_hs_publication_author':
+              plugin: views_row
+              source: field_hs_publication_author
+              destination: description
+              weight: 3
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_year
-            'views_row:title':
-              destination: title
-              weight: 2
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_author':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_author
       defaults:
         pager: true
         group_by: true
@@ -3522,46 +3522,46 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
-            field_hs_publication_author: 0
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            title: '0'
+            field_hs_publication_year: '0'
+            field_hs_publication_author: '0'
           separator: ''
-          hide_empty: 0
+          hide_empty: false
           pattern: vertical_card
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              plugin: views_row
+              source: field_hs_publication_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_publication_type':
+              plugin: views_row
+              source: field_hs_publication_type
+              destination: category
+              weight: 1
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: title
+              weight: 2
+            'views_row:field_hs_publication_year':
+              plugin: views_row
+              source: field_hs_publication_year
+              destination: description
+              weight: 3
+            'views_row:field_hs_publication_author':
+              plugin: views_row
+              source: field_hs_publication_author
+              destination: description
+              weight: 4
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_type':
-              destination: category
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_type
-            'views_row:title':
-              destination: title
-              weight: 2
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_year':
-              destination: description
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_year
-            'views_row:field_hs_publication_author':
-              destination: description
-              weight: 4
-              plugin: views_row
-              source: field_hs_publication_author
       defaults:
         pager: false
         use_more: true
@@ -4138,46 +4138,46 @@ display:
       row:
         type: ui_patterns
         options:
-          default_field_elements: 1
+          default_field_elements: true
           inline:
-            field_hs_publication_image: 0
-            field_hs_publication_type: 0
-            title: 0
-            field_hs_publication_year: 0
-            field_hs_publication_author: 0
+            field_hs_publication_image: '0'
+            field_hs_publication_type: '0'
+            title: '0'
+            field_hs_publication_year: '0'
+            field_hs_publication_author: '0'
           separator: ''
-          hide_empty: 1
+          hide_empty: true
           pattern: masonry_item
+          pattern_mapping:
+            'views_row:field_hs_publication_image':
+              plugin: views_row
+              source: field_hs_publication_image
+              destination: image
+              weight: 0
+            'views_row:field_hs_publication_type':
+              plugin: views_row
+              source: field_hs_publication_type
+              destination: body
+              weight: 1
+            'views_row:title':
+              plugin: views_row
+              source: title
+              destination: body
+              weight: 2
+            'views_row:field_hs_publication_author':
+              plugin: views_row
+              source: field_hs_publication_author
+              destination: body
+              weight: 3
+            'views_row:field_hs_publication_year':
+              plugin: views_row
+              source: field_hs_publication_year
+              destination: body
+              weight: 4
           variants:
             hero_text_overlay: default
             generic_three_column: default
             accordion: closed
-          pattern_mapping:
-            'views_row:field_hs_publication_image':
-              destination: image
-              weight: 0
-              plugin: views_row
-              source: field_hs_publication_image
-            'views_row:field_hs_publication_type':
-              destination: body
-              weight: 1
-              plugin: views_row
-              source: field_hs_publication_type
-            'views_row:title':
-              destination: body
-              weight: 2
-              plugin: views_row
-              source: title
-            'views_row:field_hs_publication_author':
-              destination: body
-              weight: 3
-              plugin: views_row
-              source: field_hs_publication_author
-            'views_row:field_hs_publication_year':
-              destination: body
-              weight: 4
-              plugin: views_row
-              source: field_hs_publication_year
       defaults:
         query: true
         pager: true

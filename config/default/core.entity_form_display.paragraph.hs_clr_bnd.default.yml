@@ -3,26 +3,39 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bgc
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_bg
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_lnk
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_ttl
     - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_txt
-    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_wdth
+    - field.field.paragraph.hs_clr_bnd.field_hs_clr_bnd_width
     - paragraphs.paragraphs_type.hs_clr_bnd
   module:
+    - field_formatter_class
     - link
     - maxlength
+    - style_selector
 id: paragraph.hs_clr_bnd.default
 targetEntityType: paragraph
 bundle: hs_clr_bnd
 mode: default
 content:
-  field_hs_clr_bnd_bgc:
-    type: options_select
-    weight: 3
+  field_hs_clr_bnd_bg:
+    type: style_selector_tile_widget
+    weight: 4
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: color-widget
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   field_hs_clr_bnd_lnk:
     type: link_default
     weight: 2
@@ -59,12 +72,23 @@ content:
         maxlength_js: 180
         maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
         maxlength_js_enforce: true
-  field_hs_clr_bnd_wdth:
-    type: options_select
-    weight: 4
+  field_hs_clr_bnd_width:
+    type: style_selector_tile_widget
+    weight: 6
     region: content
-    settings: {  }
-    third_party_settings: {  }
+    settings:
+      size: default
+      advanced:
+        extra_classes: ''
+        empty_option: None
+        ui_settings:
+          alpha_grid: false
+          check_icon: true
+          empty_icon: false
+          text_icon: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
 hidden:
   created: true
   status: true

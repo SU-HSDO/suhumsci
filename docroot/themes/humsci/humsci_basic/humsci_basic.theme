@@ -106,7 +106,7 @@ function humsci_basic_preprocess_html(&$vars) {
     'hs_banner' => [
       'field' => 'field_hs_banner_image',
       'image_field' => '',
-      'style' => 'hero_no_text_3000px_',
+      'style' => '',
     ],
     'hs_hero_image' => [
       'field' => 'field_hs_hero_image',
@@ -160,6 +160,14 @@ function humsci_basic_preprocess_html(&$vars) {
         ],
       ];
       $style_name = $spotlight_image_styles[$spotlight_style][$spotlight_height];
+      humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
+    }
+  }
+  elseif ($bundle === 'hs_banner') {
+    $image_referenced = $entity;
+    if ($image_referenced) {
+      $banner_height = $paragraph->get('field_hs_banner_image_height')->value;
+      $style_name = $banner_height == 'tall' ? 'hero_no_text_tall_2400px' : 'hero_no_text_3000px_';
       humsci_basic_preload_full_width_image($image_referenced, $style_name, $vars);
     }
   }

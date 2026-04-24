@@ -31,5 +31,7 @@ class FieldClone extends Plugin {
     public readonly ?TranslatableMarkup $description = NULL,
     protected readonly array $fieldTypes = [],
   ) {
+
   }
+
 }

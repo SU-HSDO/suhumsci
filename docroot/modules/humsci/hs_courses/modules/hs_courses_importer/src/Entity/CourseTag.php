@@ -18,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     "form" => [
       "add" => "Drupal\hs_courses_importer\Form\CourseTagForm",
       "edit" => "Drupal\hs_courses_importer\Form\CourseTagForm",
-      "delete" => "Drupal\hs_courses_importer\Form\CourseTagDeleteForm"
+      "delete" => "Drupal\hs_courses_importer\Form\CourseTagDeleteForm",
     ],
     "route_provider" => [
       "html" => "Drupal\hs_courses_importer\CourseTagHtmlRouteProvider",
@@ -29,19 +29,19 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   entity_keys: [
     "id" => "id",
     "label" => "label",
-    "uuid" => "uuid"
+    "uuid" => "uuid",
   ],
   links: [
     "canonical" => "/admin/config/importers/course-tag/{hs_course_tag}",
     "add-form" => "/admin/config/importers/course-tag/add",
     "edit-form" => "/admin/config/importers/course-tag/{hs_course_tag}/edit",
     "delete-form" => "/admin/config/importers/course-tag/{hs_course_tag}/delete",
-    "collection" => "/admin/config/importers/course-tag"
+    "collection" => "/admin/config/importers/course-tag",
   ],
   config_export: [
     "id",
     "label",
-    "tag"
+    "tag",
   ],
 )]
 class CourseTag extends ConfigEntityBase implements CourseTagInterface {

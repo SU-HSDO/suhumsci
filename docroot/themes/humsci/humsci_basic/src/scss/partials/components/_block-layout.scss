@@ -8,11 +8,11 @@
 
 .block-layout-builder {
   // In Flexible Pages this class is always followed by a block-back-to-top,
-  // this means block-back-top would be the last children. If we use the
+  // this means block-back-top would be the last children. If we use only the
   // :last-child selector, it will cause to have a bottom space always.
   // If there's Full Bleed/Width Collection as the last item, we want
   // that component flushing with the footer.
-  & + .block-layout-builder {
+  &:not(:has(+ .block-back-to-top)):not(:last-child) {
     margin-bottom: hb-calculate-rems(20px);
   }
 

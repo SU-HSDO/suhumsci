@@ -1261,12 +1261,12 @@ function su_humsci_profile_update_9761() {
 
   // Final summary log.
   if ($deleted || $failed) {
-    $logger->notice('Image style cleanup completed. @deleted styles deleted, @failed failures.', [
+    return t('Image style cleanup completed. @deleted styles deleted, @failed failures.', [
       '@deleted' => $deleted,
       '@failed' => $failed,
     ]);
   }
   else {
-    $logger->notice('Image style cleanup: No styles found to delete.');
+    return 'Image style cleanup: No styles found to delete.';
   }
 }

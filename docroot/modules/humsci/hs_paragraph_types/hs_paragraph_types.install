@@ -761,11 +761,14 @@ function hs_paragraph_types_update_10021(&$sandbox) {
       ->condition('type', 'hs_postcard')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
+    $sandbox['system_theme'] = \Drupal::config('system.theme')->get('default');
   }
 
-  $paragraph_ids = array_splice($sandbox['ids'], 0, 25);
+  $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
+    dump($sandbox['system_theme']);
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
     if (
       !$paragraph->hasField('field_hs_postcard_display') ||
@@ -778,45 +781,46 @@ function hs_paragraph_types_update_10021(&$sandbox) {
 
     $display = $paragraph->get('field_hs_postcard_display')->value;
 
-    switch ($display) {
-      case 'default':
-        $paragraph->set('field_hs_postcard_layout', 'vertical');
-        $vertical_style = 'plain';
-        if (\Drupal::config('system.theme')->get('default') == 'humsci_colorful') {
-          $parent = $paragraph->getParentEntity();
-          if ($parent && in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection'])) {
-            if ($parent->hasField('field_raised_cards') && $parent->get('field_raised_cards')->value) {
-              $vertical_style = 'accent';
-            }
-          }
+    $layout = 'vertical';
+    $vertical_style = 'plain';
+
+    if ($display == 'default') {
+      if ($sandbox['system_theme'] == 'humsci_colorful') {
+        $parent = $paragraph->getParentEntity();
+        if (
+          $parent &&
+          in_array($parent->bundle(), ['hs_collection', 'hs_priv_collection']) &&
+          $parent->hasField('field_raised_cards') &&
+          $parent->get('field_raised_cards')->value
+        ) {
+          $vertical_style = 'accent';
         }
-        $paragraph->set('field_hs_postcard_vertical_style', $vertical_style);
-        $paragraph->set('field_hs_postcard_alignment', 'left');
-        break;
-
-      case 'preview':
-        $paragraph->set('field_hs_postcard_layout', 'horizontal');
-        $paragraph->set('field_hs_postcard_vertical_style', 'plain');
-        $paragraph->set('field_hs_postcard_alignment', 'left');
-        break;
-
-      case 'token':
-        $paragraph->set('field_hs_postcard_layout', 'vertical');
-        $paragraph->set('field_hs_postcard_vertical_style', 'two_color');
-        $paragraph->set('field_hs_postcard_alignment', 'left');
-        break;
-
-      case 'vertical_button_card':
-        $paragraph->set('field_hs_postcard_layout', 'vertical');
-        $paragraph->set('field_hs_postcard_vertical_style', 'stacked');
-        $paragraph->set('field_hs_postcard_alignment', 'left');
-        break;
+      }
+    }
+    elseif ($display == 'preview') {
+      $layout = 'horizontal';
+    }
+    elseif ($display == 'token') {
+      $vertical_style = 'two_color';
+    }
+    elseif ($display == 'vertical_button_card') {
+      $vertical_style = 'stacked';
     }
 
+    $paragraph->set('field_hs_postcard_layout', $layout);
+    $paragraph->set('field_hs_postcard_vertical_style', $vertical_style);
+    $paragraph->set('field_hs_postcard_alignment', 'left');
     $paragraph->save();
+    $sandbox['updated']++;
   }
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  return t('Updated %updated of %total hs_postcard paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
+
 }
 
 /**
@@ -825,8 +829,10 @@ function hs_paragraph_types_update_10021(&$sandbox) {
 function hs_paragraph_types_update_10022() {
   if ($display_field = FieldConfig::loadByName('paragraph', 'hs_postcard', 'field_hs_postcard_display')) {
     $display_field->delete();
+    \Drupal::logger('hs_paragraph_types')->notice('Removed field instance field_hs_postcard_display from paragraph.hs_postcard.');
   }
   if ($display_storage = FieldStorageConfig::loadByName('paragraph', 'field_hs_postcard_display')) {
     $display_storage->delete();
+    \Drupal::logger('hs_paragraph_types')->notice('Removed field storage field_hs_postcard_display from paragraph.');
   }
 }

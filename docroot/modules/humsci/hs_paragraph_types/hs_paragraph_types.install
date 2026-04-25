@@ -1181,7 +1181,7 @@ function hs_paragraph_types_update_10029(&$sandbox) {
 /**
  * Creates new fields for Color Band paragraph visual variants.
  */
-function hs_paragraph_types_update_10028() {
+function hs_paragraph_types_update_10030() {
   $config_storage = \Drupal::service('config.storage.sync');
 
   /** @var \Drupal\Core\Entity\EntityStorageInterface $field_config_storage */
@@ -1227,7 +1227,7 @@ function hs_paragraph_types_update_10028() {
 /**
  * Migrate Color Band paragraph data from old fields to new fields.
  */
-function hs_paragraph_types_update_10029(&$sandbox) {
+function hs_paragraph_types_update_10031(&$sandbox) {
   $paragraph_storage = \Drupal::entityTypeManager()->getStorage('paragraph');
 
   if (empty($sandbox['ids'])) {
@@ -1286,7 +1286,7 @@ function hs_paragraph_types_update_10029(&$sandbox) {
 /**
  * Removes legacy paragraph fields.
  */
-function hs_paragraph_types_update_10030() {
+function hs_paragraph_types_update_10032() {
   $fields_to_delete = [
     'hs_spotlight' => [
       'field_hs_spotlight_bg',

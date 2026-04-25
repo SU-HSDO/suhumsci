@@ -768,7 +768,6 @@ function hs_paragraph_types_update_10021(&$sandbox) {
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
 
   foreach ($paragraph_storage->loadMultiple($paragraph_ids) as $paragraph) {
-    dump($sandbox['system_theme']);
     /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
     if (
       !$paragraph->hasField('field_hs_postcard_display') ||

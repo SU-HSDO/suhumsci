@@ -42,6 +42,7 @@ function hs_cmap_update_10002(&$sandbox) {
       ->condition('field_hs_cmap_crs_course', NULL, 'IS NOT NULL')
       ->execute();
     $sandbox['total'] = count($sandbox['ids']);
+    $sandbox['updated'] = 0;
   }
 
   $paragraph_ids = array_splice($sandbox['ids'], 0, 50);
@@ -54,32 +55,30 @@ function hs_cmap_update_10002(&$sandbox) {
 
     $paragraph->setNewRevision(FALSE);
     $paragraph->save();
+    $sandbox['updated']++;
   }
 
   $sandbox['#finished'] = count($sandbox['ids']) ? 1 - count($sandbox['ids']) / $sandbox['total'] : 1;
+
+  return t('Updated %updated of %total hs_cmap_qtr_crs paragraphs.', [
+    '%updated' => $sandbox['updated'],
+    '%total' => $sandbox['total'],
+  ]);
 }
 
 /**
  * Grant permissions to roles.
  */
 function hs_cmap_update_10003() {
-  user_role_grant_permissions('site_manager', [
-    'use text format minimal_text_formatting',
-  ]);
+  $roles = ['site_manager', 'preparer', 'contributor', 'authenticated', 'administrator'];
 
-  user_role_grant_permissions('preparer', [
-    'use text format minimal_text_formatting',
-  ]);
+  foreach ($roles as $role) {
+    user_role_grant_permissions($role, [
+      'use text format minimal_text_formatting',
+    ]);
+  }
 
-  user_role_grant_permissions('contributor', [
-    'use text format minimal_text_formatting',
-  ]);
-
-  user_role_grant_permissions('authenticated', [
-    'use text format minimal_text_formatting',
-  ]);
-
-  user_role_grant_permissions('administrator', [
-    'use text format minimal_text_formatting',
+  return t('Assigned "use text format minimal_text_formatting" permissions to the following roles: %roles.', [
+    '%roles' => join(', ', $roles),
   ]);
 }

@@ -190,10 +190,10 @@ function hs_layouts_preprocess_pattern_spotlight(&$variables) {
     }
     else {
       $media = $paragraph->get('field_hs_spotlight_image')->entity;
-      if ($media->bundle() == 'video') {
+      if ($media && $media->bundle() === 'video') {
         $spotlight_type = 'video';
       }
-      elseif ($media->bundle() == 'image' && $spotlight_type == 'classic') {
+      elseif ($media && $media->bundle() === 'image' && $spotlight_type === 'classic') {
         $view_mode = $context->getProperty('view_mode');
         $image_style = $view_mode == 'default' ? 'spotlight_framed_tall' : 'spotlight_framed_short';
         $variables['image']['field_hs_spotlight_image'][0]['#stanford_media_image_style'] = $image_style;

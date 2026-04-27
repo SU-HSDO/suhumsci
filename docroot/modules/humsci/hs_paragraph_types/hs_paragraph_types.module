@@ -209,12 +209,16 @@ function hs_paragraph_types_field_widget_complete_options_select_form_alter(arra
  * Implements hook_entity_view_mode_alter().
  */
 function hs_paragraph_types_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
-  if (!(
-    $entity instanceof Paragraph &&
-    $entity->bundle() == 'hs_postcard' &&
-    $entity->hasField('field_hs_postcard_layout') &&
-    $entity->hasField('field_hs_postcard_vertical_style')
-  )) {
+  if (!$entity instanceof Paragraph) {
+    return;
+  }
+  if ($entity->bundle() !== 'hs_postcard') {
+    return;
+  }
+  if (
+    !$entity->hasField('field_hs_postcard_layout') ||
+    !$entity->hasField('field_hs_postcard_vertical_style')
+  ) {
     return;
   }
 

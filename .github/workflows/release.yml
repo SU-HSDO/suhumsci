@@ -60,7 +60,7 @@ jobs:
             docroot/core
             docroot/libraries
             docroot/modules/contrib
-          key: 1.0-${{ hashFiles('blt/blt.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
+          key: 1.0-${{ hashFiles('drush/drush.yml') }}-${{ hashFiles('composer.json') }}-${{ hashFiles('composer.lock') }}
       - name: Install theme dependencies
         if: ${{ steps.tag.outputs.tag }}
         run: npm ci --prefix docroot/themes/humsci/humsci_basic
@@ -72,8 +72,7 @@ jobs:
           git config --global user.name "Github Actions" &&
           ssh-keyscan -t rsa svn-2314.prod.hosting.acquia.com >> /root/.ssh/known_hosts &&
           composer install -n &&
-          blt blt:telemetry:disable --no-interaction &&
-          blt deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} --no-interaction
+          drush sws:artifact:deploy --tag=$(date +'%Y-%m-%d')"_"${{ steps.tag.outputs.tag }} --commit-msg=${{ steps.tag.outputs.tag }} -v -n
       - name: Get Next Release
         if: ${{ steps.tag.outputs.tag }}
         id: next_tag
@@ -94,4 +93,4 @@ jobs:
           body: "# DO NOT DELETE"
       - name: Push New Branch
         if: ${{ steps.next_tag.outputs.version }}
-        run: blt deploy --branch=${{ steps.next_tag.outputs.version }}-release-build --commit-msg=${{ steps.next_tag.outputs.version }} --ignore-dirty -n
+        run: drush sws:artifact:deploy --branch=${{ steps.next_tag.outputs.version }}-release-build --commit-msg=${{ steps.next_tag.outputs.version }} -n

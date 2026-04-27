@@ -16,7 +16,7 @@ Follow these steps to ensure a clean and secure process.
 
 ### Decommission a site (remove from service)
 
-- **Technical steps:** Remove NetDB pointers, remove domains, remove from BLT multi-site, remove from WAF. Keep database and `docroot/sites/<site>` (site files).
+- **Technical steps:** Remove NetDB pointers, remove domains, remove from multi-site, remove from WAF/CDN. Keep database and `docroot/sites/<site>` (site files).
 - **Effects:** Site is inaccessible and no commands are run (no updates, cron, scripts, etc.). Database and files remain on Acquia and in the codebase.
 - **Pros/cons:** Easy to restore; continues to take up storage and may appear in codebase/UI.
 
@@ -42,8 +42,8 @@ See [Development Requirements](DevelopmentRequirements.md)
 
 🚩 Create a new branch.
 
-Update BLT multi-sites array:
-- Edit `blt/blt.yml` and remove the site alias from the multisite array.
+Update Drush multi-sites array:
+- Edit `drush/drush.yml` and remove the site alias from the multisite array.
 
 Remove the site Drush alias YAML:
 
@@ -146,7 +146,7 @@ drush rsync @SITE.prod:%private/ ~/site-backups/SITE-files-backup_YYYY-MM-DD/fil
 
 **With vanilla rsync:**
 
-Replace the server URL with the correct URL/host for the production server. This should be available in the codebase in BLT configuration or can be retrieved through ACLI or the Acquia UI.
+Replace the server URL with the correct URL/host for the production server. This should be available in the codebase in Drush configuration or can be retrieved through ACLI or the Acquia UI.
 
 ```bash
 rsync -av humscigryphon.prod@web-XXXX.prod.hosting.acquia.com:/mnt/gfs/humscigryphon/sites/SITE/files ~/site-backups/SITE-files-backup_YYYY-MM-DD

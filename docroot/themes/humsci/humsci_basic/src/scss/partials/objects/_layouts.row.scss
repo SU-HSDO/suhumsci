@@ -10,7 +10,6 @@
 $container-lg-width: hb-calculate-rems(992px);
 $container-md-width: hb-calculate-rems(768px);
 $container-sm-width: hb-calculate-rems(576px);
-$container-with-sidebar-width: hb-calculate-rems(868px);
 
 // Collection Paragraph Styles
 .hs-paragraph-style {
@@ -105,6 +104,9 @@ $container-with-sidebar-width: hb-calculate-rems(868px);
     flex: 0 0 var(--max-width);
 
     @include grid-media-min('sm') {
+      // This is neccesary to remove the force override
+      // happening in paragraphs like accordion
+      // Check _layouts.general.scss line 109
       margin: 0 !important;
     }
   }
@@ -191,32 +193,14 @@ $container-with-sidebar-width: hb-calculate-rems(868px);
       margin: hb-spacing-width() auto;
     }
   }
-}
 
-// Overrides for one sidebar (main content is narrower)
-// only when sidebar is visible
-@include grid-media-min('lg') {
-  .hb-three-column--one-sidebar .field-hs-collection-items {
-    @container collection (width < #{$container-with-sidebar-width}) {
-      &.item-per-row--4 .ptype-hs-postcard,
-      &.item-per-row--4 .ptype-hs-view {
-        --columns: 3;
-      }
+  // Remove extra space in some components
+  .ptype-hs-accordion details {
+    margin: 0;
+  }
 
-      .ptype-hs-testimonial,
-      .ptype-hs-accordion,
-      .ptype-hs-timeline {
-        --columns: 1;
-      }
-
-      &:not(.item-per-row--1) {
-        .ptype-hs-text-area,
-        .ptype-hs-postcard,
-        .ptype-hs-view {
-          --columns: 2;
-        }
-      }
-    }
+  .ptype-hs-spotlight .hb-spotlight {
+    margin-top: 0;
   }
 }
 

@@ -350,7 +350,7 @@ function hs_admin_update_10006(): string {
     'assign site_manager role',
   ];
 
-  // Remove permissions from Site Manager
+  // Remove permissions from Site Manager.
   $role_permissions = $role->getPermissions();
   if (!empty($to_remove = array_intersect($permissions, $role_permissions))) {
     foreach ($to_remove as $perm) {

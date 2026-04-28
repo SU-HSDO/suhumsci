@@ -5,8 +5,6 @@
  * Update functions for hs_cmap module.
  */
 
-use Drupal\user\Entity\Role;
-
 /**
  * Grant permissions to site manager role.
  */
@@ -72,7 +70,8 @@ function hs_cmap_update_10002(&$sandbox) {
  * Grant permissions to roles.
  */
 function hs_cmap_update_10003() {
-  // Import the text format from config, otherwise its permissions won't be defined.
+  // Import the text format from config,
+  // otherwise its permissions won't be defined.
   $config_name = 'filter.format.minimal_text_formatting';
   $config_factory = \Drupal::configFactory();
   $config = $config_factory->getEditable($config_name);
@@ -92,4 +91,3 @@ function hs_cmap_update_10003() {
     '%roles' => implode(', ', $roles),
   ]);
 }
-
